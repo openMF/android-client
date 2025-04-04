@@ -47,7 +47,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mifos.core.common.utils.DateHelper
 import com.mifos.core.designsystem.component.MifosCircularProgress
@@ -57,6 +56,7 @@ import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.network.GenericResponse
 import com.mifos.feature.loan.R
 import com.mifos.room.entities.accounts.loans.LoanWithAssociationsEntity
+import org.koin.androidx.compose.koinViewModel
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -67,7 +67,7 @@ import java.util.Locale
 @Composable
 internal fun LoanAccountApprovalScreen(
     navigateBack: () -> Unit,
-    viewModel: LoanAccountApprovalViewModel = hiltViewModel(),
+    viewModel: LoanAccountApprovalViewModel = koinViewModel(),
 ) {
     val uiState by viewModel.loanAccountApprovalUiState.collectAsStateWithLifecycle()
 
@@ -312,29 +312,29 @@ private fun LoanAccountApprovalContent(
                 if (isFieldValid(amount = approvedAmount, context = context) &&
                     isFieldValid(amount = transactionAmount, context = context)
                 ) {
-                    if (com.mifos.core.common.utils.Network.isOnline(context)) {
-                        val approvedOnDate = SimpleDateFormat(
-                            "dd MMMM yyyy",
-                            Locale.getDefault(),
-                        ).format(
-                            approveDate,
-                        )
+//                    if (Network.isOnline(context)) {
+                    val approvedOnDate = SimpleDateFormat(
+                        "dd MMMM yyyy",
+                        Locale.getDefault(),
+                    ).format(
+                        approveDate,
+                    )
 
-                        onLoanApprove.invoke(
-                            com.mifos.core.model.objects.account.loan.LoanApproval(
-                                note = note,
-                                approvedOnDate = approvedOnDate,
-                                approvedLoanAmount = approvedAmount,
-                                expectedDisbursementDate = disbursementDate,
-                            ),
-                        )
-                    } else {
-                        Toast.makeText(
-                            context,
-                            context.resources.getString(R.string.feature_loan_error_not_connected_internet),
-                            Toast.LENGTH_SHORT,
-                        ).show()
-                    }
+                    onLoanApprove.invoke(
+                        com.mifos.core.model.objects.account.loan.LoanApproval(
+                            note = note,
+                            approvedOnDate = approvedOnDate,
+                            approvedLoanAmount = approvedAmount,
+                            expectedDisbursementDate = disbursementDate,
+                        ),
+                    )
+//                    } else {
+//                        Toast.makeText(
+//                            context,
+//                            context.resources.getString(R.string.feature_loan_error_not_connected_internet),
+//                            Toast.LENGTH_SHORT,
+//                        ).show()
+//                    }
                 }
             },
         ) {

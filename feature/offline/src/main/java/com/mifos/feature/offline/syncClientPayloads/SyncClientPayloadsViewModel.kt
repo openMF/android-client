@@ -9,28 +9,27 @@
  */
 package com.mifos.feature.offline.syncClientPayloads
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.mifos.core.common.utils.FileUtils.LOG_TAG
+import com.mifos.core.common.utils.FileUtils
 import com.mifos.core.data.repository.SyncClientPayloadsRepository
-import com.mifos.core.datastore.PrefManager
+import com.mifos.core.datastore.UserPreferencesRepository
 import com.mifos.room.entities.client.ClientPayloadEntity
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
 /**
  * Created by Aditya Gupta on 16/08/23.
  */
-@HiltViewModel
-class SyncClientPayloadsViewModel @Inject constructor(
+class SyncClientPayloadsViewModel(
     private val repository: SyncClientPayloadsRepository,
-    private val prefManager: PrefManager,
+    private val prefManager: UserPreferencesRepository,
 ) : ViewModel() {
 
     private val _syncClientPayloadsUiState =
@@ -45,9 +44,13 @@ class SyncClientPayloadsViewModel @Inject constructor(
     private var mClientPayloads: MutableList<ClientPayloadEntity> = mutableListOf()
     private var mClientSyncIndex = 0
 
-    fun getUserStatus(): Boolean {
-        return prefManager.userStatus
-    }
+    val userStatus: StateFlow<Boolean> = prefManager.userInfo
+        .map { it.userStatus }
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000),
+            initialValue = false,
+        )
 
     fun refreshClientPayloads() {
         _isRefreshing.value = true
@@ -140,10 +143,11 @@ class SyncClientPayloadsViewModel @Inject constructor(
                 break
             } else {
                 mClientPayloads[i].errorMessage?.let {
-                    Log.d(
-                        LOG_TAG,
-                        it,
-                    )
+                    FileUtils.logger.d { it }
+//                    Log.d(
+//                        LOG_TAG,
+//                        it,
+//                    )
                 }
             }
         }

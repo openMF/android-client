@@ -14,13 +14,13 @@ import com.mifos.core.model.objects.noncoreobjects.Document
 import com.mifos.core.network.GenericResponse
 import com.mifos.core.network.datamanager.DataManagerDocument
 import okhttp3.ResponseBody
-import javax.inject.Inject
 
 /**
  * Created by Aditya Gupta on 08/08/23.
  */
-class DocumentListRepositoryImp @Inject constructor(private val dataManagerDocument: DataManagerDocument) :
-    DocumentListRepository {
+class DocumentListRepositoryImp(
+    private val dataManagerDocument: DataManagerDocument,
+) : DocumentListRepository {
 
     override suspend fun getDocumentsList(entityType: String, entityId: Int): List<Document> {
         return dataManagerDocument.getDocumentsList(entityType, entityId)

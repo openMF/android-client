@@ -9,9 +9,12 @@
  */
 package com.mifos.core.model.objects.organisations
 
+import kotlinx.serialization.Serializable
+
 /**
  * Created by nkiboi on 12/15/2015.
  */
+@Serializable
 data class ClientClassificationOptions(
     var id: Int? = null,
 

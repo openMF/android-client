@@ -54,11 +54,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.google.gson.Gson
 import com.mifos.core.common.utils.Constants
-import com.mifos.core.common.utils.Network
 import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosDatePickerTextField
 import com.mifos.core.designsystem.component.MifosOutlinedTextField
@@ -69,6 +66,9 @@ import com.mifos.core.model.objects.account.saving.SavingsAccountTransactionResp
 import com.mifos.feature.savings.R
 import com.mifos.room.entities.accounts.savings.SavingsAccountTransactionRequestEntity
 import com.mifos.room.entities.templates.savings.SavingsAccountTransactionTemplateEntity
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
+import org.koin.androidx.compose.koinViewModel
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -79,7 +79,7 @@ import java.util.Locale
 @Composable
 internal fun SavingsAccountTransactionScreen(
     navigateBack: () -> Unit,
-    viewmodel: SavingsAccountTransactionViewModel = hiltViewModel(),
+    viewmodel: SavingsAccountTransactionViewModel = koinViewModel(),
 ) {
     val uiState by viewmodel.savingsAccountTransactionUiState.collectAsStateWithLifecycle()
 
@@ -283,7 +283,7 @@ private fun SavingsAccountTransactionContent(
                         )
 
                         val builtTransactionRequestAsJson =
-                            Gson().toJson(savingsAccountTransactionRequest)
+                            Json.encodeToString(savingsAccountTransactionRequest)
                         Log.i(
                             context.resources.getString(R.string.feature_savings_transaction_body),
                             builtTransactionRequestAsJson,
@@ -418,17 +418,17 @@ private fun SavingsAccountTransactionContent(
 //                ),
                 onClick = {
                     if (isAmountValid(context, amount)) {
-                        if (Network.isOnline(context = context)) {
-                            showReviewTransactionDialog = true
-                        } else {
-                            setUserOffline.invoke()
-
-                            Toast.makeText(
-                                context,
-                                context.resources.getString(R.string.feature_savings_error_not_connected_internet),
-                                Toast.LENGTH_SHORT,
-                            ).show()
-                        }
+//                        if (Network.isOnline(context = context)) {
+                        showReviewTransactionDialog = true
+//                        } else {
+                        setUserOffline.invoke()
+//
+//                            Toast.makeText(
+//                                context,
+//                                context.resources.getString(R.string.feature_savings_error_not_connected_internet),
+//                                Toast.LENGTH_SHORT,
+//                            ).show()
+//                        }
                     }
                 },
             ) {

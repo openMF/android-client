@@ -9,28 +9,27 @@
  */
 package com.mifos.feature.offline.syncCenterPayloads
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.mifos.core.common.utils.FileUtils.LOG_TAG
+import com.mifos.core.common.utils.FileUtils
 import com.mifos.core.data.repository.SyncCenterPayloadsRepository
-import com.mifos.core.datastore.PrefManager
+import com.mifos.core.datastore.UserPreferencesRepository
 import com.mifos.room.entities.center.CenterPayloadEntity
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
 /**
  * Created by Aditya Gupta on 16/08/23.
  */
-@HiltViewModel
-class SyncCenterPayloadsViewModel @Inject constructor(
-    private val prefManager: PrefManager,
+class SyncCenterPayloadsViewModel(
+    private val prefManager: UserPreferencesRepository,
     private val repository: SyncCenterPayloadsRepository,
 ) : ViewModel() {
 
@@ -45,9 +44,13 @@ class SyncCenterPayloadsViewModel @Inject constructor(
     private var mCenterPayloads: MutableList<CenterPayloadEntity> = mutableListOf()
     private var centerSyncIndex = 0
 
-    fun getUserStatus(): Boolean {
-        return prefManager.userStatus
-    }
+    val userStatus: StateFlow<Boolean> = prefManager.userInfo
+        .map { it.userStatus }
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000),
+            initialValue = false,
+        )
 
     fun refreshCenterPayloads() {
         _isRefreshing.value = true
@@ -139,10 +142,11 @@ class SyncCenterPayloadsViewModel @Inject constructor(
                 break
             } else {
                 mCenterPayloads[i].errorMessage?.let {
-                    Log.d(
-                        LOG_TAG,
-                        it,
-                    )
+                    FileUtils.logger.d { it }
+//                    Log.d(
+//                        FileUtils.logger,
+//                        it,
+//                    )
                 }
             }
         }

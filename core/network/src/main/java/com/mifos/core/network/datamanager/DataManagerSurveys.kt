@@ -9,6 +9,7 @@
  */
 package com.mifos.core.network.datamanager
 
+import com.mifos.core.datastore.UserPreferencesRepository
 import com.mifos.core.model.objects.surveys.Scorecard
 import com.mifos.core.network.BaseApiManager
 import com.mifos.room.entities.survey.QuestionDatasEntity
@@ -16,10 +17,9 @@ import com.mifos.room.entities.survey.ResponseDatasEntity
 import com.mifos.room.entities.survey.SurveyEntity
 import com.mifos.room.helper.SurveyDaoHelper
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flow
 import rx.Observable
-import javax.inject.Inject
-import javax.inject.Singleton
 
 /**
  * This DataManager is for Managing Survey API, In which Request is going to Server
@@ -27,12 +27,11 @@ import javax.inject.Singleton
  *
  * Created by Rajan Maurya on 22/08/16.
  */
-@Singleton
-class DataManagerSurveys @Inject constructor(
+class DataManagerSurveys(
     val mBaseApiManager: BaseApiManager,
 //    private val mDatabaseHelperSurveys: DatabaseHelperSurveys,
     private val surveyDatabaseHelper: SurveyDaoHelper,
-    private val prefManager: com.mifos.core.datastore.PrefManager,
+    private val prefManager: UserPreferencesRepository,
 ) {
     /**
      * This Method sending the Request to REST API :
@@ -42,9 +41,11 @@ class DataManagerSurveys @Inject constructor(
      * @return Observable<List></List><Survey>>
      </Survey></Survey> */
     val allSurvey: Flow<List<SurveyEntity>>
-        get() = when (prefManager.userStatus) {
-            false -> flow { mBaseApiManager.surveyApi.allSurveys() }
-            true -> surveyDatabaseHelper.readAllSurveys()
+        get() = prefManager.userInfo.flatMapLatest { userData ->
+            when (userData.userStatus) {
+                false -> flow { mBaseApiManager.surveyApi.allSurveys() }
+                true -> surveyDatabaseHelper.readAllSurveys()
+            }
         }
 
     /**

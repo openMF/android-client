@@ -14,6 +14,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.CountDownTimer
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -45,17 +46,16 @@ import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mifos.core.common.enums.MifosAppLanguage
-import com.mifos.core.common.utils.LanguageHelper
+import com.mifos.core.datastore.model.AppTheme
 import com.mifos.core.designsystem.component.MifosRadioButtonDialog
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.UpdateEndpointDialogScreen
 import com.mifos.feature.settings.R
 import com.mifos.feature.settings.syncSurvey.SyncSurveysDialog
 import com.mifos.feature.settings.updateServer.UpdateServerConfigScreenRoute
-import java.util.Locale
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 internal fun SettingsScreen(
@@ -63,22 +63,18 @@ internal fun SettingsScreen(
     navigateToLoginScreen: () -> Unit,
     changePasscode: (String) -> Unit,
     languageChanged: () -> Unit,
-    viewModel: SettingsViewModel = hiltViewModel(),
+    viewModel: SettingsViewModel = koinViewModel(),
 ) {
-    val baseURL by viewModel.baseUrl.collectAsStateWithLifecycle()
-    val tenant by viewModel.tenant.collectAsStateWithLifecycle()
-    val passcode by viewModel.passcode.collectAsStateWithLifecycle()
-    val theme by viewModel.theme.collectAsStateWithLifecycle()
-    val language by viewModel.language.collectAsStateWithLifecycle()
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val context = LocalContext.current
 
     SettingsScreen(
         onBackPressed = onBackPressed,
-        selectedLanguage = language ?: "System Language",
-        selectedTheme = theme ?: "System Theme",
-        baseURL = baseURL ?: "",
-        tenant = tenant ?: "",
-        changePasscode = { changePasscode(passcode ?: "") },
+        selectedLanguage = uiState.language.code ?: "System Language",
+        selectedTheme = uiState.theme.themeName ?: "System Theme",
+        baseURL = uiState.baseUrl ?: "",
+        tenant = uiState.tenant ?: "",
+        changePasscode = { changePasscode(uiState.passcode ?: "") },
         handleEndpointUpdate = { baseURL, tenant ->
             if (viewModel.tryUpdatingEndpoint(selectedBaseUrl = baseURL, selectedTenant = tenant)) {
                 navigateToLoginScreen()
@@ -265,16 +261,20 @@ private fun SettingsCardItem(
 }
 
 private fun updateLanguageLocale(context: Context, language: String, isSystemLanguage: Boolean) {
-    if (isSystemLanguage) {
-        LanguageHelper.setLocale(context, language)
-    } else {
-        val systemLanguageCode = Locale.getDefault().language
-        if (MifosAppLanguage.entries.find { it.code == systemLanguageCode } == null) {
-            LanguageHelper.setLocale(context, MifosAppLanguage.ENGLISH.code)
-        } else {
-            LanguageHelper.setLocale(context, language)
-        }
-    }
+    Log.d(
+        "SettingsScreen",
+        "updateLanguageLocale: $language" + context.packageName.toString() + isSystemLanguage,
+    )
+//    if (isSystemLanguage) {
+//        LanguageHelper.setLocale(context, language)
+//    } else {
+//        val systemLanguageCode = Locale.getDefault().language
+//        if (MifosAppLanguage.entries.find { it.code == systemLanguageCode } == null) {
+//            LanguageHelper.setLocale(context, MifosAppLanguage.ENGLISH.code)
+//        } else {
+//            LanguageHelper.setLocale(context, language)
+//        }
+//    }
 }
 
 private fun showRestartCountdownToast(context: Context, seconds: Int) {

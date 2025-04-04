@@ -14,9 +14,8 @@ import com.mifos.core.model.objects.checkerinboxtask.CheckerTask
 import com.mifos.core.network.BaseApiManager
 import com.mifos.core.network.GenericResponse
 import rx.Observable
-import javax.inject.Inject
 
-class DataManagerCheckerInbox @Inject constructor(
+class DataManagerCheckerInbox(
     private val mBaseApiManager: BaseApiManager,
 ) {
 

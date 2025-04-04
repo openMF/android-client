@@ -44,9 +44,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.mifos.core.common.utils.Network
 import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosDatePickerTextField
 import com.mifos.core.designsystem.component.MifosOutlinedTextField
@@ -55,6 +53,7 @@ import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.model.objects.account.loan.SavingsApproval
 import com.mifos.core.network.GenericResponse
 import com.mifos.feature.savings.R
+import org.koin.androidx.compose.koinViewModel
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -65,7 +64,7 @@ import java.util.Locale
 @Composable
 internal fun SavingsAccountApprovalScreen(
     navigateBack: () -> Unit,
-    viewModel: SavingsAccountApprovalViewModel = hiltViewModel(),
+    viewModel: SavingsAccountApprovalViewModel = koinViewModel(),
 ) {
     val uiState by viewModel.savingsAccountApprovalUiState.collectAsStateWithLifecycle()
     val savingsAccountId by viewModel.savingsAccountId.collectAsStateWithLifecycle()
@@ -223,23 +222,23 @@ private fun SavingsAccountApprovalContent(
                 .padding(horizontal = 16.dp)
                 .heightIn(44.dp),
             onClick = {
-                if (Network.isOnline(context)) {
-                    approveLoan.invoke(
-                        SavingsApproval(
-                            approvedOnDate = SimpleDateFormat(
-                                "yyyy-MM-dd",
-                                Locale.getDefault(),
-                            ).format(approvalDate),
-                            note = reasonForApproval,
-                        ),
-                    )
-                } else {
-                    Toast.makeText(
-                        context,
-                        context.resources.getString(R.string.feature_savings_error_not_connected_internet),
-                        Toast.LENGTH_SHORT,
-                    ).show()
-                }
+//                if (Network.isOnline(context)) {
+                approveLoan.invoke(
+                    SavingsApproval(
+                        approvedOnDate = SimpleDateFormat(
+                            "yyyy-MM-dd",
+                            Locale.getDefault(),
+                        ).format(approvalDate),
+                        note = reasonForApproval,
+                    ),
+                )
+//                } else {
+//                    Toast.makeText(
+//                        context,
+//                        context.resources.getString(R.string.feature_savings_error_not_connected_internet),
+//                        Toast.LENGTH_SHORT,
+//                    ).show()
+//                }
             },
         ) {
             Text(text = stringResource(id = R.string.feature_savings_save))

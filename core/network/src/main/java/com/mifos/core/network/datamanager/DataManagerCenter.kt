@@ -10,6 +10,7 @@
 package com.mifos.core.network.datamanager
 
 import com.mifos.core.common.utils.Page
+import com.mifos.core.datastore.UserPreferencesRepository
 import com.mifos.core.model.objects.clients.ActivatePayload
 import com.mifos.core.network.BaseApiManager
 import com.mifos.core.network.mappers.centers.GetCentersResponseMapper
@@ -21,11 +22,10 @@ import com.mifos.room.entities.group.CenterWithAssociations
 import com.mifos.room.entities.organisation.OfficeEntity
 import com.mifos.room.helper.CenterDaoHelper
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
 import org.openapitools.client.models.PostCentersCenterIdRequest
 import org.openapitools.client.models.PostCentersCenterIdResponse
-import javax.inject.Inject
-import javax.inject.Singleton
 
 /**
  * This DataManager is for Managing Center API, In which Request is going to Server
@@ -33,12 +33,11 @@ import javax.inject.Singleton
  * DataManagerCenter saving response in Database and response to Presenter as accordingly.
  * Created by Rajan Maurya on 28/6/16.
  */
-@Singleton
-class DataManagerCenter @Inject constructor(
+class DataManagerCenter(
     val mBaseApiManager: BaseApiManager,
     private val centerDatabaseHelper: CenterDaoHelper,
     private val baseApiManager: org.mifos.core.apimanager.BaseApiManager,
-    private val prefManager: com.mifos.core.datastore.PrefManager,
+    private val prefManager: UserPreferencesRepository,
 ) {
     /**
      * This Method sending the Request to REST API if UserStatus is 0 and
@@ -123,7 +122,7 @@ class DataManagerCenter @Inject constructor(
     }
 
     suspend fun createCenter(centerPayload: CenterPayloadEntity?) {
-        when (prefManager.userStatus) {
+        when (prefManager.userInfo.first().userStatus) {
             false -> mBaseApiManager.centerApi.createCenter(centerPayload)
             true ->
                 /**
@@ -140,7 +139,7 @@ class DataManagerCenter @Inject constructor(
      */
     fun getCenterWithAssociations(centerId: Int): Flow<CenterWithAssociations> {
         return flow {
-            when (prefManager.userStatus) {
+            when (prefManager.userInfo.first().userStatus) {
                 false -> mBaseApiManager.centerApi.getAllGroupsForCenter(centerId)
                 true ->
                     /**

@@ -9,60 +9,64 @@
  */
 package com.mifos.core.network.di
 
-import android.content.Context
-import androidx.core.os.trace
 import coil.ImageLoader
 import coil.util.DebugLogger
+import com.mifos.core.common.network.MifosDispatchers
 import com.mifos.core.common.utils.getInstanceUrl
-import dagger.Module
-import dagger.Provides
-import dagger.hilt.InstallIn
-import dagger.hilt.android.qualifiers.ApplicationContext
-import dagger.hilt.components.SingletonComponent
+import com.mifos.core.datastore.UserPreferencesRepository
+import com.mifos.core.datastore.UserPreferencesRepositoryImpl
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
 import okhttp3.Call
 import okhttp3.OkHttpClient
+import org.koin.android.ext.koin.androidContext
+import org.koin.core.qualifier.named
+import org.koin.dsl.module
 import org.mifos.core.apimanager.BaseApiManager
-import javax.inject.Singleton
 
-@Module
-@InstallIn(SingletonComponent::class)
-object NetworkModule {
+val NetworkModule = module {
 
-    @Provides
-    @Singleton
-    fun provideBaseApiManager(prefManager: com.mifos.core.datastore.PrefManager): com.mifos.core.network.BaseApiManager {
-        return com.mifos.core.network.BaseApiManager(prefManager)
-    }
-
-    @Provides
-    @Singleton
-    fun provideSdkBaseApiManager(prefManager: com.mifos.core.datastore.PrefManager): BaseApiManager {
-        val usernamePassword: Pair<String, String> = prefManager.usernamePassword
-        val baseManager = BaseApiManager.getInstance()
-        baseManager.createService(
-            usernamePassword.first,
-            usernamePassword.second,
-            prefManager.getServerConfig.getInstanceUrl().dropLast(3),
-            prefManager.getServerConfig.tenant,
-            false,
+    single<UserPreferencesRepository> {
+        UserPreferencesRepositoryImpl(
+            get(),
+            get(
+                named(
+                    MifosDispatchers.IO.name,
+                ),
+            ),
+            get(named(MifosDispatchers.Unconfined)),
         )
-        return baseManager
     }
 
-    @Provides
-    @Singleton
-    fun okHttpCallFactory(): Call.Factory = trace("MifosHttpClient") {
-        OkHttpClient.Builder().build()
+    single { com.mifos.core.network.BaseApiManager(get()) }
+
+    single { BaseApiManager }
+
+    single {
+        val prefManager: UserPreferencesRepository = get()
+        val baseManager = BaseApiManager.getInstance()
+        CoroutineScope(Dispatchers.IO).launch {
+            val user = prefManager.userData.first()
+            val serverConfig = prefManager.getServerConfig.first()
+            baseManager.createService(
+                user.username ?: "",
+                user.password ?: "",
+                serverConfig.getInstanceUrl().dropLast(3),
+                serverConfig.tenant,
+                false,
+            )
+        }
+        baseManager
     }
 
-    @Provides
-    @Singleton
-    fun provideImageLoader(
-        okHttpCallFactory: dagger.Lazy<Call.Factory>,
-        @ApplicationContext context: Context,
-    ): ImageLoader {
-        return ImageLoader.Builder(context)
-            .callFactory { okHttpCallFactory.get() }
+    single<Call.Factory> { OkHttpClient.Builder().build() }
+
+    single {
+        val okHttpCallFactory by lazy { get<Call.Factory>() }
+        ImageLoader.Builder(androidContext())
+            .callFactory { okHttpCallFactory }
             .apply {
                 logger(DebugLogger())
             }.build()

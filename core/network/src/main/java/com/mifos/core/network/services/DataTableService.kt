@@ -9,11 +9,11 @@
  */
 package com.mifos.core.network.services
 
-import com.google.gson.JsonArray
 import com.mifos.core.model.objects.users.UserLocation
 import com.mifos.core.network.GenericResponse
 import com.mifos.room.basemodel.APIEndPoint
 import com.mifos.room.entities.noncore.DataTableEntity
+import kotlinx.serialization.json.JsonArray
 import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET

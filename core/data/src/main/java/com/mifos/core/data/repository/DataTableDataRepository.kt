@@ -9,7 +9,7 @@
  */
 package com.mifos.core.data.repository
 
-import com.google.gson.JsonArray
+import kotlinx.serialization.json.JsonArray
 import org.openapitools.client.models.DeleteDataTablesDatatableAppTableIdDatatableIdResponse
 
 /**

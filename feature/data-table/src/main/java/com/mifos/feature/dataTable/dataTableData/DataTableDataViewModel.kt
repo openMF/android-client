@@ -12,23 +12,20 @@ package com.mifos.feature.dataTable.dataTableData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.google.gson.Gson
-import com.google.gson.JsonArray
 import com.mifos.core.common.utils.Constants
 import com.mifos.core.common.utils.Resource
 import com.mifos.core.domain.useCases.DeleteDataTableEntryUseCase
 import com.mifos.core.domain.useCases.GetDataTableInfoUseCase
 import com.mifos.feature.data_table.R
 import com.mifos.room.entities.navigation.DataTableDataNavigationArg
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import javax.inject.Inject
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.jsonArray
 
-@HiltViewModel
-class DataTableDataViewModel @Inject constructor(
+class DataTableDataViewModel(
     private val getDataTableInfoUseCase: GetDataTableInfoUseCase,
     private val deleteDataTableEntryUseCase: DeleteDataTableEntryUseCase,
     private val savedStateHandle: SavedStateHandle,
@@ -37,7 +34,7 @@ class DataTableDataViewModel @Inject constructor(
     private val args =
         savedStateHandle.getStateFlow(key = Constants.DATA_TABLE_DATA_NAV_DATA, initialValue = "")
     val arg: DataTableDataNavigationArg =
-        Gson().fromJson(args.value, DataTableDataNavigationArg::class.java)
+        Json.decodeFromString<DataTableDataNavigationArg>(args.value)
 
     private val _dataTableDataUiState =
         MutableStateFlow<DataTableDataUiState>(DataTableDataUiState.Loading)
@@ -66,7 +63,7 @@ class DataTableDataViewModel @Inject constructor(
 
                     is Resource.Success ->
                         _dataTableDataUiState.value =
-                            DataTableDataUiState.DataTableInfo(result.data ?: JsonArray())
+                            DataTableDataUiState.DataTableInfo(Json.parseToJsonElement(result.data.toString()).jsonArray)
                 }
             }
         }

@@ -19,6 +19,7 @@ import java.util.Locale
 /**
  * Created by ishankhanna on 01/08/14.
  */
+
 abstract class FormWidget(context: Context?, name: String?) {
 
     /**

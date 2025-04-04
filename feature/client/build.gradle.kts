@@ -39,4 +39,10 @@ dependencies {
     implementation(libs.androidx.material)
 
     implementation(libs.maps.compose)
+
+    implementation(libs.kotlinx.serialization.json)
+
+    implementation(libs.ktor.client.core)
+    implementation(libs.ktor.client.android)
+    implementation(libs.ktorfit.lib)
 }

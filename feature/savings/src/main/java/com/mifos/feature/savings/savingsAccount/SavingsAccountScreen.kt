@@ -57,9 +57,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.mifos.core.common.utils.Network
 import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosDatePickerTextField
 import com.mifos.core.designsystem.component.MifosOutlinedTextField
@@ -73,6 +71,7 @@ import com.mifos.feature.savings.R
 import com.mifos.room.entities.client.Savings
 import com.mifos.room.entities.templates.savings.SavingProductsTemplate
 import com.mifos.room.entities.zipmodels.SavingProductsAndTemplate
+import org.koin.androidx.compose.koinViewModel
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -83,7 +82,7 @@ import java.util.Locale
 @Composable
 internal fun SavingsAccountScreen(
     navigateBack: () -> Unit,
-    viewModel: SavingAccountViewModel = hiltViewModel(),
+    viewModel: SavingAccountViewModel = koinViewModel(),
 ) {
     val uiState by viewModel.savingAccountUiState.collectAsStateWithLifecycle()
     val savingProductsTemplate by viewModel.savingProductsTemplate.collectAsStateWithLifecycle()
@@ -510,39 +509,39 @@ private fun SavingsAccountContent(
                 .padding(horizontal = 16.dp),
             contentPadding = PaddingValues(),
             onClick = {
-                if (Network.isOnline(context)) {
-                    val savingsPayload = SavingsPayload()
+//                if (Network.isOnline(context)) {
+                val savingsPayload = SavingsPayload()
 
-                    savingsPayload.externalId = externalId
-                    savingsPayload.locale = "en"
-                    savingsPayload.submittedOnDate = SimpleDateFormat(
-                        "dd MMMM yyyy", Locale.getDefault(),
-                    ).format(submittedOnDate)
-                    savingsPayload.dateFormat = "dd MMMM yyyy"
-                    if (isGroupAccount) {
-                        savingsPayload.groupId = groupId
-                    } else {
-                        savingsPayload.clientId = clientId
-                    }
-                    savingsPayload.productId = selectedSavingsProductID
-                    savingsPayload.fieldOfficerId = fieldOfficerId
-                    savingsPayload.nominalAnnualInterestRate = nominalAnnualInterest
-                    savingsPayload.allowOverdraft = overDraftAllowed
-                    savingsPayload.nominalAnnualInterestRateOverdraft =
-                        nominalAnnualInterestOverdraft
-                    savingsPayload.overdraftLimit = maximumOverdraftAmount
-                    savingsPayload.minOverdraftForInterestCalculation = minimumOverdraftAmount
-                    savingsPayload.enforceMinRequiredBalance = enforceMinimumBalance
-                    savingsPayload.minRequiredOpeningBalance = minimumRequiredBalance
-
-                    createSavingsAccount.invoke(savingsPayload)
+                savingsPayload.externalId = externalId
+                savingsPayload.locale = "en"
+                savingsPayload.submittedOnDate = SimpleDateFormat(
+                    "dd MMMM yyyy", Locale.getDefault(),
+                ).format(submittedOnDate)
+                savingsPayload.dateFormat = "dd MMMM yyyy"
+                if (isGroupAccount) {
+                    savingsPayload.groupId = groupId
                 } else {
-                    Toast.makeText(
-                        context,
-                        context.resources.getString(R.string.feature_savings_error_not_connected_internet),
-                        Toast.LENGTH_SHORT,
-                    ).show()
+                    savingsPayload.clientId = clientId
                 }
+                savingsPayload.productId = selectedSavingsProductID
+                savingsPayload.fieldOfficerId = fieldOfficerId
+                savingsPayload.nominalAnnualInterestRate = nominalAnnualInterest
+                savingsPayload.allowOverdraft = overDraftAllowed
+                savingsPayload.nominalAnnualInterestRateOverdraft =
+                    nominalAnnualInterestOverdraft
+                savingsPayload.overdraftLimit = maximumOverdraftAmount
+                savingsPayload.minOverdraftForInterestCalculation = minimumOverdraftAmount
+                savingsPayload.enforceMinRequiredBalance = enforceMinimumBalance
+                savingsPayload.minRequiredOpeningBalance = minimumRequiredBalance
+
+                createSavingsAccount.invoke(savingsPayload)
+//                } else {
+//                    Toast.makeText(
+//                        context,
+//                        context.resources.getString(R.string.feature_savings_error_not_connected_internet),
+//                        Toast.LENGTH_SHORT,
+//                    ).show()
+//                }
             },
         ) {
             Text(text = stringResource(id = R.string.feature_savings_submit))

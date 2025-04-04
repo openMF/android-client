@@ -17,12 +17,11 @@ import com.mifos.room.entities.collectionsheet.IndividualCollectionSheet
 import com.mifos.room.entities.organisation.OfficeEntity
 import com.mifos.room.entities.organisation.StaffEntity
 import kotlinx.coroutines.flow.Flow
-import javax.inject.Inject
 
 /**
  * Created by Aditya Gupta on 10/08/23.
  */
-class NewIndividualCollectionSheetRepositoryImp @Inject constructor(
+class NewIndividualCollectionSheetRepositoryImp(
     private val dataManager: DataManager,
     private val dataManagerCollection: DataManagerCollectionSheet,
 ) : NewIndividualCollectionSheetRepository {

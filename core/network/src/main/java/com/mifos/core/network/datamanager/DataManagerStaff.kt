@@ -9,25 +9,23 @@
  */
 package com.mifos.core.network.datamanager
 
-import com.mifos.core.datastore.PrefManager
+import com.mifos.core.datastore.UserPreferencesRepository
 import com.mifos.core.network.BaseApiManager
 import com.mifos.core.network.mappers.staffs.StaffMapper
 import com.mifos.room.entities.organisation.StaffEntity
 import com.mifos.room.helper.StaffDaoHelper
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flow
-import javax.inject.Inject
-import javax.inject.Singleton
 
 /**
  * Created by Rajan Maurya on 7/7/16.
  */
-@Singleton
-class DataManagerStaff @Inject constructor(
+class DataManagerStaff(
     val mBaseApiManager: BaseApiManager,
 //    private val mDatabaseHelperStaff: DatabaseHelperStaff,
     private val baseApiManager: org.mifos.core.apimanager.BaseApiManager,
-    private val prefManager: PrefManager,
+    private val prefManager: UserPreferencesRepository,
     private val staffDaoHelper: StaffDaoHelper,
 ) {
     /**
@@ -35,21 +33,23 @@ class DataManagerStaff @Inject constructor(
      * @return
      */
     fun getStaffInOffice(officeId: Int): Flow<List<StaffEntity>> {
-        return when (prefManager.userStatus) {
-            false -> flow {
-                baseApiManager.getStaffApi().retrieveAll16(
-                    officeId.toLong(),
-                    null,
-                    null,
-                    null,
-                )
-                    .map(StaffMapper::mapFromEntity)
-            }
+        return prefManager.userInfo.flatMapLatest { userData ->
+            when (userData.userStatus) {
+                false -> flow {
+                    baseApiManager.getStaffApi().retrieveAll16(
+                        officeId.toLong(),
+                        null,
+                        null,
+                        null,
+                    )
+                        .map(StaffMapper::mapFromEntity)
+                }
 
-            /**
-             * return all List of Staffs of Office from DatabaseHelperOffices
-             */
-            true -> staffDaoHelper.getAllStaffOffices(officeId)
+                /**
+                 * return all List of Staffs of Office from DatabaseHelperOffices
+                 */
+                true -> staffDaoHelper.getAllStaffOffices(officeId)
+            }
         }
     }
 //    fun getStaffInOffice(officeId: Int): Observable<List<Staff>> {

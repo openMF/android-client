@@ -14,14 +14,14 @@ import com.mifos.core.model.objects.checkerinboxtask.CheckerTask
 import com.mifos.core.network.datamanager.DataManagerCheckerInbox
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import javax.inject.Inject
 
 /**
  * Created by Aditya Gupta on 21/03/24.
  */
 
-class CheckerInboxTasksRepositoryImp @Inject constructor(private val dataManagerCheckerInbox: DataManagerCheckerInbox) :
-    CheckerInboxTasksRepository {
+class CheckerInboxTasksRepositoryImp(
+    private val dataManagerCheckerInbox: DataManagerCheckerInbox,
+) : CheckerInboxTasksRepository {
 
     override suspend fun getRescheduleLoansTaskList(): Flow<List<com.mifos.core.model.objects.checkerinboxtask.RescheduleLoansTask>> {
         return flow { emit(dataManagerCheckerInbox.getRechdeduleLoansTaskList()) }

@@ -11,31 +11,31 @@ package com.mifos.feature.loan.loanApproval
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
-import com.google.gson.Gson
 import com.mifos.core.data.repository.LoanAccountApprovalRepository
 import com.mifos.core.network.GenericResponse
 import com.mifos.room.entities.accounts.loans.LoanApprovalData
-import dagger.hilt.android.lifecycle.HiltViewModel
+import io.ktor.client.plugins.ClientRequestException
+import io.ktor.client.plugins.ServerResponseException
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import retrofit2.HttpException
+import kotlinx.io.IOException
+import kotlinx.serialization.SerializationException
+import kotlinx.serialization.json.Json
 import rx.Subscriber
 import rx.android.schedulers.AndroidSchedulers
 import rx.plugins.RxJavaPlugins
 import rx.schedulers.Schedulers
-import javax.inject.Inject
 
 /**
  * Created by Aditya Gupta on 10/08/23.
  */
-@HiltViewModel
-class LoanAccountApprovalViewModel @Inject constructor(
+class LoanAccountApprovalViewModel(
     private val repository: LoanAccountApprovalRepository,
     savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
 
     private val arg = savedStateHandle.getStateFlow(key = "arg", initialValue = "")
-    private val loanAccountData: LoanApprovalData = Gson().fromJson(arg.value, LoanApprovalData::class.java)
+    private val loanAccountData: LoanApprovalData = Json.decodeFromString<LoanApprovalData>(arg.value)
 
     private val _loanAccountApprovalUiState =
         MutableStateFlow<LoanAccountApprovalUiState>(LoanAccountApprovalUiState.Initial)
@@ -53,13 +53,31 @@ class LoanAccountApprovalViewModel @Inject constructor(
                 override fun onCompleted() {}
                 override fun onError(e: Throwable) {
                     try {
-                        if (e is HttpException) {
-                            val errorMessage = e.response()?.errorBody()
-                                ?.string()
-                            _loanAccountApprovalUiState.value =
-                                LoanAccountApprovalUiState.ShowLoanApproveFailed(
-                                    errorMessage ?: "Something went wrong",
-                                )
+                        when (e) {
+                            is ClientRequestException, is ServerResponseException -> {
+                                _loanAccountApprovalUiState.value =
+                                    LoanAccountApprovalUiState.ShowLoanApproveFailed(
+                                        e.message ?: "Server error occurred",
+                                    )
+                            }
+                            is IOException -> {
+                                _loanAccountApprovalUiState.value =
+                                    LoanAccountApprovalUiState.ShowLoanApproveFailed(
+                                        e.message ?: "Network error occurred",
+                                    )
+                            }
+                            is SerializationException -> {
+                                _loanAccountApprovalUiState.value =
+                                    LoanAccountApprovalUiState.ShowLoanApproveFailed(
+                                        e.message ?: "Data parsing error",
+                                    )
+                            }
+                            else -> {
+                                _loanAccountApprovalUiState.value =
+                                    LoanAccountApprovalUiState.ShowLoanApproveFailed(
+                                        e.message ?: "Unknown error",
+                                    )
+                            }
                         }
                     } catch (throwable: Throwable) {
                         RxJavaPlugins.getInstance().errorHandler.handleError(e)

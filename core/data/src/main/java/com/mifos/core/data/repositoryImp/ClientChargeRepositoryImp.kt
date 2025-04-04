@@ -17,12 +17,11 @@ import com.mifos.core.data.repository.ClientChargeRepository
 import com.mifos.core.network.datamanager.DataManagerCharge
 import com.mifos.room.entities.client.ChargesEntity
 import kotlinx.coroutines.flow.Flow
-import javax.inject.Inject
 
 /**
  * Created by Aditya Gupta on 08/08/23.
  */
-class ClientChargeRepositoryImp @Inject constructor(
+class ClientChargeRepositoryImp(
     private val dataManagerCharge: DataManagerCharge,
 ) : ClientChargeRepository {
 

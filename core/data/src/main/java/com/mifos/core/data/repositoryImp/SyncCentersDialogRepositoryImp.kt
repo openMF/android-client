@@ -28,12 +28,11 @@ import com.mifos.room.entities.group.GroupWithAssociations
 import com.mifos.room.entities.templates.loans.LoanRepaymentTemplateEntity
 import com.mifos.room.entities.templates.savings.SavingsAccountTransactionTemplateEntity
 import kotlinx.coroutines.flow.Flow
-import javax.inject.Inject
 
 /**
  * Created by Aditya Gupta on 16/08/23.
  */
-class SyncCentersDialogRepositoryImp @Inject constructor(
+class SyncCentersDialogRepositoryImp(
     private val dataManagerCenter: DataManagerCenter,
     private val dataManagerLoan: DataManagerLoan,
     private val dataManagerSavings: DataManagerSavings,

@@ -43,7 +43,6 @@ import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mifos.core.common.utils.Constants
 import com.mifos.core.designsystem.component.MifosCircularProgress
@@ -51,13 +50,14 @@ import com.mifos.core.designsystem.component.MifosDatePickerTextField
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.model.objects.clients.ActivatePayload
+import org.koin.androidx.compose.koinViewModel
 import java.text.SimpleDateFormat
 import java.util.Locale
 
 @Composable
 internal fun ActivateScreen(
     onBackPressed: () -> Unit,
-    viewModel: ActivateViewModel = hiltViewModel(),
+    viewModel: ActivateViewModel = koinViewModel(),
 ) {
     val state by viewModel.activateUiState.collectAsStateWithLifecycle()
     val id by viewModel.id.collectAsStateWithLifecycle()

@@ -11,18 +11,16 @@ package com.mifos.feature.splash.splash
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.mifos.core.datastore.PrefManager
-import dagger.hilt.android.lifecycle.HiltViewModel
+import com.mifos.core.datastore.UserPreferencesRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
-@HiltViewModel
-class SplashScreenViewmodel @Inject constructor(
-    private val prefManager: PrefManager,
+class SplashScreenViewmodel(
+    private val prefManager: UserPreferencesRepository,
 ) : ViewModel() {
 
     private val _isAuthenticated = MutableStateFlow<Boolean?>(null)
@@ -34,6 +32,7 @@ class SplashScreenViewmodel @Inject constructor(
 
     private fun checkAuthenticationStatus() = viewModelScope.launch(Dispatchers.IO) {
         delay(2000)
-        _isAuthenticated.value = prefManager.isAuthenticated()
+        val isAuthenticatedValue = prefManager.userData.firstOrNull()?.isAuthenticated
+        _isAuthenticated.value = isAuthenticatedValue ?: false
     }
 }

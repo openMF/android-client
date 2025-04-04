@@ -11,7 +11,7 @@ package com.mifos.feature.offline.syncClientPayloads
 
 import android.Manifest
 import android.content.Context
-import android.widget.Toast
+import android.util.Log
 import androidx.annotation.RequiresPermission
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -50,21 +50,21 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.mifos.core.common.utils.Network
 import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.feature.offline.R
 import com.mifos.room.entities.client.ClientPayloadEntity
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 internal fun SyncClientPayloadsScreenRoute(
-    viewModel: SyncClientPayloadsViewModel = hiltViewModel(),
+    viewModel: SyncClientPayloadsViewModel = koinViewModel(),
     onBackPressed: () -> Unit,
 ) {
     val uiState by viewModel.syncClientPayloadsUiState.collectAsStateWithLifecycle()
+    val userStatus by viewModel.userStatus.collectAsStateWithLifecycle()
     val refreshState by viewModel.isRefreshing.collectAsStateWithLifecycle()
 
     LaunchedEffect(key1 = Unit) {
@@ -81,7 +81,7 @@ internal fun SyncClientPayloadsScreenRoute(
         syncClientPayloads = {
             viewModel.syncClientPayload()
         },
-        userStatus = viewModel.getUserStatus(),
+        userStatus = userStatus,
     )
 }
 
@@ -293,15 +293,16 @@ private fun checkNetworkConnectionAndSync(
     context: Context,
     syncClientPayloads: () -> Unit,
 ) {
-    if (Network.isOnline(context)) {
-        syncClientPayloads()
-    } else {
-        Toast.makeText(
-            context,
-            context.getString(R.string.feature_offline_error_not_connected_internet),
-            Toast.LENGTH_SHORT,
-        ).show()
-    }
+    Log.d("C", context.packageName)
+//    if (Network.isOnline(context)) {
+    syncClientPayloads()
+//    } else {
+//        Toast.makeText(
+//            context,
+//            context.getString(R.string.feature_offline_error_not_connected_internet),
+//            Toast.LENGTH_SHORT,
+//        ).show()
+//    }
 }
 
 class SyncClientPayloadsUiStateProvider : PreviewParameterProvider<SyncClientPayloadsUiState> {

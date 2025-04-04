@@ -12,28 +12,28 @@ package com.mifos.feature.offline.syncSavingsAccountTransaction
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mifos.core.data.repository.SyncSavingsAccountTransactionRepository
-import com.mifos.core.datastore.PrefManager
+import com.mifos.core.datastore.UserPreferencesRepository
 import com.mifos.feature.offline.R
 import com.mifos.room.entities.PaymentTypeOptionEntity
 import com.mifos.room.entities.accounts.savings.SavingsAccountTransactionRequestEntity
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import rx.Observable
-import javax.inject.Inject
 
 /**
  * Created by Aditya Gupta on 16/08/23.
  */
-@HiltViewModel
-class SyncSavingsAccountTransactionViewModel @Inject constructor(
+class SyncSavingsAccountTransactionViewModel(
 //    private val processTransactionUseCase: ProcessTransactionUseCase,
     private val repository: SyncSavingsAccountTransactionRepository,
-    private val prefManager: PrefManager,
+    private val prefManager: UserPreferencesRepository,
 ) : ViewModel() {
 
     private val _syncSavingsAccountTransactionUiState =
@@ -59,9 +59,13 @@ class SyncSavingsAccountTransactionViewModel @Inject constructor(
     private var mTransactionIndex = 0
     private var mTransactionsFailed = 0
 
-    fun getUserStatus(): Boolean {
-        return prefManager.userStatus
-    }
+    val userStatus: StateFlow<Boolean> = prefManager.userInfo
+        .map { it.userStatus }
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000),
+            initialValue = false,
+        )
 
     fun syncSavingsAccountTransactions() {
         if (mSavingsAccountTransactionRequests.size != 0) {

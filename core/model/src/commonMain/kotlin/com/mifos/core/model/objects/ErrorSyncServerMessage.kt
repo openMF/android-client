@@ -12,6 +12,7 @@ package com.mifos.core.model.objects
 /**
  * Created by Rajan Maurya on 23/07/16.
  */
+
 class ErrorSyncServerMessage {
     var developerMessage: String? = null
     var httpStatusCode = 0

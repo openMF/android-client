@@ -12,41 +12,38 @@ package com.mifos.feature.client.syncClientDialog
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mifos.core.common.utils.Constants
-import com.mifos.core.common.utils.NetworkUtilsWrapper
 import com.mifos.core.data.repository.SyncClientsDialogRepository
-import com.mifos.core.datastore.PrefManager
-import com.mifos.core.designsystem.icon.MifosIcons
-import com.mifos.feature.client.R
+import com.mifos.core.datastore.UserPreferencesRepository
 import com.mifos.room.entities.accounts.loans.LoanAccountEntity
 import com.mifos.room.entities.accounts.savings.SavingsAccountEntity
 import com.mifos.room.entities.client.ClientEntity
 import com.mifos.room.entities.zipmodels.LoanAndLoanRepayment
 import com.mifos.room.entities.zipmodels.SavingsAccountAndTransactionTemplate
-import dagger.hilt.android.lifecycle.HiltViewModel
+import io.ktor.client.plugins.ClientRequestException
+import io.ktor.client.plugins.ServerResponseException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import retrofit2.HttpException
 import rx.Observable
 import rx.plugins.RxJavaPlugins
-import javax.inject.Inject
 
 /**
  * Created by Aditya Gupta on 16/08/23.
  */
-@HiltViewModel
-class SyncClientsDialogViewModel @Inject constructor(
+class SyncClientsDialogViewModel(
     private val repository: SyncClientsDialogRepository,
-    private val networkUtilsWrapper: NetworkUtilsWrapper,
-    private val prefManager: PrefManager,
+    private val prefManager: UserPreferencesRepository,
+//    private val networkUtilsWrapper: NetworkUtilsWrapper,
 ) : ViewModel() {
 
     private var mClientList: List<ClientEntity> = ArrayList()
+
     private val mFailedSyncClient: MutableList<ClientEntity> = ArrayList()
     private var mLoanAccountList: List<LoanAccountEntity> = ArrayList()
     private var mSavingsAccountList: List<SavingsAccountEntity> = ArrayList()
@@ -71,9 +68,12 @@ class SyncClientsDialogViewModel @Inject constructor(
     }
 
     fun syncClient() {
-        if (prefManager.userStatus == Constants.USER_ONLINE) {
-            checkNetworkConnection {
-                syncClientAndUpdateUI()
+        viewModelScope.launch {
+            val userStatus = prefManager.userInfo.first().userStatus
+            if (userStatus == Constants.USER_ONLINE) {
+                checkNetworkConnection {
+                    syncClientAndUpdateUI()
+                }
             }
         }
     }
@@ -134,7 +134,7 @@ class SyncClientsDialogViewModel @Inject constructor(
 
     fun onAccountSyncFailed(e: Throwable?) {
         try {
-            if (e is HttpException) {
+            if (e is ClientRequestException || e is ServerResponseException) {
                 val singleSyncClientMax = maxSingleSyncClientProgressBar
                 _syncClientData.update { it.copy(singleSyncCount = singleSyncClientMax) }
                 mFailedSyncClient.add(mClientList[mClientSyncIndex])
@@ -293,14 +293,14 @@ class SyncClientsDialogViewModel @Inject constructor(
     private fun checkNetworkConnection(
         taskWhenOnline: () -> Unit,
     ) {
-        if (networkUtilsWrapper.isNetworkConnected()) {
-            taskWhenOnline.invoke()
-        } else {
-            _syncClientsDialogUiState.value = SyncClientsDialogUiState.Error(
-                messageResId = R.string.feature_client_error_network_not_available,
-                imageVector = MifosIcons.WifiOff,
-            )
-        }
+//        if (networkUtilsWrapper.isNetworkConnected()) {
+        taskWhenOnline.invoke()
+//        } else {
+//            _syncClientsDialogUiState.value = SyncClientsDialogUiState.Error(
+//                messageResId = R.string.feature_client_error_network_not_available,
+//                imageVector = MifosIcons.WifiOff,
+//            )
+//        }
     }
 
     fun getActiveLoanAccounts(loanAccountList: List<LoanAccountEntity>?): List<LoanAccountEntity> {

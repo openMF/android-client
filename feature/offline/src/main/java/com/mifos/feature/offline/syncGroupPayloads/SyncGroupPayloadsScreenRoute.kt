@@ -11,7 +11,7 @@ package com.mifos.feature.offline.syncGroupPayloads
 
 import android.Manifest
 import android.content.Context
-import android.widget.Toast
+import android.util.Log
 import androidx.annotation.RequiresPermission
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -41,22 +41,22 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.mifos.core.common.utils.Network
 import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosErrorContent
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.feature.offline.R
 import com.mifos.room.entities.group.GroupPayloadEntity
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 internal fun SyncGroupPayloadsScreenRoute(
-    viewModel: SyncGroupPayloadsViewModel = hiltViewModel(),
+    viewModel: SyncGroupPayloadsViewModel = koinViewModel(),
     onBackPressed: () -> Unit,
 ) {
     val uiState by viewModel.syncGroupPayloadsUiState.collectAsStateWithLifecycle()
+    val userStatus by viewModel.userStatus.collectAsStateWithLifecycle()
     val groupPayloadsList by viewModel.groupPayloadsList.collectAsStateWithLifecycle()
     val refreshState by viewModel.isRefreshing.collectAsStateWithLifecycle()
 
@@ -75,7 +75,7 @@ internal fun SyncGroupPayloadsScreenRoute(
         syncGroupPayloads = {
             viewModel.syncGroupPayloadFromStart()
         },
-        userStatus = viewModel.getUserStatus(),
+        userStatus = userStatus,
     )
 }
 
@@ -254,15 +254,16 @@ private fun checkNetworkConnectionAndSync(
     context: Context,
     syncGroupPayloads: () -> Unit,
 ) {
-    if (Network.isOnline(context)) {
-        syncGroupPayloads()
-    } else {
-        Toast.makeText(
-            context,
-            context.getString(R.string.feature_offline_error_not_connected_internet),
-            Toast.LENGTH_SHORT,
-        ).show()
-    }
+    Log.d("C", context.packageName)
+//    if (Network.isOnline(context)) {
+    syncGroupPayloads()
+//    } else {
+//        Toast.makeText(
+//            context,
+//            context.getString(R.string.feature_offline_error_not_connected_internet),
+//            Toast.LENGTH_SHORT,
+//        ).show()
+//    }
 }
 
 // @Preview

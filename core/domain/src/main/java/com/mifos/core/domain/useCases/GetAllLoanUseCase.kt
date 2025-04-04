@@ -11,17 +11,19 @@ package com.mifos.core.domain.useCases
 
 import com.mifos.core.common.utils.Resource
 import com.mifos.core.data.repository.LoanAccountRepository
+import com.mifos.core.model.objects.organisations.LoanProducts
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import rx.Subscriber
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
-import javax.inject.Inject
 
-class GetAllLoanUseCase @Inject constructor(private val loanAccountRepository: LoanAccountRepository) {
+class GetAllLoanUseCase(
+    private val loanAccountRepository: LoanAccountRepository,
+) {
 
-    suspend operator fun invoke(): Flow<Resource<List<com.mifos.core.model.objects.organisations.LoanProducts>>> = callbackFlow {
+    suspend operator fun invoke(): Flow<Resource<List<LoanProducts>>> = callbackFlow {
         try {
             trySend(Resource.Loading())
             loanAccountRepository.allLoans()

@@ -9,15 +9,15 @@
  */
 package com.mifos.core.network.datamanager
 
+import com.mifos.core.datastore.UserPreferencesRepository
 import com.mifos.core.model.objects.clients.Page
 import com.mifos.core.network.BaseApiManager
 import com.mifos.room.entities.client.ChargesEntity
 import com.mifos.room.helper.ChargeDaoHelper
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.map
-import javax.inject.Inject
-import javax.inject.Singleton
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.onEach
 
 /**
  * This DataManager is for Managing Charge API, In which Request is going to Server
@@ -27,12 +27,11 @@ import javax.inject.Singleton
  *
  * Created by Rajan Maurya on 4/7/16.
  */
-@Singleton
-class DataManagerCharge @Inject constructor(
+class DataManagerCharge(
     val mBaseApiManager: BaseApiManager,
 //    val mDatabaseHelperCharge: DatabaseHelperCharge,
     val chargeDatabase: ChargeDaoHelper,
-    private val prefManager: com.mifos.core.datastore.PrefManager,
+    private val prefManager: UserPreferencesRepository,
 ) {
     /**
      * This Method Request the Charge API at
@@ -45,26 +44,21 @@ class DataManagerCharge @Inject constructor(
      * @return Page<Charge> Page of Charge in Which List Size is according to Limit and from
      * where position is Starting according to offset</Charge>>
      */
-    suspend fun getClientCharges(
+    fun getClientCharges(
         clientId: Int,
         offset: Int,
         limit: Int,
     ): Flow<Page<ChargesEntity>> {
-        return when (prefManager.userStatus) {
-            false -> mBaseApiManager.chargeApi.getListOfCharges(clientId, offset, limit).map {
-                chargeDatabase.saveClientCharges(it, clientId)
-                it
-            }
+        return prefManager.userInfo.flatMapLatest { userData ->
+            when (userData.userStatus) {
+                false -> mBaseApiManager.chargeApi.getListOfCharges(clientId, offset, limit)
+                    .onEach { chargeDatabase.saveClientCharges(it, clientId) }
 
-            true -> {
-                /**
-                 * Return Client Charges from DatabaseHelperClient only one time.
-                 */
-                if (offset == 0) {
-                    chargeDatabase.readClientCharges(clientId)
-                } else {
-                    flow {
-                        emit(Page())
+                true -> {
+                    if (offset == 0) {
+                        chargeDatabase.readClientCharges(clientId)
+                    } else {
+                        flowOf(Page())
                     }
                 }
             }

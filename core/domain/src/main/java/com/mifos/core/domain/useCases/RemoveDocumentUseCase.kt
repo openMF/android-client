@@ -14,9 +14,10 @@ import com.mifos.core.data.repository.DocumentListRepository
 import com.mifos.core.network.GenericResponse
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import javax.inject.Inject
 
-class RemoveDocumentUseCase @Inject constructor(private val repository: DocumentListRepository) {
+class RemoveDocumentUseCase(
+    private val repository: DocumentListRepository,
+) {
 
     suspend operator fun invoke(
         entityType: String,

@@ -20,15 +20,12 @@ import com.mifos.core.domain.useCases.GetLoansAccountTemplateUseCase
 import com.mifos.core.network.model.LoansPayload
 import com.mifos.feature.loan.R
 import com.mifos.room.entities.templates.loans.LoanTemplate
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
-@HiltViewModel
-class LoanAccountViewModel @Inject constructor(
+class LoanAccountViewModel(
     private val getAllLoanUseCase: GetAllLoanUseCase,
     private val getLoansAccountTemplateUseCase: GetLoansAccountTemplateUseCase,
     private val createLoanAccountUseCase: CreateLoanAccountUseCase,

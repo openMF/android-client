@@ -18,15 +18,12 @@ import com.mifos.core.domain.useCases.ActivateCenterUseCase
 import com.mifos.core.domain.useCases.ActivateClientUseCase
 import com.mifos.core.domain.useCases.ActivateGroupUseCase
 import com.mifos.core.model.objects.clients.ActivatePayload
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
-@HiltViewModel
-class ActivateViewModel @Inject constructor(
+class ActivateViewModel(
     private val activateClientUseCase: ActivateClientUseCase,
     private val activateCenterUseCase: ActivateCenterUseCase,
     private val activateGroupUseCase: ActivateGroupUseCase,
@@ -43,13 +40,13 @@ class ActivateViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.IO) {
             activateClientUseCase(clientId, clientPayload).collect { result ->
                 when (result) {
-                    is Resource.Error ->
+                    is Resource.Error<*> ->
                         _activateUiState.value =
                             ActivateUiState.Error(R.string.feature_activate_failed_to_activate_client)
 
-                    is Resource.Loading -> _activateUiState.value = ActivateUiState.Loading
+                    is Resource.Loading<*> -> _activateUiState.value = ActivateUiState.Loading
 
-                    is Resource.Success ->
+                    is Resource.Success<*> ->
                         _activateUiState.value =
                             ActivateUiState.ActivatedSuccessfully(R.string.feature_activate_client)
                 }

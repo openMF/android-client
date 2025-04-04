@@ -61,7 +61,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
@@ -74,11 +73,12 @@ import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.component.PermissionBox
 import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.feature.client.R
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 internal fun PinpointClientScreen(
     onBackPressed: () -> Unit,
-    viewModel: PinPointClientViewModel = hiltViewModel(),
+    viewModel: PinPointClientViewModel = koinViewModel(),
 ) {
     val clientId by viewModel.clientId.collectAsStateWithLifecycle()
     val state by viewModel.pinPointClientUiState.collectAsStateWithLifecycle()

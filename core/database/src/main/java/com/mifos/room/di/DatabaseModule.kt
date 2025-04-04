@@ -9,31 +9,25 @@
  */
 package com.mifos.room.di
 
-import android.content.Context
 import androidx.room.Room
+import com.mifos.core.common.network.MifosDispatchers
 import com.mifos.room.db.MifosDatabase
-import dagger.Module
-import dagger.Provides
-import dagger.hilt.InstallIn
-import dagger.hilt.android.qualifiers.ApplicationContext
-import dagger.hilt.components.SingletonComponent
-import kotlinx.coroutines.Dispatchers
-import javax.inject.Singleton
+import org.koin.android.ext.koin.androidContext
+import org.koin.core.qualifier.named
+import org.koin.dsl.module
+import kotlin.coroutines.CoroutineContext
 
-@Module
-@InstallIn(SingletonComponent::class)
-object DatabaseModule {
+val DatabaseModule = module {
+    single {
+        val ioContext: CoroutineContext = getKoin().get(named(MifosDispatchers.IO.name))
 
-    @Provides
-    @Singleton
-    fun providesDatabase(@ApplicationContext context: Context): MifosDatabase {
-        return Room.databaseBuilder(
-            context = context,
+        Room.databaseBuilder(
+            context = androidContext(),
             klass = MifosDatabase::class.java,
             name = "mifos-database",
         ).enableMultiInstanceInvalidation()
             .fallbackToDestructiveMigration(true)
-            .setQueryCoroutineContext(Dispatchers.IO)
+            .setQueryCoroutineContext(ioContext)
             .build()
     }
 }

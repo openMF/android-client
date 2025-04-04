@@ -11,8 +11,10 @@ package com.mifos.room.entities
 
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
+import kotlinx.serialization.Serializable
 
 @Parcelize
+@Serializable
 data class Timeline(
     val submittedOnDate: List<Int> = emptyList(),
     val submittedByUsername: String? = null,

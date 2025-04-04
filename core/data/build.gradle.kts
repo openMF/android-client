@@ -9,9 +9,10 @@
  */
 plugins {
     alias(libs.plugins.mifos.android.library)
-    alias(libs.plugins.mifos.android.hilt)
+    alias(libs.plugins.mifos.android.koin)
     alias(libs.plugins.mifos.android.library.jacoco)
     id(libs.plugins.kotlin.parcelize.get().pluginId)
+    alias(libs.plugins.kotlin.serialization)
 }
 
 android {
@@ -43,7 +44,12 @@ dependencies {
 
     api(libs.androidx.paging.runtime.ktx)
 
+    implementation(libs.kotlinx.serialization.json)
+
     testImplementation(libs.kotlinx.coroutines.test)
     testImplementation(libs.kotlinx.serialization.json)
     testImplementation(projects.core.testing)
+
+    implementation(libs.androidx.core.ktx)
+    implementation(libs.androidx.tracing.ktx)
 }

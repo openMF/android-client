@@ -9,32 +9,31 @@
  */
 package com.mifos.feature.offline.syncLoanRepaymentTransaction
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.mifos.core.common.utils.FileUtils.LOG_TAG
+import com.mifos.core.common.utils.FileUtils
 import com.mifos.core.data.repository.SyncLoanRepaymentTransactionRepository
-import com.mifos.core.datastore.PrefManager
+import com.mifos.core.datastore.UserPreferencesRepository
 import com.mifos.feature.offline.R
 import com.mifos.room.entities.PaymentTypeOptionEntity
 import com.mifos.room.entities.accounts.loans.LoanRepaymentRequestEntity
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
 /**
  * Created by Aditya Gupta on 16/08/23.
  */
-@HiltViewModel
-class SyncLoanRepaymentTransactionViewModel @Inject constructor(
+class SyncLoanRepaymentTransactionViewModel(
     private val repository: SyncLoanRepaymentTransactionRepository,
-    private val prefManager: PrefManager,
+    private val prefManager: UserPreferencesRepository,
 ) : ViewModel() {
 
     private val _syncLoanRepaymentTransactionUiState =
@@ -51,9 +50,13 @@ class SyncLoanRepaymentTransactionViewModel @Inject constructor(
     private var mPaymentTypeOptions: List<PaymentTypeOptionEntity> = emptyList()
     private var mClientSyncIndex = 0
 
-    fun getUserStatus(): Boolean {
-        return prefManager.userStatus
-    }
+    val userStatus: StateFlow<Boolean> = prefManager.userInfo
+        .map { it.userStatus }
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000),
+            initialValue = false,
+        )
 
     fun refreshTransactions() {
         _isRefreshing.value = true
@@ -191,10 +194,11 @@ class SyncLoanRepaymentTransactionViewModel @Inject constructor(
                 break
             } else {
                 mLoanRepaymentRequests[i].errorMessage?.let {
-                    Log.d(
-                        LOG_TAG,
-                        it,
-                    )
+                    FileUtils.logger.d { it }
+//                    Log.d(
+//                        LOG_TAG,
+//                        it,
+//                    )
                 }
             }
         }

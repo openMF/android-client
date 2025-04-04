@@ -15,12 +15,11 @@ import com.mifos.room.entities.accounts.loans.LoanRepaymentRequestEntity
 import com.mifos.room.entities.accounts.loans.LoanRepaymentResponseEntity
 import com.mifos.room.entities.templates.loans.LoanRepaymentTemplateEntity
 import kotlinx.coroutines.flow.Flow
-import javax.inject.Inject
 
 /**
  * Created by Aditya Gupta on 10/08/23.
  */
-class LoanRepaymentRepositoryImp @Inject constructor(
+class LoanRepaymentRepositoryImp(
     private val dataManagerLoan: DataManagerLoan,
 ) : LoanRepaymentRepository {
 

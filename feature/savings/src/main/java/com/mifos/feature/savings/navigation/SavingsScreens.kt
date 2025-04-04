@@ -9,12 +9,13 @@
  */
 package com.mifos.feature.savings.navigation
 
-import com.google.gson.Gson
 import com.mifos.core.common.utils.Constants
 import com.mifos.room.entities.accounts.savings.SavingAccountDepositTypeEntity
 import com.mifos.room.entities.accounts.savings.SavingsAccountWithAssociationsEntity
 import com.mifos.room.entities.accounts.savings.SavingsSummaryData
 import com.mifos.room.entities.accounts.savings.SavingsTransactionData
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 
 /**
  * Created by Pronay Sarker on 14/08/2024 (1:11 PM)
@@ -40,9 +41,8 @@ sealed class SavingsScreens(val route: String) {
     data object SavingsAccountSummary :
         SavingsScreens(route = "savings_account_summary_screen/{arg}") {
         fun argument(savingsAccountId: Int, savingsAccountType: SavingAccountDepositTypeEntity): String {
-            val gson = Gson()
             val arg = SavingsSummaryData(id = savingsAccountId, type = savingsAccountType)
-            val savingsSummaryDataToJson = gson.toJson(arg)
+            val savingsSummaryDataToJson = Json.encodeToString(arg)
 
             return "savings_account_summary_screen/$savingsSummaryDataToJson"
         }
@@ -56,10 +56,8 @@ sealed class SavingsScreens(val route: String) {
             transactionType: String,
             depositType: SavingAccountDepositTypeEntity?,
         ): String {
-            val gson = Gson()
             val arg = SavingsTransactionData(savingsAccountWithAssociations, depositType, transactionType)
-            val savingsTransactionDataToJson = gson.toJson(arg)
-
+            val savingsTransactionDataToJson = Json.encodeToString(arg)
             return "savings_account_transaction_screen/$savingsTransactionDataToJson"
         }
     }

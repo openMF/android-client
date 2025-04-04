@@ -15,12 +15,11 @@ import com.mifos.room.entities.accounts.GroupAccounts
 import com.mifos.room.entities.group.GroupEntity
 import com.mifos.room.entities.group.GroupWithAssociations
 import kotlinx.coroutines.flow.Flow
-import javax.inject.Inject
 
 /**
  * Created by Aditya Gupta on 06/08/23.
  */
-class GroupDetailsRepositoryImp @Inject constructor(
+class GroupDetailsRepositoryImp(
     private val dataManagerGroups: DataManagerGroups,
 ) : GroupDetailsRepository {
 

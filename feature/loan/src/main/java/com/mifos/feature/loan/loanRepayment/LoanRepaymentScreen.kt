@@ -55,9 +55,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.mifos.core.common.utils.Network
 import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosDatePickerTextField
 import com.mifos.core.designsystem.component.MifosOutlinedTextField
@@ -69,6 +67,7 @@ import com.mifos.room.entities.PaymentTypeOptionEntity
 import com.mifos.room.entities.accounts.loans.LoanRepaymentRequestEntity
 import com.mifos.room.entities.accounts.loans.LoanRepaymentResponseEntity
 import com.mifos.room.entities.templates.loans.LoanRepaymentTemplateEntity
+import org.koin.androidx.compose.koinViewModel
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -78,7 +77,7 @@ import java.util.Locale
 @Composable
 internal fun LoanRepaymentScreen(
     navigateBack: () -> Unit,
-    viewmodel: LoanRepaymentViewModel = hiltViewModel(),
+    viewmodel: LoanRepaymentViewModel = koinViewModel(),
 ) {
     val uiState by viewmodel.loanRepaymentUiState.collectAsStateWithLifecycle()
 
@@ -466,34 +465,35 @@ private fun ShowLoanRepaymentConfirmationDialog(
     context: Context,
     submitPayment: (request: LoanRepaymentRequestEntity) -> Unit,
 ) {
+    Log.d("C", context.packageName)
     AlertDialog(
         onDismissRequest = { onDismiss() },
         confirmButton = {
             TextButton(
                 onClick = {
                     onDismiss()
-                    if (Network.isOnline(context)) {
-                        val request = LoanRepaymentRequestEntity(
-                            accountNumber = loanAccountNumber,
-                            paymentTypeId = paymentTypeId,
-                            dateFormat = "dd MM yyyy",
-                            locale = "en",
-                            transactionAmount = total,
-                            transactionDate = SimpleDateFormat(
-                                "dd MMMM yyyy",
-                                Locale.getDefault(),
-                            ).format(
-                                repaymentDate,
-                            ),
-                        )
-                        submitPayment.invoke(request)
-                    } else {
-                        Toast.makeText(
-                            context,
-                            context.resources.getString(R.string.feature_loan_error_not_connected_internet),
-                            Toast.LENGTH_SHORT,
-                        ).show()
-                    }
+//                    if (Network.isOnline(context)) {
+                    val request = LoanRepaymentRequestEntity(
+                        accountNumber = loanAccountNumber,
+                        paymentTypeId = paymentTypeId,
+                        dateFormat = "dd MM yyyy",
+                        locale = "en",
+                        transactionAmount = total,
+                        transactionDate = SimpleDateFormat(
+                            "dd MMMM yyyy",
+                            Locale.getDefault(),
+                        ).format(
+                            repaymentDate,
+                        ),
+                    )
+                    submitPayment.invoke(request)
+//                    } else {
+//                        Toast.makeText(
+//                            context,
+//                            context.resources.getString(R.string.feature_loan_error_not_connected_internet),
+//                            Toast.LENGTH_SHORT,
+//                        ).show()
+//                    }
                 },
             ) {
                 Text(text = stringResource(id = R.string.feature_loan_dialog_action_pay_now))

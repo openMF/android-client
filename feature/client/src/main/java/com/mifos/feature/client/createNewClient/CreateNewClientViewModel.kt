@@ -18,7 +18,8 @@ import com.mifos.room.entities.client.ClientPayloadEntity
 import com.mifos.room.entities.organisation.OfficeEntity
 import com.mifos.room.entities.organisation.StaffEntity
 import com.mifos.room.entities.templates.clients.ClientsTemplateEntity
-import dagger.hilt.android.lifecycle.HiltViewModel
+import io.ktor.client.plugins.ClientRequestException
+import io.ktor.client.plugins.ServerResponseException
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
@@ -26,15 +27,12 @@ import kotlinx.coroutines.launch
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
-import retrofit2.HttpException
 import java.io.File
-import javax.inject.Inject
 
 /**
  * Created by Aditya Gupta on 10/08/23.
  */
-@HiltViewModel
-class CreateNewClientViewModel @Inject constructor(
+class CreateNewClientViewModel(
     private val repository: CreateNewClientRepository,
 //    private val clientTemplateUseCase: ClientTemplateUseCase,
 //    private val getOfficeListUseCase: GetOfficeListUseCase,
@@ -110,8 +108,14 @@ class CreateNewClientViewModel @Inject constructor(
                     _createNewClientUiState.value =
                         CreateNewClientUiState.ShowWaitingForCheckerApproval(0)
                 }
-            } catch (e: HttpException) {
-                val errorMessage = e.response()?.errorBody()?.string().orEmpty()
+            } catch (e: ClientRequestException) {
+                val errorMessage = e.message
+                Log.d("CreateClient", errorMessage)
+                _createNewClientUiState.value = CreateNewClientUiState.ShowStringError(
+                    "HTTP Error: $errorMessage",
+                )
+            } catch (e: ServerResponseException) {
+                val errorMessage = e.message
                 Log.d("CreateClient", errorMessage)
                 _createNewClientUiState.value = CreateNewClientUiState.ShowStringError(
                     "HTTP Error: $errorMessage",

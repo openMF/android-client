@@ -9,10 +9,9 @@
  */
 package com.mifos.core.network
 
-import com.google.gson.GsonBuilder
-import com.mifos.core.common.utils.FlowCallAdapterFactory
+import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import com.mifos.core.common.utils.getInstanceUrl
-import com.mifos.core.datastore.PrefManager
+import com.mifos.core.datastore.UserPreferencesRepository
 import com.mifos.core.network.services.CenterService
 import com.mifos.core.network.services.ChargeService
 import com.mifos.core.network.services.CheckerInboxService
@@ -30,18 +29,18 @@ import com.mifos.core.network.services.SavingsAccountService
 import com.mifos.core.network.services.SearchService
 import com.mifos.core.network.services.StaffService
 import com.mifos.core.network.services.SurveyService
-import org.mifos.core.utils.JsonDateSerializer
+import com.mifos.core.network.utils.JsonDateSerializer
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.modules.SerializersModule
+import okhttp3.MediaType.Companion.toMediaType
 import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.converter.scalars.ScalarsConverterFactory
 import java.util.Date
-import javax.inject.Inject
 
 /**
  * @author fomenkoo
  */
-class BaseApiManager @Inject constructor(private val prefManager: PrefManager) {
-
+class BaseApiManager(private val prefManager: UserPreferencesRepository) {
     init {
         createService(prefManager)
     }
@@ -159,14 +158,28 @@ class BaseApiManager @Inject constructor(private val prefManager: PrefManager) {
             return mRetrofit!!.create(clazz)
         }
 
-        fun createService(prefManager: com.mifos.core.datastore.PrefManager) {
-            val gson = GsonBuilder()
-                .registerTypeAdapter(Date::class.java, JsonDateSerializer()).create()
+        fun createService(prefManager: UserPreferencesRepository) {
+            /**
+             *  JsonDateSerializer is imported from com.mifos.core.network.utils.JsonDateSerializer
+             *  but it required to import from org.mifos.core.utils.JsonDateSerializer in
+             *  fineract-android-sdk library after convert from Gson to kotlinx.json
+             */
+
+            val json = Json {
+                serializersModule = SerializersModule {
+                    contextual(Date::class, JsonDateSerializer)
+                }
+                ignoreUnknownKeys = true
+                isLenient = true
+                prettyPrint = true
+            }
+
+            val instanceUrl = prefManager.getServerConfig.value.getInstanceUrl()
             mRetrofit = Retrofit.Builder()
-                .baseUrl(prefManager.getServerConfig.getInstanceUrl())
+                .baseUrl(instanceUrl)
                 .addConverterFactory(ScalarsConverterFactory.create())
-                .addConverterFactory(GsonConverterFactory.create(gson))
-                .addCallAdapterFactory(FlowCallAdapterFactory.create())
+                .addConverterFactory(json.asConverterFactory("application/json".toMediaType()))
+//                .addCallAdapterFactory(FlowCallAdapterFactory.create())
                 .client(MifosOkHttpClient(prefManager).okHttpClient)
                 .build()
             init()

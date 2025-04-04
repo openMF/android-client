@@ -14,8 +14,10 @@ import com.mifos.room.entities.client.ChargeCalculationTypeEntity
 import com.mifos.room.entities.client.ChargeTimeTypeEntity
 import kotlinx.parcelize.IgnoredOnParcel
 import kotlinx.parcelize.Parcelize
+import kotlinx.serialization.Serializable
 
 @Parcelize
+@Serializable
 data class Charge(
     val id: Int? = null,
 

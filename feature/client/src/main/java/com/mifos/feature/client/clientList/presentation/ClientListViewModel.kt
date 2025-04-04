@@ -12,23 +12,21 @@ package com.mifos.feature.client.clientList.presentation
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mifos.core.data.repository.ClientListRepository
-import com.mifos.core.datastore.PrefManager
-import dagger.hilt.android.lifecycle.HiltViewModel
+import com.mifos.core.datastore.UserPreferencesRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
 /**
  * Created by Aditya Gupta on 21/02/24.
  */
 
-@HiltViewModel
-class ClientListViewModel @Inject constructor(
+class ClientListViewModel(
     private val repository: ClientListRepository,
-    private val prefManager: PrefManager,
+    private val prefManager: UserPreferencesRepository,
 ) : ViewModel() {
 
     private val _clientListUiState = MutableStateFlow<ClientListUiState>(ClientListUiState.Empty)
@@ -49,10 +47,13 @@ class ClientListViewModel @Inject constructor(
     }
 
     fun getClientList() {
-        if (prefManager.userStatus) {
-            loadClientsFromDb()
-        } else {
-            loadClientsFromApi()
+        viewModelScope.launch {
+            val userStatus = prefManager.userInfo.first().userStatus
+            if (userStatus) {
+                loadClientsFromDb()
+            } else {
+                loadClientsFromApi()
+            }
         }
     }
 

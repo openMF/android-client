@@ -38,7 +38,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mifos.core.common.utils.DateHelper
 import com.mifos.core.designsystem.component.MifosCircularProgress
@@ -48,6 +47,7 @@ import com.mifos.core.model.objects.account.loan.Period
 import com.mifos.core.model.objects.account.loan.RepaymentSchedule
 import com.mifos.feature.loan.R
 import com.mifos.room.entities.accounts.loans.LoanWithAssociationsEntity
+import org.koin.androidx.compose.koinViewModel
 
 /**
  * Created by Pronay Sarker on 03/07/2024 (9:18 AM)
@@ -55,7 +55,7 @@ import com.mifos.room.entities.accounts.loans.LoanWithAssociationsEntity
 
 @Composable
 internal fun LoanRepaymentScheduleScreen(
-    viewModel: LoanRepaymentScheduleViewModel = hiltViewModel(),
+    viewModel: LoanRepaymentScheduleViewModel = koinViewModel(),
     navigateBack: () -> Unit,
 ) {
     val uiState by viewModel.loanRepaymentScheduleUiState.collectAsStateWithLifecycle()

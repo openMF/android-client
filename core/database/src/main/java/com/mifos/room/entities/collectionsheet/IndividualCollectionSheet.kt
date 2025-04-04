@@ -13,11 +13,13 @@ import android.os.Parcelable
 import com.mifos.core.model.objects.account.loan.PaymentTypeOptions
 import kotlinx.parcelize.IgnoredOnParcel
 import kotlinx.parcelize.Parcelize
+import kotlinx.serialization.Serializable
 
 /**
  * Created by Tarun on 06-07-2017.
  */
 @Parcelize
+@Serializable
 data class IndividualCollectionSheet(
     var dueDate: IntArray? = null,
 

@@ -59,15 +59,14 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.core.content.ContextCompat
 import androidx.core.content.PermissionChecker
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.mifos.core.common.utils.FileUtils
 import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosOutlinedTextField
 import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.model.objects.noncoreobjects.Document
 import com.mifos.core.network.GenericResponse
 import com.mifos.feature.document.R
+import org.koin.androidx.compose.koinViewModel
 import java.io.File
 
 @Composable
@@ -77,7 +76,7 @@ internal fun DocumentDialogScreen(
     closeDialog: () -> Unit,
     entityType: String,
     entityId: Int,
-    viewModel: DocumentDialogViewModel = hiltViewModel(),
+    viewModel: DocumentDialogViewModel = koinViewModel(),
     closeScreen: () -> Unit,
 ) {
     val context = LocalContext.current
@@ -94,11 +93,12 @@ internal fun DocumentDialogScreen(
     var fileChosen by rememberSaveable { mutableStateOf<File?>(null) }
     val launcher = rememberLauncherForActivityResult(ActivityResultContracts.PickVisualMedia()) {
         it?.let { uri ->
-            val filePath = FileUtils.getPathReal(context, uri)
-            filePath?.let { path ->
-                fileChosen = File(path)
-                fileName = fileChosen!!.name
-            }
+            // todo while migrating to cmp
+//            val filePath = FileUtils.getPathReal(context, uri)
+//            filePath?.let { path ->
+//                fileChosen = File(path)
+//                fileName = fileChosen!!.name
+//            }
         }
     }
     val permissionsLauncher = rememberLauncherForActivityResult(

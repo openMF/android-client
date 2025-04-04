@@ -9,9 +9,12 @@
  */
 package com.mifos.core.model.objects.organisations
 
+import kotlinx.serialization.Serializable
+
 /**
  * Created by nellyk on 2/21/2016.
  */
+@Serializable
 data class LoanPurpose(
     var id: Int? = null,
 

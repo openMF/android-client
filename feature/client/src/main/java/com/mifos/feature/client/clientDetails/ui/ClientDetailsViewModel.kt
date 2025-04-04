@@ -24,20 +24,17 @@ import com.mifos.core.network.utils.ImageLoaderUtils
 import com.mifos.room.entities.accounts.loans.LoanAccountEntity
 import com.mifos.room.entities.accounts.savings.SavingsAccountEntity
 import com.mifos.room.entities.client.ClientEntity
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import java.io.File
 import java.io.FileOutputStream
-import javax.inject.Inject
 
 /**
  * Created by Aditya Gupta on 06/08/23.
  */
-@HiltViewModel
-class ClientDetailsViewModel @Inject constructor(
+class ClientDetailsViewModel(
     private val uploadClientImageUseCase: UploadClientImageUseCase,
     private val getClientDetailsUseCase: GetClientDetailsUseCase,
     private val imageLoaderUtils: ImageLoaderUtils,

@@ -15,27 +15,23 @@ import androidx.compose.runtime.snapshotFlow
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mifos.core.common.utils.ServerConfig
-import com.mifos.core.datastore.PrefManager
+import com.mifos.core.datastore.UserPreferencesRepository
 import com.mifos.core.domain.useCases.ServerConfigValidatorUseCase
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
-@HiltViewModel
-class UpdateServerConfigViewModel @Inject constructor(
-    private val prefManager: PrefManager,
+class UpdateServerConfigViewModel(
+    private val prefManager: UserPreferencesRepository,
     private val validator: ServerConfigValidatorUseCase,
 ) : ViewModel() {
 
-    private val serverConfig = prefManager.getServerConfig
-
-    private val _state = mutableStateOf(serverConfig)
-    val state: State<ServerConfig> get() = _state
+    private val serverConfigFlow = prefManager.getServerConfig
+    private val _state = mutableStateOf(serverConfigFlow.value)
+    val state: State<ServerConfig?> get() = _state
 
     private val _result = MutableSharedFlow<Boolean>()
     val result = _result.asSharedFlow()

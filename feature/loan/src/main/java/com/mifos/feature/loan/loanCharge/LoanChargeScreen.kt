@@ -52,7 +52,6 @@ import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosScaffold
@@ -62,11 +61,12 @@ import com.mifos.core.ui.components.MifosEmptyUi
 import com.mifos.feature.loan.R
 import com.mifos.feature.loan.loanChargeDialog.LoanChargeDialogScreen
 import com.mifos.room.entities.client.ChargesEntity
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 internal fun LoanChargeScreen(
     onBackPressed: () -> Unit,
-    viewModel: LoanChargeViewModel = hiltViewModel(),
+    viewModel: LoanChargeViewModel = koinViewModel(),
 ) {
     val state by viewModel.loanChargeUiState.collectAsStateWithLifecycle()
     val refreshState by viewModel.isRefreshing.collectAsStateWithLifecycle()

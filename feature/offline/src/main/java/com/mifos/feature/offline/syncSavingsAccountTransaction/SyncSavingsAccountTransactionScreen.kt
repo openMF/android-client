@@ -11,7 +11,7 @@ package com.mifos.feature.offline.syncSavingsAccountTransaction
 
 import android.Manifest
 import android.content.Context
-import android.widget.Toast
+import android.util.Log
 import androidx.annotation.RequiresPermission
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -53,9 +53,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.mifos.core.common.utils.Network
 import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.icon.MifosIcons
@@ -63,13 +61,15 @@ import com.mifos.core.ui.components.MifosEmptyUi
 import com.mifos.feature.offline.R
 import com.mifos.room.entities.PaymentTypeOptionEntity
 import com.mifos.room.entities.accounts.savings.SavingsAccountTransactionRequestEntity
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 internal fun SyncSavingsAccountTransactionScreenRoute(
-    viewModel: SyncSavingsAccountTransactionViewModel = hiltViewModel(),
+    viewModel: SyncSavingsAccountTransactionViewModel = koinViewModel(),
     onBackPressed: () -> Unit,
 ) {
     val uiState by viewModel.syncSavingsAccountTransactionUiState.collectAsStateWithLifecycle()
+    val userStatus by viewModel.userStatus.collectAsStateWithLifecycle()
     val refreshState by viewModel.isRefreshing.collectAsStateWithLifecycle()
 
     LaunchedEffect(key1 = Unit) {
@@ -87,7 +87,7 @@ internal fun SyncSavingsAccountTransactionScreenRoute(
         syncSavingsAccountTransactions = {
             viewModel.syncSavingsAccountTransactions()
         },
-        getUserStatus = { viewModel.getUserStatus() },
+        userStatus = userStatus,
     )
 }
 
@@ -99,8 +99,8 @@ internal fun SyncSavingsAccountTransactionScreen(
     refreshState: Boolean,
     onRefresh: () -> Unit,
     syncSavingsAccountTransactions: () -> Unit,
+    userStatus: Boolean,
     modifier: Modifier = Modifier,
-    getUserStatus: () -> Boolean,
 ) {
     val snackbarHostState by remember { mutableStateOf(SnackbarHostState()) }
     val context = LocalContext.current
@@ -116,7 +116,7 @@ internal fun SyncSavingsAccountTransactionScreen(
         actions = {
             IconButton(
                 onClick = {
-                    when (getUserStatus()) {
+                    when (userStatus) {
                         false -> checkNetworkConnectionAndSync(
                             context,
                             syncSavingsAccountTransactions,
@@ -285,15 +285,16 @@ private fun checkNetworkConnectionAndSync(
     context: Context,
     syncSavingsAccountTransactions: () -> Unit,
 ) {
-    if (Network.isOnline(context)) {
-        syncSavingsAccountTransactions()
-    } else {
-        Toast.makeText(
-            context,
-            context.resources.getString(R.string.feature_offline_error_not_connected_internet),
-            Toast.LENGTH_SHORT,
-        ).show()
-    }
+    Log.d("C", context.packageName)
+//    if (Network.isOnline(context)) {
+    syncSavingsAccountTransactions()
+//    } else {
+//        Toast.makeText(
+//            context,
+//            context.resources.getString(R.string.feature_offline_error_not_connected_internet),
+//            Toast.LENGTH_SHORT,
+//        ).show()
+//    }
 }
 
 class SyncSavingsAccountTransactionUiStateProvider :
@@ -321,7 +322,7 @@ private fun SyncSavingsAccountTransactionScreenPreview(
         refreshState = false,
         onRefresh = {},
         syncSavingsAccountTransactions = {},
-        getUserStatus = { true },
+        userStatus = true,
     )
 }
 

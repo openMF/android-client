@@ -13,7 +13,6 @@ import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.mifos.core.data.repository.GroupsListRepository
 import com.mifos.room.entities.group.GroupEntity
-import retrofit2.HttpException
 import java.io.IOException
 
 class GroupsListPagingDataSource(
@@ -39,8 +38,6 @@ class GroupsListPagingDataSource(
                 prevKey = if (currentOffset <= 0) null else currentOffset - limit,
                 nextKey = if (groups.isEmpty()) null else currentOffset + limit,
             )
-        } catch (e: HttpException) {
-            LoadResult.Error(e)
         } catch (e: IOException) {
             LoadResult.Error(e)
         } catch (e: Exception) {

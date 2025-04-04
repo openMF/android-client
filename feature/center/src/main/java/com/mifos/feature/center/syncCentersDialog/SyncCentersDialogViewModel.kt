@@ -13,11 +13,8 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mifos.core.common.utils.Constants
-import com.mifos.core.common.utils.NetworkUtilsWrapper
 import com.mifos.core.data.repository.SyncCentersDialogRepository
-import com.mifos.core.datastore.PrefManager
-import com.mifos.core.designsystem.icon.MifosIcons
-import com.mifos.feature.center.R
+import com.mifos.core.datastore.UserPreferencesRepository
 import com.mifos.room.entities.accounts.loans.LoanAccountEntity
 import com.mifos.room.entities.accounts.savings.SavingsAccountEntity
 import com.mifos.room.entities.client.ClientEntity
@@ -25,27 +22,26 @@ import com.mifos.room.entities.group.CenterEntity
 import com.mifos.room.entities.group.GroupEntity
 import com.mifos.room.entities.zipmodels.LoanAndLoanRepayment
 import com.mifos.room.entities.zipmodels.SavingsAccountAndTransactionTemplate
-import dagger.hilt.android.lifecycle.HiltViewModel
+import io.ktor.client.plugins.ClientRequestException
+import io.ktor.client.plugins.ServerResponseException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import retrofit2.HttpException
 import rx.Observable
-import javax.inject.Inject
 
 /**
  * Created by Aditya Gupta on 16/08/23.
  */
-@HiltViewModel
-class SyncCentersDialogViewModel @Inject constructor(
+class SyncCentersDialogViewModel(
     private val repository: SyncCentersDialogRepository,
-    private val networkUtilsWrapper: NetworkUtilsWrapper,
-    private val prefManager: PrefManager,
+    private val prefManager: UserPreferencesRepository,
+//    private val networkUtilsWrapper: NetworkUtilsWrapper,
 ) : ViewModel() {
 
     private val _syncCentersDialogUiState =
@@ -61,6 +57,7 @@ class SyncCentersDialogViewModel @Inject constructor(
     private var mSavingsAccountList: List<SavingsAccountEntity> = emptyList()
     private var mMemberLoanAccountsList: List<LoanAccountEntity> = emptyList()
     private var mCenterList: List<CenterEntity> = emptyList()
+
     private val mFailedSyncCenter: MutableList<CenterEntity> = mutableListOf()
     private var mGroups: List<GroupEntity> = emptyList()
     private var mClients: List<ClientEntity> = emptyList()
@@ -80,9 +77,12 @@ class SyncCentersDialogViewModel @Inject constructor(
     }
 
     fun syncCenter() {
-        if (prefManager.userStatus == Constants.USER_ONLINE) {
-            checkNetworkConnection {
-                syncCenterAndUpdateUI()
+        viewModelScope.launch {
+            val userStatus = prefManager.userInfo.first().userStatus
+            if (userStatus == Constants.USER_ONLINE) {
+                checkNetworkConnection {
+                    syncCenterAndUpdateUI()
+                }
             }
         }
     }
@@ -121,7 +121,7 @@ class SyncCentersDialogViewModel @Inject constructor(
      */
     private fun onAccountSyncFailed(e: Throwable) {
         try {
-            if (e is HttpException) {
+            if (e is ClientRequestException || e is ServerResponseException) {
                 val singleSyncCenterMax = maxSingleSyncCenterProgressBar
                 _syncCenterData.update { it.copy(singleSyncCount = singleSyncCenterMax) }
                 mFailedSyncCenter.add(mCenterList[mCenterSyncIndex])
@@ -754,14 +754,16 @@ class SyncCentersDialogViewModel @Inject constructor(
     private fun checkNetworkConnection(
         taskWhenOnline: () -> Unit,
     ) {
-        if (networkUtilsWrapper.isNetworkConnected()) {
-            taskWhenOnline.invoke()
-        } else {
-            _syncCentersDialogUiState.value = SyncCentersDialogUiState.Error(
-                messageResId = R.string.feature_center_error_not_connected_internet,
-                imageVector = MifosIcons.WifiOff,
-            )
-        }
+// TODO: Commented out since we dont have a network connection checker now.
+
+//        if (networkUtilsWrapper.isNetworkConnected()) {
+        taskWhenOnline.invoke()
+//        } else {
+//            _syncCentersDialogUiState.value = SyncCentersDialogUiState.Error(
+//                messageResId = R.string.feature_center_error_not_connected_internet,
+//                imageVector = MifosIcons.WifiOff,
+//            )
+//        }
     }
 
     fun getActiveLoanAccounts(loanAccountList: List<LoanAccountEntity>?): List<LoanAccountEntity> {
