@@ -38,14 +38,13 @@ class LoginViewModel(
 //    private val context: Context,
     private val usernameValidationUseCase: UsernameValidationUseCase,
     private val passwordValidationUseCase: PasswordValidationUseCase,
-//    private val baseApiManager: BaseApiManager,
     private val loginUseCase: LoginUseCase,
 ) : ViewModel() {
 
     private val _loginUiState = MutableStateFlow<LoginUiState>(LoginUiState.Empty)
     val loginUiState = _loginUiState.asStateFlow()
 
-    val passcode: StateFlow<String?> = prefManager.settingsInfo
+    private val passcode: StateFlow<String?> = prefManager.settingsInfo
         .map { it.passcode }
         .stateIn(
             scope = viewModelScope,
