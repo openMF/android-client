@@ -18,11 +18,14 @@ import com.mifos.core.domain.useCases.LoginUseCase
 import com.mifos.core.domain.useCases.PasswordValidationUseCase
 import com.mifos.core.domain.useCases.UsernameValidationUseCase
 import com.mifos.core.model.objects.users.User
-import com.mifos.core.network.BaseApiManager
 import com.mifos.feature.auth.R
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import org.openapitools.client.models.PostAuthenticationResponse
 
@@ -41,6 +44,14 @@ class LoginViewModel(
 
     private val _loginUiState = MutableStateFlow<LoginUiState>(LoginUiState.Empty)
     val loginUiState = _loginUiState.asStateFlow()
+
+    val passcode: StateFlow<String?> = prefManager.settingsInfo
+        .map { it.passcode }
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000),
+            initialValue = null,
+        )
 
     fun validateUserInputs(username: String, password: String) {
         val usernameValidationResult = usernameValidationUseCase(username)
@@ -127,10 +138,10 @@ class LoginViewModel(
             )
         }
 
-//        if (prefManager.getPassCodeStatus()) {
-//            _loginUiState.value = LoginUiState.HomeActivityIntent
-//        } else {
-//            _loginUiState.value = LoginUiState.PassCodeActivityIntent
-//        }
+        if (passcode.value != null) {
+            _loginUiState.value = LoginUiState.HomeActivityIntent
+        } else {
+            _loginUiState.value = LoginUiState.PassCodeActivityIntent
+        }
     }
 }
