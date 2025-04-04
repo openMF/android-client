@@ -113,15 +113,6 @@ class LoginViewModel(
         username: String,
         password: String,
     ) {
-        // Updating Services
-//        baseApiManager.createService(
-//            username = username,
-//            password = password,
-//            baseUrl = prefManager.getServerConfig.value.getInstanceUrl().dropLast(3),
-//            tenant = prefManager.getServerConfig.value.tenant,
-//            secured = false,
-//        )
-
         viewModelScope.launch {
             prefManager.updateUser(
                 User(
