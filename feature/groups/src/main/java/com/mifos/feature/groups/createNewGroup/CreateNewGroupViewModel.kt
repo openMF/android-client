@@ -12,11 +12,14 @@ package com.mifos.feature.groups.createNewGroup
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mifos.core.data.repository.CreateNewGroupRepository
-import com.mifos.core.datastore.PrefManager
+import com.mifos.core.datastore.UserPreferencesRepository
 import com.mifos.room.entities.group.GroupPayloadEntity
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 /**
@@ -26,8 +29,16 @@ class CreateNewGroupViewModel(
 //    private val getGroupOfficesUseCase: GetGroupOfficesUseCase,
 //    private val createNewGroupUseCase: CreateNewGroupUseCase,
     private val repository: CreateNewGroupRepository,
-    private val prefManager: PrefManager,
+    private val prefManager: UserPreferencesRepository,
 ) : ViewModel() {
+
+    val userStatus: StateFlow<Boolean> = prefManager.userInfo
+        .map { it.userStatus }
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000),
+            initialValue = false,
+        )
 
     private val _createNewGroupUiState = MutableStateFlow<CreateNewGroupUiState>(
         CreateNewGroupUiState.ShowProgressbar,
@@ -35,10 +46,8 @@ class CreateNewGroupViewModel(
     val createNewGroupUiState: StateFlow<CreateNewGroupUiState>
         get() = _createNewGroupUiState
 
-    fun getUserStatus() = prefManager.userStatus
-
     fun getResponse(): String {
-        return when (prefManager.userStatus) {
+        return when (userStatus.value) {
             false -> "created successfully"
             true -> "Saved into DB Successfully"
         }

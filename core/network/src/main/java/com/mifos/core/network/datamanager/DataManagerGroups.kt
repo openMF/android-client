@@ -10,6 +10,7 @@
 package com.mifos.core.network.datamanager
 
 import com.mifos.core.common.utils.Page
+import com.mifos.core.datastore.UserPreferencesRepository
 import com.mifos.core.model.objects.clients.ActivatePayload
 import com.mifos.core.model.objects.responses.SaveResponse
 import com.mifos.core.network.BaseApiManager
@@ -22,6 +23,8 @@ import com.mifos.room.entities.group.GroupWithAssociations
 import com.mifos.room.helper.ClientDaoHelper
 import com.mifos.room.helper.GroupsDaoHelper
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flow
 import rx.Observable
 
@@ -37,7 +40,7 @@ class DataManagerGroups(
 //    private val mDatabaseHelperClient: DatabaseHelperClient,
     private val databaseHelperClient: ClientDaoHelper,
     private val baseApiManager: org.mifos.core.apimanager.BaseApiManager,
-    private val prefManager: com.mifos.core.datastore.PrefManager,
+    private val prefManager: UserPreferencesRepository,
 ) {
     /**
      * This Method sending the Request to REST API if UserStatus is 0 and
@@ -56,7 +59,7 @@ class DataManagerGroups(
      * @return Groups List page from offset to max Limit
      */
     suspend fun getGroups(paged: Boolean, offset: Int, limit: Int): Page<GroupEntity> {
-        return when (prefManager.userStatus) {
+        return when (prefManager.userInfo.first().userStatus) {
             false -> baseApiManager.getGroupApi().retrieveAll24(
                 null,
                 null,
@@ -128,13 +131,15 @@ class DataManagerGroups(
      * @return Group
      */
     fun getGroup(groupId: Int): Flow<GroupEntity> {
-        return when (prefManager.userStatus) {
-            false -> flow { emit(mBaseApiManager.groupApi.getGroup(groupId)) }
-            true ->
-                /**
-                 * Return Groups from DatabaseHelperGroups.
-                 */
-                databaseHelperGroups.getGroup(groupId)
+        return prefManager.userInfo.flatMapLatest { userData ->
+            when (userData.userStatus) {
+                false -> flow { emit(mBaseApiManager.groupApi.getGroup(groupId)) }
+                true ->
+                    /**
+                     * Return Groups from DatabaseHelperGroups.
+                     */
+                    databaseHelperGroups.getGroup(groupId)
+            }
         }
     }
 
@@ -154,13 +159,15 @@ class DataManagerGroups(
      * @return GroupWithAssociations
      */
     fun getGroupWithAssociations(groupId: Int): Flow<GroupWithAssociations> {
-        return when (prefManager.userStatus) {
-            false -> mBaseApiManager.groupApi.getGroupWithAssociations(groupId)
-            true ->
-                /**
-                 * Return Groups from DatabaseHelperGroups.
-                 */
-                databaseHelperClient.getGroupAssociateClients(groupId)
+        return prefManager.userInfo.flatMapLatest { userData ->
+            when (userData.userStatus) {
+                false -> mBaseApiManager.groupApi.getGroupWithAssociations(groupId)
+                true ->
+                    /**
+                     * Return Groups from DatabaseHelperGroups.
+                     */
+                    databaseHelperClient.getGroupAssociateClients(groupId)
+            }
         }
     }
 
@@ -172,13 +179,15 @@ class DataManagerGroups(
      * @return GroupAccounts
      */
     fun getGroupAccounts(groupId: Int): Flow<GroupAccounts> {
-        return when (prefManager.userStatus) {
-            false -> flow { emit(mBaseApiManager.groupApi.getGroupAccounts(groupId)) }
-            true ->
-                /**
-                 * Return Groups from DatabaseHelperGroups.
-                 */
-                databaseHelperGroups.readGroupAccounts(groupId)
+        return prefManager.userInfo.flatMapLatest { userdata ->
+            when (userdata.userStatus) {
+                false -> flow { emit(mBaseApiManager.groupApi.getGroupAccounts(groupId)) }
+                true ->
+                    /**
+                     * Return Groups from DatabaseHelperGroups.
+                     */
+                    databaseHelperGroups.readGroupAccounts(groupId)
+            }
         }
     }
 
@@ -203,7 +212,7 @@ class DataManagerGroups(
      * @return Group
      */
     suspend fun createGroup(groupPayload: GroupPayloadEntity): SaveResponse {
-        return when (prefManager.userStatus) {
+        return when (prefManager.userInfo.first().userStatus) {
             false -> mBaseApiManager.groupApi.createGroup(groupPayload)
 
             true ->

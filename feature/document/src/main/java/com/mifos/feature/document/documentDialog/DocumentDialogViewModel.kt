@@ -12,12 +12,17 @@ package com.mifos.feature.document.documentDialog
 import androidx.lifecycle.ViewModel
 import com.mifos.core.data.repository.DocumentDialogRepository
 import com.mifos.core.network.GenericResponse
+import io.ktor.client.plugins.ClientRequestException
+import io.ktor.client.plugins.ServerResponseException
+import io.ktor.util.rootCause
+import io.ktor.utils.io.InternalAPI
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.io.IOException
+import kotlinx.serialization.SerializationException
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
-import retrofit2.HttpException
 import rx.Subscriber
 import rx.android.schedulers.AndroidSchedulers
 import rx.plugins.RxJavaPlugins
@@ -38,6 +43,7 @@ class DocumentDialogViewModel(
     val documentDialogUiState: StateFlow<DocumentDialogUiState>
         get() = _documentDialogUiState
 
+    @OptIn(InternalAPI::class)
     fun createDocument(type: String?, id: Int, name: String?, desc: String?, file: File) {
         _documentDialogUiState.value = DocumentDialogUiState.ShowProgressbar
         repository
@@ -50,18 +56,20 @@ class DocumentDialogViewModel(
                     }
 
                     override fun onError(e: Throwable) {
-                        val errorMessage: String?
                         try {
-                            if (e is HttpException) {
-                                errorMessage = e.response()?.errorBody()?.string()
-                                _documentDialogUiState.value = errorMessage?.let {
-                                    DocumentDialogUiState.ShowUploadError(
-                                        it,
-                                    )
-                                }!!
-                            } else {
-                                _documentDialogUiState.value =
-                                    DocumentDialogUiState.ShowError(e.message.toString())
+                            when (e) {
+                                is ClientRequestException, is ServerResponseException -> {
+                                    _documentDialogUiState.value = DocumentDialogUiState.ShowUploadError(e.message ?: "Server error occurred")
+                                }
+                                is IOException -> {
+                                    _documentDialogUiState.value = DocumentDialogUiState.ShowError(e.rootCause?.message ?: "Network error occurred")
+                                }
+                                is SerializationException -> {
+                                    _documentDialogUiState.value = DocumentDialogUiState.ShowError("Data parsing error")
+                                }
+                                else -> {
+                                    _documentDialogUiState.value = DocumentDialogUiState.ShowError(e.rootCause?.message ?: "Unknown error")
+                                }
                             }
                         } catch (throwable: Throwable) {
                             RxJavaPlugins.getInstance().errorHandler

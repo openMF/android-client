@@ -14,11 +14,12 @@ import androidx.lifecycle.viewModelScope
 import com.mifos.room.entities.survey.QuestionDatasEntity
 import com.mifos.room.entities.survey.ResponseDatasEntity
 import com.mifos.room.entities.survey.SurveyEntity
+import io.ktor.client.plugins.ClientRequestException
+import io.ktor.client.plugins.ServerResponseException
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
-import retrofit2.HttpException
 import rx.Observable
 
 /**
@@ -39,6 +40,7 @@ class SyncSurveysDialogViewModel(
         get() = _syncSurveysDialogUiState
 
     private var mSurveyList: List<SurveyEntity> = ArrayList()
+
     private val mFailedSyncSurvey: MutableList<SurveyEntity> = ArrayList()
     private var mQuestionDatasList: List<QuestionDatasEntity> = ArrayList()
     private var mResponseDatasList: List<ResponseDatasEntity> = ArrayList()
@@ -170,7 +172,7 @@ class SyncSurveysDialogViewModel(
      */
     private fun onAccountSyncFailed(e: Throwable) {
         try {
-            if (e is HttpException) {
+            if (e is ClientRequestException || e is ServerResponseException) {
                 maxSingleSyncSurveyProgressBar
                 mFailedSyncSurvey.add(mSurveyList[mSurveySyncIndex])
                 mSurveySyncIndex += 1

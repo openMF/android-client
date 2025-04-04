@@ -12,16 +12,17 @@ package com.mifos.feature.center.centerList.ui
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mifos.core.data.repository.CenterListRepository
-import com.mifos.core.datastore.PrefManager
+import com.mifos.core.datastore.UserPreferencesRepository
 import com.mifos.feature.center.R
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
 class CenterListViewModel(
-    private val prefManager: PrefManager,
+    private val prefManager: UserPreferencesRepository,
     private val repository: CenterListRepository,
 ) : ViewModel() {
 
@@ -39,10 +40,13 @@ class CenterListViewModel(
     val centerListUiState = _centerListUiState.asStateFlow()
 
     fun getCenterList() {
-        if (prefManager.userStatus) {
-            loadCentersFromDb()
-        } else {
-            loadCentersFromApi()
+        viewModelScope.launch {
+            val userStatus = prefManager.userInfo.first().userStatus
+            if (userStatus) {
+                loadCentersFromDb()
+            } else {
+                loadCentersFromApi()
+            }
         }
     }
 

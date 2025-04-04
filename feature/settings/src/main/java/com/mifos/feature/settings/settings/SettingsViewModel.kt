@@ -9,62 +9,61 @@
  */
 package com.mifos.feature.settings.settings
 
-import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mifos.core.common.enums.MifosAppLanguage
-import com.mifos.core.common.utils.Constants
-import com.mifos.core.datastore.PrefManager
+import com.mifos.core.datastore.UserPreferencesRepository
+import com.mifos.core.datastore.model.AppTheme
 import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.feature.settings.R
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 
 class SettingsViewModel(
-    private val prefManager: PrefManager,
+    private val prefManager: UserPreferencesRepository,
 ) : ViewModel() {
 
-    val tenant: StateFlow<String?> = prefManager.getStringValue(Constants.TENANT)
-        .stateIn(viewModelScope, SharingStarted.Eagerly, null)
-
-    val baseUrl: StateFlow<String?> = prefManager.getStringValue(Constants.BASE_URL)
-        .stateIn(viewModelScope, SharingStarted.Eagerly, null)
-
-    val passcode: StateFlow<String?> = prefManager.getStringValue(Constants.PASSCODE)
-        .stateIn(viewModelScope, SharingStarted.Eagerly, null)
-
-    val theme: StateFlow<String?> = prefManager.getStringValue(Constants.THEME)
-        .stateIn(viewModelScope, SharingStarted.Eagerly, "System Theme")
-
-    val language: StateFlow<String?> = prefManager.getStringValue(Constants.LANGUAGE)
-        .stateIn(viewModelScope, SharingStarted.Eagerly, "System Language")
+    val uiState: StateFlow<SettingsUiState> = prefManager
+        .settingsInfo
+        .map { settings ->
+            SettingsUiState(
+                tenant = settings.tenant,
+                baseUrl = settings.baseUrl,
+                passcode = settings.passcode ?: "",
+                theme = settings.appTheme,
+                language = settings.language,
+            )
+        }
+        .stateIn(viewModelScope, SharingStarted.Eagerly, SettingsUiState.DEFAULT)
 
     fun updateTheme(theme: AppTheme) {
-        prefManager.setStringValue(Constants.THEME, theme.themeName)
-        AppCompatDelegate.setDefaultNightMode(
-            when (theme) {
-                AppTheme.DARK -> AppCompatDelegate.MODE_NIGHT_YES
-                AppTheme.LIGHT -> AppCompatDelegate.MODE_NIGHT_NO
-                else -> AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
-            },
-        )
+        viewModelScope.launch {
+            prefManager.updateTheme(theme)
+        }
     }
 
     fun updateLanguage(language: String): Boolean {
-        prefManager.setStringValue(Constants.LANGUAGE, language)
-        val isSystemLanguage = (language == MifosAppLanguage.SYSTEM_LANGUAGE.code)
-        return isSystemLanguage
+        return (language == MifosAppLanguage.SYSTEM_LANGUAGE.code)
     }
 
     fun tryUpdatingEndpoint(selectedBaseUrl: String, selectedTenant: String): Boolean {
-        val isEndpointUpdated = !(baseUrl.value == selectedBaseUrl && tenant.value == selectedTenant)
+        val isEndpointUpdated = !(uiState.value.baseUrl == selectedBaseUrl && uiState.value.tenant == selectedTenant)
         if (isEndpointUpdated) {
-            prefManager.setStringValue(Constants.BASE_URL, selectedBaseUrl)
-            prefManager.setStringValue(Constants.TENANT, selectedTenant)
+            viewModelScope.launch {
+                prefManager.updateSettings(
+                    prefManager.settingsInfo.first().copy(
+                        baseUrl = selectedBaseUrl,
+                        tenant = selectedTenant,
+                    ),
+                )
+            }
         }
-        return !(baseUrl.equals(selectedBaseUrl) && tenant.equals(selectedTenant))
+        return !(uiState.value.baseUrl == selectedBaseUrl && uiState.value.tenant == selectedTenant)
     }
 }
 
@@ -105,10 +104,18 @@ enum class SettingsCardItem(
     ),
 }
 
-enum class AppTheme(
-    val themeName: String,
+data class SettingsUiState(
+    val tenant: String,
+    val baseUrl: String,
+    val passcode: String,
+    val theme: AppTheme = AppTheme.SYSTEM,
+    val language: MifosAppLanguage = MifosAppLanguage.SYSTEM_LANGUAGE,
 ) {
-    SYSTEM(themeName = "System Theme"),
-    LIGHT(themeName = "Light Theme"),
-    DARK(themeName = "Dark Theme"),
+    companion object {
+        val DEFAULT = SettingsUiState(
+            tenant = "",
+            baseUrl = "",
+            passcode = "",
+        )
+    }
 }

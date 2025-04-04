@@ -16,7 +16,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mifos.core.common.utils.Constants
 import com.mifos.core.data.repository.DataTableListRepository
-import com.mifos.core.datastore.PrefManager
+import com.mifos.core.datastore.UserPreferencesRepository
 import com.mifos.core.model.objects.payloads.GroupLoanPayload
 import com.mifos.core.network.model.LoansPayload
 import com.mifos.feature.data_table.R
@@ -25,7 +25,10 @@ import com.mifos.room.entities.client.ClientPayloadEntity
 import com.mifos.room.entities.noncore.DataTableEntity
 import com.mifos.room.entities.noncore.DataTablePayload
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.modules.SerializersModule
@@ -39,9 +42,17 @@ import rx.schedulers.Schedulers
  */
 class DataTableListViewModel(
     private val repository: DataTableListRepository,
-    private val prefManager: PrefManager,
+    private val prefManager: UserPreferencesRepository,
     savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
+
+    val userStatus: StateFlow<Boolean> = prefManager.userInfo
+        .map { it.userStatus }
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000),
+            initialValue = false,
+        )
 
     private val json = Json {
         serializersModule = SerializersModule {
@@ -74,10 +85,6 @@ class DataTableListViewModel(
     private var groupLoanPayload: GroupLoanPayload? = null
     private var clientPayload: ClientPayloadEntity? = null
     private var formWidgetsList: MutableList<List<FormWidgetDTO>> = ArrayList()
-
-    fun getUserStatus(): Boolean {
-        return prefManager.userStatus
-    }
 
     fun initArgs(
         dataTables: List<DataTableEntity>,

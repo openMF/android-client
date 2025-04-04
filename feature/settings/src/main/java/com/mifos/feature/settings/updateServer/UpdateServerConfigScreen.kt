@@ -80,7 +80,7 @@ internal fun UpdateServerConfigScreenRoute(
 
     UpdateServerConfigScreenContent(
         modifier = modifier,
-        serverConfig = viewModel.state.value,
+        serverConfig = viewModel.state.value!!,
         protocolError = protocolError,
         apiPathError = apiPathError,
         endPointError = endPointError,

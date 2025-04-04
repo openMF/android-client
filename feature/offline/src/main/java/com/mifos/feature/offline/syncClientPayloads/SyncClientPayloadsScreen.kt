@@ -64,6 +64,7 @@ internal fun SyncClientPayloadsScreenRoute(
     onBackPressed: () -> Unit,
 ) {
     val uiState by viewModel.syncClientPayloadsUiState.collectAsStateWithLifecycle()
+    val userStatus by viewModel.userStatus.collectAsStateWithLifecycle()
     val refreshState by viewModel.isRefreshing.collectAsStateWithLifecycle()
 
     LaunchedEffect(key1 = Unit) {
@@ -80,7 +81,7 @@ internal fun SyncClientPayloadsScreenRoute(
         syncClientPayloads = {
             viewModel.syncClientPayload()
         },
-        userStatus = viewModel.getUserStatus(),
+        userStatus = userStatus,
     )
 }
 

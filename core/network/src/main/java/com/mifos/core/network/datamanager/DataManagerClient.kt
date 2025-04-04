@@ -10,6 +10,7 @@
 package com.mifos.core.network.datamanager
 
 import com.mifos.core.common.utils.Page
+import com.mifos.core.datastore.UserPreferencesRepository
 import com.mifos.core.model.objects.clients.ActivatePayload
 import com.mifos.core.model.objects.noncoreobjects.Identifier
 import com.mifos.core.model.objects.noncoreobjects.IdentifierCreationResponse
@@ -27,6 +28,8 @@ import com.mifos.room.entities.client.ClientPayloadEntity
 import com.mifos.room.entities.templates.clients.ClientsTemplateEntity
 import com.mifos.room.helper.ClientDaoHelper
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 import okhttp3.MultipartBody
 import org.openapitools.client.models.DeleteClientsClientIdIdentifiersIdentifierIdResponse
@@ -43,7 +46,7 @@ class DataManagerClient(
 //    private val mDatabaseHelperClient: DatabaseHelperClient,
     private val clientDatabaseHelper: ClientDaoHelper,
     private val baseApiManager: org.mifos.core.apimanager.BaseApiManager,
-    private val prefManager: com.mifos.core.datastore.PrefManager,
+    private val prefManager: UserPreferencesRepository,
 ) {
     /**
      * This Method sending the Request to REST API if UserStatus is 0 and
@@ -212,24 +215,26 @@ class DataManagerClient(
      * @return ClientTemplate
      */
     val clientTemplate: Flow<ClientsTemplateEntity>
-        get() = when (prefManager.userStatus) {
-            false ->
-                mBaseApiManager.clientsApi.clientTemplate
-                    .map { clientsTemplate ->
-                        clientDatabaseHelper.saveClientTemplate(
-                            clientsTemplate,
-                        )
-                        clientsTemplate
-                    }
+        get() = prefManager.userInfo.flatMapLatest { userData ->
+            when (userData.userStatus) {
+                false ->
+                    mBaseApiManager.clientsApi.clientTemplate
+                        .map { clientsTemplate ->
+                            clientDatabaseHelper.saveClientTemplate(
+                                clientsTemplate,
+                            )
+                            clientsTemplate
+                        }
 
-            true ->
-                /**
-                 * Return Clients from DatabaseHelperClient only one time.
-                 */
-                /**
-                 * Return Clients from DatabaseHelperClient only one time.
-                 */
-                clientDatabaseHelper.readClientTemplate()
+                true ->
+                    /**
+                     * Return Clients from DatabaseHelperClient only one time.
+                     */
+                    /**
+                     * Return Clients from DatabaseHelperClient only one time.
+                     */
+                    clientDatabaseHelper.readClientTemplate()
+            }
         }
 
     /**
@@ -241,18 +246,11 @@ class DataManagerClient(
      * @return Client
      */
     suspend fun createClient(clientPayload: ClientPayloadEntity): Int? {
-        return when (prefManager.userStatus) {
-            false -> mBaseApiManager.clientsApi.createClient(clientPayload)?.clientId
-
-            true ->
-                /**
-                 * If user is in offline mode and he is making client. client payload will be saved
-                 * in Database for future synchronization to sever.
-                 */
-                {
-                    clientDatabaseHelper.saveClientPayloadToDB(clientPayload)
-                    null
-                }
+        return if (prefManager.userInfo.first().userStatus) {
+            clientDatabaseHelper.saveClientPayloadToDB(clientPayload)
+            null
+        } else {
+            mBaseApiManager.clientsApi.createClient(clientPayload)?.clientId
         }
     }
 
