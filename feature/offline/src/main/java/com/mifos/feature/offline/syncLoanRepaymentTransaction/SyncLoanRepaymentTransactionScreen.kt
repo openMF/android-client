@@ -71,6 +71,7 @@ internal fun SyncLoanRepaymentTransactionScreenRoute(
     onBackPressed: () -> Unit,
 ) {
     val uiState by viewModel.syncLoanRepaymentTransactionUiState.collectAsStateWithLifecycle()
+    val userStatus by viewModel.userStatus.collectAsStateWithLifecycle()
     val refreshState by viewModel.isRefreshing.collectAsStateWithLifecycle()
 
     LaunchedEffect(key1 = Unit) {
@@ -88,7 +89,7 @@ internal fun SyncLoanRepaymentTransactionScreenRoute(
         syncLoanRepaymentTransactions = {
             viewModel.syncGroupPayload()
         },
-        userStatus = viewModel.getUserStatus(),
+        userStatus = userStatus,
     )
 }
 

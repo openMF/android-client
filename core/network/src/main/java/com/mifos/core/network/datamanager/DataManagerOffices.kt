@@ -9,12 +9,13 @@
  */
 package com.mifos.core.network.datamanager
 
-import com.mifos.core.datastore.PrefManager
+import com.mifos.core.datastore.UserPreferencesRepository
 import com.mifos.core.network.BaseApiManager
 import com.mifos.core.network.mappers.offices.GetOfficeResponseMapper
 import com.mifos.room.entities.organisation.OfficeEntity
 import com.mifos.room.helper.OfficeDaoHelper
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flow
 
 /**
@@ -28,7 +29,7 @@ class DataManagerOffices(
     val mBaseApiManager: BaseApiManager,
     private val baseApiManager: org.mifos.core.apimanager.BaseApiManager,
     private val officeDaoHelper: OfficeDaoHelper,
-    private val prefManager: PrefManager,
+    private val prefManager: UserPreferencesRepository,
 ) {
     /**
      * return all List of Offices from DatabaseHelperOffices
@@ -44,19 +45,21 @@ class DataManagerOffices(
     }
 
     val offices: Flow<List<OfficeEntity>>
-        get() = when (prefManager.userStatus) {
-            false -> flow {
-                baseApiManager.getOfficeApi().retrieveOffices(null, null, null)
-                    .map { GetOfficeResponseMapper.mapFromEntity(it) }
-            }
+        get() = prefManager.userInfo.flatMapLatest { userData ->
+            when (userData.userStatus) {
+                false -> flow {
+                    baseApiManager.getOfficeApi().retrieveOffices(null, null, null)
+                        .map { GetOfficeResponseMapper.mapFromEntity(it) }
+                }
 
-            true ->
-                /**
-                 * return all List of Offices from DatabaseHelperOffices
-                 */
-                /**
-                 * return all List of Offices from DatabaseHelperOffices
-                 */
-                officeDaoHelper.readAllOffices()
+                true ->
+                    /**
+                     * return all List of Offices from DatabaseHelperOffices
+                     */
+                    /**
+                     * return all List of Offices from DatabaseHelperOffices
+                     */
+                    officeDaoHelper.readAllOffices()
+            }
         }
 }

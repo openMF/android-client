@@ -12,17 +12,22 @@ package com.mifos.feature.pathTracking
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mifos.core.common.utils.Resource
-import com.mifos.core.datastore.PrefManager
+import com.mifos.core.datastore.UserPreferencesRepository
 import com.mifos.core.domain.useCases.GetUserPathTrackingUseCase
 import com.mifos.feature.path.tracking.R
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 class PathTrackingViewModel(
     private val getUserPathTrackingUseCase: GetUserPathTrackingUseCase,
-    private val prefManager: PrefManager,
+    private val prefManager: UserPreferencesRepository,
 ) : ViewModel() {
 
     private val _pathTrackingUiState =
@@ -32,8 +37,13 @@ class PathTrackingViewModel(
     private val _isRefreshing = MutableStateFlow(false)
     val isRefreshing = _isRefreshing.asStateFlow()
 
-    private val _userStatus = MutableStateFlow(prefManager.userStatus)
-    val userStatus = _userStatus.asStateFlow()
+    val userStatus: StateFlow<Boolean?> = prefManager.userInfo
+        .map { it.userStatus }
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000),
+            initialValue = null,
+        )
 
     fun refreshCenterList() {
         _isRefreshing.value = true
@@ -42,31 +52,36 @@ class PathTrackingViewModel(
     }
 
     fun loadPathTracking() = viewModelScope.launch(Dispatchers.IO) {
-        getUserPathTrackingUseCase(prefManager.getUserId()).collect { result ->
-            when (result) {
-                is Resource.Error ->
-                    _pathTrackingUiState.value =
-                        PathTrackingUiState.Error(R.string.feature_path_tracking_failed_to_load_path_tracking)
-
-                is Resource.Loading -> _pathTrackingUiState.value = PathTrackingUiState.Loading
-
-                is Resource.Success ->
-                    result.data?.let { pathTracking ->
+        val userId = prefManager.userData.firstOrNull()?.userId
+        if (userId != null) {
+            getUserPathTrackingUseCase(userId.toInt()).collect { result ->
+                when (result) {
+                    is Resource.Error ->
                         _pathTrackingUiState.value =
-                            if (pathTracking.isEmpty()) {
-                                PathTrackingUiState.Error(R.string.feature_path_tracking_no_path_tracking_found)
-                            } else {
-                                PathTrackingUiState.PathTracking(
-                                    pathTracking,
-                                )
-                            }
-                    }
+                            PathTrackingUiState.Error(R.string.feature_path_tracking_failed_to_load_path_tracking)
+
+                    is Resource.Loading -> _pathTrackingUiState.value = PathTrackingUiState.Loading
+
+                    is Resource.Success ->
+                        result.data?.let { pathTracking ->
+                            _pathTrackingUiState.value =
+                                if (pathTracking.isEmpty()) {
+                                    PathTrackingUiState.Error(R.string.feature_path_tracking_no_path_tracking_found)
+                                } else {
+                                    PathTrackingUiState.PathTracking(
+                                        pathTracking,
+                                    )
+                                }
+                        }
+                }
             }
+        } else {
+            _pathTrackingUiState.value =
+                PathTrackingUiState.Error(R.string.feature_path_tracking_no_path_tracking_found)
         }
     }
 
     fun updateUserStatus(status: Boolean) = viewModelScope.launch(Dispatchers.IO) {
-        prefManager.userStatus = status
-        _userStatus.value = status
+        prefManager.updateUserStatus(status)
     }
 }

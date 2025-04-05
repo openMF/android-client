@@ -11,6 +11,7 @@ package com.mifos.cmp.navigation
 
 import com.mifos.core.common.network.di.DispatchersModule
 import com.mifos.core.data.di.RepositoryModule
+import com.mifos.core.datastore.di.PreferencesModule
 import com.mifos.core.domain.di.UseCaseModule
 import com.mifos.core.network.di.DataManagerModule
 import com.mifos.core.network.di.NetworkModule
@@ -45,7 +46,9 @@ object KoinModules {
     private val commonModules = module { includes(DispatchersModule) }
     private val domainModule = module { includes(UseCaseModule) }
     private val dataModules = module { includes(RepositoryModule) }
-
+    private val coreDataStoreModules = module {
+        includes(PreferencesModule)
+    }
     private val databaseModules = module {
         includes(
             DaoModule,
@@ -101,5 +104,6 @@ object KoinModules {
         featureModules,
         testingModules,
         networkModules,
+        coreDataStoreModules,
     )
 }

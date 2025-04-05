@@ -48,6 +48,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mifos.core.common.enums.MifosAppLanguage
+import com.mifos.core.datastore.model.AppTheme
 import com.mifos.core.designsystem.component.MifosRadioButtonDialog
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.UpdateEndpointDialogScreen
@@ -64,20 +65,16 @@ internal fun SettingsScreen(
     languageChanged: () -> Unit,
     viewModel: SettingsViewModel = koinViewModel(),
 ) {
-    val baseURL by viewModel.baseUrl.collectAsStateWithLifecycle()
-    val tenant by viewModel.tenant.collectAsStateWithLifecycle()
-    val passcode by viewModel.passcode.collectAsStateWithLifecycle()
-    val theme by viewModel.theme.collectAsStateWithLifecycle()
-    val language by viewModel.language.collectAsStateWithLifecycle()
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val context = LocalContext.current
 
     SettingsScreen(
         onBackPressed = onBackPressed,
-        selectedLanguage = language ?: "System Language",
-        selectedTheme = theme ?: "System Theme",
-        baseURL = baseURL ?: "",
-        tenant = tenant ?: "",
-        changePasscode = { changePasscode(passcode ?: "") },
+        selectedLanguage = uiState.language.code ?: "System Language",
+        selectedTheme = uiState.theme.themeName ?: "System Theme",
+        baseURL = uiState.baseUrl ?: "",
+        tenant = uiState.tenant ?: "",
+        changePasscode = { changePasscode(uiState.passcode ?: "") },
         handleEndpointUpdate = { baseURL, tenant ->
             if (viewModel.tryUpdatingEndpoint(selectedBaseUrl = baseURL, selectedTenant = tenant)) {
                 navigateToLoginScreen()

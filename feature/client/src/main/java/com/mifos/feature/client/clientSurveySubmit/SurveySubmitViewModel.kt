@@ -11,12 +11,16 @@ package com.mifos.feature.client.clientSurveySubmit
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.mifos.core.common.utils.Constants
 import com.mifos.core.data.repository.SurveySubmitRepository
-import com.mifos.core.datastore.PrefManager
+import com.mifos.core.datastore.UserPreferencesRepository
 import com.mifos.core.model.objects.surveys.Scorecard
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 import rx.Subscriber
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
@@ -26,7 +30,7 @@ import rx.schedulers.Schedulers
  */
 class SurveySubmitViewModel(
     private val repository: SurveySubmitRepository,
-    private val prefManager: PrefManager,
+    private val prefManager: UserPreferencesRepository,
     private val savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
 
@@ -38,7 +42,13 @@ class SurveySubmitViewModel(
     val surveySubmitUiState: StateFlow<SurveySubmitUiState>
         get() = _surveySubmitUiState
 
-    val userId = MutableStateFlow(prefManager.getUserId())
+    val userId: StateFlow<Int> = prefManager.userData
+        .map { it.userId.toInt() }
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000),
+            initialValue = 0,
+        )
 
     fun submitSurvey(survey: Int, scorecardPayload: Scorecard?) {
         _surveySubmitUiState.value = SurveySubmitUiState.ShowProgressbar

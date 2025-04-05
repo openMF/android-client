@@ -12,13 +12,14 @@ package com.mifos.feature.client.clientSurveyList
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mifos.core.data.repository.SurveyListRepository
-import com.mifos.core.datastore.PrefManager
+import com.mifos.core.datastore.UserPreferencesRepository
 import com.mifos.feature.client.R
 import com.mifos.room.entities.survey.QuestionDatasEntity
 import com.mifos.room.entities.survey.SurveyEntity
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
 /**
@@ -26,7 +27,7 @@ import kotlinx.coroutines.launch
  */
 class SurveyListViewModel(
     private val repository: SurveyListRepository,
-    private val prefManager: PrefManager,
+    private val prefManager: UserPreferencesRepository,
 ) : ViewModel() {
 
     private val _surveyListUiState =
@@ -63,7 +64,7 @@ class SurveyListViewModel(
                 }
                 .collect { surveyList ->
                     mDbSurveyList = surveyList
-                    if (prefManager.userStatus) {
+                    if (prefManager.userInfo.first().userStatus) {
                         for (survey in mSyncSurveyList) {
                             loadDatabaseQuestionData(survey.id, survey)
                         }

@@ -9,6 +9,7 @@
  */
 package com.mifos.core.network.datamanager
 
+import com.mifos.core.datastore.UserPreferencesRepository
 import com.mifos.core.model.objects.account.loan.SavingsApproval
 import com.mifos.core.model.objects.account.saving.SavingsAccountTransactionResponse
 import com.mifos.core.model.objects.organisations.ProductSavings
@@ -22,6 +23,7 @@ import com.mifos.room.entities.templates.savings.SavingProductsTemplate
 import com.mifos.room.entities.templates.savings.SavingsAccountTransactionTemplateEntity
 import com.mifos.room.helper.SavingsDaoHelper
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import rx.Observable
@@ -33,7 +35,7 @@ class DataManagerSavings(
     val mBaseApiManager: BaseApiManager,
 //    val mDatabaseHelperSavings: DatabaseHelperSavings,
     private val databaseHelperSavings: SavingsDaoHelper,
-    private val prefManager: com.mifos.core.datastore.PrefManager,
+    private val prefManager: UserPreferencesRepository,
 ) {
     /**
      * This Method Make the Request to the REST API
@@ -55,18 +57,20 @@ class DataManagerSavings(
         savingsAccountId: Int,
         association: String?,
     ): Flow<SavingsAccountWithAssociationsEntity?> {
-        return when (prefManager.userStatus) {
-            false -> mBaseApiManager.savingsApi.getSavingsAccountWithAssociations(
-                type,
-                savingsAccountId,
-                association,
-            )
+        return prefManager.userInfo.flatMapLatest { userData ->
+            when (userData.userStatus) {
+                false -> mBaseApiManager.savingsApi.getSavingsAccountWithAssociations(
+                    type,
+                    savingsAccountId,
+                    association,
+                )
 
-            true ->
-                /**
-                 * Return SavingsAccountWithAssociations from DatabaseHelperSavings.
-                 */
-                databaseHelperSavings.readSavingsAccount(savingsAccountId)
+                true ->
+                    /**
+                     * Return SavingsAccountWithAssociations from DatabaseHelperSavings.
+                     */
+                    databaseHelperSavings.readSavingsAccount(savingsAccountId)
+            }
         }
     }
 
@@ -127,18 +131,20 @@ class DataManagerSavings(
         savingsAccountId: Int,
         transactionType: String?,
     ): Flow<SavingsAccountTransactionTemplateEntity?> {
-        return when (prefManager.userStatus) {
-            false -> mBaseApiManager.savingsApi.getSavingsAccountTransactionTemplate(
-                type,
-                savingsAccountId,
-                transactionType,
-            )
+        return prefManager.userInfo.flatMapLatest { userData ->
+            when (userData.userStatus) {
+                false -> mBaseApiManager.savingsApi.getSavingsAccountTransactionTemplate(
+                    type,
+                    savingsAccountId,
+                    transactionType,
+                )
 
-            true ->
-                /**
-                 * Return SavingsAccountTransactionTemplate from DatabaseHelperSavings.
-                 */
-                databaseHelperSavings.readSavingsAccountTransactionTemplate(savingsAccountId)
+                true ->
+                    /**
+                     * Return SavingsAccountTransactionTemplate from DatabaseHelperSavings.
+                     */
+                    databaseHelperSavings.readSavingsAccountTransactionTemplate(savingsAccountId)
+            }
         }
     }
 
@@ -190,29 +196,31 @@ class DataManagerSavings(
         transactionType: String?,
         request: SavingsAccountTransactionRequestEntity,
     ): Flow<SavingsAccountTransactionResponse?> {
-        return when (prefManager.userStatus) {
-            false -> flow {
-                emit(
-                    mBaseApiManager.savingsApi.processTransaction(
-                        savingsAccountType,
-                        savingsAccountId,
-                        transactionType,
-                        request,
-                    ),
-                )
-            }
-
-            true ->
-                /**
-                 * Return SavingsAccountTransactionResponse from DatabaseHelperSavings.
-                 */
-                databaseHelperSavings
-                    .saveSavingsAccountTransaction(
-                        savingsAccountType,
-                        savingsAccountId,
-                        transactionType,
-                        request,
+        return prefManager.userInfo.flatMapLatest { userData ->
+            when (userData.userStatus) {
+                false -> flow {
+                    emit(
+                        mBaseApiManager.savingsApi.processTransaction(
+                            savingsAccountType,
+                            savingsAccountId,
+                            transactionType,
+                            request,
+                        ),
                     )
+                }
+
+                true ->
+                    /**
+                     * Return SavingsAccountTransactionResponse from DatabaseHelperSavings.
+                     */
+                    databaseHelperSavings
+                        .saveSavingsAccountTransaction(
+                            savingsAccountType,
+                            savingsAccountId,
+                            transactionType,
+                            request,
+                        )
+            }
         }
     }
 
