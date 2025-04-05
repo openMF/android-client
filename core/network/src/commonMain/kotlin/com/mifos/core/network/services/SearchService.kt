@@ -11,8 +11,9 @@ package com.mifos.core.network.services
 
 import com.mifos.core.model.objects.SearchedEntity
 import com.mifos.room.basemodel.APIEndPoint
-import retrofit2.http.GET
-import retrofit2.http.Query
+import de.jensklingenberg.ktorfit.http.GET
+import de.jensklingenberg.ktorfit.http.Query
+import kotlinx.coroutines.flow.Flow
 
 /**
  * @author fomenkoo
@@ -24,5 +25,5 @@ interface SearchService {
         @Query("query") query: String,
         @Query("resource") resource: String?,
         @Query("exactMatch") exactMatch: Boolean?,
-    ): List<SearchedEntity>
+    ): Flow<List<SearchedEntity>>
 }

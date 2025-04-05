@@ -11,14 +11,14 @@ package com.mifos.core.network.services
 
 import com.mifos.core.model.objects.checkerinboxtask.CheckerInboxSearchTemplate
 import com.mifos.core.model.objects.checkerinboxtask.CheckerTask
+import com.mifos.core.model.objects.checkerinboxtask.RescheduleLoansTask
 import com.mifos.core.network.GenericResponse
 import com.mifos.room.basemodel.APIEndPoint
-import retrofit2.http.DELETE
-import retrofit2.http.GET
-import retrofit2.http.POST
-import retrofit2.http.Path
-import retrofit2.http.Query
-import rx.Observable
+import de.jensklingenberg.ktorfit.http.GET
+import de.jensklingenberg.ktorfit.http.POST
+import de.jensklingenberg.ktorfit.http.Path
+import de.jensklingenberg.ktorfit.http.Query
+import kotlinx.coroutines.flow.Flow
 
 interface CheckerInboxService {
 
@@ -27,7 +27,7 @@ interface CheckerInboxService {
         @Query("actionName") actionName: String? = null,
         @Query("entityName") entityName: String? = null,
         @Query("resourceId") resourceId: Int? = null,
-    ): List<CheckerTask>
+    ): Flow<List<CheckerTask>>
 
     @POST(APIEndPoint.MAKER_CHECKER + "/{auditId}?command=approve")
     suspend fun approveCheckerEntry(@Path("auditId") auditId: Int): GenericResponse
@@ -39,15 +39,15 @@ interface CheckerInboxService {
     suspend fun deleteCheckerEntry(@Path("auditId") auditId: Int): GenericResponse
 
     @GET("rescheduleloans?command=pending")
-    suspend fun getRescheduleLoansTaskList(): List<com.mifos.core.model.objects.checkerinboxtask.RescheduleLoansTask>
+    suspend fun getRescheduleLoansTaskList(): List<RescheduleLoansTask>
 
     @GET(APIEndPoint.MAKER_CHECKER + "/searchtemplate?fields=entityNames,actionNames")
-    fun getCheckerInboxSearchTempalate(): Observable<CheckerInboxSearchTemplate>
+    fun getCheckerInboxSearchTempalate(): Flow<CheckerInboxSearchTemplate>
 
     @GET(APIEndPoint.MAKER_CHECKER)
     fun getCheckerTasksFromResourceId(
         @Query("actionName") actionName: String? = null,
         @Query("entityName") entityName: String? = null,
         @Query("resourceId") resourceId: Int? = null,
-    ): Observable<List<CheckerTask>>
+    ): Flow<List<CheckerTask>>
 }

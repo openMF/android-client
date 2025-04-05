@@ -11,14 +11,14 @@ package com.mifos.core.network.services
 
 import com.mifos.room.basemodel.APIEndPoint
 import com.mifos.room.entities.accounts.ClientAccounts
-import retrofit2.http.GET
-import retrofit2.http.Path
-import rx.Observable
+import de.jensklingenberg.ktorfit.http.GET
+import de.jensklingenberg.ktorfit.http.Path
+import kotlinx.coroutines.flow.Flow
 
 /**
  * @author fomenkoo
  */
 interface ClientAccountsService {
     @GET(APIEndPoint.CLIENTS + "/{clientId}/accounts")
-    fun getAllAccountsOfClient(@Path("clientId") clientId: Int): Observable<ClientAccounts>
+    fun getAllAccountsOfClient(@Path("clientId") clientId: Int): Flow<ClientAccounts>
 }

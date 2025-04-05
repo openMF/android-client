@@ -22,14 +22,13 @@ import com.mifos.room.entities.accounts.CenterAccounts
 import com.mifos.room.entities.center.CenterPayloadEntity
 import com.mifos.room.entities.group.CenterEntity
 import com.mifos.room.entities.group.CenterWithAssociations
+import de.jensklingenberg.ktorfit.http.Body
+import de.jensklingenberg.ktorfit.http.GET
+import de.jensklingenberg.ktorfit.http.POST
+import de.jensklingenberg.ktorfit.http.Path
+import de.jensklingenberg.ktorfit.http.Query
+import de.jensklingenberg.ktorfit.http.QueryMap
 import kotlinx.coroutines.flow.Flow
-import retrofit2.http.Body
-import retrofit2.http.GET
-import retrofit2.http.POST
-import retrofit2.http.Path
-import retrofit2.http.Query
-import retrofit2.http.QueryMap
-import rx.Observable
 
 /**
  * @author fomenkoo
@@ -40,7 +39,7 @@ interface CenterService {
         @Query("paged") b: Boolean,
         @Query("offset") offset: Int,
         @Query("limit") limit: Int,
-    ): Observable<Page<CenterEntity>>
+    ): Flow<Page<CenterEntity>>
 
     @GET(APIEndPoint.CENTERS + "/{centerId}/accounts")
     suspend fun getCenterAccounts(@Path("centerId") centerId: Int): CenterAccounts
@@ -52,7 +51,7 @@ interface CenterService {
     suspend fun getAllCentersInOffice(
         @Query("officeId") officeId: Int,
         @QueryMap additionalParams: Map<String, String>,
-    ): List<CenterEntity>
+    ): Flow<List<CenterEntity>>
 
     @GET(APIEndPoint.CENTERS + "/{centerId}?associations=groupMembers")
     fun getAllGroupsForCenter(@Path("centerId") centerId: Int): Flow<CenterWithAssociations>
@@ -61,19 +60,19 @@ interface CenterService {
     fun getCollectionSheet(
         @Path("centerId") centerId: Long,
         @Body payload: Payload?,
-    ): Observable<CollectionSheet>
+    ): Flow<CollectionSheet>
 
     @POST(APIEndPoint.CENTERS + "/{centerId}?command=saveCollectionSheet")
     fun saveCollectionSheet(
         @Path("centerId") centerId: Int,
         @Body collectionSheetPayload: CollectionSheetPayload?,
-    ): Observable<SaveResponse>
+    ): Flow<SaveResponse>
 
     @POST(APIEndPoint.CENTERS + "/{centerId}?command=saveCollectionSheet")
     fun saveCollectionSheetAsync(
         @Path("centerId") centerId: Int,
         @Body collectionSheetPayload: CollectionSheetPayload?,
-    ): Observable<SaveResponse>
+    ): Flow<SaveResponse>
 
     /*@POST(APIEndPoint.CLIENTS + "")
     void uploadNewClientDetails();*/
@@ -87,7 +86,7 @@ interface CenterService {
         @Query("meetingDate") meetingDate: String?,
         @Query("officeId") officeId: Int,
         @Query("staffId") staffId: Int,
-    ): Observable<List<OfflineCenter>>
+    ): Flow<List<OfflineCenter>>
 
     /**
      * This is the service to activate the center
@@ -101,5 +100,5 @@ interface CenterService {
     fun activateCenter(
         @Path("centerId") centerId: Int,
         @Body activatePayload: ActivatePayload?,
-    ): Observable<GenericResponse>
+    ): Flow<GenericResponse>
 }

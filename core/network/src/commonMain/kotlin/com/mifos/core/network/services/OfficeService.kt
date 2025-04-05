@@ -11,7 +11,8 @@ package com.mifos.core.network.services
 
 import com.mifos.room.basemodel.APIEndPoint
 import com.mifos.room.entities.organisation.OfficeEntity
-import retrofit2.http.GET
+import de.jensklingenberg.ktorfit.http.GET
+import kotlinx.coroutines.flow.Flow
 
 /**
  * @author fomenkoo
@@ -23,5 +24,5 @@ interface OfficeService {
      * @param listOfOfficesCallback
      */
     @GET(APIEndPoint.OFFICES)
-    suspend fun allOffices(): List<OfficeEntity>
+    suspend fun allOffices(): Flow<List<OfficeEntity>>
 }

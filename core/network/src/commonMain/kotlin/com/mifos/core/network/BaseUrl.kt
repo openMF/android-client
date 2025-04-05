@@ -9,19 +9,21 @@
  */
 package com.mifos.core.network
 
-import com.mifos.core.common.BuildConfig
-import com.mifos.core.common.utils.asServerConfig
+class BaseUrl {
+    val url: String
+        get() = PROTOCOL_HTTPS + API_ENDPOINT + API_PATH
 
-/**
- * @author fomenkoo
- */
-object BaseUrl {
+    val defaultBaseUrl: String
+        get() = PROTOCOL_HTTPS + API_ENDPOINT
 
-    // "/" in the last of the base url always
-    private val configs = BuildConfig.DEMO_SERVER_CONFIG.asServerConfig()
+    fun getUrl(endpoint: String): String {
+        return endpoint + API_PATH
+    }
 
-    val PROTOCOL_HTTPS = configs.protocol
-    val API_ENDPOINT = configs.endPoint
-    val API_PATH = configs.apiPath
-    val PORT = configs.port
+    companion object {
+        const val API_ENDPOINT = "tt.mifos.community"
+        const val API_PATH = "/fineract-provider/api/v1/"
+        const val PROTOCOL_HTTPS = "https://"
+    }
 }
+

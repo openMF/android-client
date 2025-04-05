@@ -21,21 +21,17 @@ import com.mifos.room.entities.accounts.ClientAccounts
 import com.mifos.room.entities.client.ClientEntity
 import com.mifos.room.entities.client.ClientPayloadEntity
 import com.mifos.room.entities.templates.clients.ClientsTemplateEntity
+import de.jensklingenberg.ktorfit.http.Body
+import de.jensklingenberg.ktorfit.http.DELETE
+import de.jensklingenberg.ktorfit.http.GET
+import de.jensklingenberg.ktorfit.http.Multipart
+import de.jensklingenberg.ktorfit.http.POST
+import de.jensklingenberg.ktorfit.http.PUT
+import de.jensklingenberg.ktorfit.http.Part
+import de.jensklingenberg.ktorfit.http.Path
+import de.jensklingenberg.ktorfit.http.Query
+import io.ktor.client.statement.HttpResponse
 import kotlinx.coroutines.flow.Flow
-import okhttp3.MultipartBody
-import okhttp3.ResponseBody
-import org.openapitools.client.models.PostAuthenticationRequest
-import org.openapitools.client.models.PostAuthenticationResponse
-import retrofit2.http.Body
-import retrofit2.http.DELETE
-import retrofit2.http.GET
-import retrofit2.http.Multipart
-import retrofit2.http.POST
-import retrofit2.http.PUT
-import retrofit2.http.Part
-import retrofit2.http.Path
-import retrofit2.http.Query
-import rx.Observable
 
 /**
  * @author fomenkoo
@@ -59,7 +55,7 @@ interface ClientService {
         @Query("paged") b: Boolean,
         @Query("offset") offset: Int,
         @Query("limit") limit: Int,
-    ): Observable<Page<ClientEntity>>
+    ): Flow<Page<ClientEntity>>
 
     @GET(APIEndPoint.CLIENTS + "/{clientId}")
     suspend fun getClient(@Path("clientId") clientId: Int): ClientEntity
@@ -69,7 +65,7 @@ interface ClientService {
     suspend fun uploadClientImage(
         @Path("clientId") clientId: Int,
         @Part file: MultipartBody.Part?,
-    ): ResponseBody
+    ): HttpResponse
 
     @DELETE(APIEndPoint.CLIENTS + "/{clientId}/images")
     suspend fun deleteClientImage(@Path("clientId") clientId: Int)
@@ -84,7 +80,7 @@ interface ClientService {
     val clientTemplate: Flow<ClientsTemplateEntity>
 
     @GET(APIEndPoint.CLIENTS + "/{clientId}/accounts")
-    fun getClientAccounts(@Path("clientId") clientId: Int): Observable<ClientAccounts>
+    fun getClientAccounts(@Path("clientId") clientId: Int): Flow<ClientAccounts>
 
     /**
      * This Service is for fetching the List of Identifiers.
@@ -95,7 +91,7 @@ interface ClientService {
      * @return List<Identifier>
      </Identifier> */
     @GET(APIEndPoint.CLIENTS + "/{clientId}/" + APIEndPoint.IDENTIFIERS)
-    fun getClientIdentifiers(@Path("clientId") clientId: Int): Observable<List<Identifier>>
+    fun getClientIdentifiers(@Path("clientId") clientId: Int): Flow<List<Identifier>>
 
     /**
      * This Service is for Creating the Client Identifier.
@@ -121,7 +117,7 @@ interface ClientService {
      * @return IdentifierTemplate
      */
     @GET(APIEndPoint.CLIENTS + "/{clientId}/identifiers/template")
-    fun getClientIdentifierTemplate(@Path("clientId") clientId: Int): Observable<IdentifierTemplate>
+    fun getClientIdentifierTemplate(@Path("clientId") clientId: Int): Flow<IdentifierTemplate>
 
     /**
      * This Service for Deleting the Client Identifier.
@@ -137,7 +133,7 @@ interface ClientService {
     fun deleteClientIdentifier(
         @Path("clientId") clientId: Int,
         @Path("identifierId") identifierId: Int,
-    ): Observable<GenericResponse>
+    ): Flow<GenericResponse>
 
     /**
      * This is the service for fetching the client pinpoint locations from the dataTable
@@ -223,5 +219,5 @@ interface ClientService {
     fun activateClient(
         @Path("clientId") clientId: Int,
         @Body clientActivate: ActivatePayload?,
-    ): Observable<GenericResponse>
+    ): Flow<GenericResponse>
 }

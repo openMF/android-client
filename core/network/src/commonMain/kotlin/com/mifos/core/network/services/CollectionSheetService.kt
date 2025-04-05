@@ -20,11 +20,13 @@ import com.mifos.room.entities.collectionsheet.CollectionSheetResponse
 import com.mifos.room.entities.collectionsheet.IndividualCollectionSheet
 import com.mifos.room.entities.collectionsheet.ProductiveCollectionSheetPayload
 import com.mifos.room.entities.group.CenterWithAssociations
-import retrofit2.http.Body
-import retrofit2.http.GET
-import retrofit2.http.POST
-import retrofit2.http.Path
-import retrofit2.http.Query
+import de.jensklingenberg.ktorfit.http.Body
+import de.jensklingenberg.ktorfit.http.GET
+import de.jensklingenberg.ktorfit.http.POST
+import de.jensklingenberg.ktorfit.http.Path
+import de.jensklingenberg.ktorfit.http.Query
+import kotlinx.coroutines.flow.Flow
+
 
 /**
  * Created by Tarun on 06-07-2017.
@@ -57,7 +59,7 @@ interface CollectionSheetService {
         @Query("meetingDate") meetingDate: String?,
         @Query("officeId") officeId: Int,
         @Query("staffId") staffId: Int,
-    ): List<CenterDetail>
+    ): Flow<List<CenterDetail>>
 
     /**
      * Request Endpoint to fetch Productive CollectionSheet

@@ -12,25 +12,24 @@ package com.mifos.core.network.services
 import com.mifos.core.model.objects.surveys.Scorecard
 import com.mifos.room.basemodel.APIEndPoint
 import com.mifos.room.entities.survey.SurveyEntity
-import retrofit2.http.Body
-import retrofit2.http.GET
-import retrofit2.http.POST
-import retrofit2.http.Path
-import rx.Observable
+import de.jensklingenberg.ktorfit.http.Body
+import de.jensklingenberg.ktorfit.http.GET
+import de.jensklingenberg.ktorfit.http.Path
+import kotlinx.coroutines.flow.Flow
 
 /**
  * @author
  */
 interface SurveyService {
     @GET(APIEndPoint.SURVEYS)
-    suspend fun allSurveys(): List<SurveyEntity>
+    suspend fun allSurveys(): Flow<List<SurveyEntity>>
 
     @GET(APIEndPoint.SURVEYS + "/{surveyId}")
-    fun getSurvey(@Path("surveyId") surveyId: Int): Observable<SurveyEntity>
+    fun getSurvey(@Path("surveyId") surveyId: Int): Flow<SurveyEntity>
 
     @POST(APIEndPoint.SURVEYS + "/{surveyId}/scorecards")
     fun submitScore(
         @Path("surveyId") surveyId: Int,
         @Body scorecardPayload: Scorecard?,
-    ): Observable<Scorecard>
+    ): Flow<Scorecard>
 }

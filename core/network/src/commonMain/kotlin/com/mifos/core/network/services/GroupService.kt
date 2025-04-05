@@ -18,14 +18,12 @@ import com.mifos.room.entities.accounts.GroupAccounts
 import com.mifos.room.entities.group.GroupEntity
 import com.mifos.room.entities.group.GroupPayloadEntity
 import com.mifos.room.entities.group.GroupWithAssociations
+import de.jensklingenberg.ktorfit.http.Body
+import de.jensklingenberg.ktorfit.http.GET
+import de.jensklingenberg.ktorfit.http.POST
+import de.jensklingenberg.ktorfit.http.Path
+import de.jensklingenberg.ktorfit.http.Query
 import kotlinx.coroutines.flow.Flow
-import retrofit2.http.Body
-import retrofit2.http.GET
-import retrofit2.http.POST
-import retrofit2.http.Path
-import retrofit2.http.Query
-import retrofit2.http.QueryMap
-import rx.Observable
 
 /**
  * @author fomenkoo
@@ -36,7 +34,7 @@ interface GroupService {
         @Query("paged") b: Boolean,
         @Query("offset") offset: Int,
         @Query("limit") limit: Int,
-    ): Observable<Page<GroupEntity>>
+    ): flow<Page<GroupEntity>>
 
     @GET(APIEndPoint.GROUPS + "/{groupId}?associations=all")
     fun getGroupWithAssociations(@Path("groupId") groupId: Int): Flow<GroupWithAssociations>
@@ -45,7 +43,7 @@ interface GroupService {
     suspend fun getAllGroupsInOffice(
         @Query("officeId") officeId: Int,
         @QueryMap params: Map<String, String>,
-    ): List<GroupEntity>
+    ): Flow<List<GroupEntity>>
 
     @POST(APIEndPoint.GROUPS)
     suspend fun createGroup(@Body groupPayload: GroupPayloadEntity?): SaveResponse
@@ -68,5 +66,5 @@ interface GroupService {
     fun activateGroup(
         @Path("groupId") groupId: Int,
         @Body activatePayload: ActivatePayload?,
-    ): Observable<GenericResponse>
+    ): Flow<GenericResponse>
 }

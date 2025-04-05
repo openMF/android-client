@@ -20,13 +20,12 @@ import com.mifos.room.entities.accounts.savings.SavingsAccountWithAssociationsEn
 import com.mifos.room.entities.client.Savings
 import com.mifos.room.entities.templates.savings.SavingProductsTemplate
 import com.mifos.room.entities.templates.savings.SavingsAccountTransactionTemplateEntity
+import de.jensklingenberg.ktorfit.http.Body
+import de.jensklingenberg.ktorfit.http.GET
+import de.jensklingenberg.ktorfit.http.POST
+import de.jensklingenberg.ktorfit.http.Path
+import de.jensklingenberg.ktorfit.http.Query
 import kotlinx.coroutines.flow.Flow
-import retrofit2.http.Body
-import retrofit2.http.GET
-import retrofit2.http.POST
-import retrofit2.http.Path
-import retrofit2.http.Query
-import rx.Observable
 
 /**
  * @author fomenkoo
@@ -95,32 +94,32 @@ interface SavingsAccountService {
     fun activateSavings(
         @Path("savingsAccountId") savingsAccountId: Int,
         @Body genericRequest: HashMap<String, String>,
-    ): Observable<GenericResponse>
+    ): Flow<GenericResponse>
 
     @POST(APIEndPoint.CREATE_SAVINGS_ACCOUNTS + "/{savingsAccountId}?command=approve")
     fun approveSavingsApplication(
         @Path("savingsAccountId") savingsAccountId: Int,
         @Body savingsApproval: SavingsApproval?,
-    ): Observable<GenericResponse>
+    ): Flow<GenericResponse>
 
     @get:GET(APIEndPoint.CREATE_SAVINGS_PRODUCTS)
-    val allSavingsAccounts: Observable<List<ProductSavings>>
+    val allSavingsAccounts: Flow<List<ProductSavings>>
 
     @POST(APIEndPoint.CREATE_SAVINGS_ACCOUNTS)
-    fun createSavingsAccount(@Body savingsPayload: SavingsPayload?): Observable<Savings>
+    fun createSavingsAccount(@Body savingsPayload: SavingsPayload?): Flow<Savings>
 
     @get:GET(APIEndPoint.CREATE_SAVINGS_PRODUCTS + "/template")
-    val savingsAccountTemplate: Observable<SavingProductsTemplate>
+    val savingsAccountTemplate: Flow<SavingProductsTemplate>
 
     @GET(APIEndPoint.CREATE_SAVINGS_ACCOUNTS + "/template")
     fun getClientSavingsAccountTemplateByProduct(
         @Query("clientId") clientId: Int,
         @Query("productId") productId: Int,
-    ): Observable<SavingProductsTemplate>
+    ): Flow<SavingProductsTemplate>
 
     @GET(APIEndPoint.CREATE_SAVINGS_ACCOUNTS + "/template")
     fun getGroupSavingsAccountTemplateByProduct(
         @Query("groupId") groupId: Int,
         @Query("productId") productId: Int,
-    ): Observable<SavingProductsTemplate>
+    ): Flow<SavingProductsTemplate>
 }

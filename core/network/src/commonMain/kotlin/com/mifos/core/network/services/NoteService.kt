@@ -11,8 +11,8 @@ package com.mifos.core.network.services
 
 import com.mifos.core.model.objects.Note
 import com.mifos.room.basemodel.APIEndPoint
-import retrofit2.http.GET
-import retrofit2.http.Path
+import de.jensklingenberg.ktorfit.http.GET
+import de.jensklingenberg.ktorfit.http.Path
 
 interface NoteService {
 

@@ -41,6 +41,10 @@ kotlin{
             implementation(libs.ktor.serialization.kotlinx.json)
             implementation(libs.ktorfit.lib)
             implementation(libs.squareup.okio)
+            api(projects.core.model)
+            api(projects.core.datastore)
+            api(projects.core.common)
+            implementation("com.github.openMF:fineract-client-kmp-sdk:0.0.1")
         }
         androidMain.dependencies {
             implementation(libs.ktor.client.okhttp)

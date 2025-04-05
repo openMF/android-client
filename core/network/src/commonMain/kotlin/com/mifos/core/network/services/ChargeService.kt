@@ -15,27 +15,26 @@ import com.mifos.core.model.objects.payloads.ChargesPayload
 import com.mifos.core.model.objects.template.client.ChargeTemplate
 import com.mifos.room.basemodel.APIEndPoint
 import com.mifos.room.entities.client.ChargesEntity
+import de.jensklingenberg.ktorfit.http.Body
+import de.jensklingenberg.ktorfit.http.GET
+import de.jensklingenberg.ktorfit.http.POST
+import de.jensklingenberg.ktorfit.http.Path
+import de.jensklingenberg.ktorfit.http.Query
+import io.ktor.client.statement.HttpResponse
 import kotlinx.coroutines.flow.Flow
-import okhttp3.ResponseBody
-import retrofit2.http.Body
-import retrofit2.http.GET
-import retrofit2.http.POST
-import retrofit2.http.Path
-import retrofit2.http.Query
-import rx.Observable
 
 /**
  * @author nellyk
  */
 interface ChargeService {
     @GET(APIEndPoint.CHARGES)
-    fun listAllCharges(): Observable<ResponseBody>
+    fun listAllCharges(): Flow<HttpResponse>
 
     @GET(APIEndPoint.CLIENTS + "/{clientId}/charges/template")
     suspend fun getAllChargesS(@Path("clientId") clientId: Int): ChargeTemplate
 
     @GET(APIEndPoint.LOANS + "/{loanId}/charges/template")
-    suspend fun getAllChargeV3(@Path("loanId") loanId: Int): ResponseBody
+    suspend fun getAllChargeV3(@Path("loanId") loanId: Int): HttpResponse
 
     @GET(APIEndPoint.CLIENTS + "/{clientId}/charges")
     fun getListOfCharges(
@@ -51,7 +50,7 @@ interface ChargeService {
     ): ChargeCreationResponse
 
     @GET(APIEndPoint.LOANS + "/{loanId}/charges")
-    fun getListOfLoanCharges(@Path("loanId") loanId: Int): Observable<Page<ChargesEntity>>
+    fun getListOfLoanCharges(@Path("loanId") loanId: Int): Flow<Page<ChargesEntity>>
 
     @POST(APIEndPoint.LOANS + "/{loanId}/charges")
     suspend fun createLoanCharges(

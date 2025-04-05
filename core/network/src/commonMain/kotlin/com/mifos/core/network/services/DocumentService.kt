@@ -12,20 +12,16 @@ package com.mifos.core.network.services
 import com.mifos.core.model.objects.noncoreobjects.Document
 import com.mifos.core.network.GenericResponse
 import com.mifos.room.basemodel.APIEndPoint
-import okhttp3.MultipartBody
-import okhttp3.ResponseBody
-import retrofit2.http.DELETE
-import retrofit2.http.GET
-import retrofit2.http.Multipart
-import retrofit2.http.POST
-import retrofit2.http.PUT
-import retrofit2.http.Part
-import retrofit2.http.Path
-import rx.Observable
+import de.jensklingenberg.ktorfit.http.DELETE
+import de.jensklingenberg.ktorfit.http.GET
+import de.jensklingenberg.ktorfit.http.Multipart
+import de.jensklingenberg.ktorfit.http.POST
+import de.jensklingenberg.ktorfit.http.PUT
+import de.jensklingenberg.ktorfit.http.Part
+import de.jensklingenberg.ktorfit.http.Path
+import io.ktor.client.statement.HttpResponse
+import kotlinx.coroutines.flow.Flow
 
-/**
- * @author fomenkoo
- */
 interface DocumentService {
     @GET("{entityType}/{entityId}/" + APIEndPoint.DOCUMENTS)
     suspend fun getDocuments(
@@ -49,7 +45,7 @@ interface DocumentService {
         @Part("name") nameOfDocument: String?,
         @Part("description") description: String?,
         @Part typedFile: MultipartBody.Part?,
-    ): Observable<GenericResponse>
+    ): Flow<GenericResponse>
 
     /**
      * This Service is for downloading the Document with EntityType and EntityId and Document Id
@@ -68,7 +64,7 @@ interface DocumentService {
         @Path("entityType") entityType: String,
         @Path("entityId") entityId: Int,
         @Path("documentId") documentId: Int,
-    ): ResponseBody
+    ): HttpResponse
 
     /**
      * This Service is for Deleting the Document with EntityType and EntityId and Document Id.
@@ -113,5 +109,5 @@ interface DocumentService {
         @Part("name") nameOfDocument: String?,
         @Part("description") description: String?,
         @Part typedFile: MultipartBody.Part?,
-    ): Observable<GenericResponse>
+    ): Flow<GenericResponse>
 }

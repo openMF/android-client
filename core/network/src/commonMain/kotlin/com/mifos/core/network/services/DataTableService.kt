@@ -13,21 +13,21 @@ import com.mifos.core.model.objects.users.UserLocation
 import com.mifos.core.network.GenericResponse
 import com.mifos.room.basemodel.APIEndPoint
 import com.mifos.room.entities.noncore.DataTableEntity
+import de.jensklingenberg.ktorfit.http.Body
+import de.jensklingenberg.ktorfit.http.DELETE
+import de.jensklingenberg.ktorfit.http.GET
+import de.jensklingenberg.ktorfit.http.POST
+import de.jensklingenberg.ktorfit.http.Path
+import de.jensklingenberg.ktorfit.http.Query
+import kotlinx.coroutines.flow.Flow
 import kotlinx.serialization.json.JsonArray
-import retrofit2.http.Body
-import retrofit2.http.DELETE
-import retrofit2.http.GET
-import retrofit2.http.POST
-import retrofit2.http.Path
-import retrofit2.http.Query
-import rx.Observable
 
 /**
  * @author fomenkoo
  */
 interface DataTableService {
     @GET(APIEndPoint.DATATABLES)
-    fun getTableOf(@Query("apptable") table: String?): Observable<List<DataTableEntity>>
+    fun getTableOf(@Query("apptable") table: String?): Flow<List<DataTableEntity>>
 
     @GET(APIEndPoint.DATATABLES + "/{dataTableName}/{entityId}/")
     suspend fun getDataOfDataTable(
@@ -48,13 +48,13 @@ interface DataTableService {
         @Path("dataTableName") dataTableName: String?,
         @Path("entityId") entityId: Int,
         @Path("dataTableRowId") dataTableRowId: Int,
-    ): Observable<GenericResponse>
+    ): Flow<GenericResponse>
 
     @POST(APIEndPoint.DATATABLES + "/user_tracking/{userId}")
     fun addUserPathTracking(
         @Path("userId") userId: Int,
         @Body userLocation: UserLocation?,
-    ): Observable<GenericResponse>
+    ): Flow<GenericResponse>
 
     @GET(APIEndPoint.DATATABLES + "/user_tracking/{userId}")
     suspend fun getUserPathTracking(@Path("userId") userId: Int): List<UserLocation>

@@ -11,20 +11,20 @@ package com.mifos.core.network.services
 
 import com.mifos.room.basemodel.APIEndPoint
 import com.mifos.room.entities.organisation.StaffEntity
-import retrofit2.http.GET
-import retrofit2.http.Query
-import rx.Observable
+import de.jensklingenberg.ktorfit.http.GET
+import de.jensklingenberg.ktorfit.http.Query
+import kotlinx.coroutines.flow.Flow
 
 /**
  * @author fomenkoo
  */
 interface StaffService {
     @GET(APIEndPoint.STAFF + "?status=all")
-    suspend fun getStaffForOffice(@Query("officeId") officeId: Int): List<StaffEntity>
+    suspend fun getStaffForOffice(@Query("officeId") officeId: Int): Flow<List<StaffEntity>>
 
     @get:GET(APIEndPoint.STAFF)
-    val allStaff: Observable<List<StaffEntity>>
+    val allStaff: Flow<List<StaffEntity>>
 
     @get:GET(APIEndPoint.STAFF + "?isLoanOfficer=true")
-    val fieldStaffForOffice: Observable<List<StaffEntity>>
+    val fieldStaffForOffice: Flow<List<StaffEntity>>
 }

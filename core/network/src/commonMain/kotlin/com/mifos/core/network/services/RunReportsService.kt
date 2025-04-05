@@ -13,10 +13,11 @@ import com.mifos.core.model.objects.groups.CenterInfo
 import com.mifos.core.model.objects.runreport.FullParameterListResponse
 import com.mifos.core.model.objects.runreport.client.ClientReportTypeItem
 import com.mifos.room.basemodel.APIEndPoint
-import retrofit2.http.GET
-import retrofit2.http.Path
-import retrofit2.http.Query
-import retrofit2.http.QueryMap
+import de.jensklingenberg.ktorfit.http.GET
+import de.jensklingenberg.ktorfit.http.Path
+import de.jensklingenberg.ktorfit.http.Query
+import de.jensklingenberg.ktorfit.http.QueryMap
+import kotlinx.coroutines.flow.Flow
 
 /**
  * Created by Rajan Maurya on 05/02/17.
@@ -34,7 +35,7 @@ interface RunReportsService {
         @Query("R_reportCategory") category: String?,
         @Query("genericResultSet") genericResultSet: Boolean,
         @Query("parameterType") parameterType: Boolean,
-    ): List<ClientReportTypeItem>
+    ): Flow<List<ClientReportTypeItem>>
 
     /**
      * Endpoint to fetch FullParameter list after fetching the categories.
@@ -90,5 +91,5 @@ interface RunReportsService {
     suspend fun getCenterSummaryInfo(
         @Query("R_groupId") centerId: Int,
         @Query("genericResultSet") genericResultSet: Boolean,
-    ): List<CenterInfo>
+    ): Flow<List<CenterInfo>>
 }
