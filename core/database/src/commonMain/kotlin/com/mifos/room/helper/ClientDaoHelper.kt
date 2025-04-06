@@ -9,8 +9,6 @@
  */
 package com.mifos.room.helper
 
-import com.mifos.core.common.network.Dispatcher
-import com.mifos.core.common.network.MifosDispatchers
 import com.mifos.core.common.utils.Constants.DATA_TABLE_NAME_CLIENT
 import com.mifos.core.common.utils.MapDeserializer
 import com.mifos.core.common.utils.Page
@@ -47,7 +45,7 @@ import kotlinx.serialization.modules.contextual
  */
 class ClientDaoHelper(
     private val clientDao: ClientDao,
-    @Dispatcher(MifosDispatchers.IO)
+//    @Dispatcher(MifosDispatchers.IO)
     private val ioDispatcher: CoroutineDispatcher,
 ) {
 

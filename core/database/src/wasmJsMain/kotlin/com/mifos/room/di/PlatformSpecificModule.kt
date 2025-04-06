@@ -11,5 +11,5 @@ package com.mifos.room.di
 
 import org.koin.core.module.Module
 
-actual val platformSpecificModule: Module
+actual val PlatformSpecificDatabaseModule: Module
     get() = TODO("Not yet implemented")

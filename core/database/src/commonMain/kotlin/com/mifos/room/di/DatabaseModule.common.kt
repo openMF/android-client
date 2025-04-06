@@ -10,12 +10,5 @@
 package com.mifos.room.di
 
 import org.koin.core.module.Module
-import org.koin.dsl.module
 
-val DatabaseModule = module {
-    single {
-        platformSpecificModule
-    }
-}
-
-expect val platformSpecificModule: Module
+expect val PlatformSpecificDatabaseModule: Module

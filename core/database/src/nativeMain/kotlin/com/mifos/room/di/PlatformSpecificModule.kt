@@ -11,14 +11,15 @@ package com.mifos.room.di
 
 import androidx.sqlite.driver.bundled.BundledSQLiteDriver
 import com.mifos.core.common.network.MifosDispatchers
+import com.mifos.room.MifosDatabase
 import com.mifos.room.utils.MifosDatabaseFactory
 import org.koin.core.module.Module
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
 import kotlin.coroutines.CoroutineContext
 
-actual val platformSpecificModule: Module = module {
-    single {
+actual val PlatformSpecificDatabaseModule: Module = module {
+    single<MifosDatabase> {
         val ioContext: CoroutineContext = getKoin().get(named(MifosDispatchers.IO.name))
 
         MifosDatabaseFactory()

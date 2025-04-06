@@ -14,5 +14,5 @@ import org.koin.core.module.Module
 /**
  * Created by Pronay Sarker on 05/04/2025 (6:27 AM)
  */
-actual val platformSpecificModule: Module
+actual val PlatformSpecificDatabaseModule: Module
     get() = TODO("Not yet implemented")
