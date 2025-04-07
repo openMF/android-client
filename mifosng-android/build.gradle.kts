@@ -265,6 +265,9 @@ dependencies {
 
     implementation(projects.cmpShared)
     implementation(libs.mifos.koin.android)
+
+    implementation(libs.ktor.client.core)
+    implementation(libs.ktor.client.cio)
 }
 
 dependencyGuard {

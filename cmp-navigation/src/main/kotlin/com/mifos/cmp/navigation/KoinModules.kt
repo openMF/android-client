@@ -37,8 +37,8 @@ import com.mifos.feature.search.di.SearchModule
 import com.mifos.feature.settings.di.SettingsModule
 import com.mifos.feature.splash.di.SplashModule
 import com.mifos.room.di.DaoModule
-import com.mifos.room.di.DatabaseModule
 import com.mifos.room.di.HelperModule
+import com.mifos.room.di.PlatformSpecificDatabaseModule
 import org.koin.dsl.module
 
 object KoinModules {
@@ -46,14 +46,12 @@ object KoinModules {
     private val commonModules = module { includes(DispatchersModule) }
     private val domainModule = module { includes(UseCaseModule) }
     private val dataModules = module { includes(RepositoryModule) }
-    private val coreDataStoreModules = module {
-        includes(PreferencesModule)
-    }
+    private val coreDataStoreModules = module { includes(PreferencesModule) }
     private val databaseModules = module {
         includes(
             DaoModule,
-            DatabaseModule,
             HelperModule,
+            PlatformSpecificDatabaseModule,
         )
     }
 

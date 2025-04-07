@@ -138,5 +138,11 @@ gradlePlugin {
             id = "mifos.android.koin"
             implementationClass = "KoinAndroidConventionPlugin"
         }
+
+        //room android
+        register("kmpRoom") {
+            id = "mifos.kmp.room"
+            implementationClass = "KMPRoomConventionPlugin"
+        }
     }
 }
