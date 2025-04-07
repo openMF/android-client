@@ -9,12 +9,12 @@
  */
 package com.mifos.core.domain.useCases
 
+import com.mifos.core.common.utils.MFErrorParser
 import com.mifos.core.common.utils.Resource
 import com.mifos.core.data.repository.ClientDetailsRepository
 import com.mifos.room.entities.zipmodels.ClientAndClientAccounts
-import kotlinx.coroutines.async
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flow
 
 /**
@@ -25,20 +25,22 @@ class GetClientDetailsUseCase(
     private val repository: ClientDetailsRepository,
 ) {
 
-    operator fun invoke(clientId: Int): Flow<Resource<ClientAndClientAccounts>> = flow {
-        emit(Resource.Loading())
-
-        val clientAndClientAccounts = coroutineScope {
-            val clientAccountsDeferred = async { repository.getClientAccounts(clientId) }
-            val clientDeferred = async { repository.getClient(clientId) }
-
-            ClientAndClientAccounts(
-                client = clientDeferred.await(),
-                clientAccounts = clientAccountsDeferred.await(),
-            )
+    operator fun invoke(clientId: Int): Flow<Resource<ClientAndClientAccounts>> =
+        flow {
+            try {
+                emit(Resource.Loading())
+                val combinedFlow = combine(
+                    repository.getClient(clientId),
+                    repository.getClientAccounts(clientId),
+                ) { client, clientAccounts ->
+                    ClientAndClientAccounts(
+                        client = client,
+                        clienAccounts = clientAccounts,
+                    )
+                }.first()
+                emit(Resource.Success(combinedFlow))
+            } catch (exception: Exception) {
+                emit(Resource.Error(MFErrorParser.errorMessage(exception)))
+            }
         }
-        emit(Resource.Success(clientAndClientAccounts))
-    }.catch { exception ->
-        emit(Resource.Error(exception.message.toString()))
-    }
 }

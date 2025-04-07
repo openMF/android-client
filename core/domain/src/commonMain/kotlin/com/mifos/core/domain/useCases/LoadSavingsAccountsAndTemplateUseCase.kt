@@ -14,6 +14,7 @@ import com.mifos.core.common.utils.Resource
 import com.mifos.core.data.repository.SavingsAccountRepository
 import com.mifos.room.entities.zipmodels.SavingProductsAndTemplate
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flow
 
 /**
@@ -27,17 +28,16 @@ class LoadSavingsAccountsAndTemplateUseCase(
         flow {
             try {
                 emit(Resource.Loading())
-
-                val savingProductsAndTemplate = coroutineScope {
-                    val savingsAccount = async { repository.savingsAccounts() }
-                    val template = async { repository.savingsAccountTemplate() }
-
-                    SavingsProductsAndTemplate(
-                        savingsAccount = savingsAccount.await(),
-                        template = template.await(),
+                val combinedFlow = combine(
+                    repository.savingsAccounts(),
+                    repository.savingsAccountTemplate(),
+                ) { savingsAccount, template ->
+                    SavingProductsAndTemplate(
+                        savingsAccount = savingsAccount,
+                        template = template,
                     )
-                }
-                emit(Resource.Success(savingProductsAndTemplate))
+                }.first()
+                emit(Resource.Success(combinedFlow))
             } catch (exception: Exception) {
                 emit(Resource.Error(MFErrorParser.errorMessage(exception)))
             }

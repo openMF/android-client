@@ -19,29 +19,6 @@ android {
     namespace = "com.mifos.core.domain"
 }
 
-//dependencies {
-//    api(projects.core.data)
-//    api(projects.core.model)
-//
-//    implementation(libs.javax.inject)
-//
-//    implementation(libs.dbflow)
-//
-//    // sdk client
-////    implementation(libs.fineract.client)
-//
-//    implementation(libs.rxandroid)
-//    implementation(libs.rxjava)
-//
-//    implementation(libs.squareup.okhttp)
-//
-//    implementation(libs.androidx.paging.runtime.ktx)
-//
-//    testImplementation(projects.core.testing)
-//    testImplementation (libs.androidx.paging.common.ktx)
-//    testImplementation (libs.androidx.paging.testing)
-//}
-
 kotlin {
     sourceSets {
         commonMain.dependencies {
@@ -52,6 +29,7 @@ kotlin {
 
             implementation(libs.kotlinx.coroutines.core)
             implementation(compose.components.resources)
+            // implementation(libs.fineract.client.kmp)
         }
 
         androidMain.dependencies {
