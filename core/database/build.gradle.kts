@@ -8,10 +8,9 @@
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
 plugins {
-    alias(libs.plugins.mifos.android.library)
-    alias(libs.plugins.mifos.android.koin)
-    alias(libs.plugins.mifos.android.room)
+    alias(libs.plugins.mifos.kmp.library)
     alias(libs.plugins.kotlin.serialization)
+    alias(libs.plugins.mifos.kmp.room)
     alias(libs.plugins.mifos.android.library.jacoco)
     alias(libs.plugins.kotlin.parcelize)
 }
@@ -24,19 +23,29 @@ android {
     }
 }
 
-dependencies {
-    api(projects.core.model)
-    api(projects.core.common)
+kotlin{
+    sourceSets {
+        commonMain.dependencies {
+            implementation(libs.kotlinx.coroutines.core)
+            implementation(libs.kotlinx.serialization.json)
+            api(projects.core.common)
+            api(projects.core.model)
+        }
 
-    implementation(libs.converter.gson)
-    implementation(libs.kotlinx.serialization.json)
+        androidMain.dependencies {
+            implementation(libs.koin.android)
+            implementation(libs.androidx.room.runtime)
+            implementation(libs.androidx.sqlite.bundled)
+        }
 
-    // fineract sdk dependencies
-    implementation(libs.mifos.android.sdk.arch)
+        nativeMain.dependencies {
+            implementation(libs.androidx.room.runtime)
+            implementation(libs.androidx.sqlite.bundled)
+        }
 
-    // sdk client
-    implementation(libs.fineract.client)
-
-    androidTestImplementation(projects.core.testing)
-    implementation(libs.koin.android)
+        desktopMain.dependencies {
+            implementation(libs.androidx.room.runtime)
+            implementation(libs.androidx.sqlite.bundled)
+        }
+    }
 }
