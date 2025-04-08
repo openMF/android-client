@@ -44,7 +44,7 @@ kotlin{
             api(projects.core.model)
             api(projects.core.datastore)
             api(projects.core.common)
-            implementation("com.github.openMF:fineract-client-kmp-sdk:0.0.1")
+            implementation(libs.fineract.client.kmp.sdk)
         }
         androidMain.dependencies {
             implementation(libs.ktor.client.okhttp)
