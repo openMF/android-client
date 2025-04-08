@@ -88,7 +88,7 @@ interface RunReportsService {
     ): FullParameterListResponse
 
     @GET(APIEndPoint.RUN_REPORTS + "/GroupSummaryCounts")
-     fun getCenterSummaryInfo(
+    fun getCenterSummaryInfo(
         @Query("R_groupId") centerId: Int,
         @Query("genericResultSet") genericResultSet: Boolean,
     ): Flow<List<CenterInfo>>

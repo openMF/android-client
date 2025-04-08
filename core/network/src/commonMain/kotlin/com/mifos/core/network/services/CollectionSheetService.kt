@@ -27,7 +27,6 @@ import de.jensklingenberg.ktorfit.http.Path
 import de.jensklingenberg.ktorfit.http.Query
 import kotlinx.coroutines.flow.Flow
 
-
 /**
  * Created by Tarun on 06-07-2017.
  */

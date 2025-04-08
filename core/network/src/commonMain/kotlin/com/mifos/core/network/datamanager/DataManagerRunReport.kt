@@ -55,7 +55,7 @@ class DataManagerRunReport(val mBaseApiManager: BaseApiManager) {
             .getRunReportWithQuery(reportName, options)
     }
 
-     fun getCenterSummaryInfo(
+    fun getCenterSummaryInfo(
         centerId: Int,
         genericResultSet: Boolean,
     ): Flow<List<CenterInfo>> {

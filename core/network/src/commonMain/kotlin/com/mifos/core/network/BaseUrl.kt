@@ -26,4 +26,3 @@ class BaseUrl {
         const val PROTOCOL_HTTPS = "https://"
     }
 }
-

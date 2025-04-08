@@ -62,7 +62,6 @@ fun EmptyDataView(
     }
 }
 
-
 @Composable
 fun EmptyDataView(
     error: StringResource,
