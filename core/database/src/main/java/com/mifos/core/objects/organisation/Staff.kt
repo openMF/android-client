@@ -10,6 +10,7 @@
 package com.mifos.core.objects.organisation
 
 import android.os.Parcelable
+import com.google.gson.annotations.SerializedName
 import com.mifos.core.database.MifosDatabase
 import com.mifos.core.model.MifosBaseModel
 import com.raizlabs.android.dbflow.annotation.Column
@@ -52,3 +53,35 @@ data class Staff(
     @Column
     var isActive: Boolean? = null,
 ) : MifosBaseModel(), Parcelable
+
+data class StaffResponse(
+    @SerializedName("displayName")
+    val displayName: String? = null,
+
+    @SerializedName("externalId")
+    val externalId: String? = null,
+
+    @SerializedName("firstname")
+    val firstname: String? = null,
+
+    @SerializedName("id")
+    val id: Long? = null,
+
+    @SerializedName("isActive")
+    val isActive: Boolean? = null,
+
+    @SerializedName("isLoanOfficer")
+    val isLoanOfficer: Boolean? = null,
+
+    @SerializedName("joiningDate")
+    val joiningDate: List<Int>? = null,
+
+    @SerializedName("lastname")
+    val lastname: String? = null,
+
+    @SerializedName("officeId")
+    val officeId: Long? = null,
+
+    @SerializedName("officeName")
+    val officeName: String? = null,
+)

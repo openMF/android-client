@@ -10,11 +10,11 @@
 package com.mifos.core.network.mappers.staffs
 
 import com.mifos.core.objects.organisation.Staff
+import com.mifos.core.objects.organisation.StaffResponse
 import org.mifos.core.data.AbstractMapper
-import org.openapitools.client.models.RetrieveOneResponse
 
-object StaffMapper : AbstractMapper<RetrieveOneResponse, Staff>() {
-    override fun mapFromEntity(entity: RetrieveOneResponse): Staff {
+object StaffMapper : AbstractMapper<StaffResponse, Staff>() {
+    override fun mapFromEntity(entity: StaffResponse): Staff {
         return Staff().apply {
             id = entity.id!!.toInt()
             firstname = entity.firstname
@@ -27,8 +27,8 @@ object StaffMapper : AbstractMapper<RetrieveOneResponse, Staff>() {
         }
     }
 
-    override fun mapToEntity(domainModel: Staff): RetrieveOneResponse {
-        return RetrieveOneResponse(
+    override fun mapToEntity(domainModel: Staff): StaffResponse {
+        return StaffResponse(
             id = domainModel.id?.toLong(),
             firstname = domainModel.firstname,
             lastname = domainModel.lastname,

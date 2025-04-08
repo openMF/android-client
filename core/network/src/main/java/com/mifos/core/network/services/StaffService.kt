@@ -11,7 +11,7 @@ package com.mifos.core.network.services
 
 import com.mifos.core.model.APIEndPoint
 import com.mifos.core.objects.organisation.Staff
-import org.openapitools.client.models.RetrieveOneResponse
+import com.mifos.core.objects.organisation.StaffResponse
 import retrofit2.http.GET
 import retrofit2.http.Query
 import rx.Observable
@@ -32,5 +32,5 @@ interface StaffService {
     @GET(APIEndPoint.STAFF)
     suspend fun getAllStaff(
         @Query("officeId") officeId: Long? = null,
-    ): List<RetrieveOneResponse>
+    ): List<StaffResponse>
 }
