@@ -33,6 +33,15 @@ import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
+/**
+ * A composable that displays an empty state view with an icon and error message.
+ * This version uses an [ImageVector] for the icon.
+ *
+ * @param error The string resource ID for the error message to display
+ * @param modifier The modifier to be applied to the layout
+ * @param icon The icon to display above the error message
+ * @param errorString Optional custom error string to override the string resource
+ */
 @Composable
 fun EmptyDataView(
     error: StringResource,
@@ -62,6 +71,15 @@ fun EmptyDataView(
     }
 }
 
+/**
+ * A composable that displays an empty state view with an optional drawable image and error message.
+ * This version uses a [DrawableResource] for the image.
+ *
+ * @param error The string resource ID for the error message to display
+ * @param modifier The modifier to be applied to the layout
+ * @param image Optional drawable resource to display above the error message
+ * @param errorString Optional custom error string to override the string resource
+ */
 @Composable
 fun EmptyDataView(
     error: StringResource,
@@ -93,6 +111,12 @@ fun EmptyDataView(
     }
 }
 
+/**
+ * Preview composable for the EmptyDataView.
+ * Shows how the EmptyDataView looks with default parameters.
+ *
+ * @param modifier The modifier to be applied to the preview
+ */
 @DevicePreview
 @Composable
 fun EmptyDataViewPreview(

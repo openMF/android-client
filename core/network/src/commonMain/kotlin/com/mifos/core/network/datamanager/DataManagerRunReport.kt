@@ -13,16 +13,17 @@ import com.mifos.core.model.objects.groups.CenterInfo
 import com.mifos.core.model.objects.runreport.FullParameterListResponse
 import com.mifos.core.model.objects.runreport.client.ClientReportTypeItem
 import com.mifos.core.network.BaseApiManager
+import kotlinx.coroutines.flow.Flow
 
 /**
  * Created by Rajan Maurya on 05/02/17.
  */
 class DataManagerRunReport(val mBaseApiManager: BaseApiManager) {
-    suspend fun getReportCategories(
+    fun getReportCategories(
         reportCategory: String?,
         genericResultSet: Boolean,
         parameterType: Boolean,
-    ): List<ClientReportTypeItem> {
+    ): Flow<List<ClientReportTypeItem>> {
         return mBaseApiManager.runReportsService.getReportCategories(
             reportCategory,
             genericResultSet,
@@ -54,10 +55,10 @@ class DataManagerRunReport(val mBaseApiManager: BaseApiManager) {
             .getRunReportWithQuery(reportName, options)
     }
 
-    suspend fun getCenterSummaryInfo(
+     fun getCenterSummaryInfo(
         centerId: Int,
         genericResultSet: Boolean,
-    ): List<CenterInfo> {
+    ): Flow<List<CenterInfo>> {
         return mBaseApiManager.runReportsService
             .getCenterSummaryInfo(centerId, genericResultSet)
     }

@@ -31,7 +31,7 @@ interface RunReportsService {
      * @return List of ClientReportTypeItem
      */
     @GET(APIEndPoint.RUN_REPORTS + "/reportCategoryList")
-    suspend fun getReportCategories(
+    fun getReportCategories(
         @Query("R_reportCategory") category: String?,
         @Query("genericResultSet") genericResultSet: Boolean,
         @Query("parameterType") parameterType: Boolean,
@@ -88,7 +88,7 @@ interface RunReportsService {
     ): FullParameterListResponse
 
     @GET(APIEndPoint.RUN_REPORTS + "/GroupSummaryCounts")
-    suspend fun getCenterSummaryInfo(
+     fun getCenterSummaryInfo(
         @Query("R_groupId") centerId: Int,
         @Query("genericResultSet") genericResultSet: Boolean,
     ): Flow<List<CenterInfo>>
