@@ -74,10 +74,10 @@ class LoginViewModel(
     private fun setupPrefManger(username: String, password: String) {
         Log.d("sdfdf", username + password)
 //        if (Network.isOnline(context)) {
-//            login(username, password)
+        login(username, password)
 //        } else {
-        _loginUiState.value =
-            LoginUiState.ShowError(R.string.feature_auth_error_not_connected_internet)
+//        _loginUiState.value =
+//            LoginUiState.ShowError(R.string.feature_auth_error_not_connected_internet)
 //        }
     }
 
