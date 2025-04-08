@@ -20,7 +20,7 @@ import kotlinx.coroutines.flow.Flow
  */
 interface StaffService {
     @GET(APIEndPoint.STAFF + "?status=all")
-    suspend fun getStaffForOffice(@Query("officeId") officeId: Int): Flow<List<StaffEntity>>
+    fun getStaffForOffice(@Query("officeId") officeId: Int): Flow<List<StaffEntity>>
 
     @get:GET(APIEndPoint.STAFF)
     val allStaff: Flow<List<StaffEntity>>

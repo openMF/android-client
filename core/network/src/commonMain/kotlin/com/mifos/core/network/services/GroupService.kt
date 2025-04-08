@@ -23,6 +23,7 @@ import de.jensklingenberg.ktorfit.http.GET
 import de.jensklingenberg.ktorfit.http.POST
 import de.jensklingenberg.ktorfit.http.Path
 import de.jensklingenberg.ktorfit.http.Query
+import de.jensklingenberg.ktorfit.http.QueryMap
 import kotlinx.coroutines.flow.Flow
 
 /**
@@ -34,13 +35,13 @@ interface GroupService {
         @Query("paged") b: Boolean,
         @Query("offset") offset: Int,
         @Query("limit") limit: Int,
-    ): flow<Page<GroupEntity>>
+    ): Flow<Page<GroupEntity>>
 
     @GET(APIEndPoint.GROUPS + "/{groupId}?associations=all")
     fun getGroupWithAssociations(@Path("groupId") groupId: Int): Flow<GroupWithAssociations>
 
     @GET(APIEndPoint.GROUPS)
-    suspend fun getAllGroupsInOffice(
+    fun getAllGroupsInOffice(
         @Query("officeId") officeId: Int,
         @QueryMap params: Map<String, String>,
     ): Flow<List<GroupEntity>>

@@ -29,12 +29,11 @@ import com.mifos.room.entities.group.GroupEntity
 import com.mifos.room.entities.group.GroupWithAssociations
 import com.mifos.room.entities.organisation.OfficeEntity
 import com.mifos.room.entities.organisation.StaffEntity
+import io.ktor.client.statement.HttpResponse
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import okhttp3.ResponseBody
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
-import rx.Observable
 
 /**
  * Created by Rajan Maurya on 4/6/16.
@@ -51,18 +50,18 @@ class DataManager : KoinComponent {
         return mBaseApiManager.centerApi.getAllGroupsForCenter(id)
     }
 
-    suspend fun getCentersInOffice(id: Int, params: Map<String, String>): List<CenterEntity> {
+    fun getCentersInOffice(id: Int, params: Map<String, String>): Flow<List<CenterEntity>> {
         return mBaseApiManager.centerApi.getAllCentersInOffice(id, params)
     }
 
-    fun getCollectionSheet(id: Long, payload: Payload?): Observable<CollectionSheet> {
+    fun getCollectionSheet(id: Long, payload: Payload?): Flow<CollectionSheet> {
         return mBaseApiManager.centerApi.getCollectionSheet(id, payload)
     }
 
     fun saveCollectionSheet(
         centerId: Int,
         collectionSheetPayload: CollectionSheetPayload?,
-    ): Observable<SaveResponse> {
+    ): Flow<SaveResponse> {
         return mBaseApiManager.centerApi.saveCollectionSheet(
             centerId,
             collectionSheetPayload,
@@ -72,7 +71,7 @@ class DataManager : KoinComponent {
     fun saveCollectionSheetAsync(
         id: Int,
         payload: CollectionSheetPayload?,
-    ): Observable<SaveResponse> {
+    ): Flow<SaveResponse> {
         return mBaseApiManager.centerApi.saveCollectionSheetAsync(id, payload)
     }
 
@@ -82,7 +81,7 @@ class DataManager : KoinComponent {
         meetingDate: String?,
         officeId: Int,
         staffId: Int,
-    ): Observable<List<OfflineCenter>> {
+    ): Flow<List<OfflineCenter>> {
         return mBaseApiManager.centerApi.getCenterList(
             dateFormat,
             locale,
@@ -111,7 +110,7 @@ class DataManager : KoinComponent {
         return mBaseApiManager.chargeApi.createCharges(clientId, payload)
     }
 
-    suspend fun getAllChargesV3(loanId: Int): ResponseBody {
+    suspend fun getAllChargesV3(loanId: Int): HttpResponse {
         return mBaseApiManager.chargeApi.getAllChargeV3(loanId)
     }
 
@@ -129,10 +128,10 @@ class DataManager : KoinComponent {
         return mBaseApiManager.groupApi.getGroupWithAssociations(groupid)
     }
 
-    suspend fun getGroupsByOffice(
+    fun getGroupsByOffice(
         office: Int,
         params: Map<String, String>,
-    ): List<GroupEntity> {
+    ): Flow<List<GroupEntity>> {
         return mBaseApiManager.groupApi.getAllGroupsInOffice(office, params)
     }
 
@@ -148,39 +147,39 @@ class DataManager : KoinComponent {
     /**
      * Staff API
      */
-    suspend fun getStaffInOffice(officeId: Int): List<StaffEntity> {
+    fun getStaffInOffice(officeId: Int): Flow<List<StaffEntity>> {
         return mBaseApiManager.staffApi.getStaffForOffice(officeId)
     }
 
-    val allStaff: Observable<List<StaffEntity>>
+    val allStaff: Flow<List<StaffEntity>>
         get() = mBaseApiManager.staffApi.allStaff
 
     /**
      * Loans API
      */
-    fun getLoanTransactions(loan: Int): Observable<LoanWithAssociationsEntity> {
+    fun getLoanTransactions(loan: Int): Flow<LoanWithAssociationsEntity> {
         return mBaseApiManager.loanApi.getLoanWithTransactions(loan)
     }
 
-    val allLoans: Observable<List<com.mifos.core.model.objects.organisations.LoanProducts>>
+    val allLoans: Flow<List<com.mifos.core.model.objects.organisations.LoanProducts>>
         get() = mBaseApiManager.loanApi.allLoans
 
-    fun getGroupLoansAccountTemplate(groupId: Int, productId: Int): Observable<GroupLoanTemplate> {
+    fun getGroupLoansAccountTemplate(groupId: Int, productId: Int): Flow<GroupLoanTemplate> {
         return mBaseApiManager.loanApi.getGroupLoansAccountTemplate(groupId, productId)
     }
 
-    fun createGroupLoansAccount(loansPayload: GroupLoanPayload?): Observable<Loan> {
+    fun createGroupLoansAccount(loansPayload: GroupLoanPayload?): Flow<Loan> {
         return mBaseApiManager.loanApi.createGroupLoansAccount(loansPayload)
     }
 
-    fun getLoanRepaySchedule(loanId: Int): Observable<LoanWithAssociationsEntity> {
+    fun getLoanRepaySchedule(loanId: Int): Flow<LoanWithAssociationsEntity> {
         return mBaseApiManager.loanApi.getLoanRepaymentSchedule(loanId)
     }
 
     fun approveLoan(
         loanId: Int,
         loanApproval: com.mifos.core.model.objects.account.loan.LoanApproval?,
-    ): Observable<GenericResponse> {
+    ): Flow<GenericResponse> {
         return mBaseApiManager.loanApi.approveLoanApplication(loanId, loanApproval)
     }
 
@@ -188,7 +187,7 @@ class DataManager : KoinComponent {
         return mBaseApiManager.loanApi.getListOfLoanCharges(loanId)
     }
 
-    fun getListOfCharges(clientId: Int): Observable<Page<ChargesEntity>> {
+    fun getListOfCharges(clientId: Int): Flow<Page<ChargesEntity>> {
         return mBaseApiManager.loanApi.getListOfCharges(clientId)
     }
 }

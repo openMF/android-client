@@ -43,6 +43,7 @@ kotlin{
             implementation(libs.squareup.okio)
             api(projects.core.model)
             api(projects.core.datastore)
+            api(projects.core.database)
             api(projects.core.common)
             implementation(libs.fineract.client.kmp.sdk)
         }

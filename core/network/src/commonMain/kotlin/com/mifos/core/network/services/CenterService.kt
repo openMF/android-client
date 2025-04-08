@@ -48,7 +48,7 @@ interface CenterService {
     suspend fun getCenterWithGroupMembersAndCollectionMeetingCalendar(@Path("centerId") centerId: Int): CenterWithAssociations
 
     @GET(APIEndPoint.CENTERS)
-    suspend fun getAllCentersInOffice(
+    fun getAllCentersInOffice(
         @Query("officeId") officeId: Int,
         @QueryMap additionalParams: Map<String, String>,
     ): Flow<List<CenterEntity>>
