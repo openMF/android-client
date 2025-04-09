@@ -87,10 +87,13 @@ data class ClientPayload(
     var address: List<Address>? = ArrayList(),
 
     @Column
-    var dateFormat: String? = "dd MMMM YYYY",
+    var dateFormat: String? = "dd MMMM yyyy",
 
     @Column
     var locale: String? = "en",
 
     var datatables: List<DataTablePayload>? = null,
+
+    // 1 for Individual client
+    var legalFormId: Int = 1
 ) : MifosBaseModel(), Parcelable

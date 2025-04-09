@@ -118,6 +118,7 @@ class CreateNewClientViewModel @Inject constructor(
 
     fun createClient(clientPayload: ClientPayload) {
         _createNewClientUiState.value = CreateNewClientUiState.ShowProgressbar
+
         repository.createClient(clientPayload)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(Schedulers.io())
