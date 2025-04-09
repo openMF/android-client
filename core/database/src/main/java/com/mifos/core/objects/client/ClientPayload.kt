@@ -95,5 +95,5 @@ data class ClientPayload(
     var datatables: List<DataTablePayload>? = null,
 
     // 1 for Individual client
-    var legalFormId: Int = 1
+    var legalFormId: Int = 1,
 ) : MifosBaseModel(), Parcelable
