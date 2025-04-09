@@ -9,7 +9,10 @@
  */
 package com.mifos.feature.about
 
-
+import androidx.compose.material3.Text
+import androidx.compose.foundation.Image
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import androidx.compose.foundation.Image

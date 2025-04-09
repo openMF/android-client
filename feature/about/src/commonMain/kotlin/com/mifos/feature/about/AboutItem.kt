@@ -11,9 +11,9 @@ package com.mifos.feature.about
 
 import androidx.compose.ui.graphics.Color
 
-internal  class AboutItem(
+data class AboutItem(
     val icon: Int?,
-    val title: String,
+    val title: StringResource,
     val subtitle: Int?,
     val color: Color,
     val id: AboutItems,
