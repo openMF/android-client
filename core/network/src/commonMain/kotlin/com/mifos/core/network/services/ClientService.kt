@@ -76,8 +76,8 @@ interface ClientService {
     @POST(APIEndPoint.CLIENTS)
     suspend fun createClient(@Body clientPayload: ClientPayloadEntity?): ClientEntity?
 
-    @get:GET(APIEndPoint.CLIENTS + "/template")
-    val clientTemplate: Flow<ClientsTemplateEntity>
+    @GET(APIEndPoint.CLIENTS + "/template")
+    suspend fun getClientTemplate(): ClientsTemplateEntity
 
     @GET(APIEndPoint.CLIENTS + "/{clientId}/accounts")
     fun getClientAccounts(@Path("clientId") clientId: Int): Flow<ClientAccounts>

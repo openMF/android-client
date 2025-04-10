@@ -26,7 +26,6 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flow
-import rx.Observable
 
 /**
  * This DataManager is for Managing Groups API, In which Request is going to Server
@@ -262,7 +261,7 @@ class DataManagerGroups(
     fun activateGroup(
         groupId: Int,
         activatePayload: ActivatePayload?,
-    ): Observable<GenericResponse> {
+    ): Flow<GenericResponse> {
         return mBaseApiManager.groupApi.activateGroup(groupId, activatePayload)
     }
 }

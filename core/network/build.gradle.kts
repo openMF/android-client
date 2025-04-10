@@ -45,6 +45,7 @@ kotlin{
             api(projects.core.datastore)
             api(projects.core.database)
             api(projects.core.common)
+            api(libs.kotlinx.datetime)
             implementation(libs.fineract.client.kmp.sdk)
         }
         androidMain.dependencies {

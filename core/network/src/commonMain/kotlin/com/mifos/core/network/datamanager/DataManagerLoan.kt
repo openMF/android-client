@@ -27,7 +27,6 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flow
-import rx.Observable
 
 /**
  * Created by Rajan Maurya on 15/07/16.
@@ -41,7 +40,7 @@ class DataManagerLoan(
     /**
      * This Method sending the Request to REST API if UserStatus is 0 and
      * get the LoanWithAssociation. The response is pass to the DatabaseHelperLoan
-     * that save the response in Database with Observable.defer and next pass the response to
+     * that save the response in Database with Flow.defer and next pass the response to
      * DataManager to pass to Presenter to show in the view.
      *
      *
@@ -68,7 +67,7 @@ class DataManagerLoan(
     /**
      * This Method sending the Request to REST API and
      * get the LoanWithAssociation. The response is pass to the DatabaseHelperLoan
-     * that save the response in Database with Observable.defer and next pass the response to
+     * that save the response in Database with Flow.defer and next pass the response to
      * DataManager to pass to Presenter to show in the view.
      *
      * @param loanId Loan Id
@@ -82,14 +81,14 @@ class DataManagerLoan(
         }
     }
 
-    val allLoans: Observable<List<com.mifos.core.model.objects.organisations.LoanProducts>>
+    val allLoans: Flow<List<com.mifos.core.model.objects.organisations.LoanProducts>>
         get() = mBaseApiManager.loanApi.allLoans
 
-    fun getLoansAccountTemplate(clientId: Int, productId: Int): Observable<LoanTemplate> {
+    fun getLoansAccountTemplate(clientId: Int, productId: Int): Flow<LoanTemplate> {
         return mBaseApiManager.loanApi.getLoansAccountTemplate(clientId, productId)
     }
 
-    fun createLoansAccount(loansPayload: LoansPayload?): Observable<Loan> {
+    fun createLoansAccount(loansPayload: LoansPayload?): Flow<Loan> {
         return mBaseApiManager.loanApi.createLoansAccount(loansPayload)
     }
 
@@ -188,7 +187,7 @@ class DataManagerLoan(
         get() = loanDaoHelper.readAllLoanRepaymentTransaction()
 
     /**
-     * This method request a Observable to DatabaseHelperLoan and DatabaseHelper check in
+     * This method request a Flow to DatabaseHelperLoan and DatabaseHelper check in
      * LoanRepayment Table that with this loan Id, any entry is available or not.
      *
      *
@@ -260,14 +259,14 @@ class DataManagerLoan(
     fun getLoanTransactionTemplate(
         loanId: Int,
         command: String?,
-    ): Observable<LoanTransactionTemplate> {
+    ): Flow<LoanTransactionTemplate> {
         return mBaseApiManager.loanApi.getLoanTransactionTemplate(loanId, command)
     }
 
     fun disburseLoan(
         loanId: Int,
         loanDisbursement: LoanDisbursement?,
-    ): Observable<GenericResponse> {
+    ): Flow<GenericResponse> {
         return mBaseApiManager.loanApi.disburseLoan(loanId, loanDisbursement)
     }
 }

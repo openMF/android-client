@@ -26,7 +26,6 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
-import rx.Observable
 
 /**
  * Created by Rajan Maurya on 17/08/16.
@@ -108,7 +107,7 @@ class DataManagerSavings(
     fun activateSavings(
         savingsAccountId: Int,
         request: HashMap<String, String>,
-    ): Observable<GenericResponse> {
+    ): Flow<GenericResponse> {
         return mBaseApiManager.savingsApi.activateSavings(savingsAccountId, request)
     }
 
@@ -279,20 +278,20 @@ class DataManagerSavings(
         )
     }
 
-    val savingsAccounts: Observable<List<ProductSavings>>
+    val savingsAccounts: Flow<List<ProductSavings>>
         get() = mBaseApiManager.savingsApi.allSavingsAccounts
 
-    fun createSavingsAccount(savingsPayload: SavingsPayload?): Observable<Savings> {
+    fun createSavingsAccount(savingsPayload: SavingsPayload?): Flow<Savings> {
         return mBaseApiManager.savingsApi.createSavingsAccount(savingsPayload)
     }
 
-    val savingsAccountTemplate: Observable<SavingProductsTemplate>
+    val savingsAccountTemplate: Flow<SavingProductsTemplate>
         get() = mBaseApiManager.savingsApi.savingsAccountTemplate
 
     fun getClientSavingsAccountTemplateByProduct(
         clientId: Int,
         productId: Int,
-    ): Observable<SavingProductsTemplate> {
+    ): Flow<SavingProductsTemplate> {
         return mBaseApiManager.savingsApi.getClientSavingsAccountTemplateByProduct(
             clientId,
             productId,
@@ -302,7 +301,7 @@ class DataManagerSavings(
     fun getGroupSavingsAccountTemplateByProduct(
         groupId: Int,
         productId: Int,
-    ): Observable<SavingProductsTemplate> {
+    ): Flow<SavingProductsTemplate> {
         return mBaseApiManager.savingsApi.getGroupSavingsAccountTemplateByProduct(
             groupId,
             productId,
@@ -312,7 +311,7 @@ class DataManagerSavings(
     fun approveSavingsApplication(
         savingsAccountId: Int,
         savingsApproval: SavingsApproval?,
-    ): Observable<GenericResponse> {
+    ): Flow<GenericResponse> {
         return mBaseApiManager.savingsApi.approveSavingsApplication(
             savingsAccountId,
             savingsApproval,

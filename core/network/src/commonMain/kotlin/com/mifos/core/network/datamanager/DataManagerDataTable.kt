@@ -14,9 +14,9 @@ import com.mifos.core.network.BaseApiManager
 import com.mifos.core.network.GenericResponse
 import com.mifos.core.network.mappers.dataTable.GetDataTablesResponseMapper
 import com.mifos.room.entities.noncore.DataTableEntity
+import kotlinx.coroutines.flow.Flow
 import kotlinx.serialization.json.JsonArray
 import org.openapitools.client.models.DeleteDataTablesDatatableAppTableIdDatatableIdResponse
-import rx.Observable
 
 /**
  * This DataManager is for Managing DataTable API, In which Request is going to Server
@@ -78,7 +78,7 @@ class DataManagerDataTable(
     fun addUserPathTracking(
         userId: Int,
         userLocation: UserLocation?,
-    ): Observable<GenericResponse> {
+    ): Flow<GenericResponse> {
         return mBaseApiManager.dataTableApi.addUserPathTracking(userId, userLocation)
     }
 

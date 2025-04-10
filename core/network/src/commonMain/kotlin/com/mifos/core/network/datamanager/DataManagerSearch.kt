@@ -11,6 +11,7 @@ package com.mifos.core.network.datamanager
 
 import com.mifos.core.model.objects.SearchedEntity
 import com.mifos.core.network.BaseApiManager
+import kotlinx.coroutines.flow.Flow
 
 /**
  * Created by Rajan Maurya on 12/12/16.
@@ -22,7 +23,7 @@ class DataManagerSearch(
         query: String,
         resource: String?,
         exactMatch: Boolean?,
-    ): List<SearchedEntity> {
+    ): Flow<List<SearchedEntity>> {
         return baseApiManager.searchApi.searchResources(query, resource, exactMatch)
     }
 }

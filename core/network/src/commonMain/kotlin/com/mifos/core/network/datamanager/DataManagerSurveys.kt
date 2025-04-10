@@ -19,7 +19,6 @@ import com.mifos.room.helper.SurveyDaoHelper
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flow
-import rx.Observable
 
 /**
  * This DataManager is for Managing Survey API, In which Request is going to Server
@@ -84,11 +83,11 @@ class DataManagerSurveys(
      * @param scorecardPayload Scorecard Payload
      * @return Scorecard
      */
-    fun submitScore(surveyId: Int, scorecardPayload: Scorecard?): Observable<Scorecard> {
+    fun submitScore(surveyId: Int, scorecardPayload: Scorecard?): Flow<Scorecard> {
         return mBaseApiManager.surveyApi.submitScore(surveyId, scorecardPayload)
     }
 
-    fun getSurvey(surveyId: Int): Observable<SurveyEntity> {
+    fun getSurvey(surveyId: Int): Flow<SurveyEntity> {
         return mBaseApiManager.surveyApi.getSurvey(surveyId)
     }
 

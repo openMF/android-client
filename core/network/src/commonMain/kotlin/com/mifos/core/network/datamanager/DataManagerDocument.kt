@@ -12,9 +12,8 @@ package com.mifos.core.network.datamanager
 import com.mifos.core.model.objects.noncoreobjects.Document
 import com.mifos.core.network.BaseApiManager
 import com.mifos.core.network.GenericResponse
-import okhttp3.MultipartBody
-import okhttp3.ResponseBody
-import rx.Observable
+import io.ktor.client.statement.HttpResponse
+import kotlinx.coroutines.flow.Flow
 
 /**
  * This DataManager Class for Handling the every request regarding the Document.
@@ -52,7 +51,7 @@ class DataManagerDocument(val mBaseApiManager: BaseApiManager) {
         name: String?,
         desc: String?,
         file: MultipartBody.Part?,
-    ): Observable<GenericResponse> {
+    ): Flow<GenericResponse> {
         return mBaseApiManager
             .documentApi
             .createDocument(entityType, entityId, name, desc, file)
@@ -73,7 +72,7 @@ class DataManagerDocument(val mBaseApiManager: BaseApiManager) {
         entityType: String,
         entityId: Int,
         documentId: Int,
-    ): ResponseBody {
+    ): HttpResponse {
         return mBaseApiManager.documentApi.downloadDocument(entityType, entityId, documentId)
     }
 
@@ -119,7 +118,7 @@ class DataManagerDocument(val mBaseApiManager: BaseApiManager) {
         name: String?,
         desc: String?,
         file: MultipartBody.Part?,
-    ): Observable<GenericResponse> {
+    ): Flow<GenericResponse> {
         return mBaseApiManager.documentApi
             .updateDocument(entityType, entityId, documentId, name, desc, file)
     }
