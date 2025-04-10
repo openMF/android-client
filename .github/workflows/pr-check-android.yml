@@ -77,7 +77,7 @@ permissions:
 jobs:
   pr_checks:
     name: PR Checks
-    uses: openMF/mifos-mobile-github-actions/.github/workflows/pr-check-android.yaml@main
+    uses: openMF/mifos-x-actionhub/.github/workflows/pr-check-android.yaml@v1.0.0
     secrets: inherit
     with:
       android_package_name: 'mifosng-android' # <-- Change Your Android Package Name
