@@ -14,6 +14,7 @@ import com.mifos.core.network.BaseApiManager
 import com.mifos.core.network.mappers.staffs.StaffMapper
 import com.mifos.room.entities.organisation.StaffEntity
 import com.mifos.room.helper.StaffDaoHelper
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flow
@@ -32,6 +33,7 @@ class DataManagerStaff(
      * @param officeId
      * @return
      */
+    @OptIn(ExperimentalCoroutinesApi::class)
     fun getStaffInOffice(officeId: Int): Flow<List<StaffEntity>> {
         return prefManager.userInfo.flatMapLatest { userData ->
             when (userData.userStatus) {

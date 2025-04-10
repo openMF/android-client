@@ -16,6 +16,7 @@ import com.mifos.room.entities.survey.QuestionDatasEntity
 import com.mifos.room.entities.survey.ResponseDatasEntity
 import com.mifos.room.entities.survey.SurveyEntity
 import com.mifos.room.helper.SurveyDaoHelper
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flow
@@ -39,6 +40,7 @@ class DataManagerSurveys(
      *
      * @return Observable<List></List><Survey>>
      </Survey></Survey> */
+    @OptIn(ExperimentalCoroutinesApi::class)
     val allSurvey: Flow<List<SurveyEntity>>
         get() = prefManager.userInfo.flatMapLatest { userData ->
             when (userData.userStatus) {

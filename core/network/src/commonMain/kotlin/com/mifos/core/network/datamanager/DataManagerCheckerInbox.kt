@@ -13,17 +13,17 @@ import com.mifos.core.model.objects.checkerinboxtask.CheckerInboxSearchTemplate
 import com.mifos.core.model.objects.checkerinboxtask.CheckerTask
 import com.mifos.core.network.BaseApiManager
 import com.mifos.core.network.GenericResponse
-import rx.Observable
+import kotlinx.coroutines.flow.Flow
 
 class DataManagerCheckerInbox(
     private val mBaseApiManager: BaseApiManager,
 ) {
 
-    suspend fun getCheckerTaskList(
+     fun getCheckerTaskList(
         actionName: String? = null,
         entityName: String? = null,
         resourceId: Int? = null,
-    ): List<CheckerTask> {
+    ): Flow<List<CheckerTask>> {
         return mBaseApiManager.checkerInboxApi.getCheckerList(
             actionName,
             entityName,
@@ -47,7 +47,7 @@ class DataManagerCheckerInbox(
         return mBaseApiManager.checkerInboxApi.getRescheduleLoansTaskList()
     }
 
-    fun getCheckerInboxSearchTemplate(): Observable<CheckerInboxSearchTemplate> {
+    fun getCheckerInboxSearchTemplate(): Flow<CheckerInboxSearchTemplate> {
         return mBaseApiManager.checkerInboxApi.getCheckerInboxSearchTempalate()
     }
 
@@ -55,7 +55,7 @@ class DataManagerCheckerInbox(
         actionName: String? = null,
         entityName: String? = null,
         resourceId: Int? = null,
-    ): Observable<List<CheckerTask>> {
+    ): Flow<List<CheckerTask>> {
         return mBaseApiManager.checkerInboxApi.getCheckerTasksFromResourceId(
             actionName,
             entityName,

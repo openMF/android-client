@@ -24,7 +24,7 @@ import kotlinx.coroutines.flow.Flow
 interface CheckerInboxService {
 
     @GET(APIEndPoint.MAKER_CHECKER)
-    suspend fun getCheckerList(
+     fun getCheckerList(
         @Query("actionName") actionName: String? = null,
         @Query("entityName") entityName: String? = null,
         @Query("resourceId") resourceId: Int? = null,

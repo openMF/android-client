@@ -22,6 +22,7 @@ import com.mifos.room.entities.client.Savings
 import com.mifos.room.entities.templates.savings.SavingProductsTemplate
 import com.mifos.room.entities.templates.savings.SavingsAccountTransactionTemplateEntity
 import com.mifos.room.helper.SavingsDaoHelper
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flow
@@ -189,6 +190,7 @@ class DataManagerSavings(
      * @param request            SavingsAccountTransactionRequest
      * @return SavingsAccountTransactionResponse
      */
+    @OptIn(ExperimentalCoroutinesApi::class)
     fun processTransaction(
         savingsAccountType: String?,
         savingsAccountId: Int,

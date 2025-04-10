@@ -20,6 +20,7 @@ import com.mifos.room.entities.collectionsheet.CollectionSheetResponse
 import com.mifos.room.entities.collectionsheet.IndividualCollectionSheet
 import com.mifos.room.entities.collectionsheet.ProductiveCollectionSheetPayload
 import com.mifos.room.entities.group.CenterWithAssociations
+import kotlinx.coroutines.flow.Flow
 
 /**
  * Created by Tarun on 22-07-2017.
@@ -45,13 +46,13 @@ class DataManagerCollectionSheet(
     /**
      * Productive CollectionSheet API
      */
-    suspend fun fetchCenterDetails(
+     fun fetchCenterDetails(
         format: String?,
         locale: String?,
         meetingDate: String?,
         officeId: Int,
         staffId: Int,
-    ): List<CenterDetail> {
+    ): Flow<List<CenterDetail>> {
         return mBaseApiManager.collectionSheetApi.fetchCenterDetails(
             format,
             locale,
