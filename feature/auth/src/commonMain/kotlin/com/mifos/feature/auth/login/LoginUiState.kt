@@ -9,6 +9,8 @@
  */
 package com.mifos.feature.auth.login
 
+import org.jetbrains.compose.resources.StringResource
+
 /**
  * Created by Aditya Gupta on 06/08/23.
  */
@@ -19,7 +21,7 @@ sealed class LoginUiState {
 
     data object ShowProgress : LoginUiState()
 
-    data class ShowError(val message: Int) : LoginUiState()
+    data class ShowError(val message: StringResource) : LoginUiState()
 
     data class ShowValidationError(val usernameError: Int? = null, val passwordError: Int? = null) :
         LoginUiState()

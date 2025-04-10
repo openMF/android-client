@@ -9,16 +9,16 @@
  */
 package com.mifos.feature.auth.login
 
-import android.util.Log
+import androidclient.feature.auth.generated.resources.Res
+import androidclient.feature.auth.generated.resources.feature_auth_error_login_failed
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.mifos.core.common.model.user.User
 import com.mifos.core.common.utils.Resource
 import com.mifos.core.datastore.UserPreferencesRepository
 import com.mifos.core.domain.useCases.LoginUseCase
 import com.mifos.core.domain.useCases.PasswordValidationUseCase
 import com.mifos.core.domain.useCases.UsernameValidationUseCase
-import com.mifos.core.model.objects.users.User
-import com.mifos.feature.auth.R
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -85,17 +85,17 @@ class LoginViewModel(
         viewModelScope.launch(Dispatchers.IO) {
             loginUseCase(username, password).collect { result ->
                 when (result) {
-                    is Resource.Error -> {
+                    is Resource.Error<*> -> {
                         _loginUiState.value =
-                            LoginUiState.ShowError(R.string.feature_auth_error_login_failed)
+                            LoginUiState.ShowError(Res.string.feature_auth_error_login_failed)
                         Log.e("@@@", "login: ${result.message}")
                     }
 
-                    is Resource.Loading -> {
+                    is Resource.Loading<*> -> {
                         _loginUiState.value = LoginUiState.ShowProgress
                     }
 
-                    is Resource.Success -> {
+                    is Resource.Success<*> -> {
                         result.data?.let {
                             if (it.userId != null && it.authenticated == true) {
                                 onLoginSuccessful(it, username, password)
