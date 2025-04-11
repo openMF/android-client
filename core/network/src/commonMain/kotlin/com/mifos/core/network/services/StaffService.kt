@@ -22,9 +22,9 @@ interface StaffService {
     @GET(APIEndPoint.STAFF + "?status=all")
     fun getStaffForOffice(@Query("officeId") officeId: Int): Flow<List<StaffEntity>>
 
-    @get:GET(APIEndPoint.STAFF)
-    val allStaff: Flow<List<StaffEntity>>
+    @GET(APIEndPoint.STAFF)
+    fun allStaff(): Flow<List<StaffEntity>>
 
-    @get:GET(APIEndPoint.STAFF + "?isLoanOfficer=true")
-    val fieldStaffForOffice: Flow<List<StaffEntity>>
+    @GET(APIEndPoint.STAFF + "?isLoanOfficer=true")
+    fun fieldStaffForOffice(): Flow<List<StaffEntity>>
 }

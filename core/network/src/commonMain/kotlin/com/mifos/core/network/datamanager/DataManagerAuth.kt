@@ -10,8 +10,8 @@
 package com.mifos.core.network.datamanager
 
 import com.mifos.core.network.BaseApiManager
-import org.openapitools.client.models.PostAuthenticationRequest
-import org.openapitools.client.models.PostAuthenticationResponse
+import com.mifos.core.network.model.PostAuthenticationRequest
+import com.mifos.core.network.model.PostAuthenticationResponse
 
 /**
  * Created by Rajan Maurya on 19/02/17.

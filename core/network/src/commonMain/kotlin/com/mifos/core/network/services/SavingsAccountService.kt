@@ -102,14 +102,14 @@ interface SavingsAccountService {
         @Body savingsApproval: SavingsApproval?,
     ): Flow<GenericResponse>
 
-    @get:GET(APIEndPoint.CREATE_SAVINGS_PRODUCTS)
-    val allSavingsAccounts: Flow<List<ProductSavings>>
+    @GET(APIEndPoint.CREATE_SAVINGS_PRODUCTS)
+    fun allSavingsAccounts(): Flow<List<ProductSavings>>
 
     @POST(APIEndPoint.CREATE_SAVINGS_ACCOUNTS)
     fun createSavingsAccount(@Body savingsPayload: SavingsPayload?): Flow<Savings>
 
-    @get:GET(APIEndPoint.CREATE_SAVINGS_PRODUCTS + "/template")
-    val savingsAccountTemplate: Flow<SavingProductsTemplate>
+    @GET(APIEndPoint.CREATE_SAVINGS_PRODUCTS + "/template")
+    fun savingsAccountTemplate(): Flow<SavingProductsTemplate>
 
     @GET(APIEndPoint.CREATE_SAVINGS_ACCOUNTS + "/template")
     fun getClientSavingsAccountTemplateByProduct(

@@ -13,6 +13,7 @@ import com.mifos.core.model.objects.noncoreobjects.Document
 import com.mifos.core.network.BaseApiManager
 import com.mifos.core.network.GenericResponse
 import io.ktor.client.statement.HttpResponse
+import io.ktor.http.content.PartData
 import kotlinx.coroutines.flow.Flow
 
 /**
@@ -50,7 +51,7 @@ class DataManagerDocument(val mBaseApiManager: BaseApiManager) {
         entityId: Int,
         name: String?,
         desc: String?,
-        file: MultipartBody.Part?,
+        file: PartData,
     ): Flow<GenericResponse> {
         return mBaseApiManager
             .documentApi
@@ -117,7 +118,7 @@ class DataManagerDocument(val mBaseApiManager: BaseApiManager) {
         documentId: Int,
         name: String?,
         desc: String?,
-        file: MultipartBody.Part?,
+        file: PartData,
     ): Flow<GenericResponse> {
         return mBaseApiManager.documentApi
             .updateDocument(entityType, entityId, documentId, name, desc, file)

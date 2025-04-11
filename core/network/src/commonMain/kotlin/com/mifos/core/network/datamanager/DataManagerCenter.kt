@@ -15,6 +15,8 @@ import com.mifos.core.model.objects.clients.ActivatePayload
 import com.mifos.core.network.BaseApiManager
 import com.mifos.core.network.mappers.centers.GetCentersResponseMapper
 import com.mifos.core.network.mappers.offices.GetOfficeResponseMapper
+import com.mifos.core.network.model.PostCentersCenterIdRequest
+import com.mifos.core.network.model.PostCentersCenterIdResponse
 import com.mifos.room.entities.accounts.CenterAccounts
 import com.mifos.room.entities.center.CenterPayloadEntity
 import com.mifos.room.entities.group.CenterEntity
@@ -24,8 +26,6 @@ import com.mifos.room.helper.CenterDaoHelper
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
-import org.openapitools.client.models.PostCentersCenterIdRequest
-import org.openapitools.client.models.PostCentersCenterIdResponse
 
 /**
  * This DataManager is for Managing Center API, In which Request is going to Server

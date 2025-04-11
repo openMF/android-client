@@ -22,18 +22,19 @@ import com.mifos.core.network.mappers.clients.GetClientResponseMapper
 import com.mifos.core.network.mappers.clients.GetClientsClientIdAccountMapper
 import com.mifos.core.network.mappers.clients.GetIdentifiersTemplateMapper
 import com.mifos.core.network.mappers.clients.IdentifierMapper
+import com.mifos.core.network.model.DeleteClientsClientIdIdentifiersIdentifierIdResponse
+import com.mifos.core.network.model.PostClientsClientIdRequest
+import com.mifos.core.network.model.PostClientsClientIdResponse
 import com.mifos.room.entities.accounts.ClientAccounts
 import com.mifos.room.entities.client.ClientEntity
 import com.mifos.room.entities.client.ClientPayloadEntity
 import com.mifos.room.entities.templates.clients.ClientsTemplateEntity
 import com.mifos.room.helper.ClientDaoHelper
+import io.ktor.http.content.PartData
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
-import org.openapitools.client.models.DeleteClientsClientIdIdentifiersIdentifierIdResponse
-import org.openapitools.client.models.PostClientsClientIdRequest
-import org.openapitools.client.models.PostClientsClientIdResponse
 
 /**
  * This DataManager is for Managing Client API, In which Request is going to Server
@@ -199,7 +200,7 @@ class DataManagerClient(
      * @param file MultipartBody of the Image file
      * @return ResponseBody is the Retrofit 2 response
      */
-    suspend fun uploadClientImage(id: Int, file: MultipartBody.Part?) {
+    suspend fun uploadClientImage(id: Int, file: PartData) {
         mBaseApiManager.clientsApi.uploadClientImage(id, file)
     }
     /**

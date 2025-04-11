@@ -82,7 +82,7 @@ class DataManagerLoan(
     }
 
     val allLoans: Flow<List<com.mifos.core.model.objects.organisations.LoanProducts>>
-        get() = mBaseApiManager.loanApi.allLoans
+        get() = mBaseApiManager.loanApi.getAllLoans()
 
     fun getLoansAccountTemplate(clientId: Int, productId: Int): Flow<LoanTemplate> {
         return mBaseApiManager.loanApi.getLoansAccountTemplate(clientId, productId)

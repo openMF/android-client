@@ -14,6 +14,7 @@ import com.mifos.core.model.objects.clients.Page
 import com.mifos.core.network.BaseApiManager
 import com.mifos.room.entities.client.ChargesEntity
 import com.mifos.room.helper.ChargeDaoHelper
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
@@ -44,6 +45,7 @@ class DataManagerCharge(
      * @return Page<Charge> Page of Charge in Which List Size is according to Limit and from
      * where position is Starting according to offset</Charge>>
      */
+    @OptIn(ExperimentalCoroutinesApi::class)
     fun getClientCharges(
         clientId: Int,
         offset: Int,

@@ -152,7 +152,7 @@ class DataManager : KoinComponent {
     }
 
     val allStaff: Flow<List<StaffEntity>>
-        get() = mBaseApiManager.staffApi.allStaff
+        get() = mBaseApiManager.staffApi.allStaff()
 
     /**
      * Loans API
@@ -162,7 +162,7 @@ class DataManager : KoinComponent {
     }
 
     val allLoans: Flow<List<com.mifos.core.model.objects.organisations.LoanProducts>>
-        get() = mBaseApiManager.loanApi.allLoans
+        get() = mBaseApiManager.loanApi.getAllLoans()
 
     fun getGroupLoansAccountTemplate(groupId: Int, productId: Int): Flow<GroupLoanTemplate> {
         return mBaseApiManager.loanApi.getGroupLoansAccountTemplate(groupId, productId)

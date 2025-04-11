@@ -70,8 +70,8 @@ interface LoanService {
     @GET(APIEndPoint.LOANS + "/{loanId}?associations=transactions")
     fun getLoanWithTransactions(@Path("loanId") loanId: Int): Flow<LoanWithAssociationsEntity>
 
-    @get:GET(APIEndPoint.CREATE_LOANS_PRODUCTS)
-    val allLoans: Flow<List<com.mifos.core.model.objects.organisations.LoanProducts>>
+    @GET(APIEndPoint.CREATE_LOANS_PRODUCTS)
+    fun getAllLoans(): Flow<List<com.mifos.core.model.objects.organisations.LoanProducts>>
 
     @POST(APIEndPoint.CREATE_LOANS_ACCOUNTS)
     fun createLoansAccount(@Body loansPayload: LoansPayload?): Flow<Loan>

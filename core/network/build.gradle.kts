@@ -46,7 +46,6 @@ kotlin{
             api(projects.core.database)
             api(projects.core.common)
             api(libs.kotlinx.datetime)
-            implementation(libs.fineract.client.kmp.sdk)
         }
         androidMain.dependencies {
             implementation(libs.ktor.client.okhttp)

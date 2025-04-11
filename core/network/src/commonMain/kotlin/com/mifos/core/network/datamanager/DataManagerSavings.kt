@@ -281,14 +281,14 @@ class DataManagerSavings(
     }
 
     val savingsAccounts: Flow<List<ProductSavings>>
-        get() = mBaseApiManager.savingsApi.allSavingsAccounts
+        get() = mBaseApiManager.savingsApi.allSavingsAccounts()
 
     fun createSavingsAccount(savingsPayload: SavingsPayload?): Flow<Savings> {
         return mBaseApiManager.savingsApi.createSavingsAccount(savingsPayload)
     }
 
     val savingsAccountTemplate: Flow<SavingProductsTemplate>
-        get() = mBaseApiManager.savingsApi.savingsAccountTemplate
+        get() = mBaseApiManager.savingsApi.savingsAccountTemplate()
 
     fun getClientSavingsAccountTemplateByProduct(
         clientId: Int,
