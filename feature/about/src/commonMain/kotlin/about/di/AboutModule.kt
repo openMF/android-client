@@ -7,9 +7,9 @@
  *
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
-package com.mifos.feature.about.di
+package about.di
 
-import com.mifos.feature.about.AboutViewModel
+import about.AboutViewModel
 import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.module
 

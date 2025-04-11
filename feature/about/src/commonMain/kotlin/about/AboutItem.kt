@@ -7,14 +7,16 @@
  *
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
-package com.mifos.feature.about
+package about
 
 import androidx.compose.ui.graphics.Color
+import org.jetbrains.compose.resources.DrawableResource
+import org.jetbrains.compose.resources.StringResource
 
 data class AboutItem(
-    val icon: Int?,
-    val title: Int,
-    val subtitle: Int?,
+    val icon: DrawableResource? = null,
+    val title: StringResource,
+    val subtitle: StringResource? = null,
     val color: Color,
     val id: AboutItems,
 )

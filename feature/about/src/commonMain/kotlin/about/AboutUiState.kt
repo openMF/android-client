@@ -7,11 +7,15 @@
  *
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
-package com.mifos.feature.about.navigation
+package about
 
-/**
- * Created by Pronay Sarker on 18/08/2024 (2:42 PM)
- */
-sealed class AboutScreens(val route: String) {
-    data object AboutScreen : AboutScreens(route = "about_screen_route")
+import org.jetbrains.compose.resources.StringResource
+
+sealed class AboutUiState {
+
+    data object Loading : AboutUiState()
+
+    data class Error(val message: StringResource) : AboutUiState()
+
+    data class AboutOptions(val aboutOptions: List<AboutItem>) : AboutUiState()
 }
