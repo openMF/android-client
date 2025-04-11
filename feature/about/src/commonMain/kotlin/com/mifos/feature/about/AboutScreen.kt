@@ -7,7 +7,7 @@
  *
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
-package about
+package com.mifos.feature.about
 
 import androidclient.feature.about.generated.resources.Res
 import androidclient.feature.about.generated.resources.feature_about
@@ -113,7 +113,8 @@ internal fun AboutScreen(
                 }
 
                 is AboutUiState.Error -> MifosSweetError(
-                    message = stringResource(state.message)) {
+                    message = stringResource(state.message),
+                ) {
                     onRetry()
                 }
 
@@ -225,4 +226,3 @@ private fun AboutCardItem(
         }
     }
 }
-

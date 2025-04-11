@@ -7,11 +7,11 @@
  *
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
-package about.navigation
+package com.mifos.feature.about.navigation
 
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
-import about.AboutScreen
+import com.mifos.feature.about.AboutScreen
 
 /**
  * Created by Pronay Sarker on 10/08/2024 (7:56 AM)

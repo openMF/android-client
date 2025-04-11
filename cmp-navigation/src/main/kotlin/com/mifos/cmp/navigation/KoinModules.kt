@@ -17,7 +17,7 @@ import com.mifos.core.network.di.DataManagerModule
 import com.mifos.core.network.di.NetworkModule
 import com.mifos.core.testing.di.TestDispatcherModule
 import com.mifos.core.testing.di.TestDispatchersModule
-import about.di.AboutModule
+import com.mifos.feature.about.di.AboutModule
 import com.mifos.feature.activate.di.ActivateModule
 import com.mifos.feature.auth.di.AuthModule
 import com.mifos.feature.center.di.CenterModule

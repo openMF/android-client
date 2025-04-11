@@ -7,7 +7,7 @@
  *
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
-package about.navigation
+package com.mifos.feature.about.navigation
 
 /**
  * Created by Pronay Sarker on 18/08/2024 (2:42 PM)

@@ -7,7 +7,7 @@
  *
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
-package about
+package com.mifos.feature.about
 
 import androidclient.feature.about.generated.resources.Res
 import androidclient.feature.about.generated.resources.feature_about_app_version
