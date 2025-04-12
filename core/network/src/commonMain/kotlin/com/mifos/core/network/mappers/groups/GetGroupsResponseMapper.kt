@@ -10,9 +10,9 @@
 package com.mifos.core.network.mappers.groups
 
 import com.mifos.core.common.utils.Page
+import com.mifos.core.network.data.AbstractMapper
+import com.mifos.core.network.model.GetGroupsResponse
 import com.mifos.room.entities.group.GroupEntity
-import org.mifos.core.data.AbstractMapper
-import org.openapitools.client.models.GetGroupsResponse
 
 object GetGroupsResponseMapper : AbstractMapper<GetGroupsResponse, Page<GroupEntity>>() {
 

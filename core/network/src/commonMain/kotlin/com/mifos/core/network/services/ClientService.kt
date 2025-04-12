@@ -16,6 +16,8 @@ import com.mifos.core.model.objects.noncoreobjects.IdentifierCreationResponse
 import com.mifos.core.model.objects.noncoreobjects.IdentifierPayload
 import com.mifos.core.model.objects.noncoreobjects.IdentifierTemplate
 import com.mifos.core.network.GenericResponse
+import com.mifos.core.network.model.PostAuthenticationRequest
+import com.mifos.core.network.model.PostAuthenticationResponse
 import com.mifos.room.basemodel.APIEndPoint
 import com.mifos.room.entities.accounts.ClientAccounts
 import com.mifos.room.entities.client.ClientEntity

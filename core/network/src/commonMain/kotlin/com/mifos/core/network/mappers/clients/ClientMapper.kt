@@ -9,11 +9,11 @@
  */
 package com.mifos.core.network.mappers.clients
 
+import com.mifos.core.network.data.AbstractMapper
+import com.mifos.core.network.model.GetClientStatus
+import com.mifos.core.network.model.GetClientsPageItemsResponse
 import com.mifos.room.entities.client.ClientEntity
 import com.mifos.room.entities.client.ClientStatusEntity
-import org.mifos.core.data.AbstractMapper
-import org.openapitools.client.models.GetClientStatus
-import org.openapitools.client.models.GetClientsPageItemsResponse
 
 object ClientMapper : AbstractMapper<GetClientsPageItemsResponse, ClientEntity>() {
 
@@ -24,15 +24,15 @@ object ClientMapper : AbstractMapper<GetClientsPageItemsResponse, ClientEntity>(
             fullname = entity.fullname,
             firstname = entity.displayName!!.split(" ")[0],
             lastname =
-            if (entity.displayName!!.split(" ").size >= 2) entity.displayName!!.split(" ")[1] else "",
+            if (entity.displayName.split(" ").size >= 2) entity.displayName.split(" ")[1] else "",
             displayName = entity.displayName,
             officeId = entity.officeId!!.toInt(),
             officeName = entity.officeName,
             active = entity.active!!,
             status = ClientStatusEntity(
                 id = entity.status?.id!!.toInt(),
-                code = entity.status?.code,
-                value = entity.status?.description,
+                code = entity.status.code,
+                value = entity.status.description,
             ),
         )
     }

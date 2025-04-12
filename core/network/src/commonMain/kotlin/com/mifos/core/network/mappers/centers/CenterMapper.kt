@@ -9,11 +9,11 @@
  */
 package com.mifos.core.network.mappers.centers
 
+import com.mifos.core.network.data.AbstractMapper
+import com.mifos.core.network.model.GetCentersPageItems
+import com.mifos.core.network.model.GetCentersStatus
 import com.mifos.room.entities.client.ClientStatusEntity
 import com.mifos.room.entities.group.CenterEntity
-import org.mifos.core.data.AbstractMapper
-import org.openapitools.client.models.GetCentersPageItems
-import org.openapitools.client.models.GetCentersStatus
 
 object CenterMapper : AbstractMapper<GetCentersPageItems, CenterEntity>() {
 

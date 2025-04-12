@@ -9,9 +9,9 @@
  */
 package com.mifos.core.network.mappers.staffs
 
+import com.mifos.core.network.data.AbstractMapper
+import com.mifos.core.network.model.RetrieveOneResponse
 import com.mifos.room.entities.organisation.StaffEntity
-import org.mifos.core.data.AbstractMapper
-import org.openapitools.client.models.RetrieveOneResponse
 
 object StaffMapper : AbstractMapper<RetrieveOneResponse, StaffEntity>() {
     override fun mapFromEntity(entity: RetrieveOneResponse): StaffEntity {

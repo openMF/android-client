@@ -11,9 +11,9 @@ package com.mifos.core.network.mappers.clients
 
 import com.mifos.core.model.objects.noncoreobjects.DocumentType
 import com.mifos.core.model.objects.noncoreobjects.Identifier
-import org.mifos.core.data.AbstractMapper
-import org.openapitools.client.models.GetClientsClientIdIdentifiersResponse
-import org.openapitools.client.models.GetClientsDocumentType
+import com.mifos.core.network.data.AbstractMapper
+import com.mifos.core.network.model.GetClientsClientIdIdentifiersResponse
+import com.mifos.core.network.model.GetClientsDocumentType
 
 /**
  * Created by Aditya Gupta on 30/08/23.

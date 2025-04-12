@@ -9,9 +9,9 @@
  */
 package com.mifos.core.network.mappers.offices
 
+import com.mifos.core.network.data.AbstractMapper
+import com.mifos.core.network.model.GetOfficesResponse
 import com.mifos.room.entities.organisation.OfficeEntity
-import org.mifos.core.data.AbstractMapper
-import org.openapitools.client.models.GetOfficesResponse
 
 object GetOfficeResponseMapper : AbstractMapper<GetOfficesResponse, OfficeEntity>() {
 

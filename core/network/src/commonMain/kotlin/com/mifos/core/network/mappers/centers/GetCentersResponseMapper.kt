@@ -10,9 +10,9 @@
 package com.mifos.core.network.mappers.centers
 
 import com.mifos.core.common.utils.Page
+import com.mifos.core.network.data.AbstractMapper
+import com.mifos.core.network.model.GetCentersResponse
 import com.mifos.room.entities.group.CenterEntity
-import org.mifos.core.data.AbstractMapper
-import org.openapitools.client.models.GetCentersResponse
 
 object GetCentersResponseMapper : AbstractMapper<GetCentersResponse, Page<CenterEntity>>() {
 

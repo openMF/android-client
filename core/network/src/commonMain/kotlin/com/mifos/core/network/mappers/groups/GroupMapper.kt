@@ -9,11 +9,11 @@
  */
 package com.mifos.core.network.mappers.groups
 
+import com.mifos.core.network.data.AbstractMapper
+import com.mifos.core.network.model.GetGroupsPageItems
+import com.mifos.core.network.model.GetGroupsStatus
 import com.mifos.room.entities.client.ClientStatusEntity
 import com.mifos.room.entities.group.GroupEntity
-import org.mifos.core.data.AbstractMapper
-import org.openapitools.client.models.GetGroupsPageItems
-import org.openapitools.client.models.GetGroupsStatus
 
 object GroupMapper : AbstractMapper<GetGroupsPageItems, GroupEntity>() {
 
@@ -27,8 +27,8 @@ object GroupMapper : AbstractMapper<GetGroupsPageItems, GroupEntity>() {
             hierarchy = entity.hierarchy,
             status = ClientStatusEntity(
                 id = entity.status?.id!!.toInt(),
-                code = entity.status?.code,
-                value = entity.status?.description,
+                code = entity.status.code,
+                value = entity.status.description,
             ),
         )
     }

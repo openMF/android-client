@@ -9,11 +9,11 @@
  */
 package com.mifos.core.network.mappers.dataTable
 
+import com.mifos.core.network.data.AbstractMapper
+import com.mifos.core.network.model.GetDataTablesResponse
+import com.mifos.core.network.model.ResultsetColumnHeaderData
 import com.mifos.room.entities.noncore.ColumnHeader
 import com.mifos.room.entities.noncore.DataTableEntity
-import org.mifos.core.data.AbstractMapper
-import org.openapitools.client.models.GetDataTablesResponse
-import org.openapitools.client.models.ResultsetColumnHeaderData
 
 /**
  * Created by Aditya Gupta on 31/08/23.

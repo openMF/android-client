@@ -10,9 +10,9 @@
 package com.mifos.core.network.mappers.clients
 
 import com.mifos.core.common.utils.Page
+import com.mifos.core.network.data.AbstractMapper
+import com.mifos.core.network.model.GetClientsResponse
 import com.mifos.room.entities.client.ClientEntity
-import org.mifos.core.data.AbstractMapper
-import org.openapitools.client.models.GetClientsResponse
 
 object GetClientResponseMapper : AbstractMapper<GetClientsResponse, Page<ClientEntity>>() {
 

@@ -9,6 +9,15 @@
  */
 package com.mifos.core.network.mappers.clients
 
+import com.mifos.core.network.data.AbstractMapper
+import com.mifos.core.network.model.GetClientsClientIdAccountsResponse
+import com.mifos.core.network.model.GetClientsLoanAccounts
+import com.mifos.core.network.model.GetClientsLoanAccountsStatus
+import com.mifos.core.network.model.GetClientsLoanAccountsType
+import com.mifos.core.network.model.GetClientsSavingsAccounts
+import com.mifos.core.network.model.GetClientsSavingsAccountsCurrency
+import com.mifos.core.network.model.GetClientsSavingsAccountsDepositType
+import com.mifos.core.network.model.GetClientsSavingsAccountsStatus
 import com.mifos.room.entities.accounts.ClientAccounts
 import com.mifos.room.entities.accounts.loans.LoanAccountEntity
 import com.mifos.room.entities.accounts.loans.LoanTypeEntity
@@ -16,15 +25,6 @@ import com.mifos.room.entities.accounts.savings.SavingAccountCurrencyEntity
 import com.mifos.room.entities.accounts.savings.SavingAccountDepositTypeEntity
 import com.mifos.room.entities.accounts.savings.SavingsAccountEntity
 import com.mifos.room.entities.accounts.savings.SavingsAccountStatusEntity
-import org.mifos.core.data.AbstractMapper
-import org.openapitools.client.models.GetClientsClientIdAccountsResponse
-import org.openapitools.client.models.GetClientsLoanAccounts
-import org.openapitools.client.models.GetClientsLoanAccountsStatus
-import org.openapitools.client.models.GetClientsLoanAccountsType
-import org.openapitools.client.models.GetClientsSavingsAccounts
-import org.openapitools.client.models.GetClientsSavingsAccountsCurrency
-import org.openapitools.client.models.GetClientsSavingsAccountsDepositType
-import org.openapitools.client.models.GetClientsSavingsAccountsStatus
 
 /**
  * Created by Aditya Gupta on 30/08/23.

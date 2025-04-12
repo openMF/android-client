@@ -1,0 +1,23 @@
+package com.mifos.core.network.model
+
+
+import kotlinx.serialization.Serializable
+
+/**
+ * GetDataTablesResponse
+ *
+ * @param applicationTableName
+ * @param columnHeaderData
+ * @param registeredTableName
+ */
+
+@Serializable
+data class GetDataTablesResponse(
+
+    val applicationTableName: kotlin.String? = null,
+
+    val columnHeaderData: kotlin.collections.List<ResultsetColumnHeaderData>? = null,
+
+    val registeredTableName: kotlin.String? = null,
+
+    )

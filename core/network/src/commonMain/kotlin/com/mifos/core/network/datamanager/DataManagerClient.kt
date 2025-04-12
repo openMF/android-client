@@ -34,6 +34,7 @@ import io.ktor.http.content.PartData
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 
 /**
@@ -218,13 +219,11 @@ class DataManagerClient(
         get() = prefManager.userInfo.flatMapLatest { userData ->
             when (userData.userStatus) {
                 false ->
-                    mBaseApiManager.clientsApi.clientTemplate
-                        .map { clientsTemplate ->
-                            clientDatabaseHelper.saveClientTemplate(
-                                clientsTemplate,
-                            )
-                            clientsTemplate
-                        }
+                    flow {
+                        val clientsTemplate = mBaseApiManager.clientsApi.getClientTemplate()
+                        clientDatabaseHelper.saveClientTemplate(clientsTemplate)
+                        emit(clientsTemplate)
+                    }
 
                 true ->
                     /**
