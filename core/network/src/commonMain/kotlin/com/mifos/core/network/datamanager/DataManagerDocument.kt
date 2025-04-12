@@ -47,10 +47,10 @@ class DataManagerDocument(val mBaseApiManager: BaseApiManager) {
      * @return GenericResponse
      */
     fun createDocument(
-        entityType: String?,
+        entityType: String,
         entityId: Int,
-        name: String?,
-        desc: String?,
+        name: String,
+        desc: String,
         file: PartData,
     ): Flow<GenericResponse> {
         return mBaseApiManager
@@ -113,11 +113,11 @@ class DataManagerDocument(val mBaseApiManager: BaseApiManager) {
      * @return GenericResponse
      */
     fun updateDocument(
-        entityType: String?,
+        entityType: String,
         entityId: Int,
         documentId: Int,
-        name: String?,
-        desc: String?,
+        name: String,
+        desc: String,
         file: PartData,
     ): Flow<GenericResponse> {
         return mBaseApiManager.documentApi

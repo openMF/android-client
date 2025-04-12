@@ -41,10 +41,10 @@ interface DocumentService {
     @POST("{entityType}/{entityId}/" + APIEndPoint.DOCUMENTS)
     @Multipart
     fun createDocument(
-        @Path("entityType") entityType: String?,
+        @Path("entityType") entityType: String,
         @Path("entityId") entityId: Int,
-        @Part("name") nameOfDocument: String?,
-        @Part("description") description: String?,
+        @Part("name") nameOfDocument: String,
+        @Part("description") description: String,
         @Part typedFile: PartData,
     ): Flow<GenericResponse>
 
@@ -104,11 +104,11 @@ interface DocumentService {
     @PUT("{entityType}/{entityId}/" + APIEndPoint.DOCUMENTS + "/{documentId}")
     @Multipart
     fun updateDocument(
-        @Path("entityType") entityType: String?,
+        @Path("entityType") entityType: String,
         @Path("entityId") entityId: Int,
         @Path("documentId") documentId: Int,
-        @Part("name") nameOfDocument: String?,
-        @Part("description") description: String?,
+        @Part("name") nameOfDocument: String,
+        @Part("description") description: String,
         @Part typedFile:PartData,
     ): Flow<GenericResponse>
 }

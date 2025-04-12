@@ -49,7 +49,7 @@ interface SavingsAccountService {
      */
     @GET("{savingsAccountType}/{savingsAccountId}")
     fun getSavingsAccountWithAssociations(
-        @Path("savingsAccountType") savingsAccountType: String?,
+        @Path("savingsAccountType") savingsAccountType: String,
         @Path("savingsAccountId") savingsAccountId: Int,
         @Query("associations") association: String?,
     ): Flow<SavingsAccountWithAssociationsEntity>
@@ -66,7 +66,7 @@ interface SavingsAccountService {
      */
     @GET("{savingsAccountType}/{savingsAccountId}/transactions/template")
     fun getSavingsAccountTransactionTemplate(
-        @Path("savingsAccountType") savingsAccountType: String?,
+        @Path("savingsAccountType") savingsAccountType: String,
         @Path("savingsAccountId") savingsAccountId: Int,
         @Query("command") transactionType: String?,
     ): Flow<SavingsAccountTransactionTemplateEntity>
@@ -84,7 +84,7 @@ interface SavingsAccountService {
      */
     @POST("{savingsAccountType}/{savingsAccountId}/transactions")
     suspend fun processTransaction(
-        @Path("savingsAccountType") savingsAccountType: String?,
+        @Path("savingsAccountType") savingsAccountType: String,
         @Path("savingsAccountId") savingsAccountId: Int,
         @Query("command") transactionType: String?,
         @Body savingsAccountTransactionRequest: SavingsAccountTransactionRequestEntity?,

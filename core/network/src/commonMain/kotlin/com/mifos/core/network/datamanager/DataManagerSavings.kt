@@ -53,7 +53,7 @@ class DataManagerSavings(
      * @return SavingsAccountWithAssociations
      */
     fun getSavingsAccount(
-        type: String?,
+        type: String,
         savingsAccountId: Int,
         association: String?,
     ): Flow<SavingsAccountWithAssociationsEntity?> {
@@ -92,7 +92,7 @@ class DataManagerSavings(
      * @return SavingsAccountWithAssociations
      */
     fun syncSavingsAccount(
-        type: String?,
+        type: String,
         savingsAccountId: Int,
         association: String?,
     ): Flow<SavingsAccountWithAssociationsEntity> {
@@ -127,7 +127,7 @@ class DataManagerSavings(
      * @return SavingsAccountTransactionTemplate
      */
     fun getSavingsAccountTransactionTemplate(
-        type: String?,
+        type: String,
         savingsAccountId: Int,
         transactionType: String?,
     ): Flow<SavingsAccountTransactionTemplateEntity?> {
@@ -162,7 +162,7 @@ class DataManagerSavings(
      * @return SavingsAccountTransactionTemplate
      */
     fun syncSavingsAccountTransactionTemplate(
-        savingsAccountType: String?,
+        savingsAccountType: String,
         savingsAccountId: Int,
         transactionType: String?,
     ): Flow<SavingsAccountTransactionTemplateEntity> {
@@ -192,7 +192,7 @@ class DataManagerSavings(
      */
     @OptIn(ExperimentalCoroutinesApi::class)
     fun processTransaction(
-        savingsAccountType: String?,
+        savingsAccountType: String,
         savingsAccountId: Int,
         transactionType: String?,
         request: SavingsAccountTransactionRequestEntity,

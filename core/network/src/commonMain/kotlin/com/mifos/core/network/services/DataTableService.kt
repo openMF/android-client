@@ -45,7 +45,7 @@ interface DataTableService {
 
     @DELETE(APIEndPoint.DATATABLES + "/{dataTableName}/{entityId}/{dataTableRowId}")
     fun deleteEntryOfDataTableManyToMany(
-        @Path("dataTableName") dataTableName: String?,
+        @Path("dataTableName") dataTableName: String,
         @Path("entityId") entityId: Int,
         @Path("dataTableRowId") dataTableRowId: Int,
     ): Flow<GenericResponse>

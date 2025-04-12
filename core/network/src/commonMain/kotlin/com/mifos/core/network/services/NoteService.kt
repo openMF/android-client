@@ -22,7 +22,7 @@ interface NoteService {
      */
     @GET("{entityType}/{entityId}/" + APIEndPoint.NOTES)
     fun getNotes(
-        @Path("entityType") entityType: String?,
+        @Path("entityType") entityType: String,
         @Path("entityId") entityId: Int,
     ): List<Note>
 }

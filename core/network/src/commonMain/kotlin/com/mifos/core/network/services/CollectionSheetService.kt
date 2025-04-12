@@ -90,7 +90,7 @@ interface CollectionSheetService {
         @Body payload: CollectionSheetPayload?,
     ): GenericResponse
 
-    @GET(APIEndPoint.CENTERS + "/{centerId}?associations=groupMembers, collectionMeetingCalendar")
+    @GET(APIEndPoint.CENTERS + "/{centerId}?associations=groupMembers,collectionMeetingCalendar")
     suspend fun fetchGroupsAssociatedWithCenter(
         @Path("centerId") centerId: Int,
     ): CenterWithAssociations
