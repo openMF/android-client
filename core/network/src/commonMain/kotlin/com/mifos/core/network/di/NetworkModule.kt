@@ -9,20 +9,20 @@
  */
 package com.mifos.core.network.di
 
-import coil.ImageLoader
-import coil.util.DebugLogger
 import com.mifos.core.common.network.MifosDispatchers
 import com.mifos.core.common.utils.getInstanceUrl
 import com.mifos.core.datastore.UserPreferencesRepository
 import com.mifos.core.datastore.UserPreferencesRepositoryImpl
+import com.mifos.core.network.BaseUrl
+import com.mifos.core.network.KtorfitClient
+import io.ktor.client.HttpClient
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
-import org.koin.android.ext.koin.androidContext
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
-import org.mifos.core.apimanager.BaseApiManager
+//import org.mifos.core.apimanager.BaseApiManager
 
 val NetworkModule = module {
 
@@ -38,35 +38,41 @@ val NetworkModule = module {
         )
     }
 
-    single { com.mifos.core.network.BaseApiManager(get()) }
-
-    single { BaseApiManager }
-
-    single {
-        val prefManager: UserPreferencesRepository = get()
-        val baseManager = BaseApiManager.getInstance()
-        CoroutineScope(Dispatchers.IO).launch {
-            val user = prefManager.userData.first()
-            val serverConfig = prefManager.getServerConfig.first()
-            baseManager.createService(
-                user.username ?: "",
-                user.password ?: "",
-                serverConfig.getInstanceUrl().dropLast(3),
-                serverConfig.tenant,
-                false,
-            )
-        }
-        baseManager
+    single<KtorfitClient>(MifosClient) {
+        KtorfitClient.builder()
+            .httpClient(get(KtorBaseClient))
+            .baseURL(BaseUrl().url)
+            .build()
     }
 
-    single<Call.Factory> { OkHttpClient.Builder().build() }
+//    single { com.mifos.core.network.BaseApiManager(get()) }
+//
+//    single { BaseApiManager }
 
-    single {
-        val okHttpCallFactory by lazy { get<Call.Factory>() }
-        ImageLoader.Builder(androidContext())
-            .callFactory { okHttpCallFactory }
-            .apply {
-                logger(DebugLogger())
-            }.build()
-    }
+//    single {
+//        val prefManager: UserPreferencesRepository = get()
+//        val baseManager = BaseApiManager.getInstance()
+//        CoroutineScope(Dispatchers.IO).launch {
+//            val user = prefManager.userData.first()
+//            val serverConfig = prefManager.getServerConfig.first()
+//            baseManager.createService(
+//                user.username ?: "",
+//                user.password ?: "",
+//                serverConfig.getInstanceUrl().dropLast(3),
+//                serverConfig.tenant,
+//                false,
+//            )
+//        }
+//        baseManager
+//    }
+//
+
+//    single {
+//        val okHttpCallFactory by lazy { get<Call.Factory>() }
+//        ImageLoader.Builder(androidContext())
+//            .callFactory { okHttpCallFactory }
+//            .apply {
+//                logger(DebugLogger())
+//            }.build()
+//    }
 }

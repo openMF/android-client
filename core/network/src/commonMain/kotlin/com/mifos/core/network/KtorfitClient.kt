@@ -14,7 +14,7 @@ import de.jensklingenberg.ktorfit.Ktorfit
 import io.ktor.client.HttpClient
 
 class KtorfitClient(
-    ktorfit: Ktorfit,
+    val ktorfit: Ktorfit,
 ) {
     class Builder internal constructor() {
         private lateinit var baseURL: String
