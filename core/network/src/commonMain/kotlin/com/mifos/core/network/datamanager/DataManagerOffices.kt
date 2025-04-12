@@ -27,14 +27,14 @@ import kotlinx.coroutines.flow.flow
  */
 class DataManagerOffices(
     val mBaseApiManager: BaseApiManager,
-    private val baseApiManager: org.mifos.core.apimanager.BaseApiManager,
+    private val baseApiManager: com.mifos.core.network.apimanager.BaseApiManager,
     private val officeDaoHelper: OfficeDaoHelper,
     private val prefManager: UserPreferencesRepository,
 ) {
     /**
      * return all List of Offices from DatabaseHelperOffices
      */
-    fun offices(): Flow<List<OfficeEntity>> {
+    fun fetchOffices(): Flow<List<OfficeEntity>> {
         return flow {
             emit(
                 baseApiManager.getOfficeApi().retrieveOffices(null, null, null).map(

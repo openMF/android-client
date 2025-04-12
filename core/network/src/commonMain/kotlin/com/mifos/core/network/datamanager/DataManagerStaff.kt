@@ -25,7 +25,7 @@ import kotlinx.coroutines.flow.flow
 class DataManagerStaff(
     val mBaseApiManager: BaseApiManager,
 //    private val mDatabaseHelperStaff: DatabaseHelperStaff,
-    private val baseApiManager: org.mifos.core.apimanager.BaseApiManager,
+    private val baseApiManager: com.mifos.core.network.apimanager.BaseApiManager,
     private val prefManager: UserPreferencesRepository,
     private val staffDaoHelper: StaffDaoHelper,
 ) {

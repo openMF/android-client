@@ -19,7 +19,6 @@ import com.mifos.core.datastore.UserPreferencesRepository
 import com.mifos.core.network.MifosInterceptor
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.firstOrNull
-import kotlinx.coroutines.runBlocking
 
 class ImageLoaderUtils(
     private val prefManager: UserPreferencesRepository,

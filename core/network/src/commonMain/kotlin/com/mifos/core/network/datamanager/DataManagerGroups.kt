@@ -38,7 +38,7 @@ class DataManagerGroups(
     private val databaseHelperGroups: GroupsDaoHelper,
 //    private val mDatabaseHelperClient: DatabaseHelperClient,
     private val databaseHelperClient: ClientDaoHelper,
-    private val baseApiManager: org.mifos.core.apimanager.BaseApiManager,
+    private val baseApiManager: com.mifos.core.network.apimanager.BaseApiManager,
     private val prefManager: UserPreferencesRepository,
 ) {
     /**

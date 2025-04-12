@@ -46,7 +46,7 @@ class DataManagerClient(
     val mBaseApiManager: BaseApiManager,
 //    private val mDatabaseHelperClient: DatabaseHelperClient,
     private val clientDatabaseHelper: ClientDaoHelper,
-    private val baseApiManager: org.mifos.core.apimanager.BaseApiManager,
+    private val baseApiManager: com.mifos.core.network.apimanager.BaseApiManager,
     private val prefManager: UserPreferencesRepository,
 ) {
     /**

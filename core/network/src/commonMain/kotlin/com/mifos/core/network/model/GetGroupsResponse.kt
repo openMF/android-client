@@ -12,7 +12,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class GetGroupsResponse(
 
-    val pageItems: kotlin.collections.Set<GetGroupsPageItems>? = null,
+    val pageItems: Set<GetGroupsPageItems>? = null,
 
     val totalFilteredRecords: kotlin.Int? = null,
 

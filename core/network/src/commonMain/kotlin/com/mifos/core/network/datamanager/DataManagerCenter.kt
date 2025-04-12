@@ -36,7 +36,7 @@ import kotlinx.coroutines.flow.flow
 class DataManagerCenter(
     val mBaseApiManager: BaseApiManager,
     private val centerDatabaseHelper: CenterDaoHelper,
-    private val baseApiManager: org.mifos.core.apimanager.BaseApiManager,
+    private val baseApiManager: com.mifos.core.network.apimanager.BaseApiManager,
     private val prefManager: UserPreferencesRepository,
 ) {
     /**

@@ -26,7 +26,7 @@ import kotlinx.serialization.json.JsonArray
  */
 class DataManagerDataTable(
     val mBaseApiManager: BaseApiManager,
-    private val baseApiManager: org.mifos.core.apimanager.BaseApiManager,
+    private val baseApiManager: com.mifos.core.network.apimanager.BaseApiManager,
 ) {
     /**
      * This Method Request the REST API of Datatable and In response give the List of DataTable
