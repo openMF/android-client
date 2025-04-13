@@ -52,7 +52,7 @@ interface CollectionSheetService {
      * @return List of CenterDetail
      */
     @GET(APIEndPoint.CENTERS)
-     fun fetchCenterDetails(
+    fun fetchCenterDetails(
         @Query("dateFormat") format: String?,
         @Query("locale") locale: String?,
         @Query("meetingDate") meetingDate: String?,

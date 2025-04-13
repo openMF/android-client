@@ -7,35 +7,6 @@
  *
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
-//package com.mifos.core.network
-//
-//import com.mifos.core.datastore.UserPreferencesRepository
-//import okhttp3.Interceptor
-//import okhttp3.Response
-//import java.io.IOException
-//
-///**
-// * @author fomenkoo
-// */
-//class MifosInterceptor(private val prefManager: UserPreferencesRepository) : Interceptor {
-//
-//
-//    override fun intercept(chain: Interceptor.Chain): Response {
-//        val chainrequest = chain.request()
-//        val builder = chainrequest.newBuilder()
-//        val tenant = prefManager.getServerConfig.value.tenant
-//        builder.header(HEADER_TENANT, tenant)
-//        val request = builder.build()
-//        return chain.proceed(request)
-//    }
-//
-//    companion object {
-//        const val HEADER_TENANT = "Fineract-Platform-TenantId"
-//        const val HEADER_AUTH = "Authorization"
-//    }
-//}
-
-
 package com.mifos.core.network
 
 import com.mifos.core.datastore.UserPreferencesRepository
@@ -44,7 +15,6 @@ import io.ktor.client.plugins.HttpClientPlugin
 import io.ktor.client.request.HttpRequestPipeline
 import io.ktor.client.request.header
 import io.ktor.util.AttributeKey
-
 
 class MifosInterceptor(
     private val repository: UserPreferencesRepository,
@@ -60,8 +30,6 @@ class MifosInterceptor(
         override fun install(plugin: MifosInterceptor, scope: HttpClient) {
             scope.requestPipeline.intercept(HttpRequestPipeline.State) {
                 val tenant = plugin.repository.getServerConfig.value.tenant
-
-
                 context.header(CONTENT_TYPE, "application/json")
                 context.header("Accept", "application/json")
                 context.header(HEADER_TENANT, tenant)

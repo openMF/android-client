@@ -109,6 +109,6 @@ interface DocumentService {
         @Path("documentId") documentId: Int,
         @Part("name") nameOfDocument: String,
         @Part("description") description: String,
-        @Part typedFile:PartData,
+        @Part typedFile: PartData,
     ): Flow<GenericResponse>
 }

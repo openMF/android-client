@@ -46,7 +46,7 @@ class DataManagerCollectionSheet(
     /**
      * Productive CollectionSheet API
      */
-     fun fetchCenterDetails(
+    fun fetchCenterDetails(
         format: String?,
         locale: String?,
         meetingDate: String?,

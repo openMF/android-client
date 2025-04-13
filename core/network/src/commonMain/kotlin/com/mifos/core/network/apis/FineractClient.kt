@@ -1,5 +1,13 @@
+/*
+ * Copyright 2025 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ */
 package com.mifos.core.network.apis
-
 
 import de.jensklingenberg.ktorfit.Ktorfit
 import io.ktor.client.HttpClient
@@ -19,13 +27,13 @@ class FineractClient private constructor(
     private val ktorfit: Ktorfit,
 ) {
 
-    val clientIdentifiers:ClientIdentifierApi = ktorfit.create()
-    val centers:CentersApi = ktorfit.create()
-    val clients :ClientApi= ktorfit.create()
-    val dataTables:DataTablesApi = ktorfit.create()
-    val groups:GroupsApi = ktorfit.create()
-    val offices :OfficesApi= ktorfit.create()
-    val staff:StaffApi = ktorfit.create()
+    val clientIdentifiers: ClientIdentifierApi = ktorfit.create()
+    val centers: CentersApi = ktorfit.create()
+    val clients: ClientApi = ktorfit.create()
+    val dataTables: DataTablesApi = ktorfit.create()
+    val groups: GroupsApi = ktorfit.create()
+    val offices: OfficesApi = ktorfit.create()
+    val staff: StaffApi = ktorfit.create()
 
     class Builder internal constructor() {
         /**

@@ -1,3 +1,12 @@
+/*
+ * Copyright 2025 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ */
 package com.mifos.core.network.apis
 
 import com.mifos.core.network.model.GetClientsClientIdAccountsResponse
@@ -28,7 +37,6 @@ interface ClientApi {
         @Body postClientsClientIdRequest: PostClientsClientIdRequest,
         @Query("command") command: String? = null,
     ): PostClientsClientIdResponse
-
 
     /**
      * List Clients
@@ -65,7 +73,6 @@ interface ClientApi {
         @Query("sortOrder") sortOrder: String? = null,
         @Query("orphansOnly") orphansOnly: Boolean? = null,
     ): GetClientsResponse
-
 
     /**
      * Retrieve client accounts overview

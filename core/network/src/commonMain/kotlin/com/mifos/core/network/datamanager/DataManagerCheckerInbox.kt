@@ -19,7 +19,7 @@ class DataManagerCheckerInbox(
     private val mBaseApiManager: BaseApiManager,
 ) {
 
-     fun getCheckerTaskList(
+    fun getCheckerTaskList(
         actionName: String? = null,
         entityName: String? = null,
         resourceId: Int? = null,
