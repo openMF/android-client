@@ -139,8 +139,8 @@ class CreateNewClientViewModel(
         // create RequestBody instance from file
         val requestFile = pngFile.asRequestBody("image/png".toMediaTypeOrNull())
 
-        // MultipartBody.Part is used to send also the actual file name
-        val body = MultipartBody.Part.createFormData("file", pngFile.name, requestFile)
+        // PartData is used to send also the actual file name
+        val body = PartData.createFormData("file", pngFile.name, requestFile)
 
         viewModelScope.launch {
             try {

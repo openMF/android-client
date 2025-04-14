@@ -12,7 +12,6 @@ package com.mifos.core.data.repository
 import com.mifos.core.model.objects.noncoreobjects.Document
 import com.mifos.core.network.GenericResponse
 import io.ktor.client.statement.HttpResponse
-import okhttp3.ResponseBody
 
 /**
  * Created by Aditya Gupta on 08/08/23.

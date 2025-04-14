@@ -10,6 +10,7 @@
 package com.mifos.core.data.repository
 
 import com.mifos.core.network.GenericResponse
+import io.ktor.http.content.PartData
 import kotlinx.coroutines.flow.Flow
 import okhttp3.MultipartBody
 
@@ -23,6 +24,6 @@ interface SignatureRepository {
         entityId: Int,
         name: String?,
         desc: String?,
-        file: MultipartBody.Part?,
+        file: PartData?,
     ): Flow<GenericResponse>
 }

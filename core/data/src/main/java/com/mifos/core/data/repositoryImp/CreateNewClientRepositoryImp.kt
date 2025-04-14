@@ -17,8 +17,8 @@ import com.mifos.room.entities.client.ClientPayloadEntity
 import com.mifos.room.entities.organisation.OfficeEntity
 import com.mifos.room.entities.organisation.StaffEntity
 import com.mifos.room.entities.templates.clients.ClientsTemplateEntity
+import io.ktor.http.content.PartData
 import kotlinx.coroutines.flow.Flow
-import okhttp3.MultipartBody
 
 /**
  * Created by Aditya Gupta on 10/08/23.
@@ -46,7 +46,7 @@ class CreateNewClientRepositoryImp(
         return dataManagerClient.createClient(clientPayload)
     }
 
-    override suspend fun uploadClientImage(id: Int, file: MultipartBody.Part?) {
+    override suspend fun uploadClientImage(id: Int, file: PartData?) {
 //        dataManagerClient.uploadClientImage(id, file)
     }
 }

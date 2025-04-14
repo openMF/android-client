@@ -12,6 +12,7 @@ package com.mifos.core.data.repositoryImp
 import com.mifos.core.data.repository.DocumentDialogRepository
 import com.mifos.core.network.GenericResponse
 import com.mifos.core.network.datamanager.DataManagerDocument
+import io.ktor.http.content.PartData
 import kotlinx.coroutines.flow.Flow
 import okhttp3.MultipartBody
 import rx.Observable
@@ -28,9 +29,9 @@ class DocumentDialogRepositoryImp(
         entityId: Int,
         name: String?,
         desc: String?,
-        file: MultipartBody.Part?,
+        file: PartData?,
     ): Flow<GenericResponse> {
-        return dataManagerDocument.createDocument(entityType, entityId, name, desc, file)
+        return dataManagerDocument.createDocument(entityType!!, entityId, name!!, desc!!, file!!)
     }
 
     override fun updateDocument(
@@ -39,15 +40,15 @@ class DocumentDialogRepositoryImp(
         documentId: Int,
         name: String?,
         desc: String?,
-        file: MultipartBody.Part?,
+        file: PartData?,
     ): Flow<GenericResponse> {
         return dataManagerDocument.updateDocument(
-            entityType,
+            entityType!!,
             entityId,
             documentId,
-            name,
-            desc,
-            file,
+            name!!,
+            desc!!,
+            file!!,
         )
     }
 }

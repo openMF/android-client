@@ -31,7 +31,7 @@ class UploadClientImageUseCase(
         try {
             emit(Resource.Loading())
             val requestFile = pngFile.asRequestBody("image/png".toMediaTypeOrNull())
-            val body = MultipartBody.Part.createFormData("file", pngFile.name, requestFile)
+            val body = PartData.createFormData("file", pngFile.name, requestFile)
             repository.uploadClientImage(id, body)
             emit(Resource.Success(ResponseBody.create(null, "success")))
         } catch (e: Exception) {

@@ -58,12 +58,12 @@ class SignatureViewModel(
             }
         }
 
-    private fun getRequestFileBody(file: File?): MultipartBody.Part? {
+    private fun getRequestFileBody(file: File?): PartData? {
         // create RequestBody instance from file
         val requestFile =
             file?.asRequestBody("multipart/form-data".toMediaTypeOrNull())
 
-        // MultipartBody.Part is used to send also the actual file name
-        return requestFile?.let { MultipartBody.Part.createFormData("file", file.name, it) }
+        // PartData is used to send also the actual file name
+        return requestFile?.let { PartData.createFormData("file", file.name, it) }
     }
 }

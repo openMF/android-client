@@ -29,7 +29,7 @@ class CreateDocumentUseCase(
         entityId: Int,
         name: String?,
         desc: String?,
-        file: MultipartBody.Part?,
+        file: PartData?,
     ): Flow<Resource<GenericResponse>> = callbackFlow {
         try {
             trySend(Resource.Loading())

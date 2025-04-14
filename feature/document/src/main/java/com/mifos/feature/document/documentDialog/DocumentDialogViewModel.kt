@@ -120,11 +120,11 @@ class DocumentDialogViewModel(
             )
     }
 
-    private fun getRequestFileBody(file: File): MultipartBody.Part {
+    private fun getRequestFileBody(file: File): PartData {
         // create RequestBody instance from file
         val requestFile = file.asRequestBody("multipart/form-data".toMediaTypeOrNull())
 
-        // MultipartBody.Part is used to send also the actual file name
-        return MultipartBody.Part.createFormData("file", file.name, requestFile)
+        // PartData is used to send also the actual file name
+        return PartData.createFormData("file", file.name, requestFile)
     }
 }

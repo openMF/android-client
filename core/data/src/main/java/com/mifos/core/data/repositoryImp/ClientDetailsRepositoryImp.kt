@@ -13,18 +13,18 @@ import com.mifos.core.data.repository.ClientDetailsRepository
 import com.mifos.core.network.datamanager.DataManagerClient
 import com.mifos.room.entities.accounts.ClientAccounts
 import com.mifos.room.entities.client.ClientEntity
+import io.ktor.http.content.PartData
 import okhttp3.MultipartBody
 
 /**
  * Created by Aditya Gupta on 06/08/23.
  */
-//TODO: during conversion change uploadClientImage file to PartData
 class ClientDetailsRepositoryImp(
     private val dataManagerClient: DataManagerClient,
 ) : ClientDetailsRepository {
 
-    override suspend fun uploadClientImage(id: Int, file: MultipartBody.Part?) {
-//        dataManagerClient.uploadClientImage(id, file)
+    override suspend fun uploadClientImage(id: Int, file: PartData?) {
+        dataManagerClient.uploadClientImage(id, file!!)
     }
 
     override suspend fun deleteClientImage(clientId: Int) {
