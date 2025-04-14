@@ -12,7 +12,6 @@ package com.mifos.core.data.repository
 import com.mifos.core.model.objects.clients.ChargeCreationResponse
 import com.mifos.core.model.objects.payloads.ChargesPayload
 import io.ktor.client.statement.HttpResponse
-import okhttp3.ResponseBody
 
 /**
  * Created by Aditya Gupta on 16/08/23.

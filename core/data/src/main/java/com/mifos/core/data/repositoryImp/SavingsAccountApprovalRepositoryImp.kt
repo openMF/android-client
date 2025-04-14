@@ -14,7 +14,6 @@ import com.mifos.core.model.objects.account.loan.SavingsApproval
 import com.mifos.core.network.GenericResponse
 import com.mifos.core.network.datamanager.DataManagerSavings
 import kotlinx.coroutines.flow.Flow
-import rx.Observable
 
 /**
  * Created by Aditya Gupta on 13/08/23.

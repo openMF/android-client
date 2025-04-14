@@ -14,7 +14,6 @@ import com.mifos.core.network.datamanager.DataManagerClient
 import com.mifos.room.entities.accounts.ClientAccounts
 import com.mifos.room.entities.client.ClientEntity
 import io.ktor.http.content.PartData
-import okhttp3.MultipartBody
 
 /**
  * Created by Aditya Gupta on 06/08/23.

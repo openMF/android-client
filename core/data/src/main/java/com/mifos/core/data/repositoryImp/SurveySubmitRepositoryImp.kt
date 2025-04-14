@@ -13,7 +13,6 @@ import com.mifos.core.data.repository.SurveySubmitRepository
 import com.mifos.core.model.objects.surveys.Scorecard
 import com.mifos.core.network.datamanager.DataManagerSurveys
 import kotlinx.coroutines.flow.Flow
-import rx.Observable
 
 /**
  * Created by Aditya Gupta on 13/08/23.

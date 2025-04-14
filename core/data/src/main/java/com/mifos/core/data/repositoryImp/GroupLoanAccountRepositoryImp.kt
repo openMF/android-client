@@ -15,7 +15,6 @@ import com.mifos.core.model.objects.template.loan.GroupLoanTemplate
 import com.mifos.core.network.DataManager
 import com.mifos.room.entities.accounts.loans.Loan
 import kotlinx.coroutines.flow.Flow
-import rx.Observable
 
 /**
  * Created by Aditya Gupta on 12/08/23.

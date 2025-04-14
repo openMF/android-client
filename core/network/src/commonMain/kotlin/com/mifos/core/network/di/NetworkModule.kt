@@ -9,6 +9,7 @@
  */
 package com.mifos.core.network.di
 
+import coil3.ImageLoader
 import com.mifos.core.common.network.MifosDispatchers
 import com.mifos.core.common.utils.getInstanceUrl
 import com.mifos.core.datastore.UserPreferencesRepository
@@ -16,6 +17,7 @@ import com.mifos.core.datastore.UserPreferencesRepositoryImpl
 import com.mifos.core.network.BaseApiManager
 import com.mifos.core.network.BaseUrl
 import com.mifos.core.network.KtorfitClient
+import com.mifos.core.network.utils.ImageLoaderUtils
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
@@ -63,5 +65,13 @@ val NetworkModule = module {
             )
         }
         baseManager
+    }
+
+    single { (context: Any) ->
+        ImageLoaderUtils(
+            prefManager = get<UserPreferencesRepository>(),
+            imageLoader = get<ImageLoader>(),
+            context = context,
+        )
     }
 }

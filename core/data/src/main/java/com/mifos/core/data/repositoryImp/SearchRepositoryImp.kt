@@ -14,16 +14,12 @@ import com.mifos.core.model.objects.SearchedEntity
 import com.mifos.core.network.datamanager.DataManagerSearch
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.flowOn
 
 /**
  * Created by Aditya Gupta on 06/08/23.
  */
 class SearchRepositoryImp(
     private val dataManagerSearch: DataManagerSearch,
-    private val ioDispatcher: CoroutineDispatcher,
 ) : SearchRepository {
     override suspend fun searchResources(
         query: String,

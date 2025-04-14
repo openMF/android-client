@@ -18,7 +18,6 @@ import com.mifos.core.network.model.LoansPayload
 import com.mifos.room.entities.accounts.loans.Loan
 import com.mifos.room.entities.client.ClientPayloadEntity
 import kotlinx.coroutines.flow.Flow
-import rx.Observable
 
 /**
  * Created by Aditya Gupta on 10/08/23.

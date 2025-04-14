@@ -15,7 +15,6 @@ import com.mifos.core.network.GenericResponse
 import com.mifos.core.network.datamanager.DataManagerLoan
 import com.mifos.room.entities.templates.loans.LoanTransactionTemplate
 import kotlinx.coroutines.flow.Flow
-import rx.Observable
 
 /**
  * Created by Aditya Gupta on 10/08/23.

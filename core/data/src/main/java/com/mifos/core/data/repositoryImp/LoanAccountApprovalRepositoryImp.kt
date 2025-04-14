@@ -13,7 +13,6 @@ import com.mifos.core.data.repository.LoanAccountApprovalRepository
 import com.mifos.core.network.DataManager
 import com.mifos.core.network.GenericResponse
 import kotlinx.coroutines.flow.Flow
-import rx.Observable
 
 /**
  * Created by Aditya Gupta on 10/08/23.

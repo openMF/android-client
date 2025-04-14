@@ -13,7 +13,6 @@ import com.mifos.core.data.repository.LoanTransactionsRepository
 import com.mifos.core.network.DataManager
 import com.mifos.room.entities.accounts.loans.LoanWithAssociationsEntity
 import kotlinx.coroutines.flow.Flow
-import rx.Observable
 
 /**
  * Created by Aditya Gupta on 12/08/23.

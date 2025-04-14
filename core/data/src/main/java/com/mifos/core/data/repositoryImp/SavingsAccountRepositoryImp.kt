@@ -16,7 +16,6 @@ import com.mifos.core.network.datamanager.DataManagerSavings
 import com.mifos.room.entities.client.Savings
 import com.mifos.room.entities.templates.savings.SavingProductsTemplate
 import kotlinx.coroutines.flow.Flow
-import rx.Observable
 
 /**
  * Created by Aditya Gupta on 08/08/23.

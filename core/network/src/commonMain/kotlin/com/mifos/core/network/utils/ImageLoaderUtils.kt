@@ -1,3 +1,12 @@
+/*
+ * Copyright 2025 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ */
 package com.mifos.core.network.utils
 
 import coil3.ImageLoader
@@ -10,17 +19,17 @@ import kotlinx.coroutines.flow.first
 class ImageLoaderUtils(
     private val prefManager: UserPreferencesRepository,
     private val imageLoader: ImageLoader,
-    private val context: Any
+    private val context: Any,
 ) {
 
     private suspend fun buildImageUrl(clientId: Int): String {
         val serverConfig = prefManager.serverConfig.first()
         return (
-                serverConfig.getInstanceUrl() +
-                        "clients/" +
-                        clientId +
-                        "/images?maxHeight=120&maxWidth=120"
-                )
+            serverConfig.getInstanceUrl() +
+                "clients/" +
+                clientId +
+                "/images?maxHeight=120&maxWidth=120"
+            )
     }
 
     suspend fun loadImage(clientId: Int): ImageResult {
