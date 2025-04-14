@@ -10,6 +10,7 @@
 plugins {
     alias(libs.plugins.mifos.kmp.library)
     alias(libs.plugins.ktorfit)
+    alias(libs.plugins.kotlin.parcelize)
     id("kotlinx-serialization")
     id("com.google.devtools.ksp")
 }
