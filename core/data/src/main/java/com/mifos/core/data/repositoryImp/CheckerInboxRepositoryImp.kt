@@ -14,6 +14,7 @@ import com.mifos.core.model.objects.checkerinboxtask.CheckerInboxSearchTemplate
 import com.mifos.core.model.objects.checkerinboxtask.CheckerTask
 import com.mifos.core.network.GenericResponse
 import com.mifos.core.network.datamanager.DataManagerCheckerInbox
+import kotlinx.coroutines.flow.Flow
 
 class CheckerInboxRepositoryImp(
     private val dataManagerCheckerInbox: DataManagerCheckerInbox,
@@ -23,7 +24,7 @@ class CheckerInboxRepositoryImp(
         actionName: String?,
         entityName: String?,
         resourceId: Int?,
-    ): List<CheckerTask> {
+    ): Flow<List<CheckerTask>> {
         return dataManagerCheckerInbox.getCheckerTaskList()
     }
 

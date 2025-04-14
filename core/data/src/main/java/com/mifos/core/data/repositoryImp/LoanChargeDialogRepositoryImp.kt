@@ -13,6 +13,7 @@ import com.mifos.core.data.repository.LoanChargeDialogRepository
 import com.mifos.core.model.objects.clients.ChargeCreationResponse
 import com.mifos.core.model.objects.payloads.ChargesPayload
 import com.mifos.core.network.DataManager
+import io.ktor.client.statement.HttpResponse
 import okhttp3.ResponseBody
 
 /**
@@ -22,7 +23,7 @@ class LoanChargeDialogRepositoryImp(
     private val dataManager: DataManager,
 ) : LoanChargeDialogRepository {
 
-    override suspend fun getAllChargesV3(loanId: Int): ResponseBody {
+    override suspend fun getAllChargesV3(loanId: Int): HttpResponse {
         return dataManager.getAllChargesV3(loanId)
     }
 

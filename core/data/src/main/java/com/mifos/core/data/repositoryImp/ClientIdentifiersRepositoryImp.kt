@@ -12,9 +12,9 @@ package com.mifos.core.data.repositoryImp
 import com.mifos.core.data.repository.ClientIdentifiersRepository
 import com.mifos.core.model.objects.noncoreobjects.Identifier
 import com.mifos.core.network.datamanager.DataManagerClient
+import com.mifos.core.network.model.DeleteClientsClientIdIdentifiersIdentifierIdResponse
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import org.openapitools.client.models.DeleteClientsClientIdIdentifiersIdentifierIdResponse
 
 /**
  * Created by Aditya Gupta on 08/08/23.

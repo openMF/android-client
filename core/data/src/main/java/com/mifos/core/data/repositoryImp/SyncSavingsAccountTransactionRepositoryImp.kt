@@ -40,7 +40,7 @@ class SyncSavingsAccountTransactionRepositoryImp(
         request: SavingsAccountTransactionRequestEntity,
     ): Flow<SavingsAccountTransactionResponse?> {
         return dataManagerSavings.processTransaction(
-            savingsAccountType,
+            savingsAccountType!!,
             savingsAccountId,
             transactionType,
             request,

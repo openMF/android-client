@@ -17,6 +17,7 @@ import com.mifos.core.network.datamanager.DataManagerLoan
 import com.mifos.core.network.model.LoansPayload
 import com.mifos.room.entities.accounts.loans.Loan
 import com.mifos.room.entities.client.ClientPayloadEntity
+import kotlinx.coroutines.flow.Flow
 import rx.Observable
 
 /**
@@ -28,11 +29,11 @@ class DataTableListRepositoryImp(
     private val dataManagerClient: DataManagerClient,
 ) : DataTableListRepository {
 
-    override fun createLoansAccount(loansPayload: LoansPayload?): Observable<Loan> {
+    override fun createLoansAccount(loansPayload: LoansPayload?): Flow<Loan> {
         return dataManagerLoan.createLoansAccount(loansPayload)
     }
 
-    override fun createGroupLoansAccount(loansPayload: GroupLoanPayload?): Observable<Loan> {
+    override fun createGroupLoansAccount(loansPayload: GroupLoanPayload?): Flow<Loan> {
         return dataManager.createGroupLoansAccount(loansPayload)
     }
 

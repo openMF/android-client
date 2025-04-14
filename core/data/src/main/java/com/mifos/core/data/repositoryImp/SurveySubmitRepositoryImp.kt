@@ -12,6 +12,7 @@ package com.mifos.core.data.repositoryImp
 import com.mifos.core.data.repository.SurveySubmitRepository
 import com.mifos.core.model.objects.surveys.Scorecard
 import com.mifos.core.network.datamanager.DataManagerSurveys
+import kotlinx.coroutines.flow.Flow
 import rx.Observable
 
 /**
@@ -21,7 +22,7 @@ class SurveySubmitRepositoryImp(
     private val dataManagerSurveys: DataManagerSurveys,
 ) : SurveySubmitRepository {
 
-    override fun submitScore(surveyId: Int, scorecardPayload: Scorecard?): Observable<Scorecard> {
+    override fun submitScore(surveyId: Int, scorecardPayload: Scorecard?): Flow<Scorecard> {
         return dataManagerSurveys.submitScore(surveyId, scorecardPayload)
     }
 }

@@ -26,6 +26,6 @@ class SavingsAccountSummaryRepositoryImp(
         savingsAccountId: Int,
         association: String?,
     ): Flow<SavingsAccountWithAssociationsEntity?> {
-        return dataManagerSavings.getSavingsAccount(type, savingsAccountId, association)
+        return dataManagerSavings.getSavingsAccount(type!!, savingsAccountId, association)
     }
 }

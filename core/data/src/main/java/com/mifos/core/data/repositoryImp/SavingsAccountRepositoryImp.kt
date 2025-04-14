@@ -15,6 +15,7 @@ import com.mifos.core.model.objects.payloads.SavingsPayload
 import com.mifos.core.network.datamanager.DataManagerSavings
 import com.mifos.room.entities.client.Savings
 import com.mifos.room.entities.templates.savings.SavingProductsTemplate
+import kotlinx.coroutines.flow.Flow
 import rx.Observable
 
 /**
@@ -23,29 +24,29 @@ import rx.Observable
 class SavingsAccountRepositoryImp(
     private val dataManagerSavings: DataManagerSavings,
 ) : SavingsAccountRepository {
-    override fun savingsAccounts(): Observable<List<ProductSavings>> {
+    override fun savingsAccounts(): Flow<List<ProductSavings>> {
         return dataManagerSavings.savingsAccounts
     }
 
-    override fun savingsAccountTemplate(): Observable<SavingProductsTemplate> {
+    override fun savingsAccountTemplate(): Flow<SavingProductsTemplate> {
         return dataManagerSavings.savingsAccountTemplate
     }
 
     override fun getClientSavingsAccountTemplateByProduct(
         clientId: Int,
         productId: Int,
-    ): Observable<SavingProductsTemplate> {
+    ): Flow<SavingProductsTemplate> {
         return dataManagerSavings.getClientSavingsAccountTemplateByProduct(clientId, productId)
     }
 
     override fun getGroupSavingsAccountTemplateByProduct(
         groupId: Int,
         productId: Int,
-    ): Observable<SavingProductsTemplate> {
+    ): Flow<SavingProductsTemplate> {
         return dataManagerSavings.getGroupSavingsAccountTemplateByProduct(groupId, productId)
     }
 
-    override fun createSavingsAccount(savingsPayload: SavingsPayload?): Observable<Savings> {
+    override fun createSavingsAccount(savingsPayload: SavingsPayload?): Flow<Savings> {
         return dataManagerSavings.createSavingsAccount(savingsPayload)
     }
 }

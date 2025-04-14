@@ -13,6 +13,7 @@ import com.mifos.core.data.repository.DocumentListRepository
 import com.mifos.core.model.objects.noncoreobjects.Document
 import com.mifos.core.network.GenericResponse
 import com.mifos.core.network.datamanager.DataManagerDocument
+import io.ktor.client.statement.HttpResponse
 import okhttp3.ResponseBody
 
 /**
@@ -30,7 +31,7 @@ class DocumentListRepositoryImp(
         entityType: String,
         entityId: Int,
         documentId: Int,
-    ): ResponseBody {
+    ): HttpResponse {
         return dataManagerDocument.downloadDocument(entityType, entityId, documentId)
     }
 

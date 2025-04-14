@@ -10,6 +10,7 @@
 package com.mifos.core.data.repository
 
 import com.mifos.core.model.objects.runreport.client.ClientReportTypeItem
+import kotlinx.coroutines.flow.Flow
 
 /**
  * Created by Aditya Gupta on 12/08/23.
@@ -20,5 +21,5 @@ interface ReportCategoryRepository {
         reportCategory: String,
         genericResultSet: Boolean,
         parameterType: Boolean,
-    ): List<ClientReportTypeItem>
+    ): Flow<List<ClientReportTypeItem>>
 }

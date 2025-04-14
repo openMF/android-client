@@ -11,6 +11,7 @@ package com.mifos.core.data.repository
 
 import com.mifos.core.model.objects.noncoreobjects.Document
 import com.mifos.core.network.GenericResponse
+import io.ktor.client.statement.HttpResponse
 import okhttp3.ResponseBody
 
 /**
@@ -24,7 +25,7 @@ interface DocumentListRepository {
         entityType: String,
         entityId: Int,
         documentId: Int,
-    ): ResponseBody
+    ): HttpResponse
 
     suspend fun removeDocument(
         entityType: String,

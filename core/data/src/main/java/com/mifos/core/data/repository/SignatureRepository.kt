@@ -10,8 +10,8 @@
 package com.mifos.core.data.repository
 
 import com.mifos.core.network.GenericResponse
+import kotlinx.coroutines.flow.Flow
 import okhttp3.MultipartBody
-import rx.Observable
 
 /**
  * Created by Aditya Gupta on 08/08/23.
@@ -24,5 +24,5 @@ interface SignatureRepository {
         name: String?,
         desc: String?,
         file: MultipartBody.Part?,
-    ): Observable<GenericResponse>
+    ): Flow<GenericResponse>
 }

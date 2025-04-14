@@ -52,7 +52,7 @@ class SyncGroupsDialogRepositoryImp(
         savingsAccountId: Int,
         association: String?,
     ): Flow<SavingsAccountWithAssociationsEntity> {
-        return dataManagerSavings.syncSavingsAccount(type, savingsAccountId, association)
+        return dataManagerSavings.syncSavingsAccount(type!!, savingsAccountId, association)
     }
 
     override fun syncSavingsAccountTransactionTemplate(
@@ -61,7 +61,7 @@ class SyncGroupsDialogRepositoryImp(
         transactionType: String?,
     ): Flow<SavingsAccountTransactionTemplateEntity?> {
         return dataManagerSavings.getSavingsAccountTransactionTemplate(
-            savingsAccountType,
+            savingsAccountType!!,
             savingsAccountId,
             transactionType,
         )

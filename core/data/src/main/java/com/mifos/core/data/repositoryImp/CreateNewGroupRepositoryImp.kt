@@ -26,7 +26,7 @@ class CreateNewGroupRepositoryImp(
 ) : CreateNewGroupRepository {
 
     override fun offices(): Flow<List<OfficeEntity>> {
-        return dataManagerOffices.offices()
+        return dataManagerOffices.offices
     }
 
     override suspend fun createGroup(groupPayload: GroupPayloadEntity): SaveResponse {

@@ -11,6 +11,7 @@ package com.mifos.core.data.repository
 
 import com.mifos.core.model.objects.clients.ChargeCreationResponse
 import com.mifos.core.model.objects.payloads.ChargesPayload
+import io.ktor.client.statement.HttpResponse
 import okhttp3.ResponseBody
 
 /**
@@ -18,7 +19,7 @@ import okhttp3.ResponseBody
  */
 interface LoanChargeDialogRepository {
 
-    suspend fun getAllChargesV3(loanId: Int): ResponseBody
+    suspend fun getAllChargesV3(loanId: Int): HttpResponse
 
     suspend fun createLoanCharges(
         loanId: Int,

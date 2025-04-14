@@ -13,26 +13,26 @@ import com.mifos.core.model.objects.organisations.ProductSavings
 import com.mifos.core.model.objects.payloads.SavingsPayload
 import com.mifos.room.entities.client.Savings
 import com.mifos.room.entities.templates.savings.SavingProductsTemplate
-import rx.Observable
+import kotlinx.coroutines.flow.Flow
 
 /**
  * Created by Aditya Gupta on 08/08/23.
  */
 interface SavingsAccountRepository {
 
-    fun savingsAccounts(): Observable<List<ProductSavings>>
+    fun savingsAccounts(): Flow<List<ProductSavings>>
 
-    fun savingsAccountTemplate(): Observable<SavingProductsTemplate>
+    fun savingsAccountTemplate(): Flow<SavingProductsTemplate>
 
     fun getClientSavingsAccountTemplateByProduct(
         clientId: Int,
         productId: Int,
-    ): Observable<SavingProductsTemplate>
+    ): Flow<SavingProductsTemplate>
 
     fun getGroupSavingsAccountTemplateByProduct(
         groupId: Int,
         productId: Int,
-    ): Observable<SavingProductsTemplate>
+    ): Flow<SavingProductsTemplate>
 
-    fun createSavingsAccount(savingsPayload: SavingsPayload?): Observable<Savings>
+    fun createSavingsAccount(savingsPayload: SavingsPayload?): Flow<Savings>
 }

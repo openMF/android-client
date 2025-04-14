@@ -18,12 +18,13 @@ import okhttp3.MultipartBody
 /**
  * Created by Aditya Gupta on 06/08/23.
  */
+//TODO: during conversion change uploadClientImage file to PartData
 class ClientDetailsRepositoryImp(
     private val dataManagerClient: DataManagerClient,
 ) : ClientDetailsRepository {
 
     override suspend fun uploadClientImage(id: Int, file: MultipartBody.Part?) {
-        dataManagerClient.uploadClientImage(id, file)
+//        dataManagerClient.uploadClientImage(id, file)
     }
 
     override suspend fun deleteClientImage(clientId: Int) {

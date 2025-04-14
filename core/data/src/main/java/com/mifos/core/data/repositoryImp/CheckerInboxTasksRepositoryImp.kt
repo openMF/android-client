@@ -32,6 +32,6 @@ class CheckerInboxTasksRepositoryImp(
         entityName: String?,
         resourceId: Int?,
     ): Flow<List<CheckerTask>> {
-        return flow { emit(dataManagerCheckerInbox.getCheckerTaskList()) }
+        return dataManagerCheckerInbox.getCheckerTaskList()
     }
 }

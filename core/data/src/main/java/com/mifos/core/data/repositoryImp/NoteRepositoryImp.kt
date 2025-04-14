@@ -18,6 +18,6 @@ class NoteRepositoryImp(
 ) : NoteRepository {
 
     override fun getNotes(entityType: String?, entityId: Int): List<Note> {
-        return dataManagerNote.getNotes(entityType, entityId)
+        return dataManagerNote.getNotes(entityType!!, entityId)
     }
 }

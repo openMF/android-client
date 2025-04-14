@@ -12,6 +12,7 @@ package com.mifos.core.data.repository
 import com.mifos.core.model.objects.checkerinboxtask.CheckerInboxSearchTemplate
 import com.mifos.core.model.objects.checkerinboxtask.CheckerTask
 import com.mifos.core.network.GenericResponse
+import kotlinx.coroutines.flow.Flow
 
 interface CheckerInboxRepository {
 
@@ -19,7 +20,7 @@ interface CheckerInboxRepository {
         actionName: String? = null,
         entityName: String? = null,
         resourceId: Int? = null,
-    ): List<CheckerTask>
+    ): Flow<List<CheckerTask>>
 
     suspend fun approveCheckerEntry(auditId: Int): GenericResponse
 

@@ -12,6 +12,7 @@ package com.mifos.core.data.repositoryImp
 import com.mifos.core.data.repository.SavingsAccountActivateRepository
 import com.mifos.core.network.GenericResponse
 import com.mifos.core.network.datamanager.DataManagerSavings
+import kotlinx.coroutines.flow.Flow
 import rx.Observable
 
 /**
@@ -24,7 +25,7 @@ class SavingsAccountActivateRepositoryImp(
     override fun activateSavings(
         savingsAccountId: Int,
         request: HashMap<String, String>,
-    ): Observable<GenericResponse> {
+    ): Flow<GenericResponse> {
         return dataManagerSavings.activateSavings(savingsAccountId, request)
     }
 }

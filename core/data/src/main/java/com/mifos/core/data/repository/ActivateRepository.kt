@@ -11,9 +11,9 @@ package com.mifos.core.data.repository
 
 import com.mifos.core.model.objects.clients.ActivatePayload
 import com.mifos.core.network.GenericResponse
-import org.openapitools.client.models.PostCentersCenterIdResponse
-import org.openapitools.client.models.PostClientsClientIdResponse
-import rx.Observable
+import com.mifos.core.network.model.PostCentersCenterIdResponse
+import com.mifos.core.network.model.PostClientsClientIdResponse
+import kotlinx.coroutines.flow.Flow
 
 /**
  * Created by Aditya Gupta on 06/08/23.
@@ -34,5 +34,5 @@ interface ActivateRepository {
     fun activateGroup(
         groupId: Int,
         activatePayload: ActivatePayload?,
-    ): Observable<GenericResponse>
+    ): Flow<GenericResponse>
 }

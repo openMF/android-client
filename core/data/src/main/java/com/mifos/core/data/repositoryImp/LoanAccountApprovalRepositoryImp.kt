@@ -12,6 +12,7 @@ package com.mifos.core.data.repositoryImp
 import com.mifos.core.data.repository.LoanAccountApprovalRepository
 import com.mifos.core.network.DataManager
 import com.mifos.core.network.GenericResponse
+import kotlinx.coroutines.flow.Flow
 import rx.Observable
 
 /**
@@ -24,7 +25,7 @@ class LoanAccountApprovalRepositoryImp(
     override fun approveLoan(
         loanId: Int,
         loanApproval: com.mifos.core.model.objects.account.loan.LoanApproval?,
-    ): Observable<GenericResponse> {
+    ): Flow<GenericResponse> {
         return dataManager.approveLoan(loanId, loanApproval)
     }
 }

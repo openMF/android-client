@@ -29,12 +29,11 @@ class SearchRepositoryImp(
         query: String,
         resources: String?,
         exactMatch: Boolean?,
-    ): Flow<List<SearchedEntity>> = flow {
+    ): Flow<List<SearchedEntity>> =
         try {
             val result = dataManagerSearch.searchResources(query, resources, exactMatch)
-            emit(result)
+            result
         } catch (e: Exception) {
             throw e
         }
-    }.flowOn(ioDispatcher).distinctUntilChanged()
 }

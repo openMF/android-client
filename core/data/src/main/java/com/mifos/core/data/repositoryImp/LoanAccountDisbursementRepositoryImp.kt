@@ -14,6 +14,7 @@ import com.mifos.core.model.objects.account.loan.LoanDisbursement
 import com.mifos.core.network.GenericResponse
 import com.mifos.core.network.datamanager.DataManagerLoan
 import com.mifos.room.entities.templates.loans.LoanTransactionTemplate
+import kotlinx.coroutines.flow.Flow
 import rx.Observable
 
 /**
@@ -26,14 +27,14 @@ class LoanAccountDisbursementRepositoryImp(
     override fun getLoanTransactionTemplate(
         loanId: Int,
         command: String?,
-    ): Observable<LoanTransactionTemplate> {
+    ): Flow<LoanTransactionTemplate> {
         return dataManagerLoan.getLoanTransactionTemplate(loanId, command)
     }
 
     override fun disburseLoan(
         loanId: Int,
         loanDisbursement: LoanDisbursement?,
-    ): Observable<GenericResponse> {
+    ): Flow<GenericResponse> {
         return dataManagerLoan.disburseLoan(loanId, loanDisbursement)
     }
 }

@@ -12,6 +12,7 @@ package com.mifos.core.data.repositoryImp
 import com.mifos.core.data.repository.SignatureRepository
 import com.mifos.core.network.GenericResponse
 import com.mifos.core.network.datamanager.DataManagerDocument
+import kotlinx.coroutines.flow.Flow
 import okhttp3.MultipartBody
 import rx.Observable
 
@@ -28,7 +29,7 @@ class SignatureRepositoryImp(
         name: String?,
         desc: String?,
         file: MultipartBody.Part?,
-    ): Observable<GenericResponse> {
-        return dataManagerDocument.createDocument(entityType, entityId, name, desc, file)
+    ): Flow<GenericResponse> {
+        return dataManagerDocument.createDocument(entityType!!, entityId, name!!, desc!!, file)
     }
 }

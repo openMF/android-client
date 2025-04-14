@@ -9,7 +9,8 @@
  */
 package com.mifos.core.data.repository
 
-import org.openapitools.client.models.PostAuthenticationResponse
+import com.mifos.core.network.model.PostAuthenticationResponse
+
 
 /**
  * Created by Aditya Gupta on 06/08/23.
