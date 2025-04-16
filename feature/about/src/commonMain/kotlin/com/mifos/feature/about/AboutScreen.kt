@@ -205,9 +205,7 @@ private fun AboutCardItem(
                         .fillMaxWidth()
                         .padding(start = 16.dp, end = 16.dp),
                     text = stringResource(about.title),
-                    style = TextStyle(
-                        fontSize = 16.sp,
-                    ),
+                    style = MaterialTheme.typography.titleMedium,
                     color = Black,
                 )
                 about.subtitle?.let {
@@ -216,9 +214,7 @@ private fun AboutCardItem(
                             .fillMaxWidth()
                             .padding(start = 16.dp, end = 16.dp),
                         text = stringResource(it),
-                        style = TextStyle(
-                            fontSize = 16.sp,
-                        ),
+                        style = MaterialTheme.typography.bodyMedium,
                         color = Black,
                     )
                 }
