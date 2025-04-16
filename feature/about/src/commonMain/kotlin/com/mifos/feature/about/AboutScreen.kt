@@ -70,17 +70,17 @@ internal fun AboutScreen(
         onRetry = { viewModel.getAboutOptions() },
         onOptionClick = {
             when (it) {
-                AboutItems.CONTRIBUTIONS -> uriHandler.openUri("https://github.com/openMF/android-client/graphs/contributors")
+                AboutItems.CONTRIBUTIONS -> ShareUtils.openUrl("https://github.com/openMF/android-client/graphs/contributors")
 
                 AboutItems.APP_VERSION -> Unit
 
-                AboutItems.OFFICIAL_WEBSITE -> uriHandler.openUri("https://openmf.github.io/mobileapps.github.io/")
+                AboutItems.OFFICIAL_WEBSITE -> ShareUtils.openUrl("https://openmf.github.io/mobileapps.github.io/")
 
-                AboutItems.TWITTER -> uriHandler.openUri("https://twitter.com/mifos")
+                AboutItems.TWITTER -> ShareUtils.openUrl("https://twitter.com/mifos")
 
-                AboutItems.SOURCE_CODE -> uriHandler.openUri("https://github.com/openMF/android-client")
+                AboutItems.SOURCE_CODE -> ShareUtils.openUrl("https://github.com/openMF/android-client")
 
-                AboutItems.LICENSE -> uriHandler.openUri("https://github.com/openMF/android-client/blob/master/LICENSE.md")
+                AboutItems.LICENSE -> ShareUtils.openUrl("https://github.com/openMF/android-client/blob/master/LICENSE.md")
             }
         },
     )
