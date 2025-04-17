@@ -23,7 +23,6 @@ import kotlinx.coroutines.flow.Flow
 /**
  * Created by Aditya Gupta on 10/08/23.
  */
-// TODO: In  uploadClientImage pass part data while migrating data
 class CreateNewClientRepositoryImp(
     private val dataManagerClient: DataManagerClient,
     private val dataManagerOffices: DataManagerOffices,
@@ -47,6 +46,6 @@ class CreateNewClientRepositoryImp(
     }
 
     override suspend fun uploadClientImage(id: Int, file: PartData?) {
-//        dataManagerClient.uploadClientImage(id, file)
+        dataManagerClient.uploadClientImage(id, file)
     }
 }

@@ -31,6 +31,7 @@ import com.mifos.room.entities.client.ClientPayloadEntity
 import com.mifos.room.entities.templates.clients.ClientsTemplateEntity
 import com.mifos.room.helper.ClientDaoHelper
 import io.ktor.http.content.PartData
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
@@ -201,7 +202,7 @@ class DataManagerClient(
      * @param file MultipartBody of the Image file
      * @return ResponseBody is the Retrofit 2 response
      */
-    suspend fun uploadClientImage(id: Int, file: PartData) {
+    suspend fun uploadClientImage(id: Int, file: PartData?) {
         mBaseApiManager.clientsApi.uploadClientImage(id, file)
     }
     /**
@@ -215,6 +216,7 @@ class DataManagerClient(
      *
      * @return ClientTemplate
      */
+    @OptIn(ExperimentalCoroutinesApi::class)
     val clientTemplate: Flow<ClientsTemplateEntity>
         get() = prefManager.userInfo.flatMapLatest { userData ->
             when (userData.userStatus) {

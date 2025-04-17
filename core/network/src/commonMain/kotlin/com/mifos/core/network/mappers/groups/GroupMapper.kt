@@ -27,8 +27,8 @@ object GroupMapper : AbstractMapper<GetGroupsPageItems, GroupEntity>() {
             hierarchy = entity.hierarchy,
             status = ClientStatusEntity(
                 id = entity.status?.id!!.toInt(),
-                code = entity.status.code,
-                value = entity.status.description,
+                code = entity.status?.code,
+                value = entity.status?.description,
             ),
         )
     }

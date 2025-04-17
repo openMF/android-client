@@ -23,7 +23,7 @@ class ClientDetailsRepositoryImp(
 ) : ClientDetailsRepository {
 
     override suspend fun uploadClientImage(id: Int, file: PartData?) {
-        dataManagerClient.uploadClientImage(id, file!!)
+        dataManagerClient.uploadClientImage(id, file)
     }
 
     override suspend fun deleteClientImage(clientId: Int) {

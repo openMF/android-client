@@ -16,7 +16,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface CheckerInboxRepository {
 
-    suspend fun loadCheckerTasks(
+    fun loadCheckerTasks(
         actionName: String? = null,
         entityName: String? = null,
         resourceId: Int? = null,

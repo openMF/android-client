@@ -19,9 +19,9 @@ import kotlinx.coroutines.flow.Flow
  */
 interface LoanAccountRepository {
 
-    suspend fun allLoans(): Flow<List<com.mifos.core.model.objects.organisations.LoanProducts>>
+    fun allLoans(): Flow<List<com.mifos.core.model.objects.organisations.LoanProducts>>
 
-    suspend fun getLoansAccountTemplate(clientId: Int, productId: Int): Flow<LoanTemplate>
+    fun getLoansAccountTemplate(clientId: Int, productId: Int): Flow<LoanTemplate>
 
-    suspend fun createLoansAccount(loansPayload: LoansPayload): Flow<Loan>
+    fun createLoansAccount(loansPayload: LoansPayload): Flow<Loan>
 }

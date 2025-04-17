@@ -19,7 +19,7 @@ import kotlinx.coroutines.flow.Flow
 class DataManagerSearch(
     private val baseApiManager: BaseApiManager,
 ) {
-    suspend fun searchResources(
+     fun searchResources(
         query: String,
         resource: String?,
         exactMatch: Boolean?,

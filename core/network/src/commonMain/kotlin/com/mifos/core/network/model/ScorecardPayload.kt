@@ -10,7 +10,7 @@
 package com.mifos.core.network.model
 
 import com.mifos.core.model.objects.surveys.ScorecardValues
-import java.util.Date
+import kotlinx.datetime.Instant
 
 /**
  * Created by Nasim Banu on 28,January,2016.
@@ -18,6 +18,6 @@ import java.util.Date
 data class ScorecardPayload(
     var userId: Int = 0,
     var clientId: Int = 0,
-    var createdOn: Date? = null,
+    var createdOn: Instant? = null,
     var scorecardValues: List<ScorecardValues>? = null,
 )

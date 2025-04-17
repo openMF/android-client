@@ -40,7 +40,7 @@ class DataManagerCollectionSheet(
     suspend fun saveIndividualCollectionSheet(
         payload: IndividualCollectionSheetPayload?,
     ): GenericResponse {
-        return mBaseApiManager.collectionSheetApi.saveindividualCollectionSheet(payload)
+        return mBaseApiManager.collectionSheetApi.saveIndividualCollectionSheet(payload)
     }
 
     /**

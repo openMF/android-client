@@ -22,6 +22,7 @@ import com.mifos.room.entities.group.GroupPayloadEntity
 import com.mifos.room.entities.group.GroupWithAssociations
 import com.mifos.room.helper.ClientDaoHelper
 import com.mifos.room.helper.GroupsDaoHelper
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
@@ -129,6 +130,7 @@ class DataManagerGroups(
      * @param groupId Group Id
      * @return Group
      */
+    @OptIn(ExperimentalCoroutinesApi::class)
     fun getGroup(groupId: Int): Flow<GroupEntity> {
         return prefManager.userInfo.flatMapLatest { userData ->
             when (userData.userStatus) {
@@ -157,6 +159,7 @@ class DataManagerGroups(
      * @param groupId Group Id
      * @return GroupWithAssociations
      */
+    @OptIn(ExperimentalCoroutinesApi::class)
     fun getGroupWithAssociations(groupId: Int): Flow<GroupWithAssociations> {
         return prefManager.userInfo.flatMapLatest { userData ->
             when (userData.userStatus) {
@@ -177,6 +180,7 @@ class DataManagerGroups(
      * @param groupId Group Id
      * @return GroupAccounts
      */
+    @OptIn(ExperimentalCoroutinesApi::class)
     fun getGroupAccounts(groupId: Int): Flow<GroupAccounts> {
         return prefManager.userInfo.flatMapLatest { userdata ->
             when (userdata.userStatus) {

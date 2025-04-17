@@ -29,7 +29,7 @@ class DocumentDialogRepositoryImp(
         desc: String?,
         file: PartData?,
     ): Flow<GenericResponse> {
-        return dataManagerDocument.createDocument(entityType!!, entityId, name!!, desc!!, file!!)
+        return dataManagerDocument.createDocument(entityType, entityId, name, desc, file)
     }
 
     override fun updateDocument(
@@ -41,12 +41,12 @@ class DocumentDialogRepositoryImp(
         file: PartData?,
     ): Flow<GenericResponse> {
         return dataManagerDocument.updateDocument(
-            entityType!!,
+            entityType,
             entityId,
             documentId,
-            name!!,
-            desc!!,
-            file!!,
+            name,
+            desc,
+            file,
         )
     }
 }

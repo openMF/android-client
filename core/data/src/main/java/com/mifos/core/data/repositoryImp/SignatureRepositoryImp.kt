@@ -29,6 +29,6 @@ class SignatureRepositoryImp(
         desc: String?,
         file: PartData?,
     ): Flow<GenericResponse> {
-        return dataManagerDocument.createDocument(entityType!!, entityId, name!!, desc!!, file!!)
+        return dataManagerDocument.createDocument(entityType, entityId, name, desc, file)
     }
 }

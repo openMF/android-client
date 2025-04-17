@@ -48,7 +48,7 @@ class DataManagerCheckerInbox(
     }
 
     fun getCheckerInboxSearchTemplate(): Flow<CheckerInboxSearchTemplate> {
-        return mBaseApiManager.checkerInboxApi.getCheckerInboxSearchTempalate()
+        return mBaseApiManager.checkerInboxApi.getCheckerInboxSearchTemplate()
     }
 
     fun getCheckerTaskFromResourceId(

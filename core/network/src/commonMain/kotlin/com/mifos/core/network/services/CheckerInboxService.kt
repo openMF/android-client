@@ -43,7 +43,7 @@ interface CheckerInboxService {
     suspend fun getRescheduleLoansTaskList(): List<RescheduleLoansTask>
 
     @GET(APIEndPoint.MAKER_CHECKER + "/searchtemplate?fields=entityNames,actionNames")
-    fun getCheckerInboxSearchTempalate(): Flow<CheckerInboxSearchTemplate>
+    fun getCheckerInboxSearchTemplate(): Flow<CheckerInboxSearchTemplate>
 
     @GET(APIEndPoint.MAKER_CHECKER)
     fun getCheckerTasksFromResourceId(

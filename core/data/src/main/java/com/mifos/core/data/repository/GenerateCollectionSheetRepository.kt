@@ -25,16 +25,16 @@ import kotlinx.coroutines.flow.Flow
  */
 interface GenerateCollectionSheetRepository {
 
-    suspend fun getCentersInOffice(id: Int, params: Map<String, String>): Flow<List<CenterEntity>>
+    fun getCentersInOffice(id: Int, params: Map<String, String>): Flow<List<CenterEntity>>
 
-    suspend fun getGroupsByOffice(
+    fun getGroupsByOffice(
         office: Int,
         params: Map<String, String>,
     ): Flow<List<GroupEntity>>
 
     suspend fun fetchGroupsAssociatedWithCenter(centerId: Int): CenterWithAssociations
 
-    suspend fun fetchCenterDetails(
+    fun fetchCenterDetails(
         format: String?,
         locale: String?,
         meetingDate: String?,

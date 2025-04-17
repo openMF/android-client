@@ -17,7 +17,7 @@ import kotlinx.coroutines.flow.Flow
  */
 interface ReportCategoryRepository {
 
-    suspend fun getReportCategories(
+     fun getReportCategories(
         reportCategory: String,
         genericResultSet: Boolean,
         parameterType: Boolean,

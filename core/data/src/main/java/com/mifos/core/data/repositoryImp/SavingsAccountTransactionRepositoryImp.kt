@@ -29,7 +29,7 @@ class SavingsAccountTransactionRepositoryImp(
         transactionType: String?,
     ): Flow<SavingsAccountTransactionTemplateEntity?> {
         return dataManagerSavings.getSavingsAccountTransactionTemplate(
-            type!!,
+            type,
             savingsAccountId,
             transactionType,
         )
@@ -42,7 +42,7 @@ class SavingsAccountTransactionRepositoryImp(
         request: SavingsAccountTransactionRequestEntity,
     ): Flow<SavingsAccountTransactionResponse?> {
         return dataManagerSavings.processTransaction(
-            savingsAccountType!!,
+            savingsAccountType,
             savingsAccountId,
             transactionType,
             request,

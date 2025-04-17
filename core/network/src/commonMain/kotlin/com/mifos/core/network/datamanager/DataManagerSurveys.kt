@@ -74,7 +74,7 @@ class DataManagerSurveys(
      * from the Database ResponseDatas table and returns the List<ResponseDatas>.
      * @return List<ResponseDatas>
      </ResponseDatas></ResponseDatas> */
-    fun getDatabaseResponseDatas(questionId: Int): Flow<List<ResponseDatasEntity>> {
+    fun getDatabaseResponseData(questionId: Int): Flow<List<ResponseDatasEntity>> {
         return surveyDatabaseHelper.getResponseDatas(questionId)
     }
 

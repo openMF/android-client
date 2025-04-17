@@ -37,7 +37,7 @@ interface CollectionSheetService {
     ): IndividualCollectionSheet
 
     @POST(APIEndPoint.COLLECTION_SHEET + "?command=saveCollectionSheet")
-    suspend fun saveindividualCollectionSheet(
+    suspend fun saveIndividualCollectionSheet(
         @Body payload: IndividualCollectionSheetPayload?,
     ): GenericResponse
     // Productive CollectionSheet Endpoints
