@@ -28,6 +28,23 @@ import com.mifos.core.network.services.SavingsAccountService
 import com.mifos.core.network.services.SearchService
 import com.mifos.core.network.services.StaffService
 import com.mifos.core.network.services.SurveyService
+import com.mifos.core.network.services.createCenterService
+import com.mifos.core.network.services.createChargeService
+import com.mifos.core.network.services.createCheckerInboxService
+import com.mifos.core.network.services.createClientAccountsService
+import com.mifos.core.network.services.createClientService
+import com.mifos.core.network.services.createCollectionSheetService
+import com.mifos.core.network.services.createDataTableService
+import com.mifos.core.network.services.createDocumentService
+import com.mifos.core.network.services.createGroupService
+import com.mifos.core.network.services.createLoanService
+import com.mifos.core.network.services.createNoteService
+import com.mifos.core.network.services.createOfficeService
+import com.mifos.core.network.services.createRunReportsService
+import com.mifos.core.network.services.createSavingsAccountService
+import com.mifos.core.network.services.createSearchService
+import com.mifos.core.network.services.createStaffService
+import com.mifos.core.network.services.createSurveyService
 import de.jensklingenberg.ktorfit.Ktorfit
 
 class BaseApiManager(
@@ -35,23 +52,23 @@ class BaseApiManager(
     private val ktorfit: Ktorfit,
 ) {
 
-    val centerApi: CenterService = ktorfit.create()
-    val accountsApi: ClientAccountsService = ktorfit.create()
-    val clientsApi: ClientService = ktorfit.create()
-    val dataTableApi: DataTableService = ktorfit.create()
-    val loanApi: LoanService = ktorfit.create()
-    val savingsApi: SavingsAccountService = ktorfit.create()
-    val searchApi: SearchService = ktorfit.create()
-    val groupApi: GroupService = ktorfit.create()
-    val documentApi: DocumentService = ktorfit.create()
-    val officeApi: OfficeService = ktorfit.create()
-    val staffApi: StaffService = ktorfit.create()
-    val surveyApi: SurveyService = ktorfit.create()
-    val chargeApi: ChargeService = ktorfit.create()
-    val checkerInboxApi: CheckerInboxService = ktorfit.create()
-    val collectionSheetApi: CollectionSheetService = ktorfit.create()
-    val noteApi: NoteService = ktorfit.create()
-    val runReportsService: RunReportsService = ktorfit.create()
+    val centerApi: CenterService = ktorfit.createCenterService()
+    val accountsApi: ClientAccountsService = ktorfit.createClientAccountsService()
+    val clientsApi: ClientService = ktorfit.createClientService()
+    val dataTableApi: DataTableService = ktorfit.createDataTableService()
+    val loanApi: LoanService = ktorfit.createLoanService()
+    val savingsApi: SavingsAccountService = ktorfit.createSavingsAccountService()
+    val searchApi: SearchService = ktorfit.createSearchService()
+    val groupApi: GroupService = ktorfit.createGroupService()
+    val documentApi: DocumentService = ktorfit.createDocumentService()
+    val officeApi: OfficeService = ktorfit.createOfficeService()
+    val staffApi: StaffService = ktorfit.createStaffService()
+    val surveyApi: SurveyService = ktorfit.createSurveyService()
+    val chargeApi: ChargeService = ktorfit.createChargeService()
+    val checkerInboxApi: CheckerInboxService = ktorfit.createCheckerInboxService()
+    val collectionSheetApi: CollectionSheetService = ktorfit.createCollectionSheetService()
+    val noteApi: NoteService = ktorfit.createNoteService()
+    val runReportsService: RunReportsService = ktorfit.createRunReportsService()
 
     companion object {
         fun build(prefManager: UserPreferencesRepository): BaseApiManager {

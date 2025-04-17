@@ -27,13 +27,13 @@ class FineractClient private constructor(
     private val ktorfit: Ktorfit,
 ) {
 
-    val clientIdentifiers: ClientIdentifierApi = ktorfit.create()
-    val centers: CentersApi = ktorfit.create()
-    val clients: ClientApi = ktorfit.create()
-    val dataTables: DataTablesApi = ktorfit.create()
-    val groups: GroupsApi = ktorfit.create()
-    val offices: OfficesApi = ktorfit.create()
-    val staff: StaffApi = ktorfit.create()
+    val clientIdentifiers: ClientIdentifierApi = ktorfit.createClientIdentifierApi()
+    val centers: CentersApi = ktorfit.createCentersApi()
+    val clients: ClientApi = ktorfit.createClientApi()
+    val dataTables: DataTablesApi = ktorfit.createDataTablesApi()
+    val groups: GroupsApi = ktorfit.createGroupsApi()
+    val offices: OfficesApi = ktorfit.createOfficesApi()
+    val staff: StaffApi = ktorfit.createStaffApi()
 
     class Builder internal constructor() {
         /**
