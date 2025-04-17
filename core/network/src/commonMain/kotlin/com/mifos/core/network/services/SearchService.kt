@@ -21,7 +21,7 @@ import kotlinx.coroutines.flow.Flow
 interface SearchService {
 
     @GET(APIEndPoint.SEARCH)
-     fun searchResources(
+    fun searchResources(
         @Query("query") query: String,
         @Query("resource") resource: String?,
         @Query("exactMatch") exactMatch: Boolean?,

@@ -34,7 +34,7 @@ class CreateNewClientRepositoryImp(
     }
 
     override fun offices(): Flow<List<OfficeEntity>> {
-        return dataManagerOffices.offices
+        return dataManagerOffices.fetchOffices()
     }
 
     override fun getStaffInOffice(officeId: Int): Flow<List<StaffEntity>> {

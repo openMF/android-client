@@ -124,8 +124,8 @@ class DataManagerSurveys(
      */
     fun syncResponseDataInDatabase(
         questionId: Int,
-        responseDatas: ResponseDatasEntity,
-    ): Flow<ResponseDatasEntity> {
+        responseDatas: ResponseDataEntity,
+    ): Flow<ResponseDataEntity> {
         return surveyDatabaseHelper.saveResponseData(questionId, responseDatas)
     }
 }
