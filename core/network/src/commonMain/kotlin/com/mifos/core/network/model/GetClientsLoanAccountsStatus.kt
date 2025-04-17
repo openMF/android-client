@@ -30,26 +30,26 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class GetClientsLoanAccountsStatus(
 
-    val active: kotlin.Boolean? = null,
+    val active: Boolean? = null,
 
-    val closed: kotlin.Boolean? = null,
+    val closed: Boolean? = null,
 
-    val closedObligationsMet: kotlin.Boolean? = null,
+    val closedObligationsMet: Boolean? = null,
 
-    val closedRescheduled: kotlin.Boolean? = null,
+    val closedRescheduled: Boolean? = null,
 
-    val closedWrittenOff: kotlin.Boolean? = null,
+    val closedWrittenOff: Boolean? = null,
 
-    val code: kotlin.String? = null,
+    val code: String? = null,
 
-    val description: kotlin.String? = null,
+    val description: String? = null,
 
-    val id: kotlin.Long? = null,
+    val id: Long? = null,
 
-    val overpaid: kotlin.Boolean? = null,
+    val overpaid: Boolean? = null,
 
-    val pendingApproval: kotlin.Boolean? = null,
+    val pendingApproval: Boolean? = null,
 
-    val waitingForDisbursal: kotlin.Boolean? = null,
+    val waitingForDisbursal: Boolean? = null,
 
 )

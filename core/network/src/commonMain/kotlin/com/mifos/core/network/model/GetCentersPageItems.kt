@@ -26,17 +26,17 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class GetCentersPageItems(
 
-    val active: kotlin.Boolean? = null,
+    val active: Boolean? = null,
 
-    val hierarchy: kotlin.String? = null,
+    val hierarchy: String? = null,
 
-    val id: kotlin.Long? = null,
+    val id: Long? = null,
 
-    val name: kotlin.String? = null,
+    val name: String? = null,
 
-    val officeId: kotlin.Long? = null,
+    val officeId: Long? = null,
 
-    val officeName: kotlin.String? = null,
+    val officeName: String? = null,
 
     val status: GetCentersStatus? = null,
 

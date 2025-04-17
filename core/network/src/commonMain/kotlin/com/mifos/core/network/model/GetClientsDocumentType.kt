@@ -21,8 +21,8 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class GetClientsDocumentType(
 
-    val id: kotlin.Long? = null,
+    val id: Long? = null,
 
-    val name: kotlin.String? = null,
+    val name: String? = null,
 
 )

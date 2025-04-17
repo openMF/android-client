@@ -21,8 +21,8 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class GetClientsClientIdAccountsResponse(
 
-    val loanAccounts: kotlin.collections.Set<GetClientsLoanAccounts>? = null,
+    val loanAccounts: Set<GetClientsLoanAccounts>? = null,
 
-    val savingsAccounts: kotlin.collections.Set<GetClientsSavingsAccounts>? = null,
+    val savingsAccounts: Set<GetClientsSavingsAccounts>? = null,
 
 )

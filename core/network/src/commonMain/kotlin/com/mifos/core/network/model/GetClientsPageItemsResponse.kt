@@ -28,21 +28,21 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class GetClientsPageItemsResponse(
 
-    val accountNo: kotlin.String? = null,
+    val accountNo: String? = null,
 
-    val active: kotlin.Boolean? = null,
+    val active: Boolean? = null,
 
-    val displayName: kotlin.String? = null,
+    val displayName: String? = null,
 
-    val emailAddress: kotlin.String? = null,
+    val emailAddress: String? = null,
 
-    val fullname: kotlin.String? = null,
+    val fullName: String? = null,
 
-    val id: kotlin.Long? = null,
+    val id: Long? = null,
 
-    val officeId: kotlin.Long? = null,
+    val officeId: Long? = null,
 
-    val officeName: kotlin.String? = null,
+    val officeName: String? = null,
 
     val status: GetClientStatus? = null,
 

@@ -27,19 +27,19 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class GetClientsSavingsAccounts(
 
-    val accountNo: kotlin.String? = null,
+    val accountNo: String? = null,
 
     val currency: GetClientsSavingsAccountsCurrency? = null,
 
     val depositType: GetClientsSavingsAccountsDepositType? = null,
 
-    val id: kotlin.Long? = null,
+    val id: Long? = null,
 
-    val productId: kotlin.Long? = null,
+    val productId: Long? = null,
 
-    val productName: kotlin.String? = null,
+    val productName: String? = null,
 
-    val shortProductName: kotlin.String? = null,
+    val shortProductName: String? = null,
 
     val status: GetClientsSavingsAccountsStatus? = null,
 

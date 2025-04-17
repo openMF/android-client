@@ -22,10 +22,10 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class GetGroupsStatus(
 
-    val code: kotlin.String? = null,
+    val code: String? = null,
 
-    val description: kotlin.String? = null,
+    val description: String? = null,
 
-    val id: kotlin.Long? = null,
+    val id: Long? = null,
 
 )

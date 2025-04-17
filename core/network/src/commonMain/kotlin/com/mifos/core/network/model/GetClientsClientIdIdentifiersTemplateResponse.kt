@@ -20,6 +20,6 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class GetClientsClientIdIdentifiersTemplateResponse(
 
-    val allowedDocumentTypes: kotlin.collections.Set<GetClientsAllowedDocumentTypes>? = null,
+    val allowedDocumentTypes: Set<GetClientsAllowedDocumentTypes>? = null,
 
 )

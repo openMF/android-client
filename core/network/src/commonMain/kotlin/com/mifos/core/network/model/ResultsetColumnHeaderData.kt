@@ -42,47 +42,47 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class ResultsetColumnHeaderData(
 
-    val booleanDisplayType: kotlin.Boolean? = null,
+    val booleanDisplayType: Boolean? = null,
 
-    val codeLookupDisplayType: kotlin.Boolean? = null,
+    val codeLookupDisplayType: Boolean? = null,
 
-    val codeValueDisplayType: kotlin.Boolean? = null,
+    val codeValueDisplayType: Boolean? = null,
 
-    val columnCode: kotlin.String? = null,
+    val columnCode: String? = null,
 
-    val columnDisplayType: ResultsetColumnHeaderData.ColumnDisplayType? = null,
+    val columnDisplayType: ColumnDisplayType? = null,
 
-    val columnLength: kotlin.Long? = null,
+    val columnLength: Long? = null,
 
-    val columnName: kotlin.String? = null,
+    val columnName: String? = null,
 
-    val columnType: ResultsetColumnHeaderData.ColumnType? = null,
+    val columnType: ColumnType? = null,
 
-    val columnValues: kotlin.collections.List<@Contextual kotlin.Any>? = null,
+    val columnValues: List<@Contextual Any>? = null,
 
-    val dateDisplayType: kotlin.Boolean? = null,
+    val dateDisplayType: Boolean? = null,
 
-    val dateTimeDisplayType: kotlin.Boolean? = null,
+    val dateTimeDisplayType: Boolean? = null,
 
-    val decimalDisplayType: kotlin.Boolean? = null,
+    val decimalDisplayType: Boolean? = null,
 
-    val integerDisplayType: kotlin.Boolean? = null,
+    val integerDisplayType: Boolean? = null,
 
-    val isColumnIndexed: kotlin.Boolean? = null,
+    val isColumnIndexed: Boolean? = null,
 
-    val isColumnNullable: kotlin.Boolean? = null,
+    val isColumnNullable: Boolean? = null,
 
-    val isColumnPrimaryKey: kotlin.Boolean? = null,
+    val isColumnPrimaryKey: Boolean? = null,
 
-    val isColumnUnique: kotlin.Boolean? = null,
+    val isColumnUnique: Boolean? = null,
 
-    val mandatory: kotlin.Boolean? = null,
+    val mandatory: Boolean? = null,
 
-    val stringDisplayType: kotlin.Boolean? = null,
+    val stringDisplayType: Boolean? = null,
 
-    val textDisplayType: kotlin.Boolean? = null,
+    val textDisplayType: Boolean? = null,
 
-    val timeDisplayType: kotlin.Boolean? = null,
+    val timeDisplayType: Boolean? = null,
 
 ) {
 
@@ -92,7 +92,7 @@ data class ResultsetColumnHeaderData(
      * Values: TEXT,STRING,INTEGER,FLOAT,DECIMAL,DATE,TIME,DATETIME,BOOLEAN,BINARY,CODELOOKUP,CODEVALUE
      */
     @Serializable
-    enum class ColumnDisplayType(val value: kotlin.String) {
+    enum class ColumnDisplayType(val value: String) {
         @SerialName("TEXT")
         TEXT("TEXT"),
 
@@ -136,7 +136,7 @@ data class ResultsetColumnHeaderData(
      * Values: BIT,BOOLEAN,SMALLINT,TINYINT,INTEGER,MEDIUMINT,BIGINT,REAL,FLOAT,DOUBLE,NUMERIC,DECIMAL,SERIAL,SMALLSERIAL,BIGSERIAL,MONEY,CHAR,VARCHAR,LONGVARCHAR,TEXT,TINYTEXT,MEDIUMTEXT,LONGTEXT,JSON,DATE,TIME,TIME_WITH_TIMEZONE,TIMESTAMP,DATETIME,TIMESTAMP_WITH_TIMEZONE,INTERVAL,BINARY,VARBINARY,LONGVARBINARY,BYTEA,BLOB,TINYBLOB,MEDIUMBLOB,LONGBLOB
      */
     @Serializable
-    enum class ColumnType(val value: kotlin.String) {
+    enum class ColumnType(val value: String) {
         @SerialName("BIT")
         BIT("BIT"),
 

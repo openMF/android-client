@@ -22,10 +22,10 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class GetClientsSavingsAccountsDepositType(
 
-    val code: kotlin.String? = null,
+    val code: String? = null,
 
-    val id: kotlin.Long? = null,
+    val id: Long? = null,
 
-    val value: kotlin.String? = null,
+    val value: String? = null,
 
 )

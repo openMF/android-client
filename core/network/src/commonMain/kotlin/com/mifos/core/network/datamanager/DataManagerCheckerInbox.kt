@@ -43,7 +43,7 @@ class DataManagerCheckerInbox(
         return mBaseApiManager.checkerInboxApi.deleteCheckerEntry(auditId)
     }
 
-    suspend fun getRechdeduleLoansTaskList(): List<com.mifos.core.model.objects.checkerinboxtask.RescheduleLoansTask> {
+    suspend fun getRescheduleLoansTaskList(): List<com.mifos.core.model.objects.checkerinboxtask.RescheduleLoansTask> {
         return mBaseApiManager.checkerInboxApi.getRescheduleLoansTaskList()
     }
 

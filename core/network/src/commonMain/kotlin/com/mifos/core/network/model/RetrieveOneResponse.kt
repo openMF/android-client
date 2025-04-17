@@ -31,25 +31,25 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class RetrieveOneResponse(
 
-    val displayName: kotlin.String? = null,
+    val displayName: String? = null,
 
-    val externalId: kotlin.String? = null,
+    val externalId: String? = null,
 
-    val firstname: kotlin.String? = null,
+    val firstname: String? = null,
 
-    val id: kotlin.Long? = null,
+    val id: Long? = null,
 
-    val isActive: kotlin.Boolean? = null,
+    val isActive: Boolean? = null,
 
-    val isLoanOfficer: kotlin.Boolean? = null,
+    val isLoanOfficer: Boolean? = null,
 
     @Contextual
     val joiningDate: LocalDate? = null,
 
-    val lastname: kotlin.String? = null,
+    val lastname: String? = null,
 
-    val officeId: kotlin.Long? = null,
+    val officeId: Long? = null,
 
-    val officeName: kotlin.String? = null,
+    val officeName: String? = null,
 
 )

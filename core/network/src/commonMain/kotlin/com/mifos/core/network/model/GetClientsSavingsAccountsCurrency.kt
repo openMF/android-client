@@ -25,16 +25,16 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class GetClientsSavingsAccountsCurrency(
 
-    val code: kotlin.String? = null,
+    val code: String? = null,
 
-    val decimalPlaces: kotlin.Int? = null,
+    val decimalPlaces: Int? = null,
 
-    val displayLabel: kotlin.String? = null,
+    val displayLabel: String? = null,
 
-    val displaySymbol: kotlin.String? = null,
+    val displaySymbol: String? = null,
 
-    val name: kotlin.String? = null,
+    val name: String? = null,
 
-    val nameCode: kotlin.String? = null,
+    val nameCode: String? = null,
 
 )

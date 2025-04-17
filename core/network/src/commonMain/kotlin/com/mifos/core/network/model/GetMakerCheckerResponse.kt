@@ -41,46 +41,46 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class GetMakerCheckerResponse(
 
-    val actionName: kotlin.String? = null,
+    val actionName: String? = null,
 
     @Contextual
     val checkedOnDate: LocalDateTime? = null,
 
-    val checker: kotlin.String? = null,
+    val checker: String? = null,
 
-    val clientId: kotlin.Long? = null,
+    val clientId: Long? = null,
 
-    val clientName: kotlin.String? = null,
+    val clientName: String? = null,
 
-    val commandAsJson: kotlin.String? = null,
+    val commandAsJson: String? = null,
 
-    val entityName: kotlin.String? = null,
+    val entityName: String? = null,
 
-    val groupLevelName: kotlin.String? = null,
+    val groupLevelName: String? = null,
 
-    val groupName: kotlin.String? = null,
+    val groupName: String? = null,
 
-    val id: kotlin.Long? = null,
+    val id: Long? = null,
 
-    val loanAccountNo: kotlin.String? = null,
+    val loanAccountNo: String? = null,
 
-    val loanId: kotlin.Long? = null,
+    val loanId: Long? = null,
 
     @Contextual
     val madeOnDate: LocalDateTime? = null,
 
-    val maker: kotlin.String? = null,
+    val maker: String? = null,
 
-    val officeName: kotlin.String? = null,
+    val officeName: String? = null,
 
-    val processingResult: kotlin.String? = null,
+    val processingResult: String? = null,
 
-    val resourceId: kotlin.Long? = null,
+    val resourceId: Long? = null,
 
-    val savingsAccountNo: kotlin.String? = null,
+    val savingsAccountNo: String? = null,
 
-    val subresourceId: kotlin.Long? = null,
+    val subresourceId: Long? = null,
 
-    val url: kotlin.String? = null,
+    val url: String? = null,
 
 )

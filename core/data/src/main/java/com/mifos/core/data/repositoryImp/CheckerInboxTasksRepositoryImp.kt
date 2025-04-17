@@ -24,7 +24,7 @@ class CheckerInboxTasksRepositoryImp(
 ) : CheckerInboxTasksRepository {
 
     override suspend fun getRescheduleLoansTaskList(): Flow<List<com.mifos.core.model.objects.checkerinboxtask.RescheduleLoansTask>> {
-        return flow { emit(dataManagerCheckerInbox.getRechdeduleLoansTaskList()) }
+        return flow { emit(dataManagerCheckerInbox.getRescheduleLoansTaskList()) }
     }
 
     override suspend fun getCheckerTaskList(

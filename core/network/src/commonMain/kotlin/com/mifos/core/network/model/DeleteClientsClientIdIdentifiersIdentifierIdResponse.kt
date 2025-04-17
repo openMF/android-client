@@ -22,10 +22,10 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class DeleteClientsClientIdIdentifiersIdentifierIdResponse(
 
-    val clientId: kotlin.Long? = null,
+    val clientId: Long? = null,
 
-    val officeId: kotlin.Long? = null,
+    val officeId: Long? = null,
 
-    val resourceId: kotlin.Long? = null,
+    val resourceId: Long? = null,
 
 )

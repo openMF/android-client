@@ -30,21 +30,21 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class GetOfficesResponse(
 
-    val allowedParents: kotlin.collections.List<GetOfficesResponse>? = null,
+    val allowedParents: List<GetOfficesResponse>? = null,
 
-    val dateFormat: kotlin.String? = null,
+    val dateFormat: String? = null,
 
-    val externalId: kotlin.String? = null,
+    val externalId: String? = null,
 
-    val hierarchy: kotlin.String? = null,
+    val hierarchy: String? = null,
 
-    val id: kotlin.Long? = null,
+    val id: Long? = null,
 
-    val locale: kotlin.String? = null,
+    val locale: String? = null,
 
-    val name: kotlin.String? = null,
+    val name: String? = null,
 
-    val nameDecorated: kotlin.String? = null,
+    val nameDecorated: String? = null,
 
     @Contextual
     val openingDate: LocalDate? = null,

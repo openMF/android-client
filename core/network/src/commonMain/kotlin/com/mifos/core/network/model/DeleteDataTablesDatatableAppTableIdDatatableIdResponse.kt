@@ -20,6 +20,6 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class DeleteDataTablesDatatableAppTableIdDatatableIdResponse(
 
-    val resourceId: kotlin.Long? = null,
+    val resourceId: Long? = null,
 
 )

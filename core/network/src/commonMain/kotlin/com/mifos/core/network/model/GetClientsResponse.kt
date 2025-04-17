@@ -21,8 +21,8 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class GetClientsResponse(
 
-    val pageItems: kotlin.collections.Set<GetClientsPageItemsResponse>? = null,
+    val pageItems: Set<GetClientsPageItemsResponse>? = null,
 
-    val totalFilteredRecords: kotlin.Int? = null,
+    val totalFilteredRecords: Int? = null,
 
 )

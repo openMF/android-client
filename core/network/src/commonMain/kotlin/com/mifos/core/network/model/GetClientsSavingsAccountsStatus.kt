@@ -32,30 +32,30 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class GetClientsSavingsAccountsStatus(
 
-    val active: kotlin.Boolean? = null,
+    val active: Boolean? = null,
 
-    val approved: kotlin.Boolean? = null,
+    val approved: Boolean? = null,
 
-    val closed: kotlin.Boolean? = null,
+    val closed: Boolean? = null,
 
-    val code: kotlin.String? = null,
+    val code: String? = null,
 
-    val id: kotlin.Long? = null,
+    val id: Long? = null,
 
-    val matured: kotlin.Boolean? = null,
+    val matured: Boolean? = null,
 
-    val prematureClosed: kotlin.Boolean? = null,
+    val prematureClosed: Boolean? = null,
 
-    val rejected: kotlin.Boolean? = null,
+    val rejected: Boolean? = null,
 
-    val submittedAndPendingApproval: kotlin.Boolean? = null,
+    val submittedAndPendingApproval: Boolean? = null,
 
-    val transferInProgress: kotlin.Boolean? = null,
+    val transferInProgress: Boolean? = null,
 
-    val transferOnHold: kotlin.Boolean? = null,
+    val transferOnHold: Boolean? = null,
 
-    val value: kotlin.String? = null,
+    val value: String? = null,
 
-    val withdrawnByApplicant: kotlin.Boolean? = null,
+    val withdrawnByApplicant: Boolean? = null,
 
 )

@@ -19,5 +19,5 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class PostCentersCenterIdResponse(
-    val resourceId: kotlin.Long? = null,
+    val resourceId: Long? = null,
 )

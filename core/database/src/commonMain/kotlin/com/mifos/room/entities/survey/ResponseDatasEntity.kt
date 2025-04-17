@@ -25,7 +25,7 @@ import kotlinx.serialization.Serializable
     ignoredColumns = [],
     tableName = "ResponseDatas",
 )
-data class ResponseDatasEntity(
+data class ResponseDataEntity(
     @PrimaryKey(autoGenerate = true)
     val responseId: Int = 0,
 

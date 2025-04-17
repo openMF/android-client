@@ -22,10 +22,10 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class PostClientsClientIdRequest(
 
-    val activationDate: kotlin.String? = null,
+    val activationDate: String? = null,
 
-    val dateFormat: kotlin.String? = null,
+    val dateFormat: String? = null,
 
-    val locale: kotlin.String? = null,
+    val locale: String? = null,
 
 )

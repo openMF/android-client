@@ -22,10 +22,10 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class GetClientsAllowedDocumentTypes(
 
-    val id: kotlin.Long? = null,
+    val id: Long? = null,
 
-    val name: kotlin.String? = null,
+    val name: String? = null,
 
-    val position: kotlin.Int? = null,
+    val position: Int? = null,
 
 )

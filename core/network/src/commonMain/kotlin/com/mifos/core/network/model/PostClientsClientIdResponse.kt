@@ -23,12 +23,12 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class PostClientsClientIdResponse(
 
-    val clientId: kotlin.Long? = null,
+    val clientId: Long? = null,
 
-    val officeId: kotlin.Long? = null,
+    val officeId: Long? = null,
 
-    val resourceExternalId: kotlin.String? = null,
+    val resourceExternalId: String? = null,
 
-    val resourceId: kotlin.Long? = null,
+    val resourceId: Long? = null,
 
 )

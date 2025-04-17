@@ -23,6 +23,6 @@ data class GetGroupsResponse(
 
     val pageItems: Set<GetGroupsPageItems>? = null,
 
-    val totalFilteredRecords: kotlin.Int? = null,
+    val totalFilteredRecords: Int? = null,
 
 )

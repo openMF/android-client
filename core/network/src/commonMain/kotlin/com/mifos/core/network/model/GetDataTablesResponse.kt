@@ -22,10 +22,10 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class GetDataTablesResponse(
 
-    val applicationTableName: kotlin.String? = null,
+    val applicationTableName: String? = null,
 
-    val columnHeaderData: kotlin.collections.List<ResultsetColumnHeaderData>? = null,
+    val columnHeaderData: List<ResultsetColumnHeaderData>? = null,
 
-    val registeredTableName: kotlin.String? = null,
+    val registeredTableName: String? = null,
 
 )

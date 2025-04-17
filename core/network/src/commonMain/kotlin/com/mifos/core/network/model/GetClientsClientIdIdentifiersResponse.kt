@@ -24,14 +24,14 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class GetClientsClientIdIdentifiersResponse(
 
-    val clientId: kotlin.Long? = null,
+    val clientId: Long? = null,
 
-    val description: kotlin.String? = null,
+    val description: String? = null,
 
-    val documentKey: kotlin.String? = null,
+    val documentKey: String? = null,
 
     val documentType: GetClientsDocumentType? = null,
 
-    val id: kotlin.Long? = null,
+    val id: Long? = null,
 
 )

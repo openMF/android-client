@@ -23,12 +23,12 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class PostCentersCenterIdRequest(
 
-    val closureDate: kotlin.String? = null,
+    val closureDate: String? = null,
 
-    val closureReasonId: kotlin.Long? = null,
+    val closureReasonId: Long? = null,
 
-    val dateFormat: kotlin.String? = null,
+    val dateFormat: String? = null,
 
-    val locale: kotlin.String? = null,
+    val locale: String? = null,
 
 )
