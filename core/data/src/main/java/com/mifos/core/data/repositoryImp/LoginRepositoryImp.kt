@@ -11,7 +11,7 @@ package com.mifos.core.data.repositoryImp
 
 import com.mifos.core.data.repository.LoginRepository
 import com.mifos.core.network.datamanager.DataManagerAuth
-import org.openapitools.client.models.PostAuthenticationResponse
+import com.mifos.core.network.model.PostAuthenticationResponse
 
 /**
  * Created by Aditya Gupta on 06/08/23.

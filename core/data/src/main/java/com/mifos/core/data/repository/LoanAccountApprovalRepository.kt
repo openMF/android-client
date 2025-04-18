@@ -11,12 +11,12 @@ package com.mifos.core.data.repository
 
 import com.mifos.core.model.objects.account.loan.LoanApproval
 import com.mifos.core.network.GenericResponse
-import rx.Observable
+import kotlinx.coroutines.flow.Flow
 
 /**
  * Created by Aditya Gupta on 10/08/23.
  */
 interface LoanAccountApprovalRepository {
 
-    fun approveLoan(loanId: Int, loanApproval: LoanApproval?): Observable<GenericResponse>
+    fun approveLoan(loanId: Int, loanApproval: LoanApproval?): Flow<GenericResponse>
 }

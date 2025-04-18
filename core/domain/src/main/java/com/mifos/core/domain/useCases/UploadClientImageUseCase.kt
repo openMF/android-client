@@ -14,7 +14,6 @@ import com.mifos.core.data.repository.ClientDetailsRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
-import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.ResponseBody
 import java.io.File
@@ -31,7 +30,7 @@ class UploadClientImageUseCase(
         try {
             emit(Resource.Loading())
             val requestFile = pngFile.asRequestBody("image/png".toMediaTypeOrNull())
-            val body = MultipartBody.Part.createFormData("file", pngFile.name, requestFile)
+            val body = PartData.createFormData("file", pngFile.name, requestFile)
             repository.uploadClientImage(id, body)
             emit(Resource.Success(ResponseBody.create(null, "success")))
         } catch (e: Exception) {

@@ -34,7 +34,7 @@ class NewIndividualCollectionSheetRepositoryImp(
         return dataManager.offices()
     }
 
-    override suspend fun getStaffInOffice(officeId: Int): List<StaffEntity> {
+    override suspend fun getStaffInOffice(officeId: Int): Flow<List<StaffEntity>> {
         return dataManager.getStaffInOffice(officeId)
     }
 }

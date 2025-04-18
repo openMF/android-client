@@ -21,7 +21,6 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.io.IOException
 import kotlinx.serialization.SerializationException
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
-import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
 import rx.Subscriber
 import rx.android.schedulers.AndroidSchedulers
@@ -120,11 +119,11 @@ class DocumentDialogViewModel(
             )
     }
 
-    private fun getRequestFileBody(file: File): MultipartBody.Part {
+    private fun getRequestFileBody(file: File): PartData {
         // create RequestBody instance from file
         val requestFile = file.asRequestBody("multipart/form-data".toMediaTypeOrNull())
 
-        // MultipartBody.Part is used to send also the actual file name
-        return MultipartBody.Part.createFormData("file", file.name, requestFile)
+        // PartData is used to send also the actual file name
+        return PartData.createFormData("file", file.name, requestFile)
     }
 }

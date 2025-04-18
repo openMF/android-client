@@ -12,7 +12,7 @@ package com.mifos.core.data.repository
 import com.mifos.core.model.objects.account.loan.LoanDisbursement
 import com.mifos.core.network.GenericResponse
 import com.mifos.room.entities.templates.loans.LoanTransactionTemplate
-import rx.Observable
+import kotlinx.coroutines.flow.Flow
 
 /**
  * Created by Aditya Gupta on 10/08/23.
@@ -22,10 +22,10 @@ interface LoanAccountDisbursementRepository {
     fun getLoanTransactionTemplate(
         loanId: Int,
         command: String?,
-    ): Observable<LoanTransactionTemplate>
+    ): Flow<LoanTransactionTemplate>
 
     fun disburseLoan(
         loanId: Int,
         loanDisbursement: LoanDisbursement?,
-    ): Observable<GenericResponse>
+    ): Flow<GenericResponse>
 }

@@ -12,7 +12,7 @@ package com.mifos.core.data.repositoryImp
 import com.mifos.core.data.repository.LoanRepaymentScheduleRepository
 import com.mifos.core.network.DataManager
 import com.mifos.room.entities.accounts.loans.LoanWithAssociationsEntity
-import rx.Observable
+import kotlinx.coroutines.flow.Flow
 
 /**
  * Created by Aditya Gupta on 12/08/23.
@@ -21,7 +21,7 @@ class LoanRepaymentScheduleRepositoryImp(
     private val dataManager: DataManager,
 ) : LoanRepaymentScheduleRepository {
 
-    override fun getLoanRepaySchedule(loanId: Int): Observable<LoanWithAssociationsEntity> {
+    override fun getLoanRepaySchedule(loanId: Int): Flow<LoanWithAssociationsEntity> {
         return dataManager.getLoanRepaySchedule(loanId)
     }
 }

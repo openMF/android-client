@@ -13,7 +13,7 @@ import com.mifos.core.data.repository.SavingsAccountApprovalRepository
 import com.mifos.core.model.objects.account.loan.SavingsApproval
 import com.mifos.core.network.GenericResponse
 import com.mifos.core.network.datamanager.DataManagerSavings
-import rx.Observable
+import kotlinx.coroutines.flow.Flow
 
 /**
  * Created by Aditya Gupta on 13/08/23.
@@ -25,7 +25,7 @@ class SavingsAccountApprovalRepositoryImp(
     override fun approveSavingsApplication(
         savingsAccountId: Int,
         savingsApproval: SavingsApproval?,
-    ): Observable<GenericResponse> {
+    ): Flow<GenericResponse> {
         return dataManagerSavings.approveSavingsApplication(savingsAccountId, savingsApproval)
     }
 }

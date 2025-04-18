@@ -10,8 +10,8 @@
 package com.mifos.core.data.repository
 
 import com.mifos.core.network.GenericResponse
-import okhttp3.MultipartBody
-import rx.Observable
+import io.ktor.http.content.PartData
+import kotlinx.coroutines.flow.Flow
 
 /**
  * Created by Aditya Gupta on 16/08/23.
@@ -23,8 +23,8 @@ interface DocumentDialogRepository {
         entityId: Int,
         name: String?,
         desc: String?,
-        file: MultipartBody.Part?,
-    ): Observable<GenericResponse>
+        file: PartData?,
+    ): Flow<GenericResponse>
 
     fun updateDocument(
         entityType: String?,
@@ -32,6 +32,6 @@ interface DocumentDialogRepository {
         documentId: Int,
         name: String?,
         desc: String?,
-        file: MultipartBody.Part?,
-    ): Observable<GenericResponse>
+        file: PartData?,
+    ): Flow<GenericResponse>
 }
