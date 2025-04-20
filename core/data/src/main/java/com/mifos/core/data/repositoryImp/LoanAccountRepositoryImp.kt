@@ -14,7 +14,7 @@ import com.mifos.core.network.datamanager.DataManagerLoan
 import com.mifos.core.network.model.LoansPayload
 import com.mifos.room.entities.accounts.loans.Loan
 import com.mifos.room.entities.templates.loans.LoanTemplate
-import rx.Observable
+import kotlinx.coroutines.flow.Flow
 
 /**
  * Created by Aditya Gupta on 08/08/23.
@@ -23,18 +23,18 @@ class LoanAccountRepositoryImp(
     private val dataManagerLoan: DataManagerLoan,
 ) : LoanAccountRepository {
 
-    override suspend fun allLoans(): Observable<List<com.mifos.core.model.objects.organisations.LoanProducts>> {
+    override suspend fun allLoans(): Flow<List<com.mifos.core.model.objects.organisations.LoanProducts>> {
         return dataManagerLoan.allLoans
     }
 
     override suspend fun getLoansAccountTemplate(
         clientId: Int,
         productId: Int,
-    ): Observable<LoanTemplate> {
+    ): Flow<LoanTemplate> {
         return dataManagerLoan.getLoansAccountTemplate(clientId, productId)
     }
 
-    override suspend fun createLoansAccount(loansPayload: LoansPayload): Observable<Loan> {
+    override suspend fun createLoansAccount(loansPayload: LoansPayload): Flow<Loan> {
         return dataManagerLoan.createLoansAccount(loansPayload)
     }
 }

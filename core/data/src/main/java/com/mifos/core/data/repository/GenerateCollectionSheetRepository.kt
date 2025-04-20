@@ -18,28 +18,29 @@ import com.mifos.room.entities.collectionsheet.ProductiveCollectionSheetPayload
 import com.mifos.room.entities.group.CenterEntity
 import com.mifos.room.entities.group.CenterWithAssociations
 import com.mifos.room.entities.group.GroupEntity
+import kotlinx.coroutines.flow.Flow
 
 /**
  * Created by Aditya Gupta on 12/08/23.
  */
 interface GenerateCollectionSheetRepository {
 
-    suspend fun getCentersInOffice(id: Int, params: Map<String, String>): List<CenterEntity>
+    fun getCentersInOffice(id: Int, params: Map<String, String>): Flow<List<CenterEntity>>
 
-    suspend fun getGroupsByOffice(
+    fun getGroupsByOffice(
         office: Int,
         params: Map<String, String>,
-    ): List<GroupEntity>
+    ): Flow<List<GroupEntity>>
 
     suspend fun fetchGroupsAssociatedWithCenter(centerId: Int): CenterWithAssociations
 
-    suspend fun fetchCenterDetails(
+    fun fetchCenterDetails(
         format: String?,
         locale: String?,
         meetingDate: String?,
         officeId: Int,
         staffId: Int,
-    ): List<CenterDetail>
+    ): Flow<List<CenterDetail>>
 
     suspend fun fetchProductiveCollectionSheet(
         centerId: Int,

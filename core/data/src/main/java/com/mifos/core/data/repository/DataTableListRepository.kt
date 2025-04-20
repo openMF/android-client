@@ -13,16 +13,16 @@ import com.mifos.core.model.objects.payloads.GroupLoanPayload
 import com.mifos.core.network.model.LoansPayload
 import com.mifos.room.entities.accounts.loans.Loan
 import com.mifos.room.entities.client.ClientPayloadEntity
-import rx.Observable
+import kotlinx.coroutines.flow.Flow
 
 /**
  * Created by Aditya Gupta on 10/08/23.
  */
 interface DataTableListRepository {
 
-    fun createLoansAccount(loansPayload: LoansPayload?): Observable<Loan>
+    fun createLoansAccount(loansPayload: LoansPayload?): Flow<Loan>
 
-    fun createGroupLoansAccount(loansPayload: GroupLoanPayload?): Observable<Loan>
+    fun createGroupLoansAccount(loansPayload: GroupLoanPayload?): Flow<Loan>
 
     suspend fun createClient(clientPayload: ClientPayloadEntity): Int?
 }

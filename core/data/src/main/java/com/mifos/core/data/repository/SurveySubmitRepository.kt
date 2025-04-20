@@ -10,12 +10,12 @@
 package com.mifos.core.data.repository
 
 import com.mifos.core.model.objects.surveys.Scorecard
-import rx.Observable
+import kotlinx.coroutines.flow.Flow
 
 /**
  * Created by Aditya Gupta on 13/08/23.
  */
 interface SurveySubmitRepository {
 
-    fun submitScore(surveyId: Int, scorecardPayload: Scorecard?): Observable<Scorecard>
+    fun submitScore(surveyId: Int, scorecardPayload: Scorecard?): Flow<Scorecard>
 }

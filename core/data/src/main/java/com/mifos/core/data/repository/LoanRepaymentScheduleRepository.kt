@@ -10,12 +10,12 @@
 package com.mifos.core.data.repository
 
 import com.mifos.room.entities.accounts.loans.LoanWithAssociationsEntity
-import rx.Observable
+import kotlinx.coroutines.flow.Flow
 
 /**
  * Created by Aditya Gupta on 12/08/23.
  */
 interface LoanRepaymentScheduleRepository {
 
-    fun getLoanRepaySchedule(loanId: Int): Observable<LoanWithAssociationsEntity>
+    fun getLoanRepaySchedule(loanId: Int): Flow<LoanWithAssociationsEntity>
 }

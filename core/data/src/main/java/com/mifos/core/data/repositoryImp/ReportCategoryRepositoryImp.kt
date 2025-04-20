@@ -12,6 +12,7 @@ package com.mifos.core.data.repositoryImp
 import com.mifos.core.data.repository.ReportCategoryRepository
 import com.mifos.core.model.objects.runreport.client.ClientReportTypeItem
 import com.mifos.core.network.datamanager.DataManagerRunReport
+import kotlinx.coroutines.flow.Flow
 
 /**
  * Created by Aditya Gupta on 12/08/23.
@@ -24,7 +25,7 @@ class ReportCategoryRepositoryImp(
         reportCategory: String,
         genericResultSet: Boolean,
         parameterType: Boolean,
-    ): List<ClientReportTypeItem> {
+    ): Flow<List<ClientReportTypeItem>> {
         return dataManager.getReportCategories(reportCategory, genericResultSet, parameterType)
     }
 }

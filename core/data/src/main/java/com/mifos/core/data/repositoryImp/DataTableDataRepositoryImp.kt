@@ -11,8 +11,8 @@ package com.mifos.core.data.repositoryImp
 
 import com.mifos.core.data.repository.DataTableDataRepository
 import com.mifos.core.network.datamanager.DataManagerDataTable
+import com.mifos.core.network.model.DeleteDataTablesDatatableAppTableIdDatatableIdResponse
 import kotlinx.serialization.json.JsonArray
-import org.openapitools.client.models.DeleteDataTablesDatatableAppTableIdDatatableIdResponse
 
 /**
  * Created by Aditya Gupta on 10/08/23.

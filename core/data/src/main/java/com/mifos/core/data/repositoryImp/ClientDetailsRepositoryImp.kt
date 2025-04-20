@@ -13,7 +13,7 @@ import com.mifos.core.data.repository.ClientDetailsRepository
 import com.mifos.core.network.datamanager.DataManagerClient
 import com.mifos.room.entities.accounts.ClientAccounts
 import com.mifos.room.entities.client.ClientEntity
-import okhttp3.MultipartBody
+import io.ktor.http.content.PartData
 
 /**
  * Created by Aditya Gupta on 06/08/23.
@@ -22,7 +22,7 @@ class ClientDetailsRepositoryImp(
     private val dataManagerClient: DataManagerClient,
 ) : ClientDetailsRepository {
 
-    override suspend fun uploadClientImage(id: Int, file: MultipartBody.Part?) {
+    override suspend fun uploadClientImage(id: Int, file: PartData?) {
         dataManagerClient.uploadClientImage(id, file)
     }
 

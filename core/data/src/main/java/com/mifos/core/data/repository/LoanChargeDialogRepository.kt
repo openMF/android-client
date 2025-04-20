@@ -11,14 +11,14 @@ package com.mifos.core.data.repository
 
 import com.mifos.core.model.objects.clients.ChargeCreationResponse
 import com.mifos.core.model.objects.payloads.ChargesPayload
-import okhttp3.ResponseBody
+import io.ktor.client.statement.HttpResponse
 
 /**
  * Created by Aditya Gupta on 16/08/23.
  */
 interface LoanChargeDialogRepository {
 
-    suspend fun getAllChargesV3(loanId: Int): ResponseBody
+    suspend fun getAllChargesV3(loanId: Int): HttpResponse
 
     suspend fun createLoanCharges(
         loanId: Int,

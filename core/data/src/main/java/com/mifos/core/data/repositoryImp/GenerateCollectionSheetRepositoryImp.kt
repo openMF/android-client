@@ -21,6 +21,7 @@ import com.mifos.room.entities.collectionsheet.ProductiveCollectionSheetPayload
 import com.mifos.room.entities.group.CenterEntity
 import com.mifos.room.entities.group.CenterWithAssociations
 import com.mifos.room.entities.group.GroupEntity
+import kotlinx.coroutines.flow.Flow
 
 /**
  * Created by Aditya Gupta on 12/08/23.
@@ -33,14 +34,14 @@ class GenerateCollectionSheetRepositoryImp(
     override suspend fun getCentersInOffice(
         id: Int,
         params: Map<String, String>,
-    ): List<CenterEntity> {
+    ): Flow<List<CenterEntity>> {
         return dataManager.getCentersInOffice(id, params)
     }
 
     override suspend fun getGroupsByOffice(
         office: Int,
         params: Map<String, String>,
-    ): List<GroupEntity> {
+    ): Flow<List<GroupEntity>> {
         return dataManager.getGroupsByOffice(office, params)
     }
 
@@ -54,7 +55,7 @@ class GenerateCollectionSheetRepositoryImp(
         meetingDate: String?,
         officeId: Int,
         staffId: Int,
-    ): List<CenterDetail> {
+    ): Flow<List<CenterDetail>> {
         return collectionDataManager.fetchCenterDetails(
             format,
             locale,

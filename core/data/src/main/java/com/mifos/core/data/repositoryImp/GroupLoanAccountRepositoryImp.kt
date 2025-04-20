@@ -14,7 +14,7 @@ import com.mifos.core.model.objects.payloads.GroupLoanPayload
 import com.mifos.core.model.objects.template.loan.GroupLoanTemplate
 import com.mifos.core.network.DataManager
 import com.mifos.room.entities.accounts.loans.Loan
-import rx.Observable
+import kotlinx.coroutines.flow.Flow
 
 /**
  * Created by Aditya Gupta on 12/08/23.
@@ -25,11 +25,11 @@ class GroupLoanAccountRepositoryImp(private val dataManager: DataManager) :
     override fun getGroupLoansAccountTemplate(
         groupId: Int,
         productId: Int,
-    ): Observable<GroupLoanTemplate> {
+    ): Flow<GroupLoanTemplate> {
         return dataManager.getGroupLoansAccountTemplate(groupId, productId)
     }
 
-    override fun createGroupLoansAccount(loansPayload: GroupLoanPayload): Observable<Loan> {
+    override fun createGroupLoansAccount(loansPayload: GroupLoanPayload): Flow<Loan> {
         return dataManager.createGroupLoansAccount(loansPayload)
     }
 }

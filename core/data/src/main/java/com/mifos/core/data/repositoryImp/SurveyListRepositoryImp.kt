@@ -36,6 +36,6 @@ class SurveyListRepositoryImp(
     }
 
     override fun getDatabaseResponseDatas(questionId: Int): Flow<List<ResponseDatasEntity>> {
-        return dataManagerSurveys.getDatabaseResponseDatas(questionId)
+        return dataManagerSurveys.getDatabaseResponseData(questionId)
     }
 }

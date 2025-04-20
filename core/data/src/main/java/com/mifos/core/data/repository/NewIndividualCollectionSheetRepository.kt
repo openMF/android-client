@@ -26,5 +26,5 @@ interface NewIndividualCollectionSheetRepository {
 
     fun offices(): Flow<List<OfficeEntity>>
 
-    suspend fun getStaffInOffice(officeId: Int): List<StaffEntity>
+    fun getStaffInOffice(officeId: Int): Flow<List<StaffEntity>>
 }

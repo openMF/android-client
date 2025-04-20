@@ -9,6 +9,7 @@
  */
 package com.mifos.core.model.objects.checkerinboxtask
 
+import com.mifos.core.model.utils.IgnoredOnParcel
 import com.mifos.core.model.utils.Parcelable
 import com.mifos.core.model.utils.Parcelize
 import kotlinx.datetime.Instant
@@ -17,6 +18,7 @@ import kotlinx.datetime.toLocalDateTime
 import kotlinx.serialization.Serializable
 
 // TODO migrate to KMP
+@IgnoredOnParcel
 @Parcelize
 @Serializable
 data class CheckerTask(

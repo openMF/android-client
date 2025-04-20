@@ -52,4 +52,6 @@ dependencies {
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.tracing.ktx)
+
+    implementation(libs.ktor.client.okhttp)
 }

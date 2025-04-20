@@ -12,16 +12,16 @@ package com.mifos.core.data.repository
 import com.mifos.core.network.model.LoansPayload
 import com.mifos.room.entities.accounts.loans.Loan
 import com.mifos.room.entities.templates.loans.LoanTemplate
-import rx.Observable
+import kotlinx.coroutines.flow.Flow
 
 /**
  * Created by Aditya Gupta on 08/08/23.
  */
 interface LoanAccountRepository {
 
-    suspend fun allLoans(): Observable<List<com.mifos.core.model.objects.organisations.LoanProducts>>
+    fun allLoans(): Flow<List<com.mifos.core.model.objects.organisations.LoanProducts>>
 
-    suspend fun getLoansAccountTemplate(clientId: Int, productId: Int): Observable<LoanTemplate>
+    fun getLoansAccountTemplate(clientId: Int, productId: Int): Flow<LoanTemplate>
 
-    suspend fun createLoansAccount(loansPayload: LoansPayload): Observable<Loan>
+    fun createLoansAccount(loansPayload: LoansPayload): Flow<Loan>
 }

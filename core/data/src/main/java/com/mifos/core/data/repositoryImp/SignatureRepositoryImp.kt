@@ -12,8 +12,8 @@ package com.mifos.core.data.repositoryImp
 import com.mifos.core.data.repository.SignatureRepository
 import com.mifos.core.network.GenericResponse
 import com.mifos.core.network.datamanager.DataManagerDocument
-import okhttp3.MultipartBody
-import rx.Observable
+import io.ktor.http.content.PartData
+import kotlinx.coroutines.flow.Flow
 
 /**
  * Created by Aditya Gupta on 08/08/23.
@@ -27,8 +27,8 @@ class SignatureRepositoryImp(
         entityId: Int,
         name: String?,
         desc: String?,
-        file: MultipartBody.Part?,
-    ): Observable<GenericResponse> {
+        file: PartData?,
+    ): Flow<GenericResponse> {
         return dataManagerDocument.createDocument(entityType, entityId, name, desc, file)
     }
 }

@@ -33,6 +33,6 @@ class CenterDetailsRepositoryImp(
         centerId: Int,
         genericResultSet: Boolean,
     ): Flow<List<CenterInfo>> {
-        return flow { emit(dataManagerRunReport.getCenterSummaryInfo(centerId, genericResultSet)) }
+        return dataManagerRunReport.getCenterSummaryInfo(centerId, genericResultSet)
     }
 }
