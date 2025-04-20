@@ -11,9 +11,9 @@ package com.mifos.core.domain.useCases
 
 import com.mifos.core.common.utils.Resource
 import com.mifos.core.data.repository.ClientIdentifiersRepository
+import com.mifos.core.network.model.DeleteClientsClientIdIdentifiersIdentifierIdResponse
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import org.openapitools.client.models.DeleteClientsClientIdIdentifiersIdentifierIdResponse
 
 class DeleteIdentifierUseCase(
     private val repository: ClientIdentifiersRepository,

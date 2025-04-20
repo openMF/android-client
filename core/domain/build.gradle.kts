@@ -25,21 +25,30 @@ kotlin {
           //  api(projects.core.data)
             api(projects.core.model)
             api(projects.core.common)
-          //  api(projects.core.network)
+            api(projects.core.network)
 
             implementation(libs.kotlinx.coroutines.core)
             implementation(compose.components.resources)
+            implementation(libs.kotlinx.serialization.json)
             // implementation(libs.fineract.client.kmp)
         }
 
         androidMain.dependencies {
             implementation(libs.squareup.okhttp)
+            implementation(libs.ktor.client.okhttp)
             implementation(libs.androidx.paging.runtime.ktx)
         }
         nativeMain.dependencies {
+            implementation(libs.ktor.client.darwin)
         }
         desktopMain.dependencies {
-            implementation(libs.squareup.okhttp)
+            implementation(libs.ktor.client.okhttp)
+        }
+        jsMain.dependencies {
+            implementation(libs.ktor.client.js)
+        }
+        wasmJsMain.dependencies {
+            implementation(libs.ktor.client.js)
         }
     }
 }

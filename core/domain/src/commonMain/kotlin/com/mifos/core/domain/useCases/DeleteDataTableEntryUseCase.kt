@@ -11,9 +11,9 @@ package com.mifos.core.domain.useCases
 
 import com.mifos.core.common.utils.Resource
 import com.mifos.core.data.repository.DataTableDataRepository
+import com.mifos.core.network.model.DeleteDataTablesDatatableAppTableIdDatatableIdResponse
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import org.openapitools.client.models.DeleteDataTablesDatatableAppTableIdDatatableIdResponse
 
 class DeleteDataTableEntryUseCase(
     private val repository: DataTableDataRepository,
