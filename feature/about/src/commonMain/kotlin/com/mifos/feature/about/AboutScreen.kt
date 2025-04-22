@@ -9,12 +9,6 @@
  */
 package com.mifos.feature.about
 
-import androidclient.feature.about.generated.resources.Res
-import androidclient.feature.about.generated.resources.feature_about
-import androidclient.feature.about.generated.resources.feature_about_app
-import androidclient.feature.about.generated.resources.feature_about_ic_launcher
-import androidclient.feature.about.generated.resources.feature_about_mifos
-import androidclient.feature.about.generated.resources.feature_about_mifos_x_droid
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -27,7 +21,6 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -38,9 +31,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Color.Companion.Black
+import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.platform.LocalUriHandler
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
+import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -49,10 +48,7 @@ import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.theme.aboutItemTextStyle
 import com.mifos.core.designsystem.theme.aboutItemTextStyleBold
-import com.mifos.core.ui.util.ShareUtils
-import org.jetbrains.compose.resources.painterResource
-import org.jetbrains.compose.resources.stringResource
-import org.koin.compose.viewmodel.koinViewModel
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 internal fun AboutScreen(
@@ -72,17 +68,17 @@ internal fun AboutScreen(
         onRetry = { viewModel.getAboutOptions() },
         onOptionClick = {
             when (it) {
-                AboutItems.CONTRIBUTIONS -> ShareUtils.openUrl("https://github.com/openMF/android-client/graphs/contributors")
+                AboutItems.CONTRIBUTIONS -> uriHandler.openUri("https://github.com/openMF/android-client/graphs/contributors")
 
                 AboutItems.APP_VERSION -> Unit
 
-                AboutItems.OFFICIAL_WEBSITE -> ShareUtils.openUrl("https://openmf.github.io/mobileapps.github.io/")
+                AboutItems.OFFICIAL_WEBSITE -> uriHandler.openUri("https://openmf.github.io/mobileapps.github.io/")
 
-                AboutItems.TWITTER -> ShareUtils.openUrl("https://twitter.com/mifos")
+                AboutItems.TWITTER -> uriHandler.openUri("https://twitter.com/mifos")
 
-                AboutItems.SOURCE_CODE -> ShareUtils.openUrl("https://github.com/openMF/android-client")
+                AboutItems.SOURCE_CODE -> uriHandler.openUri("https://github.com/openMF/android-client")
 
-                AboutItems.LICENSE -> ShareUtils.openUrl("https://github.com/openMF/android-client/blob/master/LICENSE.md")
+                AboutItems.LICENSE -> uriHandler.openUri("https://github.com/openMF/android-client/blob/master/LICENSE.md")
             }
         },
     )
@@ -98,7 +94,7 @@ internal fun AboutScreen(
     val snackbarHostState = remember { SnackbarHostState() }
 
     MifosScaffold(
-        title = stringResource(Res.string.feature_about),
+        title = stringResource(R.string.feature_about),
         onBackPressed = onBackPressed,
         snackbarHostState = snackbarHostState,
     ) { paddingValues ->
@@ -114,9 +110,7 @@ internal fun AboutScreen(
                     )
                 }
 
-                is AboutUiState.Error -> MifosSweetError(
-                    message = stringResource(state.message),
-                ) {
+                is AboutUiState.Error -> MifosSweetError(message = stringResource(id = state.message)) {
                     onRetry()
                 }
 
@@ -134,21 +128,21 @@ private fun AboutScreenContent(
     Column {
         Image(
             modifier = Modifier.size(100.dp),
-            painter = painterResource(Res.drawable.feature_about_ic_launcher),
+            painter = painterResource(id = R.drawable.feature_about_ic_launcher),
             contentDescription = null,
         )
         Text(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(16.dp),
-            text = stringResource(Res.string.feature_about_mifos_x_droid),
+            text = stringResource(id = R.string.feature_about_mifos_x_droid),
             style = aboutItemTextStyleBold,
         )
         Text(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(start = 16.dp, end = 16.dp),
-            text = stringResource(Res.string.feature_about_app),
+            text = stringResource(id = R.string.feature_about_app),
             style = aboutItemTextStyle,
         )
         Text(
@@ -158,7 +152,7 @@ private fun AboutScreenContent(
                 .clickable {
                     onOptionClick(AboutItems.CONTRIBUTIONS)
                 },
-            text = stringResource(Res.string.feature_about_mifos),
+            text = stringResource(id = R.string.feature_about_mifos),
             style = TextStyle(
                 fontSize = 16.sp,
             ),
@@ -186,8 +180,7 @@ private fun AboutCardItem(
             bottom = 8.dp,
         ),
         elevation = CardDefaults.elevatedCardElevation(0.dp),
-
-        colors = CardDefaults.elevatedCardColors(containerColor = about.color ?: MaterialTheme.colorScheme.surface),
+        colors = CardDefaults.elevatedCardColors(about.color),
         onClick = {
             onOptionClick(about.id)
         },
@@ -207,8 +200,10 @@ private fun AboutCardItem(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(start = 16.dp, end = 16.dp),
-                    text = stringResource(about.title),
-                    style = MaterialTheme.typography.titleMedium,
+                    text = stringResource(id = about.title),
+                    style = TextStyle(
+                        fontSize = 16.sp,
+                    ),
                     color = Black,
                 )
                 about.subtitle?.let {
@@ -216,12 +211,47 @@ private fun AboutCardItem(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(start = 16.dp, end = 16.dp),
-                        text = stringResource(it),
-                        style = MaterialTheme.typography.bodyMedium,
+                        text = stringResource(id = it),
+                        style = TextStyle(
+                            fontSize = 16.sp,
+                        ),
                         color = Black,
                     )
                 }
             }
         }
     }
+}
+
+private class AboutUiStateProvider : PreviewParameterProvider<AboutUiState> {
+
+    override val values: Sequence<AboutUiState>
+        get() = sequenceOf(
+            AboutUiState.Loading,
+            AboutUiState.Error(R.string.feature_about_failed_to_load),
+            AboutUiState.AboutOptions(sampleAboutItem),
+        )
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun AboutScreenPreview(
+    @PreviewParameter(AboutUiStateProvider::class) state: AboutUiState,
+) {
+    AboutScreen(
+        state = state,
+        onBackPressed = {},
+        onRetry = {},
+        onOptionClick = {},
+    )
+}
+
+val sampleAboutItem = List(4) {
+    AboutItem(
+        icon = R.drawable.feature_about_icon_twitter,
+        title = R.string.feature_about_support_twitter,
+        subtitle = R.string.feature_about_license_sub,
+        color = White,
+        id = AboutItems.TWITTER,
+    )
 }
