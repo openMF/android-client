@@ -18,6 +18,6 @@ data class AboutItem(
     val icon: DrawableResource? = null,
     val title: StringResource,
     val subtitle: StringResource? = null,
-    val color: Color,
+    val color: Color? = null,
     val id: AboutItems,
 )
