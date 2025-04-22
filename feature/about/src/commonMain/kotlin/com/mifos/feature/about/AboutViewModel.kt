@@ -9,8 +9,17 @@
  */
 package com.mifos.feature.about
 
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Color.Companion.White
+import androidclient.feature.about.generated.resources.Res
+import androidclient.feature.about.generated.resources.feature_about_app_version
+import androidclient.feature.about.generated.resources.feature_about_failed_to_load
+import androidclient.feature.about.generated.resources.feature_about_ic_source_code
+import androidclient.feature.about.generated.resources.feature_about_ic_website
+import androidclient.feature.about.generated.resources.feature_about_icon_twitter
+import androidclient.feature.about.generated.resources.feature_about_license
+import androidclient.feature.about.generated.resources.feature_about_license_sub
+import androidclient.feature.about.generated.resources.feature_about_support_github
+import androidclient.feature.about.generated.resources.feature_about_support_twitter
+import androidclient.feature.about.generated.resources.feature_about_website
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -27,43 +36,38 @@ class AboutViewModel : ViewModel() {
             val options = listOf(
                 AboutItem(
                     icon = null,
-                    title = R.string.feature_about_app_version,
+                    title = Res.string.feature_about_app_version,
                     subtitle = null,
-                    color = Color.Blue,
                     id = AboutItems.APP_VERSION,
                 ),
                 AboutItem(
-                    icon = R.drawable.feature_about_ic_website,
-                    title = R.string.feature_about_website,
+                    icon = Res.drawable.feature_about_ic_website,
+                    title = Res.string.feature_about_website,
                     subtitle = null,
-                    color = White,
                     id = AboutItems.OFFICIAL_WEBSITE,
                 ),
                 AboutItem(
-                    icon = R.drawable.feature_about_icon_twitter,
-                    title = R.string.feature_about_support_twitter,
+                    icon = Res.drawable.feature_about_icon_twitter,
+                    title = Res.string.feature_about_support_twitter,
                     subtitle = null,
-                    color = White,
                     id = AboutItems.TWITTER,
                 ),
                 AboutItem(
-                    icon = R.drawable.feature_about_ic_source_code,
-                    title = R.string.feature_about_support_github,
+                    icon = Res.drawable.feature_about_ic_source_code,
+                    title = Res.string.feature_about_support_github,
                     subtitle = null,
-                    color = White,
                     id = AboutItems.SOURCE_CODE,
                 ),
                 AboutItem(
                     icon = null,
-                    title = R.string.feature_about_license,
-                    subtitle = R.string.feature_about_license_sub,
-                    color = Color.Blue,
+                    title = Res.string.feature_about_license,
+                    subtitle = Res.string.feature_about_license_sub,
                     id = AboutItems.LICENSE,
                 ),
             )
             _aboutUiState.value = AboutUiState.AboutOptions(options)
         } catch (exception: Exception) {
-            _aboutUiState.value = AboutUiState.Error(R.string.feature_about_failed_to_load)
+            _aboutUiState.value = AboutUiState.Error(Res.string.feature_about_failed_to_load)
         }
     }
 }
