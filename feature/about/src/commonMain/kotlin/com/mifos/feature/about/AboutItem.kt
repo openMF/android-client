@@ -9,11 +9,15 @@
  */
 package com.mifos.feature.about
 
-sealed class AboutUiState {
+import androidx.compose.ui.graphics.Color
+import org.jetbrains.compose.resources.DrawableResource
+import org.jetbrains.compose.resources.StringResource
 
-    data object Loading : AboutUiState()
+data class AboutItem(
 
-    data class Error(val message: Int) : AboutUiState()
-
-    data class AboutOptions(val aboutOptions: List<AboutItem>) : AboutUiState()
-}
+    val icon: DrawableResource? = null,
+    val title: StringResource,
+    val subtitle: StringResource? = null,
+    val color: Color,
+    val id: AboutItems,
+)
