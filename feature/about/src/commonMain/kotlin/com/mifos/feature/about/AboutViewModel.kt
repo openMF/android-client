@@ -20,6 +20,8 @@ import androidclient.feature.about.generated.resources.feature_about_license_sub
 import androidclient.feature.about.generated.resources.feature_about_support_github
 import androidclient.feature.about.generated.resources.feature_about_support_twitter
 import androidclient.feature.about.generated.resources.feature_about_website
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -38,30 +40,35 @@ class AboutViewModel : ViewModel() {
                     icon = null,
                     title = Res.string.feature_about_app_version,
                     subtitle = null,
+                    color = Color.Blue,
                     id = AboutItems.APP_VERSION,
                 ),
                 AboutItem(
                     icon = Res.drawable.feature_about_ic_website,
                     title = Res.string.feature_about_website,
                     subtitle = null,
+                    color = White,
                     id = AboutItems.OFFICIAL_WEBSITE,
                 ),
                 AboutItem(
                     icon = Res.drawable.feature_about_icon_twitter,
                     title = Res.string.feature_about_support_twitter,
                     subtitle = null,
+                    color = White,
                     id = AboutItems.TWITTER,
                 ),
                 AboutItem(
                     icon = Res.drawable.feature_about_ic_source_code,
                     title = Res.string.feature_about_support_github,
                     subtitle = null,
+                    color = White,
                     id = AboutItems.SOURCE_CODE,
                 ),
                 AboutItem(
                     icon = null,
                     title = Res.string.feature_about_license,
                     subtitle = Res.string.feature_about_license_sub,
+                    color = Color.Blue,
                     id = AboutItems.LICENSE,
                 ),
             )

@@ -12,8 +12,8 @@ package com.mifos.feature.about
 import androidclient.feature.about.generated.resources.Res
 import androidclient.feature.about.generated.resources.feature_about
 import androidclient.feature.about.generated.resources.feature_about_app
-import androidclient.feature.about.generated.resources.feature_about_ic_launcher
 import androidclient.feature.about.generated.resources.feature_about_mifos
+import androidclient.feature.about.generated.resources.feature_about_ic_launcher
 import androidclient.feature.about.generated.resources.feature_about_mifos_x_droid
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -117,7 +117,7 @@ internal fun AboutScreen(
                 is AboutUiState.Error -> MifosSweetError(
                     message = stringResource(state.message),
                 ) {
-                    onRetry()
+                onRetry()
                 }
 
                 is AboutUiState.Loading -> MifosCircularProgress()
@@ -186,8 +186,7 @@ private fun AboutCardItem(
             bottom = 8.dp,
         ),
         elevation = CardDefaults.elevatedCardElevation(0.dp),
-
-        colors = CardDefaults.elevatedCardColors(containerColor = about.color ?: MaterialTheme.colorScheme.surface),
+        colors = CardDefaults.elevatedCardColors(about.color),
         onClick = {
             onOptionClick(about.id)
         },
@@ -218,10 +217,11 @@ private fun AboutCardItem(
                             .padding(start = 16.dp, end = 16.dp),
                         text = stringResource(it),
                         style = MaterialTheme.typography.bodyMedium,
-                        color = Black,
+                       color = Black,
                     )
                 }
             }
         }
     }
 }
+
