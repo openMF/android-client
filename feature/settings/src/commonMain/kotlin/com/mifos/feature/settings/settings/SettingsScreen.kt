@@ -56,6 +56,7 @@ import com.mifos.feature.settings.R
 import com.mifos.feature.settings.syncSurvey.SyncSurveysDialog
 import com.mifos.feature.settings.updateServer.UpdateServerConfigScreenRoute
 import org.koin.androidx.compose.koinViewModel
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 internal fun SettingsScreen(
@@ -265,17 +266,6 @@ private fun updateLanguageLocale(context: Context, language: String, isSystemLan
         "SettingsScreen",
         "updateLanguageLocale: $language" + context.packageName.toString() + isSystemLanguage,
     )
-//    if (isSystemLanguage) {
-//        LanguageHelper.setLocale(context, language)
-//    } else {
-//        val systemLanguageCode = Locale.getDefault().language
-//        if (MifosAppLanguage.entries.find { it.code == systemLanguageCode } == null) {
-//            LanguageHelper.setLocale(context, MifosAppLanguage.ENGLISH.code)
-//        } else {
-//            LanguageHelper.setLocale(context, language)
-//        }
-//    }
-}
 
 private fun showRestartCountdownToast(context: Context, seconds: Int) {
     val countDownTimer = object : CountDownTimer((seconds * 1000).toLong(), 1000) {
@@ -304,18 +294,3 @@ private fun Context.restartApplication() {
     Runtime.getRuntime().exit(0)
 }
 
-@Composable
-@Preview(showSystemUi = true, showBackground = true)
-private fun PreviewSettingsScreen() {
-    SettingsScreen(
-        onBackPressed = {},
-        selectedLanguage = "",
-        selectedTheme = "",
-        baseURL = "",
-        tenant = "",
-        handleEndpointUpdate = { _, _ -> },
-        updateLanguage = {},
-        updateTheme = {},
-        changePasscode = {},
-    )
-}
