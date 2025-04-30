@@ -66,7 +66,7 @@ import com.mifos.room.entities.organisation.OfficeOpeningDateEntity
 import com.mifos.room.entities.organisation.StaffEntity
 import com.mifos.room.entities.survey.ComponentDatasEntity
 import com.mifos.room.entities.survey.QuestionDatasEntity
-import com.mifos.room.entities.survey. ResponseDatasEntity
+import com.mifos.room.entities.survey.ResponseDatasEntity
 import com.mifos.room.entities.survey.SurveyEntity
 import com.mifos.room.entities.templates.clients.ClientsTemplateEntity
 import com.mifos.room.entities.templates.clients.InterestTypeEntity

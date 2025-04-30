@@ -40,10 +40,14 @@ kotlin {
             implementation(compose.material3)
             implementation(compose.components.resources)
             implementation(compose.ui)
+            api(projects.core.common)
+            api(projects.core.model)
+            api(projects.core.network)
+            api(projects.core.datastore)
+            api(projects.core.designsystem)
+            //api(projects.core.domain)
+
         }
     }
 }
-dependencies {
-    implementation(libs.androidx.ui.android)
-    implementation(libs.material3.android)
-}
+

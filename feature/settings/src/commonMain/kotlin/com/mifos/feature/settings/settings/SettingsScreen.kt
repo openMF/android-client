@@ -55,7 +55,9 @@ import com.mifos.core.designsystem.component.UpdateEndpointDialogScreen
 import com.mifos.feature.settings.R
 import com.mifos.feature.settings.syncSurvey.SyncSurveysDialog
 import com.mifos.feature.settings.updateServer.UpdateServerConfigScreenRoute
-import org.koin.androidx.compose.koinViewModel
+import core.designsystem.generated.resources.Res
+import org.jetbrains.compose.resources.stringArrayResource
+import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -120,7 +122,7 @@ internal fun SettingsScreen(
 
     MifosScaffold(
         onBackPressed = onBackPressed,
-        title = stringResource(R.string.feature_settings),
+        title = stringResource(Res.string.feature_settings),
     ) { paddingValues ->
         Column(
             Modifier.padding(paddingValues),
@@ -170,8 +172,8 @@ internal fun SettingsScreen(
 
     if (showLanguageUpdateDialog) {
         MifosRadioButtonDialog(
-            title = stringResource(R.string.feature_settings_choose_language),
-            items = stringArrayResource(R.array.feature_settings_languages),
+            title = stringResource(Res.string.feature_settings_choose_language),
+            items = stringArrayResource(Res.array.feature_settings_languages),
             selectItem = { _, index -> updateLanguage(MifosAppLanguage.entries[index]) },
             onDismissRequest = { showLanguageUpdateDialog = false },
             selectedItem = MifosAppLanguage.fromCode(selectedLanguage).displayName,
@@ -180,7 +182,7 @@ internal fun SettingsScreen(
 
     if (showThemeUpdateDialog) {
         MifosRadioButtonDialog(
-            title = stringResource(R.string.feature_settings_change_app_theme),
+            title = stringResource(Res.string.feature_settings_change_app_theme),
             items = AppTheme.entries.map { it.themeName }.toTypedArray(),
             selectItem = { _, index -> updateTheme(AppTheme.entries[index]) },
             onDismissRequest = { showThemeUpdateDialog = false },
@@ -267,30 +269,31 @@ private fun updateLanguageLocale(context: Context, language: String, isSystemLan
         "updateLanguageLocale: $language" + context.packageName.toString() + isSystemLanguage,
     )
 
-private fun showRestartCountdownToast(context: Context, seconds: Int) {
-    val countDownTimer = object : CountDownTimer((seconds * 1000).toLong(), 1000) {
-        override fun onTick(millisUntilFinished: Long) {
-            val secondsRemaining = millisUntilFinished / 1000
-            Toast.makeText(
-                context,
-                "Restarting app in $secondsRemaining seconds",
-                Toast.LENGTH_SHORT,
-            ).show()
-        }
+    private fun showRestartCountdownToast(context: Context, seconds: Int) {
+        val countDownTimer = object : CountDownTimer((seconds * 1000).toLong(), 1000) {
+            override fun onTick(millisUntilFinished: Long) {
+                val secondsRemaining = millisUntilFinished / 1000
+                Toast.makeText(
+                    context,
+                    "Restarting app in $secondsRemaining seconds",
+                    Toast.LENGTH_SHORT,
+                ).show()
+            }
 
-        override fun onFinish() {
-            context.restartApplication()
+            override fun onFinish() {
+                context.restartApplication()
+            }
         }
+        countDownTimer.start()
     }
-    countDownTimer.start()
-}
 
-private fun Context.restartApplication() {
-    val packageManager: PackageManager = this.packageManager
-    val intent: Intent = packageManager.getLaunchIntentForPackage(this.packageName)!!
-    val componentName: ComponentName = intent.component!!
-    val restartIntent: Intent = Intent.makeRestartActivityTask(componentName)
-    this.startActivity(restartIntent)
-    Runtime.getRuntime().exit(0)
+    private fun Context.restartApplication() {
+        val packageManager: PackageManager = this.packageManager
+        val intent: Intent = packageManager.getLaunchIntentForPackage(this.packageName)!!
+        val componentName: ComponentName = intent.component!!
+        val restartIntent: Intent = Intent.makeRestartActivityTask(componentName)
+        this.startActivity(restartIntent)
+        Runtime.getRuntime().exit(0)
+    }
 }
 
