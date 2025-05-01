@@ -9,13 +9,6 @@
  */
 package com.mifos.feature.settings.settings
 
-import android.content.ComponentName
-import android.content.Context
-import android.content.Intent
-import android.content.pm.PackageManager
-import android.os.CountDownTimer
-import android.util.Log
-import android.widget.Toast
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -41,10 +34,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringArrayResource
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mifos.core.common.enums.MifosAppLanguage
@@ -52,11 +41,9 @@ import com.mifos.core.datastore.model.AppTheme
 import com.mifos.core.designsystem.component.MifosRadioButtonDialog
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.UpdateEndpointDialogScreen
-import com.mifos.feature.settings.R
 import com.mifos.feature.settings.syncSurvey.SyncSurveysDialog
 import com.mifos.feature.settings.updateServer.UpdateServerConfigScreenRoute
 import core.designsystem.generated.resources.Res
-import org.jetbrains.compose.resources.stringArrayResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -69,7 +56,6 @@ internal fun SettingsScreen(
     viewModel: SettingsViewModel = koinViewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-    val context = LocalContext.current
 
     SettingsScreen(
         onBackPressed = onBackPressed,
@@ -88,11 +74,6 @@ internal fun SettingsScreen(
         },
         updateLanguage = {
             val isSystemLanguage = viewModel.updateLanguage(it.code)
-            updateLanguageLocale(
-                context = context,
-                language = it.code,
-                isSystemLanguage = isSystemLanguage,
-            )
             languageChanged()
         },
     )
@@ -118,7 +99,6 @@ internal fun SettingsScreen(
     var showServerConfig by rememberSaveable { mutableStateOf(false) }
 
     val sheetState = rememberModalBottomSheetState()
-    val context = LocalContext.current
 
     MifosScaffold(
         onBackPressed = onBackPressed,
@@ -164,7 +144,6 @@ internal fun SettingsScreen(
                 onCloseClick = { showServerConfig = false },
                 onSuccessful = {
                     showServerConfig = false
-                    showRestartCountdownToast(context, 2)
                 },
             )
         }
@@ -173,7 +152,7 @@ internal fun SettingsScreen(
     if (showLanguageUpdateDialog) {
         MifosRadioButtonDialog(
             title = stringResource(Res.string.feature_settings_choose_language),
-            items = stringArrayResource(Res.array.feature_settings_languages),
+            items = MifosAppLanguage.entries.map { it.displayName }.toTypedArray(),
             selectItem = { _, index -> updateLanguage(MifosAppLanguage.entries[index]) },
             onDismissRequest = { showLanguageUpdateDialog = false },
             selectedItem = MifosAppLanguage.fromCode(selectedLanguage).displayName,
@@ -249,12 +228,12 @@ private fun SettingsCardItem(
                 modifier = Modifier.weight(0.8f),
             ) {
                 Text(
-                    text = stringResource(id = title),
+                    text = stringResource(title),
                     style = MaterialTheme.typography.bodyMedium,
                 )
                 Text(
                     modifier = Modifier.padding(end = 16.dp),
-                    text = stringResource(id = details),
+                    text = stringResource(details),
                     color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.8f),
                     style = MaterialTheme.typography.bodyMedium,
                 )
@@ -263,37 +242,4 @@ private fun SettingsCardItem(
     }
 }
 
-private fun updateLanguageLocale(context: Context, language: String, isSystemLanguage: Boolean) {
-    Log.d(
-        "SettingsScreen",
-        "updateLanguageLocale: $language" + context.packageName.toString() + isSystemLanguage,
-    )
-
-    private fun showRestartCountdownToast(context: Context, seconds: Int) {
-        val countDownTimer = object : CountDownTimer((seconds * 1000).toLong(), 1000) {
-            override fun onTick(millisUntilFinished: Long) {
-                val secondsRemaining = millisUntilFinished / 1000
-                Toast.makeText(
-                    context,
-                    "Restarting app in $secondsRemaining seconds",
-                    Toast.LENGTH_SHORT,
-                ).show()
-            }
-
-            override fun onFinish() {
-                context.restartApplication()
-            }
-        }
-        countDownTimer.start()
-    }
-
-    private fun Context.restartApplication() {
-        val packageManager: PackageManager = this.packageManager
-        val intent: Intent = packageManager.getLaunchIntentForPackage(this.packageName)!!
-        val componentName: ComponentName = intent.component!!
-        val restartIntent: Intent = Intent.makeRestartActivityTask(componentName)
-        this.startActivity(restartIntent)
-        Runtime.getRuntime().exit(0)
-    }
-}
 
