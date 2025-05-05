@@ -27,4 +27,7 @@ kotlin {
         }
     }
 }
+dependencies {
+    implementation(libs.androidx.ui.android)
+}
 

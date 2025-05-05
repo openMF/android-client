@@ -12,6 +12,7 @@ package com.mifos.feature.report.reportDetail
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.mifos.core.common.network.MifosDispatchers
 import com.mifos.core.common.utils.Constants
 import com.mifos.core.common.utils.Resource
 import com.mifos.core.domain.useCases.GetReportFullParameterListUseCase
@@ -22,7 +23,7 @@ import com.mifos.core.domain.useCases.GetRunReportWithQueryUseCase
 import com.mifos.core.model.objects.runreport.DataRow
 import com.mifos.core.model.objects.runreport.FullParameterListResponse
 import com.mifos.core.model.objects.runreport.client.ClientReportTypeItem
-import com.mifos.feature.report.R
+import core.designsystem.generated.resources.Res
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -68,7 +69,7 @@ class ReportDetailViewModel(
                 when (result) {
                     is Resource.Error ->
                         _reportDetailUiState.value =
-                            ReportDetailUiState.Error(R.string.feature_report_failed_to_load_report_details)
+                            ReportDetailUiState.Error(Res.string.feature_report_failed_to_load_report_details)
 
                     is Resource.Loading -> _reportDetailUiState.value = ReportDetailUiState.Loading
 
@@ -80,7 +81,7 @@ class ReportDetailViewModel(
         }
 
     fun fetchParameterDetails(parameterName: String, parameterType: Boolean) =
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(MifosDispatchers.IO) {
             getReportParameterDetailsUseCase(parameterName, parameterType).collect { result ->
                 when (result) {
                     is Resource.Error -> Unit
@@ -96,12 +97,12 @@ class ReportDetailViewModel(
         }
 
     fun fetchOffices(parameterName: String, officeId: Int, parameterType: Boolean) =
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(MifosDispatchers.IO) {
             getRunReportOfficesUseCase(parameterName, officeId, parameterType).collect { result ->
                 when (result) {
                     is Resource.Error ->
                         _reportDetailUiState.value =
-                            ReportDetailUiState.Error(R.string.feature_report_failed_to_load_report_details)
+                            ReportDetailUiState.Error(Res.string.feature_report_failed_to_load_report_details)
 
                     is Resource.Loading -> Unit
 
@@ -114,12 +115,12 @@ class ReportDetailViewModel(
         }
 
     fun fetchProduct(parameterName: String, currencyId: String, parameterType: Boolean) =
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(MifosDispatchers.IO) {
             getRunReportProductUseCase(parameterName, currencyId, parameterType).collect { result ->
                 when (result) {
                     is Resource.Error ->
                         _reportDetailUiState.value =
-                            ReportDetailUiState.Error(R.string.feature_report_failed_to_load_report_details)
+                            ReportDetailUiState.Error(Res.string.feature_report_failed_to_load_report_details)
 
                     is Resource.Loading -> Unit
 
@@ -132,12 +133,12 @@ class ReportDetailViewModel(
         }
 
     fun fetchRunReportWithQuery(reportName: String, options: MutableMap<String, String>) =
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(MifosDispatchers.IO) {
             getRunReportWithQueryUseCase(reportName, options).collect { result ->
                 when (result) {
                     is Resource.Error ->
                         _reportDetailUiState.value =
-                            ReportDetailUiState.Error(R.string.feature_report_failed_to_load_report_details)
+                            ReportDetailUiState.Error(Res.string.feature_report_failed_to_load_report_details)
 
                     is Resource.Loading -> _reportDetailUiState.value = ReportDetailUiState.Loading
 
