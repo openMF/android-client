@@ -15,23 +15,16 @@ android {
     namespace = "com.mifos.feature.report"
 }
 
-//dependencies {
-//
-//    implementation(projects.core.domain)
-//
-//    //DBFlow dependencies
-//    testImplementation(libs.hilt.android.testing)
-//    testImplementation(projects.core.testing)
-//
-//    implementation(libs.kotlinx.serialization.json)
-//
-//    androidTestImplementation(projects.core.testing)
-//}
-
 kotlin {
     sourceSets {
         commonMain.dependencies {
+            implementation(compose.material3)
+            implementation(compose.components.resources)
+            implementation(compose.ui)
+            api(projects.core.common)
+            api(projects.core.model)
 
         }
     }
 }
+

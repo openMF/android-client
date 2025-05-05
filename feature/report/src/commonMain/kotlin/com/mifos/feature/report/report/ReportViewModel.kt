@@ -14,7 +14,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mifos.core.common.utils.Constants
 import com.mifos.core.model.objects.runreport.FullParameterListResponse
-import com.mifos.feature.report.R
+import core.designsystem.generated.resources.Res
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -37,7 +37,7 @@ class ReportViewModel(
 
     fun exportCsv(report: FullParameterListResponse, reportDirectoryPath: String) =
         viewModelScope.launch(Dispatchers.IO) {
-            _reportUiState.value = ReportUiState.Message(R.string.feature_report_export_started)
+            _reportUiState.value = ReportUiState.Message(Res.string.feature_report_export_started)
             val timestamp = System.currentTimeMillis()
             val reportPath = "$reportDirectoryPath$timestamp.csv"
             val reportDirectory = File(reportDirectoryPath)
@@ -46,7 +46,7 @@ class ReportViewModel(
                 val makeRequiredDirectories = reportDirectory.mkdirs()
                 if (!makeRequiredDirectories) {
                     _reportUiState.value =
-                        ReportUiState.Message(R.string.feature_report_unable_to_create_directory)
+                        ReportUiState.Message(Res.string.feature_report_unable_to_create_directory)
                 }
             }
 
@@ -75,9 +75,9 @@ class ReportViewModel(
                 fileWriter.close()
             } catch (e: Exception) {
                 _reportUiState.value =
-                    ReportUiState.Message(R.string.feature_report_unable_to_export)
+                    ReportUiState.Message(Res.string.feature_report_unable_to_export)
             }
             _reportUiState.value =
-                ReportUiState.Message(R.string.feature_report_exported_successfully)
+                ReportUiState.Message(Res.string.feature_report_exported_successfully)
         }
 }
