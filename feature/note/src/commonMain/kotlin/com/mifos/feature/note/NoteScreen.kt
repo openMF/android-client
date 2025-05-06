@@ -6,16 +6,22 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  *
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
- */package com.mifos.feature.note
+ */
+package com.mifos.feature.note
 
+import androidclient.feature.note.generated.resources.Res
+import org.jetbrains.compose.resources.stringResource
+
+import androidclient.feature.note.generated.resources.feature_note_Note
+import androidclient.feature.note.generated.resources.feature_note_no_notes_found
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
-import androidclient.feature.note.generated.resources.feature_note_Note
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
@@ -36,10 +42,7 @@ import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.model.objects.Note
 import com.mifos.core.ui.components.MifosEmptyUi
-import org.jetbrains.compose.resources.stringResource
-import core.designsystem.generated.resources.Res
 import org.koin.compose.viewmodel.koinViewModel
-
 
 @Composable
 internal fun NoteScreen(
@@ -74,7 +77,7 @@ internal fun NoteScreen(
     val pullRefreshState = rememberPullToRefreshState()
 
     MifosScaffold(
-        title = stringResource(feature_note_Note),
+        title = stringResource(Res.string.feature_note_Note),
         onBackPressed = onBackPressed,
         snackbarHostState = snackBarHostState,
         modifier = modifier,
@@ -96,7 +99,7 @@ internal fun NoteScreen(
                     }
 
                     NoteUiState.ShowEmptyNotes -> {
-                        MifosEmptyUi(text = stringResource(feature_note_no_notes_found))
+                        MifosEmptyUi(text = stringResource(Res.string.feature_note_no_notes_found))
                     }
 
                     is NoteUiState.ShowError -> {
@@ -154,4 +157,3 @@ private fun NoteItem(
         )
     }
 }
-

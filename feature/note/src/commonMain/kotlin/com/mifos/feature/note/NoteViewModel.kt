@@ -9,14 +9,15 @@
  */
 package com.mifos.feature.note
 
-import android.util.Log
+import androidclient.feature.note.generated.resources.Res
+import androidclient.feature.note.generated.resources.feature_note_failed_to_fetch_notes
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.media3.common.util.Log
+
 import com.mifos.core.common.utils.Constants
 import com.mifos.core.data.repositoryImp.NoteRepositoryImp
-import core.designsystem.generated.resources.Res
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -26,6 +27,7 @@ import kotlinx.coroutines.withContext
 
 class NoteViewModel(
     private val repository: NoteRepositoryImp,
+    private val ioDispatcher: CoroutineDispatcher = Dispatchers.Default,
     savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
 
@@ -50,11 +52,11 @@ class NoteViewModel(
      * Response: List<Note>
      </Note> */
     fun loadNote() {
-        Log.d("NoteScreendebug1", "id ${entityId.value} type ${entityType.value}")
+        println("NoteScreen Debug: id=${entityId.value}, type=${entityType.value}")
         viewModelScope.launch {
             _noteUiState.value = NoteUiState.ShowProgressbar
             try {
-                val notes = withContext(Dispatchers.IO) {
+                val notes = withContext(ioDispatcher) {
                     repository.getNotes(entityType.value, entityId.value)
                 }
                 if (notes.isNotEmpty()) {
@@ -65,6 +67,7 @@ class NoteViewModel(
             } catch (e: Exception) {
                 _noteUiState.value =
                     NoteUiState.ShowError(Res.string.feature_note_failed_to_fetch_notes)
+
             }
             _isRefreshing.emit(false)
         }
