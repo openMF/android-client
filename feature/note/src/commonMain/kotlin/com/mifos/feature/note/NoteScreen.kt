@@ -6,17 +6,16 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  *
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
- */
-package com.mifos.feature.note
+ */package com.mifos.feature.note
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
+import androidclient.feature.note.generated.resources.feature_note_Note
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
@@ -30,10 +29,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.tooling.preview.PreviewParameter
-import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mifos.core.designsystem.component.MifosCircularProgress
@@ -41,7 +36,10 @@ import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.model.objects.Note
 import com.mifos.core.ui.components.MifosEmptyUi
-import org.koin.androidx.compose.koinViewModel
+import org.jetbrains.compose.resources.stringResource
+import core.designsystem.generated.resources.Res
+import org.koin.compose.viewmodel.koinViewModel
+
 
 @Composable
 internal fun NoteScreen(
@@ -76,7 +74,7 @@ internal fun NoteScreen(
     val pullRefreshState = rememberPullToRefreshState()
 
     MifosScaffold(
-        title = stringResource(id = R.string.feature_note_Note),
+        title = stringResource(feature_note_Note),
         onBackPressed = onBackPressed,
         snackbarHostState = snackBarHostState,
         modifier = modifier,
@@ -98,12 +96,12 @@ internal fun NoteScreen(
                     }
 
                     NoteUiState.ShowEmptyNotes -> {
-                        MifosEmptyUi(text = stringResource(id = R.string.feature_note_no_notes_found))
+                        MifosEmptyUi(text = stringResource(feature_note_no_notes_found))
                     }
 
                     is NoteUiState.ShowError -> {
                         MifosSweetError(
-                            message = stringResource(id = uiState.message),
+                            message = stringResource(uiState.message),
                             onclick = refresh,
                         )
                     }
@@ -157,61 +155,3 @@ private fun NoteItem(
     }
 }
 
-private class NoteScreenPreviewProvider : PreviewParameterProvider<NoteUiState> {
-    val demoNotes = listOf(
-        Note(
-            id = 1,
-            clientId = 101,
-            noteContent = "This is the first demo note.",
-            createdById = 1001,
-            createdByUsername = "creator_1",
-            createdOn = System.currentTimeMillis(),
-            updatedById = 1002,
-            updatedByUsername = "updater_1",
-            updatedOn = System.currentTimeMillis(),
-        ),
-        Note(
-            id = 2,
-            clientId = 102,
-            noteContent = "This is the second demo note.",
-            createdById = 1003,
-            createdByUsername = "creator_2",
-            createdOn = System.currentTimeMillis(),
-            updatedById = 1004,
-            updatedByUsername = "updater_2",
-            updatedOn = System.currentTimeMillis(),
-        ),
-        Note(
-            id = 3,
-            clientId = 103,
-            noteContent = "This is the third demo note.",
-            createdById = 1005,
-            createdByUsername = "creator_3",
-            createdOn = System.currentTimeMillis(),
-            updatedById = 1006,
-            updatedByUsername = "updater_3",
-            updatedOn = System.currentTimeMillis(),
-        ),
-    )
-
-    override val values: Sequence<NoteUiState>
-        get() = sequenceOf(
-            NoteUiState.ShowEmptyNotes,
-            NoteUiState.ShowNote(demoNotes),
-            NoteUiState.ShowProgressbar,
-            NoteUiState.ShowError(R.string.feature_note_failed_to_fetch_notes),
-        )
-}
-
-@Composable
-@Preview(showSystemUi = true)
-private fun PreviewNoteScreen(
-    @PreviewParameter(NoteScreenPreviewProvider::class) noteUiState: NoteUiState,
-) {
-    NoteScreen(
-        isRefreshing = false,
-        refresh = { },
-        uiState = noteUiState,
-        onBackPressed = {},
-    )
-}

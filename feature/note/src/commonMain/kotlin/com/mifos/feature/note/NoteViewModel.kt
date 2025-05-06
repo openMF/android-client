@@ -13,8 +13,10 @@ import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.media3.common.util.Log
 import com.mifos.core.common.utils.Constants
 import com.mifos.core.data.repositoryImp.NoteRepositoryImp
+import core.designsystem.generated.resources.Res
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -62,7 +64,7 @@ class NoteViewModel(
                 }
             } catch (e: Exception) {
                 _noteUiState.value =
-                    NoteUiState.ShowError(R.string.feature_note_failed_to_fetch_notes)
+                    NoteUiState.ShowError(Res.string.feature_note_failed_to_fetch_notes)
             }
             _isRefreshing.emit(false)
         }
