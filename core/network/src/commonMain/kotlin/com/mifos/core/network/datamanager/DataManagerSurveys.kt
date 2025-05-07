@@ -13,7 +13,7 @@ import com.mifos.core.datastore.UserPreferencesRepository
 import com.mifos.core.model.objects.surveys.Scorecard
 import com.mifos.core.network.BaseApiManager
 import com.mifos.room.entities.survey.QuestionDatasEntity
-import com.mifos.room.entities.survey.ResponseDataEntity
+import com.mifos.room.entities.survey.ResponseDatasEntity
 import com.mifos.room.entities.survey.SurveyEntity
 import com.mifos.room.helper.SurveyDaoHelper
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -73,8 +73,8 @@ class DataManagerSurveys(
      * mDatabaseHelperSurveys.getResponseDatas() read the all ResponseDatas
      * from the Database ResponseDatas table and returns the List<ResponseDatas>.
      * @return List<ResponseDatas>
-     </ResponseData></ResponseData> */
-    fun getDatabaseResponseData(questionId: Int): Flow<List<ResponseDataEntity>> {
+     </ResponseData></ResponseDatas> */
+    fun getDatabaseResponseDatas(questionId: Int): Flow<List<ResponseDatasEntity>> {
         return surveyDatabaseHelper.getResponseDatas(questionId)
     }
 
@@ -124,8 +124,8 @@ class DataManagerSurveys(
      */
     fun syncResponseDataInDatabase(
         questionId: Int,
-        responseDatas: ResponseDataEntity,
-    ): Flow<ResponseDataEntity> {
+        responseDatas: ResponseDatasEntity,
+    ): Flow<ResponseDatasEntity> {
         return surveyDatabaseHelper.saveResponseData(questionId, responseDatas)
     }
 }

@@ -12,6 +12,7 @@ package com.mifos.core.network.datamanager
 import com.mifos.core.common.utils.Page
 import com.mifos.core.datastore.UserPreferencesRepository
 import com.mifos.core.model.objects.clients.ActivatePayload
+import com.mifos.core.model.objects.clients.ClientAddressResponse
 import com.mifos.core.model.objects.noncoreobjects.Identifier
 import com.mifos.core.model.objects.noncoreobjects.IdentifierCreationResponse
 import com.mifos.core.model.objects.noncoreobjects.IdentifierPayload
@@ -202,7 +203,7 @@ class DataManagerClient(
      * @param file MultipartBody of the Image file
      * @return ResponseBody is the Retrofit 2 response
      */
-    suspend fun uploadClientImage(id: Int, file: PartData?) {
+    suspend fun uploadClientImage(id: Int, file: PartData) {
         mBaseApiManager.clientsApi.uploadClientImage(id, file)
     }
     /**
@@ -295,9 +296,11 @@ class DataManagerClient(
      * @param clientId Client Id
      * @return List<Identifier>
      </Identifier> */
-    suspend fun getClientIdentifiers(clientId: Int): List<Identifier> {
+    fun getClientIdentifiers(clientId: Int): Flow<List<Identifier>> {
         return baseApiManager.getClient().clientIdentifiers.retrieveAllClientIdentifiers(clientId.toLong())
-            .map(IdentifierMapper::mapFromEntity)
+            .map { responseList ->
+                responseList.map(IdentifierMapper::mapFromEntity)
+            }
     }
 
     /**
@@ -349,7 +352,7 @@ class DataManagerClient(
      * @param clientId Client Id
      * @return ClientAddressResponse
      */
-    suspend fun getClientPinpointLocations(clientId: Int): List<com.mifos.core.model.objects.clients.ClientAddressResponse> {
+    fun getClientPinpointLocations(clientId: Int): Flow<List<ClientAddressResponse>> {
         return mBaseApiManager.clientsApi.getClientPinpointLocations(clientId)
     }
 

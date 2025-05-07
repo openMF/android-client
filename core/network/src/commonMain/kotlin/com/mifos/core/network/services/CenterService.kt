@@ -45,7 +45,9 @@ interface CenterService {
     suspend fun getCenterAccounts(@Path("centerId") centerId: Int): CenterAccounts
 
     @GET(APIEndPoint.CENTERS + "/{centerId}?associations=groupMembers,collectionMeetingCalendar")
-    suspend fun getCenterWithGroupMembersAndCollectionMeetingCalendar(@Path("centerId") centerId: Int): CenterWithAssociations
+    suspend fun getCenterWithGroupMembersAndCollectionMeetingCalendar(
+        @Path("centerId") centerId: Int,
+    ): CenterWithAssociations
 
     @GET(APIEndPoint.CENTERS)
     fun getAllCentersInOffice(

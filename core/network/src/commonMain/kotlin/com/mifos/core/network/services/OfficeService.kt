@@ -24,5 +24,5 @@ interface OfficeService {
      * @param listOfOfficesCallback
      */
     @GET(APIEndPoint.OFFICES)
-    suspend fun allOffices(): Flow<List<OfficeEntity>>
+    fun allOffices(): Flow<List<OfficeEntity>>
 }

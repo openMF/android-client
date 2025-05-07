@@ -33,7 +33,6 @@ import kotlinx.coroutines.flow.map
  */
 class DataManagerSavings(
     val mBaseApiManager: BaseApiManager,
-//    val mDatabaseHelperSavings: DatabaseHelperSavings,
     private val databaseHelperSavings: SavingsDaoHelper,
     private val prefManager: UserPreferencesRepository,
 ) {
@@ -52,6 +51,7 @@ class DataManagerSavings(
      * 'charges':Savings Account charges data.
      * @return SavingsAccountWithAssociations
      */
+    @OptIn(ExperimentalCoroutinesApi::class)
     fun getSavingsAccount(
         type: String,
         savingsAccountId: Int,
@@ -62,7 +62,7 @@ class DataManagerSavings(
                 false -> mBaseApiManager.savingsApi.getSavingsAccountWithAssociations(
                     type,
                     savingsAccountId,
-                    association,
+                    association ?: "",
                 )
 
                 true ->
@@ -126,6 +126,7 @@ class DataManagerSavings(
      * @param transactionType  Transaction Type Example : 'Deposit', 'Withdrawal'
      * @return SavingsAccountTransactionTemplate
      */
+    @OptIn(ExperimentalCoroutinesApi::class)
     fun getSavingsAccountTransactionTemplate(
         type: String,
         savingsAccountId: Int,
@@ -280,14 +281,14 @@ class DataManagerSavings(
         )
     }
 
-    val savingsAccounts: Flow<List<ProductSavings>>
+    val getSavingsAccounts: Flow<List<ProductSavings>>
         get() = mBaseApiManager.savingsApi.allSavingsAccounts()
 
     fun createSavingsAccount(savingsPayload: SavingsPayload?): Flow<Savings> {
         return mBaseApiManager.savingsApi.createSavingsAccount(savingsPayload)
     }
 
-    val savingsAccountTemplate: Flow<SavingProductsTemplate>
+    val getSavingsAccountTemplate: Flow<SavingProductsTemplate>
         get() = mBaseApiManager.savingsApi.savingsAccountTemplate()
 
     fun getClientSavingsAccountTemplateByProduct(

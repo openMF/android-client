@@ -78,7 +78,6 @@ androidx.lifecycle:lifecycle-common:2.8.7
 androidx.lifecycle:lifecycle-extensions:2.2.0
 androidx.lifecycle:lifecycle-livedata-core-ktx:2.8.7
 androidx.lifecycle:lifecycle-livedata-core:2.8.7
-androidx.lifecycle:lifecycle-livedata-ktx:2.8.7
 androidx.lifecycle:lifecycle-livedata:2.8.7
 androidx.lifecycle:lifecycle-process:2.8.7
 androidx.lifecycle:lifecycle-reactivestreams-ktx:2.8.7
@@ -110,11 +109,6 @@ androidx.navigation:navigation-runtime-ktx:2.8.5
 androidx.navigation:navigation-runtime:2.8.5
 androidx.navigation:navigation-ui-ktx:2.8.5
 androidx.navigation:navigation-ui:2.8.5
-androidx.paging:paging-common-android:3.3.5
-androidx.paging:paging-common-ktx:3.3.5
-androidx.paging:paging-common:3.3.5
-androidx.paging:paging-runtime-ktx:3.3.5
-androidx.paging:paging-runtime:3.3.5
 androidx.preference:preference-ktx:1.2.1
 androidx.preference:preference:1.2.1
 androidx.print:print:1.0.0
@@ -150,8 +144,6 @@ com.github.bumptech.glide:glide:4.15.1
 com.github.deano2390:MaterialShowcaseView:1.3.7
 com.github.openMF:fineract-client-cmp:0.0.1
 com.github.openMF:fineract-client-sdk-cmp:0.0.1
-com.github.raizlabs.dbflow.dbflow:dbflow-core:3.1.1
-com.github.raizlabs.dbflow.dbflow:dbflow:3.1.1
 com.github.therajanmaurya:sweet-error:1.0.9
 com.google.android.gms:play-services-base:18.5.0
 com.google.android.gms:play-services-basement:18.4.0
@@ -172,6 +164,7 @@ com.jakewharton.fliptables:fliptables:1.0.1
 com.joanzapata.iconify:android-iconify-material:2.2.2
 com.joanzapata.iconify:android-iconify:2.2.2
 com.squareup.okhttp3:logging-interceptor:4.12.0
+com.squareup.okhttp3:okhttp-sse:4.12.0
 com.squareup.okhttp3:okhttp:4.12.0
 com.squareup.okio:okio-jvm:3.10.2
 com.squareup.okio:okio:3.10.2
@@ -205,6 +198,8 @@ io.ktor:ktor-client-cio-jvm:3.0.3
 io.ktor:ktor-client-cio:3.0.3
 io.ktor:ktor-client-core-jvm:3.0.3
 io.ktor:ktor-client-core:3.0.3
+io.ktor:ktor-client-okhttp-jvm:3.0.3
+io.ktor:ktor-client-okhttp:3.0.3
 io.ktor:ktor-events-jvm:3.0.3
 io.ktor:ktor-events:3.0.3
 io.ktor:ktor-http-cio-jvm:3.0.3

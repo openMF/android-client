@@ -26,6 +26,7 @@ import com.mifos.room.helper.CenterDaoHelper
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.map
 
 /**
  * This DataManager is for Managing Center API, In which Request is going to Server
@@ -159,9 +160,11 @@ class DataManagerCenter(
     val allDatabaseCenters: Flow<Page<CenterEntity>>
         get() = centerDatabaseHelper.readAllCenters()
 
-    suspend fun offices(): List<OfficeEntity> {
+    fun offices(): Flow<List<OfficeEntity>> {
         return baseApiManager.getOfficeApi().retrieveOffices(null, null, null)
-            .map(GetOfficeResponseMapper::mapFromEntity)
+            .map { responseList ->
+                responseList.map(GetOfficeResponseMapper::mapFromEntity)
+            }
     }
 
     /**
@@ -169,7 +172,7 @@ class DataManagerCenter(
      *
      * @return List<CenterPayload>
      </CenterPayload> */
-    val allDatabaseCenterPayload: Flow<List<CenterPayloadEntity>>
+    val getAllDatabaseCenterPayload: Flow<List<CenterPayloadEntity>>
         get() = centerDatabaseHelper.readAllCenterPayload()
 
     /**

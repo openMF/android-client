@@ -25,10 +25,10 @@ import kotlinx.coroutines.flow.Flow
 
 interface DocumentService {
     @GET("{entityType}/{entityId}/" + APIEndPoint.DOCUMENTS)
-    suspend fun getDocuments(
+    fun getDocuments(
         @Path("entityType") entityType: String,
         @Path("entityId") entityId: Int,
-    ): List<Document>
+    ): Flow<List<Document>>
 
     /**
      * @param entityType              - Type for which document is being uploaded (Client, Loan
