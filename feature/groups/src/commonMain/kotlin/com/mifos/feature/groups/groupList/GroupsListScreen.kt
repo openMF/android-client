@@ -9,6 +9,8 @@
  */
 package com.mifos.feature.groups.groupList
 
+import androidclient.feature.groups.generated.resources.Res
+import androidclient.feature.groups.generated.resources.feature_groups_sync
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
@@ -77,7 +79,9 @@ import com.mifos.core.ui.components.SelectionModeTopAppBar
 import com.mifos.feature.groups.R
 import com.mifos.feature.groups.syncGroupDialog.SyncGroupDialogScreen
 import com.mifos.room.entities.group.GroupEntity
+import org.jetbrains.compose.resources.stringResource
 import org.koin.androidx.compose.koinViewModel
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 internal fun GroupsListRoute(
@@ -178,7 +182,7 @@ fun GroupsListScreen(
                                 imageVector = MifosIcons.Sync,
                                 contentDescription = "Sync Items",
                             )
-                            Text(text = stringResource(id = R.string.feature_groups_sync))
+                            Text(text = stringResource(Res.string.feature_groups_sync))
                         }
                     },
                 )

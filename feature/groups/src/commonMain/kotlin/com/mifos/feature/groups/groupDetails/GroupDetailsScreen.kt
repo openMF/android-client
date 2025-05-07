@@ -9,6 +9,22 @@
  */
 package com.mifos.feature.groups.groupDetails
 
+import androidclient.feature.groups.generated.resources.Res
+import androidclient.feature.groups.generated.resources.feature_groups_accounts
+import androidclient.feature.groups.generated.resources.feature_groups_activate_group
+import androidclient.feature.groups.generated.resources.feature_groups_activation_date
+import androidclient.feature.groups.generated.resources.feature_groups_add_loan_account
+import androidclient.feature.groups.generated.resources.feature_groups_add_savings_account
+import androidclient.feature.groups.generated.resources.feature_groups_documents
+import androidclient.feature.groups.generated.resources.feature_groups_external_id
+import androidclient.feature.groups.generated.resources.feature_groups_group
+import androidclient.feature.groups.generated.resources.feature_groups_group_clients
+import androidclient.feature.groups.generated.resources.feature_groups_loan_account
+import androidclient.feature.groups.generated.resources.feature_groups_more_group_info
+import androidclient.feature.groups.generated.resources.feature_groups_notes
+import androidclient.feature.groups.generated.resources.feature_groups_office
+import androidclient.feature.groups.generated.resources.feature_groups_savings_account
+import androidclient.feature.groups.generated.resources.feature_groups_staff
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.LinearOutSlowInEasing
 import androidx.compose.animation.core.animateFloatAsState
@@ -31,9 +47,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.outlined.DateRange
-import androidx.compose.material.icons.outlined.HomeWork
-import androidx.compose.material.icons.outlined.Numbers
-import androidx.compose.material.icons.outlined.PersonOutline
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -57,14 +70,10 @@ import androidx.compose.ui.graphics.Color.Companion.Black
 import androidx.compose.ui.graphics.Color.Companion.DarkGray
 import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.tooling.preview.PreviewParameter
-import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -74,13 +83,15 @@ import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosMenuDropDownItem
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
-import com.mifos.feature.groups.R
+import com.mifos.core.designsystem.icon.MifosIcons
+import com.mifos.core.ui.components.MifosIcon
 import com.mifos.room.entities.accounts.loans.LoanAccountEntity
 import com.mifos.room.entities.accounts.savings.SavingAccountDepositTypeEntity
 import com.mifos.room.entities.accounts.savings.SavingsAccountEntity
 import com.mifos.room.entities.client.ClientEntity
 import com.mifos.room.entities.group.GroupEntity
-import org.koin.androidx.compose.koinViewModel
+import org.jetbrains.compose.resources.stringResource
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 internal fun GroupDetailsScreen(
@@ -156,7 +167,7 @@ internal fun GroupDetailsScreen(
 
     MifosScaffold(
         modifier = modifier,
-        title = stringResource(id = R.string.feature_groups_group),
+        title = stringResource(Res.string.feature_groups_group),
         onBackPressed = onBackPressed,
         actions = {
             IconButton(onClick = { showMenu = showMenu.not() }) {
@@ -168,42 +179,42 @@ internal fun GroupDetailsScreen(
                 onDismissRequest = { showMenu = false },
             ) {
                 MifosMenuDropDownItem(
-                    option = stringResource(id = R.string.feature_groups_add_loan_account),
+                    option = stringResource(Res.string.feature_groups_add_loan_account),
                     onClick = {
                         onMenuClick(MenuItems.ADD_LOAN_ACCOUNT)
                         showMenu = false
                     },
                 )
                 MifosMenuDropDownItem(
-                    option = stringResource(id = R.string.feature_groups_add_savings_account),
+                    option = stringResource(Res.string.feature_groups_add_savings_account),
                     onClick = {
                         onMenuClick(MenuItems.ADD_SAVINGS_ACCOUNT)
                         showMenu = false
                     },
                 )
                 MifosMenuDropDownItem(
-                    option = stringResource(id = R.string.feature_groups_documents),
+                    option = stringResource(Res.string.feature_groups_documents),
                     onClick = {
                         onMenuClick(MenuItems.DOCUMENTS)
                         showMenu = false
                     },
                 )
                 MifosMenuDropDownItem(
-                    option = stringResource(id = R.string.feature_groups_group_clients),
+                    option = stringResource(Res.string.feature_groups_group_clients),
                     onClick = {
                         onMenuClick(MenuItems.GROUP_CLIENTS)
                         showMenu = false
                     },
                 )
                 MifosMenuDropDownItem(
-                    option = stringResource(id = R.string.feature_groups_more_group_info),
+                    option = stringResource(Res.string.feature_groups_more_group_info),
                     onClick = {
                         onMenuClick(MenuItems.MORE_GROUP_INFO)
                         showMenu = false
                     },
                 )
                 MifosMenuDropDownItem(
-                    option = stringResource(id = R.string.feature_groups_notes),
+                    option = stringResource(Res.string.feature_groups_notes),
                     onClick = {
                         onMenuClick(MenuItems.NOTES)
                         showMenu = false
@@ -225,7 +236,7 @@ internal fun GroupDetailsScreen(
 //                    ),
                 ) {
                     Text(
-                        text = stringResource(id = R.string.feature_groups_activate_group),
+                        text = stringResource(Res.string.feature_groups_activate_group),
                         fontSize = 16.sp,
                     )
                 }
@@ -234,7 +245,7 @@ internal fun GroupDetailsScreen(
     ) { paddingValue ->
         Column(modifier = Modifier.padding(paddingValue)) {
             when (state) {
-                is GroupDetailsUiState.Error -> MifosSweetError(message = stringResource(id = state.message)) {
+                is GroupDetailsUiState.Error -> MifosSweetError(message = stringResource(state.message)) {
                 }
 
                 is GroupDetailsUiState.Loading -> MifosCircularProgress()
@@ -286,27 +297,27 @@ fun GroupDetailsContent(
         }
         group.externalId?.let {
             MifosCenterDetailsText(
-                icon = Icons.Outlined.Numbers,
-                field = stringResource(id = R.string.feature_groups_external_id),
+                icon = MifosIcons.Numbers,
+                field = stringResource(Res.string.feature_groups_external_id),
                 value = it,
             )
         }
         MifosCenterDetailsText(
             icon = Icons.Outlined.DateRange,
-            field = stringResource(id = R.string.feature_groups_activation_date),
+            field = stringResource(Res.string.feature_groups_activation_date),
             value = Utils.getStringOfDate(group.activationDate),
         )
         group.officeName?.let {
             MifosCenterDetailsText(
-                icon = Icons.Outlined.HomeWork,
-                field = stringResource(id = R.string.feature_groups_office),
+                icon = MifosIcons.Homework,
+                field = stringResource(Res.string.feature_groups_office),
                 value = it,
             )
         }
         group.staffName?.let {
             MifosCenterDetailsText(
-                icon = Icons.Outlined.PersonOutline,
-                field = stringResource(id = R.string.feature_groups_staff),
+                icon = MifosIcons.PersonOutline,
+                field = stringResource(Res.string.feature_groups_staff),
                 value = it,
             )
         }
@@ -314,7 +325,7 @@ fun GroupDetailsContent(
         if (loanAccounts.isNotEmpty() || savingsAccounts.isNotEmpty()) {
             Text(
                 modifier = Modifier.padding(start = 16.dp),
-                text = stringResource(id = R.string.feature_groups_accounts),
+                text = stringResource(Res.string.feature_groups_accounts),
                 style = TextStyle(
                     fontSize = 21.sp,
                     fontWeight = FontWeight.Medium,
@@ -327,14 +338,14 @@ fun GroupDetailsContent(
         }
         if (loanAccounts.isNotEmpty()) {
             MifosLoanAccountExpendableCard(
-                stringResource(id = R.string.feature_groups_loan_account),
+                stringResource(Res.string.feature_groups_loan_account),
                 loanAccounts,
                 loanAccountSelected = loanAccountSelected,
             )
         }
         if (savingsAccounts.isNotEmpty()) {
             MifosSavingsAccountExpendableCard(
-                stringResource(id = R.string.feature_groups_savings_account),
+                stringResource(Res.string.feature_groups_savings_account),
                 savingsAccounts,
                 savingsAccountSelected = savingsAccountSelected,
             )
@@ -748,34 +759,34 @@ private fun MifosSavingsAccountsLazyColumn(
     }
 }
 
-private class GroupDetailsUiStateProvider : PreviewParameterProvider<GroupDetailsUiState> {
-
-    override val values: Sequence<GroupDetailsUiState>
-        get() = sequenceOf(
-            GroupDetailsUiState.Loading,
-            GroupDetailsUiState.Error(R.string.feature_groups_failed_to_fetch_group_and_account),
-            GroupDetailsUiState.ShowGroup(group = GroupEntity(name = "Group", active = true)),
-            GroupDetailsUiState.ShowGroup(group = GroupEntity(name = "Group", active = false)),
-        )
-}
-
-@Preview
-@Composable
-private fun GroupDetailsScreenPreview(
-    @PreviewParameter(GroupDetailsUiStateProvider::class) state: GroupDetailsUiState,
-) {
-    GroupDetailsScreen(
-        state = state,
-        onBackPressed = {},
-        onMenuClick = {},
-        loanAccounts = sampleLoanAccountList,
-        savingsAccounts = sampleSavingAccountList,
-        loanAccountSelected = {},
-        savingsAccountSelected = { _, _ ->
-        },
-        activateGroup = {},
-    )
-}
+//private class GroupDetailsUiStateProvider : PreviewParameterProvider<GroupDetailsUiState> {
+//
+//    override val values: Sequence<GroupDetailsUiState>
+//        get() = sequenceOf(
+//            GroupDetailsUiState.Loading,
+//            GroupDetailsUiState.Error(R.string.feature_groups_failed_to_fetch_group_and_account),
+//            GroupDetailsUiState.ShowGroup(group = GroupEntity(name = "Group", active = true)),
+//            GroupDetailsUiState.ShowGroup(group = GroupEntity(name = "Group", active = false)),
+//        )
+//}
+//
+//@Preview
+//@Composable
+//private fun GroupDetailsScreenPreview(
+//    @PreviewParameter(GroupDetailsUiStateProvider::class) state: GroupDetailsUiState,
+//) {
+//    GroupDetailsScreen(
+//        state = state,
+//        onBackPressed = {},
+//        onMenuClick = {},
+//        loanAccounts = sampleLoanAccountList,
+//        savingsAccounts = sampleSavingAccountList,
+//        loanAccountSelected = {},
+//        savingsAccountSelected = { _, _ ->
+//        },
+//        activateGroup = {},
+//    )
+//}
 
 enum class MenuItems {
     ADD_LOAN_ACCOUNT,

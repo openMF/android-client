@@ -9,6 +9,21 @@
  */
 package com.mifos.feature.groups.syncGroupDialog
 
+import androidclient.feature.groups.generated.resources.Res
+import androidclient.feature.groups.generated.resources.feature_groups_cancel
+import androidclient.feature.groups.generated.resources.feature_groups_dialog_action_ok
+import androidclient.feature.groups.generated.resources.feature_groups_failed_sync
+import androidclient.feature.groups.generated.resources.feature_groups_groups
+import androidclient.feature.groups.generated.resources.feature_groups_hide
+import androidclient.feature.groups.generated.resources.feature_groups_name
+import androidclient.feature.groups.generated.resources.feature_groups_slash
+import androidclient.feature.groups.generated.resources.feature_groups_something_went_wrong
+import androidclient.feature.groups.generated.resources.feature_groups_space
+import androidclient.feature.groups.generated.resources.feature_groups_sync_groups_full_information
+import androidclient.feature.groups.generated.resources.feature_groups_syncing_client
+import androidclient.feature.groups.generated.resources.feature_groups_syncing_group
+import androidclient.feature.groups.generated.resources.feature_groups_total
+import androidclient.feature.groups.generated.resources.feature_groups_total_sync_progress
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -30,15 +45,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mifos.core.designsystem.component.MifosCircularProgress
-import com.mifos.feature.groups.R
-import org.koin.androidx.compose.koinViewModel
+import org.jetbrains.compose.resources.stringResource
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 internal fun SyncGroupDialogScreen(
@@ -87,7 +100,7 @@ internal fun SyncGroupDialogScreen(
             is SyncGroupsDialogUiState.Error -> {
                 val message = uiState.message
                     ?: uiState.messageResId?.let { stringResource(uiState.messageResId) }
-                    ?: stringResource(id = R.string.feature_groups_something_went_wrong)
+                    ?: stringResource(Res.string.feature_groups_something_went_wrong)
                 LaunchedEffect(key1 = message) {
                     snackBarHostState.showSnackbar(message = message)
                 }
@@ -115,25 +128,27 @@ private fun SyncGroupDialogContent(
         Text(
             modifier = Modifier.fillMaxWidth(),
             textAlign = TextAlign.Center,
-            text = stringResource(id = R.string.feature_groups_sync_groups_full_information),
+            text = stringResource(Res.string.feature_groups_sync_groups_full_information),
         )
 
         GroupPayloadField(
-            label = stringResource(id = R.string.feature_groups_name),
+            label = stringResource(Res.string.feature_groups_name),
             value = uiData.groupName,
         )
 
         Spacer(modifier = Modifier.height(12.dp))
 
         GroupPayloadField(
-            label = stringResource(id = R.string.feature_groups_total),
-            value = uiData.groupList.size.toString() + stringResource(R.string.feature_groups_space) + stringResource(R.string.feature_groups_groups),
+            label = stringResource(Res.string.feature_groups_total),
+            value = uiData.groupList.size.toString() + stringResource(Res.string.feature_groups_space) + stringResource(
+                Res.string.feature_groups_groups,
+            ),
         )
 
         Spacer(modifier = Modifier.height(12.dp))
 
         GroupPayloadField(
-            label = stringResource(id = R.string.feature_groups_syncing_group),
+            label = stringResource(Res.string.feature_groups_syncing_group),
             value = uiData.groupName,
         )
 
@@ -144,7 +159,7 @@ private fun SyncGroupDialogContent(
         Spacer(modifier = Modifier.height(12.dp))
 
         GroupPayloadField(
-            label = stringResource(id = R.string.feature_groups_syncing_client),
+            label = stringResource(Res.string.feature_groups_syncing_client),
             value = "syncing_client",
         )
 
@@ -155,8 +170,9 @@ private fun SyncGroupDialogContent(
         Spacer(modifier = Modifier.height(12.dp))
 
         GroupPayloadField(
-            label = stringResource(id = R.string.feature_groups_total_sync_progress),
-            value = stringResource(R.string.feature_groups_space) + uiData.totalSyncCount + stringResource(id = R.string.feature_groups_slash) + uiData.groupList.size,
+            label = stringResource(Res.string.feature_groups_total_sync_progress),
+            value = stringResource(Res.string.feature_groups_space) + uiData.totalSyncCount +
+                    stringResource(Res.string.feature_groups_slash) + uiData.groupList.size,
         )
 
         LinearProgressIndicator(
@@ -166,7 +182,7 @@ private fun SyncGroupDialogContent(
         Spacer(modifier = Modifier.height(12.dp))
 
         GroupPayloadField(
-            label = stringResource(id = R.string.feature_groups_failed_sync),
+            label = stringResource(Res.string.feature_groups_failed_sync),
             value = uiData.failedSyncGroupCount.toString(),
         )
 
@@ -180,14 +196,14 @@ private fun SyncGroupDialogContent(
                     onClick = { okClicked() },
                     modifier = Modifier.weight(1f),
                 ) {
-                    Text(text = stringResource(id = R.string.feature_groups_dialog_action_ok))
+                    Text(text = stringResource(Res.string.feature_groups_dialog_action_ok))
                 }
             } else {
                 FilledTonalButton(
                     onClick = { cancelClicked() },
                     modifier = Modifier.weight(1f),
                 ) {
-                    Text(text = stringResource(id = R.string.feature_groups_cancel))
+                    Text(text = stringResource(Res.string.feature_groups_cancel))
                 }
 
                 Spacer(modifier = Modifier.width(10.dp))
@@ -196,7 +212,7 @@ private fun SyncGroupDialogContent(
                     onClick = { hideClicked() },
                     modifier = Modifier.weight(1f),
                 ) {
-                    Text(text = stringResource(id = R.string.feature_groups_hide))
+                    Text(text = stringResource(Res.string.feature_groups_hide))
                 }
             }
         }
@@ -227,14 +243,14 @@ private fun GroupPayloadField(
         )
     }
 }
-
-@Preview(showBackground = true, backgroundColor = 0xFFFFFFFF)
-@Composable
-private fun SyncGroupDialogScreenPreview() {
-    SyncGroupDialogScreen(
-        dismiss = { },
-        uiState = SyncGroupsDialogUiState.Success,
-        uiData = SyncGroupDialogData(),
-        hide = { },
-    )
-}
+//
+//@Preview(showBackground = true, backgroundColor = 0xFFFFFFFF)
+//@Composable
+//private fun SyncGroupDialogScreenPreview() {
+//    SyncGroupDialogScreen(
+//        dismiss = { },
+//        uiState = SyncGroupsDialogUiState.Success,
+//        uiData = SyncGroupDialogData(),
+//        hide = { },
+//    )
+//}

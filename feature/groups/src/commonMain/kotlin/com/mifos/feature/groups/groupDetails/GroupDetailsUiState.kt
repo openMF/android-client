@@ -10,6 +10,7 @@
 package com.mifos.feature.groups.groupDetails
 
 import com.mifos.room.entities.group.GroupEntity
+import org.jetbrains.compose.resources.StringResource
 
 /**
  * Created by Aditya Gupta on 06/08/23.
@@ -18,7 +19,7 @@ sealed class GroupDetailsUiState {
 
     data object Loading : GroupDetailsUiState()
 
-    data class Error(val message: Int) : GroupDetailsUiState()
+    data class Error(val message: StringResource) : GroupDetailsUiState()
 
     data class ShowGroup(val group: GroupEntity) : GroupDetailsUiState()
 }

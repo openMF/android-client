@@ -9,8 +9,18 @@
  */
 package com.mifos.feature.groups.createNewGroup
 
-import android.content.Context
-import android.widget.Toast
+
+import androidclient.feature.groups.generated.resources.Res
+import androidclient.feature.groups.generated.resources.feature_groups_activation_date
+import androidclient.feature.groups.generated.resources.feature_groups_active
+import androidclient.feature.groups.generated.resources.feature_groups_create_new_group
+import androidclient.feature.groups.generated.resources.feature_groups_dismiss
+import androidclient.feature.groups.generated.resources.feature_groups_external_id
+import androidclient.feature.groups.generated.resources.feature_groups_groups
+import androidclient.feature.groups.generated.resources.feature_groups_name
+import androidclient.feature.groups.generated.resources.feature_groups_office_name_mandatory
+import androidclient.feature.groups.generated.resources.feature_groups_select_date
+import androidclient.feature.groups.generated.resources.feature_groups_submit
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.fadeIn
@@ -50,12 +60,8 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.tooling.preview.PreviewParameter
-import androidx.compose.ui.tooling.preview.PreviewParameterProvider
+import androidx.compose.ui.text.intl.Locale
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mifos.core.designsystem.component.MifosCircularProgress
@@ -65,12 +71,10 @@ import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.component.MifosTextFieldDropdown
 import com.mifos.core.model.objects.responses.SaveResponse
-import com.mifos.feature.groups.R
 import com.mifos.room.entities.group.GroupPayloadEntity
 import com.mifos.room.entities.organisation.OfficeEntity
-import org.koin.androidx.compose.koinViewModel
-import java.text.SimpleDateFormat
-import java.util.Locale
+import org.jetbrains.compose.resources.stringResource
+import org.koin.compose.viewmodel.koinViewModel
 
 /**
  * Created by Pronay Sarker on 30/06/2024 (7:53 AM)
@@ -113,7 +117,7 @@ internal fun CreateNewGroupScreen(
 
     MifosScaffold(
         modifier = modifier,
-        title = stringResource(id = R.string.feature_groups_create_new_group),
+        title = stringResource(Res.string.feature_groups_create_new_group),
         onBackPressed = {},
         snackbarHostState = snackbarHostState,
     ) { paddingValues ->
@@ -125,7 +129,7 @@ internal fun CreateNewGroupScreen(
             when (uiState) {
                 is CreateNewGroupUiState.ShowFetchingError -> {
                     MifosSweetError(
-                        message = uiState.message,
+                        message = stringResource(uiState.message),
                         onclick = { onRetry.invoke() },
                     )
                 }
@@ -181,6 +185,7 @@ private fun CreateNewGroupContent(
     val density = LocalDensity.current
     val scrollState = rememberScrollState()
     var officeId by rememberSaveable { mutableIntStateOf(0) }
+    //todo
     var activationDate by rememberSaveable { mutableLongStateOf(System.currentTimeMillis()) }
     var submittedOnDate by rememberSaveable { mutableLongStateOf(System.currentTimeMillis()) }
 
@@ -222,7 +227,7 @@ private fun CreateNewGroupContent(
                         submitDatePicker = false
                         activationDatePicker = false
                     },
-                ) { Text(stringResource(id = R.string.feature_groups_select_date)) }
+                ) { Text(stringResource(androidclient.feature.groups.generated.resources.Res.string.feature_groups_select_date)) }
             },
             dismissButton = {
                 TextButton(
@@ -230,7 +235,7 @@ private fun CreateNewGroupContent(
                         activationDatePicker = false
                         submitDatePicker = false
                     },
-                ) { Text(stringResource(id = R.string.feature_groups_dismiss)) }
+                ) { Text(stringResource(Res.string.feature_groups_dismiss)) }
             },
         ) {
             DatePicker(state = if (submitDatePicker) sumittedDatePickerState else activateDatePickerState)
@@ -247,7 +252,7 @@ private fun CreateNewGroupContent(
         MifosOutlinedTextField(
             value = groupName,
             onValueChange = { groupName = it },
-            label = stringResource(id = R.string.feature_groups_name),
+            label = stringResource(Res.string.feature_groups_name),
             error = null,
         )
 
@@ -264,13 +269,14 @@ private fun CreateNewGroupContent(
                     officeId = it
                 }
             },
-            label = R.string.feature_groups_office_name_mandatory,
+            labelString = stringResource(Res.string.feature_groups_office_name_mandatory),
             options = officeList.map { it.name.toString() },
             readOnly = true,
         )
 
         Spacer(modifier = Modifier.height(16.dp))
 
+        //todo use kotlin
         MifosDatePickerTextField(
             value = SimpleDateFormat("dd MMMM yyyy", Locale.getDefault()).format(
                 submittedOnDate,
@@ -286,7 +292,7 @@ private fun CreateNewGroupContent(
         MifosOutlinedTextField(
             value = externalId,
             onValueChange = { externalId = it },
-            label = stringResource(id = R.string.feature_groups_external_id),
+            label = stringResource(Res.string.feature_groups_external_id),
             error = null,
         )
 
@@ -303,7 +309,7 @@ private fun CreateNewGroupContent(
                 checked = isActive,
                 onCheckedChange = { isActive = !isActive },
             )
-            Text(text = stringResource(id = R.string.feature_groups_active))
+            Text(text = stringResource(Res.string.feature_groups_active))
         }
 
         AnimatedVisibility(
@@ -323,7 +329,8 @@ private fun CreateNewGroupContent(
                 value = SimpleDateFormat("dd MMMM yyyy", Locale.getDefault()).format(
                     activationDate,
                 ),
-                label = stringResource(R.string.feature_groups_activation_date),
+
+                label = stringResource(Res.string.feature_groups_activation_date),
                 openDatePicker = {
                     activationDatePicker = true
                 },
@@ -384,11 +391,11 @@ private fun CreateNewGroupContent(
 //                }
             },
         ) {
-            Text(text = stringResource(id = R.string.feature_groups_submit))
+            Text(text = stringResource(Res.string.feature_groups_submit))
         }
     }
 }
-
+// todo move into viewmodels
 private fun validateFields(groupName: String, officeName: String, context: Context): Boolean {
     return when {
         groupName.isEmpty() -> {
@@ -431,27 +438,27 @@ private fun validateFields(groupName: String, officeName: String, context: Conte
     }
 }
 
-private class CreateNewGroupScreenPreviewProvider : PreviewParameterProvider<CreateNewGroupUiState> {
-    override val values: Sequence<CreateNewGroupUiState>
-        get() = sequenceOf(
-            CreateNewGroupUiState.ShowProgressbar,
-            CreateNewGroupUiState.ShowOffices(listOf()),
-            CreateNewGroupUiState.ShowFetchingError("Failed to fetch Offices"),
-            CreateNewGroupUiState.ShowGroupCreatedSuccessfully(saveResponse = SaveResponse()),
-        )
-}
-
-@Composable
-@Preview(showSystemUi = true)
-private fun PreviewCreateNewGroupScreen(
-    @PreviewParameter(CreateNewGroupScreenPreviewProvider::class) createNewGroupUiState: CreateNewGroupUiState,
-) {
-    CreateNewGroupScreen(
-        uiState = createNewGroupUiState,
-        onRetry = {},
-        invokeGroupCreation = {},
-        onGroupCreated = { _ ->
-        },
-        getResponse = { "" },
-    )
-}
+//private class CreateNewGroupScreenPreviewProvider : PreviewParameterProvider<CreateNewGroupUiState> {
+//    override val values: Sequence<CreateNewGroupUiState>
+//        get() = sequenceOf(
+//            CreateNewGroupUiState.ShowProgressbar,
+//            CreateNewGroupUiState.ShowOffices(listOf()),
+//            CreateNewGroupUiState.ShowFetchingError("Failed to fetch Offices"),
+//            CreateNewGroupUiState.ShowGroupCreatedSuccessfully(saveResponse = SaveResponse()),
+//        )
+//}
+//
+//@Composable
+//@Preview(showSystemUi = true)
+//private fun PreviewCreateNewGroupScreen(
+//    @PreviewParameter(CreateNewGroupScreenPreviewProvider::class) createNewGroupUiState: CreateNewGroupUiState,
+//) {
+//    CreateNewGroupScreen(
+//        uiState = createNewGroupUiState,
+//        onRetry = {},
+//        invokeGroupCreation = {},
+//        onGroupCreated = { _ ->
+//        },
+//        getResponse = { "" },
+//    )
+//}

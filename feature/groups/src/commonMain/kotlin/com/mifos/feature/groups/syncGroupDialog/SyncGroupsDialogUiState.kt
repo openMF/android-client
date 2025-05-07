@@ -11,6 +11,7 @@ package com.mifos.feature.groups.syncGroupDialog
 
 import androidx.compose.ui.graphics.vector.ImageVector
 import com.mifos.room.entities.group.GroupEntity
+import org.jetbrains.compose.resources.StringResource
 
 /**
  * Created by Aditya Gupta on 16/08/23.
@@ -19,7 +20,7 @@ sealed class SyncGroupsDialogUiState {
     data object Loading : SyncGroupsDialogUiState()
     data object Success : SyncGroupsDialogUiState()
     data class Error(
-        val messageResId: Int? = null,
+        val messageResId: StringResource? = null,
         val imageVector: ImageVector? = null,
         val message: String? = null,
     ) : SyncGroupsDialogUiState()

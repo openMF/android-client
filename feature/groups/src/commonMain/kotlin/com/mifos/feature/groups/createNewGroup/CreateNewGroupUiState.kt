@@ -11,6 +11,7 @@ package com.mifos.feature.groups.createNewGroup
 
 import com.mifos.core.model.objects.responses.SaveResponse
 import com.mifos.room.entities.organisation.OfficeEntity
+import org.jetbrains.compose.resources.StringResource
 
 /**
  * Created by Aditya Gupta on 10/08/23.
@@ -19,7 +20,7 @@ sealed class CreateNewGroupUiState {
 
     data object ShowProgressbar : CreateNewGroupUiState()
 
-    data class ShowFetchingError(val message: String) : CreateNewGroupUiState()
+    data class ShowFetchingError(val message: StringResource) : CreateNewGroupUiState()
 
     data class ShowOffices(val offices: List<OfficeEntity>) : CreateNewGroupUiState()
 
