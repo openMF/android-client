@@ -31,6 +31,7 @@ androidxMaterial = "1.6.7"
 androidxMaterialVersion = "1.7.6"
 androidxMetrics = "1.0.0-beta01"
 androidxNavigation = "2.8.5"
+androidxPagingCommon = "3.3.6"
 androidxProfileinstaller = "1.4.1"
 androidxStartup = "1.2.0"
 androidxTestCore = "1.6.1"
@@ -204,6 +205,7 @@ androidx-material-v168 = { module = "androidx.compose.material:material", versio
 androidx-multidex = { module = "androidx.multidex:multidex", version.ref = "multidex" }
 
 # Androidx Preference
+androidx-paging-common = { module = "androidx.paging:paging-common", version.ref = "androidxPagingCommon" }
 androidx-paging-compose = { module = "androidx.paging:paging-compose", version.ref = "pagingRuntimeKtx" }
 androidx-paging-runtime-ktx = { module = "androidx.paging:paging-runtime-ktx", version.ref = "pagingRuntimeKtx" }
 androidx-paging-common-ktx = { module = "androidx.paging:paging-common-ktx", version.ref = "pagingRuntimeKtx" }

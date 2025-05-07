@@ -23,7 +23,7 @@ import kotlinx.coroutines.flow.Flow
  */
 interface SurveyService {
     @GET(APIEndPoint.SURVEYS)
-    suspend fun allSurveys(): Flow<List<SurveyEntity>>
+    fun allSurveys(): Flow<List<SurveyEntity>>
 
     @GET(APIEndPoint.SURVEYS + "/{surveyId}")
     fun getSurvey(@Path("surveyId") surveyId: Int): Flow<SurveyEntity>

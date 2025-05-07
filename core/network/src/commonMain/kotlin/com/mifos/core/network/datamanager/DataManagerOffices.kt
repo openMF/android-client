@@ -14,9 +14,10 @@ import com.mifos.core.network.BaseApiManager
 import com.mifos.core.network.mappers.offices.GetOfficeResponseMapper
 import com.mifos.room.entities.organisation.OfficeEntity
 import com.mifos.room.helper.OfficeDaoHelper
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.map
 
 /**
  * This DataManager is for Managing Offices API, In which Request is going to Server
@@ -35,22 +36,22 @@ class DataManagerOffices(
      * return all List of Offices from DatabaseHelperOffices
      */
     fun fetchOffices(): Flow<List<OfficeEntity>> {
-        return flow {
-            emit(
-                baseApiManager.getOfficeApi().retrieveOffices(null, null, null).map(
-                    GetOfficeResponseMapper::mapFromEntity,
-                ),
-            )
-        }
+        return baseApiManager.getOfficeApi()
+            .retrieveOffices(null, null, null)
+            .map { responseList ->
+                responseList.map(GetOfficeResponseMapper::mapFromEntity)
+            }
     }
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     val offices: Flow<List<OfficeEntity>>
         get() = prefManager.userInfo.flatMapLatest { userData ->
             when (userData.userStatus) {
-                false -> flow {
+                false ->
                     baseApiManager.getOfficeApi().retrieveOffices(null, null, null)
-                        .map { GetOfficeResponseMapper.mapFromEntity(it) }
-                }
+                        .map { responseList ->
+                            responseList.map(GetOfficeResponseMapper::mapFromEntity)
+                        }
 
                 true ->
                     /**

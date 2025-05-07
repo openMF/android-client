@@ -11,6 +11,7 @@ package com.mifos.core.network.datamanager
 
 import com.mifos.core.model.objects.Note
 import com.mifos.core.network.BaseApiManager
+import kotlinx.coroutines.flow.Flow
 
 /**
  * This DataManager is for Managing Notes API, In which Request is going to Server
@@ -23,7 +24,7 @@ class DataManagerNote(
     /**
      * This Method Request the REST API of Note and In response give the List of Notes
      */
-    fun getNotes(entityType: String, entityId: Int): List<Note> {
+    fun getNotes(entityType: String, entityId: Int): Flow<List<Note>> {
         return mBaseApiManager.noteApi.getNotes(entityType, entityId)
     }
 }

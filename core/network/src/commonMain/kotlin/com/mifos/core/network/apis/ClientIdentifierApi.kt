@@ -15,6 +15,7 @@ import com.mifos.core.network.model.GetClientsClientIdIdentifiersTemplateRespons
 import de.jensklingenberg.ktorfit.http.DELETE
 import de.jensklingenberg.ktorfit.http.GET
 import de.jensklingenberg.ktorfit.http.Path
+import kotlinx.coroutines.flow.Flow
 
 interface ClientIdentifierApi {
     /**
@@ -27,7 +28,7 @@ interface ClientIdentifierApi {
      * @return [kotlin.collections.List<GetClientsClientIdIdentifiersResponse>]
      */
     @GET("v1/clients/{clientId}/identifiers")
-    suspend fun retrieveAllClientIdentifiers(@Path("clientId") clientId: Long): List<GetClientsClientIdIdentifiersResponse>
+    fun retrieveAllClientIdentifiers(@Path("clientId") clientId: Long): Flow<List<GetClientsClientIdIdentifiersResponse>>
 
     /**
      * Retrieve Client Identifier Details Template

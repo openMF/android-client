@@ -125,7 +125,7 @@ data class ChargesEntity(
 
             if (dueDateList != null) {
                 if (dueDateList.size > 2) {
-                    return String.format(pattern, dueDateList[0], dueDateList[1], dueDateList[2])
+                    return "${dueDateList[0]}-${dueDateList[1]}-${dueDateList[2]}"
                 }
             }
             return "No Due Date"

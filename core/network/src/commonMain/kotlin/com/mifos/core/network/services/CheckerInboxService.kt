@@ -40,7 +40,7 @@ interface CheckerInboxService {
     suspend fun deleteCheckerEntry(@Path("auditId") auditId: Int): GenericResponse
 
     @GET("rescheduleloans?command=pending")
-    suspend fun getRescheduleLoansTaskList(): List<RescheduleLoansTask>
+    fun getRescheduleLoansTaskList(): Flow<List<RescheduleLoansTask>>
 
     @GET(APIEndPoint.MAKER_CHECKER + "/searchtemplate?fields=entityNames,actionNames")
     fun getCheckerInboxSearchTemplate(): Flow<CheckerInboxSearchTemplate>

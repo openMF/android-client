@@ -12,6 +12,7 @@ package com.mifos.core.network.services
 import com.mifos.core.model.objects.account.loan.LoanApproval
 import com.mifos.core.model.objects.account.loan.LoanDisbursement
 import com.mifos.core.model.objects.clients.Page
+import com.mifos.core.model.objects.organisations.LoanProducts
 import com.mifos.core.model.objects.payloads.GroupLoanPayload
 import com.mifos.core.model.objects.template.loan.GroupLoanTemplate
 import com.mifos.core.network.GenericResponse
@@ -71,7 +72,7 @@ interface LoanService {
     fun getLoanWithTransactions(@Path("loanId") loanId: Int): Flow<LoanWithAssociationsEntity>
 
     @GET(APIEndPoint.CREATE_LOANS_PRODUCTS)
-    fun getAllLoans(): Flow<List<com.mifos.core.model.objects.organisations.LoanProducts>>
+    fun getAllLoans(): Flow<List<LoanProducts>>
 
     @POST(APIEndPoint.CREATE_LOANS_ACCOUNTS)
     fun createLoansAccount(@Body loansPayload: LoansPayload?): Flow<Loan>
@@ -111,7 +112,7 @@ interface LoanService {
     ): Flow<GroupLoanTemplate>
 
     @GET(APIEndPoint.LOANS + "/{loanId}/" + APIEndPoint.CHARGES)
-    suspend fun getListOfLoanCharges(@Path("loanId") loanId: Int): List<ChargesEntity>
+    fun getListOfLoanCharges(@Path("loanId") loanId: Int): Flow<List<ChargesEntity>>
 
     @GET(APIEndPoint.CLIENTS + "/{clientId}/" + APIEndPoint.CHARGES)
     fun getListOfCharges(@Path("clientId") clientId: Int): Flow<Page<ChargesEntity>>

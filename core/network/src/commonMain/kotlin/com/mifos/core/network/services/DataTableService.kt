@@ -57,5 +57,5 @@ interface DataTableService {
     ): Flow<GenericResponse>
 
     @GET(APIEndPoint.DATATABLES + "/user_tracking/{userId}")
-    suspend fun getUserPathTracking(@Path("userId") userId: Int): List<UserLocation>
+    fun getUserPathTracking(@Path("userId") userId: Int): Flow<List<UserLocation>>
 }
