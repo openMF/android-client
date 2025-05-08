@@ -21,7 +21,7 @@ object ClientMapper : AbstractMapper<GetClientsPageItemsResponse, ClientEntity>(
         return ClientEntity(
             id = entity.id!!.toInt(),
             accountNo = entity.accountNo,
-            fullname = entity.fullname,
+            fullname = entity.fullName,
             firstname = entity.displayName!!.split(" ")[0],
             lastname =
             if (entity.displayName.split(" ").size >= 2) entity.displayName.split(" ")[1] else "",
@@ -41,7 +41,7 @@ object ClientMapper : AbstractMapper<GetClientsPageItemsResponse, ClientEntity>(
         return GetClientsPageItemsResponse(
             id = domainModel.id.toLong(),
             accountNo = domainModel.accountNo,
-            fullname = domainModel.fullname,
+            fullName = domainModel.fullname,
             displayName = domainModel.displayName,
             officeId = domainModel.officeId.toLong(),
             officeName = domainModel.officeName,

@@ -12,6 +12,7 @@ package com.mifos.core.network.apis
 import com.mifos.core.network.model.GetOfficesResponse
 import de.jensklingenberg.ktorfit.http.GET
 import de.jensklingenberg.ktorfit.http.Query
+import kotlinx.coroutines.flow.Flow
 
 interface OfficesApi {
 
@@ -27,9 +28,9 @@ interface OfficesApi {
      * @return [kotlin.collections.List<GetOfficesResponse]
      */
     @GET("v1/offices")
-    suspend fun retrieveOffices(
+    fun retrieveOffices(
         @Query("includeAllOffices") includeAllOffices: Boolean? = false,
         @Query("orderBy") orderBy: String? = null,
         @Query("sortOrder") sortOrder: String? = null,
-    ): List<GetOfficesResponse>
+    ): Flow<List<GetOfficesResponse>>
 }

@@ -31,7 +31,6 @@ import com.mifos.room.entities.organisation.OfficeEntity
 import com.mifos.room.entities.organisation.StaffEntity
 import io.ktor.client.statement.HttpResponse
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
@@ -139,9 +138,7 @@ class DataManager : KoinComponent {
      * Offices API
      */
     fun offices(): Flow<List<OfficeEntity>> {
-        return flow {
-//            emit(GetOfficeResponseMapper.mapFromEntity(mBaseApiManager.officeApi.allOffices()))
-        }
+        return mBaseApiManager.officeApi.allOffices()
     }
 
     /**
@@ -183,7 +180,7 @@ class DataManager : KoinComponent {
         return mBaseApiManager.loanApi.approveLoanApplication(loanId, loanApproval)
     }
 
-    suspend fun getListOfLoanCharges(loanId: Int): List<ChargesEntity> {
+    fun getListOfLoanCharges(loanId: Int): Flow<List<ChargesEntity>> {
         return mBaseApiManager.loanApi.getListOfLoanCharges(loanId)
     }
 

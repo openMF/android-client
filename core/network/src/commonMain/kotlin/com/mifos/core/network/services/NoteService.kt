@@ -13,6 +13,7 @@ import com.mifos.core.model.objects.Note
 import com.mifos.room.basemodel.APIEndPoint
 import de.jensklingenberg.ktorfit.http.GET
 import de.jensklingenberg.ktorfit.http.Path
+import kotlinx.coroutines.flow.Flow
 
 interface NoteService {
 
@@ -24,5 +25,5 @@ interface NoteService {
     fun getNotes(
         @Path("entityType") entityType: String,
         @Path("entityId") entityId: Int,
-    ): List<Note>
+    ): Flow<List<Note>>
 }

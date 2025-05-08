@@ -23,6 +23,7 @@ import com.mifos.room.entities.templates.loans.LoanRepaymentTemplateEntity
 import com.mifos.room.entities.templates.loans.LoanTemplate
 import com.mifos.room.entities.templates.loans.LoanTransactionTemplate
 import com.mifos.room.helper.LoanDaoHelper
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
@@ -51,6 +52,7 @@ class DataManagerLoan(
      * @param loanId Loan Id of the Loan
      * @return LoanWithAssociation
      */
+    @OptIn(ExperimentalCoroutinesApi::class)
     fun getLoanById(loanId: Int): Flow<LoanWithAssociationsEntity?> {
         return prefManager.userInfo.flatMapLatest { userData ->
             when (userData.userStatus) {
@@ -111,6 +113,7 @@ class DataManagerLoan(
      * @param loanId Loan Id of the LoanRepaymentTemplate
      * @return LoanRepaymentTemplate
      */
+    @OptIn(ExperimentalCoroutinesApi::class)
     fun getLoanRepayTemplate(loanId: Int): Flow<LoanRepaymentTemplateEntity?> {
         return prefManager.userInfo.flatMapLatest { userData ->
             flow {

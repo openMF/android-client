@@ -8,11 +8,11 @@
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
 plugins {
-    alias(libs.plugins.mifos.android.library)
-    alias(libs.plugins.mifos.android.koin)
-    alias(libs.plugins.mifos.android.library.jacoco)
-    id(libs.plugins.kotlin.parcelize.get().pluginId)
+    alias(libs.plugins.mifos.kmp.library)
+    alias(libs.plugins.ktorfit)
+    alias(libs.plugins.kotlin.parcelize)
     alias(libs.plugins.kotlin.serialization)
+    alias(libs.plugins.ksp)
 }
 
 android {
@@ -26,32 +26,29 @@ android {
     }
 }
 
-dependencies {
-    api(projects.core.common)
-    api(projects.core.datastore)
-    api(projects.core.network)
-    api(projects.core.database)
+kotlin {
+    sourceSets {
+        commonMain.dependencies {
+            implementation(libs.koin.core)
+            implementation(libs.kotlinx.serialization.json)
+            implementation(libs.ktor.client.serialization)
+            implementation(libs.ktor.client.core)
+            implementation(libs.androidx.paging.common)
 
-    //rxjava dependencies
-    api(libs.rxandroid)
-    api(libs.rxjava)
-
-    api(libs.dbflow)
-    api(libs.squareup.okhttp)
-
-    // sdk client
-    api(libs.fineract.client)
-
-    api(libs.androidx.paging.runtime.ktx)
-
-    implementation(libs.kotlinx.serialization.json)
-
-    testImplementation(libs.kotlinx.coroutines.test)
-    testImplementation(libs.kotlinx.serialization.json)
-    testImplementation(projects.core.testing)
-
-    implementation(libs.androidx.core.ktx)
-    implementation(libs.androidx.tracing.ktx)
-
-    implementation(libs.ktor.client.okhttp)
+            api(projects.core.common)
+            api(projects.core.datastore)
+            api(projects.core.network)
+            api(projects.core.database)
+        }
+        androidMain.dependencies {
+            api(libs.ktor.client.okhttp)
+            api(libs.koin.android)
+        }
+        desktopMain.dependencies {
+            api(libs.ktor.client.okhttp)
+        }
+        nativeMain.dependencies {
+            implementation(libs.ktor.client.darwin)
+        }
+    }
 }

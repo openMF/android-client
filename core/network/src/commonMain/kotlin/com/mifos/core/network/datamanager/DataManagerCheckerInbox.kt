@@ -11,6 +11,7 @@ package com.mifos.core.network.datamanager
 
 import com.mifos.core.model.objects.checkerinboxtask.CheckerInboxSearchTemplate
 import com.mifos.core.model.objects.checkerinboxtask.CheckerTask
+import com.mifos.core.model.objects.checkerinboxtask.RescheduleLoansTask
 import com.mifos.core.network.BaseApiManager
 import com.mifos.core.network.GenericResponse
 import kotlinx.coroutines.flow.Flow
@@ -43,7 +44,7 @@ class DataManagerCheckerInbox(
         return mBaseApiManager.checkerInboxApi.deleteCheckerEntry(auditId)
     }
 
-    suspend fun getRescheduleLoansTaskList(): List<com.mifos.core.model.objects.checkerinboxtask.RescheduleLoansTask> {
+    fun getRescheduleLoansTaskList(): Flow<List<RescheduleLoansTask>> {
         return mBaseApiManager.checkerInboxApi.getRescheduleLoansTaskList()
     }
 

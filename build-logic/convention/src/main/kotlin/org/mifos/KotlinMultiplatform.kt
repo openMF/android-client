@@ -16,14 +16,14 @@ internal fun Project.configureKotlinMultiplatform() {
         iosSimulatorArm64()
         iosX64()
         iosArm64()
-        js(IR) {
-            this.nodejs()
-            binaries.executable()
-        }
-        wasmJs() {
-            browser()
-            nodejs()
-        }
+//        js(IR) {
+//            this.nodejs()
+//            binaries.executable()
+//        }
+//        wasmJs() {
+//            browser()
+//            nodejs()
+//        }
 
         compilerOptions {
             freeCompilerArgs.add("-Xexpect-actual-classes")

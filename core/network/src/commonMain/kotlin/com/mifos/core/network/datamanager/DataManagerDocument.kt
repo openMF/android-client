@@ -30,7 +30,7 @@ class DataManagerDocument(val mBaseApiManager: BaseApiManager) {
      * @param entityId   Entity Id
      * @return List<Document>
      </Document> */
-    suspend fun getDocumentsList(entityType: String, entityId: Int): List<Document> {
+    fun getDocumentsList(entityType: String, entityId: Int): Flow<List<Document>> {
         return mBaseApiManager.documentApi.getDocuments(entityType, entityId)
     }
 

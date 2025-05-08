@@ -16,6 +16,7 @@ import com.mifos.core.network.mappers.dataTable.GetDataTablesResponseMapper
 import com.mifos.core.network.model.DeleteDataTablesDatatableAppTableIdDatatableIdResponse
 import com.mifos.room.entities.noncore.DataTableEntity
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import kotlinx.serialization.json.JsonArray
 
 /**
@@ -37,10 +38,11 @@ class DataManagerDataTable(
      * @param tableName DataTable Name
      * @return List<DataTable>
      </DataTable> */
-    suspend fun getDataTable(tableName: String?): List<DataTableEntity> {
-        return baseApiManager.getDataTableApi().getDatatables(tableName).map(
-            GetDataTablesResponseMapper::mapFromEntity,
-        )
+    fun getDataTable(tableName: String?): Flow<List<DataTableEntity>> {
+        return baseApiManager.getDataTableApi().getDatatables(tableName)
+            .map { responseList ->
+                responseList.map(GetDataTablesResponseMapper::mapFromEntity)
+            }
     }
 
     suspend fun getDataTableInfo(table: String, entityId: Int): JsonArray {
@@ -88,7 +90,7 @@ class DataManagerDataTable(
      * @param userId UserId Id
      * @return List<UserLocation>
      </UserLocation> */
-    suspend fun getUserPathTracking(userId: Int): List<UserLocation> {
+    fun getUserPathTracking(userId: Int): Flow<List<UserLocation>> {
         return mBaseApiManager.dataTableApi.getUserPathTracking(userId)
     }
 }
