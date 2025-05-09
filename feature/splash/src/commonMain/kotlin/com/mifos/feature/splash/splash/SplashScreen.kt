@@ -9,6 +9,8 @@
  */
 package com.mifos.feature.splash.splash
 
+import androidclient.feature.splash.generated.resources.Res
+import androidclient.feature.splash.generated.resources.feature_splash_icon
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -19,13 +21,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mifos.core.designsystem.component.MifosScaffold
-import com.mifos.feature.splash.R
-import org.koin.androidx.compose.koinViewModel
+import com.mifos.core.ui.util.DevicePreview
+import org.jetbrains.compose.resources.painterResource
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 internal fun SplashScreen(
@@ -67,14 +68,14 @@ internal fun SplashScreen(
         ) {
             Image(
                 modifier = Modifier.size(100.dp),
-                painter = painterResource(id = R.drawable.feature_splash_icon),
+                painter = painterResource(Res.drawable.feature_splash_icon),
                 contentDescription = null,
             )
         }
     }
 }
 
-@Preview
+@DevicePreview
 @Composable
 private fun SplashScreenPreview() {
     SplashScreen(
