@@ -27,7 +27,4 @@ kotlin {
         }
     }
 }
-dependencies {
-    implementation(libs.androidx.ui.tooling.preview.android)
-}
 
