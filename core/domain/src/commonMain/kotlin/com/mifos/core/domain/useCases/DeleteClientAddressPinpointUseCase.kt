@@ -22,9 +22,11 @@ class DeleteClientAddressPinpointUseCase(
 
     operator fun invoke(clientId: Int, addressId: Int): Flow<DataState<GenericResponse>> =
         flow {
-            emit(pinPointClientRepository.deleteClientAddressPinpointLocation(
-                clientId,
-                addressId,
-            ))
+            emit(
+                pinPointClientRepository.deleteClientAddressPinpointLocation(
+                    clientId,
+                    addressId,
+                ),
+            )
         }.asDataStateFlow()
 }

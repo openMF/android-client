@@ -27,14 +27,10 @@ import com.mifos.room.entities.templates.clients.ClientsTemplateEntity
 import de.jensklingenberg.ktorfit.http.Body
 import de.jensklingenberg.ktorfit.http.DELETE
 import de.jensklingenberg.ktorfit.http.GET
-import de.jensklingenberg.ktorfit.http.Multipart
 import de.jensklingenberg.ktorfit.http.POST
 import de.jensklingenberg.ktorfit.http.PUT
-import de.jensklingenberg.ktorfit.http.Part
 import de.jensklingenberg.ktorfit.http.Path
 import de.jensklingenberg.ktorfit.http.Query
-import io.ktor.client.statement.HttpResponse
-import io.ktor.http.content.PartData
 import kotlinx.coroutines.flow.Flow
 
 /**

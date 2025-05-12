@@ -20,7 +20,7 @@ class CreateGroupLoansAccountUseCase(
 ) {
 
     operator fun invoke(
-        loansPayload: GroupLoanPayload
-    ) : Flow<DataState<Loan>> =
+        loansPayload: GroupLoanPayload,
+    ): Flow<DataState<Loan>> =
         repository.createGroupLoansAccount(loansPayload)
 }

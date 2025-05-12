@@ -25,10 +25,12 @@ class UpdateClientPinpointUseCase(
         datatableId: Int,
         address: com.mifos.core.model.objects.clients.ClientAddressRequest,
     ): Flow<DataState<GenericResponse>> = flow {
-        emit(pinPointClientRepository.updateClientPinpointLocation(
-            clientId,
-            datatableId,
-            address,
-        ))
+        emit(
+            pinPointClientRepository.updateClientPinpointLocation(
+                clientId,
+                datatableId,
+                address,
+            ),
+        )
     }.asDataStateFlow()
 }

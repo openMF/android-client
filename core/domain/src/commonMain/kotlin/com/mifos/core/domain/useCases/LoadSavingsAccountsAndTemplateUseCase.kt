@@ -31,7 +31,7 @@ class LoadSavingsAccountsAndTemplateUseCase(
                 SavingProductsAndTemplate(
                     mProductSavings = savingsAccount.data!!,
                     mSavingProductsTemplate = template.data!!,
-                )
+                ),
             )
         }
 }

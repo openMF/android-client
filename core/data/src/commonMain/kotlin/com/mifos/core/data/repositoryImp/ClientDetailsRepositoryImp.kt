@@ -24,7 +24,8 @@ class ClientDetailsRepositoryImp(
     override suspend fun uploadClientImage(clientId: Int, image: String) {
         dataManagerClient.uploadClientImage(
             clientId = clientId,
-            typedFile = "data:image/png;base64,$image",)
+            typedFile = "data:image/png;base64,$image",
+        )
     }
 
     override suspend fun deleteClientImage(clientId: Int) {

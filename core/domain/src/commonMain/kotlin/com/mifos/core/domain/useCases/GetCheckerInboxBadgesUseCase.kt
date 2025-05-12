@@ -24,8 +24,7 @@ class GetCheckerInboxBadgesUseCase(
     operator fun invoke(): Flow<DataState<Pair<Int, Int>>> =
 
         repository.getCheckerTaskList()
-            .zip(repository.getRescheduleLoansTaskList())
-        { checkerTasks, rescheduleTasks ->
-            DataState.Success(Pair(checkerTasks.data!!.size, rescheduleTasks.data!!.size))
-        }
+            .zip(repository.getRescheduleLoansTaskList()) { checkerTasks, rescheduleTasks ->
+                DataState.Success(Pair(checkerTasks.data!!.size, rescheduleTasks.data!!.size))
+            }
 }

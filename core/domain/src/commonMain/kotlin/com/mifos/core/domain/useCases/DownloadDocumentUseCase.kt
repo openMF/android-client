@@ -16,7 +16,6 @@ import io.ktor.client.statement.HttpResponse
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
-
 class DownloadDocumentUseCase(
     private val repository: DocumentListRepository,
 ) {

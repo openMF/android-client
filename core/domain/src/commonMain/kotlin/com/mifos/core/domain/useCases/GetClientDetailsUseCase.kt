@@ -25,13 +25,13 @@ class GetClientDetailsUseCase(
 ) {
 
     operator fun invoke(clientId: Int): Flow<DataState<ClientAndClientAccounts>> = flow {
-            val client = repository.getClient(clientId)
-            val accounts = repository.getClientAccounts(clientId)
+        val client = repository.getClient(clientId)
+        val accounts = repository.getClientAccounts(clientId)
 
-            val clientAndClientAccounts = ClientAndClientAccounts().apply {
-                this.client = client
-                this.clientAccounts = accounts
-            }
-            emit(clientAndClientAccounts)
-        }.asDataStateFlow()
+        val clientAndClientAccounts = ClientAndClientAccounts().apply {
+            this.client = client
+            this.clientAccounts = accounts
+        }
+        emit(clientAndClientAccounts)
+    }.asDataStateFlow()
 }

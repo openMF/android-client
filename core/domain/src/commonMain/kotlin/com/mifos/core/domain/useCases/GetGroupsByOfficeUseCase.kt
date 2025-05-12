@@ -14,7 +14,6 @@ import com.mifos.core.data.repository.GenerateCollectionSheetRepository
 import com.mifos.room.entities.group.GroupEntity
 import kotlinx.coroutines.flow.Flow
 
-
 class GetGroupsByOfficeUseCase(
     private val repository: GenerateCollectionSheetRepository,
 ) {

@@ -44,7 +44,7 @@ class GroupsListPagingDataSource(
             LoadResult.Error(e)
         } catch (e: ServerResponseException) {
             LoadResult.Error(e)
-        }catch (e: IOException) {
+        } catch (e: IOException) {
             LoadResult.Error(e)
         } catch (e: Exception) {
             LoadResult.Error(e)

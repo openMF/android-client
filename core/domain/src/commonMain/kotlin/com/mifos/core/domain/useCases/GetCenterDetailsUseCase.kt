@@ -27,7 +27,7 @@ class GetCenterDetailsUseCase(
     ): Flow<DataState<Pair<CenterWithAssociations, List<CenterInfo>>>> =
         combine(
             flow { emit(repository.getCentersGroupAndMeeting(centerId)) },
-            repository.getCenterSummaryInfo(centerId, genericResultSet)
+            repository.getCenterSummaryInfo(centerId, genericResultSet),
         ) { centerGroup, centerInfoState ->
             DataState.Success(Pair(centerGroup, centerInfoState.data!!))
         }

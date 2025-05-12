@@ -21,6 +21,6 @@ class GetClientIdentifierTemplateUseCase(
 ) {
 
     operator fun invoke(clientId: Int): Flow<DataState<IdentifierTemplate>> = flow {
-       emit(repository.getClientIdentifierTemplate(clientId))
+        emit(repository.getClientIdentifierTemplate(clientId))
     }.asDataStateFlow()
 }
