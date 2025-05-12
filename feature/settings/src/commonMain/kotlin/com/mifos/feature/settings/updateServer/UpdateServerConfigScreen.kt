@@ -27,11 +27,8 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AddLink
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Info
-import androidx.compose.material.icons.filled.Link
-import androidx.compose.material.icons.filled.Save
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.Icon
@@ -45,7 +42,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextOverflow
@@ -54,8 +50,9 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mifos.core.common.utils.ServerConfig
 import com.mifos.core.designsystem.component.MifosOutlinedTextField
 import com.mifos.core.ui.util.DevicePreview
-import com.mifos.feature.settings.R
-import org.koin.androidx.compose.koinViewModel
+import core.designsystem.generated.resources.Res
+import org.jetbrains.compose.resources.stringResource
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 internal fun UpdateServerConfigScreenRoute(
@@ -138,7 +135,7 @@ internal fun UpdateServerConfigScreenContent(
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
                     Text(
-                        text = stringResource(R.string.feature_settings_title),
+                        text = stringResource(Res.string.feature_settings_title),
                         style = MaterialTheme.typography.headlineSmall,
                         fontWeight = FontWeight.SemiBold,
                         maxLines = 1,
@@ -152,7 +149,7 @@ internal fun UpdateServerConfigScreenContent(
                     ) {
                         Icon(
                             imageVector = Icons.Default.Close,
-                            contentDescription = stringResource(R.string.feature_settings_close_bottomsheet),
+                            contentDescription = stringResource(Res.string.feature_settings_close_bottomsheet),
                         )
                     }
                 }
@@ -168,11 +165,11 @@ internal fun UpdateServerConfigScreenContent(
                 item {
                     MifosOutlinedTextField(
                         value = serverConfig.protocol,
-                        label = stringResource(R.string.feature_settings_label_protocol),
+                        label = stringResource(Res.string.feature_settings_label_protocol),
                         leadingIcon = Icons.Default.AddLink,
                         isError = protocolError != null,
                         errorText = protocolError?.let { stringResource(it) },
-                        placeholder = stringResource(R.string.feature_settings_protocol_placeholder),
+                        placeholder = stringResource(Res.string.feature_settings_protocol_placeholder),
                         keyboardType = KeyboardType.Uri,
                         showClearIcon = serverConfig.protocol.isNotEmpty(),
                         onClickClearIcon = {
@@ -187,11 +184,11 @@ internal fun UpdateServerConfigScreenContent(
                 item {
                     MifosOutlinedTextField(
                         value = serverConfig.endPoint,
-                        label = stringResource(R.string.feature_settings_label_endpoint),
+                        label = stringResource(Res.string.feature_settings_label_endpoint),
                         leadingIcon = Icons.Default.Link,
                         isError = endPointError != null,
                         errorText = endPointError?.let { stringResource(it) },
-                        placeholder = stringResource(R.string.feature_settings_endpoint_placeholder),
+                        placeholder = stringResource(Res.string.feature_settings_endpoint_placeholder),
                         showClearIcon = serverConfig.endPoint.isNotEmpty(),
                         onClickClearIcon = {
                             onEvent(UpdateServerConfigEvent.UpdateEndPoint(""))
@@ -205,11 +202,11 @@ internal fun UpdateServerConfigScreenContent(
                 item {
                     MifosOutlinedTextField(
                         value = serverConfig.apiPath,
-                        label = stringResource(R.string.feature_settings_label_api_path),
+                        label = stringResource(Res.string.feature_settings_label_api_path),
                         leadingIcon = Icons.Default.Link,
                         isError = apiPathError != null,
                         errorText = apiPathError?.let { stringResource(it) },
-                        placeholder = stringResource(R.string.feature_settings_api_path_placeholder),
+                        placeholder = stringResource(Res.string.feature_settings_api_path_placeholder),
                         showClearIcon = serverConfig.endPoint.isNotEmpty(),
                         onClickClearIcon = {
                             onEvent(UpdateServerConfigEvent.UpdateEndPoint(""))
@@ -223,11 +220,11 @@ internal fun UpdateServerConfigScreenContent(
                 item {
                     MifosOutlinedTextField(
                         value = serverConfig.port,
-                        label = stringResource(R.string.feature_settings_label_port),
+                        label = stringResource(Res.string.feature_settings_label_port),
                         leadingIcon = Icons.Default.Link,
                         isError = portError != null,
                         errorText = portError?.let { stringResource(it) },
-                        placeholder = stringResource(R.string.feature_settings_port_placeholder),
+                        placeholder = stringResource(Res.string.feature_settings_port_placeholder),
                         keyboardType = KeyboardType.Number,
                         showClearIcon = serverConfig.port.isNotEmpty(),
                         onClickClearIcon = {
@@ -242,11 +239,11 @@ internal fun UpdateServerConfigScreenContent(
                 item {
                     MifosOutlinedTextField(
                         value = serverConfig.tenant,
-                        label = stringResource(R.string.feature_settings_label_tenant),
+                        label = stringResource(Res.string.feature_settings_label_tenant),
                         leadingIcon = Icons.Default.Link,
                         isError = tenantError != null,
                         errorText = tenantError?.let { stringResource(it) },
-                        placeholder = stringResource(R.string.feature_settings_tenant_placeholder),
+                        placeholder = stringResource(Res.string.feature_settings_tenant_placeholder),
                         showClearIcon = serverConfig.tenant.isNotEmpty(),
                         onClickClearIcon = {
                             onEvent(UpdateServerConfigEvent.UpdateTenant(""))
@@ -271,7 +268,7 @@ internal fun UpdateServerConfigScreenContent(
                         )
 
                         Text(
-                            text = stringResource(R.string.feature_settings_note_text),
+                            text = stringResource(Res.string.feature_settings_note_text),
                             style = MaterialTheme.typography.labelSmall,
                         )
                     }
@@ -297,7 +294,7 @@ internal fun UpdateServerConfigScreenContent(
                             contentDescription = "updateConfig",
                         )
                         Spacer(modifier = Modifier.width(4.dp))
-                        Text(stringResource(R.string.feature_settings_update_config_btn_text).uppercase())
+                        Text(stringResource(Res.string.feature_settings_update_config_btn_text).uppercase())
                     }
                 }
             }

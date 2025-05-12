@@ -15,24 +15,6 @@ android {
     namespace = "com.mifos.feature.settings"
 }
 
-//dependencies {
-//
-//    implementation(projects.core.datastore)
-//    implementation(projects.core.designsystem)
-//    implementation(projects.core.domain)
-//    implementation(projects.core.common)
-//    implementation(projects.core.ui)
-//    implementation(libs.appcompat)
-//
-//    androidTestImplementation(libs.androidx.compose.ui.test)
-//    debugApi(libs.androidx.compose.ui.test.manifest)
-//
-//    testImplementation(libs.hilt.android.testing)
-//    testImplementation(projects.core.testing)
-//
-//    androidTestImplementation(projects.core.testing)
-//
-//}
 
 kotlin {
     sourceSets {
@@ -41,11 +23,11 @@ kotlin {
             implementation(compose.components.resources)
             implementation(compose.ui)
             api(projects.core.common)
-            api(projects.core.model)
+           api(projects.core.model)
             api(projects.core.network)
             api(projects.core.datastore)
-            api(projects.core.designsystem)
-            //api(projects.core.domain)
+           api(projects.core.designsystem)
+           // api(projects.core.domain)
 
         }
     }

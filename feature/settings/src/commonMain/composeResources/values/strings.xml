@@ -12,7 +12,7 @@
     <string name="feature_settings_close_bottomsheet">CloseBottomSheetIcon</string>
     <string name="feature_settings_update_config_btn_text">Update Config</string>
     <string name="feature_settings_note_text">The application will restart after a successful update.</string>
-
+    <string name="feature_settings_title">Update Server Configuration</string>
     <string name="feature_settings">Settings</string>
     <string name="feature_settings_sync_survey">Sync Survey</string>
     <string name="feature_settings_sync_survey_desc">Click to Sync Survey</string>
