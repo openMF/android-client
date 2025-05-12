@@ -11,6 +11,7 @@ package com.mifos.core.network.services
 
 import com.mifos.core.common.utils.Page
 import com.mifos.core.model.objects.clients.ActivatePayload
+import com.mifos.core.model.objects.clients.ClientAddressResponse
 import com.mifos.core.model.objects.noncoreobjects.Identifier
 import com.mifos.core.model.objects.noncoreobjects.IdentifierCreationResponse
 import com.mifos.core.model.objects.noncoreobjects.IdentifierPayload
@@ -67,7 +68,7 @@ interface ClientService {
     @POST(APIEndPoint.CLIENTS + "/{clientId}/images")
     suspend fun uploadClientImage(
         @Path("clientId") clientId: Int,
-        @Part file: PartData?,
+        @Part file: PartData,
     ): HttpResponse
 
     @DELETE(APIEndPoint.CLIENTS + "/{clientId}/images")
@@ -153,9 +154,9 @@ interface ClientService {
      * @return ClientAddressResponse
      */
     @GET(APIEndPoint.DATATABLES + "/client_pinpoint_location/{clientId}")
-    suspend fun getClientPinpointLocations(
+    fun getClientPinpointLocations(
         @Path("clientId") clientId: Int,
-    ): List<com.mifos.core.model.objects.clients.ClientAddressResponse>
+    ): Flow<List<ClientAddressResponse>>
 
     /**
      * This is the service for adding the new Client Pinpoint Location in dataTable

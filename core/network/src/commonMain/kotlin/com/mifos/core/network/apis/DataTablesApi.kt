@@ -15,6 +15,7 @@ import de.jensklingenberg.ktorfit.http.DELETE
 import de.jensklingenberg.ktorfit.http.GET
 import de.jensklingenberg.ktorfit.http.Path
 import de.jensklingenberg.ktorfit.http.Query
+import kotlinx.coroutines.flow.Flow
 
 interface DataTablesApi {
 
@@ -28,7 +29,7 @@ interface DataTablesApi {
      * @return [kotlin.collections.List<GetDataTablesResponse>]
      */
     @GET("v1/datatables")
-    suspend fun getDatatables(@Query("apptable") apptable: String? = null): List<GetDataTablesResponse>
+    fun getDatatables(@Query("apptable") apptable: String? = null): Flow<List<GetDataTablesResponse>>
 
     /**
      * Delete Entry in Datatable (One to Many)
