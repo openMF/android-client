@@ -32,9 +32,6 @@ dependencies {
     implementation(libs.androidx.paging.compose)
 
     testImplementation(libs.hilt.android.testing)
-    testImplementation(projects.core.testing)
-
-    androidTestImplementation(projects.core.testing)
 
     implementation(libs.androidx.material)
 

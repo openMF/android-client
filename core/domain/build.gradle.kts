@@ -36,7 +36,6 @@ dependencies {
 
     implementation(libs.androidx.paging.runtime.ktx)
 
-    testImplementation(projects.core.testing)
     testImplementation (libs.androidx.paging.common.ktx)
     testImplementation (libs.androidx.paging.testing)
 
