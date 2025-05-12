@@ -9,20 +9,12 @@
  */
 package com.mifos.core.domain.useCases
 
-import com.mifos.core.common.utils.Resource
+import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.repository.GroupListRepository
 import com.mifos.room.entities.group.CenterWithAssociations
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
 
 class GetGroupsByCenterUseCase(private val repository: GroupListRepository) {
-    operator fun invoke(id: Int): Flow<Resource<CenterWithAssociations>> = flow {
-        try {
-            emit(Resource.Loading())
-            val response = repository.getGroupsByCenter(id)
-            emit(Resource.Success(response))
-        } catch (exception: Exception) {
-            emit(Resource.Error(exception.message.toString()))
-        }
-    }
+    operator fun invoke(id: Int): Flow<DataState<CenterWithAssociations>> =
+        repository.getGroupsByCenter(id)
 }

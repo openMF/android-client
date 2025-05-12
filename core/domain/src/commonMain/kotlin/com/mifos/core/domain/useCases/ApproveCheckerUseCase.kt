@@ -9,7 +9,8 @@
  */
 package com.mifos.core.domain.useCases
 
-import com.mifos.core.common.utils.Resource
+import com.mifos.core.common.utils.DataState
+import com.mifos.core.common.utils.asDataStateFlow
 import com.mifos.core.data.repository.CheckerInboxRepository
 import com.mifos.core.network.GenericResponse
 import kotlinx.coroutines.flow.Flow
@@ -19,11 +20,7 @@ class ApproveCheckerUseCase(
     val repository: CheckerInboxRepository,
 ) {
 
-    operator fun invoke(auditId: Int): Flow<Resource<GenericResponse>> = flow {
-        emit(Resource.Loading())
-        val response = repository.approveCheckerEntry(auditId)
-        emit(Resource.Success(response))
-    }.catch { exception ->
-        emit(Resource.Error(exception.message.toString()))
-    }
+    operator fun invoke(auditId: Int): Flow<DataState<GenericResponse>> = flow {
+        emit(repository.approveCheckerEntry(auditId))
+    }.asDataStateFlow()
 }

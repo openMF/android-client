@@ -9,11 +9,10 @@
  */
 package com.mifos.core.domain.useCases
 
-import com.mifos.core.common.utils.Resource
+import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.repository.DocumentListRepository
 import com.mifos.core.model.objects.noncoreobjects.Document
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
 
 class GetDocumentsListUseCase(
     private val repository: DocumentListRepository,
@@ -22,11 +21,6 @@ class GetDocumentsListUseCase(
     operator fun invoke(
         entityType: String,
         entityId: Int,
-    ): Flow<Resource<List<Document>>> = flow {
-        emit(Resource.Loading())
-        val documents = repository.getDocumentsList(entityType, entityId)
-        emit(Resource.Success(documents))
-    }.catch { exception ->
-        emit(Resource.Error(exception.message.toString()))
-    }
+    ): Flow<DataState<List<Document>>> =
+        repository.getDocumentsList(entityType, entityId)
 }

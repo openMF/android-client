@@ -9,13 +9,11 @@
  */
 package com.mifos.core.domain.useCases
 
-import com.mifos.core.common.utils.MFErrorParser
-import com.mifos.core.common.utils.Resource
+import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.repository.ActivateRepository
 import com.mifos.core.model.objects.clients.ActivatePayload
 import com.mifos.core.network.GenericResponse
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
 
 class ActivateGroupUseCase(
     private val activateRepository: ActivateRepository,
@@ -24,13 +22,6 @@ class ActivateGroupUseCase(
     operator fun invoke(
         groupId: Int,
         groupPayload: ActivatePayload,
-    ): Flow<Resource<GenericResponse>> = flow {
-        try {
-            emit(Resource.Loading())
-            val response = activateRepository.activateGroup(groupId, groupPayload)
-            emit(Resource.Success(response))
-        } catch (exception: Exception) {
-            emit(Resource.Error(MFErrorParser.errorMessage(exception)))
-        }
-    }
+    ): Flow<DataState<GenericResponse>> =
+        activateRepository.activateGroup(groupId, groupPayload)
 }

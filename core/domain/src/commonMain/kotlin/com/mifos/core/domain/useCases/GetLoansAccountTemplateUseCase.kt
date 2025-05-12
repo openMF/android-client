@@ -9,25 +9,15 @@
  */
 package com.mifos.core.domain.useCases
 
-import com.mifos.core.common.utils.MFErrorParser
-import com.mifos.core.common.utils.Resource
+import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.repository.LoanAccountRepository
 import com.mifos.room.entities.templates.loans.LoanTemplate
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
 
 class GetLoansAccountTemplateUseCase(
     private val loanAccountRepository: LoanAccountRepository,
 ) {
 
-    operator fun invoke(clientId: Int, productId: Int): Flow<Resource<LoanTemplate>> =
-        flow {
-            try {
-                emit(Resource.Loading())
-                val response = loanAccountRepository.getLoansAccountTemplate(clientId, productId)
-                emit(Resource.Success(response))
-            } catch (exception: Exception) {
-                emit(Resource.Error(MFErrorParser.errorMessage(exception)))
-            }
-        }
+    operator fun invoke(clientId: Int, productId: Int): Flow<DataState<LoanTemplate>> =
+        loanAccountRepository.getLoansAccountTemplate(clientId, productId)
 }

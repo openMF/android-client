@@ -9,7 +9,8 @@
  */
 package com.mifos.core.domain.useCases
 
-import com.mifos.core.common.utils.Resource
+import com.mifos.core.common.utils.DataState
+import com.mifos.core.common.utils.asDataStateFlow
 import com.mifos.core.data.repository.GenerateCollectionSheetRepository
 import com.mifos.room.entities.group.CenterWithAssociations
 import kotlinx.coroutines.flow.Flow
@@ -19,11 +20,8 @@ class FetchGroupsAssociatedWithCenterUseCase(
     private val repository: GenerateCollectionSheetRepository,
 ) {
 
-    operator fun invoke(centerId: Int): Flow<Resource<CenterWithAssociations>> = flow {
-        emit(Resource.Loading())
-        val response = repository.fetchGroupsAssociatedWithCenter(centerId)
-        emit(Resource.Success(response))
-    }.catch { exception ->
-        emit(Resource.Error(exception.message.toString()))
-    }
+    operator fun invoke(centerId: Int): Flow<DataState<CenterWithAssociations>> =
+        flow {
+            emit(repository.fetchGroupsAssociatedWithCenter(centerId))
+        }.asDataStateFlow()
 }

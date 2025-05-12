@@ -9,7 +9,8 @@
  */
 package com.mifos.core.domain.useCases
 
-import com.mifos.core.common.utils.Resource
+import com.mifos.core.common.utils.DataState
+import com.mifos.core.common.utils.asDataStateFlow
 import com.mifos.core.data.repository.ClientIdentifiersRepository
 import com.mifos.core.network.model.DeleteClientsClientIdIdentifiersIdentifierIdResponse
 import kotlinx.coroutines.flow.Flow
@@ -22,12 +23,7 @@ class DeleteIdentifierUseCase(
     operator fun invoke(
         clientId: Int,
         identifierId: Int,
-    ): Flow<Resource<DeleteClientsClientIdIdentifiersIdentifierIdResponse>> = flow {
-        emit(Resource.Loading())
-        val response =
-            repository.deleteClientIdentifier(clientId = clientId, identifierId = identifierId)
-        emit(Resource.Success(response))
-    }.catch { exception ->
-        emit(Resource.Error(exception.message.toString()))
-    }
+    ): Flow<DataState<DeleteClientsClientIdIdentifiersIdentifierIdResponse>> = flow {
+        emit(repository.deleteClientIdentifier(clientId = clientId, identifierId = identifierId))
+    }.asDataStateFlow()
 }

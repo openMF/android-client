@@ -9,7 +9,8 @@
  */
 package com.mifos.core.domain.useCases
 
-import com.mifos.core.common.utils.Resource
+import com.mifos.core.common.utils.DataState
+import com.mifos.core.common.utils.asDataStateFlow
 import com.mifos.core.data.repository.NewIndividualCollectionSheetRepository
 import com.mifos.core.network.model.RequestCollectionSheetPayload
 import com.mifos.room.entities.collectionsheet.IndividualCollectionSheet
@@ -20,12 +21,8 @@ class GetIndividualCollectionSheetUseCase(
     private val repository: NewIndividualCollectionSheetRepository,
 ) {
 
-    operator fun invoke(payload: RequestCollectionSheetPayload): Flow<Resource<IndividualCollectionSheet>> =
+    operator fun invoke(payload: RequestCollectionSheetPayload): Flow<DataState<IndividualCollectionSheet>> =
         flow {
-            emit(Resource.Loading())
-            val response = repository.repository.getIndividualCollectionSheet(payload)
-            emit(Resource.Success(response))
-        }.catch { exception ->
-            emit(Resource.Error(exception.message.toString()))
-        }
+            emit(repository.getIndividualCollectionSheet(payload))
+        }.asDataStateFlow()
 }

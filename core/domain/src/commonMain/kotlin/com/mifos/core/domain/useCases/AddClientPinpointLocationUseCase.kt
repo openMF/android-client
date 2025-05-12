@@ -9,8 +9,10 @@
  */
 package com.mifos.core.domain.useCases
 
-import com.mifos.core.common.utils.Resource
+import com.mifos.core.common.utils.DataState
+import com.mifos.core.common.utils.asDataStateFlow
 import com.mifos.core.data.repository.PinPointClientRepository
+import com.mifos.core.model.objects.clients.ClientAddressRequest
 import com.mifos.core.network.GenericResponse
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -21,12 +23,8 @@ class AddClientPinpointLocationUseCase(
 
     operator fun invoke(
         clientId: Int,
-        address: com.mifos.core.model.objects.clients.ClientAddressRequest,
-    ): Flow<Resource<GenericResponse>> = flow {
-        emit(Resource.Loading())
-        val response = pinPointClientRepository.addClientPinpointLocation(clientId, address)
-        emit(Resource.Success(response))
-    }.catch { exception ->
-        emit(Resource.Error(exception.message.toString()))
-    }
+        address: ClientAddressRequest,
+    ): Flow<DataState<GenericResponse>> = flow {
+        emit(pinPointClientRepository.addClientPinpointLocation(clientId, address))
+    }.asDataStateFlow()
 }

@@ -9,21 +9,18 @@
  */
 package com.mifos.core.domain.useCases
 
-import com.mifos.core.common.utils.Resource
+import com.mifos.core.common.utils.asDataStateFlow
+import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.repository.LoanChargeDialogRepository
+import io.ktor.client.statement.HttpResponse
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import okhttp3.ResponseBody
 
 class GetAllChargesV3UseCase(
     private val repository: LoanChargeDialogRepository,
 ) {
 
-    operator fun invoke(loanId: Int): Flow<Resource<ResponseBody>> = flow {
-        emit(Resource.Loading())
-        val response = repository.getAllChargesV3(loanId)
-        emit(Resource.Success(response))
-    }.catch { exception ->
-        emit(Resource.Error(exception.message.toString()))
-    }
+    operator fun invoke(loanId: Int): Flow<DataState<HttpResponse>> = flow {
+        emit(repository.getAllChargesV3(loanId))
+    }.asDataStateFlow()
 }

@@ -203,7 +203,7 @@ class DataManagerClient(
      * @param file MultipartBody of the Image file
      * @return ResponseBody is the Retrofit 2 response
      */
-    suspend fun uploadClientImage(id: Int, file: PartData) {
+    suspend fun uploadClientImage(id: Int, file: String) {
         mBaseApiManager.clientsApi.uploadClientImage(id, file)
     }
     /**

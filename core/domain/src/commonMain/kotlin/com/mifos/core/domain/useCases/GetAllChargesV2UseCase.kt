@@ -9,7 +9,8 @@
  */
 package com.mifos.core.domain.useCases
 
-import com.mifos.core.common.utils.Resource
+import com.mifos.core.common.utils.DataState
+import com.mifos.core.common.utils.asDataStateFlow
 import com.mifos.core.data.repository.ChargeDialogRepository
 import com.mifos.core.model.objects.template.client.ChargeTemplate
 import kotlinx.coroutines.flow.Flow
@@ -19,11 +20,7 @@ class GetAllChargesV2UseCase(
     private val repository: ChargeDialogRepository,
 ) {
 
-    operator fun invoke(clientId: Int): Flow<Resource<ChargeTemplate>> = flow {
-        emit(Resource.Loading())
-        val response = repository.getAllChargesV2(clientId)
-        emit(Resource.Success(response))
-    }.catch { exception ->
-        emit(Resource.Error(exception.message.toString()))
-    }
+    operator fun invoke(clientId: Int): Flow<DataState<ChargeTemplate>> = flow {
+        emit(repository.getAllChargesV2(clientId))
+    }.asDataStateFlow()
 }

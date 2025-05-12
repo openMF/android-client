@@ -9,7 +9,8 @@
  */
 package com.mifos.core.domain.useCases
 
-import com.mifos.core.common.utils.Resource
+import com.mifos.core.common.utils.DataState
+import com.mifos.core.common.utils.asDataStateFlow
 import com.mifos.core.data.repository.ReportDetailRepository
 import com.mifos.core.model.objects.runreport.FullParameterListResponse
 import kotlinx.coroutines.flow.Flow
@@ -22,11 +23,7 @@ class GetReportParameterDetailsUseCase(
     operator fun invoke(
         parameterName: String,
         parameterType: Boolean,
-    ): Flow<Resource<FullParameterListResponse>> = flow {
-        emit(Resource.Loading())
-        val response = repository.getReportParameterDetails(parameterName, parameterType)
-        emit(Resource.Success(response))
-    }.catch { exception ->
-        emit(Resource.Error(exception.message.toString()))
-    }
+    ): Flow<DataState<FullParameterListResponse>> = flow {
+        emit(repository.getReportParameterDetails(parameterName, parameterType))
+    }.asDataStateFlow()
 }

@@ -9,11 +9,10 @@
  */
 package com.mifos.core.domain.useCases
 
-import com.mifos.core.common.utils.Resource
+import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.repository.ReportCategoryRepository
 import com.mifos.core.model.objects.runreport.client.ClientReportTypeItem
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
 
 class GetReportCategoryUseCase(
     private val repository: ReportCategoryRepository,
@@ -23,12 +22,6 @@ class GetReportCategoryUseCase(
         reportCategory: String,
         genericResultSet: Boolean,
         parameterType: Boolean,
-    ): Flow<Resource<List<ClientReportTypeItem>>> = flow {
-        emit(Resource.Loading())
-        val response =
-            repository.getReportCategories(reportCategory, genericResultSet, parameterType)
-        emit(Resource.Success(response))
-    }.catch { exception ->
-        emit(Resource.Error(exception.message.toString()))
-    }
+    ): Flow<DataState<List<ClientReportTypeItem>>> =
+        repository.getReportCategories(reportCategory, genericResultSet, parameterType)
 }

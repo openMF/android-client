@@ -9,7 +9,8 @@
  */
 package com.mifos.core.domain.useCases
 
-import com.mifos.core.common.utils.Resource
+import com.mifos.core.common.utils.DataState
+import com.mifos.core.common.utils.asDataStateFlow
 import com.mifos.core.data.repository.DataTableDataRepository
 import com.mifos.core.network.model.DeleteDataTablesDatatableAppTableIdDatatableIdResponse
 import kotlinx.coroutines.flow.Flow
@@ -23,11 +24,7 @@ class DeleteDataTableEntryUseCase(
         table: String,
         entity: Int,
         rowId: Int,
-    ): Flow<Resource<DeleteDataTablesDatatableAppTableIdDatatableIdResponse>> = flow {
-        emit(Resource.Loading())
-        val response = repository.deleteDataTableEntry(table, entity, rowId)
-        emit(Resource.Success(response))
-    }.catch { exception ->
-        emit(Resource.Error(exception.message.toString()))
-    }
+    ): Flow<DataState<DeleteDataTablesDatatableAppTableIdDatatableIdResponse>> = flow {
+        emit(repository.deleteDataTableEntry(table, entity, rowId))
+    }.asDataStateFlow()
 }

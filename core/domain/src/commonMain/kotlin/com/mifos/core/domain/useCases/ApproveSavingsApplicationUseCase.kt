@@ -9,13 +9,11 @@
  */
 package com.mifos.core.domain.useCases
 
-import com.mifos.core.common.utils.MFErrorParser
-import com.mifos.core.common.utils.Resource
+import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.repository.SavingsAccountApprovalRepository
 import com.mifos.core.model.objects.account.loan.SavingsApproval
 import com.mifos.core.network.GenericResponse
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
 
 /**
  * Created by Pronay Sarker on 04/08/2024 (12:46 PM)
@@ -24,15 +22,12 @@ class ApproveSavingsApplicationUseCase(
     private val repository: SavingsAccountApprovalRepository,
 ) {
 
-    operator fun invoke(savingsAccountId: Int, savingsApproval: SavingsApproval?): Flow<Resource<GenericResponse>> =
-        flow {
-            try {
-                emit(Resource.Loading())
-                val response =
-                    repository.approveSavingsApplication(savingsAccountId, savingsApproval)
-                emit(Resource.Success(response))
-            } catch (exception: Exception) {
-                emit(Resource.Error(MFErrorParser.errorMessage(exception)))
-            }
-        }
+    operator fun invoke(
+        savingsAccountId: Int,
+        savingsApproval: SavingsApproval?,
+    ): Flow<DataState<GenericResponse>> =
+        repository.approveSavingsApplication(
+            savingsAccountId,
+            savingsApproval,
+        )
 }

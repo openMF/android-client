@@ -9,11 +9,10 @@
  */
 package com.mifos.core.domain.useCases
 
-import com.mifos.core.common.utils.Resource
+import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.repository.CheckerInboxRepository
 import com.mifos.core.model.objects.checkerinboxtask.CheckerTask
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
 
 class GetCheckerTasksUseCase(
     private val repository: CheckerInboxRepository,
@@ -23,11 +22,6 @@ class GetCheckerTasksUseCase(
         actionName: String? = null,
         entityName: String? = null,
         resourceId: Int? = null,
-    ): Flow<Resource<List<CheckerTask>>> = flow {
-        emit(Resource.Loading())
-        val response = repository.loadCheckerTasks(actionName, entityName, resourceId)
-        emit(Resource.Success(response))
-    }.catch { exception ->
-        emit(Resource.Error(exception.message.toString()))
-    }
+    ): Flow<DataState<List<CheckerTask>>> =
+        repository.loadCheckerTasks(actionName, entityName, resourceId)
 }

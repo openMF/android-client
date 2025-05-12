@@ -9,11 +9,11 @@
  */
 package com.mifos.core.domain.useCases
 
-import com.mifos.core.common.utils.Resource
+import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.repository.GenerateCollectionSheetRepository
 import com.mifos.room.entities.group.GroupEntity
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
+
 
 class GetGroupsByOfficeUseCase(
     private val repository: GenerateCollectionSheetRepository,
@@ -22,11 +22,5 @@ class GetGroupsByOfficeUseCase(
     operator fun invoke(
         officeId: Int,
         params: Map<String, String>,
-    ): Flow<Resource<List<GroupEntity>>> = flow {
-        emit(Resource.Loading())
-        val response = repository.getGroupsByOffice(officeId, params)
-        emit(Resource.Success(response))
-    }.catch { exception ->
-        emit(Resource.Error(exception.message.toString()))
-    }
+    ): Flow<DataState<List<GroupEntity>>> = repository.getGroupsByOffice(officeId, params)
 }

@@ -22,7 +22,7 @@ android {
 kotlin {
     sourceSets {
         commonMain.dependencies {
-          //  api(projects.core.data)
+            api(projects.core.data)
             api(projects.core.model)
             api(projects.core.common)
             api(projects.core.network)

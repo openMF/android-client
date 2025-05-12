@@ -9,24 +9,17 @@
  */
 package com.mifos.core.domain.useCases
 
-import com.mifos.core.common.utils.Resource
+import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.repository.GenerateCollectionSheetRepository
 import com.mifos.room.entities.group.CenterEntity
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
 
 class GetCentersInOfficeUseCase(
     private val repository: GenerateCollectionSheetRepository,
 ) {
 
-    suspend operator fun invoke(
+    operator fun invoke(
         id: Int,
         params: Map<String, String>,
-    ): Flow<Resource<List<CenterEntity>>> = flow {
-        emit(Resource.Loading())
-        val centers = repository.getCentersInOffice(id, params)
-        emit(Resource.Success(centers))
-    }.catch { exception ->
-        emit(Resource.Error(exception.message.toString()))
-    }
+    ): Flow<DataState<List<CenterEntity>>> = repository.getCentersInOffice(id, params)
 }

@@ -9,7 +9,8 @@
  */
 package com.mifos.core.domain.useCases
 
-import com.mifos.core.common.utils.Resource
+import com.mifos.core.common.utils.DataState
+import com.mifos.core.common.utils.asDataStateFlow
 import com.mifos.core.data.repository.GenerateCollectionSheetRepository
 import com.mifos.core.network.GenericResponse
 import com.mifos.room.entities.collectionsheet.CollectionSheetPayload
@@ -23,11 +24,7 @@ class SubmitCollectionSheetUseCase(
     operator fun invoke(
         groupId: Int,
         payload: CollectionSheetPayload?,
-    ): Flow<Resource<GenericResponse>> = flow {
-        emit(Resource.Loading())
-        val response = repository.submitCollectionSheet(groupId, payload)
-        emit(Resource.Success(response))
-    }.catch { exception ->
-        emit(Resource.Error(exception.message.toString()))
-    }
+    ): Flow<DataState<GenericResponse>> = flow {
+        emit(repository.submitCollectionSheet(groupId, payload))
+    }.asDataStateFlow()
 }

@@ -9,31 +9,22 @@
  */
 package com.mifos.core.domain.useCases
 
-import com.mifos.core.common.utils.MFErrorParser
-import com.mifos.core.common.utils.Resource
+import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.repository.SignatureRepository
 import com.mifos.core.network.GenericResponse
+import io.ktor.http.content.PartData
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
-import okhttp3.MultipartBody
 
 class CreateDocumentUseCase(
     private val repository: SignatureRepository,
 ) {
 
     operator fun invoke(
-        entityType: String?,
+        entityType: String,
         entityId: Int,
-        name: String?,
-        desc: String?,
-        file: MultipartBody.Part?,
-    ): Flow<Resource<GenericResponse>> = flow {
-        try {
-            emit(Resource.Loading())
-            val response = repository.createDocument(entityType, entityId, name, desc, file)
-            emit(Resource.Success(response))
-        } catch (exception: Exception) {
-            emit(Resource.Error(MFErrorParser.errorMessage(exception)))
-        }
-    }
+        name: String,
+        desc: String,
+        file: PartData,
+    ): Flow<DataState<GenericResponse>> =
+        repository.createDocument(entityType, entityId, name, desc, file)
 }

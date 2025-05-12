@@ -9,7 +9,8 @@
  */
 package com.mifos.core.domain.useCases
 
-import com.mifos.core.common.utils.Resource
+import com.mifos.core.common.utils.DataState
+import com.mifos.core.common.utils.asDataStateFlow
 import com.mifos.core.data.repository.PinPointClientRepository
 import com.mifos.core.network.GenericResponse
 import kotlinx.coroutines.flow.Flow
@@ -19,19 +20,15 @@ class UpdateClientPinpointUseCase(
     private val pinPointClientRepository: PinPointClientRepository,
 ) {
 
-    suspend operator fun invoke(
+    operator fun invoke(
         clientId: Int,
         datatableId: Int,
         address: com.mifos.core.model.objects.clients.ClientAddressRequest,
-    ): Flow<Resource<GenericResponse>> = flow {
-        emit(Resource.Loading())
-        val response = pinPointClientRepository.updateClientPinpointLocation(
+    ): Flow<DataState<GenericResponse>> = flow {
+        emit(pinPointClientRepository.updateClientPinpointLocation(
             clientId,
             datatableId,
             address,
-        )
-        emit(Resource.Success(response))
-    }.catch { exception ->
-        emit(Resource.Error(exception.message.toString()))
-    }
+        ))
+    }.asDataStateFlow()
 }

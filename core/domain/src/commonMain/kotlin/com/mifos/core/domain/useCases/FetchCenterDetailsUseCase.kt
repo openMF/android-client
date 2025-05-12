@@ -9,11 +9,10 @@
  */
 package com.mifos.core.domain.useCases
 
-import com.mifos.core.common.utils.Resource
+import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.repository.GenerateCollectionSheetRepository
 import com.mifos.room.entities.collectionsheet.CenterDetail
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
 
 class FetchCenterDetailsUseCase(
     private val repository: GenerateCollectionSheetRepository,
@@ -25,12 +24,6 @@ class FetchCenterDetailsUseCase(
         meetingDate: String?,
         officeId: Int,
         staffId: Int,
-    ): Flow<Resource<List<CenterDetail>>> = flow {
-        emit(Resource.Loading())
-        val response =
-            repository.fetchCenterDetails(format, locale, meetingDate, officeId, staffId)
-        emit(Resource.Success(response))
-    }.catch { exception ->
-        emit(Resource.Error(exception.message.toString()))
-    }
+    ): Flow<DataState<List<CenterDetail>>> =
+        repository.fetchCenterDetails(format, locale, meetingDate, officeId, staffId)
 }

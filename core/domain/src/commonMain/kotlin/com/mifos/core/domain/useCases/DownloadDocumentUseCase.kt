@@ -9,11 +9,13 @@
  */
 package com.mifos.core.domain.useCases
 
-import com.mifos.core.common.utils.Resource
+import com.mifos.core.common.utils.DataState
+import com.mifos.core.common.utils.asDataStateFlow
 import com.mifos.core.data.repository.DocumentListRepository
+import io.ktor.client.statement.HttpResponse
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import okhttp3.ResponseBody
+
 
 class DownloadDocumentUseCase(
     private val repository: DocumentListRepository,
@@ -23,11 +25,7 @@ class DownloadDocumentUseCase(
         entityType: String,
         entityId: Int,
         documentId: Int,
-    ): Flow<Resource<ResponseBody>> = flow {
-        emit(Resource.Loading())
-        val response = repository.downloadDocument(entityType, entityId, documentId)
-        emit(Resource.Success(response))
-    }.catch { exception ->
-        emit(Resource.Error(exception.message.toString()))
-    }
+    ): Flow<DataState<HttpResponse>> = flow {
+        emit(repository.downloadDocument(entityType, entityId, documentId))
+    }.asDataStateFlow()
 }

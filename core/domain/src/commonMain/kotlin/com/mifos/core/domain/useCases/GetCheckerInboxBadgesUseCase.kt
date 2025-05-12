@@ -9,10 +9,9 @@
  */
 package com.mifos.core.domain.useCases
 
-import com.mifos.core.common.utils.Resource
+import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.repository.CheckerInboxTasksRepository
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.zip
 
 /**
@@ -22,13 +21,11 @@ import kotlinx.coroutines.flow.zip
 class GetCheckerInboxBadgesUseCase(
     private val repository: CheckerInboxTasksRepository,
 ) {
-    operator fun invoke(): Flow<Resource<Pair<Int, Int>>> = flow {
-        emit(Resource.Loading())
-    }.flatMapLatest {
-        repository.getCheckerTaskList().zip(repository.getRescheduleLoansTaskList()) { checkerTasks, rescheduleTasks ->
-            Resource.Success(Pair(checkerTasks.size, rescheduleTasks.size))
+    operator fun invoke(): Flow<DataState<Pair<Int, Int>>> =
+
+        repository.getCheckerTaskList()
+            .zip(repository.getRescheduleLoansTaskList())
+        { checkerTasks, rescheduleTasks ->
+            DataState.Success(Pair(checkerTasks.data!!.size, rescheduleTasks.data!!.size))
         }
-    }.catch { exception ->
-        emit(Resource.Error(exception.message.toString()))
-    }
 }

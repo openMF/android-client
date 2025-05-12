@@ -64,11 +64,10 @@ interface ClientService {
     @GET(APIEndPoint.CLIENTS + "/{clientId}")
     suspend fun getClient(@Path("clientId") clientId: Int): ClientEntity
 
-    @Multipart
     @POST(APIEndPoint.CLIENTS + "/{clientId}/images")
     suspend fun uploadClientImage(
         @Path("clientId") clientId: Int,
-        @Part file: PartData,
+        @Body typedFile: String,
     ): HttpResponse
 
     @DELETE(APIEndPoint.CLIENTS + "/{clientId}/images")

@@ -9,11 +9,14 @@
  */
 package com.mifos.core.domain.useCases
 
+import com.mifos.core.common.utils.DataState
 import com.mifos.core.common.utils.Resource
+import com.mifos.core.common.utils.asDataStateFlow
 import com.mifos.core.data.repository.ActivateRepository
 import com.mifos.core.model.objects.clients.ActivatePayload
 import com.mifos.core.network.model.PostCentersCenterIdResponse
 import kotlinx.coroutines.flow.Flow
+
 import kotlinx.coroutines.flow.flow
 
 class ActivateCenterUseCase(
@@ -23,11 +26,7 @@ class ActivateCenterUseCase(
     operator fun invoke(
         centerId: Int,
         centerPayload: ActivatePayload,
-    ): Flow<Resource<PostCentersCenterIdResponse>> = flow {
-        emit(Resource.Loading())
-        val response = activateRepository.activateCenter(centerId, centerPayload)
-        emit(Resource.Success(response))
-    }.catch { exception ->
-        emit(Resource.Error(exception.message.toString()))
-    }
+    ): Flow<DataState<PostCentersCenterIdResponse>> = flow {
+        emit(activateRepository.activateCenter(centerId, centerPayload))
+    }.asDataStateFlow()
 }
