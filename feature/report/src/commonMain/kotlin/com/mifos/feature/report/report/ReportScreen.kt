@@ -32,6 +32,7 @@ import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat.getString
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -84,7 +85,7 @@ internal fun ReportScreen(
     when (state) {
         is ReportUiState.Initial -> Unit
         is ReportUiState.Message -> {
-            Toast.makeText(context, stringResource(id = state.message), Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, stringResource(state.message), Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -152,6 +153,28 @@ internal fun ReportScreen(
             }
         }
     }
+}
+
+private class ReportUiStateProvider : PreviewParameterProvider<ReportUiState> {
+
+    override val values: Sequence<ReportUiState>
+        get() = sequenceOf(
+            ReportUiState.Initial,
+            ReportUiState.Message(Res.string.feature_report_export_csv),
+        )
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun ReportScreenPreview(
+    @PreviewParameter(ReportUiStateProvider::class) state: ReportUiState,
+) {
+    ReportScreen(
+        state = state,
+        report = FullParameterListResponse(emptyList(), emptyList()),
+        onBackPressed = { },
+        exportReport = { },
+    )
 }
 
 

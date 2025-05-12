@@ -49,7 +49,6 @@ import androidx.compose.ui.graphics.Color.Companion.Black
 import androidx.compose.ui.graphics.Color.Companion.Blue
 import androidx.compose.ui.graphics.Color.Companion.DarkGray
 import androidx.compose.ui.graphics.Color.Companion.White
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -63,6 +62,8 @@ import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.model.objects.runreport.client.ClientReportTypeItem
 import core.designsystem.generated.resources.Res
+import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -225,7 +226,7 @@ internal fun RunReportScreen(
     ) { paddingValues ->
         Column(modifier = Modifier.padding(paddingValues)) {
             when (state) {
-                is RunReportUiState.Error -> MifosSweetError(message = stringResource(id = state.message)) {
+                is RunReportUiState.Error -> MifosSweetError(message = stringResource(state.message)) {
                     onRetry()
                 }
 
@@ -342,6 +343,38 @@ enum class MenuItems {
     Accounting,
     XBRL,
     All,
+}
+
+class RunReportUiStateProvider : PreviewParameterProvider<RunReportUiState> {
+
+    override val values: Sequence<RunReportUiState>
+        get() = sequenceOf(
+            RunReportUiState.Loading,
+            RunReportUiState.Error(Res.string.feature_report_failed_to_fetch_reports),
+            RunReportUiState.RunReports(sampleRunReports),
+        )
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun RunReportPreview(
+    @PreviewParameter(RunReportUiStateProvider::class) state: RunReportUiState,
+) {
+    RunReportScreen(
+        state = state,
+        onBackPressed = {},
+        onMenuClick = {},
+        onRetry = {},
+        onReportClick = {},
+    )
+}
+
+val sampleRunReports = List(10) {
+    ClientReportTypeItem(
+        reportName = "Report $it",
+        reportType = "Type $it",
+        reportCategory = "Category $it",
+    )
 }
 
 
