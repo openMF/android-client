@@ -10,6 +10,7 @@
 package com.mifos.feature.note
 
 import com.mifos.core.model.objects.Note
+import org.jetbrains.compose.resources.StringResource
 
 /**
  * Created by Aditya Gupta on 08/08/23.
@@ -18,7 +19,7 @@ sealed class NoteUiState {
 
     data object ShowProgressbar : NoteUiState()
 
-    data class ShowError(val message: Int) : NoteUiState()
+    data class ShowError(val message: StringResource) : NoteUiState()
 
     data class ShowNote(val note: List<Note>) : NoteUiState()
 
