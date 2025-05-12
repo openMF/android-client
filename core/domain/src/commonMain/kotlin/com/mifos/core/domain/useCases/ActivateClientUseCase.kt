@@ -11,12 +11,10 @@ package com.mifos.core.domain.useCases
 
 import com.mifos.core.common.utils.asDataStateFlow
 import com.mifos.core.common.utils.DataState
-import com.mifos.core.common.utils.Resource
 import com.mifos.core.data.repository.ActivateRepository
 import com.mifos.core.model.objects.clients.ActivatePayload
 import com.mifos.core.network.model.PostClientsClientIdResponse
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
 
 class ActivateClientUseCase(

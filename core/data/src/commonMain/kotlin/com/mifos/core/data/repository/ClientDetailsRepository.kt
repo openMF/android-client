@@ -11,14 +11,13 @@ package com.mifos.core.data.repository
 
 import com.mifos.room.entities.accounts.ClientAccounts
 import com.mifos.room.entities.client.ClientEntity
-import io.ktor.http.content.PartData
 
 /**
  * Created by Aditya Gupta on 06/08/23.
  */
 interface ClientDetailsRepository {
 
-    suspend fun uploadClientImage(id: Int, file: PartData)
+    suspend fun uploadClientImage(clientId: Int, image: String)
 
     suspend fun deleteClientImage(clientId: Int)
 

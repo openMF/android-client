@@ -9,27 +9,27 @@
  */
 package com.mifos.core.domain.useCases
 
-import com.mifos.core.common.utils.Resource
+import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.repository.ClientDetailsRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+
+/**
+ * Created by Aditya Gupta on 18/03/24.
+ */
 
 class UploadClientImageUseCase(
     private val repository: ClientDetailsRepository,
 ) {
 
-    operator fun invoke(id: Int, pngFile: PlatformFile): Flow<Resource<String>> = flow {
-        emit(Resource.Loading())
-        val body = pngFile.toMultipartData()
-        repository.uploadClientImage(id, body)
-        emit(Resource.Success("Image uploaded successfully"))
-    }.catch { exception ->
-        emit(Resource.Error("Unable to upload image: ${exception.message}"))
+    operator fun invoke(id: Int, image: String): Flow<DataState<String>> = flow {
+        try {
+            emit(DataState.Loading)
+            repository.uploadClientImage(id, image)
+            DataState.Success("Client image uploaded successfully")
+        } catch (e: Exception) {
+            DataState.Error(e)
+        }
     }
 }
 
-expect class PlatformFile {
-    fun toMultipartData(): MultipartData
-}
-
-expect class MultipartData

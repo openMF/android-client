@@ -68,7 +68,7 @@ interface ClientService {
     suspend fun uploadClientImage(
         @Path("clientId") clientId: Int,
         @Body typedFile: String,
-    ): HttpResponse
+    ): Unit
 
     @DELETE(APIEndPoint.CLIENTS + "/{clientId}/images")
     suspend fun deleteClientImage(@Path("clientId") clientId: Int)
