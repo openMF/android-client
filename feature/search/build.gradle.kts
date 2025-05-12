@@ -8,29 +8,41 @@
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
 plugins {
-    alias(libs.plugins.mifos.android.feature)
-    alias(libs.plugins.mifos.android.library.compose)
-    alias(libs.plugins.mifos.android.library.jacoco)
+    alias(libs.plugins.mifos.cmp.feature)
 }
 
 android {
     namespace = "com.mifos.feature.search"
 }
 
-dependencies {
+//dependencies {
+//
+//    implementation(projects.core.domain)
+//
+//    implementation(libs.accompanist.drawablepainter)
+//
+//    // Text drawable dependency
+//    implementation(libs.textdrawable)
+//
+//    androidTestImplementation(libs.androidx.compose.ui.test)
+//    debugApi(libs.androidx.compose.ui.test.manifest)
+//
+//    testImplementation(libs.hilt.android.testing)
+//    testImplementation(projects.core.testing)
+//
+//    androidTestImplementation(projects.core.testing)
+//}
 
-    implementation(projects.core.domain)
+kotlin {
+    sourceSets {
+        commonMain.dependencies {
+            implementation(compose.material3)
+            implementation(compose.components.resources)
+            implementation(compose.ui)
+            api(projects.core.common)
+            api(projects.core.model)
+            api(projects.core.domain)
 
-    implementation(libs.accompanist.drawablepainter)
-
-    // Text drawable dependency
-    implementation(libs.textdrawable)
-
-    androidTestImplementation(libs.androidx.compose.ui.test)
-    debugApi(libs.androidx.compose.ui.test.manifest)
-
-    testImplementation(libs.hilt.android.testing)
-    testImplementation(projects.core.testing)
-
-    androidTestImplementation(projects.core.testing)
+        }
+    }
 }

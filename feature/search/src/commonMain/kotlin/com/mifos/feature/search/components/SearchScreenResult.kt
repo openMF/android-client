@@ -39,6 +39,8 @@ import com.mifos.core.ui.components.MifosEmptyUi
 import com.mifos.core.ui.util.DevicePreview
 import com.mifos.feature.search.R
 import com.mifos.feature.search.SearchResultState
+import core.designsystem.generated.resources.Res
+import org.jetbrains.compose.resources.stringResource
 
 @Composable
 internal fun SearchScreenResult(
@@ -62,7 +64,7 @@ internal fun SearchScreenResult(
                 is SearchResultState.Empty -> {
                     if (!state.initial) {
                         MifosEmptyUi(
-                            text = stringResource(R.string.feature_search_no_search_result_found),
+                            text = stringResource(Res.string.feature_search_no_search_result_found),
                         )
                     }
                 }
