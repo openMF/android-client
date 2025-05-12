@@ -187,26 +187,26 @@ internal fun SearchBox(
     }
 }
 
-//@DevicePreview
-//@Composable
-//private fun SearchBoxPreview() {
-//    SearchBox(
-//        modifier = Modifier.background(Color.White),
-//        state = SearchScreenState(),
-//        onEvent = {},
-//    )
-//}
-//
-//@DevicePreview
-//@Composable
-//private fun SearchBoxWithValuesPreview() {
-//    SearchBox(
-//        modifier = Modifier.background(Color.White),
-//        state = SearchScreenState(
-//            searchText = "search text",
-//            selectedFilter = FilterOption.Groups,
-//            exactMatch = true,
-//        ),
-//        onEvent = {},
-//    )
-//}
+@DevicePreview
+@Composable
+private fun SearchBoxPreview() {
+    SearchBox(
+        modifier = Modifier.background(Color.White),
+        state = SearchScreenState(),
+        onEvent = {},
+    )
+}
+
+@DevicePreview
+@Composable
+private fun SearchBoxWithValuesPreview() {
+    SearchBox(
+        modifier = Modifier.background(Color.White),
+        state = SearchScreenState(
+            searchText = "search text",
+            selectedFilter = FilterOption.Groups,
+            exactMatch = true,
+        ),
+        onEvent = {},
+    )
+}
