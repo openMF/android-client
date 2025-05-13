@@ -9,6 +9,8 @@
  */
 package com.mifos.feature.activate
 
+import org.jetbrains.compose.resources.StringResource
+
 /**
  * Created by Aditya Gupta on 06/08/23.
  */
@@ -18,7 +20,7 @@ sealed class ActivateUiState {
 
     data object Loading : ActivateUiState()
 
-    data class Error(val message: Int) : ActivateUiState()
+    data class Error(val message: StringResource) : ActivateUiState()
 
-    data class ActivatedSuccessfully(val message: Int) : ActivateUiState()
+    data class ActivatedSuccessfully(val message: StringResource) : ActivateUiState()
 }
