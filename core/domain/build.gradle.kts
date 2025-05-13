@@ -8,37 +8,36 @@
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
 plugins {
-    alias(libs.plugins.mifos.android.library)
-    alias(libs.plugins.mifos.android.library.jacoco)
-    alias(libs.plugins.mifos.android.koin)
-//    alias(libs.plugins.mifos.android.hilt)
+    alias(libs.plugins.mifos.kmp.library)
+    alias(libs.plugins.mifos.kmp.koin)
+    alias(libs.plugins.jetbrainsCompose)
+    alias(libs.plugins.compose.compiler)
+    alias(libs.plugins.kotlin.serialization)
 }
 
 android {
     namespace = "com.mifos.core.domain"
 }
 
-dependencies {
-    api(projects.core.data)
-    api(projects.core.model)
+kotlin {
+    sourceSets {
+        commonMain.dependencies {
+            api(projects.core.data)
+            api(projects.core.model)
+            api(projects.core.common)
+            api(projects.core.network)
 
-    implementation(libs.javax.inject)
+            implementation(libs.kotlinx.coroutines.core)
+            implementation(compose.components.resources)
+            implementation(libs.kotlinx.serialization.json)
+            implementation(libs.androidx.paging.common)
+            // implementation(libs.fineract.client.kmp)
+        }
+    }
+}
 
-    implementation(libs.dbflow)
-
-    // sdk client
-//    implementation(libs.fineract.client)
-
-    implementation(libs.rxandroid)
-    implementation(libs.rxjava)
-
-    implementation(libs.squareup.okhttp)
-
-    implementation(libs.androidx.paging.runtime.ktx)
-
-    testImplementation(projects.core.testing)
-    testImplementation (libs.androidx.paging.common.ktx)
-    testImplementation (libs.androidx.paging.testing)
-
-    implementation(libs.kotlinx.serialization.json)
+compose.resources {
+    publicResClass = true
+    generateResClass = always
+    packageOfResClass = "core.domain.generated.resources"
 }

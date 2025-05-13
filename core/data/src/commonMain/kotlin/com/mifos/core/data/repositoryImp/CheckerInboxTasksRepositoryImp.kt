@@ -30,7 +30,7 @@ class CheckerInboxTasksRepositoryImp(
             .asDataStateFlow()
     }
 
-    override suspend fun getCheckerTaskList(
+    override fun getCheckerTaskList(
         actionName: String?,
         entityName: String?,
         resourceId: Int?,

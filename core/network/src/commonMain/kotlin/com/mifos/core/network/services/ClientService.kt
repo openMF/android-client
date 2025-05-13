@@ -27,14 +27,10 @@ import com.mifos.room.entities.templates.clients.ClientsTemplateEntity
 import de.jensklingenberg.ktorfit.http.Body
 import de.jensklingenberg.ktorfit.http.DELETE
 import de.jensklingenberg.ktorfit.http.GET
-import de.jensklingenberg.ktorfit.http.Multipart
 import de.jensklingenberg.ktorfit.http.POST
 import de.jensklingenberg.ktorfit.http.PUT
-import de.jensklingenberg.ktorfit.http.Part
 import de.jensklingenberg.ktorfit.http.Path
 import de.jensklingenberg.ktorfit.http.Query
-import io.ktor.client.statement.HttpResponse
-import io.ktor.http.content.PartData
 import kotlinx.coroutines.flow.Flow
 
 /**
@@ -64,12 +60,11 @@ interface ClientService {
     @GET(APIEndPoint.CLIENTS + "/{clientId}")
     suspend fun getClient(@Path("clientId") clientId: Int): ClientEntity
 
-    @Multipart
     @POST(APIEndPoint.CLIENTS + "/{clientId}/images")
     suspend fun uploadClientImage(
         @Path("clientId") clientId: Int,
-        @Part file: PartData,
-    ): HttpResponse
+        @Body typedFile: String,
+    ): Unit
 
     @DELETE(APIEndPoint.CLIENTS + "/{clientId}/images")
     suspend fun deleteClientImage(@Path("clientId") clientId: Int)

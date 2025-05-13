@@ -13,7 +13,6 @@ import com.mifos.core.data.repository.ClientDetailsRepository
 import com.mifos.core.network.datamanager.DataManagerClient
 import com.mifos.room.entities.accounts.ClientAccounts
 import com.mifos.room.entities.client.ClientEntity
-import io.ktor.http.content.PartData
 
 /**
  * Created by Aditya Gupta on 06/08/23.
@@ -22,8 +21,11 @@ class ClientDetailsRepositoryImp(
     private val dataManagerClient: DataManagerClient,
 ) : ClientDetailsRepository {
 
-    override suspend fun uploadClientImage(id: Int, file: PartData) {
-        dataManagerClient.uploadClientImage(id, file)
+    override suspend fun uploadClientImage(clientId: Int, image: String) {
+        dataManagerClient.uploadClientImage(
+            clientId = clientId,
+            typedFile = "data:image/png;base64,$image",
+        )
     }
 
     override suspend fun deleteClientImage(clientId: Int) {
