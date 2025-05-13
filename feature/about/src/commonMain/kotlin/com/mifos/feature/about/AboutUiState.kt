@@ -9,12 +9,13 @@
  */
 package com.mifos.feature.about
 
-import androidx.compose.ui.graphics.Color
+import org.jetbrains.compose.resources.StringResource
 
-data class AboutItem(
-    val icon: Int?,
-    val title: Int,
-    val subtitle: Int?,
-    val color: Color,
-    val id: AboutItems,
-)
+sealed class AboutUiState {
+
+    data object Loading : AboutUiState()
+
+    data class Error(val message: StringResource) : AboutUiState()
+
+    data class AboutOptions(val aboutOptions: List<AboutItem>) : AboutUiState()
+}
