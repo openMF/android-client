@@ -9,10 +9,6 @@
  */
 package com.mifos.feature.report.report
 
-import android.Manifest
-import android.os.Build
-import android.os.Environment
-import android.widget.Toast
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyRow
@@ -34,11 +30,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color.Companion.Black
 import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat.getString
@@ -46,9 +39,10 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.PermissionBox
 import com.mifos.core.model.objects.runreport.FullParameterListResponse
-import com.mifos.feature.report.R
+import core.designsystem.generated.resources.Res
 import kotlinx.coroutines.launch
-import org.koin.androidx.compose.koinViewModel
+import org.jetbrains.compose.resources.stringResource
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 internal fun ReportScreen(
@@ -66,7 +60,7 @@ internal fun ReportScreen(
         exportReport = {
             val reportDirectoryPath =
                 Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
-                    .toString() + getString(context, R.string.feature_report_export_csv_directory)
+                    .toString() + getString(context, Res.string.feature_report_export_csv_directory)
             viewModel.exportCsv(
                 report = report,
                 reportDirectoryPath = reportDirectoryPath,
@@ -91,7 +85,7 @@ internal fun ReportScreen(
     when (state) {
         is ReportUiState.Initial -> Unit
         is ReportUiState.Message -> {
-            Toast.makeText(context, stringResource(id = state.message), Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, stringResource(state.message), Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -105,10 +99,10 @@ internal fun ReportScreen(
                     Manifest.permission.WRITE_EXTERNAL_STORAGE,
                 )
             },
-            title = stringResource(R.string.feature_report_permission_required),
-            description = stringResource(R.string.feature_report_external_approve_permission_description),
-            confirmButtonText = stringResource(R.string.feature_report_proceed),
-            dismissButtonText = stringResource(R.string.feature_report_dismiss),
+            title = stringResource(Res.string.feature_report_permission_required),
+            description = stringResource(Res.string.feature_report_external_approve_permission_description),
+            confirmButtonText = stringResource(Res.string.feature_report_proceed),
+            dismissButtonText = stringResource(Res.string.feature_report_dismiss),
             onGranted = {
                 LaunchedEffect(key1 = Unit) {
                     scope.launch {
@@ -121,7 +115,7 @@ internal fun ReportScreen(
 
     MifosScaffold(
         modifier = modifier,
-        title = stringResource(R.string.feature_report_title),
+        title = stringResource(Res.string.feature_report_title),
         onBackPressed = onBackPressed,
         actions = {
             TextButton(
@@ -130,7 +124,7 @@ internal fun ReportScreen(
                 },
                 colors = ButtonDefaults.textButtonColors(White),
             ) {
-                Text(text = stringResource(id = R.string.feature_report_export_csv), color = Black)
+                Text(text = stringResource(Res.string.feature_report_export_csv), color = Black)
             }
         },
         snackbarHostState = snackbarHostState,
@@ -166,7 +160,7 @@ private class ReportUiStateProvider : PreviewParameterProvider<ReportUiState> {
     override val values: Sequence<ReportUiState>
         get() = sequenceOf(
             ReportUiState.Initial,
-            ReportUiState.Message(R.string.feature_report_export_csv),
+            ReportUiState.Message(Res.string.feature_report_export_csv),
         )
 }
 
@@ -182,3 +176,6 @@ private fun ReportScreenPreview(
         exportReport = { },
     )
 }
+
+
+
