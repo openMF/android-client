@@ -23,9 +23,6 @@ dependencies {
 
     //DBFlow dependencies
     testImplementation(libs.hilt.android.testing)
-    testImplementation(projects.core.testing)
 
     implementation(libs.kotlinx.serialization.json)
-
-    androidTestImplementation(projects.core.testing)
 }

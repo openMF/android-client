@@ -26,7 +26,4 @@ dependencies {
     implementation(libs.coil.kt.compose)
 
     testImplementation(libs.hilt.android.testing)
-    testImplementation(projects.core.testing)
-
-    androidTestImplementation(projects.core.testing)
 }

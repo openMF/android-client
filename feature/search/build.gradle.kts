@@ -30,7 +30,4 @@ dependencies {
     debugApi(libs.androidx.compose.ui.test.manifest)
 
     testImplementation(libs.hilt.android.testing)
-    testImplementation(projects.core.testing)
-
-    androidTestImplementation(projects.core.testing)
 }
