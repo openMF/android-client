@@ -14,7 +14,6 @@ import com.mifos.room.entities.client.ClientPayloadEntity
 import com.mifos.room.entities.organisation.OfficeEntity
 import com.mifos.room.entities.organisation.StaffEntity
 import com.mifos.room.entities.templates.clients.ClientsTemplateEntity
-import io.ktor.http.content.PartData
 import kotlinx.coroutines.flow.Flow
 
 /**
@@ -30,5 +29,5 @@ interface CreateNewClientRepository {
 
     suspend fun createClient(clientPayload: ClientPayloadEntity): Int?
 
-    suspend fun uploadClientImage(id: Int, file: PartData)
+    suspend fun uploadClientImage(clientId: Int, image: String)
 }

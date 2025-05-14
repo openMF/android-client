@@ -24,5 +24,5 @@ data class MifosError(
 
     var userMessageGlobalisationCode: String? = null,
 
-    var errors: List<Errors> = ArrayList(),
+    var errors: List<Errors> = emptyList(),
 ) : Parcelable

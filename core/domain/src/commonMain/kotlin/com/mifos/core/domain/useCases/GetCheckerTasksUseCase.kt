@@ -7,24 +7,21 @@
  *
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
-package com.mifos.core.data.repository
+package com.mifos.core.domain.useCases
 
 import com.mifos.core.common.utils.DataState
+import com.mifos.core.data.repository.CheckerInboxRepository
 import com.mifos.core.model.objects.checkerinboxtask.CheckerTask
-import com.mifos.core.model.objects.checkerinboxtask.RescheduleLoansTask
 import kotlinx.coroutines.flow.Flow
 
-/**
- * Created by Aditya Gupta on 21/03/24.
- */
+class GetCheckerTasksUseCase(
+    private val repository: CheckerInboxRepository,
+) {
 
-interface CheckerInboxTasksRepository {
-
-    fun getRescheduleLoansTaskList(): Flow<DataState<List<RescheduleLoansTask>>>
-
-    fun getCheckerTaskList(
+    operator fun invoke(
         actionName: String? = null,
         entityName: String? = null,
         resourceId: Int? = null,
-    ): Flow<DataState<List<CheckerTask>>>
+    ): Flow<DataState<List<CheckerTask>>> =
+        repository.loadCheckerTasks(actionName, entityName, resourceId)
 }
