@@ -21,14 +21,6 @@ android {
     namespace = "com.mifos.cmp.shared"
 }
 
-//kotlin {
-//    sourceSets {
-//        androidMain.dependencies {
-//            implementation(projects.cmpNavigation)
-//        }
-//    }
-//}
-
 kotlin {
     listOf(
         iosX64(),
