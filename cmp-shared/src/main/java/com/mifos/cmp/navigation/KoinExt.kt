@@ -9,6 +9,7 @@
  */
 package com.mifos.cmp.navigation
 
+import cmp.navigation.di.KoinModules
 import org.koin.core.context.startKoin
 import org.koin.dsl.KoinAppDeclaration
 import org.koin.dsl.koinApplication
