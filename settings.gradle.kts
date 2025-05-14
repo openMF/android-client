@@ -21,6 +21,12 @@ rootProject.name = "AndroidClient"
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
 include(":mifosng-android")
+include(":cmp-android")
+include(":cmp-desktop")
+include(":cmp-ios")
+include(":cmp-web")
+include(":cmp-navigation")
+include(":cmp-shared")
 
 include(":core:common")
 include(":core:data")
@@ -60,6 +66,4 @@ include(":feature:search")
 include(":feature:settings")
 include(":feature:splash")
 //include(":feature:passcode")
-include(":cmp-navigation")
-include(":cmp-shared")
-include(":cmp-desktop")
+
