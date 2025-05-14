@@ -32,9 +32,6 @@ dependencies {
     implementation(project(":feature:data-table"))
 
     testImplementation(libs.hilt.android.testing)
-    testImplementation(projects.core.testing)
-
-    androidTestImplementation(projects.core.testing)
 
     implementation(libs.androidx.material)
 

@@ -30,7 +30,6 @@ include(":core:domain")
 include(":core:datastore")
 include(":core:model")
 include(":core:network")
-include(":core:testing")
 include(":core:ui")
 
 // Lint Modules
