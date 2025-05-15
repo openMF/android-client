@@ -11,7 +11,7 @@ module FastlaneConfig
       firebase_prod_app_id: "1:728434912738:android:ecdb5b96f0e735661a1dbb",
       firebase_demo_app_id: "1:728434912738:android:53d0930e402622611a1dbb",
       firebase_service_creds_file: "secrets/firebaseAppDistributionServiceCredentialsFile.json",
-      firebase_groups: "mifos-mobile-testers"
+      firebase_groups: "mifos-mobile-apps"
     }
 
     BUILD_PATHS = {
