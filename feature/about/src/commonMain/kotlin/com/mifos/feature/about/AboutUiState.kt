@@ -9,11 +9,13 @@
  */
 package com.mifos.feature.about
 
+import org.jetbrains.compose.resources.StringResource
+
 sealed class AboutUiState {
 
     data object Loading : AboutUiState()
 
-    data class Error(val message: Int) : AboutUiState()
+    data class Error(val message: StringResource) : AboutUiState()
 
     data class AboutOptions(val aboutOptions: List<AboutItem>) : AboutUiState()
 }
