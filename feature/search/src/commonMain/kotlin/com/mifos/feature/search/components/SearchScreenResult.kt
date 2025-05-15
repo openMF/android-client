@@ -28,19 +28,22 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import com.amulyakhare.textdrawable.TextDrawable
-import com.amulyakhare.textdrawable.util.ColorGenerator
-import com.google.accompanist.drawablepainter.rememberDrawablePainter
+//import com.amulyakhare.textdrawable.TextDrawable
+//import com.google.accompanist.drawablepainter.rememberDrawablePainter
 import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.model.objects.SearchedEntity
 import com.mifos.core.ui.components.MifosEmptyUi
 import com.mifos.core.ui.util.DevicePreview
-import com.mifos.feature.search.R
 import com.mifos.feature.search.SearchResultState
 import core.designsystem.generated.resources.Res
 import org.jetbrains.compose.resources.stringResource
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.size
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.sp
+import androidx.compose.foundation.shape.CircleShape
 
 @Composable
 internal fun SearchScreenResult(
@@ -107,32 +110,51 @@ internal fun SearchResult(
     onSearchOptionClick: (SearchedEntity) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val color = ColorGenerator.MATERIAL.getColor(searchedEntity.entityType)
-    val drawable =
-        TextDrawable.builder().round().build(searchedEntity.entityType?.get(0).toString(), color)
+////    val color = ColorGenerator.MATERIAL.getColor(searchedEntity.entityType)
+//    val drawable =
+////        TextDrawable.builder().round().build(searchedEntity.entityType?.get(0).toString(), color)
+//        TextDrawable.builder().round().build(searchedEntity.entityType?.get(0).toString())
 
     ListItem(
         headlineContent = {
             Text(text = searchedEntity.description)
         },
         leadingContent = {
-            Image(
-                modifier = Modifier
-                    .width(50.dp)
-                    .height(50.dp),
-                contentDescription = null,
-                painter = rememberDrawablePainter(drawable = drawable),
-            )
+//            Image(
+//                modifier = Modifier
+//                    .width(50.dp)
+//                    .height(50.dp),
+//                contentDescription = null,
+//                painter = rememberDrawablePainter(drawable = drawable),
+//            )
+            CircleInitial(text = searchedEntity.entityType ?: "?")
         },
-        colors = ListItemDefaults.colors(
-            containerColor = MaterialTheme.colorScheme.surfaceContainerLowest,
-        ),
+//        colors = ListItemDefaults.colors(
+//            containerColor = MaterialTheme.colorScheme.surfaceContainerLowest,
+//        ),
         modifier = modifier
             .fillMaxWidth()
             .clickable {
                 onSearchOptionClick(searchedEntity)
             },
     )
+}
+
+@Composable
+fun CircleInitial(text: String) {
+    Box(
+        modifier = Modifier
+            .size(50.dp)
+            .clip(CircleShape)
+            .background(MaterialTheme.colorScheme.primary),
+        contentAlignment = Alignment.Center
+    ) {
+        Text(
+            text = text.firstOrNull()?.uppercase() ?: "?",
+            color = Color.White,
+            fontSize = 18.sp
+        )
+    }
 }
 
 @DevicePreview
