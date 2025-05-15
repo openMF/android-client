@@ -15,8 +15,6 @@ import com.mifos.core.datastore.di.PreferencesModule
 import com.mifos.core.domain.di.UseCaseModule
 import com.mifos.core.network.di.DataManagerModule
 import com.mifos.core.network.di.NetworkModule
-import com.mifos.core.testing.di.TestDispatcherModule
-import com.mifos.core.testing.di.TestDispatchersModule
 import com.mifos.feature.about.di.AboutModule
 import com.mifos.feature.activate.di.ActivateModule
 import com.mifos.feature.auth.di.AuthModule
@@ -62,13 +60,6 @@ object KoinModules {
         )
     }
 
-    private val testingModules = module {
-        includes(
-            TestDispatcherModule,
-            TestDispatchersModule,
-        )
-    }
-
     private val featureModules = module {
         includes(
             AboutModule,
@@ -94,7 +85,6 @@ object KoinModules {
     }
 
     val allModules = listOf(
-        testingModules,
         commonModules,
         domainModule,
         dataModules,
