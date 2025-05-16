@@ -27,8 +27,6 @@ kotlin {
             implementation(projects.core.database)
             implementation(projects.core.network)
 
-//            implementation(projects.core.testing)
-//
 //            implementation(projects.feature.about)
 //            implementation(projects.feature.activate)
 //            implementation(projects.feature.auth)
@@ -50,6 +48,14 @@ kotlin {
 //            implementation(projects.feature.splash)
 //
 //            implementation(project.libs.mifos.passcode)
+            implementation(compose.material3)
+            implementation(compose.foundation)
+            implementation(compose.ui)
+            implementation(compose.components.uiToolingPreview)
+            implementation(compose.components.resources)
+            implementation(libs.window.size)
+            implementation(libs.koin.compose)
+            implementation(libs.koin.compose.viewmodel)
         }
         androidMain.dependencies {
             implementation(libs.androidx.core.ktx)
@@ -59,8 +65,8 @@ kotlin {
     }
 }
 
-//compose.resources {
-//    publicResClass = true
-//    generateResClass = always
-//    packageOfResClass = "org.mifos.navigation.generated.resources"
-//}
+compose.resources {
+    publicResClass = true
+    generateResClass = always
+    packageOfResClass = "org.mifos.navigation.generated.resources"
+}

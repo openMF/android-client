@@ -8,13 +8,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import cmp.navigation.ComposeApp
 
 @Composable
 fun SharedApp(
     modifier: Modifier = Modifier,
 ) {
-    Box(modifier=modifier.fillMaxSize())
-    {
-        Text("Hello",modifier=Modifier.align(Alignment.Center))
-    }
+    ComposeApp(modifier)
 }
