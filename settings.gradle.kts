@@ -24,7 +24,6 @@ include(":mifosng-android")
 include(":cmp-android")
 include(":cmp-desktop")
 include(":cmp-ios")
-include(":cmp-web")
 include(":cmp-navigation")
 include(":cmp-shared")
 

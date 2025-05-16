@@ -33,6 +33,9 @@ kotlin {
             implementation(libs.androidx.paging.common)
             // implementation(libs.fineract.client.kmp)
         }
+        androidMain.dependencies {
+            implementation(libs.androidx.compose.runtime)
+        }
     }
 }
 

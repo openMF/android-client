@@ -59,8 +59,8 @@ kotlin {
     }
 }
 
-compose.resources {
-    publicResClass = true
-    generateResClass = always
-    packageOfResClass = "org.mifos.mobile.navigation.generated.resources"
-}
+//compose.resources {
+//    publicResClass = true
+//    generateResClass = always
+//    packageOfResClass = "org.mifos.navigation.generated.resources"
+//}
