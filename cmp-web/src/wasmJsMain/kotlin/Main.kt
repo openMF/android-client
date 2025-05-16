@@ -37,7 +37,7 @@ fun main() {
      * This window uses the canvas element with the ID "ComposeTarget" and has the title "WebApp".
      */
     CanvasBasedWindow(
-        title = "Mifos Mobile", // Window title
+        title = "Android Client", // Window title
         canvasElementId = "ComposeTarget", // The canvas element where the Compose UI will be rendered
     ) {
         /*
