@@ -9,12 +9,6 @@
  */
 package com.mifos.feature.about
 
-import androidx.compose.ui.graphics.Color.Companion.White
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.launch
 import androidclient.feature.about.generated.resources.feature_about_app_version
 import androidclient.feature.about.generated.resources.feature_about_failed_to_load
 import androidclient.feature.about.generated.resources.feature_about_ic_source_code
@@ -25,6 +19,12 @@ import androidclient.feature.about.generated.resources.feature_about_license_sub
 import androidclient.feature.about.generated.resources.feature_about_support_github
 import androidclient.feature.about.generated.resources.feature_about_support_twitter
 import androidclient.feature.about.generated.resources.feature_about_website
+import androidx.compose.ui.graphics.Color.Companion.White
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
 
 class AboutViewModel : ViewModel() {
 
@@ -38,14 +38,14 @@ class AboutViewModel : ViewModel() {
                     icon = null,
                     title = androidclient.feature.about.generated.resources.Res.string.feature_about_app_version,
                     subtitle = null,
-                   // color = Color.Blue,
+                    // color = Color.Blue,
                     id = AboutItems.APP_VERSION,
                 ),
                 AboutItem(
                     icon = androidclient.feature.about.generated.resources.Res.drawable.feature_about_ic_website,
                     title = androidclient.feature.about.generated.resources.Res.string.feature_about_website,
                     subtitle = null,
-                   // color = White,
+                    // color = White,
                     id = AboutItems.OFFICIAL_WEBSITE,
                 ),
                 AboutItem(
@@ -59,14 +59,14 @@ class AboutViewModel : ViewModel() {
                     icon = androidclient.feature.about.generated.resources.Res.drawable.feature_about_ic_source_code,
                     title = androidclient.feature.about.generated.resources.Res.string.feature_about_support_github,
                     subtitle = null,
-                   // color = White,
+                    // color = White,
                     id = AboutItems.SOURCE_CODE,
                 ),
                 AboutItem(
                     icon = null,
                     title = androidclient.feature.about.generated.resources.Res.string.feature_about_license,
                     subtitle = androidclient.feature.about.generated.resources.Res.string.feature_about_license_sub,
-                  //  color = Color.Blue,
+                    //  color = Color.Blue,
                     id = AboutItems.LICENSE,
                 ),
             )
