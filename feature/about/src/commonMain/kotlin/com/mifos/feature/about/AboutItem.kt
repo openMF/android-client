@@ -20,3 +20,13 @@ data class AboutItem(
     val color: Color? = null,
     val id: AboutItems,
 )
+
+
+enum class AboutItems {
+    CONTRIBUTIONS,
+    APP_VERSION,
+    OFFICIAL_WEBSITE,
+    TWITTER,
+    SOURCE_CODE,
+    LICENSE,
+}

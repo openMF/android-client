@@ -21,9 +21,7 @@ kotlin {
             implementation(compose.material3)
             implementation(compose.components.resources)
             implementation(compose.ui)
-            api(projects.core.common)
-            api(projects.core.model)
-            api(projects.core.domain)
+
         }
     }
 }
