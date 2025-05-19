@@ -9,6 +9,9 @@
  */
 package com.mifos.feature.note
 
+import androidclient.feature.note.generated.resources.Res
+import androidclient.feature.note.generated.resources.feature_note_Note
+import androidclient.feature.note.generated.resources.feature_note_no_notes_found
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -39,10 +42,6 @@ import com.mifos.core.model.objects.Note
 import com.mifos.core.ui.components.MifosEmptyUi
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
-import androidclient.feature.note.generated.resources.feature_note_Note
-import androidclient.feature.note.generated.resources.feature_note_no_notes_found
-import androidclient.feature.note.generated.resources.Res
-
 
 @Composable
 internal fun NoteScreen(
@@ -157,4 +156,3 @@ private fun NoteItem(
         )
     }
 }
-
