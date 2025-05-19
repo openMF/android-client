@@ -13,7 +13,6 @@ import androidx.compose.ui.window.application
 import androidx.compose.ui.window.rememberWindowState
 import cmp.shared.SharedApp
 import cmp.shared.utils.initKoin
-import org.jetbrains.compose.resources.stringResource
 
 /**
  * Main function.
