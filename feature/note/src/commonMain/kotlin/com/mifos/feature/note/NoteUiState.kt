@@ -23,7 +23,7 @@ sealed class NoteUiState {
 
     data class ShowError(val message: StringResource) : NoteUiState()
 
-    data class ShowNote(val note: Flow<DataState<List<Note>>>?) : NoteUiState()
+    data class ShowNote(val note: List<Note>) : NoteUiState()
 
     data object ShowEmptyNotes : NoteUiState()
 }

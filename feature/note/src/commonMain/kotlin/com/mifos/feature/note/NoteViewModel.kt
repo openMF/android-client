@@ -23,6 +23,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import androidclient.feature.note.generated.resources.Res
 import androidclient.feature.note.generated.resources.feature_note_failed_to_fetch_notes
+import com.mifos.core.common.utils.DataState
 
 
 class NoteViewModel(
@@ -53,22 +54,47 @@ class NoteViewModel(
      </Note> */
     fun loadNote() {
         println("NoteScreen Debug: id=${entityId.value}, type=${entityType.value}")
+
         viewModelScope.launch {
             _noteUiState.value = NoteUiState.ShowProgressbar
+
             try {
-                val notes = withContext(ioDispatcher) {
-                    entityType.value?.let { repository.getNotes(it, entityId.value) }
-                }
-                if (!notes.isNullOrEmpty()) {
-                    _noteUiState.value = NoteUiState.ShowNote(notes)
-                } else {
-                    _noteUiState.value = NoteUiState.ShowEmptyNotes
+                val entityTypeValue = entityType.value
+                if (entityTypeValue != null) {
+                    val notesFlow = repository.getNotes(entityTypeValue, entityId.value)
+
+                    notesFlow?.collect { dataState ->
+                        when (dataState) {
+                            is DataState.Loading -> {
+                                _noteUiState.value = NoteUiState.ShowProgressbar
+                            }
+
+                            is DataState.Success -> {
+                                val notes = dataState.data
+
+                                if (notes.isNullOrEmpty()) {
+                                    _noteUiState.value = NoteUiState.ShowEmptyNotes
+                                } else {
+                                    _noteUiState.value = NoteUiState.ShowNote(notes)
+                                }
+                            }
+
+                            is DataState.Error -> {
+                                _noteUiState.value = NoteUiState.ShowError(
+                                    message = Res.string.feature_note_failed_to_fetch_notes
+                                )
+                            }
+                        }
+                    }
                 }
             } catch (e: Exception) {
-                _noteUiState.value =
-                    NoteUiState.ShowError(Res.string.feature_note_failed_to_fetch_notes)
+                _noteUiState.value = NoteUiState.ShowError(
+                    message = Res.string.feature_note_failed_to_fetch_notes
+                )
             }
+
             _isRefreshing.emit(false)
         }
     }
 }
+
