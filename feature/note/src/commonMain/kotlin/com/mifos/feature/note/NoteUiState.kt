@@ -9,9 +9,7 @@
  */
 package com.mifos.feature.note
 
-import com.mifos.core.common.utils.DataState
 import com.mifos.core.model.objects.Note
-import kotlinx.coroutines.flow.Flow
 import org.jetbrains.compose.resources.StringResource
 
 /**

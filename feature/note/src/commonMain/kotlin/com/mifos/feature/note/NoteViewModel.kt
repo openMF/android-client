@@ -9,10 +9,13 @@
  */
 package com.mifos.feature.note
 
+import androidclient.feature.note.generated.resources.Res
+import androidclient.feature.note.generated.resources.feature_note_failed_to_fetch_notes
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mifos.core.common.utils.Constants
+import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.repositoryImp.NoteRepositoryImp
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
@@ -20,11 +23,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import androidclient.feature.note.generated.resources.Res
-import androidclient.feature.note.generated.resources.feature_note_failed_to_fetch_notes
-import com.mifos.core.common.utils.DataState
-
 
 class NoteViewModel(
     private val repository: NoteRepositoryImp,
@@ -81,7 +79,7 @@ class NoteViewModel(
 
                             is DataState.Error -> {
                                 _noteUiState.value = NoteUiState.ShowError(
-                                    message = Res.string.feature_note_failed_to_fetch_notes
+                                    message = Res.string.feature_note_failed_to_fetch_notes,
                                 )
                             }
                         }
@@ -89,7 +87,7 @@ class NoteViewModel(
                 }
             } catch (e: Exception) {
                 _noteUiState.value = NoteUiState.ShowError(
-                    message = Res.string.feature_note_failed_to_fetch_notes
+                    message = Res.string.feature_note_failed_to_fetch_notes,
                 )
             }
 
@@ -97,4 +95,3 @@ class NoteViewModel(
         }
     }
 }
-
