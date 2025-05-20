@@ -16,12 +16,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalUriHandler
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.theme.aboutItemTextStyle
 import com.mifos.core.designsystem.theme.aboutItemTextStyleBold
@@ -33,8 +29,6 @@ import org.jetbrains.compose.resources.stringResource
 internal fun AboutScreen(
     onBackPressed: () -> Unit,
 ) {
-    val uriHandler = LocalUriHandler.current
-
     MifosScaffold(
         title = stringResource(Res.string.feature_about),
         onBackPressed = onBackPressed,
@@ -47,7 +41,7 @@ internal fun AboutScreen(
             Image(
                 modifier = Modifier.size(100.dp),
                 painter = painterResource(Res.drawable.feature_about_ic_launcher),
-                contentDescription = null,
+                contentDescription = "App icon",
             )
             Text(
                 modifier = Modifier
@@ -71,8 +65,7 @@ internal fun AboutScreen(
                         ShareUtils.openUrl("https://github.com/openMF/android-client/graphs/contributors")
                     },
                 text = stringResource(Res.string.feature_about_mifos),
-                style = TextStyle(fontSize = 16.sp),
-                color = Color.Blue,
+                style = MaterialTheme.typography.bodyMedium,
                 textAlign = TextAlign.Center,
             )
             LazyColumn {
@@ -110,7 +103,7 @@ private fun AboutCardItem(
             about.icon?.let {
                 Icon(
                     painter = painterResource(it),
-                    contentDescription = null,
+                    contentDescription = stringResource(about.title),
                 )
             }
             Column {
