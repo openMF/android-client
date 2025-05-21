@@ -28,7 +28,6 @@ kotlin {
         jvmMain.dependencies {
             implementation(projects.cmpShared)
 
-            implementation(libs.jb.composeRuntime)
             implementation(libs.kotlinx.coroutines.swing)
             implementation(compose.desktop.currentOs)
             implementation(libs.jb.kotlin.stdlib)
