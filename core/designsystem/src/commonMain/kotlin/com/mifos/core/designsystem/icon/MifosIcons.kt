@@ -11,6 +11,7 @@ package com.mifos.core.designsystem.icon
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.material.icons.automirrored.filled.Assignment
 import androidx.compose.material.icons.automirrored.filled.CompareArrows
 import androidx.compose.material.icons.automirrored.filled.Help
@@ -35,6 +36,7 @@ import androidx.compose.material.icons.filled.FlashOn
 import androidx.compose.material.icons.filled.Image
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.LocationOn
+import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Notifications
@@ -100,6 +102,7 @@ object MifosIcons {
     val ArrowUp = Icons.Rounded.KeyboardArrowUp
     val ArrowDown = Icons.Rounded.KeyboardArrowDown
     val MoreVert = Icons.Rounded.MoreVert
+    val ArrowForward = Icons.AutoMirrored.Filled.ArrowForward
     val FileTask = Icons.Default.AssignmentTurnedIn
     val AddLocation = Icons.Rounded.AddLocation
     val CloudDownload = Icons.Default.CloudDownload
@@ -123,6 +126,7 @@ object MifosIcons {
     val Profile = Icons.Outlined.AccountCircle
     val ProfileBoarder = Icons.Rounded.AccountCircle
     val buildingIcon = Icons.Filled.Apartment
+    val Lock: ImageVector = Icons.Filled.Lock
 
     val Paid: ImageVector = Icons.Default.Paid
     val Logout: ImageVector = Icons.AutoMirrored.Filled.Logout

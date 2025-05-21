@@ -76,13 +76,34 @@ class LoginViewModel(
     }
 
     private fun setupPrefManger(username: String, password: String) {
-        Logger.d("sdfdf", Throwable(username + password))
-//        if (Network.isOnline(context)) {
-        login(username, password)
-//        } else {
-//        _loginUiState.value =
-//            LoginUiState.ShowError(R.string.feature_auth_error_not_connected_internet)
-//        }
+        viewModelScope.launch {
+            _loginUiState.value = LoginUiState.ShowProgress
+
+            loginUseCase(username, password).collect { result ->
+                when (result) {
+                    is DataState.Error -> {
+                        _loginUiState.value =
+                            LoginUiState.ShowError(Res.string.feature_auth_error_login_failed)
+                        Logger.e("Login Error", result.exception)
+                    }
+
+                    is DataState.Loading -> {
+                        _loginUiState.value = LoginUiState.ShowProgress
+                    }
+
+                    is DataState.Success -> {
+                        result.data.let { user ->
+                            if (user.userId != null && user.authenticated == true) {
+                                onLoginSuccessful(user, username, password)
+                            } else {
+                                _loginUiState.value =
+                                    LoginUiState.ShowError(Res.string.feature_auth_error_login_failed)
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 
     fun login(username: String, password: String) {

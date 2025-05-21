@@ -26,10 +26,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
-import androidx.compose.material.icons.filled.Lock
-import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
@@ -53,11 +50,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color.Companion.DarkGray
 import androidx.compose.ui.graphics.Color.Companion.White
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontStyle
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.input.VisualTransformation
@@ -70,7 +63,6 @@ import com.mifos.core.designsystem.component.MifosAndroidClientIcon
 import com.mifos.core.designsystem.component.MifosOutlinedTextField
 import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.ui.util.DevicePreview
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.getString
@@ -167,7 +159,7 @@ internal fun LoginScreen(
                     Spacer(modifier = Modifier.width(4.dp))
 
                     Icon(
-                        imageVector = Icons.AutoMirrored.Filled.ArrowForward,
+                        imageVector = MifosIcons.ArrowForward,
                         contentDescription = "ArrowForward",
                     )
                 }
@@ -192,12 +184,7 @@ internal fun LoginScreen(
                     .padding(top = 8.dp),
                 text = stringResource(Res.string.feature_auth_enter_credentials),
                 textAlign = TextAlign.Center,
-                style = TextStyle(
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight.Bold,
-                    fontStyle = FontStyle.Normal,
-                    color = DarkGray,
-                ),
+                style = MaterialTheme.typography.bodyMedium,
             )
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -207,12 +194,12 @@ internal fun LoginScreen(
                 onValueChanged = { value ->
                     userName = value
                 },
-                icon = Icons.Filled.Person,
+                icon = MifosIcons.Person,
                 label = stringResource(Res.string.feature_auth_username),
                 error = usernameError.value?.let { it1 -> stringResource(it1) },
                 trailingIcon = {
                     if (usernameError.value != null) {
-                        Icon(imageVector = MifosIcons.Error, contentDescription = null)
+                        Icon(imageVector = MifosIcons.Error, contentDescription = "Error Icon")
                     }
                 },
             )
@@ -225,7 +212,7 @@ internal fun LoginScreen(
                     password = value
                 },
                 visualTransformation = if (passwordVisibility) VisualTransformation.None else PasswordVisualTransformation(),
-                icon = Icons.Filled.Lock,
+                icon = MifosIcons.Lock,
                 label = stringResource(Res.string.feature_auth_password),
                 error = passwordError.value?.let { it1 -> stringResource(it1) },
                 trailingIcon = {
@@ -236,7 +223,7 @@ internal fun LoginScreen(
                             MifosIcons.VisibilityOff
                         }
                         IconButton(onClick = { passwordVisibility = !passwordVisibility }) {
-                            Icon(imageVector = image, null)
+                            Icon(imageVector = image, "PasswordVisibility Icon")
                         }
                     } else {
                         Icon(MifosIcons.Error, contentDescription = null)
