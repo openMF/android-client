@@ -18,7 +18,7 @@ plugins {
 }
 
 android {
-    namespace = "com.mifos.cmp.shared"
+    namespace = "cmp.shared"
 }
 
 kotlin {

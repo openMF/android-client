@@ -14,7 +14,7 @@ plugins {
 }
 
 android {
-    namespace = "com.mifos.cmp.navigation"
+    namespace = "cmp.navigation"
 }
 
 kotlin {
