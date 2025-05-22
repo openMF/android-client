@@ -23,12 +23,11 @@ kotlin {
             implementation(compose.ui)
             api(projects.core.common)
             api(projects.core.model)
-            api(projects.core.domain)
-            implementation(libs.kotlinx.serialization.json)
-
-
-
         }
 
     }
 }
+dependencies {
+    implementation(libs.androidx.ui.tooling.preview.android)
+}
+

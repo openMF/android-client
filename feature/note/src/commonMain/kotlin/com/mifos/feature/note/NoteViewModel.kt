@@ -51,7 +51,7 @@ class NoteViewModel(
      * Response: List<Note>
      </Note> */
     fun loadNote() {
-        println("NoteScreen Debug: id=${entityId.value}, type=${entityType.value}")
+        //println("NoteScreen Debug: id=${entityId.value}, type=${entityType.value}")
 
         viewModelScope.launch {
             _noteUiState.value = NoteUiState.ShowProgressbar
