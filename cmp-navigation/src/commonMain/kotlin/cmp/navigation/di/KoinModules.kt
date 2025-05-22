@@ -32,12 +32,6 @@ object KoinModules {
         )
     }
 
-//    private val testingModules = module {
-//        includes(
-//            TestDispatcherModule,
-//            TestDispatchersModule,
-//        )
-//    }
 
     private val featureModules = module {
         includes(
@@ -69,7 +63,6 @@ object KoinModules {
         dataModules,
         databaseModules,
         featureModules,
-//        testingModules,
         networkModules,
         coreDataStoreModules,
     )
