@@ -68,7 +68,8 @@ name: PR Checks
 on:
   push:
     branches: [ kmp-impl ]  # Runs on pushes to dev branch
-  pull_request:       # Runs on all pull requests
+  pull_request:
+    branches: [ kmp-impl ]  # Runs on pushes to dev branch
 
 # Concurrency settings to prevent multiple simultaneous workflow runs
 concurrency:
@@ -81,10 +82,18 @@ permissions:
 jobs:
   pr_checks:
     name: PR Checks
-    uses: openMF/mifos-x-actionhub/.github/workflows/pr-check.yaml@v1.0.0
-    secrets: inherit
+    uses: openMF/mifos-x-actionhub/.github/workflows/pr-check.yaml@main
     with:
       android_package_name: 'cmp-android' # <-- Change Your Android Package Name
       desktop_package_name: 'cmp-desktop' # <-- Change Your Desktop Package Name
       web_package_name: 'cmp-web' # <-- Change Your Web Package Name
       ios_package_name: 'cmp-ios' # <-- Change Your iOS Package Name
+      build_ios: true # <-- Change to 'false' if you don't want to build iOS
+      git_url: 'git@github.com:openMF/ios-provisioning-profile.git'
+      git_branch: 'master'
+      match_type: 'adhoc'
+      app_identifier: 'org.mifos.kmp.template'
+      provisioning_profile_name: 'match AdHoc org.mifos.kmp.template'
+    secrets:
+      match_ssh_private_key: ${{ secrets.MATCH_SSH_PRIVATE_KEY }}
+      match_password: ${{ secrets.MATCH_PASSWORD }}
