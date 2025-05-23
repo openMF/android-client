@@ -183,7 +183,7 @@ class DataTableListViewModel(
 //                    _dataTableListUiState.value = DataTableListUiState.Success(client = clientPayload)
                 } else {
                     _dataTableListUiState.value =
-                        DataTableListUiState.Success(messageResId = R.string.feature_data_table_waiting_for_checker_approval)
+                        DataTableListUiState.Success(message = R.string.feature_data_table_waiting_for_checker_approval)
                 }
             } catch (e: Exception) {
                 _dataTableListUiState.value =

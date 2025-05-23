@@ -9,15 +9,16 @@
  */
 package com.mifos.feature.dataTable.dataTableRowDialog
 
+import androidclient.feature.data_table.generated.resources.Res
+import androidclient.feature.data_table.generated.resources.feature_data_table_failed_to_add_data_table
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.mifos.core.common.utils.Resource
+import com.mifos.core.common.utils.DataState
 import com.mifos.core.domain.useCases.AddDataTableEntryUseCase
-import com.mifos.feature.data_table.R
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import org.jetbrains.compose.resources.getString
 
 class DataTableRowDialogViewModel(
     private val addDataTableEntryUseCase: AddDataTableEntryUseCase,
@@ -27,24 +28,33 @@ class DataTableRowDialogViewModel(
         MutableStateFlow<DataTableRowDialogUiState>(DataTableRowDialogUiState.Initial)
     val dataTableRowDialogUiState = _dataTableRowDialogUiState.asStateFlow()
 
-    fun addDataTableEntry(table: String, entityId: Int, payload: Map<String, String>) =
-        viewModelScope.launch(Dispatchers.IO) {
-            addDataTableEntryUseCase(table, entityId, payload).collect { result ->
-                when (result) {
-                    is Resource.Error ->
+    fun addDataTableEntry(
+        table: String,
+        entityId: Int,
+        payload: Map<String, String>
+    ) {
+        viewModelScope.launch {
+            addDataTableEntryUseCase.invoke(table, entityId, payload)
+                .collect { result ->
+                when(result){
+                    is DataState.Error<*> -> {
                         _dataTableRowDialogUiState.value =
                             DataTableRowDialogUiState.Error(
-                                R.string.feature_data_table_failed_to_add_data_table,
+                                getString(Res.string.feature_data_table_failed_to_add_data_table,)
                             )
+                    }
 
-                    is Resource.Loading ->
+                    DataState.Loading -> {
                         _dataTableRowDialogUiState.value =
                             DataTableRowDialogUiState.Loading
+                    }
 
-                    is Resource.Success ->
+                    is DataState.Success<*> -> {
                         _dataTableRowDialogUiState.value =
                             DataTableRowDialogUiState.DataTableEntrySuccessfully
+                    }
                 }
             }
         }
+    }
 }

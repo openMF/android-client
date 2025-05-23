@@ -18,9 +18,8 @@ sealed class DataTableListUiState {
 
     data object Loading : DataTableListUiState()
 
-    data class ShowMessage(val messageResId: Int? = null, val message: String? = null) :
-        DataTableListUiState()
+    data class ShowMessage(val message: String? = null) : DataTableListUiState()
 
-    data class Success(val messageResId: Int? = null, val client: ClientEntity? = null) :
+    data class Success(val message: String? = null, val client: ClientEntity? = null) :
         DataTableListUiState()
 }

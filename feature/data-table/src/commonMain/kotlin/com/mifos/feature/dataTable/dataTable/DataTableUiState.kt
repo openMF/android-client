@@ -18,7 +18,7 @@ sealed class DataTableUiState {
 
     data object ShowProgressbar : DataTableUiState()
 
-    data class ShowError(val message: Int) : DataTableUiState()
+    data class ShowError(val message: String) : DataTableUiState()
 
     data class ShowDataTables(val dataTables: List<DataTableEntity>) : DataTableUiState()
 

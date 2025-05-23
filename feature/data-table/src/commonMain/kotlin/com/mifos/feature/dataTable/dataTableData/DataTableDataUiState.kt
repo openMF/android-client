@@ -18,7 +18,7 @@ sealed class DataTableDataUiState {
 
     data object Loading : DataTableDataUiState()
 
-    data class Error(val message: Int) : DataTableDataUiState()
+    data class Error(val message: String) : DataTableDataUiState()
 
     data class DataTableInfo(val jsonElements: JsonArray) : DataTableDataUiState()
 

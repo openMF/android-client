@@ -23,7 +23,7 @@ import com.mifos.core.ui.util.DevicePreview
 fun MifosAlertDialog(
     dialogTitle: String,
     dialogText: String,
-    dismissText: String,
+    dismissText: String?,
     confirmationText: String,
     onDismissRequest: () -> Unit,
     onConfirmation: () -> Unit,
@@ -47,10 +47,12 @@ fun MifosAlertDialog(
             )
         },
         dismissButton = {
-            MifosTextButton(
-                text = { Text(text = dismissText) },
-                onClick = onDismissRequest,
-            )
+            if(dismissText != null){
+                MifosTextButton(
+                    text = { Text(text = dismissText) },
+                    onClick = onDismissRequest,
+                )
+            }
         },
     )
 }

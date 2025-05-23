@@ -9,7 +9,10 @@
  */
 package com.mifos.feature.dataTable.dataTableList
 
-import android.app.DatePickerDialog
+import androidclient.feature.data_table.generated.resources.Res
+import androidclient.feature.data_table.generated.resources.feature_data_table_associated_datatables
+import androidclient.feature.data_table.generated.resources.feature_data_table_save
+import androidclient.feature.data_table.generated.resources.feature_data_table_something_went_wrong
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -35,12 +38,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -49,12 +49,10 @@ import com.mifos.core.designsystem.component.MifosDatePickerTextField
 import com.mifos.core.designsystem.component.MifosOutlinedTextField
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosTextFieldDropdown
-import com.mifos.feature.data_table.R
 import com.mifos.room.entities.client.ClientEntity
 import com.mifos.room.entities.noncore.DataTableEntity
-import org.koin.androidx.compose.koinViewModel
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
+import org.jetbrains.compose.resources.stringResource
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun DataTableListScreen(
@@ -95,7 +93,7 @@ fun DataTableListScreen(
     val snackBarHostState = remember { SnackbarHostState() }
 
     MifosScaffold(
-        title = stringResource(id = R.string.feature_data_table_associated_datatables),
+        title = stringResource(Res.string.feature_data_table_associated_datatables),
         onBackPressed = onBackPressed,
         snackbarHostState = snackBarHostState,
     ) { paddingValues ->
@@ -112,10 +110,9 @@ fun DataTableListScreen(
 
             when (uiState) {
                 is DataTableListUiState.ShowMessage -> {
-                    val message = when {
-                        uiState.messageResId != null -> stringResource(id = uiState.messageResId)
+                    val message  = when {
                         uiState.message != null -> uiState.message
-                        else -> stringResource(id = R.string.feature_data_table_something_went_wrong)
+                        else -> stringResource(Res.string.feature_data_table_something_went_wrong)
                     }
                     LaunchedEffect(key1 = message) {
                         snackBarHostState.showSnackbar(message = message)
@@ -128,8 +125,8 @@ fun DataTableListScreen(
                         clientCreated(client)
                     } ?: run {
                         val message = when {
-                            uiState.messageResId != null -> stringResource(id = uiState.messageResId)
-                            else -> stringResource(id = R.string.feature_data_table_something_went_wrong)
+                            uiState.message != null -> uiState.message
+                            else -> stringResource(Res.string.feature_data_table_something_went_wrong)
                         }
                         LaunchedEffect(key1 = message) {
                             snackBarHostState.showSnackbar(message = message)
@@ -176,7 +173,7 @@ fun DataTableListContent(
                 .padding(16.dp),
             colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
         ) {
-            Text(text = stringResource(id = R.string.feature_data_table_save), color = Color.White)
+            Text(text = stringResource(Res.string.feature_data_table_save), color = Color.White)
         }
     }
 }
@@ -186,7 +183,6 @@ fun TableColumnHeader(
     table: DataTableEntity,
     modifier: Modifier = Modifier,
 ) {
-    val context = LocalContext.current
     Column(modifier = modifier) {
         table.columnHeaderData.filter { it.columnPrimaryKey != null }.forEach { columnHeader ->
             when (columnHeader.columnDisplayType) {
@@ -238,6 +234,7 @@ fun TableColumnHeader(
                     Spacer(modifier = Modifier.height(16.dp))
                 }
 
+                //todo use kotlin dateformatter
                 FormWidget.SCHEMA_KEY_DATE -> {
                     val dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
                     var selectedDate by remember {
@@ -289,17 +286,17 @@ fun TableColumnHeader(
     }
 }
 
-@Preview(showSystemUi = true)
-@Composable
-fun DataTableListScreenPreview() {
-    DataTableListScreen(
-        uiState = DataTableListUiState.Success(),
-        dataTableList = listOf(),
-        onBackPressed = { },
-        clientCreated = { },
-        onSaveClicked = { },
-    )
-}
+//@Preview(showSystemUi = true)
+//@Composable
+//fun DataTableListScreenPreview() {
+//    DataTableListScreen(
+//        uiState = DataTableListUiState.Success(),
+//        dataTableList = listOf(),
+//        onBackPressed = { },
+//        clientCreated = { },
+//        onSaveClicked = { },
+//    )
+//}
 
 // private fun createFormWidgetList(): MutableList<List<FormWidget>> {
 //    return dataTables?.map { createForm(it) }?.toMutableList() ?: mutableListOf()
