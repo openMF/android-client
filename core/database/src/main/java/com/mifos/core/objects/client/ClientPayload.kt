@@ -84,7 +84,7 @@ data class ClientPayload(
     @Column
     var clientClassificationId: Int? = null,
 
-    var address: List<Address>? = ArrayList(),
+    var address: List<Address>? = emptyList(),
 
     @Column
     var dateFormat: String? = "dd MMMM yyyy",

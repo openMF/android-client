@@ -142,7 +142,7 @@
     <string name="feature_client_last_name_mandatory">Last Name*</string>
     <string name="feature_client_gender">Gender</string>
     <string name="feature_client_dob">Date of Birth</string>
-    <string name="feature_client_client">Client</string>
+    <string name="feature_client_client_type">Client Type</string>
     <string name="feature_client_client_classification">Client Classification</string>
     <string name="feature_client_office_name_mandatory">Office*</string>
     <string name="feature_client_staff">Staff</string>
@@ -167,4 +167,21 @@
     <string name="feature_client_Image_Upload_Successful">Image Upload Successful</string>
     <string name="feature_client_error_not_connected_internet">Not connected to Network</string>
 
+    <string name="feature_client_add_address">Add Address</string>
+    <string name="feature_client_address_type">Address Type*</string>
+    <string name="feature_client_address_line_1">Address Line 1</string>
+    <string name="feature_client_address_line_2">Address Line 2</string>
+    <string name="feature_client_address_line_3">Address Line 3</string>
+    <string name="feature_client_street">Street</string>
+    <string name="feature_client_city">City</string>
+    <string name="feature_client_town_village">Town/Village</string>
+    <string name="feature_client_county_district">County/District</string>
+    <string name="feature_client_country">Country</string>
+    <string name="feature_client_state_province">State/Province</string>
+    <string name="feature_client_postal_code">Postal Code</string>
+    <string name="feature_client_address_active">Address Active</string>
+
+    <string name="feature_client_error_address_type_is_required">Address Type is required</string>
+    <string name="feature_client_failed_to_fetch_address_configuration">Failed to fetch address configuration</string>
+    <string name="feature_client_failed_to_fetch_address_template">Failed to fetch address template</string>
 </resources>

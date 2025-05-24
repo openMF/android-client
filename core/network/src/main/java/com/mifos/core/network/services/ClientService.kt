@@ -20,6 +20,8 @@ import com.mifos.core.objects.noncore.Identifier
 import com.mifos.core.objects.noncore.IdentifierCreationResponse
 import com.mifos.core.objects.noncore.IdentifierPayload
 import com.mifos.core.objects.noncore.IdentifierTemplate
+import com.mifos.core.objects.templates.clients.AddressConfiguration
+import com.mifos.core.objects.templates.clients.AddressTemplate
 import com.mifos.core.objects.templates.clients.ClientsTemplate
 import kotlinx.coroutines.flow.Flow
 import okhttp3.MultipartBody
@@ -220,4 +222,21 @@ interface ClientService {
         @Body clientActivate: PostClientsClientIdRequest,
         @Query("command") command: String? = null,
     ): PostClientsClientIdResponse
+
+    /**
+     * Retrieves address configuration from Global Configuration.
+     *
+     * @return The AddressConfiguration object
+     */
+    @GET("configurations/name/enable-address")
+    suspend fun getAddressConfiguration(): AddressConfiguration
+
+    /**
+     * Retrieves an address template.
+     * This template can be used to pre-fill address forms or guide users in providing address information.
+     *
+     * @return An [AddressTemplate] object containing the structure for an address.
+     */
+    @GET("client/addresses/template")
+    suspend fun getAddressTemplate(): AddressTemplate
 }

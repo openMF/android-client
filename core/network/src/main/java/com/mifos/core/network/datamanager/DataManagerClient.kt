@@ -28,6 +28,8 @@ import com.mifos.core.objects.noncore.Identifier
 import com.mifos.core.objects.noncore.IdentifierCreationResponse
 import com.mifos.core.objects.noncore.IdentifierPayload
 import com.mifos.core.objects.noncore.IdentifierTemplate
+import com.mifos.core.objects.templates.clients.AddressConfiguration
+import com.mifos.core.objects.templates.clients.AddressTemplate
 import com.mifos.core.objects.templates.clients.ClientsTemplate
 import kotlinx.coroutines.flow.Flow
 import okhttp3.MultipartBody
@@ -344,5 +346,26 @@ class DataManagerClient @Inject constructor(
             ),
             "activate",
         )
+    }
+
+    /**
+     * Gets the address configuration.
+     *
+     * @return The address configuration.
+     */
+    suspend fun getAddressConfiguration(): AddressConfiguration {
+        return mBaseApiManager.clientsApi.getAddressConfiguration()
+    }
+
+    /**
+     * Gets the address template.
+     *
+     * The address template is a predefined format for addresses that can be used to ensure consistency
+     * and accuracy when collecting and storing address information.
+     *
+     * @return The address template.
+     */
+    suspend fun getAddressTemplate(): AddressTemplate {
+        return mBaseApiManager.clientsApi.getAddressTemplate()
     }
 }

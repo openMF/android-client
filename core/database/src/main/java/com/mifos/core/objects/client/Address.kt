@@ -17,13 +17,21 @@ import kotlinx.parcelize.Parcelize
  */
 @Parcelize
 data class Address(
-    var addressTypeId: Int? = null,
+    var addressTypeId: Int = -1,
 
-    var active: Boolean? = null,
+    var isActive: Boolean = false,
 
-    var street: String? = null,
+    var addressLine1: String = "",
 
-    var stateProvinceId: Int? = null,
+    var addressLine2: String = "",
 
-    var countryId: Int? = null,
+    var addressLine3: String = "",
+
+    var city: String = "",
+
+    var stateProvinceId: Int = -1,
+
+    var countryId: Int = -1,
+
+    var postalCode: String = "",
 ) : Parcelable

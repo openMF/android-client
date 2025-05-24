@@ -21,6 +21,7 @@ import com.mifos.core.objects.client.Client
 import com.mifos.core.objects.client.ClientPayload
 import com.mifos.core.objects.organisation.Office
 import com.mifos.core.objects.organisation.Staff
+import com.mifos.core.objects.templates.clients.AddressTemplate
 import com.mifos.core.objects.templates.clients.ClientsTemplate
 import com.mifos.feature.client.R
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -61,6 +62,15 @@ class CreateNewClientViewModel @Inject constructor(
     private val _showOffices = MutableStateFlow<List<Office>>(emptyList())
     val showOffices: StateFlow<List<Office>> get() = _showOffices
 
+    private val _isAddressEnabled = MutableStateFlow(false)
+    val isAddressEnabled: StateFlow<Boolean> get() = _isAddressEnabled
+
+    private val _addressTemplate = MutableStateFlow<AddressTemplate?>(null)
+    val addressTemplate: StateFlow<AddressTemplate?> get() = _addressTemplate
+
+    private val _clientsTemplate = MutableStateFlow<ClientsTemplate?>(null)
+    val clientsTemplate: StateFlow<ClientsTemplate?> get() = _clientsTemplate
+
     fun loadOfficeAndClientTemplate() {
         _createNewClientUiState.value = CreateNewClientUiState.ShowProgressbar
         loadClientTemplate()
@@ -76,9 +86,18 @@ class CreateNewClientViewModel @Inject constructor(
 
                 is Resource.Loading -> Unit
 
-                is Resource.Success ->
+                is Resource.Success -> {
+                    _clientsTemplate.value = result.data
+
+                    loadAddressConfiguration()
+
                     _createNewClientUiState.value =
-                        CreateNewClientUiState.ShowClientTemplate(result.data ?: ClientsTemplate())
+                        CreateNewClientUiState.ShowClientTemplate(
+                            result.data ?: ClientsTemplate(),
+                            isAddressEnabled = _isAddressEnabled.value,
+                            addressTemplate = _addressTemplate.value ?: AddressTemplate(),
+                        )
+                }
             }
         }
     }
@@ -194,5 +213,31 @@ class CreateNewClientViewModel @Inject constructor(
                     }
                 },
             )
+    }
+
+    suspend fun loadAddressConfiguration() {
+        try {
+            val addressConfig = repository.getAddressConfiguration()
+            _isAddressEnabled.value = addressConfig.enabled
+
+            if (addressConfig.enabled) {
+                loadAddressTemplate()
+            }
+        } catch (e: Exception) {
+            _createNewClientUiState.value =
+                CreateNewClientUiState.ShowError(R.string.feature_client_failed_to_fetch_address_configuration)
+            Log.e("CreateNewClientViewModel", "Error checking address configuration", e)
+        }
+    }
+
+    suspend fun loadAddressTemplate() {
+        try {
+            val template = repository.getAddressTemplate()
+            _addressTemplate.value = template
+        } catch (e: Exception) {
+            _createNewClientUiState.value =
+                CreateNewClientUiState.ShowError(R.string.feature_client_failed_to_fetch_address_template)
+            Log.e("CreateNewClientViewModel", "Error loading address template", e)
+        }
     }
 }
