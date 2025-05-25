@@ -209,7 +209,7 @@ private class NoteScreenPreviewProvider : PreviewParameterProvider<NoteUiState> 
         )
 }
 
-@DevicePreview(showSystemUi = true)
+@DevicePreview()
 @Composable
 fun PreviewNoteScreen(
     @PreviewParameter(NoteScreenPreviewProvider::class) noteUiState: NoteUiState = NoteUiState.ShowEmptyNotes,)
