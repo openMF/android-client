@@ -9,5 +9,7 @@
  */
 package com.mifos.room.di
 
-actual val PlatformSpecificDatabaseModule: org.koin.core.annotation.Module
+import org.koin.core.module.Module
+
+actual val PlatformSpecificDatabaseModule: Module
     get() = TODO("Not yet implemented")
