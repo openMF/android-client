@@ -17,7 +17,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import co.touchlab.kermit.Logger
 import com.mifos.core.common.utils.DataState
-import com.mifos.core.data.repository.NoteRepository
 import com.mifos.core.datastore.UserPreferencesRepository
 import com.mifos.core.domain.useCases.LoginUseCase
 import com.mifos.core.domain.useCases.PasswordValidationUseCase
@@ -41,7 +40,6 @@ class LoginViewModel(
     private val usernameValidationUseCase: UsernameValidationUseCase,
     private val passwordValidationUseCase: PasswordValidationUseCase,
     private val loginUseCase: LoginUseCase,
-    private val noteRepository: NoteRepository,
 ) : ViewModel() {
 
     private val _loginUiState = MutableStateFlow<LoginUiState>(LoginUiState.Empty)
@@ -89,10 +87,13 @@ class LoginViewModel(
                     }
 
                     is DataState.Success -> {
-                        result.data.let {
-                            if (it.userId != null && it.authenticated == true) {
-                                onLoginSuccessful(it, username, password)
-                            }
+                        if (result.data.authenticated == true) {
+                            onLoginSuccessful(result.data, username, password)
+                        } else {
+                            _loginUiState.value =
+                                LoginUiState.ShowError(Res.string.feature_auth_error_login_failed)
+
+                            Logger.d("@@@", Throwable("login: ${result.data}"))
                         }
                     }
                 }
