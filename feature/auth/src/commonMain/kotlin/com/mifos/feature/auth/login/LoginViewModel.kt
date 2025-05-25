@@ -22,11 +22,8 @@ import com.mifos.core.datastore.UserPreferencesRepository
 import com.mifos.core.domain.useCases.LoginUseCase
 import com.mifos.core.domain.useCases.PasswordValidationUseCase
 import com.mifos.core.domain.useCases.UsernameValidationUseCase
-import com.mifos.core.model.objects.Note
 import com.mifos.core.model.objects.users.User
 import com.mifos.core.network.model.PostAuthenticationResponse
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.IO
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -44,7 +41,7 @@ class LoginViewModel(
     private val usernameValidationUseCase: UsernameValidationUseCase,
     private val passwordValidationUseCase: PasswordValidationUseCase,
     private val loginUseCase: LoginUseCase,
-    private val noteRepository: NoteRepository
+    private val noteRepository: NoteRepository,
 ) : ViewModel() {
 
     private val _loginUiState = MutableStateFlow<LoginUiState>(LoginUiState.Empty)
