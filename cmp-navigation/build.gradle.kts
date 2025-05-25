@@ -11,6 +11,7 @@ plugins {
     alias(libs.plugins.mifos.kmp.library)
     alias(libs.plugins.mifos.cmp.feature)
     alias(libs.plugins.mifos.kmp.koin)
+    alias(libs.plugins.kotlin.serialization)
 }
 
 android {
@@ -20,6 +21,8 @@ android {
 kotlin {
     sourceSets {
         commonMain.dependencies{
+            implementation(libs.kotlinx.serialization.json)
+
             implementation(projects.core.domain)
             implementation(projects.core.common)
             implementation(projects.core.data)
@@ -29,7 +32,7 @@ kotlin {
 
 //            implementation(projects.feature.about)
 //            implementation(projects.feature.activate)
-//            implementation(projects.feature.auth)
+            implementation(projects.feature.auth)
 //            implementation(projects.feature.center)
 //            implementation(projects.feature.checkerInboxTask)
 //            implementation(projects.feature.client)

@@ -23,8 +23,6 @@ import com.mifos.core.domain.useCases.PasswordValidationUseCase
 import com.mifos.core.domain.useCases.UsernameValidationUseCase
 import com.mifos.core.model.objects.users.User
 import com.mifos.core.network.model.PostAuthenticationResponse
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.IO
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -39,7 +37,6 @@ import kotlinx.coroutines.launch
 
 class LoginViewModel(
     private val prefManager: UserPreferencesRepository,
-//    private val context: Context,
     private val usernameValidationUseCase: UsernameValidationUseCase,
     private val passwordValidationUseCase: PasswordValidationUseCase,
     private val loginUseCase: LoginUseCase,
@@ -71,43 +68,12 @@ class LoginViewModel(
             return
         }
         viewModelScope.launch {
-            setupPrefManger(username, password)
+            login(username, password)
         }
     }
 
-    private fun setupPrefManger(username: String, password: String) {
+    private fun login(username: String, password: String) {
         viewModelScope.launch {
-            _loginUiState.value = LoginUiState.ShowProgress
-
-            loginUseCase(username, password).collect { result ->
-                when (result) {
-                    is DataState.Error -> {
-                        _loginUiState.value =
-                            LoginUiState.ShowError(Res.string.feature_auth_error_login_failed)
-                        Logger.e("Login Error", result.exception)
-                    }
-
-                    is DataState.Loading -> {
-                        _loginUiState.value = LoginUiState.ShowProgress
-                    }
-
-                    is DataState.Success -> {
-                        result.data.let { user ->
-                            if (user.userId != null && user.authenticated == true) {
-                                onLoginSuccessful(user, username, password)
-                            } else {
-                                _loginUiState.value =
-                                    LoginUiState.ShowError(Res.string.feature_auth_error_login_failed)
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    fun login(username: String, password: String) {
-        viewModelScope.launch(Dispatchers.IO) {
             loginUseCase(username, password).collect { result ->
                 when (result) {
                     is DataState.Error -> {
@@ -121,10 +87,13 @@ class LoginViewModel(
                     }
 
                     is DataState.Success -> {
-                        result.data.let {
-                            if (it.userId != null && it.authenticated == true) {
-                                onLoginSuccessful(it, username, password)
-                            }
+                        if (result.data.authenticated == true) {
+                            onLoginSuccessful(result.data, username, password)
+                        } else {
+                            _loginUiState.value =
+                                LoginUiState.ShowError(Res.string.feature_auth_error_login_failed)
+
+                            Logger.d("@@@", Throwable("login: ${result.data}"))
                         }
                     }
                 }
@@ -156,7 +125,7 @@ class LoginViewModel(
         if (passcode.value != null) {
             _loginUiState.value = LoginUiState.HomeActivityIntent
         } else {
-            _loginUiState.value = LoginUiState.PassCodeActivityIntent
+            _loginUiState.value = LoginUiState.HomeActivityIntent
         }
     }
 }

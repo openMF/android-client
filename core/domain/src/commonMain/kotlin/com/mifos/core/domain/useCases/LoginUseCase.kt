@@ -23,7 +23,6 @@ import kotlinx.coroutines.flow.flow
 class LoginUseCase(
     private val loginRepository: LoginRepository,
 ) {
-
     operator fun invoke(
         username: String,
         password: String,

@@ -15,6 +15,7 @@ import com.mifos.core.datastore.di.PreferencesModule
 import com.mifos.core.domain.di.UseCaseModule
 import com.mifos.core.network.di.DataManagerModule
 import com.mifos.core.network.di.NetworkModule
+import com.mifos.feature.auth.di.AuthModule
 import com.mifos.room.di.DaoModule
 import com.mifos.room.di.HelperModule
 import com.mifos.room.di.PlatformSpecificDatabaseModule
@@ -45,7 +46,7 @@ object KoinModules {
         includes(
 //            AboutModule,
 //            ActivateModule,
-//            AuthModule,
+            AuthModule,
 //            CenterModule,
 //            CheckerInboxTaskModule,
 //            ClientModule,

@@ -17,6 +17,8 @@ import androidx.navigation.compose.composable
 import cmp.navigation.App
 import cmp.navigation.navigation.NavGraphRoute.MAIN_GRAPH
 import com.mifos.core.data.util.NetworkMonitor
+import com.mifos.feature.auth.navigation.AuthScreens
+import com.mifos.feature.auth.navigation.authNavGraph
 
 @Composable
 fun RootNavGraph(
@@ -26,10 +28,16 @@ fun RootNavGraph(
 ) {
     NavHost(
         navController = navHostController,
-        startDestination = MAIN_GRAPH,
+        startDestination = AuthScreens.LoginScreenRoute.route,
         route = NavGraphRoute.ROOT_GRAPH,
         modifier = modifier,
     ) {
+        authNavGraph(
+            navigateHome = { navHostController.navigate(MAIN_GRAPH) },
+            navigatePasscode = { },
+            updateServerConfig = {},
+        )
+
         composable(MAIN_GRAPH) {
             App(
                 modifier = modifier,
