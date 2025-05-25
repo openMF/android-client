@@ -33,12 +33,15 @@ import org.koin.dsl.module
 
 val NetworkModule = module {
 
-    single<UserPreferencesRepository> {
-        UserPreferencesRepositoryImpl(
-            get(),
-            get(named(MifosDispatchers.IO.name,),),
-            get(named(MifosDispatchers.Unconfined)),
-        )
+    single<HttpClient>(MifosClient) {
+        val preferencesRepository = get<UserPreferencesRepository>()
+
+        KtorHttpClient.config {
+            install(Auth)
+            install(MifosInterceptor) {
+                repository = preferencesRepository
+            }
+        }
     }
 
     single<KtorfitClient>(MifosClient) {
@@ -52,7 +55,14 @@ val NetworkModule = module {
 
     single { BaseApiManager(get(), get()) }
 
-    single<Ktorfit> { Ktorfit.Builder().build() }
+//    single<Ktorfit> { Ktorfit.Builder().build() }
+
+    single<Ktorfit> {
+        Ktorfit.Builder()
+            .baseUrl(BaseUrl().url)
+            .httpClient(get<HttpClient>(MifosClient))
+            .build()
+    }
 
     single {
         val prefManager: UserPreferencesRepository = get()

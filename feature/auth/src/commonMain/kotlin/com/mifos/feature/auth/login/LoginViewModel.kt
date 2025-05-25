@@ -77,21 +77,6 @@ class LoginViewModel(
         }
     }
 
-    fun testFunction(){
-        viewModelScope.launch {
-            val ans : List<Note>
-            val t = noteRepository.getNotes("sdfe", 0).collect{
-                when(it){
-                    is DataState.Error<*> -> Logger.e("@@@", it.message.toString() )
-                    DataState.Loading -> TODO()
-                    is DataState.Success<*> -> TODO()
-                }
-            }
-            Logger.d("@@@", t. )
-
-        }
-    }
-
     private fun login(username: String, password: String) {
         viewModelScope.launch {
             loginUseCase(username, password).collect { result ->
