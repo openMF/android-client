@@ -20,11 +20,11 @@ kotlin {
         commonMain.dependencies {
             implementation(compose.material3)
             implementation(compose.components.resources)
+            implementation(compose.components.uiToolingPreview)
             implementation(compose.ui)
-            api(projects.core.common)
-            api(projects.core.model)
+            implementation(projects.core.common)
+            implementation(projects.core.model)
         }
-
     }
 }
 

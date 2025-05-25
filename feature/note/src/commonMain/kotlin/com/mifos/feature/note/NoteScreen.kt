@@ -40,14 +40,10 @@ import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.model.objects.Note
 import com.mifos.core.ui.components.MifosEmptyUi
-import org.jetbrains.compose.resources.stringResource
-import org.koin.compose.viewmodel.koinViewModel
-import androidx.compose.ui.tooling.preview.PreviewParameter
-import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import com.mifos.core.ui.util.DevicePreview
 import kotlinx.datetime.Clock
-
-
+import org.jetbrains.compose.resources.stringResource
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 internal fun NoteScreen(
@@ -163,63 +159,49 @@ private fun NoteItem(
     }
 }
 
-private class NoteScreenPreviewProvider : PreviewParameterProvider<NoteUiState> {
-    val demoNotes = listOf(
-        Note(
-            id = 1,
-            clientId = 101,
-            noteContent = "This is the first demo note.",
-            createdById = 1001,
-            createdByUsername = "creator_1",
-            createdOn = Clock.System.now().toEpochMilliseconds(),
-            updatedById = 1002,
-            updatedByUsername = "updater_1",
-            updatedOn = Clock.System.now().toEpochMilliseconds(),
-        ),
-        Note(
-            id = 2,
-            clientId = 102,
-            noteContent = "This is the second demo note.",
-            createdById = 1003,
-            createdByUsername = "creator_2",
-            createdOn = Clock.System.now().toEpochMilliseconds(),
-            updatedById = 1004,
-            updatedByUsername = "updater_2",
-            updatedOn = Clock.System.now().toEpochMilliseconds(),
-        ),
-        Note(
-            id = 3,
-            clientId = 103,
-            noteContent = "This is the third demo note.",
-            createdById = 1005,
-            createdByUsername = "creator_3",
-            createdOn = Clock.System.now().toEpochMilliseconds(),
-            updatedById = 1006,
-            updatedByUsername = "updater_3",
-            updatedOn = Clock.System.now().toEpochMilliseconds(),
-        ),
-    )
+internal val demoNotes = listOf(
+    Note(
+        id = 1,
+        clientId = 101,
+        noteContent = "This is the first demo note.",
+        createdById = 1001,
+        createdByUsername = "creator_1",
+        createdOn = Clock.System.now().toEpochMilliseconds(),
+        updatedById = 1002,
+        updatedByUsername = "updater_1",
+        updatedOn = Clock.System.now().toEpochMilliseconds(),
+    ),
+    Note(
+        id = 2,
+        clientId = 102,
+        noteContent = "This is the second demo note.",
+        createdById = 1003,
+        createdByUsername = "creator_2",
+        createdOn = Clock.System.now().toEpochMilliseconds(),
+        updatedById = 1004,
+        updatedByUsername = "updater_2",
+        updatedOn = Clock.System.now().toEpochMilliseconds(),
+    ),
+    Note(
+        id = 3,
+        clientId = 103,
+        noteContent = "This is the third demo note.",
+        createdById = 1005,
+        createdByUsername = "creator_3",
+        createdOn = Clock.System.now().toEpochMilliseconds(),
+        updatedById = 1006,
+        updatedByUsername = "updater_3",
+        updatedOn = Clock.System.now().toEpochMilliseconds(),
+    ),
+)
 
-    override val values: Sequence<NoteUiState>
-        get() = sequenceOf(
-            NoteUiState.ShowEmptyNotes,
-            NoteUiState.ShowNote(demoNotes),
-            NoteUiState.ShowProgressbar,
-           // NoteUiState.ShowError(Res.string.feature_note_failed_to_fetch_notes),
-        )
-}
-
-@DevicePreview()
+@DevicePreview
 @Composable
-fun PreviewNoteScreen(
-    @PreviewParameter(NoteScreenPreviewProvider::class) noteUiState: NoteUiState = NoteUiState.ShowEmptyNotes,)
- {
+fun PreviewSuccessNoteScreen() {
     NoteScreen(
         isRefreshing = false,
         refresh = {},
-        uiState = noteUiState,
+        uiState = NoteUiState.ShowNote(demoNotes),
         onBackPressed = {},
     )
 }
-
-

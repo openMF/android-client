@@ -17,8 +17,6 @@ import androidx.lifecycle.viewModelScope
 import com.mifos.core.common.utils.Constants
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.repositoryImp.NoteRepositoryImp
-import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -26,12 +24,12 @@ import kotlinx.coroutines.launch
 
 class NoteViewModel(
     private val repository: NoteRepositoryImp,
-    private val ioDispatcher: CoroutineDispatcher = Dispatchers.Default,
     savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
 
-    val entityId = savedStateHandle.getStateFlow(key = Constants.ENTITY_ID, initialValue = 0)
-    val entityType: StateFlow<String?> = savedStateHandle.getStateFlow(key = Constants.ENTITY_TYPE, initialValue = null)
+    val entityId = savedStateHandle.getStateFlow(key = Constants.ENTITY_ID, initialValue = "0")
+    val entityType: StateFlow<String?> =
+        savedStateHandle.getStateFlow(key = Constants.ENTITY_TYPE, initialValue = null)
 
     private val _noteUiState = MutableStateFlow<NoteUiState>(NoteUiState.ShowProgressbar)
     val noteUiState: StateFlow<NoteUiState> get() = _noteUiState
@@ -51,46 +49,29 @@ class NoteViewModel(
      * Response: List<Note>
      </Note> */
     fun loadNote() {
-        //println("NoteScreen Debug: id=${entityId.value}, type=${entityType.value}")
-
         viewModelScope.launch {
-            _noteUiState.value = NoteUiState.ShowProgressbar
+            entityType.value?.let {
+                repository.getNotes(it, entityId.value.toInt())
+                    .collect { dataState ->
 
-            try {
-                val entityTypeValue = entityType.value
-                if (entityTypeValue != null) {
-                    val notesFlow = repository.getNotes(entityTypeValue, entityId.value)
-
-                    notesFlow?.collect { dataState ->
                         when (dataState) {
-                            is DataState.Loading -> {
-                                _noteUiState.value = NoteUiState.ShowProgressbar
-                            }
+                            is DataState.Error<*> -> _noteUiState.value = NoteUiState.ShowError(
+                                message = Res.string.feature_note_failed_to_fetch_notes,
+                            )
 
-                            is DataState.Success -> {
+                            DataState.Loading -> _noteUiState.value = NoteUiState.ShowProgressbar
+
+                            is DataState.Success<*> -> {
                                 val notes = dataState.data
-
                                 if (notes.isNullOrEmpty()) {
                                     _noteUiState.value = NoteUiState.ShowEmptyNotes
                                 } else {
                                     _noteUiState.value = NoteUiState.ShowNote(notes)
                                 }
                             }
-
-                            is DataState.Error -> {
-                                _noteUiState.value = NoteUiState.ShowError(
-                                    message = Res.string.feature_note_failed_to_fetch_notes,
-                                )
-                            }
                         }
                     }
-                }
-            } catch (e: Exception) {
-                _noteUiState.value = NoteUiState.ShowError(
-                    message = Res.string.feature_note_failed_to_fetch_notes,
-                )
             }
-
             _isRefreshing.emit(false)
         }
     }

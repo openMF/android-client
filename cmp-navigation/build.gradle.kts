@@ -41,7 +41,7 @@ kotlin {
 //            implementation(projects.feature.document)
 //            implementation(projects.feature.groups)
 //            implementation(projects.feature.loan)
-//            implementation(projects.feature.note)
+            implementation(projects.feature.note)
 //            implementation(projects.feature.offline)
 //            implementation(projects.feature.pathTracking)
 //            implementation(projects.feature.report)
