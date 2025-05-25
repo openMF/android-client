@@ -9,6 +9,11 @@
  */
 package com.mifos.feature.auth.login
 
+import androidclient.feature.auth.generated.resources.Res
+import androidclient.feature.auth.generated.resources.feature_auth_enter_credentials
+import androidclient.feature.auth.generated.resources.feature_auth_mifos_logo
+import androidclient.feature.auth.generated.resources.feature_auth_password
+import androidclient.feature.auth.generated.resources.feature_auth_username
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -21,13 +26,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
-import androidx.compose.material.icons.filled.Error
-import androidx.compose.material.icons.filled.Lock
-import androidx.compose.material.icons.filled.Person
-import androidx.compose.material.icons.filled.Visibility
-import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
@@ -46,32 +45,30 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Color.Companion.DarkGray
 import androidx.compose.ui.graphics.Color.Companion.White
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontStyle
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.mifos.core.designsystem.component.MifosAndroidClientIcon
 import com.mifos.core.designsystem.component.MifosOutlinedTextField
-import com.mifos.feature.auth.R
-import org.koin.androidx.compose.koinViewModel
+import com.mifos.core.designsystem.icon.MifosIcons
+import com.mifos.core.ui.util.DevicePreview
+import kotlinx.coroutines.launch
+import org.jetbrains.compose.resources.StringResource
+import org.jetbrains.compose.resources.getString
+import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.resources.stringResource
+import org.koin.compose.viewmodel.koinViewModel
 
 /**
  * Created by Aditya Gupta on 11/02/24.
@@ -86,7 +83,7 @@ internal fun LoginScreen(
     loginViewModel: LoginViewModel = koinViewModel(),
 ) {
     val state = loginViewModel.loginUiState.collectAsState().value
-    val context = LocalContext.current
+    val coroutineScope = rememberCoroutineScope()
 
     val snackbarHostState = remember { SnackbarHostState() }
 
@@ -104,8 +101,8 @@ internal fun LoginScreen(
     }
     var passwordVisibility: Boolean by remember { mutableStateOf(false) }
 
-    val usernameError: MutableState<Int?> = remember { mutableStateOf(null) }
-    val passwordError: MutableState<Int?> = remember { mutableStateOf(null) }
+    val usernameError: MutableState<StringResource?> = remember { mutableStateOf(null) }
+    val passwordError: MutableState<StringResource?> = remember { mutableStateOf(null) }
 
     when (state) {
         is LoginUiState.Empty -> {}
@@ -113,7 +110,7 @@ internal fun LoginScreen(
         is LoginUiState.ShowError -> {
             showDialog.value = false
             LaunchedEffect(key1 = state.message) {
-                snackbarHostState.showSnackbar(message = context.getString(state.message))
+                snackbarHostState.showSnackbar(message = getString(state.message))
             }
         }
 
@@ -141,7 +138,7 @@ internal fun LoginScreen(
         modifier = modifier
             .fillMaxSize()
             .padding(16.dp),
-        containerColor = Color.White,
+        containerColor = White,
         snackbarHost = { SnackbarHost(snackbarHostState) },
         bottomBar = {
             Box(
@@ -162,7 +159,7 @@ internal fun LoginScreen(
                     Spacer(modifier = Modifier.width(4.dp))
 
                     Icon(
-                        imageVector = Icons.AutoMirrored.Filled.ArrowForward,
+                        imageVector = MifosIcons.ArrowForward,
                         contentDescription = "ArrowForward",
                     )
                 }
@@ -179,20 +176,15 @@ internal fun LoginScreen(
         ) {
             Spacer(modifier = Modifier.height(80.dp))
 
-            MifosAndroidClientIcon(imageVector = painterResource(R.drawable.feature_auth_mifos_logo))
+            MifosAndroidClientIcon(imageVector = painterResource(Res.drawable.feature_auth_mifos_logo))
 
             Text(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(top = 8.dp),
-                text = stringResource(id = R.string.feature_auth_enter_credentials),
+                text = stringResource(Res.string.feature_auth_enter_credentials),
                 textAlign = TextAlign.Center,
-                style = TextStyle(
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight.Bold,
-                    fontStyle = FontStyle.Normal,
-                    color = DarkGray,
-                ),
+                style = MaterialTheme.typography.bodyMedium,
             )
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -202,12 +194,12 @@ internal fun LoginScreen(
                 onValueChanged = { value ->
                     userName = value
                 },
-                icon = Icons.Filled.Person,
-                label = stringResource(R.string.feature_auth_username),
+                icon = MifosIcons.Person,
+                label = stringResource(Res.string.feature_auth_username),
                 error = usernameError.value?.let { it1 -> stringResource(it1) },
                 trailingIcon = {
                     if (usernameError.value != null) {
-                        Icon(imageVector = Icons.Filled.Error, contentDescription = null)
+                        Icon(imageVector = MifosIcons.Error, contentDescription = "Error Icon")
                     }
                 },
             )
@@ -220,21 +212,21 @@ internal fun LoginScreen(
                     password = value
                 },
                 visualTransformation = if (passwordVisibility) VisualTransformation.None else PasswordVisualTransformation(),
-                icon = Icons.Filled.Lock,
-                label = stringResource(R.string.feature_auth_password),
+                icon = MifosIcons.Lock,
+                label = stringResource(Res.string.feature_auth_password),
                 error = passwordError.value?.let { it1 -> stringResource(it1) },
                 trailingIcon = {
                     if (passwordError.value == null) {
                         val image = if (passwordVisibility) {
-                            Icons.Filled.Visibility
+                            MifosIcons.Visibility
                         } else {
-                            Icons.Filled.VisibilityOff
+                            MifosIcons.VisibilityOff
                         }
                         IconButton(onClick = { passwordVisibility = !passwordVisibility }) {
-                            Icon(imageVector = image, null)
+                            Icon(imageVector = image, "PasswordVisibility Icon")
                         }
                     } else {
-                        Icon(imageVector = Icons.Filled.Error, contentDescription = null)
+                        Icon(MifosIcons.Error, contentDescription = null)
                     }
                 },
             )
@@ -242,7 +234,11 @@ internal fun LoginScreen(
             Spacer(modifier = Modifier.height(8.dp))
 
             Button(
-                onClick = { loginViewModel.validateUserInputs(userName.text, password.text) },
+                onClick = {
+                    coroutineScope.launch {
+                        loginViewModel.validateUserInputs(userName.text, password.text)
+                    }
+                },
                 modifier = Modifier
                     .fillMaxWidth()
                     .heightIn(44.dp)
@@ -266,7 +262,7 @@ internal fun LoginScreen(
     }
 }
 
-@Preview(showSystemUi = true, device = "id:pixel_7")
+@DevicePreview()
 @Composable
 private fun LoginScreenPreview() {
     LoginScreen({}, {}, {})

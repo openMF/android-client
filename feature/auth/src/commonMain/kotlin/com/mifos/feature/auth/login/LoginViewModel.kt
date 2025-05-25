@@ -9,17 +9,22 @@
  */
 package com.mifos.feature.auth.login
 
-import android.util.Log
+import androidclient.feature.auth.generated.resources.Res
+import androidclient.feature.auth.generated.resources.feature_auth_error_login_failed
+import androidclient.feature.auth.generated.resources.feature_auth_error_password_length
+import androidclient.feature.auth.generated.resources.feature_auth_error_username_length
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.mifos.core.common.utils.Resource
+import co.touchlab.kermit.Logger
+import com.mifos.core.common.utils.DataState
 import com.mifos.core.datastore.UserPreferencesRepository
 import com.mifos.core.domain.useCases.LoginUseCase
 import com.mifos.core.domain.useCases.PasswordValidationUseCase
 import com.mifos.core.domain.useCases.UsernameValidationUseCase
 import com.mifos.core.model.objects.users.User
-import com.mifos.feature.auth.R
+import com.mifos.core.network.model.PostAuthenticationResponse
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.IO
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -27,7 +32,6 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import org.openapitools.client.models.PostAuthenticationResponse
 
 /**
  * Created by Aditya Gupta on 06/08/23.
@@ -52,7 +56,7 @@ class LoginViewModel(
             initialValue = null,
         )
 
-    fun validateUserInputs(username: String, password: String) {
+    suspend fun validateUserInputs(username: String, password: String) {
         val usernameValidationResult = usernameValidationUseCase(username)
         val passwordValidationResult = passwordValidationUseCase(password)
 
@@ -61,8 +65,8 @@ class LoginViewModel(
 
         if (hasError) {
             _loginUiState.value = LoginUiState.ShowValidationError(
-                usernameValidationResult.message,
-                passwordValidationResult.message,
+                Res.string.feature_auth_error_username_length,
+                Res.string.feature_auth_error_password_length,
             )
             return
         }
@@ -72,31 +76,52 @@ class LoginViewModel(
     }
 
     private fun setupPrefManger(username: String, password: String) {
-        Log.d("sdfdf", username + password)
-//        if (Network.isOnline(context)) {
-        login(username, password)
-//        } else {
-//        _loginUiState.value =
-//            LoginUiState.ShowError(R.string.feature_auth_error_not_connected_internet)
-//        }
+        viewModelScope.launch {
+            _loginUiState.value = LoginUiState.ShowProgress
+
+            loginUseCase(username, password).collect { result ->
+                when (result) {
+                    is DataState.Error -> {
+                        _loginUiState.value =
+                            LoginUiState.ShowError(Res.string.feature_auth_error_login_failed)
+                        Logger.e("Login Error", result.exception)
+                    }
+
+                    is DataState.Loading -> {
+                        _loginUiState.value = LoginUiState.ShowProgress
+                    }
+
+                    is DataState.Success -> {
+                        result.data.let { user ->
+                            if (user.userId != null && user.authenticated == true) {
+                                onLoginSuccessful(user, username, password)
+                            } else {
+                                _loginUiState.value =
+                                    LoginUiState.ShowError(Res.string.feature_auth_error_login_failed)
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 
     fun login(username: String, password: String) {
         viewModelScope.launch(Dispatchers.IO) {
             loginUseCase(username, password).collect { result ->
                 when (result) {
-                    is Resource.Error -> {
+                    is DataState.Error -> {
                         _loginUiState.value =
-                            LoginUiState.ShowError(R.string.feature_auth_error_login_failed)
-                        Log.e("@@@", "login: ${result.message}")
+                            LoginUiState.ShowError(Res.string.feature_auth_error_login_failed)
+                        Logger.d("@@@", Throwable("login: ${result.data}"))
                     }
 
-                    is Resource.Loading -> {
+                    is DataState.Loading -> {
                         _loginUiState.value = LoginUiState.ShowProgress
                     }
 
-                    is Resource.Success -> {
-                        result.data?.let {
+                    is DataState.Success -> {
+                        result.data.let {
                             if (it.userId != null && it.authenticated == true) {
                                 onLoginSuccessful(it, username, password)
                             }
