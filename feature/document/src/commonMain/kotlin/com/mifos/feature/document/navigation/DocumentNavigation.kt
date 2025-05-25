@@ -17,9 +17,6 @@ import androidx.navigation.navArgument
 import com.mifos.core.common.utils.Constants
 import com.mifos.feature.document.documentList.DocumentListScreen
 
-/**
- * Created by Pronay Sarker on 17/08/2024 (4:00 AM)
- */
 fun NavGraphBuilder.documentListScreen(
     onBackPressed: () -> Unit,
 ) {

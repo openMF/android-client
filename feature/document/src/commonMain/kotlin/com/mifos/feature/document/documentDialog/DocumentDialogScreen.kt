@@ -9,13 +9,7 @@
  */
 package com.mifos.feature.document.documentDialog
 
-import android.Manifest
-import android.content.Context
-import android.os.Build
-import android.widget.Toast
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.PickVisualMediaRequest
-import androidx.activity.result.contract.ActivityResultContracts
+import androidclient.feature.document.generated.resources.Res
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -29,9 +23,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -42,32 +36,22 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Color.Companion.White
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.TextFieldValue
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.tooling.preview.PreviewParameter
-import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
-import androidx.core.content.ContextCompat
-import androidx.core.content.PermissionChecker
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.mifos.core.designsystem.component.MifosButton
 import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosOutlinedTextField
 import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.model.objects.noncoreobjects.Document
-import com.mifos.core.network.GenericResponse
-import com.mifos.feature.document.R
-import org.koin.androidx.compose.koinViewModel
-import java.io.File
+import org.jetbrains.compose.resources.stringResource
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 internal fun DocumentDialogScreen(
@@ -79,7 +63,7 @@ internal fun DocumentDialogScreen(
     viewModel: DocumentDialogViewModel = koinViewModel(),
     closeScreen: () -> Unit,
 ) {
-    val context = LocalContext.current
+
     val state by viewModel.documentDialogUiState.collectAsStateWithLifecycle()
     val requiredPermissions = if (Build.VERSION.SDK_INT >= 33) {
         arrayOf(Manifest.permission.READ_MEDIA_IMAGES)
@@ -198,8 +182,6 @@ internal fun DocumentDialogScreen(
     filename: String?,
     closeScreen: () -> Unit,
 ) {
-    val context = LocalContext.current
-
     DocumentDialogContent(
         document = document,
         documentAction = documentAction,
@@ -269,7 +251,7 @@ private fun DocumentDialogContent(
     uploadDocument: (String, String) -> Unit,
     fileName: String?,
 ) {
-    var dialogTitle = stringResource(id = R.string.feature_document_upload_document)
+    var dialogTitle = stringResource(Res.string.feature_document_upload_document)
     var name by rememberSaveable(stateSaver = TextFieldValue.Saver) {
         mutableStateOf(TextFieldValue(""))
     }
@@ -281,8 +263,8 @@ private fun DocumentDialogContent(
     var descriptionError by rememberSaveable { mutableStateOf(false) }
     var fileError by rememberSaveable { mutableStateOf(false) }
 
-    if (documentAction == stringResource(id = R.string.feature_document_update_document)) {
-        dialogTitle = stringResource(id = R.string.feature_document_update_document)
+    if (documentAction == stringResource(Res.string.feature_document_update_document)) {
+        dialogTitle = stringResource(Res.string.feature_document_update_document)
         name = TextFieldValue(document?.name!!)
         description = TextFieldValue(document.description!!)
     }
@@ -311,7 +293,7 @@ private fun DocumentDialogContent(
         Box(
             modifier = Modifier
                 .clip(RoundedCornerShape(16.dp))
-                .background(Color.White),
+                .background(White),
             contentAlignment = Alignment.Center,
         ) {
             Column(modifier = Modifier.padding(20.dp)) {
@@ -344,8 +326,8 @@ private fun DocumentDialogContent(
                         name = value
                         nameError = false
                     },
-                    label = stringResource(R.string.feature_document_name),
-                    error = if (nameError) stringResource(R.string.feature_document_message_field_required) else null,
+                    label = stringResource(Res.string.feature_document_name),
+                    error = if (nameError) stringResource(Res.string.feature_document_message_field_required) else null,
                     trailingIcon = {
                         if (nameError) {
                             Icon(imageVector = MifosIcons.Error, contentDescription = null)
@@ -359,8 +341,8 @@ private fun DocumentDialogContent(
                         description = value
                         descriptionError = false
                     },
-                    label = stringResource(R.string.feature_document_description),
-                    error = if (descriptionError) stringResource(R.string.feature_document_message_field_required) else null,
+                    label = stringResource(Res.string.feature_document_description),
+                    error = if (descriptionError) stringResource(Res.string.feature_document_message_field_required) else null,
                     trailingIcon = {
                         if (descriptionError) {
                             Icon(imageVector = MifosIcons.Error, contentDescription = null)
@@ -368,12 +350,12 @@ private fun DocumentDialogContent(
                     },
                 )
 
-                androidx.compose.material3.OutlinedTextField(
+                OutlinedTextField(
                     value = if (fileName != null) TextFieldValue(fileName) else TextFieldValue(""),
                     onValueChange = {
                         fileError = false
                     },
-                    label = { Text(stringResource(id = R.string.feature_document_selected_file)) },
+                    label = { Text(stringResource(Res.string.feature_document_selected_file)) },
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(start = 16.dp, end = 16.dp),
@@ -393,7 +375,7 @@ private fun DocumentDialogContent(
                         if (fileError) {
                             Text(
                                 modifier = Modifier.fillMaxWidth(),
-                                text = stringResource(id = R.string.feature_document_message_file_required),
+                                text = stringResource(Res.string.feature_document_message_file_required),
                                 color = MaterialTheme.colorScheme.error,
                             )
                         }
@@ -403,14 +385,14 @@ private fun DocumentDialogContent(
                 Spacer(modifier = Modifier.height(20.dp))
 
                 DialogButton(
-                    text = stringResource(id = R.string.feature_document_browse),
+                    text = stringResource(Res.string.feature_document_browse),
                     onClick = openFilePicker,
                 )
 
                 Spacer(modifier = Modifier.height(20.dp))
 
                 DialogButton(
-                    text = stringResource(id = R.string.feature_document_upload),
+                    text = stringResource(Res.string.feature_document_upload),
                     onClick = {
                         if (validateInput()) {
                             uploadDocument.invoke(name.text, description.text)
@@ -428,42 +410,42 @@ private fun DialogButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    Button(
-        onClick = onClick,
-        modifier = modifier
+    MifosButton(
+        onClick=onClick,
+        modifier=modifier
             .fillMaxWidth()
             .height(50.dp)
-            .padding(20.dp, 0.dp, 20.dp, 0.dp),
-    ) {
-        Text(text = text)
+            .padding(20.dp, 0.dp, 20.dp, 0.dp)
+    ){
+        Text(text=text)
     }
 }
 
-private class DocumentDialogPreviewProvider : PreviewParameterProvider<DocumentDialogUiState> {
-    override val values: Sequence<DocumentDialogUiState>
-        get() = sequenceOf(
-            DocumentDialogUiState.Initial,
-            DocumentDialogUiState.ShowProgressbar,
-            DocumentDialogUiState.ShowDocumentUpdatedSuccessfully(GenericResponse()),
-            DocumentDialogUiState.ShowDocumentedCreatedSuccessfully(GenericResponse()),
-            DocumentDialogUiState.ShowError("Error"),
-            DocumentDialogUiState.ShowUploadError("Upload Error"),
-        )
-}
+//private class DocumentDialogPreviewProvider : PreviewParameterProvider<DocumentDialogUiState> {
+//    override val values: Sequence<DocumentDialogUiState>
+//        get() = sequenceOf(
+//            DocumentDialogUiState.Initial,
+//            DocumentDialogUiState.ShowProgressbar,
+//            DocumentDialogUiState.ShowDocumentUpdatedSuccessfully(GenericResponse()),
+//            DocumentDialogUiState.ShowDocumentedCreatedSuccessfully(GenericResponse()),
+//            DocumentDialogUiState.ShowError("Error"),
+//            DocumentDialogUiState.ShowUploadError("Upload Error"),
+//        )
+//}
 
-@Preview(showBackground = true)
-@Composable
-private fun DocumentDialogPreview(
-    @PreviewParameter(DocumentDialogPreviewProvider::class) state: DocumentDialogUiState,
-) {
-    DocumentDialogScreen(
-        uiState = state,
-        documentAction = "",
-        document = Document(),
-        openFilePicker = { },
-        closeDialog = { },
-        uploadDocument = { _, _ -> },
-        filename = "",
-        closeScreen = { },
-    )
-}
+//@Preview(showBackground = true)
+//@Composable
+//private fun DocumentDialogPreview(
+//    @PreviewParameter(DocumentDialogPreviewProvider::class) state: DocumentDialogUiState,
+//) {
+//    DocumentDialogScreen(
+//        uiState = state,
+//        documentAction = "",
+//        document = Document(),
+//        openFilePicker = { },
+//        closeDialog = { },
+//        uploadDocument = { _, _ -> },
+//        filename = "",
+//        closeScreen = { },
+//    )
+//}

@@ -7,14 +7,12 @@
  *
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
-package com.mifos.feature.document.ui
+package com.mifos.feature.document.di
 
-import com.mifos.feature.document.documentDialog.DocumentDialogViewModel
-import com.mifos.feature.document.documentList.DocumentListViewModel
 import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.module
 
 val DocumentModule = module {
-    viewModelOf(::DocumentDialogViewModel)
-    viewModelOf(::DocumentListViewModel)
+//    viewModelOf(::DocumentDialogViewModel)
+//    viewModelOf(::DocumentListViewModel)
 }

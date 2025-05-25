@@ -7,12 +7,11 @@
  *
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
-@file:OptIn(ExperimentalMaterialApi::class)
 
 package com.mifos.feature.document.documentList
 
-import android.util.Log
-import android.widget.Toast
+
+import androidclient.feature.document.generated.resources.Res
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -25,10 +24,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.pullrefresh.PullRefreshIndicator
-import androidx.compose.material.pullrefresh.pullRefresh
-import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -48,36 +43,31 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.graphics.RectangleShape
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.tooling.preview.PreviewParameter
-import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import co.touchlab.kermit.Logger
 import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.model.objects.noncoreobjects.Document
 import com.mifos.core.ui.components.MifosEmptyUi
-import com.mifos.feature.document.R
 import com.mifos.feature.document.documentDialog.DocumentDialogScreen
-import org.koin.androidx.compose.koinViewModel
+import org.jetbrains.compose.resources.stringResource
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 internal fun DocumentListScreen(
     viewModel: DocumentListViewModel = koinViewModel(),
     onBackPressed: () -> Unit,
 ) {
-    val context = LocalContext.current
     val state by viewModel.documentListUiState.collectAsStateWithLifecycle()
     val refreshState by viewModel.isRefreshing.collectAsStateWithLifecycle()
     val downloadState by viewModel.downloadDocumentState.collectAsStateWithLifecycle()
@@ -103,27 +93,29 @@ internal fun DocumentListScreen(
     }
 
     LaunchedEffect(Unit) {
-        Log.d("documentListDebugLog", "id : $entityId, type : $entityType")
+        Logger.e("documentListDebugLog"){
+            "id : $entityId, type : $entityType"
+        }
         viewModel.loadDocumentList(entityType, entityId)
     }
 
     LaunchedEffect(downloadState) {
         if (downloadState) {
-            Toast.makeText(
-                context,
-                context.getString(R.string.feature_document_download_successful),
-                Toast.LENGTH_SHORT,
-            ).show()
+//            Toast.makeText(
+//                context,
+//                context.getString(R.string.feature_document_download_successful),
+//                Toast.LENGTH_SHORT,
+//            ).show()
         }
     }
 
     LaunchedEffect(removeState) {
         if (removeState) {
-            Toast.makeText(
-                context,
-                context.getString(R.string.feature_document_remove_successful),
-                Toast.LENGTH_SHORT,
-            ).show()
+//            Toast.makeText(
+//                context,
+//                context.getString(R.string.feature_document_remove_successful),
+//                Toast.LENGTH_SHORT,
+//            ).show()
         }
     }
 
@@ -155,7 +147,6 @@ internal fun DocumentListScreen(
     )
 }
 
-@OptIn(ExperimentalMaterialApi::class)
 @Composable
 internal fun DocumentListScreen(
     state: DocumentListUiState,
@@ -202,7 +193,7 @@ internal fun DocumentListScreen(
 
     MifosScaffold(
         modifier = modifier,
-        title = stringResource(id = R.string.feature_document_title),
+        title = stringResource(Res.string.feature_document_title),
         onBackPressed = onBackPressed,
         actions = {
             IconButton(onClick = {
@@ -219,7 +210,7 @@ internal fun DocumentListScreen(
                     is DocumentListUiState.DocumentList -> {
                         if (state.documents.isEmpty()) {
                             MifosEmptyUi(
-                                text = stringResource(id = R.string.feature_document_no_document),
+                                text = stringResource(Res.string.feature_document_no_document),
                                 icon = MifosIcons.FileTask,
                             )
                         } else {
@@ -233,7 +224,7 @@ internal fun DocumentListScreen(
                         }
                     }
 
-                    is DocumentListUiState.Error -> MifosSweetError(message = stringResource(id = state.message)) {
+                    is DocumentListUiState.Error -> MifosSweetError(message = stringResource(state.message)) {
                         onRetry()
                     }
 
@@ -377,7 +368,7 @@ private fun SelectOptionsDialog(
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 Text(
-                    text = stringResource(id = R.string.feature_document_select_option),
+                    text = stringResource(Res.string.feature_document_select_option),
                     modifier = Modifier.fillMaxWidth(),
                     style = TextStyle(
                         fontSize = 18.sp,
@@ -392,7 +383,7 @@ private fun SelectOptionsDialog(
                     onClick = { downloadDocument() },
                 ) {
                     Text(
-                        text = stringResource(id = R.string.feature_document_download_document),
+                        text = stringResource( Res.string.feature_document_download_document),
                         modifier = Modifier.fillMaxWidth(),
                         style = TextStyle(
                             fontSize = 18.sp,
@@ -407,7 +398,7 @@ private fun SelectOptionsDialog(
                     onClick = { updateDocument() },
                 ) {
                     Text(
-                        text = stringResource(id = R.string.feature_document_update_document),
+                        text = stringResource(Res.string.feature_document_update_document),
                         modifier = Modifier.fillMaxWidth(),
                         style = TextStyle(
                             fontSize = 18.sp,
@@ -422,7 +413,7 @@ private fun SelectOptionsDialog(
                     onClick = { removeDocument() },
                 ) {
                     Text(
-                        text = stringResource(id = R.string.feature_document_remove_document),
+                        text = stringResource( Res.string.feature_document_remove_document),
                         modifier = Modifier.fillMaxWidth(),
                         style = TextStyle(
                             fontSize = 18.sp,
@@ -438,34 +429,34 @@ private fun SelectOptionsDialog(
     }
 }
 
-private class DocumentListUiStateProvider : PreviewParameterProvider<DocumentListUiState> {
+//private class DocumentListUiStateProvider : PreviewParameterProvider<DocumentListUiState> {
+//
+//    override val values: Sequence<DocumentListUiState>
+//        get() = sequenceOf(
+//            DocumentListUiState.DocumentList(sampleDocumentList),
+//            DocumentListUiState.Error(R.string.feature_document_failed_to_load_documents_list),
+//            DocumentListUiState.Loading,
+//        )
+//}
+//
+//@Preview(showBackground = true)
+//@Composable
+//private fun DocumentListPreview(
+//    @PreviewParameter(DocumentListUiStateProvider::class) state: DocumentListUiState,
+//) {
+//    DocumentListScreen(
+//        state = state,
+//        onBackPressed = { },
+//        refreshState = false,
+//        onRefresh = { },
+//        onRetry = { },
+//        onAddDocument = { },
+//        onDownloadDocument = { },
+//        onUpdateDocument = { },
+//        onRemovedDocument = { },
+//    )
+//}
 
-    override val values: Sequence<DocumentListUiState>
-        get() = sequenceOf(
-            DocumentListUiState.DocumentList(sampleDocumentList),
-            DocumentListUiState.Error(R.string.feature_document_failed_to_load_documents_list),
-            DocumentListUiState.Loading,
-        )
-}
-
-@Preview(showBackground = true)
-@Composable
-private fun DocumentListPreview(
-    @PreviewParameter(DocumentListUiStateProvider::class) state: DocumentListUiState,
-) {
-    DocumentListScreen(
-        state = state,
-        onBackPressed = { },
-        refreshState = false,
-        onRefresh = { },
-        onRetry = { },
-        onAddDocument = { },
-        onDownloadDocument = { },
-        onUpdateDocument = { },
-        onRemovedDocument = { },
-    )
-}
-
-private val sampleDocumentList = List(10) {
-    Document(name = "Document $it", description = "desc $it")
-}
+//private val sampleDocumentList = List(10) {
+//    Document(name = "Document $it", description = "desc $it")
+//}

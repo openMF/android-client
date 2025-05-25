@@ -9,16 +9,18 @@
  */
 package com.mifos.feature.document.documentList
 
+import androidclient.feature.document.generated.resources.Res
+import androidclient.feature.document.generated.resources.feature_document_failed_to_load_documents_list
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mifos.core.common.utils.Constants
-import com.mifos.core.common.utils.Resource
+import com.mifos.core.common.utils.DataState
 import com.mifos.core.domain.useCases.DownloadDocumentUseCase
 import com.mifos.core.domain.useCases.GetDocumentsListUseCase
 import com.mifos.core.domain.useCases.RemoveDocumentUseCase
-import com.mifos.feature.document.R
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.IO
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
@@ -55,15 +57,18 @@ class DocumentListViewModel(
         viewModelScope.launch(Dispatchers.IO) {
             getDocumentsListUseCase(entityType, entityId).collect { result ->
                 when (result) {
-                    is Resource.Error ->
+                    is DataState.Error<*> -> {
                         _documentListUiState.value =
-                            DocumentListUiState.Error(R.string.feature_document_failed_to_load_documents_list)
+                            DocumentListUiState.Error(Res.string.feature_document_failed_to_load_documents_list)
 
-                    is Resource.Loading -> _documentListUiState.value = DocumentListUiState.Loading
-
-                    is Resource.Success ->
+                    }
+                    DataState.Loading -> {
+                        _documentListUiState.value = DocumentListUiState.Loading
+                    }
+                    is DataState.Success<*> -> {
                         _documentListUiState.value =
                             DocumentListUiState.DocumentList(result.data ?: emptyList())
+                    }
                 }
             }
         }
@@ -72,13 +77,13 @@ class DocumentListViewModel(
         viewModelScope.launch(Dispatchers.IO) {
             downloadDocumentUseCase(entityType, entityId, documentId).collect { result ->
                 when (result) {
-                    is Resource.Error ->
+                    is DataState.Error<*> ->
                         _documentListUiState.value =
-                            DocumentListUiState.Error(R.string.feature_document_failed_to_download_document)
+                            DocumentListUiState.Error(Res.string.feature_document_failed_to_download_document)
 
-                    is Resource.Loading -> _documentListUiState.value = DocumentListUiState.Loading
+                    is DataState.Loading -> _documentListUiState.value = DocumentListUiState.Loading
 
-                    is Resource.Success -> {
+                    is DataState.Success -> {
                         _downloadDocumentState.value = true
                         loadDocumentList(entityType, entityId)
                     }
@@ -90,13 +95,13 @@ class DocumentListViewModel(
         viewModelScope.launch(Dispatchers.IO) {
             removeDocumentUseCase(entityType, entityId, documentId).collect { result ->
                 when (result) {
-                    is Resource.Error ->
+                    is DataState.Error<*> ->
                         _documentListUiState.value =
-                            DocumentListUiState.Error(R.string.feature_document_failed_to_remove_document)
+                            DocumentListUiState.Error(Res.string.feature_document_failed_to_remove_document)
 
-                    is Resource.Loading -> _documentListUiState.value = DocumentListUiState.Loading
+                    is DataState.Loading -> _documentListUiState.value = DocumentListUiState.Loading
 
-                    is Resource.Success -> {
+                    is DataState.Success -> {
                         _removeDocumentState.value = true
                         loadDocumentList(entityType, entityId)
                     }

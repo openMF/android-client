@@ -14,23 +14,13 @@ import com.mifos.core.data.repository.DocumentDialogRepository
 import com.mifos.core.network.GenericResponse
 import io.ktor.client.plugins.ClientRequestException
 import io.ktor.client.plugins.ServerResponseException
+import io.ktor.http.content.PartData
 import io.ktor.util.rootCause
 import io.ktor.utils.io.InternalAPI
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.io.IOException
 import kotlinx.serialization.SerializationException
-import okhttp3.MediaType.Companion.toMediaTypeOrNull
-import okhttp3.RequestBody.Companion.asRequestBody
-import rx.Subscriber
-import rx.android.schedulers.AndroidSchedulers
-import rx.plugins.RxJavaPlugins
-import rx.schedulers.Schedulers
-import java.io.File
-
-/**
- * Created by Aditya Gupta on 16/08/23.
- */
 
 class DocumentDialogViewModel(
     private val repository: DocumentDialogRepository,
