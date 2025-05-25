@@ -45,7 +45,7 @@ include(":core:ui")
 //include(":libs:pullrefresh")
 //include(":libs:mifos-passcode")
 
-////include(":feature:about")
+include(":feature:about")
 //include(":feature:activate")
 include(":feature:auth")
 //include(":feature:center")

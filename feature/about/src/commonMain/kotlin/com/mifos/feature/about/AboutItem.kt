@@ -21,7 +21,6 @@ data class AboutItem(
     val id: AboutItems,
 )
 
-
 enum class AboutItems {
     CONTRIBUTIONS,
     APP_VERSION,

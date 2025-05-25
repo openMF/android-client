@@ -30,7 +30,7 @@ kotlin {
             implementation(projects.core.database)
             implementation(projects.core.network)
 
-//            implementation(projects.feature.about)
+            implementation(projects.feature.about)
 //            implementation(projects.feature.activate)
             implementation(projects.feature.auth)
 //            implementation(projects.feature.center)
