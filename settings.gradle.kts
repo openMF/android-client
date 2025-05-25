@@ -47,7 +47,7 @@ include(":core:ui")
 
 ////include(":feature:about")
 //include(":feature:activate")
-//include(":feature:auth")
+include(":feature:auth")
 //include(":feature:center")
 //include(":feature:checker-inbox-task")
 //include(":feature:client")

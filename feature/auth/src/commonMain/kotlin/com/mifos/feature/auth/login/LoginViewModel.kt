@@ -17,10 +17,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import co.touchlab.kermit.Logger
 import com.mifos.core.common.utils.DataState
+import com.mifos.core.data.repository.NoteRepository
 import com.mifos.core.datastore.UserPreferencesRepository
 import com.mifos.core.domain.useCases.LoginUseCase
 import com.mifos.core.domain.useCases.PasswordValidationUseCase
 import com.mifos.core.domain.useCases.UsernameValidationUseCase
+import com.mifos.core.model.objects.Note
 import com.mifos.core.model.objects.users.User
 import com.mifos.core.network.model.PostAuthenticationResponse
 import kotlinx.coroutines.Dispatchers
@@ -39,10 +41,10 @@ import kotlinx.coroutines.launch
 
 class LoginViewModel(
     private val prefManager: UserPreferencesRepository,
-//    private val context: Context,
     private val usernameValidationUseCase: UsernameValidationUseCase,
     private val passwordValidationUseCase: PasswordValidationUseCase,
     private val loginUseCase: LoginUseCase,
+    private val noteRepository: NoteRepository
 ) : ViewModel() {
 
     private val _loginUiState = MutableStateFlow<LoginUiState>(LoginUiState.Empty)
@@ -71,43 +73,27 @@ class LoginViewModel(
             return
         }
         viewModelScope.launch {
-            setupPrefManger(username, password)
+            login(username, password)
         }
     }
 
-    private fun setupPrefManger(username: String, password: String) {
+    fun testFunction(){
         viewModelScope.launch {
-            _loginUiState.value = LoginUiState.ShowProgress
-
-            loginUseCase(username, password).collect { result ->
-                when (result) {
-                    is DataState.Error -> {
-                        _loginUiState.value =
-                            LoginUiState.ShowError(Res.string.feature_auth_error_login_failed)
-                        Logger.e("Login Error", result.exception)
-                    }
-
-                    is DataState.Loading -> {
-                        _loginUiState.value = LoginUiState.ShowProgress
-                    }
-
-                    is DataState.Success -> {
-                        result.data.let { user ->
-                            if (user.userId != null && user.authenticated == true) {
-                                onLoginSuccessful(user, username, password)
-                            } else {
-                                _loginUiState.value =
-                                    LoginUiState.ShowError(Res.string.feature_auth_error_login_failed)
-                            }
-                        }
-                    }
+            val ans : List<Note>
+            val t = noteRepository.getNotes("sdfe", 0).collect{
+                when(it){
+                    is DataState.Error<*> -> Logger.e("@@@", it.message.toString() )
+                    DataState.Loading -> TODO()
+                    is DataState.Success<*> -> TODO()
                 }
             }
+            Logger.d("@@@", t. )
+
         }
     }
 
-    fun login(username: String, password: String) {
-        viewModelScope.launch(Dispatchers.IO) {
+    private fun login(username: String, password: String) {
+        viewModelScope.launch {
             loginUseCase(username, password).collect { result ->
                 when (result) {
                     is DataState.Error -> {
