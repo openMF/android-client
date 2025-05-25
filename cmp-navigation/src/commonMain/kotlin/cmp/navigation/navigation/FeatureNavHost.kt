@@ -24,7 +24,7 @@ import androidx.navigation.compose.composable
 import cmp.navigation.AppState
 import com.mifos.feature.about.navigation.aboutNavGraph
 
-const val WELCOME_ROUTE = "about_screen_route"
+const val WELCOME_ROUTE = "home_route"
 
 @Composable
 internal fun FeatureNavHost(
