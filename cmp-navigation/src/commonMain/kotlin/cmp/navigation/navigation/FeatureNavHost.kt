@@ -22,6 +22,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import cmp.navigation.AppState
+import com.mifos.feature.about.navigation.aboutNavGraph
 
 const val WELCOME_ROUTE = "home_route"
 
@@ -38,6 +39,8 @@ internal fun FeatureNavHost(
         modifier = modifier,
     ) {
         homeScreen()
+
+        aboutNavGraph(onBackPressed = appState.navController::popBackStack)
     }
 }
 
