@@ -9,18 +9,50 @@
  */
 plugins {
     alias(libs.plugins.mifos.kmp.library)
-//    alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.mifos.cmp.feature)
+    alias(libs.plugins.android.library)
+    alias(libs.plugins.compose.compiler)
+    alias(libs.plugins.jetbrainsCompose)
+    alias(libs.plugins.kotlin.parcelize)
     alias(libs.plugins.mifos.kmp.koin)
 }
 
 android {
-    namespace = "com.mifos.cmp.shared"
+    namespace = "cmp.shared"
 }
 
 kotlin {
+    listOf(
+        iosX64(),
+        iosArm64(),
+        iosSimulatorArm64()
+    ).forEach { iosTarget ->
+        iosTarget.binaries.framework {
+            baseName = "ComposeApp"
+            isStatic = true
+            optimized = true
+        }
+    }
+
     sourceSets {
-        androidMain.dependencies {
+        commonMain.dependencies {
+            // Navigation Modules
             implementation(projects.cmpNavigation)
+            implementation(compose.components.resources)
+            api(projects.core.data)
+            api(projects.core.network)
+            //put your multiplatform dependencies here
+            implementation(compose.material)
+            implementation(compose.material3)
+            api(libs.koin.core)
+            implementation(libs.koin.compose)
+            implementation(libs.koin.compose.viewmodel)
+        }
+
+        desktopMain.dependencies {
+            // Desktop specific dependencies
+            implementation(compose.desktop.currentOs)
+            implementation(compose.desktop.common)
         }
     }
 }
