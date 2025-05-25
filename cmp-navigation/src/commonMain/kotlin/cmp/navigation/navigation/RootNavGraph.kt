@@ -34,8 +34,8 @@ fun RootNavGraph(
         modifier = modifier,
     ) {
         authNavGraph(
-            navigateHome = { navHostController.navigate(NavGraphRoute::MAIN_GRAPH) },
-            navigatePasscode = {},
+            navigateHome = { navHostController.navigate(MAIN_GRAPH) },
+            navigatePasscode = { },
             updateServerConfig = {}
         )
 

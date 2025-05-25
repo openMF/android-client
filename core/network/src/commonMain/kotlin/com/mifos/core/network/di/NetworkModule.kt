@@ -55,8 +55,6 @@ val NetworkModule = module {
 
     single { BaseApiManager(get(), get()) }
 
-//    single<Ktorfit> { Ktorfit.Builder().build() }
-
     single<Ktorfit> {
         Ktorfit.Builder()
             .baseUrl(BaseUrl().url)

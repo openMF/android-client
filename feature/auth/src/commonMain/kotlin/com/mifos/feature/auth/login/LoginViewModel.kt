@@ -127,7 +127,7 @@ class LoginViewModel(
         if (passcode.value != null) {
             _loginUiState.value = LoginUiState.HomeActivityIntent
         } else {
-            _loginUiState.value = LoginUiState.PassCodeActivityIntent
+            _loginUiState.value = LoginUiState.HomeActivityIntent
         }
     }
 }
