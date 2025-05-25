@@ -10,33 +10,34 @@
 package com.mifos.core.network.di
 
 import coil3.ImageLoader
-import com.mifos.core.common.network.MifosDispatchers
 import com.mifos.core.common.utils.getInstanceUrl
 import com.mifos.core.datastore.UserPreferencesRepository
-import com.mifos.core.datastore.UserPreferencesRepositoryImpl
 import com.mifos.core.network.BaseApiManager
 import com.mifos.core.network.BaseUrl
+import com.mifos.core.network.KtorHttpClient
 import com.mifos.core.network.KtorfitClient
+import com.mifos.core.network.MifosInterceptor
 import com.mifos.core.network.utils.ImageLoaderUtils
+import de.jensklingenberg.ktorfit.Ktorfit
+import io.ktor.client.HttpClient
+import io.ktor.client.plugins.auth.Auth
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
-import org.koin.core.qualifier.named
 import org.koin.dsl.module
 
 val NetworkModule = module {
 
-    single<UserPreferencesRepository> {
-        UserPreferencesRepositoryImpl(
-            get(),
-            get(
-                named(
-                    MifosDispatchers.IO.name,
-                ),
-            ),
-            get(named(MifosDispatchers.Unconfined)),
-        )
+    single<HttpClient>(MifosClient) {
+        val preferencesRepository = get<UserPreferencesRepository>()
+
+        KtorHttpClient.config {
+            install(Auth)
+            install(MifosInterceptor) {
+                repository = preferencesRepository
+            }
+        }
     }
 
     single<KtorfitClient>(MifosClient) {
@@ -49,6 +50,13 @@ val NetworkModule = module {
     single { BaseApiManager.build(get()) }
 
     single { BaseApiManager(get(), get()) }
+
+    single<Ktorfit> {
+        Ktorfit.Builder()
+            .baseUrl(BaseUrl().url)
+            .httpClient(get<HttpClient>(MifosClient))
+            .build()
+    }
 
     single {
         val prefManager: UserPreferencesRepository = get()
