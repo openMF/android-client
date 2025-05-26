@@ -30,7 +30,7 @@ kotlin {
             implementation(projects.core.database)
             implementation(projects.core.network)
 
-//            implementation(projects.feature.about)
+            implementation(projects.feature.about)
 //            implementation(projects.feature.activate)
             implementation(projects.feature.auth)
 //            implementation(projects.feature.center)
@@ -41,7 +41,7 @@ kotlin {
 //            implementation(projects.feature.document)
 //            implementation(projects.feature.groups)
 //            implementation(projects.feature.loan)
-//            implementation(projects.feature.note)
+            implementation(projects.feature.note)
 //            implementation(projects.feature.offline)
 //            implementation(projects.feature.pathTracking)
 //            implementation(projects.feature.report)

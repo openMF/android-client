@@ -16,6 +16,7 @@ import com.mifos.core.domain.di.UseCaseModule
 import com.mifos.core.network.di.DataManagerModule
 import com.mifos.core.network.di.NetworkModule
 import com.mifos.feature.auth.di.AuthModule
+import com.mifos.feature.note.di.NoteModule
 import com.mifos.room.di.DaoModule
 import com.mifos.room.di.HelperModule
 import com.mifos.room.di.PlatformSpecificDatabaseModule
@@ -55,7 +56,7 @@ object KoinModules {
 //            DocumentModule,
 //            GroupsModule,
 //            LoanModule,
-//            NoteModule,
+            NoteModule,
 //            OfflineModule,
 //            PathTrackingModule,
 //            ReportModule,

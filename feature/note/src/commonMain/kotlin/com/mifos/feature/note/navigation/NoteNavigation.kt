@@ -20,7 +20,7 @@ import com.mifos.feature.note.NoteScreen
 /**
  * Created by Pronay Sarker on 17/08/2024 (12:05 AM)
  */
-fun NavGraphBuilder.noteScreen(
+fun NavGraphBuilder.noteNavGraph(
     onBackPressed: () -> Unit,
 ) {
     composable(
