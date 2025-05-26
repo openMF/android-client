@@ -12,11 +12,21 @@ package com.mifos.feature.document.documentList
 
 
 import androidclient.feature.document.generated.resources.Res
+import androidclient.feature.document.generated.resources.feature_document_download_document
+import androidclient.feature.document.generated.resources.feature_document_download_successful
+import androidclient.feature.document.generated.resources.feature_document_no_document
+import androidclient.feature.document.generated.resources.feature_document_remove_document
+import androidclient.feature.document.generated.resources.feature_document_remove_successful
+import androidclient.feature.document.generated.resources.feature_document_select_option
+import androidclient.feature.document.generated.resources.feature_document_title
+import androidclient.feature.document.generated.resources.feature_document_update_document
+import androidclient.feature.document.generated.resources.feature_document_upload_document
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -27,13 +37,17 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
+import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -53,13 +67,16 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import co.touchlab.kermit.Logger
+import com.mifos.core.designsystem.component.MifosButton
 import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
+import com.mifos.core.designsystem.component.rememberMifosPullToRefreshState
 import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.model.objects.noncoreobjects.Document
 import com.mifos.core.ui.components.MifosEmptyUi
 import com.mifos.feature.document.documentDialog.DocumentDialogScreen
+import org.jetbrains.compose.resources.getString
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -68,6 +85,7 @@ internal fun DocumentListScreen(
     viewModel: DocumentListViewModel = koinViewModel(),
     onBackPressed: () -> Unit,
 ) {
+    val snackbarHostState = remember { SnackbarHostState() }
     val state by viewModel.documentListUiState.collectAsStateWithLifecycle()
     val refreshState by viewModel.isRefreshing.collectAsStateWithLifecycle()
     val downloadState by viewModel.downloadDocumentState.collectAsStateWithLifecycle()
@@ -101,21 +119,13 @@ internal fun DocumentListScreen(
 
     LaunchedEffect(downloadState) {
         if (downloadState) {
-//            Toast.makeText(
-//                context,
-//                context.getString(R.string.feature_document_download_successful),
-//                Toast.LENGTH_SHORT,
-//            ).show()
+            snackbarHostState.showSnackbar(message = getString(Res.string.feature_document_download_successful)
         }
     }
 
     LaunchedEffect(removeState) {
         if (removeState) {
-//            Toast.makeText(
-//                context,
-//                context.getString(R.string.feature_document_remove_successful),
-//                Toast.LENGTH_SHORT,
-//            ).show()
+            snackbarHostState.showSnackbar(message =  getString(Res.string.feature_document_remove_successful))
         }
     }
 
@@ -130,7 +140,7 @@ internal fun DocumentListScreen(
             viewModel.loadDocumentList(entityType, entityId)
         },
         onAddDocument = {
-            dialogBoxAction = context.getString(R.string.feature_document_upload_document)
+            dialogBoxAction = "Upload Document"
             isDialogBoxActive = true
         },
         onDownloadDocument = { documentId ->
@@ -138,19 +148,22 @@ internal fun DocumentListScreen(
         },
         onUpdateDocument = { document ->
             dialogDocument = document
-            dialogBoxAction = context.getString(R.string.feature_document_update_document)
+            dialogBoxAction = "Update Document"
             isDialogBoxActive = true
         },
         onRemovedDocument = { documentId ->
             viewModel.removeDocument(entityType, entityId, documentId)
         },
+        snackbarHostState=snackbarHostState
     )
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun DocumentListScreen(
     state: DocumentListUiState,
     onBackPressed: () -> Unit,
+    snackbarHostState: SnackbarHostState,
     refreshState: Boolean,
     onRefresh: () -> Unit,
     onRetry: () -> Unit,
@@ -160,11 +173,8 @@ internal fun DocumentListScreen(
     modifier: Modifier = Modifier,
     onRemovedDocument: (Int) -> Unit,
 ) {
-    val snackbarHostState = remember { SnackbarHostState() }
-    val pullRefreshState = rememberPullRefreshState(
-        refreshing = refreshState,
-        onRefresh = onRefresh,
-    )
+    val pullRefreshState = rememberPullToRefreshState()
+
 
     var showSelectOptionsDialog by remember { mutableStateOf(false) }
     var selectedDocument by remember { mutableStateOf<Document?>(null) }
@@ -205,7 +215,14 @@ internal fun DocumentListScreen(
         snackbarHostState = snackbarHostState,
     ) { paddingValues ->
         Column(modifier = Modifier.padding(paddingValues)) {
-            Box(modifier = Modifier.pullRefresh(pullRefreshState)) {
+            Box() {
+                PullToRefreshBox(
+                    state = pullRefreshState,
+                    modifier = Modifier.fillMaxSize(),
+                    isRefreshing = refreshState,
+                    onRefresh = onRefresh,
+                ){
+
                 when (state) {
                     is DocumentListUiState.DocumentList -> {
                         if (state.documents.isEmpty()) {
@@ -230,12 +247,7 @@ internal fun DocumentListScreen(
 
                     is DocumentListUiState.Loading -> MifosCircularProgress()
                 }
-
-                PullRefreshIndicator(
-                    refreshing = refreshState,
-                    state = pullRefreshState,
-                    modifier = Modifier.align(Alignment.TopCenter),
-                )
+                }
             }
         }
     }
@@ -379,7 +391,7 @@ private fun SelectOptionsDialog(
                 )
                 Spacer(modifier = Modifier.height(20.dp))
 
-                Button(
+                MifosButton(
                     onClick = { downloadDocument() },
                 ) {
                     Text(
@@ -394,7 +406,7 @@ private fun SelectOptionsDialog(
                         textAlign = TextAlign.Center,
                     )
                 }
-                Button(
+                MifosButton(
                     onClick = { updateDocument() },
                 ) {
                     Text(
@@ -409,7 +421,7 @@ private fun SelectOptionsDialog(
                         textAlign = TextAlign.Center,
                     )
                 }
-                Button(
+                MifosButton(
                     onClick = { removeDocument() },
                 ) {
                     Text(

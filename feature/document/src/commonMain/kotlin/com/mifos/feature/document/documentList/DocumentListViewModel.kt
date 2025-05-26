@@ -10,7 +10,9 @@
 package com.mifos.feature.document.documentList
 
 import androidclient.feature.document.generated.resources.Res
+import androidclient.feature.document.generated.resources.feature_document_failed_to_download_document
 import androidclient.feature.document.generated.resources.feature_document_failed_to_load_documents_list
+import androidclient.feature.document.generated.resources.feature_document_failed_to_remove_document
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

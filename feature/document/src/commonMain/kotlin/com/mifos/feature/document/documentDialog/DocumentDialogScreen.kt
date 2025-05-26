@@ -10,6 +10,21 @@
 package com.mifos.feature.document.documentDialog
 
 import androidclient.feature.document.generated.resources.Res
+import androidclient.feature.document.generated.resources.allStringResources
+import androidclient.feature.document.generated.resources.feature_document_browse
+import androidclient.feature.document.generated.resources.feature_document_description
+import androidclient.feature.document.generated.resources.feature_document_document_updated_successfully
+import androidclient.feature.document.generated.resources.feature_document_message_field_required
+import androidclient.feature.document.generated.resources.feature_document_message_file_required
+import androidclient.feature.document.generated.resources.feature_document_name
+import androidclient.feature.document.generated.resources.feature_document_permission_denied
+import androidclient.feature.document.generated.resources.feature_document_permission_granted
+import androidclient.feature.document.generated.resources.feature_document_remove_successful
+import androidclient.feature.document.generated.resources.feature_document_selected_file
+import androidclient.feature.document.generated.resources.feature_document_update_document
+import androidclient.feature.document.generated.resources.feature_document_upload
+import androidclient.feature.document.generated.resources.feature_document_upload_document
+import androidclient.feature.document.generated.resources.feature_document_uploaded_successfully
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -26,11 +41,13 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -50,6 +67,7 @@ import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosOutlinedTextField
 import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.model.objects.noncoreobjects.Document
+import org.jetbrains.compose.resources.getString
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -64,6 +82,7 @@ internal fun DocumentDialogScreen(
     closeScreen: () -> Unit,
 ) {
 
+    val snackbarHostState = remember { SnackbarHostState() }
     val state by viewModel.documentDialogUiState.collectAsStateWithLifecycle()
     val requiredPermissions = if (Build.VERSION.SDK_INT >= 33) {
         arrayOf(Manifest.permission.READ_MEDIA_IMAGES)
@@ -90,23 +109,16 @@ internal fun DocumentDialogScreen(
     ) { permissionsMap: Map<String, Boolean> ->
         permissionsMap.forEach { (permission, isGranted) ->
             if (isGranted) {
-                Toast.makeText(
-                    context,
-                    context.getString(R.string.feature_document_permission_granted),
-                    Toast.LENGTH_SHORT,
-                ).show()
+                snackbarHostState.showSnackbar(message =  getString(Res.string.feature_document_permission_granted))
             } else {
-                Toast.makeText(
-                    context,
-                    context.getString(R.string.feature_document_permission_denied),
-                    Toast.LENGTH_SHORT,
-                ).show()
+                snackbarHostState.showSnackbar(message =  getString(Res.string.feature_document_permission_denied))
             }
         }
     }
 
     DocumentDialogScreen(
         uiState = state,
+        snackbarHostState=snackbarHostState,
         documentAction = documentAction,
         document = document,
         openFilePicker = {
@@ -121,7 +133,7 @@ internal fun DocumentDialogScreen(
         closeDialog = closeDialog,
         uploadDocument = { documentName, documentDescription ->
 
-            if (documentAction == context.getString(R.string.feature_document_update_document)) {
+            if (documentAction == "Update Document") {
                 viewModel.updateDocument(
                     entityType,
                     entityId,
@@ -130,7 +142,7 @@ internal fun DocumentDialogScreen(
                     documentDescription,
                     fileChosen!!,
                 )
-            } else if (documentAction == context.getString(R.string.feature_document_upload_document)) {
+            } else if (documentAction == "Upload Document") {
                 viewModel.createDocument(
                     entityType,
                     entityId,
@@ -174,6 +186,7 @@ private fun checkPermission(context: Context): Boolean {
 @Composable
 internal fun DocumentDialogScreen(
     uiState: DocumentDialogUiState,
+    snackbarHostState: SnackbarHostState,
     documentAction: String?,
     document: Document?,
     openFilePicker: () -> Unit,
@@ -199,43 +212,37 @@ internal fun DocumentDialogScreen(
         }
 
         is DocumentDialogUiState.ShowDocumentedCreatedSuccessfully -> {
+            val message = stringResource(
+                Res.string.feature_document_uploaded_successfully,
+                listOf(filename)
+            )
             LaunchedEffect(true) {
-                Toast.makeText(
-                    context,
-                    String.format(
-                        context.getString(R.string.feature_document_uploaded_successfully),
-                        filename,
-                    ),
-                    Toast.LENGTH_SHORT,
-                ).show()
+                snackbarHostState.showSnackbar(message)
             }
             closeDialog.invoke()
         }
 
         is DocumentDialogUiState.ShowDocumentUpdatedSuccessfully -> {
+            val message = stringResource(
+                Res.string.feature_document_document_updated_successfully,
+                listOf(filename)
+            )
             LaunchedEffect(true) {
-                Toast.makeText(
-                    context,
-                    String.format(
-                        context.getString(R.string.feature_document_document_updated_successfully),
-                        filename,
-                    ),
-                    Toast.LENGTH_SHORT,
-                ).show()
+                snackbarHostState.showSnackbar(message)
             }
             closeDialog.invoke()
         }
 
         is DocumentDialogUiState.ShowUploadError -> {
             LaunchedEffect(true) {
-                Toast.makeText(context, uiState.message, Toast.LENGTH_SHORT).show()
+                snackbarHostState.showSnackbar(message = uiState.message)
             }
             closeScreen.invoke()
         }
 
         is DocumentDialogUiState.ShowError -> {
             LaunchedEffect(true) {
-                Toast.makeText(context, uiState.message, Toast.LENGTH_SHORT).show()
+                snackbarHostState.showSnackbar(message = uiState.message)
             }
             closeScreen.invoke()
         }
@@ -311,8 +318,7 @@ private fun DocumentDialogContent(
                     )
                     Icon(
                         imageVector = MifosIcons.Cancel,
-                        contentDescription = "",
-                        tint = colorResource(android.R.color.darker_gray),
+                        contentDescription = "Cancel Icon",
                         modifier = Modifier
                             .width(30.dp)
                             .height(30.dp)
@@ -415,7 +421,7 @@ private fun DialogButton(
         modifier=modifier
             .fillMaxWidth()
             .height(50.dp)
-            .padding(20.dp, 0.dp, 20.dp, 0.dp)
+            .padding(horizontal = 20.dp)
     ){
         Text(text=text)
     }

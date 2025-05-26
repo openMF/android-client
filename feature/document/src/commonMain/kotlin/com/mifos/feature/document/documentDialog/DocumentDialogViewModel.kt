@@ -61,8 +61,8 @@ class DocumentDialogViewModel(
                                 }
                             }
                         } catch (throwable: Throwable) {
-                            RxJavaPlugins.getInstance().errorHandler
-                                .handleError(throwable)
+//                            RxJavaPlugins.getInstance().errorHandler
+//                                .handleError(throwable)
                         }
                     }
 
