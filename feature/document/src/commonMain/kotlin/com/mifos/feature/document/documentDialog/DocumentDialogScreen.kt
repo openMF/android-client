@@ -48,6 +48,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -67,9 +68,16 @@ import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosOutlinedTextField
 import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.model.objects.noncoreobjects.Document
+import io.github.vinceglb.filekit.dialogs.FileKitType
+import io.github.vinceglb.filekit.dialogs.compose.rememberFilePickerLauncher
+import io.github.vinceglb.filekit.name
+import io.github.vinceglb.filekit.readBytes
+import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.getString
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
+
+
 
 @Composable
 internal fun DocumentDialogScreen(
@@ -84,37 +92,28 @@ internal fun DocumentDialogScreen(
 
     val snackbarHostState = remember { SnackbarHostState() }
     val state by viewModel.documentDialogUiState.collectAsStateWithLifecycle()
-    val requiredPermissions = if (Build.VERSION.SDK_INT >= 33) {
-        arrayOf(Manifest.permission.READ_MEDIA_IMAGES)
-    } else {
-        arrayOf(
-            Manifest.permission.READ_EXTERNAL_STORAGE,
-            Manifest.permission.WRITE_EXTERNAL_STORAGE,
-        )
-    }
+    val scope = rememberCoroutineScope()
+//    val requiredPermissions = if (Build.VERSION.SDK_INT >= 33) {
+//        arrayOf(Manifest.permission.READ_MEDIA_IMAGES)
+//    } else {
+//        arrayOf(
+//            Manifest.permission.READ_EXTERNAL_STORAGE,
+//            Manifest.permission.WRITE_EXTERNAL_STORAGE,
+//        )
+//    }
     var fileName by rememberSaveable { mutableStateOf<String?>(document?.name) }
-    var fileChosen by rememberSaveable { mutableStateOf<File?>(null) }
-    val launcher = rememberLauncherForActivityResult(ActivityResultContracts.PickVisualMedia()) {
-        it?.let { uri ->
-            // todo while migrating to cmp
-//            val filePath = FileUtils.getPathReal(context, uri)
-//            filePath?.let { path ->
-//                fileChosen = File(path)
-//                fileName = fileChosen!!.name
-//            }
-        }
-    }
-    val permissionsLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.RequestMultiplePermissions(),
-    ) { permissionsMap: Map<String, Boolean> ->
-        permissionsMap.forEach { (permission, isGranted) ->
-            if (isGranted) {
-                snackbarHostState.showSnackbar(message =  getString(Res.string.feature_document_permission_granted))
-            } else {
-                snackbarHostState.showSnackbar(message =  getString(Res.string.feature_document_permission_denied))
+    var fileData by remember { mutableStateOf<ByteArray?>(null) }
+
+    val pickerLauncher = rememberFilePickerLauncher(
+        type = FileKitType.ImageAndVideo,
+        onResult = { files ->
+            scope.launch {
+                fileName=files?.name ?: "Nothing choosen"
+                fileData=files?.readBytes()
             }
         }
-    }
+    )
+
 
     DocumentDialogScreen(
         uiState = state,
@@ -122,65 +121,33 @@ internal fun DocumentDialogScreen(
         documentAction = documentAction,
         document = document,
         openFilePicker = {
-            if (checkPermission(context)) {
-                launcher.launch(
-                    PickVisualMediaRequest(mediaType = ActivityResultContracts.PickVisualMedia.ImageAndVideo),
-                )
-            } else {
-                permissionsLauncher.launch(requiredPermissions)
-            }
+            pickerLauncher.launch()
         },
         closeDialog = closeDialog,
         uploadDocument = { documentName, documentDescription ->
 
             if (documentAction == "Update Document") {
-                viewModel.updateDocument(
-                    entityType,
-                    entityId,
-                    document!!.id,
-                    documentName,
-                    documentDescription,
-                    fileChosen!!,
-                )
+//                viewModel.updateDocument(
+//                    entityType,
+//                    entityId,
+//                    document!!.id,
+//                    documentName,
+//                    documentDescription,
+//                    fileData!!,
+//                )
             } else if (documentAction == "Upload Document") {
-                viewModel.createDocument(
-                    entityType,
-                    entityId,
-                    documentName,
-                    documentDescription,
-                    fileChosen!!,
-                )
+//                viewModel.createDocument(
+//                    entityType,
+//                    entityId,
+//                    documentName,
+//                    documentDescription,
+//                    fileData!!,
+//                )
             }
         },
         filename = fileName,
         closeScreen = closeScreen,
     )
-}
-
-private fun checkPermission(context: Context): Boolean {
-    if (Build.VERSION.SDK_INT >= 33) {
-        if (ContextCompat.checkSelfPermission(
-                context,
-                Manifest.permission.READ_MEDIA_IMAGES,
-            ) == PermissionChecker.PERMISSION_GRANTED
-        ) {
-            return true
-        }
-    } else {
-        if (ContextCompat.checkSelfPermission(
-                context,
-                Manifest.permission.READ_EXTERNAL_STORAGE,
-            ) == PermissionChecker.PERMISSION_GRANTED &&
-            ContextCompat.checkSelfPermission(
-                context,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE,
-            ) == PermissionChecker.PERMISSION_GRANTED
-        ) {
-            return true
-        }
-    }
-
-    return false
 }
 
 @Composable

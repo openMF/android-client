@@ -35,86 +35,87 @@ class DocumentDialogViewModel(
     val documentDialogUiState: StateFlow<DocumentDialogUiState>
         get() = _documentDialogUiState
 
-    @OptIn(InternalAPI::class)
-    fun createDocument(type: String?, id: Int, name: String?, desc: String?, file: File) {
-        _documentDialogUiState.value = DocumentDialogUiState.ShowProgressbar
-        viewModelScope.launch {
-            repository.createDocument(
-                type!!, id, name!!, desc!!, getRequestFileBody(file)
-            ).collect {result->
-                when(result){
-                    is DataState.Error<*> -> {
-                        when(result.exception){
-                            is ClientRequestException, is ServerResponseException -> {
-                                _documentDialogUiState.value = DocumentDialogUiState.ShowUploadError(result.exception.message ?: "Server error occurred")
-                            }
-                            is IOException -> {
-                                _documentDialogUiState.value = DocumentDialogUiState.ShowError(result.exception.rootCause?.message ?: "Network error occurred")
-                            }
-                            is SerializationException -> {
-                                _documentDialogUiState.value = DocumentDialogUiState.ShowError("Data parsing error")
-                            }
-                            else -> {
-                                _documentDialogUiState.value = DocumentDialogUiState.ShowError(result.exception.rootCause?.message ?: "Unknown error")
-                            }
-                        }
-                    }
-                    DataState.Loading -> {
-                        _documentDialogUiState.value = DocumentDialogUiState.ShowProgressbar
-                    }
-                    is DataState.Success<GenericResponse> -> {
-                        _documentDialogUiState.value =
-                            DocumentDialogUiState.ShowDocumentedCreatedSuccessfully(result.data)
-                    }
-                }
-
-            }
-        }
-    }
-
-    fun updateDocument(
-        entityType: String?,
-        entityId: Int,
-        documentId: Int,
-        name: String?,
-        desc: String?,
-        file: File,
-    ) {
-        _documentDialogUiState.value = DocumentDialogUiState.ShowProgressbar
-        viewModelScope.launch {
-            repository.updateDocument(
-                entityType!!,
-                entityId,
-                documentId,
-                name!!,
-                desc!!,
-                getRequestFileBody(file),
-            ).collect { result->
-                when(result)
-                {
-                    is DataState.Error<*> -> {
-                        _documentDialogUiState.value =
-                            DocumentDialogUiState.ShowError(result.message)
-                    }
-                    DataState.Loading -> {
-                        _documentDialogUiState.value = DocumentDialogUiState.ShowProgressbar
-                    }
-                    is DataState.Success<GenericResponse> -> {
-                        _documentDialogUiState.value =
-                            DocumentDialogUiState.ShowDocumentUpdatedSuccessfully(result.data)
-
-                    }
-                }
-
-            }
-        }
-    }
-
-    private fun getRequestFileBody(file: File): PartData {
-        // create RequestBody instance from file
-        val requestFile = file.asRequestBody("multipart/form-data".toMediaTypeOrNull())
-
-        // PartData is used to send also the actual file name
-        return PartData.createFormData("file", file.name, requestFile)
-    }
+//    @OptIn(InternalAPI::class)
+//    fun createDocument(type: String?, id: Int, name: String?, desc: String?, file: File) {
+//        _documentDialogUiState.value = DocumentDialogUiState.ShowProgressbar
+//        viewModelScope.launch {
+//            repository.createDocument(
+//                type!!, id, name!!, desc!!, getRequestFileBody(file)
+//            ).collect {result->
+//                when(result){
+//                    is DataState.Error<*> -> {
+//                        when(result.exception){
+//                            is ClientRequestException, is ServerResponseException -> {
+//                                _documentDialogUiState.value = DocumentDialogUiState.ShowUploadError(result.exception.message ?: "Server error occurred")
+//                            }
+//                            is IOException -> {
+//                                _documentDialogUiState.value = DocumentDialogUiState.ShowError(result.exception.rootCause?.message ?: "Network error occurred")
+//                            }
+//                            is SerializationException -> {
+//                                _documentDialogUiState.value = DocumentDialogUiState.ShowError("Data parsing error")
+//                            }
+//                            else -> {
+//                                _documentDialogUiState.value = DocumentDialogUiState.ShowError(result.exception.rootCause?.message ?: "Unknown error")
+//                            }
+//                        }
+//                    }
+//                    DataState.Loading -> {
+//                        _documentDialogUiState.value = DocumentDialogUiState.ShowProgressbar
+//                    }
+//                    is DataState.Success<GenericResponse> -> {
+//                        _documentDialogUiState.value =
+//                            DocumentDialogUiState.ShowDocumentedCreatedSuccessfully(result.data)
+//                    }
+//                }
+//
+//            }
+//        }
+//    }
+//
+//    fun updateDocument(
+//        entityType: String?,
+//        entityId: Int,
+//        documentId: Int,
+//        name: String?,
+//        desc: String?,
+//        file: File,
+//    ) {
+//        _documentDialogUiState.value = DocumentDialogUiState.ShowProgressbar
+//        viewModelScope.launch {
+//            repository.updateDocument(
+//                entityType!!,
+//                entityId,
+//                documentId,
+//                name!!,
+//                desc!!,
+//                getRequestFileBody(file),
+//            ).collect { result->
+//                when(result)
+//                {
+//                    is DataState.Error<*> -> {
+//                        _documentDialogUiState.value =
+//                            DocumentDialogUiState.ShowError(result.message)
+//                    }
+//                    DataState.Loading -> {
+//                        _documentDialogUiState.value = DocumentDialogUiState.ShowProgressbar
+//                    }
+//                    is DataState.Success<GenericResponse> -> {
+//                        _documentDialogUiState.value =
+//                            DocumentDialogUiState.ShowDocumentUpdatedSuccessfully(result.data)
+//
+//                    }
+//                }
+//
+//            }
+//        }
+//    }
+//
+//    private fun getRequestFileBody(file: File): PartData {
+////        // create RequestBody instance from file
+////        val requestFile = file.asRequestBody("multipart/form-data".toMediaTypeOrNull())
+////
+////        // PartData is used to send also the actual file name
+////        return PartData.createFormData("file", file.name, requestFile)
+//        return PartData.BinaryItem
+//    }
 }
