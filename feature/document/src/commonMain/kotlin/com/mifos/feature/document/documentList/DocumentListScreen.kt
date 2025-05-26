@@ -129,33 +129,33 @@ internal fun DocumentListScreen(
         }
     }
 
-//    DocumentListScreen(
-//        state = state,
-//        onBackPressed = onBackPressed,
-//        refreshState = refreshState,
-//        onRefresh = {
-//            viewModel.refreshDocumentList(entityType, entityId)
-//        },
-//        onRetry = {
-//            viewModel.loadDocumentList(entityType, entityId)
-//        },
-//        onAddDocument = {
-//            dialogBoxAction = "Upload Document"
-//            isDialogBoxActive = true
-//        },
-//        onDownloadDocument = { documentId ->
-//            viewModel.downloadDocument(entityType, entityId, documentId)
-//        },
-//        onUpdateDocument = { document ->
-//            dialogDocument = document
-//            dialogBoxAction = "Update Document"
-//            isDialogBoxActive = true
-//        },
-//        onRemovedDocument = { documentId ->
-//            viewModel.removeDocument(entityType, entityId, documentId)
-//        },
-//        snackbarHostState=snackbarHostState
-//    )
+    DocumentListScreen(
+        state = state,
+        onBackPressed = onBackPressed,
+        refreshState = refreshState,
+        onRefresh = {
+            viewModel.refreshDocumentList(entityType, entityId)
+        },
+        onRetry = {
+            viewModel.loadDocumentList(entityType, entityId)
+        },
+        onAddDocument = {
+            dialogBoxAction = "Upload Document"
+            isDialogBoxActive = true
+        },
+        onDownloadDocument = { documentId ->
+            viewModel.downloadDocument(entityType, entityId, documentId)
+        },
+        onUpdateDocument = { document ->
+            dialogDocument = document
+            dialogBoxAction = "Update Document"
+            isDialogBoxActive = true
+        },
+        onRemovedDocument = { documentId ->
+            viewModel.removeDocument(entityType, entityId, documentId)
+        },
+        snackbarHostState=snackbarHostState
+    )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)

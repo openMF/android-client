@@ -127,22 +127,22 @@ internal fun DocumentDialogScreen(
         uploadDocument = { documentName, documentDescription ->
 
             if (documentAction == "Update Document") {
-//                viewModel.updateDocument(
-//                    entityType,
-//                    entityId,
-//                    document!!.id,
-//                    documentName,
-//                    documentDescription,
-//                    fileData!!,
-//                )
+                viewModel.updateDocument(
+                    entityType,
+                    entityId,
+                    document!!.id,
+                    documentName,
+                    documentDescription,
+                    fileData!!,
+                )
             } else if (documentAction == "Upload Document") {
-//                viewModel.createDocument(
-//                    entityType,
-//                    entityId,
-//                    documentName,
-//                    documentDescription,
-//                    fileData!!,
-//                )
+                viewModel.createDocument(
+                    entityType,
+                    entityId,
+                    documentName,
+                    documentDescription,
+                    fileData!!,
+                )
             }
         },
         filename = fileName,
