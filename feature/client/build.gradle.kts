@@ -8,38 +8,64 @@
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
 plugins {
-    alias(libs.plugins.mifos.android.feature)
-    alias(libs.plugins.mifos.android.library.compose)
-    alias(libs.plugins.mifos.android.library.jacoco)
+    alias(libs.plugins.mifos.cmp.feature)
 }
 
 android {
     namespace = "com.mifos.feature.client"
 }
 
-dependencies {
+//kotlin {
+//    sourceSets {
+//        commonMain.dependencies {
+//            implementation(projects.core.data)
+//            implementation(projects.core.domain)
+//            implementation(projects.core.datastore)
+//
+//            implementation(libs.accompanist.permission)
+//            implementation(libs.accompanist.swiperefresh)
+//
+//            implementation(libs.coil.kt2.compose)
+//            implementation(libs.androidx.paging.compose)
+////            implementation(project(":feature:data-table"))
+//
+//
+//            implementation(libs.androidx.material)
+//
+//            implementation(libs.maps.compose)
+//
+//            implementation(libs.kotlinx.serialization.json)
+//
+//            implementation(libs.ktor.client.core)
+//            implementation(libs.ktor.client.android)
+//            implementation(libs.ktorfit.lib)
+//        }
+//    }
+//}
 
-    implementation(projects.core.data)
-    implementation(projects.core.domain)
-    implementation(projects.core.datastore)
-
-    // swipe refresh
-    implementation(libs.accompanist.permission)
-    implementation(libs.accompanist.swiperefresh)
-
-    implementation(libs.coil.kt2.compose)
-    implementation(libs.androidx.paging.compose)
-    implementation(project(":feature:data-table"))
-
-    testImplementation(libs.hilt.android.testing)
-
-    implementation(libs.androidx.material)
-
-    implementation(libs.maps.compose)
-
-    implementation(libs.kotlinx.serialization.json)
-
-    implementation(libs.ktor.client.core)
-    implementation(libs.ktor.client.android)
-    implementation(libs.ktorfit.lib)
-}
+//dependencies {
+//
+//    implementation(projects.core.data)
+//    implementation(projects.core.domain)
+//    implementation(projects.core.datastore)
+//
+//    // swipe refresh
+//    implementation(libs.accompanist.permission)
+//    implementation(libs.accompanist.swiperefresh)
+//
+//    implementation(libs.coil.kt2.compose)
+//    implementation(libs.androidx.paging.compose)
+//    implementation(project(":feature:data-table"))
+//
+//    testImplementation(libs.hilt.android.testing)
+//
+//    implementation(libs.androidx.material)
+//
+//    implementation(libs.maps.compose)
+//
+//    implementation(libs.kotlinx.serialization.json)
+//
+//    implementation(libs.ktor.client.core)
+//    implementation(libs.ktor.client.android)
+//    implementation(libs.ktorfit.lib)
+//}
