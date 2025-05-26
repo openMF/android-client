@@ -33,7 +33,7 @@ import com.mifos.core.ui.components.MultiFloatingActionButton
 import com.mifos.core.ui.util.DevicePreview
 import com.mifos.feature.search.components.SearchBox
 import com.mifos.feature.search.components.SearchScreenResult
-import org.koin.androidx.compose.koinViewModel
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun SearchScreenRoute(

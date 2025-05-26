@@ -9,6 +9,8 @@
  */
 package com.mifos.feature.search.components
 
+import androidclient.feature.search.generated.resources.Res
+import androidclient.feature.search.generated.resources.feature_search_filter
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -24,15 +26,14 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalConfiguration
-import androidx.compose.ui.res.stringResource
+//import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.DialogProperties
 import com.mifos.core.ui.util.DevicePreview
 import com.mifos.feature.search.FilterOption
-import com.mifos.feature.search.R
 import com.mifos.feature.search.SearchScreenEvent
+import org.jetbrains.compose.resources.stringResource
 
 @Composable
 internal fun FilterDialog(
@@ -41,14 +42,16 @@ internal fun FilterDialog(
     onDismiss: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val configuration = LocalConfiguration.current
+   // val configuration = LocalConfiguration.current
+    val dialogMaxWidth = 400.dp
+
 
     AlertDialog(
-        modifier = modifier.widthIn(max = configuration.screenWidthDp.dp - 80.dp),
+        modifier = modifier.widthIn(max = dialogMaxWidth),
         properties = DialogProperties(usePlatformDefaultWidth = false),
         onDismissRequest = onDismiss,
         title = {
-            Text(text = stringResource(id = R.string.feature_search_filter))
+            Text(text = stringResource(Res.string.feature_search_filter))
         },
         text = {
             HorizontalDivider()
