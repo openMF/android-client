@@ -9,16 +9,26 @@
  */
 package com.mifos.feature.activate
 
+import androidclient.feature.activate.generated.resources.Res
+import androidclient.feature.activate.generated.resources.feature_activate_center
+import androidclient.feature.activate.generated.resources.feature_activate_client
+import androidclient.feature.activate.generated.resources.feature_activate_failed_to_activate_center
+import androidclient.feature.activate.generated.resources.feature_activate_failed_to_activate_client
+import androidclient.feature.activate.generated.resources.feature_activate_failed_to_activate_group
+import androidclient.feature.activate.generated.resources.feature_activate_group
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mifos.core.common.utils.Constants
+import com.mifos.core.common.utils.DataState
 import com.mifos.core.common.utils.Resource
 import com.mifos.core.domain.useCases.ActivateCenterUseCase
 import com.mifos.core.domain.useCases.ActivateClientUseCase
 import com.mifos.core.domain.useCases.ActivateGroupUseCase
 import com.mifos.core.model.objects.clients.ActivatePayload
+import com.mifos.feature.activate.ActivateUiState.*
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.IO
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
@@ -40,15 +50,15 @@ class ActivateViewModel(
         viewModelScope.launch(Dispatchers.IO) {
             activateClientUseCase(clientId, clientPayload).collect { result ->
                 when (result) {
-                    is Resource.Error<*> ->
+                    is DataState.Error<*> ->
                         _activateUiState.value =
-                            ActivateUiState.Error(R.string.feature_activate_failed_to_activate_client)
+                            ActivateUiState.Error(Res.string.feature_activate_failed_to_activate_client)
 
-                    is Resource.Loading<*> -> _activateUiState.value = ActivateUiState.Loading
+                    is DataState.Loading -> _activateUiState.value = ActivateUiState.Loading
 
-                    is Resource.Success<*> ->
+                    is DataState.Success<*> ->
                         _activateUiState.value =
-                            ActivateUiState.ActivatedSuccessfully(R.string.feature_activate_client)
+                            ActivateUiState.ActivatedSuccessfully(Res.string.feature_activate_client)
                 }
             }
         }
@@ -57,15 +67,15 @@ class ActivateViewModel(
         viewModelScope.launch(Dispatchers.IO) {
             activateCenterUseCase(centerId, centerPayload).collect { result ->
                 when (result) {
-                    is Resource.Error ->
+                    is DataState.Error<*>  ->
                         _activateUiState.value =
-                            ActivateUiState.Error(R.string.feature_activate_failed_to_activate_center)
+                            ActivateUiState.Error(Res.string.feature_activate_failed_to_activate_center)
 
-                    is Resource.Loading -> _activateUiState.value = ActivateUiState.Loading
+                    is DataState.Loading -> _activateUiState.value = ActivateUiState.Loading
 
-                    is Resource.Success ->
+                    is DataState.Success<*> ->
                         _activateUiState.value =
-                            ActivateUiState.ActivatedSuccessfully(R.string.feature_activate_center)
+                            ActivateUiState.ActivatedSuccessfully(Res.string.feature_activate_center)
                 }
             }
         }
@@ -74,15 +84,15 @@ class ActivateViewModel(
         viewModelScope.launch(Dispatchers.IO) {
             activateGroupUseCase(groupId, groupPayload).collect { result ->
                 when (result) {
-                    is Resource.Error ->
+                    is DataState.Error<*> ->
                         _activateUiState.value =
-                            ActivateUiState.Error(R.string.feature_activate_failed_to_activate_group)
+                            Error(Res.string.feature_activate_failed_to_activate_group)
 
-                    is Resource.Loading -> _activateUiState.value = ActivateUiState.Loading
+                    is DataState.Loading -> _activateUiState.value = ActivateUiState.Loading
 
-                    is Resource.Success ->
+                    is DataState.Success<*> ->
                         _activateUiState.value =
-                            ActivateUiState.ActivatedSuccessfully(R.string.feature_activate_group)
+                            ActivatedSuccessfully(Res.string.feature_activate_group)
                 }
             }
         }

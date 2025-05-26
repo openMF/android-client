@@ -11,7 +11,11 @@
 
 package com.mifos.feature.activate
 
-import android.widget.Toast
+import androidclient.feature.activate.generated.resources.Res
+import androidclient.feature.activate.generated.resources.feature_activate
+import androidclient.feature.activate.generated.resources.feature_activate_activation_date
+import androidclient.feature.activate.generated.resources.feature_activate_cancel
+import androidclient.feature.activate.generated.resources.feature_activate_select
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
@@ -36,11 +40,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.tooling.preview.PreviewParameter
-import androidx.compose.ui.tooling.preview.PreviewParameterProvider
+import androidx.compose.ui.text.intl.Locale
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -50,9 +50,9 @@ import com.mifos.core.designsystem.component.MifosDatePickerTextField
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.model.objects.clients.ActivatePayload
-import org.koin.androidx.compose.koinViewModel
-import java.text.SimpleDateFormat
-import java.util.Locale
+import kotlinx.datetime.Clock
+import org.jetbrains.compose.resources.stringResource
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 internal fun ActivateScreen(
@@ -104,22 +104,22 @@ internal fun ActivateScreen(
     val snackbarHostState = remember { SnackbarHostState() }
 
     MifosScaffold(
-        title = stringResource(id = R.string.feature_activate),
+        title = stringResource(Res.string.feature_activate),
         onBackPressed = onBackPressed,
         snackbarHostState = snackbarHostState,
     ) { paddingValues ->
         Column(modifier = modifier.padding(paddingValues)) {
             when (state) {
                 is ActivateUiState.ActivatedSuccessfully -> {
-                    Toast.makeText(
-                        LocalContext.current,
-                        stringResource(id = state.message),
-                        Toast.LENGTH_SHORT,
-                    ).show()
+//                    Toast.makeText(
+//                        LocalContext.current,
+//                        stringResource(id = state.message),
+//                        Toast.LENGTH_SHORT,
+//                    ).show()
                     onBackPressed()
                 }
 
-                is ActivateUiState.Error -> MifosSweetError(message = stringResource(id = state.message)) {}
+                is ActivateUiState.Error -> MifosSweetError(message = stringResource(state.message)) {}
 
                 is ActivateUiState.Loading -> MifosCircularProgress()
 
@@ -136,7 +136,7 @@ private fun ActivateContent(
 ) {
     Column(modifier = modifier) {
         var showDatePicker by rememberSaveable { mutableStateOf(false) }
-        var activateDate by rememberSaveable { mutableLongStateOf(System.currentTimeMillis()) }
+        var activateDate by rememberSaveable { mutableLongStateOf(Clock.System.currentTimeMillis()) }
         val datePickerState = rememberDatePickerState(
             initialSelectedDateMillis = activateDate,
             selectableDates = object : SelectableDates {
@@ -159,14 +159,14 @@ private fun ActivateContent(
                                 activateDate = it
                             }
                         },
-                    ) { Text(stringResource(id = R.string.feature_activate_select)) }
+                    ) { Text(stringResource(Res.string.feature_activate_select)) }
                 },
                 dismissButton = {
                     TextButton(
                         onClick = {
                             showDatePicker = false
                         },
-                    ) { Text(stringResource(id = R.string.feature_activate_cancel)) }
+                    ) { Text(stringResource(Res.string.feature_activate_cancel)) }
                 },
             ) {
                 DatePicker(state = datePickerState)
@@ -177,7 +177,7 @@ private fun ActivateContent(
             value = SimpleDateFormat("dd MMMM yyyy", Locale.getDefault()).format(
                 activateDate,
             ),
-            label = stringResource(R.string.feature_activate_activation_date),
+            label = stringResource(Res.string.feature_activate_activation_date),
             openDatePicker = {
                 showDatePicker = true
             },
@@ -199,30 +199,30 @@ private fun ActivateContent(
                 .padding(start = 16.dp, end = 16.dp),
             contentPadding = PaddingValues(),
         ) {
-            Text(text = stringResource(id = R.string.feature_activate), fontSize = 16.sp)
+            Text(text = stringResource(Res.string.feature_activate), fontSize = 16.sp)
         }
     }
 }
-
-private class ActivateUiStateProvider : PreviewParameterProvider<ActivateUiState> {
-
-    override val values: Sequence<ActivateUiState>
-        get() = sequenceOf(
-            ActivateUiState.Loading,
-            ActivateUiState.Error(R.string.feature_activate_failed_to_activate_client),
-            ActivateUiState.ActivatedSuccessfully(R.string.feature_activate_client),
-            ActivateUiState.Initial,
-        )
-}
-
-@Preview(showBackground = true)
-@Composable
-private fun ActivateScreenPreview(
-    @PreviewParameter(ActivateUiStateProvider::class) state: ActivateUiState,
-) {
-    ActivateScreen(
-        state = state,
-        onActivate = {},
-        onBackPressed = {},
-    )
-}
+//
+//private class ActivateUiStateProvider : PreviewParameterProvider<ActivateUiState> {
+//
+//    override val values: Sequence<ActivateUiState>
+//        get() = sequenceOf(
+//            ActivateUiState.Loading,
+//            ActivateUiState.Error(R.string.feature_activate_failed_to_activate_client),
+//            ActivateUiState.ActivatedSuccessfully(R.string.feature_activate_client),
+//            ActivateUiState.Initial,
+//        )
+//}
+//
+//@Preview(showBackground = true)
+//@Composable
+//private fun ActivateScreenPreview(
+//    @PreviewParameter(ActivateUiStateProvider::class) state: ActivateUiState,
+//) {
+//    ActivateScreen(
+//        state = state,
+//        onActivate = {},
+//        onBackPressed = {},
+//    )
+//}
