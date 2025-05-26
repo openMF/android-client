@@ -10,6 +10,8 @@
 package com.mifos.feature.document.documentDialog
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.repository.DocumentDialogRepository
 import com.mifos.core.network.GenericResponse
 import io.ktor.client.plugins.ClientRequestException
@@ -19,6 +21,7 @@ import io.ktor.util.rootCause
 import io.ktor.utils.io.InternalAPI
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.launch
 import kotlinx.io.IOException
 import kotlinx.serialization.SerializationException
 
@@ -35,43 +38,38 @@ class DocumentDialogViewModel(
     @OptIn(InternalAPI::class)
     fun createDocument(type: String?, id: Int, name: String?, desc: String?, file: File) {
         _documentDialogUiState.value = DocumentDialogUiState.ShowProgressbar
-        repository
-            .createDocument(type, id, name, desc, getRequestFileBody(file))
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribeOn(Schedulers.io())
-            .subscribe(
-                object : Subscriber<GenericResponse>() {
-                    override fun onCompleted() {
-                    }
-
-                    override fun onError(e: Throwable) {
-                        try {
-                            when (e) {
-                                is ClientRequestException, is ServerResponseException -> {
-                                    _documentDialogUiState.value = DocumentDialogUiState.ShowUploadError(e.message ?: "Server error occurred")
-                                }
-                                is IOException -> {
-                                    _documentDialogUiState.value = DocumentDialogUiState.ShowError(e.rootCause?.message ?: "Network error occurred")
-                                }
-                                is SerializationException -> {
-                                    _documentDialogUiState.value = DocumentDialogUiState.ShowError("Data parsing error")
-                                }
-                                else -> {
-                                    _documentDialogUiState.value = DocumentDialogUiState.ShowError(e.rootCause?.message ?: "Unknown error")
-                                }
+        viewModelScope.launch {
+            repository.createDocument(
+                type!!, id, name!!, desc!!, getRequestFileBody(file)
+            ).collect {result->
+                when(result){
+                    is DataState.Error<*> -> {
+                        when(result.exception){
+                            is ClientRequestException, is ServerResponseException -> {
+                                _documentDialogUiState.value = DocumentDialogUiState.ShowUploadError(result.exception.message ?: "Server error occurred")
                             }
-                        } catch (throwable: Throwable) {
-//                            RxJavaPlugins.getInstance().errorHandler
-//                                .handleError(throwable)
+                            is IOException -> {
+                                _documentDialogUiState.value = DocumentDialogUiState.ShowError(result.exception.rootCause?.message ?: "Network error occurred")
+                            }
+                            is SerializationException -> {
+                                _documentDialogUiState.value = DocumentDialogUiState.ShowError("Data parsing error")
+                            }
+                            else -> {
+                                _documentDialogUiState.value = DocumentDialogUiState.ShowError(result.exception.rootCause?.message ?: "Unknown error")
+                            }
                         }
                     }
-
-                    override fun onNext(genericResponse: GenericResponse) {
-                        _documentDialogUiState.value =
-                            DocumentDialogUiState.ShowDocumentedCreatedSuccessfully(genericResponse)
+                    DataState.Loading -> {
+                        _documentDialogUiState.value = DocumentDialogUiState.ShowProgressbar
                     }
-                },
-            )
+                    is DataState.Success<GenericResponse> -> {
+                        _documentDialogUiState.value =
+                            DocumentDialogUiState.ShowDocumentedCreatedSuccessfully(result.data)
+                    }
+                }
+
+            }
+        }
     }
 
     fun updateDocument(
@@ -83,30 +81,33 @@ class DocumentDialogViewModel(
         file: File,
     ) {
         _documentDialogUiState.value = DocumentDialogUiState.ShowProgressbar
-        repository.updateDocument(
-            entityType,
-            entityId,
-            documentId,
-            name,
-            desc,
-            getRequestFileBody(file),
-        )
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribeOn(Schedulers.io())
-            .subscribe(
-                object : Subscriber<GenericResponse>() {
-                    override fun onCompleted() {}
-                    override fun onError(e: Throwable) {
+        viewModelScope.launch {
+            repository.updateDocument(
+                entityType!!,
+                entityId,
+                documentId,
+                name!!,
+                desc!!,
+                getRequestFileBody(file),
+            ).collect { result->
+                when(result)
+                {
+                    is DataState.Error<*> -> {
                         _documentDialogUiState.value =
-                            DocumentDialogUiState.ShowError(e.message.toString())
+                            DocumentDialogUiState.ShowError(result.message)
                     }
+                    DataState.Loading -> {
+                        _documentDialogUiState.value = DocumentDialogUiState.ShowProgressbar
+                    }
+                    is DataState.Success<GenericResponse> -> {
+                        _documentDialogUiState.value =
+                            DocumentDialogUiState.ShowDocumentUpdatedSuccessfully(result.data)
 
-                    override fun onNext(genericResponse: GenericResponse) {
-                        _documentDialogUiState.value =
-                            DocumentDialogUiState.ShowDocumentUpdatedSuccessfully(genericResponse)
                     }
-                },
-            )
+                }
+
+            }
+        }
     }
 
     private fun getRequestFileBody(file: File): PartData {
