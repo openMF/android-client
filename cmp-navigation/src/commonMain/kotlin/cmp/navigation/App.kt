@@ -152,21 +152,20 @@ fun App(
                             contentDescription = "Profile header",
                         )
                         Column(modifier = Modifier.padding(32.dp)) {
-                            Image(
-                                modifier = Modifier
-                                    .size(64.dp)
-                                    .clip(CircleShape),
-                                painter = painterResource(Res.drawable.ic_dp_placeholder),
-                                contentDescription = "DP place holder",
-                            )
-                            Text(
-                                text = "Mifos",
-                                style = TextStyle(
-                                    fontSize = 14.sp,
-                                    fontWeight = FontWeight.Medium,
-                                    fontStyle = FontStyle.Normal,
-                                ),
-                            )
+                            Column(horizontalAlignment= Alignment.CenterHorizontally){
+                                Image(
+                                    modifier = Modifier
+                                        .size(64.dp)
+                                        .clip(CircleShape),
+                                    painter = painterResource(Res.drawable.ic_dp_placeholder),
+                                    contentDescription = "DP place holder",
+                                )
+                                Text(
+                                    text = "Mifos",
+                                    color = Color.White,
+                                    style = MaterialTheme.typography.titleMedium,
+                                )
+                            }
                             Spacer(modifier = Modifier.height(16.dp))
                             Row(
                                 modifier = Modifier.fillMaxWidth(),
@@ -193,11 +192,7 @@ fun App(
                             label = {
                                 Text(
                                     text = item.title,
-                                    style = TextStyle(
-                                        fontSize = 14.sp,
-                                        fontWeight = FontWeight.Medium,
-                                        fontStyle = FontStyle.Normal,
-                                    ),
+                                    style = MaterialTheme.typography.bodyMedium,
                                 )
                             },
                             selected = index == selectedItemIndex,

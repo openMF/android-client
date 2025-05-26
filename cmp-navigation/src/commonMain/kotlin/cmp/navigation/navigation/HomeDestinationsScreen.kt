@@ -1,6 +1,14 @@
+/*
+ * Copyright 2025 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ */
 package cmp.navigation.navigation
 
-import androidx.compose.material.icons.Icons
 import androidx.compose.ui.graphics.vector.ImageVector
 import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.feature.about.navigation.AboutScreens
@@ -12,7 +20,7 @@ sealed class HomeDestinationsScreen(
 ) {
     data object SearchScreen : HomeDestinationsScreen(
         title = "Search",
-        route="search_screen",
+        route = "search_screen",
         icon = MifosIcons.Dashboard,
     )
 
@@ -30,14 +38,14 @@ sealed class HomeDestinationsScreen(
 
     data object GroupListScreen : HomeDestinationsScreen(
         title = "Groups",
-        route="",
+        route = "",
         icon = MifosIcons.Group,
     )
 
     data object CheckerInboxAndTasksScreen : HomeDestinationsScreen(
         title = "Checker Inbox & Tasks",
-        route="",
-        icon =MifosIcons.Checkbox ,
+        route = "",
+        icon = MifosIcons.Checkbox,
     )
 
     data object IndividualCollectionSheetScreen : HomeDestinationsScreen(
@@ -60,25 +68,25 @@ sealed class HomeDestinationsScreen(
 
     data object PathTrackerScreen : HomeDestinationsScreen(
         title = "Path Tracker",
-        route="",
+        route = "",
         icon = MifosIcons.PersonPinCircle,
     )
 
     data object SettingsScreen : HomeDestinationsScreen(
         title = "Settings",
-        route="",
+        route = "",
         icon = MifosIcons.Settings,
     )
 
     data object AboutScreen : HomeDestinationsScreen(
         title = "About",
-        route =AboutScreens.AboutScreen.route,
+        route = AboutScreens.AboutScreen.route,
         icon = MifosIcons.Info,
     )
 
     data object OfflineSyncScreen : HomeDestinationsScreen(
         title = "Offline Sync",
-        route="",
+        route = "",
         icon = MifosIcons.PowerSettings,
     )
 }

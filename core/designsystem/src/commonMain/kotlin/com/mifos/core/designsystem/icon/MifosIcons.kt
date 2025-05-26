@@ -122,13 +122,13 @@ object MifosIcons {
     val Gallery = Icons.Filled.Image
     val ArrowDropDown = Icons.Default.ArrowDropDown
     val AssignmentTurnedIn = Icons.Default.AssignmentTurnedIn
-    val Dashboard=Icons.Rounded.Dashboard
-    val Business=Icons.Rounded.Business
-    val Checkbox=Icons.Rounded.CheckBox
-    val Assignment=Icons.AutoMirrored.Rounded.Assignment
-    val PowerSettings=Icons.Rounded.PowerSettingsNew
-    val PersonPinCircle=Icons.Rounded.PersonPinCircle
-    val Task=Icons.Rounded.Task
+    val Dashboard = Icons.Rounded.Dashboard
+    val Business = Icons.Rounded.Business
+    val Checkbox = Icons.Rounded.CheckBox
+    val Assignment = Icons.AutoMirrored.Rounded.Assignment
+    val PowerSettings = Icons.Rounded.PowerSettingsNew
+    val PersonPinCircle = Icons.Rounded.PersonPinCircle
+    val Task = Icons.Rounded.Task
 
     // Recently added
     val ArrowBack2 = Icons.Filled.ChevronLeft
