@@ -42,7 +42,7 @@ internal fun FeatureNavHost(
         navController = appState.navController,
         modifier = modifier,
     ) {
-        homeScreen(onClick = {appState.navController.navigateToActivateScreen(0,"")})
+        homeScreen(onClick = { appState.navController.navigateToActivateScreen(0, "") })
 
         aboutNavGraph(onBackPressed = appState.navController::popBackStack)
 
@@ -52,21 +52,21 @@ internal fun FeatureNavHost(
     }
 }
 
-fun NavGraphBuilder.homeScreen(onClick:()-> Unit) {
+fun NavGraphBuilder.homeScreen(onClick: () -> Unit) {
     composable(route = HomeDestinationsScreen.SearchScreen.route) {
         WelcomeScreen(onClick)
     }
 }
 
 @Composable
-fun WelcomeScreen(onClick:()-> Unit) {
+fun WelcomeScreen(onClick: () -> Unit) {
     Column(
         modifier = Modifier.fillMaxSize().background(Color.White),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Text(text = "Welcome to Mifos", color = Color.Black)
-        Button(onClick = onClick){
+        Button(onClick = onClick) {
             Text("navigate")
         }
     }

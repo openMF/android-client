@@ -48,11 +48,13 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mifos.core.common.utils.Constants
 import com.mifos.core.common.utils.formatDate
+import com.mifos.core.designsystem.component.MifosButton
 import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosDatePickerTextField
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.model.objects.clients.ActivatePayload
+import com.mifos.core.ui.components.MifosAlertDialog
 import com.mifos.core.ui.util.DevicePreview
 import kotlinx.datetime.Clock
 import org.jetbrains.compose.resources.getString
@@ -107,20 +109,19 @@ internal fun ActivateScreen(
     onBackPressed: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val snackbarHostState = remember { SnackbarHostState() }
-
     MifosScaffold(
         title = stringResource(Res.string.feature_activate),
         onBackPressed = onBackPressed,
-        snackbarHostState = snackbarHostState,
     ) { paddingValues ->
         Column(modifier = modifier.padding(paddingValues)) {
             when (state) {
                 is ActivateUiState.ActivatedSuccessfully -> {
-                    LaunchedEffect(true){
-                        snackbarHostState.showSnackbar(getString( state.message))
-                    }
-                    onBackPressed()
+                    MifosAlertDialog(
+                        dialogTitle = "Success",
+                        dialogText = stringResource(state.message),
+                        onConfirmation = onBackPressed,
+                        onDismissRequest = onBackPressed,
+                    )
                 }
 
                 is ActivateUiState.Error -> MifosSweetError(message = stringResource(state.message)) {}
@@ -187,7 +188,7 @@ private fun ActivateContent(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        Button(
+        MifosButton(
             onClick = {
                 onActivate(
                     ActivatePayload(
