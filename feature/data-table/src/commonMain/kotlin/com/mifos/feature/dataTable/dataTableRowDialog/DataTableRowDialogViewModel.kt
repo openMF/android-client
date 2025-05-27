@@ -37,7 +37,7 @@ class DataTableRowDialogViewModel(
             addDataTableEntryUseCase.invoke(table, entityId, payload)
                 .collect { result ->
                 when(result){
-                    is DataState.Error<*> -> {
+                    is DataState.Error -> {
                         _dataTableRowDialogUiState.value =
                             DataTableRowDialogUiState.Error(
                                 getString(Res.string.feature_data_table_failed_to_add_data_table,)
@@ -49,7 +49,7 @@ class DataTableRowDialogViewModel(
                             DataTableRowDialogUiState.Loading
                     }
 
-                    is DataState.Success<*> -> {
+                    is DataState.Success -> {
                         _dataTableRowDialogUiState.value =
                             DataTableRowDialogUiState.DataTableEntrySuccessfully
                     }

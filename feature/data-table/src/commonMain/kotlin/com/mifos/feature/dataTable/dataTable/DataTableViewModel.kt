@@ -13,6 +13,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mifos.core.common.utils.Constants
+import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.repository.DataTableRepository
 import com.mifos.core.model.objects.nav.DataTableNavigationArg
 import kotlinx.coroutines.Dispatchers
@@ -49,13 +50,30 @@ class DataTableViewModel(
         }
     }
 
-    fun loadDataTable(tableName: String?) = viewModelScope.launch(Dispatchers.IO) {
-        _dataTableUiState.value = DataTableUiState.ShowProgressbar
-        val response = repository.getDataTable(tableName)
-        if (response.isEmpty()) {
-            _dataTableUiState.value = DataTableUiState.ShowEmptyDataTables
-        } else {
-            _dataTableUiState.value = DataTableUiState.ShowDataTables(response)
+    fun loadDataTable(tableName: String?) {
+        viewModelScope.launch {
+            repository.getDataTable(tableName)
+                .collect { dataState ->
+                    when (dataState) {
+                        is DataState.Error -> {
+                            _dataTableUiState.value =
+                                DataTableUiState.ShowError(dataState.message)
+                        }
+
+                        DataState.Loading -> _dataTableUiState.value =
+                            DataTableUiState.ShowProgressbar
+
+
+                        is DataState.Success -> {
+                            val result = dataState.data
+                            if (result.isEmpty()) {
+                                _dataTableUiState.value = DataTableUiState.ShowEmptyDataTables
+                            } else {
+                                _dataTableUiState.value = DataTableUiState.ShowDataTables(result)
+                            }
+                        }
+                    }
+                }
         }
     }
 }
