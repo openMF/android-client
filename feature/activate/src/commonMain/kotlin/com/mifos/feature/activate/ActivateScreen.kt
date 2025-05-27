@@ -29,6 +29,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SelectableDates
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
@@ -202,7 +203,8 @@ private fun ActivateContent(
                 .padding(start = 16.dp, end = 16.dp),
             contentPadding = PaddingValues(),
         ) {
-            Text(text = stringResource(Res.string.feature_activate), fontSize = 16.sp)
+            Text(text = stringResource(Res.string.feature_activate),
+                style= MaterialTheme.typography.bodySmall)
         }
     }
 }
