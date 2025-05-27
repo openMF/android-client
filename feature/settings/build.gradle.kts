@@ -8,12 +8,7 @@
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
 plugins {
-//    alias(libs.plugins.mifos.android.feature)
-//    alias(libs.plugins.mifos.android.library.compose)
-//    alias(libs.plugins.mifos.android.library.jacoco)
     alias(libs.plugins.mifos.cmp.feature)
-
-
 }
 
 android {
@@ -34,16 +29,5 @@ kotlin {
             api(projects.core.domain)
             api(projects.core.datastore)
         }
-
-        androidMain.dependencies {
-            implementation(libs.appcompat)
-        }
     }
-}
-
-dependencies {
-//    androidTestImplementation(libs.androidx.compose.ui.test)
-//    debugApi(libs.androidx.compose.ui.test.manifest)
-//    testImplementation(libs.hilt.android.testing)
-
 }
