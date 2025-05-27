@@ -33,6 +33,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -51,6 +52,10 @@ import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.model.objects.clients.ActivatePayload
 import kotlinx.datetime.Clock
+import kotlinx.datetime.Instant
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toLocalDateTime
+import org.jetbrains.compose.resources.getString
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -62,6 +67,7 @@ internal fun ActivateScreen(
     val state by viewModel.activateUiState.collectAsStateWithLifecycle()
     val id by viewModel.id.collectAsStateWithLifecycle()
     val activateType by viewModel.activateType.collectAsStateWithLifecycle()
+
 
     ActivateScreen(
         state = state,
@@ -111,11 +117,9 @@ internal fun ActivateScreen(
         Column(modifier = modifier.padding(paddingValues)) {
             when (state) {
                 is ActivateUiState.ActivatedSuccessfully -> {
-//                    Toast.makeText(
-//                        LocalContext.current,
-//                        stringResource(id = state.message),
-//                        Toast.LENGTH_SHORT,
-//                    ).show()
+                    LaunchedEffect(true){
+                        snackbarHostState.showSnackbar(getString( state.message))
+                    }
                     onBackPressed()
                 }
 
@@ -136,12 +140,12 @@ private fun ActivateContent(
 ) {
     Column(modifier = modifier) {
         var showDatePicker by rememberSaveable { mutableStateOf(false) }
-        var activateDate by rememberSaveable { mutableLongStateOf(Clock.System.currentTimeMillis()) }
+        var activateDate by rememberSaveable { mutableLongStateOf(Clock.System.now().toEpochMilliseconds()) }
         val datePickerState = rememberDatePickerState(
             initialSelectedDateMillis = activateDate,
             selectableDates = object : SelectableDates {
                 override fun isSelectableDate(utcTimeMillis: Long): Boolean {
-                    return utcTimeMillis >= System.currentTimeMillis()
+                    return utcTimeMillis >= Clock.System.now().toEpochMilliseconds()
                 }
             },
         )
@@ -174,9 +178,7 @@ private fun ActivateContent(
         }
 
         MifosDatePickerTextField(
-            value = SimpleDateFormat("dd MMMM yyyy", Locale.getDefault()).format(
-                activateDate,
-            ),
+            value = formatDate(activateDate),
             label = stringResource(Res.string.feature_activate_activation_date),
             openDatePicker = {
                 showDatePicker = true
@@ -203,6 +205,12 @@ private fun ActivateContent(
         }
     }
 }
+
+fun formatDate(millis: Long): String {
+    val dateTime = Instant.fromEpochMilliseconds(millis).toLocalDateTime(TimeZone.currentSystemDefault())
+    return "${dateTime.dayOfMonth} ${dateTime.month.name.lowercase().replaceFirstChar { it.uppercase() }} ${dateTime.year}"
+}
+
 //
 //private class ActivateUiStateProvider : PreviewParameterProvider<ActivateUiState> {
 //
