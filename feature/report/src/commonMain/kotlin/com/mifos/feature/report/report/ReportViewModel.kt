@@ -19,14 +19,18 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mifos.core.common.utils.Constants
 import com.mifos.core.model.objects.runreport.FullParameterListResponse
+import io.ktor.http.ContentDisposition.Companion.File
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
-import java.io.File
-import java.io.FileWriter
+//import java.io.File
+//import java.io.FileWriter
 import kotlinx.coroutines.IO
+import kotlinx.datetime.Clock
+import kotlinx.io.files.FileSystem
+import okio.Path.Companion.toPath
 
 class ReportViewModel(
     savedStateHandle: SavedStateHandle,
@@ -43,9 +47,10 @@ class ReportViewModel(
     fun exportCsv(report: FullParameterListResponse, reportDirectoryPath: String) =
         viewModelScope.launch(Dispatchers.IO) {
             _reportUiState.value = ReportUiState.Message(Res.string.feature_report_export_started)
-            val timestamp = System.currentTimeMillis()
-            val reportPath = "$reportDirectoryPath$timestamp.csv"
+            val timestamp = Clock.System.now().toEpochMilliseconds().toString()
+            val reportPath = "$reportDirectoryPath$timestamp.csv".toPath()
             val reportDirectory = File(reportDirectoryPath)
+            val fileSystem = FileSystem.SYSTEM
 
             if (!reportDirectory.exists()) {
                 val makeRequiredDirectories = reportDirectory.mkdirs()

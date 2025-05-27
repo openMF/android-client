@@ -13,9 +13,15 @@ import androidclient.feature.report.generated.resources.Res
 import androidclient.feature.report.generated.resources.feature_report_currency
 import androidclient.feature.report.generated.resources.feature_report_details
 import androidclient.feature.report.generated.resources.feature_report_failed_to_load_report_details
+import androidclient.feature.report.generated.resources.feature_report_fund
 import androidclient.feature.report.generated.resources.feature_report_gl_account
+import androidclient.feature.report.generated.resources.feature_report_ic_report_item
+import androidclient.feature.report.generated.resources.feature_report_loan_officer
+import androidclient.feature.report.generated.resources.feature_report_loan_purpose
 import androidclient.feature.report.generated.resources.feature_report_obligation_date
+import androidclient.feature.report.generated.resources.feature_report_office
 import androidclient.feature.report.generated.resources.feature_report_par_type
+import androidclient.feature.report.generated.resources.feature_report_product
 import androidclient.feature.report.generated.resources.feature_report_run_report
 import androidclient.feature.report.generated.resources.feature_report_saving_account
 import androidx.compose.foundation.background
@@ -55,12 +61,9 @@ import androidx.compose.ui.graphics.Color.Companion.Black
 import androidx.compose.ui.graphics.Color.Companion.Blue
 import androidx.compose.ui.graphics.Color.Companion.Gray
 import androidx.compose.ui.graphics.Color.Companion.White
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.PreviewParameter
-import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -72,7 +75,7 @@ import com.mifos.core.designsystem.component.MifosTextFieldDropdown
 import com.mifos.core.model.objects.runreport.DataRow
 import com.mifos.core.model.objects.runreport.FullParameterListResponse
 import com.mifos.core.model.objects.runreport.client.ClientReportTypeItem
-import com.mifos.core.ui.util.DevicePreview
+import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 

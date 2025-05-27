@@ -22,9 +22,7 @@ kotlin {
             implementation(compose.components.resources)
             implementation(compose.ui)
             api(projects.core.domain)
+            implementation(libs.kotlinx.serialization.json.v163)
         }
     }
-}
-dependencies {
-    implementation(libs.androidx.ui.android)
 }
