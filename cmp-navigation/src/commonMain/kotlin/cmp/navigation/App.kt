@@ -72,6 +72,7 @@ import cmp.navigation.components.NavigationConstants
 import cmp.navigation.navigation.FeatureNavHost
 import cmp.navigation.navigation.HomeDestinationsScreen
 import com.mifos.core.data.util.NetworkMonitor
+import com.mifos.core.designsystem.component.MifosDialogBox
 import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.designsystem.theme.MifosBackground
 import kotlinx.coroutines.launch
@@ -87,7 +88,6 @@ fun App(
     modifier: Modifier = Modifier,
     onClickLogout: () -> Unit,
 ) {
-
     val appState = rememberAppState(
         networkMonitor = networkMonitor,
     )
@@ -112,6 +112,7 @@ fun App(
     }
 
     var selectedItemIndex by rememberSaveable { mutableStateOf<Int?>(null) }
+    var dialogState by rememberSaveable { mutableStateOf(false) }
 
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
@@ -148,7 +149,7 @@ fun App(
                             contentDescription = "Profile header",
                         )
                         Column(modifier = Modifier.padding(32.dp)) {
-                            Column(horizontalAlignment= Alignment.CenterHorizontally){
+                            Column(horizontalAlignment = Alignment.CenterHorizontally) {
                                 Image(
                                     modifier = Modifier
                                         .size(64.dp)
@@ -171,7 +172,7 @@ fun App(
                                 Text(
                                     text = "Offline Mode",
                                     style = MaterialTheme.typography.bodyMedium,
-                                    color = Color.White
+                                    color = Color.White,
                                 )
                                 Switch(
                                     checked = offline,
@@ -232,7 +233,7 @@ fun App(
                 }
             },
             gesturesEnabled = isNavScreen,
-        ){
+        ) {
             Scaffold(
                 topBar = {
                     if (isNavScreen) {
@@ -255,7 +256,7 @@ fun App(
                                 }
                             },
                             actions = {
-                                IconButton(onClick = onClickLogout) {
+                                IconButton(onClick = { dialogState = true }) {
                                     Icon(
                                         imageVector = MifosIcons.Logout,
                                         contentDescription = "Log out icon",
@@ -288,10 +289,20 @@ fun App(
                 },
             ) { paddingValues ->
                 FeatureNavHost(
-                        appState = appState,
-                        onClickLogout = onClickLogout,
-                        modifier = Modifier,
+                    appState = appState,
+                    onClickLogout = onClickLogout,
+                    modifier = Modifier,
+                )
+                if (dialogState) {
+                    MifosDialogBox(
+                        title = "Are you Sure you want to Logout?",
+                        showDialogState = dialogState,
+                        confirmButtonText = "LogOut",
+                        onDismiss = { dialogState = false },
+                        onConfirm = onClickLogout,
+                        dismissButtonText = "Cancel",
                     )
+                }
             }
         }
     }

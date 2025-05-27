@@ -83,8 +83,8 @@ import androidx.compose.material.icons.rounded.Lock
 import androidx.compose.material.icons.rounded.MoreVert
 import androidx.compose.material.icons.rounded.PersonOutline
 import androidx.compose.material.icons.rounded.PersonPinCircle
-import androidx.compose.material.icons.rounded.PowerSettingsNew
 import androidx.compose.material.icons.rounded.Search
+import androidx.compose.material.icons.rounded.SignalWifiOff
 import androidx.compose.material.icons.rounded.SwapHoriz
 import androidx.compose.material.icons.rounded.Sync
 import androidx.compose.material.icons.rounded.Task
@@ -126,7 +126,7 @@ object MifosIcons {
     val Business = Icons.Rounded.Business
     val Checkbox = Icons.Rounded.CheckBox
     val Assignment = Icons.AutoMirrored.Rounded.Assignment
-    val PowerSettings = Icons.Rounded.PowerSettingsNew
+    val OfflineSync = Icons.Rounded.SignalWifiOff
     val PersonPinCircle = Icons.Rounded.PersonPinCircle
     val Task = Icons.Rounded.Task
 

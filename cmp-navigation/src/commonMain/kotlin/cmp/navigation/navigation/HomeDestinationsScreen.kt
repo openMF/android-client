@@ -87,6 +87,6 @@ sealed class HomeDestinationsScreen(
     data object OfflineSyncScreen : HomeDestinationsScreen(
         title = "Offline Sync",
         route = "",
-        icon = MifosIcons.PowerSettings,
+        icon = MifosIcons.OfflineSync,
     )
 }
