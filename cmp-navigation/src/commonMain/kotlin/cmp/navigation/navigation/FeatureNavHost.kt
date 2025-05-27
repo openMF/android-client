@@ -35,7 +35,7 @@ internal fun FeatureNavHost(
 ) {
     NavHost(
         route = NavGraphRoute.MAIN_GRAPH,
-        startDestination = WELCOME_ROUTE,
+        startDestination = HomeDestinationsScreen.SearchScreen.route,
         navController = appState.navController,
         modifier = modifier,
     ) {
@@ -48,7 +48,7 @@ internal fun FeatureNavHost(
 }
 
 fun NavGraphBuilder.homeScreen() {
-    composable(route = WELCOME_ROUTE) {
+    composable(route = HomeDestinationsScreen.SearchScreen.route) {
         WelcomeScreen()
     }
 }
