@@ -77,7 +77,7 @@ internal fun SearchBox(
             ) {
                 Text(
                     text = stringResource(Res.string.feature_search_title),
-                    fontSize = 24.sp,
+                    style = MaterialTheme.typography.headlineSmall,
                 )
 
                 AssistChip(
@@ -87,19 +87,19 @@ internal fun SearchBox(
                     label = {
                         Text(
                             text = state.selectedFilter?.label ?: "All",
-                            fontSize = 16.sp,
+                            style = MaterialTheme.typography.bodyLarge,
                         )
                     },
                     leadingIcon = {
                         Icon(
                             imageVector = Icons.Default.Search,
-                            contentDescription = "filterIcon",
+                            contentDescription = "MifosIcons",
                         )
                     },
                     trailingIcon = {
                         Icon(
                             imageVector = Icons.Default.KeyboardArrowDown,
-                            contentDescription = "changeFilter",
+                            contentDescription = "MifosIcons",
                         )
                     },
                     colors = AssistChipDefaults.assistChipColors().copy(
@@ -134,12 +134,12 @@ internal fun SearchBox(
             ) {
                 Icon(
                     imageVector = Icons.Outlined.Search,
-                    contentDescription = "searchIcon",
+                    contentDescription = "MifosIcons",
                 )
 
                 Text(
                     text = stringResource(Res.string.feature_search_title),
-                    fontSize = 16.sp,
+                    style = MaterialTheme.typography.bodyLarge,
                 )
             }
 
@@ -167,7 +167,7 @@ internal fun SearchBox(
 
                 Text(
                     text = stringResource(Res.string.feature_search_exact_match),
-                    fontSize = 16.sp,
+                    style = MaterialTheme.typography.bodyLarge,
                 )
             }
         }

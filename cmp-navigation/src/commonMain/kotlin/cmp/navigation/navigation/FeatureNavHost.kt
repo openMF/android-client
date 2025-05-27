@@ -12,6 +12,7 @@ package cmp.navigation.navigation
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
@@ -27,7 +28,7 @@ import com.mifos.feature.about.navigation.aboutNavGraph
 import com.mifos.feature.activate.navigation.activateScreen
 import com.mifos.feature.activate.navigation.navigateToActivateScreen
 import com.mifos.feature.note.navigation.noteNavGraph
-import com.mifos.feature.note.navigation.searchNavGraph
+import com.mifos.feature.search.navigation.searchNavGraph
 
 const val WELCOME_ROUTE = "home_screen"
 
@@ -46,7 +47,18 @@ internal fun FeatureNavHost(
         homeScreen(onClick = { appState.navController.navigateToActivateScreen(0, "") })
 
 
-        searchNavGraph(onBackPressed = appState.navController::popBackStack)
+        searchNavGraph(
+            paddingValues = PaddingValues(),
+            onCreateClient = { println("Create Client") },
+            onCreateCenter = { println("Create Center") },
+            onCreateGroup = { println("Create Group") },
+            onClient = { id -> println("Client clicked: $id") },
+            onCenter = { id -> println("Center clicked: $id") },
+            onGroup = { id -> println("Group clicked: $id") },
+            onLoan = { id -> println("Loan clicked: $id") },
+            onSavings = { id -> println("Savings clicked: $id") }
+        )
+
         aboutNavGraph(onBackPressed = appState.navController::popBackStack)
 
         noteNavGraph(onBackPressed = appState.navController::popBackStack)
