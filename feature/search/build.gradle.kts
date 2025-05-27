@@ -26,6 +26,4 @@ kotlin {
         }
     }
 }
-dependencies {
-    implementation(libs.androidx.foundation.layout.android)
-}
+

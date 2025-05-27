@@ -107,9 +107,7 @@ internal fun SearchResult(
     onSearchOptionClick: (SearchedEntity) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-//    val color = ColorGenerator.MATERIAL.getColor(searchedEntity.entityType)
-//    val drawable =
-//        TextDrawable.builder().round().build(searchedEntity.entityType?.get(0).toString(), color)
+
     val entityType = searchedEntity.entityType ?: "?"
     val color = getMaterialColor(entityType)
 
@@ -118,13 +116,6 @@ internal fun SearchResult(
             Text(text = searchedEntity.description)
         },
         leadingContent = {
-//            Image(
-//                modifier = Modifier
-//                    .width(50.dp)
-//                    .height(50.dp),
-//                contentDescription = null,
-//                painter = rememberDrawablePainter(drawable = drawable),
-//            )
             ColoredAvatar(
                 initial = entityType.firstOrNull() ?: '?',
                 backgroundColor = color,
