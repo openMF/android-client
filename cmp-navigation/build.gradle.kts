@@ -31,7 +31,7 @@ kotlin {
             implementation(projects.core.network)
 
             implementation(projects.feature.about)
-//            implementation(projects.feature.activate)
+            implementation(projects.feature.activate)
             implementation(projects.feature.auth)
 //            implementation(projects.feature.center)
 //            implementation(projects.feature.checkerInboxTask)
