@@ -47,7 +47,7 @@ kotlin {
 //            implementation(projects.feature.report)
 //            implementation(projects.feature.savings)
 //            implementation(projects.feature.search)
-//            implementation(projects.feature.settings)
+            implementation(projects.feature.settings)
 //            implementation(projects.feature.splash)
 //
 //            implementation(project.libs.mifos.passcode)

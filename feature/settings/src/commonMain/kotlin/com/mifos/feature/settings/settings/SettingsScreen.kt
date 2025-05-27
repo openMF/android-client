@@ -54,8 +54,6 @@ import com.mifos.core.designsystem.component.MifosRadioButtonDialog
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.UpdateEndpointDialogScreen
 import com.mifos.core.ui.util.DevicePreview
-import com.mifos.feature.settings.syncSurvey.SyncSurveysDialog
-import com.mifos.feature.settings.updateServer.UpdateServerConfigScreenRoute
 import kotlinx.coroutines.delay
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringArrayResource
@@ -74,11 +72,11 @@ internal fun SettingsScreen(
 
     SettingsScreen(
         onBackPressed = onBackPressed,
-        selectedLanguage = uiState.language.code ?: "System Language",
-        selectedTheme = uiState.theme.themeName ?: "System Theme",
-        baseURL = uiState.baseUrl ?: "",
-        tenant = uiState.tenant ?: "",
-        changePasscode = { changePasscode(uiState.passcode ?: "") },
+        selectedLanguage = uiState.language.code,
+        selectedTheme = uiState.theme.themeName,
+        baseURL = uiState.baseUrl,
+        tenant = uiState.tenant,
+        changePasscode = { changePasscode(uiState.passcode) },
         handleEndpointUpdate = { baseURL, tenant ->
             if (viewModel.tryUpdatingEndpoint(selectedBaseUrl = baseURL, selectedTenant = tenant)) {
                 navigateToLoginScreen()
@@ -147,11 +145,11 @@ internal fun SettingsScreen(
     }
 
     if (showSyncSurveyDialog) {
-        SyncSurveysDialog(
-            closeDialog = {
-                showSyncSurveyDialog = false
-            },
-        )
+//        SyncSurveysDialog(
+//            closeDialog = {
+//                showSyncSurveyDialog = false
+//            },
+//        )
     }
 
     if (showServerConfig) {
@@ -159,13 +157,13 @@ internal fun SettingsScreen(
             onDismissRequest = { showServerConfig = false },
             sheetState = sheetState,
         ) {
-            UpdateServerConfigScreenRoute(
-                onCloseClick = { showServerConfig = false },
-                onSuccessful = {
-                    showServerConfig = false
-                    RestartCountdownSnackbar(2, SnackbarHostState())
-                },
-            )
+//            UpdateServerConfigScreenRoute(
+//                onCloseClick = { showServerConfig = false },
+//                onSuccessful = {
+//                    showServerConfig = false
+//                    RestartCountdownSnackbar(2, SnackbarHostState())
+//                },
+//            )
         }
     }
 

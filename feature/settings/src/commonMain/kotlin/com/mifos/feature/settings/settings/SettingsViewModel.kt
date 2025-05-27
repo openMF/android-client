@@ -29,7 +29,6 @@ import com.mifos.core.common.enums.MifosAppLanguage
 import com.mifos.core.datastore.UserPreferencesRepository
 import com.mifos.core.datastore.model.AppTheme
 import com.mifos.core.designsystem.icon.MifosIcons
-import com.mifos.feature.settings.R
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.first

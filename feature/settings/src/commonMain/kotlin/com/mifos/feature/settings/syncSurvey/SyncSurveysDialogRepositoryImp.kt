@@ -15,7 +15,7 @@ import com.mifos.room.entities.survey.ResponseDatasEntity
 import com.mifos.room.entities.survey.SurveyEntity
 import kotlinx.coroutines.flow.Flow
 
-class SyncSurveysDialogRepositoryImp @Inject constructor(private val dataManagerSurvey: DataManagerSurveys) :
+class SyncSurveysDialogRepositoryImp(private val dataManagerSurvey: DataManagerSurveys) :
     SyncSurveysDialogRepository {
 
     override suspend fun syncSurveyInDatabase(survey: SurveyEntity) {
