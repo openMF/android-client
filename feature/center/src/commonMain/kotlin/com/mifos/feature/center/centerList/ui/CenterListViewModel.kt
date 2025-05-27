@@ -9,12 +9,12 @@
  */
 package com.mifos.feature.center.centerList.ui
 
+import androidclient.feature.center.generated.resources.Res
+import androidclient.feature.center.generated.resources.feature_center_failed_to_load_db_centers
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mifos.core.data.repository.CenterListRepository
 import com.mifos.core.datastore.UserPreferencesRepository
-import com.mifos.feature.center.R
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
@@ -50,19 +50,19 @@ class CenterListViewModel(
         }
     }
 
-    private fun loadCentersFromApi() = viewModelScope.launch(Dispatchers.IO) {
+    private fun loadCentersFromApi() = viewModelScope.launch {
         val response = repository.getAllCenters()
         _centerListUiState.value = CenterListUiState.CenterList(response)
     }
 
     private fun loadCentersFromDb() {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch {
             _centerListUiState.value = CenterListUiState.Loading
 
             repository.allDatabaseCenters()
                 .catch {
                     _centerListUiState.value =
-                        CenterListUiState.Error(R.string.feature_center_failed_to_load_db_centers)
+                        CenterListUiState.Error(Res.string.feature_center_failed_to_load_db_centers)
                 }.collect {
                     _centerListUiState.value =
                         CenterListUiState.CenterListDb(it.pageItems)

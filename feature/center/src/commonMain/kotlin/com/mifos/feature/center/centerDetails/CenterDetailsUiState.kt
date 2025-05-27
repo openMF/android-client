@@ -11,15 +11,13 @@ package com.mifos.feature.center.centerDetails
 
 import com.mifos.core.model.objects.groups.CenterInfo
 import com.mifos.room.entities.group.CenterWithAssociations
+import org.jetbrains.compose.resources.StringResource
 
-/**
- * Created by Aditya Gupta on 06/08/23.
- */
 sealed class CenterDetailsUiState {
 
     data object Loading : CenterDetailsUiState()
 
-    data class Error(val message: Int) : CenterDetailsUiState()
+    data class Error(val message: StringResource) : CenterDetailsUiState()
 
     data class CenterDetails(
         val centerWithAssociations: CenterWithAssociations,

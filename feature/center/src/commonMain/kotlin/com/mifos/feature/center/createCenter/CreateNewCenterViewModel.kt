@@ -9,11 +9,14 @@
  */
 package com.mifos.feature.center.createCenter
 
+import androidclient.feature.center.generated.resources.Res
+import androidclient.feature.center.generated.resources.feature_center_failed_to_create_center
+import androidclient.feature.center.generated.resources.feature_center_failed_to_load_offices
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.repository.CreateNewCenterRepository
 import com.mifos.core.data.repository.NewIndividualCollectionSheetRepository
-import com.mifos.feature.center.R
 import com.mifos.room.entities.center.CenterPayloadEntity
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -37,10 +40,23 @@ class CreateNewCenterViewModel(
             collectionSheetRepo.offices()
                 .catch {
                     _createNewCenterUiState.value =
-                        CreateNewCenterUiState.Error(R.string.feature_center_failed_to_load_offices)
+                        CreateNewCenterUiState.Error(Res.string.feature_center_failed_to_load_offices)
                 }.collect {
-                    _createNewCenterUiState.value =
-                        CreateNewCenterUiState.Offices(it)
+                    when(it){
+                        is DataState.Error -> {
+                            _createNewCenterUiState.value =
+                                CreateNewCenterUiState.Error(Res.string.feature_center_failed_to_load_offices)
+                        }
+                        DataState.Loading -> {
+                            _createNewCenterUiState.value =
+                                CreateNewCenterUiState.Loading
+                        }
+                        is DataState.Success -> {
+                            _createNewCenterUiState.value =
+                                CreateNewCenterUiState.Offices(it.data)
+                        }
+                    }
+
                 }
         }
     }
@@ -54,7 +70,7 @@ class CreateNewCenterViewModel(
                     CreateNewCenterUiState.CenterCreatedSuccessfully
             } catch (e: Exception) {
                 _createNewCenterUiState.value =
-                    CreateNewCenterUiState.Error(R.string.feature_center_failed_to_create_center)
+                    CreateNewCenterUiState.Error(Res.string.feature_center_failed_to_create_center)
             }
         }
     }

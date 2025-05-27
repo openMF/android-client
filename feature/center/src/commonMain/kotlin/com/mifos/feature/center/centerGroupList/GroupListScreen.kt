@@ -9,6 +9,12 @@
  */
 package com.mifos.feature.center.centerGroupList
 
+import androidclient.feature.center.generated.resources.Res
+import androidclient.feature.center.generated.resources.feature_center_active
+import androidclient.feature.center.generated.resources.feature_center_failed_to_load_group_list
+import androidclient.feature.center.generated.resources.feature_center_groups
+import androidclient.feature.center.generated.resources.feature_center_inactive
+import androidclient.feature.center.generated.resources.feature_center_no_group_list_to_show
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -34,10 +40,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.tooling.preview.PreviewParameter
-import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mifos.core.designsystem.component.MifosCircularProgress
@@ -45,12 +47,13 @@ import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.ui.components.MifosEmptyUi
-import com.mifos.feature.center.R
+import com.mifos.core.ui.util.DevicePreview
 import com.mifos.room.entities.client.ClientEntity
 import com.mifos.room.entities.client.ClientStatusEntity
 import com.mifos.room.entities.group.CenterWithAssociations
 import com.mifos.room.entities.group.GroupEntity
-import org.koin.androidx.compose.koinViewModel
+import org.jetbrains.compose.resources.stringResource
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 internal fun GroupListScreen(
@@ -98,13 +101,13 @@ internal fun GroupListScreen(
     val snackbarHostState = remember { SnackbarHostState() }
 
     MifosScaffold(
-        title = stringResource(id = R.string.feature_center_groups),
+        title = stringResource(Res.string.feature_center_groups),
         onBackPressed = onBackPressed,
         snackbarHostState = snackbarHostState,
     ) { paddingValues ->
         Column(modifier = Modifier.padding(paddingValues)) {
             when (state) {
-                is GroupListUiState.Error -> MifosSweetError(message = stringResource(id = state.message)) {
+                is GroupListUiState.Error -> MifosSweetError(message = stringResource(state.message)) {
                     onRetry()
                 }
 
@@ -113,7 +116,7 @@ internal fun GroupListScreen(
                 is GroupListUiState.GroupList -> {
                     if (state.centerWithAssociations.groupMembers.isEmpty()) {
                         MifosEmptyUi(
-                            text = stringResource(id = R.string.feature_center_no_group_list_to_show),
+                            text = stringResource(Res.string.feature_center_no_group_list_to_show),
                             icon = MifosIcons.FileTask,
                         )
                     } else {
@@ -179,9 +182,9 @@ private fun GroupItem(
                     modifier = Modifier.padding(8.dp),
                     style = MaterialTheme.typography.bodySmall,
                     text = if (group.status?.value?.let { ClientStatusEntity.isActive(it) } == true) {
-                        stringResource(id = R.string.feature_center_active)
+                        stringResource(Res.string.feature_center_active)
                     } else {
-                        stringResource(id = R.string.feature_center_inactive)
+                        stringResource(Res.string.feature_center_inactive)
                     },
                 )
                 Canvas(modifier = Modifier.size(16.dp)) {
@@ -197,27 +200,35 @@ private fun GroupItem(
     HorizontalDivider()
 }
 
-class GroupListUiStateProvider : PreviewParameterProvider<GroupListUiState> {
-
-    override val values: Sequence<GroupListUiState>
-        get() = sequenceOf(
-            GroupListUiState.Loading,
-            GroupListUiState.Error(R.string.feature_center_failed_to_load_group_list),
-            GroupListUiState.GroupList(sampleCenterWithAssociations),
-        )
-}
-
-@Preview(showBackground = true)
+@DevicePreview
 @Composable
-private fun GroupListScreenPreview(
-    @PreviewParameter(GroupListUiStateProvider::class) state: GroupListUiState,
-) {
+private fun GroupListScreenLoadingPreview() {
     GroupListScreen(
-        state = state,
+        state = GroupListUiState.Loading,
         onBackPressed = {},
         onGroupClick = {},
         onRetry = {},
     )
 }
 
-val sampleCenterWithAssociations = CenterWithAssociations()
+@DevicePreview
+@Composable
+private fun GroupListScreenErrorPreview() {
+    GroupListScreen(
+        state = GroupListUiState.Error(Res.string.feature_center_failed_to_load_group_list),
+        onBackPressed = {},
+        onGroupClick = {},
+        onRetry = {},
+    )
+}
+
+@DevicePreview
+@Composable
+private fun GroupListScreenGroupListPreview() {
+    GroupListScreen(
+        state = GroupListUiState.GroupList(CenterWithAssociations()),
+        onBackPressed = {},
+        onGroupClick = {},
+        onRetry = {},
+    )
+}

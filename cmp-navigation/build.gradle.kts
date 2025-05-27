@@ -33,7 +33,7 @@ kotlin {
             implementation(projects.feature.about)
             implementation(projects.feature.activate)
             implementation(projects.feature.auth)
-//            implementation(projects.feature.center)
+            implementation(projects.feature.center)
 //            implementation(projects.feature.checkerInboxTask)
 //            implementation(projects.feature.client)
 //            implementation(projects.feature.collectionSheet)

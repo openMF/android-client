@@ -10,15 +10,13 @@
 package com.mifos.feature.center.centerGroupList
 
 import com.mifos.room.entities.group.CenterWithAssociations
+import org.jetbrains.compose.resources.StringResource
 
-/**
- * Created by Aditya Gupta on 06/08/23.
- */
 sealed class GroupListUiState {
 
     data object Loading : GroupListUiState()
 
-    data class Error(val message: Int) : GroupListUiState()
+    data class Error(val message: StringResource) : GroupListUiState()
 
     data class GroupList(val centerWithAssociations: CenterWithAssociations) : GroupListUiState()
 }

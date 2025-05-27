@@ -9,6 +9,22 @@
  */
 package com.mifos.feature.center.syncCentersDialog
 
+import androidclient.feature.center.generated.resources.Res
+import androidclient.feature.center.generated.resources.feature_center_cancel
+import androidclient.feature.center.generated.resources.feature_center_center
+import androidclient.feature.center.generated.resources.feature_center_dialog_action_ok
+import androidclient.feature.center.generated.resources.feature_center_failed_sync
+import androidclient.feature.center.generated.resources.feature_center_hide
+import androidclient.feature.center.generated.resources.feature_center_name
+import androidclient.feature.center.generated.resources.feature_center_slash
+import androidclient.feature.center.generated.resources.feature_center_something_went_wrong
+import androidclient.feature.center.generated.resources.feature_center_space
+import androidclient.feature.center.generated.resources.feature_center_sync_centers_full_information
+import androidclient.feature.center.generated.resources.feature_center_syncing_center
+import androidclient.feature.center.generated.resources.feature_center_syncing_client
+import androidclient.feature.center.generated.resources.feature_center_syncing_group
+import androidclient.feature.center.generated.resources.feature_center_total
+import androidclient.feature.center.generated.resources.feature_center_total_sync_progress
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -30,16 +46,15 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mifos.core.designsystem.component.MifosCircularProgress
-import com.mifos.feature.center.R
+import com.mifos.core.ui.util.DevicePreview
 import com.mifos.room.entities.group.CenterEntity
-import org.koin.androidx.compose.koinViewModel
+import org.jetbrains.compose.resources.stringResource
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 internal fun SyncCenterDialogScreen(
@@ -91,7 +106,7 @@ internal fun SyncCenterDialogScreen(
             is SyncCentersDialogUiState.Error -> {
                 val message = uiState.message
                     ?: uiState.messageResId?.let { stringResource(uiState.messageResId) }
-                    ?: stringResource(id = R.string.feature_center_something_went_wrong)
+                    ?: stringResource(Res.string.feature_center_something_went_wrong)
                 LaunchedEffect(key1 = message) {
                     snackBarHostState.showSnackbar(message = message)
                 }
@@ -120,27 +135,27 @@ private fun SyncGroupDialogContent(
         Text(
             modifier = Modifier.fillMaxWidth(),
             textAlign = TextAlign.Center,
-            text = stringResource(id = R.string.feature_center_sync_centers_full_information),
+            text = stringResource(Res.string.feature_center_sync_centers_full_information),
         )
 
         PayloadField(
-            label = stringResource(id = R.string.feature_center_name),
+            label = stringResource(Res.string.feature_center_name),
             value = uiData.centerName,
         )
 
         Spacer(modifier = Modifier.height(12.dp))
 
         PayloadField(
-            label = stringResource(id = R.string.feature_center_total),
-            value = uiData.centersList.size.toString() + stringResource(R.string.feature_center_space) + stringResource(
-                com.mifos.feature.center.R.string.feature_center_center,
+            label = stringResource(Res.string.feature_center_total),
+            value = uiData.centersList.size.toString() + stringResource(Res.string.feature_center_space) + stringResource(
+                Res.string.feature_center_center,
             ),
         )
 
         Spacer(modifier = Modifier.height(12.dp))
 
         PayloadField(
-            label = stringResource(id = R.string.feature_center_syncing_center),
+            label = stringResource(Res.string.feature_center_syncing_center),
             value = uiData.centerName,
         )
 
@@ -151,7 +166,7 @@ private fun SyncGroupDialogContent(
         Spacer(modifier = Modifier.height(12.dp))
 
         PayloadField(
-            label = stringResource(id = R.string.feature_center_syncing_group),
+            label = stringResource(Res.string.feature_center_syncing_group),
             value = "syncing_group",
         )
 
@@ -162,7 +177,7 @@ private fun SyncGroupDialogContent(
         Spacer(modifier = Modifier.height(12.dp))
 
         PayloadField(
-            label = stringResource(id = R.string.feature_center_syncing_client),
+            label = stringResource(Res.string.feature_center_syncing_client),
             value = "syncing_client",
         )
 
@@ -173,8 +188,8 @@ private fun SyncGroupDialogContent(
         Spacer(modifier = Modifier.height(12.dp))
 
         PayloadField(
-            label = stringResource(id = R.string.feature_center_total_sync_progress),
-            value = stringResource(R.string.feature_center_space) + uiData.totalSyncCount + stringResource(id = R.string.feature_center_slash) + uiData.centersList.size,
+            label = stringResource(Res.string.feature_center_total_sync_progress),
+            value = stringResource(Res.string.feature_center_space) + uiData.totalSyncCount + stringResource(Res.string.feature_center_slash) + uiData.centersList.size,
         )
 
         LinearProgressIndicator(
@@ -184,7 +199,7 @@ private fun SyncGroupDialogContent(
         Spacer(modifier = Modifier.height(12.dp))
 
         PayloadField(
-            label = stringResource(id = R.string.feature_center_failed_sync),
+            label = stringResource(Res.string.feature_center_failed_sync),
             value = uiData.failedSyncGroupCount.toString(),
         )
 
@@ -198,14 +213,14 @@ private fun SyncGroupDialogContent(
                     onClick = { okClicked() },
                     modifier = Modifier.weight(1f),
                 ) {
-                    Text(text = stringResource(id = R.string.feature_center_dialog_action_ok))
+                    Text(text = stringResource(Res.string.feature_center_dialog_action_ok))
                 }
             } else {
                 FilledTonalButton(
                     onClick = { cancelClicked() },
                     modifier = Modifier.weight(1f),
                 ) {
-                    Text(text = stringResource(id = R.string.feature_center_cancel))
+                    Text(text = stringResource(Res.string.feature_center_cancel))
                 }
 
                 Spacer(modifier = Modifier.width(10.dp))
@@ -214,7 +229,7 @@ private fun SyncGroupDialogContent(
                     onClick = { hideClicked() },
                     modifier = Modifier.weight(1f),
                 ) {
-                    Text(text = stringResource(id = R.string.feature_center_hide))
+                    Text(text = stringResource(Res.string.feature_center_hide))
                 }
             }
         }
@@ -242,7 +257,7 @@ private fun PayloadField(label: String, value: String) {
     }
 }
 
-@Preview(showBackground = true, backgroundColor = 0xFFFFFFFF)
+@DevicePreview
 @Composable
 private fun SyncCenterDialogScreenPreview() {
     SyncCenterDialogScreen(

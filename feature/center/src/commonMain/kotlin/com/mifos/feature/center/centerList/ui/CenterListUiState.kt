@@ -9,18 +9,15 @@
  */
 package com.mifos.feature.center.centerList.ui
 
-import androidx.paging.PagingData
 import com.mifos.room.entities.group.CenterEntity
 import kotlinx.coroutines.flow.Flow
+import org.jetbrains.compose.resources.StringResource
 
-/**
- * Created by Aditya Gupta on 06/08/23.
- */
 sealed class CenterListUiState {
 
     data object Loading : CenterListUiState()
 
-    data class Error(val message: Int) : CenterListUiState()
+    data class Error(val message: StringResource) : CenterListUiState()
 
     data class CenterList(val centers: Flow<PagingData<CenterEntity>>) : CenterListUiState()
 

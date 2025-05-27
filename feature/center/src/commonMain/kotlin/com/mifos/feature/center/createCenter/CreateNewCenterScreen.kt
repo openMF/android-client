@@ -11,7 +11,19 @@
 
 package com.mifos.feature.center.createCenter
 
-import android.widget.Toast
+import androidclient.feature.center.generated.resources.Res
+import androidclient.feature.center.generated.resources.feature_center_activate
+import androidclient.feature.center.generated.resources.feature_center_activation_date
+import androidclient.feature.center.generated.resources.feature_center_cancel
+import androidclient.feature.center.generated.resources.feature_center_center_name
+import androidclient.feature.center.generated.resources.feature_center_center_name_empty
+import androidclient.feature.center.generated.resources.feature_center_center_name_should_be_more_than_4_characters
+import androidclient.feature.center.generated.resources.feature_center_center_name_should_not_contains_special_characters_or_numbers
+import androidclient.feature.center.generated.resources.feature_center_create
+import androidclient.feature.center.generated.resources.feature_center_create_new_center
+import androidclient.feature.center.generated.resources.feature_center_office
+import androidclient.feature.center.generated.resources.feature_center_select
+import androidclient.feature.center.generated.resources.feature_center_select_office
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -41,24 +53,23 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.mifos.core.common.utils.formatDate
+import com.mifos.core.designsystem.component.MifosButton
 import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosDatePickerTextField
 import com.mifos.core.designsystem.component.MifosOutlinedTextField
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.component.MifosTextFieldDropdown
-import com.mifos.feature.center.R
 import com.mifos.room.entities.center.CenterPayloadEntity
 import com.mifos.room.entities.organisation.OfficeEntity
-import org.koin.androidx.compose.koinViewModel
-import org.openapitools.client.models.Office
-import java.text.SimpleDateFormat
-import java.util.Locale
+import kotlinx.datetime.Clock
+import org.jetbrains.compose.resources.getString
+import org.jetbrains.compose.resources.stringResource
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 internal fun CreateNewCenterScreen(
@@ -93,22 +104,22 @@ internal fun CreateNewCenterScreen(
     val snackbarHostState = remember { SnackbarHostState() }
 
     MifosScaffold(
-        title = stringResource(id = R.string.feature_center_create_new_center),
+        title = stringResource(Res.string.feature_center_create_new_center),
         snackbarHostState = snackbarHostState,
         onBackPressed = {},
     ) { paddingValues ->
         Column(modifier = Modifier.padding(paddingValues)) {
             when (state) {
                 is CreateNewCenterUiState.CenterCreatedSuccessfully -> {
-                    Toast.makeText(
-                        LocalContext.current,
-                        stringResource(id = R.string.feature_center_center_created_successfully),
-                        Toast.LENGTH_SHORT,
-                    ).show()
+//                    Toast.makeText(
+//                        LocalContext.current,
+//                        stringResource(id = R.string.feature_center_center_created_successfully),
+//                        Toast.LENGTH_SHORT,
+//                    ).show()
                     onCreateSuccess()
                 }
 
-                is CreateNewCenterUiState.Error -> MifosSweetError(message = stringResource(id = state.message)) {
+                is CreateNewCenterUiState.Error -> MifosSweetError(message = stringResource(state.message)) {
                     onRetry()
                 }
 
@@ -127,18 +138,18 @@ private fun CreateNewCenterContent(
     offices: List<OfficeEntity>,
     createCenter: (CenterPayloadEntity) -> Unit,
 ) {
-    val context = LocalContext.current
+//    val context = LocalContext.current
     var centerName by rememberSaveable { mutableStateOf("") }
     var centerNameValidator by rememberSaveable { mutableStateOf<String?>(null) }
     var selectedOffice by rememberSaveable { mutableStateOf("") }
     var selectedOfficeValidator by rememberSaveable { mutableStateOf<String?>(null) }
     var isActivate by rememberSaveable { mutableStateOf(false) }
-    var activateDate by rememberSaveable { mutableLongStateOf(System.currentTimeMillis()) }
+    var activateDate by rememberSaveable { mutableLongStateOf(Clock.System.now().toEpochMilliseconds()) }
     val datePickerState = rememberDatePickerState(
         initialSelectedDateMillis = activateDate,
         selectableDates = object : SelectableDates {
             override fun isSelectableDate(utcTimeMillis: Long): Boolean {
-                return utcTimeMillis >= System.currentTimeMillis()
+                return utcTimeMillis >= Clock.System.now().toEpochMilliseconds()
             }
         },
     )
@@ -148,11 +159,11 @@ private fun CreateNewCenterContent(
     LaunchedEffect(key1 = centerName) {
         centerNameValidator = when {
             centerName.trim()
-                .isEmpty() -> context.getString(R.string.feature_center_center_name_empty)
+                .isEmpty() -> getString(Res.string.feature_center_center_name_empty)
 
-            centerName.length < 4 -> context.getString(R.string.feature_center_center_name_should_be_more_than_4_characters)
+            centerName.length < 4 -> getString(Res.string.feature_center_center_name_should_be_more_than_4_characters)
 
-            centerName.contains("[^a-zA-Z ]".toRegex()) -> context.getString(R.string.feature_center_center_name_should_not_contains_special_characters_or_numbers)
+            centerName.contains("[^a-zA-Z ]".toRegex()) -> getString(Res.string.feature_center_center_name_should_not_contains_special_characters_or_numbers)
 
             else -> null
         }
@@ -161,7 +172,7 @@ private fun CreateNewCenterContent(
     LaunchedEffect(key1 = selectedOffice) {
         selectedOfficeValidator = when {
             selectedOffice.trim()
-                .isEmpty() -> context.getString(R.string.feature_center_select_office)
+                .isEmpty() -> getString(Res.string.feature_center_select_office)
 
             else -> null
         }
@@ -170,12 +181,12 @@ private fun CreateNewCenterContent(
     fun validateAllFields(): Boolean {
         when {
             centerNameValidator != null -> {
-                Toast.makeText(context, centerNameValidator, Toast.LENGTH_SHORT).show()
+//                Toast.makeText(context, centerNameValidator, Toast.LENGTH_SHORT).show()
                 return false
             }
 
             selectedOfficeValidator != null -> {
-                Toast.makeText(context, selectedOfficeValidator, Toast.LENGTH_SHORT).show()
+//                Toast.makeText(context, selectedOfficeValidator, Toast.LENGTH_SHORT).show()
                 return false
             }
 
@@ -198,14 +209,14 @@ private fun CreateNewCenterContent(
                                 activateDate = it
                             }
                         },
-                    ) { Text(stringResource(id = R.string.feature_center_select)) }
+                    ) { Text(stringResource(Res.string.feature_center_select)) }
                 },
                 dismissButton = {
                     TextButton(
                         onClick = {
                             showDatePicker = false
                         },
-                    ) { Text(stringResource(id = R.string.feature_center_cancel)) }
+                    ) { Text(stringResource(Res.string.feature_center_cancel)) }
                 },
             ) {
                 DatePicker(state = datePickerState)
@@ -215,7 +226,7 @@ private fun CreateNewCenterContent(
         MifosOutlinedTextField(
             value = centerName,
             onValueChange = { centerName = it },
-            label = stringResource(R.string.feature_center_center_name),
+            label = stringResource(Res.string.feature_center_center_name),
             error = null,
         )
 
@@ -230,7 +241,7 @@ private fun CreateNewCenterContent(
                     officeId = it
                 }
             },
-            label = R.string.feature_center_office,
+            label = Res.string.feature_center_office,
             options = offices.map { it.name.toString() },
             readOnly = true,
         )
@@ -245,15 +256,13 @@ private fun CreateNewCenterContent(
                     isActivate = it
                 },
             )
-            Text(text = stringResource(id = R.string.feature_center_activate))
+            Text(text = stringResource(Res.string.feature_center_activate))
         }
 
         if (isActivate) {
             MifosDatePickerTextField(
-                value = SimpleDateFormat("dd MMMM yyyy", Locale.getDefault()).format(
-                    activateDate,
-                ),
-                label = stringResource(R.string.feature_center_activation_date),
+                value = formatDate(activateDate),
+                label = stringResource(Res.string.feature_center_activation_date),
                 openDatePicker = {
                     showDatePicker = true
                 },
@@ -261,7 +270,7 @@ private fun CreateNewCenterContent(
             Spacer(modifier = Modifier.height(16.dp))
         }
 
-        Button(
+        MifosButton(
             onClick = {
                 if (validateAllFields()) {
                     createCenter(
@@ -269,12 +278,7 @@ private fun CreateNewCenterContent(
                             name = centerName,
                             active = isActivate,
                             activationDate = if (isActivate) {
-                                SimpleDateFormat(
-                                    "dd MMMM yyyy",
-                                    Locale.getDefault(),
-                                ).format(
-                                    activateDate,
-                                )
+                                formatDate(activateDate)
                             } else {
                                 null
                             },
@@ -290,11 +294,8 @@ private fun CreateNewCenterContent(
                 .heightIn(44.dp)
                 .padding(start = 16.dp, end = 16.dp),
             contentPadding = PaddingValues(),
-//            colors = ButtonDefaults.buttonColors(
-//                containerColor = if (isSystemInDarkTheme()) BluePrimaryDark else BluePrimary,
-//            ),
         ) {
-            Text(text = stringResource(id = R.string.feature_center_create), fontSize = 16.sp)
+            Text(text = stringResource(Res.string.feature_center_create), fontSize = 16.sp)
         }
     }
 }
@@ -324,6 +325,6 @@ private fun CreateNewCenterContent(
 //    )
 // }
 
-val sampleOfficeList = List(10) {
-    Office(name = "Office $it")
-}
+//val sampleOfficeList = List(10) {
+//    Office(name = "Office $it")
+//}

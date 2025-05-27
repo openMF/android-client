@@ -18,9 +18,9 @@ import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.module
 
 val CenterModule = module {
-    viewModelOf(::CenterDetailsViewModel)
-    viewModelOf(::GroupListViewModel)
-    viewModelOf(::CenterListViewModel)
-    viewModelOf(::CreateNewCenterViewModel)
-    viewModelOf(::SyncCentersDialogViewModel)
+//    viewModelOf(::CenterDetailsViewModel)
+//    viewModelOf(::GroupListViewModel)
+//    viewModelOf(::CenterListViewModel)
+//    viewModelOf(::CreateNewCenterViewModel)
+//    viewModelOf(::SyncCentersDialogViewModel)
 }

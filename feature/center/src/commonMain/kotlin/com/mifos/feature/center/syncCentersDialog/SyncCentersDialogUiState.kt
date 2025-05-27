@@ -11,15 +11,13 @@ package com.mifos.feature.center.syncCentersDialog
 
 import androidx.compose.ui.graphics.vector.ImageVector
 import com.mifos.room.entities.group.CenterEntity
+import org.jetbrains.compose.resources.StringResource
 
-/**
- * Created by Aditya Gupta on 16/08/23.
- */
 sealed class SyncCentersDialogUiState {
     data object Loading : SyncCentersDialogUiState()
     data object Success : SyncCentersDialogUiState()
     data class Error(
-        val messageResId: Int? = null,
+        val messageResId: StringResource? = null,
         val imageVector: ImageVector? = null,
         val message: String? = null,
     ) : SyncCentersDialogUiState()

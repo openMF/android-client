@@ -9,9 +9,9 @@
  */
 package com.mifos.feature.center.syncCentersDialog
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import co.touchlab.kermit.Logger
 import com.mifos.core.common.utils.Constants
 import com.mifos.core.data.repository.SyncCentersDialogRepository
 import com.mifos.core.datastore.UserPreferencesRepository
@@ -33,7 +33,6 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import rx.Observable
 
 /**
  * Created by Aditya Gupta on 16/08/23.
@@ -79,7 +78,7 @@ class SyncCentersDialogViewModel(
     fun syncCenter() {
         viewModelScope.launch {
             val userStatus = prefManager.userInfo.first().userStatus
-            if (userStatus == Constants.USER_ONLINE) {
+            if (!userStatus) {
                 checkNetworkConnection {
                     syncCenterAndUpdateUI()
                 }
@@ -130,7 +129,7 @@ class SyncCentersDialogViewModel(
                 syncCenter()
             }
         } catch (throwable: Throwable) {
-            Log.d("Error", throwable.message.toString())
+            Logger.e("Error",throwable)
         }
     }
 
@@ -154,16 +153,13 @@ class SyncCentersDialogViewModel(
                     onAccountSyncFailed(e)
                 }.collect { centerAccounts ->
                     mLoanAccountList = getActiveLoanAccounts(
-                        centerAccounts
-                            .loanAccounts,
+                        centerAccounts.data?.loanAccounts,
                     )
                     mSavingsAccountList = getActiveSavingsAccounts(
-                        centerAccounts
-                            .savingsAccounts,
+                        centerAccounts.data?.savingsAccounts,
                     )
                     mMemberLoanAccountsList = getActiveLoanAccounts(
-                        centerAccounts
-                            .memberLoanAccounts,
+                        centerAccounts.data?.memberLoanAccounts,
                     )
                     // Updating UI
                     maxSingleSyncCenterProgressBar = (
@@ -331,7 +327,9 @@ class SyncCentersDialogViewModel(
                 mCenterSyncIndex += 1
                 syncCenter()
             } catch (e: Exception) {
-                Log.d("TAG", "syncCenter: ${e.message}")
+                Logger.e("Error"){
+                    "syncCenter: ${e.message}"
+                }
             }
         }
     }
@@ -397,7 +395,7 @@ class SyncCentersDialogViewModel(
                 .catch {
                     onAccountSyncFailed(it)
                 }.collect { centerWithAssociations ->
-                    mGroups = centerWithAssociations.groupMembers
+                    mGroups = centerWithAssociations.data?.groupMembers ?: emptyList()
                     mGroupSyncIndex = 0
                     resetIndexes()
                     if (mGroups.isNotEmpty()) {
@@ -422,7 +420,7 @@ class SyncCentersDialogViewModel(
                 .catch {
                     onAccountSyncFailed(it)
                 }.collect { groupWithAssociations ->
-                    mClients = getActiveClients(groupWithAssociations.clientMembers)
+                    mClients = getActiveClients(groupWithAssociations.data?.clientMembers)
                     mClientSyncIndex = 0
                     resetIndexes()
                     if (mClients.isNotEmpty()) {
@@ -456,12 +454,10 @@ class SyncCentersDialogViewModel(
                 }
                 .collect { groupAccounts ->
                     mLoanAccountList = getActiveLoanAccounts(
-                        groupAccounts
-                            .loanAccounts,
+                        groupAccounts.data?.loanAccounts,
                     )
                     mSavingsAccountList = getActiveSavingsAccounts(
-                        groupAccounts
-                            .savingsAccounts,
+                        groupAccounts.data?.savingsAccounts,
                     )
                     checkAccountsSyncStatusAndSyncGroupAccounts()
                 }
@@ -481,7 +477,7 @@ class SyncCentersDialogViewModel(
      *
      * @param clientId Client Id
      */
-    private fun syncClientAccounts(clientId: Int) = viewModelScope.launch(Dispatchers.IO) {
+    private fun syncClientAccounts(clientId: Int) = viewModelScope.launch {
         val clientAccounts = repository.syncClientAccounts(clientId)
         mLoanAccountList = getActiveLoanAccounts(
             clientAccounts

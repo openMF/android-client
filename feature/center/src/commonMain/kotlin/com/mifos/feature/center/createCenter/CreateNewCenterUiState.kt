@@ -10,15 +10,13 @@
 package com.mifos.feature.center.createCenter
 
 import com.mifos.room.entities.organisation.OfficeEntity
+import org.jetbrains.compose.resources.StringResource
 
-/**
- * Created by Aditya Gupta on 10/08/23.
- */
 sealed class CreateNewCenterUiState {
 
     data object Loading : CreateNewCenterUiState()
 
-    data class Error(val message: Int) : CreateNewCenterUiState()
+    data class Error(val message: StringResource) : CreateNewCenterUiState()
 
     data class Offices(val offices: List<OfficeEntity>) : CreateNewCenterUiState()
 
