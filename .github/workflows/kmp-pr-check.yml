@@ -87,6 +87,6 @@ jobs:
     with:
       android_package_name: 'cmp-android' # <-- Change Your Android Package Name
       desktop_package_name: 'cmp-desktop' # <-- Change Your Desktop Package Name
-#      web_package_name: 'cmp-web' # <-- Change Your Web Package Name
+      web_package_name: 'cmp-web' # <-- Change Your Web Package Name
       ios_package_name: 'cmp-ios' # <-- Change Your iOS Package Name
       build_ios: false # <-- Change to 'false' if you don't want to build iOS
