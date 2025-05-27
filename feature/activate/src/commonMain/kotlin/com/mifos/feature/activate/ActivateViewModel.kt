@@ -47,7 +47,7 @@ class ActivateViewModel(
     val activateUiState = _activateUiState.asStateFlow()
 
     fun activateClient(clientId: Int, clientPayload: ActivatePayload) =
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch {
             activateClientUseCase(clientId, clientPayload).collect { result ->
                 when (result) {
                     is DataState.Error<*> ->
@@ -64,7 +64,7 @@ class ActivateViewModel(
         }
 
     fun activateCenter(centerId: Int, centerPayload: ActivatePayload) =
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch {
             activateCenterUseCase(centerId, centerPayload).collect { result ->
                 when (result) {
                     is DataState.Error<*>  ->
@@ -81,7 +81,7 @@ class ActivateViewModel(
         }
 
     fun activateGroup(groupId: Int, groupPayload: ActivatePayload) =
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch {
             activateGroupUseCase(groupId, groupPayload).collect { result ->
                 when (result) {
                     is DataState.Error<*> ->
