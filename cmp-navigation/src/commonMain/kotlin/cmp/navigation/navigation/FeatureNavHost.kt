@@ -27,6 +27,7 @@ import com.mifos.feature.about.navigation.aboutNavGraph
 import com.mifos.feature.activate.navigation.activateScreen
 import com.mifos.feature.activate.navigation.navigateToActivateScreen
 import com.mifos.feature.note.navigation.noteNavGraph
+import com.mifos.feature.note.navigation.searchNavGraph
 
 const val WELCOME_ROUTE = "home_screen"
 
@@ -44,6 +45,8 @@ internal fun FeatureNavHost(
     ) {
         homeScreen(onClick = { appState.navController.navigateToActivateScreen(0, "") })
 
+
+        searchNavGraph(onBackPressed = appState.navController::popBackStack)
         aboutNavGraph(onBackPressed = appState.navController::popBackStack)
 
         noteNavGraph(onBackPressed = appState.navController::popBackStack)

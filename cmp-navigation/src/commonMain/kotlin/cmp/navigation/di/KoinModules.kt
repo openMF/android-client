@@ -18,6 +18,7 @@ import com.mifos.core.network.di.NetworkModule
 import com.mifos.feature.activate.di.ActivateModule
 import com.mifos.feature.auth.di.AuthModule
 import com.mifos.feature.note.di.NoteModule
+import com.mifos.feature.search.di.SearchModule
 import com.mifos.room.di.DaoModule
 import com.mifos.room.di.HelperModule
 import com.mifos.room.di.PlatformSpecificDatabaseModule
@@ -62,7 +63,8 @@ object KoinModules {
 //            PathTrackingModule,
 //            ReportModule,
 //            SavingsModule,
-//            SearchModule,
+           SearchModule,
+
 //            SettingsModule,
 //            SplashModule,
         )
