@@ -54,6 +54,7 @@ import com.mifos.core.designsystem.component.MifosRadioButtonDialog
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.UpdateEndpointDialogScreen
 import com.mifos.core.ui.util.DevicePreview
+import com.mifos.feature.settings.updateServer.UpdateServerConfigScreenRoute
 import kotlinx.coroutines.delay
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringArrayResource
@@ -157,13 +158,13 @@ internal fun SettingsScreen(
             onDismissRequest = { showServerConfig = false },
             sheetState = sheetState,
         ) {
-//            UpdateServerConfigScreenRoute(
-//                onCloseClick = { showServerConfig = false },
-//                onSuccessful = {
-//                    showServerConfig = false
+            UpdateServerConfigScreenRoute(
+                onCloseClick = { showServerConfig = false },
+                onSuccessful = {
+                    showServerConfig = false
 //                    RestartCountdownSnackbar(2, SnackbarHostState())
-//                },
-//            )
+                },
+            )
         }
     }
 
