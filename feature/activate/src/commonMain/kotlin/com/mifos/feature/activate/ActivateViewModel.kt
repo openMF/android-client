@@ -9,16 +9,23 @@
  */
 package com.mifos.feature.activate
 
+import androidclient.feature.activate.generated.resources.Res
+import androidclient.feature.activate.generated.resources.feature_activate_center
+import androidclient.feature.activate.generated.resources.feature_activate_client
+import androidclient.feature.activate.generated.resources.feature_activate_failed_to_activate_center
+import androidclient.feature.activate.generated.resources.feature_activate_failed_to_activate_client
+import androidclient.feature.activate.generated.resources.feature_activate_failed_to_activate_group
+import androidclient.feature.activate.generated.resources.feature_activate_group
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mifos.core.common.utils.Constants
-import com.mifos.core.common.utils.Resource
+import com.mifos.core.common.utils.DataState
 import com.mifos.core.domain.useCases.ActivateCenterUseCase
 import com.mifos.core.domain.useCases.ActivateClientUseCase
 import com.mifos.core.domain.useCases.ActivateGroupUseCase
 import com.mifos.core.model.objects.clients.ActivatePayload
-import kotlinx.coroutines.Dispatchers
+import com.mifos.feature.activate.ActivateUiState.*
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
@@ -33,56 +40,56 @@ class ActivateViewModel(
     val id = savedStateHandle.getStateFlow(key = Constants.ACTIVATE_ID, initialValue = 0)
     val activateType = savedStateHandle.getStateFlow(key = Constants.ACTIVATE_TYPE, initialValue = "")
 
-    private val _activateUiState = MutableStateFlow<ActivateUiState>(ActivateUiState.Initial)
+    private val _activateUiState = MutableStateFlow<ActivateUiState>(Initial)
     val activateUiState = _activateUiState.asStateFlow()
 
     fun activateClient(clientId: Int, clientPayload: ActivatePayload) =
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch {
             activateClientUseCase(clientId, clientPayload).collect { result ->
                 when (result) {
-                    is Resource.Error<*> ->
+                    is DataState.Error ->
                         _activateUiState.value =
-                            ActivateUiState.Error(R.string.feature_activate_failed_to_activate_client)
+                            Error(Res.string.feature_activate_failed_to_activate_client)
 
-                    is Resource.Loading<*> -> _activateUiState.value = ActivateUiState.Loading
+                    is DataState.Loading -> _activateUiState.value = Loading
 
-                    is Resource.Success<*> ->
+                    is DataState.Success ->
                         _activateUiState.value =
-                            ActivateUiState.ActivatedSuccessfully(R.string.feature_activate_client)
+                            ActivatedSuccessfully(Res.string.feature_activate_client)
                 }
             }
         }
 
     fun activateCenter(centerId: Int, centerPayload: ActivatePayload) =
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch {
             activateCenterUseCase(centerId, centerPayload).collect { result ->
                 when (result) {
-                    is Resource.Error ->
+                    is DataState.Error  ->
                         _activateUiState.value =
-                            ActivateUiState.Error(R.string.feature_activate_failed_to_activate_center)
+                            Error(Res.string.feature_activate_failed_to_activate_center)
 
-                    is Resource.Loading -> _activateUiState.value = ActivateUiState.Loading
+                    is DataState.Loading -> _activateUiState.value = Loading
 
-                    is Resource.Success ->
+                    is DataState.Success ->
                         _activateUiState.value =
-                            ActivateUiState.ActivatedSuccessfully(R.string.feature_activate_center)
+                            ActivatedSuccessfully(Res.string.feature_activate_center)
                 }
             }
         }
 
     fun activateGroup(groupId: Int, groupPayload: ActivatePayload) =
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch {
             activateGroupUseCase(groupId, groupPayload).collect { result ->
                 when (result) {
-                    is Resource.Error ->
+                    is DataState.Error ->
                         _activateUiState.value =
-                            ActivateUiState.Error(R.string.feature_activate_failed_to_activate_group)
+                            Error(Res.string.feature_activate_failed_to_activate_group)
 
-                    is Resource.Loading -> _activateUiState.value = ActivateUiState.Loading
+                    is DataState.Loading -> _activateUiState.value = ActivateUiState.Loading
 
-                    is Resource.Success ->
+                    is DataState.Success ->
                         _activateUiState.value =
-                            ActivateUiState.ActivatedSuccessfully(R.string.feature_activate_group)
+                            ActivatedSuccessfully(Res.string.feature_activate_group)
                 }
             }
         }

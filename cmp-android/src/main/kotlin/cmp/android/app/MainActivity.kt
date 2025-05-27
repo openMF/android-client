@@ -16,6 +16,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.WindowCompat
 import cmp.shared.SharedApp
+import com.mifos.core.ui.util.ShareUtils
 
 /**
  * Main activity class.
@@ -33,6 +34,8 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         installSplashScreen()
+
+        ShareUtils.setActivityProvider { this }
 
         WindowCompat.setDecorFitsSystemWindows(window, false)
         enableEdgeToEdge()
