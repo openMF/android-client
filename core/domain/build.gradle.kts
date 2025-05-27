@@ -27,6 +27,7 @@ kotlin {
             api(projects.core.common)
             api(projects.core.network)
 
+            implementation(compose.runtime)
             implementation(libs.kotlinx.coroutines.core)
             implementation(compose.components.resources)
             implementation(libs.kotlinx.serialization.json)

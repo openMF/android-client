@@ -51,7 +51,7 @@ interface LoanDao {
     suspend fun insertLoanRepaymentTemplate(template: LoanRepaymentTemplateEntity)
 
     @Query("SELECT * FROM LoanRepaymentTemplate WHERE loanId = :loanId LIMIT 1")
-    fun getLoanRepaymentTemplate(loanId: Int): LoanRepaymentTemplateEntity?
+    suspend fun getLoanRepaymentTemplate(loanId: Int): LoanRepaymentTemplateEntity?
 
     @Query("DELETE FROM LoanRepaymentTemplate WHERE loanId = :loanId")
     suspend fun deleteLoanRepaymentByLoanId(loanId: Int)

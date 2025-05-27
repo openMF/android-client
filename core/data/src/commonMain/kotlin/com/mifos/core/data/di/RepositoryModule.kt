@@ -130,6 +130,7 @@ import com.mifos.core.data.repositoryImp.SyncGroupPayloadsRepositoryImp
 import com.mifos.core.data.repositoryImp.SyncGroupsDialogRepositoryImp
 import com.mifos.core.data.repositoryImp.SyncLoanRepaymentTransactionRepositoryImp
 import com.mifos.core.data.repositoryImp.SyncSavingsAccountTransactionRepositoryImp
+import com.mifos.core.data.util.NetworkMonitor
 import kotlinx.coroutines.CoroutineDispatcher
 import org.koin.core.module.dsl.singleOf
 import org.koin.core.qualifier.named
@@ -214,4 +215,8 @@ val RepositoryModule = module {
     singleOf(::SignatureRepositoryImp) bind SignatureRepository::class
     singleOf(::SurveyListRepositoryImp) bind SurveyListRepository::class
     singleOf(::SurveySubmitRepositoryImp) bind SurveySubmitRepository::class
+
+    includes(platformModule)
+    single<PlatformDependentDataModule> { getPlatformDataModule }
+    single<NetworkMonitor> { getPlatformDataModule.networkMonitor }
 }

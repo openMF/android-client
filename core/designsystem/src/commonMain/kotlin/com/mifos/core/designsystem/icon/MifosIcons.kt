@@ -11,12 +11,14 @@ package com.mifos.core.designsystem.icon
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.material.icons.automirrored.filled.Assignment
 import androidx.compose.material.icons.automirrored.filled.CompareArrows
 import androidx.compose.material.icons.automirrored.filled.Help
 import androidx.compose.material.icons.automirrored.filled.Label
 import androidx.compose.material.icons.automirrored.filled.Logout
 import androidx.compose.material.icons.automirrored.outlined.ArrowBack
+import androidx.compose.material.icons.automirrored.rounded.Assignment
 import androidx.compose.material.icons.filled.AccountBalance
 import androidx.compose.material.icons.filled.AccountBalanceWallet
 import androidx.compose.material.icons.filled.Add
@@ -35,6 +37,7 @@ import androidx.compose.material.icons.filled.FlashOn
 import androidx.compose.material.icons.filled.Image
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.LocationOn
+import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Notifications
@@ -62,9 +65,12 @@ import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material.icons.rounded.AddLocation
 import androidx.compose.material.icons.rounded.ArrowBackIosNew
 import androidx.compose.material.icons.rounded.Bedtime
+import androidx.compose.material.icons.rounded.Business
 import androidx.compose.material.icons.rounded.Cancel
 import androidx.compose.material.icons.rounded.Check
+import androidx.compose.material.icons.rounded.CheckBox
 import androidx.compose.material.icons.rounded.Close
+import androidx.compose.material.icons.rounded.Dashboard
 import androidx.compose.material.icons.rounded.Delete
 import androidx.compose.material.icons.rounded.Download
 import androidx.compose.material.icons.rounded.Error
@@ -76,9 +82,12 @@ import androidx.compose.material.icons.rounded.KeyboardArrowUp
 import androidx.compose.material.icons.rounded.Lock
 import androidx.compose.material.icons.rounded.MoreVert
 import androidx.compose.material.icons.rounded.PersonOutline
+import androidx.compose.material.icons.rounded.PersonPinCircle
 import androidx.compose.material.icons.rounded.Search
+import androidx.compose.material.icons.rounded.SignalWifiOff
 import androidx.compose.material.icons.rounded.SwapHoriz
 import androidx.compose.material.icons.rounded.Sync
+import androidx.compose.material.icons.rounded.Task
 import androidx.compose.material.icons.rounded.Translate
 import androidx.compose.ui.graphics.vector.ImageVector
 
@@ -100,6 +109,7 @@ object MifosIcons {
     val ArrowUp = Icons.Rounded.KeyboardArrowUp
     val ArrowDown = Icons.Rounded.KeyboardArrowDown
     val MoreVert = Icons.Rounded.MoreVert
+    val ArrowForward = Icons.AutoMirrored.Filled.ArrowForward
     val FileTask = Icons.Default.AssignmentTurnedIn
     val AddLocation = Icons.Rounded.AddLocation
     val CloudDownload = Icons.Default.CloudDownload
@@ -112,6 +122,13 @@ object MifosIcons {
     val Gallery = Icons.Filled.Image
     val ArrowDropDown = Icons.Default.ArrowDropDown
     val AssignmentTurnedIn = Icons.Default.AssignmentTurnedIn
+    val Dashboard = Icons.Rounded.Dashboard
+    val Business = Icons.Rounded.Business
+    val Checkbox = Icons.Rounded.CheckBox
+    val Assignment = Icons.AutoMirrored.Rounded.Assignment
+    val OfflineSync = Icons.Rounded.SignalWifiOff
+    val PersonPinCircle = Icons.Rounded.PersonPinCircle
+    val Task = Icons.Rounded.Task
 
     // Recently added
     val ArrowBack2 = Icons.Filled.ChevronLeft
@@ -123,13 +140,13 @@ object MifosIcons {
     val Profile = Icons.Outlined.AccountCircle
     val ProfileBoarder = Icons.Rounded.AccountCircle
     val buildingIcon = Icons.Filled.Apartment
+    val Lock: ImageVector = Icons.Filled.Lock
 
     val Paid: ImageVector = Icons.Default.Paid
     val Logout: ImageVector = Icons.AutoMirrored.Filled.Logout
     val Help: ImageVector = Icons.AutoMirrored.Filled.Help
     val Settings: ImageVector = Icons.Default.Settings
     val Label: ImageVector = Icons.AutoMirrored.Filled.Label
-    val Assignment: ImageVector = Icons.AutoMirrored.Filled.Assignment
     val People: ImageVector = Icons.Filled.People
     val RealEstateAgent: ImageVector = Icons.Filled.RealEstateAgent
     val AccountBalanceWallet: ImageVector = Icons.Filled.AccountBalanceWallet
