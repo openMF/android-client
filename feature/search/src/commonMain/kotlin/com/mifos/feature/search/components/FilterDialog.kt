@@ -26,7 +26,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-//import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.DialogProperties
@@ -42,9 +41,7 @@ internal fun FilterDialog(
     onDismiss: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-   // val configuration = LocalConfiguration.current
     val dialogMaxWidth = 400.dp
-
 
     AlertDialog(
         modifier = modifier.widthIn(max = dialogMaxWidth),
