@@ -20,7 +20,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
-import rx.Observable
 
 /**
  * Created by Aditya Gupta on 16/08/23.
@@ -181,8 +180,8 @@ class SyncSurveysDialogViewModel(
                 checkNetworkConnectionAndSyncSurvey()
             }
         } catch (throwable: Throwable) {
-            val errorObservable = Observable.error<Throwable>(RuntimeException("Custom error"))
-            errorObservable.subscribe { println("Error: ${throwable.message}") }
+//            val errorObservable = Observable.error<Throwable>(RuntimeException("Custom error"))
+//            errorObservable.subscribe { println("Error: ${throwable.message}") }
         }
     }
 
