@@ -9,6 +9,8 @@
  */
 package com.mifos.feature.report.reportDetail
 
+import androidclient.feature.report.generated.resources.Res
+import androidclient.feature.report.generated.resources.feature_report_failed_to_load_report_details
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -22,8 +24,8 @@ import com.mifos.core.domain.useCases.GetRunReportWithQueryUseCase
 import com.mifos.core.model.objects.runreport.DataRow
 import com.mifos.core.model.objects.runreport.FullParameterListResponse
 import com.mifos.core.model.objects.runreport.client.ClientReportTypeItem
-import com.mifos.feature.report.R
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.IO
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
@@ -68,7 +70,7 @@ class ReportDetailViewModel(
                 when (result) {
                     is Resource.Error ->
                         _reportDetailUiState.value =
-                            ReportDetailUiState.Error(R.string.feature_report_failed_to_load_report_details)
+                            ReportDetailUiState.Error(Res.string.feature_report_failed_to_load_report_details)
 
                     is Resource.Loading -> _reportDetailUiState.value = ReportDetailUiState.Loading
 
@@ -101,7 +103,7 @@ class ReportDetailViewModel(
                 when (result) {
                     is Resource.Error ->
                         _reportDetailUiState.value =
-                            ReportDetailUiState.Error(R.string.feature_report_failed_to_load_report_details)
+                            ReportDetailUiState.Error(Res.string.feature_report_failed_to_load_report_details)
 
                     is Resource.Loading -> Unit
 
@@ -119,7 +121,7 @@ class ReportDetailViewModel(
                 when (result) {
                     is Resource.Error ->
                         _reportDetailUiState.value =
-                            ReportDetailUiState.Error(R.string.feature_report_failed_to_load_report_details)
+                            ReportDetailUiState.Error(Res.string.feature_report_failed_to_load_report_details)
 
                     is Resource.Loading -> Unit
 
@@ -137,7 +139,7 @@ class ReportDetailViewModel(
                 when (result) {
                     is Resource.Error ->
                         _reportDetailUiState.value =
-                            ReportDetailUiState.Error(R.string.feature_report_failed_to_load_report_details)
+                            ReportDetailUiState.Error(Res.string.feature_report_failed_to_load_report_details)
 
                     is Resource.Loading -> _reportDetailUiState.value = ReportDetailUiState.Loading
 

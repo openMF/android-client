@@ -59,7 +59,7 @@ object KoinModules {
             NoteModule,
 //            OfflineModule,
 //            PathTrackingModule,
-//            ReportModule,
+            ReportModule,
 //            SavingsModule,
 //            SearchModule,
 //            SettingsModule,

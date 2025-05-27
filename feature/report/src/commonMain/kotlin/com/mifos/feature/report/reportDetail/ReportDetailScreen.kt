@@ -9,6 +9,15 @@
  */
 package com.mifos.feature.report.reportDetail
 
+import androidclient.feature.report.generated.resources.Res
+import androidclient.feature.report.generated.resources.feature_report_currency
+import androidclient.feature.report.generated.resources.feature_report_details
+import androidclient.feature.report.generated.resources.feature_report_failed_to_load_report_details
+import androidclient.feature.report.generated.resources.feature_report_gl_account
+import androidclient.feature.report.generated.resources.feature_report_obligation_date
+import androidclient.feature.report.generated.resources.feature_report_par_type
+import androidclient.feature.report.generated.resources.feature_report_run_report
+import androidclient.feature.report.generated.resources.feature_report_saving_account
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -47,11 +56,9 @@ import androidx.compose.ui.graphics.Color.Companion.Blue
 import androidx.compose.ui.graphics.Color.Companion.Gray
 import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
@@ -65,8 +72,9 @@ import com.mifos.core.designsystem.component.MifosTextFieldDropdown
 import com.mifos.core.model.objects.runreport.DataRow
 import com.mifos.core.model.objects.runreport.FullParameterListResponse
 import com.mifos.core.model.objects.runreport.client.ClientReportTypeItem
-import com.mifos.feature.report.R
-import org.koin.androidx.compose.koinViewModel
+import com.mifos.core.ui.util.DevicePreview
+import org.jetbrains.compose.resources.stringResource
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 internal fun ReportDetailScreen(
@@ -210,21 +218,21 @@ internal fun ReportDetailScreen(
 
     MifosScaffold(
         modifier = modifier,
-        title = stringResource(id = R.string.feature_report_details),
+        title = stringResource(Res.string.feature_report_details),
         onBackPressed = onBackPressed,
         actions = {
             TextButton(
                 onClick = { runReport(runReportDetail) },
                 colors = ButtonDefaults.textButtonColors(White),
             ) {
-                Text(text = stringResource(id = R.string.feature_report_run_report), color = Black)
+                Text(text = stringResource(Res.string.feature_report_run_report), color = Black)
             }
         },
         snackbarHostState = snackbarHostState,
     ) { paddingValues ->
         Box(modifier = Modifier.padding(paddingValues)) {
             when (state) {
-                is ReportDetailUiState.Error -> MifosSweetError(message = stringResource(id = state.message)) {
+                is ReportDetailUiState.Error -> MifosSweetError(message = stringResource(state.message)) {
                     onRetry()
                 }
 
@@ -368,7 +376,7 @@ private fun RunReportContent(
                         .background(Blue, CircleShape),
                 ) {
                     Icon(
-                        painter = painterResource(id = R.drawable.feature_report_ic_report_item),
+                        painter = painterResource(Res.drawable.feature_report_ic_report_item),
                         contentDescription = null,
                         tint = Black,
                     )
@@ -430,7 +438,7 @@ private fun RunReportContent(
                     selectedOffice = value
                     selectedOfficeId = officeList[index].row.first()
                 },
-                label = R.string.feature_report_office,
+                label = Res.string.feature_report_office,
                 options = officeList.map { it.row[1] },
                 readOnly = true,
             )
@@ -447,7 +455,7 @@ private fun RunReportContent(
                     selectedLoanPurpose = value
                     selectedLoanPurposeId = loanPurposeList[index].row.first()
                 },
-                label = R.string.feature_report_loan_purpose,
+                label = Res.string.feature_report_loan_purpose,
                 options = loanPurposeList.map { it.row[1] },
                 readOnly = true,
             )
@@ -464,7 +472,7 @@ private fun RunReportContent(
                     selectedLoanOfficer = value
                     selectedLoanOfficerId = reportOffices[index].row.first()
                 },
-                label = R.string.feature_report_loan_officer,
+                label = Res.string.feature_report_loan_officer,
                 options = reportOffices.map { it.row[1] },
                 readOnly = true,
             )
@@ -481,7 +489,7 @@ private fun RunReportContent(
                     selectedProducts = value
                     selectedProductsId = reportProducts[index].row.first()
                 },
-                label = R.string.feature_report_product,
+                label = Res.string.feature_report_product,
                 options = reportProducts.map { it.row[1] },
                 readOnly = true,
             )
@@ -498,7 +506,7 @@ private fun RunReportContent(
                     selectedFund = value
                     selectedFundId = fundList[index].row.first()
                 },
-                label = R.string.feature_report_fund,
+                label = Res.string.feature_report_fund,
                 options = fundList.map { it.row[1] },
                 readOnly = true,
             )
@@ -515,7 +523,7 @@ private fun RunReportContent(
                     selectedCurrency = value
                     selectedCurrencyId = currencyList[index].row.first()
                 },
-                label = R.string.feature_report_currency,
+                label = Res.string.feature_report_currency,
                 options = currencyList.map { it.row[1] },
                 readOnly = true,
             )
@@ -532,7 +540,7 @@ private fun RunReportContent(
                     selectedParCalculator = value
                     selectedParCalculatorId = parCalculatorList[index].row.first()
                 },
-                label = R.string.feature_report_par_type,
+                label = Res.string.feature_report_par_type,
                 options = parCalculatorList.map { it.row[1] },
                 readOnly = true,
             )
@@ -549,7 +557,7 @@ private fun RunReportContent(
                     selectedSavingsAccountDeposit = value
                     selectedSavingsAccountDepositId = savingsAccountDepositList[index].row.first()
                 },
-                label = R.string.feature_report_saving_account,
+                label = Res.string.feature_report_saving_account,
                 options = savingsAccountDepositList.map { it.row[1] },
                 readOnly = true,
             )
@@ -566,7 +574,7 @@ private fun RunReportContent(
                     selectedGlAccount = value
                     selectedGlAccountId = glAccountList[index].row.first()
                 },
-                label = R.string.feature_report_gl_account,
+                label = Res.string.feature_report_gl_account,
                 options = glAccountList.map { it.row[1] },
                 readOnly = true,
             )
@@ -583,7 +591,7 @@ private fun RunReportContent(
                     selectedObligationDate = value
                     selectedObligationDateId = obligationDateList[index].row.first()
                 },
-                label = R.string.feature_report_obligation_date,
+                label = Res.string.feature_report_obligation_date,
                 options = obligationDateList.map { it.row[1] },
                 readOnly = true,
             )
@@ -592,36 +600,36 @@ private fun RunReportContent(
     }
 }
 
-private class ReportDetailUiStateProvider : PreviewParameterProvider<ReportDetailUiState> {
-
-    override val values: Sequence<ReportDetailUiState>
-        get() = sequenceOf(
-            ReportDetailUiState.Error(R.string.feature_report_failed_to_load_report_details),
-            ReportDetailUiState.Loading,
-            ReportDetailUiState.ParameterDetailsSuccess,
-        )
-}
-
-@Preview(showBackground = true)
-@Composable
-private fun ReportDetailScreenPreview(
-    @PreviewParameter(ReportDetailUiStateProvider::class) state: ReportDetailUiState,
-) {
-    ReportDetailScreen(
-        reportItem = ClientReportTypeItem(),
-        state = state,
-        onBackPressed = {},
-        onRetry = {},
-        officeList = emptyList(),
-        loanPurposeList = emptyList(),
-        fundList = emptyList(),
-        currencyList = emptyList(),
-        parCalculatorList = emptyList(),
-        savingsAccountDepositList = emptyList(),
-        glAccountList = emptyList(),
-        obligationDateList = emptyList(),
-        reportOffices = emptyList(),
-        reportProducts = emptyList(),
-        runReport = {},
-    )
-}
+//private class ReportDetailUiStateProvider : PreviewParameterProvider<ReportDetailUiState> {
+//
+//    override val values: Sequence<ReportDetailUiState>
+//        get() = sequenceOf(
+//            ReportDetailUiState.Error(Res.string.feature_report_failed_to_load_report_details),
+//            ReportDetailUiState.Loading,
+//            ReportDetailUiState.ParameterDetailsSuccess,
+//        )
+//}
+//
+//@DevicePreview
+//@Composable
+//private fun ReportDetailScreenPreview(
+//    @PreviewParameter(ReportDetailUiStateProvider::class) state: ReportDetailUiState,
+//) {
+//    ReportDetailScreen(
+//        reportItem = ClientReportTypeItem(),
+//        state = state,
+//        onBackPressed = {},
+//        onRetry = {},
+//        officeList = emptyList(),
+//        loanPurposeList = emptyList(),
+//        fundList = emptyList(),
+//        currencyList = emptyList(),
+//        parCalculatorList = emptyList(),
+//        savingsAccountDepositList = emptyList(),
+//        glAccountList = emptyList(),
+//        obligationDateList = emptyList(),
+//        reportOffices = emptyList(),
+//        reportProducts = emptyList(),
+//        runReport = {},
+//    )
+//}

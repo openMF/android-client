@@ -11,6 +11,14 @@
 
 package com.mifos.feature.report.runReport
 
+import androidclient.feature.report.generated.resources.Res
+import androidclient.feature.report.generated.resources.feature_report_accounting
+import androidclient.feature.report.generated.resources.feature_report_all
+import androidclient.feature.report.generated.resources.feature_report_client
+import androidclient.feature.report.generated.resources.feature_report_fund
+import androidclient.feature.report.generated.resources.feature_report_loan
+import androidclient.feature.report.generated.resources.feature_report_savings
+import androidclient.feature.report.generated.resources.feature_report_xbrl
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -50,12 +58,10 @@ import androidx.compose.ui.graphics.Color.Companion.Blue
 import androidx.compose.ui.graphics.Color.Companion.DarkGray
 import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
@@ -66,8 +72,9 @@ import com.mifos.core.designsystem.component.MifosMenuDropDownItem
 import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.model.objects.runreport.client.ClientReportTypeItem
-import com.mifos.feature.report.R
-import org.koin.androidx.compose.koinViewModel
+import com.mifos.core.ui.util.DevicePreview
+import org.jetbrains.compose.resources.stringResource
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 internal fun RunReportScreen(
@@ -164,7 +171,7 @@ internal fun RunReportScreen(
                         onDismissRequest = { showMenu = false },
                     ) {
                         MifosMenuDropDownItem(
-                            option = stringResource(id = R.string.feature_report_client),
+                            option = stringResource(Res.string.feature_report_client),
                             onClick = {
                                 onMenuClick(MenuItems.Client)
                                 menuTitle = MenuItems.Client.name
@@ -172,7 +179,7 @@ internal fun RunReportScreen(
                             },
                         )
                         MifosMenuDropDownItem(
-                            option = stringResource(id = R.string.feature_report_loan),
+                            option = stringResource(Res.string.feature_report_loan),
                             onClick = {
                                 onMenuClick(MenuItems.Loan)
                                 menuTitle = MenuItems.Loan.name
@@ -180,7 +187,7 @@ internal fun RunReportScreen(
                             },
                         )
                         MifosMenuDropDownItem(
-                            option = stringResource(id = R.string.feature_report_savings),
+                            option = stringResource(Res.string.feature_report_savings),
                             onClick = {
                                 onMenuClick(MenuItems.Savings)
                                 menuTitle = MenuItems.Savings.name
@@ -188,7 +195,7 @@ internal fun RunReportScreen(
                             },
                         )
                         MifosMenuDropDownItem(
-                            option = stringResource(id = R.string.feature_report_fund),
+                            option = stringResource(Res.string.feature_report_fund),
                             onClick = {
                                 onMenuClick(MenuItems.Fund)
                                 menuTitle = MenuItems.Fund.name
@@ -196,7 +203,7 @@ internal fun RunReportScreen(
                             },
                         )
                         MifosMenuDropDownItem(
-                            option = stringResource(id = R.string.feature_report_accounting),
+                            option = stringResource(Res.string.feature_report_accounting),
                             onClick = {
                                 onMenuClick(MenuItems.Accounting)
                                 menuTitle = MenuItems.Accounting.name
@@ -204,7 +211,7 @@ internal fun RunReportScreen(
                             },
                         )
                         MifosMenuDropDownItem(
-                            option = stringResource(id = R.string.feature_report_xbrl),
+                            option = stringResource(Res.string.feature_report_xbrl),
                             onClick = {
                                 onMenuClick(MenuItems.XBRL)
                                 menuTitle = MenuItems.XBRL.name
@@ -212,7 +219,7 @@ internal fun RunReportScreen(
                             },
                         )
                         MifosMenuDropDownItem(
-                            option = stringResource(id = R.string.feature_report_all),
+                            option = stringResource(Res.string.feature_report_all),
                             onClick = {
                                 onMenuClick(MenuItems.All)
                                 menuTitle = MenuItems.All.name
@@ -229,7 +236,7 @@ internal fun RunReportScreen(
     ) { paddingValues ->
         Column(modifier = Modifier.padding(paddingValues)) {
             when (state) {
-                is RunReportUiState.Error -> MifosSweetError(message = stringResource(id = state.message)) {
+                is RunReportUiState.Error -> MifosSweetError(message = stringResource(state.message)) {
                     onRetry()
                 }
 
@@ -287,7 +294,7 @@ private fun RunReportCardItem(
                     .background(Blue, CircleShape),
             ) {
                 Icon(
-                    painter = painterResource(id = R.drawable.feature_report_ic_report_item),
+                    painter = painterResource(Res.drawable.feature_report_ic_report_item),
                     contentDescription = null,
                     tint = Black,
                 )
@@ -353,12 +360,12 @@ class RunReportUiStateProvider : PreviewParameterProvider<RunReportUiState> {
     override val values: Sequence<RunReportUiState>
         get() = sequenceOf(
             RunReportUiState.Loading,
-            RunReportUiState.Error(R.string.feature_report_failed_to_fetch_reports),
+            RunReportUiState.Error(Res.string.feature_report_failed_to_fetch_reports),
             RunReportUiState.RunReports(sampleRunReports),
         )
 }
 
-@Preview(showBackground = true)
+@DevicePreview
 @Composable
 private fun RunReportPreview(
     @PreviewParameter(RunReportUiStateProvider::class) state: RunReportUiState,

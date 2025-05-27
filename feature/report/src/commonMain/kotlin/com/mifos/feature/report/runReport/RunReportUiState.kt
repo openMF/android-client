@@ -10,12 +10,13 @@
 package com.mifos.feature.report.runReport
 
 import com.mifos.core.model.objects.runreport.client.ClientReportTypeItem
+import org.jetbrains.compose.resources.StringResource
 
 sealed class RunReportUiState {
 
     data object Loading : RunReportUiState()
 
-    data class Error(val message: Int) : RunReportUiState()
+    data class Error(val message: StringResource) : RunReportUiState()
 
     data class RunReports(val runReports: List<ClientReportTypeItem>) : RunReportUiState()
 }

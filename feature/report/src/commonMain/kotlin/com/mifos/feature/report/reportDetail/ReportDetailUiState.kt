@@ -9,6 +9,8 @@
  */
 package com.mifos.feature.report.reportDetail
 
+import org.jetbrains.compose.resources.StringResource
+
 /**
  * Created by Aditya Gupta on 12/08/23.
  */
@@ -16,7 +18,7 @@ sealed class ReportDetailUiState {
 
     data object Loading : ReportDetailUiState()
 
-    data class Error(val message: Int) : ReportDetailUiState()
+    data class Error(val message: StringResource) : ReportDetailUiState()
 
     data object ParameterDetailsSuccess : ReportDetailUiState()
 }
