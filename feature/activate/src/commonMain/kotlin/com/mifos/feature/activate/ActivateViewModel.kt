@@ -40,22 +40,22 @@ class ActivateViewModel(
     val id = savedStateHandle.getStateFlow(key = Constants.ACTIVATE_ID, initialValue = 0)
     val activateType = savedStateHandle.getStateFlow(key = Constants.ACTIVATE_TYPE, initialValue = "")
 
-    private val _activateUiState = MutableStateFlow<ActivateUiState>(ActivateUiState.Initial)
+    private val _activateUiState = MutableStateFlow<ActivateUiState>(Initial)
     val activateUiState = _activateUiState.asStateFlow()
 
     fun activateClient(clientId: Int, clientPayload: ActivatePayload) =
         viewModelScope.launch {
             activateClientUseCase(clientId, clientPayload).collect { result ->
                 when (result) {
-                    is DataState.Error<*> ->
+                    is DataState.Error ->
                         _activateUiState.value =
-                            ActivateUiState.Error(Res.string.feature_activate_failed_to_activate_client)
+                            Error(Res.string.feature_activate_failed_to_activate_client)
 
-                    is DataState.Loading -> _activateUiState.value = ActivateUiState.Loading
+                    is DataState.Loading -> _activateUiState.value = Loading
 
-                    is DataState.Success<*> ->
+                    is DataState.Success ->
                         _activateUiState.value =
-                            ActivateUiState.ActivatedSuccessfully(Res.string.feature_activate_client)
+                            ActivatedSuccessfully(Res.string.feature_activate_client)
                 }
             }
         }
@@ -64,15 +64,15 @@ class ActivateViewModel(
         viewModelScope.launch {
             activateCenterUseCase(centerId, centerPayload).collect { result ->
                 when (result) {
-                    is DataState.Error<*>  ->
+                    is DataState.Error  ->
                         _activateUiState.value =
-                            ActivateUiState.Error(Res.string.feature_activate_failed_to_activate_center)
+                            Error(Res.string.feature_activate_failed_to_activate_center)
 
-                    is DataState.Loading -> _activateUiState.value = ActivateUiState.Loading
+                    is DataState.Loading -> _activateUiState.value = Loading
 
-                    is DataState.Success<*> ->
+                    is DataState.Success ->
                         _activateUiState.value =
-                            ActivateUiState.ActivatedSuccessfully(Res.string.feature_activate_center)
+                            ActivatedSuccessfully(Res.string.feature_activate_center)
                 }
             }
         }
@@ -81,13 +81,13 @@ class ActivateViewModel(
         viewModelScope.launch {
             activateGroupUseCase(groupId, groupPayload).collect { result ->
                 when (result) {
-                    is DataState.Error<*> ->
+                    is DataState.Error ->
                         _activateUiState.value =
                             Error(Res.string.feature_activate_failed_to_activate_group)
 
                     is DataState.Loading -> _activateUiState.value = ActivateUiState.Loading
 
-                    is DataState.Success<*> ->
+                    is DataState.Success ->
                         _activateUiState.value =
                             ActivatedSuccessfully(Res.string.feature_activate_group)
                 }

@@ -22,7 +22,6 @@ kotlin {
             implementation(compose.components.resources)
             implementation(compose.ui)
             implementation(projects.core.domain)
-
         }
     }
 }

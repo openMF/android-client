@@ -15,6 +15,8 @@ import androidclient.feature.activate.generated.resources.Res
 import androidclient.feature.activate.generated.resources.feature_activate
 import androidclient.feature.activate.generated.resources.feature_activate_activation_date
 import androidclient.feature.activate.generated.resources.feature_activate_cancel
+import androidclient.feature.activate.generated.resources.feature_activate_client
+import androidclient.feature.activate.generated.resources.feature_activate_failed_to_activate_client
 import androidclient.feature.activate.generated.resources.feature_activate_select
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -41,20 +43,18 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.intl.Locale
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mifos.core.common.utils.Constants
+import com.mifos.core.common.utils.formatDate
 import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosDatePickerTextField
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.model.objects.clients.ActivatePayload
+import com.mifos.core.ui.util.DevicePreview
 import kotlinx.datetime.Clock
-import kotlinx.datetime.Instant
-import kotlinx.datetime.TimeZone
-import kotlinx.datetime.toLocalDateTime
 import org.jetbrains.compose.resources.getString
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
@@ -206,31 +206,42 @@ private fun ActivateContent(
     }
 }
 
-fun formatDate(millis: Long): String {
-    val dateTime = Instant.fromEpochMilliseconds(millis).toLocalDateTime(TimeZone.currentSystemDefault())
-    return "${dateTime.dayOfMonth} ${dateTime.month.name.lowercase().replaceFirstChar { it.uppercase() }} ${dateTime.year}"
+@DevicePreview
+@Composable
+private fun ActivateScreenPreviewInitial() {
+    ActivateScreen(
+        state = ActivateUiState.Initial,
+        onActivate = {},
+        onBackPressed = {},
+    )
 }
 
-//
-//private class ActivateUiStateProvider : PreviewParameterProvider<ActivateUiState> {
-//
-//    override val values: Sequence<ActivateUiState>
-//        get() = sequenceOf(
-//            ActivateUiState.Loading,
-//            ActivateUiState.Error(R.string.feature_activate_failed_to_activate_client),
-//            ActivateUiState.ActivatedSuccessfully(R.string.feature_activate_client),
-//            ActivateUiState.Initial,
-//        )
-//}
-//
-//@Preview(showBackground = true)
-//@Composable
-//private fun ActivateScreenPreview(
-//    @PreviewParameter(ActivateUiStateProvider::class) state: ActivateUiState,
-//) {
-//    ActivateScreen(
-//        state = state,
-//        onActivate = {},
-//        onBackPressed = {},
-//    )
-//}
+@DevicePreview
+@Composable
+private fun ActivateScreenPreviewLoading() {
+    ActivateScreen(
+        state = ActivateUiState.Loading,
+        onActivate = {},
+        onBackPressed = {},
+    )
+}
+
+@DevicePreview
+@Composable
+private fun ActivateScreenPreviewActivatedSuccessfully() {
+    ActivateScreen(
+        state = ActivateUiState.ActivatedSuccessfully(Res.string.feature_activate_client),
+        onActivate = {},
+        onBackPressed = {},
+    )
+}
+
+@DevicePreview
+@Composable
+private fun ActivateScreenPreviewError() {
+    ActivateScreen(
+        state = ActivateUiState.Error(Res.string.feature_activate_failed_to_activate_client),
+        onActivate = {},
+        onBackPressed = {},
+    )
+}
