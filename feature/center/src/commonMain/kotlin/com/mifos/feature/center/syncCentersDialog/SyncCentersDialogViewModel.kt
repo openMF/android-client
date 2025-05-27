@@ -346,8 +346,8 @@ class SyncCentersDialogViewModel(
             repository.syncLoanRepaymentTemplate(loanId),
         ) { loanWithAssociations, loanRepaymentTemplate ->
             LoanAndLoanRepayment(
-                loanWithAssociations,
-                loanRepaymentTemplate,
+                loanWithAssociations.data,
+                loanRepaymentTemplate.data,
             )
         }
     }
@@ -376,8 +376,8 @@ class SyncCentersDialogViewModel(
             ),
         ) { savingsAccountWithAssociations, savingsAccountTransactionTemplate ->
             SavingsAccountAndTransactionTemplate(
-                savingsAccountWithAssociations,
-                savingsAccountTransactionTemplate,
+                savingsAccountWithAssociations.data,
+                savingsAccountTransactionTemplate.data,
             )
         }
     }
@@ -763,41 +763,32 @@ class SyncCentersDialogViewModel(
     }
 
     fun getActiveLoanAccounts(loanAccountList: List<LoanAccountEntity>?): List<LoanAccountEntity> {
-        val loanAccounts: MutableList<LoanAccountEntity> = ArrayList()
-        Observable.from(loanAccountList)
-            .filter { loanAccount -> loanAccount.status?.active }
-            .subscribe { loanAccount -> loanAccounts.add(loanAccount) }
-        return loanAccounts
+        return loanAccountList?.filter {
+            it.status?.active == true
+        }.orEmpty()
     }
 
     fun getActiveSavingsAccounts(savingsAccounts: List<SavingsAccountEntity>?): List<SavingsAccountEntity> {
-        val accounts: MutableList<SavingsAccountEntity> = ArrayList()
-        Observable.from(savingsAccounts)
-            .filter { savingsAccount ->
-                savingsAccount.status?.active == true &&
-                    !savingsAccount.depositType!!.isRecurring
+        return savingsAccounts
+            ?.filter { account ->
+                account.status?.active == true && account.depositType?.isRecurring == false
             }
-            .subscribe { savingsAccount -> accounts.add(savingsAccount) }
-        return accounts
+            .orEmpty()
     }
 
     fun getActiveClients(clients: List<ClientEntity>?): List<ClientEntity> {
-        val accounts: MutableList<ClientEntity> = ArrayList()
-        Observable.from(clients)
-            .filter { client -> client.active }
-            .subscribe { client -> accounts.add(client) }
-        return accounts
+        return clients
+            ?.filter { it.active }
+            .orEmpty()
     }
 
     fun getSyncableSavingsAccounts(savingsAccounts: List<SavingsAccountEntity>?): List<SavingsAccountEntity> {
-        val accounts: MutableList<SavingsAccountEntity> = ArrayList()
-        Observable.from(savingsAccounts)
-            .filter { savingsAccount ->
-                savingsAccount.depositType?.value == "Savings" &&
-                    savingsAccount.status?.active == true &&
-                    !savingsAccount.depositType!!.isRecurring
+        return savingsAccounts
+            ?.filter { account ->
+                account.depositType?.value == "Savings" &&
+                        account.status?.active == true &&
+                        account.depositType?.isRecurring == false
             }
-            .subscribe { savingsAccount -> accounts.add(savingsAccount) }
-        return accounts
+            .orEmpty()
     }
 }

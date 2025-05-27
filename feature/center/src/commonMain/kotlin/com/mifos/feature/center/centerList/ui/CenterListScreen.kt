@@ -13,6 +13,7 @@ package com.mifos.feature.center.centerList.ui
 
 import androidclient.feature.center.generated.resources.Res
 import androidclient.feature.center.generated.resources.feature_center_error_loading_centers
+import androidclient.feature.center.generated.resources.feature_center_ic_done_all_black_24dp
 import androidclient.feature.center.generated.resources.feature_center_no_more_centers
 import androidclient.feature.center.generated.resources.feature_center_sync
 import androidx.compose.foundation.Canvas
@@ -63,6 +64,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.paging.LoadState
+import coil3.compose.AsyncImage
 import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosPagingAppendProgress
 import com.mifos.core.designsystem.component.MifosSweetError
@@ -70,9 +73,9 @@ import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.ui.components.SelectionModeTopAppBar
 import com.mifos.feature.center.syncCentersDialog.SyncCenterDialogScreen
 import com.mifos.room.entities.group.CenterEntity
-import kotlinx.coroutines.flow.flowOf
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
+
 
 @Composable
 internal fun CenterListScreen(
@@ -420,7 +423,7 @@ private fun CenterListContent(
                     if (centerPagingList[index]?.sync == true) {
                         AsyncImage(
                             modifier = Modifier.size(20.dp),
-                            model = R.drawable.feature_center_ic_done_all_black_24dp,
+                            model = Res.drawable.feature_center_ic_done_all_black_24dp,
                             contentDescription = null,
                         )
                     }
@@ -564,7 +567,7 @@ private fun CenterListDbContent(
                     }
                     AsyncImage(
                         modifier = Modifier.size(20.dp),
-                        model = R.drawable.feature_center_ic_done_all_black_24dp,
+                        model = Res.drawable.feature_center_ic_done_all_black_24dp,
                         contentDescription = null,
                     )
                 }
