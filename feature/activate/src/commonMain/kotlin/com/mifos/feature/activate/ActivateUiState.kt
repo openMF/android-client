@@ -9,17 +9,15 @@
  */
 package com.mifos.feature.activate
 
-import org.junit.Assert.assertEquals
-import org.junit.Test
+import org.jetbrains.compose.resources.StringResource
 
-/**
- * Example local unit test, which will execute on the development machine (host).
- *
- * See [testing documentation](http://d.android.com/tools/testing).
- */
-class ExampleUnitTest {
-    @Test
-    fun addition_isCorrect() {
-        assertEquals(4, 2 + 2)
-    }
+sealed class ActivateUiState {
+
+    data object Initial : ActivateUiState()
+
+    data object Loading : ActivateUiState()
+
+    data class Error(val message: StringResource) : ActivateUiState()
+
+    data class ActivatedSuccessfully(val message: StringResource) : ActivateUiState()
 }

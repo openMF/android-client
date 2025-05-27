@@ -97,7 +97,7 @@ internal fun AboutScreen(
                 AboutCardItem(about = about) {
                     when (it) {
                         AboutItems.CONTRIBUTIONS -> ShareUtils.openUrl("https://github.com/openMF/android-client/graphs/contributors")
-                        AboutItems.APP_VERSION -> Unit
+                        AboutItems.APP_VERSION -> ShareUtils.openAppInfo()
                         AboutItems.OFFICIAL_WEBSITE -> ShareUtils.openUrl("https://openmf.github.io/mobileapps.github.io/")
                         AboutItems.TWITTER -> ShareUtils.openUrl("https://twitter.com/mifos")
                         AboutItems.SOURCE_CODE -> ShareUtils.openUrl("https://github.com/openMF/android-client")
