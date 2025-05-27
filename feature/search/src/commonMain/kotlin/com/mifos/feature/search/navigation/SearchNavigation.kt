@@ -21,6 +21,7 @@ import com.mifos.core.ui.components.FabType
 import com.mifos.feature.search.SearchScreenRoute
 
 fun NavGraphBuilder.searchNavGraph(
+//fun NavGraphBuilder.searchNavGraph(
     paddingValues: PaddingValues,
     onCreateClient: () -> Unit,
     onCreateCenter: () -> Unit,
