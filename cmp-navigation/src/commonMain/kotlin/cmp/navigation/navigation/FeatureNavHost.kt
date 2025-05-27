@@ -13,6 +13,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -22,8 +23,12 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import cmp.navigation.AppState
+import com.mifos.feature.about.navigation.aboutNavGraph
+import com.mifos.feature.activate.navigation.activateScreen
+import com.mifos.feature.activate.navigation.navigateToActivateScreen
+import com.mifos.feature.note.navigation.noteNavGraph
 
-const val WELCOME_ROUTE = "home_route"
+const val WELCOME_ROUTE = "home_screen"
 
 @Composable
 internal fun FeatureNavHost(
@@ -33,27 +38,36 @@ internal fun FeatureNavHost(
 ) {
     NavHost(
         route = NavGraphRoute.MAIN_GRAPH,
-        startDestination = WELCOME_ROUTE,
+        startDestination = HomeDestinationsScreen.SearchScreen.route,
         navController = appState.navController,
         modifier = modifier,
     ) {
-        homeScreen()
+        homeScreen(onClick = { appState.navController.navigateToActivateScreen(0, "") })
+
+        aboutNavGraph(onBackPressed = appState.navController::popBackStack)
+
+        noteNavGraph(onBackPressed = appState.navController::popBackStack)
+
+        activateScreen(onBackPressed = appState.navController::popBackStack)
     }
 }
 
-fun NavGraphBuilder.homeScreen() {
-    composable(route = WELCOME_ROUTE) {
-        WelcomeScreen()
+fun NavGraphBuilder.homeScreen(onClick: () -> Unit) {
+    composable(route = HomeDestinationsScreen.SearchScreen.route) {
+        WelcomeScreen(onClick)
     }
 }
 
 @Composable
-fun WelcomeScreen() {
+fun WelcomeScreen(onClick: () -> Unit) {
     Column(
         modifier = Modifier.fillMaxSize().background(Color.White),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Text(text = "Welcome to Mifos", color = Color.Black)
+        Button(onClick = onClick) {
+            Text("navigate")
+        }
     }
 }
