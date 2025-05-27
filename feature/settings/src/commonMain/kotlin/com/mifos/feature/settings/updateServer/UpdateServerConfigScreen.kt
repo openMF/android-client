@@ -56,11 +56,12 @@ import com.mifos.core.designsystem.component.MifosOutlinedTextField
 import com.mifos.core.ui.util.DevicePreview
 import com.mifos.feature.settings.R
 import org.koin.androidx.compose.koinViewModel
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 internal fun UpdateServerConfigScreenRoute(
     onCloseClick: () -> Unit,
-    onSuccessful: () -> Unit,
+    onSuccessful: @Composable () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: UpdateServerConfigViewModel = koinViewModel(),
 ) {

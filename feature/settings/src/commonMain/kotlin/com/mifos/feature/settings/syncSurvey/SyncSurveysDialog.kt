@@ -49,9 +49,11 @@ import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import com.mifos.core.designsystem.component.MifosCircularProgress
+import com.mifos.core.ui.util.DevicePreview
 import com.mifos.feature.settings.R
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 internal fun SyncSurveysDialog(
@@ -397,7 +399,7 @@ class SyncSurveysDialogPreviewProvider : PreviewParameterProvider<SyncSurveysDia
         )
 }
 
-@Preview(showBackground = true)
+@DevicePreview
 @Composable
 private fun SyncSurveysDialogPreview(
     @PreviewParameter(SyncSurveysDialogPreviewProvider::class) state: SyncSurveysDialogUiState,
