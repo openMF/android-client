@@ -12,6 +12,7 @@ package com.mifos.feature.center.centerList.ui
 import com.mifos.room.entities.group.CenterEntity
 import kotlinx.coroutines.flow.Flow
 import org.jetbrains.compose.resources.StringResource
+import androidx.paging.PagingData
 
 sealed class CenterListUiState {
 
@@ -21,5 +22,5 @@ sealed class CenterListUiState {
 
     data class CenterList(val centers: Flow<PagingData<CenterEntity>>) : CenterListUiState()
 
-    data class CenterListDb(val centers: List<CenterEntity>) : CenterListUiState()
+    data class CenterListDb(val centers: List<CenterEntity>?) : CenterListUiState()
 }

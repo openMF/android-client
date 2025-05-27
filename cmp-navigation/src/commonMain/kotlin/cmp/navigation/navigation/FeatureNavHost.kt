@@ -12,6 +12,7 @@ package cmp.navigation.navigation
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
@@ -26,6 +27,7 @@ import cmp.navigation.AppState
 import com.mifos.feature.about.navigation.aboutNavGraph
 import com.mifos.feature.activate.navigation.activateScreen
 import com.mifos.feature.activate.navigation.navigateToActivateScreen
+import com.mifos.feature.center.navigation.centerNavGraph
 import com.mifos.feature.note.navigation.noteNavGraph
 
 const val WELCOME_ROUTE = "home_screen"
@@ -34,6 +36,7 @@ const val WELCOME_ROUTE = "home_screen"
 internal fun FeatureNavHost(
     appState: AppState,
     onClickLogout: () -> Unit,
+    padding: PaddingValues,
     modifier: Modifier = Modifier,
 ) {
     NavHost(
@@ -49,6 +52,16 @@ internal fun FeatureNavHost(
         noteNavGraph(onBackPressed = appState.navController::popBackStack)
 
         activateScreen(onBackPressed = appState.navController::popBackStack)
+
+        centerNavGraph(
+            navController = appState.navController,
+            paddingValues = padding,
+            onActivateCenter = appState.navController::navigateToActivateScreen,
+            addSavingsAccount = {
+//                navController.navigateToAddSavingsAccount(it, 0, true)
+            },
+
+            )
     }
 }
 
