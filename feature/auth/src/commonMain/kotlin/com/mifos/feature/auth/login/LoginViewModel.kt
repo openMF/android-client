@@ -43,7 +43,20 @@ class LoginViewModel(
 ) : ViewModel() {
 
     private val _loginUiState = MutableStateFlow<LoginUiState>(LoginUiState.Empty)
+
+    init {
+        checkLoginStatus()
+    }
     val loginUiState = _loginUiState.asStateFlow()
+    private fun checkLoginStatus() {
+        viewModelScope.launch {
+            prefManager.userData.collect { user ->
+                if (user.isAuthenticated) {
+                    _loginUiState.value = LoginUiState.HomeActivityIntent
+                }
+            }
+        }
+    }
 
     private val passcode: StateFlow<String?> = prefManager.settingsInfo
         .map { it.passcode }
@@ -122,10 +135,10 @@ class LoginViewModel(
             )
         }
 
-        if (passcode.value != null) {
-            _loginUiState.value = LoginUiState.HomeActivityIntent
-        } else {
-            _loginUiState.value = LoginUiState.HomeActivityIntent
-        }
+//        if (passcode.value != null) {
+//            _loginUiState.value = LoginUiState.HomeActivityIntent
+//        } else {
+//            _loginUiState.value = LoginUiState.HomeActivityIntent
+//        }
     }
 }
