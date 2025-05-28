@@ -22,7 +22,7 @@ interface CheckerInboxTasksRepository {
 
     fun getRescheduleLoansTaskList(): Flow<DataState<List<RescheduleLoansTask>>>
 
-    suspend fun getCheckerTaskList(
+    fun getCheckerTaskList(
         actionName: String? = null,
         entityName: String? = null,
         resourceId: Int? = null,

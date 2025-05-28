@@ -23,9 +23,6 @@ dependencies {
 
     //DBFlow dependencies
     testImplementation(libs.hilt.android.testing)
-    testImplementation(projects.core.testing)
-
-    androidTestImplementation(projects.core.testing)
 
     implementation(libs.androidx.material)
 
