@@ -50,6 +50,7 @@ import androidx.compose.material.icons.filled.RealEstateAgent
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.Share
+import androidx.compose.material.icons.filled.Update
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material.icons.filled.WifiOff
@@ -103,6 +104,7 @@ object MifosIcons {
     val ArrowBack1 = Icons.Rounded.ArrowBackIosNew
 
     val Link = Icons.Default.Link
+    val Server = Icons.Default
     val AddLink = Icons.Default.AddLink
     val Search = Icons.Rounded.Search
     val Filter = Icons.Rounded.FilterList
@@ -143,6 +145,7 @@ object MifosIcons {
     val HomeBoarder = Icons.Rounded.Home
     val Payment = Icons.Rounded.SwapHoriz
     val Finance = Icons.Outlined.Wallet
+    val Update = Icons.Default.Update
     val Profile = Icons.Outlined.AccountCircle
     val ProfileBoarder = Icons.Rounded.AccountCircle
     val buildingIcon = Icons.Filled.Apartment

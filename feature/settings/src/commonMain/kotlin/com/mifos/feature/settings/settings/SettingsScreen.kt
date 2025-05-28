@@ -54,6 +54,7 @@ import com.mifos.core.designsystem.component.MifosRadioButtonDialog
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.UpdateEndpointDialogScreen
 import com.mifos.core.ui.util.DevicePreview
+import com.mifos.feature.settings.syncSurvey.SyncSurveysDialog
 import com.mifos.feature.settings.updateServer.UpdateServerConfigScreenRoute
 import kotlinx.coroutines.delay
 import org.jetbrains.compose.resources.StringResource
@@ -75,6 +76,7 @@ internal fun SettingsScreen(
         onBackPressed = onBackPressed,
         selectedLanguage = uiState.language.code,
         selectedTheme = uiState.theme.themeName,
+        currentTheme = uiState.theme,
         baseURL = uiState.baseUrl,
         tenant = uiState.tenant,
         changePasscode = { changePasscode(uiState.passcode) },
@@ -103,6 +105,7 @@ internal fun SettingsScreen(
     onBackPressed: () -> Unit,
     selectedLanguage: String,
     selectedTheme: String,
+    currentTheme: AppTheme,
     baseURL: String,
     tenant: String,
     changePasscode: () -> Unit,
@@ -117,6 +120,10 @@ internal fun SettingsScreen(
     var showServerConfig by rememberSaveable { mutableStateOf(false) }
 
     val sheetState = rememberModalBottomSheetState()
+
+    LaunchedEffect(currentTheme) {
+        Logger.d { "Current theme changed to: $currentTheme" }
+    }
 
     MifosScaffold(
         onBackPressed = onBackPressed,
@@ -184,7 +191,7 @@ internal fun SettingsScreen(
             items = AppTheme.entries.map { it.themeName }.toTypedArray(),
             selectItem = { _, index -> updateTheme(AppTheme.entries[index]) },
             onDismissRequest = { showThemeUpdateDialog = false },
-            selectedItem = selectedTheme,
+            selectedItem = currentTheme.themeName,
         )
     }
 
@@ -312,6 +319,7 @@ private fun PreviewSettingsScreen() {
         onBackPressed = {},
         selectedLanguage = "",
         selectedTheme = "",
+        currentTheme = AppTheme.SYSTEM,
         baseURL = "",
         tenant = "",
         handleEndpointUpdate = { _, _ -> },

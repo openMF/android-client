@@ -65,7 +65,8 @@ class SettingsViewModel(
     }
 
     fun tryUpdatingEndpoint(selectedBaseUrl: String, selectedTenant: String): Boolean {
-        val isEndpointUpdated = !(uiState.value.baseUrl == selectedBaseUrl && uiState.value.tenant == selectedTenant)
+        val isEndpointUpdated =
+            !(uiState.value.baseUrl == selectedBaseUrl && uiState.value.tenant == selectedTenant)
         if (isEndpointUpdated) {
             viewModelScope.launch {
                 prefManager.updateSettings(
@@ -88,7 +89,7 @@ enum class SettingsCardItem(
     SYNC_SURVEY(
         title = Res.string.feature_settings_sync_survey,
         details = Res.string.feature_settings_sync_survey_desc,
-        icon = null,
+        icon = MifosIcons.Sync,
     ),
     LANGUAGE(
         title = Res.string.feature_settings_language,
@@ -108,12 +109,12 @@ enum class SettingsCardItem(
     ENDPOINT(
         title = Res.string.feature_settings_instance_url,
         details = Res.string.feature_settings_instance_url_desc,
-        icon = null,
+        icon = MifosIcons.AddLink,
     ),
     SERVER_CONFIG(
         title = Res.string.feature_settings_server_config,
         details = Res.string.feature_settings_server_config_desc,
-        icon = null,
+        icon = MifosIcons.Update,
     ),
 }
 
