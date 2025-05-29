@@ -20,61 +20,61 @@ sealed class HomeDestinationsScreen(
 ) {
     data object SearchScreen : HomeDestinationsScreen(
         title = "Search",
-        route = "search_screen",
+        route = "search_screen_route",
         icon = MifosIcons.Dashboard,
     )
 
     data object ClientListScreen : HomeDestinationsScreen(
         title = "Clients",
-        route = "client_list_screen",
+        route = " ",
         icon = MifosIcons.Person,
     )
 
     data object CenterListScreen : HomeDestinationsScreen(
         title = "Centers",
-        route = "center_list_screen",
+        route = " ",
         icon = MifosIcons.Business,
     )
 
     data object GroupListScreen : HomeDestinationsScreen(
         title = "Groups",
-        route = "",
+        route = " ",
         icon = MifosIcons.Group,
     )
 
     data object CheckerInboxAndTasksScreen : HomeDestinationsScreen(
         title = "Checker Inbox & Tasks",
-        route = "",
+        route = " ",
         icon = MifosIcons.Checkbox,
     )
 
     data object IndividualCollectionSheetScreen : HomeDestinationsScreen(
         title = "Individual Collection Sheet",
-        route = "individual_collection_sheet_route",
+        route = " ",
         icon = MifosIcons.Assignment,
     )
 
     data object CollectionSheetScreen : HomeDestinationsScreen(
         title = "Collection Sheet",
-        route = "generate_collection_sheet",
+        route = " ",
         icon = MifosIcons.Assignment,
     )
 
     data object RunReportsScreen : HomeDestinationsScreen(
         title = "Run Reports",
-        route = "run_report_screen",
+        route = " ",
         icon = MifosIcons.Task,
     )
 
     data object PathTrackerScreen : HomeDestinationsScreen(
         title = "Path Tracker",
-        route = "",
+        route = " ",
         icon = MifosIcons.PersonPinCircle,
     )
 
     data object SettingsScreen : HomeDestinationsScreen(
         title = "Settings",
-        route = "",
+        route = " ",
         icon = MifosIcons.Settings,
     )
 
@@ -86,7 +86,7 @@ sealed class HomeDestinationsScreen(
 
     data object OfflineSyncScreen : HomeDestinationsScreen(
         title = "Offline Sync",
-        route = "",
+        route = " ",
         icon = MifosIcons.OfflineSync,
     )
 }
