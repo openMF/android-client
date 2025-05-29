@@ -48,10 +48,7 @@ class ActivateViewModel(
                 when (result) {
                     is DataState.Error ->
                         _activateUiState.value =
-                            ActivateUiState.Error(
-                                Res.string
-                                    .feature_activate_failed_to_activate_client,
-                            )
+                            ActivateUiState.Error(Res.string.feature_activate_failed_to_activate_client)
 
                     is DataState.Loading -> _activateUiState.value = ActivateUiState.Loading
 
