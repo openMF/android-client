@@ -25,7 +25,6 @@ import com.mifos.core.domain.useCases.ActivateCenterUseCase
 import com.mifos.core.domain.useCases.ActivateClientUseCase
 import com.mifos.core.domain.useCases.ActivateGroupUseCase
 import com.mifos.core.model.objects.clients.ActivatePayload
-import com.mifos.feature.activate.ActivateUiState.*
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
@@ -40,7 +39,7 @@ class ActivateViewModel(
     val id = savedStateHandle.getStateFlow(key = Constants.ACTIVATE_ID, initialValue = 0)
     val activateType = savedStateHandle.getStateFlow(key = Constants.ACTIVATE_TYPE, initialValue = "")
 
-    private val _activateUiState = MutableStateFlow<ActivateUiState>(Initial)
+    private val _activateUiState = MutableStateFlow<ActivateUiState>(ActivateUiState.Initial)
     val activateUiState = _activateUiState.asStateFlow()
 
     fun activateClient(clientId: Int, clientPayload: ActivatePayload) =
@@ -49,13 +48,13 @@ class ActivateViewModel(
                 when (result) {
                     is DataState.Error ->
                         _activateUiState.value =
-                            Error(Res.string.feature_activate_failed_to_activate_client)
+                            ActivateUiState.Error(Res.string.feature_activate_failed_to_activate_client)
 
-                    is DataState.Loading -> _activateUiState.value = Loading
+                    is DataState.Loading -> _activateUiState.value = ActivateUiState.Loading
 
                     is DataState.Success ->
                         _activateUiState.value =
-                            ActivatedSuccessfully(Res.string.feature_activate_client)
+                            ActivateUiState.ActivatedSuccessfully(Res.string.feature_activate_client)
                 }
             }
         }
@@ -64,15 +63,15 @@ class ActivateViewModel(
         viewModelScope.launch {
             activateCenterUseCase(centerId, centerPayload).collect { result ->
                 when (result) {
-                    is DataState.Error  ->
+                    is DataState.Error ->
                         _activateUiState.value =
-                            Error(Res.string.feature_activate_failed_to_activate_center)
+                            ActivateUiState.Error(Res.string.feature_activate_failed_to_activate_center)
 
-                    is DataState.Loading -> _activateUiState.value = Loading
+                    is DataState.Loading -> _activateUiState.value = ActivateUiState.Loading
 
                     is DataState.Success ->
                         _activateUiState.value =
-                            ActivatedSuccessfully(Res.string.feature_activate_center)
+                            ActivateUiState.ActivatedSuccessfully(Res.string.feature_activate_center)
                 }
             }
         }
@@ -83,13 +82,13 @@ class ActivateViewModel(
                 when (result) {
                     is DataState.Error ->
                         _activateUiState.value =
-                            Error(Res.string.feature_activate_failed_to_activate_group)
+                            ActivateUiState.Error(Res.string.feature_activate_failed_to_activate_group)
 
                     is DataState.Loading -> _activateUiState.value = ActivateUiState.Loading
 
                     is DataState.Success ->
                         _activateUiState.value =
-                            ActivatedSuccessfully(Res.string.feature_activate_group)
+                            ActivateUiState.ActivatedSuccessfully(Res.string.feature_activate_group)
                 }
             }
         }
