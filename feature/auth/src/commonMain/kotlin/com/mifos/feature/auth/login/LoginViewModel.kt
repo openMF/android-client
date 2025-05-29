@@ -27,7 +27,9 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
@@ -43,18 +45,22 @@ class LoginViewModel(
 ) : ViewModel() {
 
     private val _loginUiState = MutableStateFlow<LoginUiState>(LoginUiState.Empty)
-
-    init {
-        checkLoginStatus()
-    }
-    val loginUiState = _loginUiState.asStateFlow()
+    val loginUiState = _loginUiState
+        .onStart { checkLoginStatus() }
+        .stateIn(
+            viewModelScope,
+            SharingStarted.WhileSubscribed(5000),
+            LoginUiState.Empty
+        )
     private fun checkLoginStatus() {
         viewModelScope.launch {
-            prefManager.userData.collect { user ->
+            val user = prefManager.userData.first()
                 if (user.isAuthenticated) {
                     _loginUiState.value = LoginUiState.HomeActivityIntent
                 }
-            }
+                else{
+                    _loginUiState.value = LoginUiState.Empty
+                }
         }
     }
 
@@ -131,9 +137,11 @@ class LoginViewModel(
                     officeName = user.officeName,
                     permissions = user.permissions!!,
 
-                ),
+                    ),
             )
         }
+
+        _loginUiState.value = LoginUiState.HomeActivityIntent
 
 //        if (passcode.value != null) {
 //            _loginUiState.value = LoginUiState.HomeActivityIntent
