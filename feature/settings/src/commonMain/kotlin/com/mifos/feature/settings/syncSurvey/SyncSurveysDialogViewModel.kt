@@ -11,6 +11,7 @@ package com.mifos.feature.settings.syncSurvey
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import co.touchlab.kermit.Logger
 import com.mifos.room.entities.survey.QuestionDatasEntity
 import com.mifos.room.entities.survey.ResponseDatasEntity
 import com.mifos.room.entities.survey.SurveyEntity
@@ -180,6 +181,7 @@ class SyncSurveysDialogViewModel(
                 checkNetworkConnectionAndSyncSurvey()
             }
         } catch (throwable: Throwable) {
+            Logger.e("onAccountSyncFailed", throwable)
 //            val errorObservable = Observable.error<Throwable>(RuntimeException("Custom error"))
 //            errorObservable.subscribe { println("Error: ${throwable.message}") }
         }

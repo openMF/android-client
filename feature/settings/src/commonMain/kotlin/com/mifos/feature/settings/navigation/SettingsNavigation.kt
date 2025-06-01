@@ -14,7 +14,6 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import com.mifos.feature.settings.settings.SettingsScreen
 
-
 fun NavController.navigateToSettingsScreen() {
     navigate(SettingsScreens.SettingsScreen.route)
 }

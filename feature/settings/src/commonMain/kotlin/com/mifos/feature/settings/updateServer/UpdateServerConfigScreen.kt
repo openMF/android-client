@@ -1,4 +1,5 @@
- /* Copyright 2024 Mifos Initiative
+/*
+ * Copyright 2024 Mifos Initiative
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -6,8 +7,7 @@
  *
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
- package com.mifos.feature.settings.updateServer
-
+package com.mifos.feature.settings.updateServer
 
 import androidclient.feature.settings.generated.resources.Res
 import androidclient.feature.settings.generated.resources.feature_settings_api_path_placeholder

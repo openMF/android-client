@@ -54,7 +54,6 @@ import com.mifos.core.designsystem.component.MifosRadioButtonDialog
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.UpdateEndpointDialogScreen
 import com.mifos.core.ui.util.DevicePreview
-import com.mifos.feature.settings.syncSurvey.SyncSurveysDialog
 import com.mifos.feature.settings.updateServer.UpdateServerConfigScreenRoute
 import kotlinx.coroutines.delay
 import org.jetbrains.compose.resources.StringResource
@@ -303,14 +302,14 @@ fun RestartCountdownSnackbar(
     }
 }
 
-//private fun Context.restartApplication() {
+// private fun Context.restartApplication() {
 //    val packageManager: PackageManager = this.packageManager
 //    val intent: Intent = packageManager.getLaunchIntentForPackage(this.packageName)!!
 //    val componentName: ComponentName = intent.component!!
 //    val restartIntent: Intent = Intent.makeRestartActivityTask(componentName)
 //    this.startActivity(restartIntent)
 //    Runtime.getRuntime().exit(0)
-//}
+// }
 
 @Composable
 @DevicePreview

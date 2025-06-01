@@ -80,7 +80,6 @@ internal fun SyncSurveysDialog(
     )
 }
 
-
 @Composable
 internal fun SyncSurveysDialog(
     uiState: SyncSurveysDialogUiState,
@@ -142,12 +141,11 @@ internal fun SyncSurveysDialog(
             closeDialog.invoke()
         }
 
-
         is SyncSurveysDialogUiState.ShowNetworkIsNotAvailable -> {
             val message = stringResource(Res.string.feature_settings_error_network_not_available)
             LaunchedEffect(uiState) {
                 snackbarHostState.showSnackbar(
-                    message
+                    message,
                 )
             }
         }
@@ -160,9 +158,9 @@ internal fun SyncSurveysDialog(
             showCancelButton = false
             val message = stringResource(Res.string.feature_settings_sync_success)
             LaunchedEffect(key1 = true) {
-               snackbarHostState.showSnackbar(
-                   message
-               )
+                snackbarHostState.showSnackbar(
+                    message,
+                )
             }
         }
 
@@ -409,4 +407,3 @@ private fun SyncSurveysDialogPreview() {
         SyncSurveysDialog(uiState = SyncSurveysDialogUiState.ShowSyncedFailedSurveys(1), closeDialog = {})
     }
 }
-
