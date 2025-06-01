@@ -26,7 +26,6 @@ import com.mifos.core.network.model.PostAuthenticationResponse
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onStart
@@ -50,17 +49,16 @@ class LoginViewModel(
         .stateIn(
             viewModelScope,
             SharingStarted.WhileSubscribed(5000),
-            LoginUiState.Empty
+            LoginUiState.Empty,
         )
     private fun checkLoginStatus() {
         viewModelScope.launch {
             val user = prefManager.userData.first()
-                if (user.isAuthenticated) {
-                    _loginUiState.value = LoginUiState.HomeActivityIntent
-                }
-                else{
-                    _loginUiState.value = LoginUiState.Empty
-                }
+            if (user.isAuthenticated) {
+                _loginUiState.value = LoginUiState.HomeActivityIntent
+            } else {
+                _loginUiState.value = LoginUiState.Empty
+            }
         }
     }
 
@@ -137,16 +135,16 @@ class LoginViewModel(
                     officeName = user.officeName,
                     permissions = user.permissions!!,
 
-                    ),
+                ),
             )
         }
 
         _loginUiState.value = LoginUiState.HomeActivityIntent
 
 //        if (passcode.value != null) {
-//            _loginUiState.value = LoginUiState.HomeActivityIntent
+//                TODO() navigate to passcode screen
 //        } else {
-//            _loginUiState.value = LoginUiState.HomeActivityIntent
+//        TODO() navigate to home screen
 //        }
     }
 }
