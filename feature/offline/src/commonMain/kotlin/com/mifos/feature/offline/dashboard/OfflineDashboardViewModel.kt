@@ -9,13 +9,19 @@
  */
 package com.mifos.feature.offline.dashboard
 
+import androidclient.feature.offline.generated.resources.Res
+import androidclient.feature.offline.generated.resources.feature_offline_sync_centers
+import androidclient.feature.offline.generated.resources.feature_offline_sync_clients
+import androidclient.feature.offline.generated.resources.feature_offline_sync_groups
+import androidclient.feature.offline.generated.resources.feature_offline_sync_loanRepayments
+import androidclient.feature.offline.generated.resources.feature_offline_sync_savingsAccountTransactions
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.repository.OfflineDashboardRepository
-import com.mifos.feature.offline.R
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
 
 class OfflineDashboardViewModel(
@@ -27,61 +33,38 @@ class OfflineDashboardViewModel(
     val offlineDashboardUiState: StateFlow<OfflineDashboardUiState> = _offlineDashboardUiState
 
     fun loadDatabaseClientPayload() {
-        viewModelScope.launch {
-            repository.allDatabaseClientPayload()
-                .catch {
-                    setError(Type.SYNC_CLIENTS, it.message.toString())
-                }.collect { clientPayloads ->
-                    setCountOfSyncData(Type.SYNC_CLIENTS, clientPayloads.size)
-                }
-        }
+        handleDataState(
+            flow = repository.allDatabaseClientPayload(),
+            type = Type.SYNC_CLIENTS,
+        )
     }
 
     fun loadDatabaseGroupPayload() {
-        viewModelScope.launch {
-            repository.allDatabaseGroupPayload()
-                .catch {
-                    setError(Type.SYNC_GROUPS, it.message.toString())
-                }.collect { groupPayloads ->
-                    setCountOfSyncData(Type.SYNC_GROUPS, groupPayloads.size)
-                }
-        }
+        handleDataState(
+            flow = repository.allDatabaseGroupPayload(),
+            type = Type.SYNC_GROUPS,
+        )
     }
 
     fun loadDatabaseCenterPayload() {
-        viewModelScope.launch {
-            repository.allDatabaseCenterPayload()
-                .catch {
-                    setError(Type.SYNC_CENTERS, it.message.toString())
-                }.collect { centerPayloads ->
-                    setCountOfSyncData(Type.SYNC_CENTERS, centerPayloads.size)
-                }
-        }
+        handleDataState(
+            flow = repository.allDatabaseCenterPayload(),
+            type = Type.SYNC_CENTERS,
+        )
     }
 
     fun loadDatabaseLoanRepaymentTransactions() {
-        viewModelScope.launch {
-            repository.databaseLoanRepayments()
-                .catch { e ->
-                    setError(Type.SYNC_LOAN_REPAYMENTS, e.message.toString())
-                }.collect { loanRepaymentRequests ->
-                    setCountOfSyncData(Type.SYNC_LOAN_REPAYMENTS, loanRepaymentRequests.size)
-                }
-        }
+        handleDataState(
+            flow = repository.databaseLoanRepayments(),
+            type = Type.SYNC_LOAN_REPAYMENTS,
+        )
     }
 
     fun loadDatabaseSavingsAccountTransactions() {
-        viewModelScope.launch {
-            repository.allSavingsAccountTransactions()
-                .catch { e ->
-                    setError(Type.SYNC_SAVINGS_ACCOUNT_TRANSACTION, e.message.toString())
-                }.collect { transactionRequests ->
-                    setCountOfSyncData(
-                        Type.SYNC_SAVINGS_ACCOUNT_TRANSACTION,
-                        transactionRequests.size,
-                    )
-                }
-        }
+        handleDataState(
+            flow = repository.allSavingsAccountTransactions(),
+            type = Type.SYNC_SAVINGS_ACCOUNT_TRANSACTION,
+        )
     }
 
     private fun setCountOfSyncData(type: Type, count: Int) {
@@ -109,32 +92,46 @@ class OfflineDashboardViewModel(
             _offlineDashboardUiState.value = OfflineDashboardUiState.SyncUiState(updatedList)
         }
     }
+    fun <T> handleDataState(
+        flow: Flow<DataState<List<T>>>,
+        type: Type,
+    ) {
+        viewModelScope.launch {
+            flow.collect { state ->
+                when (state) {
+                    is DataState.Success -> setCountOfSyncData(type, state.data.size)
+                    is DataState.Error -> setError(type, state.message)
+                    is DataState.Loading -> { /* handle loading if needed */ }
+                }
+            }
+        }
+    }
 
     private fun initGetSyncData(): List<SyncStateData> {
         return listOf(
             SyncStateData(
                 count = 0,
-                name = R.string.feature_offline_sync_clients,
+                name = Res.string.feature_offline_sync_clients,
                 type = Type.SYNC_CLIENTS,
             ),
             SyncStateData(
                 count = 0,
-                name = R.string.feature_offline_sync_groups,
+                name = Res.string.feature_offline_sync_groups,
                 type = Type.SYNC_GROUPS,
             ),
             SyncStateData(
                 count = 0,
-                name = R.string.feature_offline_sync_centers,
+                name = Res.string.feature_offline_sync_centers,
                 type = Type.SYNC_CENTERS,
             ),
             SyncStateData(
                 count = 0,
-                name = R.string.feature_offline_sync_loanRepayments,
+                name = Res.string.feature_offline_sync_loanRepayments,
                 type = Type.SYNC_LOAN_REPAYMENTS,
             ),
             SyncStateData(
                 count = 0,
-                name = R.string.feature_offline_sync_savingsAccountTransactions,
+                name = Res.string.feature_offline_sync_savingsAccountTransactions,
                 type = Type.SYNC_SAVINGS_ACCOUNT_TRANSACTION,
             ),
         )
