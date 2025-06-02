@@ -9,6 +9,19 @@
  */
 package com.mifos.feature.settings.settings
 
+import androidclient.feature.settings.generated.resources.Res
+import androidclient.feature.settings.generated.resources.feature_settings_change_passcode
+import androidclient.feature.settings.generated.resources.feature_settings_change_passcode_desc
+import androidclient.feature.settings.generated.resources.feature_settings_instance_url
+import androidclient.feature.settings.generated.resources.feature_settings_instance_url_desc
+import androidclient.feature.settings.generated.resources.feature_settings_language
+import androidclient.feature.settings.generated.resources.feature_settings_language_desc
+import androidclient.feature.settings.generated.resources.feature_settings_server_config
+import androidclient.feature.settings.generated.resources.feature_settings_server_config_desc
+import androidclient.feature.settings.generated.resources.feature_settings_sync_survey
+import androidclient.feature.settings.generated.resources.feature_settings_sync_survey_desc
+import androidclient.feature.settings.generated.resources.feature_settings_theme
+import androidclient.feature.settings.generated.resources.feature_settings_theme_desc
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -16,13 +29,13 @@ import com.mifos.core.common.enums.MifosAppLanguage
 import com.mifos.core.datastore.UserPreferencesRepository
 import com.mifos.core.datastore.model.AppTheme
 import com.mifos.core.designsystem.icon.MifosIcons
-import com.mifos.feature.settings.R
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import org.jetbrains.compose.resources.StringResource
 
 class SettingsViewModel(
     private val prefManager: UserPreferencesRepository,
@@ -52,7 +65,8 @@ class SettingsViewModel(
     }
 
     fun tryUpdatingEndpoint(selectedBaseUrl: String, selectedTenant: String): Boolean {
-        val isEndpointUpdated = !(uiState.value.baseUrl == selectedBaseUrl && uiState.value.tenant == selectedTenant)
+        val isEndpointUpdated =
+            !(uiState.value.baseUrl == selectedBaseUrl && uiState.value.tenant == selectedTenant)
         if (isEndpointUpdated) {
             viewModelScope.launch {
                 prefManager.updateSettings(
@@ -68,39 +82,39 @@ class SettingsViewModel(
 }
 
 enum class SettingsCardItem(
-    val title: Int,
-    val details: Int,
+    val title: StringResource,
+    val details: StringResource,
     val icon: ImageVector?,
 ) {
     SYNC_SURVEY(
-        title = R.string.feature_settings_sync_survey,
-        details = R.string.feature_settings_sync_survey_desc,
-        icon = null,
+        title = Res.string.feature_settings_sync_survey,
+        details = Res.string.feature_settings_sync_survey_desc,
+        icon = MifosIcons.Sync,
     ),
     LANGUAGE(
-        title = R.string.feature_settings_language,
-        details = R.string.feature_settings_language_desc,
+        title = Res.string.feature_settings_language,
+        details = Res.string.feature_settings_language_desc,
         icon = MifosIcons.Language,
     ),
     THEME(
-        title = R.string.feature_settings_theme,
-        details = R.string.feature_settings_theme_desc,
+        title = Res.string.feature_settings_theme,
+        details = Res.string.feature_settings_theme_desc,
         icon = MifosIcons.Theme,
     ),
     PASSCODE(
-        title = R.string.feature_settings_change_passcode,
-        details = R.string.feature_settings_change_passcode_desc,
+        title = Res.string.feature_settings_change_passcode,
+        details = Res.string.feature_settings_change_passcode_desc,
         icon = MifosIcons.Password,
     ),
     ENDPOINT(
-        title = R.string.feature_settings_instance_url,
-        details = R.string.feature_settings_instance_url_desc,
-        icon = null,
+        title = Res.string.feature_settings_instance_url,
+        details = Res.string.feature_settings_instance_url_desc,
+        icon = MifosIcons.AddLink,
     ),
     SERVER_CONFIG(
-        title = R.string.feature_settings_server_config,
-        details = R.string.feature_settings_server_config_desc,
-        icon = null,
+        title = Res.string.feature_settings_server_config,
+        details = Res.string.feature_settings_server_config_desc,
+        icon = MifosIcons.Update,
     ),
 }
 

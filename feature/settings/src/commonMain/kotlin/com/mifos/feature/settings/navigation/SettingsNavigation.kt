@@ -9,13 +9,15 @@
  */
 package com.mifos.feature.settings.navigation
 
+import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import com.mifos.feature.settings.settings.SettingsScreen
 
-/**
- * Created by Pronay Sarker on 10/08/2024 (7:52 AM)
- */
+fun NavController.navigateToSettingsScreen() {
+    navigate(SettingsScreens.SettingsScreen.route)
+}
+
 fun NavGraphBuilder.settingsScreen(
     navigateBack: () -> Unit,
     navigateToLoginScreen: () -> Unit,

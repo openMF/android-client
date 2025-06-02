@@ -22,6 +22,7 @@ import androidx.compose.material.icons.automirrored.rounded.Assignment
 import androidx.compose.material.icons.filled.AccountBalance
 import androidx.compose.material.icons.filled.AccountBalanceWallet
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.AddLink
 import androidx.compose.material.icons.filled.Apartment
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.ArrowDropUp
@@ -36,6 +37,7 @@ import androidx.compose.material.icons.filled.FlashOff
 import androidx.compose.material.icons.filled.FlashOn
 import androidx.compose.material.icons.filled.Image
 import androidx.compose.material.icons.filled.Info
+import androidx.compose.material.icons.filled.Link
 import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Menu
@@ -48,6 +50,7 @@ import androidx.compose.material.icons.filled.RealEstateAgent
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.Share
+import androidx.compose.material.icons.filled.Update
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material.icons.filled.WifiOff
@@ -79,6 +82,7 @@ import androidx.compose.material.icons.rounded.FilterList
 import androidx.compose.material.icons.rounded.Home
 import androidx.compose.material.icons.rounded.KeyboardArrowDown
 import androidx.compose.material.icons.rounded.KeyboardArrowUp
+import androidx.compose.material.icons.rounded.Link
 import androidx.compose.material.icons.rounded.Lock
 import androidx.compose.material.icons.rounded.MoreVert
 import androidx.compose.material.icons.rounded.PersonOutline
@@ -98,6 +102,10 @@ object MifosIcons {
     val EventRepeat = Icons.Outlined.EventRepeat
     val Date = Icons.Outlined.DateRange
     val ArrowBack1 = Icons.Rounded.ArrowBackIosNew
+
+    val Link = Icons.Default.Link
+    val Server = Icons.Default
+    val AddLink = Icons.Default.AddLink
     val Search = Icons.Rounded.Search
     val Filter = Icons.Rounded.FilterList
     val Sync = Icons.Rounded.Sync
@@ -137,6 +145,7 @@ object MifosIcons {
     val HomeBoarder = Icons.Rounded.Home
     val Payment = Icons.Rounded.SwapHoriz
     val Finance = Icons.Outlined.Wallet
+    val Update = Icons.Default.Update
     val Profile = Icons.Outlined.AccountCircle
     val ProfileBoarder = Icons.Rounded.AccountCircle
     val buildingIcon = Icons.Filled.Apartment

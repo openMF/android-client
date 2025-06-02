@@ -28,6 +28,8 @@ import com.mifos.feature.activate.navigation.activateScreen
 import com.mifos.feature.activate.navigation.navigateToActivateScreen
 import com.mifos.feature.individualCollectionSheet.navigation.individualCollectionSheetNavGraph
 import com.mifos.feature.note.navigation.noteNavGraph
+import com.mifos.feature.settings.navigation.navigateToSettingsScreen
+import com.mifos.feature.settings.navigation.settingsScreen
 
 const val WELCOME_ROUTE = "home_screen"
 
@@ -43,13 +45,20 @@ internal fun FeatureNavHost(
         navController = appState.navController,
         modifier = modifier,
     ) {
-        homeScreen(onClick = { appState.navController.navigateToActivateScreen(0, "") })
+        homeScreen(onClick = { appState.navController.navigateToSettingsScreen() })
 
         aboutNavGraph(onBackPressed = appState.navController::popBackStack)
 
         noteNavGraph(onBackPressed = appState.navController::popBackStack)
 
         activateScreen(onBackPressed = appState.navController::popBackStack)
+
+        settingsScreen(
+            navigateBack = appState.navController::popBackStack,
+            navigateToLoginScreen = {},
+            changePasscode = {},
+            languageChanged = {},
+        )
 
         individualCollectionSheetNavGraph(
             navController = appState.navController,

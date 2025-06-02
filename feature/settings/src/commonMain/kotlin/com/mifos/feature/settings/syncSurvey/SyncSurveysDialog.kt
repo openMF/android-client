@@ -9,9 +9,22 @@
  */
 package com.mifos.feature.settings.syncSurvey
 
-import android.annotation.SuppressLint
-import android.util.Log
-import android.widget.Toast
+import androidclient.feature.settings.generated.resources.Res
+import androidclient.feature.settings.generated.resources.feature_settings_cancel
+import androidclient.feature.settings.generated.resources.feature_settings_error_network_not_available
+import androidclient.feature.settings.generated.resources.feature_settings_failed_sync
+import androidclient.feature.settings.generated.resources.feature_settings_hide
+import androidclient.feature.settings.generated.resources.feature_settings_name
+import androidclient.feature.settings.generated.resources.feature_settings_slash
+import androidclient.feature.settings.generated.resources.feature_settings_space
+import androidclient.feature.settings.generated.resources.feature_settings_surveys
+import androidclient.feature.settings.generated.resources.feature_settings_sync_success
+import androidclient.feature.settings.generated.resources.feature_settings_sync_surveys_full_information
+import androidclient.feature.settings.generated.resources.feature_settings_syncing_question
+import androidclient.feature.settings.generated.resources.feature_settings_syncing_response
+import androidclient.feature.settings.generated.resources.feature_settings_syncing_survey
+import androidclient.feature.settings.generated.resources.feature_settings_total
+import androidclient.feature.settings.generated.resources.feature_settings_total_sync_progress
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -41,17 +54,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.tooling.preview.PreviewParameter
-import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
+import co.touchlab.kermit.Logger
 import com.mifos.core.designsystem.component.MifosCircularProgress
-import com.mifos.feature.settings.R
+import com.mifos.core.ui.util.DevicePreview
 import kotlinx.coroutines.launch
-import org.koin.androidx.compose.koinViewModel
+import org.jetbrains.compose.resources.stringResource
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 internal fun SyncSurveysDialog(
@@ -70,13 +80,11 @@ internal fun SyncSurveysDialog(
     )
 }
 
-@SuppressLint("CoroutineCreationDuringComposition", "MutableCollectionMutableState")
 @Composable
 internal fun SyncSurveysDialog(
     uiState: SyncSurveysDialogUiState,
     closeDialog: () -> Unit,
 ) {
-    val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
     val snackBarHostState = remember {
         SnackbarHostState()
@@ -113,6 +121,8 @@ internal fun SyncSurveysDialog(
         responseName = responseName,
     )
 
+    val snackbarHostState = remember { SnackbarHostState() }
+
     when (uiState) {
         is SyncSurveysDialogUiState.Initial -> Unit
 
@@ -132,12 +142,11 @@ internal fun SyncSurveysDialog(
         }
 
         is SyncSurveysDialogUiState.ShowNetworkIsNotAvailable -> {
-            LaunchedEffect(key1 = true) {
-                Toast.makeText(
-                    context,
-                    context.getString(R.string.feature_settings_error_network_not_available),
-                    Toast.LENGTH_SHORT,
-                ).show()
+            val message = stringResource(Res.string.feature_settings_error_network_not_available)
+            LaunchedEffect(uiState) {
+                snackbarHostState.showSnackbar(
+                    message,
+                )
             }
         }
 
@@ -147,9 +156,11 @@ internal fun SyncSurveysDialog(
 
         is SyncSurveysDialogUiState.ShowSurveysSyncSuccessfully -> {
             showCancelButton = false
+            val message = stringResource(Res.string.feature_settings_sync_success)
             LaunchedEffect(key1 = true) {
-                Toast.makeText(context, R.string.feature_settings_sync_success, Toast.LENGTH_SHORT)
-                    .show()
+                snackbarHostState.showSnackbar(
+                    message,
+                )
             }
         }
 
@@ -162,8 +173,8 @@ internal fun SyncSurveysDialog(
             surveySyncProgressMax = uiState.total
             totalSyncProgressMax = uiState.total
             val totalSurveys =
-                uiState.total.toString() + stringResource(R.string.feature_settings_space) +
-                    stringResource(R.string.feature_settings_surveys)
+                uiState.total.toString() + stringResource(Res.string.feature_settings_space) +
+                    stringResource(Res.string.feature_settings_surveys)
             totalSurveysText = totalSurveys
             syncFailedText = 0.toString()
         }
@@ -173,11 +184,10 @@ internal fun SyncSurveysDialog(
             totalSyncProgress = uiState.index
             surveyName = uiState.name
             questionSyncProgressMax = uiState.questionTotal
-            val totalSyncCount =
-                context.getString(R.string.feature_settings_space) + uiState.index + context.getString(
-                    R.string.feature_settings_slash,
-                ) + totalListSize
-            totalProgressText = totalSyncCount
+            val space = stringResource(Res.string.feature_settings_space)
+            val slash = stringResource(Res.string.feature_settings_slash)
+
+            totalProgressText = "$space${uiState.index}$slash$totalListSize"
         }
 
         is SyncSurveysDialogUiState.UpdateQuestionSync -> {
@@ -193,7 +203,7 @@ internal fun SyncSurveysDialog(
 
         is SyncSurveysDialogUiState.UpdateTotalSyncSurveyProgressBarMax -> {
             surveySyncProgressMax = uiState.total
-            Log.d("TAG", "SyncDialogSurveysScreen: $surveySyncProgressMax")
+            Logger.d("TAG", Throwable("SyncDialogSurveysScreen: $surveySyncProgressMax"))
         }
     }
 }
@@ -227,7 +237,7 @@ private fun SyncSurveysDialogContent(
                     .padding(5.dp),
             ) {
                 Text(
-                    text = stringResource(id = R.string.feature_settings_sync_surveys_full_information),
+                    text = stringResource(Res.string.feature_settings_sync_surveys_full_information),
                     modifier = Modifier
                         .padding(10.dp)
                         .align(Alignment.CenterHorizontally),
@@ -244,7 +254,7 @@ private fun SyncSurveysDialogContent(
                             .padding(vertical = 8.dp),
                         horizontalArrangement = Arrangement.SpaceBetween,
                     ) {
-                        Text(text = stringResource(id = R.string.feature_settings_name))
+                        Text(text = stringResource(Res.string.feature_settings_name))
                         Text(text = surveyName)
                     }
 
@@ -254,7 +264,7 @@ private fun SyncSurveysDialogContent(
                             .padding(vertical = 8.dp),
                         horizontalArrangement = Arrangement.SpaceBetween,
                     ) {
-                        Text(text = stringResource(id = R.string.feature_settings_total))
+                        Text(text = stringResource(Res.string.feature_settings_total))
                         Text(text = totalSurveysText)
                     }
 
@@ -264,7 +274,7 @@ private fun SyncSurveysDialogContent(
                             .padding(vertical = 8.dp),
                         horizontalArrangement = Arrangement.SpaceBetween,
                     ) {
-                        Text(text = stringResource(id = R.string.feature_settings_syncing_survey))
+                        Text(text = stringResource(Res.string.feature_settings_syncing_survey))
                         Text(text = surveyName)
                     }
 
@@ -281,7 +291,7 @@ private fun SyncSurveysDialogContent(
                             .padding(vertical = 8.dp),
                         horizontalArrangement = Arrangement.SpaceBetween,
                     ) {
-                        Text(text = stringResource(id = R.string.feature_settings_syncing_question))
+                        Text(text = stringResource(Res.string.feature_settings_syncing_question))
                         Text(text = questionName)
                     }
 
@@ -298,7 +308,7 @@ private fun SyncSurveysDialogContent(
                             .padding(vertical = 8.dp),
                         horizontalArrangement = Arrangement.SpaceBetween,
                     ) {
-                        Text(text = stringResource(id = R.string.feature_settings_syncing_response))
+                        Text(text = stringResource(Res.string.feature_settings_syncing_response))
                         Text(text = responseName)
                     }
 
@@ -315,7 +325,7 @@ private fun SyncSurveysDialogContent(
                             .padding(vertical = 8.dp),
                         horizontalArrangement = Arrangement.SpaceBetween,
                     ) {
-                        Text(text = stringResource(id = R.string.feature_settings_total_sync_progress))
+                        Text(text = stringResource(Res.string.feature_settings_total_sync_progress))
                         Text(text = totalProgressText)
                     }
 
@@ -332,7 +342,7 @@ private fun SyncSurveysDialogContent(
                             .padding(vertical = 8.dp),
                         horizontalArrangement = Arrangement.SpaceBetween,
                     ) {
-                        Text(text = stringResource(id = R.string.feature_settings_failed_sync))
+                        Text(text = stringResource(Res.string.feature_settings_failed_sync))
                         Text(text = syncFailedText)
                     }
                 }
@@ -347,7 +357,7 @@ private fun SyncSurveysDialogContent(
                         modifier = Modifier
                             .weight(1f)
                             .padding(end = 8.dp),
-                        text = stringResource(id = R.string.feature_settings_cancel),
+                        text = stringResource(Res.string.feature_settings_cancel),
                         isEnabled = showCancelButton,
                     )
 
@@ -356,7 +366,7 @@ private fun SyncSurveysDialogContent(
                         modifier = Modifier
                             .weight(1f)
                             .padding(start = 8.dp),
-                        text = stringResource(id = R.string.feature_settings_hide),
+                        text = stringResource(Res.string.feature_settings_hide),
                         isEnabled = true,
                     )
                 }
@@ -386,24 +396,14 @@ private fun SyncSurveyButton(
     }
 }
 
-class SyncSurveysDialogPreviewProvider : PreviewParameterProvider<SyncSurveysDialogUiState> {
-    override val values: Sequence<SyncSurveysDialogUiState>
-        get() = sequenceOf(
-            SyncSurveysDialogUiState.DismissDialog,
-            SyncSurveysDialogUiState.ShowError("Error"),
-            SyncSurveysDialogUiState.ShowProgressbar,
-            SyncSurveysDialogUiState.ShowSurveysSyncSuccessfully,
-            SyncSurveysDialogUiState.ShowSyncedFailedSurveys(1),
-        )
-}
-
-@Preview(showBackground = true)
 @Composable
-private fun SyncSurveysDialogPreview(
-    @PreviewParameter(SyncSurveysDialogPreviewProvider::class) state: SyncSurveysDialogUiState,
-) {
-    SyncSurveysDialog(
-        uiState = state,
-        closeDialog = { },
-    )
+@DevicePreview
+private fun SyncSurveysDialogPreview() {
+    Column {
+        SyncSurveysDialog(uiState = SyncSurveysDialogUiState.DismissDialog, closeDialog = {})
+        SyncSurveysDialog(uiState = SyncSurveysDialogUiState.ShowError("Error"), closeDialog = {})
+        SyncSurveysDialog(uiState = SyncSurveysDialogUiState.ShowProgressbar, closeDialog = {})
+        SyncSurveysDialog(uiState = SyncSurveysDialogUiState.ShowSurveysSyncSuccessfully, closeDialog = {})
+        SyncSurveysDialog(uiState = SyncSurveysDialogUiState.ShowSyncedFailedSurveys(1), closeDialog = {})
+    }
 }

@@ -9,6 +9,21 @@
  */
 package com.mifos.feature.settings.updateServer
 
+import androidclient.feature.settings.generated.resources.Res
+import androidclient.feature.settings.generated.resources.feature_settings_api_path_placeholder
+import androidclient.feature.settings.generated.resources.feature_settings_close_bottomsheet
+import androidclient.feature.settings.generated.resources.feature_settings_endpoint_placeholder
+import androidclient.feature.settings.generated.resources.feature_settings_label_api_path
+import androidclient.feature.settings.generated.resources.feature_settings_label_endpoint
+import androidclient.feature.settings.generated.resources.feature_settings_label_port
+import androidclient.feature.settings.generated.resources.feature_settings_label_protocol
+import androidclient.feature.settings.generated.resources.feature_settings_label_tenant
+import androidclient.feature.settings.generated.resources.feature_settings_note_text
+import androidclient.feature.settings.generated.resources.feature_settings_port_placeholder
+import androidclient.feature.settings.generated.resources.feature_settings_protocol_placeholder
+import androidclient.feature.settings.generated.resources.feature_settings_tenant_placeholder
+import androidclient.feature.settings.generated.resources.feature_settings_title
+import androidclient.feature.settings.generated.resources.feature_settings_update_config_btn_text
 import androidx.annotation.VisibleForTesting
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -26,12 +41,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AddLink
-import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.filled.Info
-import androidx.compose.material.icons.filled.Link
-import androidx.compose.material.icons.filled.Save
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.Icon
@@ -45,7 +54,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextOverflow
@@ -53,9 +61,10 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mifos.core.common.utils.ServerConfig
 import com.mifos.core.designsystem.component.MifosOutlinedTextField
+import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.ui.util.DevicePreview
-import com.mifos.feature.settings.R
-import org.koin.androidx.compose.koinViewModel
+import org.jetbrains.compose.resources.stringResource
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 internal fun UpdateServerConfigScreenRoute(
@@ -97,11 +106,11 @@ internal fun UpdateServerConfigScreenContent(
     serverConfig: ServerConfig,
     onEvent: (UpdateServerConfigEvent) -> Unit,
     modifier: Modifier = Modifier,
-    protocolError: Int? = null,
-    apiPathError: Int? = null,
-    endPointError: Int? = null,
-    portError: Int? = null,
-    tenantError: Int? = null,
+    protocolError: String? = null,
+    apiPathError: String? = null,
+    endPointError: String? = null,
+    portError: String? = null,
+    tenantError: String? = null,
     onCloseClick: () -> Unit,
 ) {
     val lazyListState = rememberLazyListState()
@@ -138,7 +147,7 @@ internal fun UpdateServerConfigScreenContent(
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
                     Text(
-                        text = stringResource(R.string.feature_settings_title),
+                        text = stringResource(Res.string.feature_settings_title),
                         style = MaterialTheme.typography.headlineSmall,
                         fontWeight = FontWeight.SemiBold,
                         maxLines = 1,
@@ -151,8 +160,8 @@ internal fun UpdateServerConfigScreenContent(
                         onClick = onCloseClick,
                     ) {
                         Icon(
-                            imageVector = Icons.Default.Close,
-                            contentDescription = stringResource(R.string.feature_settings_close_bottomsheet),
+                            imageVector = MifosIcons.Close,
+                            contentDescription = stringResource(Res.string.feature_settings_close_bottomsheet),
                         )
                     }
                 }
@@ -168,11 +177,11 @@ internal fun UpdateServerConfigScreenContent(
                 item {
                     MifosOutlinedTextField(
                         value = serverConfig.protocol,
-                        label = stringResource(R.string.feature_settings_label_protocol),
-                        leadingIcon = Icons.Default.AddLink,
+                        label = stringResource(Res.string.feature_settings_label_protocol),
+                        leadingIcon = MifosIcons.AddLink,
                         isError = protocolError != null,
-                        errorText = protocolError?.let { stringResource(it) },
-                        placeholder = stringResource(R.string.feature_settings_protocol_placeholder),
+                        errorText = protocolError,
+                        placeholder = stringResource(Res.string.feature_settings_protocol_placeholder),
                         keyboardType = KeyboardType.Uri,
                         showClearIcon = serverConfig.protocol.isNotEmpty(),
                         onClickClearIcon = {
@@ -187,11 +196,11 @@ internal fun UpdateServerConfigScreenContent(
                 item {
                     MifosOutlinedTextField(
                         value = serverConfig.endPoint,
-                        label = stringResource(R.string.feature_settings_label_endpoint),
-                        leadingIcon = Icons.Default.Link,
+                        label = stringResource(Res.string.feature_settings_label_endpoint),
+                        leadingIcon = MifosIcons.Link,
                         isError = endPointError != null,
-                        errorText = endPointError?.let { stringResource(it) },
-                        placeholder = stringResource(R.string.feature_settings_endpoint_placeholder),
+                        errorText = endPointError,
+                        placeholder = stringResource(Res.string.feature_settings_endpoint_placeholder),
                         showClearIcon = serverConfig.endPoint.isNotEmpty(),
                         onClickClearIcon = {
                             onEvent(UpdateServerConfigEvent.UpdateEndPoint(""))
@@ -205,11 +214,11 @@ internal fun UpdateServerConfigScreenContent(
                 item {
                     MifosOutlinedTextField(
                         value = serverConfig.apiPath,
-                        label = stringResource(R.string.feature_settings_label_api_path),
-                        leadingIcon = Icons.Default.Link,
+                        label = stringResource(Res.string.feature_settings_label_api_path),
+                        leadingIcon = MifosIcons.Link,
                         isError = apiPathError != null,
-                        errorText = apiPathError?.let { stringResource(it) },
-                        placeholder = stringResource(R.string.feature_settings_api_path_placeholder),
+                        errorText = apiPathError,
+                        placeholder = stringResource(Res.string.feature_settings_api_path_placeholder),
                         showClearIcon = serverConfig.endPoint.isNotEmpty(),
                         onClickClearIcon = {
                             onEvent(UpdateServerConfigEvent.UpdateEndPoint(""))
@@ -223,11 +232,11 @@ internal fun UpdateServerConfigScreenContent(
                 item {
                     MifosOutlinedTextField(
                         value = serverConfig.port,
-                        label = stringResource(R.string.feature_settings_label_port),
-                        leadingIcon = Icons.Default.Link,
+                        label = stringResource(Res.string.feature_settings_label_port),
+                        leadingIcon = MifosIcons.Link,
                         isError = portError != null,
-                        errorText = portError?.let { stringResource(it) },
-                        placeholder = stringResource(R.string.feature_settings_port_placeholder),
+                        errorText = portError,
+                        placeholder = stringResource(Res.string.feature_settings_port_placeholder),
                         keyboardType = KeyboardType.Number,
                         showClearIcon = serverConfig.port.isNotEmpty(),
                         onClickClearIcon = {
@@ -242,11 +251,11 @@ internal fun UpdateServerConfigScreenContent(
                 item {
                     MifosOutlinedTextField(
                         value = serverConfig.tenant,
-                        label = stringResource(R.string.feature_settings_label_tenant),
-                        leadingIcon = Icons.Default.Link,
+                        label = stringResource(Res.string.feature_settings_label_tenant),
+                        leadingIcon = MifosIcons.Link,
                         isError = tenantError != null,
-                        errorText = tenantError?.let { stringResource(it) },
-                        placeholder = stringResource(R.string.feature_settings_tenant_placeholder),
+                        errorText = tenantError,
+                        placeholder = stringResource(Res.string.feature_settings_tenant_placeholder),
                         showClearIcon = serverConfig.tenant.isNotEmpty(),
                         onClickClearIcon = {
                             onEvent(UpdateServerConfigEvent.UpdateTenant(""))
@@ -264,14 +273,14 @@ internal fun UpdateServerConfigScreenContent(
                         horizontalArrangement = Arrangement.spacedBy(4.dp, Alignment.Start),
                     ) {
                         Icon(
-                            imageVector = Icons.Default.Info,
+                            imageVector = MifosIcons.Info,
                             contentDescription = "infoIcon",
                             tint = MaterialTheme.colorScheme.error,
                             modifier = Modifier.size(20.dp),
                         )
 
                         Text(
-                            text = stringResource(R.string.feature_settings_note_text),
+                            text = stringResource(Res.string.feature_settings_note_text),
                             style = MaterialTheme.typography.labelSmall,
                         )
                     }
@@ -293,11 +302,11 @@ internal fun UpdateServerConfigScreenContent(
                         ),
                     ) {
                         Icon(
-                            imageVector = Icons.Default.Save,
+                            imageVector = MifosIcons.Save,
                             contentDescription = "updateConfig",
                         )
                         Spacer(modifier = Modifier.width(4.dp))
-                        Text(stringResource(R.string.feature_settings_update_config_btn_text).uppercase())
+                        Text(stringResource(Res.string.feature_settings_update_config_btn_text).uppercase())
                     }
                 }
             }
