@@ -15,9 +15,10 @@ import androidx.navigation.compose.composable
 import com.mifos.feature.settings.settings.SettingsScreen
 import com.mifos.feature.settings.updateServer.UpdateServerConfigScreenRoute
 
-/**
- * Created by Pronay Sarker on 10/08/2024 (7:52 AM)
- */
+fun NavController.navigateToSettingsScreen() {
+    navigate(SettingsScreens.SettingsScreen.route)
+}
+
 fun NavGraphBuilder.settingsScreen(
     navigateBack: () -> Unit,
     changePasscode: () -> Unit,
