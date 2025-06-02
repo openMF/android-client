@@ -46,7 +46,7 @@ include(":core:ui")
 //include(":libs:mifos-passcode")
 
 include(":feature:about")
-//include(":feature:activate")
+include(":feature:activate")
 include(":feature:auth")
 //include(":feature:center")
 //include(":feature:checker-inbox-task")
