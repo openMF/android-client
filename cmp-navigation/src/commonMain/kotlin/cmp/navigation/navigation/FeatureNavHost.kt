@@ -44,7 +44,6 @@ internal fun FeatureNavHost(
     ) {
         homeScreen(onClick = { appState.navController.navigateToSettingsScreen() })
 
-
         searchNavGraph(
             paddingValues = PaddingValues(),
             onCreateClient = { println("Create Client") },
@@ -54,7 +53,7 @@ internal fun FeatureNavHost(
             onCenter = { id -> println("Center clicked: $id") },
             onGroup = { id -> println("Group clicked: $id") },
             onLoan = { id -> println("Loan clicked: $id") },
-            onSavings = { id -> println("Savings clicked: $id") }
+            onSavings = { id -> println("Savings clicked: $id") },
         )
 
         aboutNavGraph(onBackPressed = appState.navController::popBackStack)
