@@ -26,7 +26,7 @@ import kotlinx.coroutines.launch
 class GroupListViewModel(
     private val groupRepo: GroupListRepository,
     private val repository: GroupListRepository,
-    private val savedStateHandle: SavedStateHandle,
+    savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
 
     val centerId = savedStateHandle.getStateFlow(key = Constants.CENTER_ID, initialValue = 0)

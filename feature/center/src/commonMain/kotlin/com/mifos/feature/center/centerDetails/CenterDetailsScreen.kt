@@ -44,6 +44,7 @@ import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -66,6 +67,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mifos.core.common.utils.Utils
+import com.mifos.core.designsystem.component.MifosButton
 import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosMenuDropDownItem
 import com.mifos.core.designsystem.component.MifosScaffold
@@ -126,10 +128,9 @@ internal fun CenterDetailsScreen(
         onBackPressed = onBackPressed,
         actions = {
             IconButton(onClick = { showMenu = showMenu.not() }) {
-                Icon(imageVector = Icons.Default.MoreVert, contentDescription = null)
+                Icon(imageVector = MifosIcons.MoreVert, contentDescription = "Icon")
             }
             DropdownMenu(
-                modifier = Modifier.background(Color.White),
                 expanded = showMenu,
                 onDismissRequest = { showMenu = false },
             ) {
@@ -152,16 +153,16 @@ internal fun CenterDetailsScreen(
         snackbarHostState = snackbarHostState,
         bottomBar = {
             if (!centerActive) {
-                Button(
+                MifosButton(
                     onClick = { onActivateCenter() },
                     modifier = Modifier
                         .fillMaxWidth()
                         .heightIn(44.dp)
-                        .padding(start = 16.dp, end = 16.dp),
+                        .padding(horizontal = 16.dp),
                 ) {
                     Text(
                         text = stringResource(Res.string.feature_center_activate_center),
-                        fontSize = 16.sp,
+                        style = MaterialTheme.typography.bodyMedium,
                     )
                 }
             }
@@ -207,11 +208,7 @@ private fun CenterDetailsContent(
                     .fillMaxWidth()
                     .padding(16.dp),
                 text = it,
-                style = TextStyle(
-                    fontSize = 24.sp,
-                    fontWeight = FontWeight.SemiBold,
-                ),
-                color = Color.Black,
+                style = MaterialTheme.typography.titleMedium,
                 textAlign = TextAlign.Center,
             )
         }
@@ -251,18 +248,14 @@ private fun CenterDetailsContent(
         )
 
         Spacer(modifier = Modifier.height(16.dp))
-        HorizontalDivider(modifier = Modifier.padding(start = 16.dp, end = 16.dp))
+        HorizontalDivider(modifier = Modifier.padding(horizontal = 16.dp))
 
         Text(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(16.dp),
             text = stringResource(Res.string.feature_center_summary_info),
-            style = TextStyle(
-                fontSize = 24.sp,
-                fontWeight = FontWeight.SemiBold,
-            ),
-            color = Color.Black,
+            style = MaterialTheme.typography.titleMedium,
             textAlign = TextAlign.Center,
         )
 
@@ -308,7 +301,7 @@ private fun CenterDetailsContent(
 private fun MifosCenterDetailsText(icon: ImageVector, field: String, value: String) {
     Row(
         modifier = Modifier
-            .padding(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 8.dp)
+            .padding(horizontal = 16.dp, vertical = 8.dp)
             .fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,
     ) {
@@ -322,23 +315,12 @@ private fun MifosCenterDetailsText(icon: ImageVector, field: String, value: Stri
                 .weight(1f)
                 .padding(start = 16.dp),
             text = field,
-            style = TextStyle(
-                fontSize = 18.sp,
-                fontWeight = FontWeight.Normal,
-                fontStyle = FontStyle.Normal,
-            ),
-            color = Black,
+            style = MaterialTheme.typography.bodyLarge,
             textAlign = TextAlign.Start,
         )
         Text(
-
             text = value,
-            style = TextStyle(
-                fontSize = 18.sp,
-                fontWeight = FontWeight.Normal,
-                fontStyle = FontStyle.Normal,
-            ),
-            color = DarkGray,
+            style = MaterialTheme.typography.bodyLarge,
             textAlign = TextAlign.Start,
         )
     }

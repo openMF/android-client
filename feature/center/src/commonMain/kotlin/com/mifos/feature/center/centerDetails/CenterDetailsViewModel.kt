@@ -24,7 +24,7 @@ import kotlinx.coroutines.launch
 
 class CenterDetailsViewModel(
     private val getCenterDetailsUseCase: GetCenterDetailsUseCase,
-    private val savedStateHandle: SavedStateHandle,
+    savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
 
     val centerId = savedStateHandle.getStateFlow(key = Constants.CENTER_ID, initialValue = 0)

@@ -15,12 +15,14 @@ import androidclient.feature.center.generated.resources.Res
 import androidclient.feature.center.generated.resources.feature_center_activate
 import androidclient.feature.center.generated.resources.feature_center_activation_date
 import androidclient.feature.center.generated.resources.feature_center_cancel
+import androidclient.feature.center.generated.resources.feature_center_center_created_successfully
 import androidclient.feature.center.generated.resources.feature_center_center_name
 import androidclient.feature.center.generated.resources.feature_center_center_name_empty
 import androidclient.feature.center.generated.resources.feature_center_center_name_should_be_more_than_4_characters
 import androidclient.feature.center.generated.resources.feature_center_center_name_should_not_contains_special_characters_or_numbers
 import androidclient.feature.center.generated.resources.feature_center_create
 import androidclient.feature.center.generated.resources.feature_center_create_new_center
+import androidclient.feature.center.generated.resources.feature_center_failed_to_load_offices
 import androidclient.feature.center.generated.resources.feature_center_office
 import androidclient.feature.center.generated.resources.feature_center_select
 import androidclient.feature.center.generated.resources.feature_center_select_office
@@ -37,6 +39,7 @@ import androidx.compose.material3.Checkbox
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SelectableDates
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
@@ -64,6 +67,8 @@ import com.mifos.core.designsystem.component.MifosOutlinedTextField
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.component.MifosTextFieldDropdown
+import com.mifos.core.ui.components.MifosAlertDialog
+import com.mifos.core.ui.util.DevicePreview
 import com.mifos.room.entities.center.CenterPayloadEntity
 import com.mifos.room.entities.organisation.OfficeEntity
 import kotlinx.datetime.Clock
@@ -111,12 +116,12 @@ internal fun CreateNewCenterScreen(
         Column(modifier = Modifier.padding(paddingValues)) {
             when (state) {
                 is CreateNewCenterUiState.CenterCreatedSuccessfully -> {
-//                    Toast.makeText(
-//                        LocalContext.current,
-//                        stringResource(id = R.string.feature_center_center_created_successfully),
-//                        Toast.LENGTH_SHORT,
-//                    ).show()
-                    onCreateSuccess()
+                    MifosAlertDialog(
+                        dialogTitle = "Success",
+                        dialogText = stringResource(Res.string.feature_center_center_created_successfully),
+                        onDismissRequest = onCreateSuccess,
+                        onConfirmation = onCreateSuccess
+                    )
                 }
 
                 is CreateNewCenterUiState.Error -> MifosSweetError(message = stringResource(state.message)) {
@@ -292,39 +297,56 @@ private fun CreateNewCenterContent(
             modifier = Modifier
                 .fillMaxWidth()
                 .heightIn(44.dp)
-                .padding(start = 16.dp, end = 16.dp),
+                .padding(horizontal = 16.dp),
             contentPadding = PaddingValues(),
         ) {
-            Text(text = stringResource(Res.string.feature_center_create), fontSize = 16.sp)
+            Text(text = stringResource(Res.string.feature_center_create),
+                style=MaterialTheme.typography.bodyMedium)
         }
     }
 }
 
-// class CreateNewCenterUiStateProvider : PreviewParameterProvider<CreateNewCenterUiState> {
-//
-//    override val values = sequenceOf(
-//        CreateNewCenterUiState.Loading,
-//        CreateNewCenterUiState.Error(R.string.feature_center_failed_to_load_offices),
-//        CreateNewCenterUiState.Offices(
-// //            sampleOfficeList
-//        ),
-//        CreateNewCenterUiState.CenterCreatedSuccessfully,
-//    )
-// }
-//
-// @Preview(showBackground = true)
-// @Composable
-// private fun CreateNewCenterPreview(
-//    @PreviewParameter(CreateNewCenterUiStateProvider::class) state: CreateNewCenterUiState,
-// ) {
-//    CreateNewCenterScreen(
-//        state = state,
-//        onRetry = {},
-//        createCenter = {},
-//        onCreateSuccess = {},
-//    )
-// }
+@DevicePreview
+ @Composable
+ private fun CreateNewCenterLoadingPreview() {
+    CreateNewCenterScreen(
+        state = CreateNewCenterUiState.Loading,
+        onRetry = {},
+        createCenter = {},
+        onCreateSuccess = {},
+    )
+ }
 
-//val sampleOfficeList = List(10) {
-//    Office(name = "Office $it")
-//}
+@DevicePreview
+@Composable
+private fun CreateNewCenterErrorPreview() {
+    CreateNewCenterScreen(
+        state = CreateNewCenterUiState.Error(Res.string.feature_center_failed_to_load_offices),
+        onRetry = {},
+        createCenter = {},
+        onCreateSuccess = {},
+    )
+}
+
+@DevicePreview
+@Composable
+private fun CreateNewCenterOfficesPreview() {
+    CreateNewCenterScreen(
+        state = CreateNewCenterUiState.Offices(emptyList()),
+        onRetry = {},
+        createCenter = {},
+        onCreateSuccess = {},
+    )
+}
+
+
+@DevicePreview
+@Composable
+private fun CreateNewCenterCenterCreatedSuccessfullyPreview() {
+    CreateNewCenterScreen(
+        state = CreateNewCenterUiState.CenterCreatedSuccessfully,
+        onRetry = {},
+        createCenter = {},
+        onCreateSuccess = {},
+    )
+}

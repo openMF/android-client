@@ -42,6 +42,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.mifos.core.designsystem.component.MifosCard
 import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
@@ -148,14 +149,10 @@ private fun GroupItem(
     group: GroupEntity,
     onGroupClick: (Int) -> Unit,
 ) {
-    Card(
+    MifosCard(
         modifier = Modifier
             .fillMaxWidth(),
         shape = RoundedCornerShape(0.dp),
-        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
-        colors = CardDefaults.cardColors(
-            containerColor = Color.White,
-        ),
         onClick = { group.id?.let { onGroupClick(it) } },
     ) {
         Column(modifier = Modifier.padding(8.dp)) {
