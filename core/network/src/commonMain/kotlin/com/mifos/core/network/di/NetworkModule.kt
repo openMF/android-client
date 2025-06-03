@@ -31,10 +31,12 @@ import org.koin.dsl.module
 val NetworkModule = module {
 
     single<HttpClient>(MifosClient) {
-        val preferencesRepository = get<UserPreferencesRepository>()
+        //val preferencesRepository = get<UserPreferencesRepository>()
+        val preferencesRepository: UserPreferencesRepository = get()
+
 
         KtorHttpClient.config {
-            install(Auth)
+           // install(Auth)
             install(MifosInterceptor) {
                 repository = preferencesRepository
             }
