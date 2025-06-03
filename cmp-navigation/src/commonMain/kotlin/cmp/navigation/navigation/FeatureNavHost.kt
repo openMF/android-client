@@ -26,6 +26,7 @@ import cmp.navigation.AppState
 import com.mifos.feature.about.navigation.aboutNavGraph
 import com.mifos.feature.activate.navigation.activateScreen
 import com.mifos.feature.activate.navigation.navigateToActivateScreen
+import com.mifos.feature.individualCollectionSheet.navigation.individualCollectionSheetNavGraph
 import com.mifos.feature.note.navigation.noteNavGraph
 
 const val WELCOME_ROUTE = "home_screen"
@@ -49,6 +50,11 @@ internal fun FeatureNavHost(
         noteNavGraph(onBackPressed = appState.navController::popBackStack)
 
         activateScreen(onBackPressed = appState.navController::popBackStack)
+
+        individualCollectionSheetNavGraph(
+            navController = appState.navController,
+            onBackPressed = appState.navController::popBackStack,
+        )
     }
 }
 

@@ -13,6 +13,7 @@ import com.mifos.room.utils.Entity
 import com.mifos.room.utils.ForeignKey
 import com.mifos.room.utils.ForeignKeyAction
 import com.mifos.room.utils.PrimaryKey
+import kotlinx.serialization.Serializable
 
 @Entity(
     tableName = "Office",
@@ -31,6 +32,7 @@ import com.mifos.room.utils.PrimaryKey
         ),
     ],
 )
+@Serializable
 data class OfficeEntity(
     @PrimaryKey(autoGenerate = true)
     val id: Int,
