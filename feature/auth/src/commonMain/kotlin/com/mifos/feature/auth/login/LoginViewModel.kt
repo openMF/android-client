@@ -140,11 +140,5 @@ class LoginViewModel(
         }
 
         _loginUiState.value = LoginUiState.HomeActivityIntent
-
-//        if (passcode.value != null) {
-//                TODO() navigate to passcode screen
-//        } else {
-//        TODO() navigate to home screen
-//        }
     }
 }

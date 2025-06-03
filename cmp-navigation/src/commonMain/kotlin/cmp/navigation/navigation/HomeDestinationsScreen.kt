@@ -45,7 +45,7 @@ sealed class HomeDestinationsScreen(
 
     data object CheckerInboxAndTasksScreen : HomeDestinationsScreen(
         title = "Checker Inbox & Tasks",
-        route = "",
+        route = "checker_inbox_task_screen_route",
         icon = MifosIcons.Checkbox,
     )
 

@@ -7,11 +7,11 @@
  *
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
-package com.mifos.feature.checkerInboxTask.di
+package com.mifos.feature.checker.inbox.task.di
 
-import com.mifos.feature.checkerInboxTask.checkerInbox.CheckerInboxViewModel
-import com.mifos.feature.checkerInboxTask.checkerInboxDialog.CheckerInboxDialogViewmodel
-import com.mifos.feature.checkerInboxTask.checkerInboxTasks.CheckerInboxTasksViewModel
+import com.mifos.feature.checker.inbox.task.checkerInbox.CheckerInboxViewModel
+import com.mifos.feature.checker.inbox.task.checkerInboxDialog.CheckerInboxDialogViewmodel
+import com.mifos.feature.checker.inbox.task.checkerInboxTasks.CheckerInboxTasksViewModel
 import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.module
 

@@ -22,9 +22,18 @@ class GetCheckerInboxBadgesUseCase(
     private val repository: CheckerInboxTasksRepository,
 ) {
     operator fun invoke(): Flow<DataState<Pair<Int, Int>>> =
-
         repository.getCheckerTaskList()
             .zip(repository.getRescheduleLoansTaskList()) { checkerTasks, rescheduleTasks ->
-                DataState.Success(Pair(checkerTasks.data!!.size, rescheduleTasks.data!!.size))
+                if (checkerTasks is DataState.Error) {
+                    return@zip DataState.Error(checkerTasks.exception)
+                }
+                if (rescheduleTasks is DataState.Error) {
+                    return@zip DataState.Error(rescheduleTasks.exception)
+                }
+
+                val checkerSize = checkerTasks.data?.size ?: 0
+                val rescheduleSize = rescheduleTasks.data?.size ?: 0
+
+                DataState.Success(checkerSize to rescheduleSize)
             }
 }
