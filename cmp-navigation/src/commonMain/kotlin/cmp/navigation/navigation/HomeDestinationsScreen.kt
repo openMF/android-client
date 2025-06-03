@@ -12,6 +12,7 @@ package cmp.navigation.navigation
 import androidx.compose.ui.graphics.vector.ImageVector
 import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.feature.about.navigation.AboutScreens
+import com.mifos.feature.settings.navigation.SettingsScreens
 
 sealed class HomeDestinationsScreen(
     val title: String = "",
@@ -74,7 +75,7 @@ sealed class HomeDestinationsScreen(
 
     data object SettingsScreen : HomeDestinationsScreen(
         title = "Settings",
-        route = "",
+        route = SettingsScreens.SettingsScreen.route,
         icon = MifosIcons.Settings,
     )
 

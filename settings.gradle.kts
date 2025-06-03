@@ -61,8 +61,6 @@ include(":feature:note")
 //include(":feature:path-tracking")
 //include(":feature:report")
 //include(":feature:savings")
-include(":feature:search")
-//include(":feature:settings")
 //include(":feature:splash")
 //include(":feature:passcode")
 
