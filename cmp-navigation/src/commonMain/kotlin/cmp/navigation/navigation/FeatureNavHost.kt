@@ -49,11 +49,11 @@ internal fun FeatureNavHost(
             onCreateClient = { println("Create Client") },
             onCreateCenter = { println("Create Center") },
             onCreateGroup = { println("Create Group") },
-            onClient = { id -> println("Client clicked: $id") },
-            onCenter = { id -> println("Center clicked: $id") },
-            onGroup = { id -> println("Group clicked: $id") },
-            onLoan = { id -> println("Loan clicked: $id") },
-            onSavings = { id -> println("Savings clicked: $id") },
+            onClient = { println("Client clicked: $id") },
+            onCenter = { println("Center clicked: $id") },
+            onGroup = { println("Group clicked: $id") },
+            onLoan = {  println("Loan clicked: $id") },
+            onSavings = { println("Savings clicked: $id") },
         )
 
         aboutNavGraph(onBackPressed = appState.navController::popBackStack)

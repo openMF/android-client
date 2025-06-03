@@ -21,7 +21,6 @@ import com.mifos.core.network.utils.FlowConverterFactory
 import com.mifos.core.network.utils.ImageLoaderUtils
 import de.jensklingenberg.ktorfit.Ktorfit
 import io.ktor.client.HttpClient
-import io.ktor.client.plugins.auth.Auth
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
@@ -31,12 +30,11 @@ import org.koin.dsl.module
 val NetworkModule = module {
 
     single<HttpClient>(MifosClient) {
-        //val preferencesRepository = get<UserPreferencesRepository>()
+        // val preferencesRepository = get<UserPreferencesRepository>()
         val preferencesRepository: UserPreferencesRepository = get()
 
-
         KtorHttpClient.config {
-           // install(Auth)
+            // install(Auth)
             install(MifosInterceptor) {
                 repository = preferencesRepository
             }
