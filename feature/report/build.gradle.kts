@@ -22,7 +22,6 @@ kotlin {
             implementation(compose.components.resources)
             implementation(compose.ui)
             api(projects.core.domain)
-            implementation(libs.kotlinx.serialization.json.v163)
         }
     }
 }

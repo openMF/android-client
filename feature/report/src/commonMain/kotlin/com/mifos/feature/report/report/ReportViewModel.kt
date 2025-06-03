@@ -20,11 +20,11 @@ import androidx.lifecycle.viewModelScope
 import com.mifos.core.common.utils.Constants
 import com.mifos.core.model.objects.runreport.FullParameterListResponse
 import io.ktor.http.ContentDisposition.Companion.File
+import io.ktor.http.ContentType.Application.Json
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import kotlinx.serialization.json.Json
 //import java.io.File
 //import java.io.FileWriter
 import kotlinx.coroutines.IO
