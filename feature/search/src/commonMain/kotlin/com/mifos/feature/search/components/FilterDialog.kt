@@ -15,10 +15,8 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.RadioButton
@@ -26,22 +24,20 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.window.DialogProperties
 import com.mifos.core.designsystem.component.MifosDialogBox
 import com.mifos.core.ui.util.DevicePreview
 import com.mifos.feature.search.FilterOption
 import com.mifos.feature.search.SearchScreenEvent
 import org.jetbrains.compose.resources.stringResource
 
-//@Composable
-//internal fun FilterDialog(
+// @Composable
+// internal fun FilterDialog(
 //    selected: FilterOption?,
 //    onEvent: (SearchScreenEvent.UpdateSelectedFilter) -> Unit,
 //    onDismiss: () -> Unit,
 //    modifier: Modifier = Modifier,
-//) {
+// ) {
 //    val dialogMaxWidth = 400.dp
 //
 //    AlertDialog(
@@ -86,7 +82,7 @@ import org.jetbrains.compose.resources.stringResource
 //        },
 //        confirmButton = {},
 //    )
-//}
+// }
 
 @Composable
 internal fun FilterDialog(
@@ -95,7 +91,6 @@ internal fun FilterDialog(
     onDismiss: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-
     MifosDialogBox(
         title = stringResource(Res.string.feature_search_filter),
         showDialogState = true,
@@ -104,13 +99,13 @@ internal fun FilterDialog(
         onConfirm = {},
         onDismiss = onDismiss,
         modifier = modifier,
-        message = null
+        message = null,
     )
 
- Column(
+    Column(
         modifier = modifier
             .verticalScroll(rememberScrollState())
-            .fillMaxWidth()
+            .fillMaxWidth(),
     ) {
         HorizontalDivider()
         FilterOption(

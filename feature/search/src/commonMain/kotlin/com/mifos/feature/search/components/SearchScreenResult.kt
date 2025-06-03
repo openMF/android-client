@@ -107,7 +107,6 @@ internal fun SearchResult(
     onSearchOptionClick: (SearchedEntity) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-
     val entityType = searchedEntity.entityType ?: "?"
     val color = getMaterialColor(entityType)
 
