@@ -161,6 +161,8 @@ com.squareup.okio:okio-jvm:3.10.2
 com.squareup.okio:okio:3.10.2
 de.jensklingenberg.ktorfit:ktorfit-annotations-android:2.2.0
 de.jensklingenberg.ktorfit:ktorfit-annotations:2.2.0
+de.jensklingenberg.ktorfit:ktorfit-converters-flow-android:2.2.0
+de.jensklingenberg.ktorfit:ktorfit-converters-flow:2.2.0
 de.jensklingenberg.ktorfit:ktorfit-lib-android:2.2.0
 de.jensklingenberg.ktorfit:ktorfit-lib-light-android:2.2.0
 de.jensklingenberg.ktorfit:ktorfit-lib-light:2.2.0
