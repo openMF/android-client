@@ -20,7 +20,7 @@ sealed class CreateNewGroupUiState {
 
     data object ShowProgressbar : CreateNewGroupUiState()
 
-    data class ShowFetchingError(val message: StringResource) : CreateNewGroupUiState()
+    data class ShowFetchingError(val message: String) : CreateNewGroupUiState()
 
     data class ShowOffices(val offices: List<OfficeEntity>) : CreateNewGroupUiState()
 

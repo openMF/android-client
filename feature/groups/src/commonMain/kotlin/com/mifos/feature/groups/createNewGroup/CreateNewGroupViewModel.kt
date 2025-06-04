@@ -11,6 +11,7 @@ package com.mifos.feature.groups.createNewGroup
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.repository.CreateNewGroupRepository
 import com.mifos.core.datastore.UserPreferencesRepository
 import com.mifos.room.entities.group.GroupPayloadEntity
@@ -55,18 +56,30 @@ class CreateNewGroupViewModel(
 
     fun loadOffices() {
         viewModelScope.launch {
-            _createNewGroupUiState.value =
-                CreateNewGroupUiState.ShowProgressbar
+            repository.offices().collect { dataState ->
+                when (dataState) {
+                    is DataState.Error<*> -> {
+                        _createNewGroupUiState.value =
+                            CreateNewGroupUiState.ShowFetchingError(dataState.message)
+                    }
 
-            repository.offices()
-                .catch {
-                    _createNewGroupUiState.value =
-                        CreateNewGroupUiState.ShowFetchingError(it.message.toString())
+                    DataState.Loading -> {
+                        _createNewGroupUiState.value =
+                            CreateNewGroupUiState.ShowProgressbar
+                    }
+
+                    is DataState.Success<*> -> {
+                        val offices = dataState.data
+                        if (offices == null) {
+                            _createNewGroupUiState.value =
+                                CreateNewGroupUiState.ShowFetchingError("No offices found")
+                        } else {
+                            _createNewGroupUiState.value =
+                                CreateNewGroupUiState.ShowOffices(offices)
+                        }
+                    }
                 }
-                .collect {
-                    _createNewGroupUiState.value =
-                        CreateNewGroupUiState.ShowOffices(it)
-                }
+            }
         }
     }
 
