@@ -12,7 +12,7 @@ package com.mifos.feature.checker.inbox.task.checkerInboxTasks
 import androidclient.feature.checker_inbox_task.generated.resources.Res
 import androidclient.feature.checker_inbox_task.generated.resources.feature_checker_inbox_task_checker_Inbox
 import androidclient.feature.checker_inbox_task.generated.resources.feature_checker_inbox_task_client_Approval
-import androidclient.feature.checker_inbox_task.generated.resources.feature_checker_inbox_task_failed_to_Load_Check_Inbox
+import androidclient.feature.checker_inbox_task.generated.resources.feature_checker_inbox_task_failed_to_Load_Checker_Inbox
 import androidclient.feature.checker_inbox_task.generated.resources.feature_checker_inbox_task_ic_assignment_black_24dp
 import androidclient.feature.checker_inbox_task.generated.resources.feature_checker_inbox_task_ic_done_all_24dp
 import androidclient.feature.checker_inbox_task.generated.resources.feature_checker_inbox_task_ic_mail_outline_24dp
@@ -85,7 +85,7 @@ internal fun CheckerInboxTasksScreen(
         ) {
             when (state) {
                 is CheckerInboxTasksUiState.Error -> {
-                    MifosSweetError(message = stringResource(Res.string.feature_checker_inbox_task_failed_to_Load_Check_Inbox)) {
+                    MifosSweetError(message = stringResource(Res.string.feature_checker_inbox_task_failed_to_Load_Checker_Inbox)) {
                         checkerInboxTasksViewModel.loadCheckerTasksBadges()
                     }
                 }

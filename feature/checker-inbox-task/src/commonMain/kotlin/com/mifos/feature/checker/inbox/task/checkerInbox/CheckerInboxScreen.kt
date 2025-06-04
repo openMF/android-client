@@ -22,7 +22,7 @@ import androidclient.feature.checker_inbox_task.generated.resources.feature_chec
 import androidclient.feature.checker_inbox_task.generated.resources.feature_checker_inbox_task_checker_inbox
 import androidclient.feature.checker_inbox_task.generated.resources.feature_checker_inbox_task_client_Approval
 import androidclient.feature.checker_inbox_task.generated.resources.feature_checker_inbox_task_create_by
-import androidclient.feature.checker_inbox_task.generated.resources.feature_checker_inbox_task_failed_to_Load_Check_Inbox
+import androidclient.feature.checker_inbox_task.generated.resources.feature_checker_inbox_task_failed_to_Load_Checker_Inbox
 import androidclient.feature.checker_inbox_task.generated.resources.feature_checker_inbox_task_no
 import androidclient.feature.checker_inbox_task.generated.resources.feature_checker_inbox_task_search_by_user
 import androidclient.feature.checker_inbox_task.generated.resources.feature_checker_inbox_task_yes
@@ -415,7 +415,7 @@ private fun CheckerInboxScreen(
 
                 is CheckerInboxUiState.Error -> {
                     MifosSweetError(
-                        message = stringResource(Res.string.feature_checker_inbox_task_failed_to_Load_Check_Inbox),
+                        message = stringResource(Res.string.feature_checker_inbox_task_failed_to_Load_Checker_Inbox),
                     ) {
                         onRetry()
                     }
@@ -686,7 +686,7 @@ class CheckerInboxUiStateProvider : PreviewParameterProvider<CheckerInboxUiState
     override val values: Sequence<CheckerInboxUiState>
         get() = sequenceOf(
             CheckerInboxUiState.Loading,
-            CheckerInboxUiState.Error(Res.string.feature_checker_inbox_task_failed_to_Load_Check_Inbox),
+            CheckerInboxUiState.Error(Res.string.feature_checker_inbox_task_failed_to_Load_Checker_Inbox),
             CheckerInboxUiState.CheckerTasksList(sampleCheckerTaskList),
             CheckerInboxUiState.SuccessResponse(Res.string.feature_checker_inbox_task_client_Approval),
         )

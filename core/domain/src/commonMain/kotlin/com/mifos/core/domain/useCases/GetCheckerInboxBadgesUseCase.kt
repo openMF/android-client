@@ -12,7 +12,7 @@ package com.mifos.core.domain.useCases
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.repository.CheckerInboxTasksRepository
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.zip
+import kotlinx.coroutines.flow.combine
 
 /**
  * Created by Aditya Gupta on 21/03/24.
@@ -21,19 +21,32 @@ import kotlinx.coroutines.flow.zip
 class GetCheckerInboxBadgesUseCase(
     private val repository: CheckerInboxTasksRepository,
 ) {
-    operator fun invoke(): Flow<DataState<Pair<Int, Int>>> =
-        repository.getCheckerTaskList()
-            .zip(repository.getRescheduleLoansTaskList()) { checkerTasks, rescheduleTasks ->
-                if (checkerTasks is DataState.Error) {
-                    return@zip DataState.Error(checkerTasks.exception)
-                }
-                if (rescheduleTasks is DataState.Error) {
-                    return@zip DataState.Error(rescheduleTasks.exception)
-                }
+    operator fun invoke(): Flow<DataState<Pair<Int, Int>>> = combine(
+        repository.getCheckerTaskList(),
+        repository.getRescheduleLoansTaskList(),
+    ) { checkerTaskState, rescheduleTaskState ->
 
-                val checkerSize = checkerTasks.data?.size ?: 0
-                val rescheduleSize = rescheduleTasks.data?.size ?: 0
+        if (checkerTaskState is DataState.Loading || rescheduleTaskState is DataState.Loading) {
+            return@combine DataState.Loading
+        }
 
-                DataState.Success(checkerSize to rescheduleSize)
-            }
+        val errors = mutableListOf<Throwable>()
+        if (checkerTaskState is DataState.Error) errors.add(checkerTaskState.exception)
+        if (rescheduleTaskState is DataState.Error) errors.add(rescheduleTaskState.exception)
+
+        if (errors.isNotEmpty()) {
+            val combined = CombinedException(errors)
+            return@combine DataState.Error(combined)
+        }
+
+        val checkerTaskSize = checkerTaskState.data?.size ?: 0
+        val rescheduleTaskSize = rescheduleTaskState.data?.size ?: 0
+        DataState.Success(checkerTaskSize to rescheduleTaskSize)
+    }
 }
+
+class CombinedException(
+    val errors: List<Throwable>,
+) : Exception(
+    errors.joinToString(separator = "\n") { it.message ?: "Unknown error" },
+)

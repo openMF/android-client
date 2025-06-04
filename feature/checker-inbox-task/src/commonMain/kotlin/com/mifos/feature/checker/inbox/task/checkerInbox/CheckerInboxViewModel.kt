@@ -12,7 +12,7 @@ package com.mifos.feature.checker.inbox.task.checkerInbox
 import androidclient.feature.checker_inbox_task.generated.resources.Res
 import androidclient.feature.checker_inbox_task.generated.resources.feature_checker_inbox_task_approve_success
 import androidclient.feature.checker_inbox_task.generated.resources.feature_checker_inbox_task_delete_success
-import androidclient.feature.checker_inbox_task.generated.resources.feature_checker_inbox_task_failed_to_Load_Check_Inbox
+import androidclient.feature.checker_inbox_task.generated.resources.feature_checker_inbox_task_failed_to_Load_Checker_Inbox
 import androidclient.feature.checker_inbox_task.generated.resources.feature_checker_inbox_task_failed_to_approve
 import androidclient.feature.checker_inbox_task.generated.resources.feature_checker_inbox_task_failed_to_delete
 import androidclient.feature.checker_inbox_task.generated.resources.feature_checker_inbox_task_failed_to_reject
@@ -48,7 +48,7 @@ class CheckerInboxViewModel(
             when (result) {
                 is DataState.Error ->
                     _checkerInboxUiState.value =
-                        CheckerInboxUiState.Error(Res.string.feature_checker_inbox_task_failed_to_Load_Check_Inbox)
+                        CheckerInboxUiState.Error(Res.string.feature_checker_inbox_task_failed_to_Load_Checker_Inbox)
 
                 is DataState.Loading -> _checkerInboxUiState.value = CheckerInboxUiState.Loading
 

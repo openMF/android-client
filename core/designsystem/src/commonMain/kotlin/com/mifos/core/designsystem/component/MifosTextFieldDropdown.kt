@@ -42,7 +42,6 @@ fun MifosTextFieldDropdown(
         .fillMaxWidth()
         .padding(horizontal = 16.dp),
     label: String? = null,
-    labelString: String? = null,
     readOnly: Boolean = false,
 ) {
     var isExpanded by remember { mutableStateOf(false) }
@@ -54,12 +53,7 @@ fun MifosTextFieldDropdown(
         OutlinedTextField(
             value = value,
             onValueChange = onValueChanged,
-            label = {
-                when {
-                    labelString != null -> Text(text = labelString)
-                    label != null -> Text(text = label)
-                }
-            },
+            label = { label?.let { Text(it) } },
             modifier = modifier
                 .menuAnchor()
                 .clickable(enabled = readOnly) { isExpanded = true },

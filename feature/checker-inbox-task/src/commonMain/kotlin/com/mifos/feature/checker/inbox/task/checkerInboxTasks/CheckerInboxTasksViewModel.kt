@@ -11,6 +11,7 @@ package com.mifos.feature.checker.inbox.task.checkerInboxTasks
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import co.touchlab.kermit.Logger
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.domain.useCases.GetCheckerInboxBadgesUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -43,6 +44,8 @@ class CheckerInboxTasksViewModel(
 
             when (result) {
                 is DataState.Error -> {
+                    Logger.e("CheckerInbox: ${result.exception.message}", result.exception)
+
                     _checkerInboxTasksUiState.value =
                         CheckerInboxTasksUiState.Error(result.message)
                 }
