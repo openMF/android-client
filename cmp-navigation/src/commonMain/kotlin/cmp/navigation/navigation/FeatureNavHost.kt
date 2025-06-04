@@ -27,6 +27,9 @@ import cmp.navigation.AppState
 import com.mifos.feature.about.navigation.aboutNavGraph
 import com.mifos.feature.activate.navigation.activateScreen
 import com.mifos.feature.note.navigation.noteNavGraph
+import com.mifos.feature.search.navigation.searchNavGraph
+import com.mifos.feature.settings.navigation.navigateToSettingsScreen
+import com.mifos.feature.settings.navigation.settingsScreen
 
 const val WELCOME_ROUTE = "home_screen"
 
@@ -49,11 +52,11 @@ internal fun FeatureNavHost(
             onCreateClient = { println("Create Client") },
             onCreateCenter = { println("Create Center") },
             onCreateGroup = { println("Create Group") },
-            onClient = { println("Client clicked: $id") },
-            onCenter = { println("Center clicked: $id") },
-            onGroup = { println("Group clicked: $id") },
-            onLoan = {  println("Loan clicked: $id") },
-            onSavings = { println("Savings clicked: $id") },
+            onClient = { id -> println("Client clicked: $id") },
+            onCenter = { id -> println("Center clicked: $id") },
+            onGroup = { id -> println("Group clicked: $id") },
+            onLoan = { id -> println("Loan clicked: $id") },
+            onSavings = { id -> println("Savings clicked: $id") },
         )
 
         aboutNavGraph(onBackPressed = appState.navController::popBackStack)
