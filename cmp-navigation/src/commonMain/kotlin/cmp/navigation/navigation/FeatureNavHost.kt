@@ -25,6 +25,7 @@ import androidx.navigation.compose.composable
 import cmp.navigation.AppState
 import com.mifos.feature.about.navigation.aboutNavGraph
 import com.mifos.feature.activate.navigation.activateScreen
+import com.mifos.feature.individualCollectionSheet.navigation.individualCollectionSheetNavGraph
 import com.mifos.feature.note.navigation.noteNavGraph
 import com.mifos.feature.settings.navigation.navigateToSettingsScreen
 import com.mifos.feature.settings.navigation.settingsScreen
@@ -56,6 +57,10 @@ internal fun FeatureNavHost(
             navigateToLoginScreen = {},
             changePasscode = {},
             languageChanged = {},
+        )
+        individualCollectionSheetNavGraph(
+            navController = appState.navController,
+            onBackPressed = appState.navController::popBackStack,
         )
     }
 }
