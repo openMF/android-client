@@ -9,8 +9,6 @@
  */
 plugins {
     alias(libs.plugins.mifos.cmp.feature)
-//    alias(libs.plugins.mifos.android.library.compose)
-//    alias(libs.plugins.mifos.android.library.jacoco)
 }
 
 android {
@@ -20,23 +18,9 @@ android {
 kotlin{
     sourceSets{
         commonMain.dependencies {
-            //    implementation(projects.core.domain)
             implementation(compose.material3)
             implementation(compose.components.resources)
             implementation(compose.ui)
-//            implementation(projects.core.model)
-//            implementation(projects.core.data)
-//            implementation(projects.core.database)
-//            implementation(projects.core.designsystem)
         }
     }
 }
-//dependencies {
-//    implementation(projects.core.domain)
-//
-//    //DBFlow dependencies
-//    testImplementation(libs.hilt.android.testing)
-//    testImplementation(projects.core.testing)
-//
-//    androidTestImplementation(projects.core.testing)
-//}
