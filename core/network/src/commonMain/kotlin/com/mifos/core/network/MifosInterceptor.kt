@@ -37,16 +37,14 @@ class MifosInterceptor(
                 context.header("Accept", "application/json")
                 context.header(HEADER_TENANT, tenant)
 
-                runBlocking {
-                    val user = plugin.repository.userData.firstOrNull()
-                    val username = user?.username
-                    val password = user?.password
+                val user = plugin.repository.userData.firstOrNull()
+                val username = user?.username
+                val password = user?.password
 
-                    if (!username.isNullOrEmpty() && !password.isNullOrEmpty()) {
-                        val raw = "$username:$password"
-                        val encoded = raw.encodeToByteArray().encodeBase64()
-                        context.header(HEADER_AUTH, "Basic $encoded")
-                    }
+                if (!username.isNullOrEmpty() && !password.isNullOrEmpty()) {
+                    val raw = "$username:$password"
+                    val encoded = raw.encodeToByteArray().encodeBase64()
+                    context.header(HEADER_AUTH, "Basic $encoded")
                 }
             }
         }

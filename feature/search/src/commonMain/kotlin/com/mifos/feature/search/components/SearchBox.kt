@@ -46,6 +46,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.mifos.core.designsystem.component.MifosOutlinedTextField
+import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.ui.util.DevicePreview
 import com.mifos.feature.search.FilterOption
 import com.mifos.feature.search.SearchScreenEvent
@@ -91,14 +92,14 @@ internal fun SearchBox(
                     },
                     leadingIcon = {
                         Icon(
-                            imageVector = Icons.Default.Search,
-                            contentDescription = "MifosIcons",
+                            imageVector = MifosIcons.Search,
+                            contentDescription = "Search Icon",
                         )
                     },
                     trailingIcon = {
                         Icon(
-                            imageVector = Icons.Default.KeyboardArrowDown,
-                            contentDescription = "MifosIcons",
+                            imageVector =  MifosIcons.KeyboardArrowDown,
+                            contentDescription = "Dropdown Icon",
                         )
                     },
                     colors = AssistChipDefaults.assistChipColors().copy(

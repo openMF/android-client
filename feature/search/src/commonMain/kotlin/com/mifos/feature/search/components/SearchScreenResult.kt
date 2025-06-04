@@ -144,7 +144,7 @@ fun ColoredAvatar(initial: Char, backgroundColor: Color, modifier: Modifier = Mo
             text = initial.uppercaseChar().toString(),
             color = Color.White,
             fontWeight = FontWeight.Bold,
-            fontSize = 20.sp,
+            style = MaterialTheme.typography.titleLarge
         )
     }
 }

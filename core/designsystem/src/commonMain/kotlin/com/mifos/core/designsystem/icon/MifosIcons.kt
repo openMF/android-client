@@ -102,7 +102,7 @@ object MifosIcons {
     val EventRepeat = Icons.Outlined.EventRepeat
     val Date = Icons.Outlined.DateRange
     val ArrowBack1 = Icons.Rounded.ArrowBackIosNew
-
+val KeyboardArrowDown = Icons.Rounded.KeyboardArrowDown
     val Link = Icons.Default.Link
     val Server = Icons.Default
     val AddLink = Icons.Default.AddLink

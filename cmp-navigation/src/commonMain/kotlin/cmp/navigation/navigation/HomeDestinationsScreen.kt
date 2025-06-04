@@ -12,6 +12,7 @@ package cmp.navigation.navigation
 import androidx.compose.ui.graphics.vector.ImageVector
 import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.feature.about.navigation.AboutScreens
+import com.mifos.feature.search.navigation.SearchScreens
 import com.mifos.feature.settings.navigation.SettingsScreens
 
 sealed class HomeDestinationsScreen(
@@ -21,7 +22,7 @@ sealed class HomeDestinationsScreen(
 ) {
     data object SearchScreen : HomeDestinationsScreen(
         title = "Search",
-        route = "search_screen_route",
+        route = SearchScreens.SearchScreenRoute.route,
         icon = MifosIcons.Dashboard,
     )
 

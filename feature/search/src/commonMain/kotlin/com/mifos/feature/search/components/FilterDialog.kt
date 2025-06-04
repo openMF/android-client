@@ -31,58 +31,6 @@ import com.mifos.feature.search.FilterOption
 import com.mifos.feature.search.SearchScreenEvent
 import org.jetbrains.compose.resources.stringResource
 
-// @Composable
-// internal fun FilterDialog(
-//    selected: FilterOption?,
-//    onEvent: (SearchScreenEvent.UpdateSelectedFilter) -> Unit,
-//    onDismiss: () -> Unit,
-//    modifier: Modifier = Modifier,
-// ) {
-//    val dialogMaxWidth = 400.dp
-//
-//    AlertDialog(
-//        modifier = modifier.widthIn(max = MifosDialogBox()),
-//        properties = DialogProperties(usePlatformDefaultWidth = false),
-//        onDismissRequest = onDismiss,
-//        title = {
-//            Text(text = stringResource(Res.string.feature_search_filter))
-//        },
-//        text = {
-//            HorizontalDivider()
-//            Column(
-//                modifier = Modifier
-//                    .verticalScroll(rememberScrollState()),
-//            ) {
-//                FilterOption(
-//                    text = "All",
-//                    selected = selected == null,
-//                    onSelected = {
-//                        onEvent(SearchScreenEvent.UpdateSelectedFilter(null))
-//                        onDismiss()
-//                    },
-//                )
-//
-//                HorizontalDivider()
-//
-//                FilterOption.values.forEachIndexed { index, option ->
-//                    FilterOption(
-//                        text = option.label,
-//                        selected = option == selected,
-//                        onSelected = {
-//                            onEvent(SearchScreenEvent.UpdateSelectedFilter(option))
-//                            onDismiss()
-//                        },
-//                    )
-//
-//                    if (index != FilterOption.values.size - 1) {
-//                        HorizontalDivider()
-//                    }
-//                }
-//            }
-//        },
-//        confirmButton = {},
-//    )
-// }
 
 @Composable
 internal fun FilterDialog(
