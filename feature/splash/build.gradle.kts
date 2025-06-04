@@ -40,10 +40,3 @@ kotlin{
 //
 //    androidTestImplementation(projects.core.testing)
 //}
-=======
-dependencies {
-    implementation(projects.core.domain)
-
-    //DBFlow dependencies
-    testImplementation(libs.hilt.android.testing)
-}

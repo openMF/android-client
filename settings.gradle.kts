@@ -63,6 +63,6 @@ include(":feature:note")
 //include(":feature:savings")
 //include(":feature:search")
 //include(":feature:settings")
-//include(":feature:splash")
+include(":feature:splash")
 //include(":feature:passcode")
 
