@@ -188,7 +188,6 @@ androidPackageName = "AndroidApp"
 androidPackageNamespace = "org.mifos.client"
 androidPackageVersion = "1.0.0"
 uiAndroidVersion = "1.7.8"
-foundationLayoutAndroid = "1.8.2"
 
 [libraries]
 
