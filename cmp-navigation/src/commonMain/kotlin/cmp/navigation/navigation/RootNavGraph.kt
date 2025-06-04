@@ -42,7 +42,7 @@ fun RootNavGraph(
 
         splashNavGraph(
             navigateLogin = navHostController::navigateToLogin,
-            navigatePasscode = {}
+            navigatePasscode = {},
         )
 
         composable(MAIN_GRAPH) {
