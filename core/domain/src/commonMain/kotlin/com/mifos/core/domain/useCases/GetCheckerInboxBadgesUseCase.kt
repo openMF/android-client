@@ -25,28 +25,28 @@ class GetCheckerInboxBadgesUseCase(
         repository.getCheckerTaskList(),
         repository.getRescheduleLoansTaskList(),
     ) { checkerTaskState, rescheduleTaskState ->
+        when {
+            checkerTaskState is DataState.Loading || rescheduleTaskState is DataState.Loading -> {
+                DataState.Loading
+            }
 
-        if (checkerTaskState is DataState.Loading || rescheduleTaskState is DataState.Loading) {
-            return@combine DataState.Loading
+            checkerTaskState is DataState.Success && rescheduleTaskState is DataState.Success -> {
+                val checkerTaskSize = checkerTaskState.data.size
+                val rescheduleTaskSize = rescheduleTaskState.data.size
+                DataState.Success(checkerTaskSize to rescheduleTaskSize)
+            }
+
+            else -> {
+                val errors = listOfNotNull(
+                    (checkerTaskState as? DataState.Error)?.exception,
+                    (rescheduleTaskState as? DataState.Error)?.exception,
+                )
+                DataState.Error(combineErrors(errors))
+            }
         }
+    }
 
-        val errors = mutableListOf<Throwable>()
-        if (checkerTaskState is DataState.Error) errors.add(checkerTaskState.exception)
-        if (rescheduleTaskState is DataState.Error) errors.add(rescheduleTaskState.exception)
-
-        if (errors.isNotEmpty()) {
-            val combined = CombinedException(errors)
-            return@combine DataState.Error(combined)
-        }
-
-        val checkerTaskSize = checkerTaskState.data?.size ?: 0
-        val rescheduleTaskSize = rescheduleTaskState.data?.size ?: 0
-        DataState.Success(checkerTaskSize to rescheduleTaskSize)
+    fun combineErrors(errors: List<Throwable>): Throwable {
+        return Throwable(errors.joinToString("\n") { it.message ?: "Unknown error" })
     }
 }
-
-class CombinedException(
-    val errors: List<Throwable>,
-) : Exception(
-    errors.joinToString(separator = "\n") { it.message ?: "Unknown error" },
-)

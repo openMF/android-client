@@ -20,7 +20,6 @@ kotlin {
         commonMain.dependencies {
             implementation(projects.core.domain)
 
-            implementation(libs.coil.kt.compose)
             implementation(compose.ui)
             implementation(compose.material3)
             implementation(compose.foundation)
