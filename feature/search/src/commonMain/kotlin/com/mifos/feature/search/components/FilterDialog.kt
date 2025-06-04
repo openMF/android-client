@@ -31,7 +31,6 @@ import com.mifos.feature.search.FilterOption
 import com.mifos.feature.search.SearchScreenEvent
 import org.jetbrains.compose.resources.stringResource
 
-
 @Composable
 internal fun FilterDialog(
     selected: FilterOption?,

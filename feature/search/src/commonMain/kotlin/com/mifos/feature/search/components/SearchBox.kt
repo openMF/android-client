@@ -98,7 +98,7 @@ internal fun SearchBox(
                     },
                     trailingIcon = {
                         Icon(
-                            imageVector =  MifosIcons.KeyboardArrowDown,
+                            imageVector = MifosIcons.KeyboardArrowDown,
                             contentDescription = "Dropdown Icon",
                         )
                     },

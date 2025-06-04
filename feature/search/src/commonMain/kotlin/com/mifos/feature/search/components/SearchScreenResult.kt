@@ -34,7 +34,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.model.objects.SearchedEntity
 import com.mifos.core.ui.components.MifosEmptyUi
@@ -144,7 +143,7 @@ fun ColoredAvatar(initial: Char, backgroundColor: Color, modifier: Modifier = Mo
             text = initial.uppercaseChar().toString(),
             color = Color.White,
             fontWeight = FontWeight.Bold,
-            style = MaterialTheme.typography.titleLarge
+            style = MaterialTheme.typography.titleLarge,
         )
     }
 }
