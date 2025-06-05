@@ -9,13 +9,11 @@
  */
 package com.mifos.feature.settings.settings
 
-import android.content.ComponentName
-import android.content.Context
-import android.content.Intent
-import android.content.pm.PackageManager
-import android.os.CountDownTimer
-import android.util.Log
-import android.widget.Toast
+import androidclient.feature.settings.generated.resources.Res
+import androidclient.feature.settings.generated.resources.feature_settings
+import androidclient.feature.settings.generated.resources.feature_settings_change_app_theme
+import androidclient.feature.settings.generated.resources.feature_settings_choose_language
+import androidclient.feature.settings.generated.resources.feature_settings_languages
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -30,32 +28,38 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringArrayResource
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
+import co.touchlab.kermit.Logger
 import com.mifos.core.common.enums.MifosAppLanguage
 import com.mifos.core.datastore.model.AppTheme
 import com.mifos.core.designsystem.component.MifosRadioButtonDialog
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.UpdateEndpointDialogScreen
-import com.mifos.feature.settings.R
-import com.mifos.feature.settings.syncSurvey.SyncSurveysDialog
+import com.mifos.core.ui.util.DevicePreview
 import com.mifos.feature.settings.updateServer.UpdateServerConfigScreenRoute
-import org.koin.androidx.compose.koinViewModel
+import kotlinx.coroutines.delay
+import org.jetbrains.compose.resources.StringResource
+import org.jetbrains.compose.resources.stringArrayResource
+import org.jetbrains.compose.resources.stringResource
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 internal fun SettingsScreen(
@@ -66,15 +70,15 @@ internal fun SettingsScreen(
     viewModel: SettingsViewModel = koinViewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-    val context = LocalContext.current
 
     SettingsScreen(
         onBackPressed = onBackPressed,
-        selectedLanguage = uiState.language.code ?: "System Language",
-        selectedTheme = uiState.theme.themeName ?: "System Theme",
-        baseURL = uiState.baseUrl ?: "",
-        tenant = uiState.tenant ?: "",
-        changePasscode = { changePasscode(uiState.passcode ?: "") },
+        selectedLanguage = uiState.language.code,
+        selectedTheme = uiState.theme.themeName,
+        currentTheme = uiState.theme,
+        baseURL = uiState.baseUrl,
+        tenant = uiState.tenant,
+        changePasscode = { changePasscode(uiState.passcode) },
         handleEndpointUpdate = { baseURL, tenant ->
             if (viewModel.tryUpdatingEndpoint(selectedBaseUrl = baseURL, selectedTenant = tenant)) {
                 navigateToLoginScreen()
@@ -86,7 +90,6 @@ internal fun SettingsScreen(
         updateLanguage = {
             val isSystemLanguage = viewModel.updateLanguage(it.code)
             updateLanguageLocale(
-                context = context,
                 language = it.code,
                 isSystemLanguage = isSystemLanguage,
             )
@@ -101,6 +104,7 @@ internal fun SettingsScreen(
     onBackPressed: () -> Unit,
     selectedLanguage: String,
     selectedTheme: String,
+    currentTheme: AppTheme,
     baseURL: String,
     tenant: String,
     changePasscode: () -> Unit,
@@ -115,11 +119,14 @@ internal fun SettingsScreen(
     var showServerConfig by rememberSaveable { mutableStateOf(false) }
 
     val sheetState = rememberModalBottomSheetState()
-    val context = LocalContext.current
+
+    LaunchedEffect(currentTheme) {
+        Logger.d { "Current theme changed to: $currentTheme" }
+    }
 
     MifosScaffold(
         onBackPressed = onBackPressed,
-        title = stringResource(R.string.feature_settings),
+        title = stringResource(resource = Res.string.feature_settings),
     ) { paddingValues ->
         Column(
             Modifier.padding(paddingValues),
@@ -145,11 +152,11 @@ internal fun SettingsScreen(
     }
 
     if (showSyncSurveyDialog) {
-        SyncSurveysDialog(
-            closeDialog = {
-                showSyncSurveyDialog = false
-            },
-        )
+//        SyncSurveysDialog(
+//            closeDialog = {
+//                showSyncSurveyDialog = false
+//            },
+//        )
     }
 
     if (showServerConfig) {
@@ -161,7 +168,7 @@ internal fun SettingsScreen(
                 onCloseClick = { showServerConfig = false },
                 onSuccessful = {
                     showServerConfig = false
-                    showRestartCountdownToast(context, 2)
+//                    RestartCountdownSnackbar(2, SnackbarHostState())
                 },
             )
         }
@@ -169,8 +176,8 @@ internal fun SettingsScreen(
 
     if (showLanguageUpdateDialog) {
         MifosRadioButtonDialog(
-            title = stringResource(R.string.feature_settings_choose_language),
-            items = stringArrayResource(R.array.feature_settings_languages),
+            title = stringResource(Res.string.feature_settings_choose_language),
+            items = stringArrayResource(Res.array.feature_settings_languages).toTypedArray(),
             selectItem = { _, index -> updateLanguage(MifosAppLanguage.entries[index]) },
             onDismissRequest = { showLanguageUpdateDialog = false },
             selectedItem = MifosAppLanguage.fromCode(selectedLanguage).displayName,
@@ -179,11 +186,11 @@ internal fun SettingsScreen(
 
     if (showThemeUpdateDialog) {
         MifosRadioButtonDialog(
-            title = stringResource(R.string.feature_settings_change_app_theme),
+            title = stringResource(Res.string.feature_settings_change_app_theme),
             items = AppTheme.entries.map { it.themeName }.toTypedArray(),
             selectItem = { _, index -> updateTheme(AppTheme.entries[index]) },
             onDismissRequest = { showThemeUpdateDialog = false },
-            selectedItem = selectedTheme,
+            selectedItem = currentTheme.themeName,
         )
     }
 
@@ -217,8 +224,8 @@ private fun SettingsCards(
 
 @Composable
 private fun SettingsCardItem(
-    title: Int,
-    details: Int,
+    title: StringResource,
+    details: StringResource,
     icon: ImageVector?,
     onclick: () -> Unit,
 ) {
@@ -246,12 +253,12 @@ private fun SettingsCardItem(
                 modifier = Modifier.weight(0.8f),
             ) {
                 Text(
-                    text = stringResource(id = title),
+                    text = stringResource(title),
                     style = MaterialTheme.typography.bodyMedium,
                 )
                 Text(
                     modifier = Modifier.padding(end = 16.dp),
-                    text = stringResource(id = details),
+                    text = stringResource(details),
                     color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.8f),
                     style = MaterialTheme.typography.bodyMedium,
                 )
@@ -260,11 +267,8 @@ private fun SettingsCardItem(
     }
 }
 
-private fun updateLanguageLocale(context: Context, language: String, isSystemLanguage: Boolean) {
-    Log.d(
-        "SettingsScreen",
-        "updateLanguageLocale: $language" + context.packageName.toString() + isSystemLanguage,
-    )
+private fun updateLanguageLocale(language: String, isSystemLanguage: Boolean) {
+    Logger.d { "updateLanguageLocale: $language" }
 //    if (isSystemLanguage) {
 //        LanguageHelper.setLocale(context, language)
 //    } else {
@@ -277,40 +281,44 @@ private fun updateLanguageLocale(context: Context, language: String, isSystemLan
 //    }
 }
 
-private fun showRestartCountdownToast(context: Context, seconds: Int) {
-    val countDownTimer = object : CountDownTimer((seconds * 1000).toLong(), 1000) {
-        override fun onTick(millisUntilFinished: Long) {
-            val secondsRemaining = millisUntilFinished / 1000
-            Toast.makeText(
-                context,
-                "Restarting app in $secondsRemaining seconds",
-                Toast.LENGTH_SHORT,
-            ).show()
-        }
+@Composable
+fun RestartCountdownSnackbar(
+    seconds: Int,
+    snackbarHostState: SnackbarHostState,
+) {
+    val scope = rememberCoroutineScope()
+    var secondsRemaining by remember { mutableStateOf(seconds) }
 
-        override fun onFinish() {
-            context.restartApplication()
+    LaunchedEffect(Unit) {
+        while (secondsRemaining > 0) {
+            snackbarHostState.showSnackbar(
+                message = "Restarting in $secondsRemaining seconds...",
+                withDismissAction = false,
+                duration = SnackbarDuration.Short,
+            )
+            delay(1000)
+            secondsRemaining--
         }
     }
-    countDownTimer.start()
 }
 
-private fun Context.restartApplication() {
-    val packageManager: PackageManager = this.packageManager
-    val intent: Intent = packageManager.getLaunchIntentForPackage(this.packageName)!!
-    val componentName: ComponentName = intent.component!!
-    val restartIntent: Intent = Intent.makeRestartActivityTask(componentName)
-    this.startActivity(restartIntent)
-    Runtime.getRuntime().exit(0)
-}
+// private fun Context.restartApplication() {
+//    val packageManager: PackageManager = this.packageManager
+//    val intent: Intent = packageManager.getLaunchIntentForPackage(this.packageName)!!
+//    val componentName: ComponentName = intent.component!!
+//    val restartIntent: Intent = Intent.makeRestartActivityTask(componentName)
+//    this.startActivity(restartIntent)
+//    Runtime.getRuntime().exit(0)
+// }
 
 @Composable
-@Preview(showSystemUi = true, showBackground = true)
+@DevicePreview
 private fun PreviewSettingsScreen() {
     SettingsScreen(
         onBackPressed = {},
         selectedLanguage = "",
         selectedTheme = "",
+        currentTheme = AppTheme.SYSTEM,
         baseURL = "",
         tenant = "",
         handleEndpointUpdate = { _, _ -> },

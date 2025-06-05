@@ -68,6 +68,7 @@ import com.mifos.core.domain.useCases.PasswordValidationUseCase
 import com.mifos.core.domain.useCases.RejectCheckerUseCase
 import com.mifos.core.domain.useCases.RemoveDocumentUseCase
 import com.mifos.core.domain.useCases.SaveIndividualCollectionSheetUseCase
+import com.mifos.core.domain.useCases.ServerConfigValidatorUseCase
 import com.mifos.core.domain.useCases.SubmitCollectionSheetUseCase
 import com.mifos.core.domain.useCases.SubmitProductiveSheetUseCase
 import com.mifos.core.domain.useCases.UpdateClientPinpointUseCase
@@ -130,6 +131,7 @@ val UseCaseModule = module {
     factoryOf(::GetReportFullParameterListUseCase)
     factoryOf(::GetReportParameterDetailsUseCase)
     factoryOf(::GetRunReportOfficesUseCase)
+    factoryOf(::ServerConfigValidatorUseCase)
     factoryOf(::GetRunReportProductUseCase)
     factoryOf(::GetRunReportWithQueryUseCase)
     factoryOf(::GetStaffInOfficeUseCase)
