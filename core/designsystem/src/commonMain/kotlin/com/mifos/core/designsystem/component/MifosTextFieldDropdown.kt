@@ -11,6 +11,7 @@
 
 package com.mifos.core.designsystem.component
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
@@ -18,6 +19,7 @@ import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -26,11 +28,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -41,47 +40,42 @@ fun MifosTextFieldDropdown(
     options: List<String>,
     modifier: Modifier = Modifier
         .fillMaxWidth()
-        .padding(start = 16.dp, end = 16.dp),
-    label: Int? = null,
-    labelString: String? = null,
+        .padding(horizontal = 16.dp),
+    label: String? = null,
     readOnly: Boolean = false,
 ) {
-    var isExpended by remember { mutableStateOf(false) }
+    var isExpanded by remember { mutableStateOf(false) }
 
     ExposedDropdownMenuBox(
-        expanded = isExpended,
-        onExpandedChange = { isExpended = it },
+        expanded = isExpanded,
+        onExpandedChange = { isExpanded = !isExpanded },
     ) {
         OutlinedTextField(
             value = value,
-            onValueChange = { onValueChanged(it) },
-            label = {
-                if (labelString != null) {
-                    Text(text = labelString)
-                }
-            },
-            modifier = modifier.menuAnchor(),
+            onValueChange = onValueChanged,
+            label = { label?.let { Text(it) } },
+            modifier = modifier
+                .menuAnchor()
+                .clickable(enabled = readOnly) { isExpanded = true },
             maxLines = 1,
-            textStyle = LocalDensity.current.run {
-                TextStyle(fontSize = 18.sp)
-            },
-            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
+            textStyle = MaterialTheme.typography.bodyLarge,
+            keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Next),
             trailingIcon = {
-                ExposedDropdownMenuDefaults.TrailingIcon(isExpended)
+                ExposedDropdownMenuDefaults.TrailingIcon(expanded = isExpanded)
             },
             readOnly = readOnly,
         )
 
         ExposedDropdownMenu(
-            expanded = isExpended,
-            onDismissRequest = { isExpended = false },
+            expanded = isExpanded,
+            onDismissRequest = { isExpanded = false },
         ) {
-            options.forEachIndexed { index, value ->
+            options.forEachIndexed { index, item ->
                 DropdownMenuItem(
-                    text = { Text(text = value) },
+                    text = { Text(text = item) },
                     onClick = {
-                        isExpended = false
-                        onOptionSelected(index, value)
+                        isExpanded = false
+                        onOptionSelected(index, item)
                     },
                 )
             }

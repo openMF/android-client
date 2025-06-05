@@ -7,13 +7,13 @@
  *
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
-package com.mifos.feature.checkerInboxTask.checkerInboxTasks
+package com.mifos.feature.checker.inbox.task.checkerInboxTasks
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.mifos.core.common.utils.Resource
+import co.touchlab.kermit.Logger
+import com.mifos.core.common.utils.DataState
 import com.mifos.core.domain.useCases.GetCheckerInboxBadgesUseCase
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
@@ -39,23 +39,25 @@ class CheckerInboxTasksViewModel(
         _isRefreshing.value = false
     }
 
-    fun loadCheckerTasksBadges() = viewModelScope.launch(Dispatchers.IO) {
+    fun loadCheckerTasksBadges() = viewModelScope.launch {
         getCheckerInboxBadgesUseCase().collect { result ->
 
             when (result) {
-                is Resource.Error -> {
+                is DataState.Error -> {
+                    Logger.e("CheckerInbox: ${result.exception.message}", result.exception)
+
                     _checkerInboxTasksUiState.value =
-                        CheckerInboxTasksUiState.Error(result.message.toString())
+                        CheckerInboxTasksUiState.Error(result.message)
                 }
 
-                is Resource.Loading -> {
+                is DataState.Loading -> {
                     _checkerInboxTasksUiState.value = CheckerInboxTasksUiState.Loading
                 }
 
-                is Resource.Success -> {
+                is DataState.Success -> {
                     _checkerInboxTasksUiState.value = CheckerInboxTasksUiState.Success(
-                        result.data?.first.toString(),
-                        result.data?.second.toString(),
+                        result.data.first.toString(),
+                        result.data.second.toString(),
                     )
                 }
             }

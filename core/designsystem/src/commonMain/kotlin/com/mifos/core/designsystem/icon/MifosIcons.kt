@@ -27,7 +27,6 @@ import androidx.compose.material.icons.filled.Apartment
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.ArrowDropUp
 import androidx.compose.material.icons.filled.AssignmentTurnedIn
-import androidx.compose.material.icons.filled.ChevronLeft
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.CloudDownload
 import androidx.compose.material.icons.filled.Edit
@@ -66,7 +65,6 @@ import androidx.compose.material.icons.outlined.Wallet
 import androidx.compose.material.icons.rounded.AccountCircle
 import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material.icons.rounded.AddLocation
-import androidx.compose.material.icons.rounded.ArrowBackIosNew
 import androidx.compose.material.icons.rounded.Bedtime
 import androidx.compose.material.icons.rounded.Business
 import androidx.compose.material.icons.rounded.Cancel
@@ -101,8 +99,6 @@ object MifosIcons {
     val Group = Icons.Outlined.Group
     val EventRepeat = Icons.Outlined.EventRepeat
     val Date = Icons.Outlined.DateRange
-    val ArrowBack1 = Icons.Rounded.ArrowBackIosNew
-
     val Link = Icons.Default.Link
     val Server = Icons.Default
     val AddLink = Icons.Default.AddLink
@@ -139,7 +135,6 @@ object MifosIcons {
     val Task = Icons.Rounded.Task
 
     // Recently added
-    val ArrowBack2 = Icons.Filled.ChevronLeft
     val Back = Icons.AutoMirrored.Outlined.ArrowBack
     val Home = Icons.Outlined.Home
     val HomeBoarder = Icons.Rounded.Home
