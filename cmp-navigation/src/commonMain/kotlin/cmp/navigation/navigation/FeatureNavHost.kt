@@ -29,6 +29,8 @@ import com.mifos.feature.activate.navigation.activateScreen
 import com.mifos.feature.activate.navigation.navigateToActivateScreen
 import com.mifos.feature.center.navigation.centerNavGraph
 import com.mifos.feature.note.navigation.noteNavGraph
+import com.mifos.feature.settings.navigation.navigateToSettingsScreen
+import com.mifos.feature.settings.navigation.settingsScreen
 
 const val WELCOME_ROUTE = "home_screen"
 
@@ -45,7 +47,7 @@ internal fun FeatureNavHost(
         navController = appState.navController,
         modifier = modifier,
     ) {
-        homeScreen(onClick = { appState.navController.navigateToActivateScreen(0, "") })
+        homeScreen(onClick = { appState.navController.navigateToSettingsScreen() })
 
         aboutNavGraph(onBackPressed = appState.navController::popBackStack)
 
@@ -62,6 +64,13 @@ internal fun FeatureNavHost(
             },
 
             )
+
+        settingsScreen(
+            navigateBack = appState.navController::popBackStack,
+            navigateToLoginScreen = {},
+            changePasscode = {},
+            languageChanged = {},
+        )
     }
 }
 
