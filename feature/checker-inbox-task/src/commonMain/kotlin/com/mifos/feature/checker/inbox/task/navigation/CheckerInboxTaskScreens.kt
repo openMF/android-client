@@ -7,7 +7,7 @@
  *
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
-package com.mifos.feature.checkerInboxTask.navigation
+package com.mifos.feature.checker.inbox.task.navigation
 
 sealed class CheckerInboxTaskScreens(val route: String) {
 

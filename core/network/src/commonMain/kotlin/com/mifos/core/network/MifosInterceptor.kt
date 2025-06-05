@@ -15,9 +15,6 @@ import io.ktor.client.plugins.HttpClientPlugin
 import io.ktor.client.request.HttpRequestPipeline
 import io.ktor.client.request.header
 import io.ktor.util.AttributeKey
-import io.ktor.util.encodeBase64
-import kotlinx.coroutines.flow.firstOrNull
-import kotlinx.coroutines.runBlocking
 
 class MifosInterceptor(
     private val repository: UserPreferencesRepository,
@@ -37,14 +34,10 @@ class MifosInterceptor(
                 context.header("Accept", "application/json")
                 context.header(HEADER_TENANT, tenant)
 
-                val user = plugin.repository.userData.firstOrNull()
-                val username = user?.username
-                val password = user?.password
-
-                if (!username.isNullOrEmpty() && !password.isNullOrEmpty()) {
-                    val raw = "$username:$password"
-                    val encoded = raw.encodeToByteArray().encodeBase64()
-                    context.header(HEADER_AUTH, "Basic $encoded")
+                plugin.repository.token?.let { token ->
+                    if (token.isNotEmpty()) {
+                        context.headers[HEADER_AUTH] = token
+                    }
                 }
             }
         }

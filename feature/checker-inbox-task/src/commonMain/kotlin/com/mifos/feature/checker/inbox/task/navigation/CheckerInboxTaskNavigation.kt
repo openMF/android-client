@@ -7,16 +7,16 @@
  *
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
-package com.mifos.feature.checkerInboxTask.navigation
+package com.mifos.feature.checker.inbox.task.navigation
 
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
-import com.mifos.feature.checkerInboxTask.checkerInbox.CheckerInboxScreen
-import com.mifos.feature.checkerInboxTask.checkerInboxTasks.CheckerInboxTasksScreen
+import com.mifos.feature.checker.inbox.task.checkerInbox.CheckerInboxScreen
+import com.mifos.feature.checker.inbox.task.checkerInboxTasks.CheckerInboxTasksScreen
 
-fun NavGraphBuilder.checkerInboxTaskGraph(
+fun NavGraphBuilder.checkerInboxTaskNavGraph(
     navController: NavController,
 ) {
     navigation(
@@ -43,6 +43,7 @@ fun NavGraphBuilder.checkerInboxTaskRoute(
         CheckerInboxTasksScreen(
             onBackPressed = onBackPressed,
             checkerInbox = checkerInbox,
+            onRefresh = checkerInbox,
         )
     }
 }

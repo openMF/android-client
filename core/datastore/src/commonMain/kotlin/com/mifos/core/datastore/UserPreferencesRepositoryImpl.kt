@@ -52,6 +52,8 @@ class UserPreferencesRepositoryImpl(
             }
         }
     }
+    override val token: String?
+        get() = preferenceManager.token
 
     override suspend fun updateTheme(theme: AppTheme): Result<Unit> {
         return try {
