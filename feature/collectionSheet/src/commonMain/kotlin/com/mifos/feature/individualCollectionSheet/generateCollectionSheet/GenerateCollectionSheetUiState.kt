@@ -9,9 +9,6 @@
  */
 package com.mifos.feature.individualCollectionSheet.generateCollectionSheet
 
-/**
- * Created by Aditya Gupta on 12/08/23.
- */
 sealed class GenerateCollectionSheetUiState {
 
     data object Loading : GenerateCollectionSheetUiState()

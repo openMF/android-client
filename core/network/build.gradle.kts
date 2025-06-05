@@ -41,7 +41,6 @@ kotlin{
             implementation(libs.ktor.client.auth)
             implementation(libs.ktor.serialization.kotlinx.json)
             implementation(libs.ktorfit.lib)
-            implementation(libs.ktorfit.converters.flow)
             implementation(libs.squareup.okio)
             api(projects.core.model)
             api(projects.core.datastore)

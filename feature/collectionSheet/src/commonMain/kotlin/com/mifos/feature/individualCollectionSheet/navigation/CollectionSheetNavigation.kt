@@ -119,10 +119,6 @@ fun NavController.navigateToPaymentDetailsScreen(
     paymentTypeOptions: List<PaymentTypeOptions>,
     clientId: Int,
 ) {
-    val payloadInGsonString = Json.encodeToString(payload)
-    val paymentTypeOptionNameInGsonString = Json.encodeToString(paymentTypeOptionsName)
-    val loansAndClientNameInGsonString = Json.encodeToString(loansAndClientName)
-    val paymentTypeOptionsInGsonString = Json.encodeToString(paymentTypeOptions)
 
     val args = PaymentDetailsArgs(
         position = position,

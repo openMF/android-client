@@ -30,7 +30,7 @@ import org.koin.dsl.module
 
 val NetworkModule = module {
 
-    single<HttpClient>(MifosClient) {
+    single<HttpClient>(KtorClient) {
         val preferencesRepository = get<UserPreferencesRepository>()
 
         KtorHttpClient.config {
@@ -43,7 +43,7 @@ val NetworkModule = module {
 
     single<KtorfitClient>(MifosClient) {
         KtorfitClient.builder()
-            .httpClient(get(KtorBaseClient))
+            .httpClient(get(KtorClient))
             .baseURL(BaseUrl().url)
             .build()
     }
@@ -55,7 +55,7 @@ val NetworkModule = module {
     single<Ktorfit> {
         Ktorfit.Builder()
             .baseUrl(BaseUrl().url)
-            .httpClient(get<HttpClient>(MifosClient))
+            .httpClient(get<HttpClient>(KtorClient))
             .converterFactories(FlowConverterFactory())
             .build()
     }

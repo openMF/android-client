@@ -19,6 +19,7 @@ import androidclient.feature.collectionsheet.generated.resources.feature_collect
 import androidclient.feature.collectionsheet.generated.resources.feature_collection_sheet_total_charges
 import androidclient.feature.collectionsheet.generated.resources.feature_collection_sheet_total_due
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Column
@@ -64,6 +65,7 @@ import com.mifos.room.entities.collectionsheet.ClientCollectionSheet
 import com.mifos.room.entities.collectionsheet.IndividualCollectionSheet
 import com.mifos.room.entities.noncore.BulkRepaymentTransactions
 import kotlinx.coroutines.launch
+import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -228,13 +230,13 @@ private fun IndividualCollectionSheetItem(
                 ),
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            AsyncImage(
+            Image(
                 modifier = Modifier
                     .size(40.dp)
                     .clip(CircleShape)
                     .border(width = 1.dp, LightGray, shape = CircleShape),
-                model = Res.drawable.feature_collection_sheet_ic_dp_placeholder,
-                contentDescription = null,
+                painter = painterResource(Res.drawable.feature_collection_sheet_ic_dp_placeholder),
+                contentDescription = "collection sheet placeholder",
             )
             Column(
                 modifier = Modifier
