@@ -92,7 +92,7 @@ internal fun SearchBox(
                     },
                     leadingIcon = {
                         Icon(
-                            imageVector = MifosIcons.Search,
+                            imageVector = MifosIcons.Filter,
                             contentDescription = "Search Icon",
                         )
                     },

@@ -97,8 +97,7 @@ internal fun SearchScreenContent(
     ) {
         Column(
             modifier = Modifier
-                .fillMaxSize()
-                .padding(it),
+                .fillMaxSize(),
             horizontalAlignment = Alignment.Start,
         ) {
             SearchBox(
@@ -117,7 +116,6 @@ internal fun SearchScreenContent(
     }
 }
 
-// Previews
 @DevicePreview
 @Composable
 private fun SearchScreenContentEmptyStateAndLoadingPreview() {

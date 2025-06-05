@@ -46,39 +46,38 @@ internal fun FilterDialog(
         onConfirm = {},
         onDismiss = onDismiss,
         modifier = modifier,
-        message = null,
-    )
-
-    Column(
-        modifier = modifier
-            .verticalScroll(rememberScrollState())
-            .fillMaxWidth(),
-    ) {
-        HorizontalDivider()
-        FilterOption(
-            text = "All",
-            selected = selected == null,
-            onSelected = {
-                onEvent(SearchScreenEvent.UpdateSelectedFilter(null))
-                onDismiss()
-            },
-        )
-        HorizontalDivider()
-
-        FilterOption.values.forEachIndexed { index, option ->
-            FilterOption(
-                text = option.label,
-                selected = option == selected,
-                onSelected = {
-                    onEvent(SearchScreenEvent.UpdateSelectedFilter(option))
-                    onDismiss()
-                },
-            )
-            if (index != FilterOption.values.size - 1) {
+        message = {
+            Column(
+                modifier = modifier
+                    .verticalScroll(rememberScrollState())
+                    .fillMaxWidth(),
+            ) {
                 HorizontalDivider()
+                FilterOption(
+                    text = "All",
+                    selected = selected == null,
+                    onSelected = {
+                        onEvent(SearchScreenEvent.UpdateSelectedFilter(null))
+                        onDismiss()
+                    },
+                )
+                HorizontalDivider()
+                FilterOption.values.forEachIndexed { index, option ->
+                    FilterOption(
+                        text = option.label,
+                        selected = option == selected,
+                        onSelected = {
+                            onEvent(SearchScreenEvent.UpdateSelectedFilter(option))
+                            onDismiss()
+                        },
+                    )
+                    if (index != FilterOption.values.size - 1) {
+                        HorizontalDivider()
+                    }
+                }
             }
-        }
-    }
+        },
+    )
 }
 
 @Composable
