@@ -15,6 +15,7 @@ import com.mifos.core.datastore.di.PreferencesModule
 import com.mifos.core.domain.di.UseCaseModule
 import com.mifos.core.network.di.DataManagerModule
 import com.mifos.core.network.di.NetworkModule
+import com.mifos.feature.activate.di.ActivateModule
 import com.mifos.feature.auth.di.AuthModule
 import com.mifos.feature.checker.inbox.task.di.CheckerInboxTaskModule
 import com.mifos.feature.note.di.NoteModule
@@ -49,7 +50,7 @@ object KoinModules {
     private val featureModules = module {
         includes(
 //            AboutModule,
-//            ActivateModule,
+            ActivateModule,
             AuthModule,
 //            CenterModule,
             CheckerInboxTaskModule,
