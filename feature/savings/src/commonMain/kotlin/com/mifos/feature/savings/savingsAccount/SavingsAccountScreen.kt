@@ -331,7 +331,7 @@ private fun SavingsAccountContent(
                     onSavingsProductSelected.invoke(it)
                 }
             },
-            labelString = stringResource(Res.string.feature_savings_product),
+            label = stringResource(Res.string.feature_savings_product),
             options = productSavings.map { it.name.toString() },
             readOnly = true,
         )
@@ -349,7 +349,7 @@ private fun SavingsAccountContent(
                     fieldOfficerId = it
                 }
             },
-            labelString = stringResource(Res.string.feature_savings_field_officer),
+            label = stringResource(Res.string.feature_savings_field_officer),
             options = fieldOfficerOptions.map { it.displayName.toString() },
             readOnly = true,
         )

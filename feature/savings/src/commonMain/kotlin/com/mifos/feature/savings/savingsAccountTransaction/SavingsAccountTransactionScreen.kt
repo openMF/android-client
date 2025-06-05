@@ -83,7 +83,6 @@ import com.mifos.core.ui.components.MifosAlertDialog
 import com.mifos.room.entities.accounts.savings.SavingsAccountTransactionRequestEntity
 import com.mifos.room.entities.templates.savings.SavingsAccountTransactionTemplateEntity
 import kotlinx.datetime.Clock
-import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
@@ -427,7 +426,7 @@ private fun SavingsAccountTransactionContent(
                 paymentType = value
                 paymentTypeId = savingsAccountTransactionTemplate.paymentTypeOptions[index].id
             },
-            labelString = stringResource(Res.string.feature_savings_payment_type),
+            label = stringResource(Res.string.feature_savings_payment_type),
             options = savingsAccountTransactionTemplate.paymentTypeOptions.map { it.name },
             readOnly = true,
         )

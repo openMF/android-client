@@ -40,9 +40,8 @@ fun MifosTextFieldDropdown(
     options: List<String>,
     modifier: Modifier = Modifier
         .fillMaxWidth()
-        .padding(start = 16.dp, end = 16.dp),
-    labelString: String? = null,
         .padding(horizontal = 16.dp),
+    label: String? = null,
     readOnly: Boolean = false,
 ) {
     var isExpanded by remember { mutableStateOf(false) }
