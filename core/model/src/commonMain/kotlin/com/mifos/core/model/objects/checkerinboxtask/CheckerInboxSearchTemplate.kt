@@ -9,11 +9,10 @@
  */
 package com.mifos.core.model.objects.checkerinboxtask
 
-import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
 data class CheckerInboxSearchTemplate(
-    @SerialName("actionNames") var actionNames: List<String>,
-    @SerialName("entityNames") var entityNames: List<String>,
+    val actionNames: List<String> = emptyList(),
+    val entityNames: List<String> = emptyList(),
 )

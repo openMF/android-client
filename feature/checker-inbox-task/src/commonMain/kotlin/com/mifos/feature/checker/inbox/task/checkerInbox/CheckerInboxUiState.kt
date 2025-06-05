@@ -7,17 +7,18 @@
  *
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
-package com.mifos.feature.checkerInboxTask.checkerInbox
+package com.mifos.feature.checker.inbox.task.checkerInbox
 
 import com.mifos.core.model.objects.checkerinboxtask.CheckerTask
+import org.jetbrains.compose.resources.StringResource
 
 sealed class CheckerInboxUiState {
 
     data object Loading : CheckerInboxUiState()
 
-    data class Error(val message: Int) : CheckerInboxUiState()
+    data class Error(val message: StringResource) : CheckerInboxUiState()
 
     data class CheckerTasksList(val checkerTasks: List<CheckerTask>) : CheckerInboxUiState()
 
-    data class SuccessResponse(val message: Int) : CheckerInboxUiState()
+    data class SuccessResponse(val message: StringResource) : CheckerInboxUiState()
 }
