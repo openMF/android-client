@@ -25,9 +25,11 @@ import androidx.navigation.compose.composable
 import cmp.navigation.AppState
 import com.mifos.feature.about.navigation.aboutNavGraph
 import com.mifos.feature.activate.navigation.activateScreen
-import com.mifos.feature.activate.navigation.navigateToActivateScreen
+import com.mifos.feature.checker.inbox.task.navigation.checkerInboxTaskNavGraph
 import com.mifos.feature.note.navigation.noteNavGraph
 import com.mifos.feature.savings.navigation.savingsNavGraph
+import com.mifos.feature.settings.navigation.navigateToSettingsScreen
+import com.mifos.feature.settings.navigation.settingsScreen
 
 const val WELCOME_ROUTE = "home_screen"
 
@@ -52,11 +54,20 @@ internal fun FeatureNavHost(
 
         homeScreen(onClick = { appState.navController.navigateToActivateScreen(0, "") })
 
+        checkerInboxTaskNavGraph(appState.navController)
+
         aboutNavGraph(onBackPressed = appState.navController::popBackStack)
 
         noteNavGraph(onBackPressed = appState.navController::popBackStack)
 
         activateScreen(onBackPressed = appState.navController::popBackStack)
+
+        settingsScreen(
+            navigateBack = appState.navController::popBackStack,
+            navigateToLoginScreen = {},
+            changePasscode = {},
+            languageChanged = {},
+        )
     }
 }
 

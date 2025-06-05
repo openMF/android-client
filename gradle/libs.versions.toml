@@ -146,9 +146,9 @@ kotlinxSerializationJson = "1.7.3"
 ksp = "2.1.0-1.0.29"
 
 # Ktor & Ktorfit
-ktorVersion = "3.0.3"
-ktorfit = "2.2.0"
-ktorfitKsp = "2.2.0-1.0.29"
+ktorVersion = "3.1.3"
+ktorfit = "2.5.2"
+ktorfitKsp = "2.5.1"
 
 # Koin CMP Dependencies
 koin = "4.0.1-RC1"
@@ -167,6 +167,7 @@ okioVersion = "3.9.1"
 kermit = "2.0.4"
 fileKit = "0.8.7"
 wire = "5.0.0"
+compose_ui = "1.8.0-alpha03"
 
 # Jetbrains CMP
 windowsSizeClass = "0.5.0"
@@ -536,6 +537,7 @@ constraint-layout = { group = "tech.annexflow.compose", name="constraintlayout-c
 filekit-core = { group = "io.github.vinceglb", name = "filekit-core", version.ref = "fileKit" }
 filekit-compose = { group = "io.github.vinceglb", name = "filekit-compose", version.ref = "fileKit" }
 qrose = { group = "io.github.alexzhirkevich", name="qrose", version.ref = "qroseVersion" }
+ui-backhandler = { group = "org.jetbrains.compose.ui", name = "ui-backhandler", version.ref = "compose_ui" }
 
 kermit-logging = { group = "co.touchlab", name = "kermit", version.ref = "kermit" }
 kermit-simple = { group = "co.touchlab", name = "kermit-simple", version.ref = "kermit" }

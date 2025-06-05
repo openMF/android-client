@@ -13,6 +13,7 @@ plugins {
     alias(libs.plugins.mifos.android.library.jacoco)
     alias(libs.plugins.secrets)
     alias(libs.plugins.kotlin.serialization)
+    alias(libs.plugins.kotlin.parcelize)
 }
 
 android {
