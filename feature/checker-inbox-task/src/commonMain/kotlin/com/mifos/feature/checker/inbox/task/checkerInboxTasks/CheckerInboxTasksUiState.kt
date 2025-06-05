@@ -7,7 +7,7 @@
  *
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
-package com.mifos.feature.checkerInboxTask.checkerInboxTasks
+package com.mifos.feature.checker.inbox.task.checkerInboxTasks
 
 /**
  * Created by Aditya Gupta on 21/03/24.

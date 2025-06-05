@@ -26,6 +26,7 @@ import androidx.navigation.compose.composable
 import cmp.navigation.AppState
 import com.mifos.feature.about.navigation.aboutNavGraph
 import com.mifos.feature.activate.navigation.activateScreen
+import com.mifos.feature.checker.inbox.task.navigation.checkerInboxTaskNavGraph
 import com.mifos.feature.note.navigation.noteNavGraph
 import com.mifos.feature.search.navigation.searchNavGraph
 import com.mifos.feature.settings.navigation.navigateToSettingsScreen
@@ -46,18 +47,6 @@ internal fun FeatureNavHost(
         modifier = modifier,
     ) {
         homeScreen(onClick = { appState.navController.navigateToSettingsScreen() })
-
-        searchNavGraph(
-            paddingValues = PaddingValues(),
-            onCreateClient = { println("Create Client") },
-            onCreateCenter = { println("Create Center") },
-            onCreateGroup = { println("Create Group") },
-            onClient = { id -> println("Client clicked: $id") },
-            onCenter = { id -> println("Center clicked: $id") },
-            onGroup = { id -> println("Group clicked: $id") },
-            onLoan = { id -> println("Loan clicked: $id") },
-            onSavings = { id -> println("Savings clicked: $id") },
-        )
 
         aboutNavGraph(onBackPressed = appState.navController::popBackStack)
 
