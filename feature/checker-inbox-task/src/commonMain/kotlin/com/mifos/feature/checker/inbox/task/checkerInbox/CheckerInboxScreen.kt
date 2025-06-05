@@ -13,15 +13,25 @@
     ExperimentalFoundationApi::class,
 )
 
-package com.mifos.feature.checkerInboxTask.checkerInbox
+package com.mifos.feature.checker.inbox.task.checkerInbox
 
-import android.widget.Toast
-import androidx.activity.compose.BackHandler
+import androidclient.feature.checker_inbox_task.generated.resources.Res
+import androidclient.feature.checker_inbox_task.generated.resources.feature_checker_inbox_task_are_you_sure_you_want_to_approve_this_task
+import androidclient.feature.checker_inbox_task.generated.resources.feature_checker_inbox_task_are_you_sure_you_want_to_delete_this_task
+import androidclient.feature.checker_inbox_task.generated.resources.feature_checker_inbox_task_are_you_sure_you_want_to_reject_this_task
+import androidclient.feature.checker_inbox_task.generated.resources.feature_checker_inbox_task_checker_inbox
+import androidclient.feature.checker_inbox_task.generated.resources.feature_checker_inbox_task_client_Approval
+import androidclient.feature.checker_inbox_task.generated.resources.feature_checker_inbox_task_create_by
+import androidclient.feature.checker_inbox_task.generated.resources.feature_checker_inbox_task_failed_to_Load_Checker_Inbox
+import androidclient.feature.checker_inbox_task.generated.resources.feature_checker_inbox_task_no
+import androidclient.feature.checker_inbox_task.generated.resources.feature_checker_inbox_task_search_by_user
+import androidclient.feature.checker_inbox_task.generated.resources.feature_checker_inbox_task_yes
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -36,14 +46,12 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.State
@@ -53,43 +61,38 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.backhandler.BackHandler
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Color.Companion.Black
-import androidx.compose.ui.graphics.Color.Companion.LightGray
-import androidx.compose.ui.graphics.Color.Companion.White
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontStyle
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.tooling.preview.PreviewParameter
-import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosDialogBox
+import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.model.objects.checkerinboxtask.CheckerTask
 import com.mifos.core.ui.components.SelectionModeTopAppBar
-import com.mifos.feature.checkerInboxTask.checkerInboxDialog.CheckerInboxTasksFilterDialog
-import com.mifos.feature.checker_inbox_task.R
-import org.koin.androidx.compose.koinViewModel
-import java.sql.Timestamp
+import com.mifos.feature.checker.inbox.task.checkerInboxDialog.CheckerInboxTasksFilterDialog
+import kotlinx.coroutines.launch
+import kotlinx.datetime.Instant
+import org.jetbrains.compose.resources.stringResource
+import org.jetbrains.compose.ui.tooling.preview.Preview
+import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
+import org.jetbrains.compose.ui.tooling.preview.PreviewParameterProvider
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 internal fun CheckerInboxScreen(
     onBackPressed: () -> Unit,
     viewModel: CheckerInboxViewModel = koinViewModel(),
 ) {
-    val context = LocalContext.current
     val state by viewModel.checkerInboxUiState.collectAsStateWithLifecycle()
     var isDialogBoxActive by rememberSaveable { mutableStateOf(false) }
     var searchQuery by rememberSaveable { mutableStateOf("") }
@@ -98,11 +101,14 @@ internal fun CheckerInboxScreen(
     var isFiltered by rememberSaveable { mutableStateOf(false) }
     var isSearching by rememberSaveable { mutableStateOf(false) }
 
-    var fromDate by rememberSaveable { mutableStateOf<Timestamp?>(null) }
-    var toDate by rememberSaveable { mutableStateOf<Timestamp?>(null) }
+    var fromDate by rememberSaveable { mutableStateOf<Instant?>(null) }
+    var toDate by rememberSaveable { mutableStateOf<Instant?>(null) }
     var action: String? by rememberSaveable { mutableStateOf(null) }
     var entity: String? by rememberSaveable { mutableStateOf(null) }
     var resourceId: String? by rememberSaveable { mutableStateOf(null) }
+
+    val scope = rememberCoroutineScope()
+    val snackbarHostState = remember { SnackbarHostState() }
 
     LaunchedEffect(key1 = true) {
         viewModel.loadCheckerTasks()
@@ -134,7 +140,9 @@ internal fun CheckerInboxScreen(
                         checkerList,
                     )
                 } catch (e: Exception) {
-                    Toast.makeText(context, e.message, Toast.LENGTH_SHORT).show()
+                    scope.launch {
+                        snackbarHostState.showSnackbar(e.message ?: "Unknown error")
+                    }
                 }
                 isDialogBoxActive = false
             },
@@ -195,6 +203,7 @@ internal fun CheckerInboxScreen(
     )
 }
 
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 private fun CheckerInboxScreen(
     state: CheckerInboxUiState,
@@ -228,9 +237,11 @@ private fun CheckerInboxScreen(
         isInSelectionMode = false
         selectedItemsState.clear()
     }
+
     BackHandler(enabled = isInSelectionMode) {
         resetSelectionMode()
     }
+
     LaunchedEffect(
         key1 = isInSelectionMode,
         key2 = selectedItemsState.size(),
@@ -243,40 +254,40 @@ private fun CheckerInboxScreen(
     MifosDialogBox(
         showDialogState = showApproveDialog,
         onDismiss = { showApproveDialog = false },
-        title = stringResource(R.string.feature_checker_inbox_task_are_you_sure_you_want_to_approve_this_task),
-        confirmButtonText = stringResource(R.string.feature_checker_inbox_task_yes),
+        title = stringResource(Res.string.feature_checker_inbox_task_are_you_sure_you_want_to_approve_this_task),
+        confirmButtonText = stringResource(Res.string.feature_checker_inbox_task_yes),
         onConfirm = {
             onApprove(approveId)
             showApproveDialog = false
         },
-        dismissButtonText = stringResource(R.string.feature_checker_inbox_task_no),
+        dismissButtonText = stringResource(Res.string.feature_checker_inbox_task_no),
     )
 
     MifosDialogBox(
         showDialogState = showRejectDialog,
         onDismiss = { showRejectDialog = false },
-        title = stringResource(R.string.feature_checker_inbox_task_are_you_sure_you_want_to_reject_this_task),
-        confirmButtonText = stringResource(R.string.feature_checker_inbox_task_yes),
+        title = stringResource(Res.string.feature_checker_inbox_task_are_you_sure_you_want_to_reject_this_task),
+        confirmButtonText = stringResource(Res.string.feature_checker_inbox_task_yes),
         onConfirm = {
             onReject(rejectId)
             showRejectDialog = false
         },
-        dismissButtonText = stringResource(R.string.feature_checker_inbox_task_no),
+        dismissButtonText = stringResource(Res.string.feature_checker_inbox_task_no),
     )
 
     MifosDialogBox(
         showDialogState = showDeleteDialog,
         onDismiss = { showDeleteDialog = false },
-        title = stringResource(R.string.feature_checker_inbox_task_are_you_sure_you_want_to_delete_this_task),
-        confirmButtonText = stringResource(R.string.feature_checker_inbox_task_yes),
+        title = stringResource(Res.string.feature_checker_inbox_task_are_you_sure_you_want_to_delete_this_task),
+        confirmButtonText = stringResource(Res.string.feature_checker_inbox_task_yes),
         onConfirm = {
             onDelete(deleteId)
             showDeleteDialog = false
         },
-        dismissButtonText = stringResource(R.string.feature_checker_inbox_task_no),
+        dismissButtonText = stringResource(Res.string.feature_checker_inbox_task_no),
     )
 
-    Scaffold(
+    MifosScaffold(
         topBar = {
             if (isInSelectionMode) {
                 SelectionModeTopAppBar(
@@ -289,7 +300,6 @@ private fun CheckerInboxScreen(
                         }) {
                             Icon(
                                 imageVector = MifosIcons.Check,
-                                tint = Color.Green,
                                 contentDescription = null,
                             )
                         }
@@ -299,7 +309,6 @@ private fun CheckerInboxScreen(
                         }) {
                             Icon(
                                 imageVector = MifosIcons.Close,
-                                tint = Color.Yellow,
                                 contentDescription = null,
                             )
                         }
@@ -309,7 +318,6 @@ private fun CheckerInboxScreen(
                         }) {
                             Icon(
                                 imageVector = MifosIcons.Delete,
-                                tint = Color.Red,
                                 contentDescription = null,
                             )
                         }
@@ -317,7 +325,6 @@ private fun CheckerInboxScreen(
                 )
             } else {
                 TopAppBar(
-                    colors = TopAppBarDefaults.mediumTopAppBarColors(containerColor = White),
                     navigationIcon = {
                         IconButton(
                             onClick = { onBackPressed() },
@@ -325,34 +332,24 @@ private fun CheckerInboxScreen(
                             Icon(
                                 imageVector = MifosIcons.ArrowBack,
                                 contentDescription = null,
-                                tint = Black,
                             )
                         }
                     },
                     title = {
                         Text(
-                            text = stringResource(id = R.string.feature_checker_inbox_task_checker_inbox),
-                            style = TextStyle(
-                                fontSize = 24.sp,
-                                fontWeight = FontWeight.Medium,
-                                fontStyle = FontStyle.Normal,
-                            ),
-                            color = Black,
-                            textAlign = TextAlign.Start,
+                            text = stringResource(Res.string.feature_checker_inbox_task_checker_inbox),
                         )
                     },
                     actions = { },
                 )
             }
         },
-        snackbarHost = { SnackbarHost(snackbarHostState) },
-        contentColor = Color.White,
+        snackbarHostState = snackbarHostState,
     ) { paddingValues ->
         Column(modifier = Modifier.padding(paddingValues)) {
             ElevatedCard(
                 modifier = Modifier.padding(8.dp),
                 elevation = CardDefaults.elevatedCardElevation(4.dp),
-                colors = CardDefaults.elevatedCardColors(White),
             ) {
                 Row(
                     modifier = Modifier.padding(4.dp),
@@ -373,12 +370,10 @@ private fun CheckerInboxScreen(
                             searchInbox = it
                             search.invoke(it)
                         },
-                        placeholder = { Text(stringResource(id = R.string.feature_checker_inbox_task_search_by_user)) },
-                        colors = TextFieldDefaults.colors(
-                            focusedContainerColor = White,
-                            unfocusedContainerColor = White,
-                            focusedIndicatorColor = Color.White,
-                            unfocusedIndicatorColor = Color.White,
+                        placeholder = { Text(stringResource(Res.string.feature_checker_inbox_task_search_by_user)) },
+                        colors = TextFieldDefaults.colors().copy(
+                            focusedContainerColor = Color.Transparent,
+                            unfocusedContainerColor = Color.Transparent,
                         ),
                     )
                     IconButton(
@@ -398,6 +393,8 @@ private fun CheckerInboxScreen(
                     fetchedList = state.checkerTasks
                     setList.invoke(fetchedList)
                     CheckerInboxContent(
+                        isInSelectionMode = isInSelectionMode,
+                        selectedItemsState = selectedItemsState,
                         checkerTaskList = if (isFiltered || isSearching) filteredList else fetchedList,
                         onApprove = {
                             approveId = it
@@ -411,17 +408,14 @@ private fun CheckerInboxScreen(
                             deleteId = it
                             showDeleteDialog = true
                         },
-                        isInSelectionMode = isInSelectionMode,
-                        selectedItemsState = selectedItemsState,
-                        selectedMode = {
-                            isInSelectionMode = true
-                        },
-                    )
+                    ) {
+                        isInSelectionMode = true
+                    }
                 }
 
                 is CheckerInboxUiState.Error -> {
                     MifosSweetError(
-                        message = stringResource(id = R.string.feature_checker_inbox_task_failed_to_Load_Check_Inbox),
+                        message = stringResource(Res.string.feature_checker_inbox_task_failed_to_Load_Checker_Inbox),
                     ) {
                         onRetry()
                     }
@@ -444,16 +438,24 @@ private fun CheckerInboxScreen(
 
 @Composable
 private fun CheckerInboxContent(
+    isInSelectionMode: Boolean,
+    selectedItemsState: SelectedItemsState,
     checkerTaskList: List<CheckerTask>,
     onApprove: (Int) -> Unit,
     onReject: (Int) -> Unit,
     onDelete: (Int) -> Unit,
-    isInSelectionMode: Boolean,
-    selectedItemsState: SelectedItemsState,
+    modifier: Modifier = Modifier,
     selectedMode: () -> Unit,
 ) {
-    LazyColumn {
-        items(checkerTaskList.size) { index ->
+    LazyColumn(
+        modifier = modifier,
+        contentPadding = PaddingValues(12.dp),
+        verticalArrangement = Arrangement.spacedBy(12.dp),
+    ) {
+        items(
+            count = checkerTaskList.size,
+            key = { index -> checkerTaskList[index].id },
+        ) { index ->
             CheckerInboxItem(
                 checkerTask = checkerTaskList[index],
                 onApprove = onApprove,
@@ -502,10 +504,13 @@ private fun CheckerInboxItem(
     selectedItemsState: SelectedItemsState,
     selectedMode: () -> Unit,
 ) {
+    val selectedColor = MaterialTheme.colorScheme.primaryContainer
+    val unselectedColor = MaterialTheme.colorScheme.surface
+
     val selectedItems by selectedItemsState.selectedItems
     val isSelected = selectedItemsState.contains(checkerTask.id)
 
-    var cardColor by remember { mutableStateOf(White) }
+    var cardColor by remember { mutableStateOf(unselectedColor) }
 
     var expendCheckerTask by remember { mutableStateOf(false) }
 
@@ -517,10 +522,10 @@ private fun CheckerInboxItem(
                     if (isInSelectionMode) {
                         cardColor = if (isSelected) {
                             selectedItemsState.remove(checkerTask.id)
-                            White
+                            unselectedColor
                         } else {
                             selectedItemsState.add(checkerTask.id)
-                            LightGray
+                            selectedColor
                         }
                     } else {
                         expendCheckerTask = expendCheckerTask.not()
@@ -530,22 +535,22 @@ private fun CheckerInboxItem(
                     if (isInSelectionMode) {
                         cardColor = if (isSelected) {
                             selectedItemsState.remove(checkerTask.id)
-                            White
+                            unselectedColor
                         } else {
                             selectedItemsState.add(checkerTask.id)
-                            LightGray
+                            selectedColor
                         }
                     } else {
                         selectedMode()
                         selectedItemsState.add(checkerTask.id)
-                        cardColor = LightGray
+                        cardColor = selectedColor
                     }
                 },
             ),
         colors = CardDefaults.cardColors(
             containerColor = if (selectedItems.isEmpty()) {
-                cardColor = White
-                White
+                cardColor = unselectedColor
+                unselectedColor
             } else {
                 cardColor
             },
@@ -555,31 +560,17 @@ private fun CheckerInboxItem(
             modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            Card(
-                modifier = Modifier
-                    .width(8.dp)
-                    .height(60.dp),
-                colors = CardDefaults.cardColors(Color.Yellow),
-            ) {
-            }
             Column(
                 modifier = Modifier.padding(16.dp),
             ) {
                 Text(
                     text = "# ${checkerTask.id} ${checkerTask.actionName} ${checkerTask.entityName}",
-                    style = TextStyle(
-                        fontSize = 18.sp,
-                        fontWeight = FontWeight.Medium,
-                        color = Black,
-                    ),
+                    style = MaterialTheme.typography.bodyLarge,
                 )
                 Spacer(modifier = Modifier.height(16.dp))
                 Text(
                     text = checkerTask.processingResult,
-                    style = TextStyle(
-                        fontSize = 14.sp,
-                        fontWeight = FontWeight.Normal,
-                    ),
+                    style = MaterialTheme.typography.bodyMedium,
                 )
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -587,27 +578,18 @@ private fun CheckerInboxItem(
                 ) {
                     Row {
                         Text(
-                            text = stringResource(id = R.string.feature_checker_inbox_task_create_by),
-                            style = TextStyle(
-                                fontSize = 14.sp,
-                                fontWeight = FontWeight.Normal,
-                            ),
+                            text = stringResource(Res.string.feature_checker_inbox_task_create_by),
+                            style = MaterialTheme.typography.bodyMedium,
                         )
                         Spacer(modifier = Modifier.width(8.dp))
                         Text(
                             text = checkerTask.maker,
-                            style = TextStyle(
-                                fontSize = 14.sp,
-                                fontWeight = FontWeight.Medium,
-                            ),
+                            style = MaterialTheme.typography.labelLarge,
                         )
                     }
                     Text(
                         text = checkerTask.getDate(),
-                        style = TextStyle(
-                            fontSize = 14.sp,
-                            fontWeight = FontWeight.Medium,
-                        ),
+                        style = MaterialTheme.typography.labelLarge,
                     )
                 }
             }
@@ -617,11 +599,7 @@ private fun CheckerInboxItem(
             Column(modifier = Modifier.padding(8.dp)) {
                 Text(
                     text = checkerTask.entityName,
-                    style = TextStyle(
-                        fontSize = 18.sp,
-                        fontWeight = FontWeight.Medium,
-                        color = Black,
-                    ),
+                    style = MaterialTheme.typography.labelLarge,
                 )
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -652,10 +630,7 @@ private fun CheckerInboxItem(
                 Text(
                     modifier = Modifier.fillMaxWidth(),
                     text = checkerTask.getDate(),
-                    style = TextStyle(
-                        fontSize = 14.sp,
-                        fontWeight = FontWeight.Medium,
-                    ),
+                    style = MaterialTheme.typography.labelLarge,
                     textAlign = TextAlign.Center,
                 )
             }
@@ -664,11 +639,10 @@ private fun CheckerInboxItem(
     }
 }
 
-@Suppress("UnusedParameter")
 private fun getFilteredList(
     searchQuery: String,
-    fromDate: Timestamp?,
-    toDate: Timestamp?,
+    fromDate: Instant?,
+    toDate: Instant?,
     action: String?,
     entity: String?,
     resourceId: String?,
@@ -689,22 +663,22 @@ private fun getFilteredList(
         return checkerList
     }
 
-    // TODO:: Fix this based on KMP implementation
-//    val aLL = "ALL"
-//    return checkerList.filter { checkerTask ->
-//        val isDateInRange = if (fromDate == null) {
-//            !checkerTask.getTimeStamp().after(toDate)
-//        } else {
-//            checkerTask.getTimeStamp().after(fromDate) && checkerTask.getTimeStamp().before(toDate)
-//        }
-//
-//        val isActionMatch = action == aLL || action.equals(checkerTask.actionName, true)
-//        val isEntityMatch = entity == aLL || entity.equals(checkerTask.entityName, true)
-//
-//        isDateInRange && isActionMatch && isEntityMatch
-//    }
+    val aLL = "ALL"
+    return checkerList.filter { checkerTask ->
+        val taskTimestamp = checkerTask.getTimeStamp()
 
-    return checkerList
+        val isDateInRange = when {
+            fromDate == null && toDate != null -> taskTimestamp <= toDate
+            fromDate != null && toDate != null -> taskTimestamp > fromDate && taskTimestamp < toDate
+            fromDate == null && toDate == null -> true
+            else -> false
+        }
+
+        val isActionMatch = action == aLL || action.equals(checkerTask.actionName, true)
+        val isEntityMatch = entity == aLL || entity.equals(checkerTask.entityName, true)
+
+        isDateInRange && isActionMatch && isEntityMatch
+    }
 }
 
 class CheckerInboxUiStateProvider : PreviewParameterProvider<CheckerInboxUiState> {
@@ -712,9 +686,9 @@ class CheckerInboxUiStateProvider : PreviewParameterProvider<CheckerInboxUiState
     override val values: Sequence<CheckerInboxUiState>
         get() = sequenceOf(
             CheckerInboxUiState.Loading,
-            CheckerInboxUiState.Error(R.string.feature_checker_inbox_task_failed_to_Load_Check_Inbox),
+            CheckerInboxUiState.Error(Res.string.feature_checker_inbox_task_failed_to_Load_Checker_Inbox),
             CheckerInboxUiState.CheckerTasksList(sampleCheckerTaskList),
-            CheckerInboxUiState.SuccessResponse(R.string.feature_checker_inbox_task_client_Approval),
+            CheckerInboxUiState.SuccessResponse(Res.string.feature_checker_inbox_task_client_Approval),
         )
 }
 
@@ -732,7 +706,7 @@ private fun CheckerInboxItemPreview() {
     )
 }
 
-@Preview(showBackground = true)
+@Preview
 @Composable
 private fun CheckerInboxContentPreview() {
     CheckerInboxContent(
@@ -746,7 +720,7 @@ private fun CheckerInboxContentPreview() {
     )
 }
 
-@Preview(showBackground = true)
+@Preview
 @Composable
 private fun CheckerInboxScreenPreview(
     @PreviewParameter(CheckerInboxUiStateProvider::class) state: CheckerInboxUiState,
