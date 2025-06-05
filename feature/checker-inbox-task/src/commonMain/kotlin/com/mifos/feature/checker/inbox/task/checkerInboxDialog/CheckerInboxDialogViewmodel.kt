@@ -7,18 +7,17 @@
  *
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
-package com.mifos.feature.checkerInboxTask.checkerInboxDialog
+package com.mifos.feature.checker.inbox.task.checkerInboxDialog
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import co.touchlab.kermit.Logger
+import com.mifos.core.common.utils.MFErrorParser
 import com.mifos.core.model.objects.checkerinboxtask.CheckerInboxSearchTemplate
 import com.mifos.core.network.datamanager.DataManagerCheckerInbox
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import rx.android.schedulers.AndroidSchedulers
-import rx.schedulers.Schedulers
 
 class CheckerInboxDialogViewmodel(
     private val dataManager: DataManagerCheckerInbox,
@@ -34,16 +33,12 @@ class CheckerInboxDialogViewmodel(
     fun loadSearchTemplate() {
         viewModelScope.launch {
             try {
-                dataManager.getCheckerInboxSearchTemplate()
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe({ response ->
-                        _searchTemplate.value = response
-                    }, { throwable ->
-                        Log.e("CheckerInboxViewModel", "Error loading search template", throwable)
-                    })
+                dataManager.getCheckerInboxSearchTemplate().collect { response ->
+                    _searchTemplate.value = response
+                }
             } catch (e: Exception) {
-                Log.e("CheckerInboxViewModel", "Error loading search template")
+                Logger.e("CheckerInboxViewModel", e) { "Error loading search template" }
+                MFErrorParser.errorMessage(e)
             }
         }
     }
