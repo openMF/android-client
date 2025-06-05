@@ -63,7 +63,7 @@ object KoinModules {
 //            PathTrackingModule,
 //            ReportModule,
 //            SavingsModule,
-           SearchModule,
+            SearchModule,
             SettingsModule,
 //            SplashModule,
         )
