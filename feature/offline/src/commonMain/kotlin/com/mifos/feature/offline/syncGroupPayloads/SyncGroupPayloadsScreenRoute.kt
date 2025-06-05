@@ -9,10 +9,17 @@
  */
 package com.mifos.feature.offline.syncGroupPayloads
 
-import android.Manifest
-import android.content.Context
 import android.util.Log
-import androidx.annotation.RequiresPermission
+import androidclient.feature.offline.generated.resources.Res
+import androidclient.feature.offline.generated.resources.feature_offline_activation_date
+import androidclient.feature.offline.generated.resources.feature_offline_active
+import androidclient.feature.offline.generated.resources.feature_offline_click_to_refresh
+import androidclient.feature.offline.generated.resources.feature_offline_external_id
+import androidclient.feature.offline.generated.resources.feature_offline_name
+import androidclient.feature.offline.generated.resources.feature_offline_office_id
+import androidclient.feature.offline.generated.resources.feature_offline_submit_date
+import androidclient.feature.offline.generated.resources.feature_offline_sync
+import androidclient.feature.offline.generated.resources.feature_offline_sync_groups
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -36,7 +43,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
@@ -46,9 +52,10 @@ import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosErrorContent
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.icon.MifosIcons
-import com.mifos.feature.offline.R
 import com.mifos.room.entities.group.GroupPayloadEntity
+import org.jetbrains.compose.resources.stringResource
 import org.koin.androidx.compose.koinViewModel
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 internal fun SyncGroupPayloadsScreenRoute(
@@ -92,19 +99,17 @@ internal fun SyncGroupPayloadsScreen(
     modifier: Modifier = Modifier,
 ) {
     val snackBarHostState = remember { SnackbarHostState() }
-    val context = LocalContext.current
     val pullRefreshState = rememberPullToRefreshState()
 
     MifosScaffold(
         modifier = modifier,
-        title = stringResource(id = R.string.feature_offline_sync_groups),
+        title = stringResource(Res.string.feature_offline_sync_groups),
         onBackPressed = onBackPressed,
         actions = {
             IconButton(
                 onClick = {
                     when (userStatus) {
                         false -> checkNetworkConnectionAndSync(
-                            context = context,
                             syncGroupPayloads = syncGroupPayloads,
                         )
 
@@ -114,7 +119,7 @@ internal fun SyncGroupPayloadsScreen(
             ) {
                 Icon(
                     MifosIcons.Sync,
-                    contentDescription = stringResource(id = R.string.feature_offline_sync),
+                    contentDescription = stringResource(Res.string.feature_offline_sync),
                 )
             }
         },
@@ -137,9 +142,9 @@ internal fun SyncGroupPayloadsScreen(
 
                     is SyncGroupPayloadsUiState.Error -> {
                         MifosErrorContent(
-                            message = stringResource(id = uiState.messageResId),
+                            message = stringResource(uiState.messageResId),
                             onRefresh = onRefresh,
-                            refreshButtonText = stringResource(id = R.string.feature_offline_click_to_refresh),
+                            refreshButtonText = stringResource(Res.string.feature_offline_click_to_refresh),
                         )
                     }
 
@@ -147,7 +152,7 @@ internal fun SyncGroupPayloadsScreen(
                         if (uiState.emptyState != null) {
                             MifosErrorContent(
                                 imageVector = ImageVector.vectorResource(id = uiState.emptyState.iconResId),
-                                message = stringResource(id = uiState.emptyState.messageResId),
+                                message = stringResource(uiState.emptyState.messageResId),
                                 isRefreshEnabled = false,
                             )
                         } else {
@@ -191,26 +196,26 @@ private fun GroupPayloadItem(
             }
 
             GroupPayloadField(
-                stringResource(id = R.string.feature_offline_name),
+                stringResource(Res.string.feature_offline_name),
                 payload.name ?: "",
             )
             GroupPayloadField(
-                stringResource(id = R.string.feature_offline_external_id),
+                stringResource(Res.string.feature_offline_external_id),
                 payload.externalId ?: "",
             )
             GroupPayloadField(
-                stringResource(id = R.string.feature_offline_office_id),
+                stringResource(Res.string.feature_offline_office_id),
                 payload.officeId.toString(),
             )
             GroupPayloadField(
-                stringResource(id = R.string.feature_offline_submit_date),
+                stringResource(Res.string.feature_offline_submit_date),
                 payload.submittedOnDate ?: "",
             )
             GroupPayloadField(
-                stringResource(id = R.string.feature_offline_activation_date),
+                stringResource(Res.string.feature_offline_activation_date),
                 payload.activationDate ?: "",
             )
-            GroupPayloadField(stringResource(id = R.string.feature_offline_active), status)
+            GroupPayloadField(stringResource(Res.string.feature_offline_active), status)
 
             if (payload.errorMessage != null) {
                 Text(
@@ -249,9 +254,8 @@ private fun GroupPayloadField(
     }
 }
 
-@RequiresPermission(Manifest.permission.ACCESS_NETWORK_STATE)
+// @RequiresPermission(Manifest.permission.ACCESS_NETWORK_STATE)
 private fun checkNetworkConnectionAndSync(
-    context: Context,
     syncGroupPayloads: () -> Unit,
 ) {
     Log.d("C", context.packageName)

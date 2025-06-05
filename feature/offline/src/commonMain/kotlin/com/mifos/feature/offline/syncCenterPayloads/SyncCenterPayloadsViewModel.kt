@@ -16,6 +16,7 @@ import com.mifos.core.data.repository.SyncCenterPayloadsRepository
 import com.mifos.core.datastore.UserPreferencesRepository
 import com.mifos.room.entities.center.CenterPayloadEntity
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.IO
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -28,6 +29,7 @@ import kotlinx.coroutines.launch
 /**
  * Created by Aditya Gupta on 16/08/23.
  */
+@Suppress("UNCHECKED_CAST")
 class SyncCenterPayloadsViewModel(
     private val prefManager: UserPreferencesRepository,
     private val repository: SyncCenterPayloadsRepository,
@@ -60,13 +62,13 @@ class SyncCenterPayloadsViewModel(
 
     fun loadDatabaseCenterPayload() {
         viewModelScope.launch(Dispatchers.IO) {
-            repository.allDatabaseCenterPayload()
+            repository.getAllDatabaseCenterPayload()
                 .catch {
                     _syncCenterPayloadsUiState.value =
                         SyncCenterPayloadsUiState.ShowError(it.message.toString())
                 }.collect { mCenterPayloads ->
                     _syncCenterPayloadsUiState.value =
-                        SyncCenterPayloadsUiState.ShowCenters(mCenterPayloads)
+                        SyncCenterPayloadsUiState.ShowCenters(mCenterPayloads as List<CenterPayloadEntity>)
                 }
         }
     }
@@ -100,7 +102,7 @@ class SyncCenterPayloadsViewModel(
                         SyncCenterPayloadsUiState.ShowError(it.message.toString())
                 }.collect {
                     centerSyncIndex = 0
-                    mCenterPayloads = it.toMutableList()
+                    mCenterPayloads = it as MutableList<CenterPayloadEntity>
                     _syncCenterPayloadsUiState.value =
                         SyncCenterPayloadsUiState.ShowCenters(mCenterPayloads)
                     if (mCenterPayloads.isNotEmpty()) {

@@ -9,11 +9,14 @@
  */
 package com.mifos.feature.offline.syncGroupPayloads
 
+import androidclient.feature.offline.generated.resources.Res
+import androidclient.feature.offline.generated.resources.feature_offline_error_failed_to_load_groupPayload
+import androidclient.feature.offline.generated.resources.feature_offline_error_failed_to_update_list
+import androidclient.feature.offline.generated.resources.feature_offline_error_group_sync_failed
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mifos.core.data.repository.SyncGroupPayloadsRepository
 import com.mifos.core.datastore.UserPreferencesRepository
-import com.mifos.feature.offline.R
 import com.mifos.room.entities.group.GroupPayloadEntity
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -70,7 +73,7 @@ class SyncGroupPayloadsViewModel(
             repository.allDatabaseGroupPayload()
                 .catch {
                     _syncGroupPayloadsUiState.value =
-                        SyncGroupPayloadsUiState.Error(R.string.feature_offline_error_failed_to_load_groupPayload)
+                        SyncGroupPayloadsUiState.Error(Res.string.feature_offline_error_failed_to_load_groupPayload)
                 }
                 .collect { groupPayloadsList ->
                     _groupPayloadsList.value = groupPayloadsList
@@ -107,7 +110,7 @@ class SyncGroupPayloadsViewModel(
                 deleteAndUpdateGroupPayload()
             } catch (e: Exception) {
                 _syncGroupPayloadsUiState.value =
-                    SyncGroupPayloadsUiState.Error(R.string.feature_offline_error_group_sync_failed)
+                    SyncGroupPayloadsUiState.Error(Res.string.feature_offline_error_group_sync_failed)
                 updateGroupPayload()
             }
         }
@@ -120,7 +123,7 @@ class SyncGroupPayloadsViewModel(
             repository.deleteAndUpdateGroupPayloads(id)
                 .catch {
                     _syncGroupPayloadsUiState.value =
-                        SyncGroupPayloadsUiState.Error(R.string.feature_offline_error_failed_to_update_list)
+                        SyncGroupPayloadsUiState.Error(Res.string.feature_offline_error_failed_to_update_list)
                 }
                 .collect { groupPayloads ->
                     groupPayloadSyncIndex = 0
@@ -155,7 +158,7 @@ class SyncGroupPayloadsViewModel(
                 }
             } catch (e: Exception) {
                 _syncGroupPayloadsUiState.value =
-                    SyncGroupPayloadsUiState.Error(R.string.feature_offline_error_failed_to_load_groupPayload)
+                    SyncGroupPayloadsUiState.Error(Res.string.feature_offline_error_failed_to_load_groupPayload)
             }
         }
     }

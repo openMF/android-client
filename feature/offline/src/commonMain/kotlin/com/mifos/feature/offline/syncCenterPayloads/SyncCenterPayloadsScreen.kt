@@ -18,7 +18,6 @@ import androidclient.feature.offline.generated.resources.feature_offline_no_cent
 import androidclient.feature.offline.generated.resources.feature_offline_office_id
 import androidclient.feature.offline.generated.resources.feature_offline_sync_centers
 import androidclient.feature.offline.generated.resources.feature_offline_sync_centers_payloads
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -29,11 +28,14 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
+import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -75,6 +77,7 @@ internal fun SyncCenterPayloadsScreenRoute(
     )
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun SyncCenterPayloadsScreen(
     uiState: SyncCenterPayloadsUiState,
@@ -86,7 +89,7 @@ internal fun SyncCenterPayloadsScreen(
     modifier: Modifier = Modifier,
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
-//    val pullRefreshState = rememberPullRefreshState(refreshing = refreshing, onRefresh = onRefresh)
+    val pullToRefreshState = rememberPullToRefreshState()
 
     MifosScaffold(
         modifier = modifier,
@@ -109,7 +112,10 @@ internal fun SyncCenterPayloadsScreen(
         },
         snackbarHostState = snackbarHostState,
     ) { paddingValues ->
-        Box(
+        PullToRefreshBox(
+            state = pullToRefreshState,
+            onRefresh = onRefresh,
+            isRefreshing = refreshing,
             modifier = Modifier
                 .padding(paddingValues)
                 .fillMaxSize(),
@@ -126,14 +132,6 @@ internal fun SyncCenterPayloadsScreen(
                 is SyncCenterPayloadsUiState.ShowCenters -> {
                     CenterPayloadsList(centerPayloads = uiState.centerPayloads)
                 }
-            }
-
-            if (refreshing) {
-                CircularProgressIndicator(
-                    modifier = Modifier
-                        .align(Alignment.TopCenter)
-                        .padding(top = 8.dp),
-                )
             }
         }
     }
@@ -223,7 +221,7 @@ private fun PayloadField(
 private fun checkNetworkConnectionAndSync(
     syncCenterPayloads: () -> Unit,
 ) {
-    Log.d("C", context.packageName)
+//    Log.d("C", context.packageName)
 //    if (Network.isOnline(context)) {
     syncCenterPayloads()
 //    } else {
@@ -237,11 +235,9 @@ private fun checkNetworkConnectionAndSync(
 
 @DevicePreview
 @Composable
-private fun SyncCenterPayloadsScreenPreview(
-    @PreviewParameter(SyncCenterPayloadsUiStateProvider::class) uiState: SyncCenterPayloadsUiState,
-) {
+private fun SyncCenterPayloadsScreenPreview() {
     SyncCenterPayloadsScreen(
-        uiState = uiState,
+        uiState = SyncCenterPayloadsUiState.ShowCenters(sampleCenterPayloads),
         onBackPressed = {},
         refreshing = false,
         onRefresh = {},
@@ -250,11 +246,29 @@ private fun SyncCenterPayloadsScreenPreview(
     )
 }
 
-class SyncCenterPayloadsUiStateProvider : PreviewParameterProvider<SyncCenterPayloadsUiState> {
-    override val values = sequenceOf(
-        SyncCenterPayloadsUiState.ShowProgressbar,
-        SyncCenterPayloadsUiState.ShowError("Failed to load center payloads"),
-        SyncCenterPayloadsUiState.ShowCenters(sampleCenterPayloads),
+@DevicePreview()
+@Composable
+private fun SyncCenterPayloadsLoadingPreview() {
+    SyncCenterPayloadsScreen(
+        uiState = SyncCenterPayloadsUiState.ShowProgressbar,
+        onBackPressed = {},
+        refreshing = true,
+        onRefresh = {},
+        syncCenterPayloads = {},
+        userStatus = true,
+    )
+}
+
+@DevicePreview()
+@Composable
+private fun SyncCenterPayloadsErrorPreview() {
+    SyncCenterPayloadsScreen(
+        uiState = SyncCenterPayloadsUiState.ShowError("Failed to load center payloads"),
+        onBackPressed = {},
+        refreshing = false,
+        onRefresh = {},
+        syncCenterPayloads = {},
+        userStatus = true,
     )
 }
 

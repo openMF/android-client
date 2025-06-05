@@ -9,12 +9,21 @@
  */
 package com.mifos.feature.offline.syncClientPayloads
 
-import android.Manifest
-import android.content.Context
-import android.util.Log
-import androidx.annotation.RequiresPermission
+import androidclient.feature.offline.generated.resources.Res
+import androidclient.feature.offline.generated.resources.feature_offline_activation_date
+import androidclient.feature.offline.generated.resources.feature_offline_active
+import androidclient.feature.offline.generated.resources.feature_offline_click_to_refresh
+import androidclient.feature.offline.generated.resources.feature_offline_dob
+import androidclient.feature.offline.generated.resources.feature_offline_external_id
+import androidclient.feature.offline.generated.resources.feature_offline_first_name
+import androidclient.feature.offline.generated.resources.feature_offline_gender
+import androidclient.feature.offline.generated.resources.feature_offline_last_name
+import androidclient.feature.offline.generated.resources.feature_offline_middle_name
+import androidclient.feature.offline.generated.resources.feature_offline_mobile_no
+import androidclient.feature.offline.generated.resources.feature_offline_office_id
+import androidclient.feature.offline.generated.resources.feature_offline_sync_clients
+import androidclient.feature.offline.generated.resources.feature_offline_sync_clients_payloads
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -23,40 +32,33 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Error
-import androidx.compose.material.pullrefresh.PullRefreshIndicator
-import androidx.compose.material.pullrefresh.pullRefresh
-import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
+import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.tooling.preview.PreviewParameter
-import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.icon.MifosIcons
-import com.mifos.feature.offline.R
+import com.mifos.core.ui.util.DevicePreview
 import com.mifos.room.entities.client.ClientPayloadEntity
-import org.koin.androidx.compose.koinViewModel
+import org.jetbrains.compose.resources.stringResource
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 internal fun SyncClientPayloadsScreenRoute(
@@ -85,7 +87,7 @@ internal fun SyncClientPayloadsScreenRoute(
     )
 }
 
-@OptIn(ExperimentalMaterialApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun SyncClientPayloadsScreen(
     uiState: SyncClientPayloadsUiState,
@@ -97,35 +99,36 @@ internal fun SyncClientPayloadsScreen(
     modifier: Modifier = Modifier,
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
-    val context = LocalContext.current
-    val pullRefreshState =
-        rememberPullRefreshState(refreshing = refreshState, onRefresh = onRefresh)
+    val pullToRefreshState = rememberPullToRefreshState()
 
     MifosScaffold(
         modifier = modifier,
-        title = stringResource(id = R.string.feature_offline_sync_clients_payloads),
+        title = stringResource(Res.string.feature_offline_sync_clients_payloads),
         onBackPressed = onBackPressed,
         actions = {
             IconButton(
                 onClick = {
                     when (userStatus) {
-                        false -> checkNetworkConnectionAndSync(context, syncClientPayloads)
+                        false -> checkNetworkConnectionAndSync(syncClientPayloads)
                         true -> TODO("Implement OfflineModeDialog()")
                     }
                 },
             ) {
                 Icon(
                     MifosIcons.Sync,
-                    contentDescription = stringResource(id = R.string.feature_offline_sync_clients),
+                    contentDescription = stringResource(Res.string.feature_offline_sync_clients),
                 )
             }
         },
         snackbarHostState = snackbarHostState,
     ) { paddingValues ->
-        Box(
+        PullToRefreshBox(
+            state = pullToRefreshState,
+            onRefresh = onRefresh,
+            isRefreshing = refreshState,
             modifier = Modifier
                 .padding(paddingValues)
-                .pullRefresh(pullRefreshState),
+                .fillMaxSize(),
         ) {
             when (uiState) {
                 is SyncClientPayloadsUiState.ShowProgressbar -> {
@@ -140,11 +143,6 @@ internal fun SyncClientPayloadsScreen(
                     ClientPayloadsList(uiState.clientPayloads)
                 }
             }
-            PullRefreshIndicator(
-                refreshing = refreshState,
-                state = pullRefreshState,
-                modifier = Modifier.align(Alignment.TopCenter),
-            )
         }
     }
 }
@@ -194,39 +192,39 @@ private fun ClientPayloadItem(
             }
 
             PayloadField(
-                stringResource(id = R.string.feature_offline_first_name),
+                stringResource(Res.string.feature_offline_first_name),
                 payload.firstname ?: "",
             )
             PayloadField(
-                stringResource(id = R.string.feature_offline_middle_name),
+                stringResource(Res.string.feature_offline_middle_name),
                 payload.middlename ?: "",
             )
             PayloadField(
-                stringResource(id = R.string.feature_offline_last_name),
+                stringResource(Res.string.feature_offline_last_name),
                 payload.lastname ?: "",
             )
             PayloadField(
-                stringResource(id = R.string.feature_offline_mobile_no),
+                stringResource(Res.string.feature_offline_mobile_no),
                 payload.mobileNo ?: "",
             )
             PayloadField(
-                stringResource(id = R.string.feature_offline_external_id),
+                stringResource(Res.string.feature_offline_external_id),
                 payload.externalId ?: "",
             )
-            PayloadField(stringResource(id = R.string.feature_offline_gender), gender)
+            PayloadField(stringResource(Res.string.feature_offline_gender), gender)
             PayloadField(
-                stringResource(id = R.string.feature_offline_dob),
+                stringResource(Res.string.feature_offline_dob),
                 payload.dateOfBirth ?: "",
             )
             PayloadField(
-                stringResource(id = R.string.feature_offline_office_id),
+                stringResource(Res.string.feature_offline_office_id),
                 payload.officeId?.toString() ?: "",
             )
             PayloadField(
-                stringResource(id = R.string.feature_offline_activation_date),
+                stringResource(Res.string.feature_offline_activation_date),
                 payload.activationDate ?: "",
             )
-            PayloadField(stringResource(id = R.string.feature_offline_active), payloadStatus)
+            PayloadField(stringResource(Res.string.feature_offline_active), payloadStatus)
 
             if (payload.errorMessage != null) {
                 Text(
@@ -277,23 +275,22 @@ private fun ErrorStateScreen(
         verticalArrangement = Arrangement.Center,
     ) {
         Icon(
-            imageVector = Icons.Default.Error,
+            imageVector = MifosIcons.Error,
             contentDescription = null,
             modifier = Modifier.size(48.dp),
         )
         Text(text = message, modifier = Modifier.padding(vertical = 16.dp))
         Button(onClick = onRefresh) {
-            Text(stringResource(id = R.string.feature_offline_click_to_refresh))
+            Text(stringResource(Res.string.feature_offline_click_to_refresh))
         }
     }
 }
 
-@RequiresPermission(Manifest.permission.ACCESS_NETWORK_STATE)
+// @RequiresPermission(Manifest.permission.ACCESS_NETWORK_STATE)
 private fun checkNetworkConnectionAndSync(
-    context: Context,
     syncClientPayloads: () -> Unit,
 ) {
-    Log.d("C", context.packageName)
+//    Log.d("C", context.packageName)
 //    if (Network.isOnline(context)) {
     syncClientPayloads()
 //    } else {
@@ -305,21 +302,24 @@ private fun checkNetworkConnectionAndSync(
 //    }
 }
 
-class SyncClientPayloadsUiStateProvider : PreviewParameterProvider<SyncClientPayloadsUiState> {
-    override val values = sequenceOf(
-        SyncClientPayloadsUiState.ShowProgressbar,
-        SyncClientPayloadsUiState.ShowError("Failed to load client payloads"),
-//        SyncClientPayloadsUiState.ShowPayloads(sampleClientPayloads),
+@DevicePreview()
+@Composable
+private fun SyncClientPayloadsLoadingPreview() {
+    SyncClientPayloadsScreen(
+        uiState = SyncClientPayloadsUiState.ShowProgressbar,
+        onBackPressed = {},
+        refreshState = true,
+        onRefresh = {},
+        syncClientPayloads = {},
+        userStatus = true,
     )
 }
 
-@Preview(showBackground = true)
+@DevicePreview()
 @Composable
-private fun SyncClientPayloadsScreenPreview(
-    @PreviewParameter(SyncClientPayloadsUiStateProvider::class) uiState: SyncClientPayloadsUiState,
-) {
+private fun SyncClientPayloadsErrorPreview() {
     SyncClientPayloadsScreen(
-        uiState = uiState,
+        uiState = SyncClientPayloadsUiState.ShowError("Failed to load client payloads"),
         onBackPressed = {},
         refreshState = false,
         onRefresh = {},
@@ -365,24 +365,26 @@ private fun SyncClientPayloadsScreenPreview(
 //    ClientPayloadItem(payload = sampleClientPayload)
 // }
 
-class PayloadFieldPreviewProvider : PreviewParameterProvider<Pair<String, String>> {
-    override val values = sequenceOf(
-        "First Name" to "John",
-        "Last Name" to "Doe",
-        "Mobile No" to "1234567890",
-        "External ID" to "EXT-001",
-        "Gender" to "Male",
-        "Date of Birth" to "1990-01-01",
-        "Office ID" to "12345",
-        "Activation Date" to "2023-07-15",
-        "Active" to "true",
-    )
+@DevicePreview()
+@Composable
+private fun PayloadFieldNamePreview() {
+    PayloadField(label = "First Name", value = "John")
 }
 
-@Preview(showBackground = true)
+@DevicePreview()
 @Composable
-private fun PayloadFieldPreview(
-    @PreviewParameter(PayloadFieldPreviewProvider::class) labelValuePair: Pair<String, String>,
-) {
-    PayloadField(label = labelValuePair.first, value = labelValuePair.second)
+private fun PayloadFieldMobilePreview() {
+    PayloadField(label = "Mobile No", value = "1234567890")
+}
+
+@DevicePreview()
+@Composable
+private fun PayloadFieldOfficePreview() {
+    PayloadField(label = "Office ID", value = "12345")
+}
+
+@DevicePreview()
+@Composable
+private fun PayloadFieldActivationPreview() {
+    PayloadField(label = "Activation Date", value = "2023-07-15")
 }

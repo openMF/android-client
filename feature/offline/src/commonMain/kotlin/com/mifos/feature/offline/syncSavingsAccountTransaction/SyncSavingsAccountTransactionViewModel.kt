@@ -9,14 +9,22 @@
  */
 package com.mifos.feature.offline.syncSavingsAccountTransaction
 
+import androidclient.feature.offline.generated.resources.Res
+import androidclient.feature.offline.generated.resources.feature_offline_error_fix_before_sync
+import androidclient.feature.offline.generated.resources.feature_offline_failed_to_load_paymentoptions
+import androidclient.feature.offline.generated.resources.feature_offline_failed_to_load_savingaccounttransaction
+import androidclient.feature.offline.generated.resources.feature_offline_failed_to_update_list
+import androidclient.feature.offline.generated.resources.feature_offline_failed_to_update_savingsaccount
+import androidclient.feature.offline.generated.resources.feature_offline_no_transaction_to_sync
+import androidclient.feature.offline.generated.resources.feature_offline_nothing_to_sync
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mifos.core.data.repository.SyncSavingsAccountTransactionRepository
 import com.mifos.core.datastore.UserPreferencesRepository
-import com.mifos.feature.offline.R
 import com.mifos.room.entities.PaymentTypeOptionEntity
 import com.mifos.room.entities.accounts.savings.SavingsAccountTransactionRequestEntity
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.IO
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -25,7 +33,6 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import rx.Observable
 
 /**
  * Created by Aditya Gupta on 16/08/23.
@@ -73,7 +80,7 @@ class SyncSavingsAccountTransactionViewModel(
             checkErrorAndSync()
         } else {
             _syncSavingsAccountTransactionUiState.value =
-                SyncSavingsAccountTransactionUiState.ShowError(R.string.feature_offline_nothing_to_sync)
+                SyncSavingsAccountTransactionUiState.ShowError(Res.string.feature_offline_nothing_to_sync)
         }
     }
 
@@ -102,7 +109,7 @@ class SyncSavingsAccountTransactionViewModel(
                 break
             } else if (checkTransactionsSyncBeforeOrNot()) {
                 _syncSavingsAccountTransactionUiState.value =
-                    SyncSavingsAccountTransactionUiState.ShowError(R.string.feature_offline_error_fix_before_sync)
+                    SyncSavingsAccountTransactionUiState.ShowError(Res.string.feature_offline_error_fix_before_sync)
             }
         }
     }
@@ -162,7 +169,7 @@ class SyncSavingsAccountTransactionViewModel(
             syncSavingsAccountTransactions()
         } else {
             _syncSavingsAccountTransactionUiState.value =
-                SyncSavingsAccountTransactionUiState.ShowEmptySavingsAccountTransactions(R.string.feature_offline_nothing_to_sync)
+                SyncSavingsAccountTransactionUiState.ShowEmptySavingsAccountTransactions(Res.string.feature_offline_nothing_to_sync)
         }
     }
 
@@ -185,7 +192,7 @@ class SyncSavingsAccountTransactionViewModel(
             repository.allSavingsAccountTransactions()
                 .catch {
                     _syncSavingsAccountTransactionUiState.value =
-                        SyncSavingsAccountTransactionUiState.ShowError(R.string.feature_offline_failed_to_load_savingaccounttransaction)
+                        SyncSavingsAccountTransactionUiState.ShowError(Res.string.feature_offline_failed_to_load_savingaccounttransaction)
                 }.collect { savings ->
                     if (savings.isNotEmpty()) {
                         mSavingsAccountTransactionRequests = savings.toMutableList()
@@ -193,7 +200,7 @@ class SyncSavingsAccountTransactionViewModel(
                     } else {
                         _syncSavingsAccountTransactionUiState.value =
                             SyncSavingsAccountTransactionUiState.ShowEmptySavingsAccountTransactions(
-                                R.string.feature_offline_no_transaction_to_sync,
+                                Res.string.feature_offline_no_transaction_to_sync,
                             )
                     }
                 }
@@ -210,7 +217,7 @@ class SyncSavingsAccountTransactionViewModel(
 
         repository.paymentTypeOption().catch {
             _syncSavingsAccountTransactionUiState.value =
-                SyncSavingsAccountTransactionUiState.ShowError(R.string.feature_offline_failed_to_load_paymentoptions)
+                SyncSavingsAccountTransactionUiState.ShowError(Res.string.feature_offline_failed_to_load_paymentoptions)
         }.collect { list ->
             mPaymentTypeOptions = list
             updateUiState()
@@ -226,7 +233,7 @@ class SyncSavingsAccountTransactionViewModel(
                 )
         } else {
             _syncSavingsAccountTransactionUiState.value =
-                SyncSavingsAccountTransactionUiState.ShowEmptySavingsAccountTransactions(R.string.feature_offline_no_transaction_to_sync)
+                SyncSavingsAccountTransactionUiState.ShowEmptySavingsAccountTransactions(Res.string.feature_offline_no_transaction_to_sync)
         }
     }
 
@@ -280,7 +287,7 @@ class SyncSavingsAccountTransactionViewModel(
             repository.deleteAndUpdateTransactions(savingsAccountId)
                 .catch {
                     _syncSavingsAccountTransactionUiState.value =
-                        SyncSavingsAccountTransactionUiState.ShowError(R.string.feature_offline_failed_to_update_list)
+                        SyncSavingsAccountTransactionUiState.ShowError(Res.string.feature_offline_failed_to_update_list)
                 }
                 .collect { savingsAccountTransactionRequests ->
                     showTransactionDeletedAndUpdated(
@@ -306,7 +313,7 @@ class SyncSavingsAccountTransactionViewModel(
                 showTransactionUpdatedSuccessfully(request)
             } catch (e: Exception) {
                 _syncSavingsAccountTransactionUiState.value =
-                    SyncSavingsAccountTransactionUiState.ShowError(R.string.feature_offline_failed_to_update_savingsaccount)
+                    SyncSavingsAccountTransactionUiState.ShowError(Res.string.feature_offline_failed_to_update_savingsaccount)
             }
         }
 }
