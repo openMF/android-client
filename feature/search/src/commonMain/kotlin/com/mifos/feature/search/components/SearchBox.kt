@@ -114,7 +114,7 @@ internal fun SearchBox(
                 onValueChange = {
                     onEvent(SearchScreenEvent.UpdateSearchText(it))
                 },
-                leadingIcon = Icons.Default.Search,
+                leadingIcon = MifosIcons.Search,
                 label = stringResource(Res.string.feature_search_search_hint),
                 showClearIcon = state.searchText.isNotEmpty(),
                 onClickClearIcon = {
