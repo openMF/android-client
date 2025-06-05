@@ -7,9 +7,18 @@
  *
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
-package com.mifos.feature.savings.savingsAccountApproval
+package com.mifos.feature.savings.savingsAccountActivate
 
-import android.widget.Toast
+// import com.mifos.core.common.utils.Network
+import androidclient.feature.savings.generated.resources.Res
+import androidclient.feature.savings.generated.resources.feature_savings_activate_savings
+import androidclient.feature.savings.generated.resources.feature_savings_approval_savings_date
+import androidclient.feature.savings.generated.resources.feature_savings_approved_on
+import androidclient.feature.savings.generated.resources.feature_savings_cancel
+import androidclient.feature.savings.generated.resources.feature_savings_save
+import androidclient.feature.savings.generated.resources.feature_savings_savings_account_activated
+import androidclient.feature.savings.generated.resources.feature_savings_savings_approval_reason
+import androidclient.feature.savings.generated.resources.feature_savings_select_date
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -38,60 +47,56 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.tooling.preview.PreviewParameter
-import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.mifos.core.common.utils.formatDate
 import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosDatePickerTextField
 import com.mifos.core.designsystem.component.MifosOutlinedTextField
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
-import com.mifos.core.model.objects.account.loan.SavingsApproval
 import com.mifos.core.network.GenericResponse
-import com.mifos.feature.savings.R
-import org.koin.androidx.compose.koinViewModel
-import java.text.SimpleDateFormat
-import java.util.Locale
+import com.mifos.core.ui.components.MifosAlertDialog
+import kotlinx.datetime.Clock
+import org.jetbrains.compose.resources.stringResource
+import org.jetbrains.compose.ui.tooling.preview.Preview
+import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
+import org.jetbrains.compose.ui.tooling.preview.PreviewParameterProvider
+import org.koin.compose.viewmodel.koinViewModel
 
 /**
- * Created by Pronay Sarker on 12/07/2024 (12:21 AM)
+ * Created by Pronay Sarker on 12/07/2024 (11:10 AM)
  */
-
 @Composable
-internal fun SavingsAccountApprovalScreen(
+internal fun SavingsAccountActivateScreen(
     navigateBack: () -> Unit,
-    viewModel: SavingsAccountApprovalViewModel = koinViewModel(),
+    viewModel: SavingsAccountActivateViewModel = koinViewModel(),
 ) {
-    val uiState by viewModel.savingsAccountApprovalUiState.collectAsStateWithLifecycle()
+    val uiState by viewModel.savingsAccountActivateUiState.collectAsStateWithLifecycle()
     val savingsAccountId by viewModel.savingsAccountId.collectAsStateWithLifecycle()
 
-    SavingsAccountApprovalScreen(
+    SavingsAccountActivateScreen(
         uiState = uiState,
         navigateBack = navigateBack,
-        approveLoan = { viewModel.approveSavingsApplication(savingsAccountId, it) },
+        activateSavings = { viewModel.activateSavings(savingsAccountId, it) },
     )
 }
 
 @Composable
-internal fun SavingsAccountApprovalScreen(
-    uiState: SavingsAccountApprovalUiState,
+internal fun SavingsAccountActivateScreen(
+    uiState: SavingsAccountActivateUiState,
     navigateBack: () -> Unit,
     modifier: Modifier = Modifier,
-    approveLoan: (SavingsApproval) -> Unit,
+    activateSavings: (hashMap: HashMap<String, String>) -> Unit,
 ) {
-    val snackbarHostState = remember {
+    val snackBarHostState = remember {
         SnackbarHostState()
     }
-    val context = LocalContext.current
 
     MifosScaffold(
         modifier = modifier,
-        snackbarHostState = snackbarHostState,
-        title = stringResource(id = R.string.feature_savings_approve_savings),
+        snackbarHostState = snackBarHostState,
+        title = stringResource(Res.string.feature_savings_activate_savings),
         onBackPressed = navigateBack,
     ) {
         Box(
@@ -100,11 +105,13 @@ internal fun SavingsAccountApprovalScreen(
                 .padding(it),
         ) {
             when (uiState) {
-                SavingsAccountApprovalUiState.Initial -> {
-                    SavingsAccountApprovalContent(approveLoan = approveLoan)
+                SavingsAccountActivateUiState.Initial -> {
+                    SavingsAccountActivateContent(
+                        activateSavings = activateSavings,
+                    )
                 }
 
-                is SavingsAccountApprovalUiState.ShowError -> {
+                is SavingsAccountActivateUiState.ShowError -> {
                     MifosSweetError(
                         message = uiState.message,
                         isRetryEnabled = false,
@@ -112,17 +119,18 @@ internal fun SavingsAccountApprovalScreen(
                     )
                 }
 
-                SavingsAccountApprovalUiState.ShowProgressbar -> {
+                SavingsAccountActivateUiState.ShowProgressbar -> {
                     MifosCircularProgress()
                 }
 
-                is SavingsAccountApprovalUiState.ShowSavingAccountApprovedSuccessfully -> {
-                    Toast.makeText(
-                        context,
-                        stringResource(id = R.string.feature_savings_savings_approved),
-                        Toast.LENGTH_LONG,
-                    ).show()
-                    navigateBack.invoke()
+                is SavingsAccountActivateUiState.ShowSavingAccountActivatedSuccessfully -> {
+                    MifosAlertDialog(
+                        dialogTitle = "Success",
+                        dialogText = stringResource(Res.string.feature_savings_savings_account_activated),
+                        onConfirmation = navigateBack,
+                        onDismissRequest = {},
+                        dismissText = null,
+                    )
                 }
             }
         }
@@ -131,29 +139,31 @@ internal fun SavingsAccountApprovalScreen(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun SavingsAccountApprovalContent(
-    approveLoan: (savingsApproval: SavingsApproval) -> Unit,
+private fun SavingsAccountActivateContent(
     modifier: Modifier = Modifier,
+    activateSavings: (hashMap: HashMap<String, String>) -> Unit,
 ) {
-    val scrollState = rememberScrollState()
-    var approvalDate by rememberSaveable {
-        mutableLongStateOf(System.currentTimeMillis())
-    }
-    var reasonForApproval by rememberSaveable {
+    val scrollstate = rememberScrollState()
+    var approvalReason by rememberSaveable {
         mutableStateOf("")
     }
+    var showDatePickerDialog by rememberSaveable {
+        mutableStateOf(false)
+    }
+
+    var approvalDate by rememberSaveable {
+        mutableLongStateOf(Clock.System.now().toEpochMilliseconds())
+    }
+
     val datePickerState = rememberDatePickerState(
         initialSelectedDateMillis = approvalDate,
         selectableDates = object : SelectableDates {
             override fun isSelectableDate(utcTimeMillis: Long): Boolean {
-                return utcTimeMillis >= System.currentTimeMillis()
+                return utcTimeMillis >= Clock.System.now().toEpochMilliseconds()
             }
         },
     )
-    val context = LocalContext.current
-    var showDatePickerDialog by rememberSaveable {
-        mutableStateOf(false)
-    }
+
     if (showDatePickerDialog) {
         DatePickerDialog(
             onDismissRequest = {
@@ -167,14 +177,14 @@ private fun SavingsAccountApprovalContent(
                         }
                         showDatePickerDialog = false
                     },
-                ) { Text(stringResource(id = R.string.feature_savings_select_date)) }
+                ) { Text(stringResource(Res.string.feature_savings_select_date)) }
             },
             dismissButton = {
                 TextButton(
                     onClick = {
                         showDatePickerDialog = false
                     },
-                ) { Text(stringResource(id = R.string.feature_savings_cancel)) }
+                ) { Text(stringResource(Res.string.feature_savings_cancel)) }
             },
         ) {
             DatePicker(state = datePickerState)
@@ -183,34 +193,33 @@ private fun SavingsAccountApprovalContent(
 
     Column(
         modifier = modifier
-            .verticalScroll(scrollState)
-            .fillMaxSize(),
+            .fillMaxSize()
+            .verticalScroll(scrollstate),
     ) {
         Spacer(modifier = Modifier.height(16.dp))
 
         Text(
             style = MaterialTheme.typography.bodyLarge,
-            text = stringResource(id = R.string.feature_savings_approved_on),
+            text = stringResource(Res.string.feature_savings_approved_on),
             modifier = Modifier.padding(start = 16.dp),
         )
 
         Spacer(modifier = Modifier.height(16.dp))
 
         MifosDatePickerTextField(
-            value = SimpleDateFormat("dd MMMM yyyy", Locale.getDefault()).format(
-                approvalDate,
-            ),
-            label = stringResource(R.string.feature_savings_approval_savings_date),
-        ) {
-            showDatePickerDialog = true
-        }
+            value = formatDate(approvalDate),
+            label = stringResource(Res.string.feature_savings_approval_savings_date),
+            openDatePicker = {
+                showDatePickerDialog = true
+            },
+        )
 
         Spacer(modifier = Modifier.height(16.dp))
 
         MifosOutlinedTextField(
-            value = reasonForApproval,
-            onValueChange = { reasonForApproval = it },
-            label = stringResource(id = R.string.feature_savings_savings_approval_reason),
+            value = approvalReason,
+            onValueChange = { approvalReason = it },
+            label = stringResource(Res.string.feature_savings_savings_approval_reason),
             error = null,
         )
 
@@ -220,18 +229,15 @@ private fun SavingsAccountApprovalContent(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp)
-                .heightIn(44.dp),
+                .heightIn(46.dp),
             onClick = {
 //                if (Network.isOnline(context)) {
-                approveLoan.invoke(
-                    SavingsApproval(
-                        approvedOnDate = SimpleDateFormat(
-                            "yyyy-MM-dd",
-                            Locale.getDefault(),
-                        ).format(approvalDate),
-                        note = reasonForApproval,
-                    ),
-                )
+                val hashMap = HashMap<String, String>()
+                hashMap["dateFormat"] = "dd MMMM yyyy"
+                hashMap["activatedOnDate"] = approvalDate.toString()
+                hashMap["locale"] = "en"
+
+                activateSavings.invoke(hashMap)
 //                } else {
 //                    Toast.makeText(
 //                        context,
@@ -241,32 +247,31 @@ private fun SavingsAccountApprovalContent(
 //                }
             },
         ) {
-            Text(text = stringResource(id = R.string.feature_savings_save))
+            Text(text = stringResource(Res.string.feature_savings_save))
         }
     }
 }
 
-class SavingsAccountApprovalScreenPreviewProvider :
-    PreviewParameterProvider<SavingsAccountApprovalUiState> {
-
-    override val values: Sequence<SavingsAccountApprovalUiState>
+class SavingsAccountActivateScreenPreviewProvider :
+    PreviewParameterProvider<SavingsAccountActivateUiState> {
+    override val values: Sequence<SavingsAccountActivateUiState>
         get() = sequenceOf(
-            SavingsAccountApprovalUiState.Initial,
-            SavingsAccountApprovalUiState.ShowProgressbar,
-            SavingsAccountApprovalUiState.ShowSavingAccountApprovedSuccessfully(GenericResponse()),
-            SavingsAccountApprovalUiState.ShowError("Error"),
+            SavingsAccountActivateUiState.Initial,
+            SavingsAccountActivateUiState.ShowProgressbar,
+            SavingsAccountActivateUiState.ShowSavingAccountActivatedSuccessfully(GenericResponse()),
+            SavingsAccountActivateUiState.ShowError("Error"),
         )
 }
 
 @Composable
-@Preview(showSystemUi = true)
-private fun PreviewSavingsAccountApprovalScreen(
-    @PreviewParameter(SavingsAccountApprovalScreenPreviewProvider::class)
-    savingsAccountApprovalUiState: SavingsAccountApprovalUiState,
+@Preview
+private fun PreviewSavingsAccountActivateScreen(
+    @PreviewParameter(SavingsAccountActivateScreenPreviewProvider::class)
+    savingsAccountActivateUiState: SavingsAccountActivateUiState,
 ) {
-    SavingsAccountApprovalScreen(
-        uiState = savingsAccountApprovalUiState,
+    SavingsAccountActivateScreen(
+        uiState = savingsAccountActivateUiState,
         navigateBack = { },
-    ) {
-    }
+        activateSavings = {},
+    )
 }

@@ -27,6 +27,7 @@ import com.mifos.feature.about.navigation.aboutNavGraph
 import com.mifos.feature.activate.navigation.activateScreen
 import com.mifos.feature.activate.navigation.navigateToActivateScreen
 import com.mifos.feature.note.navigation.noteNavGraph
+import com.mifos.feature.savings.navigation.savingsNavGraph
 
 const val WELCOME_ROUTE = "home_screen"
 
@@ -42,6 +43,13 @@ internal fun FeatureNavHost(
         navController = appState.navController,
         modifier = modifier,
     ) {
+        savingsNavGraph(
+            navController = appState.navController,
+            onBackPressed = appState.navController::popBackStack,
+            loadMoreSavingsAccountInfo = { _, _ -> },
+            loadDocuments = { _, _ -> },
+        )
+
         homeScreen(onClick = { appState.navController.navigateToActivateScreen(0, "") })
 
         aboutNavGraph(onBackPressed = appState.navController::popBackStack)
