@@ -33,6 +33,12 @@ class MifosInterceptor(
                 context.header(CONTENT_TYPE, "application/json")
                 context.header("Accept", "application/json")
                 context.header(HEADER_TENANT, tenant)
+
+                plugin.repository.token?.let { token ->
+                    if (token.isNotEmpty()) {
+                        context.headers[HEADER_AUTH] = token
+                    }
+                }
             }
         }
 
