@@ -21,8 +21,6 @@ import com.mifos.feature.note.navigation.noteNavGraph
 import com.mifos.feature.search.navigation.searchNavGraph
 import com.mifos.feature.settings.navigation.settingsScreen
 
-const val WELCOME_ROUTE = "home_screen"
-
 @Composable
 internal fun FeatureNavHost(
     appState: AppState,
@@ -36,8 +34,6 @@ internal fun FeatureNavHost(
         navController = appState.navController,
         modifier = modifier,
     ) {
-//        homeScreen(onClick = { appState.navController.navigateToSettingsScreen() })
-
         checkerInboxTaskNavGraph(appState.navController)
 
         searchNavGraph(
@@ -66,23 +62,3 @@ internal fun FeatureNavHost(
         )
     }
 }
-//
-// fun NavGraphBuilder.homeScreen(onClick: () -> Unit) {
-//    composable(route = HomeDestinationsScreen.SearchScreen.route) {
-//        WelcomeScreen(onClick)
-//    }
-// }
-//
-// @Composable
-// fun WelcomeScreen(onClick: () -> Unit) {
-//    Column(
-//        modifier = Modifier.fillMaxSize().background(Color.White),
-//        verticalArrangement = Arrangement.Center,
-//        horizontalAlignment = Alignment.CenterHorizontally,
-//    ) {
-//        Text(text = "Welcome to Mifos", color = Color.Black)
-//        Button(onClick = onClick) {
-//            Text("navigate")
-//        }
-//    }
-// }
