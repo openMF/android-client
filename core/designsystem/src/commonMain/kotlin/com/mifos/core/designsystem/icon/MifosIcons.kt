@@ -65,6 +65,7 @@ import androidx.compose.material.icons.outlined.Wallet
 import androidx.compose.material.icons.rounded.AccountCircle
 import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material.icons.rounded.AddLocation
+import androidx.compose.material.icons.rounded.ArrowBackIosNew
 import androidx.compose.material.icons.rounded.Bedtime
 import androidx.compose.material.icons.rounded.Business
 import androidx.compose.material.icons.rounded.Cancel
