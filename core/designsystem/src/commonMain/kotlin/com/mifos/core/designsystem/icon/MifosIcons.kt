@@ -84,6 +84,7 @@ import androidx.compose.material.icons.rounded.KeyboardArrowUp
 import androidx.compose.material.icons.rounded.Link
 import androidx.compose.material.icons.rounded.Lock
 import androidx.compose.material.icons.rounded.MoreVert
+import androidx.compose.material.icons.rounded.MyLocation
 import androidx.compose.material.icons.rounded.PersonOutline
 import androidx.compose.material.icons.rounded.PersonPinCircle
 import androidx.compose.material.icons.rounded.Search
@@ -179,4 +180,6 @@ object MifosIcons {
     val Notifications = Icons.Filled.Notifications
     val NavigationDrawer = Icons.Default.Menu
     val Stop = Icons.Rounded.Stop
+
+    val MyLocation = Icons.Rounded.MyLocation
 }

@@ -203,7 +203,7 @@ internal fun PathTrackingScreen(
                 },
             ) {
                 Icon(
-                    imageVector = if (userStatus) MifosIcons.Stop else MifosIcons.LocationOn,
+                    imageVector = if (userStatus) MifosIcons.Stop else MifosIcons.MyLocation,
                     contentDescription = null,
                 )
             }
