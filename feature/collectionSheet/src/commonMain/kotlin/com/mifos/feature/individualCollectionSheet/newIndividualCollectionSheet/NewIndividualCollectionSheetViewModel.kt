@@ -76,9 +76,15 @@ class NewIndividualCollectionSheetViewModel(
             when (result) {
                 is DataState.Loading -> Unit
                 is DataState.Error -> updateUiState {
+                    Logger.e("Revanth"){
+                        result.exception.toString()
+                    }
                     it.copy(error = result.message)
                 }
                 is DataState.Success -> updateUiState {
+                    Logger.e("Revanth"){
+                        result.data.toString()
+                    }
                     it.copy(individualCollectionSheet = result.data)
                 }
             }

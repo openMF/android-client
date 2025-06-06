@@ -291,7 +291,7 @@ internal fun NewIndividualCollectionSheetScreen(
                             .weight(1f)
                             .padding(16.dp),
                         contentPadding = PaddingValues(),
-//                        enabled =  selectedOffice != "",
+                        enabled =  selectedOffice != "",
                     ) {
                         Text(
                             text = stringResource(Res.string.feature_collection_sheet_generate),
