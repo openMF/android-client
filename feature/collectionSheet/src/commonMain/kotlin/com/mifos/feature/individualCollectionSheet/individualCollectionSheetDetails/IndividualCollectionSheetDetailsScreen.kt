@@ -53,6 +53,7 @@ import androidx.compose.ui.graphics.Color.Companion.LightGray
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.compose.AsyncImage
+import coil3.util.Logger
 import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
@@ -79,6 +80,15 @@ internal fun IndividualCollectionSheetDetailsScreen(
     val loansAndClientNames =
         viewModel.filterLoanAndClientNames(viewModel.sheet.clients ?: emptyList())
 
+    LaunchedEffect(Unit) {
+        viewModel.sheet.clients?.toList()?.forEachIndexed { index, item ->
+            co.touchlab.kermit.Logger.e("Revanth"){
+                "[$index] ClientName: ${item.clientName}, " +
+                        "ClientId: ${item.clientId}, " +
+                        "LoanId: ${item.loans}, "
+            }
+        }
+    }
     IndividualCollectionSheetDetailsScreen(
         sheet = viewModel.sheet,
         loansAndClientNames = loansAndClientNames,
@@ -257,10 +267,10 @@ private fun IndividualCollectionSheetItem(
 
                     )
                     Spacer(modifier = Modifier.width(16.dp))
-                    Text(
-                        text = client.loans?.get(index)?.totalDue.toString(),
-                        style = MaterialTheme.typography.bodyMedium,
-                    )
+//                    Text(
+////                        text = client.loans?.get(index)?.totalDue.toString(),
+////                        style = MaterialTheme.typography.bodyMedium,
+////                    )
                 }
                 Row {
                     Text(
@@ -268,19 +278,19 @@ private fun IndividualCollectionSheetItem(
                         style = MaterialTheme.typography.bodyMedium,
                     )
                     Spacer(modifier = Modifier.width(16.dp))
-                    Text(
-                        text = client.loans?.get(index)?.chargesDue.toString(),
-                        style = MaterialTheme.typography.bodyMedium,
-                    )
+//                    Text(
+//                        text = client.loans?.get(index)?.chargesDue.toString(),
+//                        style = MaterialTheme.typography.bodyMedium,
+//                    )
                 }
-                Text(
-                    text = "${client.loans?.get(index)?.productShortName} (#${
-                        client.loans?.get(
-                            index,
-                        )?.productShortName
-                    })",
-                    style = MaterialTheme.typography.bodyMedium,
-                )
+//                Text(
+//                    text = "${client.loans?.get(index)?.productShortName} (#${
+//                        client.loans?.get(
+//                            index,
+//                        )?.productShortName
+//                    })",
+//                    style = MaterialTheme.typography.bodyMedium,
+//                )
             }
             Icon(
                 imageVector = MifosIcons.ArrowForward,
