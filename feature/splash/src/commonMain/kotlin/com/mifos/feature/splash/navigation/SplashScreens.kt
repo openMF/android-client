@@ -7,20 +7,11 @@
  *
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
-plugins {
-    alias(libs.plugins.mifos.cmp.feature)
-}
+package com.mifos.feature.splash.navigation
 
-android {
-    namespace = "com.mifos.feature.splash"
-}
+sealed class SplashScreens(val route: String) {
 
-kotlin{
-    sourceSets{
-        commonMain.dependencies {
-            implementation(compose.material3)
-            implementation(compose.components.resources)
-            implementation(compose.ui)
-        }
-    }
+    data object SplashScreenRoute : SplashScreens("splash_screen_route")
+
+    data object SplashScreen : SplashScreens("splash_screen")
 }
