@@ -16,8 +16,8 @@ import kotlinx.serialization.Serializable
  */
 @Serializable
 data class RequestCollectionSheetPayload(
-    var dateFormat: String = "dd-MM-yyyy",
-    var locale: String = "en",
+    var dateFormat: String ?= null,
+    var locale: String ?= null,
     var officeId: Int? = null,
     var staffId: Int? = null,
     var transactionDate: String = "",

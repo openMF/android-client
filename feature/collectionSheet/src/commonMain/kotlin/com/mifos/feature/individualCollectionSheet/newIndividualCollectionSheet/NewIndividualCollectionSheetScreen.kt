@@ -96,6 +96,8 @@ internal fun NewIndividualCollectionSheetScreen(
                     officeId = id
                     transactionDate = date
                     staffId = idStaff
+                    locale="en"
+                    dateFormat="dd-MM-yyyy"
                 },
             )
         },
@@ -331,7 +333,7 @@ private fun CollectionSheetDialogContent(
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(start = 15.dp, end = 16.dp, bottom = 16.dp),
+                    .padding(start = 16.dp, end = 16.dp, bottom = 16.dp),
             ) {
                 Text(
                     modifier = Modifier
