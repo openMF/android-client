@@ -21,6 +21,7 @@ import com.mifos.feature.checker.inbox.task.di.CheckerInboxTaskModule
 import com.mifos.feature.note.di.NoteModule
 import com.mifos.feature.search.di.SearchModule
 import com.mifos.feature.settings.di.SettingsModule
+import com.mifos.feature.splash.di.SplashModule
 import com.mifos.room.di.DaoModule
 import com.mifos.room.di.HelperModule
 import com.mifos.room.di.PlatformSpecificDatabaseModule
@@ -66,8 +67,9 @@ object KoinModules {
 //            ReportModule,
 //            SavingsModule,
             SearchModule,
+//            SearchModule,
+            SplashModule,
             SettingsModule,
-//            SplashModule,
         )
     }
 

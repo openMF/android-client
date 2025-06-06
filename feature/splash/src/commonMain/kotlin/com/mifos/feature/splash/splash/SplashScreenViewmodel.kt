@@ -12,7 +12,6 @@ package com.mifos.feature.splash.splash
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mifos.core.datastore.UserPreferencesRepository
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -30,7 +29,7 @@ class SplashScreenViewmodel(
         checkAuthenticationStatus()
     }
 
-    private fun checkAuthenticationStatus() = viewModelScope.launch(Dispatchers.IO) {
+    private fun checkAuthenticationStatus() = viewModelScope.launch {
         delay(2000)
         val isAuthenticatedValue = prefManager.userData.firstOrNull()?.isAuthenticated
         _isAuthenticated.value = isAuthenticatedValue ?: false
