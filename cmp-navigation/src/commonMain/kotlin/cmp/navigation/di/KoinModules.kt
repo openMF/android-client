@@ -51,7 +51,7 @@ object KoinModules {
 
     private val featureModules = module {
         includes(
-            AboutModule,
+//            AboutModule,
             ActivateModule,
             AuthModule,
 //            CenterModule,

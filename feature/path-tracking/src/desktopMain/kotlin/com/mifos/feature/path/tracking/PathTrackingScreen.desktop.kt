@@ -11,10 +11,11 @@ package com.mifos.feature.path.tracking
 
 import androidx.compose.runtime.Composable
 import com.mifos.feature.pathTracking.PathTrackingViewModel
-import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
-expect fun PathTrackingScreen(
+actual fun PathTrackingScreen(
     onBackPressed: () -> Unit,
-    viewModel: PathTrackingViewModel = koinViewModel(),
-)
+    viewModel: PathTrackingViewModel,
+) {
+    TODO("Not yet implemented")
+}

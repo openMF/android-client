@@ -26,29 +26,15 @@ kotlin {
             implementation(compose.foundation)
             implementation(compose.components.resources)
             implementation(compose.components.uiToolingPreview)
-            implementation(libs.kotlin.reflect)
         }
 
         androidMain.dependencies {
             implementation(libs.maps.compose)
+            implementation(libs.androidx.material)
+            implementation(libs.accompanist.permission)
+            implementation(libs.coil.kt.compose)
+            implementation(libs.kotlinx.serialization.json)
+            implementation(libs.maps.compose)
         }
     }
 }
-
-dependencies {
-    debugImplementation(compose.uiTooling)
-}
-
-//dependencies {
-//    implementation(projects.core.domain)
-//
-//    implementation(libs.androidx.material)
-//    implementation(libs.accompanist.permission)
-//
-//    implementation(libs.coil.kt.compose)
-//    testImplementation(libs.hilt.android.testing)
-//
-//    implementation(libs.kotlinx.serialization.json)
-//
-//    implementation(libs.maps.compose)
-//}
