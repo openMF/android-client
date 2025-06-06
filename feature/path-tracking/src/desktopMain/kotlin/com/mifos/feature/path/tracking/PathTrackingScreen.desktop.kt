@@ -10,6 +10,7 @@
 package com.mifos.feature.path.tracking
 
 import androidx.compose.runtime.Composable
+import com.mifos.core.model.objects.users.UserLatLng
 import com.mifos.feature.pathTracking.PathTrackingViewModel
 
 @Composable
@@ -17,5 +18,18 @@ actual fun PathTrackingScreen(
     onBackPressed: () -> Unit,
     viewModel: PathTrackingViewModel,
 ) {
+    TODO("Not yet implemented")
+}
+
+@Composable
+actual fun HandleLocationPermissionRequest(
+    show: Boolean,
+    onPermissionResult: (Boolean) -> Unit,
+) {
+    TODO("Not yet implemented")
+}
+
+@Composable
+actual fun PathTrackingMapView(latLngList: List<UserLatLng>) {
     TODO("Not yet implemented")
 }
