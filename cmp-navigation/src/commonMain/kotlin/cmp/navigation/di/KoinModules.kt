@@ -19,6 +19,7 @@ import com.mifos.feature.activate.di.ActivateModule
 import com.mifos.feature.auth.di.AuthModule
 import com.mifos.feature.checker.inbox.task.di.CheckerInboxTaskModule
 import com.mifos.feature.note.di.NoteModule
+import com.mifos.feature.pathTracking.di.PathTrackingModule
 import com.mifos.feature.search.di.SearchModule
 import com.mifos.feature.settings.di.SettingsModule
 import com.mifos.feature.splash.di.SplashModule
@@ -50,7 +51,7 @@ object KoinModules {
 
     private val featureModules = module {
         includes(
-//            AboutModule,
+            AboutModule,
             ActivateModule,
             AuthModule,
 //            CenterModule,
@@ -63,11 +64,10 @@ object KoinModules {
 //            LoanModule,
             NoteModule,
 //            OfflineModule,
-//            PathTrackingModule,
+            PathTrackingModule,
 //            ReportModule,
 //            SavingsModule,
             SearchModule,
-//            SearchModule,
             SplashModule,
             SettingsModule,
         )

@@ -11,10 +11,9 @@
     ExperimentalMaterialApi::class,
 )
 
-package com.mifos.feature.pathTracking
+package com.mifos.feature.path.tracking
 
 import android.Manifest
-import android.annotation.SuppressLint
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
@@ -28,9 +27,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.MyLocation
-import androidx.compose.material.icons.rounded.Stop
 import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
@@ -49,18 +45,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color.Companion.Black
-import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontStyle
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.tooling.preview.PreviewParameter
-import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
 import androidx.core.content.ContextCompat.registerReceiver
 import androidx.core.content.ContextCompat.startActivity
@@ -75,12 +61,28 @@ import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.component.PermissionBox
+import com.mifos.core.model.objects.users.UserLatLng
 import com.mifos.core.model.objects.users.UserLocation
-import com.mifos.feature.path.tracking.R
+import androidclient.feature.path_tracking.generated.resources.Res
+import androidclient.feature.path_tracking.generated.resources.feature_path_tracking_approve_permission_description_location
+import androidclient.feature.path_tracking.generated.resources.feature_path_tracking_dismiss
+import androidclient.feature.path_tracking.generated.resources.feature_path_tracking_failed_to_load_path_tracking
+import androidclient.feature.path_tracking.generated.resources.feature_path_tracking_no_path_tracking_found
+import androidclient.feature.path_tracking.generated.resources.feature_path_tracking_permission_required
+import androidclient.feature.path_tracking.generated.resources.feature_path_tracking_proceed
+import androidclient.feature.path_tracking.generated.resources.feature_path_tracking_track_my_path
+import androidx.compose.material3.MaterialTheme
+import com.mifos.core.designsystem.icon.MifosIcons
+import com.mifos.core.ui.util.DevicePreview
+import com.mifos.feature.pathTracking.PathTrackingUiState
+import com.mifos.feature.pathTracking.PathTrackingViewModel
 import kotlinx.serialization.json.Json
-import org.koin.androidx.compose.koinViewModel
+import org.jetbrains.compose.resources.stringResource
+import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
+import org.jetbrains.compose.ui.tooling.preview.PreviewParameterProvider
+import org.koin.compose.viewmodel.koinViewModel
 
-@SuppressLint("WrongConstant")
+
 @Composable
 fun PathTrackingScreen(
     onBackPressed: () -> Unit,
@@ -155,7 +157,7 @@ internal fun PathTrackingScreen(
     state: PathTrackingUiState,
     onBackPressed: () -> Unit,
     onRetry: () -> Unit,
-    onPathTrackingClick: (List<com.mifos.core.model.objects.users.UserLatLng>) -> Unit,
+    onPathTrackingClick: (List<UserLatLng>) -> Unit,
     onRefresh: () -> Unit,
     refreshState: Boolean,
     userStatus: Boolean,
@@ -175,10 +177,10 @@ internal fun PathTrackingScreen(
                 Manifest.permission.ACCESS_FINE_LOCATION,
                 Manifest.permission.ACCESS_COARSE_LOCATION,
             ),
-            title = stringResource(R.string.feature_path_tracking_permission_required),
-            description = stringResource(R.string.feature_path_tracking_approve_permission_description_location),
-            confirmButtonText = stringResource(R.string.feature_path_tracking_proceed),
-            dismissButtonText = stringResource(R.string.feature_path_tracking_dismiss),
+            title = stringResource(Res.string.feature_path_tracking_permission_required),
+            description = stringResource(Res.string.feature_path_tracking_approve_permission_description_location),
+            confirmButtonText = stringResource(Res.string.feature_path_tracking_proceed),
+            dismissButtonText = stringResource(Res.string.feature_path_tracking_dismiss),
             onGranted = {
                 updateUserStatus(true)
             },
@@ -187,7 +189,7 @@ internal fun PathTrackingScreen(
 
     MifosScaffold(
         modifier = modifier,
-        title = stringResource(id = R.string.feature_path_tracking_track_my_path),
+        title = stringResource(Res.string.feature_path_tracking_track_my_path),
         onBackPressed = onBackPressed,
         actions = {
             IconButton(
@@ -201,7 +203,7 @@ internal fun PathTrackingScreen(
                 },
             ) {
                 Icon(
-                    imageVector = if (userStatus) Icons.Rounded.Stop else Icons.Rounded.MyLocation,
+                    imageVector = if (userStatus) MifosIcons.Stop else MifosIcons.LocationOn,
                     contentDescription = null,
                 )
             }
@@ -212,7 +214,7 @@ internal fun PathTrackingScreen(
             Box(modifier = Modifier.pullRefresh(pullRefreshState)) {
                 when (state) {
                     is PathTrackingUiState.Error -> {
-                        MifosSweetError(message = stringResource(id = state.message)) {
+                        MifosSweetError(message = stringResource(state.message)) {
                             onRetry()
                         }
                     }
@@ -240,7 +242,7 @@ internal fun PathTrackingScreen(
 private fun PathTrackingContent(
     pathTrackingList: List<UserLocation>,
     modifier: Modifier = Modifier,
-    onPathTrackingClick: (List<com.mifos.core.model.objects.users.UserLatLng>) -> Unit,
+    onPathTrackingClick: (List<UserLatLng>) -> Unit,
 ) {
     LazyColumn(modifier = modifier) {
         items(pathTrackingList) { pathTracking ->
@@ -256,7 +258,7 @@ private fun PathTrackingContent(
 private fun PathTrackingItem(
     pathTracking: UserLocation,
     modifier: Modifier = Modifier,
-    onPathTrackingClick: (List<com.mifos.core.model.objects.users.UserLatLng>) -> Unit,
+    onPathTrackingClick: (List<UserLatLng>) -> Unit,
 ) {
     val latLngList = getLatLngList(pathTracking.latLng)
     val latLng = latLngList[0]
@@ -273,7 +275,7 @@ private fun PathTrackingItem(
         onClick = {
             onPathTrackingClick(latLngList)
         },
-        colors = CardDefaults.outlinedCardColors(White),
+        colors = CardDefaults.outlinedCardColors(MaterialTheme.colorScheme.surface),
     ) {
         GoogleMap(
             modifier = Modifier
@@ -285,17 +287,12 @@ private fun PathTrackingItem(
         Text(
             modifier = Modifier.padding(8.dp),
             text = "${pathTracking.date} from ${pathTracking.startTime} to ${pathTracking.stopTime}",
-            style = TextStyle(
-                fontSize = 16.sp,
-                fontWeight = FontWeight.Normal,
-                fontStyle = FontStyle.Normal,
-                color = Black,
-            ),
+            style = MaterialTheme.typography.bodyLarge,
         )
     }
 }
 
-private fun getLatLngList(latLngString: String?): List<com.mifos.core.model.objects.users.UserLatLng> {
+private fun getLatLngList(latLngString: String?): List<UserLatLng> {
     val json = Json { ignoreUnknownKeys = true }
 
     if (latLngString.isNullOrEmpty()) return emptyList()
@@ -307,13 +304,13 @@ private class PathTrackingUiStateProvider : PreviewParameterProvider<PathTrackin
     override val values: Sequence<PathTrackingUiState>
         get() = sequenceOf(
             PathTrackingUiState.Loading,
-            PathTrackingUiState.Error(R.string.feature_path_tracking_no_path_tracking_found),
-            PathTrackingUiState.Error(R.string.feature_path_tracking_failed_to_load_path_tracking),
+            PathTrackingUiState.Error(Res.string.feature_path_tracking_no_path_tracking_found),
+            PathTrackingUiState.Error(Res.string.feature_path_tracking_failed_to_load_path_tracking),
             PathTrackingUiState.PathTracking(samplePathTrackingList),
         )
 }
 
-@Preview(showBackground = true)
+@DevicePreview
 @Composable
 private fun PathTrackingScreenPreview(
     @PreviewParameter(PathTrackingUiStateProvider::class) state: PathTrackingUiState,

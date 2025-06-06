@@ -88,6 +88,7 @@ import androidx.compose.material.icons.rounded.PersonOutline
 import androidx.compose.material.icons.rounded.PersonPinCircle
 import androidx.compose.material.icons.rounded.Search
 import androidx.compose.material.icons.rounded.SignalWifiOff
+import androidx.compose.material.icons.rounded.Stop
 import androidx.compose.material.icons.rounded.SwapHoriz
 import androidx.compose.material.icons.rounded.Sync
 import androidx.compose.material.icons.rounded.Task
@@ -177,4 +178,5 @@ object MifosIcons {
     val Error2 = Icons.Filled.Error
     val Notifications = Icons.Filled.Notifications
     val NavigationDrawer = Icons.Default.Menu
+    val Stop = Icons.Rounded.Stop
 }

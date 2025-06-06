@@ -18,6 +18,7 @@ import com.mifos.feature.about.navigation.aboutNavGraph
 import com.mifos.feature.activate.navigation.activateScreen
 import com.mifos.feature.checker.inbox.task.navigation.checkerInboxTaskNavGraph
 import com.mifos.feature.note.navigation.noteNavGraph
+import com.mifos.feature.pathTracking.navigation.pathTrackingNavGraph
 import com.mifos.feature.search.navigation.searchNavGraph
 import com.mifos.feature.settings.navigation.settingsScreen
 
@@ -60,5 +61,7 @@ internal fun FeatureNavHost(
             changePasscode = {},
             languageChanged = {},
         )
+
+        pathTrackingNavGraph(appState.navController)
     }
 }
