@@ -49,7 +49,7 @@ kotlin {
             implementation(projects.feature.splash)
            implementation(projects.feature.search)
             implementation(projects.feature.settings)
-//            implementation(projects.feature.search)
+            implementation(projects.feature.search)
 
             implementation(projects.feature.settings)
             implementation(projects.feature.splash)

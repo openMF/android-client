@@ -68,7 +68,7 @@ object KoinModules {
 //            ReportModule,
             SavingsModule,
             SearchModule,
-           SearchModule,
+            SearchModule,
             SplashModule,
             SettingsModule,
         )

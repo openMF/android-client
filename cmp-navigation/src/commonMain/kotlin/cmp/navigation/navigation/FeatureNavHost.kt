@@ -16,7 +16,6 @@ import androidx.navigation.compose.NavHost
 import cmp.navigation.AppState
 import com.mifos.feature.about.navigation.aboutNavGraph
 import com.mifos.feature.activate.navigation.activateScreen
-import com.mifos.feature.activate.navigation.navigateToActivateScreen
 import com.mifos.feature.checker.inbox.task.navigation.checkerInboxTaskNavGraph
 import com.mifos.feature.note.navigation.noteNavGraph
 import com.mifos.feature.savings.navigation.savingsNavGraph
@@ -42,8 +41,6 @@ internal fun FeatureNavHost(
             loadMoreSavingsAccountInfo = { _, _ -> },
             loadDocuments = { _, _ -> },
         )
-
-        homeScreen(onClick = { appState.navController.navigateToActivateScreen(0, "") })
 
         checkerInboxTaskNavGraph(appState.navController)
 
