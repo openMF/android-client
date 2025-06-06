@@ -41,18 +41,12 @@ class NewIndividualCollectionSheetViewModel(
         viewModelScope.launch {
             newIndividualCollectionSheetRepository.offices()
                 .catch { error ->
-                    Logger.e("Error"){
-                        error.message.toString()
-                    }
                     updateUiState { it.copy(isLoading = false, error = error.message) }
                 }
                 .collect { result ->
                     when (result) {
                         is DataState.Loading -> Unit
                         is DataState.Error -> updateUiState {
-                            Logger.e("Error"){
-                                result.message
-                            }
                             it.copy(isLoading = false, error = result.message)
                         }
                         is DataState.Success -> updateUiState {
@@ -71,7 +65,7 @@ class NewIndividualCollectionSheetViewModel(
                     it.copy(error = result.message)
                 }
                 is DataState.Success -> updateUiState {
-                    it.copy(staffList = result.data.orEmpty())
+                    it.copy(staffList = result.data)
                 }
             }
         }

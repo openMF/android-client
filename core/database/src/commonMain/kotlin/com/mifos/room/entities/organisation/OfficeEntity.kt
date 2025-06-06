@@ -36,7 +36,6 @@ import kotlinx.serialization.Serializable
 )
 
 @Serializable
-@Parcelize
 data class OfficeEntity(
     @PrimaryKey(autoGenerate = true)
     val id: Int,
@@ -50,4 +49,4 @@ data class OfficeEntity(
     val officeOpeningDate: OfficeOpeningDateEntity? = null,
 
     val openingDate: List<Int?> = emptyList(),
-): Parcelable
+)

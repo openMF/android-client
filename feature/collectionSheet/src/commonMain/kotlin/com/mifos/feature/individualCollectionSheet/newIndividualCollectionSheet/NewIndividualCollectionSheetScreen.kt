@@ -245,7 +245,7 @@ internal fun NewIndividualCollectionSheetScreen(
                         selectedOffice = value
                         selectedStaff = ""
                     },
-                    labelString = stringResource(Res.string.feature_collection_sheet_office),
+                    label = stringResource(Res.string.feature_collection_sheet_office),
                     options = state.officeList.map { it.name.toString() },
                 )
                 Spacer(modifier = Modifier.height(8.dp))
@@ -270,7 +270,7 @@ internal fun NewIndividualCollectionSheetScreen(
                         }
                         selectedStaff = value
                     },
-                    labelString = stringResource(Res.string.feature_collection_sheet_staff),
+                    label = stringResource(Res.string.feature_collection_sheet_staff),
                     options = state.staffList.map { it.displayName.toString() },
                 )
                 Row(

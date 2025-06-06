@@ -308,7 +308,7 @@ internal fun PaymentsDetailsScreen(
                     modifier = Modifier.padding(vertical = 16.dp),
                 ) {
                     MifosTextFieldDropdown(
-                        labelString = stringResource(Res.string.feature_collection_sheet_payment_type),
+                        label = stringResource(Res.string.feature_collection_sheet_payment_type),
                         value = paymentType,
                         onValueChanged = { paymentType = it },
                         onOptionSelected = { index, value ->

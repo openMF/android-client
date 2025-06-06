@@ -312,7 +312,7 @@ private fun GenerateCollectionSheetContent(
                 }
             },
             options = officeList.map { it.name.toString() },
-            labelString = stringResource(Res.string.feature_collection_sheet_office),
+            label = stringResource(Res.string.feature_collection_sheet_office),
             readOnly = true,
         )
 
@@ -341,7 +341,7 @@ private fun GenerateCollectionSheetContent(
                 onStaffSelected(selectedOfficeId, selectedStaffId)
             },
             options = staffList.map { it.displayName.toString() },
-            labelString = stringResource(Res.string.feature_collection_sheet_staff),
+            label = stringResource(Res.string.feature_collection_sheet_staff),
             readOnly = true,
         )
 
@@ -385,7 +385,7 @@ private fun GenerateCollectionSheetContent(
                 }
             },
             options = centerList.map { it.name.toString() },
-            labelString = stringResource(Res.string.feature_collection_sheet_center),
+            label = stringResource(Res.string.feature_collection_sheet_center),
             readOnly = true,
         )
 
@@ -403,7 +403,7 @@ private fun GenerateCollectionSheetContent(
                 }
             },
             options = groupList.map { it.name.toString() },
-            labelString = stringResource(Res.string.feature_collection_sheet_group),
+            label = stringResource(Res.string.feature_collection_sheet_group),
             readOnly = true,
         )
 
@@ -448,7 +448,7 @@ private fun GenerateCollectionSheetContent(
                     selectedAttendanceTypeId = collectionSheet.attendanceTypeOptions[index].id
                 },
                 options = collectionSheet.attendanceTypeOptions.map { it.value.toString() },
-                labelString = stringResource(Res.string.feature_collection_sheet_attendance_type),
+                label = stringResource(Res.string.feature_collection_sheet_attendance_type),
             )
 
             MifosTextFieldDropdown(
@@ -461,7 +461,7 @@ private fun GenerateCollectionSheetContent(
                     selectedPaymentTypeId = collectionSheet.paymentTypeOptions[index].id
                 },
                 options = collectionSheet.paymentTypeOptions.map { it.name },
-                labelString = stringResource(Res.string.feature_collection_sheet_payment_type),
+                label = stringResource(Res.string.feature_collection_sheet_payment_type),
             )
 
             collectionSheet.loanProducts.forEach {
