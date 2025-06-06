@@ -9,14 +9,14 @@
  */
 package com.mifos.feature.search.components
 
+import androidclient.feature.search.generated.resources.Res
+import androidclient.feature.search.generated.resources.feature_search_filter
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.RadioButton
@@ -24,15 +24,12 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalConfiguration
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.window.DialogProperties
+import com.mifos.core.designsystem.component.MifosDialogBox
 import com.mifos.core.ui.util.DevicePreview
 import com.mifos.feature.search.FilterOption
-import com.mifos.feature.search.R
 import com.mifos.feature.search.SearchScreenEvent
+import org.jetbrains.compose.resources.stringResource
 
 @Composable
 internal fun FilterDialog(
@@ -41,21 +38,21 @@ internal fun FilterDialog(
     onDismiss: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val configuration = LocalConfiguration.current
-
-    AlertDialog(
-        modifier = modifier.widthIn(max = configuration.screenWidthDp.dp - 80.dp),
-        properties = DialogProperties(usePlatformDefaultWidth = false),
-        onDismissRequest = onDismiss,
-        title = {
-            Text(text = stringResource(id = R.string.feature_search_filter))
-        },
-        text = {
-            HorizontalDivider()
+    MifosDialogBox(
+        title = stringResource(Res.string.feature_search_filter),
+        showDialogState = true,
+        confirmButtonText = "",
+        dismissButtonText = "Close",
+        onConfirm = {},
+        onDismiss = onDismiss,
+        modifier = modifier,
+        message = {
             Column(
-                modifier = Modifier
-                    .verticalScroll(rememberScrollState()),
+                modifier = modifier
+                    .verticalScroll(rememberScrollState())
+                    .fillMaxWidth(),
             ) {
+                HorizontalDivider()
                 FilterOption(
                     text = "All",
                     selected = selected == null,
@@ -64,9 +61,7 @@ internal fun FilterDialog(
                         onDismiss()
                     },
                 )
-
                 HorizontalDivider()
-
                 FilterOption.values.forEachIndexed { index, option ->
                     FilterOption(
                         text = option.label,
@@ -76,14 +71,12 @@ internal fun FilterDialog(
                             onDismiss()
                         },
                     )
-
                     if (index != FilterOption.values.size - 1) {
                         HorizontalDivider()
                     }
                 }
             }
         },
-        confirmButton = {},
     )
 }
 
