@@ -15,6 +15,7 @@ import androidclient.feature.offline.generated.resources.feature_offline_error_f
 import androidclient.feature.offline.generated.resources.feature_offline_error_group_sync_failed
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.repository.SyncGroupPayloadsRepository
 import com.mifos.core.datastore.UserPreferencesRepository
 import com.mifos.room.entities.group.GroupPayloadEntity
@@ -26,6 +27,11 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import kotlinx.io.IOException
+import kotlinx.serialization.SerializationException
+import org.jetbrains.compose.resources.StringResource
+import org.jetbrains.compose.resources.getString
+import org.jetbrains.compose.resources.stringResource
 
 /**
  * Created by Aditya Gupta on 16/08/23.
@@ -76,14 +82,26 @@ class SyncGroupPayloadsViewModel(
                         SyncGroupPayloadsUiState.Error(Res.string.feature_offline_error_failed_to_load_groupPayload)
                 }
                 .collect { groupPayloadsList ->
-                    _groupPayloadsList.value = groupPayloadsList
-                    _syncGroupPayloadsUiState.value = SyncGroupPayloadsUiState.Success(
-                        if (groupPayloadsList.isEmpty()) {
-                            GroupPayloadEmptyState.NOTHING_TO_SYNC
-                        } else {
-                            null
-                        },
-                    )
+                    when (groupPayloadsList) {
+                        is DataState.Success -> {
+                            val list = groupPayloadsList.data
+                            _groupPayloadsList.value = list
+                            _syncGroupPayloadsUiState.value = SyncGroupPayloadsUiState.Success(
+                                if (list.isEmpty()) {
+                                    GroupPayloadEmptyState.NOTHING_TO_SYNC
+                                } else null,
+                            )
+                        }
+
+                        is DataState.Error -> {
+                            _syncGroupPayloadsUiState.value =
+                                SyncGroupPayloadsUiState.Error(Res.string.feature_offline_error_failed_to_load_groupPayload)
+                        }
+
+                        is DataState.Loading -> {
+                            _syncGroupPayloadsUiState.value = SyncGroupPayloadsUiState.Loading
+                        }
+                    }
                 }
         }
     }
@@ -126,16 +144,25 @@ class SyncGroupPayloadsViewModel(
                         SyncGroupPayloadsUiState.Error(Res.string.feature_offline_error_failed_to_update_list)
                 }
                 .collect { groupPayloads ->
-                    groupPayloadSyncIndex = 0
-                    _groupPayloadsList.value = groupPayloads
-                    _syncGroupPayloadsUiState.value = SyncGroupPayloadsUiState.Success(
-                        if ((groupPayloads.isEmpty())
-                        ) {
-                            GroupPayloadEmptyState.ALL_SYNCED
-                        } else {
-                            null
-                        },
-                    )
+                    when (groupPayloads) {
+                        is DataState.Success -> {
+                            val updatedList = groupPayloads.data
+                            groupPayloadSyncIndex = 0
+                            _groupPayloadsList.value = updatedList
+                            _syncGroupPayloadsUiState.value = SyncGroupPayloadsUiState.Success(
+                                if (updatedList.isEmpty()) GroupPayloadEmptyState.ALL_SYNCED else null,
+                            )
+                        }
+
+                        is DataState.Error -> {
+                            _syncGroupPayloadsUiState.value =
+                                SyncGroupPayloadsUiState.Error(Res.string.feature_offline_error_failed_to_update_list)
+                        }
+
+                        is DataState.Loading -> {
+                            _syncGroupPayloadsUiState.value = SyncGroupPayloadsUiState.Loading
+                        }
+                    }
                 }
         }
     }

@@ -11,6 +11,7 @@ package com.mifos.feature.offline.syncCenterPayloads
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.mifos.core.common.utils.DataState
 import com.mifos.core.common.utils.FileUtils
 import com.mifos.core.data.repository.SyncCenterPayloadsRepository
 import com.mifos.core.datastore.UserPreferencesRepository
@@ -67,8 +68,22 @@ class SyncCenterPayloadsViewModel(
                     _syncCenterPayloadsUiState.value =
                         SyncCenterPayloadsUiState.ShowError(it.message.toString())
                 }.collect { mCenterPayloads ->
-                    _syncCenterPayloadsUiState.value =
-                        SyncCenterPayloadsUiState.ShowCenters(mCenterPayloads as List<CenterPayloadEntity>)
+                    when (mCenterPayloads) {
+                        is DataState.Success -> {
+                            _syncCenterPayloadsUiState.value =
+                                SyncCenterPayloadsUiState.ShowCenters(mCenterPayloads.data)
+                        }
+
+                        is DataState.Error -> {
+                            _syncCenterPayloadsUiState.value =
+                                SyncCenterPayloadsUiState.ShowError(mCenterPayloads.message)
+                        }
+
+                        is DataState.Loading -> {
+                            _syncCenterPayloadsUiState.value =
+                                SyncCenterPayloadsUiState.ShowProgressbar
+                        }
+                    }
                 }
         }
     }

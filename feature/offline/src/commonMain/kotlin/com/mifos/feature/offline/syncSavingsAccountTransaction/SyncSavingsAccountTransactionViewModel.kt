@@ -19,6 +19,7 @@ import androidclient.feature.offline.generated.resources.feature_offline_no_tran
 import androidclient.feature.offline.generated.resources.feature_offline_nothing_to_sync
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.repository.SyncSavingsAccountTransactionRepository
 import com.mifos.core.datastore.UserPreferencesRepository
 import com.mifos.room.entities.PaymentTypeOptionEntity
@@ -174,9 +175,7 @@ class SyncSavingsAccountTransactionViewModel(
     }
 
     private fun checkTransactionsSyncBeforeOrNot(): Boolean {
-        Observable.from(mSavingsAccountTransactionRequests)
-            .filter { savingsAccountTransactionRequest -> savingsAccountTransactionRequest.errorMessage != null }
-            .subscribe { mTransactionsFailed += 1 }
+        mTransactionsFailed = mSavingsAccountTransactionRequests.count { it.errorMessage != null }
         return mTransactionsFailed == mSavingsAccountTransactionRequests.size
     }
 
@@ -193,15 +192,31 @@ class SyncSavingsAccountTransactionViewModel(
                 .catch {
                     _syncSavingsAccountTransactionUiState.value =
                         SyncSavingsAccountTransactionUiState.ShowError(Res.string.feature_offline_failed_to_load_savingaccounttransaction)
-                }.collect { savings ->
-                    if (savings.isNotEmpty()) {
-                        mSavingsAccountTransactionRequests = savings.toMutableList()
-                        updateUiState()
-                    } else {
-                        _syncSavingsAccountTransactionUiState.value =
-                            SyncSavingsAccountTransactionUiState.ShowEmptySavingsAccountTransactions(
-                                Res.string.feature_offline_no_transaction_to_sync,
-                            )
+                }.collect {
+                        savings ->
+                    when (savings) {
+                        is DataState.Success -> {
+                            val transactions = savings.data
+                            if (transactions.isNotEmpty()) {
+                                mSavingsAccountTransactionRequests = transactions.toMutableList()
+                                updateUiState()
+                            } else {
+                                _syncSavingsAccountTransactionUiState.value =
+                                    SyncSavingsAccountTransactionUiState.ShowEmptySavingsAccountTransactions(
+                                        Res.string.feature_offline_no_transaction_to_sync
+                                    )
+                            }
+                        }
+
+                        is DataState.Error -> {
+                            _syncSavingsAccountTransactionUiState.value =
+                                SyncSavingsAccountTransactionUiState.ShowError(Res.string.feature_offline_failed_to_load_savingaccounttransaction)
+                        }
+
+                        is DataState.Loading -> {
+                            _syncSavingsAccountTransactionUiState.value =
+                                SyncSavingsAccountTransactionUiState.Loading
+                        }
                     }
                 }
         }
@@ -219,8 +234,22 @@ class SyncSavingsAccountTransactionViewModel(
             _syncSavingsAccountTransactionUiState.value =
                 SyncSavingsAccountTransactionUiState.ShowError(Res.string.feature_offline_failed_to_load_paymentoptions)
         }.collect { list ->
-            mPaymentTypeOptions = list
-            updateUiState()
+            when (list) {
+                is DataState.Success -> {
+                    mPaymentTypeOptions = list.data
+                    updateUiState()
+                }
+
+                is DataState.Error -> {
+                    _syncSavingsAccountTransactionUiState.value =
+                        SyncSavingsAccountTransactionUiState.ShowError(Res.string.feature_offline_failed_to_load_paymentoptions)
+                }
+
+                is DataState.Loading -> {
+                    _syncSavingsAccountTransactionUiState.value =
+                        SyncSavingsAccountTransactionUiState.Loading
+                }
+            }
         }
     }
 
@@ -261,7 +290,7 @@ class SyncSavingsAccountTransactionViewModel(
         _syncSavingsAccountTransactionUiState.value =
             SyncSavingsAccountTransactionUiState.Loading
         repository.processTransaction(
-            type,
+            type?:"",
             accountId,
             transactionType,
             request!!,

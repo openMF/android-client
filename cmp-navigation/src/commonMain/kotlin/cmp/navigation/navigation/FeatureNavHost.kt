@@ -27,6 +27,7 @@ import com.mifos.feature.about.navigation.aboutNavGraph
 import com.mifos.feature.activate.navigation.activateScreen
 import com.mifos.feature.checker.inbox.task.navigation.checkerInboxTaskNavGraph
 import com.mifos.feature.note.navigation.noteNavGraph
+import com.mifos.feature.offline.navigation.offlineNavGraph
 import com.mifos.feature.settings.navigation.navigateToSettingsScreen
 import com.mifos.feature.settings.navigation.settingsScreen
 
@@ -47,6 +48,8 @@ internal fun FeatureNavHost(
         homeScreen(onClick = { appState.navController.navigateToSettingsScreen() })
 
         checkerInboxTaskNavGraph(appState.navController)
+
+        offlineNavGraph(appState.navController)
 
         aboutNavGraph(onBackPressed = appState.navController::popBackStack)
 

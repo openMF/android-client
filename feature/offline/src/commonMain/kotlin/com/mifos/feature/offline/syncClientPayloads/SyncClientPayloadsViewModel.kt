@@ -11,6 +11,7 @@ package com.mifos.feature.offline.syncClientPayloads
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.mifos.core.common.utils.DataState
 import com.mifos.core.common.utils.FileUtils
 import com.mifos.core.data.repository.SyncClientPayloadsRepository
 import com.mifos.core.datastore.UserPreferencesRepository
@@ -67,9 +68,23 @@ class SyncClientPayloadsViewModel(
                     _syncClientPayloadsUiState.value =
                         SyncClientPayloadsUiState.ShowError(it.message.toString())
                 }.collect { clientPayloads ->
-                    mClientPayloads = clientPayloads.toMutableList()
-                    _syncClientPayloadsUiState.value =
-                        SyncClientPayloadsUiState.ShowPayloads(mClientPayloads)
+                    when (clientPayloads) {
+                        is DataState.Success -> {
+                            mClientPayloads = clientPayloads.data.toMutableList()
+                            _syncClientPayloadsUiState.value =
+                                SyncClientPayloadsUiState.ShowPayloads(mClientPayloads)
+                        }
+
+                        is DataState.Error -> {
+                            _syncClientPayloadsUiState.value =
+                                SyncClientPayloadsUiState.ShowError(clientPayloads.message)
+                        }
+
+                        is DataState.Loading -> {
+                            _syncClientPayloadsUiState.value =
+                                SyncClientPayloadsUiState.ShowProgressbar
+                        }
+                    }
                 }
         }
     }
@@ -105,14 +120,29 @@ class SyncClientPayloadsViewModel(
                 .catch { e ->
                     _syncClientPayloadsUiState.value =
                         SyncClientPayloadsUiState.ShowError(e.message.toString())
-                }.collect { clientPayloads ->
+                }.collect {  clientPayloads ->
                     mClientSyncIndex = 0
-                    if (clientPayloads.isNotEmpty()) {
-                        syncClientPayload()
+                    when (clientPayloads) {
+                        is DataState.Success -> {
+                            val list = clientPayloads.data
+                            if (list.isNotEmpty()) {
+                                syncClientPayload()
+                            }
+                            mClientPayloads = list.toMutableList()
+                            _syncClientPayloadsUiState.value =
+                                SyncClientPayloadsUiState.ShowPayloads(mClientPayloads)
+                        }
+
+                        is DataState.Error -> {
+                            _syncClientPayloadsUiState.value =
+                                SyncClientPayloadsUiState.ShowError(clientPayloads.message)
+                        }
+
+                        is DataState.Loading -> {
+                            _syncClientPayloadsUiState.value =
+                                SyncClientPayloadsUiState.ShowProgressbar
+                        }
                     }
-                    mClientPayloads = clientPayloads.toMutableList()
-                    _syncClientPayloadsUiState.value =
-                        SyncClientPayloadsUiState.ShowPayloads(mClientPayloads)
                 }
         }
     }

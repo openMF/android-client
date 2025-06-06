@@ -9,7 +9,6 @@
  */
 package com.mifos.feature.offline.syncGroupPayloads
 
-import android.util.Log
 import androidclient.feature.offline.generated.resources.Res
 import androidclient.feature.offline.generated.resources.feature_offline_activation_date
 import androidclient.feature.offline.generated.resources.feature_offline_active
@@ -43,8 +42,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -54,7 +51,7 @@ import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.room.entities.group.GroupPayloadEntity
 import org.jetbrains.compose.resources.stringResource
-import org.koin.androidx.compose.koinViewModel
+import org.jetbrains.compose.resources.vectorResource
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -151,7 +148,7 @@ internal fun SyncGroupPayloadsScreen(
                     is SyncGroupPayloadsUiState.Success -> {
                         if (uiState.emptyState != null) {
                             MifosErrorContent(
-                                imageVector = ImageVector.vectorResource(id = uiState.emptyState.iconResId),
+                                imageVector = vectorResource(uiState.emptyState.iconResId),
                                 message = stringResource(uiState.emptyState.messageResId),
                                 isRefreshEnabled = false,
                             )
@@ -258,7 +255,7 @@ private fun GroupPayloadField(
 private fun checkNetworkConnectionAndSync(
     syncGroupPayloads: () -> Unit,
 ) {
-    Log.d("C", context.packageName)
+//    Log.d("C", context.packageName)
 //    if (Network.isOnline(context)) {
     syncGroupPayloads()
 //    } else {
