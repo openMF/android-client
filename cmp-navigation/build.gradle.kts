@@ -46,9 +46,13 @@ kotlin {
 //            implementation(projects.feature.pathTracking)
 //            implementation(projects.feature.report)
 //            implementation(projects.feature.savings)
-//            implementation(projects.feature.search)
-            implementation(projects.feature.settings)
 //            implementation(projects.feature.splash)
+           implementation(projects.feature.search)
+            implementation(projects.feature.settings)
+//            implementation(projects.feature.search)
+
+            implementation(projects.feature.settings)
+            implementation(projects.feature.splash)
 //
 //            implementation(project.libs.mifos.passcode)
             implementation(compose.material3)

@@ -70,6 +70,41 @@ fun MifosDialogBox(
 }
 
 @Composable
+fun MifosDialogBox(
+    title: String,
+    showDialogState: Boolean,
+    confirmButtonText: String,
+    dismissButtonText: String,
+    onConfirm: () -> Unit,
+    onDismiss: () -> Unit,
+    modifier: Modifier = Modifier,
+    message: @Composable () -> Unit,
+) {
+    if (showDialogState) {
+        AlertDialog(
+            modifier = modifier,
+            onDismissRequest = onDismiss,
+            title = { Text(text = title) },
+            text = message,
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        onConfirm()
+                    },
+                ) {
+                    Text(text = confirmButtonText)
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = onDismiss) {
+                    Text(text = dismissButtonText)
+                }
+            },
+        )
+    }
+}
+
+@Composable
 fun MifosRadioButtonDialog(
     title: String,
     selectedItem: String,

@@ -292,6 +292,7 @@ fun App(
                     appState = appState,
                     onClickLogout = onClickLogout,
                     modifier = Modifier,
+                    padding = paddingValues,
                 )
                 if (dialogState) {
                     MifosDialogBox(
