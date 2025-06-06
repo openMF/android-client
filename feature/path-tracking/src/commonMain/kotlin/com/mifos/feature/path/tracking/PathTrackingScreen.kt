@@ -19,6 +19,14 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.net.Uri
+import androidclient.feature.path_tracking.generated.resources.Res
+import androidclient.feature.path_tracking.generated.resources.feature_path_tracking_approve_permission_description_location
+import androidclient.feature.path_tracking.generated.resources.feature_path_tracking_dismiss
+import androidclient.feature.path_tracking.generated.resources.feature_path_tracking_failed_to_load_path_tracking
+import androidclient.feature.path_tracking.generated.resources.feature_path_tracking_no_path_tracking_found
+import androidclient.feature.path_tracking.generated.resources.feature_path_tracking_permission_required
+import androidclient.feature.path_tracking.generated.resources.feature_path_tracking_proceed
+import androidclient.feature.path_tracking.generated.resources.feature_path_tracking_track_my_path
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -33,6 +41,7 @@ import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
@@ -61,18 +70,9 @@ import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.component.PermissionBox
+import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.model.objects.users.UserLatLng
 import com.mifos.core.model.objects.users.UserLocation
-import androidclient.feature.path_tracking.generated.resources.Res
-import androidclient.feature.path_tracking.generated.resources.feature_path_tracking_approve_permission_description_location
-import androidclient.feature.path_tracking.generated.resources.feature_path_tracking_dismiss
-import androidclient.feature.path_tracking.generated.resources.feature_path_tracking_failed_to_load_path_tracking
-import androidclient.feature.path_tracking.generated.resources.feature_path_tracking_no_path_tracking_found
-import androidclient.feature.path_tracking.generated.resources.feature_path_tracking_permission_required
-import androidclient.feature.path_tracking.generated.resources.feature_path_tracking_proceed
-import androidclient.feature.path_tracking.generated.resources.feature_path_tracking_track_my_path
-import androidx.compose.material3.MaterialTheme
-import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.ui.util.DevicePreview
 import com.mifos.feature.pathTracking.PathTrackingUiState
 import com.mifos.feature.pathTracking.PathTrackingViewModel
@@ -81,7 +81,6 @@ import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameterProvider
 import org.koin.compose.viewmodel.koinViewModel
-
 
 @Composable
 fun PathTrackingScreen(
