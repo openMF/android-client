@@ -148,6 +148,7 @@ com.arkivanov.essenty:utils-internal-android:2.1.0
 com.arkivanov.essenty:utils-internal:2.1.0
 com.caverock:androidsvg-aar:1.4
 com.google.accompanist:accompanist-drawablepainter:0.36.0
+com.google.accompanist:accompanist-permissions:0.34.0
 com.google.android.gms:play-services-base:18.5.0
 com.google.android.gms:play-services-basement:18.4.0
 com.google.android.gms:play-services-maps:18.2.0
@@ -282,9 +283,6 @@ org.jetbrains.compose.ui:ui-backhandler:1.8.0-alpha03
 org.jetbrains.compose.ui:ui-geometry:1.7.3
 org.jetbrains.compose.ui:ui-graphics:1.7.3
 org.jetbrains.compose.ui:ui-text:1.7.3
-org.jetbrains.compose.ui:ui-tooling-data:1.7.0-rc01
-org.jetbrains.compose.ui:ui-tooling-preview:1.7.0-rc01
-org.jetbrains.compose.ui:ui-tooling:1.7.0-rc01
 org.jetbrains.compose.ui:ui-unit:1.7.3
 org.jetbrains.compose.ui:ui-util:1.8.0-alpha03
 org.jetbrains.compose.ui:ui:1.7.3
