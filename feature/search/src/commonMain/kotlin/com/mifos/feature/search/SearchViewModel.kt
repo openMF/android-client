@@ -12,6 +12,7 @@ package com.mifos.feature.search
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.repository.SearchRepository
 import com.mifos.core.model.objects.SearchedEntity
 import kotlinx.coroutines.Job
@@ -100,13 +101,28 @@ class SearchViewModel(
                 searchResultState.update { SearchResultState.Loading }
             }.catch { throwable ->
                 searchResultState.update { SearchResultState.Error(throwable.message.toString()) }
-            }.onEach { results ->
-                if (results.isEmpty()) {
-                    searchResultState.update { SearchResultState.Empty(false) }
-                } else {
-                    searchResultState.update { SearchResultState.Success(results) }
+            }
+                .onEach { resultState ->
+                    when (resultState) {
+                        is DataState.Success -> {
+                            val results = resultState.data
+                            if (results.isEmpty()) {
+                                searchResultState.update { SearchResultState.Empty(false) }
+                            } else {
+                                searchResultState.update { SearchResultState.Success(results) }
+                            }
+                        }
+
+                        is DataState.Error -> {
+                            searchResultState.update { SearchResultState.Error(resultState.message) }
+                        }
+
+                        is DataState.Loading -> {
+                            searchResultState.update { SearchResultState.Loading }
+                        }
+                    }
                 }
-            }.launchIn(viewModelScope)
+                .launchIn(viewModelScope)
         }
     }
 }
