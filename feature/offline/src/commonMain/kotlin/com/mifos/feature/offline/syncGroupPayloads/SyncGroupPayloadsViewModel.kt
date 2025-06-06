@@ -27,12 +27,6 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import kotlinx.io.IOException
-import kotlinx.serialization.SerializationException
-import org.jetbrains.compose.resources.StringResource
-import org.jetbrains.compose.resources.getString
-import org.jetbrains.compose.resources.stringResource
-
 /**
  * Created by Aditya Gupta on 16/08/23.
  */
@@ -89,7 +83,9 @@ class SyncGroupPayloadsViewModel(
                             _syncGroupPayloadsUiState.value = SyncGroupPayloadsUiState.Success(
                                 if (list.isEmpty()) {
                                     GroupPayloadEmptyState.NOTHING_TO_SYNC
-                                } else null,
+                                } else {
+                                    null
+                                },
                             )
                         }
 

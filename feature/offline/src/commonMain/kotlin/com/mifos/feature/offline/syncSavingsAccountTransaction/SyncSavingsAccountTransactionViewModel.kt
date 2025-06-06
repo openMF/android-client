@@ -203,7 +203,7 @@ class SyncSavingsAccountTransactionViewModel(
                             } else {
                                 _syncSavingsAccountTransactionUiState.value =
                                     SyncSavingsAccountTransactionUiState.ShowEmptySavingsAccountTransactions(
-                                        Res.string.feature_offline_no_transaction_to_sync
+                                        Res.string.feature_offline_no_transaction_to_sync,
                                     )
                             }
                         }
@@ -287,13 +287,15 @@ class SyncSavingsAccountTransactionViewModel(
         transactionType: String?,
         request: SavingsAccountTransactionRequestEntity?,
     ) = viewModelScope.launch(Dispatchers.IO) {
+        require(!type.isNullOrBlank()) { "Account type must not be null or blank" }
+        requireNotNull(request) { "Request must not be null" }
         _syncSavingsAccountTransactionUiState.value =
             SyncSavingsAccountTransactionUiState.Loading
         repository.processTransaction(
-            type?:"",
+            type,
             accountId,
             transactionType,
-            request!!,
+            request,
         ).catch {
             showTransactionSyncFailed(it.message)
         }.collect {

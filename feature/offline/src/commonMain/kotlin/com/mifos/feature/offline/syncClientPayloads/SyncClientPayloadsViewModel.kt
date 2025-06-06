@@ -120,7 +120,7 @@ class SyncClientPayloadsViewModel(
                 .catch { e ->
                     _syncClientPayloadsUiState.value =
                         SyncClientPayloadsUiState.ShowError(e.message.toString())
-                }.collect {  clientPayloads ->
+                }.collect { clientPayloads ->
                     mClientSyncIndex = 0
                     when (clientPayloads) {
                         is DataState.Success -> {

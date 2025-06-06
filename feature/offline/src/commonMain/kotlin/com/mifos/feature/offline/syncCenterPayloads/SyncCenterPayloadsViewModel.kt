@@ -115,13 +115,27 @@ class SyncCenterPayloadsViewModel(
                 .catch {
                     _syncCenterPayloadsUiState.value =
                         SyncCenterPayloadsUiState.ShowError(it.message.toString())
-                }.collect {
-                    centerSyncIndex = 0
-                    mCenterPayloads = it as MutableList<CenterPayloadEntity>
-                    _syncCenterPayloadsUiState.value =
-                        SyncCenterPayloadsUiState.ShowCenters(mCenterPayloads)
-                    if (mCenterPayloads.isNotEmpty()) {
-                        syncCenterPayload()
+                }.collect { result ->
+                    when (result) {
+                        is DataState.Success -> {
+                            centerSyncIndex = 0
+                            mCenterPayloads = result.data.toMutableList()
+                            _syncCenterPayloadsUiState.value =
+                                SyncCenterPayloadsUiState.ShowCenters(mCenterPayloads)
+                            if (mCenterPayloads.isNotEmpty()) {
+                                syncCenterPayload()
+                            }
+                        }
+
+                        is DataState.Error -> {
+                            _syncCenterPayloadsUiState.value =
+                                SyncCenterPayloadsUiState.ShowError(result.message)
+                        }
+
+                        is DataState.Loading -> {
+                            _syncCenterPayloadsUiState.value =
+                                SyncCenterPayloadsUiState.ShowProgressbar
+                        }
                     }
                 }
         }

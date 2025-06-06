@@ -92,7 +92,7 @@ class OfflineDashboardViewModel(
             _offlineDashboardUiState.value = OfflineDashboardUiState.SyncUiState(updatedList)
         }
     }
-    fun <T> handleDataState(
+    private fun <T> handleDataState(
         flow: Flow<DataState<List<T>>>,
         type: Type,
     ) {

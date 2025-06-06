@@ -8,9 +8,6 @@
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
 plugins {
-//    alias(libs.plugins.mifos.android.feature)
-//    alias(libs.plugins.mifos.android.library.compose)
-//    alias(libs.plugins.mifos.android.library.jacoco)
       alias(libs.plugins.mifos.cmp.feature)
 }
 
@@ -26,8 +23,4 @@ kotlin {
             api(projects.core.domain)
         }
     }
-}
-
-dependencies {
-//    implementation (libs.androidx.material.v168)
 }
