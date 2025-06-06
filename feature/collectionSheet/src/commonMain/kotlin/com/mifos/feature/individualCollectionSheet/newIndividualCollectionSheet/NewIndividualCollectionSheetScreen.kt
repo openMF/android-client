@@ -184,9 +184,7 @@ internal fun NewIndividualCollectionSheetScreen(
             MifosBottomSheet(
                 content = {
                     CollectionSheetDialogContent(
-                        date = formatDate(
-                            repaymentDate,
-                        ),
+                        date = DateHelper.getDateAsStringFromLong(repaymentDate),
                         member = individualCollectionSheet?.clients?.size.toString(),
                         fillNow = {
                             showCollectionSheetDialog = false
@@ -250,9 +248,7 @@ internal fun NewIndividualCollectionSheetScreen(
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 MifosDatePickerTextField(
-                    value = formatDate(
-                        repaymentDate,
-                    ),
+                    value = DateHelper.getDateAsStringFromLong(repaymentDate),
                     label = stringResource(Res.string.feature_collection_sheet_repayment_date),
                     openDatePicker = {
                         showDatePicker = true

@@ -21,10 +21,11 @@ import kotlinx.serialization.Serializable
 @Parcelize
 @Serializable
 data class IndividualCollectionSheet(
-    var dueDate: IntArray? = null,
+    var dueDate: String? = null,
 
     var clients: ArrayList<ClientCollectionSheet>? = null,
 
     @IgnoredOnParcel
     var paymentTypeOptions: ArrayList<PaymentTypeOptions>? = null,
 ) : Parcelable
+

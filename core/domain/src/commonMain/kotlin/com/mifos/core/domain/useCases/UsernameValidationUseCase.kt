@@ -27,7 +27,7 @@ class UsernameValidationUseCase {
                 success = false,
                 getString(Res.string.core_domain_enter_credentials),
             )
-        } else if (username.length < 5) {
+        } else if (username.length < 4) {
             return ValidationResult(
                 success = false,
                 getString(Res.string.core_domain_error_username_length),

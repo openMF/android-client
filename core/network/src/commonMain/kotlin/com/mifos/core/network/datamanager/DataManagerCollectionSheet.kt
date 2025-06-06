@@ -9,6 +9,7 @@
  */
 package com.mifos.core.network.datamanager
 
+import co.touchlab.kermit.Logger
 import com.mifos.core.model.objects.collectionsheets.CollectionSheetRequestPayload
 import com.mifos.core.network.BaseApiManager
 import com.mifos.core.network.GenericResponse
@@ -34,7 +35,14 @@ class DataManagerCollectionSheet(
     suspend fun getIndividualCollectionSheet(
         payload: RequestCollectionSheetPayload?,
     ): IndividualCollectionSheet {
-        return mBaseApiManager.collectionSheetApi.getIndividualCollectionSheet(payload)
+        val res=mBaseApiManager.collectionSheetApi.getIndividualCollectionSheet(payload)
+        Logger.e("Revanth"){
+            payload.toString()
+        }
+        Logger.e("Revanth"){
+            res.toString()
+        }
+        return res
     }
 
     suspend fun saveIndividualCollectionSheet(
