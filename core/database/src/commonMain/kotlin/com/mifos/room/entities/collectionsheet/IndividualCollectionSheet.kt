@@ -28,4 +28,3 @@ data class IndividualCollectionSheet(
     @IgnoredOnParcel
     var paymentTypeOptions: ArrayList<PaymentTypeOptions>? = null,
 ) : Parcelable
-

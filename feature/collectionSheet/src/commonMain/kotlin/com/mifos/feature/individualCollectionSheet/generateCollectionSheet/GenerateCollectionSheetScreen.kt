@@ -58,6 +58,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mifos.core.common.utils.DateHelper
+import com.mifos.core.designsystem.component.MifosButton
 import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosDatePickerTextField
 import com.mifos.core.designsystem.component.MifosScaffold
@@ -347,7 +348,7 @@ private fun GenerateCollectionSheetContent(
 
         Spacer(modifier = Modifier.heightIn(16.dp))
 
-        Button(
+        MifosButton(
             onClick = {
                 onCenterDetails(
                     DateHelper.getDateAsStringFromLong(repaymentDate),
@@ -409,7 +410,7 @@ private fun GenerateCollectionSheetContent(
 
         Spacer(modifier = Modifier.heightIn(16.dp))
 
-        Button(
+        MifosButton(
             onClick = {
                 val payload = CollectionSheetRequestPayload().apply {
                     transactionDate = DateHelper.getDateAsStringFromLong(repaymentDate)
@@ -478,7 +479,7 @@ private fun GenerateCollectionSheetContent(
                 }
             }
 
-            Button(
+            MifosButton(
                 onClick = {
                     if (isProductiveResponse) {
                         val payload = ProductiveCollectionSheetPayload().apply {
