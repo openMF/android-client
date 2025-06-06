@@ -9,7 +9,6 @@
  */
 package com.mifos.feature.offline.syncLoanRepaymentTransaction
 
-
 import androidclient.feature.offline.generated.resources.Res
 import androidclient.feature.offline.generated.resources.feature_offline_account_number
 import androidclient.feature.offline.generated.resources.feature_offline_click_to_refresh
@@ -19,9 +18,7 @@ import androidclient.feature.offline.generated.resources.feature_offline_loan_tr
 import androidclient.feature.offline.generated.resources.feature_offline_payment_type
 import androidclient.feature.offline.generated.resources.feature_offline_sync_loanrepayment
 import androidclient.feature.offline.generated.resources.feature_offline_transaction_amount
-
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -124,7 +121,7 @@ internal fun SyncLoanRepaymentTransactionScreen(
             ) {
                 Icon(
                     MifosIcons.Sync,
-                    contentDescription = stringResource( Res.string.feature_offline_sync_loanrepayment),
+                    contentDescription = stringResource(Res.string.feature_offline_sync_loanrepayment),
                 )
             }
         },
@@ -304,7 +301,7 @@ private fun EmptyLoanRepaymentsScreen(
     }
 }
 
-//@RequiresPermission(Manifest.permission.ACCESS_NETWORK_STATE)
+// @RequiresPermission(Manifest.permission.ACCESS_NETWORK_STATE)
 internal fun checkNetworkConnectionAndSync(
     syncLoanRepaymentTransactions: () -> Unit,
 ) {
@@ -338,7 +335,7 @@ private fun SyncLoanRepaymentTransactionLoadingPreview() {
 private fun SyncLoanRepaymentTransactionErrorPreview() {
     SyncLoanRepaymentTransactionScreen(
         uiState = SyncLoanRepaymentTransactionUiState.ShowError(
-            Res.string.feature_offline_failed_to_load_loanrepayment
+            Res.string.feature_offline_failed_to_load_loanrepayment,
         ),
         onBackPressed = {},
         refreshState = false,
