@@ -65,6 +65,7 @@ import androidx.compose.material.icons.outlined.Wallet
 import androidx.compose.material.icons.rounded.AccountCircle
 import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material.icons.rounded.AddLocation
+import androidx.compose.material.icons.rounded.ArrowBackIosNew
 import androidx.compose.material.icons.rounded.Bedtime
 import androidx.compose.material.icons.rounded.Business
 import androidx.compose.material.icons.rounded.Cancel
@@ -99,6 +100,8 @@ object MifosIcons {
     val Group = Icons.Outlined.Group
     val EventRepeat = Icons.Outlined.EventRepeat
     val Date = Icons.Outlined.DateRange
+    val ArrowBack1 = Icons.Rounded.ArrowBackIosNew
+    val KeyboardArrowDown = Icons.Rounded.KeyboardArrowDown
     val Link = Icons.Default.Link
     val Server = Icons.Default
     val AddLink = Icons.Default.AddLink

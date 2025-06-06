@@ -9,6 +9,10 @@
  */
 package com.mifos.feature.search.components
 
+import androidclient.feature.search.generated.resources.Res
+import androidclient.feature.search.generated.resources.feature_search_exact_match
+import androidclient.feature.search.generated.resources.feature_search_search_hint
+import androidclient.feature.search.generated.resources.feature_search_title
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -22,7 +26,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.FilterList
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.outlined.Search
@@ -41,15 +44,14 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.mifos.core.designsystem.component.MifosOutlinedTextField
+import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.ui.util.DevicePreview
 import com.mifos.feature.search.FilterOption
-import com.mifos.feature.search.R
 import com.mifos.feature.search.SearchScreenEvent
 import com.mifos.feature.search.SearchScreenState
+import org.jetbrains.compose.resources.stringResource
 
 @Composable
 internal fun SearchBox(
@@ -74,8 +76,8 @@ internal fun SearchBox(
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 Text(
-                    text = stringResource(id = R.string.feature_search_title),
-                    fontSize = 24.sp,
+                    text = stringResource(Res.string.feature_search_title),
+                    style = MaterialTheme.typography.headlineSmall,
                 )
 
                 AssistChip(
@@ -85,19 +87,19 @@ internal fun SearchBox(
                     label = {
                         Text(
                             text = state.selectedFilter?.label ?: "All",
-                            fontSize = 16.sp,
+                            style = MaterialTheme.typography.bodyLarge,
                         )
                     },
                     leadingIcon = {
                         Icon(
-                            imageVector = Icons.Default.FilterList,
-                            contentDescription = "filterIcon",
+                            imageVector = MifosIcons.Filter,
+                            contentDescription = "Search Icon",
                         )
                     },
                     trailingIcon = {
                         Icon(
-                            imageVector = Icons.Default.KeyboardArrowDown,
-                            contentDescription = "changeFilter",
+                            imageVector = MifosIcons.KeyboardArrowDown,
+                            contentDescription = "Dropdown Icon",
                         )
                     },
                     colors = AssistChipDefaults.assistChipColors().copy(
@@ -112,8 +114,8 @@ internal fun SearchBox(
                 onValueChange = {
                     onEvent(SearchScreenEvent.UpdateSearchText(it))
                 },
-                leadingIcon = Icons.Default.Search,
-                label = stringResource(id = R.string.feature_search_search_hint),
+                leadingIcon = MifosIcons.Search,
+                label = stringResource(Res.string.feature_search_search_hint),
                 showClearIcon = state.searchText.isNotEmpty(),
                 onClickClearIcon = {
                     onEvent(SearchScreenEvent.ClearSearchText)
@@ -132,12 +134,12 @@ internal fun SearchBox(
             ) {
                 Icon(
                     imageVector = Icons.Outlined.Search,
-                    contentDescription = "searchIcon",
+                    contentDescription = "MifosIcons",
                 )
 
                 Text(
-                    text = stringResource(id = R.string.feature_search_title),
-                    fontSize = 16.sp,
+                    text = stringResource(Res.string.feature_search_title),
+                    style = MaterialTheme.typography.bodyLarge,
                 )
             }
 
@@ -164,8 +166,8 @@ internal fun SearchBox(
                 )
 
                 Text(
-                    text = stringResource(id = R.string.feature_search_exact_match),
-                    fontSize = 16.sp,
+                    text = stringResource(Res.string.feature_search_exact_match),
+                    style = MaterialTheme.typography.bodyLarge,
                 )
             }
         }
