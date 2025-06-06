@@ -166,7 +166,7 @@ class SyncSavingsAccountTransactionViewModel(
         mTransactionIndex = 0
         mSavingsAccountTransactionRequests = transactions
         updateUiState()
-        if (mSavingsAccountTransactionRequests.size != 0) {
+        if (mSavingsAccountTransactionRequests.isNotEmpty()) {
             syncSavingsAccountTransactions()
         } else {
             _syncSavingsAccountTransactionUiState.value =

@@ -10,6 +10,7 @@
 package com.mifos.feature.offline.syncSavingsAccountTransaction
 
 import androidclient.feature.offline.generated.resources.Res
+import androidclient.feature.offline.generated.resources.feature_offline_error_not_connected_internet
 import androidclient.feature.offline.generated.resources.feature_offline_failed_to_load_savingaccounttransaction
 import androidclient.feature.offline.generated.resources.feature_offline_no_transaction_to_sync
 import androidclient.feature.offline.generated.resources.feature_offline_nothing_to_sync
@@ -46,6 +47,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
@@ -58,6 +60,7 @@ import com.mifos.core.ui.components.MifosEmptyUi
 import com.mifos.core.ui.util.DevicePreview
 import com.mifos.room.entities.PaymentTypeOptionEntity
 import com.mifos.room.entities.accounts.savings.SavingsAccountTransactionRequestEntity
+import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -98,10 +101,13 @@ internal fun SyncSavingsAccountTransactionScreen(
     onRefresh: () -> Unit,
     syncSavingsAccountTransactions: () -> Unit,
     userStatus: Boolean,
+    isOnline: Boolean = true,
     modifier: Modifier = Modifier,
 ) {
     val snackbarHostState by remember { mutableStateOf(SnackbarHostState()) }
     val pullToRefreshState = rememberPullToRefreshState()
+    val offlineMessage = stringResource(Res.string.feature_offline_error_not_connected_internet)
+    val scope = rememberCoroutineScope()
 
     MifosScaffold(
         modifier = modifier,
@@ -113,6 +119,14 @@ internal fun SyncSavingsAccountTransactionScreen(
                     when (userStatus) {
                         false -> checkNetworkConnectionAndSync(
                             syncSavingsAccountTransactions,
+                            isOnline = isOnline,
+                            onShowOfflineMessage = {
+                                scope.launch {
+                                    snackbarHostState.showSnackbar(
+                                        message = offlineMessage,
+                                    )
+                                }
+                            },
                         )
 
                         true -> TODO() // Implement OfflineModeDialog()
@@ -277,10 +291,18 @@ fun getPaymentTypeName(
 // @RequiresPermission(Manifest.permission.ACCESS_NETWORK_STATE)
 private fun checkNetworkConnectionAndSync(
     syncSavingsAccountTransactions: () -> Unit,
+    isOnline: Boolean,
+    onShowOfflineMessage: () -> Unit,
 ) {
+    if (isOnline) {
+        syncSavingsAccountTransactions()
+    } else {
+        onShowOfflineMessage()
+    }
+
 //    Log.d("C", context.packageName)
 //    if (Network.isOnline(context)) {
-    syncSavingsAccountTransactions()
+//    syncSavingsAccountTransactions()
 //    } else {
 //        Toast.makeText(
 //            context,

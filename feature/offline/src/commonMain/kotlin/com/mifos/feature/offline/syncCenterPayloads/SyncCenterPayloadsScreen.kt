@@ -13,6 +13,7 @@ package com.mifos.feature.offline.syncCenterPayloads
 import androidclient.feature.offline.generated.resources.Res
 import androidclient.feature.offline.generated.resources.feature_offline_activation_date
 import androidclient.feature.offline.generated.resources.feature_offline_active
+import androidclient.feature.offline.generated.resources.feature_offline_error_not_connected_internet
 import androidclient.feature.offline.generated.resources.feature_offline_name
 import androidclient.feature.offline.generated.resources.feature_offline_no_center_payload_to_sync
 import androidclient.feature.offline.generated.resources.feature_offline_office_id
@@ -40,6 +41,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
@@ -51,6 +53,7 @@ import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.ui.components.MifosEmptyUi
 import com.mifos.core.ui.util.DevicePreview
 import com.mifos.room.entities.center.CenterPayloadEntity
+import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -86,10 +89,13 @@ internal fun SyncCenterPayloadsScreen(
     onRefresh: () -> Unit,
     syncCenterPayloads: () -> Unit,
     userStatus: Boolean,
+    isOnline: Boolean = true,
     modifier: Modifier = Modifier,
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
     val pullToRefreshState = rememberPullToRefreshState()
+    val offlineMessage = stringResource(Res.string.feature_offline_error_not_connected_internet)
+    val scope = rememberCoroutineScope()
 
     MifosScaffold(
         modifier = modifier,
@@ -99,7 +105,18 @@ internal fun SyncCenterPayloadsScreen(
             IconButton(
                 onClick = {
                     when (userStatus) {
-                        false -> checkNetworkConnectionAndSync(syncCenterPayloads)
+                        false -> checkNetworkConnectionAndSync(
+                            syncCenterPayloads,
+                            isOnline = isOnline,
+                            onShowOfflineMessage = {
+                                scope.launch {
+                                    snackbarHostState.showSnackbar(
+                                        message = offlineMessage,
+                                    )
+                                }
+                            },
+                        )
+
                         true -> TODO("Implement OfflineModeDialog()")
                     }
                 },
@@ -220,10 +237,17 @@ private fun PayloadField(
 // @RequiresPermission(Manifest.permission.ACCESS_NETWORK_STATE)
 private fun checkNetworkConnectionAndSync(
     syncCenterPayloads: () -> Unit,
+    isOnline: Boolean,
+    onShowOfflineMessage: () -> Unit,
 ) {
+    if (isOnline) {
+        syncCenterPayloads()
+    } else {
+        onShowOfflineMessage()
+    }
 //    Log.d("C", context.packageName)
 //    if (Network.isOnline(context)) {
-    syncCenterPayloads()
+//    syncCenterPayloads()
 //    } else {
 //        Toast.makeText(
 //            context,

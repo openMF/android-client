@@ -158,12 +158,6 @@ internal fun OfflineDashboardScreen(
                                         },
                                     )
                                 }
-
-                                LaunchedEffect(item.errorMsg) {
-                                    item.errorMsg?.let { it ->
-                                        snackBarHostState.showSnackbar(it)
-                                    }
-                                }
                             }
                         }
                     }

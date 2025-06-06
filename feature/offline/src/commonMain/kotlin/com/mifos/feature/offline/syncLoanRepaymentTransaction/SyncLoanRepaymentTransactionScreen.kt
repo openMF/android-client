@@ -12,6 +12,7 @@ package com.mifos.feature.offline.syncLoanRepaymentTransaction
 import androidclient.feature.offline.generated.resources.Res
 import androidclient.feature.offline.generated.resources.feature_offline_account_number
 import androidclient.feature.offline.generated.resources.feature_offline_click_to_refresh
+import androidclient.feature.offline.generated.resources.feature_offline_error_not_connected_internet
 import androidclient.feature.offline.generated.resources.feature_offline_failed_to_load_loanrepayment
 import androidclient.feature.offline.generated.resources.feature_offline_loan_id
 import androidclient.feature.offline.generated.resources.feature_offline_loan_transaction_date
@@ -45,6 +46,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
@@ -58,6 +60,7 @@ import com.mifos.core.ui.util.DevicePreview
 import com.mifos.feature.offline.syncSavingsAccountTransaction.getPaymentTypeName
 import com.mifos.room.entities.PaymentTypeOptionEntity
 import com.mifos.room.entities.accounts.loans.LoanRepaymentRequestEntity
+import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -98,10 +101,13 @@ internal fun SyncLoanRepaymentTransactionScreen(
     onRefresh: () -> Unit,
     syncLoanRepaymentTransactions: () -> Unit,
     userStatus: Boolean,
+    isOnline: Boolean = true,
     modifier: Modifier = Modifier,
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
     val pullToRefreshState = rememberPullToRefreshState()
+    val offlineMessage = stringResource(Res.string.feature_offline_error_not_connected_internet)
+    val scope = rememberCoroutineScope()
 
     MifosScaffold(
         modifier = modifier,
@@ -113,6 +119,14 @@ internal fun SyncLoanRepaymentTransactionScreen(
                     when (userStatus) {
                         false -> checkNetworkConnectionAndSync(
                             syncLoanRepaymentTransactions,
+                            isOnline = isOnline,
+                            onShowOfflineMessage = {
+                                scope.launch {
+                                    snackbarHostState.showSnackbar(
+                                        message = offlineMessage,
+                                    )
+                                }
+                            },
                         )
 
                         true -> TODO("Implement OfflineModeDialog()")
@@ -304,10 +318,17 @@ private fun EmptyLoanRepaymentsScreen(
 // @RequiresPermission(Manifest.permission.ACCESS_NETWORK_STATE)
 internal fun checkNetworkConnectionAndSync(
     syncLoanRepaymentTransactions: () -> Unit,
+    isOnline: Boolean = true,
+    onShowOfflineMessage: () -> Unit = {},
 ) {
+    if (isOnline) {
+        syncLoanRepaymentTransactions()
+    } else {
+        onShowOfflineMessage()
+    }
 //    Log.d("C", context.packageName)
 //    if (Network.isOnline(context)) {
-    syncLoanRepaymentTransactions()
+//    syncLoanRepaymentTransactions()
 //    } else {
 //        Toast.makeText(
 //            context,

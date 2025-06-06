@@ -13,6 +13,7 @@ import androidclient.feature.offline.generated.resources.Res
 import androidclient.feature.offline.generated.resources.feature_offline_activation_date
 import androidclient.feature.offline.generated.resources.feature_offline_active
 import androidclient.feature.offline.generated.resources.feature_offline_click_to_refresh
+import androidclient.feature.offline.generated.resources.feature_offline_error_not_connected_internet
 import androidclient.feature.offline.generated.resources.feature_offline_external_id
 import androidclient.feature.offline.generated.resources.feature_offline_name
 import androidclient.feature.offline.generated.resources.feature_offline_office_id
@@ -40,6 +41,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -49,6 +51,7 @@ import com.mifos.core.designsystem.component.MifosErrorContent
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.room.entities.group.GroupPayloadEntity
+import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.resources.vectorResource
 import org.koin.compose.viewmodel.koinViewModel
@@ -92,10 +95,13 @@ internal fun SyncGroupPayloadsScreen(
     onRefresh: () -> Unit,
     syncGroupPayloads: () -> Unit,
     userStatus: Boolean,
+    isOnline: Boolean = true,
     modifier: Modifier = Modifier,
 ) {
     val snackBarHostState = remember { SnackbarHostState() }
     val pullRefreshState = rememberPullToRefreshState()
+    val offlineMessage = stringResource(Res.string.feature_offline_error_not_connected_internet)
+    val scope = rememberCoroutineScope()
 
     MifosScaffold(
         modifier = modifier,
@@ -107,6 +113,14 @@ internal fun SyncGroupPayloadsScreen(
                     when (userStatus) {
                         false -> checkNetworkConnectionAndSync(
                             syncGroupPayloads = syncGroupPayloads,
+                            isOnline = isOnline,
+                            onShowOfflineMessage = {
+                                scope.launch {
+                                    snackBarHostState.showSnackbar(
+                                        message = offlineMessage,
+                                    )
+                                }
+                            },
                         )
 
                         true -> TODO("Implement OfflineModeDialog()")
@@ -253,10 +267,17 @@ private fun GroupPayloadField(
 // @RequiresPermission(Manifest.permission.ACCESS_NETWORK_STATE)
 private fun checkNetworkConnectionAndSync(
     syncGroupPayloads: () -> Unit,
+    isOnline: Boolean,
+    onShowOfflineMessage: () -> Unit,
 ) {
+    if (isOnline) {
+        syncGroupPayloads()
+    } else {
+        onShowOfflineMessage()
+    }
 //    Log.d("C", context.packageName)
 //    if (Network.isOnline(context)) {
-    syncGroupPayloads()
+//    syncGroupPayloads()
 //    } else {
 //        Toast.makeText(
 //            context,
