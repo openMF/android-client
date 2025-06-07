@@ -119,7 +119,6 @@ fun NavController.navigateToPaymentDetailsScreen(
     paymentTypeOptions: List<PaymentTypeOptions>,
     clientId: Int,
 ) {
-
     val args = PaymentDetailsArgs(
         position = position,
         individualCollectionSheetPayload = payload,

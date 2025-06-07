@@ -35,7 +35,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.material3.Button
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -56,15 +55,10 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mifos.core.common.utils.DateHelper
-import com.mifos.core.common.utils.formatDate
 import com.mifos.core.designsystem.component.MifosBottomSheet
 import com.mifos.core.designsystem.component.MifosButton
 import com.mifos.core.designsystem.component.MifosCircularProgress
@@ -98,8 +92,8 @@ internal fun NewIndividualCollectionSheetScreen(
                     officeId = id
                     transactionDate = date
                     staffId = idStaff
-                    locale="en"
-                    dateFormat="dd-MM-yyyy"
+                    locale = "en"
+                    dateFormat = "dd-MM-yyyy"
                 },
             )
         },
@@ -221,12 +215,12 @@ internal fun NewIndividualCollectionSheetScreen(
                     modifier = Modifier.padding(16.dp),
                     text = stringResource(Res.string.feature_collection_sheet_generate_new),
                     style = MaterialTheme.typography.titleLarge,
-                    )
+                )
                 Text(
                     modifier = Modifier.padding(start = 16.dp, end = 16.dp),
                     text = stringResource(Res.string.feature_collection_sheet_fill_collection_sheet_message),
                     style = MaterialTheme.typography.bodyMedium,
-                    )
+                )
                 Spacer(modifier = Modifier.height(16.dp))
                 MifosTextFieldDropdown(
                     value = selectedOffice,
@@ -286,12 +280,12 @@ internal fun NewIndividualCollectionSheetScreen(
                             .weight(1f)
                             .padding(16.dp),
                         contentPadding = PaddingValues(),
-                        enabled =  selectedOffice != "",
+                        enabled = selectedOffice != "",
                     ) {
                         Text(
                             text = stringResource(Res.string.feature_collection_sheet_generate),
                             style = MaterialTheme.typography.bodyLarge,
-                            )
+                        )
                     }
                     MifosButton(
                         onClick = {
@@ -308,7 +302,7 @@ internal fun NewIndividualCollectionSheetScreen(
                         Text(
                             text = stringResource(Res.string.feature_collection_sheet_clear),
                             style = MaterialTheme.typography.bodyLarge,
-                            )
+                        )
                     }
                 }
             }
@@ -338,35 +332,35 @@ private fun CollectionSheetDialogContent(
                         .align(Alignment.CenterHorizontally),
                     text = stringResource(Res.string.feature_collection_sheet_found_sheet),
                     style = MaterialTheme.typography.titleLarge,
-                    )
+                )
                 Spacer(modifier = Modifier.height(16.dp))
                 Text(
                     text = stringResource(Res.string.feature_collection_sheet_fill_collection_sheet_message),
                     style = MaterialTheme.typography.bodyLarge,
-                    )
+                )
                 Spacer(modifier = Modifier.height(16.dp))
                 Row {
                     Text(
                         text = stringResource(Res.string.feature_collection_sheet_date),
                         style = MaterialTheme.typography.bodyLarge,
-                        )
+                    )
                     Spacer(modifier = Modifier.width(16.dp))
                     Text(
                         text = date,
                         style = MaterialTheme.typography.bodyLarge,
-                        )
+                    )
                 }
 
                 Row {
                     Text(
                         text = stringResource(Res.string.feature_collection_sheet_member),
                         style = MaterialTheme.typography.bodyLarge,
-                        )
+                    )
                     Spacer(modifier = Modifier.width(16.dp))
                     Text(
                         text = member,
                         style = MaterialTheme.typography.bodyLarge,
-                        )
+                    )
                 }
                 Spacer(modifier = Modifier.height(16.dp))
                 Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
@@ -376,7 +370,7 @@ private fun CollectionSheetDialogContent(
                         Text(
                             text = stringResource(Res.string.feature_collection_sheet_fill_now),
                             style = MaterialTheme.typography.bodyLarge,
-                            )
+                        )
                     }
                     Spacer(modifier = Modifier.width(16.dp))
                     MifosButton(
@@ -385,7 +379,7 @@ private fun CollectionSheetDialogContent(
                         Text(
                             text = stringResource(Res.string.feature_collection_sheet_cancel),
                             style = MaterialTheme.typography.bodyLarge,
-                            )
+                        )
                     }
                 }
             }

@@ -9,8 +9,6 @@
  */
 package com.mifos.room.entities.organisation
 
-import com.mifos.core.model.utils.Parcelable
-import com.mifos.core.model.utils.Parcelize
 import com.mifos.room.utils.Entity
 import com.mifos.room.utils.ForeignKey
 import com.mifos.room.utils.ForeignKeyAction
@@ -34,7 +32,6 @@ import kotlinx.serialization.Serializable
         ),
     ],
 )
-
 @Serializable
 data class OfficeEntity(
     @PrimaryKey(autoGenerate = true)

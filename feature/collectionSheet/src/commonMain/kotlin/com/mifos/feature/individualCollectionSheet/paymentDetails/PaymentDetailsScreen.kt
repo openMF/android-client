@@ -48,11 +48,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
 import coil3.request.ImageResult
 import com.mifos.core.designsystem.component.MifosButton
@@ -223,7 +221,7 @@ internal fun PaymentsDetailsScreen(
                     Text(
                         text = loanAndClientNameItem.clientName ?: "This is Tv name",
                         style = MaterialTheme.typography.titleLarge,
-                        )
+                    )
 
                     Spacer(modifier = Modifier.height(16.dp))
 
@@ -231,7 +229,7 @@ internal fun PaymentsDetailsScreen(
                         text = "${loanCollectionSheetItem?.productShortName} (#${loanCollectionSheetItem?.accountId})",
                         color = Color.DarkGray.copy(alpha = .7f),
                         style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
-                        )
+                    )
 
                     Spacer(modifier = Modifier.height(16.dp))
 
@@ -301,7 +299,7 @@ internal fun PaymentsDetailsScreen(
             ) {
                 Column(
                     modifier = Modifier.padding(vertical = 16.dp),
-                    verticalArrangement = Arrangement.spacedBy(16.dp)
+                    verticalArrangement = Arrangement.spacedBy(16.dp),
                 ) {
                     MifosTextFieldDropdown(
                         label = stringResource(Res.string.feature_collection_sheet_payment_type),

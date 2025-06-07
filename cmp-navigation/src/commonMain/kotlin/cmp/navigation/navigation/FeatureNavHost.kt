@@ -16,8 +16,8 @@ import androidx.navigation.compose.NavHost
 import cmp.navigation.AppState
 import com.mifos.feature.about.navigation.aboutNavGraph
 import com.mifos.feature.activate.navigation.activateScreen
-import com.mifos.feature.individualCollectionSheet.navigation.individualCollectionSheetNavGraph
 import com.mifos.feature.checker.inbox.task.navigation.checkerInboxTaskNavGraph
+import com.mifos.feature.individualCollectionSheet.navigation.individualCollectionSheetNavGraph
 import com.mifos.feature.note.navigation.noteNavGraph
 import com.mifos.feature.search.navigation.searchNavGraph
 import com.mifos.feature.settings.navigation.settingsScreen

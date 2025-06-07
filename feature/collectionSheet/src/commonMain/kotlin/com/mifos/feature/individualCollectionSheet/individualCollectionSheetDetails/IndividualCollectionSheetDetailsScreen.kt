@@ -52,8 +52,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color.Companion.LightGray
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import coil3.compose.AsyncImage
-import coil3.util.Logger
 import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
