@@ -34,7 +34,7 @@ kotlin {
             implementation(projects.feature.activate)
             implementation(projects.feature.auth)
             implementation(projects.feature.center)
-//            implementation(projects.feature.checkerInboxTask)
+            implementation(projects.feature.checkerInboxTask)
 //            implementation(projects.feature.client)
 //            implementation(projects.feature.collectionSheet)
 //            implementation(projects.feature.dataTable)
@@ -46,11 +46,7 @@ kotlin {
 //            implementation(projects.feature.pathTracking)
 //            implementation(projects.feature.report)
 //            implementation(projects.feature.savings)
-//            implementation(projects.feature.splash)
            implementation(projects.feature.search)
-            implementation(projects.feature.settings)
-//            implementation(projects.feature.search)
-
             implementation(projects.feature.settings)
             implementation(projects.feature.splash)
 //

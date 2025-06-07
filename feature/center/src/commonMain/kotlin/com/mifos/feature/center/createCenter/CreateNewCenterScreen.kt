@@ -246,7 +246,7 @@ private fun CreateNewCenterContent(
                     officeId = it
                 }
             },
-            label = Res.string.feature_center_office,
+            label = stringResource(Res.string.feature_center_office),
             options = offices.map { it.name.toString() },
             readOnly = true,
         )

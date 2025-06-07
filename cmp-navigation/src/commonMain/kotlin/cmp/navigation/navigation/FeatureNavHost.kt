@@ -32,7 +32,7 @@ internal fun FeatureNavHost(
 ) {
     NavHost(
         route = NavGraphRoute.MAIN_GRAPH,
-        startDestination = HomeDestinationsScreen.SearchScreen.route,
+        startDestination = "center_screen_route",
         navController = appState.navController,
         modifier = modifier,
     ) {
