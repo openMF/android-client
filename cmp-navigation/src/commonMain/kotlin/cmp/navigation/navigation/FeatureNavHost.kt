@@ -9,57 +9,56 @@
  */
 package cmp.navigation.navigation
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.Text
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
 import cmp.navigation.AppState
 import com.mifos.feature.about.navigation.aboutNavGraph
+import com.mifos.feature.activate.navigation.activateScreen
+import com.mifos.feature.checker.inbox.task.navigation.checkerInboxTaskNavGraph
 import com.mifos.feature.note.navigation.noteNavGraph
-
-const val WELCOME_ROUTE = "home_screen"
+import com.mifos.feature.search.navigation.searchNavGraph
+import com.mifos.feature.settings.navigation.settingsScreen
 
 @Composable
 internal fun FeatureNavHost(
     appState: AppState,
     onClickLogout: () -> Unit,
+    padding: PaddingValues,
     modifier: Modifier = Modifier,
 ) {
     NavHost(
         route = NavGraphRoute.MAIN_GRAPH,
-        startDestination = WELCOME_ROUTE,
+        startDestination = HomeDestinationsScreen.SearchScreen.route,
         navController = appState.navController,
         modifier = modifier,
     ) {
-        homeScreen()
+        checkerInboxTaskNavGraph(appState.navController)
+
+        searchNavGraph(
+            paddingValues = padding,
+            onCreateClient = { println("Create Client") },
+            onCreateCenter = { println("Create Center") },
+            onCreateGroup = { println("Create Group") },
+            onClient = { id -> println("Client clicked: $id") },
+            onCenter = { id -> println("Center clicked: $id") },
+            onGroup = { id -> println("Group clicked: $id") },
+            onLoan = { id -> println("Loan clicked: $id") },
+            onSavings = { id -> println("Savings clicked: $id") },
+        )
 
         aboutNavGraph(onBackPressed = appState.navController::popBackStack)
 
         noteNavGraph(onBackPressed = appState.navController::popBackStack)
-    }
-}
 
-fun NavGraphBuilder.homeScreen() {
-    composable(route = WELCOME_ROUTE) {
-        WelcomeScreen()
-    }
-}
+        activateScreen(onBackPressed = appState.navController::popBackStack)
 
-@Composable
-fun WelcomeScreen() {
-    Column(
-        modifier = Modifier.fillMaxSize().background(Color.White),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally,
-    ) {
-        Text(text = "Welcome to Mifos", color = Color.Black)
+        settingsScreen(
+            navigateBack = appState.navController::popBackStack,
+            navigateToLoginScreen = {},
+            changePasscode = {},
+            languageChanged = {},
+        )
     }
 }
