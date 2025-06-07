@@ -42,7 +42,7 @@ class CreateNewCenterViewModel(
                     _createNewCenterUiState.value =
                         CreateNewCenterUiState.Error(Res.string.feature_center_failed_to_load_offices)
                 }.collect {
-                    when(it){
+                    when (it) {
                         is DataState.Error -> {
                             _createNewCenterUiState.value =
                                 CreateNewCenterUiState.Error(Res.string.feature_center_failed_to_load_offices)
@@ -56,7 +56,6 @@ class CreateNewCenterViewModel(
                                 CreateNewCenterUiState.Offices(it.data)
                         }
                     }
-
                 }
         }
     }

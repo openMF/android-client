@@ -34,7 +34,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Button
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
@@ -57,7 +56,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mifos.core.common.utils.formatDate
 import com.mifos.core.designsystem.component.MifosButton
@@ -120,7 +118,7 @@ internal fun CreateNewCenterScreen(
                         dialogTitle = "Success",
                         dialogText = stringResource(Res.string.feature_center_center_created_successfully),
                         onDismissRequest = onCreateSuccess,
-                        onConfirmation = onCreateSuccess
+                        onConfirmation = onCreateSuccess,
                     )
                 }
 
@@ -300,22 +298,24 @@ private fun CreateNewCenterContent(
                 .padding(horizontal = 16.dp),
             contentPadding = PaddingValues(),
         ) {
-            Text(text = stringResource(Res.string.feature_center_create),
-                style=MaterialTheme.typography.bodyMedium)
+            Text(
+                text = stringResource(Res.string.feature_center_create),
+                style = MaterialTheme.typography.bodyMedium,
+            )
         }
     }
 }
 
 @DevicePreview
- @Composable
- private fun CreateNewCenterLoadingPreview() {
+@Composable
+private fun CreateNewCenterLoadingPreview() {
     CreateNewCenterScreen(
         state = CreateNewCenterUiState.Loading,
         onRetry = {},
         createCenter = {},
         onCreateSuccess = {},
     )
- }
+}
 
 @DevicePreview
 @Composable
@@ -338,7 +338,6 @@ private fun CreateNewCenterOfficesPreview() {
         onCreateSuccess = {},
     )
 }
-
 
 @DevicePreview
 @Composable

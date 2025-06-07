@@ -24,7 +24,6 @@ import com.mifos.room.entities.zipmodels.LoanAndLoanRepayment
 import com.mifos.room.entities.zipmodels.SavingsAccountAndTransactionTemplate
 import io.ktor.client.plugins.ClientRequestException
 import io.ktor.client.plugins.ServerResponseException
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -129,7 +128,7 @@ class SyncCentersDialogViewModel(
                 syncCenter()
             }
         } catch (throwable: Throwable) {
-            Logger.e("Error",throwable)
+            Logger.e("Error", throwable)
         }
     }
 
@@ -327,7 +326,7 @@ class SyncCentersDialogViewModel(
                 mCenterSyncIndex += 1
                 syncCenter()
             } catch (e: Exception) {
-                Logger.e("Error"){
+                Logger.e("Error") {
                     "syncCenter: ${e.message}"
                 }
             }
@@ -786,8 +785,8 @@ class SyncCentersDialogViewModel(
         return savingsAccounts
             ?.filter { account ->
                 account.depositType?.value == "Savings" &&
-                        account.status?.active == true &&
-                        account.depositType?.isRecurring == false
+                    account.status?.active == true &&
+                    account.depositType?.isRecurring == false
             }
             .orEmpty()
     }

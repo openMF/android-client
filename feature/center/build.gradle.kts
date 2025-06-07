@@ -35,24 +35,3 @@ kotlin{
         }
     }
 }
-
-//dependencies {
-//
-//    implementation(projects.core.datastore)
-//    implementation(projects.core.network)
-//    implementation(projects.core.domain)
-//
-//    implementation(libs.androidx.material)
-//
-//    //DBFlow dependencies
-//    testImplementation(libs.hilt.android.testing)
-//    //paging compose
-//    implementation(libs.androidx.paging.compose)
-//
-//    //coil
-//    implementation(libs.coil.kt.compose)
-//
-//    implementation(libs.ktor.client.core)
-//    implementation(libs.ktor.client.android)
-//    implementation(libs.ktorfit.lib)
-//}

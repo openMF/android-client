@@ -290,7 +290,7 @@ fun App(
             ) { paddingValues ->
                 FeatureNavHost(
                     appState = appState,
-                    padding=paddingValues,
+                    padding = paddingValues,
                     onClickLogout = onClickLogout,
                     modifier = Modifier,
                 )

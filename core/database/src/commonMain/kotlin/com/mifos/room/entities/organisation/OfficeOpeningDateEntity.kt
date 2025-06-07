@@ -26,7 +26,6 @@ import kotlinx.serialization.Serializable
     ignoredColumns = [],
     tableName = "OfficeOpeningDate",
 )
-
 @Serializable
 data class OfficeOpeningDateEntity(
     @PrimaryKey(autoGenerate = true)

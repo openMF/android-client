@@ -7,8 +7,6 @@
  *
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
-
-
 package com.mifos.feature.center.centerList.ui
 
 import androidclient.feature.center.generated.resources.Res
@@ -22,11 +20,8 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
@@ -60,14 +55,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Color.Companion.Black
-import androidx.compose.ui.graphics.Color.Companion.DarkGray
-import androidx.compose.ui.graphics.Color.Companion.White
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontStyle
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.compose.AsyncImage
 import com.mifos.core.designsystem.component.MifosCircularProgress
@@ -78,7 +66,6 @@ import com.mifos.feature.center.syncCentersDialog.SyncCenterDialogScreen
 import com.mifos.room.entities.group.CenterEntity
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
-
 
 @Composable
 internal fun CenterListScreen(
@@ -127,9 +114,6 @@ internal fun CenterListScreen(
     val sync = rememberSaveable {
         mutableStateOf(false)
     }
-//    BackHandler(enabled = isInSelectionMode) {
-//        resetSelectionMode()
-//    }
 
     val pullRefreshState = rememberPullToRefreshState()
 
@@ -169,7 +153,6 @@ internal fun CenterListScreen(
         floatingActionButton = {
             FloatingActionButton(
                 onClick = { createNewCenter() },
-//                containerColor = ,
             ) {
                 Icon(
                     imageVector = MifosIcons.Add,
@@ -187,8 +170,8 @@ internal fun CenterListScreen(
                 state = pullRefreshState,
                 onRefresh = onRefresh,
                 isRefreshing = refreshState,
-            ){
-                Box{
+            ) {
+                Box {
                     when (state) {
                         is CenterListUiState.Error -> {
                             MifosSweetError(message = stringResource(state.message)) {
@@ -202,7 +185,7 @@ internal fun CenterListScreen(
 
                         is CenterListUiState.CenterList -> {
                             CenterListContent(
-                                state=state,
+                                state = state,
                                 isInSelectionMode = isInSelectionMode,
                                 selectedItems = selectedItems,
                                 onRefresh = {
@@ -217,7 +200,7 @@ internal fun CenterListScreen(
                             )
                         }
 
-                        is CenterListUiState.CenterListDb -> CenterListDbContent( state.centers)
+                        is CenterListUiState.CenterListDb -> CenterListDbContent(state.centers)
                     }
                     if (sync.value) {
                         SyncCenterDialogScreen(
@@ -268,7 +251,7 @@ class SelectedItemsState(initialSelectedItems: List<CenterEntity> = emptyList())
 
 @Composable
 expect fun CenterListContent(
-    state:CenterListUiState,
+    state: CenterListUiState,
     isInSelectionMode: Boolean,
     selectedItems: SelectedItemsState,
     onRefresh: () -> Unit,
@@ -276,8 +259,6 @@ expect fun CenterListContent(
     selectedMode: () -> Unit,
     modifier: Modifier = Modifier,
 )
-
-
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -357,18 +338,20 @@ fun CenterCard(
         )
     }
 }
+
 @Composable
 fun CenterListDbContent(
     centerList: List<CenterEntity>?,
     modifier: Modifier = Modifier,
     lazyListState: LazyListState = rememberLazyListState(),
 ) {
-    if(centerList!=null){
+    if (centerList != null) {
         LazyColumn(
             modifier = modifier,
             state = lazyListState,
         ) {
-            items(centerList.size
+            items(
+                centerList.size,
             ) { index ->
                 CenterCard(
                     center = centerList[index],
@@ -382,7 +365,7 @@ fun CenterListDbContent(
     }
 }
 
-//class CenterListUiStateProvider :
+// class CenterListUiStateProvider :
 //    PreviewParameterProvider<CenterListUiState> {
 //
 //    override val values: Sequence<CenterListUiState>
@@ -392,11 +375,11 @@ fun CenterListDbContent(
 //            CenterListUiState.CenterListDb(sampleCenterListDb),
 //            CenterListUiState.CenterList(sampleCenterList),
 //        )
-//}
+// }
 //
-//@Preview(showBackground = true)
-//@Composable
-//private fun CenterListContentPreview() {
+// @Preview(showBackground = true)
+// @Composable
+// private fun CenterListContentPreview() {
 //    CenterListContent(
 //        centerPagingList = sampleCenterList.collectAsLazyPagingItems(),
 //        isInSelectionMode = false,
@@ -405,19 +388,19 @@ fun CenterListDbContent(
 //        onCenterSelect = {},
 //        selectedMode = {},
 //    )
-//}
+// }
 //
-//@Preview(showBackground = true)
-//@Composable
-//private fun CenterListDbContentPreview() {
+// @Preview(showBackground = true)
+// @Composable
+// private fun CenterListDbContentPreview() {
 //    CenterListDbContent(sampleCenterListDb)
-//}
+// }
 //
-//@Preview(showBackground = true)
-//@Composable
-//private fun CenterListScreenPreview(
+// @Preview(showBackground = true)
+// @Composable
+// private fun CenterListScreenPreview(
 //    @PreviewParameter(CenterListUiStateProvider::class) centerListUiState: CenterListUiState,
-//) {
+// ) {
 //    CenterListScreen(
 //        paddingValues = PaddingValues(),
 //        state = centerListUiState,
@@ -426,9 +409,9 @@ fun CenterListDbContent(
 //        refreshState = false,
 //        onCenterSelect = {},
 //    )
-//}
+// }
 //
-//val sampleCenterListDb = List(10) {
+// val sampleCenterListDb = List(10) {
 //    CenterEntity(
 //        name = "Center $it",
 //        officeId = it,
@@ -437,6 +420,6 @@ fun CenterListDbContent(
 //        staffName = "Staff $it",
 //        active = it % 2 == 0,
 //    )
-//}
+// }
 //
-//val sampleCenterList = flowOf(PagingData.from(sampleCenterListDb))
+// val sampleCenterList = flowOf(PagingData.from(sampleCenterListDb))
