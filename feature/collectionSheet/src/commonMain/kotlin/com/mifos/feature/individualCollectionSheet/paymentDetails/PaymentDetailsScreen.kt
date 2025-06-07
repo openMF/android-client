@@ -34,7 +34,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Button
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedCard
@@ -56,6 +55,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
 import coil3.request.ImageResult
+import com.mifos.core.designsystem.component.MifosButton
 import com.mifos.core.designsystem.component.MifosOutlinedTextField
 import com.mifos.core.designsystem.component.MifosTextFieldDropdown
 import com.mifos.core.model.objects.account.loan.PaymentTypeOptions
@@ -222,21 +222,16 @@ internal fun PaymentsDetailsScreen(
                 ) {
                     Text(
                         text = loanAndClientNameItem.clientName ?: "This is Tv name",
-                        style = TextStyle(
-                            fontSize = 24.sp,
-                            fontWeight = FontWeight.Bold,
-                        ),
-                    )
+                        style = MaterialTheme.typography.titleLarge,
+                        )
 
                     Spacer(modifier = Modifier.height(16.dp))
 
                     Text(
                         text = "${loanCollectionSheetItem?.productShortName} (#${loanCollectionSheetItem?.accountId})",
                         color = Color.DarkGray.copy(alpha = .7f),
-                        style = TextStyle(
-                            fontWeight = FontWeight.Bold,
-                        ),
-                    )
+                        style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
+                        )
 
                     Spacer(modifier = Modifier.height(16.dp))
 
@@ -274,7 +269,7 @@ internal fun PaymentsDetailsScreen(
             }
         }
 
-        Button(
+        MifosButton(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp)
@@ -306,6 +301,7 @@ internal fun PaymentsDetailsScreen(
             ) {
                 Column(
                     modifier = Modifier.padding(vertical = 16.dp),
+                    verticalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
                     MifosTextFieldDropdown(
                         label = stringResource(Res.string.feature_collection_sheet_payment_type),
@@ -319,16 +315,12 @@ internal fun PaymentsDetailsScreen(
                         readOnly = true,
                     )
 
-                    Spacer(modifier = Modifier.height(16.dp))
-
                     MifosOutlinedTextField(
                         value = accountNumber,
                         onValueChange = { accountNumber = it },
                         label = stringResource(Res.string.feature_collection_sheet_account_number),
                         error = null,
                     )
-
-                    Spacer(modifier = Modifier.height(16.dp))
 
                     MifosOutlinedTextField(
                         value = chequeNumber,
@@ -337,16 +329,12 @@ internal fun PaymentsDetailsScreen(
                         error = null,
                     )
 
-                    Spacer(modifier = Modifier.height(16.dp))
-
                     MifosOutlinedTextField(
                         value = routingCode,
                         onValueChange = { routingCode = it },
                         label = stringResource(Res.string.feature_collection_sheet_routing_code),
                         error = null,
                     )
-
-                    Spacer(modifier = Modifier.height(16.dp))
 
                     MifosOutlinedTextField(
                         value = receiptNumber,
@@ -355,8 +343,6 @@ internal fun PaymentsDetailsScreen(
                         error = null,
                     )
 
-                    Spacer(modifier = Modifier.height(16.dp))
-
                     MifosOutlinedTextField(
                         value = bankNumber,
                         onValueChange = { bankNumber = it },
@@ -364,9 +350,7 @@ internal fun PaymentsDetailsScreen(
                         error = null,
                     )
 
-                    Spacer(modifier = Modifier.height(16.dp))
-
-                    ButtonRow(cancelAdditional = { cancelAdditional() }) {
+                    MifosButtonRow(cancelAdditional = { cancelAdditional() }) {
                         saveAdditional()
                     }
                 }
@@ -376,7 +360,7 @@ internal fun PaymentsDetailsScreen(
 }
 
 @Composable
-private fun ButtonRow(
+private fun MifosButtonRow(
     cancelAdditional: () -> Unit,
     modifier: Modifier = Modifier,
     saveAdditional: () -> Unit,
@@ -387,14 +371,13 @@ private fun ButtonRow(
             .padding(horizontal = 16.dp),
         horizontalArrangement = Arrangement.SpaceBetween,
     ) {
-        Button(
+        MifosButton(
             modifier = Modifier.height(50.dp),
             onClick = { cancelAdditional() },
         ) {
             Text(text = stringResource(Res.string.feature_collection_sheet_cancel))
         }
-
-        Button(
+        MifosButton(
             modifier = Modifier.height(50.dp),
             onClick = { saveAdditional() },
         ) {

@@ -39,6 +39,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SelectableDates
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
@@ -65,6 +66,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mifos.core.common.utils.DateHelper
 import com.mifos.core.common.utils.formatDate
 import com.mifos.core.designsystem.component.MifosBottomSheet
+import com.mifos.core.designsystem.component.MifosButton
 import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosDatePickerTextField
 import com.mifos.core.designsystem.component.MifosScaffold
@@ -218,18 +220,13 @@ internal fun NewIndividualCollectionSheetScreen(
                 Text(
                     modifier = Modifier.padding(16.dp),
                     text = stringResource(Res.string.feature_collection_sheet_generate_new),
-                    style = TextStyle(
-                        fontSize = 24.sp,
-                    ),
-                )
+                    style = MaterialTheme.typography.titleLarge,
+                    )
                 Text(
                     modifier = Modifier.padding(start = 16.dp, end = 16.dp),
                     text = stringResource(Res.string.feature_collection_sheet_fill_collection_sheet_message),
-                    style = TextStyle(
-                        fontSize = 14.sp,
-                        color = Color.Black,
-                    ),
-                )
+                    style = MaterialTheme.typography.bodyMedium,
+                    )
                 Spacer(modifier = Modifier.height(16.dp))
                 MifosTextFieldDropdown(
                     value = selectedOffice,
@@ -276,7 +273,7 @@ internal fun NewIndividualCollectionSheetScreen(
                         .fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween,
                 ) {
-                    Button(
+                    MifosButton(
                         onClick = {
                             keyboardController?.hide()
                             generateCollection(
@@ -293,10 +290,10 @@ internal fun NewIndividualCollectionSheetScreen(
                     ) {
                         Text(
                             text = stringResource(Res.string.feature_collection_sheet_generate),
-                            fontSize = 16.sp,
-                        )
+                            style = MaterialTheme.typography.bodyLarge,
+                            )
                     }
-                    Button(
+                    MifosButton(
                         onClick = {
                             selectedOffice = ""
                             repaymentDate = Clock.System.now().toEpochMilliseconds()
@@ -310,8 +307,8 @@ internal fun NewIndividualCollectionSheetScreen(
                     ) {
                         Text(
                             text = stringResource(Res.string.feature_collection_sheet_clear),
-                            fontSize = 16.sp,
-                        )
+                            style = MaterialTheme.typography.bodyLarge,
+                            )
                     }
                 }
             }
@@ -340,71 +337,55 @@ private fun CollectionSheetDialogContent(
                         .fillMaxWidth()
                         .align(Alignment.CenterHorizontally),
                     text = stringResource(Res.string.feature_collection_sheet_found_sheet),
-                    style = TextStyle(
-                        fontSize = 24.sp,
-                    ),
-                )
+                    style = MaterialTheme.typography.titleLarge,
+                    )
                 Spacer(modifier = Modifier.height(16.dp))
                 Text(
                     text = stringResource(Res.string.feature_collection_sheet_fill_collection_sheet_message),
-                    style = TextStyle(
-                        fontSize = 16.sp,
-                    ),
-                )
+                    style = MaterialTheme.typography.bodyLarge,
+                    )
                 Spacer(modifier = Modifier.height(16.dp))
                 Row {
                     Text(
                         text = stringResource(Res.string.feature_collection_sheet_date),
-                        style = TextStyle(
-                            fontSize = 16.sp,
-                            fontWeight = FontWeight.Bold,
-                        ),
-                    )
+                        style = MaterialTheme.typography.bodyLarge,
+                        )
                     Spacer(modifier = Modifier.width(16.dp))
                     Text(
                         text = date,
-                        style = TextStyle(
-                            fontSize = 16.sp,
-                            fontWeight = FontWeight.Normal,
-                        ),
-                    )
+                        style = MaterialTheme.typography.bodyLarge,
+                        )
                 }
 
                 Row {
                     Text(
                         text = stringResource(Res.string.feature_collection_sheet_member),
-                        style = TextStyle(
-                            fontSize = 16.sp,
-                            fontWeight = FontWeight.Bold,
-                        ),
-                    )
+                        style = MaterialTheme.typography.bodyLarge,
+                        )
                     Spacer(modifier = Modifier.width(16.dp))
                     Text(
                         text = member,
-                        style = TextStyle(
-                            fontSize = 16.sp,
-                            fontWeight = FontWeight.Normal,
-                        ),
-                    )
+                        style = MaterialTheme.typography.bodyLarge,
+                        )
                 }
                 Spacer(modifier = Modifier.height(16.dp))
                 Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
-                    Button(
+                    MifosButton(
                         onClick = fillNow,
                     ) {
                         Text(
                             text = stringResource(Res.string.feature_collection_sheet_fill_now),
-                            fontSize = 16.sp,
-                        )
+                            style = MaterialTheme.typography.bodyLarge,
+                            )
                     }
                     Spacer(modifier = Modifier.width(16.dp))
-                    Button(
+                    MifosButton(
                         onClick = onDismiss,
                     ) {
                         Text(
                             text = stringResource(Res.string.feature_collection_sheet_cancel),
-                            fontSize = 16.sp,
-                        )
+                            style = MaterialTheme.typography.bodyLarge,
+                            )
                     }
                 }
             }
