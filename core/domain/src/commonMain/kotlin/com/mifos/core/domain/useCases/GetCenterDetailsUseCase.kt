@@ -29,6 +29,9 @@ class GetCenterDetailsUseCase(
             flow { emit(repository.getCentersGroupAndMeeting(centerId)) },
             repository.getCenterSummaryInfo(centerId, genericResultSet),
         ) { centerGroup, centerInfoState ->
-            DataState.Success(Pair(centerGroup, centerInfoState.data!!))
+            centerInfoState.data?.let { centerInfo ->
+                DataState.Success(Pair(centerGroup, centerInfo))
+            } ?: DataState.Error(Throwable("Center info is null"))
+
         }
 }
