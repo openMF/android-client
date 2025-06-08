@@ -31,6 +31,6 @@ class GetCenterDetailsUseCase(
         ) { centerGroup, centerInfoState ->
             centerInfoState.data?.let { centerInfo ->
                 DataState.Success(Pair(centerGroup, centerInfo))
-            } ?: DataState.Error(Throwable("Center info is null"))
+            } ?: DataState.Loading
         }
 }
