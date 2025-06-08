@@ -10,6 +10,7 @@
 package com.mifos.feature.pathTracking
 
 import com.mifos.core.model.objects.users.UserLocation
+import org.jetbrains.compose.resources.StringResource
 
 /**
  * Created by Aditya Gupta on 06/08/23.
@@ -19,7 +20,7 @@ sealed class PathTrackingUiState {
 
     data object Loading : PathTrackingUiState()
 
-    data class Error(val message: Int) : PathTrackingUiState()
+    data class Error(val message: StringResource) : PathTrackingUiState()
 
     data class PathTracking(val userLocations: List<UserLocation>) : PathTrackingUiState()
 }
