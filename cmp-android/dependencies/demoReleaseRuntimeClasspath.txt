@@ -100,6 +100,8 @@ androidx.navigation:navigation-runtime-ktx:2.8.4
 androidx.navigation:navigation-runtime:2.8.4
 androidx.paging:paging-common-android:3.3.6
 androidx.paging:paging-common:3.3.6
+androidx.paging:paging-compose-android:3.3.5
+androidx.paging:paging-compose:3.3.5
 androidx.performance:performance-annotation-android:1.0.0-alpha01
 androidx.performance:performance-annotation:1.0.0-alpha01
 androidx.profileinstaller:profileinstaller:1.4.1

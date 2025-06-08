@@ -16,6 +16,8 @@ import androidx.navigation.compose.NavHost
 import cmp.navigation.AppState
 import com.mifos.feature.about.navigation.aboutNavGraph
 import com.mifos.feature.activate.navigation.activateScreen
+import com.mifos.feature.activate.navigation.navigateToActivateScreen
+import com.mifos.feature.center.navigation.centerNavGraph
 import com.mifos.feature.checker.inbox.task.navigation.checkerInboxTaskNavGraph
 import com.mifos.feature.note.navigation.noteNavGraph
 import com.mifos.feature.search.navigation.searchNavGraph
@@ -53,6 +55,16 @@ internal fun FeatureNavHost(
         noteNavGraph(onBackPressed = appState.navController::popBackStack)
 
         activateScreen(onBackPressed = appState.navController::popBackStack)
+
+        centerNavGraph(
+            navController = appState.navController,
+            paddingValues = padding,
+            onActivateCenter = appState.navController::navigateToActivateScreen,
+            addSavingsAccount = {
+//                navController.navigateToAddSavingsAccount(it, 0, true)
+            },
+
+        )
 
         settingsScreen(
             navigateBack = appState.navController::popBackStack,
