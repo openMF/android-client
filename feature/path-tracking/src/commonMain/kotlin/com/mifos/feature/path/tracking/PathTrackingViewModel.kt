@@ -9,13 +9,14 @@
  */
 package com.mifos.feature.pathTracking
 
+import androidclient.feature.path_tracking.generated.resources.Res
+import androidclient.feature.path_tracking.generated.resources.feature_path_tracking_failed_to_load_path_tracking
+import androidclient.feature.path_tracking.generated.resources.feature_path_tracking_no_path_tracking_found
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.mifos.core.common.utils.Resource
+import com.mifos.core.common.utils.DataState
 import com.mifos.core.datastore.UserPreferencesRepository
 import com.mifos.core.domain.useCases.GetUserPathTrackingUseCase
-import com.mifos.feature.path.tracking.R
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -51,22 +52,22 @@ class PathTrackingViewModel(
         _isRefreshing.value = false
     }
 
-    fun loadPathTracking() = viewModelScope.launch(Dispatchers.IO) {
+    fun loadPathTracking() = viewModelScope.launch {
         val userId = prefManager.userData.firstOrNull()?.userId
         if (userId != null) {
             getUserPathTrackingUseCase(userId.toInt()).collect { result ->
                 when (result) {
-                    is Resource.Error ->
+                    is DataState.Error ->
                         _pathTrackingUiState.value =
-                            PathTrackingUiState.Error(R.string.feature_path_tracking_failed_to_load_path_tracking)
+                            PathTrackingUiState.Error(Res.string.feature_path_tracking_failed_to_load_path_tracking)
 
-                    is Resource.Loading -> _pathTrackingUiState.value = PathTrackingUiState.Loading
+                    is DataState.Loading -> _pathTrackingUiState.value = PathTrackingUiState.Loading
 
-                    is Resource.Success ->
-                        result.data?.let { pathTracking ->
+                    is DataState.Success ->
+                        result.data.let { pathTracking ->
                             _pathTrackingUiState.value =
                                 if (pathTracking.isEmpty()) {
-                                    PathTrackingUiState.Error(R.string.feature_path_tracking_no_path_tracking_found)
+                                    PathTrackingUiState.Error(Res.string.feature_path_tracking_no_path_tracking_found)
                                 } else {
                                     PathTrackingUiState.PathTracking(
                                         pathTracking,
@@ -77,11 +78,11 @@ class PathTrackingViewModel(
             }
         } else {
             _pathTrackingUiState.value =
-                PathTrackingUiState.Error(R.string.feature_path_tracking_no_path_tracking_found)
+                PathTrackingUiState.Error(Res.string.feature_path_tracking_no_path_tracking_found)
         }
     }
 
-    fun updateUserStatus(status: Boolean) = viewModelScope.launch(Dispatchers.IO) {
+    fun updateUserStatus(status: Boolean) = viewModelScope.launch {
         prefManager.updateUserStatus(status)
     }
 }
