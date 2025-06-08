@@ -22,6 +22,7 @@ import com.mifos.feature.checker.inbox.task.navigation.checkerInboxTaskNavGraph
 import com.mifos.feature.note.navigation.noteNavGraph
 import com.mifos.feature.search.navigation.searchNavGraph
 import com.mifos.feature.settings.navigation.settingsScreen
+import com.mifos.feature.client.navigat
 
 @Composable
 internal fun FeatureNavHost(
@@ -71,6 +72,10 @@ internal fun FeatureNavHost(
             navigateToLoginScreen = {},
             changePasscode = {},
             languageChanged = {},
+        )
+
+        clientcSreens(
+
         )
     }
 }

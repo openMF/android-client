@@ -9,7 +9,7 @@
  */
 @file:OptIn(ExperimentalMaterial3Api::class, ExperimentalPermissionsApi::class)
 
-package com.mifos.feature.client.clientDetails.ui
+package com.mifos.feature.client.ui
 
 import android.Manifest
 import android.content.Context

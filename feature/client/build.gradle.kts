@@ -15,57 +15,30 @@ android {
     namespace = "com.mifos.feature.client"
 }
 
-//kotlin {
-//    sourceSets {
-//        commonMain.dependencies {
-//            implementation(projects.core.data)
-//            implementation(projects.core.domain)
-//            implementation(projects.core.datastore)
-//
-//            implementation(libs.accompanist.permission)
-//            implementation(libs.accompanist.swiperefresh)
-//
-//            implementation(libs.coil.kt2.compose)
-//            implementation(libs.androidx.paging.compose)
-////            implementation(project(":feature:data-table"))
-//
-//
-//            implementation(libs.androidx.material)
-//
-//            implementation(libs.maps.compose)
-//
-//            implementation(libs.kotlinx.serialization.json)
-//
-//            implementation(libs.ktor.client.core)
-//            implementation(libs.ktor.client.android)
-//            implementation(libs.ktorfit.lib)
-//        }
-//    }
-//}
+kotlin {
+    sourceSets {
+        commonMain.dependencies {
+            implementation(projects.core.data)
+            implementation(projects.core.domain)
+            implementation(projects.core.datastore)
+//            implementation(project(":feature:data-table"))
 
-//dependencies {
-//
-//    implementation(projects.core.data)
-//    implementation(projects.core.domain)
-//    implementation(projects.core.datastore)
-//
-//    // swipe refresh
-//    implementation(libs.accompanist.permission)
-//    implementation(libs.accompanist.swiperefresh)
-//
-//    implementation(libs.coil.kt2.compose)
-//    implementation(libs.androidx.paging.compose)
-//    implementation(project(":feature:data-table"))
-//
-//    testImplementation(libs.hilt.android.testing)
-//
-//    implementation(libs.androidx.material)
-//
-//    implementation(libs.maps.compose)
-//
-//    implementation(libs.kotlinx.serialization.json)
-//
-//    implementation(libs.ktor.client.core)
-//    implementation(libs.ktor.client.android)
-//    implementation(libs.ktorfit.lib)
-//}
+            implementation(libs.kotlinx.serialization.json)
+            implementation(compose.ui)
+            implementation(compose.material3)
+            implementation(compose.foundation)
+            implementation(compose.components.resources)
+            implementation(compose.components.uiToolingPreview)
+            implementation(libs.androidx.paging.common)
+        }
+        
+        androidMain.dependencies {
+            implementation(libs.maps.compose)
+            implementation(libs.androidx.material)
+            implementation(libs.accompanist.permission)
+            implementation(libs.ktor.client.android)
+
+            implementation(libs.androidx.paging.compose)
+        }
+    }
+}

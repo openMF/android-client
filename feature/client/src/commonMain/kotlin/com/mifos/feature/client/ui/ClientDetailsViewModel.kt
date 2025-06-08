@@ -7,7 +7,7 @@
  *
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
-package com.mifos.feature.client.clientDetails.ui
+package com.mifos.feature.client.ui
 
 import android.graphics.Bitmap
 import android.os.Environment

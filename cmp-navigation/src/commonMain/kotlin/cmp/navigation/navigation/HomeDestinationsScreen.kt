@@ -29,7 +29,7 @@ sealed class HomeDestinationsScreen(
 
     data object ClientListScreen : HomeDestinationsScreen(
         title = "Clients",
-        route = "client_list_screen",
+        route = ,
         icon = MifosIcons.Person,
     )
 

@@ -11,13 +11,13 @@ package com.mifos.feature.client.clientChargeDialog
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.mifos.core.common.utils.Resource
+import androidclient.feature.client.generated.resources.Res
+import androidclient.feature.client.generated.resources.feature_client_failed_to_load_client_charges
+import com.mifos.core.common.utils.DataState
 import com.mifos.core.domain.useCases.CreateChargesUseCase
 import com.mifos.core.domain.useCases.GetAllChargesV2UseCase
 import com.mifos.core.model.objects.payloads.ChargesPayload
 import com.mifos.core.model.objects.template.client.ChargeTemplate
-import com.mifos.feature.client.R
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
@@ -31,16 +31,16 @@ class ChargeDialogViewModel(
         MutableStateFlow<ChargeDialogUiState>(ChargeDialogUiState.Loading)
     val chargeDialogUiState = _chargeDialogUiState.asStateFlow()
 
-    fun loadAllChargesV2(clientId: Int) = viewModelScope.launch(Dispatchers.IO) {
+    fun loadAllChargesV2(clientId: Int) = viewModelScope.launch {
         getAllChargesV2UseCase(clientId).collect { result ->
             when (result) {
-                is Resource.Error ->
+                is DataState.Error ->
                     _chargeDialogUiState.value =
-                        ChargeDialogUiState.Error(R.string.feature_client_failed_to_load_client_charges)
+                        ChargeDialogUiState.Error(Res.string.feature_client_failed_to_load_client_charges)
 
-                is Resource.Loading -> _chargeDialogUiState.value = ChargeDialogUiState.Loading
+                is DataState.Loading -> _chargeDialogUiState.value = ChargeDialogUiState.Loading
 
-                is Resource.Success ->
+                is DataState.Success ->
                     _chargeDialogUiState.value =
                         ChargeDialogUiState.AllChargesV2(
                             result.data ?: ChargeTemplate(
@@ -53,16 +53,16 @@ class ChargeDialogViewModel(
     }
 
     fun createCharges(clientId: Int, payload: ChargesPayload) =
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch {
             createChargesUseCase(clientId, payload).collect { result ->
                 when (result) {
-                    is Resource.Error ->
+                    is DataState.Error ->
                         _chargeDialogUiState.value =
-                            ChargeDialogUiState.Error(R.string.feature_client_failed_to_create_charge)
+                            ChargeDialogUiState.Error(Res.string.feature_client_failed_to_create_charge)
 
-                    is Resource.Loading -> _chargeDialogUiState.value = ChargeDialogUiState.Loading
+                    is DataState.Loading -> _chargeDialogUiState.value = ChargeDialogUiState.Loading
 
-                    is Resource.Success ->
+                    is DataState.Success ->
                         _chargeDialogUiState.value =
                             ChargeDialogUiState.ChargesCreatedSuccessfully
                 }
