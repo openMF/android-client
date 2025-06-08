@@ -13,7 +13,7 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
-import com.mifos.feature.pathTracking.PathTrackingScreen
+import com.mifos.feature.path.tracking.PathTrackingScreen
 
 fun NavGraphBuilder.pathTrackingNavGraph(
     navController: NavController,
