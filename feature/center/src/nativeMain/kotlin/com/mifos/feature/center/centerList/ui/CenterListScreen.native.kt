@@ -9,16 +9,17 @@
  */
 package com.mifos.feature.center.centerList.ui
 
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 
-@androidx.compose.runtime.Composable
+@Composable
 actual fun CenterListContent(
     state: CenterListUiState,
     isInSelectionMode: Boolean,
     selectedItems: SelectedItemsState,
     onRefresh: () -> Unit,
     onCenterSelect: (Int) -> Unit,
-    modifier: Modifier = Modifier,
+    modifier: Modifier,
 ) {
     TODO("Not yet implemented")
 }

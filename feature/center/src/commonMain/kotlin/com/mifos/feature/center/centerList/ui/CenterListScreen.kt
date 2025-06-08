@@ -17,7 +17,6 @@ import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -36,8 +35,6 @@ import androidx.compose.material3.ListItem
 import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedCard
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
@@ -60,6 +57,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.PagingData
 import coil3.compose.AsyncImage
 import com.mifos.core.designsystem.component.MifosCircularProgress
+import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.ui.components.SelectionModeTopAppBar
@@ -120,7 +118,7 @@ internal fun CenterListScreen(
 
     val pullRefreshState = rememberPullToRefreshState()
 
-    Scaffold(
+    MifosScaffold(
         modifier = Modifier
             .padding(paddingValues),
         topBar = {
@@ -144,7 +142,7 @@ internal fun CenterListScreen(
                 )
             }
         },
-        snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
+        snackbarHostState = snackbarHostState,
         floatingActionButton = {
             FloatingActionButton(
                 onClick = { createNewCenter() },
@@ -169,45 +167,43 @@ internal fun CenterListScreen(
                 onRefresh = onRefresh,
                 isRefreshing = refreshState,
             ) {
-                Box {
-                    when (state) {
-                        is CenterListUiState.Error -> {
-                            MifosSweetError(message = stringResource(state.message)) {
-                                onRefresh()
-                            }
+                when (state) {
+                    is CenterListUiState.Error -> {
+                        MifosSweetError(message = stringResource(state.message)) {
+                            onRefresh()
                         }
-
-                        is CenterListUiState.Loading -> {
-                            MifosCircularProgress()
-                        }
-
-                        is CenterListUiState.CenterList -> {
-                            CenterListContent(
-                                state = state,
-                                isInSelectionMode = isInSelectionMode,
-                                selectedItems = selectedItems,
-                                onRefresh = {
-                                    onRefresh()
-                                },
-                                onCenterSelect = {
-                                    onCenterSelect(it)
-                                },
-                            )
-                        }
-
-                        is CenterListUiState.CenterListDb -> CenterListDbContent(state.centers)
                     }
-                    if (sync.value) {
-                        SyncCenterDialogScreen(
-                            dismiss = {
-                                sync.value = false
-                                selectedItems.clear()
-                                resetSelectionMode()
+
+                    is CenterListUiState.Loading -> {
+                        MifosCircularProgress()
+                    }
+
+                    is CenterListUiState.CenterList -> {
+                        CenterListContent(
+                            state = state,
+                            isInSelectionMode = isInSelectionMode,
+                            selectedItems = selectedItems,
+                            onRefresh = {
+                                onRefresh()
                             },
-                            hide = { sync.value = false },
-                            centers = selectedItems.toList(),
+                            onCenterSelect = {
+                                onCenterSelect(it)
+                            },
                         )
                     }
+
+                    is CenterListUiState.CenterListDb -> CenterListDbContent(state.centers)
+                }
+                if (sync.value) {
+                    SyncCenterDialogScreen(
+                        dismiss = {
+                            sync.value = false
+                            selectedItems.clear()
+                            resetSelectionMode()
+                        },
+                        hide = { sync.value = false },
+                        centers = selectedItems.toList(),
+                    )
                 }
             }
         }
