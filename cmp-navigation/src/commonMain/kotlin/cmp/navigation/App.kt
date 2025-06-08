@@ -239,7 +239,7 @@ fun App(
                     if (isNavScreen) {
                         TopAppBar(
                             title = {
-                                Text("Dashboard")
+                                Text(NavigationConstants.getTitleForRoute(route))
                             },
                             navigationIcon = {
                                 IconButton(onClick = {

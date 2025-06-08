@@ -18,7 +18,6 @@ actual fun CenterListContent(
     selectedItems: SelectedItemsState,
     onRefresh: () -> Unit,
     onCenterSelect: (Int) -> Unit,
-    selectedMode: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     TODO("Not yet implemented")

@@ -42,7 +42,6 @@ actual fun CenterListContent(
     selectedItems: SelectedItemsState,
     onRefresh: () -> Unit,
     onCenterSelect: (Int) -> Unit,
-    selectedMode: () -> Unit,
     modifier: Modifier,
 ) {
     if (state is CenterListUiState.CenterList) {
@@ -76,7 +75,11 @@ actual fun CenterListContent(
                     selected = selectedItems.contains(center),
                     isInSelectionMode = selectedItems.size() > 0,
                     onSelect = {
-                        selectedItems.add(it)
+                        if (selectedItems.contains(it)) {
+                            selectedItems.remove(it)
+                        } else {
+                            selectedItems.add(it)
+                        }
                     },
                     onClick = {
                         onCenterSelect(it.id ?: 0)

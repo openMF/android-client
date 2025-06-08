@@ -19,7 +19,7 @@ import androidclient.feature.center.generated.resources.feature_center_active_gr
 import androidclient.feature.center.generated.resources.feature_center_active_group_loan
 import androidclient.feature.center.generated.resources.feature_center_active_overdue_group_loans
 import androidclient.feature.center.generated.resources.feature_center_add_savings_account
-import androidclient.feature.center.generated.resources.feature_center_center
+import androidclient.feature.center.generated.resources.feature_center_center_details
 import androidclient.feature.center.generated.resources.feature_center_error_loading_centers
 import androidclient.feature.center.generated.resources.feature_center_group_list
 import androidclient.feature.center.generated.resources.feature_center_meeting_frequency
@@ -36,7 +36,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -114,7 +113,7 @@ internal fun CenterDetailsScreen(
     var centerActive by remember { mutableStateOf(true) }
 
     MifosScaffold(
-        title = stringResource(Res.string.feature_center_center),
+        title = stringResource(Res.string.feature_center_center_details),
         onBackPressed = onBackPressed,
         actions = {
             IconButton(onClick = { showMenu = showMenu.not() }) {
