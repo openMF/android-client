@@ -16,6 +16,7 @@ import com.mifos.room.utils.PrimaryKey
 import com.mifos.room.utils.UNDEFINED
 import com.mifos.room.utils.UNSPECIFIED
 import com.mifos.room.utils.VALUE_UNSPECIFIED
+import kotlinx.serialization.Serializable
 
 @Entity(
     indices = [],
@@ -25,6 +26,7 @@ import com.mifos.room.utils.VALUE_UNSPECIFIED
     ignoredColumns = [],
     tableName = "OfficeOpeningDate",
 )
+@Serializable
 data class OfficeOpeningDateEntity(
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(index = true, name = INHERIT_FIELD_NAME, typeAffinity = UNDEFINED, collate = UNSPECIFIED, defaultValue = VALUE_UNSPECIFIED)
