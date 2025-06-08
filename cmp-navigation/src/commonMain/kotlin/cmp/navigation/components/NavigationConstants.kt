@@ -24,4 +24,12 @@ object NavigationConstants {
     fun isNavScreen(route: String?): Boolean {
         return NavScreenRoutes.contains(route)
     }
+    fun getTitleForRoute(route: String?): String {
+        return when (route) {
+            HomeDestinationsScreen.ClientListScreen.route -> HomeDestinationsScreen.ClientListScreen.title
+            HomeDestinationsScreen.CenterListScreen.route -> HomeDestinationsScreen.CenterListScreen.title
+            HomeDestinationsScreen.GroupListScreen.route -> HomeDestinationsScreen.GroupListScreen.title
+            else -> "Dashboard"
+        }
+    }
 }
