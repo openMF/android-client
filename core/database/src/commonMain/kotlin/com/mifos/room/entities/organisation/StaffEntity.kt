@@ -15,6 +15,7 @@ import com.mifos.room.utils.Entity
 import com.mifos.room.utils.PrimaryKey
 import kotlinx.serialization.Serializable
 
+@Serializable
 @Parcelize
 @Entity(
     indices = [],

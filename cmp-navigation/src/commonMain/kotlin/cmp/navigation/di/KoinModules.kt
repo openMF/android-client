@@ -17,9 +17,11 @@ import com.mifos.core.network.di.DataManagerModule
 import com.mifos.core.network.di.NetworkModule
 import com.mifos.feature.activate.di.ActivateModule
 import com.mifos.feature.auth.di.AuthModule
+import com.mifos.feature.center.di.CenterModule
 import com.mifos.feature.checker.inbox.task.di.CheckerInboxTaskModule
 import com.mifos.feature.individualCollectionSheet.di.CollectionSheetModule
 import com.mifos.feature.note.di.NoteModule
+import com.mifos.feature.pathTracking.di.PathTrackingModule
 import com.mifos.feature.search.di.SearchModule
 import com.mifos.feature.settings.di.SettingsModule
 import com.mifos.feature.splash.di.SplashModule
@@ -54,7 +56,7 @@ object KoinModules {
 //            AboutModule,
             ActivateModule,
             AuthModule,
-//            CenterModule,
+            CenterModule,
             CheckerInboxTaskModule,
 //            ClientModule,
             CollectionSheetModule,
@@ -64,11 +66,10 @@ object KoinModules {
 //            LoanModule,
             NoteModule,
 //            OfflineModule,
-//            PathTrackingModule,
+            PathTrackingModule,
 //            ReportModule,
 //            SavingsModule,
             SearchModule,
-//            SearchModule,
             SplashModule,
             SettingsModule,
         )

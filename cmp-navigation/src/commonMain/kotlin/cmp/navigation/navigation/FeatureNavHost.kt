@@ -16,9 +16,12 @@ import androidx.navigation.compose.NavHost
 import cmp.navigation.AppState
 import com.mifos.feature.about.navigation.aboutNavGraph
 import com.mifos.feature.activate.navigation.activateScreen
+import com.mifos.feature.activate.navigation.navigateToActivateScreen
+import com.mifos.feature.center.navigation.centerNavGraph
 import com.mifos.feature.checker.inbox.task.navigation.checkerInboxTaskNavGraph
 import com.mifos.feature.individualCollectionSheet.navigation.individualCollectionSheetNavGraph
 import com.mifos.feature.note.navigation.noteNavGraph
+import com.mifos.feature.pathTracking.navigation.pathTrackingNavGraph
 import com.mifos.feature.search.navigation.searchNavGraph
 import com.mifos.feature.settings.navigation.settingsScreen
 
@@ -55,6 +58,16 @@ internal fun FeatureNavHost(
 
         activateScreen(onBackPressed = appState.navController::popBackStack)
 
+        centerNavGraph(
+            navController = appState.navController,
+            paddingValues = padding,
+            onActivateCenter = appState.navController::navigateToActivateScreen,
+            addSavingsAccount = {
+//                navController.navigateToAddSavingsAccount(it, 0, true)
+            },
+
+        )
+
         settingsScreen(
             navigateBack = appState.navController::popBackStack,
             navigateToLoginScreen = {},
@@ -65,5 +78,7 @@ internal fun FeatureNavHost(
             navController = appState.navController,
             onBackPressed = appState.navController::popBackStack,
         )
+
+        pathTrackingNavGraph(appState.navController)
     }
 }

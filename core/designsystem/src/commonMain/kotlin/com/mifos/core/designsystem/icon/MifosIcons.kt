@@ -11,7 +11,6 @@ package com.mifos.core.designsystem.icon
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.material.icons.automirrored.filled.Assignment
 import androidx.compose.material.icons.automirrored.filled.CompareArrows
 import androidx.compose.material.icons.automirrored.filled.Help
@@ -27,6 +26,8 @@ import androidx.compose.material.icons.filled.Apartment
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.ArrowDropUp
 import androidx.compose.material.icons.filled.AssignmentTurnedIn
+import androidx.compose.material.icons.filled.ChevronLeft
+import androidx.compose.material.icons.filled.ChevronRight
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.CloudDownload
 import androidx.compose.material.icons.filled.Edit
@@ -84,10 +85,12 @@ import androidx.compose.material.icons.rounded.KeyboardArrowUp
 import androidx.compose.material.icons.rounded.Link
 import androidx.compose.material.icons.rounded.Lock
 import androidx.compose.material.icons.rounded.MoreVert
+import androidx.compose.material.icons.rounded.MyLocation
 import androidx.compose.material.icons.rounded.PersonOutline
 import androidx.compose.material.icons.rounded.PersonPinCircle
 import androidx.compose.material.icons.rounded.Search
 import androidx.compose.material.icons.rounded.SignalWifiOff
+import androidx.compose.material.icons.rounded.Stop
 import androidx.compose.material.icons.rounded.SwapHoriz
 import androidx.compose.material.icons.rounded.Sync
 import androidx.compose.material.icons.rounded.Task
@@ -116,7 +119,7 @@ object MifosIcons {
     val ArrowUp = Icons.Rounded.KeyboardArrowUp
     val ArrowDown = Icons.Rounded.KeyboardArrowDown
     val MoreVert = Icons.Rounded.MoreVert
-    val ArrowForward = Icons.AutoMirrored.Filled.ArrowForward
+    val ArrowForward = Icons.Filled.ChevronRight
     val FileTask = Icons.Default.AssignmentTurnedIn
     val AddLocation = Icons.Rounded.AddLocation
     val CloudDownload = Icons.Default.CloudDownload
@@ -169,7 +172,7 @@ object MifosIcons {
     val ArrowDropUp: ImageVector = Icons.Default.ArrowDropUp
     val OutlinedVisibilityOff: ImageVector = Icons.Outlined.VisibilityOff
     val OutlinedVisibility: ImageVector = Icons.Outlined.Visibility
-    val ArrowBack = Icons.AutoMirrored.Default.ArrowBack
+    val ArrowBack = Icons.Filled.ChevronLeft
     val Edit = Icons.Default.Edit
     val FilterList = Icons.Filled.FilterList
     val FlashOn = Icons.Default.FlashOn
@@ -177,4 +180,7 @@ object MifosIcons {
     val Error2 = Icons.Filled.Error
     val Notifications = Icons.Filled.Notifications
     val NavigationDrawer = Icons.Default.Menu
+    val Stop = Icons.Rounded.Stop
+
+    val MyLocation = Icons.Rounded.MyLocation
 }
