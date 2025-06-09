@@ -49,7 +49,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
@@ -81,7 +80,6 @@ internal fun DocumentDialogScreen(
     viewModel: DocumentDialogViewModel = koinViewModel(),
     closeScreen: () -> Unit,
 ) {
-
     val state by viewModel.documentDialogUiState.collectAsStateWithLifecycle()
 
     var fileName by rememberSaveable { mutableStateOf<String?>(document?.name) }
@@ -90,10 +88,9 @@ internal fun DocumentDialogScreen(
     DocumentDialogScreen(
         uiState = state,
         documentAction = documentAction,
-        snackbarHostState=snackbarHostState,
+        snackbarHostState = snackbarHostState,
         document = document,
         openFilePicker = {
-
         },
         closeDialog = closeDialog,
         uploadDocument = { documentName, documentDescription ->
@@ -106,7 +103,7 @@ internal fun DocumentDialogScreen(
                     documentDescription,
                     fileChosen!!,
                 )
-            } else if (documentAction ==Res.string.feature_document_upload_document) {
+            } else if (documentAction == Res.string.feature_document_upload_document) {
                 viewModel.createDocument(
                     entityType,
                     entityId,
@@ -133,7 +130,6 @@ internal fun DocumentDialogScreen(
     filename: String?,
     closeScreen: () -> Unit,
 ) {
-
     DocumentDialogContent(
         document = document,
         documentAction = documentAction,
@@ -152,28 +148,28 @@ internal fun DocumentDialogScreen(
 
         is DocumentDialogUiState.ShowDocumentedCreatedSuccessfully -> {
             LaunchedEffect(true) {
-                snackbarHostState.showSnackbar(getString( Res.string.feature_document_uploaded_successfully))
+                snackbarHostState.showSnackbar(getString(Res.string.feature_document_uploaded_successfully))
             }
             closeDialog.invoke()
         }
 
         is DocumentDialogUiState.ShowDocumentUpdatedSuccessfully -> {
             LaunchedEffect(true) {
-                snackbarHostState.showSnackbar(getString( Res.string.feature_document_document_updated_successfully))
+                snackbarHostState.showSnackbar(getString(Res.string.feature_document_document_updated_successfully))
             }
             closeDialog.invoke()
         }
 
         is DocumentDialogUiState.ShowUploadError -> {
             LaunchedEffect(true) {
-                snackbarHostState.showSnackbar( uiState.message)
+                snackbarHostState.showSnackbar(uiState.message)
             }
             closeScreen.invoke()
         }
 
         is DocumentDialogUiState.ShowError -> {
             LaunchedEffect(true) {
-                snackbarHostState.showSnackbar( uiState.message)
+                snackbarHostState.showSnackbar(uiState.message)
             }
             closeScreen.invoke()
         }
