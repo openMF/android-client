@@ -19,6 +19,7 @@ import com.mifos.feature.activate.navigation.activateScreen
 import com.mifos.feature.activate.navigation.navigateToActivateScreen
 import com.mifos.feature.center.navigation.centerNavGraph
 import com.mifos.feature.checker.inbox.task.navigation.checkerInboxTaskNavGraph
+import com.mifos.feature.individualCollectionSheet.navigation.individualCollectionSheetNavGraph
 import com.mifos.feature.note.navigation.noteNavGraph
 import com.mifos.feature.pathTracking.navigation.pathTrackingNavGraph
 import com.mifos.feature.search.navigation.searchNavGraph
@@ -72,6 +73,10 @@ internal fun FeatureNavHost(
             navigateToLoginScreen = {},
             changePasscode = {},
             languageChanged = {},
+        )
+        individualCollectionSheetNavGraph(
+            navController = appState.navController,
+            onBackPressed = appState.navController::popBackStack,
         )
 
         pathTrackingNavGraph(appState.navController)
