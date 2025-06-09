@@ -13,6 +13,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.feature.about.navigation.AboutScreens
 import com.mifos.feature.checker.inbox.task.navigation.CheckerInboxTaskScreens
+import com.mifos.feature.offline.navigation.OfflineScreens
 import com.mifos.feature.pathTracking.navigation.PathTrackingScreens
 import com.mifos.feature.search.navigation.SearchScreens
 import com.mifos.feature.settings.navigation.SettingsScreens
@@ -90,7 +91,7 @@ sealed class HomeDestinationsScreen(
 
     data object OfflineSyncScreen : HomeDestinationsScreen(
         title = "Offline Sync",
-        route = "",
+        route = OfflineScreens.OfflineDashboardScreens.route,
         icon = MifosIcons.OfflineSync,
     )
 }

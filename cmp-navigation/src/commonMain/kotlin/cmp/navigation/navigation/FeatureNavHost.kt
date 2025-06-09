@@ -21,6 +21,7 @@ import com.mifos.feature.center.navigation.centerNavGraph
 import com.mifos.feature.checker.inbox.task.navigation.checkerInboxTaskNavGraph
 import com.mifos.feature.individualCollectionSheet.navigation.individualCollectionSheetNavGraph
 import com.mifos.feature.note.navigation.noteNavGraph
+import com.mifos.feature.offline.navigation.offlineNavGraph
 import com.mifos.feature.pathTracking.navigation.pathTrackingNavGraph
 import com.mifos.feature.search.navigation.searchNavGraph
 import com.mifos.feature.settings.navigation.settingsScreen
@@ -53,6 +54,8 @@ internal fun FeatureNavHost(
         )
 
         aboutNavGraph(onBackPressed = appState.navController::popBackStack)
+
+        offlineNavGraph(navController = appState.navController)
 
         noteNavGraph(onBackPressed = appState.navController::popBackStack)
 
