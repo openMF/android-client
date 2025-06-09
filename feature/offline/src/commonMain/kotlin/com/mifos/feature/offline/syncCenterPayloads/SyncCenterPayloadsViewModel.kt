@@ -160,10 +160,6 @@ class SyncCenterPayloadsViewModel(
             } else {
                 mCenterPayloads[i].errorMessage?.let {
                     FileUtils.logger.d { it }
-//                    Log.d(
-//                        FileUtils.logger,
-//                        it,
-//                    )
                 }
             }
         }

@@ -264,7 +264,6 @@ private fun GroupPayloadField(
     }
 }
 
-// @RequiresPermission(Manifest.permission.ACCESS_NETWORK_STATE)
 private fun checkNetworkConnectionAndSync(
     syncGroupPayloads: () -> Unit,
     isOnline: Boolean,
@@ -275,28 +274,4 @@ private fun checkNetworkConnectionAndSync(
     } else {
         onShowOfflineMessage()
     }
-//    Log.d("C", context.packageName)
-//    if (Network.isOnline(context)) {
-//    syncGroupPayloads()
-//    } else {
-//        Toast.makeText(
-//            context,
-//            context.getString(R.string.feature_offline_error_not_connected_internet),
-//            Toast.LENGTH_SHORT,
-//        ).show()
-//    }
 }
-
-// @Preview
-// @Composable
-// private fun SyncGroupPayloadsScreenPreview() {
-//    SyncGroupPayloadsScreen(
-//        uiState = SyncGroupPayloadsUiState.Success(),
-//        onRefresh = { },
-//        onBackPressed = { },
-//        refreshState = false,
-//        syncGroupPayloads = { },
-//        groupPayloadsList = dummyGroupPayloads,
-//        userStatus = true,
-//    )
-// }

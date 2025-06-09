@@ -288,7 +288,6 @@ fun getPaymentTypeName(
         ?.name
 }
 
-// @RequiresPermission(Manifest.permission.ACCESS_NETWORK_STATE)
 private fun checkNetworkConnectionAndSync(
     syncSavingsAccountTransactions: () -> Unit,
     isOnline: Boolean,
@@ -299,17 +298,6 @@ private fun checkNetworkConnectionAndSync(
     } else {
         onShowOfflineMessage()
     }
-
-//    Log.d("C", context.packageName)
-//    if (Network.isOnline(context)) {
-//    syncSavingsAccountTransactions()
-//    } else {
-//        Toast.makeText(
-//            context,
-//            context.resources.getString(R.string.feature_offline_error_not_connected_internet),
-//            Toast.LENGTH_SHORT,
-//        ).show()
-//    }
 }
 
 @DevicePreview()
@@ -371,7 +359,6 @@ private fun SyncSavingsAccountTransactionSuccessPreview() {
     )
 }
 
-// Sample data for previews
 val sampleSavingsAccountTransactions = List(5) { index ->
     SavingsAccountTransactionRequestEntity(
         savingAccountId = index,
@@ -397,7 +384,6 @@ val samplePaymentTypeOptions = List(3) { index ->
     )
 }
 
-// Individual preview for SavingsAccountTransactionItem
 @DevicePreview
 @Composable
 private fun SavingsAccountTransactionItemPreview() {

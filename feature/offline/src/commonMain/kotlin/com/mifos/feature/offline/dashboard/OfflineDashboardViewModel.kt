@@ -68,29 +68,25 @@ class OfflineDashboardViewModel(
     }
 
     private fun setCountOfSyncData(type: Type, count: Int) {
-        viewModelScope.launch {
-            val updatedList = _offlineDashboardUiState.value.list.map { syncStateData ->
-                if (syncStateData.type == type) {
-                    syncStateData.copy(count = count)
-                } else {
-                    syncStateData
-                }
+        val updatedList = _offlineDashboardUiState.value.list.map { syncStateData ->
+            if (syncStateData.type == type) {
+                syncStateData.copy(count = count)
+            } else {
+                syncStateData
             }
-            _offlineDashboardUiState.value = OfflineDashboardUiState.SyncUiState(updatedList)
         }
+        _offlineDashboardUiState.value = OfflineDashboardUiState.SyncUiState(updatedList)
     }
 
     private fun setError(type: Type, error: String) {
-        viewModelScope.launch {
-            val updatedList = _offlineDashboardUiState.value.list.map { syncStateData ->
-                if (syncStateData.type == type) {
-                    syncStateData.copy(errorMsg = error)
-                } else {
-                    syncStateData
-                }
+        val updatedList = _offlineDashboardUiState.value.list.map { syncStateData ->
+            if (syncStateData.type == type) {
+                syncStateData.copy(errorMsg = error)
+            } else {
+                syncStateData
             }
-            _offlineDashboardUiState.value = OfflineDashboardUiState.SyncUiState(updatedList)
         }
+        _offlineDashboardUiState.value = OfflineDashboardUiState.SyncUiState(updatedList)
     }
     private fun <T> handleDataState(
         flow: Flow<DataState<List<T>>>,

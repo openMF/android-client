@@ -175,10 +175,6 @@ class SyncClientPayloadsViewModel(
             } else {
                 mClientPayloads[i].errorMessage?.let {
                     FileUtils.logger.d { it }
-//                    Log.d(
-//                        LOG_TAG,
-//                        it,
-//                    )
                 }
             }
         }

@@ -246,10 +246,6 @@ class SyncLoanRepaymentTransactionViewModel(
             } else {
                 mLoanRepaymentRequests[i].errorMessage?.let {
                     FileUtils.logger.d { it }
-//                    Log.d(
-//                        LOG_TAG,
-//                        it,
-//                    )
                 }
             }
         }

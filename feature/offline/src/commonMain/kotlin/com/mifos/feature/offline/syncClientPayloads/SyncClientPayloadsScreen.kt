@@ -302,7 +302,6 @@ private fun ErrorStateScreen(
     }
 }
 
-// @RequiresPermission(Manifest.permission.ACCESS_NETWORK_STATE)
 private fun checkNetworkConnectionAndSync(
     syncClientPayloads: () -> Unit,
     isOnline: Boolean,
@@ -313,16 +312,6 @@ private fun checkNetworkConnectionAndSync(
     } else {
         onShowOfflineMessage()
     }
-//    Log.d("C", context.packageName)
-//    if (Network.isOnline(context)) {
-//    syncClientPayloads()
-//    } else {
-//        Toast.makeText(
-//            context,
-//            context.getString(R.string.feature_offline_error_not_connected_internet),
-//            Toast.LENGTH_SHORT,
-//        ).show()
-//    }
 }
 
 @DevicePreview()
@@ -350,43 +339,6 @@ private fun SyncClientPayloadsErrorPreview() {
         userStatus = true,
     )
 }
-
-// Sample data for previews
-// val sampleClientPayloads = List(5) { index ->
-//    ClientPayload().apply {
-//        firstname = "John$index"
-//        middlename = "Sam$index"
-//        lastname = "Doe$index"
-//        mobileNo = "123456789$index"
-//        externalId = "EXT-$index"
-//        officeId = index
-//        active = index % 2 == 0
-//        activationDate = "2023-07-${15 + index}"
-//        genderId = if (index % 3 == 0) 24 else 22
-//        dateOfBirth = "1990-01-0$index"
-//        errorMessage = if (index % 2 == 0) null else "Error in payload"
-//    }
-// }
-
-// @Preview(showBackground = true)
-// @Composable
-// private fun ClientPayloadItemPreview() {
-//    val sampleClientPayload = ClientPayload().apply {
-//        firstname = "John"
-//        middlename = "Michael"
-//        lastname = "Doe"
-//        mobileNo = "1234567890"
-//        externalId = "EXT-001"
-//        genderId = 22
-//        dateOfBirth = "1990-01-01"
-//        officeId = 12
-//        activationDate = "2023-07-15"
-//        active = true
-//        errorMessage = null
-//    }
-//
-//    ClientPayloadItem(payload = sampleClientPayload)
-// }
 
 @DevicePreview()
 @Composable

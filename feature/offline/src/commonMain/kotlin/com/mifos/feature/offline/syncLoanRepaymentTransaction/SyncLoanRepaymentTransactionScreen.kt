@@ -315,7 +315,6 @@ private fun EmptyLoanRepaymentsScreen(
     }
 }
 
-// @RequiresPermission(Manifest.permission.ACCESS_NETWORK_STATE)
 internal fun checkNetworkConnectionAndSync(
     syncLoanRepaymentTransactions: () -> Unit,
     isOnline: Boolean = true,
@@ -326,16 +325,6 @@ internal fun checkNetworkConnectionAndSync(
     } else {
         onShowOfflineMessage()
     }
-//    Log.d("C", context.packageName)
-//    if (Network.isOnline(context)) {
-//    syncLoanRepaymentTransactions()
-//    } else {
-//        Toast.makeText(
-//            context,
-//            context.getString(R.string.feature_offline_error_not_connected_internet),
-//            Toast.LENGTH_SHORT,
-//        ).show()
-//    }
 }
 
 @DevicePreview()
@@ -395,7 +384,6 @@ private fun SyncLoanRepaymentTransactionSuccessPreview() {
     )
 }
 
-// Sample data for previews
 val sampleLoanRepaymentRequests = List(5) { index ->
     LoanRepaymentRequestEntity(
         loanId = index,
@@ -417,7 +405,6 @@ val samplePaymentTypeOptions = List(3) { index ->
     )
 }
 
-// Individual preview for LoanRepaymentTransactionItem
 @DevicePreview
 @Composable
 private fun LoanRepaymentTransactionItemPreview() {
