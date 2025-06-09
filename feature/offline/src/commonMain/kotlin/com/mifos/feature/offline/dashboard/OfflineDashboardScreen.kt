@@ -134,11 +134,14 @@ internal fun OfflineDashboardScreen(
                 when (uiState) {
                     is OfflineDashboardUiState.SyncUiState -> {
                         val syncState = uiState
-
-                        val firstError = syncState.list.firstOrNull { it.errorMsg != null }?.errorMsg
-
-                        LaunchedEffect(firstError) {
-                            firstError?.let { snackBarHostState.showSnackbar(it) }
+                        LaunchedEffect(syncState.list) {
+                            syncState.list
+                                .filter { it.errorMsg != null }
+                                .forEach { item ->
+                                    item.errorMsg?.let { msg ->
+                                        snackBarHostState.showSnackbar(msg)
+                                    }
+                                }
                         }
 
                         LazyColumn {
