@@ -57,7 +57,7 @@ fun MifosAlertDialog(
 
 @DevicePreview
 @Composable
-fun MifosAlertDialogPreview(
+private fun MifosAlertDialogPreview(
     modifier: Modifier = Modifier,
 ) {
     MifosTheme {

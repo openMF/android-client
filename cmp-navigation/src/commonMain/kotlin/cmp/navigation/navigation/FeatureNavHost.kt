@@ -19,7 +19,10 @@ import com.mifos.feature.activate.navigation.activateScreen
 import com.mifos.feature.activate.navigation.navigateToActivateScreen
 import com.mifos.feature.center.navigation.centerNavGraph
 import com.mifos.feature.checker.inbox.task.navigation.checkerInboxTaskNavGraph
+import com.mifos.feature.groups.navigation.groupNavGraph
+import com.mifos.feature.groups.navigation.navigateToCreateNewGroupScreen
 import com.mifos.feature.individualCollectionSheet.navigation.individualCollectionSheetNavGraph
+import com.mifos.feature.note.navigation.navigateToNoteScreen
 import com.mifos.feature.note.navigation.noteNavGraph
 import com.mifos.feature.pathTracking.navigation.pathTrackingNavGraph
 import com.mifos.feature.search.navigation.searchNavGraph
@@ -43,7 +46,7 @@ internal fun FeatureNavHost(
         searchNavGraph(
             paddingValues = padding,
             onCreateClient = { println("Create Client") },
-            onCreateCenter = { println("Create Center") },
+            onCreateCenter = appState.navController::navigateToCreateNewGroupScreen,
             onCreateGroup = { println("Create Group") },
             onClient = { id -> println("Client clicked: $id") },
             onCenter = { id -> println("Center clicked: $id") },
@@ -68,12 +71,27 @@ internal fun FeatureNavHost(
 
         )
 
+        groupNavGraph(
+            navController = appState.navController,
+            paddingValues = padding,
+            addGroupLoanAccount = {},
+            addSavingsAccount = { _, _, _ -> },
+            loadDocumentList = { _, _ -> },
+            clientListFragment = {},
+            loadSavingsAccountSummary = { _, _ -> },
+            loadGroupDataTables = { _, _ -> },
+            loadNotes = appState.navController::navigateToNoteScreen,
+            loadLoanAccountSummary = { _ -> },
+            activateGroup = appState.navController::navigateToActivateScreen,
+        )
+
         settingsScreen(
             navigateBack = appState.navController::popBackStack,
             navigateToLoginScreen = {},
             changePasscode = {},
             languageChanged = {},
         )
+
         individualCollectionSheetNavGraph(
             navController = appState.navController,
             onBackPressed = appState.navController::popBackStack,

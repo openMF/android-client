@@ -18,7 +18,6 @@ import com.mifos.room.entities.group.GroupPayloadEntity
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
@@ -58,7 +57,7 @@ class CreateNewGroupViewModel(
         viewModelScope.launch {
             repository.offices().collect { dataState ->
                 when (dataState) {
-                    is DataState.Error<*> -> {
+                    is DataState.Error -> {
                         _createNewGroupUiState.value =
                             CreateNewGroupUiState.ShowFetchingError(dataState.message)
                     }
@@ -68,7 +67,7 @@ class CreateNewGroupViewModel(
                             CreateNewGroupUiState.ShowProgressbar
                     }
 
-                    is DataState.Success<*> -> {
+                    is DataState.Success -> {
                         val offices = dataState.data
                         if (offices == null) {
                             _createNewGroupUiState.value =

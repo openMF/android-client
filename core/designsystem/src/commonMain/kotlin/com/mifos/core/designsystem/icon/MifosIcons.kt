@@ -30,6 +30,7 @@ import androidx.compose.material.icons.filled.ChevronLeft
 import androidx.compose.material.icons.filled.ChevronRight
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.CloudDownload
+import androidx.compose.material.icons.filled.DoneAll
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Error
 import androidx.compose.material.icons.filled.FilterList
@@ -107,6 +108,7 @@ object MifosIcons {
     val EventRepeat = Icons.Outlined.EventRepeat
     val Date = Icons.Outlined.DateRange
     val ArrowBack1 = Icons.Rounded.ArrowBackIosNew
+    val DoneAll = Icons.Default.DoneAll
     val KeyboardArrowDown = Icons.Rounded.KeyboardArrowDown
     val Link = Icons.Default.Link
     val Server = Icons.Default

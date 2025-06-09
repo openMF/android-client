@@ -84,7 +84,6 @@ import com.mifos.core.designsystem.component.MifosMenuDropDownItem
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.icon.MifosIcons
-import com.mifos.core.ui.components.MifosIcon
 import com.mifos.room.entities.accounts.loans.LoanAccountEntity
 import com.mifos.room.entities.accounts.savings.SavingAccountDepositTypeEntity
 import com.mifos.room.entities.accounts.savings.SavingsAccountEntity
@@ -231,9 +230,6 @@ internal fun GroupDetailsScreen(
                         .fillMaxWidth()
                         .heightIn(44.dp)
                         .padding(start = 16.dp, end = 16.dp),
-//                    colors = ButtonDefaults.buttonColors(
-//                        containerColor = if (isSystemInDarkTheme()) BluePrimaryDark else BluePrimary,
-//                    ),
                 ) {
                     Text(
                         text = stringResource(Res.string.feature_groups_activate_group),
@@ -758,35 +754,6 @@ private fun MifosSavingsAccountsLazyColumn(
         }
     }
 }
-
-//private class GroupDetailsUiStateProvider : PreviewParameterProvider<GroupDetailsUiState> {
-//
-//    override val values: Sequence<GroupDetailsUiState>
-//        get() = sequenceOf(
-//            GroupDetailsUiState.Loading,
-//            GroupDetailsUiState.Error(R.string.feature_groups_failed_to_fetch_group_and_account),
-//            GroupDetailsUiState.ShowGroup(group = GroupEntity(name = "Group", active = true)),
-//            GroupDetailsUiState.ShowGroup(group = GroupEntity(name = "Group", active = false)),
-//        )
-//}
-//
-//@Preview
-//@Composable
-//private fun GroupDetailsScreenPreview(
-//    @PreviewParameter(GroupDetailsUiStateProvider::class) state: GroupDetailsUiState,
-//) {
-//    GroupDetailsScreen(
-//        state = state,
-//        onBackPressed = {},
-//        onMenuClick = {},
-//        loanAccounts = sampleLoanAccountList,
-//        savingsAccounts = sampleSavingAccountList,
-//        loanAccountSelected = {},
-//        savingsAccountSelected = { _, _ ->
-//        },
-//        activateGroup = {},
-//    )
-//}
 
 enum class MenuItems {
     ADD_LOAN_ACCOUNT,

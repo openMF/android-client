@@ -51,6 +51,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mifos.core.designsystem.component.MifosCircularProgress
 import org.jetbrains.compose.resources.stringResource
+import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -172,7 +173,7 @@ private fun SyncGroupDialogContent(
         GroupPayloadField(
             label = stringResource(Res.string.feature_groups_total_sync_progress),
             value = stringResource(Res.string.feature_groups_space) + uiData.totalSyncCount +
-                    stringResource(Res.string.feature_groups_slash) + uiData.groupList.size,
+                stringResource(Res.string.feature_groups_slash) + uiData.groupList.size,
         )
 
         LinearProgressIndicator(
@@ -243,14 +244,14 @@ private fun GroupPayloadField(
         )
     }
 }
-//
-//@Preview(showBackground = true, backgroundColor = 0xFFFFFFFF)
-//@Composable
-//private fun SyncGroupDialogScreenPreview() {
-//    SyncGroupDialogScreen(
-//        dismiss = { },
-//        uiState = SyncGroupsDialogUiState.Success,
-//        uiData = SyncGroupDialogData(),
-//        hide = { },
-//    )
-//}
+
+@Composable
+@Preview
+private fun SyncGroupDialogScreenPreview() {
+    SyncGroupDialogScreen(
+        dismiss = { },
+        uiState = SyncGroupsDialogUiState.Success,
+        uiData = SyncGroupDialogData(),
+        hide = { },
+    )
+}
