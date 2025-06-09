@@ -9,7 +9,28 @@
  */
 package com.mifos.feature.savings.savingsAccount
 
-import android.widget.Toast
+import androidclient.feature.savings.generated.resources.Res
+import androidclient.feature.savings.generated.resources.feature_savings_cancel
+import androidclient.feature.savings.generated.resources.feature_savings_create_savings_account
+import androidclient.feature.savings.generated.resources.feature_savings_days_in_year
+import androidclient.feature.savings.generated.resources.feature_savings_external_id
+import androidclient.feature.savings.generated.resources.feature_savings_failed_to_fetch_savings_template
+import androidclient.feature.savings.generated.resources.feature_savings_field_officer
+import androidclient.feature.savings.generated.resources.feature_savings_go_back
+import androidclient.feature.savings.generated.resources.feature_savings_interest_calc
+import androidclient.feature.savings.generated.resources.feature_savings_interest_comp
+import androidclient.feature.savings.generated.resources.feature_savings_interest_p_period
+import androidclient.feature.savings.generated.resources.feature_savings_maxoverdraft
+import androidclient.feature.savings.generated.resources.feature_savings_min_overdraft
+import androidclient.feature.savings.generated.resources.feature_savings_min_required_balance
+import androidclient.feature.savings.generated.resources.feature_savings_nominal
+import androidclient.feature.savings.generated.resources.feature_savings_nominal_overdraft
+import androidclient.feature.savings.generated.resources.feature_savings_overdraft_allowed
+import androidclient.feature.savings.generated.resources.feature_savings_product
+import androidclient.feature.savings.generated.resources.feature_savings_savings_account_submitted_for_approval
+import androidclient.feature.savings.generated.resources.feature_savings_select_date
+import androidclient.feature.savings.generated.resources.feature_savings_submit
+import androidclient.feature.savings.generated.resources.feature_savings_submitted_on
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.fadeIn
@@ -49,15 +70,11 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.tooling.preview.PreviewParameter
-import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.mifos.core.common.utils.DateHelper
 import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosDatePickerTextField
 import com.mifos.core.designsystem.component.MifosOutlinedTextField
@@ -67,18 +84,20 @@ import com.mifos.core.designsystem.component.MifosTextFieldDropdown
 import com.mifos.core.model.objects.account.saving.FieldOfficerOptions
 import com.mifos.core.model.objects.organisations.ProductSavings
 import com.mifos.core.model.objects.payloads.SavingsPayload
-import com.mifos.feature.savings.R
+import com.mifos.core.ui.components.MifosAlertDialog
 import com.mifos.room.entities.client.Savings
 import com.mifos.room.entities.templates.savings.SavingProductsTemplate
 import com.mifos.room.entities.zipmodels.SavingProductsAndTemplate
-import org.koin.androidx.compose.koinViewModel
-import java.text.SimpleDateFormat
-import java.util.Locale
+import kotlinx.datetime.Clock
+import org.jetbrains.compose.resources.stringResource
+import org.jetbrains.compose.ui.tooling.preview.Preview
+import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
+import org.jetbrains.compose.ui.tooling.preview.PreviewParameterProvider
+import org.koin.compose.viewmodel.koinViewModel
 
 /**
  * Created by Pronay Sarker on 14/07/2024 (12:04 AM)
  */
-
 @Composable
 internal fun SavingsAccountScreen(
     navigateBack: () -> Unit,
@@ -141,12 +160,11 @@ internal fun SavingsAccountScreen(
     val snackBarHostState = remember {
         SnackbarHostState()
     }
-    val context = LocalContext.current
 
     MifosScaffold(
         modifier = modifier,
         snackbarHostState = snackBarHostState,
-        title = stringResource(id = R.string.feature_savings_create_savings_account),
+        title = stringResource(Res.string.feature_savings_create_savings_account),
         onBackPressed = navigateBack,
     ) {
         Box(
@@ -160,7 +178,7 @@ internal fun SavingsAccountScreen(
                 }
 
                 is SavingAccountUiState.ShowFetchingError -> {
-                    MifosSweetError(message = stringResource(id = uiState.message)) {
+                    MifosSweetError(message = stringResource(uiState.message)) {
                         onRetry()
                     }
                 }
@@ -168,7 +186,7 @@ internal fun SavingsAccountScreen(
                 is SavingAccountUiState.ShowFetchingErrorString -> {
                     MifosSweetError(
                         message = uiState.message,
-                        buttonText = stringResource(id = R.string.feature_savings_go_back),
+                        buttonText = stringResource(Res.string.feature_savings_go_back),
                         onclick = { onRetry() },
                     )
                 }
@@ -192,13 +210,13 @@ internal fun SavingsAccountScreen(
                 }
 
                 is SavingAccountUiState.ShowSavingsAccountCreatedSuccessfully -> {
-                    Toast.makeText(
-                        context,
-                        context.resources.getString(R.string.feature_savings_savings_account_submitted_for_approval),
-                        Toast.LENGTH_LONG,
-                    ).show()
-
-                    navigateBack()
+                    MifosAlertDialog(
+                        dialogTitle = "Success",
+                        dialogText = stringResource(Res.string.feature_savings_savings_account_submitted_for_approval),
+                        onConfirmation = navigateBack,
+                        onDismissRequest = {},
+                        dismissText = null,
+                    )
                 }
             }
         }
@@ -250,22 +268,23 @@ private fun SavingsAccountContent(
     var nominalAnnualInterestOverdraft by rememberSaveable {
         mutableStateOf("")
     }
-
-    val context = LocalContext.current
     val density = LocalDensity.current
     val scrollState = rememberScrollState()
 
-    var submittedOnDate by rememberSaveable { mutableLongStateOf(System.currentTimeMillis()) }
     var pickSubmitDate by rememberSaveable { mutableStateOf(false) }
+    var submittedOnDate by rememberSaveable {
+        mutableLongStateOf(
+            Clock.System.now().toEpochMilliseconds(),
+        )
+    }
     val datePickerState = rememberDatePickerState(
         initialSelectedDateMillis = submittedOnDate,
         selectableDates = object : SelectableDates {
             override fun isSelectableDate(utcTimeMillis: Long): Boolean {
-                return utcTimeMillis >= System.currentTimeMillis()
+                return utcTimeMillis >= Clock.System.now().toEpochMilliseconds()
             }
         },
     )
-
     if (pickSubmitDate) {
         DatePickerDialog(
             onDismissRequest = {
@@ -279,14 +298,14 @@ private fun SavingsAccountContent(
                         }
                         pickSubmitDate = false
                     },
-                ) { Text(stringResource(id = R.string.feature_savings_select_date)) }
+                ) { Text(stringResource(Res.string.feature_savings_select_date)) }
             },
             dismissButton = {
                 TextButton(
                     onClick = {
                         pickSubmitDate = false
                     },
-                ) { Text(stringResource(id = R.string.feature_savings_cancel)) }
+                ) { Text(stringResource(Res.string.feature_savings_cancel)) }
             },
         ) {
             DatePicker(state = datePickerState)
@@ -312,7 +331,7 @@ private fun SavingsAccountContent(
                     onSavingsProductSelected.invoke(it)
                 }
             },
-            label = R.string.feature_savings_product,
+            label = stringResource(Res.string.feature_savings_product),
             options = productSavings.map { it.name.toString() },
             readOnly = true,
         )
@@ -330,7 +349,7 @@ private fun SavingsAccountContent(
                     fieldOfficerId = it
                 }
             },
-            label = R.string.feature_savings_field_officer,
+            label = stringResource(Res.string.feature_savings_field_officer),
             options = fieldOfficerOptions.map { it.displayName.toString() },
             readOnly = true,
         )
@@ -340,28 +359,26 @@ private fun SavingsAccountContent(
         MifosOutlinedTextField(
             value = externalId,
             onValueChange = { externalId = it },
-            label = stringResource(id = R.string.feature_savings_external_id),
+            label = stringResource(Res.string.feature_savings_external_id),
             error = null,
         )
 
         Spacer(modifier = Modifier.height(16.dp))
 
         MifosDatePickerTextField(
-            value = SimpleDateFormat(
-                "dd MMMM yyyy",
-                Locale.getDefault(),
-            ).format(submittedOnDate),
-            label = stringResource(R.string.feature_savings_submitted_on),
-        ) {
-            pickSubmitDate = true
-        }
+            value = DateHelper.getDateAsStringFromLong(submittedOnDate),
+            label = stringResource(Res.string.feature_savings_submitted_on),
+            openDatePicker = {
+                pickSubmitDate = true
+            },
+        )
 
         Spacer(modifier = Modifier.height(16.dp))
 
         MifosOutlinedTextField(
             value = nominalAnnualInterest,
             onValueChange = { nominalAnnualInterest = it },
-            label = stringResource(id = R.string.feature_savings_nominal),
+            label = stringResource(Res.string.feature_savings_nominal),
             error = null,
             keyboardType = KeyboardType.Number,
         )
@@ -371,7 +388,7 @@ private fun SavingsAccountContent(
         MifosOutlinedTextField(
             value = savingProductsTemplate.mSavingProductsTemplate.interestCalculationType?.value.toString(),
             onValueChange = { interestCalculatedUsing = it },
-            label = stringResource(id = R.string.feature_savings_interest_calc),
+            label = stringResource(Res.string.feature_savings_interest_calc),
             error = null,
             readOnly = true,
         )
@@ -381,7 +398,7 @@ private fun SavingsAccountContent(
         MifosOutlinedTextField(
             value = savingProductsTemplate.mSavingProductsTemplate.interestCompoundingPeriodType?.value.toString(),
             onValueChange = { },
-            label = stringResource(id = R.string.feature_savings_interest_comp),
+            label = stringResource(Res.string.feature_savings_interest_comp),
             error = null,
             readOnly = true,
         )
@@ -391,7 +408,7 @@ private fun SavingsAccountContent(
         MifosOutlinedTextField(
             value = savingProductsTemplate.mSavingProductsTemplate.interestPostingPeriodType?.value.toString(),
             onValueChange = { interestPostingPeriod = it },
-            label = stringResource(id = R.string.feature_savings_interest_p_period),
+            label = stringResource(Res.string.feature_savings_interest_p_period),
             error = null,
             readOnly = true,
         )
@@ -401,7 +418,7 @@ private fun SavingsAccountContent(
         MifosOutlinedTextField(
             value = savingProductsTemplate.mSavingProductsTemplate.interestCalculationDaysInYearType?.value.toString(),
             onValueChange = { },
-            label = stringResource(id = R.string.feature_savings_days_in_year),
+            label = stringResource(Res.string.feature_savings_days_in_year),
             error = null,
             readOnly = true,
         )
@@ -417,7 +434,7 @@ private fun SavingsAccountContent(
                 onCheckedChange = { enforceMinimumBalance = !enforceMinimumBalance },
             )
 
-            Text(text = stringResource(id = R.string.feature_savings_min_required_balance))
+            Text(text = stringResource(Res.string.feature_savings_min_required_balance))
         }
 
         AnimatedVisibility(
@@ -436,7 +453,7 @@ private fun SavingsAccountContent(
             MifosOutlinedTextField(
                 value = minimumRequiredBalance,
                 onValueChange = { minimumRequiredBalance = it },
-                label = stringResource(id = R.string.feature_savings_min_required_balance),
+                label = stringResource(Res.string.feature_savings_min_required_balance),
                 error = null,
                 keyboardType = KeyboardType.Number,
             )
@@ -453,7 +470,7 @@ private fun SavingsAccountContent(
                 onCheckedChange = { overDraftAllowed = !overDraftAllowed },
             )
 
-            Text(text = stringResource(id = R.string.feature_savings_overdraft_allowed))
+            Text(text = stringResource(Res.string.feature_savings_overdraft_allowed))
         }
 
         AnimatedVisibility(
@@ -473,7 +490,7 @@ private fun SavingsAccountContent(
                 MifosOutlinedTextField(
                     value = maximumOverdraftAmount,
                     onValueChange = { maximumOverdraftAmount = it },
-                    label = stringResource(id = R.string.feature_savings_maxoverdraft),
+                    label = stringResource(Res.string.feature_savings_maxoverdraft),
                     error = null,
                     keyboardType = KeyboardType.Number,
                 )
@@ -483,7 +500,7 @@ private fun SavingsAccountContent(
                 MifosOutlinedTextField(
                     value = nominalAnnualInterestOverdraft,
                     onValueChange = { nominalAnnualInterestOverdraft = it },
-                    label = stringResource(id = R.string.feature_savings_nominal_overdraft),
+                    label = stringResource(Res.string.feature_savings_nominal_overdraft),
                     error = null,
                     keyboardType = KeyboardType.Number,
                 )
@@ -493,7 +510,7 @@ private fun SavingsAccountContent(
                 MifosOutlinedTextField(
                     value = minimumOverdraftAmount,
                     onValueChange = { minimumOverdraftAmount = it },
-                    label = stringResource(id = R.string.feature_savings_min_overdraft),
+                    label = stringResource(Res.string.feature_savings_min_overdraft),
                     error = null,
                     keyboardType = KeyboardType.Number,
                 )
@@ -514,9 +531,7 @@ private fun SavingsAccountContent(
 
                 savingsPayload.externalId = externalId
                 savingsPayload.locale = "en"
-                savingsPayload.submittedOnDate = SimpleDateFormat(
-                    "dd MMMM yyyy", Locale.getDefault(),
-                ).format(submittedOnDate)
+                savingsPayload.submittedOnDate = submittedOnDate.toString()
                 savingsPayload.dateFormat = "dd MMMM yyyy"
                 if (isGroupAccount) {
                     savingsPayload.groupId = groupId
@@ -535,16 +550,9 @@ private fun SavingsAccountContent(
                 savingsPayload.minRequiredOpeningBalance = minimumRequiredBalance
 
                 createSavingsAccount.invoke(savingsPayload)
-//                } else {
-//                    Toast.makeText(
-//                        context,
-//                        context.resources.getString(R.string.feature_savings_error_not_connected_internet),
-//                        Toast.LENGTH_SHORT,
-//                    ).show()
-//                }
             },
         ) {
-            Text(text = stringResource(id = R.string.feature_savings_submit))
+            Text(text = stringResource(Res.string.feature_savings_submit))
         }
     }
 }
@@ -566,12 +574,12 @@ class SavingsAccountScreenPreviewProvider : PreviewParameterProvider<SavingAccou
             ),
             SavingAccountUiState.ShowFetchingErrorString("Failed to fetch"),
             SavingAccountUiState.ShowSavingsAccountCreatedSuccessfully(Savings()),
-            SavingAccountUiState.ShowFetchingError(R.string.feature_savings_failed_to_fetch_savings_template),
+            SavingAccountUiState.ShowFetchingError(Res.string.feature_savings_failed_to_fetch_savings_template),
         )
 }
 
 @Composable
-@Preview(showSystemUi = true)
+@Preview
 private fun PreviewSavingsAccountScreen(
     @PreviewParameter(SavingsAccountScreenPreviewProvider::class) savingAccountUiState: SavingAccountUiState,
 ) {

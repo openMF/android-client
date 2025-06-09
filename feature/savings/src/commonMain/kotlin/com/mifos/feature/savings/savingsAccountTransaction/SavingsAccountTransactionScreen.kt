@@ -9,9 +9,28 @@
  */
 package com.mifos.feature.savings.savingsAccountTransaction
 
-import android.content.Context
-import android.util.Log
-import android.widget.Toast
+import androidclient.feature.savings.generated.resources.Res
+import androidclient.feature.savings.generated.resources.feature_savings_account_number
+import androidclient.feature.savings.generated.resources.feature_savings_amount
+import androidclient.feature.savings.generated.resources.feature_savings_amount_message_field_required
+import androidclient.feature.savings.generated.resources.feature_savings_cancel
+import androidclient.feature.savings.generated.resources.feature_savings_date
+import androidclient.feature.savings.generated.resources.feature_savings_deposit
+import androidclient.feature.savings.generated.resources.feature_savings_deposit_successful_transaction_ID
+import androidclient.feature.savings.generated.resources.feature_savings_dialog_action_ok
+import androidclient.feature.savings.generated.resources.feature_savings_dialog_message_sync_savingaccounttransaction
+import androidclient.feature.savings.generated.resources.feature_savings_error_amount_can_not_be_empty
+import androidclient.feature.savings.generated.resources.feature_savings_error_invalid_amount
+import androidclient.feature.savings.generated.resources.feature_savings_payment_type
+import androidclient.feature.savings.generated.resources.feature_savings_review_transaction
+import androidclient.feature.savings.generated.resources.feature_savings_review_transaction_details
+import androidclient.feature.savings.generated.resources.feature_savings_savingsAccount
+import androidclient.feature.savings.generated.resources.feature_savings_select_date
+import androidclient.feature.savings.generated.resources.feature_savings_sync_previous_transaction
+import androidclient.feature.savings.generated.resources.feature_savings_transaction_date
+import androidclient.feature.savings.generated.resources.feature_savings_transaction_saved_in_db
+import androidclient.feature.savings.generated.resources.feature_savings_withdrawal
+import androidclient.feature.savings.generated.resources.feature_savings_withdrawal_successful_transaction_ID
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -42,20 +61,18 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color.Companion.Black
 import androidx.compose.ui.graphics.Color.Companion.DarkGray
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.tooling.preview.PreviewParameter
-import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import co.touchlab.kermit.Logger
 import com.mifos.core.common.utils.Constants
+import com.mifos.core.common.utils.DateHelper
 import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosDatePickerTextField
 import com.mifos.core.designsystem.component.MifosOutlinedTextField
@@ -63,14 +80,17 @@ import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.component.MifosTextFieldDropdown
 import com.mifos.core.model.objects.account.saving.SavingsAccountTransactionResponse
-import com.mifos.feature.savings.R
+import com.mifos.core.ui.components.MifosAlertDialog
 import com.mifos.room.entities.accounts.savings.SavingsAccountTransactionRequestEntity
 import com.mifos.room.entities.templates.savings.SavingsAccountTransactionTemplateEntity
-import kotlinx.serialization.encodeToString
+import kotlinx.datetime.Clock
 import kotlinx.serialization.json.Json
-import org.koin.androidx.compose.koinViewModel
-import java.text.SimpleDateFormat
-import java.util.Locale
+import org.jetbrains.compose.resources.StringResource
+import org.jetbrains.compose.resources.stringResource
+import org.jetbrains.compose.ui.tooling.preview.Preview
+import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
+import org.jetbrains.compose.ui.tooling.preview.PreviewParameterProvider
+import org.koin.compose.viewmodel.koinViewModel
 
 /**
  * Created by Pronay Sarker on 18/07/2024 (8:28 PM)
@@ -124,13 +144,37 @@ internal fun SavingsAccountTransactionScreen(
     setUserOffline: () -> Unit,
 ) {
     val snackBarHostState = remember { SnackbarHostState() }
-    val context = LocalContext.current
+    val scope = rememberCoroutineScope()
 
     val topbarTitle = if (transactionType == Constants.SAVINGS_ACCOUNT_TRANSACTION_DEPOSIT) {
-        stringResource(id = R.string.feature_savings_savingsAccount) + " " +
-            stringResource(id = R.string.feature_savings_deposit)
+        stringResource(Res.string.feature_savings_savingsAccount) + " " +
+            stringResource(Res.string.feature_savings_deposit)
     } else {
-        stringResource(id = R.string.feature_savings_savingsAccount) + " " + stringResource(id = R.string.feature_savings_withdrawal)
+        stringResource(Res.string.feature_savings_savingsAccount) + " " +
+            stringResource(Res.string.feature_savings_withdrawal)
+    }
+    val dialogTitle by rememberSaveable { mutableStateOf("") }
+    var dialogText by rememberSaveable { mutableStateOf("") }
+    var showDialog by rememberSaveable { mutableStateOf(false) }
+    var dialogMessageStr: StringResource? = null
+
+    if (showDialog) {
+        MifosAlertDialog(
+            dialogTitle = if (dialogMessageStr != null) {
+                stringResource(dialogMessageStr)
+            } else {
+                dialogTitle
+            },
+            dialogText = dialogText,
+            onDismissRequest = {
+                showDialog = false
+                dialogMessageStr = null
+            },
+            onConfirmation = {
+                showDialog = false
+                dialogMessageStr = null
+            },
+        )
     }
 
     MifosScaffold(
@@ -163,6 +207,10 @@ internal fun SavingsAccountTransactionScreen(
                         savingsAccountNumber = savingsAccountNumber,
                         onProcessTransaction = onProcessTransaction,
                         setUserOffline = setUserOffline,
+                        showSnackbar = { message ->
+                            dialogMessageStr = message
+                            showDialog = true
+                        },
                     )
                 }
 
@@ -176,40 +224,34 @@ internal fun SavingsAccountTransactionScreen(
                         title = {
                             Text(
                                 style = MaterialTheme.typography.titleLarge,
-                                text = stringResource(id = R.string.feature_savings_sync_previous_transaction),
+                                text = stringResource(Res.string.feature_savings_sync_previous_transaction),
                             )
                         },
-                        text = { Text(text = stringResource(id = R.string.feature_savings_dialog_message_sync_savingaccounttransaction)) },
+                        text = { Text(text = stringResource(Res.string.feature_savings_dialog_message_sync_savingaccounttransaction)) },
                         confirmButton = {
                             TextButton(onClick = { navigateBack() }) {
-                                Text(text = stringResource(id = R.string.feature_savings_dialog_action_ok))
+                                Text(text = stringResource(Res.string.feature_savings_dialog_action_ok))
                             }
                         },
                     )
                 }
 
                 is SavingsAccountTransactionUiState.ShowTransactionSuccessfullyDone -> {
+                    showDialog = true
                     if (uiState.savingsAccountTransactionResponse.resourceId == null) {
-                        Toast.makeText(
-                            context,
-                            context.resources.getString(R.string.feature_savings_transaction_saved_in_db),
-                            Toast.LENGTH_SHORT,
-                        ).show()
+                        dialogText =
+                            stringResource(Res.string.feature_savings_transaction_saved_in_db)
                     } else {
                         if (transactionType == Constants.SAVINGS_ACCOUNT_TRANSACTION_DEPOSIT) {
-                            Toast.makeText(
-                                context,
-                                context.resources.getString(R.string.feature_savings_deposit_successful_transaction_ID) +
-                                    uiState.savingsAccountTransactionResponse.resourceId,
-                                Toast.LENGTH_SHORT,
-                            ).show()
+                            dialogText =
+                                stringResource(Res.string.feature_savings_deposit_successful_transaction_ID)
+                            // todo find a way to show transactionID as well
+//                            + uiState.savingsAccountTransactionResponse.resourceId
                         } else if (transactionType == Constants.SAVINGS_ACCOUNT_TRANSACTION_WITHDRAWAL) {
-                            Toast.makeText(
-                                context,
-                                context.resources.getString(R.string.feature_savings_withdrawal_successful_transaction_ID) +
-                                    uiState.savingsAccountTransactionResponse.resourceId,
-                                Toast.LENGTH_SHORT,
-                            ).show()
+                            dialogText =
+                                stringResource(Res.string.feature_savings_withdrawal_successful_transaction_ID)
+                            // todo find a way to show transactionID as well
+//                           + uiState.savingsAccountTransactionResponse.resourceId
                         }
                     }
                 }
@@ -228,21 +270,24 @@ private fun SavingsAccountTransactionContent(
     onProcessTransaction: (savingsAccountTransactionRequest: SavingsAccountTransactionRequestEntity) -> Unit,
     modifier: Modifier = Modifier,
     setUserOffline: () -> Unit,
+    showSnackbar: (StringResource) -> Unit,
 ) {
     var amount by rememberSaveable { mutableStateOf("") }
     var paymentType by rememberSaveable { mutableStateOf("") }
     var paymentTypeId by rememberSaveable { mutableStateOf(0) }
-    var transactionDate by rememberSaveable { mutableLongStateOf(System.currentTimeMillis()) }
+    var transactionDate by rememberSaveable {
+        mutableLongStateOf(Clock.System.now().toEpochMilliseconds())
+    }
     var openDatepicker by rememberSaveable { mutableStateOf(false) }
+
     val datePickerState = rememberDatePickerState(
         initialSelectedDateMillis = transactionDate,
         selectableDates = object : SelectableDates {
             override fun isSelectableDate(utcTimeMillis: Long): Boolean {
-                return utcTimeMillis >= System.currentTimeMillis()
+                return utcTimeMillis >= Clock.System.now().toEpochMilliseconds()
             }
         },
     )
-    val context = LocalContext.current
     val scrollState = rememberScrollState()
     var showReviewTransactionDialog by rememberSaveable { mutableStateOf(false) }
 
@@ -251,53 +296,48 @@ private fun SavingsAccountTransactionContent(
             onDismissRequest = { showReviewTransactionDialog = false },
             title = {
                 Text(
-                    text = stringResource(id = R.string.feature_savings_review_transaction_details),
+                    text = stringResource(Res.string.feature_savings_review_transaction_details),
                     style = MaterialTheme.typography.titleLarge,
                 )
             },
             text = {
                 Column {
                     Text(
-                        text = stringResource(id = R.string.feature_savings_transaction_date) + " : " + SimpleDateFormat(
-                            "dd MMMM yyyy",
-                            Locale.getDefault(),
-                        ).format(transactionDate),
+                        text = stringResource(Res.string.feature_savings_transaction_date) + " : " +
+                            DateHelper.getDateAsStringFromLong(transactionDate),
                     )
-                    Text(text = stringResource(id = R.string.feature_savings_payment_type) + " : " + paymentType)
-                    Text(text = stringResource(id = R.string.feature_savings_amount) + " : " + amount)
+                    Text(text = stringResource(Res.string.feature_savings_payment_type) + " : " + paymentType)
+                    Text(text = stringResource(Res.string.feature_savings_amount) + " : " + amount)
                 }
             },
             confirmButton = {
                 TextButton(
                     onClick = {
                         showReviewTransactionDialog = false
-                        val savingsAccountTransactionRequest = SavingsAccountTransactionRequestEntity(
-                            locale = "en",
-                            dateFormat = "dd MM yyyy",
-                            transactionDate = SimpleDateFormat(
-                                "dd MMMM yyyy",
-                                Locale.getDefault(),
-                            ).format(transactionDate),
-                            transactionAmount = amount,
-                            paymentTypeId = paymentTypeId.toString(),
-                        )
+                        val savingsAccountTransactionRequest =
+                            SavingsAccountTransactionRequestEntity(
+                                locale = "en",
+                                dateFormat = "dd MM yyyy",
+                                transactionDate = transactionDate.toString(),
+                                transactionAmount = amount,
+                                paymentTypeId = paymentTypeId.toString(),
+                            )
 
                         val builtTransactionRequestAsJson =
                             Json.encodeToString(savingsAccountTransactionRequest)
-                        Log.i(
-                            context.resources.getString(R.string.feature_savings_transaction_body),
-                            builtTransactionRequestAsJson,
+                        Logger.d(
+                            "builtTransactionRequestAsJson",
+                            Throwable(builtTransactionRequestAsJson),
                         )
-
                         onProcessTransaction.invoke(savingsAccountTransactionRequest)
                     },
                 ) {
-                    Text(text = stringResource(id = R.string.feature_savings_review_transaction))
+                    Text(text = stringResource(Res.string.feature_savings_review_transaction))
                 }
             },
             dismissButton = {
                 TextButton(onClick = { showReviewTransactionDialog = false }) {
-                    Text(text = stringResource(id = R.string.feature_savings_cancel))
+                    Text(text = stringResource(Res.string.feature_savings_cancel))
                 }
             },
         )
@@ -316,14 +356,14 @@ private fun SavingsAccountTransactionContent(
                         }
                         openDatepicker = false
                     },
-                ) { Text(stringResource(id = R.string.feature_savings_select_date)) }
+                ) { Text(stringResource(Res.string.feature_savings_select_date)) }
             },
             dismissButton = {
                 TextButton(
                     onClick = {
                         openDatepicker = false
                     },
-                ) { Text(stringResource(id = R.string.feature_savings_cancel)) }
+                ) { Text(stringResource(Res.string.feature_savings_cancel)) }
             },
         ) {
             DatePicker(state = datePickerState)
@@ -348,7 +388,7 @@ private fun SavingsAccountTransactionContent(
         HorizontalDivider(modifier = Modifier.padding(top = 6.dp))
 
         FarApartTextItem(
-            title = stringResource(id = R.string.feature_savings_account_number),
+            title = stringResource(Res.string.feature_savings_account_number),
             value = savingsAccountNumber?.toString() ?: "",
         )
 
@@ -359,11 +399,8 @@ private fun SavingsAccountTransactionContent(
         // 2. Date Entered is not greater than Date Today i.e Date is not in future
 
         MifosDatePickerTextField(
-            value = SimpleDateFormat(
-                "dd-MMMM-yyyy",
-                Locale.getDefault(),
-            ).format(transactionDate),
-            label = stringResource(R.string.feature_savings_date),
+            value = DateHelper.getDateAsStringFromLong(transactionDate),
+            label = stringResource(Res.string.feature_savings_date),
             modifier = Modifier.fillMaxWidth(),
         ) {
             openDatepicker = true
@@ -375,7 +412,7 @@ private fun SavingsAccountTransactionContent(
             modifier = Modifier.fillMaxWidth(),
             value = amount,
             onValueChange = { amount = it },
-            label = stringResource(id = R.string.feature_savings_amount),
+            label = stringResource(Res.string.feature_savings_amount),
             error = null,
             keyboardType = KeyboardType.Number,
         )
@@ -390,7 +427,7 @@ private fun SavingsAccountTransactionContent(
                 paymentType = value
                 paymentTypeId = savingsAccountTransactionTemplate.paymentTypeOptions[index].id
             },
-            label = R.string.feature_savings_payment_type,
+            label = stringResource(Res.string.feature_savings_payment_type),
             options = savingsAccountTransactionTemplate.paymentTypeOptions.map { it.name },
             readOnly = true,
         )
@@ -403,74 +440,47 @@ private fun SavingsAccountTransactionContent(
         ) {
             Button(
                 modifier = Modifier.heightIn(46.dp),
-//                colors = ButtonDefaults.buttonColors(
-//                    containerColor = if (isSystemInDarkTheme()) BluePrimaryDark else BluePrimary,
-//                ),
                 onClick = { navigateBack.invoke() },
             ) {
-                Text(text = stringResource(id = R.string.feature_savings_cancel))
+                Text(text = stringResource(Res.string.feature_savings_cancel))
             }
 
             Button(
                 modifier = Modifier.heightIn(46.dp),
-//                colors = ButtonDefaults.buttonColors(
-//                    containerColor = if (isSystemInDarkTheme()) BluePrimaryDark else BluePrimary,
-//                ),
                 onClick = {
-                    if (isAmountValid(context, amount)) {
-//                        if (Network.isOnline(context = context)) {
+                    if (isAmountValid(
+                            amount,
+                            showSnackbar = showSnackbar,
+                        )
+                    ) {
                         showReviewTransactionDialog = true
-//                        } else {
-                        setUserOffline.invoke()
-//
-//                            Toast.makeText(
-//                                context,
-//                                context.resources.getString(R.string.feature_savings_error_not_connected_internet),
-//                                Toast.LENGTH_SHORT,
-//                            ).show()
-//                        }
+                        // todo if user is offline set user offline
+//                        setUserOffline.invoke()
                     }
                 },
             ) {
-                Text(text = stringResource(id = R.string.feature_savings_review_transaction))
+                Text(text = stringResource(Res.string.feature_savings_review_transaction))
             }
         }
     }
 }
 
 private fun isAmountValid(
-    context: Context,
     amount: String,
+    showSnackbar: (StringResource) -> Unit,
 ): Boolean {
     if (amount.isEmpty()) {
-        Toast.makeText(
-            context,
-            context.resources.getString(R.string.feature_savings_amount) + " " + context.resources.getString(
-                R.string.feature_savings_message_field_required,
-            ),
-            Toast.LENGTH_SHORT,
-        ).show()
-
+        showSnackbar.invoke(Res.string.feature_savings_amount_message_field_required)
         return false
     }
 
     try {
         if (amount.toFloat() == 0f) {
-            Toast.makeText(
-                context,
-                context.resources.getString(R.string.feature_savings_error_amount_can_not_be_empty),
-                Toast.LENGTH_SHORT,
-            ).show()
-
+            showSnackbar.invoke(Res.string.feature_savings_error_amount_can_not_be_empty)
             return false
         }
     } catch (e: NumberFormatException) {
-        Toast.makeText(
-            context,
-            context.resources.getString(R.string.feature_savings_error_invalid_amount),
-            Toast.LENGTH_SHORT,
-        ).show()
-
+        showSnackbar.invoke(Res.string.feature_savings_error_invalid_amount)
         return false
     }
 
@@ -520,7 +530,7 @@ class SavingsAccountTransactionScreenPreviewProvider :
 }
 
 @Composable
-@Preview(showSystemUi = true)
+@Preview
 private fun PreviewSavingsAccountTransactionScreen(
     @PreviewParameter(SavingsAccountTransactionScreenPreviewProvider::class)
     savingsAccountTransactionUiState: SavingsAccountTransactionUiState,

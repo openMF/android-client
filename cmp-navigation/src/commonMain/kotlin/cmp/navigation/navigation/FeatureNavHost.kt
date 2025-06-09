@@ -22,6 +22,8 @@ import com.mifos.feature.checker.inbox.task.navigation.checkerInboxTaskNavGraph
 import com.mifos.feature.individualCollectionSheet.navigation.individualCollectionSheetNavGraph
 import com.mifos.feature.note.navigation.noteNavGraph
 import com.mifos.feature.pathTracking.navigation.pathTrackingNavGraph
+import com.mifos.feature.savings.navigation.navigateToAddSavingsAccount
+import com.mifos.feature.savings.navigation.savingsNavGraph
 import com.mifos.feature.search.navigation.searchNavGraph
 import com.mifos.feature.settings.navigation.settingsScreen
 
@@ -52,6 +54,13 @@ internal fun FeatureNavHost(
             onSavings = { id -> println("Savings clicked: $id") },
         )
 
+        savingsNavGraph(
+            navController = appState.navController,
+            onBackPressed = appState.navController::popBackStack,
+            loadDocuments = { _, _ -> },
+            loadMoreSavingsAccountInfo = { _, _ -> },
+        )
+
         aboutNavGraph(onBackPressed = appState.navController::popBackStack)
 
         noteNavGraph(onBackPressed = appState.navController::popBackStack)
@@ -62,10 +71,9 @@ internal fun FeatureNavHost(
             navController = appState.navController,
             paddingValues = padding,
             onActivateCenter = appState.navController::navigateToActivateScreen,
-            addSavingsAccount = {
-//                navController.navigateToAddSavingsAccount(it, 0, true)
+            addSavingsAccount = { centerId ->
+                appState.navController.navigateToAddSavingsAccount(0, centerId, false)
             },
-
         )
 
         settingsScreen(
@@ -74,6 +82,7 @@ internal fun FeatureNavHost(
             changePasscode = {},
             languageChanged = {},
         )
+
         individualCollectionSheetNavGraph(
             navController = appState.navController,
             onBackPressed = appState.navController::popBackStack,
