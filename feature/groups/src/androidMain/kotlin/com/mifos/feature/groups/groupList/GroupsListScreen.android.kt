@@ -19,6 +19,7 @@ import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -68,7 +69,7 @@ import org.jetbrains.compose.resources.stringResource
 
 @Composable
 internal actual fun GroupsListRoute(
-    paddingValues: androidx.compose.foundation.layout.PaddingValues,
+    paddingValues: PaddingValues,
     onAddGroupClick: () -> Unit,
     onGroupClick: (Int) -> Unit,
     viewModel: GroupsListViewModel,
@@ -88,7 +89,7 @@ internal actual fun GroupsListRoute(
 
     GroupsListScreen(
         modifier = Modifier
-            .fillMaxSize()
+//            .fillMaxSize()
             .padding(paddingValues),
         lazyListState = lazyListState,
         selectedItems = selectedItems,

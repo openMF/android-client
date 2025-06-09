@@ -47,7 +47,7 @@ internal fun FeatureNavHost(
             paddingValues = padding,
             onCreateClient = { println("Create Client") },
             onCreateCenter = appState.navController::navigateToCreateNewGroupScreen,
-            onCreateGroup = { println("Create Group") },
+            onCreateGroup = appState.navController::navigateToCreateNewGroupScreen,
             onClient = { id -> println("Client clicked: $id") },
             onCenter = { id -> println("Center clicked: $id") },
             onGroup = { id -> println("Group clicked: $id") },
