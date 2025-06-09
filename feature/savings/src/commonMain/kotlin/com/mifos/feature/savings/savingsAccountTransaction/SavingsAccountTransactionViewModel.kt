@@ -13,6 +13,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mifos.core.common.utils.Constants
+import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.repository.SavingsAccountTransactionRepository
 import com.mifos.core.datastore.UserPreferencesRepository
 import com.mifos.core.model.objects.account.saving.SavingsAccountTransactionResponse
@@ -21,7 +22,7 @@ import com.mifos.room.entities.accounts.savings.SavingsTransactionData
 import com.mifos.room.entities.templates.savings.SavingsAccountTransactionTemplateEntity
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
 
@@ -29,9 +30,6 @@ import kotlinx.serialization.json.Json
  * Created by Aditya Gupta on 13/08/23.
  */
 class SavingsAccountTransactionViewModel(
-//    private val getSavingsAccountTransactionTemplateUseCase: GetSavingsAccountTransactionTemplateUseCase,
-//    private val processTransactionUseCase: ProcessTransactionUseCase,
-//    private val getSavingsAccountTransactionUseCase: GetSavingsAccountTransactionUseCase,
     private val prefManager: UserPreferencesRepository,
     private val repository: SavingsAccountTransactionRepository,
     savedStateHandle: SavedStateHandle,
@@ -49,7 +47,7 @@ class SavingsAccountTransactionViewModel(
 
     private val _savingsAccountTransactionUiState =
         MutableStateFlow<SavingsAccountTransactionUiState>(SavingsAccountTransactionUiState.ShowProgressbar)
-    val savingsAccountTransactionUiState: StateFlow<SavingsAccountTransactionUiState> get() = _savingsAccountTransactionUiState
+    val savingsAccountTransactionUiState: StateFlow<SavingsAccountTransactionUiState> get() = _savingsAccountTransactionUiState.asStateFlow()
 
     fun setUserOffline() {
         viewModelScope.launch {
@@ -60,21 +58,26 @@ class SavingsAccountTransactionViewModel(
     fun loadSavingAccountTemplate() {
         viewModelScope.launch {
             if (accountId != null) {
-                _savingsAccountTransactionUiState.value =
-                    SavingsAccountTransactionUiState.ShowProgressbar
-
                 repository.getSavingsAccountTransactionTemplate(
-                    savingsAccountType?.endpoint,
+                    savingsAccountType?.endpoint!!,
                     accountId,
                     transactionType,
-                ).catch {
-                    _savingsAccountTransactionUiState.value =
-                        SavingsAccountTransactionUiState.ShowError(it.message.toString())
-                }.collect { template ->
-                    _savingsAccountTransactionUiState.value =
-                        SavingsAccountTransactionUiState.ShowSavingAccountTemplate(
-                            template ?: SavingsAccountTransactionTemplateEntity(),
-                        )
+                ).collect { state ->
+                    when (state) {
+                        is DataState.Error ->
+                            _savingsAccountTransactionUiState.value =
+                                SavingsAccountTransactionUiState.ShowError(state.message)
+
+                        DataState.Loading ->
+                            _savingsAccountTransactionUiState.value =
+                                SavingsAccountTransactionUiState.ShowProgressbar
+
+                        is DataState.Success ->
+                            _savingsAccountTransactionUiState.value =
+                                SavingsAccountTransactionUiState.ShowSavingAccountTemplate(
+                                    state.data ?: SavingsAccountTransactionTemplateEntity(),
+                                )
+                    }
                 }
             }
         }
@@ -83,22 +86,27 @@ class SavingsAccountTransactionViewModel(
     fun processTransaction(request: SavingsAccountTransactionRequestEntity) {
         viewModelScope.launch {
             if (accountId != null) {
-                _savingsAccountTransactionUiState.value =
-                    SavingsAccountTransactionUiState.ShowProgressbar
-
                 repository.processTransaction(
-                    savingsAccountType?.endpoint,
+                    savingsAccountType?.endpoint!!,
                     accountId,
                     transactionType,
                     request,
-                ).catch {
-                    _savingsAccountTransactionUiState.value =
-                        SavingsAccountTransactionUiState.ShowError(it.message.toString())
-                }.collect {
-                    _savingsAccountTransactionUiState.value =
-                        SavingsAccountTransactionUiState.ShowTransactionSuccessfullyDone(
-                            it ?: SavingsAccountTransactionResponse(),
-                        )
+                ).collect { dataState ->
+                    when (dataState) {
+                        is DataState.Error<*> ->
+                            _savingsAccountTransactionUiState.value =
+                                SavingsAccountTransactionUiState.ShowError(dataState.message)
+
+                        DataState.Loading ->
+                            _savingsAccountTransactionUiState.value =
+                                SavingsAccountTransactionUiState.ShowProgressbar
+
+                        is DataState.Success<*> ->
+                            _savingsAccountTransactionUiState.value =
+                                SavingsAccountTransactionUiState.ShowTransactionSuccessfullyDone(
+                                    dataState.data ?: SavingsAccountTransactionResponse(),
+                                )
+                    }
                 }
             }
         }
@@ -107,20 +115,28 @@ class SavingsAccountTransactionViewModel(
     fun checkInDatabaseSavingAccountTransaction() {
         viewModelScope.launch {
             if (accountId != null) {
-                _savingsAccountTransactionUiState.value =
-                    SavingsAccountTransactionUiState.ShowProgressbar
-
                 repository.getSavingsAccountTransaction(accountId)
-                    .catch {
-                        _savingsAccountTransactionUiState.value =
-                            SavingsAccountTransactionUiState.ShowError(it.message.toString())
-                    }.collect { savings ->
-                        if (savings != null) {
-                            _savingsAccountTransactionUiState.value =
-                                SavingsAccountTransactionUiState.ShowSavingAccountTransactionExistInDatabase
-                        } else {
-                            _savingsAccountTransactionUiState.value =
-                                SavingsAccountTransactionUiState.ShowSavingAccountTransactionDoesNotExistInDatabase
+                    .collect { dataState ->
+                        when (dataState) {
+                            is DataState.Error<*> -> {
+                                _savingsAccountTransactionUiState.value =
+                                    SavingsAccountTransactionUiState.ShowError(dataState.message)
+                            }
+
+                            DataState.Loading ->
+                                _savingsAccountTransactionUiState.value =
+                                    SavingsAccountTransactionUiState.ShowProgressbar
+
+                            is DataState.Success<*> -> {
+                                val savings = dataState.data
+                                if (savings != null) {
+                                    _savingsAccountTransactionUiState.value =
+                                        SavingsAccountTransactionUiState.ShowSavingAccountTransactionExistInDatabase
+                                } else {
+                                    _savingsAccountTransactionUiState.value =
+                                        SavingsAccountTransactionUiState.ShowSavingAccountTransactionDoesNotExistInDatabase
+                                }
+                            }
                         }
                     }
             }

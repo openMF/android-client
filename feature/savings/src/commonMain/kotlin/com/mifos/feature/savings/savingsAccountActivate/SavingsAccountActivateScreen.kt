@@ -10,7 +10,15 @@
 package com.mifos.feature.savings.savingsAccountActivate
 
 // import com.mifos.core.common.utils.Network
-import android.widget.Toast
+import androidclient.feature.savings.generated.resources.Res
+import androidclient.feature.savings.generated.resources.feature_savings_activate_savings
+import androidclient.feature.savings.generated.resources.feature_savings_approval_savings_date
+import androidclient.feature.savings.generated.resources.feature_savings_approved_on
+import androidclient.feature.savings.generated.resources.feature_savings_cancel
+import androidclient.feature.savings.generated.resources.feature_savings_save
+import androidclient.feature.savings.generated.resources.feature_savings_savings_account_activated
+import androidclient.feature.savings.generated.resources.feature_savings_savings_approval_reason
+import androidclient.feature.savings.generated.resources.feature_savings_select_date
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -39,28 +47,26 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.tooling.preview.PreviewParameter
-import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.mifos.core.common.utils.DateHelper
 import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosDatePickerTextField
 import com.mifos.core.designsystem.component.MifosOutlinedTextField
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.network.GenericResponse
-import com.mifos.feature.savings.R
-import org.koin.androidx.compose.koinViewModel
-import java.text.SimpleDateFormat
-import java.util.Locale
+import com.mifos.core.ui.components.MifosAlertDialog
+import kotlinx.datetime.Clock
+import org.jetbrains.compose.resources.stringResource
+import org.jetbrains.compose.ui.tooling.preview.Preview
+import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
+import org.jetbrains.compose.ui.tooling.preview.PreviewParameterProvider
+import org.koin.compose.viewmodel.koinViewModel
 
 /**
  * Created by Pronay Sarker on 12/07/2024 (11:10 AM)
  */
-
 @Composable
 internal fun SavingsAccountActivateScreen(
     navigateBack: () -> Unit,
@@ -86,12 +92,11 @@ internal fun SavingsAccountActivateScreen(
     val snackBarHostState = remember {
         SnackbarHostState()
     }
-    val context = LocalContext.current
 
     MifosScaffold(
         modifier = modifier,
         snackbarHostState = snackBarHostState,
-        title = stringResource(id = R.string.feature_savings_activate_savings),
+        title = stringResource(Res.string.feature_savings_activate_savings),
         onBackPressed = navigateBack,
     ) {
         Box(
@@ -119,13 +124,13 @@ internal fun SavingsAccountActivateScreen(
                 }
 
                 is SavingsAccountActivateUiState.ShowSavingAccountActivatedSuccessfully -> {
-                    Toast.makeText(
-                        context,
-                        context.resources.getString(R.string.feature_savings_savings_account_activated),
-                        Toast.LENGTH_LONG,
-                    ).show()
-
-                    navigateBack.invoke()
+                    MifosAlertDialog(
+                        dialogTitle = "Success",
+                        dialogText = stringResource(Res.string.feature_savings_savings_account_activated),
+                        onConfirmation = navigateBack,
+                        onDismissRequest = {},
+                        dismissText = null,
+                    )
                 }
             }
         }
@@ -139,21 +144,22 @@ private fun SavingsAccountActivateContent(
     activateSavings: (hashMap: HashMap<String, String>) -> Unit,
 ) {
     val scrollstate = rememberScrollState()
-    val context = LocalContext.current
-    var approvalDate by rememberSaveable {
-        mutableLongStateOf(System.currentTimeMillis())
-    }
     var approvalReason by rememberSaveable {
         mutableStateOf("")
     }
     var showDatePickerDialog by rememberSaveable {
         mutableStateOf(false)
     }
+
+    var approvalDate by rememberSaveable {
+        mutableLongStateOf(Clock.System.now().toEpochMilliseconds())
+    }
+
     val datePickerState = rememberDatePickerState(
         initialSelectedDateMillis = approvalDate,
         selectableDates = object : SelectableDates {
             override fun isSelectableDate(utcTimeMillis: Long): Boolean {
-                return utcTimeMillis >= System.currentTimeMillis()
+                return utcTimeMillis >= Clock.System.now().toEpochMilliseconds()
             }
         },
     )
@@ -171,14 +177,14 @@ private fun SavingsAccountActivateContent(
                         }
                         showDatePickerDialog = false
                     },
-                ) { Text(stringResource(id = R.string.feature_savings_select_date)) }
+                ) { Text(stringResource(Res.string.feature_savings_select_date)) }
             },
             dismissButton = {
                 TextButton(
                     onClick = {
                         showDatePickerDialog = false
                     },
-                ) { Text(stringResource(id = R.string.feature_savings_cancel)) }
+                ) { Text(stringResource(Res.string.feature_savings_cancel)) }
             },
         ) {
             DatePicker(state = datePickerState)
@@ -194,28 +200,26 @@ private fun SavingsAccountActivateContent(
 
         Text(
             style = MaterialTheme.typography.bodyLarge,
-            text = stringResource(id = R.string.feature_savings_approved_on),
+            text = stringResource(Res.string.feature_savings_approved_on),
             modifier = Modifier.padding(start = 16.dp),
         )
 
         Spacer(modifier = Modifier.height(16.dp))
 
         MifosDatePickerTextField(
-            value = SimpleDateFormat(
-                "dd-MMMM-yyyy",
-                Locale.getDefault(),
-            ).format(approvalDate),
-            label = stringResource(R.string.feature_savings_approval_savings_date),
-        ) {
-            showDatePickerDialog = true
-        }
+            value = DateHelper.getDateAsStringFromLong(approvalDate),
+            label = stringResource(Res.string.feature_savings_approval_savings_date),
+            openDatePicker = {
+                showDatePickerDialog = true
+            },
+        )
 
         Spacer(modifier = Modifier.height(16.dp))
 
         MifosOutlinedTextField(
             value = approvalReason,
             onValueChange = { approvalReason = it },
-            label = stringResource(id = R.string.feature_savings_savings_approval_reason),
+            label = stringResource(Res.string.feature_savings_savings_approval_reason),
             error = null,
         )
 
@@ -227,26 +231,15 @@ private fun SavingsAccountActivateContent(
                 .padding(horizontal = 16.dp)
                 .heightIn(46.dp),
             onClick = {
-//                if (Network.isOnline(context)) {
                 val hashMap = HashMap<String, String>()
                 hashMap["dateFormat"] = "dd MMMM yyyy"
-                hashMap["activatedOnDate"] = SimpleDateFormat(
-                    "dd-MMMM-yyyy",
-                    Locale.getDefault(),
-                ).format(approvalDate)
+                hashMap["activatedOnDate"] = approvalDate.toString()
                 hashMap["locale"] = "en"
 
                 activateSavings.invoke(hashMap)
-//                } else {
-//                    Toast.makeText(
-//                        context,
-//                        context.resources.getString(R.string.feature_savings_error_not_connected_internet),
-//                        Toast.LENGTH_SHORT,
-//                    ).show()
-//                }
             },
         ) {
-            Text(text = stringResource(id = R.string.feature_savings_save))
+            Text(text = stringResource(Res.string.feature_savings_save))
         }
     }
 }
@@ -263,7 +256,7 @@ class SavingsAccountActivateScreenPreviewProvider :
 }
 
 @Composable
-@Preview(showSystemUi = true)
+@Preview
 private fun PreviewSavingsAccountActivateScreen(
     @PreviewParameter(SavingsAccountActivateScreenPreviewProvider::class)
     savingsAccountActivateUiState: SavingsAccountActivateUiState,
