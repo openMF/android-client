@@ -231,20 +231,12 @@ private fun SavingsAccountActivateContent(
                 .padding(horizontal = 16.dp)
                 .heightIn(46.dp),
             onClick = {
-//                if (Network.isOnline(context)) {
                 val hashMap = HashMap<String, String>()
                 hashMap["dateFormat"] = "dd MMMM yyyy"
                 hashMap["activatedOnDate"] = approvalDate.toString()
                 hashMap["locale"] = "en"
 
                 activateSavings.invoke(hashMap)
-//                } else {
-//                    Toast.makeText(
-//                        context,
-//                        context.resources.getString(R.string.feature_savings_error_not_connected_internet),
-//                        Toast.LENGTH_SHORT,
-//                    ).show()
-//                }
             },
         ) {
             Text(text = stringResource(Res.string.feature_savings_save))
