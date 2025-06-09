@@ -36,7 +36,7 @@ kotlin {
             implementation(projects.feature.center)
             implementation(projects.feature.checkerInboxTask)
 //            implementation(projects.feature.client)
-//            implementation(projects.feature.collectionSheet)
+            implementation(projects.feature.collectionSheet)
 //            implementation(projects.feature.dataTable)
 //            implementation(projects.feature.document)
 //            implementation(projects.feature.groups)
