@@ -10,6 +10,7 @@
 package com.mifos.feature.client.createNewClient
 
 import com.mifos.room.entities.templates.clients.ClientsTemplateEntity
+import org.jetbrains.compose.resources.StringResource
 
 /**
  * Created by Aditya Gupta on 10/08/23.
@@ -20,17 +21,17 @@ sealed class CreateNewClientUiState {
 
     data class ShowProgress(val message: String) : CreateNewClientUiState()
 
-    data class ShowError(val message: Int) : CreateNewClientUiState()
+    data class ShowError(val message: StringResource) : CreateNewClientUiState()
 
     data class ShowStringError(val message: String) : CreateNewClientUiState()
 
-    data class OnImageUploadSuccess(val message: Int) : CreateNewClientUiState()
+    data class OnImageUploadSuccess(val message: StringResource) : CreateNewClientUiState()
 
     data class ShowClientTemplate(val clientsTemplate: ClientsTemplateEntity) : CreateNewClientUiState()
 
-    data class ShowClientCreatedSuccessfully(val message: Int) : CreateNewClientUiState()
+    data class ShowClientCreatedSuccessfully(val message: StringResource) : CreateNewClientUiState()
 
     data class SetClientId(val id: Int) : CreateNewClientUiState()
 
-    data class ShowWaitingForCheckerApproval(val message: Int) : CreateNewClientUiState()
+    data class ShowWaitingForCheckerApproval(val message: StringResource) : CreateNewClientUiState()
 }

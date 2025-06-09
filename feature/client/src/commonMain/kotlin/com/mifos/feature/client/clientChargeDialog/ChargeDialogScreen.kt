@@ -44,11 +44,21 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidclient.feature.client.generated.resources.Res
+import androidclient.feature.client.generated.resources.feature_client_charge_amount
+import androidclient.feature.client.generated.resources.feature_client_charge_cancel
+import androidclient.feature.client.generated.resources.feature_client_charge_created_successfully
+import androidclient.feature.client.generated.resources.feature_client_charge_dialog
+import androidclient.feature.client.generated.resources.feature_client_charge_locale
+import androidclient.feature.client.generated.resources.feature_client_charge_name
+import androidclient.feature.client.generated.resources.feature_client_charge_select
+import androidclient.feature.client.generated.resources.feature_client_due_date
+import androidclient.feature.client.generated.resources.feature_client_failed_to_load_charges
+import androidclient.feature.client.generated.resources.feature_client_message_field_required
+import androidclient.feature.client.generated.resources.feature_client_charge_submit
 import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosDatePickerTextField
 import com.mifos.core.designsystem.component.MifosOutlinedTextField
@@ -148,7 +158,7 @@ internal fun ChargeDialogScreen(
     ) {
         Surface(
             shape = RoundedCornerShape(16.dp),
-            color = Color.White,
+            color = MaterialTheme.colorScheme.background,
         ) {
             Box(
                 contentAlignment = Alignment.Center,
@@ -174,7 +184,7 @@ internal fun ChargeDialogScreen(
                                     Icon(
                                         imageVector = MifosIcons.Close,
                                         contentDescription = "",
-                                        tint = colorResource(android.R.color.darker_gray),
+                                        tint = MaterialTheme.colorScheme.onSurface,
                                         modifier = Modifier
                                             .width(30.dp)
                                             .height(30.dp),
@@ -187,7 +197,7 @@ internal fun ChargeDialogScreen(
                                 onValueChanged = { value ->
                                     name = value
                                 },
-                                label = Res.string.feature_client_charge_name,
+                                label = stringResource(Res.string.feature_client_charge_name),
                                 readOnly = true,
                                 onOptionSelected = { index, value ->
                                     chargeId = state.chargeTemplate.chargeOptions[index].id
@@ -258,12 +268,12 @@ internal fun ChargeDialogScreen(
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .height(50.dp),
-//                                colors = ButtonColors(
-//                                    containerColor = BluePrimary,
-//                                    contentColor = White,
-//                                    disabledContainerColor = BluePrimary,
-//                                    disabledContentColor = Gray,
-//                                ),
+                                colors = ButtonColors(
+                                    containerColor = BluePrimary,
+                                    contentColor = White,
+                                    disabledContainerColor = BluePrimary,
+                                    disabledContentColor = Gray,
+                                ),
                             ) {
                                 Text(text = stringResource(Res.string.feature_client_charge_submit))
                             }

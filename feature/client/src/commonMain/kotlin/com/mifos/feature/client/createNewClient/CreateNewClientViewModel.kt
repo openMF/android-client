@@ -10,8 +10,16 @@
 package com.mifos.feature.client.createNewClient
 
 import android.util.Log
+import androidclient.feature.client.generated.resources.Res
+import androidclient.feature.client.generated.resources.feature_client_Image_Upload_Failed
+import androidclient.feature.client.generated.resources.feature_client_Image_Upload_Successful
+import androidclient.feature.client.generated.resources.feature_client_client_created_successfully
+import androidclient.feature.client.generated.resources.feature_client_failed_to_fetch_client_template
+import androidclient.feature.client.generated.resources.feature_client_failed_to_fetch_offices
+import androidclient.feature.client.generated.resources.feature_client_failed_to_fetch_staffs
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import co.touchlab.kermit.Logger
 import com.mifos.core.data.repository.CreateNewClientRepository
 import com.mifos.feature.client.R
 import com.mifos.room.entities.client.ClientPayloadEntity
@@ -58,7 +66,7 @@ class CreateNewClientViewModel(
         viewModelScope.launch {
             repository.clientTemplate().catch {
                 _createNewClientUiState.value =
-                    CreateNewClientUiState.ShowError(R.string.feature_client_failed_to_fetch_client_template)
+                    CreateNewClientUiState.ShowError(Res.string.feature_client_failed_to_fetch_client_template)
             }.collect {
                 _createNewClientUiState.value =
                     CreateNewClientUiState.ShowClientTemplate(it ?: ClientsTemplateEntity())
@@ -71,7 +79,7 @@ class CreateNewClientViewModel(
             repository.offices()
                 .catch {
                     _createNewClientUiState.value =
-                        CreateNewClientUiState.ShowError(R.string.feature_client_failed_to_fetch_offices)
+                        CreateNewClientUiState.ShowError(Res.string.feature_client_failed_to_fetch_offices)
                 }.collect { offices ->
                     _showOffices.value = offices
                 }
@@ -83,7 +91,7 @@ class CreateNewClientViewModel(
             repository.getStaffInOffice(officeId)
                 .catch {
                     _createNewClientUiState.value =
-                        CreateNewClientUiState.ShowError(R.string.feature_client_failed_to_fetch_staffs)
+                        CreateNewClientUiState.ShowError(Res.string.feature_client_failed_to_fetch_staffs)
                 }.collect { staffs ->
                     _staffInOffices.value = staffs
                 }
@@ -100,7 +108,7 @@ class CreateNewClientViewModel(
                 clientId?.let {
                     _createNewClientUiState.value =
                         CreateNewClientUiState.ShowClientCreatedSuccessfully(
-                            R.string.feature_client_client_created_successfully,
+                            Res.string.feature_client_client_created_successfully,
                         )
                     _createNewClientUiState.value = CreateNewClientUiState.SetClientId(it)
                 } ?: run {
@@ -109,19 +117,19 @@ class CreateNewClientViewModel(
                 }
             } catch (e: ClientRequestException) {
                 val errorMessage = e.message
-                Log.d("CreateClient", errorMessage)
+                Logger.d("CreateClient: $errorMessage", e)
                 _createNewClientUiState.value = CreateNewClientUiState.ShowStringError(
                     "HTTP Error: $errorMessage",
                 )
             } catch (e: ServerResponseException) {
                 val errorMessage = e.message
-                Log.d("CreateClient", errorMessage)
+                Logger.d("CreateClient: $errorMessage", e)
                 _createNewClientUiState.value = CreateNewClientUiState.ShowStringError(
                     "HTTP Error: $errorMessage",
                 )
             } catch (e: Exception) {
                 val errorMessage = e.message.orEmpty()
-                Log.e("CreateClient", "Unexpected error", e)
+                Logger.e("CreateClient: Unexpected error", e)
                 // Todo check if we need to assign value to uiState here. else remove
                 _createNewClientUiState.value = CreateNewClientUiState.ShowStringError(
                     "Unexpected Error: $errorMessage",
@@ -146,10 +154,10 @@ class CreateNewClientViewModel(
                 repository.uploadClientImage(id, body)
 
                 _createNewClientUiState.value =
-                    CreateNewClientUiState.OnImageUploadSuccess(R.string.feature_client_Image_Upload_Successful)
+                    CreateNewClientUiState.OnImageUploadSuccess(Res.string.feature_client_Image_Upload_Successful)
             } catch (e: Exception) {
                 _createNewClientUiState.value =
-                    CreateNewClientUiState.ShowError(R.string.feature_client_Image_Upload_Failed)
+                    CreateNewClientUiState.ShowError(Res.string.feature_client_Image_Upload_Failed)
             }
         }
     }

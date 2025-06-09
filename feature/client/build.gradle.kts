@@ -23,13 +23,13 @@ kotlin {
             implementation(projects.core.datastore)
 //            implementation(project(":feature:data-table"))
 
-            implementation(libs.kotlinx.serialization.json)
             implementation(compose.ui)
             implementation(compose.material3)
             implementation(compose.foundation)
             implementation(compose.components.resources)
             implementation(compose.components.uiToolingPreview)
             implementation(libs.androidx.paging.common)
+            implementation(libs.kotlinx.serialization.json)
         }
         
         androidMain.dependencies {

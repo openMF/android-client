@@ -7,7 +7,7 @@
  *
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
-package com.mifos.feature.client.ui
+package com.mifos.feature.client.clientDetails
 
 import okhttp3.ResponseBody
 

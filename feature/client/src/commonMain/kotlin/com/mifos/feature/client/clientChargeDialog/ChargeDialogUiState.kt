@@ -10,6 +10,7 @@
 package com.mifos.feature.client.clientChargeDialog
 
 import com.mifos.core.model.objects.template.client.ChargeTemplate
+import org.jetbrains.compose.resources.StringResource
 
 /**
  * Created by Aditya Gupta on 13/08/23.
@@ -18,7 +19,7 @@ sealed class ChargeDialogUiState {
 
     data object Loading : ChargeDialogUiState()
 
-    data class Error(val message: Int) : ChargeDialogUiState()
+    data class Error(val message: StringResource) : ChargeDialogUiState()
 
     data class AllChargesV2(val chargeTemplate: ChargeTemplate) : ChargeDialogUiState()
 

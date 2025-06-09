@@ -10,6 +10,7 @@
 package com.mifos.feature.client.clientIdentifiers
 
 import com.mifos.core.model.objects.noncoreobjects.Identifier
+import org.jetbrains.compose.resources.StringResource
 
 /**
  * Created by Aditya Gupta on 08/08/23.
@@ -18,7 +19,7 @@ sealed class ClientIdentifiersUiState {
 
     data object Loading : ClientIdentifiersUiState()
 
-    data class Error(val message: Int) : ClientIdentifiersUiState()
+    data class Error(val message: StringResource) : ClientIdentifiersUiState()
 
     data class ClientIdentifiers(val identifiers: List<Identifier>) : ClientIdentifiersUiState()
 

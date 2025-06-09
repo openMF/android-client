@@ -12,12 +12,12 @@ package com.mifos.feature.client.clientChargeDialog
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidclient.feature.client.generated.resources.Res
+import androidclient.feature.client.generated.resources.feature_client_failed_to_create_charge
 import androidclient.feature.client.generated.resources.feature_client_failed_to_load_client_charges
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.domain.useCases.CreateChargesUseCase
 import com.mifos.core.domain.useCases.GetAllChargesV2UseCase
 import com.mifos.core.model.objects.payloads.ChargesPayload
-import com.mifos.core.model.objects.template.client.ChargeTemplate
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
@@ -43,10 +43,7 @@ class ChargeDialogViewModel(
                 is DataState.Success ->
                     _chargeDialogUiState.value =
                         ChargeDialogUiState.AllChargesV2(
-                            result.data ?: ChargeTemplate(
-                                false,
-                                emptyList(),
-                            ),
+                            result.data,
                         )
             }
         }

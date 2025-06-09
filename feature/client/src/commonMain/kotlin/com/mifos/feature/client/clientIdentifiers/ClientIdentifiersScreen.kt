@@ -7,14 +7,22 @@
  *
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
-@file:OptIn(ExperimentalMaterialApi::class)
+@file:OptIn(ExperimentalMaterial3Api::class)
 
 package com.mifos.feature.client.clientIdentifiers
 
-import android.widget.Toast
+import androidclient.feature.client.generated.resources.Res
+import androidclient.feature.client.generated.resources.feature_client_description
+import androidclient.feature.client.generated.resources.feature_client_documents
+import androidclient.feature.client.generated.resources.feature_client_failed_to_load_client_identifiers
+import androidclient.feature.client.generated.resources.feature_client_id
+import androidclient.feature.client.generated.resources.feature_client_identifier_deleted
+import androidclient.feature.client.generated.resources.feature_client_identifiers
+import androidclient.feature.client.generated.resources.feature_client_remove
+import androidclient.feature.client.generated.resources.feature_client_there_is_no_identifier_to_show
+import androidclient.feature.client.generated.resources.feature_client_type
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -23,17 +31,17 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.pullrefresh.PullRefreshIndicator
-import androidx.compose.material.pullrefresh.pullRefresh
-import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.ElevatedCard
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
+import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -44,13 +52,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Color.Companion.LightGray
-import androidx.compose.ui.graphics.Color.Companion.White
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.tooling.preview.PreviewParameter
-import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mifos.core.designsystem.component.MifosCircularProgress
@@ -62,9 +63,12 @@ import com.mifos.core.designsystem.theme.identifierTextStyleDark
 import com.mifos.core.designsystem.theme.identifierTextStyleLight
 import com.mifos.core.model.objects.noncoreobjects.Identifier
 import com.mifos.core.ui.components.MifosEmptyUi
-import com.mifos.feature.client.R
+import com.mifos.core.ui.util.DevicePreview
 import com.mifos.feature.client.clientIdentifiersDialog.ClientIdentifiersDialogScreen
-import org.koin.androidx.compose.koinViewModel
+import org.jetbrains.compose.resources.stringResource
+import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
+import org.jetbrains.compose.ui.tooling.preview.PreviewParameterProvider
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 internal fun ClientIdentifiersScreen(
@@ -114,10 +118,7 @@ internal fun ClientIdentifiersScreen(
     onDocumentClicked: (Int) -> Unit,
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
-    val pullRefreshState = rememberPullRefreshState(
-        refreshing = refreshState,
-        onRefresh = onRefresh,
-    )
+    val pullToRefreshState = rememberPullToRefreshState()
     var showCreateIdentifierDialog by remember { mutableStateOf(false) }
 
     if (showCreateIdentifierDialog) {
@@ -132,7 +133,7 @@ internal fun ClientIdentifiersScreen(
     }
 
     MifosScaffold(
-        title = stringResource(id = R.string.feature_client_identifiers),
+        title = stringResource(Res.string.feature_client_identifiers),
         onBackPressed = onBackPressed,
         actions = {
             IconButton(
@@ -149,13 +150,17 @@ internal fun ClientIdentifiersScreen(
         snackbarHostState = snackbarHostState,
     ) { paddingValues ->
         Column(modifier = Modifier.padding(paddingValues)) {
-            Box(modifier = Modifier.pullRefresh(pullRefreshState)) {
+            PullToRefreshBox(
+                state = pullToRefreshState,
+                onRefresh = onRefresh,
+                isRefreshing = refreshState,
+            ) {
                 when (state) {
                     is ClientIdentifiersUiState.ClientIdentifiers -> {
                         when (state.identifiers.isEmpty()) {
                             true -> {
                                 MifosEmptyUi(
-                                    text = stringResource(id = R.string.feature_client_there_is_no_identifier_to_show),
+                                    text = stringResource(Res.string.feature_client_there_is_no_identifier_to_show),
                                     icon = MifosIcons.FileTask,
                                 )
                             }
@@ -168,26 +173,25 @@ internal fun ClientIdentifiersScreen(
                         }
                     }
 
-                    is ClientIdentifiersUiState.Error -> MifosSweetError(message = stringResource(id = state.message)) {
+                    is ClientIdentifiersUiState.Error -> MifosSweetError(
+                        message = stringResource(
+                            state.message,
+                        ),
+                    ) {
                         onRetry()
                     }
 
                     is ClientIdentifiersUiState.IdentifierDeletedSuccessfully -> {
                         Toast.makeText(
                             LocalContext.current,
-                            stringResource(id = R.string.feature_client_identifier_deleted),
+                            stringResource(Res.string.feature_client_identifier_deleted),
                             Toast.LENGTH_SHORT,
                         ).show()
                     }
 
+
                     is ClientIdentifiersUiState.Loading -> MifosCircularProgress()
                 }
-
-                PullRefreshIndicator(
-                    refreshing = refreshState,
-                    state = pullRefreshState,
-                    modifier = Modifier.align(Alignment.TopCenter),
-                )
             }
         }
     }
@@ -221,7 +225,7 @@ private fun ClientIdentifiersItem(
     ElevatedCard(
         modifier = Modifier.padding(8.dp),
         elevation = CardDefaults.elevatedCardElevation(0.dp),
-        colors = CardDefaults.elevatedCardColors(LightGray),
+        colors = CardDefaults.elevatedCardColors(MaterialTheme.colorScheme.surfaceVariant),
         onClick = {},
     ) {
         Row(
@@ -243,34 +247,34 @@ private fun ClientIdentifiersItem(
                     .weight(3f),
             ) {
                 MifosIdentifierDetailsText(
-                    field = stringResource(id = R.string.feature_client_id),
+                    field = stringResource(Res.string.feature_client_id),
                     value = identifier.id.toString(),
                 )
                 MifosIdentifierDetailsText(
-                    field = stringResource(id = R.string.feature_client_type),
+                    field = stringResource(Res.string.feature_client_type),
                     value = identifier.documentType?.name ?: "-",
                 )
                 MifosIdentifierDetailsText(
-                    field = stringResource(id = R.string.feature_client_description),
+                    field = stringResource(Res.string.feature_client_description),
                     value = identifier.description ?: "-",
                 )
             }
             IconButton(modifier = Modifier.weight(.5f), onClick = { showMenu = showMenu.not() }) {
                 Icon(imageVector = MifosIcons.MoreVert, contentDescription = null)
                 DropdownMenu(
-                    modifier = Modifier.background(White),
+                    modifier = Modifier.background(MaterialTheme.colorScheme.background),
                     expanded = showMenu,
                     onDismissRequest = { showMenu = false },
                 ) {
                     MifosMenuDropDownItem(
-                        option = stringResource(id = R.string.feature_client_remove),
+                        option = stringResource(Res.string.feature_client_remove),
                         onClick = {
                             identifier.id?.let { onDeleteIdentifier(it) }
                             showMenu = false
                         },
                     )
                     MifosMenuDropDownItem(
-                        option = stringResource(id = R.string.feature_client_documents),
+                        option = stringResource(Res.string.feature_client_documents),
                         onClick = {
                             identifier.id?.let { onDocumentClicked(it) }
                             showMenu = false
@@ -311,13 +315,13 @@ private class ClientIdentifiersUiStateProvider :
     override val values: Sequence<ClientIdentifiersUiState>
         get() = sequenceOf(
             ClientIdentifiersUiState.Loading,
-            ClientIdentifiersUiState.Error(R.string.feature_client_failed_to_load_client_identifiers),
+            ClientIdentifiersUiState.Error(Res.string.feature_client_failed_to_load_client_identifiers),
             ClientIdentifiersUiState.IdentifierDeletedSuccessfully,
             ClientIdentifiersUiState.ClientIdentifiers(sampleClientIdentifiers),
         )
 }
 
-@Preview(showBackground = true)
+@DevicePreview
 @Composable
 private fun ClientIdentifiersScreenPreview(
     @PreviewParameter(ClientIdentifiersUiStateProvider::class) state: ClientIdentifiersUiState,

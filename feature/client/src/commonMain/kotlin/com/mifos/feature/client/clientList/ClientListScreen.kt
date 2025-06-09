@@ -9,7 +9,7 @@
  */
 @file:OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 
-package com.mifos.feature.client.presentation
+package com.mifos.feature.client.clientList
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.ExperimentalFoundationApi

@@ -7,7 +7,7 @@
  *
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
-package com.mifos.feature.client.presentation
+package com.mifos.feature.client.clientList
 
 import androidx.paging.PagingData
 import com.mifos.room.entities.client.ClientEntity

@@ -7,10 +7,18 @@
  *
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
-@file:OptIn(ExperimentalMaterialApi::class)
+@file:OptIn(ExperimentalMaterial3Api::class)
 
 package com.mifos.feature.client.clientCharges
 
+import androidclient.feature.client.generated.resources.Res
+import androidclient.feature.client.generated.resources.feature_client_charge_amount
+import androidclient.feature.client.generated.resources.feature_client_charge_name
+import androidclient.feature.client.generated.resources.feature_client_charges
+import androidclient.feature.client.generated.resources.feature_client_client_id
+import androidclient.feature.client.generated.resources.feature_client_due_date
+import androidclient.feature.client.generated.resources.feature_client_failed_to_load_client_charges
+import androidclient.feature.client.generated.resources.feature_client_no_more_charges_available
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -20,16 +28,15 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.pullrefresh.PullRefreshIndicator
-import androidx.compose.material.pullrefresh.pullRefresh
-import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
+import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -39,32 +46,23 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color.Companion.DarkGray
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontStyle
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.tooling.preview.PreviewParameter
-import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.paging.LoadState
-import androidx.paging.PagingData
-import androidx.paging.compose.LazyPagingItems
-import androidx.paging.compose.collectAsLazyPagingItems
 import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosPagingAppendProgress
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.icon.MifosIcons
-import com.mifos.feature.client.R
+import com.mifos.core.ui.util.DevicePreview
 import com.mifos.feature.client.clientChargeDialog.ChargeDialogScreen
 import com.mifos.room.entities.client.ChargesEntity
 import kotlinx.coroutines.flow.flowOf
-import org.koin.androidx.compose.koinViewModel
+import org.jetbrains.compose.resources.stringResource
+import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
+import org.jetbrains.compose.ui.tooling.preview.PreviewParameterProvider
+import org.koin.compose.viewmodel.koinViewModel
+
 
 @Composable
 internal fun ClientChargesScreen(
@@ -103,10 +101,7 @@ internal fun ClientChargesScreen(
     onChargeCreated: () -> Unit,
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
-    val pullRefreshState = rememberPullRefreshState(
-        refreshing = refreshState,
-        onRefresh = onRefresh,
-    )
+    val pullRefreshState = rememberPullToRefreshState()
     var showClientChargeDialog by rememberSaveable { mutableStateOf(false) }
 
     if (showClientChargeDialog) {
@@ -123,7 +118,7 @@ internal fun ClientChargesScreen(
     }
 
     MifosScaffold(
-        title = stringResource(id = R.string.feature_client_charges),
+        title = stringResource(Res.string.feature_client_charges),
         onBackPressed = onBackPressed,
         actions = {
             IconButton(onClick = { showClientChargeDialog = true }) {
@@ -140,17 +135,12 @@ internal fun ClientChargesScreen(
                         onRetry = onRetry,
                     )
 
-                    is ClientChargeUiState.Error -> MifosSweetError(message = stringResource(id = state.message)) {
+                    is ClientChargeUiState.Error -> MifosSweetError(message = stringResource(state.message)) {
                         onRetry()
                     }
 
                     is ClientChargeUiState.Loading -> MifosCircularProgress()
                 }
-                PullRefreshIndicator(
-                    refreshing = refreshState,
-                    state = pullRefreshState,
-                    modifier = Modifier.align(Alignment.TopCenter),
-                )
             }
         }
     }
@@ -163,7 +153,7 @@ private fun ClientChargeContent(
 ) {
     when (chargesPage.loadState.refresh) {
         is LoadState.Error -> {
-            MifosSweetError(message = stringResource(id = R.string.feature_client_failed_to_load_client_charges)) {
+            MifosSweetError(message = stringResource(Res.string.feature_client_failed_to_load_client_charges)) {
                 onRetry()
             }
         }
@@ -197,11 +187,8 @@ private fun ClientChargeContent(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(6.dp),
-                        text = stringResource(id = R.string.feature_client_no_more_charges_available),
-                        style = TextStyle(
-                            fontSize = 14.sp,
-                        ),
-                        color = DarkGray,
+                        text = stringResource(Res.string.feature_client_no_more_charges_available),
+                        style = MaterialTheme.typography.bodyMedium,
                         textAlign = TextAlign.Center,
                     )
                 }
@@ -226,19 +213,19 @@ private fun ChargesItems(charges: ChargesEntity) {
     ) {
         Spacer(modifier = Modifier.height(8.dp))
         MifosCenterDetailsText(
-            stringResource(id = R.string.feature_client_client_id),
+            stringResource(Res.string.feature_client_client_id),
             charges.chargeId.toString(),
         )
         MifosCenterDetailsText(
-            stringResource(id = R.string.feature_client_charge_name),
+            stringResource(Res.string.feature_client_charge_name),
             charges.name ?: "",
         )
         MifosCenterDetailsText(
-            stringResource(id = R.string.feature_client_charge_amount),
+            stringResource(Res.string.feature_client_charge_amount),
             charges.amount.toString(),
         )
         MifosCenterDetailsText(
-            stringResource(id = R.string.feature_client_due_date),
+            stringResource(Res.string.feature_client_due_date),
             charges.formattedDueDate,
         )
         Spacer(modifier = Modifier.height(8.dp))
@@ -257,22 +244,13 @@ private fun MifosCenterDetailsText(field: String, value: String) {
                 .weight(1f)
                 .padding(start = 16.dp),
             text = field,
-            style = TextStyle(
-                fontSize = 16.sp,
-                fontWeight = FontWeight.Normal,
-                fontStyle = FontStyle.Normal,
-            ),
+            style = MaterialTheme.typography.bodyLarge,
             textAlign = TextAlign.Start,
         )
         Text(
             modifier = Modifier.weight(1f),
             text = value,
-            style = TextStyle(
-                fontSize = 16.sp,
-                fontWeight = FontWeight.Normal,
-                fontStyle = FontStyle.Normal,
-            ),
-            color = DarkGray,
+            style = MaterialTheme.typography.bodyLarge,
             textAlign = TextAlign.Start,
         )
     }
@@ -283,12 +261,12 @@ private class ClientChargesScreenUiStateProvider : PreviewParameterProvider<Clie
     override val values: Sequence<ClientChargeUiState>
         get() = sequenceOf(
             ClientChargeUiState.Loading,
-            ClientChargeUiState.Error(R.string.feature_client_failed_to_load_client_charges),
+            ClientChargeUiState.Error(Res.string.feature_client_failed_to_load_client_charges),
             ClientChargeUiState.ChargesList(flowOf(PagingData.from(sampleClientCharge))),
         )
 }
 
-@Preview(showBackground = true)
+@DevicePreview
 @Composable
 private fun ClientChargesScreenPreview(
     @PreviewParameter(ClientChargesScreenUiStateProvider::class) state: ClientChargeUiState,

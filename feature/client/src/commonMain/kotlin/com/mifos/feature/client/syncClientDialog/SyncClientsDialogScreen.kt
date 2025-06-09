@@ -9,6 +9,20 @@
  */
 package com.mifos.feature.client.syncClientDialog
 
+import androidclient.feature.client.generated.resources.Res
+import androidclient.feature.client.generated.resources.feature_client_cancel
+import androidclient.feature.client.generated.resources.feature_client_clients
+import androidclient.feature.client.generated.resources.feature_client_dialog_action_ok
+import androidclient.feature.client.generated.resources.feature_client_failed_sync
+import androidclient.feature.client.generated.resources.feature_client_hide
+import androidclient.feature.client.generated.resources.feature_client_name
+import androidclient.feature.client.generated.resources.feature_client_slash
+import androidclient.feature.client.generated.resources.feature_client_something_went_wrong
+import androidclient.feature.client.generated.resources.feature_client_space
+import androidclient.feature.client.generated.resources.feature_client_sync_clients_full_information
+import androidclient.feature.client.generated.resources.feature_client_syncing_client
+import androidclient.feature.client.generated.resources.feature_client_total
+import androidclient.feature.client.generated.resources.feature_client_total_sync_progress
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -30,16 +44,15 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mifos.core.designsystem.component.MifosCircularProgress
-import com.mifos.feature.client.R
+import com.mifos.core.ui.util.DevicePreview
 import com.mifos.room.entities.client.ClientEntity
-import org.koin.androidx.compose.koinViewModel
+import org.jetbrains.compose.resources.stringResource
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 internal fun SyncClientsDialogScreen(
@@ -90,10 +103,10 @@ internal fun SyncClientsDialogScreen(
 
             is SyncClientsDialogUiState.Error -> {
                 val message = uiState.message
-                    ?: uiState.messageResId?.let { stringResource(uiState.messageResId) }
-                    ?: stringResource(id = R.string.feature_client_something_went_wrong)
+                    ?: uiState.messageResId?.let { uiState.messageResId }
+                    ?: stringResource(Res.string.feature_client_something_went_wrong)
                 LaunchedEffect(key1 = message) {
-                    snackBarHostState.showSnackbar(message = message)
+                    snackBarHostState.showSnackbar(message.toString())
                 }
                 dismiss()
             }
@@ -118,27 +131,27 @@ private fun SyncClientsDialogContent(
         Text(
             modifier = Modifier.fillMaxWidth(),
             textAlign = TextAlign.Center,
-            text = stringResource(id = R.string.feature_client_sync_clients_full_information),
+            text = stringResource(Res.string.feature_client_sync_clients_full_information),
         )
 
         PayloadField(
-            label = stringResource(id = R.string.feature_client_name),
+            label = stringResource(Res.string.feature_client_name),
             value = uiData.clientName,
         )
 
         Spacer(modifier = Modifier.height(12.dp))
 
         PayloadField(
-            label = stringResource(id = R.string.feature_client_total),
-            value = uiData.clientList.size.toString() + stringResource(R.string.feature_client_space) + stringResource(
-                R.string.feature_client_clients,
+            label = stringResource(Res.string.feature_client_total),
+            value = uiData.clientList.size.toString() + stringResource(Res.string.feature_client_space) + stringResource(
+                Res.string.feature_client_clients,
             ),
         )
 
         Spacer(modifier = Modifier.height(12.dp))
 
         PayloadField(
-            label = stringResource(id = R.string.feature_client_syncing_client),
+            label = stringResource(Res.string.feature_client_syncing_client),
             value = uiData.clientName,
         )
 
@@ -149,9 +162,9 @@ private fun SyncClientsDialogContent(
         Spacer(modifier = Modifier.height(12.dp))
 
         PayloadField(
-            label = stringResource(id = R.string.feature_client_total_sync_progress),
-            value = stringResource(R.string.feature_client_space) +
-                uiData.totalSyncCount + stringResource(id = R.string.feature_client_slash) +
+            label = stringResource(Res.string.feature_client_total_sync_progress),
+            value = stringResource(Res.string.feature_client_space) +
+                uiData.totalSyncCount + stringResource(Res.string.feature_client_slash) +
                 uiData.clientList.size,
         )
 
@@ -162,7 +175,7 @@ private fun SyncClientsDialogContent(
         Spacer(modifier = Modifier.height(12.dp))
 
         PayloadField(
-            label = stringResource(id = R.string.feature_client_failed_sync),
+            label = stringResource(Res.string.feature_client_failed_sync),
             value = uiData.failedSyncGroupCount.toString(),
         )
 
@@ -176,14 +189,14 @@ private fun SyncClientsDialogContent(
                     onClick = { okClicked() },
                     modifier = Modifier.weight(1f),
                 ) {
-                    Text(text = stringResource(id = R.string.feature_client_dialog_action_ok))
+                    Text(text = stringResource(Res.string.feature_client_dialog_action_ok))
                 }
             } else {
                 FilledTonalButton(
                     onClick = { cancelClicked() },
                     modifier = Modifier.weight(1f),
                 ) {
-                    Text(text = stringResource(id = R.string.feature_client_cancel))
+                    Text(text = stringResource(Res.string.feature_client_cancel))
                 }
 
                 Spacer(modifier = Modifier.width(10.dp))
@@ -192,7 +205,7 @@ private fun SyncClientsDialogContent(
                     onClick = { hideClicked() },
                     modifier = Modifier.weight(1f),
                 ) {
-                    Text(text = stringResource(id = R.string.feature_client_hide))
+                    Text(text = stringResource(Res.string.feature_client_hide))
                 }
             }
         }
@@ -220,7 +233,7 @@ private fun PayloadField(label: String, value: String) {
     }
 }
 
-@Preview(showBackground = true, backgroundColor = 0xFFFFFFFF)
+@DevicePreview
 @Composable
 private fun SyncClientsDialogScreenPreview() {
     SyncClientsDialogScreen(

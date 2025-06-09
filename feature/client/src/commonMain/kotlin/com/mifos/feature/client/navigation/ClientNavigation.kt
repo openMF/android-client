@@ -19,9 +19,9 @@ import androidx.navigation.navArgument
 import androidx.navigation.navigation
 import com.mifos.core.common.utils.Constants
 import com.mifos.feature.client.clientCharges.ClientChargesScreen
-import com.mifos.feature.client.clientDetails.ui.ClientDetailsScreen
+import com.mifos.feature.client.clientDetails.ClientDetailsScreen
 import com.mifos.feature.client.clientIdentifiers.ClientIdentifiersScreen
-import com.mifos.feature.client.clientList.presentation.ClientListScreen
+import com.mifos.feature.client.clientList.ClientListScreen
 import com.mifos.feature.client.clientPinpoint.PinpointClientScreen
 import com.mifos.feature.client.clientSignature.SignatureScreen
 import com.mifos.feature.client.clientSurveyList.SurveyListScreen

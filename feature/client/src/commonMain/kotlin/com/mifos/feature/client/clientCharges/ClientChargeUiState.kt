@@ -12,6 +12,7 @@ package com.mifos.feature.client.clientCharges
 import androidx.paging.PagingData
 import com.mifos.room.entities.client.ChargesEntity
 import kotlinx.coroutines.flow.Flow
+import org.jetbrains.compose.resources.StringResource
 
 /**
  * Created by Aditya Gupta on 08/08/23.
@@ -20,7 +21,7 @@ sealed class ClientChargeUiState {
 
     data object Loading : ClientChargeUiState()
 
-    data class Error(val message: Int) : ClientChargeUiState()
+    data class Error(val message: StringResource) : ClientChargeUiState()
 
     data class ChargesList(val chargesPage: Flow<PagingData<ChargesEntity>>) : ClientChargeUiState()
 }
