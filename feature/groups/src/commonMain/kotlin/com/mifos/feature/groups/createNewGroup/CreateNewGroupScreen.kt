@@ -276,7 +276,10 @@ private fun CreateNewGroupContent(
 
         MifosOutlinedTextField(
             value = groupName,
-            onValueChange = { groupName = it },
+            onValueChange = {
+                groupName = it
+                groupValidationError = null
+            },
             label = stringResource(Res.string.feature_groups_name),
             error = groupValidationError?.let { stringResource(it) },
         )
@@ -293,6 +296,7 @@ private fun CreateNewGroupContent(
                 officeList[index].id.let {
                     officeId = it
                 }
+                officeValidationError = null
             },
             label = stringResource(Res.string.feature_groups_office_name_mandatory),
             options = officeList.map { it.name.toString() },

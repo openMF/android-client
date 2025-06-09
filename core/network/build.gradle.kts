@@ -47,7 +47,6 @@ kotlin{
             api(projects.core.database)
             api(projects.core.common)
             api(libs.kotlinx.datetime)
-            implementation("de.jensklingenberg.ktorfit:ktorfit-converters-flow:2.5.2")
         }
         androidMain.dependencies {
             implementation(libs.ktor.client.okhttp)

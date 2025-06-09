@@ -18,6 +18,7 @@ import com.mifos.feature.about.navigation.aboutNavGraph
 import com.mifos.feature.activate.navigation.activateScreen
 import com.mifos.feature.activate.navigation.navigateToActivateScreen
 import com.mifos.feature.center.navigation.centerNavGraph
+import com.mifos.feature.center.navigation.navigateCreateCenterScreenRoute
 import com.mifos.feature.checker.inbox.task.navigation.checkerInboxTaskNavGraph
 import com.mifos.feature.groups.navigation.groupNavGraph
 import com.mifos.feature.groups.navigation.navigateToCreateNewGroupScreen
@@ -26,6 +27,7 @@ import com.mifos.feature.note.navigation.navigateToNoteScreen
 import com.mifos.feature.note.navigation.noteNavGraph
 import com.mifos.feature.pathTracking.navigation.pathTrackingNavGraph
 import com.mifos.feature.savings.navigation.navigateToAddSavingsAccount
+import com.mifos.feature.savings.navigation.navigateToSavingsAccountSummaryScreen
 import com.mifos.feature.savings.navigation.savingsNavGraph
 import com.mifos.feature.search.navigation.searchNavGraph
 import com.mifos.feature.settings.navigation.settingsScreen
@@ -48,7 +50,7 @@ internal fun FeatureNavHost(
         searchNavGraph(
             paddingValues = padding,
             onCreateClient = { println("Create Client") },
-            onCreateCenter = appState.navController::navigateToCreateNewGroupScreen,
+            onCreateCenter = appState.navController::navigateCreateCenterScreenRoute,
             onCreateGroup = appState.navController::navigateToCreateNewGroupScreen,
             onClient = { id -> println("Client clicked: $id") },
             onCenter = { id -> println("Center clicked: $id") },
@@ -83,10 +85,10 @@ internal fun FeatureNavHost(
             navController = appState.navController,
             paddingValues = padding,
             addGroupLoanAccount = {},
-            addSavingsAccount = { _, _, _ -> },
+            addSavingsAccount = appState.navController::navigateToAddSavingsAccount,
             loadDocumentList = { _, _ -> },
             clientListFragment = {},
-            loadSavingsAccountSummary = { _, _ -> },
+            loadSavingsAccountSummary = appState.navController::navigateToSavingsAccountSummaryScreen,
             loadGroupDataTables = { _, _ -> },
             loadNotes = appState.navController::navigateToNoteScreen,
             loadLoanAccountSummary = { _ -> },

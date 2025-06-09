@@ -15,7 +15,6 @@ import androidclient.feature.groups.generated.resources.feature_groups_failed_to
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import co.touchlab.kermit.Logger
 import com.mifos.core.common.utils.Constants
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.repository.GroupDetailsRepository
@@ -57,7 +56,6 @@ class GroupDetailsViewModel(
                         is DataState.Error -> {
                             _groupDetailsUiState.value =
                                 GroupDetailsUiState.Error(Res.string.feature_groups_failed_to_fetch_group_and_account)
-                            Logger.d("debug", Throwable(dataState.message))
                         }
 
                         DataState.Loading ->
@@ -86,7 +84,6 @@ class GroupDetailsViewModel(
                         is DataState.Error -> {
                             _groupDetailsUiState.value =
                                 GroupDetailsUiState.Error(Res.string.feature_groups_failed_to_load_client)
-                            Logger.d("debug", Throwable(dataState.message))
                         }
 
                         DataState.Loading -> Unit

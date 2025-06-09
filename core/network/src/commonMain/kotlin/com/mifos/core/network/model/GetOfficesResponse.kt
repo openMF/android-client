@@ -9,8 +9,6 @@
  */
 package com.mifos.core.network.model
 
-import kotlinx.datetime.LocalDate
-import kotlinx.serialization.Contextual
 import kotlinx.serialization.Serializable
 
 /**

@@ -20,7 +20,6 @@ import com.mifos.core.data.repository.NewIndividualCollectionSheetRepository
 import com.mifos.room.entities.center.CenterPayloadEntity
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
 
 class CreateNewCenterViewModel(

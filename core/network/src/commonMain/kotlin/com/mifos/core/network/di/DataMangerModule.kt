@@ -43,7 +43,7 @@ val DataManagerModule = module {
     single { DataManagerGroups(get(), get(), get(), get(), get()) }
     single { DataManagerLoan(get(), get(), get()) }
     single { DataManagerNote(get()) }
-    single { DataManagerOffices(get(), get(), get(), get(), get()) }
+    single { DataManagerOffices(get(), get(), get(), get()) }
     single { DataManagerRunReport(get()) }
     single { DataManagerSavings(get(), get(), get()) }
     single { DataManagerSearch(get()) }

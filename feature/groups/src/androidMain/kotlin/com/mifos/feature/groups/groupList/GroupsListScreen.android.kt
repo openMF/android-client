@@ -119,6 +119,7 @@ fun GroupsListScreen(
     onGroupClick: (groupId: Int) -> Unit,
     onSelectItem: (GroupEntity) -> Unit,
     modifier: Modifier = Modifier,
+    // todo isrefreshing logic needs to be implemented
     isRefreshing: Boolean = false,
     resetSelectionMode: () -> Unit,
 ) {
