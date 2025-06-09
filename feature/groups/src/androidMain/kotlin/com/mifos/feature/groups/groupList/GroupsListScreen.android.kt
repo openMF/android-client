@@ -89,7 +89,7 @@ internal actual fun GroupsListRoute(
 
     GroupsListScreen(
         modifier = Modifier
-//            .fillMaxSize()
+            .fillMaxSize()
             .padding(paddingValues),
         lazyListState = lazyListState,
         selectedItems = selectedItems,

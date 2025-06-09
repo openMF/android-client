@@ -11,6 +11,7 @@ package com.mifos.core.network.datamanager
 
 import com.mifos.core.datastore.UserPreferencesRepository
 import com.mifos.core.network.BaseApiManager
+import com.mifos.core.network.DataManager
 import com.mifos.core.network.mappers.offices.GetOfficeResponseMapper
 import com.mifos.room.entities.organisation.OfficeEntity
 import com.mifos.room.helper.OfficeDaoHelper
@@ -28,6 +29,7 @@ import kotlinx.coroutines.flow.map
  */
 class DataManagerOffices(
     val mBaseApiManager: BaseApiManager,
+    val dataManager: DataManager,
     private val baseApiManager: com.mifos.core.network.apimanager.BaseApiManager,
     private val officeDaoHelper: OfficeDaoHelper,
     private val prefManager: UserPreferencesRepository,
@@ -36,11 +38,7 @@ class DataManagerOffices(
      * return all List of Offices from DatabaseHelperOffices
      */
     fun fetchOffices(): Flow<List<OfficeEntity>> {
-        return baseApiManager.getOfficeApi()
-            .retrieveOffices(null, null, null)
-            .map { responseList ->
-                responseList.map(GetOfficeResponseMapper::mapFromEntity)
-            }
+        return mBaseApiManager.officeApi.allOffices()
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)

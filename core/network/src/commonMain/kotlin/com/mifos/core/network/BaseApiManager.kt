@@ -11,6 +11,7 @@ package com.mifos.core.network
 
 import com.mifos.core.common.utils.getInstanceUrl
 import com.mifos.core.datastore.UserPreferencesRepository
+import com.mifos.core.network.apis.OfficesApi
 import com.mifos.core.network.services.CenterService
 import com.mifos.core.network.services.ChargeService
 import com.mifos.core.network.services.CheckerInboxService

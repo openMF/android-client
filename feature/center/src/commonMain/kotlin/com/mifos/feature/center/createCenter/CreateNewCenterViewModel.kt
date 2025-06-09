@@ -34,14 +34,8 @@ class CreateNewCenterViewModel(
 
     fun loadOffices() {
         viewModelScope.launch {
-            _createNewCenterUiState.value =
-                CreateNewCenterUiState.Loading
-
             collectionSheetRepo.offices()
-                .catch {
-                    _createNewCenterUiState.value =
-                        CreateNewCenterUiState.Error(Res.string.feature_center_failed_to_load_offices)
-                }.collect {
+                .collect {
                     when (it) {
                         is DataState.Error -> {
                             _createNewCenterUiState.value =

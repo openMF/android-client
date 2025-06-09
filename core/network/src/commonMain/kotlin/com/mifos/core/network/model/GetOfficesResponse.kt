@@ -46,7 +46,5 @@ data class GetOfficesResponse(
 
     val nameDecorated: String? = null,
 
-    @Contextual
-    val openingDate: LocalDate? = null,
-
+    val openingDate: List<Int>? = null,
 )
