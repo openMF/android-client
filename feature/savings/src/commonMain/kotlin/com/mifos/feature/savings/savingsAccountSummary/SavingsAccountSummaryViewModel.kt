@@ -42,29 +42,31 @@ class SavingsAccountSummaryViewModel(
         MutableStateFlow<SavingsAccountSummaryUiState>(SavingsAccountSummaryUiState.ShowProgressbar)
     val savingsAccountSummaryUiState: StateFlow<SavingsAccountSummaryUiState> get() = _savingsAccountSummaryUiState.asStateFlow()
 
-    fun loadSavingAccount(type: String, accountId: Int) {
+    fun loadSavingAccount(type: String?, accountId: Int) {
         viewModelScope.launch {
-            repository.getSavingsAccount(
-                type,
-                accountId,
-                Constants.TRANSACTIONS,
-            ).collect { dataState ->
-                when (dataState) {
-                    is DataState.Error -> {
-                        Logger.e("Error: ${dataState.message}")
-                        _savingsAccountSummaryUiState.value =
-                            SavingsAccountSummaryUiState.ShowFetchingError(Res.string.feature_savings_failed_to_fetch_savingsaccount)
+            if (type != null) {
+                repository.getSavingsAccount(
+                    type,
+                    accountId,
+                    Constants.TRANSACTIONS,
+                ).collect { dataState ->
+                    when (dataState) {
+                        is DataState.Error -> {
+                            Logger.e("Error: ${dataState.message}")
+                            _savingsAccountSummaryUiState.value =
+                                SavingsAccountSummaryUiState.ShowFetchingError(Res.string.feature_savings_failed_to_fetch_savingsaccount)
+                        }
+
+                        DataState.Loading ->
+                            _savingsAccountSummaryUiState.value =
+                                SavingsAccountSummaryUiState.ShowProgressbar
+
+                        is DataState.Success ->
+                            _savingsAccountSummaryUiState.value =
+                                SavingsAccountSummaryUiState.ShowSavingAccount(
+                                    dataState.data ?: SavingsAccountWithAssociationsEntity(),
+                                )
                     }
-
-                    DataState.Loading ->
-                        _savingsAccountSummaryUiState.value =
-                            SavingsAccountSummaryUiState.ShowProgressbar
-
-                    is DataState.Success ->
-                        _savingsAccountSummaryUiState.value =
-                            SavingsAccountSummaryUiState.ShowSavingAccount(
-                                dataState.data ?: SavingsAccountWithAssociationsEntity(),
-                            )
                 }
             }
         }

@@ -70,6 +70,7 @@ import androidx.compose.ui.graphics.Color.Companion.DarkGray
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import co.touchlab.kermit.Logger
 import com.mifos.core.common.utils.Constants
 import com.mifos.core.common.utils.DateHelper
 import com.mifos.core.designsystem.component.MifosCircularProgress
@@ -324,7 +325,7 @@ private fun SavingsAccountTransactionContent(
 
                         val builtTransactionRequestAsJson =
                             Json.encodeToString(savingsAccountTransactionRequest)
-                        co.touchlab.kermit.Logger.d(
+                        Logger.d(
                             "builtTransactionRequestAsJson",
                             Throwable(builtTransactionRequestAsJson),
                         )

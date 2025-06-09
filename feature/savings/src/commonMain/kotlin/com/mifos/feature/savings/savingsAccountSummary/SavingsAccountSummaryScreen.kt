@@ -116,13 +116,13 @@ internal fun SavingsAccountSummaryScreen(
     val savingsAccountType = viewmodel.savingsNavigationData.type
 
     LaunchedEffect(key1 = Unit) {
-        viewmodel.loadSavingAccount(savingsAccountType?.endpoint!!, accountId)
+        viewmodel.loadSavingAccount(savingsAccountType.endpoint, accountId)
     }
 
     SavingsAccountSummaryScreen(
         uiState = uiState,
         navigateBack = navigateBack,
-        onRetry = { viewmodel.loadSavingAccount(savingsAccountType?.endpoint!!, accountId) },
+        onRetry = { viewmodel.loadSavingAccount(savingsAccountType.endpoint, accountId) },
         loadMoreSavingsAccountInfo = { loadMoreSavingsAccountInfo.invoke(accountId) },
         loadDocuments = { loadDocuments.invoke(accountId) },
         onDepositButtonClicked = {
