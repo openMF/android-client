@@ -239,7 +239,7 @@ fun App(
                     if (isNavScreen) {
                         TopAppBar(
                             title = {
-                                Text("Dashboard")
+                                Text(NavigationConstants.getTitleForRoute(route))
                             },
                             navigationIcon = {
                                 IconButton(onClick = {
@@ -290,6 +290,7 @@ fun App(
             ) { paddingValues ->
                 FeatureNavHost(
                     appState = appState,
+                    padding = paddingValues,
                     onClickLogout = onClickLogout,
                     modifier = Modifier,
                 )

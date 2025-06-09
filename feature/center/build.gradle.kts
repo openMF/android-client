@@ -8,32 +8,30 @@
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
 plugins {
-    alias(libs.plugins.mifos.android.feature)
-    alias(libs.plugins.mifos.android.library.compose)
-    alias(libs.plugins.mifos.android.library.jacoco)
+    alias(libs.plugins.mifos.cmp.feature)
 }
 
 android {
     namespace = "com.mifos.feature.center"
 }
 
-dependencies {
-
-    implementation(projects.core.datastore)
-    implementation(projects.core.network)
-    implementation(projects.core.domain)
-
-    implementation(libs.androidx.material)
-
-    //DBFlow dependencies
-    testImplementation(libs.hilt.android.testing)
-    //paging compose
-    implementation(libs.androidx.paging.compose)
-
-    //coil
-    implementation(libs.coil.kt.compose)
-
-    implementation(libs.ktor.client.core)
-    implementation(libs.ktor.client.android)
-    implementation(libs.ktorfit.lib)
+kotlin{
+    sourceSets{
+        commonMain.dependencies {
+            implementation(projects.core.datastore)
+            implementation(projects.core.network)
+            implementation(projects.core.domain)
+            implementation(compose.material3)
+            implementation(compose.components.resources)
+            implementation(compose.ui)
+            implementation(libs.androidx.paging.common)
+            implementation(libs.coil.kt.compose)
+        }
+        androidMain.dependencies{
+            implementation(libs.androidx.paging.compose)
+            implementation(compose.ui)
+            implementation(compose.material3)
+            implementation(libs.androidx.compose.foundation)
+        }
+    }
 }
