@@ -9,14 +9,18 @@
  */
 package com.mifos.feature.document.documentDialog
 
-import android.Manifest
-import android.content.Context
-import android.os.Build
-import android.widget.Toast
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.PickVisualMediaRequest
-import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.background
+import androidclient.feature.document.generated.resources.Res
+import androidclient.feature.document.generated.resources.feature_document_browse
+import androidclient.feature.document.generated.resources.feature_document_description
+import androidclient.feature.document.generated.resources.feature_document_document_updated_successfully
+import androidclient.feature.document.generated.resources.feature_document_message_field_required
+import androidclient.feature.document.generated.resources.feature_document_message_file_required
+import androidclient.feature.document.generated.resources.feature_document_name
+import androidclient.feature.document.generated.resources.feature_document_selected_file
+import androidclient.feature.document.generated.resources.feature_document_update_document
+import androidclient.feature.document.generated.resources.feature_document_upload
+import androidclient.feature.document.generated.resources.feature_document_upload_document
+import androidclient.feature.document.generated.resources.feature_document_uploaded_successfully
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -29,14 +33,16 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -44,100 +50,54 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Color.Companion.White
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.TextFieldValue
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.tooling.preview.PreviewParameter
-import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
-import androidx.core.content.ContextCompat
-import androidx.core.content.PermissionChecker
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.mifos.core.designsystem.component.MifosButton
 import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosOutlinedTextField
 import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.model.objects.noncoreobjects.Document
 import com.mifos.core.network.GenericResponse
-import com.mifos.feature.document.R
-import org.koin.androidx.compose.koinViewModel
-import java.io.File
+import com.mifos.core.ui.util.DevicePreview
+import org.jetbrains.compose.resources.StringResource
+import org.jetbrains.compose.resources.getString
+import org.jetbrains.compose.resources.stringResource
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 internal fun DocumentDialogScreen(
-    documentAction: String?,
+    documentAction: StringResource?,
     document: Document?,
     closeDialog: () -> Unit,
+    snackbarHostState: SnackbarHostState,
     entityType: String,
     entityId: Int,
     viewModel: DocumentDialogViewModel = koinViewModel(),
     closeScreen: () -> Unit,
 ) {
-    val context = LocalContext.current
+
     val state by viewModel.documentDialogUiState.collectAsStateWithLifecycle()
-    val requiredPermissions = if (Build.VERSION.SDK_INT >= 33) {
-        arrayOf(Manifest.permission.READ_MEDIA_IMAGES)
-    } else {
-        arrayOf(
-            Manifest.permission.READ_EXTERNAL_STORAGE,
-            Manifest.permission.WRITE_EXTERNAL_STORAGE,
-        )
-    }
+
     var fileName by rememberSaveable { mutableStateOf<String?>(document?.name) }
-    var fileChosen by rememberSaveable { mutableStateOf<File?>(null) }
-    val launcher = rememberLauncherForActivityResult(ActivityResultContracts.PickVisualMedia()) {
-        it?.let { uri ->
-            // todo while migrating to cmp
-//            val filePath = FileUtils.getPathReal(context, uri)
-//            filePath?.let { path ->
-//                fileChosen = File(path)
-//                fileName = fileChosen!!.name
-//            }
-        }
-    }
-    val permissionsLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.RequestMultiplePermissions(),
-    ) { permissionsMap: Map<String, Boolean> ->
-        permissionsMap.forEach { (permission, isGranted) ->
-            if (isGranted) {
-                Toast.makeText(
-                    context,
-                    context.getString(R.string.feature_document_permission_granted),
-                    Toast.LENGTH_SHORT,
-                ).show()
-            } else {
-                Toast.makeText(
-                    context,
-                    context.getString(R.string.feature_document_permission_denied),
-                    Toast.LENGTH_SHORT,
-                ).show()
-            }
-        }
-    }
+    var fileChosen by rememberSaveable { mutableStateOf<Any?>(null) }
 
     DocumentDialogScreen(
         uiState = state,
         documentAction = documentAction,
+        snackbarHostState=snackbarHostState,
         document = document,
         openFilePicker = {
-            if (checkPermission(context)) {
-                launcher.launch(
-                    PickVisualMediaRequest(mediaType = ActivityResultContracts.PickVisualMedia.ImageAndVideo),
-                )
-            } else {
-                permissionsLauncher.launch(requiredPermissions)
-            }
+
         },
         closeDialog = closeDialog,
         uploadDocument = { documentName, documentDescription ->
-
-            if (documentAction == context.getString(R.string.feature_document_update_document)) {
+            if (documentAction == Res.string.feature_document_update_document) {
                 viewModel.updateDocument(
                     entityType,
                     entityId,
@@ -146,7 +106,7 @@ internal fun DocumentDialogScreen(
                     documentDescription,
                     fileChosen!!,
                 )
-            } else if (documentAction == context.getString(R.string.feature_document_upload_document)) {
+            } else if (documentAction ==Res.string.feature_document_upload_document) {
                 viewModel.createDocument(
                     entityType,
                     entityId,
@@ -161,36 +121,11 @@ internal fun DocumentDialogScreen(
     )
 }
 
-private fun checkPermission(context: Context): Boolean {
-    if (Build.VERSION.SDK_INT >= 33) {
-        if (ContextCompat.checkSelfPermission(
-                context,
-                Manifest.permission.READ_MEDIA_IMAGES,
-            ) == PermissionChecker.PERMISSION_GRANTED
-        ) {
-            return true
-        }
-    } else {
-        if (ContextCompat.checkSelfPermission(
-                context,
-                Manifest.permission.READ_EXTERNAL_STORAGE,
-            ) == PermissionChecker.PERMISSION_GRANTED &&
-            ContextCompat.checkSelfPermission(
-                context,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE,
-            ) == PermissionChecker.PERMISSION_GRANTED
-        ) {
-            return true
-        }
-    }
-
-    return false
-}
-
 @Composable
 internal fun DocumentDialogScreen(
     uiState: DocumentDialogUiState,
-    documentAction: String?,
+    documentAction: StringResource?,
+    snackbarHostState: SnackbarHostState,
     document: Document?,
     openFilePicker: () -> Unit,
     closeDialog: () -> Unit?,
@@ -198,7 +133,6 @@ internal fun DocumentDialogScreen(
     filename: String?,
     closeScreen: () -> Unit,
 ) {
-    val context = LocalContext.current
 
     DocumentDialogContent(
         document = document,
@@ -218,42 +152,28 @@ internal fun DocumentDialogScreen(
 
         is DocumentDialogUiState.ShowDocumentedCreatedSuccessfully -> {
             LaunchedEffect(true) {
-                Toast.makeText(
-                    context,
-                    String.format(
-                        context.getString(R.string.feature_document_uploaded_successfully),
-                        filename,
-                    ),
-                    Toast.LENGTH_SHORT,
-                ).show()
+                snackbarHostState.showSnackbar(getString( Res.string.feature_document_uploaded_successfully))
             }
             closeDialog.invoke()
         }
 
         is DocumentDialogUiState.ShowDocumentUpdatedSuccessfully -> {
             LaunchedEffect(true) {
-                Toast.makeText(
-                    context,
-                    String.format(
-                        context.getString(R.string.feature_document_document_updated_successfully),
-                        filename,
-                    ),
-                    Toast.LENGTH_SHORT,
-                ).show()
+                snackbarHostState.showSnackbar(getString( Res.string.feature_document_document_updated_successfully))
             }
             closeDialog.invoke()
         }
 
         is DocumentDialogUiState.ShowUploadError -> {
             LaunchedEffect(true) {
-                Toast.makeText(context, uiState.message, Toast.LENGTH_SHORT).show()
+                snackbarHostState.showSnackbar( uiState.message)
             }
             closeScreen.invoke()
         }
 
         is DocumentDialogUiState.ShowError -> {
             LaunchedEffect(true) {
-                Toast.makeText(context, uiState.message, Toast.LENGTH_SHORT).show()
+                snackbarHostState.showSnackbar( uiState.message)
             }
             closeScreen.invoke()
         }
@@ -263,13 +183,13 @@ internal fun DocumentDialogScreen(
 @Composable
 private fun DocumentDialogContent(
     setShowDialog: (Boolean) -> Unit,
-    documentAction: String?,
+    documentAction: StringResource?,
     document: Document?,
     openFilePicker: () -> Unit,
     uploadDocument: (String, String) -> Unit,
     fileName: String?,
 ) {
-    var dialogTitle = stringResource(id = R.string.feature_document_upload_document)
+    var dialogTitle = stringResource(Res.string.feature_document_upload_document)
     var name by rememberSaveable(stateSaver = TextFieldValue.Saver) {
         mutableStateOf(TextFieldValue(""))
     }
@@ -281,8 +201,8 @@ private fun DocumentDialogContent(
     var descriptionError by rememberSaveable { mutableStateOf(false) }
     var fileError by rememberSaveable { mutableStateOf(false) }
 
-    if (documentAction == stringResource(id = R.string.feature_document_update_document)) {
-        dialogTitle = stringResource(id = R.string.feature_document_update_document)
+    if (documentAction == Res.string.feature_document_update_document) {
+        dialogTitle = stringResource(Res.string.feature_document_update_document)
         name = TextFieldValue(document?.name!!)
         description = TextFieldValue(document.description!!)
     }
@@ -310,8 +230,7 @@ private fun DocumentDialogContent(
     Dialog(onDismissRequest = { setShowDialog(false) }) {
         Box(
             modifier = Modifier
-                .clip(RoundedCornerShape(16.dp))
-                .background(Color.White),
+                .clip(RoundedCornerShape(16.dp)),
             contentAlignment = Alignment.Center,
         ) {
             Column(modifier = Modifier.padding(20.dp)) {
@@ -330,7 +249,7 @@ private fun DocumentDialogContent(
                     Icon(
                         imageVector = MifosIcons.Cancel,
                         contentDescription = "",
-                        tint = colorResource(android.R.color.darker_gray),
+                        tint = Color.Gray,
                         modifier = Modifier
                             .width(30.dp)
                             .height(30.dp)
@@ -344,8 +263,8 @@ private fun DocumentDialogContent(
                         name = value
                         nameError = false
                     },
-                    label = stringResource(R.string.feature_document_name),
-                    error = if (nameError) stringResource(R.string.feature_document_message_field_required) else null,
+                    label = stringResource(Res.string.feature_document_name),
+                    error = if (nameError) stringResource(Res.string.feature_document_message_field_required) else null,
                     trailingIcon = {
                         if (nameError) {
                             Icon(imageVector = MifosIcons.Error, contentDescription = null)
@@ -359,8 +278,8 @@ private fun DocumentDialogContent(
                         description = value
                         descriptionError = false
                     },
-                    label = stringResource(R.string.feature_document_description),
-                    error = if (descriptionError) stringResource(R.string.feature_document_message_field_required) else null,
+                    label = stringResource(Res.string.feature_document_description),
+                    error = if (descriptionError) stringResource(Res.string.feature_document_message_field_required) else null,
                     trailingIcon = {
                         if (descriptionError) {
                             Icon(imageVector = MifosIcons.Error, contentDescription = null)
@@ -368,15 +287,15 @@ private fun DocumentDialogContent(
                     },
                 )
 
-                androidx.compose.material3.OutlinedTextField(
+                OutlinedTextField(
                     value = if (fileName != null) TextFieldValue(fileName) else TextFieldValue(""),
                     onValueChange = {
                         fileError = false
                     },
-                    label = { Text(stringResource(id = R.string.feature_document_selected_file)) },
+                    label = { Text(stringResource(Res.string.feature_document_selected_file)) },
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(start = 16.dp, end = 16.dp),
+                        .padding(horizontal = 16.dp),
                     trailingIcon = {
                         if (descriptionError) {
                             Icon(imageVector = MifosIcons.Error, contentDescription = null)
@@ -393,7 +312,7 @@ private fun DocumentDialogContent(
                         if (fileError) {
                             Text(
                                 modifier = Modifier.fillMaxWidth(),
-                                text = stringResource(id = R.string.feature_document_message_file_required),
+                                text = stringResource(Res.string.feature_document_message_file_required),
                                 color = MaterialTheme.colorScheme.error,
                             )
                         }
@@ -403,14 +322,14 @@ private fun DocumentDialogContent(
                 Spacer(modifier = Modifier.height(20.dp))
 
                 DialogButton(
-                    text = stringResource(id = R.string.feature_document_browse),
+                    text = stringResource(Res.string.feature_document_browse),
                     onClick = openFilePicker,
                 )
 
                 Spacer(modifier = Modifier.height(20.dp))
 
                 DialogButton(
-                    text = stringResource(id = R.string.feature_document_upload),
+                    text = stringResource(Res.string.feature_document_upload),
                     onClick = {
                         if (validateInput()) {
                             uploadDocument.invoke(name.text, description.text)
@@ -428,42 +347,74 @@ private fun DialogButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    Button(
+    MifosButton(
         onClick = onClick,
         modifier = modifier
             .fillMaxWidth()
-            .height(50.dp)
-            .padding(20.dp, 0.dp, 20.dp, 0.dp),
+            .padding(horizontal = 20.dp),
     ) {
         Text(text = text)
     }
 }
 
-private class DocumentDialogPreviewProvider : PreviewParameterProvider<DocumentDialogUiState> {
-    override val values: Sequence<DocumentDialogUiState>
-        get() = sequenceOf(
-            DocumentDialogUiState.Initial,
-            DocumentDialogUiState.ShowProgressbar,
-            DocumentDialogUiState.ShowDocumentUpdatedSuccessfully(GenericResponse()),
-            DocumentDialogUiState.ShowDocumentedCreatedSuccessfully(GenericResponse()),
-            DocumentDialogUiState.ShowError("Error"),
-            DocumentDialogUiState.ShowUploadError("Upload Error"),
-        )
-}
-
-@Preview(showBackground = true)
+@DevicePreview
 @Composable
-private fun DocumentDialogPreview(
-    @PreviewParameter(DocumentDialogPreviewProvider::class) state: DocumentDialogUiState,
-) {
-    DocumentDialogScreen(
-        uiState = state,
-        documentAction = "",
-        document = Document(),
-        openFilePicker = { },
-        closeDialog = { },
-        uploadDocument = { _, _ -> },
-        filename = "",
-        closeScreen = { },
-    )
+private fun DocumentDialogPreview() {
+    Column {
+        DocumentDialogScreen(
+            uiState = DocumentDialogUiState.Initial,
+            snackbarHostState = remember { SnackbarHostState() },
+            documentAction = Res.string.feature_document_upload_document,
+            document = Document(),
+            openFilePicker = { },
+            closeDialog = { },
+            uploadDocument = { _, _ -> },
+            filename = "",
+            closeScreen = { },
+        )
+        DocumentDialogScreen(
+            uiState = DocumentDialogUiState.ShowProgressbar,
+            snackbarHostState = remember { SnackbarHostState() },
+            documentAction = Res.string.feature_document_upload_document,
+            document = Document(),
+            openFilePicker = { },
+            closeDialog = { },
+            uploadDocument = { _, _ -> },
+            filename = "",
+            closeScreen = { },
+        )
+        DocumentDialogScreen(
+            uiState = DocumentDialogUiState.ShowError("Error"),
+            snackbarHostState = remember { SnackbarHostState() },
+            documentAction = Res.string.feature_document_upload_document,
+            document = Document(),
+            openFilePicker = { },
+            closeDialog = { },
+            uploadDocument = { _, _ -> },
+            filename = "",
+            closeScreen = { },
+        )
+        DocumentDialogScreen(
+            uiState = DocumentDialogUiState.ShowDocumentUpdatedSuccessfully(GenericResponse()),
+            snackbarHostState = remember { SnackbarHostState() },
+            documentAction = Res.string.feature_document_upload_document,
+            document = Document(),
+            openFilePicker = { },
+            closeDialog = { },
+            uploadDocument = { _, _ -> },
+            filename = "",
+            closeScreen = { },
+        )
+        DocumentDialogScreen(
+            uiState = DocumentDialogUiState.ShowDocumentedCreatedSuccessfully(GenericResponse()),
+            snackbarHostState = remember { SnackbarHostState() },
+            documentAction = Res.string.feature_document_upload_document,
+            document = Document(),
+            openFilePicker = { },
+            closeDialog = { },
+            uploadDocument = { _, _ -> },
+            filename = "",
+            closeScreen = { },
+        )
+    }
 }
