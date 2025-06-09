@@ -29,7 +29,6 @@ import kotlinx.coroutines.launch
 import org.koin.dsl.module
 
 val NetworkModule = module {
-
     single<HttpClient>(KtorClient) {
         val preferencesRepository = get<UserPreferencesRepository>()
 

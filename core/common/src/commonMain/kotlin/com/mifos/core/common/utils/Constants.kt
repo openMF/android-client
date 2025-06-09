@@ -227,4 +227,5 @@ object Constants {
     const val DATA_TABLE_NAV_DATA = "data_table_nav_data"
     const val DATA_TABLE_DATA_NAV_DATA = "data_table_data_nav_data"
     const val DATA_TABLE_LIST_NAV_DATA = "data_table_list_nav_data"
+    const val PAYMENT_DETAILS_ARGS = "paymentDetailsArgs"
 }
