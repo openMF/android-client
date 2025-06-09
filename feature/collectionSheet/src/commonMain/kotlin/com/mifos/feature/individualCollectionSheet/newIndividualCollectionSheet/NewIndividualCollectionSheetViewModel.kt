@@ -11,7 +11,6 @@ package com.mifos.feature.individualCollectionSheet.newIndividualCollectionSheet
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import co.touchlab.kermit.Logger
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.repository.NewIndividualCollectionSheetRepository
 import com.mifos.core.domain.useCases.GetIndividualCollectionSheetUseCase

@@ -55,8 +55,8 @@ internal fun SavedIndividualCollectionSheetCompose(
     }
 }
 
- @DevicePreview
- @Composable
- private fun SavedIndividualCollectionSheetComposePreview() {
+@DevicePreview
+@Composable
+private fun SavedIndividualCollectionSheetComposePreview() {
     SavedIndividualCollectionSheetCompose()
- }
+}
