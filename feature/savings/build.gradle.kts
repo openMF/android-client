@@ -8,21 +8,22 @@
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
 plugins {
-    alias(libs.plugins.mifos.android.feature)
-    alias(libs.plugins.mifos.android.library.compose)
-    alias(libs.plugins.mifos.android.library.jacoco)
+    alias(libs.plugins.mifos.cmp.feature)
 }
 
 android {
     namespace = "com.mifos.feature.savings"
 }
 
-dependencies {
-    implementation(projects.core.domain)
-    testImplementation(libs.hilt.android.testing)
-
-    implementation(libs.kotlinx.serialization.json)
-
-    //material
-    implementation (libs.androidx.material.v168)
+kotlin{
+    sourceSets{
+        commonMain.dependencies {
+            implementation(projects.core.domain)
+            implementation(compose.material3)
+            implementation(compose.components.resources)
+            implementation(compose.components.uiToolingPreview)
+            implementation(compose.ui)
+            implementation(libs.kotlinx.serialization.json)
+        }
+    }
 }

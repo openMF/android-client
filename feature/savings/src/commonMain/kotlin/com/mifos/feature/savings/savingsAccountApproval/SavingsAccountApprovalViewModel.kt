@@ -13,13 +13,12 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mifos.core.common.utils.Constants
-import com.mifos.core.common.utils.Resource
+import com.mifos.core.common.utils.DataState
 import com.mifos.core.domain.useCases.ApproveSavingsApplicationUseCase
 import com.mifos.core.model.objects.account.loan.SavingsApproval
-import com.mifos.core.network.GenericResponse
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 /**
@@ -30,33 +29,38 @@ class SavingsAccountApprovalViewModel(
     savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
 
-    val savingsAccountId = savedStateHandle.getStateFlow(key = Constants.SAVINGS_ACCOUNT_ID, initialValue = 0)
+    val savingsAccountId =
+        savedStateHandle.getStateFlow(key = Constants.SAVINGS_ACCOUNT_ID, initialValue = 0)
 
     private val _savingsAccountApprovalUiState =
         MutableStateFlow<SavingsAccountApprovalUiState>(SavingsAccountApprovalUiState.Initial)
     val savingsAccountApprovalUiState: StateFlow<SavingsAccountApprovalUiState>
-        get() = _savingsAccountApprovalUiState
+        get() = _savingsAccountApprovalUiState.asStateFlow()
 
     fun approveSavingsApplication(accountId: Int, savingsApproval: SavingsApproval?) =
-        viewModelScope.launch(Dispatchers.IO) {
-            approveSavingsApplicationUseCase(accountId, savingsApproval).collect { result ->
-                when (result) {
-                    is Resource.Error ->
-                        _savingsAccountApprovalUiState.value =
-                            SavingsAccountApprovalUiState.ShowError(
-                                result.message ?: "Something went wrong",
-                            )
+        viewModelScope.launch {
+            approveSavingsApplicationUseCase(accountId, savingsApproval)
+                .collect { dataState ->
+                    when (dataState) {
+                        is DataState.Error -> {
+                            _savingsAccountApprovalUiState.value =
+                                SavingsAccountApprovalUiState.ShowError(
+                                    dataState.message,
+                                )
+                        }
 
-                    is Resource.Loading ->
-                        _savingsAccountApprovalUiState.value =
-                            SavingsAccountApprovalUiState.ShowProgressbar
+                        DataState.Loading -> {
+                            _savingsAccountApprovalUiState.value =
+                                SavingsAccountApprovalUiState.ShowProgressbar
+                        }
 
-                    is Resource.Success ->
-                        _savingsAccountApprovalUiState.value =
-                            SavingsAccountApprovalUiState.ShowSavingAccountApprovedSuccessfully(
-                                result.data ?: GenericResponse(),
-                            )
+                        is DataState.Success -> {
+                            _savingsAccountApprovalUiState.value =
+                                SavingsAccountApprovalUiState.ShowSavingAccountApprovedSuccessfully(
+                                    dataState.data,
+                                )
+                        }
+                    }
                 }
-            }
         }
 }
