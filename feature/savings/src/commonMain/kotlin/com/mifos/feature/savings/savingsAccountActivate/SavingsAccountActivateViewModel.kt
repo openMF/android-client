@@ -13,12 +13,12 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mifos.core.common.utils.Constants
-import com.mifos.core.common.utils.Resource
+import com.mifos.core.common.utils.DataState
 import com.mifos.core.domain.useCases.ActivateSavingsUseCase
 import com.mifos.core.network.GenericResponse
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 /**
@@ -33,28 +33,28 @@ class SavingsAccountActivateViewModel(
 
     private val _savingsAccountActivateUiState =
         MutableStateFlow<SavingsAccountActivateUiState>(SavingsAccountActivateUiState.Initial)
-
     val savingsAccountActivateUiState: StateFlow<SavingsAccountActivateUiState>
-        get() = _savingsAccountActivateUiState
+        get() = _savingsAccountActivateUiState.asStateFlow()
 
     fun activateSavings(savingsAccountId: Int, request: HashMap<String, String>) =
-        viewModelScope.launch(Dispatchers.IO) {
-            activateSavingsUseCase(savingsAccountId, request).collect { result ->
-                when (result) {
-                    is Resource.Error ->
-                        _savingsAccountActivateUiState.value =
-                            SavingsAccountActivateUiState.ShowError(result.message.toString())
+        viewModelScope.launch {
+            activateSavingsUseCase(savingsAccountId, request)
+                .collect { state ->
+                    when (state) {
+                        is DataState.Error ->
+                            _savingsAccountActivateUiState.value =
+                                SavingsAccountActivateUiState.ShowError(state.message)
 
-                    is Resource.Loading ->
-                        _savingsAccountActivateUiState.value =
-                            SavingsAccountActivateUiState.ShowProgressbar
+                        DataState.Loading ->
+                            _savingsAccountActivateUiState.value =
+                                SavingsAccountActivateUiState.ShowProgressbar
 
-                    is Resource.Success ->
-                        _savingsAccountActivateUiState.value =
-                            SavingsAccountActivateUiState.ShowSavingAccountActivatedSuccessfully(
-                                result.data ?: GenericResponse(),
-                            )
+                        is DataState.Success ->
+                            _savingsAccountActivateUiState.value =
+                                SavingsAccountActivateUiState.ShowSavingAccountActivatedSuccessfully(
+                                    state.data ?: GenericResponse(),
+                                )
+                    }
                 }
-            }
         }
 }

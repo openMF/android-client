@@ -17,11 +17,13 @@ import com.mifos.core.model.utils.IgnoredOnParcel
 import com.mifos.core.model.utils.Parcelable
 import com.mifos.core.model.utils.Parcelize
 import com.mifos.room.entities.PaymentTypeOptionEntity
+import kotlinx.serialization.Serializable
 
 /**
  * Created by rajan on 13/3/16.
  */
 @Parcelize
+@Serializable
 class SavingProductsTemplate(
     val currency: Currency? = null,
 

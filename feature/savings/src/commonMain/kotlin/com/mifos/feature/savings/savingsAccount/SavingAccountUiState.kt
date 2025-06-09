@@ -11,6 +11,7 @@ package com.mifos.feature.savings.savingsAccount
 
 import com.mifos.room.entities.client.Savings
 import com.mifos.room.entities.zipmodels.SavingProductsAndTemplate
+import org.jetbrains.compose.resources.StringResource
 
 /**
  * Created by Aditya Gupta on 08/08/23.
@@ -19,7 +20,7 @@ sealed class SavingAccountUiState {
 
     data object ShowProgress : SavingAccountUiState()
 
-    data class ShowFetchingError(val message: Int) : SavingAccountUiState()
+    data class ShowFetchingError(val message: StringResource) : SavingAccountUiState()
 
     data class LoadAllSavings(val savingsTemplate: SavingProductsAndTemplate) :
         SavingAccountUiState()
