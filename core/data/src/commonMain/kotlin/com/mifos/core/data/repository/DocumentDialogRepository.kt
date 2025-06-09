@@ -11,6 +11,7 @@ package com.mifos.core.data.repository
 
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.network.GenericResponse
+import io.ktor.client.request.forms.MultiPartFormDataContent
 import io.ktor.http.content.PartData
 import kotlinx.coroutines.flow.Flow
 
@@ -24,7 +25,7 @@ interface DocumentDialogRepository {
         entityId: Int,
         name: String,
         desc: String,
-        file: PartData,
+        file: MultiPartFormDataContent,
     ): Flow<DataState<GenericResponse>>
 
     fun updateDocument(
@@ -33,6 +34,6 @@ interface DocumentDialogRepository {
         documentId: Int,
         name: String,
         desc: String,
-        file: PartData,
+        file: MultiPartFormDataContent,
     ): Flow<DataState<GenericResponse>>
 }

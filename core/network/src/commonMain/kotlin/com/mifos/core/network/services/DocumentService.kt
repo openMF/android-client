@@ -19,6 +19,7 @@ import de.jensklingenberg.ktorfit.http.POST
 import de.jensklingenberg.ktorfit.http.PUT
 import de.jensklingenberg.ktorfit.http.Part
 import de.jensklingenberg.ktorfit.http.Path
+import io.ktor.client.request.forms.MultiPartFormDataContent
 import io.ktor.client.statement.HttpResponse
 import io.ktor.http.content.PartData
 import kotlinx.coroutines.flow.Flow
@@ -45,7 +46,7 @@ interface DocumentService {
         @Path("entityId") entityId: Int,
         @Part("name") nameOfDocument: String,
         @Part("description") description: String,
-        @Part typedFile: PartData,
+        @Part typedFile: MultiPartFormDataContent,
     ): Flow<GenericResponse>
 
     /**
@@ -109,6 +110,6 @@ interface DocumentService {
         @Path("documentId") documentId: Int,
         @Part("name") nameOfDocument: String,
         @Part("description") description: String,
-        @Part typedFile: PartData,
+        @Part typedFile: MultiPartFormDataContent,
     ): Flow<GenericResponse>
 }

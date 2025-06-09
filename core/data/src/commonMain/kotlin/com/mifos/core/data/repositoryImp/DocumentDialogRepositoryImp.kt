@@ -14,6 +14,7 @@ import com.mifos.core.common.utils.asDataStateFlow
 import com.mifos.core.data.repository.DocumentDialogRepository
 import com.mifos.core.network.GenericResponse
 import com.mifos.core.network.datamanager.DataManagerDocument
+import io.ktor.client.request.forms.MultiPartFormDataContent
 import io.ktor.http.content.PartData
 import kotlinx.coroutines.flow.Flow
 
@@ -29,7 +30,7 @@ class DocumentDialogRepositoryImp(
         entityId: Int,
         name: String,
         desc: String,
-        file: PartData,
+        file: MultiPartFormDataContent,
     ): Flow<DataState<GenericResponse>> {
         return dataManagerDocument.createDocument(entityType, entityId, name, desc, file)
             .asDataStateFlow()
@@ -41,7 +42,7 @@ class DocumentDialogRepositoryImp(
         documentId: Int,
         name: String,
         desc: String,
-        file: PartData,
+        file: MultiPartFormDataContent,
     ): Flow<DataState<GenericResponse>> {
         return dataManagerDocument.updateDocument(
             entityType,

@@ -11,19 +11,33 @@ package com.mifos.feature.document.documentDialog
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.repository.DocumentDialogRepository
 import com.mifos.core.network.GenericResponse
 import io.github.vinceglb.filekit.FileKit
 import io.github.vinceglb.filekit.PlatformFile
 import io.github.vinceglb.filekit.dialogs.FileKitType
 import io.github.vinceglb.filekit.dialogs.openFilePicker
+import io.github.vinceglb.filekit.readBytes
 import io.ktor.client.plugins.ClientRequestException
 import io.ktor.client.plugins.ServerResponseException
+import io.ktor.client.request.forms.MultiPartFormDataContent
+import io.ktor.client.request.forms.formData
+import io.ktor.http.Headers
+import io.ktor.http.HttpHeaders
+import io.ktor.http.content.PartData
+import io.ktor.http.headersOf
 import io.ktor.util.rootCause
 import io.ktor.utils.io.InternalAPI
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import kotlinx.io.IOException
+import kotlinx.serialization.SerializationException
+
+
 
 class DocumentDialogViewModel(
     private val repository: DocumentDialogRepository,
@@ -47,88 +61,70 @@ class DocumentDialogViewModel(
         }
     }
 
+
     @OptIn(InternalAPI::class)
-    fun createDocument(type: String?, id: Int, name: String?, desc: String?, file: FileKit) {
-//        _documentDialogUiState.value = DocumentDialogUiState.ShowProgressbar
-//        repository
-//            .createDocument(type, id, name, desc, getRequestFileBody(file))
-//            .observeOn(AndroidSchedulers.mainThread())
-//            .subscribeOn(Schedulers.io())
-//            .subscribe(
-//                object : Subscriber<GenericResponse>() {
-//                    override fun onCompleted() {
-//                    }
-//
-//                    override fun onError(e: Throwable) {
-//                        try {
-//                            when (e) {
-//                                is ClientRequestException, is ServerResponseException -> {
-//                                    _documentDialogUiState.value = DocumentDialogUiState.ShowUploadError(e.message ?: "Server error occurred")
-//                                }
-//                                is IOException -> {
-//                                    _documentDialogUiState.value = DocumentDialogUiState.ShowError(e.rootCause?.message ?: "Network error occurred")
-//                                }
-//                                is SerializationException -> {
-//                                    _documentDialogUiState.value = DocumentDialogUiState.ShowError("Data parsing error")
-//                                }
-//                                else -> {
-//                                    _documentDialogUiState.value = DocumentDialogUiState.ShowError(e.rootCause?.message ?: "Unknown error")
-//                                }
-//                            }
-//                        } catch (throwable: Throwable) {
-//                            RxJavaPlugins.getInstance().errorHandler
-//                                .handleError(throwable)
-//                        }
-//                    }
-//
-//                    override fun onNext(genericResponse: GenericResponse) {
-//                        _documentDialogUiState.value =
-//                            DocumentDialogUiState.ShowDocumentedCreatedSuccessfully(genericResponse)
-//                    }
-//                },
-//            )
+    fun createDocument(type: String, id: Int, name: String, desc: String, file: PlatformFile) {
+        _documentDialogUiState.value = DocumentDialogUiState.ShowProgressbar
+        viewModelScope.launch {
+            repository.createDocument(
+                entityId = id,
+                entityType = type,
+                name=name,
+                desc = desc,
+                file = getRequestFileBody(file,name)
+            ).collect { state ->
+                when(state){
+                    is DataState.Error -> DocumentDialogUiState.ShowError(state.message)
+                    DataState.Loading -> DocumentDialogUiState.ShowProgressbar
+                    is DataState.Success -> DocumentDialogUiState.ShowDocumentUpdatedSuccessfully(state.data)
+                }
+
+            }
+        }
     }
 
-    fun updateDocument(
-        entityType: String?,
+     fun updateDocument(
+        entityType: String,
         entityId: Int,
         documentId: Int,
-        name: String?,
-        desc: String?,
-        file: Any,
+        name: String,
+        desc: String,
+        file: PlatformFile,
     ) {
-//        _documentDialogUiState.value = DocumentDialogUiState.ShowProgressbar
-//        repository.updateDocument(
-//            entityType,
-//            entityId,
-//            documentId,
-//            name,
-//            desc,
-//            getRequestFileBody(file),
-//        )
-//            .observeOn(AndroidSchedulers.mainThread())
-//            .subscribeOn(Schedulers.io())
-//            .subscribe(
-//                object : Subscriber<GenericResponse>() {
-//                    override fun onCompleted() {}
-//                    override fun onError(e: Throwable) {
-//                        _documentDialogUiState.value =
-//                            DocumentDialogUiState.ShowError(e.message.toString())
-//                    }
-//
-//                    override fun onNext(genericResponse: GenericResponse) {
-//                        _documentDialogUiState.value =
-//                            DocumentDialogUiState.ShowDocumentUpdatedSuccessfully(genericResponse)
-//                    }
-//                },
-//            )
+        _documentDialogUiState.value = DocumentDialogUiState.ShowProgressbar
+         viewModelScope.launch {
+             repository.updateDocument(
+                 entityType,
+                 entityId,
+                 documentId,
+                 name,
+                 desc,
+                 getRequestFileBody(file,name),
+             ).collect { state ->
+                 when(state){
+                     is DataState.Error -> DocumentDialogUiState.ShowError(state.message)
+                     DataState.Loading -> DocumentDialogUiState.ShowProgressbar
+                     is DataState.Success -> DocumentDialogUiState.ShowDocumentUpdatedSuccessfully(state.data)
+                 }
+
+             }
+         }
     }
 
-//    private fun getRequestFileBody(file: File): PartData {
-//        // create RequestBody instance from file
-//        val requestFile = file.asRequestBody("multipart/form-data".toMediaTypeOrNull())
-//
-//        // PartData is used to send also the actual file name
-//        return PartData.createFormData("file", file.name, requestFile)
-//    }
+    @OptIn(InternalAPI::class)
+    private suspend fun getRequestFileBody(file: PlatformFile, name:String): MultiPartFormDataContent {
+        val formData = MultiPartFormDataContent(
+            formData {
+                append(
+                    "file",
+                    file,
+                    Headers.build {
+                        append(HttpHeaders.ContentType, "multipart/form-data")
+                        append(HttpHeaders.ContentDisposition, "filename=\"$name\"")
+                    },
+                )
+            },
+        )
+        return formData
+    }
 }
