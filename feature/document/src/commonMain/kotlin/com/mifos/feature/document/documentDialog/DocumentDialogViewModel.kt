@@ -10,27 +10,20 @@
 package com.mifos.feature.document.documentDialog
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.mifos.core.data.repository.DocumentDialogRepository
 import com.mifos.core.network.GenericResponse
+import io.github.vinceglb.filekit.FileKit
+import io.github.vinceglb.filekit.PlatformFile
+import io.github.vinceglb.filekit.dialogs.FileKitType
+import io.github.vinceglb.filekit.dialogs.openFilePicker
 import io.ktor.client.plugins.ClientRequestException
 import io.ktor.client.plugins.ServerResponseException
 import io.ktor.util.rootCause
 import io.ktor.utils.io.InternalAPI
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.io.IOException
-import kotlinx.serialization.SerializationException
-import okhttp3.MediaType.Companion.toMediaTypeOrNull
-import okhttp3.RequestBody.Companion.asRequestBody
-import rx.Subscriber
-import rx.android.schedulers.AndroidSchedulers
-import rx.plugins.RxJavaPlugins
-import rx.schedulers.Schedulers
-import java.io.File
-
-/**
- * Created by Aditya Gupta on 16/08/23.
- */
+import kotlinx.coroutines.launch
 
 class DocumentDialogViewModel(
     private val repository: DocumentDialogRepository,
@@ -42,46 +35,58 @@ class DocumentDialogViewModel(
     val documentDialogUiState: StateFlow<DocumentDialogUiState>
         get() = _documentDialogUiState
 
+    fun openFilePicker(onFilePicked: (PlatformFile?) -> Unit) {
+        viewModelScope.launch {
+            try {
+                val file = FileKit.openFilePicker(type = FileKitType.Image)
+                onFilePicked(file)
+            } catch (e: Exception) {
+                e.printStackTrace()
+                onFilePicked(null)
+            }
+        }
+    }
+
     @OptIn(InternalAPI::class)
-    fun createDocument(type: String?, id: Int, name: String?, desc: String?, file: File) {
-        _documentDialogUiState.value = DocumentDialogUiState.ShowProgressbar
-        repository
-            .createDocument(type, id, name, desc, getRequestFileBody(file))
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribeOn(Schedulers.io())
-            .subscribe(
-                object : Subscriber<GenericResponse>() {
-                    override fun onCompleted() {
-                    }
-
-                    override fun onError(e: Throwable) {
-                        try {
-                            when (e) {
-                                is ClientRequestException, is ServerResponseException -> {
-                                    _documentDialogUiState.value = DocumentDialogUiState.ShowUploadError(e.message ?: "Server error occurred")
-                                }
-                                is IOException -> {
-                                    _documentDialogUiState.value = DocumentDialogUiState.ShowError(e.rootCause?.message ?: "Network error occurred")
-                                }
-                                is SerializationException -> {
-                                    _documentDialogUiState.value = DocumentDialogUiState.ShowError("Data parsing error")
-                                }
-                                else -> {
-                                    _documentDialogUiState.value = DocumentDialogUiState.ShowError(e.rootCause?.message ?: "Unknown error")
-                                }
-                            }
-                        } catch (throwable: Throwable) {
-                            RxJavaPlugins.getInstance().errorHandler
-                                .handleError(throwable)
-                        }
-                    }
-
-                    override fun onNext(genericResponse: GenericResponse) {
-                        _documentDialogUiState.value =
-                            DocumentDialogUiState.ShowDocumentedCreatedSuccessfully(genericResponse)
-                    }
-                },
-            )
+    fun createDocument(type: String?, id: Int, name: String?, desc: String?, file: FileKit) {
+//        _documentDialogUiState.value = DocumentDialogUiState.ShowProgressbar
+//        repository
+//            .createDocument(type, id, name, desc, getRequestFileBody(file))
+//            .observeOn(AndroidSchedulers.mainThread())
+//            .subscribeOn(Schedulers.io())
+//            .subscribe(
+//                object : Subscriber<GenericResponse>() {
+//                    override fun onCompleted() {
+//                    }
+//
+//                    override fun onError(e: Throwable) {
+//                        try {
+//                            when (e) {
+//                                is ClientRequestException, is ServerResponseException -> {
+//                                    _documentDialogUiState.value = DocumentDialogUiState.ShowUploadError(e.message ?: "Server error occurred")
+//                                }
+//                                is IOException -> {
+//                                    _documentDialogUiState.value = DocumentDialogUiState.ShowError(e.rootCause?.message ?: "Network error occurred")
+//                                }
+//                                is SerializationException -> {
+//                                    _documentDialogUiState.value = DocumentDialogUiState.ShowError("Data parsing error")
+//                                }
+//                                else -> {
+//                                    _documentDialogUiState.value = DocumentDialogUiState.ShowError(e.rootCause?.message ?: "Unknown error")
+//                                }
+//                            }
+//                        } catch (throwable: Throwable) {
+//                            RxJavaPlugins.getInstance().errorHandler
+//                                .handleError(throwable)
+//                        }
+//                    }
+//
+//                    override fun onNext(genericResponse: GenericResponse) {
+//                        _documentDialogUiState.value =
+//                            DocumentDialogUiState.ShowDocumentedCreatedSuccessfully(genericResponse)
+//                    }
+//                },
+//            )
     }
 
     fun updateDocument(
@@ -90,40 +95,40 @@ class DocumentDialogViewModel(
         documentId: Int,
         name: String?,
         desc: String?,
-        file: File,
+        file: Any,
     ) {
-        _documentDialogUiState.value = DocumentDialogUiState.ShowProgressbar
-        repository.updateDocument(
-            entityType,
-            entityId,
-            documentId,
-            name,
-            desc,
-            getRequestFileBody(file),
-        )
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribeOn(Schedulers.io())
-            .subscribe(
-                object : Subscriber<GenericResponse>() {
-                    override fun onCompleted() {}
-                    override fun onError(e: Throwable) {
-                        _documentDialogUiState.value =
-                            DocumentDialogUiState.ShowError(e.message.toString())
-                    }
-
-                    override fun onNext(genericResponse: GenericResponse) {
-                        _documentDialogUiState.value =
-                            DocumentDialogUiState.ShowDocumentUpdatedSuccessfully(genericResponse)
-                    }
-                },
-            )
+//        _documentDialogUiState.value = DocumentDialogUiState.ShowProgressbar
+//        repository.updateDocument(
+//            entityType,
+//            entityId,
+//            documentId,
+//            name,
+//            desc,
+//            getRequestFileBody(file),
+//        )
+//            .observeOn(AndroidSchedulers.mainThread())
+//            .subscribeOn(Schedulers.io())
+//            .subscribe(
+//                object : Subscriber<GenericResponse>() {
+//                    override fun onCompleted() {}
+//                    override fun onError(e: Throwable) {
+//                        _documentDialogUiState.value =
+//                            DocumentDialogUiState.ShowError(e.message.toString())
+//                    }
+//
+//                    override fun onNext(genericResponse: GenericResponse) {
+//                        _documentDialogUiState.value =
+//                            DocumentDialogUiState.ShowDocumentUpdatedSuccessfully(genericResponse)
+//                    }
+//                },
+//            )
     }
 
-    private fun getRequestFileBody(file: File): PartData {
-        // create RequestBody instance from file
-        val requestFile = file.asRequestBody("multipart/form-data".toMediaTypeOrNull())
-
-        // PartData is used to send also the actual file name
-        return PartData.createFormData("file", file.name, requestFile)
-    }
+//    private fun getRequestFileBody(file: File): PartData {
+//        // create RequestBody instance from file
+//        val requestFile = file.asRequestBody("multipart/form-data".toMediaTypeOrNull())
+//
+//        // PartData is used to send also the actual file name
+//        return PartData.createFormData("file", file.name, requestFile)
+//    }
 }

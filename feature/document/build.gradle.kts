@@ -26,6 +26,10 @@ kotlin {
             implementation(compose.ui)
             implementation(projects.core.domain)
             implementation(libs.kotlinx.serialization.json)
+            
+            implementation(libs.filekit.core)
+            implementation(libs.filekit.compose)
+            implementation(libs.filekit.dialog.compose)
         }
     }
 }

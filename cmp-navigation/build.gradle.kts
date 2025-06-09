@@ -38,7 +38,7 @@ kotlin {
 //            implementation(projects.feature.client)
             implementation(projects.feature.collectionSheet)
 //            implementation(projects.feature.dataTable)
-//            implementation(projects.feature.document)
+            implementation(projects.feature.document)
 //            implementation(projects.feature.groups)
 //            implementation(projects.feature.loan)
             implementation(projects.feature.note)

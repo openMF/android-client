@@ -19,6 +19,8 @@ import com.mifos.feature.activate.navigation.activateScreen
 import com.mifos.feature.activate.navigation.navigateToActivateScreen
 import com.mifos.feature.center.navigation.centerNavGraph
 import com.mifos.feature.checker.inbox.task.navigation.checkerInboxTaskNavGraph
+import com.mifos.feature.document.navigation.DocumentScreens
+import com.mifos.feature.document.navigation.documentListScreen
 import com.mifos.feature.individualCollectionSheet.navigation.individualCollectionSheetNavGraph
 import com.mifos.feature.note.navigation.noteNavGraph
 import com.mifos.feature.pathTracking.navigation.pathTrackingNavGraph
@@ -34,11 +36,13 @@ internal fun FeatureNavHost(
 ) {
     NavHost(
         route = NavGraphRoute.MAIN_GRAPH,
-        startDestination = HomeDestinationsScreen.SearchScreen.route,
+        startDestination = "doci",
         navController = appState.navController,
         modifier = modifier,
     ) {
         checkerInboxTaskNavGraph(appState.navController)
+
+        documentListScreen(onBackPressed = appState.navController::popBackStack)
 
         searchNavGraph(
             paddingValues = padding,

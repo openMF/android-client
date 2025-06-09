@@ -64,6 +64,7 @@ import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.model.objects.noncoreobjects.Document
 import com.mifos.core.network.GenericResponse
 import com.mifos.core.ui.util.DevicePreview
+import io.github.vinceglb.filekit.name
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.getString
 import org.jetbrains.compose.resources.stringResource
@@ -82,7 +83,7 @@ internal fun DocumentDialogScreen(
 ) {
     val state by viewModel.documentDialogUiState.collectAsStateWithLifecycle()
 
-    var fileName by rememberSaveable { mutableStateOf<String?>(document?.name) }
+    var fileName by rememberSaveable { mutableStateOf(document?.name) }
     var fileChosen by rememberSaveable { mutableStateOf<Any?>(null) }
 
     DocumentDialogScreen(
@@ -91,26 +92,32 @@ internal fun DocumentDialogScreen(
         snackbarHostState = snackbarHostState,
         document = document,
         openFilePicker = {
+            viewModel.openFilePicker { file ->
+                file?.let {
+                    fileChosen = it
+                    fileName = it.name
+                }
+            }
         },
         closeDialog = closeDialog,
         uploadDocument = { documentName, documentDescription ->
             if (documentAction == Res.string.feature_document_update_document) {
-                viewModel.updateDocument(
-                    entityType,
-                    entityId,
-                    document!!.id,
-                    documentName,
-                    documentDescription,
-                    fileChosen!!,
-                )
+//                viewModel.updateDocument(
+//                    entityType,
+//                    entityId,
+//                    document!!.id,
+//                    documentName,
+//                    documentDescription,
+//                    fileChosen!!,
+//                )
             } else if (documentAction == Res.string.feature_document_upload_document) {
-                viewModel.createDocument(
-                    entityType,
-                    entityId,
-                    documentName,
-                    documentDescription,
-                    fileChosen!!,
-                )
+//                viewModel.createDocument(
+//                    entityType,
+//                    entityId,
+//                    documentName,
+//                    documentDescription,
+//                    fileChosen!!,
+//                )
             }
         },
         filename = fileName,

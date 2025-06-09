@@ -86,7 +86,7 @@ internal fun DocumentListScreen(
     val entityType by viewModel.entityType.collectAsStateWithLifecycle()
     val snackbarHostState = remember { SnackbarHostState() }
 
-    if (isDialogBoxActive) {
+//    if (isDialogBoxActive) {
         DocumentDialogScreen(
             entityType = entityType,
             snackbarHostState = snackbarHostState,
@@ -99,7 +99,7 @@ internal fun DocumentListScreen(
                 onBackPressed()
             },
         )
-    }
+//    }
 
     LaunchedEffect(Unit) {
         Logger.e("documentListDebugLog") { "id : $entityId, type : $entityType" }
