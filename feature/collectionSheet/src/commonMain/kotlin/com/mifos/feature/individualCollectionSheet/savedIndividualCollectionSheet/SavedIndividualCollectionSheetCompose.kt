@@ -24,6 +24,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
+import com.mifos.core.ui.util.DevicePreview
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
@@ -54,8 +55,8 @@ internal fun SavedIndividualCollectionSheetCompose(
     }
 }
 
-// @Preview
-// @Composable
-// private fun SavedIndividualCollectionSheetComposePreview() {
-//    SavedIndividualCollectionSheetCompose()
-// }
+ @DevicePreview
+ @Composable
+ private fun SavedIndividualCollectionSheetComposePreview() {
+    SavedIndividualCollectionSheetCompose()
+ }
