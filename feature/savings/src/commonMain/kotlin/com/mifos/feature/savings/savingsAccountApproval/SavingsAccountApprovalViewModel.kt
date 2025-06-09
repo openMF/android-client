@@ -16,7 +16,6 @@ import com.mifos.core.common.utils.Constants
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.domain.useCases.ApproveSavingsApplicationUseCase
 import com.mifos.core.model.objects.account.loan.SavingsApproval
-import com.mifos.core.network.GenericResponse
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow

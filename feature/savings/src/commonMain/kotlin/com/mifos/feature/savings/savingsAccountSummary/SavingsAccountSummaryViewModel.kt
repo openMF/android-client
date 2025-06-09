@@ -45,8 +45,8 @@ class SavingsAccountSummaryViewModel(
     fun loadSavingAccount(type: String, accountId: Int) {
         viewModelScope.launch {
             repository.getSavingsAccount(
-                "savingsaccounts",
-                1,
+                type,
+                accountId,
                 Constants.TRANSACTIONS,
             ).collect { dataState ->
                 when (dataState) {

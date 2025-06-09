@@ -16,17 +16,11 @@ import androidx.navigation.compose.NavHost
 import cmp.navigation.AppState
 import com.mifos.feature.about.navigation.aboutNavGraph
 import com.mifos.feature.activate.navigation.activateScreen
-import com.mifos.feature.activate.navigation.navigateToActivateScreen
-import com.mifos.feature.center.navigation.centerNavGraph
 import com.mifos.feature.checker.inbox.task.navigation.checkerInboxTaskNavGraph
-import com.mifos.feature.individualCollectionSheet.navigation.individualCollectionSheetNavGraph
 import com.mifos.feature.note.navigation.noteNavGraph
-import com.mifos.feature.savings.navigation.navigateToSavingsAccountSummaryScreen
 import com.mifos.feature.savings.navigation.savingsNavGraph
-import com.mifos.feature.pathTracking.navigation.pathTrackingNavGraph
 import com.mifos.feature.search.navigation.searchNavGraph
 import com.mifos.feature.settings.navigation.settingsScreen
-import com.mifos.room.entities.accounts.savings.SavingAccountDepositTypeEntity
 
 @Composable
 internal fun FeatureNavHost(
@@ -54,10 +48,7 @@ internal fun FeatureNavHost(
             paddingValues = padding,
             onCreateClient = { println("Create Client") },
             onCreateCenter = { println("Create Center") },
-            onCreateGroup = { appState.navController.navigateToSavingsAccountSummaryScreen(
-                1,
-                SavingAccountDepositTypeEntity(),
-            ) },
+            onCreateGroup = { println("Create Group") },
             onClient = { id -> println("Client clicked: $id") },
             onCenter = { id -> println("Center clicked: $id") },
             onGroup = { id -> println("Group clicked: $id") },
@@ -71,27 +62,11 @@ internal fun FeatureNavHost(
 
         activateScreen(onBackPressed = appState.navController::popBackStack)
 
-        centerNavGraph(
-            navController = appState.navController,
-            paddingValues = padding,
-            onActivateCenter = appState.navController::navigateToActivateScreen,
-            addSavingsAccount = {
-//                navController.navigateToAddSavingsAccount(it, 0, true)
-            },
-
-        )
-
         settingsScreen(
             navigateBack = appState.navController::popBackStack,
             navigateToLoginScreen = {},
             changePasscode = {},
             languageChanged = {},
         )
-        individualCollectionSheetNavGraph(
-            navController = appState.navController,
-            onBackPressed = appState.navController::popBackStack,
-        )
-
-        pathTrackingNavGraph(appState.navController)
     }
 }
