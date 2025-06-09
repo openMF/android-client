@@ -9,7 +9,6 @@
  */
 package com.mifos.core.model.objects.checkerinboxtask
 
-import com.mifos.core.model.utils.IgnoredOnParcel
 import com.mifos.core.model.utils.Parcelable
 import com.mifos.core.model.utils.Parcelize
 import kotlinx.datetime.Instant
@@ -17,27 +16,25 @@ import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 import kotlinx.serialization.Serializable
 
-// TODO migrate to KMP
-@IgnoredOnParcel
 @Parcelize
 @Serializable
 data class CheckerTask(
-    var id: Int,
-    var madeOnDate: Long,
-    var processingResult: String,
-    var maker: String,
-    var actionName: String,
-    var entityName: String,
-    var resourceId: String,
+    val id: Int,
+    val madeOnDate: Long,
+    val processingResult: String,
+    val maker: String,
+    val actionName: String,
+    val entityName: String,
+    val resourceId: String,
 ) : Parcelable {
 
     var selectedFlag = false
-
-    // todo fix this - date
     fun getDate(): String {
         val instant = Instant.fromEpochMilliseconds(madeOnDate)
         val localDate = instant.toLocalDateTime(TimeZone.currentSystemDefault()).date
-        return "${localDate.dayOfMonth} ${localDate.month.name.take(3).lowercase().replaceFirstChar { it.uppercase() }} ${localDate.year}"
+        return "${localDate.dayOfMonth} ${
+            localDate.month.name.take(3).lowercase().replaceFirstChar { it.uppercase() }
+        } ${localDate.year}"
     }
 
     fun getTimeStamp(): Instant {

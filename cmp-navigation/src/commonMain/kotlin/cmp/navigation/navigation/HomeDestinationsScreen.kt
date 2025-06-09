@@ -12,6 +12,10 @@ package cmp.navigation.navigation
 import androidx.compose.ui.graphics.vector.ImageVector
 import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.feature.about.navigation.AboutScreens
+import com.mifos.feature.checker.inbox.task.navigation.CheckerInboxTaskScreens
+import com.mifos.feature.pathTracking.navigation.PathTrackingScreens
+import com.mifos.feature.search.navigation.SearchScreens
+import com.mifos.feature.settings.navigation.SettingsScreens
 
 sealed class HomeDestinationsScreen(
     val title: String = "",
@@ -20,7 +24,7 @@ sealed class HomeDestinationsScreen(
 ) {
     data object SearchScreen : HomeDestinationsScreen(
         title = "Search",
-        route = "search_screen",
+        route = SearchScreens.SearchScreenRoute.route,
         icon = MifosIcons.Dashboard,
     )
 
@@ -44,7 +48,7 @@ sealed class HomeDestinationsScreen(
 
     data object CheckerInboxAndTasksScreen : HomeDestinationsScreen(
         title = "Checker Inbox & Tasks",
-        route = "",
+        route = CheckerInboxTaskScreens.CheckerInboxTaskScreenRoute.route,
         icon = MifosIcons.Checkbox,
     )
 
@@ -68,13 +72,13 @@ sealed class HomeDestinationsScreen(
 
     data object PathTrackerScreen : HomeDestinationsScreen(
         title = "Path Tracker",
-        route = "",
+        route = PathTrackingScreens.PathTrackingScreen.route,
         icon = MifosIcons.PersonPinCircle,
     )
 
     data object SettingsScreen : HomeDestinationsScreen(
         title = "Settings",
-        route = "",
+        route = SettingsScreens.SettingsScreen.route,
         icon = MifosIcons.Settings,
     )
 

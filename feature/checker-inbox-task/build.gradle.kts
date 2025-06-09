@@ -8,22 +8,29 @@
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
 plugins {
-    alias(libs.plugins.mifos.android.feature)
-    alias(libs.plugins.mifos.android.library.compose)
-    alias(libs.plugins.mifos.android.library.jacoco)
+    alias(libs.plugins.mifos.cmp.feature)
 }
 
 android {
-    namespace = "com.mifos.feature.checker_inbox_task"
+    namespace = "com.mifos.feature.checker.inbox.task"
 }
 
-dependencies {
-    implementation(projects.core.domain)
+kotlin {
+    sourceSets{
+        commonMain.dependencies {
+            implementation(projects.core.domain)
 
-    // swipe refresh
-    implementation(libs.accompanist.swiperefresh)
-
-    implementation(libs.coil.kt.compose)
-
-    testImplementation(libs.hilt.android.testing)
+            implementation(compose.ui)
+            implementation(compose.material3)
+            implementation(compose.foundation)
+            implementation(compose.components.resources)
+            implementation(compose.components.uiToolingPreview)
+            implementation(libs.koin.compose)
+            implementation(libs.koin.compose.viewmodel)
+            implementation(libs.kotlinx.datetime)
+            implementation(libs.kermit.logging)
+            implementation(libs.ui.backhandler)
+            implementation(libs.kotlin.reflect)
+        }
+    }
 }
