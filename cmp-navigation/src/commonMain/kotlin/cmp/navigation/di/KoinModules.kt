@@ -22,6 +22,7 @@ import com.mifos.feature.checker.inbox.task.di.CheckerInboxTaskModule
 import com.mifos.feature.individualCollectionSheet.di.CollectionSheetModule
 import com.mifos.feature.note.di.NoteModule
 import com.mifos.feature.pathTracking.di.PathTrackingModule
+import com.mifos.feature.savings.di.SavingsModule
 import com.mifos.feature.search.di.SearchModule
 import com.mifos.feature.settings.di.SettingsModule
 import com.mifos.feature.splash.di.SplashModule
@@ -68,7 +69,7 @@ object KoinModules {
 //            OfflineModule,
             PathTrackingModule,
 //            ReportModule,
-//            SavingsModule,
+            SavingsModule,
             SearchModule,
             SplashModule,
             SettingsModule,
