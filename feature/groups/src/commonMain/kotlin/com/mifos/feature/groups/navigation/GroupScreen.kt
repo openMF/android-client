@@ -16,7 +16,7 @@ import com.mifos.core.common.utils.Constants
  */
 sealed class GroupScreen(val route: String) {
 
-    data object GroupListScreen : GroupScreen("group_list_screen")
+    data object GroupListScreen : GroupScreen("groups_screen")
 
     data object CreateNewGroupScreen : GroupScreen("create_new_group")
 

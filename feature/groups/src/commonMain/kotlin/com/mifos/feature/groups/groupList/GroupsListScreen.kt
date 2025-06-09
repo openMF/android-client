@@ -94,7 +94,7 @@ fun GroupItem(
             ) {
                 Text(
                     text = it,
-                    style = MaterialTheme.typography.titleMedium,
+                    style = MaterialTheme.typography.titleSmall,
                 )
 
                 if (group.sync) {

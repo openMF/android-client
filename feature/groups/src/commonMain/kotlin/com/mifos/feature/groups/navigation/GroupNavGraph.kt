@@ -27,8 +27,6 @@ import com.mifos.room.entities.client.ClientEntity
 /**
  * Created by Pronay Sarker on 13/08/2024
  */
-const val GROUP_NAV_GRAPH_ROUTE = "group_nav_route"
-
 fun NavGraphBuilder.groupNavGraph(
     paddingValues: PaddingValues,
     navController: NavController,
@@ -44,7 +42,7 @@ fun NavGraphBuilder.groupNavGraph(
 ) {
     navigation(
         startDestination = GroupScreen.GroupListScreen.route,
-        route = GROUP_NAV_GRAPH_ROUTE,
+        route = "groups_screen_graph",
     ) {
         groupListScreenRoute(
             paddingValues = paddingValues,

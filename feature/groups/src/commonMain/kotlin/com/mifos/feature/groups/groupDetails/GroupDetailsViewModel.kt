@@ -15,6 +15,7 @@ import androidclient.feature.groups.generated.resources.feature_groups_failed_to
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import co.touchlab.kermit.Logger
 import com.mifos.core.common.utils.Constants
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.repository.GroupDetailsRepository
@@ -53,22 +54,24 @@ class GroupDetailsViewModel(
             getGroupDetailsUseCase.invoke(groupId)
                 .collect { dataState ->
                     when (dataState) {
-                        is DataState.Error ->
+                        is DataState.Error -> {
                             _groupDetailsUiState.value =
                                 GroupDetailsUiState.Error(Res.string.feature_groups_failed_to_fetch_group_and_account)
+                            Logger.d("debug", Throwable(dataState.message))
+                        }
 
                         DataState.Loading ->
                             _groupDetailsUiState.value =
                                 GroupDetailsUiState.Loading
 
-                        is DataState.Success<*> -> {
+                        is DataState.Success -> {
                             val account = dataState.data
                             _groupDetailsUiState.value =
-                                GroupDetailsUiState.ShowGroup(account?.group ?: GroupEntity())
+                                GroupDetailsUiState.ShowGroup(account.group ?: GroupEntity())
                             _loanAccounts.value =
-                                account?.groupAccounts?.loanAccounts ?: emptyList()
+                                account.groupAccounts?.loanAccounts ?: emptyList()
                             _savingsAccounts.value =
-                                account?.groupAccounts?.savingsAccounts ?: emptyList()
+                                account.groupAccounts?.savingsAccounts ?: emptyList()
                         }
                     }
                 }
@@ -80,16 +83,17 @@ class GroupDetailsViewModel(
             repository.getGroupWithAssociations(groupId)
                 .collect { dataState ->
                     when (dataState) {
-                        is DataState.Error<*> -> {
+                        is DataState.Error -> {
                             _groupDetailsUiState.value =
                                 GroupDetailsUiState.Error(Res.string.feature_groups_failed_to_load_client)
+                            Logger.d("debug", Throwable(dataState.message))
                         }
 
                         DataState.Loading -> Unit
 
-                        is DataState.Success<*> -> {
+                        is DataState.Success -> {
                             _groupAssociateClients.value =
-                                dataState.data?.clientMembers ?: emptyList()
+                                dataState.data.clientMembers
                         }
                     }
                 }

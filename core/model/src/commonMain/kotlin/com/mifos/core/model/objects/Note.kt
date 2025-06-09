@@ -11,14 +11,16 @@ package com.mifos.core.model.objects
 
 import com.mifos.core.model.utils.Parcelable
 import com.mifos.core.model.utils.Parcelize
+import kotlinx.serialization.Serializable
 
 @Parcelize
+@Serializable
 data class Note(
     val id: Int? = null,
 
     val clientId: Int? = null,
 
-    val noteContent: String? = null,
+    val note: String? = null,
 
     val createdById: Int? = null,
 
