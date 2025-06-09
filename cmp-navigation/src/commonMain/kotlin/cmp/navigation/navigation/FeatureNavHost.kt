@@ -18,9 +18,11 @@ import com.mifos.feature.about.navigation.aboutNavGraph
 import com.mifos.feature.activate.navigation.activateScreen
 import com.mifos.feature.checker.inbox.task.navigation.checkerInboxTaskNavGraph
 import com.mifos.feature.note.navigation.noteNavGraph
+import com.mifos.feature.savings.navigation.navigateToSavingsAccountSummaryScreen
 import com.mifos.feature.savings.navigation.savingsNavGraph
 import com.mifos.feature.search.navigation.searchNavGraph
 import com.mifos.feature.settings.navigation.settingsScreen
+import com.mifos.room.entities.accounts.savings.SavingAccountDepositTypeEntity
 
 @Composable
 internal fun FeatureNavHost(
@@ -48,12 +50,15 @@ internal fun FeatureNavHost(
             paddingValues = padding,
             onCreateClient = { println("Create Client") },
             onCreateCenter = { println("Create Center") },
-            onCreateGroup = { println("Create Group") },
+            onCreateGroup = { appState.navController.navigateToSavingsAccountSummaryScreen(
+                1,
+                SavingAccountDepositTypeEntity(),
+            ) },
             onClient = { id -> println("Client clicked: $id") },
             onCenter = { id -> println("Center clicked: $id") },
             onGroup = { id -> println("Group clicked: $id") },
             onLoan = { id -> println("Loan clicked: $id") },
-            onSavings = { id -> println("Savings clicked: $id") },
+            onSavings = { id -> },
         )
 
         aboutNavGraph(onBackPressed = appState.navController::popBackStack)

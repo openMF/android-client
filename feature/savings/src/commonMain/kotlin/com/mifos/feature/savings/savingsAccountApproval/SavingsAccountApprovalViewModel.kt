@@ -19,6 +19,7 @@ import com.mifos.core.model.objects.account.loan.SavingsApproval
 import com.mifos.core.network.GenericResponse
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 /**
@@ -35,14 +36,14 @@ class SavingsAccountApprovalViewModel(
     private val _savingsAccountApprovalUiState =
         MutableStateFlow<SavingsAccountApprovalUiState>(SavingsAccountApprovalUiState.Initial)
     val savingsAccountApprovalUiState: StateFlow<SavingsAccountApprovalUiState>
-        get() = _savingsAccountApprovalUiState
+        get() = _savingsAccountApprovalUiState.asStateFlow()
 
     fun approveSavingsApplication(accountId: Int, savingsApproval: SavingsApproval?) =
         viewModelScope.launch {
             approveSavingsApplicationUseCase(accountId, savingsApproval)
                 .collect { dataState ->
                     when (dataState) {
-                        is DataState.Error<*> -> {
+                        is DataState.Error -> {
                             _savingsAccountApprovalUiState.value =
                                 SavingsAccountApprovalUiState.ShowError(
                                     dataState.message,
@@ -54,10 +55,10 @@ class SavingsAccountApprovalViewModel(
                                 SavingsAccountApprovalUiState.ShowProgressbar
                         }
 
-                        is DataState.Success<*> -> {
+                        is DataState.Success -> {
                             _savingsAccountApprovalUiState.value =
                                 SavingsAccountApprovalUiState.ShowSavingAccountApprovedSuccessfully(
-                                    dataState.data ?: GenericResponse(),
+                                    dataState.data,
                                 )
                         }
                     }

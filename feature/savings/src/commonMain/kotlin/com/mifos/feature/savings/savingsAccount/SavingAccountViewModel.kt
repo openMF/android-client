@@ -45,7 +45,7 @@ class SavingAccountViewModel(
 
     private val _savingAccountUiState =
         MutableStateFlow<SavingAccountUiState>(SavingAccountUiState.ShowProgress)
-    val savingAccountUiState: StateFlow<SavingAccountUiState> get() = _savingAccountUiState
+    val savingAccountUiState: StateFlow<SavingAccountUiState> get() = _savingAccountUiState.asStateFlow()
 
     private val _savingProductsTemplate = MutableStateFlow(SavingProductsTemplate())
     val savingProductsTemplate = _savingProductsTemplate.asStateFlow()
@@ -55,7 +55,7 @@ class SavingAccountViewModel(
             loadSavingsAccountsAndTemplateUseCase()
                 .collect { dataState ->
                     when (dataState) {
-                        is DataState.Error<*> ->
+                        is DataState.Error ->
                             _savingAccountUiState.value =
                                 SavingAccountUiState.ShowFetchingError(
                                     Res.string.feature_savings_failed_to_load_savings_products_and_template,
@@ -65,12 +65,9 @@ class SavingAccountViewModel(
                             _savingAccountUiState.value =
                                 SavingAccountUiState.ShowProgress
 
-                        is DataState.Success<*> -> {
-                            val result = dataState.data
-                            if (result != null) {
-                                _savingAccountUiState.value =
-                                    SavingAccountUiState.LoadAllSavings(dataState.data!!)
-                            }
+                        is DataState.Success -> {
+                            _savingAccountUiState.value =
+                                SavingAccountUiState.LoadAllSavings(dataState.data)
                         }
                     }
                 }
@@ -83,14 +80,14 @@ class SavingAccountViewModel(
                 productId,
             ).collect { dataState ->
                 when (dataState) {
-                    is DataState.Error<*> -> {
+                    is DataState.Error -> {
                         _savingAccountUiState.value =
                             SavingAccountUiState.ShowFetchingError(Res.string.feature_savings_failed_to_load_savings_products_and_template)
                     }
 
                     DataState.Loading -> Unit
 
-                    is DataState.Success<*> -> {
+                    is DataState.Success -> {
                         _savingProductsTemplate.value =
                             dataState.data ?: SavingProductsTemplate()
                     }

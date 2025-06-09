@@ -18,6 +18,7 @@ import com.mifos.core.domain.useCases.ActivateSavingsUseCase
 import com.mifos.core.network.GenericResponse
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 /**
@@ -29,11 +30,11 @@ class SavingsAccountActivateViewModel(
 ) : ViewModel() {
 
     val savingsAccountId = savedStateHandle.getStateFlow(Constants.SAVINGS_ACCOUNT_ID, 0)
+
     private val _savingsAccountActivateUiState =
         MutableStateFlow<SavingsAccountActivateUiState>(SavingsAccountActivateUiState.Initial)
-
     val savingsAccountActivateUiState: StateFlow<SavingsAccountActivateUiState>
-        get() = _savingsAccountActivateUiState
+        get() = _savingsAccountActivateUiState.asStateFlow()
 
     fun activateSavings(savingsAccountId: Int, request: HashMap<String, String>) =
         viewModelScope.launch {
@@ -48,7 +49,7 @@ class SavingsAccountActivateViewModel(
                             _savingsAccountActivateUiState.value =
                                 SavingsAccountActivateUiState.ShowProgressbar
 
-                        is DataState.Success<*> ->
+                        is DataState.Success ->
                             _savingsAccountActivateUiState.value =
                                 SavingsAccountActivateUiState.ShowSavingAccountActivatedSuccessfully(
                                     state.data ?: GenericResponse(),

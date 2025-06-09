@@ -14,6 +14,7 @@ import androidclient.feature.savings.generated.resources.feature_savings_failed_
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import co.touchlab.kermit.Logger
 import com.mifos.core.common.utils.Constants
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.repository.SavingsAccountSummaryRepository
@@ -21,6 +22,7 @@ import com.mifos.room.entities.accounts.savings.SavingsAccountWithAssociationsEn
 import com.mifos.room.entities.accounts.savings.SavingsSummaryData
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
 
@@ -38,25 +40,27 @@ class SavingsAccountSummaryViewModel(
 
     private val _savingsAccountSummaryUiState =
         MutableStateFlow<SavingsAccountSummaryUiState>(SavingsAccountSummaryUiState.ShowProgressbar)
-    val savingsAccountSummaryUiState: StateFlow<SavingsAccountSummaryUiState> get() = _savingsAccountSummaryUiState
+    val savingsAccountSummaryUiState: StateFlow<SavingsAccountSummaryUiState> get() = _savingsAccountSummaryUiState.asStateFlow()
 
     fun loadSavingAccount(type: String, accountId: Int) {
         viewModelScope.launch {
             repository.getSavingsAccount(
-                type,
-                accountId,
+                "savingsaccounts",
+                1,
                 Constants.TRANSACTIONS,
             ).collect { dataState ->
                 when (dataState) {
-                    is DataState.Error ->
+                    is DataState.Error -> {
+                        Logger.e("Error: ${dataState.message}")
                         _savingsAccountSummaryUiState.value =
                             SavingsAccountSummaryUiState.ShowFetchingError(Res.string.feature_savings_failed_to_fetch_savingsaccount)
+                    }
 
                     DataState.Loading ->
                         _savingsAccountSummaryUiState.value =
                             SavingsAccountSummaryUiState.ShowProgressbar
 
-                    is DataState.Success<*> ->
+                    is DataState.Success ->
                         _savingsAccountSummaryUiState.value =
                             SavingsAccountSummaryUiState.ShowSavingAccount(
                                 dataState.data ?: SavingsAccountWithAssociationsEntity(),

@@ -22,6 +22,7 @@ import com.mifos.room.entities.accounts.savings.SavingsTransactionData
 import com.mifos.room.entities.templates.savings.SavingsAccountTransactionTemplateEntity
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
 
@@ -29,9 +30,6 @@ import kotlinx.serialization.json.Json
  * Created by Aditya Gupta on 13/08/23.
  */
 class SavingsAccountTransactionViewModel(
-//    private val getSavingsAccountTransactionTemplateUseCase: GetSavingsAccountTransactionTemplateUseCase,
-//    private val processTransactionUseCase: ProcessTransactionUseCase,
-//    private val getSavingsAccountTransactionUseCase: GetSavingsAccountTransactionUseCase,
     private val prefManager: UserPreferencesRepository,
     private val repository: SavingsAccountTransactionRepository,
     savedStateHandle: SavedStateHandle,
@@ -49,7 +47,7 @@ class SavingsAccountTransactionViewModel(
 
     private val _savingsAccountTransactionUiState =
         MutableStateFlow<SavingsAccountTransactionUiState>(SavingsAccountTransactionUiState.ShowProgressbar)
-    val savingsAccountTransactionUiState: StateFlow<SavingsAccountTransactionUiState> get() = _savingsAccountTransactionUiState
+    val savingsAccountTransactionUiState: StateFlow<SavingsAccountTransactionUiState> get() = _savingsAccountTransactionUiState.asStateFlow()
 
     fun setUserOffline() {
         viewModelScope.launch {
@@ -66,7 +64,7 @@ class SavingsAccountTransactionViewModel(
                     transactionType,
                 ).collect { state ->
                     when (state) {
-                        is DataState.Error<*> ->
+                        is DataState.Error ->
                             _savingsAccountTransactionUiState.value =
                                 SavingsAccountTransactionUiState.ShowError(state.message)
 
@@ -74,7 +72,7 @@ class SavingsAccountTransactionViewModel(
                             _savingsAccountTransactionUiState.value =
                                 SavingsAccountTransactionUiState.ShowProgressbar
 
-                        is DataState.Success<*> ->
+                        is DataState.Success ->
                             _savingsAccountTransactionUiState.value =
                                 SavingsAccountTransactionUiState.ShowSavingAccountTemplate(
                                     state.data ?: SavingsAccountTransactionTemplateEntity(),
