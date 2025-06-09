@@ -71,7 +71,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mifos.core.common.utils.Constants
-import com.mifos.core.common.utils.formatDate
+import com.mifos.core.common.utils.DateHelper
 import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosDatePickerTextField
 import com.mifos.core.designsystem.component.MifosOutlinedTextField
@@ -303,7 +303,7 @@ private fun SavingsAccountTransactionContent(
                 Column {
                     Text(
                         text = stringResource(Res.string.feature_savings_transaction_date) + " : " +
-                            formatDate(transactionDate),
+                            DateHelper.getDateAsStringFromLong(transactionDate),
                     )
                     Text(text = stringResource(Res.string.feature_savings_payment_type) + " : " + paymentType)
                     Text(text = stringResource(Res.string.feature_savings_amount) + " : " + amount)
@@ -398,7 +398,7 @@ private fun SavingsAccountTransactionContent(
         // 2. Date Entered is not greater than Date Today i.e Date is not in future
 
         MifosDatePickerTextField(
-            value = formatDate(transactionDate),
+            value = DateHelper.getDateAsStringFromLong(transactionDate),
             label = stringResource(Res.string.feature_savings_date),
             modifier = Modifier.fillMaxWidth(),
         ) {

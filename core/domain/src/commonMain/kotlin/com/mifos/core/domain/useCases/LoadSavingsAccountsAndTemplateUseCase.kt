@@ -27,11 +27,21 @@ class LoadSavingsAccountsAndTemplateUseCase(
             repository.getSavingsAccounts(),
             repository.getSavingsAccountTemplate(),
         ) { savingsAccount, template ->
-            DataState.Success(
-                SavingProductsAndTemplate(
-                    mProductSavings = savingsAccount.data!!,
-                    mSavingProductsTemplate = template.data!!,
-                ),
-            )
+
+            if (savingsAccount is DataState.Success && template is DataState.Success) {
+                DataState.Success(
+                    SavingProductsAndTemplate(
+                        mProductSavings = savingsAccount.data,
+                        mSavingProductsTemplate = template.data,
+                    ),
+                )
+            } else if (savingsAccount is DataState.Error || template is DataState.Error) {
+                val exception = (savingsAccount as? DataState.Error)?.exception
+                    ?: (template as? DataState.Error)?.exception
+                    ?: Exception("Unknown error")
+                DataState.Error(exception)
+            } else {
+                DataState.Loading
+            }
         }
 }

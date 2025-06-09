@@ -48,7 +48,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.mifos.core.common.utils.formatDate
+import com.mifos.core.common.utils.DateHelper
 import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosDatePickerTextField
 import com.mifos.core.designsystem.component.MifosOutlinedTextField
@@ -204,7 +204,7 @@ private fun SavingsAccountApprovalContent(
         Spacer(modifier = Modifier.height(16.dp))
 
         MifosDatePickerTextField(
-            value = formatDate(approvalDate),
+            value = DateHelper.getDateAsStringFromLong(approvalDate),
             label = stringResource(Res.string.feature_savings_approval_savings_date),
         ) {
             showDatePickerDialog = true
