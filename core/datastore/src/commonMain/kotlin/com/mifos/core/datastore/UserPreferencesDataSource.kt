@@ -9,7 +9,6 @@
  */
 package com.mifos.core.datastore
 
-import co.touchlab.kermit.Logger
 import com.mifos.core.common.utils.ServerConfig
 import com.mifos.core.datastore.model.AppSettings
 import com.mifos.core.datastore.model.AppTheme

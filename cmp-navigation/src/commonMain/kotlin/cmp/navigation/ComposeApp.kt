@@ -17,6 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.compose.rememberNavController
 import cmp.navigation.navigation.NavGraphRoute.AUTH_GRAPH
+import cmp.navigation.navigation.NavGraphRoute.MAIN_GRAPH
 import cmp.navigation.navigation.RootNavGraph
 import com.mifos.core.data.util.NetworkMonitor
 import com.mifos.core.datastore.model.AppTheme
@@ -34,13 +35,22 @@ fun ComposeApp(
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val navController = rememberNavController()
 
+    val navDestination = when (uiState) {
+        is MainUiState.Loading -> AUTH_GRAPH
+        is MainUiState.Success -> if ((uiState as MainUiState.Success).isAuthenticated) {
+            MAIN_GRAPH
+        } else {
+            AUTH_GRAPH
+        }
+    }
+
     when (uiState) {
         is MainUiState.Loading -> {
             MifosCircularProgress(Modifier.fillMaxWidth())
         }
         is MainUiState.Success -> {
             val theme = (uiState as MainUiState.Success).appTheme
-            val isDarkTheme=when(theme){
+            val isDarkTheme = when (theme) {
                 AppTheme.SYSTEM -> isSystemInDarkTheme()
                 AppTheme.LIGHT -> false
                 AppTheme.DARK -> true
@@ -48,7 +58,8 @@ fun ComposeApp(
             MifosTheme(isDarkTheme) {
                 RootNavGraph(
                     networkMonitor = networkMonitor,
-                    navHostController =navController,
+                    navHostController = navController,
+                    startDestination = navDestination,
                     onClickLogout = {
                         viewModel.logout()
                         navController.navigate(AUTH_GRAPH) {
@@ -56,7 +67,7 @@ fun ComposeApp(
                                 inclusive = true
                             }
                         }
-                                    },
+                    },
                     modifier = modifier,
                 )
             }

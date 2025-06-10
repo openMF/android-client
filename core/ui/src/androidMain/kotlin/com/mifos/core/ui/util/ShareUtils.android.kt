@@ -187,5 +187,4 @@ actual object ShareUtils {
         context.startActivity(restartIntent)
         Runtime.getRuntime().exit(0)
     }
-
 }

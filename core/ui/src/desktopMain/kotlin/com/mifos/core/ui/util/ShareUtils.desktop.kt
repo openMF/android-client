@@ -75,6 +75,5 @@ actual object ShareUtils {
     }
 
     actual fun restartApplication() {
-
     }
 }

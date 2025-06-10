@@ -75,7 +75,6 @@ import com.mifos.core.data.util.NetworkMonitor
 import com.mifos.core.designsystem.component.MifosDialogBox
 import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.designsystem.theme.MifosBackground
-import com.mifos.feature.auth.navigation.navigateToLogin
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.painterResource
 import org.mifos.navigation.generated.resources.Res
@@ -292,7 +291,6 @@ fun App(
                 FeatureNavHost(
                     appState = appState,
                     padding = paddingValues,
-                    onClickLogout = onClickLogout,
                     modifier = Modifier,
                 )
                 if (dialogState) {
@@ -302,9 +300,9 @@ fun App(
                         confirmButtonText = "LogOut",
                         onDismiss = { dialogState = false },
                         onConfirm = {
-                            dialogState=false
+                            dialogState = false
                             onClickLogout()
-                                    },
+                        },
                         dismissButtonText = "Cancel",
                     )
                 }

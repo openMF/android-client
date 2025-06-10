@@ -27,11 +27,9 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
-import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -77,7 +75,6 @@ internal fun SettingsScreen(
     SettingsScreen(
         onBackPressed = onBackPressed,
         selectedLanguage = uiState.language.code,
-        selectedTheme = uiState.theme.themeName,
         currentTheme = uiState.theme,
         baseURL = uiState.baseUrl,
         tenant = uiState.tenant,
@@ -106,7 +103,6 @@ internal fun SettingsScreen(
 internal fun SettingsScreen(
     onBackPressed: () -> Unit,
     selectedLanguage: String,
-    selectedTheme: String,
     currentTheme: AppTheme,
     baseURL: String,
     tenant: String,
@@ -129,17 +125,16 @@ internal fun SettingsScreen(
                 snackbarHostState.showSnackbar(
                     message = "Restarting in $i seconds...",
                     duration = SnackbarDuration.Short,
-                    withDismissAction = false
+                    withDismissAction = false,
                 )
             }
             ShareUtils.restartApplication()
         }
     }
 
-
     MifosScaffold(
         onBackPressed = onBackPressed,
-        snackbarHostState=snackbarHostState,
+        snackbarHostState = snackbarHostState,
         title = stringResource(resource = Res.string.feature_settings),
     ) { paddingValues ->
         Column(
@@ -212,7 +207,10 @@ internal fun SettingsScreen(
             initialBaseURL = baseURL,
             initialTenant = tenant,
             onDismissRequest = { showEndpointUpdateDialog = false },
-            handleEndpointUpdate = handleEndpointUpdate,
+            handleEndpointUpdate = { url,tenant->
+                handleEndpointUpdate(url,tenant)
+                showEndpointUpdateDialog=false
+            },
         )
     }
 }
@@ -330,7 +328,6 @@ private fun PreviewSettingsScreen() {
     SettingsScreen(
         onBackPressed = {},
         selectedLanguage = "",
-        selectedTheme = "",
         currentTheme = AppTheme.SYSTEM,
         baseURL = "",
         tenant = "",

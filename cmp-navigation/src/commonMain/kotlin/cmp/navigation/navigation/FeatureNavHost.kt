@@ -31,7 +31,6 @@ import com.mifos.feature.settings.navigation.settingsScreen
 @Composable
 internal fun FeatureNavHost(
     appState: AppState,
-    onClickLogout: () -> Unit,
     padding: PaddingValues,
     modifier: Modifier = Modifier,
 ) {
