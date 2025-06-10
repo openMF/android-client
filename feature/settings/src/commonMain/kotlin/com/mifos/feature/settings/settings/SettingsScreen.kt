@@ -207,9 +207,9 @@ internal fun SettingsScreen(
             initialBaseURL = baseURL,
             initialTenant = tenant,
             onDismissRequest = { showEndpointUpdateDialog = false },
-            handleEndpointUpdate = { url,tenant->
-                handleEndpointUpdate(url,tenant)
-                showEndpointUpdateDialog=false
+            handleEndpointUpdate = { url, tenant ->
+                handleEndpointUpdate(url, tenant)
+                showEndpointUpdateDialog = false
             },
         )
     }
