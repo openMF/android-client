@@ -9,25 +9,47 @@
  */
 package cmp.navigation
 
+import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.compose.rememberNavController
 import cmp.navigation.navigation.RootNavGraph
 import com.mifos.core.data.util.NetworkMonitor
+import com.mifos.core.datastore.model.AppTheme
+import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.theme.MifosTheme
 import org.koin.compose.koinInject
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun ComposeApp(
     modifier: Modifier = Modifier,
     networkMonitor: NetworkMonitor = koinInject(),
+    viewModel: ComposeAppViewModel = koinViewModel(),
 ) {
-    MifosTheme {
-        RootNavGraph(
-            networkMonitor = networkMonitor,
-            navHostController = rememberNavController(),
-            modifier = modifier,
-        )
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+
+    when (uiState) {
+        is MainUiState.Loading -> {
+            MifosCircularProgress(Modifier.fillMaxWidth())
+        }
+        is MainUiState.Success -> {
+            val theme = (uiState as MainUiState.Success).appTheme
+            val isDarkTheme=when(theme){
+                AppTheme.SYSTEM -> isSystemInDarkTheme()
+                AppTheme.LIGHT -> false
+                AppTheme.DARK -> true
+            }
+            MifosTheme(isDarkTheme) {
+                RootNavGraph(
+                    networkMonitor = networkMonitor,
+                    navHostController = rememberNavController(),
+                    modifier = modifier,
+                )
+            }
+        }
     }
 }

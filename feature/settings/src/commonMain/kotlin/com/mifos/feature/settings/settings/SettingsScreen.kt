@@ -45,6 +45,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import co.touchlab.kermit.Logger
@@ -54,6 +55,7 @@ import com.mifos.core.designsystem.component.MifosRadioButtonDialog
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.UpdateEndpointDialogScreen
 import com.mifos.core.ui.util.DevicePreview
+import com.mifos.feature.settings.syncSurvey.SyncSurveysDialog
 import com.mifos.feature.settings.updateServer.UpdateServerConfigScreenRoute
 import kotlinx.coroutines.delay
 import org.jetbrains.compose.resources.StringResource
@@ -118,7 +120,6 @@ internal fun SettingsScreen(
     var showSyncSurveyDialog by rememberSaveable { mutableStateOf(false) }
     var showServerConfig by rememberSaveable { mutableStateOf(false) }
 
-    val sheetState = rememberModalBottomSheetState()
 
     LaunchedEffect(currentTheme) {
         Logger.d { "Current theme changed to: $currentTheme" }
@@ -152,17 +153,16 @@ internal fun SettingsScreen(
     }
 
     if (showSyncSurveyDialog) {
-//        SyncSurveysDialog(
-//            closeDialog = {
-//                showSyncSurveyDialog = false
-//            },
-//        )
+        SyncSurveysDialog(
+            closeDialog = {
+                showSyncSurveyDialog = false
+            },
+        )
     }
 
     if (showServerConfig) {
-        ModalBottomSheet(
+        Dialog(
             onDismissRequest = { showServerConfig = false },
-            sheetState = sheetState,
         ) {
             UpdateServerConfigScreenRoute(
                 onCloseClick = { showServerConfig = false },
