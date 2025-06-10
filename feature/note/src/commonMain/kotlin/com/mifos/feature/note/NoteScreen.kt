@@ -126,7 +126,7 @@ private fun NoteContent(
 ) {
     LazyColumn(modifier = modifier) {
         items(notes) { note ->
-            note.noteContent?.let { NoteItem(noteTitle = it) }
+            note.note?.let { NoteItem(noteTitle = it) }
         }
     }
 }
@@ -163,7 +163,7 @@ internal val demoNotes = listOf(
     Note(
         id = 1,
         clientId = 101,
-        noteContent = "This is the first demo note.",
+        note = "This is the first demo note.",
         createdById = 1001,
         createdByUsername = "creator_1",
         createdOn = Clock.System.now().toEpochMilliseconds(),
@@ -174,7 +174,7 @@ internal val demoNotes = listOf(
     Note(
         id = 2,
         clientId = 102,
-        noteContent = "This is the second demo note.",
+        note = "This is the second demo note.",
         createdById = 1003,
         createdByUsername = "creator_2",
         createdOn = Clock.System.now().toEpochMilliseconds(),
@@ -185,7 +185,7 @@ internal val demoNotes = listOf(
     Note(
         id = 3,
         clientId = 103,
-        noteContent = "This is the third demo note.",
+        note = "This is the third demo note.",
         createdById = 1005,
         createdByUsername = "creator_3",
         createdOn = Clock.System.now().toEpochMilliseconds(),

@@ -43,6 +43,7 @@ fun MifosTextFieldDropdown(
         .padding(horizontal = 16.dp),
     label: String? = null,
     readOnly: Boolean = false,
+    errorMessage: String? = null,
 ) {
     var isExpanded by remember { mutableStateOf(false) }
 
@@ -51,6 +52,15 @@ fun MifosTextFieldDropdown(
         onExpandedChange = { isExpanded = !isExpanded },
     ) {
         OutlinedTextField(
+            isError = errorMessage != null,
+            supportingText = {
+                errorMessage?.let {
+                    Text(
+                        text = it,
+                        color = MaterialTheme.colorScheme.error,
+                    )
+                }
+            },
             value = value,
             onValueChange = onValueChanged,
             label = { label?.let { Text(it) } },

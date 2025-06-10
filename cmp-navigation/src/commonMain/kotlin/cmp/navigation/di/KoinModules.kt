@@ -19,6 +19,7 @@ import com.mifos.feature.activate.di.ActivateModule
 import com.mifos.feature.auth.di.AuthModule
 import com.mifos.feature.center.di.CenterModule
 import com.mifos.feature.checker.inbox.task.di.CheckerInboxTaskModule
+import com.mifos.feature.groups.di.GroupsModule
 import com.mifos.feature.individualCollectionSheet.di.CollectionSheetModule
 import com.mifos.feature.note.di.NoteModule
 import com.mifos.feature.pathTracking.di.PathTrackingModule
@@ -63,7 +64,7 @@ object KoinModules {
             CollectionSheetModule,
 //            DataTableModule,
 //            DocumentModule,
-//            GroupsModule,
+            GroupsModule,
 //            LoanModule,
             NoteModule,
 //            OfflineModule,
