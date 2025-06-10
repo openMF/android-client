@@ -9,7 +9,8 @@
  */
 package com.mifos.feature.dataTable.dataTableList
 
-import com.mifos.room.entities.client.ClientEntity
+import com.mifos.room.entities.client.ClientPayloadEntity
+import org.jetbrains.compose.resources.StringResource
 
 /**
  * Created by Aditya Gupta on 10/08/23.
@@ -18,8 +19,8 @@ sealed class DataTableListUiState {
 
     data object Loading : DataTableListUiState()
 
-    data class ShowMessage(val message: String? = null) : DataTableListUiState()
+    data class ShowMessage(val message: StringResource? = null) : DataTableListUiState()
 
-    data class Success(val message: String? = null, val client: ClientEntity? = null) :
+    data class Success(val message: StringResource? = null, val client: ClientPayloadEntity? = null) :
         DataTableListUiState()
 }

@@ -26,7 +26,9 @@ kotlin{
             implementation(projects.core.data)
             implementation(projects.core.domain)
             implementation(projects.core.datastore)
+            implementation(projects.core.database)
             implementation(libs.kotlinx.serialization.json)
+            implementation(compose.components.uiToolingPreview)
 
             // swipe refresh
 //            implementation(libs.accompanist.permission)

@@ -56,10 +56,10 @@ class DataTableDataViewModel(
             getDataTableInfoUseCase(table, entityId)
                 .collect { result ->
                     when (result) {
-                        is DataState.Error<*> -> {
+                        is DataState.Error -> {
                             _dataTableDataUiState.value =
                                 DataTableDataUiState.Error(
-                                    getString(Res.string.feature_data_table_failed_to_load_data_table_details),
+                                    Res.string.feature_data_table_failed_to_load_data_table_details,
                                 )
                         }
 
@@ -68,7 +68,7 @@ class DataTableDataViewModel(
                                 DataTableDataUiState.Loading
                         }
 
-                        is DataState.Success<*> -> {
+                        is DataState.Success -> {
                             _dataTableDataUiState.value =
                                 DataTableDataUiState.DataTableInfo(Json.parseToJsonElement(result.data.toString()).jsonArray)
                         }
@@ -80,10 +80,10 @@ class DataTableDataViewModel(
         viewModelScope.launch {
             deleteDataTableEntryUseCase(table, entity, rowId).collect { result ->
                 when (result) {
-                    is DataState.Error<*> ->
+                    is DataState.Error ->
                         _dataTableDataUiState.value =
                             DataTableDataUiState.Error(
-                                getString(Res.string.feature_data_table_failed_to_delete_data_table),
+                                Res.string.feature_data_table_failed_to_delete_data_table,
                             )
 
                     is DataState.Loading ->

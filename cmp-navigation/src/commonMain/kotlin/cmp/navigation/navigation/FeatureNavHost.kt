@@ -19,6 +19,8 @@ import com.mifos.feature.activate.navigation.activateScreen
 import com.mifos.feature.activate.navigation.navigateToActivateScreen
 import com.mifos.feature.center.navigation.centerNavGraph
 import com.mifos.feature.checker.inbox.task.navigation.checkerInboxTaskNavGraph
+import com.mifos.feature.dataTable.navigation.dataTableNavGraph
+import com.mifos.feature.dataTable.navigation.navigateToDataTable
 import com.mifos.feature.individualCollectionSheet.navigation.individualCollectionSheetNavGraph
 import com.mifos.feature.note.navigation.noteNavGraph
 import com.mifos.feature.pathTracking.navigation.pathTrackingNavGraph
@@ -42,11 +44,16 @@ internal fun FeatureNavHost(
     ) {
         checkerInboxTaskNavGraph(appState.navController)
 
+        dataTableNavGraph(
+            navController = appState.navController,
+            clientCreated = {_, _ -> }
+        )
+
         searchNavGraph(
             paddingValues = padding,
             onCreateClient = { println("Create Client") },
             onCreateCenter = { println("Create Center") },
-            onCreateGroup = { println("Create Group") },
+            onCreateGroup = { appState.navController.navigateToDataTable("", 2) },
             onClient = { id -> println("Client clicked: $id") },
             onCenter = { id -> println("Center clicked: $id") },
             onGroup = { id -> println("Group clicked: $id") },

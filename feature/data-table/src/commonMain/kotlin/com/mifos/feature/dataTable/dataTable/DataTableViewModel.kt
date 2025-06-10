@@ -9,6 +9,8 @@
  */
 package com.mifos.feature.dataTable.dataTable
 
+import androidclient.feature.data_table.generated.resources.Res
+import androidclient.feature.data_table.generated.resources.feature_data_table_something_went_wrong
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -57,7 +59,7 @@ class DataTableViewModel(
                     when (dataState) {
                         is DataState.Error -> {
                             _dataTableUiState.value =
-                                DataTableUiState.ShowError(dataState.message)
+                                DataTableUiState.ShowError(Res.string.feature_data_table_something_went_wrong)
                         }
 
                         DataState.Loading -> _dataTableUiState.value =
