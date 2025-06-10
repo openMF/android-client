@@ -66,14 +66,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Color.Companion.Black
-import androidx.compose.ui.graphics.Color.Companion.DarkGray
-import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.graphics.asAndroidBitmap
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidclient.feature.client.generated.resources.Res
 import androidclient.feature.client.generated.resources.feature_client
 import androidclient.feature.client.generated.resources.feature_client_account_number
@@ -104,6 +100,7 @@ import androidclient.feature.client.generated.resources.feature_client_survey
 import androidclient.feature.client.generated.resources.feature_client_take_new_image
 import androidclient.feature.client.generated.resources.feature_client_upload_new_image
 import androidclient.feature.client.generated.resources.feature_client_upload_signature
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -155,7 +152,6 @@ internal fun ClientDetailsScreen(
 ) {
     val clientId by clientDetailsViewModel.clientId.collectAsStateWithLifecycle()
 
-    val context = LocalContext.current
     val state = clientDetailsViewModel.clientDetailsUiState.collectAsStateWithLifecycle().value
     val client = clientDetailsViewModel.client.collectAsStateWithLifecycle().value
     val showLoading = clientDetailsViewModel.showLoading.collectAsStateWithLifecycle().value
@@ -248,7 +244,7 @@ internal fun ClientDetailsScreen(
                 Icon(imageVector = Icons.Default.MoreVert, contentDescription = null)
             }
             DropdownMenu(
-                modifier = Modifier.background(White),
+                modifier = Modifier.background(MaterialTheme.colorScheme.surface),
                 expanded = showMenu,
                 onDismissRequest = { showMenu = false },
             ) {
@@ -886,7 +882,7 @@ private fun MifosSelectImageDialog(
                 }
                 Button(
                     onClick = { uploadImage() },
-//                    colors = ButtonDefaults.buttonColors(BlueSecondary),
+                    colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.primary),
                 ) {
                     Text(
                         text = stringResource(Res.string.feature_client_upload_new_image),
@@ -897,7 +893,7 @@ private fun MifosSelectImageDialog(
                 }
                 Button(
                     onClick = { deleteImage() },
-//                    colors = ButtonDefaults.buttonColors(BlueSecondary),
+                    colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.secondary),
                 ) {
                     Text(
                         text = stringResource(Res.string.feature_client_delete_image),
@@ -923,7 +919,7 @@ private fun MifosClientDetailsText(icon: ImageVector, field: String, value: Stri
             modifier = Modifier.size(18.dp),
             imageVector = icon,
             contentDescription = null,
-            tint = DarkGray,
+            tint = MaterialTheme.colorScheme.onSurfaceVariant,
         )
         Text(
             modifier = Modifier

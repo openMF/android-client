@@ -19,11 +19,11 @@ import com.mifos.core.model.objects.surveys.Scorecard
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onCompletion
+import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
-import rx.Subscriber
-import rx.android.schedulers.AndroidSchedulers
-import rx.schedulers.Schedulers
 
 /**
  * Created by Aditya Gupta on 13/08/23.
@@ -51,20 +51,11 @@ class SurveySubmitViewModel(
         )
 
     fun submitSurvey(survey: Int, scorecardPayload: Scorecard?) {
-        _surveySubmitUiState.value = SurveySubmitUiState.ShowProgressbar
         repository.submitScore(survey, scorecardPayload)
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribeOn(Schedulers.io())
-            .subscribe(object : Subscriber<Scorecard>() {
-                override fun onCompleted() {}
-                override fun onError(e: Throwable) {
-                    _surveySubmitUiState.value = SurveySubmitUiState.ShowError(e.message.toString())
-                }
-
-                override fun onNext(scorecard: Scorecard) {
-                    _surveySubmitUiState.value =
-                        SurveySubmitUiState.ShowSurveySubmittedSuccessfully(scorecard)
-                }
-            })
+            .stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.Lazily,
+                initialValue = SurveySubmitUiState.Initial
+            )
     }
 }

@@ -38,6 +38,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
@@ -47,11 +48,11 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Size
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mifos.core.designsystem.component.MifosCircularProgress
@@ -65,6 +66,7 @@ import com.mifos.core.model.objects.noncoreobjects.Identifier
 import com.mifos.core.ui.components.MifosEmptyUi
 import com.mifos.core.ui.util.DevicePreview
 import com.mifos.feature.client.clientIdentifiersDialog.ClientIdentifiersDialogScreen
+import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameterProvider
@@ -155,6 +157,9 @@ internal fun ClientIdentifiersScreen(
                 onRefresh = onRefresh,
                 isRefreshing = refreshState,
             ) {
+                val scope = rememberCoroutineScope()
+                val clientIdentifierDeleted = stringResource(Res.string.feature_client_identifier_deleted)
+
                 when (state) {
                     is ClientIdentifiersUiState.ClientIdentifiers -> {
                         when (state.identifiers.isEmpty()) {
@@ -182,11 +187,12 @@ internal fun ClientIdentifiersScreen(
                     }
 
                     is ClientIdentifiersUiState.IdentifierDeletedSuccessfully -> {
-                        Toast.makeText(
-                            LocalContext.current,
-                            stringResource(Res.string.feature_client_identifier_deleted),
-                            Toast.LENGTH_SHORT,
-                        ).show()
+                        scope.launch {
+                            snackbarHostState.showSnackbar(
+                                message = clientIdentifierDeleted,
+                                duration = SnackbarDuration.Short
+                            )
+                        }
                     }
 
 
@@ -221,6 +227,7 @@ private fun ClientIdentifiersItem(
     onDocumentClicked: (Int) -> Unit,
 ) {
     var showMenu by remember { mutableStateOf(false) }
+    val lightGreen = MaterialTheme.colorScheme.tertiaryContainer // Or define a custom one
 
     ElevatedCard(
         modifier = Modifier.padding(8.dp),
@@ -237,8 +244,7 @@ private fun ClientIdentifiersItem(
                     .height(94.dp),
             ) {
                 drawRect(
-                    // TODO use lightGreen color
-                    color = Color.Green,
+                    color = lightGreen,
                     size = Size(size.width, size.height),
                 )
             }

@@ -1,22 +1,11 @@
-/*
- * Copyright 2024 Mifos Initiative
- *
- * This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at https://mozilla.org/MPL/2.0/.
- *
- * See https://github.com/openMF/android-client/blob/master/LICENSE.md
- */
 package com.mifos.feature.client.clientDetails
 
-import android.graphics.Bitmap
-import android.os.Environment
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import coil.request.ImageResult
+import coil3.request.ImageResult
 import com.mifos.core.common.utils.Constants
-import com.mifos.core.common.utils.Resource
+import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.repository.ClientDetailsRepository
 import com.mifos.core.domain.useCases.GetClientDetailsUseCase
 import com.mifos.core.domain.useCases.UploadClientImageUseCase
@@ -24,12 +13,9 @@ import com.mifos.core.network.utils.ImageLoaderUtils
 import com.mifos.room.entities.accounts.loans.LoanAccountEntity
 import com.mifos.room.entities.accounts.savings.SavingsAccountEntity
 import com.mifos.room.entities.client.ClientEntity
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import java.io.File
-import java.io.FileOutputStream
 
 /**
  * Created by Aditya Gupta on 06/08/23.
@@ -60,20 +46,20 @@ class ClientDetailsViewModel(
     private val _showLoading = MutableStateFlow(true)
     val showLoading = _showLoading.asStateFlow()
 
-    private fun uploadImage(id: Int, pngFile: File) = viewModelScope.launch(Dispatchers.IO) {
+    private fun uploadImage(id: Int, pngFile: File) = viewModelScope.launch {
         uploadClientImageUseCase(id, pngFile).collect { result ->
             when (result) {
-                is Resource.Error -> {
+                is DataState.Error -> {
                     _clientDetailsUiState.value =
-                        ClientDetailsUiState.ShowError(result.message ?: "Unexpected error")
+                        ClientDetailsUiState.ShowError(result.message)
                     _showLoading.value = false
                 }
 
-                is Resource.Loading -> {
+                is DataState.Loading -> {
                     _showLoading.value = true
                 }
 
-                is Resource.Success -> {
+                is DataState.Success -> {
                     _clientDetailsUiState.value = ClientDetailsUiState.ShowUploadImageSuccessfully(
                         result.data,
                         pngFile.absolutePath,
@@ -84,7 +70,7 @@ class ClientDetailsViewModel(
         }
     }
 
-    fun deleteClientImage(clientId: Int) = viewModelScope.launch(Dispatchers.IO) {
+    fun deleteClientImage(clientId: Int) = viewModelScope.launch {
         _showLoading.value = true
         try {
             clientDetailsRepo.deleteClientImage(clientId)
@@ -99,18 +85,18 @@ class ClientDetailsViewModel(
         }
     }
 
-    fun loadClientDetailsAndClientAccounts(clientId: Int) = viewModelScope.launch(Dispatchers.IO) {
+    fun loadClientDetailsAndClientAccounts(clientId: Int) = viewModelScope.launch {
         getClientDetailsUseCase(clientId).collect { result ->
             when (result) {
-                is Resource.Error -> {
+                is DataState.Error -> {
                     _clientDetailsUiState.value =
-                        ClientDetailsUiState.ShowError(result.message.toString())
+                        ClientDetailsUiState.ShowError(result.message)
                     _showLoading.value = false
                 }
 
-                is Resource.Loading -> _showLoading.value = true
+                is DataState.Loading -> _showLoading.value = true
 
-                is Resource.Success -> {
+                is DataState.Success -> {
                     _client.value = result.data?.client
                     loanAccounts.value = result.data?.clientAccounts?.loanAccounts
                     _savingsAccounts.value = result.data?.clientAccounts?.savingsAccounts

@@ -21,7 +21,7 @@ sealed class ClientIdentifiersUiState {
 
     data class Error(val message: StringResource) : ClientIdentifiersUiState()
 
-    data class ClientIdentifiers(val identifiers: List<Identifier>) : ClientIdentifiersUiState()
+    data class ClientIdentifiers(val identifiers: List<Identifier>?) : ClientIdentifiersUiState()
 
     data object IdentifierDeletedSuccessfully : ClientIdentifiersUiState()
 }

@@ -9,7 +9,11 @@
  */
 package com.mifos.feature.client.clientSurveySubmit
 
-import android.widget.Toast
+import androidclient.feature.client.generated.resources.Res
+import androidclient.feature.client.generated.resources.feature_client_failed_to_submit_survey
+import androidclient.feature.client.generated.resources.feature_client_scorecard_created_successfully
+import androidclient.feature.client.generated.resources.feature_client_submit_survey
+import androidclient.feature.client.generated.resources.feature_client_survey_successfully_submitted
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -19,26 +23,26 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.tooling.preview.PreviewParameter
-import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.model.objects.surveys.Scorecard
-import com.mifos.feature.client.R
+import com.mifos.core.ui.util.DevicePreview
+import org.jetbrains.compose.resources.stringResource
+import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
+import org.jetbrains.compose.ui.tooling.preview.PreviewParameterProvider
 
 @Composable
 internal fun SurveySubmitScreen(
@@ -46,7 +50,7 @@ internal fun SurveySubmitScreen(
     submitSurvey: () -> Unit,
     noOfQuestions: Int = 0,
 ) {
-    val context = LocalContext.current
+    val snackbarHostState = remember { SnackbarHostState() }
 
     when (uiState) {
         SurveySubmitUiState.Initial -> {
@@ -60,38 +64,38 @@ internal fun SurveySubmitScreen(
         is SurveySubmitUiState.ShowSurveySubmittedSuccessfully -> {
             SurveySubmitContent(
                 showButton = false,
-                displayText = stringResource(id = R.string.feature_client_survey_successfully_submitted),
+                displayText = stringResource(Res.string.feature_client_survey_successfully_submitted),
                 submitSurvey = submitSurvey,
             )
 
+            val scorecardCreatedSuccess = stringResource(Res.string.feature_client_scorecard_created_successfully)
+
             LaunchedEffect(key1 = true) {
-                Toast.makeText(
-                    context,
-                    context.getString(R.string.feature_client_scorecard_created_successfully),
-                    Toast.LENGTH_LONG,
-                ).show()
+                snackbarHostState.showSnackbar(
+                    message = scorecardCreatedSuccess,
+                    duration = SnackbarDuration.Long
+                )
             }
         }
 
         is SurveySubmitUiState.ShowError -> {
             SurveySubmitContent(
                 showButton = false,
-                displayText = stringResource(id = R.string.feature_client_failed_to_submit_survey),
+                displayText = stringResource(Res.string.feature_client_failed_to_submit_survey),
                 submitSurvey = submitSurvey,
             )
             LaunchedEffect(key1 = true) {
-                Toast.makeText(
-                    context,
-                    uiState.message,
-                    Toast.LENGTH_LONG,
-                ).show()
+                snackbarHostState.showSnackbar(
+                    message = uiState.message,
+                    duration = SnackbarDuration.Long
+                )
             }
         }
 
         SurveySubmitUiState.ShowProgressbar -> {
             SurveySubmitContent(
                 showButton = false,
-                displayText = stringResource(id = R.string.feature_client_survey_successfully_submitted),
+                displayText = stringResource(Res.string.feature_client_survey_successfully_submitted),
                 submitSurvey = submitSurvey,
             )
             MifosCircularProgress()
@@ -117,13 +121,13 @@ internal fun SurveySubmitContent(
             Card(
                 modifier = Modifier.padding(horizontal = 40.dp),
                 shape = RoundedCornerShape(4.dp),
-//                colors = CardDefaults.cardColors(containerColor = BluePrimary),
+                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primaryContainer),
             ) {
                 Card(
                     modifier = Modifier
                         .padding(top = 4.dp),
                     shape = RoundedCornerShape(4.dp),
-                    colors = CardDefaults.cardColors(containerColor = Color.White),
+                    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
                 ) {
                     Box(
                         modifier = Modifier
@@ -133,9 +137,7 @@ internal fun SurveySubmitContent(
                     ) {
                         Text(
                             text = displayText,
-                            fontSize = 20.sp,
-                            fontWeight = FontWeight.Normal,
-                            color = Color.Black,
+                            style = MaterialTheme.typography.bodyMedium,
                         )
                     }
                 }
@@ -152,14 +154,14 @@ internal fun SurveySubmitContent(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = 40.dp),
-//                    colors = ButtonDefaults.buttonColors(
-//                        containerColor = BluePrimary,
-//                        contentColor = White,
-//                        disabledContainerColor = Color.DarkGray,
-//                        disabledContentColor = White,
-//                    ),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = MaterialTheme.colorScheme.primary,
+                        contentColor = MaterialTheme.colorScheme.onPrimary,
+                        disabledContainerColor = MaterialTheme.colorScheme.surfaceVariant,
+                        disabledContentColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                    )
                 ) {
-                    Text(text = stringResource(id = R.string.feature_client_submit_survey))
+                    Text(text = stringResource(Res.string.feature_client_submit_survey))
                 }
             }
         }
@@ -178,7 +180,7 @@ private class SurveySubmitPreviewProvider : PreviewParameterProvider<SurveySubmi
 }
 
 @Composable
-@Preview(showSystemUi = true)
+@DevicePreview
 private fun PreviewSurveyListScreen(
     @PreviewParameter(SurveySubmitPreviewProvider::class) surveySubmitUiState: SurveySubmitUiState,
 ) {

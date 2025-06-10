@@ -9,15 +9,15 @@
  */
 package com.mifos.feature.client.clientIdentifiersDialog
 
+import androidclient.feature.client.generated.resources.Res
+import androidclient.feature.client.generated.resources.feature_client_failed_to_create_identifier
+import androidclient.feature.client.generated.resources.feature_client_failed_to_load_identifiers
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.mifos.core.common.utils.Resource
+import com.mifos.core.common.utils.DataState
 import com.mifos.core.domain.useCases.CreateClientIdentifierUseCase
 import com.mifos.core.domain.useCases.GetClientIdentifierTemplateUseCase
 import com.mifos.core.model.objects.noncoreobjects.IdentifierPayload
-import com.mifos.core.model.objects.noncoreobjects.IdentifierTemplate
-import com.mifos.feature.client.R
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
@@ -31,39 +31,39 @@ class ClientIdentifiersDialogViewModel(
         MutableStateFlow<ClientIdentifierDialogUiState>(ClientIdentifierDialogUiState.Loading)
     val clientIdentifierDialogUiState = _clientIdentifierDialogUiState.asStateFlow()
 
-    fun loadClientIdentifierTemplate(clientId: Int) = viewModelScope.launch(Dispatchers.IO) {
+    fun loadClientIdentifierTemplate(clientId: Int) = viewModelScope.launch {
         getClientIdentifierTemplateUseCase(clientId).collect { result ->
             when (result) {
-                is Resource.Error ->
+                is DataState.Error ->
                     _clientIdentifierDialogUiState.value =
-                        ClientIdentifierDialogUiState.Error(R.string.feature_client_failed_to_load_identifiers)
+                        ClientIdentifierDialogUiState.Error(Res.string.feature_client_failed_to_load_identifiers)
 
-                is Resource.Loading ->
+                is DataState.Loading ->
                     _clientIdentifierDialogUiState.value =
                         ClientIdentifierDialogUiState.Loading
 
-                is Resource.Success ->
+                is DataState.Success ->
                     _clientIdentifierDialogUiState.value =
                         ClientIdentifierDialogUiState.ClientIdentifierTemplate(
-                            result.data ?: IdentifierTemplate(),
+                            result.data,
                         )
             }
         }
     }
 
     fun createClientIdentifier(clientId: Int, identifierPayload: IdentifierPayload) =
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch {
             createClientIdentifierUseCase(clientId, identifierPayload).collect { result ->
                 when (result) {
-                    is Resource.Error ->
+                    is DataState.Error ->
                         _clientIdentifierDialogUiState.value =
-                            ClientIdentifierDialogUiState.Error(R.string.feature_client_failed_to_create_identifier)
+                            ClientIdentifierDialogUiState.Error(Res.string.feature_client_failed_to_create_identifier)
 
-                    is Resource.Loading ->
+                    is DataState.Loading ->
                         _clientIdentifierDialogUiState.value =
                             ClientIdentifierDialogUiState.Loading
 
-                    is Resource.Success ->
+                    is DataState.Success ->
                         _clientIdentifierDialogUiState.value =
                             ClientIdentifierDialogUiState.IdentifierCreatedSuccessfully
                 }

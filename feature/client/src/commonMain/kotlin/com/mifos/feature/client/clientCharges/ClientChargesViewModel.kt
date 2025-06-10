@@ -14,7 +14,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mifos.core.common.utils.Constants
 import com.mifos.core.data.repository.ClientChargeRepository
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
@@ -40,7 +39,7 @@ class ClientChargesViewModel(
         MutableStateFlow<ClientChargeUiState>(ClientChargeUiState.Loading)
     val clientChargesUiState = _clientChargesUiState.asStateFlow()
 
-    fun loadCharges(clientId: Int) = viewModelScope.launch(Dispatchers.IO) {
+    fun loadCharges(clientId: Int) = viewModelScope.launch {
         val response = repository.getClientCharges(clientId)
         _clientChargesUiState.value = ClientChargeUiState.ChargesList(response)
     }

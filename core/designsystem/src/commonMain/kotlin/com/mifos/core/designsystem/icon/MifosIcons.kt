@@ -191,4 +191,5 @@ object MifosIcons {
     val Groups = Icons.Outlined.Groups
     val Numbers = Icons.Outlined.Numbers
     val HomeWork = Icons.Outlined.HomeWork
+    val AddFilled = Icons.Filled.Add
 }

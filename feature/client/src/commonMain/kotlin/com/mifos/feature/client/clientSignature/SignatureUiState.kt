@@ -9,6 +9,8 @@
  */
 package com.mifos.feature.client.clientSignature
 
+import org.jetbrains.compose.resources.StringResource
+
 /**
  * Created by Aditya Gupta on 08/08/23.
  */
@@ -18,7 +20,7 @@ sealed class SignatureUiState {
 
     data object Loading : SignatureUiState()
 
-    data class Error(val message: Int) : SignatureUiState()
+    data class Error(val message: StringResource) : SignatureUiState()
 
     data object SignatureUploadedSuccessfully : SignatureUiState()
 }

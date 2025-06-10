@@ -17,16 +17,12 @@ import androidclient.feature.client.generated.resources.feature_client_charge_na
 import androidclient.feature.client.generated.resources.feature_client_charges
 import androidclient.feature.client.generated.resources.feature_client_client_id
 import androidclient.feature.client.generated.resources.feature_client_due_date
-import androidclient.feature.client.generated.resources.feature_client_failed_to_load_client_charges
-import androidclient.feature.client.generated.resources.feature_client_no_more_charges_available
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -36,6 +32,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -50,7 +47,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mifos.core.designsystem.component.MifosCircularProgress
-import com.mifos.core.designsystem.component.MifosPagingAppendProgress
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.icon.MifosIcons
@@ -62,7 +58,6 @@ import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameterProvider
 import org.koin.compose.viewmodel.koinViewModel
-
 
 @Composable
 internal fun ClientChargesScreen(
@@ -128,14 +123,19 @@ internal fun ClientChargesScreen(
         snackbarHostState = snackbarHostState,
     ) { paddingValues ->
         Column(modifier = Modifier.padding(paddingValues)) {
-            Box(modifier = Modifier.pullRefresh(pullRefreshState)) {
+            PullToRefreshBox(
+                state = pullRefreshState,
+                onRefresh = onRefresh,
+                isRefreshing = refreshState,
+            ) {
                 when (state) {
                     is ClientChargeUiState.ChargesList -> ClientChargeContent(
                         chargesPage = state.chargesPage.collectAsLazyPagingItems(),
                         onRetry = onRetry,
                     )
 
-                    is ClientChargeUiState.Error -> MifosSweetError(message = stringResource(state.message)) {
+                    is ClientChargeUiState.Error ->
+                        MifosSweetError(message = stringResource(state.message)) {
                         onRetry()
                     }
 
@@ -147,69 +147,22 @@ internal fun ClientChargesScreen(
 }
 
 @Composable
-private fun ClientChargeContent(
+expect fun ClientChargeContent(
     chargesPage: LazyPagingItems<ChargesEntity>,
     onRetry: () -> Unit,
-) {
-    when (chargesPage.loadState.refresh) {
-        is LoadState.Error -> {
-            MifosSweetError(message = stringResource(Res.string.feature_client_failed_to_load_client_charges)) {
-                onRetry()
-            }
-        }
-
-        is LoadState.Loading -> MifosCircularProgress()
-
-        is LoadState.NotLoading -> Unit
-    }
-
-    LazyColumn {
-        items(chargesPage.itemCount) { index ->
-            chargesPage[index]?.let { ChargesItems(it) }
-        }
-
-        when (chargesPage.loadState.append) {
-            is LoadState.Error -> {
-            }
-
-            is LoadState.Loading -> {
-                item {
-                    MifosPagingAppendProgress()
-                }
-            }
-
-            is LoadState.NotLoading -> Unit
-        }
-        when (chargesPage.loadState.append.endOfPaginationReached) {
-            true -> {
-                item {
-                    Text(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(6.dp),
-                        text = stringResource(Res.string.feature_client_no_more_charges_available),
-                        style = MaterialTheme.typography.bodyMedium,
-                        textAlign = TextAlign.Center,
-                    )
-                }
-            }
-
-            false -> Unit
-        }
-    }
-}
+)
 
 @Composable
-private fun ChargesItems(charges: ChargesEntity) {
+fun ChargesItems(charges: ChargesEntity) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .padding(8.dp),
         shape = RoundedCornerShape(0.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
-//        colors = CardDefaults.cardColors(
-//            containerColor = BlueSecondary,
-//        ),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.secondary,
+        ),
     ) {
         Spacer(modifier = Modifier.height(8.dp))
         MifosCenterDetailsText(
@@ -256,14 +209,8 @@ private fun MifosCenterDetailsText(field: String, value: String) {
     }
 }
 
-private class ClientChargesScreenUiStateProvider : PreviewParameterProvider<ClientChargeUiState> {
-
+expect class ClientChargesScreenUiStateProvider : PreviewParameterProvider<ClientChargeUiState> {
     override val values: Sequence<ClientChargeUiState>
-        get() = sequenceOf(
-            ClientChargeUiState.Loading,
-            ClientChargeUiState.Error(Res.string.feature_client_failed_to_load_client_charges),
-            ClientChargeUiState.ChargesList(flowOf(PagingData.from(sampleClientCharge))),
-        )
 }
 
 @DevicePreview

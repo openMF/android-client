@@ -9,11 +9,14 @@
  */
 package com.mifos.feature.client.clientSurveyList
 
+import androidclient.feature.client.generated.resources.Res
+import androidclient.feature.client.generated.resources.feature_client_failed_to_fetch_datatable
+import androidclient.feature.client.generated.resources.feature_client_failed_to_fetch_surveys_list
+import androidclient.feature.client.generated.resources.feature_client_failed_to_load_db_question_data
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mifos.core.data.repository.SurveyListRepository
 import com.mifos.core.datastore.UserPreferencesRepository
-import com.mifos.feature.client.R
 import com.mifos.room.entities.survey.QuestionDatasEntity
 import com.mifos.room.entities.survey.SurveyEntity
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -44,7 +47,7 @@ class SurveyListViewModel(
             repository.allSurvey()
                 .catch {
                     _surveyListUiState.value =
-                        SurveyListUiState.ShowFetchingError(R.string.feature_client_failed_to_fetch_surveys_list)
+                        SurveyListUiState.ShowFetchingError(Res.string.feature_client_failed_to_fetch_surveys_list)
                 }
                 .collect { surveys ->
                     mSyncSurveyList = surveys
@@ -60,7 +63,7 @@ class SurveyListViewModel(
             repository.databaseSurveys()
                 .catch {
                     _surveyListUiState.value =
-                        SurveyListUiState.ShowFetchingError(R.string.feature_client_failed_to_fetch_datatable)
+                        SurveyListUiState.ShowFetchingError(Res.string.feature_client_failed_to_fetch_datatable)
                 }
                 .collect { surveyList ->
                     mDbSurveyList = surveyList
@@ -83,7 +86,7 @@ class SurveyListViewModel(
             repository.getDatabaseQuestionData(surveyId)
                 .catch {
                     _surveyListUiState.value =
-                        SurveyListUiState.ShowFetchingError(R.string.feature_client_failed_to_load_db_question_data)
+                        SurveyListUiState.ShowFetchingError(Res.string.feature_client_failed_to_load_db_question_data)
                 }.collect { questionDatasList ->
                     for (questionDatas in questionDatasList) {
                         loadDatabaseResponseDatas(questionDatas.id, questionDatas)
@@ -104,7 +107,7 @@ class SurveyListViewModel(
             repository.getDatabaseResponseDatas(questionId)
                 .catch {
                     _surveyListUiState.value =
-                        SurveyListUiState.ShowFetchingError(R.string.feature_client_failed_to_load_db_question_data)
+                        SurveyListUiState.ShowFetchingError(Res.string.feature_client_failed_to_load_db_question_data)
                 }
                 .collect { responseDatas ->
                     val updatedQuestionDatas = questionDatas.copy(responseDatas = responseDatas)

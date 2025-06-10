@@ -10,6 +10,7 @@
 package com.mifos.feature.client.clientIdentifiersDialog
 
 import com.mifos.core.model.objects.noncoreobjects.IdentifierTemplate
+import org.jetbrains.compose.resources.StringResource
 
 /**
  * Created by Aditya Gupta on 16/08/23.
@@ -18,7 +19,7 @@ sealed class ClientIdentifierDialogUiState {
 
     data object Loading : ClientIdentifierDialogUiState()
 
-    data class Error(val message: Int) : ClientIdentifierDialogUiState()
+    data class Error(val message: StringResource) : ClientIdentifierDialogUiState()
 
     data class ClientIdentifierTemplate(val identifierTemplate: IdentifierTemplate) :
         ClientIdentifierDialogUiState()

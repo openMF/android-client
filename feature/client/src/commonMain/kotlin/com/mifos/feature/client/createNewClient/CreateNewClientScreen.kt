@@ -525,9 +525,7 @@ private fun CreateNewClientContent(
         Spacer(modifier = Modifier.height(16.dp))
 
         MifosDatePickerTextField(
-            value = SimpleDateFormat("dd MMMM yyyy", Locale.getDefault()).format(
-                dateOfBirth,
-            ),
+            value = DateHelper.getDateAsStringFromLong(dateOfBirth),
             label = stringResource(Res.string.feature_client_dob),
             openDatePicker = { showDateOfBirthDatepicker = !showDateOfBirthDatepicker },
         )
@@ -628,9 +626,7 @@ private fun CreateNewClientContent(
             Spacer(modifier = Modifier.height(16.dp))
 
             MifosDatePickerTextField(
-                value = SimpleDateFormat("dd MMMM yyyy", Locale.getDefault()).format(
-                    activationDate,
-                ),
+                value = DateHelper.getDateAsStringFromLong(activationDate),
                 label = stringResource(Res.string.feature_client_center_submission_date),
                 openDatePicker = { showActivateDatepicker = !showActivateDatepicker },
             )

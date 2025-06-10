@@ -9,6 +9,11 @@
  */
 package com.mifos.feature.client.clientSurveyList
 
+import androidclient.feature.client.generated.resources.Res
+import androidclient.feature.client.generated.resources.feature_client_failed_to_fetch_datatable
+import androidclient.feature.client.generated.resources.feature_client_no_survey_available_for_client
+import androidclient.feature.client.generated.resources.feature_client_select_one_survey
+import androidclient.feature.client.generated.resources.feature_client_surveys
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -29,14 +34,9 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.tooling.preview.PreviewParameter
-import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -44,9 +44,12 @@ import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.ui.components.MifosEmptyUi
-import com.mifos.feature.client.R
+import com.mifos.core.ui.util.DevicePreview
 import com.mifos.room.entities.survey.SurveyEntity
-import org.koin.androidx.compose.koinViewModel
+import org.jetbrains.compose.resources.stringResource
+import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
+import org.jetbrains.compose.ui.tooling.preview.PreviewParameterProvider
+import org.koin.compose.viewmodel.koinViewModel
 
 /**
  * Created by Pronay Sarker on 03/07/2024 (6:05 AM)
@@ -86,13 +89,13 @@ internal fun SurveyListScreen(
     MifosScaffold(
         snackbarHostState = snackbarHostState,
         onBackPressed = navigateBack,
-        title = stringResource(id = R.string.feature_client_surveys),
+        title = stringResource(Res.string.feature_client_surveys),
     ) {
         Box(modifier = Modifier.padding(it)) {
             when (uiState) {
                 is SurveyListUiState.ShowAllSurvey -> {
                     if (uiState.syncSurvey.isEmpty()) {
-                        MifosEmptyUi(text = stringResource(id = R.string.feature_client_no_survey_available_for_client))
+                        MifosEmptyUi(text = stringResource(Res.string.feature_client_no_survey_available_for_client))
                     } else {
                         SurveyListContent(
                             surveyList = uiState.syncSurvey,
@@ -103,7 +106,7 @@ internal fun SurveyListScreen(
 
                 is SurveyListUiState.ShowFetchingError -> {
                     MifosSweetError(
-                        message = stringResource(id = uiState.message),
+                        message = stringResource(uiState.message),
                         onclick = onRetry,
                     )
                 }
@@ -128,7 +131,7 @@ private fun SurveyListContent(
             modifier = Modifier
                 .padding(horizontal = 18.dp)
                 .padding(top = 16.dp, bottom = 8.dp),
-            text = stringResource(id = R.string.feature_client_select_one_survey),
+            text = stringResource(Res.string.feature_client_select_one_survey),
             style = TextStyle(
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Normal,
@@ -160,7 +163,7 @@ private fun SurveyCardItem(
             .padding(horizontal = 12.dp)
             .padding(bottom = 12.dp),
         colors = CardDefaults.cardColors(
-            containerColor = Color.White,
+            containerColor = MaterialTheme.colorScheme.surface,
         ),
         elevation = CardDefaults.cardElevation(2.dp),
         onClick = onCardClicked,
@@ -173,7 +176,7 @@ private fun SurveyCardItem(
                 modifier = Modifier
                     .fillMaxWidth()
                     .size(5.dp)
-                    .background(color = Color(0xFF4285f6)),
+                    .background(color = MaterialTheme.colorScheme.primary),
             )
 
             Column(
@@ -207,13 +210,13 @@ private class SurveyListPreviewProvider : PreviewParameterProvider<SurveyListUiS
     override val values: Sequence<SurveyListUiState>
         get() = sequenceOf(
             SurveyListUiState.ShowProgressbar,
-            SurveyListUiState.ShowFetchingError(R.string.feature_client_failed_to_fetch_datatable),
+            SurveyListUiState.ShowFetchingError(Res.string.feature_client_failed_to_fetch_datatable),
             SurveyListUiState.ShowAllSurvey(demoSurvey),
         )
 }
 
 @Composable
-@Preview(showSystemUi = true)
+@DevicePreview
 private fun PreviewSurveyListScreen(
     @PreviewParameter(SurveyListPreviewProvider::class) surveyListUiState: SurveyListUiState,
 ) {

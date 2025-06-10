@@ -59,6 +59,12 @@ import androidclient.feature.client.generated.resources.feature_client_due_date
 import androidclient.feature.client.generated.resources.feature_client_failed_to_load_charges
 import androidclient.feature.client.generated.resources.feature_client_message_field_required
 import androidclient.feature.client.generated.resources.feature_client_charge_submit
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import com.mifos.core.common.utils.DateHelper
 import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosDatePickerTextField
 import com.mifos.core.designsystem.component.MifosOutlinedTextField
@@ -73,6 +79,7 @@ import org.jetbrains.compose.ui.tooling.preview.PreviewParameterProvider
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 import kotlinx.datetime.Clock
+import kotlinx.coroutines.launch
 
 @Composable
 internal fun ChargeDialogScreen(
@@ -108,6 +115,11 @@ internal fun ChargeDialogScreen(
     var amountError by rememberSaveable { mutableStateOf(false) }
     val locale by rememberSaveable { mutableStateOf("en") }
     var dueDate by rememberSaveable { mutableLongStateOf(Clock.System.now().toEpochMilliseconds()) }
+
+    val snackbarHostState = remember { SnackbarHostState() }
+    val scope = rememberCoroutineScope()
+    val clientChargeCreatedSuccess = stringResource(Res.string.feature_client_charge_created_successfully)
+
     val dueDatePickerState = rememberDatePickerState(
         initialSelectedDateMillis = dueDate,
         selectableDates = object : SelectableDates {
@@ -225,12 +237,7 @@ internal fun ChargeDialogScreen(
                             )
 
                             MifosDatePickerTextField(
-                                value = SimpleDateFormat(
-                                    "dd MMMM yyyy",
-                                    Locale.getDefault(),
-                                ).format(
-                                    dueDate,
-                                ),
+                                value = DateHelper.getDateAsStringFromLong(dueDate),
                                 label = stringResource(Res.string.feature_client_due_date),
                                 openDatePicker = {
                                     showDatePicker = true
@@ -255,12 +262,7 @@ internal fun ChargeDialogScreen(
                                             this.locale = locale
                                             this.dateFormat = "dd MMMM yyyy"
                                             this.chargeId = chargeId
-                                            this.dueDate = SimpleDateFormat(
-                                                "dd MMMM yyyy",
-                                                Locale.getDefault(),
-                                            ).format(
-                                                dueDate,
-                                            )
+                                            this.dueDate = DateHelper.getDateAsStringFromLong(dueDate)
                                         }
                                         onCreate(payload)
                                     }
@@ -268,11 +270,11 @@ internal fun ChargeDialogScreen(
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .height(50.dp),
-                                colors = ButtonColors(
-                                    containerColor = BluePrimary,
-                                    contentColor = White,
-                                    disabledContainerColor = BluePrimary,
-                                    disabledContentColor = Gray,
+                                colors = ButtonDefaults.buttonColors(
+                                    containerColor = MaterialTheme.colorScheme.primary,
+                                    contentColor = MaterialTheme.colorScheme.onPrimary,
+                                    disabledContainerColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.4f),
+                                    disabledContentColor = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.6f)
                                 ),
                             ) {
                                 Text(text = stringResource(Res.string.feature_client_charge_submit))
@@ -295,11 +297,12 @@ internal fun ChargeDialogScreen(
                     )
 
                     is ChargeDialogUiState.ChargesCreatedSuccessfully -> {
-                        Toast.makeText(
-                            LocalContext.current,
-                            stringResource(Res.string.feature_client_charge_created_successfully),
-                            Toast.LENGTH_SHORT,
-                        ).show()
+                        scope.launch {
+                            snackbarHostState.showSnackbar(
+                                message = clientChargeCreatedSuccess,
+                                duration = SnackbarDuration.Short
+                            )
+                        }
                         onCreated()
                     }
                 }

@@ -9,8 +9,10 @@
  */
 package com.mifos.feature.client.clientSurveyQuestion
 
-import android.annotation.SuppressLint
-import android.widget.Toast
+import androidclient.feature.client.generated.resources.Res
+import androidclient.feature.client.generated.resources.feature_client_next
+import androidclient.feature.client.generated.resources.feature_client_scorecard_created_successfully
+import androidclient.feature.client.generated.resources.feature_client_survey
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -27,13 +29,18 @@ import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.RadioButton
+import androidx.compose.material3.RadioButtonDefaults
+import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -41,42 +48,35 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontStyle
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.model.objects.surveys.Scorecard
 import com.mifos.core.model.objects.surveys.ScorecardValues
-import com.mifos.feature.client.R
+import com.mifos.core.ui.util.DevicePreview
 import com.mifos.feature.client.clientSurveySubmit.SurveySubmitScreen
 import com.mifos.feature.client.clientSurveySubmit.SurveySubmitUiState
 import com.mifos.feature.client.clientSurveySubmit.SurveySubmitViewModel
 import com.mifos.room.entities.survey.SurveyEntity
-import kotlinx.serialization.encodeToString
+import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
-import org.koin.androidx.compose.koinViewModel
+import org.jetbrains.compose.resources.stringResource
+import org.koin.compose.viewmodel.koinViewModel
 
-@SuppressLint("MutableCollectionMutableState")
 @Composable
 internal fun SurveyQuestionScreen(
     navigateBack: () -> Unit,
     survey: SurveyEntity?,
     viewModel: SurveySubmitViewModel = koinViewModel(),
 ) {
-    val context = LocalContext.current
     val uiState by viewModel.surveySubmitUiState.collectAsStateWithLifecycle()
     val clientId by viewModel.clientId.collectAsStateWithLifecycle()
     val userId by viewModel.userId.collectAsStateWithLifecycle()
@@ -85,6 +85,10 @@ internal fun SurveyQuestionScreen(
     }
     var currentQuestionNumber by rememberSaveable { mutableIntStateOf(0) }
     var showSubmitScreen by rememberSaveable { mutableStateOf(false) }
+
+    val scorecardCreatedSuccess = stringResource(Res.string.feature_client_scorecard_created_successfully)
+    val snackbarHostState = remember { SnackbarHostState() }
+    val scope = rememberCoroutineScope()
 
     if (survey != null) {
         val (questionData, optionsData) = processSurveyData(survey)
@@ -124,11 +128,12 @@ internal fun SurveyQuestionScreen(
                         ),
                     )
                 } else {
-                    Toast.makeText(
-                        context,
-                        context.getString(R.string.feature_client_please_attempt_at_least_one_question),
-                        Toast.LENGTH_SHORT,
-                    ).show()
+                    scope.launch {
+                        snackbarHostState.showSnackbar(
+                            message = scorecardCreatedSuccess,
+                            duration = SnackbarDuration.Short,
+                        )
+                    }
                 }
             },
         )
@@ -170,9 +175,8 @@ internal fun SurveyQuestionScreen(
         }
     }
     val scoreCardData = currentScoreCardData.toMutableList()
-    val snackbarHostState = remember {
-        SnackbarHostState()
-    }
+    val snackbarHostState = remember { SnackbarHostState() }
+
     val pagerState = rememberPagerState(pageCount = { 3 })
     LaunchedEffect(questionNumber) {
         pagerState.scrollToPage(questionNumber)
@@ -231,13 +235,12 @@ private fun SurveyQuestionContent(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-//                .background(BluePrimary)
+                .background(MaterialTheme.colorScheme.primary)
                 .padding(24.dp),
         ) {
             Text(
                 text = questionData,
-                color = Color.White,
-                fontSize = 20.sp,
+                style = MaterialTheme.typography.bodyMedium,
                 modifier = Modifier
                     .align(Alignment.Start),
             )
@@ -265,14 +268,14 @@ private fun SurveyQuestionContent(
             modifier = Modifier
                 .width(160.dp)
                 .align(alignment = Alignment.CenterHorizontally),
-//            colors = ButtonDefaults.buttonColors(
-//                containerColor = BluePrimary,
-//                contentColor = White,
-//                disabledContainerColor = Color.DarkGray,
-//                disabledContentColor = White,
-//            ),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = MaterialTheme.colorScheme.primary,
+                contentColor = MaterialTheme.colorScheme.onPrimary,
+                disabledContainerColor = MaterialTheme.colorScheme.surfaceVariant,
+                disabledContentColor = MaterialTheme.colorScheme.onSurfaceVariant,
+            ),
         ) {
-            Text(text = stringResource(id = R.string.feature_client_next))
+            Text(text = stringResource(Res.string.feature_client_next))
         }
     }
 }
@@ -287,7 +290,7 @@ private fun RadioGroup(options: List<String>, selectedOptionIndex: Int, onOption
                 RadioButton(
                     selected = index == selectedOptionIndex,
                     onClick = { onOptionSelected(index) },
-//                    colors = RadioButtonDefaults.colors(BluePrimary),
+                    colors = RadioButtonDefaults.colors(MaterialTheme.colorScheme.primary),
                 )
                 Text(
                     text = option,
@@ -306,7 +309,7 @@ private fun SurveyQuestionTopBar(
     showSubmitScreen: Boolean,
 ) {
     TopAppBar(
-//        colors = TopAppBarDefaults.mediumTopAppBarColors(containerColor = White),
+        colors = TopAppBarDefaults.mediumTopAppBarColors(containerColor = MaterialTheme.colorScheme.surface),
         navigationIcon = {
             IconButton(
                 onClick = { onBackPressed() },
@@ -314,20 +317,15 @@ private fun SurveyQuestionTopBar(
                 Icon(
                     imageVector = MifosIcons.ArrowBack,
                     contentDescription = null,
-                    tint = Color.Black,
+                    tint = MaterialTheme.colorScheme.onBackground,
                 )
             }
         },
         title = {
             Column {
                 Text(
-                    text = stringResource(id = R.string.feature_client_survey),
-                    style = TextStyle(
-                        fontSize = 20.sp,
-                        fontWeight = FontWeight.Medium,
-                        fontStyle = FontStyle.Normal,
-                    ),
-                    color = Color.Black,
+                    text = stringResource(Res.string.feature_client_survey),
+                    style = MaterialTheme.typography.titleMedium,
                     textAlign = TextAlign.Start,
                 )
                 Spacer(modifier = Modifier.height(4.dp))
@@ -335,10 +333,7 @@ private fun SurveyQuestionTopBar(
                 if (!showSubmitScreen) {
                     Text(
                         text = title,
-                        style = TextStyle(
-                            fontSize = 16.sp,
-                        ),
-                        color = Color.Black,
+                        style = MaterialTheme.typography.bodyLarge,
                         textAlign = TextAlign.Start,
                     )
                 }
@@ -348,7 +343,7 @@ private fun SurveyQuestionTopBar(
 }
 
 @Composable
-@Preview(showSystemUi = true)
+@DevicePreview
 private fun PreviewSurveyQuestionScreen() {
     SurveyQuestionScreen(
         uiState = SurveySubmitUiState.Initial,

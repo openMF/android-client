@@ -9,11 +9,12 @@
  */
 package com.mifos.feature.client.clientList
 
+import androidclient.feature.client.generated.resources.Res
+import androidclient.feature.client.generated.resources.feature_client_failed_to_load_client
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mifos.core.data.repository.ClientListRepository
 import com.mifos.core.datastore.UserPreferencesRepository
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
@@ -57,7 +58,7 @@ class ClientListViewModel(
         }
     }
 
-    private fun loadClientsFromApi() = viewModelScope.launch(Dispatchers.IO) {
+    private fun loadClientsFromApi() = viewModelScope.launch {
         val response = repository.getAllClients()
         _clientListUiState.value = ClientListUiState.ClientListApi(response)
     }
@@ -67,9 +68,9 @@ class ClientListViewModel(
             repository.allDatabaseClients()
                 .catch {
                     _clientListUiState.value =
-                        ClientListUiState.Error("Failed to Fetch Clients")
-                }.collect { clients ->
-                    _clientListUiState.value = ClientListUiState.ClientListDb(clients.pageItems)
+                        ClientListUiState.Error(Res.string.feature_client_failed_to_load_client)
+                }.collect {
+                    _clientListUiState.value = ClientListUiState.ClientListDb(it.data?.pageItems)
                 }
         }
     }
