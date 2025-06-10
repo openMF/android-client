@@ -14,14 +14,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import cmp.navigation.AppState
-import com.mifos.core.common.utils.Constants
 import com.mifos.feature.about.navigation.aboutNavGraph
 import com.mifos.feature.activate.navigation.activateScreen
 import com.mifos.feature.activate.navigation.navigateToActivateScreen
 import com.mifos.feature.center.navigation.centerNavGraph
+import com.mifos.feature.center.navigation.navigateCreateCenterScreenRoute
 import com.mifos.feature.checker.inbox.task.navigation.checkerInboxTaskNavGraph
 import com.mifos.feature.dataTable.navigation.dataTableNavGraph
-import com.mifos.feature.dataTable.navigation.navigateToDataTable
 import com.mifos.feature.individualCollectionSheet.navigation.individualCollectionSheetNavGraph
 import com.mifos.feature.note.navigation.noteNavGraph
 import com.mifos.feature.pathTracking.navigation.pathTrackingNavGraph
@@ -53,12 +52,7 @@ internal fun FeatureNavHost(
         searchNavGraph(
             paddingValues = padding,
             onCreateClient = { println("Create Client") },
-            onCreateCenter = {
-                appState.navController.navigateToDataTable(
-                    Constants.DATA_TABLE_NAME_CLIENT,
-                    1,
-                )
-            },
+            onCreateCenter = appState.navController::navigateCreateCenterScreenRoute,
             onCreateGroup = { },
             onClient = { id -> println("Client clicked: $id") },
             onCenter = { id -> println("Center clicked: $id") },

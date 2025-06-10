@@ -64,6 +64,7 @@ import com.mifos.room.entities.client.ClientPayloadEntity
 import com.mifos.room.entities.noncore.DataTableEntity
 import kotlinx.datetime.Clock
 import org.jetbrains.compose.resources.stringResource
+import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -322,17 +323,17 @@ fun TableColumnHeader(
     }
 }
 
-// @Preview(showSystemUi = true)
-// @Composable
-// fun DataTableListScreenPreview() {
-//    DataTableListScreen(
-//        uiState = DataTableListUiState.Success(),
-//        dataTableList = listOf(),
-//        onBackPressed = { },
-//        clientCreated = { },
-//        onSaveClicked = { },
-//    )
-// }
+@Preview
+@Composable
+fun DataTableListScreenPreview() {
+    DataTableListScreen(
+        uiState = DataTableListUiState.Success(),
+        dataTableList = listOf(),
+        onBackPressed = { },
+        clientCreated = { },
+        onSaveClicked = { },
+    )
+}
 
 // private fun createFormWidgetList(): MutableList<List<FormWidget>> {
 //    return dataTables?.map { createForm(it) }?.toMutableList() ?: mutableListOf()

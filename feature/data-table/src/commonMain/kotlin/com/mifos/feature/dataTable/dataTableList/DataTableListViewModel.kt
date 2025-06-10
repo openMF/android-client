@@ -32,6 +32,7 @@ import com.mifos.room.entities.noncore.DataTablePayload
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
@@ -76,10 +77,10 @@ class DataTableListViewModel(
 
     private val _dataTableListUiState: MutableStateFlow<DataTableListUiState> =
         MutableStateFlow(DataTableListUiState.Loading)
-    val dataTableListUiState: StateFlow<DataTableListUiState> = _dataTableListUiState
+    val dataTableListUiState: StateFlow<DataTableListUiState> = _dataTableListUiState.asStateFlow()
 
     private val _dataTableList: MutableStateFlow<List<DataTableEntity>?> = MutableStateFlow(null)
-    val dataTableList: StateFlow<List<DataTableEntity>?> = _dataTableList
+    val dataTableList: StateFlow<List<DataTableEntity>?> = _dataTableList.asStateFlow()
 
     private var requestType: Int = 0
     private var dataTablePayloadElements: ArrayList<DataTablePayload>? = null
@@ -206,8 +207,8 @@ class DataTableListViewModel(
             when (widget) {
                 is FormWidgetModel -> {
                     payload[widget.propertyName] = when (widget.returnType) {
-                        SCHEMA_KEY_INT -> widget.value.toIntOrNull() ?: 0
-                        SCHEMA_KEY_DECIMAL -> widget.value.toDoubleOrNull() ?: 0.0
+                        BaseFormWidget.SCHEMA_KEY_INT -> widget.value.toIntOrNull() ?: 0
+                        BaseFormWidget.SCHEMA_KEY_DECIMAL -> widget.value.toDoubleOrNull() ?: 0.0
                         else -> widget.value
                     }
                 }
@@ -219,10 +220,5 @@ class DataTableListViewModel(
         }
 
         return payload
-    }
-
-    companion object {
-        const val SCHEMA_KEY_INT = "INTEGER"
-        const val SCHEMA_KEY_DECIMAL = "DECIMAL"
     }
 }

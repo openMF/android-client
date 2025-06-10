@@ -38,7 +38,7 @@ class DataTableViewModel(
 
     private val _dataTableUiState =
         MutableStateFlow<DataTableUiState>(DataTableUiState.ShowProgressbar)
-    val dataTableUiState: StateFlow<DataTableUiState> get() = _dataTableUiState
+    val dataTableUiState: StateFlow<DataTableUiState> get() = _dataTableUiState.asStateFlow()
 
     private val _isRefreshing = MutableStateFlow(false)
     val isRefreshing: StateFlow<Boolean> get() = _isRefreshing.asStateFlow()

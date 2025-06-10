@@ -77,6 +77,8 @@ import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.jsonArray
 import kotlinx.serialization.json.jsonObject
 import org.jetbrains.compose.resources.stringResource
+import org.jetbrains.compose.ui.tooling.preview.Preview
+import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameterProvider
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -407,19 +409,19 @@ fun SelectOptionsDialog(
     }
 }
 
-// @Preview(showBackground = true)
-// @Composable
-// private fun DataTableDataScreenPreview(
-//    @PreviewParameter(DataTableDataUiStateProvider::class) state: DataTableDataUiState,
-// ) {
-//    DataTableDataScreen(
-//        dataTable = DataTableEntity(),
-//        entityId = 1,
-//        state = state,
-//        onBackPressed = {},
-//        onRetry = {},
-//        onRefresh = {},
-//        refreshState = false,
-//        deleteDataTable = {},
-//    )
-// }
+@Preview
+@Composable
+private fun DataTableDataScreenPreview(
+    @PreviewParameter(DataTableDataUiStateProvider::class) state: DataTableDataUiState,
+) {
+    DataTableDataScreen(
+        dataTable = DataTableEntity(),
+        entityId = 1,
+        state = state,
+        onBackPressed = {},
+        onRetry = {},
+        onRefresh = {},
+        refreshState = false,
+        deleteDataTable = {},
+    )
+}

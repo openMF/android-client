@@ -42,6 +42,9 @@ import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.ui.components.MifosAlertDialog
 import com.mifos.room.entities.noncore.DataTableEntity
 import org.jetbrains.compose.resources.stringResource
+import org.jetbrains.compose.ui.tooling.preview.Preview
+import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
+import org.jetbrains.compose.ui.tooling.preview.PreviewParameterProvider
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -170,6 +173,32 @@ fun DataTableRowDialogContent(
     }
 }
 
+class DataTableRowDialogUiStateProvider : PreviewParameterProvider<DataTableRowDialogUiState> {
+
+    override val values: Sequence<DataTableRowDialogUiState>
+        get() = sequenceOf(
+            DataTableRowDialogUiState.Initial,
+            DataTableRowDialogUiState.Loading,
+            DataTableRowDialogUiState.Error("Something went wrong"),
+            DataTableRowDialogUiState.DataTableEntrySuccessfully,
+        )
+}
+
+@Preview
+@Composable
+private fun DataTableRowDialogScreenPreview(
+    @PreviewParameter(DataTableRowDialogUiStateProvider::class) state: DataTableRowDialogUiState,
+) {
+    DataTableRowDialogScreen(
+        dataTable = DataTableEntity(),
+        state = state,
+        onDismiss = {},
+        onSuccess = {},
+        onRetry = {},
+        onCreate = {},
+    )
+}
+
 // private fun createForm(table: DataTable?) {
 //    val formWidgets: MutableList<FormWidget> = ArrayList()
 //    if (table != null) {
@@ -259,28 +288,3 @@ fun DataTableRowDialogContent(
 //    return payload
 // }
 //
-// class DataTableRowDialogUiStateProvider : PreviewParameterProvider<DataTableRowDialogUiState> {
-//
-//    override val values: Sequence<DataTableRowDialogUiState>
-//        get() = sequenceOf(
-//            DataTableRowDialogUiState.Initial,
-//            DataTableRowDialogUiState.Loading,
-//            DataTableRowDialogUiState.Error(R.string.feature_data_table_failed_to_add_data_table),
-//            DataTableRowDialogUiState.DataTableEntrySuccessfully,
-//        )
-// }
-//
-// @Preview(showBackground = true)
-// @Composable
-// private fun DataTableRowDialogScreenPreview(
-//    @PreviewParameter(DataTableRowDialogUiStateProvider::class) state: DataTableRowDialogUiState,
-// ) {
-//    DataTableRowDialogScreen(
-//        dataTable = DataTableEntity(),
-//        state = state,
-//        onDismiss = {},
-//        onSuccess = {},
-//        onRetry = {},
-//        onCreate = {},
-//    )
-// }

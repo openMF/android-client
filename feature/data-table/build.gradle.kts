@@ -29,10 +29,6 @@ kotlin{
             implementation(projects.core.database)
             implementation(libs.kotlinx.serialization.json)
             implementation(compose.components.uiToolingPreview)
-
-            // swipe refresh
-//            implementation(libs.accompanist.permission)
-//            implementation(libs.accompanist.swiperefresh)
         }
     }
 }
