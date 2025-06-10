@@ -11,6 +11,7 @@ package com.mifos.core.data.repository
 
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.network.GenericResponse
+import io.ktor.client.request.forms.MultiPartFormDataContent
 import io.ktor.http.content.PartData
 import kotlinx.coroutines.flow.Flow
 
@@ -22,8 +23,6 @@ interface SignatureRepository {
     fun createDocument(
         entityType: String,
         entityId: Int,
-        name: String,
-        desc: String,
-        file: PartData,
+        file: MultiPartFormDataContent,
     ): Flow<DataState<GenericResponse>>
 }

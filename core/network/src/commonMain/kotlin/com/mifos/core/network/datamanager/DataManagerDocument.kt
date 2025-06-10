@@ -50,13 +50,11 @@ class DataManagerDocument(val mBaseApiManager: BaseApiManager) {
     fun createDocument(
         entityType: String,
         entityId: Int,
-        name: String,
-        desc: String,
         file: MultiPartFormDataContent,
     ): Flow<GenericResponse> {
         return mBaseApiManager
             .documentApi
-            .createDocument(entityType, entityId, name, desc, file)
+            .createDocument(entityType, entityId,  file)
     }
 
     /**
@@ -116,12 +114,9 @@ class DataManagerDocument(val mBaseApiManager: BaseApiManager) {
     fun updateDocument(
         entityType: String,
         entityId: Int,
-        documentId: Int,
-        name: String,
-        desc: String,
         file: MultiPartFormDataContent,
     ): Flow<GenericResponse> {
         return mBaseApiManager.documentApi
-            .updateDocument(entityType, entityId, documentId, name, desc, file)
+            .updateDocument(entityType, entityId,  file)
     }
 }

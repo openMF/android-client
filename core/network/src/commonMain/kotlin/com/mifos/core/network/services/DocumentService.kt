@@ -12,6 +12,7 @@ package com.mifos.core.network.services
 import com.mifos.core.model.objects.noncoreobjects.Document
 import com.mifos.core.network.GenericResponse
 import com.mifos.room.basemodel.APIEndPoint
+import de.jensklingenberg.ktorfit.http.Body
 import de.jensklingenberg.ktorfit.http.DELETE
 import de.jensklingenberg.ktorfit.http.GET
 import de.jensklingenberg.ktorfit.http.Multipart
@@ -40,13 +41,10 @@ interface DocumentService {
      * @param typedFile               - Mandatory
      */
     @POST("{entityType}/{entityId}/" + APIEndPoint.DOCUMENTS)
-    @Multipart
     fun createDocument(
         @Path("entityType") entityType: String,
         @Path("entityId") entityId: Int,
-        @Part("name") nameOfDocument: String,
-        @Part("description") description: String,
-        @Part typedFile: MultiPartFormDataContent,
+        @Body request: MultiPartFormDataContent,
     ): Flow<GenericResponse>
 
     /**
@@ -103,13 +101,9 @@ interface DocumentService {
      * @param typedFile               - Mandatory
      */
     @PUT("{entityType}/{entityId}/" + APIEndPoint.DOCUMENTS + "/{documentId}")
-    @Multipart
     fun updateDocument(
         @Path("entityType") entityType: String,
         @Path("entityId") entityId: Int,
-        @Path("documentId") documentId: Int,
-        @Part("name") nameOfDocument: String,
-        @Part("description") description: String,
-        @Part typedFile: MultiPartFormDataContent,
+        @Body request: MultiPartFormDataContent,
     ): Flow<GenericResponse>
 }

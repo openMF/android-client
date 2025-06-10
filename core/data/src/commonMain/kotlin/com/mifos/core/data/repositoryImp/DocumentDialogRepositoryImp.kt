@@ -28,28 +28,20 @@ class DocumentDialogRepositoryImp(
     override fun createDocument(
         entityType: String,
         entityId: Int,
-        name: String,
-        desc: String,
         file: MultiPartFormDataContent,
     ): Flow<DataState<GenericResponse>> {
-        return dataManagerDocument.createDocument(entityType, entityId, name, desc, file)
+        return dataManagerDocument.createDocument(entityType, entityId,  file)
             .asDataStateFlow()
     }
 
     override fun updateDocument(
         entityType: String,
         entityId: Int,
-        documentId: Int,
-        name: String,
-        desc: String,
         file: MultiPartFormDataContent,
     ): Flow<DataState<GenericResponse>> {
         return dataManagerDocument.updateDocument(
             entityType,
             entityId,
-            documentId,
-            name,
-            desc,
             file,
         ).asDataStateFlow()
     }

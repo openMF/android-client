@@ -112,7 +112,7 @@ internal fun DocumentDialogScreen(
                         documentDescription,
                         file,
                     )
-                } else if (documentAction == Res.string.feature_document_upload_document) {
+                } else  {
                     viewModel.createDocument(
                         entityType,
                         entityId,
