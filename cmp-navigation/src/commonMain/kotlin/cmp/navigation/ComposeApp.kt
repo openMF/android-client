@@ -23,6 +23,7 @@ import com.mifos.core.data.util.NetworkMonitor
 import com.mifos.core.datastore.model.AppTheme
 import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.theme.MifosTheme
+import com.mifos.feature.splash.navigation.SplashScreens
 import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -36,7 +37,7 @@ fun ComposeApp(
     val navController = rememberNavController()
 
     val navDestination = when (uiState) {
-        is MainUiState.Loading -> AUTH_GRAPH
+        is MainUiState.Loading -> SplashScreens.SplashScreenRoute.route
         is MainUiState.Success -> if ((uiState as MainUiState.Success).isAuthenticated) {
             MAIN_GRAPH
         } else {
