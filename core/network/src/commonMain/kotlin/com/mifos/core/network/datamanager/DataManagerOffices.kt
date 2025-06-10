@@ -36,11 +36,7 @@ class DataManagerOffices(
      * return all List of Offices from DatabaseHelperOffices
      */
     fun fetchOffices(): Flow<List<OfficeEntity>> {
-        return baseApiManager.getOfficeApi()
-            .retrieveOffices(null, null, null)
-            .map { responseList ->
-                responseList.map(GetOfficeResponseMapper::mapFromEntity)
-            }
+        return mBaseApiManager.officeApi.allOffices()
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)

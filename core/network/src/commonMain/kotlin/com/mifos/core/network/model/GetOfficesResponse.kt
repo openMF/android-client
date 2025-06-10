@@ -9,8 +9,6 @@
  */
 package com.mifos.core.network.model
 
-import kotlinx.datetime.LocalDate
-import kotlinx.serialization.Contextual
 import kotlinx.serialization.Serializable
 
 /**
@@ -46,7 +44,5 @@ data class GetOfficesResponse(
 
     val nameDecorated: String? = null,
 
-    @Contextual
-    val openingDate: LocalDate? = null,
-
+    val openingDate: List<Int>? = null,
 )
