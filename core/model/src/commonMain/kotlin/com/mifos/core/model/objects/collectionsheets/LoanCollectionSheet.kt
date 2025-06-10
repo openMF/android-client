@@ -10,76 +10,22 @@
 package com.mifos.core.model.objects.collectionsheets
 
 import com.mifos.core.model.objects.template.loan.Currency
-import com.mifos.core.model.utils.Parcel
 import com.mifos.core.model.utils.Parcelable
 import com.mifos.core.model.utils.Parcelize
 import kotlinx.serialization.Serializable
 
-/**
- * Created by Tarun on 06-07-2017.
- */
-// TODO migrate to kmp model,
 @Parcelize
 @Serializable
-class LoanCollectionSheet() : Parcelable {
-    var accountId: String? = null
-    var accountStatusId: Int = 0
-    var currency: Currency? = null
-    var interestDue: Double? = null
-    var interestPaid: Double? = null
-    var loanId: Int = 0
-    var principalDue: Double? = null
-    var productId: Double? = null
-    var totalDue: Double = 0.0
-    var chargesDue: Double = 0.0
-    var productShortName: String? = null
-
-    constructor(parcel: Parcel) : this() {
-        accountId = parcel.readString()
-        accountStatusId = parcel.readInt()
-        // todo resolve this
-//        currency = parcel.readParcelable(Currency::class.java.classLoader)
-        interestDue = parcel.readDouble()
-        interestPaid = parcel.readDouble()
-        loanId = parcel.readInt()
-        principalDue = parcel.readDouble()
-        productId = parcel.readDouble()
-        totalDue = parcel.readDouble()
-        chargesDue = parcel.readDouble()
-        productShortName = parcel.readString()
-    }
-
-//    override fun describeContents(): Int {
-//        return 0
-//    }
-
-//    override fun writeToParcel(dest: com.mifos.core.model.utils.Parcel, flags: Int) {
-//        dest.writeString(accountId)
-//        dest.writeInt(accountStatusId)
-//        dest.writeParcelable(currency, flags)
-//        dest.writeDouble(interestDue)
-//        dest.writeDouble(interestPaid)
-//        dest.writeInt(loanId)
-//        dest.writeDouble(principalDue)
-//        dest.writeDouble(productId)
-//        dest.writeDouble(totalDue)
-//        dest.writeDouble(chargesDue)
-//        dest.writeString(productShortName)
-//    }
-
-    override fun toString(): String {
-        return "LoanCollectionSheet(accountId=$accountId, accountStatusId=$accountStatusId, currency=$currency, " +
-            "interestDue=$interestDue, interestPaid=$interestPaid, loanId=$loanId, principalDue=$principalDue, " +
-            "productId=$productId, totalDue=$totalDue, chargesDue=$chargesDue, productShortName=$productShortName)"
-    }
-
-//    companion object CREATOR : com.mifos.core.model.utils.Parcelable.Creator<LoanCollectionSheet> {
-//        override fun createFromParcel(parcel: com.mifos.core.model.utils.Parcel): LoanCollectionSheet {
-//            return LoanCollectionSheet(parcel)
-//        }
-//
-//        override fun newArray(size: Int): Array<LoanCollectionSheet?> {
-//            return arrayOfNulls(size)
-//        }
-//    }
-}
+data class LoanCollectionSheet(
+    val accountId: String? = null,
+    val accountStatusId: Int = 0,
+    val currency: Currency? = null,
+    val interestDue: Double? = null,
+    val interestPaid: Double? = null,
+    val loanId: Int = 0,
+    val principalDue: Double? = null,
+    val productId: Double? = null,
+    val totalDue: Double = 0.0,
+    val chargesDue: Double = 0.0,
+    val productShortName: String? = null,
+) : Parcelable

@@ -11,11 +11,13 @@ package com.mifos.core.model.objects.account.saving
 
 import com.mifos.core.model.utils.Parcelable
 import com.mifos.core.model.utils.Parcelize
+import kotlinx.serialization.Serializable
 
 /**
  * Created by nkiboi on 12/15/2015.
  */
 @Parcelize
+@Serializable
 class FieldOfficerOptions(
     var id: Int? = null,
 

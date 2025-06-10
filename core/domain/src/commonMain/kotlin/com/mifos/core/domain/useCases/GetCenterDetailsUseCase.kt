@@ -29,6 +29,11 @@ class GetCenterDetailsUseCase(
             flow { emit(repository.getCentersGroupAndMeeting(centerId)) },
             repository.getCenterSummaryInfo(centerId, genericResultSet),
         ) { centerGroup, centerInfoState ->
-            DataState.Success(Pair(centerGroup, centerInfoState.data!!))
+
+            when (centerInfoState) {
+                is DataState.Error -> DataState.Error(centerInfoState.exception)
+                DataState.Loading -> DataState.Loading
+                is DataState.Success -> DataState.Success(Pair(centerGroup, centerInfoState.data))
+            }
         }
 }

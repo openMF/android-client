@@ -9,12 +9,15 @@
  */
 package com.mifos.core.network.model
 
+import kotlinx.serialization.Serializable
+
 /**
  * Created by Tarun on 06-07-2017.
  */
+@Serializable
 data class RequestCollectionSheetPayload(
-    var dateFormat: String = "dd MMMM yyyy",
-    var locale: String = "en",
+    var dateFormat: String? = null,
+    var locale: String? = null,
     var officeId: Int? = null,
     var staffId: Int? = null,
     var transactionDate: String = "",

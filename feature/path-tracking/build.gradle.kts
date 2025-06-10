@@ -8,25 +8,30 @@
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
 plugins {
-    alias(libs.plugins.mifos.android.feature)
-    alias(libs.plugins.mifos.android.library.compose)
-    alias(libs.plugins.mifos.android.library.jacoco)
+    alias(libs.plugins.mifos.cmp.feature)
 }
 
 android {
     namespace = "com.mifos.feature.path.tracking"
 }
 
-dependencies {
-    implementation(projects.core.domain)
+kotlin {
+    sourceSets {
+        commonMain.dependencies {
+            implementation(projects.core.domain)
+            implementation(projects.core.designsystem)
 
-    implementation(libs.androidx.material)
-    implementation(libs.accompanist.permission)
+            implementation(compose.ui)
+            implementation(compose.material3)
+            implementation(compose.foundation)
+            implementation(compose.components.resources)
+            implementation(compose.components.uiToolingPreview)
+            implementation(libs.kotlinx.serialization.json)
+        }
 
-    implementation(libs.coil.kt.compose)
-    testImplementation(libs.hilt.android.testing)
-
-    implementation(libs.kotlinx.serialization.json)
-
-    implementation(libs.maps.compose)
+        androidMain.dependencies {
+            implementation(libs.maps.compose)
+            implementation(libs.accompanist.permission)
+        }
+    }
 }
