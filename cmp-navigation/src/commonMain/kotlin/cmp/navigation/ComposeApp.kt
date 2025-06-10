@@ -16,6 +16,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.compose.rememberNavController
+import cmp.navigation.navigation.NavGraphRoute.AUTH_GRAPH
 import cmp.navigation.navigation.RootNavGraph
 import com.mifos.core.data.util.NetworkMonitor
 import com.mifos.core.datastore.model.AppTheme
@@ -31,6 +32,7 @@ fun ComposeApp(
     viewModel: ComposeAppViewModel = koinViewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val navController = rememberNavController()
 
     when (uiState) {
         is MainUiState.Loading -> {
@@ -46,7 +48,15 @@ fun ComposeApp(
             MifosTheme(isDarkTheme) {
                 RootNavGraph(
                     networkMonitor = networkMonitor,
-                    navHostController = rememberNavController(),
+                    navHostController =navController,
+                    onClickLogout = {
+                        viewModel.logout()
+                        navController.navigate(AUTH_GRAPH) {
+                            popUpTo(navController.graph.id) {
+                                inclusive = true
+                            }
+                        }
+                                    },
                     modifier = modifier,
                 )
             }

@@ -9,6 +9,7 @@
  */
 package com.mifos.core.datastore
 
+import co.touchlab.kermit.Logger
 import com.mifos.core.common.utils.ServerConfig
 import com.mifos.core.datastore.model.AppSettings
 import com.mifos.core.datastore.model.AppTheme
@@ -142,7 +143,7 @@ class UserPreferencesDataSource(
 
     suspend fun clearInfo() {
         withContext(dispatcher) {
-            settings.remove(AUTH_USER)
+            settings.clear()
         }
     }
 

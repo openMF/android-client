@@ -75,6 +75,7 @@ import com.mifos.core.data.util.NetworkMonitor
 import com.mifos.core.designsystem.component.MifosDialogBox
 import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.designsystem.theme.MifosBackground
+import com.mifos.feature.auth.navigation.navigateToLogin
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.painterResource
 import org.mifos.navigation.generated.resources.Res
@@ -300,7 +301,10 @@ fun App(
                         showDialogState = dialogState,
                         confirmButtonText = "LogOut",
                         onDismiss = { dialogState = false },
-                        onConfirm = onClickLogout,
+                        onConfirm = {
+                            dialogState=false
+                            onClickLogout()
+                                    },
                         dismissButtonText = "Cancel",
                     )
                 }

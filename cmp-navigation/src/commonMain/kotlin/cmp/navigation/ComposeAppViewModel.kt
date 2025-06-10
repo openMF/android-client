@@ -2,15 +2,17 @@ package cmp.navigation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import co.touchlab.kermit.Logger
 import com.mifos.core.datastore.UserPreferencesRepository
 import com.mifos.core.datastore.model.AppTheme
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 
 class ComposeAppViewModel(
-    userPreferencesRepository: UserPreferencesRepository,
+    private val userPreferencesRepository: UserPreferencesRepository,
 ) : ViewModel() {
 
     val uiState: StateFlow<MainUiState> = userPreferencesRepository.appTheme
@@ -20,6 +22,12 @@ class ComposeAppViewModel(
             started = SharingStarted.WhileSubscribed(5000),
             initialValue = MainUiState.Loading,
         )
+
+    fun logout(){
+        viewModelScope.launch {
+            userPreferencesRepository.logOut()
+        }
+    }
 }
 
 sealed interface MainUiState {

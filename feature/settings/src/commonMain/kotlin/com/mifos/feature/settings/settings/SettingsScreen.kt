@@ -55,6 +55,7 @@ import com.mifos.core.designsystem.component.MifosRadioButtonDialog
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.UpdateEndpointDialogScreen
 import com.mifos.core.ui.util.DevicePreview
+import com.mifos.core.ui.util.ShareUtils
 import com.mifos.feature.settings.syncSurvey.SyncSurveysDialog
 import com.mifos.feature.settings.updateServer.UpdateServerConfigScreenRoute
 import kotlinx.coroutines.delay
@@ -119,14 +120,26 @@ internal fun SettingsScreen(
     var showThemeUpdateDialog by rememberSaveable { mutableStateOf(false) }
     var showSyncSurveyDialog by rememberSaveable { mutableStateOf(false) }
     var showServerConfig by rememberSaveable { mutableStateOf(false) }
+    var restartTriggered by rememberSaveable { mutableStateOf(false) }
+    val snackbarHostState = remember { SnackbarHostState() }
 
-
-    LaunchedEffect(currentTheme) {
-        Logger.d { "Current theme changed to: $currentTheme" }
+    LaunchedEffect(restartTriggered) {
+        if (restartTriggered) {
+            for (i in 5 downTo 1) {
+                snackbarHostState.showSnackbar(
+                    message = "Restarting in $i seconds...",
+                    duration = SnackbarDuration.Short,
+                    withDismissAction = false
+                )
+            }
+            ShareUtils.restartApplication()
+        }
     }
+
 
     MifosScaffold(
         onBackPressed = onBackPressed,
+        snackbarHostState=snackbarHostState,
         title = stringResource(resource = Res.string.feature_settings),
     ) { paddingValues ->
         Column(
@@ -168,7 +181,7 @@ internal fun SettingsScreen(
                 onCloseClick = { showServerConfig = false },
                 onSuccessful = {
                     showServerConfig = false
-//                    RestartCountdownSnackbar(2, SnackbarHostState())
+                    restartTriggered = true
                 },
             )
         }
