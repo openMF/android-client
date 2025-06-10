@@ -31,30 +31,30 @@ class DataTableRowDialogViewModel(
     fun addDataTableEntry(
         table: String,
         entityId: Int,
-        payload: Map<String, String>
+        payload: Map<String, String>,
     ) {
         viewModelScope.launch {
             addDataTableEntryUseCase.invoke(table, entityId, payload)
                 .collect { result ->
-                when(result){
-                    is DataState.Error -> {
-                        _dataTableRowDialogUiState.value =
-                            DataTableRowDialogUiState.Error(
-                                getString(Res.string.feature_data_table_failed_to_add_data_table,)
-                            )
-                    }
+                    when (result) {
+                        is DataState.Error -> {
+                            _dataTableRowDialogUiState.value =
+                                DataTableRowDialogUiState.Error(
+                                    getString(Res.string.feature_data_table_failed_to_add_data_table),
+                                )
+                        }
 
-                    DataState.Loading -> {
-                        _dataTableRowDialogUiState.value =
-                            DataTableRowDialogUiState.Loading
-                    }
+                        DataState.Loading -> {
+                            _dataTableRowDialogUiState.value =
+                                DataTableRowDialogUiState.Loading
+                        }
 
-                    is DataState.Success -> {
-                        _dataTableRowDialogUiState.value =
-                            DataTableRowDialogUiState.DataTableEntrySuccessfully
+                        is DataState.Success -> {
+                            _dataTableRowDialogUiState.value =
+                                DataTableRowDialogUiState.DataTableEntrySuccessfully
+                        }
                     }
                 }
-            }
         }
     }
 }

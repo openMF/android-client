@@ -11,13 +11,12 @@ package com.mifos.feature.dataTable.dataTableList
 
 import androidx.compose.runtime.Composable
 
-
 abstract class BaseFormWidget(
     override val propertyName: String,
     override val returnType: String = SCHEMA_KEY_TEXT,
     override var value: String = "",
     override var visible: Boolean = true,
-    override val priority: Int = 0
+    override val priority: Int = 0,
 ) : FormWidget {
 
     override val displayText: String = toTitleCase(propertyName)
@@ -54,7 +53,6 @@ abstract class BaseFormWidget(
     }
 }
 
-
 interface FormWidget {
     val propertyName: String
     val displayText: String
@@ -67,13 +65,12 @@ interface FormWidget {
     fun Render()
 }
 
-
 //
-///**
+// /**
 // * Created by ishankhanna on 01/08/14.
 // */
 //
-//abstract class FormWidget(context: Context?, name: String?) {
+// abstract class FormWidget(context: Context?, name: String?) {
 //
 //    /**
 //     * returns the un-modified name of the property this widget represents
@@ -220,4 +217,4 @@ interface FormWidget {
 //        const val SCHEMA_KEY_META = "meta"
 //        const val SCHEMA_KEY_HINT = "hint"
 //    }
-//}
+// }

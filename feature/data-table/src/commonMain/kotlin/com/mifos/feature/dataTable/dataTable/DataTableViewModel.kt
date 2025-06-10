@@ -18,7 +18,6 @@ import com.mifos.core.common.utils.Constants
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.repository.DataTableRepository
 import com.mifos.core.model.objects.nav.DataTableNavigationArg
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -62,9 +61,9 @@ class DataTableViewModel(
                                 DataTableUiState.ShowError(Res.string.feature_data_table_something_went_wrong)
                         }
 
-                        DataState.Loading -> _dataTableUiState.value =
-                            DataTableUiState.ShowProgressbar
-
+                        DataState.Loading ->
+                            _dataTableUiState.value =
+                                DataTableUiState.ShowProgressbar
 
                         is DataState.Success -> {
                             val result = dataState.data

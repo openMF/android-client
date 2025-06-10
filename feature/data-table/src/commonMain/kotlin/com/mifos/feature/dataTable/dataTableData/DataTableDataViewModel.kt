@@ -25,7 +25,6 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.jsonArray
-import org.jetbrains.compose.resources.getString
 
 class DataTableDataViewModel(
     private val getDataTableInfoUseCase: GetDataTableInfoUseCase,

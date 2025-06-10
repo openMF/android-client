@@ -7,7 +7,6 @@
  *
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
-
 import com.mifos.feature.dataTable.dataTableList.FormSpinnerCompose
 import com.mifos.feature.dataTable.dataTableList.FormWidget
 import kotlinx.serialization.Serializable
@@ -47,8 +46,8 @@ fun FormWidget.toDTO(): FormSpinnerDTO? = when (this) {
     else -> null
 }
 
-//fun FormWidgetDTO.toFormWidget(context: Context): FormSpinner? = when (this) {
+// fun FormWidgetDTO.toFormWidget(context: Context): FormSpinner? = when (this) {
 //    is FormSpinnerDTO -> FormSpinner(context, propertyName, columnValues, columnValueIds)
 //
 //    else -> null
-//}
+// }

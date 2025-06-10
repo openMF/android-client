@@ -7,7 +7,6 @@
  *
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
-
 package com.mifos.feature.dataTable.dataTableData
 
 import androidclient.feature.data_table.generated.resources.Res
@@ -408,11 +407,11 @@ fun SelectOptionsDialog(
     }
 }
 
-//@Preview(showBackground = true)
-//@Composable
-//private fun DataTableDataScreenPreview(
+// @Preview(showBackground = true)
+// @Composable
+// private fun DataTableDataScreenPreview(
 //    @PreviewParameter(DataTableDataUiStateProvider::class) state: DataTableDataUiState,
-//) {
+// ) {
 //    DataTableDataScreen(
 //        dataTable = DataTableEntity(),
 //        entityId = 1,
@@ -423,4 +422,4 @@ fun SelectOptionsDialog(
 //        refreshState = false,
 //        deleteDataTable = {},
 //    )
-//}
+// }

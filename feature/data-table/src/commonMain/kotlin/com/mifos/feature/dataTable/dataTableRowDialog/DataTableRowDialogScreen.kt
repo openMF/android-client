@@ -259,7 +259,7 @@ fun DataTableRowDialogContent(
 //    return payload
 // }
 //
-//class DataTableRowDialogUiStateProvider : PreviewParameterProvider<DataTableRowDialogUiState> {
+// class DataTableRowDialogUiStateProvider : PreviewParameterProvider<DataTableRowDialogUiState> {
 //
 //    override val values: Sequence<DataTableRowDialogUiState>
 //        get() = sequenceOf(
@@ -268,13 +268,13 @@ fun DataTableRowDialogContent(
 //            DataTableRowDialogUiState.Error(R.string.feature_data_table_failed_to_add_data_table),
 //            DataTableRowDialogUiState.DataTableEntrySuccessfully,
 //        )
-//}
+// }
 //
-//@Preview(showBackground = true)
-//@Composable
-//private fun DataTableRowDialogScreenPreview(
+// @Preview(showBackground = true)
+// @Composable
+// private fun DataTableRowDialogScreenPreview(
 //    @PreviewParameter(DataTableRowDialogUiStateProvider::class) state: DataTableRowDialogUiState,
-//) {
+// ) {
 //    DataTableRowDialogScreen(
 //        dataTable = DataTableEntity(),
 //        state = state,
@@ -283,4 +283,4 @@ fun DataTableRowDialogContent(
 //        onRetry = {},
 //        onCreate = {},
 //    )
-//}
+// }

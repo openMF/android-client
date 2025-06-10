@@ -136,11 +136,13 @@ class DataTableListViewModel(
             repository.createLoansAccount(loansPayload)
                 .collect { dataState ->
                     when (dataState) {
-                        is DataState.Error -> _dataTableListUiState.value =
-                            DataTableListUiState.ShowMessage(Res.string.feature_data_table_generic_failure_message)
+                        is DataState.Error ->
+                            _dataTableListUiState.value =
+                                DataTableListUiState.ShowMessage(Res.string.feature_data_table_generic_failure_message)
 
-                        DataState.Loading -> _dataTableListUiState.value =
-                            DataTableListUiState.Loading
+                        DataState.Loading ->
+                            _dataTableListUiState.value =
+                                DataTableListUiState.Loading
 
                         is DataState.Success -> {
                             _dataTableListUiState.value =
@@ -156,11 +158,13 @@ class DataTableListViewModel(
             repository.createGroupLoansAccount(loansPayload)
                 .collect { dataState ->
                     when (dataState) {
-                        is DataState.Error -> _dataTableListUiState.value =
-                            DataTableListUiState.ShowMessage(Res.string.feature_data_table_generic_failure_message)
+                        is DataState.Error ->
+                            _dataTableListUiState.value =
+                                DataTableListUiState.ShowMessage(Res.string.feature_data_table_generic_failure_message)
 
-                        DataState.Loading -> _dataTableListUiState.value =
-                            DataTableListUiState.Loading
+                        DataState.Loading ->
+                            _dataTableListUiState.value =
+                                DataTableListUiState.Loading
 
                         is DataState.Success -> {
                             _dataTableListUiState.value =
@@ -221,5 +225,4 @@ class DataTableListViewModel(
         const val SCHEMA_KEY_INT = "INTEGER"
         const val SCHEMA_KEY_DECIMAL = "DECIMAL"
     }
-
 }
