@@ -45,33 +45,32 @@ fun ComposeApp(
         }
     }
 
-    when (uiState) {
-        is MainUiState.Loading -> {
-            MifosCircularProgress(Modifier.fillMaxWidth())
-        }
+    val isDarkTheme=when(uiState)
+    {
+        MainUiState.Loading -> isSystemInDarkTheme()
         is MainUiState.Success -> {
-            val theme = (uiState as MainUiState.Success).appTheme
-            val isDarkTheme = when (theme) {
+            when((uiState as MainUiState.Success).appTheme){
                 AppTheme.SYSTEM -> isSystemInDarkTheme()
                 AppTheme.LIGHT -> false
                 AppTheme.DARK -> true
             }
-            MifosTheme(isDarkTheme) {
-                RootNavGraph(
-                    networkMonitor = networkMonitor,
-                    navHostController = navController,
-                    startDestination = navDestination,
-                    onClickLogout = {
-                        viewModel.logout()
-                        navController.navigate(AUTH_GRAPH) {
-                            popUpTo(navController.graph.id) {
-                                inclusive = true
-                            }
-                        }
-                    },
-                    modifier = modifier,
-                )
-            }
         }
+    }
+
+    MifosTheme(isDarkTheme) {
+        RootNavGraph(
+            networkMonitor = networkMonitor,
+            navHostController = navController,
+            startDestination = navDestination,
+            onClickLogout = {
+                viewModel.logout()
+                navController.navigate(AUTH_GRAPH) {
+                    popUpTo(navController.graph.id) {
+                        inclusive = true
+                    }
+                }
+            },
+            modifier = modifier,
+        )
     }
 }
