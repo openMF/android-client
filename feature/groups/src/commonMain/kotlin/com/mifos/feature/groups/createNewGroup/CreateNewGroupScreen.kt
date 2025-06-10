@@ -252,7 +252,7 @@ private fun CreateNewGroupContent(
                         submitDatePicker = false
                         activationDatePicker = false
                     },
-                ) { Text(stringResource(androidclient.feature.groups.generated.resources.Res.string.feature_groups_select_date)) }
+                ) { Text(stringResource(Res.string.feature_groups_select_date)) }
             },
             dismissButton = {
                 TextButton(

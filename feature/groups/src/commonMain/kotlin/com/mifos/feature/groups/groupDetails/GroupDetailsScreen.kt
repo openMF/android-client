@@ -17,6 +17,7 @@ import androidclient.feature.groups.generated.resources.feature_groups_add_loan_
 import androidclient.feature.groups.generated.resources.feature_groups_add_savings_account
 import androidclient.feature.groups.generated.resources.feature_groups_documents
 import androidclient.feature.groups.generated.resources.feature_groups_external_id
+import androidclient.feature.groups.generated.resources.feature_groups_failed_to_fetch_group_and_account
 import androidclient.feature.groups.generated.resources.feature_groups_group
 import androidclient.feature.groups.generated.resources.feature_groups_group_clients
 import androidclient.feature.groups.generated.resources.feature_groups_loan_account
@@ -90,6 +91,9 @@ import com.mifos.room.entities.accounts.savings.SavingsAccountEntity
 import com.mifos.room.entities.client.ClientEntity
 import com.mifos.room.entities.group.GroupEntity
 import org.jetbrains.compose.resources.stringResource
+import org.jetbrains.compose.ui.tooling.preview.Preview
+import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
+import org.jetbrains.compose.ui.tooling.preview.PreviewParameterProvider
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -770,4 +774,33 @@ private val sampleLoanAccountList = List(10) {
 
 private val sampleSavingAccountList = List(10) {
     SavingsAccountEntity(id = it, productName = "Product $it")
+}
+
+private class GroupDetailsUiStateProvider : PreviewParameterProvider<GroupDetailsUiState> {
+
+    override val values: Sequence<GroupDetailsUiState>
+        get() = sequenceOf(
+            GroupDetailsUiState.Loading,
+            GroupDetailsUiState.Error(Res.string.feature_groups_failed_to_fetch_group_and_account),
+            GroupDetailsUiState.ShowGroup(group = GroupEntity(name = "Group", active = true)),
+            GroupDetailsUiState.ShowGroup(group = GroupEntity(name = "Group", active = false)),
+        )
+}
+
+@Preview
+@Composable
+private fun GroupDetailsScreenPreview(
+    @PreviewParameter(GroupDetailsUiStateProvider::class) state: GroupDetailsUiState,
+) {
+    GroupDetailsScreen(
+        state = state,
+        onBackPressed = {},
+        onMenuClick = {},
+        loanAccounts = sampleLoanAccountList,
+        savingsAccounts = sampleSavingAccountList,
+        loanAccountSelected = {},
+        savingsAccountSelected = { _, _ ->
+        },
+        activateGroup = {},
+    )
 }
