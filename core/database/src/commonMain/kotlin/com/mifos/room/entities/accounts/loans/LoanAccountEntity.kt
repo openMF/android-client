@@ -20,6 +20,7 @@ import com.mifos.room.utils.PrimaryKey
 import com.mifos.room.utils.UNDEFINED
 import com.mifos.room.utils.UNSPECIFIED
 import com.mifos.room.utils.VALUE_UNSPECIFIED
+import kotlinx.serialization.Serializable
 
 @Entity(
     tableName = "LoanAccountEntity",
@@ -47,6 +48,7 @@ import com.mifos.room.utils.VALUE_UNSPECIFIED
     ignoredColumns = [],
 )
 @Parcelize
+@Serializable
 data class LoanAccountEntity(
     @PrimaryKey(autoGenerate = true)
     val id: Int? = null,
