@@ -23,6 +23,7 @@ interface UserPreferencesRepository {
     val settingsInfo: Flow<AppSettings>
     val serverConfig: Flow<ServerConfig>
     val token: String?
+    val appTheme: StateFlow<AppTheme>
 
     suspend fun updateUser(user: User): Result<Unit>
     suspend fun updateUserStatus(status: Boolean): Result<Unit>

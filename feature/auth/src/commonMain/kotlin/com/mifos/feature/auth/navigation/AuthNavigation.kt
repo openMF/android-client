@@ -16,13 +16,14 @@ import androidx.navigation.navigation
 import com.mifos.feature.auth.login.LoginScreen
 
 fun NavGraphBuilder.authNavGraph(
+    route: String,
     navigateHome: () -> Unit,
     navigatePasscode: () -> Unit,
     updateServerConfig: () -> Unit,
 ) {
     navigation(
         startDestination = AuthScreens.LoginScreen.route,
-        route = AuthScreens.LoginScreenRoute.route,
+        route = route,
     ) {
         loginRoute(
             navigatePasscode = navigatePasscode,
