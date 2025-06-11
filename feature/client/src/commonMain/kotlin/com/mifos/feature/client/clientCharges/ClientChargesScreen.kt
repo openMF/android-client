@@ -17,6 +17,7 @@ import androidclient.feature.client.generated.resources.feature_client_charge_na
 import androidclient.feature.client.generated.resources.feature_client_charges
 import androidclient.feature.client.generated.resources.feature_client_client_id
 import androidclient.feature.client.generated.resources.feature_client_due_date
+import androidclient.feature.client.generated.resources.feature_client_failed_to_load_client_charges
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -46,6 +47,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.paging.PagingData
 import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
@@ -53,6 +55,7 @@ import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.ui.util.DevicePreview
 import com.mifos.feature.client.clientChargeDialog.ChargeDialogScreen
 import com.mifos.room.entities.client.ChargesEntity
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
@@ -130,7 +133,7 @@ internal fun ClientChargesScreen(
             ) {
                 when (state) {
                     is ClientChargeUiState.ChargesList -> ClientChargeContent(
-                        chargesPage = state.chargesPage.collectAsLazyPagingItems(),
+                        pagingFlow = state.chargesPage,
                         onRetry = onRetry,
                     )
 
@@ -148,7 +151,7 @@ internal fun ClientChargesScreen(
 
 @Composable
 expect fun ClientChargeContent(
-    chargesPage: LazyPagingItems<ChargesEntity>,
+    pagingFlow: Flow<PagingData<ChargesEntity>>,
     onRetry: () -> Unit,
 )
 
@@ -209,8 +212,14 @@ private fun MifosCenterDetailsText(field: String, value: String) {
     }
 }
 
-expect class ClientChargesScreenUiStateProvider : PreviewParameterProvider<ClientChargeUiState> {
+class ClientChargesScreenUiStateProvider : PreviewParameterProvider<ClientChargeUiState> {
+
     override val values: Sequence<ClientChargeUiState>
+        get() = sequenceOf(
+            ClientChargeUiState.Loading,
+            ClientChargeUiState.Error(Res.string.feature_client_failed_to_load_client_charges),
+            ClientChargeUiState.ChargesList(flowOf(PagingData.from(sampleClientCharge))),
+        )
 }
 
 @DevicePreview

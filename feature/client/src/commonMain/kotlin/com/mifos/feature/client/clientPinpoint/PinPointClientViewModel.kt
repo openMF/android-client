@@ -9,16 +9,23 @@
  */
 package com.mifos.feature.client.clientPinpoint
 
+import androidclient.feature.client.generated.resources.Res
+import androidclient.feature.client.generated.resources.feature_client_failed_to_add_pinpoint
+import androidclient.feature.client.generated.resources.feature_client_failed_to_delete_pinpoint
+import androidclient.feature.client.generated.resources.feature_client_failed_to_load_pinpoint
+import androidclient.feature.client.generated.resources.feature_client_failed_to_update_pinpoint
+import androidclient.feature.client.generated.resources.feature_client_no_pinpoint_found
+import androidclient.feature.client.generated.resources.feature_client_pinpoint_location_added
+import androidclient.feature.client.generated.resources.feature_client_pinpoint_location_deleted
+import androidclient.feature.client.generated.resources.feature_client_pinpoint_location_updated
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.mifos.core.common.utils.Resource
+import com.mifos.core.common.utils.DataState
 import com.mifos.core.domain.useCases.AddClientPinpointLocationUseCase
 import com.mifos.core.domain.useCases.DeleteClientAddressPinpointUseCase
 import com.mifos.core.domain.useCases.GetClientPinpointLocationsUseCase
 import com.mifos.core.domain.useCases.UpdateClientPinpointUseCase
-import com.mifos.feature.client.R
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
@@ -50,19 +57,19 @@ class PinPointClientViewModel(
         _isRefreshing.value = false
     }
 
-    fun getClientPinpointLocations(clientId: Int) = viewModelScope.launch(Dispatchers.IO) {
+    fun getClientPinpointLocations(clientId: Int) = viewModelScope.launch {
         getClientPinpointLocationsUseCase(clientId).collect { result ->
             when (result) {
-                is Resource.Error ->
+                is DataState.Error ->
                     _pinPointClientUiState.value =
-                        PinPointClientUiState.Error(R.string.feature_client_failed_to_load_pinpoint)
+                        PinPointClientUiState.Error(Res.string.feature_client_failed_to_load_pinpoint)
 
-                is Resource.Loading -> _pinPointClientUiState.value = PinPointClientUiState.Loading
+                is DataState.Loading -> _pinPointClientUiState.value = PinPointClientUiState.Loading
 
-                is Resource.Success ->
+                is DataState.Success ->
                     _pinPointClientUiState.value =
-                        if (result.data.isNullOrEmpty()) {
-                            PinPointClientUiState.Error(R.string.feature_client_no_pinpoint_found)
+                        if (result.data.isEmpty()) {
+                            PinPointClientUiState.Error(Res.string.feature_client_no_pinpoint_found)
                         } else {
                             PinPointClientUiState.ClientPinpointLocations(result.data ?: emptyList())
                         }
@@ -71,39 +78,39 @@ class PinPointClientViewModel(
     }
 
     fun addClientPinpointLocation(clientId: Int, addressRequest: com.mifos.core.model.objects.clients.ClientAddressRequest) =
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch {
             addClientPinpointLocationUseCase(clientId, addressRequest).collect { result ->
                 when (result) {
-                    is Resource.Error ->
+                    is DataState.Error ->
                         _pinPointClientUiState.value =
-                            PinPointClientUiState.Error(R.string.feature_client_failed_to_add_pinpoint)
+                            PinPointClientUiState.Error(Res.string.feature_client_failed_to_add_pinpoint)
 
-                    is Resource.Loading ->
+                    is DataState.Loading ->
                         _pinPointClientUiState.value =
                             PinPointClientUiState.Loading
 
-                    is Resource.Success ->
+                    is DataState.Success ->
                         _pinPointClientUiState.value =
-                            PinPointClientUiState.SuccessMessage(R.string.feature_client_pinpoint_location_added)
+                            PinPointClientUiState.SuccessMessage(Res.string.feature_client_pinpoint_location_added)
                 }
             }
         }
 
     fun deleteClientPinpointLocation(apptableId: Int, datatableId: Int) =
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch {
             deleteClientAddressPinpointUseCase(apptableId, datatableId).collect { result ->
                 when (result) {
-                    is Resource.Error ->
+                    is DataState.Error ->
                         _pinPointClientUiState.value =
-                            PinPointClientUiState.Error(R.string.feature_client_failed_to_delete_pinpoint)
+                            PinPointClientUiState.Error(Res.string.feature_client_failed_to_delete_pinpoint)
 
-                    is Resource.Loading ->
+                    is DataState.Loading ->
                         _pinPointClientUiState.value =
                             PinPointClientUiState.Loading
 
-                    is Resource.Success ->
+                    is DataState.Success ->
                         _pinPointClientUiState.value =
-                            PinPointClientUiState.SuccessMessage(R.string.feature_client_pinpoint_location_deleted)
+                            PinPointClientUiState.SuccessMessage(Res.string.feature_client_pinpoint_location_deleted)
                 }
             }
         }
@@ -112,18 +119,18 @@ class PinPointClientViewModel(
         apptableId: Int,
         datatableId: Int,
         addressRequest: com.mifos.core.model.objects.clients.ClientAddressRequest,
-    ) = viewModelScope.launch(Dispatchers.IO) {
+    ) = viewModelScope.launch {
         updateClientPinpointUseCase(apptableId, datatableId, addressRequest).collect { result ->
             when (result) {
-                is Resource.Error ->
+                is DataState.Error ->
                     _pinPointClientUiState.value =
-                        PinPointClientUiState.Error(R.string.feature_client_failed_to_update_pinpoint)
+                        PinPointClientUiState.Error(Res.string.feature_client_failed_to_update_pinpoint)
 
-                is Resource.Loading -> _pinPointClientUiState.value = PinPointClientUiState.Loading
+                is DataState.Loading -> _pinPointClientUiState.value = PinPointClientUiState.Loading
 
-                is Resource.Success ->
+                is DataState.Success ->
                     _pinPointClientUiState.value =
-                        PinPointClientUiState.SuccessMessage(R.string.feature_client_pinpoint_location_updated)
+                        PinPointClientUiState.SuccessMessage(Res.string.feature_client_pinpoint_location_updated)
             }
         }
     }

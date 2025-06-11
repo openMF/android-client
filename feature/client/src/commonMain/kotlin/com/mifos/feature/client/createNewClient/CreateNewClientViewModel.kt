@@ -9,7 +9,6 @@
  */
 package com.mifos.feature.client.createNewClient
 
-import android.util.Log
 import androidclient.feature.client.generated.resources.Res
 import androidclient.feature.client.generated.resources.feature_client_Image_Upload_Failed
 import androidclient.feature.client.generated.resources.feature_client_Image_Upload_Successful
@@ -21,7 +20,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import co.touchlab.kermit.Logger
 import com.mifos.core.data.repository.CreateNewClientRepository
-import com.mifos.feature.client.R
 import com.mifos.room.entities.client.ClientPayloadEntity
 import com.mifos.room.entities.organisation.OfficeEntity
 import com.mifos.room.entities.organisation.StaffEntity
@@ -32,9 +30,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
-import okhttp3.MediaType.Companion.toMediaTypeOrNull
-import okhttp3.RequestBody.Companion.asRequestBody
-import java.io.File
 
 /**
  * Created by Aditya Gupta on 10/08/23.
@@ -69,7 +64,7 @@ class CreateNewClientViewModel(
                     CreateNewClientUiState.ShowError(Res.string.feature_client_failed_to_fetch_client_template)
             }.collect {
                 _createNewClientUiState.value =
-                    CreateNewClientUiState.ShowClientTemplate(it ?: ClientsTemplateEntity())
+                    CreateNewClientUiState.ShowClientTemplate(it as ClientsTemplateEntity)
             }
         }
     }

@@ -65,7 +65,6 @@ import androidx.compose.material.icons.outlined.HomeWork
 import androidx.compose.material.icons.outlined.Mail
 import androidx.compose.material.icons.outlined.MobileFriendly
 import androidx.compose.material.icons.outlined.Numbers
-import androidx.compose.material.icons.outlined.Numbers
 import androidx.compose.material.icons.outlined.PersonOutline
 import androidx.compose.material.icons.outlined.Visibility
 import androidx.compose.material.icons.outlined.VisibilityOff
@@ -196,7 +195,6 @@ object MifosIcons {
     val MyLocation = Icons.Rounded.MyLocation
     val MobileFriendly = Icons.Outlined.MobileFriendly
     val Groups = Icons.Outlined.Groups
-    val Numbers = Icons.Outlined.Numbers
     val HomeWork = Icons.Outlined.HomeWork
     val AddFilled = Icons.Filled.Add
 }

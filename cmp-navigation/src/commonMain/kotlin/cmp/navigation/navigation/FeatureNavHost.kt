@@ -20,6 +20,7 @@ import com.mifos.feature.activate.navigation.navigateToActivateScreen
 import com.mifos.feature.center.navigation.centerNavGraph
 import com.mifos.feature.center.navigation.navigateCreateCenterScreenRoute
 import com.mifos.feature.checker.inbox.task.navigation.checkerInboxTaskNavGraph
+import com.mifos.feature.client.navigation.clientNavGraph
 import com.mifos.feature.groups.navigation.groupNavGraph
 import com.mifos.feature.groups.navigation.navigateToCreateNewGroupScreen
 import com.mifos.feature.individualCollectionSheet.navigation.individualCollectionSheetNavGraph
@@ -108,5 +109,21 @@ internal fun FeatureNavHost(
         )
 
         pathTrackingNavGraph(appState.navController)
+
+        clientNavGraph(
+            navController = appState.navController,
+            paddingValues = padding,
+            addLoanAccount = TODO(),
+            addSavingsAccount = TODO(),
+            documents = TODO(),
+            moreClientInfo = TODO(),
+            notes = TODO(),
+            loanAccountSelected = TODO(),
+            savingsAccountSelected = TODO(),
+            activateClient = TODO(),
+            hasDatatables = TODO(),
+            onDocumentClicked = TODO(),
+            onCardClicked = TODO(),
+        )
     }
 }

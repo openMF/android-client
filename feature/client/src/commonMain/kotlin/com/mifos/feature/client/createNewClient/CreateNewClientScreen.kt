@@ -9,12 +9,6 @@
  */
 package com.mifos.feature.client.createNewClient
 
-import android.Manifest
-import android.content.Context
-import android.net.Uri
-import android.os.Build
-import android.telephony.PhoneNumberUtils
-import android.widget.Toast
 import androidclient.feature.client.generated.resources.Res
 import androidclient.feature.client.generated.resources.feature_client_Image_Upload_Successful
 import androidclient.feature.client.generated.resources.feature_client_cancel
@@ -52,8 +46,6 @@ import androidclient.feature.client.generated.resources.feature_client_submit
 import androidclient.feature.client.generated.resources.feature_client_take_a_photo
 import androidclient.feature.client.generated.resources.feature_client_upload_photo
 import androidclient.feature.client.generated.resources.feature_client_waiting_for_checker_approval
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.fadeIn
@@ -80,13 +72,16 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SelectableDates
+import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -104,55 +99,37 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Color.Companion.DarkGray
-import androidx.compose.ui.graphics.Color.Companion.White
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontStyle
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.tooling.preview.PreviewParameter
-import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
-import androidx.core.content.FileProvider
-import androidx.core.net.toFile
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import coil.compose.rememberAsyncImagePainter
+import coil3.Uri
+import coil3.compose.rememberAsyncImagePainter
+import com.mifos.core.common.utils.DateHelper
+import com.mifos.core.common.utils.formatDate
 import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosDatePickerTextField
 import com.mifos.core.designsystem.component.MifosOutlinedTextField
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.component.MifosTextFieldDropdown
-import com.mifos.core.designsystem.component.PermissionBox
 import com.mifos.core.ui.util.DevicePreview
-import com.mifos.feature.client.R
 import com.mifos.room.entities.client.ClientPayloadEntity
 import com.mifos.room.entities.noncore.DataTableEntity
 import com.mifos.room.entities.organisation.OfficeEntity
 import com.mifos.room.entities.organisation.StaffEntity
 import com.mifos.room.entities.templates.clients.ClientsTemplateEntity
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameterProvider
-import org.koin.androidx.compose.koinViewModel
 import org.koin.compose.viewmodel.koinViewModel
-import java.io.File
-import java.text.SimpleDateFormat
-import java.util.Locale
-import java.util.Objects
 
 /**
  * Created by Pronay Sarker on 07/07/2024 (3:45 AM)
@@ -199,10 +176,15 @@ internal fun CreateNewClientScreen(
     uploadImage: (id: Int, imageUri: Uri) -> Unit,
     hasDatatables: (datatables: List<DataTableEntity>, clientPayload: ClientPayloadEntity) -> Unit,
 ) {
-    val context = LocalContext.current
     var createClientWithImage by rememberSaveable { mutableStateOf(false) }
     var clientImageUri: Uri? by rememberSaveable { mutableStateOf(null) }
+
     val snackbarHostState = remember { SnackbarHostState() }
+    val scope = rememberCoroutineScope()
+
+    val clientCreatedSuccess = stringResource(Res.string.feature_client_client_created_successfully)
+    val imageUploadSuccess = stringResource(Res.string.feature_client_Image_Upload_Successful)
+    val waitingForCheckerApproval = stringResource(Res.string.feature_client_waiting_for_checker_approval)
 
     MifosScaffold(
         title = stringResource(Res.string.feature_client_create_new_client),
@@ -221,6 +203,8 @@ internal fun CreateNewClientScreen(
 
                 is CreateNewClientUiState.ShowClientTemplate -> {
                     CreateNewClientContent(
+                        scope = scope,
+                        snackbarHostState = snackbarHostState,
                         officeList = officeList,
                         staffInOffices = staffInOffices,
                         clientTemplate = uiState.clientsTemplate,
@@ -245,32 +229,37 @@ internal fun CreateNewClientScreen(
                 }
 
                 is CreateNewClientUiState.ShowClientCreatedSuccessfully -> {
-                    Toast.makeText(context, uiState.message, Toast.LENGTH_LONG).show()
+                    scope.launch {
+                        snackbarHostState.showSnackbar(
+                            message = clientCreatedSuccess,
+                            duration = SnackbarDuration.Long
+                        )
+                    }
                 }
 
                 is CreateNewClientUiState.OnImageUploadSuccess -> {
-                    Toast.makeText(
-                        context,
-                        stringResource(id = uiState.message),
-                        Toast.LENGTH_SHORT,
-                    )
-                        .show()
+                    scope.launch {
+                        snackbarHostState.showSnackbar(
+                            message = imageUploadSuccess,
+                            duration = SnackbarDuration.Long
+                        )
+                    }
                     navigateBack.invoke()
                 }
 
                 is CreateNewClientUiState.ShowWaitingForCheckerApproval -> {
-                    Toast.makeText(
-                        context,
-                        stringResource(id = uiState.message),
-                        Toast.LENGTH_SHORT,
-                    )
-                        .show()
+                    scope.launch {
+                        snackbarHostState.showSnackbar(
+                            message = waitingForCheckerApproval,
+                            duration = SnackbarDuration.Long
+                        )
+                    }
                     navigateBack.invoke()
                 }
 
                 is CreateNewClientUiState.ShowError -> {
                     MifosSweetError(
-                        message = stringResource(id = uiState.message),
+                        message = stringResource(uiState.message),
                         onclick = { onRetry() },
                     )
                 }
@@ -290,6 +279,8 @@ internal fun CreateNewClientScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun CreateNewClientContent(
+    scope: CoroutineScope,
+    snackbarHostState: SnackbarHostState,
     officeList: List<OfficeEntity>,
     staffInOffices: List<StaffEntity>,
     clientTemplate: ClientsTemplateEntity,
@@ -324,8 +315,8 @@ private fun CreateNewClientContent(
 
     val scrollState = rememberScrollState()
     val density = LocalDensity.current
-    val context = LocalContext.current
-    val scope = rememberCoroutineScope()
+
+    val noStaffWithOffice = stringResource(Res.string.feature_client_no_staff_associated_with_office)
 
     var handleImageSelection by remember { mutableStateOf(false) }
     var permissionList: List<String> by rememberSaveable { mutableStateOf(listOf()) }
@@ -370,11 +361,10 @@ private fun CreateNewClientContent(
     }
     LaunchedEffect(key1 = staffInOffices) {
         if (staffInOffices.isEmpty()) {
-            Toast.makeText(
-                context,
-                context.resources.getString(Res.string.feature_client_no_staff_associated_with_office),
-                Toast.LENGTH_SHORT,
-            ).show()
+            snackbarHostState.showSnackbar(
+                message = noStaffWithOffice,
+                duration = SnackbarDuration.Short
+            )
             staff = ""
             selectedStaffId = 0
         }
@@ -605,9 +595,6 @@ private fun CreateNewClientContent(
             Checkbox(
                 checked = isActive,
                 onCheckedChange = { isActive = !isActive },
-//                colors = CheckboxDefaults.colors(
-//                    if (isSystemInDarkTheme()) BluePrimaryDark else BluePrimary,
-//                ),
             )
             Text(text = stringResource(Res.string.feature_client_client_active))
         }
@@ -639,13 +626,10 @@ private fun CreateNewClientContent(
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp)
                 .heightIn(46.dp),
-//            colors = ButtonDefaults.buttonColors(
-//                containerColor = if (isSystemInDarkTheme()) BluePrimaryDark else BluePrimary,
-//            ),
             onClick = {
                 val clientNames = Name(firstName, lastName, middleName)
                 handleSubmitClick(
-                    context, clientNames, clientTemplate, createClient, isActive, onHasDatatables,
+                    scope, clientNames, clientTemplate, createClient, isActive, onHasDatatables,
                     selectedImageUri, setUriForUpload, staffInOffices, hasDatatables,
                     selectedOfficeId, selectedClientId, selectedClientClassificationId,
                     genderId, selectedStaffId, activationDate, dateOfBirth,
@@ -665,7 +649,7 @@ data class Name(
 )
 
 private fun handleSubmitClick(
-    context: Context,
+    scope: CoroutineScope,
     clientNames: Name,
     clientTemplate: ClientsTemplateEntity,
     createClient: (clientPayload: ClientPayloadEntity) -> Unit,
@@ -686,7 +670,8 @@ private fun handleSubmitClick(
     externalId: String,
 ) {
     if (!isAllFieldsValid(
-            context,
+            scope,
+
             clientNames.firstName,
             clientNames.middleName,
             clientNames.lastName,
@@ -694,15 +679,6 @@ private fun handleSubmitClick(
     ) {
         return
     }
-
-//    if (!Network.isOnline(context)) {
-//        Toast.makeText(
-//            context,
-//            context.resources.getString(R.string.feature_client_error_not_connected_internet),
-//            Toast.LENGTH_SHORT,
-//        ).show()
-//        return
-//    }
 
     var clientPayload = createClientPayload(
         clientNames.firstName, clientNames.lastName, selectedOfficeId, staffInOffices, isActive,
@@ -749,18 +725,15 @@ private fun createClientPayload(
 
         // Optional fields with default values
         active = isActive,
-        activationDate = SimpleDateFormat(
-            "dd MMMM yyyy",
-            Locale.getDefault(),
-        ).format(activationDate),
-        dateOfBirth = SimpleDateFormat("dd MMMM yyyy", Locale.getDefault()).format(dateOfBirth),
+        activationDate = formatDate(activationDate),
+        dateOfBirth = formatDate(dateOfBirth),
     )
 
     // Optional fields
     if (middleName.isNotEmpty()) {
         clientPayload = clientPayload.copy(middlename = middleName)
     }
-    if (PhoneNumberUtils.isGlobalPhoneNumber(mobileNumber)) {
+    if (PhoneNumberUtil.isGlobalPhoneNumber(mobileNumber)) {
         clientPayload = clientPayload.copy(mobileNo = mobileNumber)
     }
     if (externalId.isNotEmpty()) {
@@ -779,6 +752,10 @@ private fun createClientPayload(
         clientPayload = clientPayload.copy(clientClassificationId = selectedClientClassificationId)
     }
     return clientPayload
+}
+
+internal expect object PhoneNumberUtil {
+    fun isGlobalPhoneNumber(phoneNumber: String): Boolean
 }
 
 @Composable
@@ -866,7 +843,7 @@ private fun ClientImageSection(selectedImageUri: Uri, onImageClick: () -> Unit) 
             modifier = Modifier
                 .align(Alignment.Center)
                 .clickable { onImageClick() }
-                .border(color = DarkGray, width = 2.dp, shape = CircleShape)
+                .border(color = MaterialTheme.colorScheme.outline, width = 2.dp, shape = CircleShape)
                 .size(80.dp)
                 .clip(CircleShape),
         )
@@ -888,7 +865,7 @@ private fun MifosSelectImageDialog(
         ),
     ) {
         Card(
-            colors = CardDefaults.cardColors(White),
+            colors = CardDefaults.cardColors(MaterialTheme.colorScheme.surface),
             shape = RoundedCornerShape(20.dp),
         ) {
             Column(
@@ -900,61 +877,41 @@ private fun MifosSelectImageDialog(
                 Text(
                     text = stringResource(Res.string.feature_client_please_select_action),
                     modifier = Modifier.fillMaxWidth(),
-                    style = TextStyle(
-                        fontSize = 18.sp,
-                        fontWeight = FontWeight.Normal,
-                        fontStyle = FontStyle.Normal,
-                    ),
-                    color = Color.Black,
+                    style = MaterialTheme.typography.bodyLarge,
                     textAlign = TextAlign.Center,
                 )
                 Spacer(modifier = Modifier.height(20.dp))
 
                 Button(
                     onClick = { takeImage() },
-//                    colors = ButtonDefaults.buttonColors(BlueSecondary),
+                    colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.secondary),
                 ) {
                     Text(
                         text = stringResource(Res.string.feature_client_take_a_photo),
                         modifier = Modifier.fillMaxWidth(),
-                        style = TextStyle(
-                            fontSize = 18.sp,
-                            fontWeight = FontWeight.Normal,
-                            fontStyle = FontStyle.Normal,
-                        ),
-                        color = Color.Black,
+                        style = MaterialTheme.typography.bodyLarge,
                         textAlign = TextAlign.Center,
                     )
                 }
                 Button(
                     onClick = { uploadImage() },
-//                    colors = ButtonDefaults.buttonColors(BlueSecondary),
+                    colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.secondary),
                 ) {
                     Text(
                         text = stringResource(Res.string.feature_client_upload_photo),
                         modifier = Modifier.fillMaxWidth(),
-                        style = TextStyle(
-                            fontSize = 18.sp,
-                            fontWeight = FontWeight.Normal,
-                            fontStyle = FontStyle.Normal,
-                        ),
-                        color = Color.Black,
+                        style = MaterialTheme.typography.bodyLarge,
                         textAlign = TextAlign.Center,
                     )
                 }
                 Button(
                     onClick = { removeImage() },
-//                    colors = ButtonDefaults.buttonColors(BlueSecondary),
+                    colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.secondary),
                 ) {
                     Text(
                         text = stringResource(Res.string.feature_client_remove_existing_photo),
                         modifier = Modifier.fillMaxWidth(),
-                        style = TextStyle(
-                            fontSize = 18.sp,
-                            fontWeight = FontWeight.Normal,
-                            fontStyle = FontStyle.Normal,
-                        ),
-                        color = Color.Black,
+                        style = MaterialTheme.typography.bodyLarge,
                         textAlign = TextAlign.Center,
                     )
                 }
@@ -978,21 +935,21 @@ private fun Context.createTempImageFile(): File {
 }
 
 private fun isAllFieldsValid(
-    context: Context,
+    scope: CoroutineScope,
     firstName: String,
     middleName: String,
     lastName: String,
 ): Boolean {
     return when {
-        !isFirstNameValid(firstName, context) -> {
+        !isFirstNameValid(firstName, scope) -> {
             false
         }
 
-        !isMiddleNameValid(middleName, context) -> {
+        !isMiddleNameValid(middleName, scope) -> {
             false
         }
 
-        !isLastNameValid(lastName, context) -> {
+        !isLastNameValid(lastName, scope) -> {
             false
         }
 
@@ -1000,7 +957,7 @@ private fun isAllFieldsValid(
     }
 }
 
-private fun isFirstNameValid(name: String, context: Context): Boolean {
+private fun isFirstNameValid(name: String): Boolean {
     return when {
         name.isEmpty() -> {
             Toast.makeText(
@@ -1024,7 +981,7 @@ private fun isFirstNameValid(name: String, context: Context): Boolean {
     }
 }
 
-private fun isLastNameValid(name: String, context: Context): Boolean {
+private fun isLastNameValid(name: String): Boolean {
     return when {
         name.isEmpty() -> {
             Toast.makeText(
@@ -1048,7 +1005,7 @@ private fun isLastNameValid(name: String, context: Context): Boolean {
     }
 }
 
-private fun isMiddleNameValid(name: String, context: Context): Boolean {
+private fun isMiddleNameValid(name: String, scope: CoroutineScope, message: String): Boolean {
     return when {
         name.isEmpty() -> {
             true

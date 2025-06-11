@@ -50,7 +50,7 @@ class SurveyListViewModel(
                         SurveyListUiState.ShowFetchingError(Res.string.feature_client_failed_to_fetch_surveys_list)
                 }
                 .collect { surveys ->
-                    mSyncSurveyList = surveys
+                    mSyncSurveyList = surveys.data
                     loadDatabaseSurveys()
                 }
         }
@@ -110,7 +110,7 @@ class SurveyListViewModel(
                         SurveyListUiState.ShowFetchingError(Res.string.feature_client_failed_to_load_db_question_data)
                 }
                 .collect { responseDatas ->
-                    val updatedQuestionDatas = questionDatas.copy(responseDatas = responseDatas)
+                    val updatedQuestionDatas = questionDatas.copy(responseDatas = responseDatas.data)
 
                     mSyncSurveyList = mSyncSurveyList.map { survey ->
                         if (survey.id == questionDatas.surveyId) {

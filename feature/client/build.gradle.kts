@@ -28,9 +28,11 @@ kotlin {
             implementation(compose.foundation)
             implementation(compose.components.resources)
             implementation(compose.components.uiToolingPreview)
+            implementation(libs.androidx.paging.common)
             implementation(libs.kotlinx.serialization.json)
             implementation(libs.coil.kt.compose)
             implementation(libs.coil.network.ktor)
+            implementation(libs.ui.backhandler)
         }
         
         androidMain.dependencies {
@@ -41,6 +43,10 @@ kotlin {
 
             implementation(libs.androidx.paging.compose)
             implementation(libs.coil.network.okhttp)
+        }
+        
+        desktopMain.dependencies {
+            implementation(libs.androidx.paging.compose)
         }
     }
 }
