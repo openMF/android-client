@@ -138,7 +138,7 @@ fun DataTableDataScreen(
 
     if (showAddDataTableRowDialog) {
         DataTableRowDialogScreen(
-            snackbarHostState,
+            snackbarHostState = snackbarHostState,
             dataTable = dataTable,
             entityId = entityId,
             onDismiss = {
