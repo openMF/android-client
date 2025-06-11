@@ -68,11 +68,7 @@ object KoinModules {
 //            LoanModule,
             NoteModule,
 //            OfflineModule,
-            PathTrackingModule,
-//            ReportModule,
-            SavingsModule,
-            SearchModule,
-            SplashModule,
+
             SettingsModule,
         )
     }
