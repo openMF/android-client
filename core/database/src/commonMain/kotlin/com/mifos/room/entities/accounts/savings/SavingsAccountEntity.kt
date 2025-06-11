@@ -20,6 +20,7 @@ import com.mifos.room.utils.PrimaryKey
 import com.mifos.room.utils.UNDEFINED
 import com.mifos.room.utils.UNSPECIFIED
 import com.mifos.room.utils.VALUE_UNSPECIFIED
+import kotlinx.serialization.Serializable
 
 @Entity(
     tableName = "SavingsAccount",
@@ -55,6 +56,7 @@ import com.mifos.room.utils.VALUE_UNSPECIFIED
     ],
 )
 @Parcelize
+@Serializable
 data class SavingsAccountEntity(
     @PrimaryKey(autoGenerate = true)
     val id: Int? = null,

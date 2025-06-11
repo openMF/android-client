@@ -11,13 +11,15 @@ package com.mifos.core.model.objects.checkerinboxtask
 
 import com.mifos.core.model.utils.Parcelable
 import com.mifos.core.model.utils.Parcelize
+import kotlinx.serialization.Serializable
 
 @Parcelize
+@Serializable
 data class RescheduleLoansTask(
     var id: Int,
     var clientName: String,
     var loanAccountNumber: String,
-    var rescheduleFromDate: Array<Int>,
+    var rescheduleFromDate: List<Int>,
     var actionName: String,
     var rescheduleReasonCodeValue: RescheduleReasonCodeValue,
 ) : Parcelable

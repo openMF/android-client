@@ -9,32 +9,34 @@
  */
 package cmp.navigation.navigation
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.Button
-import androidx.compose.material3.Text
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
 import cmp.navigation.AppState
 import com.mifos.feature.about.navigation.aboutNavGraph
 import com.mifos.feature.activate.navigation.activateScreen
+import com.mifos.feature.activate.navigation.navigateToActivateScreen
+import com.mifos.feature.center.navigation.centerNavGraph
+import com.mifos.feature.center.navigation.navigateCreateCenterScreenRoute
+import com.mifos.feature.checker.inbox.task.navigation.checkerInboxTaskNavGraph
+import com.mifos.feature.groups.navigation.groupNavGraph
+import com.mifos.feature.groups.navigation.navigateToCreateNewGroupScreen
+import com.mifos.feature.individualCollectionSheet.navigation.individualCollectionSheetNavGraph
+import com.mifos.feature.note.navigation.navigateToNoteScreen
 import com.mifos.feature.note.navigation.noteNavGraph
-import com.mifos.feature.settings.navigation.navigateToSettingsScreen
+import com.mifos.feature.pathTracking.navigation.pathTrackingNavGraph
+import com.mifos.feature.savings.navigation.navigateToAddSavingsAccount
+import com.mifos.feature.savings.navigation.navigateToSavingsAccountSummaryScreen
+import com.mifos.feature.savings.navigation.savingsNavGraph
+import com.mifos.feature.search.navigation.searchNavGraph
 import com.mifos.feature.settings.navigation.settingsScreen
-
-const val WELCOME_ROUTE = "home_screen"
 
 @Composable
 internal fun FeatureNavHost(
     appState: AppState,
     onClickLogout: () -> Unit,
+    padding: PaddingValues,
     modifier: Modifier = Modifier,
 ) {
     NavHost(
@@ -43,7 +45,26 @@ internal fun FeatureNavHost(
         navController = appState.navController,
         modifier = modifier,
     ) {
-        homeScreen(onClick = { appState.navController.navigateToSettingsScreen() })
+        checkerInboxTaskNavGraph(appState.navController)
+
+        searchNavGraph(
+            paddingValues = padding,
+            onCreateClient = { println("Create Client") },
+            onCreateCenter = appState.navController::navigateCreateCenterScreenRoute,
+            onCreateGroup = appState.navController::navigateToCreateNewGroupScreen,
+            onClient = { id -> println("Client clicked: $id") },
+            onCenter = { id -> println("Center clicked: $id") },
+            onGroup = { id -> println("Group clicked: $id") },
+            onLoan = { id -> println("Loan clicked: $id") },
+            onSavings = { id -> println("Savings clicked: $id") },
+        )
+
+        savingsNavGraph(
+            navController = appState.navController,
+            onBackPressed = appState.navController::popBackStack,
+            loadDocuments = { _, _ -> },
+            loadMoreSavingsAccountInfo = { _, _ -> },
+        )
 
         aboutNavGraph(onBackPressed = appState.navController::popBackStack)
 
@@ -51,31 +72,41 @@ internal fun FeatureNavHost(
 
         activateScreen(onBackPressed = appState.navController::popBackStack)
 
+        centerNavGraph(
+            navController = appState.navController,
+            paddingValues = padding,
+            onActivateCenter = appState.navController::navigateToActivateScreen,
+            addSavingsAccount = { centerId ->
+                appState.navController.navigateToAddSavingsAccount(0, centerId, false)
+            },
+        )
+
+        groupNavGraph(
+            navController = appState.navController,
+            paddingValues = padding,
+            addGroupLoanAccount = {},
+            addSavingsAccount = appState.navController::navigateToAddSavingsAccount,
+            loadDocumentList = { _, _ -> },
+            clientListFragment = {},
+            loadSavingsAccountSummary = appState.navController::navigateToSavingsAccountSummaryScreen,
+            loadGroupDataTables = { _, _ -> },
+            loadNotes = appState.navController::navigateToNoteScreen,
+            loadLoanAccountSummary = { _ -> },
+            activateGroup = appState.navController::navigateToActivateScreen,
+        )
+
         settingsScreen(
             navigateBack = appState.navController::popBackStack,
             navigateToLoginScreen = {},
             changePasscode = {},
             languageChanged = {},
         )
-    }
-}
 
-fun NavGraphBuilder.homeScreen(onClick: () -> Unit) {
-    composable(route = HomeDestinationsScreen.SearchScreen.route) {
-        WelcomeScreen(onClick)
-    }
-}
+        individualCollectionSheetNavGraph(
+            navController = appState.navController,
+            onBackPressed = appState.navController::popBackStack,
+        )
 
-@Composable
-fun WelcomeScreen(onClick: () -> Unit) {
-    Column(
-        modifier = Modifier.fillMaxSize().background(Color.White),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally,
-    ) {
-        Text(text = "Welcome to Mifos", color = Color.Black)
-        Button(onClick = onClick) {
-            Text("navigate")
-        }
+        pathTrackingNavGraph(appState.navController)
     }
 }
