@@ -27,7 +27,6 @@ import com.mifos.feature.pathTracking.di.PathTrackingModule
 import com.mifos.feature.savings.di.SavingsModule
 import com.mifos.feature.search.di.SearchModule
 import com.mifos.feature.settings.di.SettingsModule
-import com.mifos.feature.splash.di.SplashModule
 import com.mifos.room.di.DaoModule
 import com.mifos.room.di.HelperModule
 import com.mifos.room.di.PlatformSpecificDatabaseModule
@@ -77,7 +76,6 @@ object KoinModules {
 //            ReportModule,
             SavingsModule,
             SearchModule,
-            SplashModule,
             SettingsModule,
         )
     }

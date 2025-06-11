@@ -16,6 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.compose.rememberNavController
 import cmp.navigation.navigation.NavGraphRoute.AUTH_GRAPH
+import cmp.navigation.navigation.NavGraphRoute.LOADING_GRAPH
 import cmp.navigation.navigation.NavGraphRoute.MAIN_GRAPH
 import cmp.navigation.navigation.RootNavGraph
 import com.mifos.core.data.util.NetworkMonitor
@@ -34,7 +35,7 @@ fun ComposeApp(
     val navController = rememberNavController()
 
     val navDestination = when (uiState) {
-        is MainUiState.Loading -> AUTH_GRAPH
+        is MainUiState.Loading -> LOADING_GRAPH
         is MainUiState.Success -> if ((uiState as MainUiState.Success).isAuthenticated) {
             MAIN_GRAPH
         } else {
@@ -42,11 +43,10 @@ fun ComposeApp(
         }
     }
 
-    val isDarkTheme=when(uiState)
-    {
+    val isDarkTheme = when (uiState) {
         MainUiState.Loading -> isSystemInDarkTheme()
         is MainUiState.Success -> {
-            when((uiState as MainUiState.Success).appTheme){
+            when ((uiState as MainUiState.Success).appTheme) {
                 AppTheme.SYSTEM -> isSystemInDarkTheme()
                 AppTheme.LIGHT -> false
                 AppTheme.DARK -> true

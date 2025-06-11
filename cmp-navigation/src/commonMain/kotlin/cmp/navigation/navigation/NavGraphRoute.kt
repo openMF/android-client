@@ -14,4 +14,5 @@ internal object NavGraphRoute {
     const val AUTH_GRAPH = "auth_graph"
     const val PASSCODE_GRAPH = "passcode_graph"
     const val MAIN_GRAPH = "main_graph"
+    const val LOADING_GRAPH = "loading_graph"
 }
