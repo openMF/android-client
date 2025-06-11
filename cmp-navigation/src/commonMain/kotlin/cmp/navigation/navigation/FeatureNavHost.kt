@@ -24,6 +24,7 @@ import com.mifos.feature.checker.inbox.task.navigation.checkerInboxTaskNavGraph
 import com.mifos.feature.groups.navigation.groupNavGraph
 import com.mifos.feature.groups.navigation.navigateToCreateNewGroupScreen
 import com.mifos.feature.individualCollectionSheet.navigation.individualCollectionSheetNavGraph
+import com.mifos.feature.loan.navigation.loanNavGraph
 import com.mifos.feature.note.navigation.navigateToNoteScreen
 import com.mifos.feature.note.navigation.noteNavGraph
 import com.mifos.feature.pathTracking.navigation.pathTrackingNavGraph
@@ -108,5 +109,12 @@ internal fun FeatureNavHost(
         )
 
         pathTrackingNavGraph(appState.navController)
+
+        loanNavGraph(
+            navController = appState.navController,
+            // todo add navigation after migrating document module
+            onDocumentsClicked = { _, _ -> },
+            onMoreInfoClicked = { _, _ -> },
+        )
     }
 }
