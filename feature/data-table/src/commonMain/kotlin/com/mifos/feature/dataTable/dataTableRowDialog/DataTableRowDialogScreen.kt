@@ -26,10 +26,13 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -39,8 +42,8 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.icon.MifosIcons
-import com.mifos.core.ui.components.MifosAlertDialog
 import com.mifos.room.entities.noncore.DataTableEntity
+import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
@@ -50,6 +53,7 @@ import org.koin.compose.viewmodel.koinViewModel
 @Composable
 fun DataTableRowDialogScreen(
     dataTable: DataTableEntity,
+    snackbarHostState: SnackbarHostState,
     entityId: Int,
     onDismiss: () -> Unit,
     onSuccess: () -> Unit,
@@ -63,6 +67,7 @@ fun DataTableRowDialogScreen(
         onDismiss = onDismiss,
         onSuccess = onSuccess,
         onRetry = { },
+        snackbarHostState = snackbarHostState,
         onCreate = {
             dataTable.registeredTableName?.let { tableName ->
                 viewModel.addDataTableEntry(
@@ -79,12 +84,14 @@ fun DataTableRowDialogScreen(
 fun DataTableRowDialogScreen(
     dataTable: DataTableEntity,
     state: DataTableRowDialogUiState,
+    snackbarHostState: SnackbarHostState,
     onDismiss: () -> Unit,
     onSuccess: () -> Unit,
     onRetry: () -> Unit,
     onCreate: (HashMap<String, String>) -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val scope = rememberCoroutineScope()
     Dialog(
         onDismissRequest = { onDismiss() },
     ) {
@@ -98,14 +105,11 @@ fun DataTableRowDialogScreen(
             ) {
                 when (state) {
                     is DataTableRowDialogUiState.DataTableEntrySuccessfully -> {
-                        MifosAlertDialog(
-                            dialogTitle = "Success",
-                            dialogText = stringResource(Res.string.feature_data_table_added_data_table_successfully),
-                            confirmationText = "Okay",
-                            dismissText = null,
-                            onDismissRequest = {},
-                            onConfirmation = onSuccess,
-                        )
+                        val message = stringResource(Res.string.feature_data_table_added_data_table_successfully)
+                        scope.launch {
+                            snackbarHostState.showSnackbar(message)
+                        }
+                        onSuccess.invoke()
                     }
 
                     is DataTableRowDialogUiState.Error -> MifosSweetError(
@@ -194,6 +198,7 @@ private fun DataTableRowDialogScreenPreview(
         state = state,
         onDismiss = {},
         onSuccess = {},
+        snackbarHostState = remember { SnackbarHostState() },
         onRetry = {},
         onCreate = {},
     )

@@ -43,6 +43,12 @@ class DataTableViewModel(
     private val _isRefreshing = MutableStateFlow(false)
     val isRefreshing: StateFlow<Boolean> get() = _isRefreshing.asStateFlow()
 
+    init {
+        viewModelScope.launch {
+            loadDataTable(args.tableName)
+        }
+    }
+
     fun refresh(tableName: String?) {
         viewModelScope.launch {
             _isRefreshing.emit(true)
@@ -51,30 +57,28 @@ class DataTableViewModel(
         }
     }
 
-    fun loadDataTable(tableName: String?) {
-        viewModelScope.launch {
-            repository.getDataTable(tableName)
-                .collect { dataState ->
-                    when (dataState) {
-                        is DataState.Error -> {
-                            _dataTableUiState.value =
-                                DataTableUiState.ShowError(Res.string.feature_data_table_something_went_wrong)
-                        }
+    suspend fun loadDataTable(tableName: String?) {
+        repository.getDataTable(tableName)
+            .collect { dataState ->
+                when (dataState) {
+                    is DataState.Error -> {
+                        _dataTableUiState.value =
+                            DataTableUiState.ShowError(Res.string.feature_data_table_something_went_wrong)
+                    }
 
-                        DataState.Loading ->
-                            _dataTableUiState.value =
-                                DataTableUiState.ShowProgressbar
+                    DataState.Loading ->
+                        _dataTableUiState.value =
+                            DataTableUiState.ShowProgressbar
 
-                        is DataState.Success -> {
-                            val result = dataState.data
-                            if (result.isEmpty()) {
-                                _dataTableUiState.value = DataTableUiState.ShowEmptyDataTables
-                            } else {
-                                _dataTableUiState.value = DataTableUiState.ShowDataTables(result)
-                            }
+                    is DataState.Success -> {
+                        val result = dataState.data
+                        _dataTableUiState.value = if (result.isEmpty()) {
+                            DataTableUiState.ShowEmptyDataTables
+                        } else {
+                            DataTableUiState.ShowDataTables(result)
                         }
                     }
                 }
-        }
+            }
     }
 }

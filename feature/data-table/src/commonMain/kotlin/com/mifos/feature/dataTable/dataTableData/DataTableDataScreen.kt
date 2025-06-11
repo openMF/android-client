@@ -46,6 +46,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -67,10 +68,10 @@ import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.icon.MifosIcons
-import com.mifos.core.ui.components.MifosAlertDialog
 import com.mifos.core.ui.components.MifosEmptyUi
 import com.mifos.feature.dataTable.dataTableRowDialog.DataTableRowDialogScreen
 import com.mifos.room.entities.noncore.DataTableEntity
+import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonArray
 import kotlinx.serialization.json.JsonElement
@@ -130,13 +131,14 @@ fun DataTableDataScreen(
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
     val pullRefreshState = rememberPullToRefreshState()
-
+    val scope = rememberCoroutineScope()
     var showOptionDialog by rememberSaveable { mutableStateOf(false) }
     var deleteDataTableId by rememberSaveable { mutableIntStateOf(0) }
     var showAddDataTableRowDialog by rememberSaveable { mutableStateOf(false) }
 
     if (showAddDataTableRowDialog) {
         DataTableRowDialogScreen(
+            snackbarHostState,
             dataTable = dataTable,
             entityId = entityId,
             onDismiss = {
@@ -182,16 +184,13 @@ fun DataTableDataScreen(
             ) {
                 when (state) {
                     is DataTableDataUiState.DataTableDeletedSuccessfully -> {
-                        MifosAlertDialog(
-                            dialogTitle = "Success",
-                            dialogText = stringResource(Res.string.feature_data_table_data_table_created_successfully),
-                            confirmationText = "Okay",
-                            dismissText = null,
-                            onDismissRequest = {},
-                            onConfirmation = {
-                                onBackPressed()
-                            },
+                        val errorMessage = stringResource(
+                            (Res.string.feature_data_table_data_table_created_successfully),
                         )
+                        scope.launch {
+                            snackbarHostState.showSnackbar(message = errorMessage)
+                        }
+                        onBackPressed()
                     }
 
                     is DataTableDataUiState.DataTableInfo -> {
