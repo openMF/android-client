@@ -20,7 +20,7 @@ import com.mifos.core.data.util.NetworkMonitor
 import com.mifos.feature.auth.navigation.AuthScreens
 import com.mifos.feature.auth.navigation.authNavGraph
 import com.mifos.feature.auth.navigation.navigateToLogin
-import com.mifos.feature.splash.navigation.splashNavGraph
+//import com.mifos.feature.splash.navigation.splashNavGraph
 
 @Composable
 fun RootNavGraph(
@@ -40,10 +40,10 @@ fun RootNavGraph(
             updateServerConfig = {},
         )
 
-        splashNavGraph(
-            navigateLogin = navHostController::navigateToLogin,
-            navigatePasscode = {},
-        )
+//        splashNavGraph(
+//            navigateLogin = navHostController::navigateToLogin,
+//            navigatePasscode = {},
+//        )
 
         composable(MAIN_GRAPH) {
             App(

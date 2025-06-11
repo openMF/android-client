@@ -94,6 +94,7 @@ multidex = "2.0.1"
 navigationFragmentKtx = "2.8.5"
 navigationUiKtx = "2.8.5"
 okhttpVersion = "4.12.0"
+okio = "3.9.0"
 pagingRuntimeKtx = "3.3.5"
 playServicesLocation = "21.3.0"
 playServicesMaps = "19.0.0"
@@ -236,6 +237,7 @@ kotlinx-serialization-json-v163 = { module = "org.jetbrains.kotlinx:kotlinx-seri
 mifos-koin-android = { module = "io.insert-koin:koin-android", version.ref = "koinAndroid" }
 koin-androidx-compose-v350 = { module = "io.insert-koin:koin-androidx-compose", version.ref = "koinAndroidxCompose" }
 maps-compose = { module = "com.google.maps.android:maps-compose", version.ref = "mapsCompose" }
+okio-v390 = { module = "com.squareup.okio:okio", version.ref = "okio" }
 retrofit2-kotlinx-serialization-converter = { module = "com.jakewharton.retrofit:retrofit2-kotlinx-serialization-converter", version.ref = "retrofit2KotlinxSerializationConverter" }
 rxandroid = { module = "io.reactivex:rxandroid", version.ref = "rxandroidVersion" }
 rxjava = { module = "io.reactivex:rxjava", version.ref = "rxjava" }
@@ -555,7 +557,7 @@ moko-permission-compose = { group = "dev.icerock.moko", name = "permissions-comp
 
 window-size = { group = "dev.chrisbanes.material3", name = "material3-window-size-class-multiplatform", version.ref = "windowsSizeClass" }
 androidx-material3-android = { group = "androidx.compose.material3", name = "material3-android", version.ref = "material3Android" }
-androidx-ui-android = { group = "androidx.compose.ui", name = "ui-android", version.ref = "uiAndroid" }
+
 
 [plugins]
 
