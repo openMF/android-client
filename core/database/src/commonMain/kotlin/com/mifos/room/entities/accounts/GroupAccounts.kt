@@ -13,8 +13,10 @@ import com.mifos.core.model.utils.Parcelable
 import com.mifos.core.model.utils.Parcelize
 import com.mifos.room.entities.accounts.loans.LoanAccountEntity
 import com.mifos.room.entities.accounts.savings.SavingsAccountEntity
+import kotlinx.serialization.Serializable
 
 @Parcelize
+@Serializable
 data class GroupAccounts(
     var loanAccounts: List<LoanAccountEntity> = emptyList(),
 

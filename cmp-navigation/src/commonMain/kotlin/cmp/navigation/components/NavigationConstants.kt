@@ -10,11 +10,12 @@
 package cmp.navigation.components
 
 import cmp.navigation.navigation.HomeDestinationsScreen
+import com.mifos.feature.search.navigation.SearchScreens
 
 object NavigationConstants {
 
     private val NavScreenRoutes = listOf(
-        HomeDestinationsScreen.SearchScreen.route,
+        SearchScreens.SearchScreen.route,
         HomeDestinationsScreen.ClientListScreen.route,
         HomeDestinationsScreen.CenterListScreen.route,
         HomeDestinationsScreen.GroupListScreen.route,
@@ -22,5 +23,13 @@ object NavigationConstants {
 
     fun isNavScreen(route: String?): Boolean {
         return NavScreenRoutes.contains(route)
+    }
+    fun getTitleForRoute(route: String?): String {
+        return when (route) {
+            HomeDestinationsScreen.ClientListScreen.route -> HomeDestinationsScreen.ClientListScreen.title
+            HomeDestinationsScreen.CenterListScreen.route -> HomeDestinationsScreen.CenterListScreen.title
+            HomeDestinationsScreen.GroupListScreen.route -> HomeDestinationsScreen.GroupListScreen.title
+            else -> "Dashboard"
+        }
     }
 }
