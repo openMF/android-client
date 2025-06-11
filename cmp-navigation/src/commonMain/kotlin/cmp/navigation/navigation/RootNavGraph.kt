@@ -19,8 +19,6 @@ import cmp.navigation.navigation.NavGraphRoute.AUTH_GRAPH
 import cmp.navigation.navigation.NavGraphRoute.MAIN_GRAPH
 import com.mifos.core.data.util.NetworkMonitor
 import com.mifos.feature.auth.navigation.authNavGraph
-import com.mifos.feature.auth.navigation.navigateToLogin
-import com.mifos.feature.splash.navigation.splashNavGraph
 
 @Composable
 fun RootNavGraph(
@@ -41,11 +39,6 @@ fun RootNavGraph(
             navigateHome = { navHostController.navigate(MAIN_GRAPH) },
             navigatePasscode = { },
             updateServerConfig = {},
-        )
-
-        splashNavGraph(
-            navigateLogin = navHostController::navigateToLogin,
-            navigatePasscode = {},
         )
 
         composable(MAIN_GRAPH) {
