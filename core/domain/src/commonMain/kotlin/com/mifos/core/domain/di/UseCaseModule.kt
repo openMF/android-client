@@ -46,12 +46,14 @@ import com.mifos.core.domain.useCases.GetClientPinpointLocationsUseCase
 import com.mifos.core.domain.useCases.GetClientSavingsAccountTemplateByProductUseCase
 import com.mifos.core.domain.useCases.GetDataTableInfoUseCase
 import com.mifos.core.domain.useCases.GetDocumentsListUseCase
+import com.mifos.core.domain.useCases.GetGroupDetailsUseCase
 import com.mifos.core.domain.useCases.GetGroupLoansAccountTemplateUseCase
 import com.mifos.core.domain.useCases.GetGroupSavingsAccountTemplateByProductUseCase
 import com.mifos.core.domain.useCases.GetGroupsByCenterUseCase
 import com.mifos.core.domain.useCases.GetGroupsByOfficeUseCase
 import com.mifos.core.domain.useCases.GetIndividualCollectionSheetUseCase
 import com.mifos.core.domain.useCases.GetListOfLoanChargesUseCase
+import com.mifos.core.domain.useCases.GetLoanAndLoanRepaymentUseCase
 import com.mifos.core.domain.useCases.GetLoansAccountTemplateUseCase
 import com.mifos.core.domain.useCases.GetReportCategoryUseCase
 import com.mifos.core.domain.useCases.GetReportFullParameterListUseCase
@@ -59,6 +61,7 @@ import com.mifos.core.domain.useCases.GetReportParameterDetailsUseCase
 import com.mifos.core.domain.useCases.GetRunReportOfficesUseCase
 import com.mifos.core.domain.useCases.GetRunReportProductUseCase
 import com.mifos.core.domain.useCases.GetRunReportWithQueryUseCase
+import com.mifos.core.domain.useCases.GetSavingsAccountAndTemplateUseCase
 import com.mifos.core.domain.useCases.GetStaffInOfficeUseCase
 import com.mifos.core.domain.useCases.GetUserPathTrackingUseCase
 import com.mifos.core.domain.useCases.GroupsListPagingDataSource
@@ -153,4 +156,7 @@ val UseCaseModule = module {
     factoryOf(::ValidateServerEndPointUseCase)
     factoryOf(::ValidateServerPortUseCase)
     factoryOf(::ValidateServerTenantUseCase)
+    factoryOf(::GetGroupDetailsUseCase)
+    factoryOf(::GetLoanAndLoanRepaymentUseCase)
+    factoryOf(::GetSavingsAccountAndTemplateUseCase)
 }
