@@ -27,11 +27,9 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
-import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -45,6 +43,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import co.touchlab.kermit.Logger
@@ -54,6 +53,8 @@ import com.mifos.core.designsystem.component.MifosRadioButtonDialog
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.UpdateEndpointDialogScreen
 import com.mifos.core.ui.util.DevicePreview
+import com.mifos.core.ui.util.ShareUtils
+import com.mifos.feature.settings.syncSurvey.SyncSurveysDialog
 import com.mifos.feature.settings.updateServer.UpdateServerConfigScreenRoute
 import kotlinx.coroutines.delay
 import org.jetbrains.compose.resources.StringResource
@@ -74,7 +75,6 @@ internal fun SettingsScreen(
     SettingsScreen(
         onBackPressed = onBackPressed,
         selectedLanguage = uiState.language.code,
-        selectedTheme = uiState.theme.themeName,
         currentTheme = uiState.theme,
         baseURL = uiState.baseUrl,
         tenant = uiState.tenant,
@@ -103,7 +103,6 @@ internal fun SettingsScreen(
 internal fun SettingsScreen(
     onBackPressed: () -> Unit,
     selectedLanguage: String,
-    selectedTheme: String,
     currentTheme: AppTheme,
     baseURL: String,
     tenant: String,
@@ -117,15 +116,25 @@ internal fun SettingsScreen(
     var showThemeUpdateDialog by rememberSaveable { mutableStateOf(false) }
     var showSyncSurveyDialog by rememberSaveable { mutableStateOf(false) }
     var showServerConfig by rememberSaveable { mutableStateOf(false) }
+    var restartTriggered by rememberSaveable { mutableStateOf(false) }
+    val snackbarHostState = remember { SnackbarHostState() }
 
-    val sheetState = rememberModalBottomSheetState()
-
-    LaunchedEffect(currentTheme) {
-        Logger.d { "Current theme changed to: $currentTheme" }
+    LaunchedEffect(restartTriggered) {
+        if (restartTriggered) {
+            for (i in 5 downTo 1) {
+                snackbarHostState.showSnackbar(
+                    message = "Restarting in $i seconds...",
+                    duration = SnackbarDuration.Short,
+                    withDismissAction = false,
+                )
+            }
+            ShareUtils.restartApplication()
+        }
     }
 
     MifosScaffold(
         onBackPressed = onBackPressed,
+        snackbarHostState = snackbarHostState,
         title = stringResource(resource = Res.string.feature_settings),
     ) { paddingValues ->
         Column(
@@ -152,23 +161,22 @@ internal fun SettingsScreen(
     }
 
     if (showSyncSurveyDialog) {
-//        SyncSurveysDialog(
-//            closeDialog = {
-//                showSyncSurveyDialog = false
-//            },
-//        )
+        SyncSurveysDialog(
+            closeDialog = {
+                showSyncSurveyDialog = false
+            },
+        )
     }
 
     if (showServerConfig) {
-        ModalBottomSheet(
+        Dialog(
             onDismissRequest = { showServerConfig = false },
-            sheetState = sheetState,
         ) {
             UpdateServerConfigScreenRoute(
                 onCloseClick = { showServerConfig = false },
                 onSuccessful = {
                     showServerConfig = false
-//                    RestartCountdownSnackbar(2, SnackbarHostState())
+                    restartTriggered = true
                 },
             )
         }
@@ -199,7 +207,10 @@ internal fun SettingsScreen(
             initialBaseURL = baseURL,
             initialTenant = tenant,
             onDismissRequest = { showEndpointUpdateDialog = false },
-            handleEndpointUpdate = handleEndpointUpdate,
+            handleEndpointUpdate = { url, tenant ->
+                handleEndpointUpdate(url, tenant)
+                showEndpointUpdateDialog = false
+            },
         )
     }
 }
@@ -317,7 +328,6 @@ private fun PreviewSettingsScreen() {
     SettingsScreen(
         onBackPressed = {},
         selectedLanguage = "",
-        selectedTheme = "",
         currentTheme = AppTheme.SYSTEM,
         baseURL = "",
         tenant = "",

@@ -12,26 +12,24 @@ package com.mifos.feature.settings.syncSurvey
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import co.touchlab.kermit.Logger
+import com.mifos.core.data.util.NetworkMonitor
 import com.mifos.room.entities.survey.QuestionDatasEntity
 import com.mifos.room.entities.survey.ResponseDatasEntity
 import com.mifos.room.entities.survey.SurveyEntity
 import io.ktor.client.plugins.ClientRequestException
 import io.ktor.client.plugins.ServerResponseException
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
-/**
- * Created by Aditya Gupta on 16/08/23.
- */
 class SyncSurveysDialogViewModel(
     private val repository: SyncSurveysDialogRepository,
+    networkMonitor: NetworkMonitor,
 ) :
     ViewModel() {
-
-//    @Inject
-//    lateinit var networkUtilsWrapper: NetworkUtilsWrapper
 
     private val _syncSurveysDialogUiState =
         MutableStateFlow<SyncSurveysDialogUiState>(SyncSurveysDialogUiState.Initial)
@@ -49,15 +47,12 @@ class SyncSurveysDialogViewModel(
     private var mResponseDataSyncIndex = 0
     private var maxSingleSyncSurveyProgressBar = 0
 
-    private fun checkNetworkConnection(): Boolean {
-        // to pass detekt
-        if (1 == 2) {
-            return true
-        } else {
-            return false
-        }
-//        return networkUtilsWrapper.isNetworkConnected()
-    }
+    val isNetworkAvailable: StateFlow<Boolean> = networkMonitor.isOnline
+        .stateIn(
+            viewModelScope,
+            SharingStarted.WhileSubscribed(5_000),
+            initialValue = false,
+        )
 
     /**
      * This Method Start Syncing Surveys. Start Syncing the Survey Accounts.
@@ -72,7 +67,7 @@ class SyncSurveysDialogViewModel(
      * This Method checking network connection before starting survey synchronization
      */
     private fun checkNetworkConnectionAndSyncSurvey() {
-        if (checkNetworkConnection()) {
+        if (isNetworkAvailable.value) {
             syncSurveyAndUpdateUI()
         } else {
             _syncSurveysDialogUiState.value = SyncSurveysDialogUiState.ShowNetworkIsNotAvailable
@@ -84,7 +79,7 @@ class SyncSurveysDialogViewModel(
      * This Method checking network connection before starting questiondata synchronization
      */
     private fun checkNetworkConnectionAndSyncQuestionData() {
-        if (checkNetworkConnection()) {
+        if (isNetworkAvailable.value) {
             syncQuestionDataAndUpdateUI()
         } else {
             _syncSurveysDialogUiState.value = SyncSurveysDialogUiState.ShowNetworkIsNotAvailable
@@ -96,7 +91,7 @@ class SyncSurveysDialogViewModel(
      * This Method checking network connection before starting responsedata synchronization
      */
     private fun checkNetworkConnectionAndSyncResponseData() {
-        if (checkNetworkConnection()) {
+        if (isNetworkAvailable.value) {
             syncResponseDataAndUpdateUI()
         } else {
             _syncSurveysDialogUiState.value = SyncSurveysDialogUiState.ShowNetworkIsNotAvailable

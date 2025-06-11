@@ -9,6 +9,7 @@
  */
 package cmp.navigation.di
 
+import cmp.navigation.ComposeAppViewModel
 import com.mifos.core.common.network.di.DispatchersModule
 import com.mifos.core.data.di.RepositoryModule
 import com.mifos.core.datastore.di.PreferencesModule
@@ -27,10 +28,10 @@ import com.mifos.feature.pathTracking.di.PathTrackingModule
 import com.mifos.feature.savings.di.SavingsModule
 import com.mifos.feature.search.di.SearchModule
 import com.mifos.feature.settings.di.SettingsModule
-import com.mifos.feature.splash.di.SplashModule
 import com.mifos.room.di.DaoModule
 import com.mifos.room.di.HelperModule
 import com.mifos.room.di.PlatformSpecificDatabaseModule
+import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.module
 
 object KoinModules {
@@ -53,6 +54,9 @@ object KoinModules {
             NetworkModule,
         )
     }
+    private val sharedModule = module {
+        viewModelOf(::ComposeAppViewModel)
+    }
 
     private val featureModules = module {
         includes(
@@ -73,12 +77,12 @@ object KoinModules {
 //            ReportModule,
             SavingsModule,
             SearchModule,
-            SplashModule,
             SettingsModule,
         )
     }
 
     val allModules = listOf(
+        sharedModule,
         commonModules,
         domainModule,
         dataModules,
