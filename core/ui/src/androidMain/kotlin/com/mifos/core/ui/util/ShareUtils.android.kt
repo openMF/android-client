@@ -177,4 +177,14 @@ actual object ShareUtils {
         }
         context.startActivity(intent)
     }
+
+    actual fun restartApplication() {
+        val context = activityProvider.invoke().applicationContext
+        val packageManager = context.packageManager
+        val intent = packageManager.getLaunchIntentForPackage(context.packageName)
+        val componentName = intent?.component ?: return
+        val restartIntent = Intent.makeRestartActivityTask(componentName)
+        context.startActivity(restartIntent)
+        Runtime.getRuntime().exit(0)
+    }
 }

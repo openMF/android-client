@@ -17,13 +17,19 @@ import cmp.navigation.AppState
 import com.mifos.feature.about.navigation.aboutNavGraph
 import com.mifos.feature.activate.navigation.activateScreen
 import com.mifos.feature.activate.navigation.navigateToActivateScreen
+import com.mifos.feature.auth.navigation.navigateToLogin
 import com.mifos.feature.center.navigation.centerNavGraph
+import com.mifos.feature.center.navigation.navigateCreateCenterScreenRoute
 import com.mifos.feature.checker.inbox.task.navigation.checkerInboxTaskNavGraph
+import com.mifos.feature.groups.navigation.groupNavGraph
+import com.mifos.feature.groups.navigation.navigateToCreateNewGroupScreen
 import com.mifos.feature.individualCollectionSheet.navigation.individualCollectionSheetNavGraph
+import com.mifos.feature.note.navigation.navigateToNoteScreen
 import com.mifos.feature.note.navigation.noteNavGraph
 import com.mifos.feature.offline.navigation.offlineNavGraph
 import com.mifos.feature.pathTracking.navigation.pathTrackingNavGraph
 import com.mifos.feature.savings.navigation.navigateToAddSavingsAccount
+import com.mifos.feature.savings.navigation.navigateToSavingsAccountSummaryScreen
 import com.mifos.feature.savings.navigation.savingsNavGraph
 import com.mifos.feature.search.navigation.searchNavGraph
 import com.mifos.feature.settings.navigation.settingsScreen
@@ -31,7 +37,6 @@ import com.mifos.feature.settings.navigation.settingsScreen
 @Composable
 internal fun FeatureNavHost(
     appState: AppState,
-    onClickLogout: () -> Unit,
     padding: PaddingValues,
     modifier: Modifier = Modifier,
 ) {
@@ -46,8 +51,8 @@ internal fun FeatureNavHost(
         searchNavGraph(
             paddingValues = padding,
             onCreateClient = { println("Create Client") },
-            onCreateCenter = { println("Create Center") },
-            onCreateGroup = { println("Create Group") },
+            onCreateCenter = appState.navController::navigateCreateCenterScreenRoute,
+            onCreateGroup = appState.navController::navigateToCreateNewGroupScreen,
             onClient = { id -> println("Client clicked: $id") },
             onCenter = { id -> println("Center clicked: $id") },
             onGroup = { id -> println("Group clicked: $id") },
@@ -79,9 +84,23 @@ internal fun FeatureNavHost(
             },
         )
 
+        groupNavGraph(
+            navController = appState.navController,
+            paddingValues = padding,
+            addGroupLoanAccount = {},
+            addSavingsAccount = appState.navController::navigateToAddSavingsAccount,
+            loadDocumentList = { _, _ -> },
+            clientListFragment = {},
+            loadSavingsAccountSummary = appState.navController::navigateToSavingsAccountSummaryScreen,
+            loadGroupDataTables = { _, _ -> },
+            loadNotes = appState.navController::navigateToNoteScreen,
+            loadLoanAccountSummary = { _ -> },
+            activateGroup = appState.navController::navigateToActivateScreen,
+        )
+
         settingsScreen(
             navigateBack = appState.navController::popBackStack,
-            navigateToLoginScreen = {},
+            navigateToLoginScreen = appState.navController::navigateToLogin,
             changePasscode = {},
             languageChanged = {},
         )
