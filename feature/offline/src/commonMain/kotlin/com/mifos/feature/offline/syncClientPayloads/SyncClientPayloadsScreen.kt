@@ -363,3 +363,39 @@ private fun PayloadFieldOfficePreview() {
 private fun PayloadFieldActivationPreview() {
     PayloadField(label = "Activation Date", value = "2023-07-15")
 }
+// Sample data for previews
+// val sampleClientPayloads = List(5) { index ->
+//    ClientPayloadEntity().apply {
+//        firstname = "John$index"
+//        middlename = "Sam$index"
+//        lastname = "Doe$index"
+//        mobileNo = "123456789$index"
+//        externalId = "EXT-$index"
+//        officeId = index
+//        active = index % 2 == 0
+//        activationDate = "2023-07-${15 + index}"
+//        genderId = if (index % 3 == 0) 24 else 22
+//        dateOfBirth = "1990-01-0$index"
+//        errorMessage = if (index % 2 == 0) null else "Error in payload"
+//    }
+// }
+
+// @DevicePreview
+// @Composable
+// private fun ClientPayloadItemPreview() {
+//    val sampleClientPayload = ClientPayloadEntity().apply {
+//        firstname = "John"
+//        middlename = "Michael"
+//        lastname = "Doe"
+//        mobileNo = "1234567890"
+//        externalId = "EXT-001"
+//        genderId = 22
+//        dateOfBirth = "1990-01-01"
+//        officeId = 12
+//        activationDate = "2023-07-15"
+//        active = true
+//        errorMessage = null
+//    }
+//
+//    ClientPayloadItem(payload = sampleClientPayload)
+// }

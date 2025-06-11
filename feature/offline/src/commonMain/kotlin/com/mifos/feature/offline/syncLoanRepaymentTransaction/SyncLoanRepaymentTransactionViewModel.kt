@@ -12,7 +12,6 @@ package com.mifos.feature.offline.syncLoanRepaymentTransaction
 import androidclient.feature.offline.generated.resources.Res
 import androidclient.feature.offline.generated.resources.feature_offline_failed_to_load_loanrepayment
 import androidclient.feature.offline.generated.resources.feature_offline_failed_to_load_paymentoptions
-import androidclient.feature.offline.generated.resources.feature_offline_failed_to_update_list
 import androidclient.feature.offline.generated.resources.feature_offline_no_loanrepayment_to_sync
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -28,8 +27,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
@@ -77,12 +74,7 @@ class SyncLoanRepaymentTransactionViewModel(
                 SyncLoanRepaymentTransactionUiState.ShowProgressbar
 
             repository.databaseLoanRepayments()
-                .catch {
-                    _syncLoanRepaymentTransactionUiState.value =
-                        SyncLoanRepaymentTransactionUiState.ShowError(Res.string.feature_offline_failed_to_load_loanrepayment)
-                }
-                .collect {
-                        loanRepaymentRequests ->
+                .collect { loanRepaymentRequests ->
                     when (loanRepaymentRequests) {
                         is DataState.Success -> {
                             mLoanRepaymentRequests = loanRepaymentRequests.data.toMutableList()
@@ -109,10 +101,6 @@ class SyncLoanRepaymentTransactionViewModel(
                 SyncLoanRepaymentTransactionUiState.ShowProgressbar
 
             repository.paymentTypeOption()
-                .catch {
-                    _syncLoanRepaymentTransactionUiState.value =
-                        SyncLoanRepaymentTransactionUiState.ShowError(Res.string.feature_offline_failed_to_load_paymentoptions)
-                }
                 .collect { paymentTypeOptions ->
                     when (paymentTypeOptions) {
                         is DataState.Success -> {
@@ -175,10 +163,7 @@ class SyncLoanRepaymentTransactionViewModel(
             _syncLoanRepaymentTransactionUiState.value =
                 SyncLoanRepaymentTransactionUiState.ShowProgressbar
 
-            repository.deleteAndUpdateLoanRepayments(loanId).catch {
-                _syncLoanRepaymentTransactionUiState.value =
-                    SyncLoanRepaymentTransactionUiState.ShowError(Res.string.feature_offline_failed_to_update_list)
-            }.collect { loanRepaymentRequests ->
+            repository.deleteAndUpdateLoanRepayments(loanId).collect { loanRepaymentRequests ->
                 mClientSyncIndex = 0
                 mLoanRepaymentRequests =
                     loanRepaymentRequests as MutableList<LoanRepaymentRequestEntity>
@@ -200,13 +185,7 @@ class SyncLoanRepaymentTransactionViewModel(
             SyncLoanRepaymentTransactionUiState.ShowProgressbar
 
             repository.updateLoanRepaymentTransaction(loanRepaymentRequest!!)
-                .flowOn(Dispatchers.IO)
-                .catch {
-                    _syncLoanRepaymentTransactionUiState.value =
-                        SyncLoanRepaymentTransactionUiState.ShowError(Res.string.feature_offline_failed_to_load_loanrepayment)
-                }
-                .collect {
-                        result ->
+                .collect { result ->
                     when (result) {
                         is DataState.Success -> {
                             val updatedEntity = result.data ?: LoanRepaymentRequestEntity()

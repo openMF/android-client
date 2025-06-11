@@ -16,8 +16,6 @@ import com.mifos.core.common.utils.FileUtils
 import com.mifos.core.data.repository.SyncCenterPayloadsRepository
 import com.mifos.core.datastore.UserPreferencesRepository
 import com.mifos.room.entities.center.CenterPayloadEntity
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.IO
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -62,12 +60,9 @@ class SyncCenterPayloadsViewModel(
     }
 
     fun loadDatabaseCenterPayload() {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch {
             repository.getAllDatabaseCenterPayload()
-                .catch {
-                    _syncCenterPayloadsUiState.value =
-                        SyncCenterPayloadsUiState.ShowError(it.message.toString())
-                }.collect { mCenterPayloads ->
+                .collect { mCenterPayloads ->
                     when (mCenterPayloads) {
                         is DataState.Success -> {
                             _syncCenterPayloadsUiState.value =

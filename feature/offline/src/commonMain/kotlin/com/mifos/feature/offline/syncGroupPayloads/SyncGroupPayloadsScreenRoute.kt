@@ -50,6 +50,7 @@ import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosErrorContent
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.icon.MifosIcons
+import com.mifos.core.ui.util.DevicePreview
 import com.mifos.room.entities.group.GroupPayloadEntity
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
@@ -274,4 +275,18 @@ private fun checkNetworkConnectionAndSync(
     } else {
         onShowOfflineMessage()
     }
+}
+
+@DevicePreview
+@Composable
+private fun SyncGroupPayloadsScreenPreview() {
+    SyncGroupPayloadsScreen(
+        uiState = SyncGroupPayloadsUiState.Success(),
+        onRefresh = { },
+        onBackPressed = { },
+        refreshState = false,
+        syncGroupPayloads = { },
+        groupPayloadsList = dummyGroupPayloads,
+        userStatus = true,
+    )
 }

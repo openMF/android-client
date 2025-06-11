@@ -71,10 +71,6 @@ class SyncGroupPayloadsViewModel(
                 SyncGroupPayloadsUiState.Loading
 
             repository.allDatabaseGroupPayload()
-                .catch {
-                    _syncGroupPayloadsUiState.value =
-                        SyncGroupPayloadsUiState.Error(Res.string.feature_offline_error_failed_to_load_groupPayload)
-                }
                 .collect { groupPayloadsList ->
                     when (groupPayloadsList) {
                         is DataState.Success -> {

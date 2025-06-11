@@ -20,7 +20,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
@@ -64,10 +63,7 @@ class SyncClientPayloadsViewModel(
         _syncClientPayloadsUiState.value = SyncClientPayloadsUiState.ShowProgressbar
         viewModelScope.launch {
             repository.allDatabaseClientPayload()
-                .catch {
-                    _syncClientPayloadsUiState.value =
-                        SyncClientPayloadsUiState.ShowError(it.message.toString())
-                }.collect { clientPayloads ->
+                .collect { clientPayloads ->
                     when (clientPayloads) {
                         is DataState.Success -> {
                             mClientPayloads = clientPayloads.data.toMutableList()
@@ -117,10 +113,7 @@ class SyncClientPayloadsViewModel(
             _syncClientPayloadsUiState.value = SyncClientPayloadsUiState.ShowProgressbar
 
             repository.deleteAndUpdatePayloads(id, clientCreationTIme)
-                .catch { e ->
-                    _syncClientPayloadsUiState.value =
-                        SyncClientPayloadsUiState.ShowError(e.message.toString())
-                }.collect { clientPayloads ->
+                .collect { clientPayloads ->
                     mClientSyncIndex = 0
                     when (clientPayloads) {
                         is DataState.Success -> {

@@ -24,8 +24,6 @@ import com.mifos.core.data.repository.SyncSavingsAccountTransactionRepository
 import com.mifos.core.datastore.UserPreferencesRepository
 import com.mifos.room.entities.PaymentTypeOptionEntity
 import com.mifos.room.entities.accounts.savings.SavingsAccountTransactionRequestEntity
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.IO
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -226,14 +224,11 @@ class SyncSavingsAccountTransactionViewModel(
      * THis Method Load the Payment Type Options from Database PaymentTypeOption_Table
      * and update the UI.
      */
-    fun loadPaymentTypeOption() = viewModelScope.launch(Dispatchers.IO) {
+    fun loadPaymentTypeOption() = viewModelScope.launch {
         _syncSavingsAccountTransactionUiState.value =
             SyncSavingsAccountTransactionUiState.Loading
 
-        repository.paymentTypeOption().catch {
-            _syncSavingsAccountTransactionUiState.value =
-                SyncSavingsAccountTransactionUiState.ShowError(Res.string.feature_offline_failed_to_load_paymentoptions)
-        }.collect { list ->
+        repository.paymentTypeOption().collect { list ->
             when (list) {
                 is DataState.Success -> {
                     mPaymentTypeOptions = list.data
@@ -286,7 +281,7 @@ class SyncSavingsAccountTransactionViewModel(
         accountId: Int,
         transactionType: String?,
         request: SavingsAccountTransactionRequestEntity?,
-    ) = viewModelScope.launch(Dispatchers.IO) {
+    ) = viewModelScope.launch {
         require(!type.isNullOrBlank()) { "Account type must not be null or blank" }
         requireNotNull(request) { "Request must not be null" }
         _syncSavingsAccountTransactionUiState.value =
