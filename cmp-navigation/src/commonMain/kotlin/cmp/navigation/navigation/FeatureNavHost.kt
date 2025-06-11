@@ -17,6 +17,7 @@ import cmp.navigation.AppState
 import com.mifos.feature.about.navigation.aboutNavGraph
 import com.mifos.feature.activate.navigation.activateScreen
 import com.mifos.feature.activate.navigation.navigateToActivateScreen
+import com.mifos.feature.auth.navigation.navigateToLogin
 import com.mifos.feature.center.navigation.centerNavGraph
 import com.mifos.feature.center.navigation.navigateCreateCenterScreenRoute
 import com.mifos.feature.checker.inbox.task.navigation.checkerInboxTaskNavGraph
@@ -35,7 +36,6 @@ import com.mifos.feature.settings.navigation.settingsScreen
 @Composable
 internal fun FeatureNavHost(
     appState: AppState,
-    onClickLogout: () -> Unit,
     padding: PaddingValues,
     modifier: Modifier = Modifier,
 ) {
@@ -97,7 +97,7 @@ internal fun FeatureNavHost(
 
         settingsScreen(
             navigateBack = appState.navController::popBackStack,
-            navigateToLoginScreen = {},
+            navigateToLoginScreen = appState.navController::navigateToLogin,
             changePasscode = {},
             languageChanged = {},
         )

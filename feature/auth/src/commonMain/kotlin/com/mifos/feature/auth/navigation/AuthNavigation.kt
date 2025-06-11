@@ -17,6 +17,7 @@ import com.mifos.feature.auth.login.LoginScreen
 
 fun NavGraphBuilder.authNavGraph(
     route: String,
+    navigateHome: () -> Unit,
     navigatePasscode: () -> Unit,
     updateServerConfig: () -> Unit,
 ) {
@@ -26,12 +27,14 @@ fun NavGraphBuilder.authNavGraph(
     ) {
         loginRoute(
             navigatePasscode = navigatePasscode,
+            navigateHome = navigateHome,
             updateServerConfig = updateServerConfig,
         )
     }
 }
 
 private fun NavGraphBuilder.loginRoute(
+    navigateHome: () -> Unit,
     navigatePasscode: () -> Unit,
     updateServerConfig: () -> Unit,
 ) {
@@ -39,7 +42,8 @@ private fun NavGraphBuilder.loginRoute(
         route = AuthScreens.LoginScreen.route,
     ) {
         LoginScreen(
-            navigatePasscode = navigatePasscode,
+            homeIntent = navigateHome,
+            passcodeIntent = navigatePasscode,
             onClickToUpdateServerConfig = updateServerConfig,
         )
     }

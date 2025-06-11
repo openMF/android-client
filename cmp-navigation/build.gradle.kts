@@ -46,7 +46,6 @@ kotlin {
             implementation(projects.feature.pathTracking)
 //            implementation(projects.feature.report)
             implementation(projects.feature.savings)
-            implementation(projects.feature.splash)
             implementation(projects.feature.settings)
             implementation(projects.feature.search)
 

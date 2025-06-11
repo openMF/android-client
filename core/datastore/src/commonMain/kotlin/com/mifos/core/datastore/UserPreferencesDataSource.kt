@@ -22,6 +22,7 @@ import com.russhwolf.settings.serialization.encodeValue
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.ExperimentalSerializationApi
 
@@ -62,6 +63,7 @@ class UserPreferencesDataSource(
     )
     val userInfo = _userInfo.asStateFlow()
     val settingsInfo = _settingsInfo.asStateFlow()
+    val appTheme = _settingsInfo.map { it.appTheme }
 
     private val _userData = MutableStateFlow(
         settings.decodeValue(
@@ -140,7 +142,7 @@ class UserPreferencesDataSource(
 
     suspend fun clearInfo() {
         withContext(dispatcher) {
-            settings.remove(AUTH_USER)
+            settings.clear()
         }
     }
 
