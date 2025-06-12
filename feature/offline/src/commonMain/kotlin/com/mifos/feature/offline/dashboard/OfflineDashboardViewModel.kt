@@ -100,7 +100,8 @@ class OfflineDashboardViewModel(
                 when (state) {
                     is DataState.Success -> setCountOfSyncData(type, state.data.size)
                     is DataState.Error -> setError(type, state.message)
-                    is DataState.Loading -> { /* handle loading if needed */
+                    is DataState.Loading -> {
+                        /* handle loading if needed */
                     }
                 }
             }
