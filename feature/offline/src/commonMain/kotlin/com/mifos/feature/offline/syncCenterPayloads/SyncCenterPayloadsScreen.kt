@@ -9,51 +9,52 @@
  */
 package com.mifos.feature.offline.syncCenterPayloads
 
-// import com.mifos.core.common.utils.Network
-import android.Manifest
-import android.content.Context
-import android.util.Log
-import androidx.annotation.RequiresPermission
-import androidx.compose.foundation.layout.Box
+import androidclient.feature.offline.generated.resources.Res
+import androidclient.feature.offline.generated.resources.feature_offline_activation_date
+import androidclient.feature.offline.generated.resources.feature_offline_active
+import androidclient.feature.offline.generated.resources.feature_offline_error_not_connected_internet
+import androidclient.feature.offline.generated.resources.feature_offline_name
+import androidclient.feature.offline.generated.resources.feature_offline_no_center_payload_to_sync
+import androidclient.feature.offline.generated.resources.feature_offline_office_id
+import androidclient.feature.offline.generated.resources.feature_offline_sync_centers
+import androidclient.feature.offline.generated.resources.feature_offline_sync_centers_payloads
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.pullrefresh.PullRefreshIndicator
-import androidx.compose.material.pullrefresh.pullRefresh
-import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
+import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.tooling.preview.PreviewParameter
-import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.ui.components.MifosEmptyUi
-import com.mifos.feature.offline.R
 import com.mifos.room.entities.center.CenterPayloadEntity
-import org.koin.androidx.compose.koinViewModel
+import kotlinx.coroutines.launch
+import org.jetbrains.compose.resources.stringResource
+import org.jetbrains.compose.ui.tooling.preview.Preview
+import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
+import org.jetbrains.compose.ui.tooling.preview.PreviewParameterProvider
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 internal fun SyncCenterPayloadsScreenRoute(
@@ -63,6 +64,7 @@ internal fun SyncCenterPayloadsScreenRoute(
     val uiState by viewModel.syncCenterPayloadsUiState.collectAsStateWithLifecycle()
     val userStatus by viewModel.userStatus.collectAsStateWithLifecycle()
     val refreshing by viewModel.isRefreshing.collectAsStateWithLifecycle()
+    val isOnline by viewModel.isNetworkAvailable.collectAsStateWithLifecycle()
 
     LaunchedEffect(key1 = Unit) {
         viewModel.loadDatabaseCenterPayload()
@@ -75,10 +77,11 @@ internal fun SyncCenterPayloadsScreenRoute(
         onRefresh = { viewModel.refreshCenterPayloads() },
         syncCenterPayloads = { viewModel.syncCenterPayload() },
         userStatus = userStatus,
+        isOnline = isOnline,
     )
 }
 
-@OptIn(ExperimentalMaterialApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun SyncCenterPayloadsScreen(
     uiState: SyncCenterPayloadsUiState,
@@ -87,41 +90,59 @@ internal fun SyncCenterPayloadsScreen(
     onRefresh: () -> Unit,
     syncCenterPayloads: () -> Unit,
     userStatus: Boolean,
+    isOnline: Boolean,
     modifier: Modifier = Modifier,
 ) {
-    val context = LocalContext.current
     val snackbarHostState = remember { SnackbarHostState() }
-    val pullRefreshState = rememberPullRefreshState(refreshing = refreshing, onRefresh = onRefresh)
+    val pullToRefreshState = rememberPullToRefreshState()
+    val offlineMessage = stringResource(Res.string.feature_offline_error_not_connected_internet)
+    val scope = rememberCoroutineScope()
 
     MifosScaffold(
         modifier = modifier,
-        title = stringResource(id = R.string.feature_offline_sync_centers_payloads),
+        title = stringResource(Res.string.feature_offline_sync_centers_payloads),
         onBackPressed = onBackPressed,
         actions = {
             IconButton(
                 onClick = {
                     when (userStatus) {
-                        false -> checkNetworkConnectionAndSync(context, syncCenterPayloads)
+                        false -> {
+                            when (isOnline) {
+                                true -> syncCenterPayloads()
+
+                                false -> {
+                                    scope.launch {
+                                        snackbarHostState.showSnackbar(
+                                            message = offlineMessage,
+                                        )
+                                    }
+                                }
+                            }
+                        }
+
                         true -> TODO("Implement OfflineModeDialog()")
                     }
                 },
             ) {
                 Icon(
                     MifosIcons.Sync,
-                    contentDescription = stringResource(id = R.string.feature_offline_sync_centers),
+                    contentDescription = stringResource(Res.string.feature_offline_sync_centers),
                 )
             }
         },
         snackbarHostState = snackbarHostState,
     ) { paddingValues ->
-        Box(
+        PullToRefreshBox(
+            state = pullToRefreshState,
+            onRefresh = onRefresh,
+            isRefreshing = refreshing,
             modifier = Modifier
                 .padding(paddingValues)
-                .pullRefresh(pullRefreshState),
+                .fillMaxSize(),
         ) {
             when (uiState) {
                 is SyncCenterPayloadsUiState.ShowProgressbar -> {
-                    CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
+                    MifosCircularProgress()
                 }
 
                 is SyncCenterPayloadsUiState.ShowError -> {
@@ -132,11 +153,6 @@ internal fun SyncCenterPayloadsScreen(
                     CenterPayloadsList(centerPayloads = uiState.centerPayloads)
                 }
             }
-            PullRefreshIndicator(
-                refreshing = refreshing,
-                state = pullRefreshState,
-                modifier = Modifier.align(Alignment.TopCenter),
-            )
         }
     }
 }
@@ -147,7 +163,7 @@ private fun CenterPayloadsList(
     modifier: Modifier = Modifier,
 ) {
     if (centerPayloads.isEmpty()) {
-        MifosEmptyUi(text = stringResource(id = R.string.feature_offline_no_center_payload_to_sync))
+        MifosEmptyUi(text = stringResource(Res.string.feature_offline_no_center_payload_to_sync))
     } else {
         LazyColumn(modifier = modifier) {
             items(centerPayloads) { payload ->
@@ -170,19 +186,19 @@ private fun CenterPayloadItem(
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
             PayloadField(
-                label = stringResource(R.string.feature_offline_name),
+                label = stringResource(Res.string.feature_offline_name),
                 value = payload.name ?: "",
             )
             PayloadField(
-                label = stringResource(R.string.feature_offline_office_id),
+                label = stringResource(Res.string.feature_offline_office_id),
                 value = payload.officeId?.toString() ?: "",
             )
             PayloadField(
-                label = stringResource(R.string.feature_offline_activation_date),
+                label = stringResource(Res.string.feature_offline_activation_date),
                 value = payload.activationDate ?: "",
             )
             PayloadField(
-                label = stringResource(R.string.feature_offline_active),
+                label = stringResource(Res.string.feature_offline_active),
                 value = if (payload.active) true.toString() else false.toString(),
             )
             payload.errorMessage?.let {
@@ -210,7 +226,6 @@ private fun PayloadField(
         Text(
             text = label,
             style = MaterialTheme.typography.bodyMedium,
-            fontWeight = FontWeight.Bold,
             modifier = Modifier.weight(1f),
         )
         Text(
@@ -221,25 +236,16 @@ private fun PayloadField(
     }
 }
 
-@RequiresPermission(Manifest.permission.ACCESS_NETWORK_STATE)
-private fun checkNetworkConnectionAndSync(
-    context: Context,
-    syncCenterPayloads: () -> Unit,
-) {
-    Log.d("C", context.packageName)
-//    if (Network.isOnline(context)) {
-    syncCenterPayloads()
-//    } else {
-//        Toast.makeText(
-//            context,
-//            context.getString(R.string.feature_offline_error_not_connected_internet),
-//            Toast.LENGTH_SHORT,
-//        ).show()
-//    }
+class SyncCenterPayloadsUiStateProvider : PreviewParameterProvider<SyncCenterPayloadsUiState> {
+    override val values = sequenceOf(
+        SyncCenterPayloadsUiState.ShowProgressbar,
+        SyncCenterPayloadsUiState.ShowError("Failed to load center payloads"),
+        SyncCenterPayloadsUiState.ShowCenters(sampleCenterPayloads),
+    )
 }
 
-@Preview(showBackground = true)
 @Composable
+@Preview
 private fun SyncCenterPayloadsScreenPreview(
     @PreviewParameter(SyncCenterPayloadsUiStateProvider::class) uiState: SyncCenterPayloadsUiState,
 ) {
@@ -249,20 +255,12 @@ private fun SyncCenterPayloadsScreenPreview(
         refreshing = false,
         onRefresh = {},
         syncCenterPayloads = {},
+        isOnline = true,
         userStatus = true,
     )
 }
 
-class SyncCenterPayloadsUiStateProvider : PreviewParameterProvider<SyncCenterPayloadsUiState> {
-    override val values = sequenceOf(
-        SyncCenterPayloadsUiState.ShowProgressbar,
-        SyncCenterPayloadsUiState.ShowError("Failed to load center payloads"),
-        SyncCenterPayloadsUiState.ShowCenters(sampleCenterPayloads),
-    )
-}
-
-// Sample data for previews
-val sampleCenterPayloads = List(5) { index ->
+private val sampleCenterPayloads = List(5) { index ->
     CenterPayloadEntity(
         name = "Center $index",
         officeId = index + 1,
@@ -270,24 +268,4 @@ val sampleCenterPayloads = List(5) { index ->
         active = index % 2 == 0,
         errorMessage = if (index % 3 == 0) "Error in payload" else null,
     )
-}
-
-@Preview(showBackground = true)
-@Composable
-private fun CenterPayloadItemPreview() {
-//    val sampleCenterPayload = CenterPayload().apply {
-//        name = "Sample Center"
-//        officeId = 12345
-//        activationDate = "2023-07-15"
-//        active = true
-//        errorMessage = null
-//    }
-
-//    CenterPayloadItem(payload = sampleCenterPayload)
-}
-
-@Preview(showBackground = true)
-@Composable
-private fun PayloadFieldPreview() {
-    PayloadField(label = "Sample Label", value = "Sample Value")
 }

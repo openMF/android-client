@@ -11,16 +11,16 @@ package com.mifos.feature.offline.syncCenterPayloads
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.mifos.core.common.utils.DataState
 import com.mifos.core.common.utils.FileUtils
 import com.mifos.core.data.repository.SyncCenterPayloadsRepository
+import com.mifos.core.data.util.NetworkMonitor
 import com.mifos.core.datastore.UserPreferencesRepository
 import com.mifos.room.entities.center.CenterPayloadEntity
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
@@ -28,21 +28,31 @@ import kotlinx.coroutines.launch
 /**
  * Created by Aditya Gupta on 16/08/23.
  */
+@Suppress("UNCHECKED_CAST")
 class SyncCenterPayloadsViewModel(
     private val prefManager: UserPreferencesRepository,
     private val repository: SyncCenterPayloadsRepository,
+    networkMonitor: NetworkMonitor,
 ) : ViewModel() {
 
     private val _syncCenterPayloadsUiState = MutableStateFlow<SyncCenterPayloadsUiState>(
         SyncCenterPayloadsUiState.ShowProgressbar,
     )
-    val syncCenterPayloadsUiState: StateFlow<SyncCenterPayloadsUiState> = _syncCenterPayloadsUiState
+    val syncCenterPayloadsUiState: StateFlow<SyncCenterPayloadsUiState> =
+        _syncCenterPayloadsUiState.asStateFlow()
 
     private val _isRefreshing = MutableStateFlow(false)
     val isRefreshing: StateFlow<Boolean> = _isRefreshing.asStateFlow()
 
     private var mCenterPayloads: MutableList<CenterPayloadEntity> = mutableListOf()
     private var centerSyncIndex = 0
+
+    val isNetworkAvailable = networkMonitor.isOnline
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5_000),
+            initialValue = false,
+        )
 
     val userStatus: StateFlow<Boolean> = prefManager.userInfo
         .map { it.userStatus }
@@ -59,14 +69,25 @@ class SyncCenterPayloadsViewModel(
     }
 
     fun loadDatabaseCenterPayload() {
-        viewModelScope.launch(Dispatchers.IO) {
-            repository.allDatabaseCenterPayload()
-                .catch {
-                    _syncCenterPayloadsUiState.value =
-                        SyncCenterPayloadsUiState.ShowError(it.message.toString())
-                }.collect { mCenterPayloads ->
-                    _syncCenterPayloadsUiState.value =
-                        SyncCenterPayloadsUiState.ShowCenters(mCenterPayloads)
+        viewModelScope.launch {
+            repository.getAllDatabaseCenterPayload()
+                .collect { mCenterPayloads ->
+                    when (mCenterPayloads) {
+                        is DataState.Success -> {
+                            _syncCenterPayloadsUiState.value =
+                                SyncCenterPayloadsUiState.ShowCenters(mCenterPayloads.data)
+                        }
+
+                        is DataState.Error -> {
+                            _syncCenterPayloadsUiState.value =
+                                SyncCenterPayloadsUiState.ShowError(mCenterPayloads.message)
+                        }
+
+                        is DataState.Loading -> {
+                            _syncCenterPayloadsUiState.value =
+                                SyncCenterPayloadsUiState.ShowProgressbar
+                        }
+                    }
                 }
         }
     }
@@ -91,20 +112,27 @@ class SyncCenterPayloadsViewModel(
 
     private fun deleteAndUpdateCenterPayload(id: Int) {
         viewModelScope.launch {
-            _syncCenterPayloadsUiState.value =
-                SyncCenterPayloadsUiState.ShowProgressbar
-
             repository.deleteAndUpdateCenterPayloads(id)
-                .catch {
-                    _syncCenterPayloadsUiState.value =
-                        SyncCenterPayloadsUiState.ShowError(it.message.toString())
-                }.collect {
-                    centerSyncIndex = 0
-                    mCenterPayloads = it.toMutableList()
-                    _syncCenterPayloadsUiState.value =
-                        SyncCenterPayloadsUiState.ShowCenters(mCenterPayloads)
-                    if (mCenterPayloads.isNotEmpty()) {
-                        syncCenterPayload()
+                .collect { result ->
+                    when (result) {
+                        is DataState.Error ->
+                            _syncCenterPayloadsUiState.value =
+                                SyncCenterPayloadsUiState.ShowError(result.message)
+
+                        DataState.Loading ->
+                            _syncCenterPayloadsUiState.value =
+                                SyncCenterPayloadsUiState.ShowProgressbar
+
+                        is DataState.Success -> {
+                            centerSyncIndex = 0
+                            result.data.let { mCenterPayloads = it.toMutableList() }
+                            _syncCenterPayloadsUiState.value =
+                                SyncCenterPayloadsUiState.ShowCenters(mCenterPayloads)
+
+                            if (mCenterPayloads.isNotEmpty()) {
+                                syncCenterPayload()
+                            }
+                        }
                     }
                 }
         }
@@ -143,10 +171,6 @@ class SyncCenterPayloadsViewModel(
             } else {
                 mCenterPayloads[i].errorMessage?.let {
                     FileUtils.logger.d { it }
-//                    Log.d(
-//                        FileUtils.logger,
-//                        it,
-//                    )
                 }
             }
         }

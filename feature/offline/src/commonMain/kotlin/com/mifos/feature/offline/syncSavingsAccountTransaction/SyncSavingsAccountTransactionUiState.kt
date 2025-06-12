@@ -11,6 +11,7 @@ package com.mifos.feature.offline.syncSavingsAccountTransaction
 
 import com.mifos.room.entities.PaymentTypeOptionEntity
 import com.mifos.room.entities.accounts.savings.SavingsAccountTransactionRequestEntity
+import org.jetbrains.compose.resources.StringResource
 
 /**
  * Created by Aditya Gupta on 16/08/23.
@@ -18,7 +19,7 @@ import com.mifos.room.entities.accounts.savings.SavingsAccountTransactionRequest
 sealed class SyncSavingsAccountTransactionUiState {
     data object Loading : SyncSavingsAccountTransactionUiState()
 
-    data class ShowError(val message: Int) : SyncSavingsAccountTransactionUiState()
+    data class ShowError(val message: StringResource) : SyncSavingsAccountTransactionUiState()
 
     data class ShowSavingsAccountTransactions(
         val savingsList: MutableList<SavingsAccountTransactionRequestEntity>,
@@ -26,6 +27,6 @@ sealed class SyncSavingsAccountTransactionUiState {
     ) :
         SyncSavingsAccountTransactionUiState()
 
-    data class ShowEmptySavingsAccountTransactions(val message: Int) :
+    data class ShowEmptySavingsAccountTransactions(val message: StringResource) :
         SyncSavingsAccountTransactionUiState()
 }

@@ -27,6 +27,7 @@ import com.mifos.feature.groups.navigation.navigateToCreateNewGroupScreen
 import com.mifos.feature.individualCollectionSheet.navigation.individualCollectionSheetNavGraph
 import com.mifos.feature.note.navigation.navigateToNoteScreen
 import com.mifos.feature.note.navigation.noteNavGraph
+import com.mifos.feature.offline.navigation.offlineNavGraph
 import com.mifos.feature.pathTracking.navigation.pathTrackingNavGraph
 import com.mifos.feature.savings.navigation.navigateToAddSavingsAccount
 import com.mifos.feature.savings.navigation.navigateToSavingsAccountSummaryScreen
@@ -73,6 +74,8 @@ internal fun FeatureNavHost(
         )
 
         aboutNavGraph(onBackPressed = appState.navController::popBackStack)
+
+        offlineNavGraph(navController = appState.navController)
 
         noteNavGraph(onBackPressed = appState.navController::popBackStack)
 

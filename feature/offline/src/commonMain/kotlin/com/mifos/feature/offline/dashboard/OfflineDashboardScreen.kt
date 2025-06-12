@@ -9,8 +9,14 @@
  */
 package com.mifos.feature.offline.dashboard
 
-import android.util.Log
-import android.widget.Toast
+import androidclient.feature.offline.generated.resources.Res
+import androidclient.feature.offline.generated.resources.feature_offline_nothing_to_sync
+import androidclient.feature.offline.generated.resources.feature_offline_offline_Sync
+import androidclient.feature.offline.generated.resources.feature_offline_sync_centers
+import androidclient.feature.offline.generated.resources.feature_offline_sync_clients
+import androidclient.feature.offline.generated.resources.feature_offline_sync_groups
+import androidclient.feature.offline.generated.resources.feature_offline_sync_loanRepayments
+import androidclient.feature.offline.generated.resources.feature_offline_sync_savingsAccountTransactions
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -31,16 +37,16 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import co.touchlab.kermit.Logger
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.ui.components.MifosEmptyUi
-import com.mifos.feature.offline.R
-import org.koin.androidx.compose.koinViewModel
+import com.mifos.core.ui.util.DevicePreview
+import org.jetbrains.compose.resources.StringResource
+import org.jetbrains.compose.resources.stringResource
+import org.koin.compose.viewmodel.koinViewModel
 
 /**
  * Created by Pronay Sarker on 27/08/2024 (12:09 AM)
@@ -88,7 +94,6 @@ internal fun OfflineDashboardScreen(
     syncSavingsAccountTransactions: () -> Unit,
 ) {
     val snackBarHostState = remember { SnackbarHostState() }
-    val context = LocalContext.current
     var errorVisibility by rememberSaveable { mutableStateOf(false) }
 
     LaunchedEffect(key1 = uiState) {
@@ -96,7 +101,7 @@ internal fun OfflineDashboardScreen(
             var mPayloadIndex = 5
 
             uiState.list.forEach { item ->
-                Log.d("itemCountOfflineSync", "${item.count}")
+                Logger.d("itemCountOfflineSync", Throwable(item.count.toString()))
                 if (item.count == 0) {
                     mPayloadIndex -= 1
                     if (mPayloadIndex == 0) {
@@ -113,7 +118,7 @@ internal fun OfflineDashboardScreen(
         modifier = modifier,
         snackbarHostState = snackBarHostState,
         onBackPressed = onBackPressed,
-        title = stringResource(id = R.string.feature_offline_offline_Sync),
+        title = stringResource(Res.string.feature_offline_offline_Sync),
     ) {
         Box(
             modifier = Modifier
@@ -122,12 +127,20 @@ internal fun OfflineDashboardScreen(
         ) {
             if (errorVisibility) {
                 MifosEmptyUi(
-                    text = stringResource(id = R.string.feature_offline_nothing_to_sync),
+                    text = stringResource(Res.string.feature_offline_nothing_to_sync),
                     icon = MifosIcons.AssignmentTurnedIn,
                 )
             } else {
                 when (uiState) {
                     is OfflineDashboardUiState.SyncUiState -> {
+                        LaunchedEffect(uiState.list) {
+                            uiState.list
+                                .filter { item -> item.errorMsg != null }
+                                .forEach { item ->
+                                    snackBarHostState.showSnackbar(item.errorMsg!!)
+                                }
+                        }
+
                         LazyColumn {
                             items(uiState.list) { item ->
                                 if (item.count != 0) {
@@ -145,13 +158,6 @@ internal fun OfflineDashboardScreen(
                                         },
                                     )
                                 }
-
-                                LaunchedEffect(key1 = item.errorMsg) {
-                                    if (item.errorMsg != null) {
-                                        Toast.makeText(context, item.errorMsg, Toast.LENGTH_SHORT)
-                                            .show()
-                                    }
-                                }
                             }
                         }
                     }
@@ -164,7 +170,7 @@ internal fun OfflineDashboardScreen(
 @Composable
 private fun OfflineDashboardItemCard(
     modifier: Modifier = Modifier,
-    paymentItem: Int = -1,
+    paymentItem: StringResource,
     count: Int = 0,
     onClick: () -> Unit,
 ) {
@@ -179,7 +185,7 @@ private fun OfflineDashboardItemCard(
             verticalArrangement = Arrangement.Center,
         ) {
             Text(
-                text = stringResource(id = paymentItem),
+                text = stringResource(paymentItem),
                 style = MaterialTheme.typography.bodyLarge,
             )
 
@@ -192,32 +198,32 @@ private fun OfflineDashboardItemCard(
 }
 
 @Composable
-@Preview(showSystemUi = true)
+@DevicePreview
 private fun PreviewOfflineDashboardScreen(modifier: Modifier = Modifier) {
     val data = listOf(
         SyncStateData(
             count = 3,
-            name = R.string.feature_offline_sync_clients,
+            name = Res.string.feature_offline_sync_clients,
             type = Type.SYNC_CLIENTS,
         ),
         SyncStateData(
             count = 3,
-            name = R.string.feature_offline_sync_groups,
+            name = Res.string.feature_offline_sync_groups,
             type = Type.SYNC_GROUPS,
         ),
         SyncStateData(
             count = 2,
-            name = R.string.feature_offline_sync_centers,
+            name = Res.string.feature_offline_sync_centers,
             type = Type.SYNC_CENTERS,
         ),
         SyncStateData(
             count = 4,
-            name = R.string.feature_offline_sync_loanRepayments,
+            name = Res.string.feature_offline_sync_loanRepayments,
             type = Type.SYNC_LOAN_REPAYMENTS,
         ),
         SyncStateData(
             count = 5,
-            name = R.string.feature_offline_sync_savingsAccountTransactions,
+            name = Res.string.feature_offline_sync_savingsAccountTransactions,
             type = Type.SYNC_SAVINGS_ACCOUNT_TRANSACTION,
         ),
     )

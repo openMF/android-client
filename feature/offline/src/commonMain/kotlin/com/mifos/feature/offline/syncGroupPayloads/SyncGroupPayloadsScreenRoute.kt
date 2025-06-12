@@ -9,10 +9,17 @@
  */
 package com.mifos.feature.offline.syncGroupPayloads
 
-import android.Manifest
-import android.content.Context
-import android.util.Log
-import androidx.annotation.RequiresPermission
+import androidclient.feature.offline.generated.resources.Res
+import androidclient.feature.offline.generated.resources.feature_offline_activation_date
+import androidclient.feature.offline.generated.resources.feature_offline_active
+import androidclient.feature.offline.generated.resources.feature_offline_click_to_refresh
+import androidclient.feature.offline.generated.resources.feature_offline_error_not_connected_internet
+import androidclient.feature.offline.generated.resources.feature_offline_external_id
+import androidclient.feature.offline.generated.resources.feature_offline_name
+import androidclient.feature.offline.generated.resources.feature_offline_office_id
+import androidclient.feature.offline.generated.resources.feature_offline_submit_date
+import androidclient.feature.offline.generated.resources.feature_offline_sync
+import androidclient.feature.offline.generated.resources.feature_offline_sync_groups
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -34,11 +41,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -46,9 +50,12 @@ import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosErrorContent
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.icon.MifosIcons
-import com.mifos.feature.offline.R
+import com.mifos.core.ui.util.DevicePreview
 import com.mifos.room.entities.group.GroupPayloadEntity
-import org.koin.androidx.compose.koinViewModel
+import kotlinx.coroutines.launch
+import org.jetbrains.compose.resources.stringResource
+import org.jetbrains.compose.resources.vectorResource
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 internal fun SyncGroupPayloadsScreenRoute(
@@ -59,6 +66,7 @@ internal fun SyncGroupPayloadsScreenRoute(
     val userStatus by viewModel.userStatus.collectAsStateWithLifecycle()
     val groupPayloadsList by viewModel.groupPayloadsList.collectAsStateWithLifecycle()
     val refreshState by viewModel.isRefreshing.collectAsStateWithLifecycle()
+    val isOnline by viewModel.isNetworkAvailable.collectAsStateWithLifecycle()
 
     LaunchedEffect(key1 = Unit) {
         viewModel.loanDatabaseGroupPayload()
@@ -76,6 +84,7 @@ internal fun SyncGroupPayloadsScreenRoute(
             viewModel.syncGroupPayloadFromStart()
         },
         userStatus = userStatus,
+        isOnline = isOnline,
     )
 }
 
@@ -89,24 +98,30 @@ internal fun SyncGroupPayloadsScreen(
     onRefresh: () -> Unit,
     syncGroupPayloads: () -> Unit,
     userStatus: Boolean,
+    isOnline: Boolean,
     modifier: Modifier = Modifier,
 ) {
     val snackBarHostState = remember { SnackbarHostState() }
-    val context = LocalContext.current
     val pullRefreshState = rememberPullToRefreshState()
+    val offlineMessage = stringResource(Res.string.feature_offline_error_not_connected_internet)
+    val scope = rememberCoroutineScope()
 
     MifosScaffold(
         modifier = modifier,
-        title = stringResource(id = R.string.feature_offline_sync_groups),
+        title = stringResource(Res.string.feature_offline_sync_groups),
         onBackPressed = onBackPressed,
         actions = {
             IconButton(
                 onClick = {
                     when (userStatus) {
-                        false -> checkNetworkConnectionAndSync(
-                            context = context,
-                            syncGroupPayloads = syncGroupPayloads,
-                        )
+                        false -> when (isOnline) {
+                            true -> syncGroupPayloads
+                            false -> {
+                                scope.launch {
+                                    snackBarHostState.showSnackbar(offlineMessage)
+                                }
+                            }
+                        }
 
                         true -> TODO("Implement OfflineModeDialog()")
                     }
@@ -114,7 +129,7 @@ internal fun SyncGroupPayloadsScreen(
             ) {
                 Icon(
                     MifosIcons.Sync,
-                    contentDescription = stringResource(id = R.string.feature_offline_sync),
+                    contentDescription = stringResource(Res.string.feature_offline_sync),
                 )
             }
         },
@@ -137,17 +152,17 @@ internal fun SyncGroupPayloadsScreen(
 
                     is SyncGroupPayloadsUiState.Error -> {
                         MifosErrorContent(
-                            message = stringResource(id = uiState.messageResId),
+                            message = stringResource(uiState.messageResId),
                             onRefresh = onRefresh,
-                            refreshButtonText = stringResource(id = R.string.feature_offline_click_to_refresh),
+                            refreshButtonText = stringResource(Res.string.feature_offline_click_to_refresh),
                         )
                     }
 
                     is SyncGroupPayloadsUiState.Success -> {
                         if (uiState.emptyState != null) {
                             MifosErrorContent(
-                                imageVector = ImageVector.vectorResource(id = uiState.emptyState.iconResId),
-                                message = stringResource(id = uiState.emptyState.messageResId),
+                                imageVector = vectorResource(uiState.emptyState.iconResId),
+                                message = stringResource(uiState.emptyState.messageResId),
                                 isRefreshEnabled = false,
                             )
                         } else {
@@ -191,26 +206,26 @@ private fun GroupPayloadItem(
             }
 
             GroupPayloadField(
-                stringResource(id = R.string.feature_offline_name),
+                stringResource(Res.string.feature_offline_name),
                 payload.name ?: "",
             )
             GroupPayloadField(
-                stringResource(id = R.string.feature_offline_external_id),
+                stringResource(Res.string.feature_offline_external_id),
                 payload.externalId ?: "",
             )
             GroupPayloadField(
-                stringResource(id = R.string.feature_offline_office_id),
+                stringResource(Res.string.feature_offline_office_id),
                 payload.officeId.toString(),
             )
             GroupPayloadField(
-                stringResource(id = R.string.feature_offline_submit_date),
+                stringResource(Res.string.feature_offline_submit_date),
                 payload.submittedOnDate ?: "",
             )
             GroupPayloadField(
-                stringResource(id = R.string.feature_offline_activation_date),
+                stringResource(Res.string.feature_offline_activation_date),
                 payload.activationDate ?: "",
             )
-            GroupPayloadField(stringResource(id = R.string.feature_offline_active), status)
+            GroupPayloadField(stringResource(Res.string.feature_offline_active), status)
 
             if (payload.errorMessage != null) {
                 Text(
@@ -249,33 +264,17 @@ private fun GroupPayloadField(
     }
 }
 
-@RequiresPermission(Manifest.permission.ACCESS_NETWORK_STATE)
-private fun checkNetworkConnectionAndSync(
-    context: Context,
-    syncGroupPayloads: () -> Unit,
-) {
-    Log.d("C", context.packageName)
-//    if (Network.isOnline(context)) {
-    syncGroupPayloads()
-//    } else {
-//        Toast.makeText(
-//            context,
-//            context.getString(R.string.feature_offline_error_not_connected_internet),
-//            Toast.LENGTH_SHORT,
-//        ).show()
-//    }
+@DevicePreview
+@Composable
+private fun SyncGroupPayloadsScreenPreview() {
+    SyncGroupPayloadsScreen(
+        uiState = SyncGroupPayloadsUiState.Success(),
+        onRefresh = { },
+        onBackPressed = { },
+        refreshState = false,
+        syncGroupPayloads = { },
+        groupPayloadsList = dummyGroupPayloads,
+        userStatus = true,
+        isOnline = true,
+    )
 }
-
-// @Preview
-// @Composable
-// private fun SyncGroupPayloadsScreenPreview() {
-//    SyncGroupPayloadsScreen(
-//        uiState = SyncGroupPayloadsUiState.Success(),
-//        onRefresh = { },
-//        onBackPressed = { },
-//        refreshState = false,
-//        syncGroupPayloads = { },
-//        groupPayloadsList = dummyGroupPayloads,
-//        userStatus = true,
-//    )
-// }
