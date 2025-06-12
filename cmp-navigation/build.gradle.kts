@@ -42,11 +42,10 @@ kotlin {
             implementation(projects.feature.groups)
 //            implementation(projects.feature.loan)
             implementation(projects.feature.note)
-//            implementation(projects.feature.offline)
+            implementation(projects.feature.offline)
             implementation(projects.feature.pathTracking)
 //            implementation(projects.feature.report)
             implementation(projects.feature.savings)
-          //  implementation(projects.feature.splash)
             implementation(projects.feature.settings)
             implementation(projects.feature.search)
 

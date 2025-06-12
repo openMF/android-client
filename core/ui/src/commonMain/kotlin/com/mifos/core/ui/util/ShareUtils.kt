@@ -30,4 +30,6 @@ expect object ShareUtils {
     fun openUrl(url: String)
 
     fun ossLicensesMenuActivity()
+
+    fun restartApplication()
 }

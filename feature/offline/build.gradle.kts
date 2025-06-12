@@ -8,18 +8,20 @@
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
 plugins {
-    alias(libs.plugins.mifos.android.feature)
-    alias(libs.plugins.mifos.android.library.compose)
-    alias(libs.plugins.mifos.android.library.jacoco)
+      alias(libs.plugins.mifos.cmp.feature)
 }
 
 android {
     namespace = "com.mifos.feature.offline"
 }
-
-dependencies {
-    implementation(projects.core.domain)
-
-    //material
-    implementation (libs.androidx.material.v168)
+kotlin {
+    sourceSets {
+        commonMain.dependencies {
+            implementation(compose.material3)
+            implementation(compose.components.resources)
+            implementation(compose.ui)
+            implementation(compose.components.uiToolingPreview)
+            api(projects.core.domain)
+        }
+    }
 }

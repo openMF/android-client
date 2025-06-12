@@ -42,6 +42,13 @@ class UserPreferencesRepositoryImpl(
     override val serverConfig: Flow<ServerConfig>
         get() = preferenceManager.serverConfig
 
+    override val appTheme: StateFlow<AppTheme>
+        get() = preferenceManager.appTheme.stateIn(
+            scope = unconfinedScope,
+            initialValue = AppTheme.SYSTEM,
+            started = SharingStarted.Eagerly,
+        )
+
     override suspend fun updateUserInfo(user: UserData): Result<Unit> {
         return withContext(ioDispatcher) {
             try {
@@ -52,6 +59,7 @@ class UserPreferencesRepositoryImpl(
             }
         }
     }
+
     override val token: String?
         get() = preferenceManager.token
 

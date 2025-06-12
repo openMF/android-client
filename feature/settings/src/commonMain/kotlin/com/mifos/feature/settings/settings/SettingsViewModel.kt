@@ -77,7 +77,7 @@ class SettingsViewModel(
                 )
             }
         }
-        return !(uiState.value.baseUrl == selectedBaseUrl && uiState.value.tenant == selectedTenant)
+        return isEndpointUpdated
     }
 }
 
