@@ -44,7 +44,7 @@ class SyncLoanRepaymentTransactionViewModel(
             SyncLoanRepaymentTransactionUiState.ShowProgressbar,
         )
     val syncLoanRepaymentTransactionUiState: StateFlow<SyncLoanRepaymentTransactionUiState> =
-        _syncLoanRepaymentTransactionUiState
+        _syncLoanRepaymentTransactionUiState.asStateFlow()
 
     private val _isRefreshing = MutableStateFlow(false)
     val isRefreshing: StateFlow<Boolean> = _isRefreshing.asStateFlow()
@@ -190,8 +190,6 @@ class SyncLoanRepaymentTransactionViewModel(
 
     private fun updateLoanRepayment(loanRepaymentRequest: LoanRepaymentRequestEntity?) {
         viewModelScope.launch {
-            SyncLoanRepaymentTransactionUiState.ShowProgressbar
-
             repository.updateLoanRepaymentTransaction(loanRepaymentRequest!!)
                 .collect { result ->
                     when (result) {

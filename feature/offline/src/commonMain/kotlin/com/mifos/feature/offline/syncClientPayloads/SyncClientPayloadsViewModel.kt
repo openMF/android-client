@@ -69,7 +69,6 @@ class SyncClientPayloadsViewModel(
     }
 
     fun loadDatabaseClientPayload() {
-        _syncClientPayloadsUiState.value = SyncClientPayloadsUiState.ShowProgressbar
         viewModelScope.launch {
             repository.allDatabaseClientPayload()
                 .collect { state ->

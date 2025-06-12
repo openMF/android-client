@@ -38,7 +38,8 @@ class SyncCenterPayloadsViewModel(
     private val _syncCenterPayloadsUiState = MutableStateFlow<SyncCenterPayloadsUiState>(
         SyncCenterPayloadsUiState.ShowProgressbar,
     )
-    val syncCenterPayloadsUiState: StateFlow<SyncCenterPayloadsUiState> = _syncCenterPayloadsUiState
+    val syncCenterPayloadsUiState: StateFlow<SyncCenterPayloadsUiState> =
+        _syncCenterPayloadsUiState.asStateFlow()
 
     private val _isRefreshing = MutableStateFlow(false)
     val isRefreshing: StateFlow<Boolean> = _isRefreshing.asStateFlow()

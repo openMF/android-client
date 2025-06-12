@@ -46,7 +46,7 @@ class SyncSavingsAccountTransactionViewModel(
     private val _syncSavingsAccountTransactionUiState =
         MutableStateFlow<SyncSavingsAccountTransactionUiState>(SyncSavingsAccountTransactionUiState.Loading)
     val syncSavingsAccountTransactionUiState: StateFlow<SyncSavingsAccountTransactionUiState>
-        get() = _syncSavingsAccountTransactionUiState
+        get() = _syncSavingsAccountTransactionUiState.asStateFlow()
 
     private var mPaymentTypeOptions: List<PaymentTypeOptionEntity> = emptyList()
 

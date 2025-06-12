@@ -22,6 +22,7 @@ import com.mifos.core.data.repository.OfflineDashboardRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 class OfflineDashboardViewModel(
@@ -30,7 +31,8 @@ class OfflineDashboardViewModel(
 
     private val _offlineDashboardUiState =
         MutableStateFlow(OfflineDashboardUiState.SyncUiState(initGetSyncData()))
-    val offlineDashboardUiState: StateFlow<OfflineDashboardUiState> = _offlineDashboardUiState
+    val offlineDashboardUiState: StateFlow<OfflineDashboardUiState> =
+        _offlineDashboardUiState.asStateFlow()
 
     fun loadDatabaseClientPayload() {
         handleDataState(
@@ -88,6 +90,7 @@ class OfflineDashboardViewModel(
         }
         _offlineDashboardUiState.value = OfflineDashboardUiState.SyncUiState(updatedList)
     }
+
     private fun <T> handleDataState(
         flow: Flow<DataState<List<T>>>,
         type: Type,
@@ -97,7 +100,8 @@ class OfflineDashboardViewModel(
                 when (state) {
                     is DataState.Success -> setCountOfSyncData(type, state.data.size)
                     is DataState.Error -> setError(type, state.message)
-                    is DataState.Loading -> { /* handle loading if needed */ }
+                    is DataState.Loading -> { /* handle loading if needed */
+                    }
                 }
             }
         }
