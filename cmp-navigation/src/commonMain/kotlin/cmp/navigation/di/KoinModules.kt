@@ -72,6 +72,7 @@ object KoinModules {
             GroupsModule,
 //            LoanModule,
             NoteModule,
+            OfflineModule,
             SettingsModule,
         )
     }

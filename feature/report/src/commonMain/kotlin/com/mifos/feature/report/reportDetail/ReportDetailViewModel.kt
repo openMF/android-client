@@ -9,13 +9,10 @@
  */
 package com.mifos.feature.report.reportDetail
 
-import androidclient.feature.report.generated.resources.Res
-import androidclient.feature.report.generated.resources.feature_report_failed_to_load_report_details
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mifos.core.common.utils.Constants
-import com.mifos.core.common.utils.DataState
 import com.mifos.core.common.utils.Resource
 import com.mifos.core.domain.useCases.GetReportFullParameterListUseCase
 import com.mifos.core.domain.useCases.GetReportParameterDetailsUseCase
@@ -25,8 +22,8 @@ import com.mifos.core.domain.useCases.GetRunReportWithQueryUseCase
 import com.mifos.core.model.objects.runreport.DataRow
 import com.mifos.core.model.objects.runreport.FullParameterListResponse
 import com.mifos.core.model.objects.runreport.client.ClientReportTypeItem
+import com.mifos.feature.report.R
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.IO
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
@@ -38,7 +35,7 @@ class ReportDetailViewModel(
     private val getRunReportProductUseCase: GetRunReportProductUseCase,
     private val getRunReportWithQueryUseCase: GetRunReportWithQueryUseCase,
     private val getRunReportOfficesUseCase: GetRunReportOfficesUseCase,
-    private val savedStateHandle: SavedStateHandle
+    private val savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
 
     private val reportName =
@@ -69,19 +66,15 @@ class ReportDetailViewModel(
         viewModelScope.launch(Dispatchers.IO) {
             getReportFullParameterListUseCase(reportName, parameterType).collect { result ->
                 when (result) {
-                    is Resource.Error<*> ->
+                    is Resource.Error ->
                         _reportDetailUiState.value =
-                            ReportDetailUiState.Error(Res.string.feature_report_failed_to_load_report_details)
+                            ReportDetailUiState.Error(R.string.feature_report_failed_to_load_report_details)
 
-                    is Resource.Loading<*> -> _reportDetailUiState.value = ReportDetailUiState.Loading
+                    is Resource.Loading -> _reportDetailUiState.value = ReportDetailUiState.Loading
 
-                    is Resource.Success<*> ->
+                    is Resource.Success ->
                         _reportParameterList.value =
                             result.data?.data ?: emptyList()
-
-                    is DataState.Error<*> -> TODO()
-                    DataState.Loading -> TODO()
-                    is DataState.Success<*> -> TODO()
                 }
             }
         }
@@ -90,18 +83,14 @@ class ReportDetailViewModel(
         viewModelScope.launch(Dispatchers.IO) {
             getReportParameterDetailsUseCase(parameterName, parameterType).collect { result ->
                 when (result) {
-                    is Resource.Error<*> -> Unit
+                    is Resource.Error -> Unit
 
-                    is Resource.Loading<*> -> Unit
+                    is Resource.Loading -> Unit
 
-                    is Resource.Success<*> -> {
+                    is Resource.Success -> {
                         _reportDetail.value =
                             Pair(result.data?.data ?: emptyList(), parameterName)
                     }
-
-                    is DataState.Error<*> -> TODO()
-                    DataState.Loading -> TODO()
-                    is DataState.Success<*> -> TODO()
                 }
             }
         }
@@ -110,20 +99,16 @@ class ReportDetailViewModel(
         viewModelScope.launch(Dispatchers.IO) {
             getRunReportOfficesUseCase(parameterName, officeId, parameterType).collect { result ->
                 when (result) {
-                    is Resource.Error<*> ->
+                    is Resource.Error ->
                         _reportDetailUiState.value =
-                            ReportDetailUiState.Error(Res.string.feature_report_failed_to_load_report_details)
+                            ReportDetailUiState.Error(R.string.feature_report_failed_to_load_report_details)
 
-                    is Resource.Loading<*> -> Unit
+                    is Resource.Loading -> Unit
 
-                    is Resource.Success<*> -> {
+                    is Resource.Success -> {
                         _reportOffices.value = result.data?.data ?: emptyList()
                         _reportDetailUiState.value = ReportDetailUiState.ParameterDetailsSuccess
                     }
-
-                    is DataState.Error<*> -> TODO()
-                    DataState.Loading -> TODO()
-                    is DataState.Success<*> -> TODO()
                 }
             }
         }
@@ -132,20 +117,16 @@ class ReportDetailViewModel(
         viewModelScope.launch(Dispatchers.IO) {
             getRunReportProductUseCase(parameterName, currencyId, parameterType).collect { result ->
                 when (result) {
-                    is Resource.Error<*> ->
+                    is Resource.Error ->
                         _reportDetailUiState.value =
-                            ReportDetailUiState.Error(Res.string.feature_report_failed_to_load_report_details)
+                            ReportDetailUiState.Error(R.string.feature_report_failed_to_load_report_details)
 
-                    is Resource.Loading<*> -> Unit
+                    is Resource.Loading -> Unit
 
-                    is Resource.Success<*> -> {
+                    is Resource.Success -> {
                         _reportProducts.value = result.data?.data ?: emptyList()
                         _reportDetailUiState.value = ReportDetailUiState.ParameterDetailsSuccess
                     }
-
-                    is DataState.Error<*> -> TODO()
-                    DataState.Loading -> TODO()
-                    is DataState.Success<*> -> TODO()
                 }
             }
         }
@@ -154,16 +135,13 @@ class ReportDetailViewModel(
         viewModelScope.launch(Dispatchers.IO) {
             getRunReportWithQueryUseCase(reportName, options).collect { result ->
                 when (result) {
-                    is Resource.Error<*> ->
+                    is Resource.Error ->
                         _reportDetailUiState.value =
-                            ReportDetailUiState.Error(Res.string.feature_report_failed_to_load_report_details)
+                            ReportDetailUiState.Error(R.string.feature_report_failed_to_load_report_details)
 
-                    is Resource.Loading<*> -> _reportDetailUiState.value = ReportDetailUiState.Loading
+                    is Resource.Loading -> _reportDetailUiState.value = ReportDetailUiState.Loading
 
-                    is Resource.Success<*> -> _runReport.value = result.data
-                    is DataState.Error<*> -> TODO()
-                    DataState.Loading -> TODO()
-                    is DataState.Success<*> -> TODO()
+                    is Resource.Success -> _runReport.value = result.data
                 }
             }
         }
