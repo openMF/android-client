@@ -22,6 +22,7 @@ import com.mifos.feature.center.navigation.centerNavGraph
 import com.mifos.feature.center.navigation.navigateCreateCenterScreenRoute
 import com.mifos.feature.checker.inbox.task.navigation.checkerInboxTaskNavGraph
 import com.mifos.feature.dataTable.navigation.dataTableNavGraph
+import com.mifos.feature.dataTable.navigation.navigateToDataTable
 import com.mifos.feature.groups.navigation.groupNavGraph
 import com.mifos.feature.groups.navigation.navigateToCreateNewGroupScreen
 import com.mifos.feature.individualCollectionSheet.navigation.individualCollectionSheetNavGraph
@@ -98,7 +99,7 @@ internal fun FeatureNavHost(
             loadDocumentList = { _, _ -> },
             clientListFragment = {},
             loadSavingsAccountSummary = appState.navController::navigateToSavingsAccountSummaryScreen,
-            loadGroupDataTables = { _, _ -> },
+            loadGroupDataTables = appState.navController::navigateToDataTable,
             loadNotes = appState.navController::navigateToNoteScreen,
             loadLoanAccountSummary = { _ -> },
             activateGroup = appState.navController::navigateToActivateScreen,

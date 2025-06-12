@@ -39,7 +39,7 @@ class DataManagerDataTable(
      * @return List<DataTable>
      </DataTable> */
     fun getDataTable(tableName: String?): Flow<List<DataTableEntity>> {
-        return mBaseApiManager.dataTableApi.getDatatables(tableName)
+        return baseApiManager.getDataTableApi().getDatatables(tableName)
             .map { responseList ->
                 responseList.map(GetDataTablesResponseMapper::mapFromEntity)
             }

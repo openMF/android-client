@@ -11,7 +11,6 @@ package com.mifos.core.network.services
 
 import com.mifos.core.model.objects.users.UserLocation
 import com.mifos.core.network.GenericResponse
-import com.mifos.core.network.model.GetDataTablesResponse
 import com.mifos.room.basemodel.APIEndPoint
 import com.mifos.room.entities.noncore.DataTableEntity
 import de.jensklingenberg.ktorfit.http.Body
@@ -35,9 +34,6 @@ interface DataTableService {
         @Path("dataTableName") dataTableName: String,
         @Path("entityId") entityId: Int,
     ): JsonArray
-
-    @GET("datatables")
-    fun getDatatables(@Query("apptable") apptable: String? = null): Flow<List<GetDataTablesResponse>>
 
     // TODO Improve Body Implementation with Payload
     @POST(APIEndPoint.DATATABLES + "/{dataTableName}/{entityId}/")
