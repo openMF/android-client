@@ -57,10 +57,12 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.icon.MifosIcons
-import com.mifos.core.ui.util.DevicePreview
 import com.mifos.room.entities.client.ClientPayloadEntity
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
+import org.jetbrains.compose.ui.tooling.preview.Preview
+import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
+import org.jetbrains.compose.ui.tooling.preview.PreviewParameterProvider
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -71,6 +73,7 @@ internal fun SyncClientPayloadsScreenRoute(
     val uiState by viewModel.syncClientPayloadsUiState.collectAsStateWithLifecycle()
     val userStatus by viewModel.userStatus.collectAsStateWithLifecycle()
     val refreshState by viewModel.isRefreshing.collectAsStateWithLifecycle()
+    val isOnline by viewModel.isNetworkAvailable.collectAsStateWithLifecycle()
 
     LaunchedEffect(key1 = Unit) {
         viewModel.loadDatabaseClientPayload()
@@ -87,6 +90,7 @@ internal fun SyncClientPayloadsScreenRoute(
             viewModel.syncClientPayload()
         },
         userStatus = userStatus,
+        isOnline = isOnline,
     )
 }
 
@@ -99,7 +103,7 @@ internal fun SyncClientPayloadsScreen(
     onRefresh: () -> Unit,
     syncClientPayloads: () -> Unit,
     userStatus: Boolean,
-    isOnline: Boolean = true,
+    isOnline: Boolean,
     modifier: Modifier = Modifier,
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
@@ -115,17 +119,17 @@ internal fun SyncClientPayloadsScreen(
             IconButton(
                 onClick = {
                     when (userStatus) {
-                        false -> checkNetworkConnectionAndSync(
-                            syncClientPayloads,
-                            isOnline = isOnline,
-                            onShowOfflineMessage = {
+                        false -> when (isOnline) {
+                            true -> syncClientPayloads()
+                            false -> {
                                 scope.launch {
                                     snackbarHostState.showSnackbar(
                                         message = offlineMessage,
                                     )
                                 }
-                            },
-                        )
+                            }
+                        }
+
                         true -> TODO("Implement OfflineModeDialog()")
                     }
                 },
@@ -302,100 +306,42 @@ private fun ErrorStateScreen(
     }
 }
 
-private fun checkNetworkConnectionAndSync(
-    syncClientPayloads: () -> Unit,
-    isOnline: Boolean,
-    onShowOfflineMessage: () -> Unit,
-) {
-    if (isOnline) {
-        syncClientPayloads()
-    } else {
-        onShowOfflineMessage()
-    }
-}
-
-@DevicePreview()
-@Composable
-private fun SyncClientPayloadsLoadingPreview() {
-    SyncClientPayloadsScreen(
-        uiState = SyncClientPayloadsUiState.ShowProgressbar,
-        onBackPressed = {},
-        refreshState = true,
-        onRefresh = {},
-        syncClientPayloads = {},
-        userStatus = true,
+class SyncClientPayloadsUiStateProvider : PreviewParameterProvider<SyncClientPayloadsUiState> {
+    override val values = sequenceOf(
+        SyncClientPayloadsUiState.ShowProgressbar,
+        SyncClientPayloadsUiState.ShowError("Failed to load client payloads"),
+        SyncClientPayloadsUiState.ShowPayloads(sampleClientPayloads),
     )
 }
 
-@DevicePreview()
 @Composable
-private fun SyncClientPayloadsErrorPreview() {
+@Preview
+private fun SyncClientPayloadsScreenPreview(
+    @PreviewParameter(SyncClientPayloadsUiStateProvider::class) uiState: SyncClientPayloadsUiState,
+) {
     SyncClientPayloadsScreen(
-        uiState = SyncClientPayloadsUiState.ShowError("Failed to load client payloads"),
+        uiState = uiState,
         onBackPressed = {},
         refreshState = false,
         onRefresh = {},
         syncClientPayloads = {},
         userStatus = true,
+        isOnline = true,
     )
 }
 
-@DevicePreview()
-@Composable
-private fun PayloadFieldNamePreview() {
-    PayloadField(label = "First Name", value = "John")
+val sampleClientPayloads = List(5) { index ->
+    ClientPayloadEntity(
+        firstname = "John$index",
+        middlename = "Sam$index",
+        lastname = "Doe$index",
+        mobileNo = "123456789$index",
+        externalId = "EXT-$index",
+        officeId = index,
+        active = index % 2 == 0,
+        activationDate = "2023-07-${15 + index}",
+        genderId = if (index % 3 == 0) 24 else 22,
+        dateOfBirth = "1990-01-0$index",
+        errorMessage = if (index % 2 == 0) null else "Error in payload",
+    )
 }
-
-@DevicePreview()
-@Composable
-private fun PayloadFieldMobilePreview() {
-    PayloadField(label = "Mobile No", value = "1234567890")
-}
-
-@DevicePreview()
-@Composable
-private fun PayloadFieldOfficePreview() {
-    PayloadField(label = "Office ID", value = "12345")
-}
-
-@DevicePreview()
-@Composable
-private fun PayloadFieldActivationPreview() {
-    PayloadField(label = "Activation Date", value = "2023-07-15")
-}
-// Sample data for previews
-// val sampleClientPayloads = List(5) { index ->
-//    ClientPayloadEntity().apply {
-//        firstname = "John$index"
-//        middlename = "Sam$index"
-//        lastname = "Doe$index"
-//        mobileNo = "123456789$index"
-//        externalId = "EXT-$index"
-//        officeId = index
-//        active = index % 2 == 0
-//        activationDate = "2023-07-${15 + index}"
-//        genderId = if (index % 3 == 0) 24 else 22
-//        dateOfBirth = "1990-01-0$index"
-//        errorMessage = if (index % 2 == 0) null else "Error in payload"
-//    }
-// }
-
-// @DevicePreview
-// @Composable
-// private fun ClientPayloadItemPreview() {
-//    val sampleClientPayload = ClientPayloadEntity().apply {
-//        firstname = "John"
-//        middlename = "Michael"
-//        lastname = "Doe"
-//        mobileNo = "1234567890"
-//        externalId = "EXT-001"
-//        genderId = 22
-//        dateOfBirth = "1990-01-01"
-//        officeId = 12
-//        activationDate = "2023-07-15"
-//        active = true
-//        errorMessage = null
-//    }
-//
-//    ClientPayloadItem(payload = sampleClientPayload)
-// }

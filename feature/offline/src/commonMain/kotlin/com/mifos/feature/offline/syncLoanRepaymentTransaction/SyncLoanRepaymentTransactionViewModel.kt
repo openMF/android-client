@@ -18,11 +18,10 @@ import androidx.lifecycle.viewModelScope
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.common.utils.FileUtils
 import com.mifos.core.data.repository.SyncLoanRepaymentTransactionRepository
+import com.mifos.core.data.util.NetworkMonitor
 import com.mifos.core.datastore.UserPreferencesRepository
 import com.mifos.room.entities.PaymentTypeOptionEntity
 import com.mifos.room.entities.accounts.loans.LoanRepaymentRequestEntity
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.IO
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -37,6 +36,7 @@ import kotlinx.coroutines.launch
 class SyncLoanRepaymentTransactionViewModel(
     private val repository: SyncLoanRepaymentTransactionRepository,
     private val prefManager: UserPreferencesRepository,
+    networkMonitor: NetworkMonitor,
 ) : ViewModel() {
 
     private val _syncLoanRepaymentTransactionUiState =
@@ -52,6 +52,13 @@ class SyncLoanRepaymentTransactionViewModel(
     private var mLoanRepaymentRequests: MutableList<LoanRepaymentRequestEntity> = mutableListOf()
     private var mPaymentTypeOptions: List<PaymentTypeOptionEntity> = emptyList()
     private var mClientSyncIndex = 0
+
+    val isNetworkAvailable = networkMonitor.isOnline
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5_000),
+            initialValue = false,
+        )
 
     val userStatus: StateFlow<Boolean> = prefManager.userInfo
         .map { it.userStatus }
@@ -70,14 +77,11 @@ class SyncLoanRepaymentTransactionViewModel(
 
     fun loadDatabaseLoanRepaymentTransactions() {
         viewModelScope.launch {
-            _syncLoanRepaymentTransactionUiState.value =
-                SyncLoanRepaymentTransactionUiState.ShowProgressbar
-
             repository.databaseLoanRepayments()
-                .collect { loanRepaymentRequests ->
-                    when (loanRepaymentRequests) {
+                .collect { dataState ->
+                    when (dataState) {
                         is DataState.Success -> {
-                            mLoanRepaymentRequests = loanRepaymentRequests.data.toMutableList()
+                            mLoanRepaymentRequests = dataState.data.toMutableList()
                             updateUiState()
                         }
 
@@ -97,14 +101,11 @@ class SyncLoanRepaymentTransactionViewModel(
 
     fun loanPaymentTypeOption() {
         viewModelScope.launch {
-            _syncLoanRepaymentTransactionUiState.value =
-                SyncLoanRepaymentTransactionUiState.ShowProgressbar
-
             repository.paymentTypeOption()
-                .collect { paymentTypeOptions ->
-                    when (paymentTypeOptions) {
+                .collect { dataState ->
+                    when (dataState) {
                         is DataState.Success -> {
-                            mPaymentTypeOptions = paymentTypeOptions.data
+                            mPaymentTypeOptions = dataState.data
                             updateUiState()
                         }
 
@@ -159,24 +160,31 @@ class SyncLoanRepaymentTransactionViewModel(
     }
 
     private fun deleteAndUpdateLoanRepayments(loanId: Int) {
-        viewModelScope.launch(Dispatchers.IO) {
-            _syncLoanRepaymentTransactionUiState.value =
-                SyncLoanRepaymentTransactionUiState.ShowProgressbar
+        viewModelScope.launch {
+            repository.deleteAndUpdateLoanRepayments(loanId)
+                .collect { dataState ->
+                    when (dataState) {
+                        is DataState.Error -> Unit
 
-            repository.deleteAndUpdateLoanRepayments(loanId).collect { loanRepaymentRequests ->
-                mClientSyncIndex = 0
-                mLoanRepaymentRequests =
-                    loanRepaymentRequests as MutableList<LoanRepaymentRequestEntity>
-                if (mLoanRepaymentRequests.isNotEmpty()) {
-                    syncGroupPayload()
-                } else {
-                    _syncLoanRepaymentTransactionUiState.value =
-                        SyncLoanRepaymentTransactionUiState.ShowEmptyLoanRepayments(
-                            Res.string.feature_offline_no_loanrepayment_to_sync.toString(),
-                        )
+                        DataState.Loading ->
+                            _syncLoanRepaymentTransactionUiState.value =
+                                SyncLoanRepaymentTransactionUiState.ShowProgressbar
+
+                        is DataState.Success -> {
+                            mClientSyncIndex = 0
+                            mLoanRepaymentRequests = dataState.data.toMutableList()
+                            if (mLoanRepaymentRequests.isNotEmpty()) {
+                                syncGroupPayload()
+                            } else {
+                                _syncLoanRepaymentTransactionUiState.value =
+                                    SyncLoanRepaymentTransactionUiState.ShowEmptyLoanRepayments(
+                                        Res.string.feature_offline_no_loanrepayment_to_sync.toString(),
+                                    )
+                            }
+                            updateUiState()
+                        }
+                    }
                 }
-                updateUiState()
-            }
         }
     }
 

@@ -57,11 +57,13 @@ import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.ui.components.MifosEmptyUi
-import com.mifos.core.ui.util.DevicePreview
 import com.mifos.room.entities.PaymentTypeOptionEntity
 import com.mifos.room.entities.accounts.savings.SavingsAccountTransactionRequestEntity
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
+import org.jetbrains.compose.ui.tooling.preview.Preview
+import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
+import org.jetbrains.compose.ui.tooling.preview.PreviewParameterProvider
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -72,6 +74,7 @@ internal fun SyncSavingsAccountTransactionScreenRoute(
     val uiState by viewModel.syncSavingsAccountTransactionUiState.collectAsStateWithLifecycle()
     val userStatus by viewModel.userStatus.collectAsStateWithLifecycle()
     val refreshState by viewModel.isRefreshing.collectAsStateWithLifecycle()
+    val isOnline by viewModel.isNetworkAvailable.collectAsStateWithLifecycle()
 
     LaunchedEffect(key1 = Unit) {
         viewModel.loadDatabaseSavingsAccountTransactions()
@@ -89,6 +92,7 @@ internal fun SyncSavingsAccountTransactionScreenRoute(
             viewModel.syncSavingsAccountTransactions()
         },
         userStatus = userStatus,
+        isOnline = isOnline,
     )
 }
 
@@ -101,7 +105,7 @@ internal fun SyncSavingsAccountTransactionScreen(
     onRefresh: () -> Unit,
     syncSavingsAccountTransactions: () -> Unit,
     userStatus: Boolean,
-    isOnline: Boolean = true,
+    isOnline: Boolean,
     modifier: Modifier = Modifier,
 ) {
     val snackbarHostState by remember { mutableStateOf(SnackbarHostState()) }
@@ -117,17 +121,14 @@ internal fun SyncSavingsAccountTransactionScreen(
             IconButton(
                 onClick = {
                     when (userStatus) {
-                        false -> checkNetworkConnectionAndSync(
-                            syncSavingsAccountTransactions,
-                            isOnline = isOnline,
-                            onShowOfflineMessage = {
+                        false -> when (isOnline) {
+                            true -> syncSavingsAccountTransactions
+                            false -> {
                                 scope.launch {
-                                    snackbarHostState.showSnackbar(
-                                        message = offlineMessage,
-                                    )
+                                    snackbarHostState.showSnackbar(offlineMessage)
                                 }
-                            },
-                        )
+                            }
+                        }
 
                         true -> TODO() // Implement OfflineModeDialog()
                     }
@@ -288,107 +289,57 @@ fun getPaymentTypeName(
         ?.name
 }
 
-private fun checkNetworkConnectionAndSync(
-    syncSavingsAccountTransactions: () -> Unit,
-    isOnline: Boolean,
-    onShowOfflineMessage: () -> Unit,
-) {
-    if (isOnline) {
-        syncSavingsAccountTransactions()
-    } else {
-        onShowOfflineMessage()
+class SyncSavingsAccountTransactionUiStateProvider :
+    PreviewParameterProvider<SyncSavingsAccountTransactionUiState> {
+
+    private val sampleSavingsAccountTransactions = List(5) { index ->
+        SavingsAccountTransactionRequestEntity(
+            savingAccountId = index,
+            transactionDate = "2023-07-${15 + index}",
+            transactionAmount = "${100 + index * 10}",
+            paymentTypeId = index.toLong().toString(),
+            transactionType = if (index % 2 == 0) "deposit" else "withdrawal",
+            accountNumber = "ACC-$index",
+            checkNumber = "CHK-$index",
+            routingCode = "RTG-$index",
+            receiptNumber = "RCP-$index",
+            bankNumber = "BNK-$index",
+        )
     }
-}
+    private val samplePaymentTypeOptions = List(3) { index ->
+        PaymentTypeOptionEntity(
+            id = index,
+            name = "Payment Type $index",
+            description = "Description for Payment Type $index",
+            isCashPayment = index % 2 == 0,
+            position = index,
+        )
+    }
 
-@DevicePreview()
-@Composable
-private fun SyncSavingsAccountTransactionLoadingPreview() {
-    SyncSavingsAccountTransactionScreen(
-        uiState = SyncSavingsAccountTransactionUiState.Loading,
-        onBackPressed = {},
-        refreshState = true,
-        onRefresh = {},
-        syncSavingsAccountTransactions = {},
-        userStatus = true,
-    )
-}
-
-@DevicePreview()
-@Composable
-private fun SyncSavingsAccountTransactionErrorPreview() {
-    SyncSavingsAccountTransactionScreen(
-        uiState = SyncSavingsAccountTransactionUiState.ShowError(
-            Res.string.feature_offline_failed_to_load_savingaccounttransaction,
-        ),
-        onBackPressed = {},
-        refreshState = false,
-        onRefresh = {},
-        syncSavingsAccountTransactions = {},
-        userStatus = true,
-    )
-}
-
-@DevicePreview()
-@Composable
-private fun SyncSavingsAccountTransactionEmptyPreview() {
-    SyncSavingsAccountTransactionScreen(
-        uiState = SyncSavingsAccountTransactionUiState.ShowEmptySavingsAccountTransactions(
-            Res.string.feature_offline_no_transaction_to_sync,
-        ),
-        onBackPressed = {},
-        refreshState = false,
-        onRefresh = {},
-        syncSavingsAccountTransactions = {},
-        userStatus = true,
-    )
-}
-
-@DevicePreview()
-@Composable
-private fun SyncSavingsAccountTransactionSuccessPreview() {
-    SyncSavingsAccountTransactionScreen(
-        uiState = SyncSavingsAccountTransactionUiState.ShowSavingsAccountTransactions(
+    override val values = sequenceOf(
+        SyncSavingsAccountTransactionUiState.Loading,
+        SyncSavingsAccountTransactionUiState.ShowError(Res.string.feature_offline_failed_to_load_savingaccounttransaction),
+        SyncSavingsAccountTransactionUiState.ShowEmptySavingsAccountTransactions(Res.string.feature_offline_no_transaction_to_sync),
+        SyncSavingsAccountTransactionUiState.ShowSavingsAccountTransactions(
             sampleSavingsAccountTransactions.toMutableList(),
             samplePaymentTypeOptions,
         ),
+    )
+}
+
+@Composable
+@Preview
+private fun SyncSavingsAccountTransactionScreenPreview(
+    @PreviewParameter(SyncSavingsAccountTransactionUiStateProvider::class)
+    state: SyncSavingsAccountTransactionUiState,
+) {
+    SyncSavingsAccountTransactionScreen(
+        uiState = state,
         onBackPressed = {},
         refreshState = false,
         onRefresh = {},
         syncSavingsAccountTransactions = {},
         userStatus = true,
-    )
-}
-
-val sampleSavingsAccountTransactions = List(5) { index ->
-    SavingsAccountTransactionRequestEntity(
-        savingAccountId = index,
-        transactionDate = "2023-07-${15 + index}",
-        transactionAmount = "${100 + index * 10}",
-        paymentTypeId = index.toLong().toString(),
-        transactionType = if (index % 2 == 0) "deposit" else "withdrawal",
-        accountNumber = "ACC-$index",
-        checkNumber = "CHK-$index",
-        routingCode = "RTG-$index",
-        receiptNumber = "RCP-$index",
-        bankNumber = "BNK-$index",
-    )
-}
-
-val samplePaymentTypeOptions = List(3) { index ->
-    PaymentTypeOptionEntity(
-        id = index,
-        name = "Payment Type $index",
-        description = "Description for Payment Type $index",
-        isCashPayment = index % 2 == 0,
-        position = index,
-    )
-}
-
-@DevicePreview
-@Composable
-private fun SavingsAccountTransactionItemPreview() {
-    SavingsAccountTransactionItem(
-        transaction = sampleSavingsAccountTransactions[0],
-        paymentTypeOptions = samplePaymentTypeOptions,
+        isOnline = true,
     )
 }

@@ -48,10 +48,12 @@ import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.ui.components.MifosEmptyUi
-import com.mifos.core.ui.util.DevicePreview
 import com.mifos.room.entities.center.CenterPayloadEntity
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
+import org.jetbrains.compose.ui.tooling.preview.Preview
+import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
+import org.jetbrains.compose.ui.tooling.preview.PreviewParameterProvider
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -62,6 +64,7 @@ internal fun SyncCenterPayloadsScreenRoute(
     val uiState by viewModel.syncCenterPayloadsUiState.collectAsStateWithLifecycle()
     val userStatus by viewModel.userStatus.collectAsStateWithLifecycle()
     val refreshing by viewModel.isRefreshing.collectAsStateWithLifecycle()
+    val isOnline by viewModel.isNetworkAvailable.collectAsStateWithLifecycle()
 
     LaunchedEffect(key1 = Unit) {
         viewModel.loadDatabaseCenterPayload()
@@ -74,6 +77,7 @@ internal fun SyncCenterPayloadsScreenRoute(
         onRefresh = { viewModel.refreshCenterPayloads() },
         syncCenterPayloads = { viewModel.syncCenterPayload() },
         userStatus = userStatus,
+        isOnline = isOnline,
     )
 }
 
@@ -86,7 +90,7 @@ internal fun SyncCenterPayloadsScreen(
     onRefresh: () -> Unit,
     syncCenterPayloads: () -> Unit,
     userStatus: Boolean,
-    isOnline: Boolean = true,
+    isOnline: Boolean,
     modifier: Modifier = Modifier,
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
@@ -102,17 +106,19 @@ internal fun SyncCenterPayloadsScreen(
             IconButton(
                 onClick = {
                     when (userStatus) {
-                        false -> checkNetworkConnectionAndSync(
-                            syncCenterPayloads,
-                            isOnline = isOnline,
-                            onShowOfflineMessage = {
-                                scope.launch {
-                                    snackbarHostState.showSnackbar(
-                                        message = offlineMessage,
-                                    )
+                        false -> {
+                            when (isOnline) {
+                                true -> syncCenterPayloads()
+
+                                false -> {
+                                    scope.launch {
+                                        snackbarHostState.showSnackbar(
+                                            message = offlineMessage,
+                                        )
+                                    }
                                 }
-                            },
-                        )
+                            }
+                        }
 
                         true -> TODO("Implement OfflineModeDialog()")
                     }
@@ -230,60 +236,31 @@ private fun PayloadField(
     }
 }
 
-// @RequiresPermission(Manifest.permission.ACCESS_NETWORK_STATE)
-private fun checkNetworkConnectionAndSync(
-    syncCenterPayloads: () -> Unit,
-    isOnline: Boolean,
-    onShowOfflineMessage: () -> Unit,
+class SyncCenterPayloadsUiStateProvider : PreviewParameterProvider<SyncCenterPayloadsUiState> {
+    override val values = sequenceOf(
+        SyncCenterPayloadsUiState.ShowProgressbar,
+        SyncCenterPayloadsUiState.ShowError("Failed to load center payloads"),
+        SyncCenterPayloadsUiState.ShowCenters(sampleCenterPayloads),
+    )
+}
+
+@Composable
+@Preview
+private fun SyncCenterPayloadsScreenPreview(
+    @PreviewParameter(SyncCenterPayloadsUiStateProvider::class) uiState: SyncCenterPayloadsUiState,
 ) {
-    if (isOnline) {
-        syncCenterPayloads()
-    } else {
-        onShowOfflineMessage()
-    }
-}
-
-@DevicePreview
-@Composable
-private fun SyncCenterPayloadsScreenPreview() {
     SyncCenterPayloadsScreen(
-        uiState = SyncCenterPayloadsUiState.ShowCenters(sampleCenterPayloads),
+        uiState = uiState,
         onBackPressed = {},
         refreshing = false,
         onRefresh = {},
         syncCenterPayloads = {},
+        isOnline = true,
         userStatus = true,
     )
 }
 
-@DevicePreview()
-@Composable
-private fun SyncCenterPayloadsLoadingPreview() {
-    SyncCenterPayloadsScreen(
-        uiState = SyncCenterPayloadsUiState.ShowProgressbar,
-        onBackPressed = {},
-        refreshing = true,
-        onRefresh = {},
-        syncCenterPayloads = {},
-        userStatus = true,
-    )
-}
-
-@DevicePreview()
-@Composable
-private fun SyncCenterPayloadsErrorPreview() {
-    SyncCenterPayloadsScreen(
-        uiState = SyncCenterPayloadsUiState.ShowError("Failed to load center payloads"),
-        onBackPressed = {},
-        refreshing = false,
-        onRefresh = {},
-        syncCenterPayloads = {},
-        userStatus = true,
-    )
-}
-
-// Sample data for previews
-val sampleCenterPayloads = List(5) { index ->
+private val sampleCenterPayloads = List(5) { index ->
     CenterPayloadEntity(
         name = "Center $index",
         officeId = index + 1,
@@ -291,24 +268,4 @@ val sampleCenterPayloads = List(5) { index ->
         active = index % 2 == 0,
         errorMessage = if (index % 3 == 0) "Error in payload" else null,
     )
-}
-
-@DevicePreview
-@Composable
-private fun CenterPayloadItemPreview() {
-//    val sampleCenterPayload = CenterPayload().apply {
-//        name = "Sample Center"
-//        officeId = 12345
-//        activationDate = "2023-07-15"
-//        active = true
-//        errorMessage = null
-//    }
-
-//    CenterPayloadItem(payload = sampleCenterPayload)
-}
-
-@DevicePreview
-@Composable
-private fun PayloadFieldPreview() {
-    PayloadField(label = "Sample Label", value = "Sample Value")
 }

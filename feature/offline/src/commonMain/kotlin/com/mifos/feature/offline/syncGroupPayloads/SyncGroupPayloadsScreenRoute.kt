@@ -66,6 +66,7 @@ internal fun SyncGroupPayloadsScreenRoute(
     val userStatus by viewModel.userStatus.collectAsStateWithLifecycle()
     val groupPayloadsList by viewModel.groupPayloadsList.collectAsStateWithLifecycle()
     val refreshState by viewModel.isRefreshing.collectAsStateWithLifecycle()
+    val isOnline by viewModel.isNetworkAvailable.collectAsStateWithLifecycle()
 
     LaunchedEffect(key1 = Unit) {
         viewModel.loanDatabaseGroupPayload()
@@ -83,6 +84,7 @@ internal fun SyncGroupPayloadsScreenRoute(
             viewModel.syncGroupPayloadFromStart()
         },
         userStatus = userStatus,
+        isOnline = isOnline,
     )
 }
 
@@ -96,7 +98,7 @@ internal fun SyncGroupPayloadsScreen(
     onRefresh: () -> Unit,
     syncGroupPayloads: () -> Unit,
     userStatus: Boolean,
-    isOnline: Boolean = true,
+    isOnline: Boolean,
     modifier: Modifier = Modifier,
 ) {
     val snackBarHostState = remember { SnackbarHostState() }
@@ -112,17 +114,14 @@ internal fun SyncGroupPayloadsScreen(
             IconButton(
                 onClick = {
                     when (userStatus) {
-                        false -> checkNetworkConnectionAndSync(
-                            syncGroupPayloads = syncGroupPayloads,
-                            isOnline = isOnline,
-                            onShowOfflineMessage = {
+                        false -> when (isOnline) {
+                            true -> syncGroupPayloads
+                            false -> {
                                 scope.launch {
-                                    snackBarHostState.showSnackbar(
-                                        message = offlineMessage,
-                                    )
+                                    snackBarHostState.showSnackbar(offlineMessage)
                                 }
-                            },
-                        )
+                            }
+                        }
 
                         true -> TODO("Implement OfflineModeDialog()")
                     }
@@ -265,18 +264,6 @@ private fun GroupPayloadField(
     }
 }
 
-private fun checkNetworkConnectionAndSync(
-    syncGroupPayloads: () -> Unit,
-    isOnline: Boolean,
-    onShowOfflineMessage: () -> Unit,
-) {
-    if (isOnline) {
-        syncGroupPayloads()
-    } else {
-        onShowOfflineMessage()
-    }
-}
-
 @DevicePreview
 @Composable
 private fun SyncGroupPayloadsScreenPreview() {
@@ -288,5 +275,6 @@ private fun SyncGroupPayloadsScreenPreview() {
         syncGroupPayloads = { },
         groupPayloadsList = dummyGroupPayloads,
         userStatus = true,
+        isOnline = true,
     )
 }

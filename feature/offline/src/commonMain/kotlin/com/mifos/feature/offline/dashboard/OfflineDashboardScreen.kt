@@ -133,14 +133,11 @@ internal fun OfflineDashboardScreen(
             } else {
                 when (uiState) {
                     is OfflineDashboardUiState.SyncUiState -> {
-                        val syncState = uiState
-                        LaunchedEffect(syncState.list) {
-                            syncState.list
-                                .filter { it.errorMsg != null }
+                        LaunchedEffect(uiState.list) {
+                            uiState.list
+                                .filter { item -> item.errorMsg != null }
                                 .forEach { item ->
-                                    item.errorMsg?.let { msg ->
-                                        snackBarHostState.showSnackbar(msg)
-                                    }
+                                    snackBarHostState.showSnackbar(item.errorMsg!!)
                                 }
                         }
 

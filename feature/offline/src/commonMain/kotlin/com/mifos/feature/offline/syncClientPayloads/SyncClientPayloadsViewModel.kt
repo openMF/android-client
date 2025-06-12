@@ -14,6 +14,7 @@ import androidx.lifecycle.viewModelScope
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.common.utils.FileUtils
 import com.mifos.core.data.repository.SyncClientPayloadsRepository
+import com.mifos.core.data.util.NetworkMonitor
 import com.mifos.core.datastore.UserPreferencesRepository
 import com.mifos.room.entities.client.ClientPayloadEntity
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -31,13 +32,14 @@ import kotlinx.coroutines.launch
 class SyncClientPayloadsViewModel(
     private val repository: SyncClientPayloadsRepository,
     private val prefManager: UserPreferencesRepository,
+    networkMonitor: NetworkMonitor,
 ) : ViewModel() {
 
     private val _syncClientPayloadsUiState =
         MutableStateFlow<SyncClientPayloadsUiState>(SyncClientPayloadsUiState.ShowProgressbar)
 
     val syncClientPayloadsUiState: StateFlow<SyncClientPayloadsUiState>
-        get() = _syncClientPayloadsUiState
+        get() = _syncClientPayloadsUiState.asStateFlow()
 
     private val _isRefreshing = MutableStateFlow(false)
     val isRefreshing: StateFlow<Boolean> = _isRefreshing.asStateFlow()
@@ -53,6 +55,13 @@ class SyncClientPayloadsViewModel(
             initialValue = false,
         )
 
+    val isNetworkAvailable = networkMonitor.isOnline
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5_000),
+            initialValue = false,
+        )
+
     fun refreshClientPayloads() {
         _isRefreshing.value = true
         loadDatabaseClientPayload()
@@ -63,17 +72,17 @@ class SyncClientPayloadsViewModel(
         _syncClientPayloadsUiState.value = SyncClientPayloadsUiState.ShowProgressbar
         viewModelScope.launch {
             repository.allDatabaseClientPayload()
-                .collect { clientPayloads ->
-                    when (clientPayloads) {
+                .collect { state ->
+                    when (state) {
                         is DataState.Success -> {
-                            mClientPayloads = clientPayloads.data.toMutableList()
+                            mClientPayloads = state.data.toMutableList()
                             _syncClientPayloadsUiState.value =
                                 SyncClientPayloadsUiState.ShowPayloads(mClientPayloads)
                         }
 
                         is DataState.Error -> {
                             _syncClientPayloadsUiState.value =
-                                SyncClientPayloadsUiState.ShowError(clientPayloads.message)
+                                SyncClientPayloadsUiState.ShowError(state.message)
                         }
 
                         is DataState.Loading -> {
@@ -110,14 +119,12 @@ class SyncClientPayloadsViewModel(
 
     fun deleteAndUpdateClientPayload(id: Int, clientCreationTIme: Long) {
         viewModelScope.launch {
-            _syncClientPayloadsUiState.value = SyncClientPayloadsUiState.ShowProgressbar
-
             repository.deleteAndUpdatePayloads(id, clientCreationTIme)
-                .collect { clientPayloads ->
-                    mClientSyncIndex = 0
-                    when (clientPayloads) {
+                .collect { dataState ->
+                    when (dataState) {
                         is DataState.Success -> {
-                            val list = clientPayloads.data
+                            mClientSyncIndex = 0
+                            val list = dataState.data
                             if (list.isNotEmpty()) {
                                 syncClientPayload()
                             }
@@ -128,7 +135,7 @@ class SyncClientPayloadsViewModel(
 
                         is DataState.Error -> {
                             _syncClientPayloadsUiState.value =
-                                SyncClientPayloadsUiState.ShowError(clientPayloads.message)
+                                SyncClientPayloadsUiState.ShowError(dataState.message)
                         }
 
                         is DataState.Loading -> {

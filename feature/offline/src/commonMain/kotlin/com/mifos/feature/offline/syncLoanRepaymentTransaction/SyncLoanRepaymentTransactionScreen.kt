@@ -56,12 +56,14 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.icon.MifosIcons
-import com.mifos.core.ui.util.DevicePreview
 import com.mifos.feature.offline.syncSavingsAccountTransaction.getPaymentTypeName
 import com.mifos.room.entities.PaymentTypeOptionEntity
 import com.mifos.room.entities.accounts.loans.LoanRepaymentRequestEntity
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
+import org.jetbrains.compose.ui.tooling.preview.Preview
+import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
+import org.jetbrains.compose.ui.tooling.preview.PreviewParameterProvider
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -72,6 +74,7 @@ internal fun SyncLoanRepaymentTransactionScreenRoute(
     val uiState by viewModel.syncLoanRepaymentTransactionUiState.collectAsStateWithLifecycle()
     val userStatus by viewModel.userStatus.collectAsStateWithLifecycle()
     val refreshState by viewModel.isRefreshing.collectAsStateWithLifecycle()
+    val isOnline by viewModel.isNetworkAvailable.collectAsStateWithLifecycle()
 
     LaunchedEffect(key1 = Unit) {
         viewModel.loadDatabaseLoanRepaymentTransactions()
@@ -89,6 +92,7 @@ internal fun SyncLoanRepaymentTransactionScreenRoute(
             viewModel.syncGroupPayload()
         },
         userStatus = userStatus,
+        isOnline = isOnline,
     )
 }
 
@@ -101,7 +105,7 @@ internal fun SyncLoanRepaymentTransactionScreen(
     onRefresh: () -> Unit,
     syncLoanRepaymentTransactions: () -> Unit,
     userStatus: Boolean,
-    isOnline: Boolean = true,
+    isOnline: Boolean,
     modifier: Modifier = Modifier,
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
@@ -117,17 +121,14 @@ internal fun SyncLoanRepaymentTransactionScreen(
             IconButton(
                 onClick = {
                     when (userStatus) {
-                        false -> checkNetworkConnectionAndSync(
-                            syncLoanRepaymentTransactions,
-                            isOnline = isOnline,
-                            onShowOfflineMessage = {
+                        false -> when (isOnline) {
+                            true -> syncLoanRepaymentTransactions()
+                            false -> {
                                 scope.launch {
-                                    snackbarHostState.showSnackbar(
-                                        message = offlineMessage,
-                                    )
+                                    snackbarHostState.showSnackbar(offlineMessage)
                                 }
-                            },
-                        )
+                            }
+                        }
 
                         true -> TODO("Implement OfflineModeDialog()")
                     }
@@ -315,76 +316,20 @@ private fun EmptyLoanRepaymentsScreen(
     }
 }
 
-internal fun checkNetworkConnectionAndSync(
-    syncLoanRepaymentTransactions: () -> Unit,
-    isOnline: Boolean = true,
-    onShowOfflineMessage: () -> Unit = {},
-) {
-    if (isOnline) {
-        syncLoanRepaymentTransactions()
-    } else {
-        onShowOfflineMessage()
-    }
-}
-
-@DevicePreview()
-@Composable
-private fun SyncLoanRepaymentTransactionLoadingPreview() {
-    SyncLoanRepaymentTransactionScreen(
-        uiState = SyncLoanRepaymentTransactionUiState.ShowProgressbar,
-        onBackPressed = {},
-        refreshState = true,
-        onRefresh = {},
-        syncLoanRepaymentTransactions = {},
-        userStatus = true,
-    )
-}
-
-@DevicePreview()
-@Composable
-private fun SyncLoanRepaymentTransactionErrorPreview() {
-    SyncLoanRepaymentTransactionScreen(
-        uiState = SyncLoanRepaymentTransactionUiState.ShowError(
-            Res.string.feature_offline_failed_to_load_loanrepayment,
-        ),
-        onBackPressed = {},
-        refreshState = false,
-        onRefresh = {},
-        syncLoanRepaymentTransactions = {},
-        userStatus = true,
-    )
-}
-
-@DevicePreview()
-@Composable
-private fun SyncLoanRepaymentTransactionEmptyPreview() {
-    SyncLoanRepaymentTransactionScreen(
-        uiState = SyncLoanRepaymentTransactionUiState.ShowEmptyLoanRepayments("No loan repayments to sync"),
-        onBackPressed = {},
-        refreshState = false,
-        onRefresh = {},
-        syncLoanRepaymentTransactions = {},
-        userStatus = true,
-    )
-}
-
-@DevicePreview()
-@Composable
-private fun SyncLoanRepaymentTransactionSuccessPreview() {
-    SyncLoanRepaymentTransactionScreen(
-        uiState = SyncLoanRepaymentTransactionUiState.ShowLoanRepaymentTransactions(
+private class SyncLoanRepaymentTransactionUiStateProvider :
+    PreviewParameterProvider<SyncLoanRepaymentTransactionUiState> {
+    override val values = sequenceOf(
+        SyncLoanRepaymentTransactionUiState.ShowProgressbar,
+        SyncLoanRepaymentTransactionUiState.ShowError(Res.string.feature_offline_failed_to_load_loanrepayment),
+        SyncLoanRepaymentTransactionUiState.ShowEmptyLoanRepayments("No loan repayments to sync"),
+        SyncLoanRepaymentTransactionUiState.ShowLoanRepaymentTransactions(
             sampleLoanRepaymentRequests,
             samplePaymentTypeOptions,
         ),
-        onBackPressed = {},
-        refreshState = false,
-        onRefresh = {},
-        syncLoanRepaymentTransactions = {},
-        userStatus = true,
     )
 }
 
-val sampleLoanRepaymentRequests = List(5) { index ->
+private val sampleLoanRepaymentRequests = List(5) { index ->
     LoanRepaymentRequestEntity(
         loanId = index,
         accountNumber = "LOAN-$index",
@@ -395,7 +340,7 @@ val sampleLoanRepaymentRequests = List(5) { index ->
     )
 }
 
-val samplePaymentTypeOptions = List(3) { index ->
+private val samplePaymentTypeOptions = List(3) { index ->
     PaymentTypeOptionEntity(
         id = index,
         name = "Payment Type $index",
@@ -405,11 +350,18 @@ val samplePaymentTypeOptions = List(3) { index ->
     )
 }
 
-@DevicePreview
 @Composable
-private fun LoanRepaymentTransactionItemPreview() {
-    LoanRepaymentTransactionItem(
-        request = sampleLoanRepaymentRequests[0],
-        paymentTypeOptions = samplePaymentTypeOptions,
+@Preview
+private fun SyncLoanRepaymentTransactionScreenPreview(
+    @PreviewParameter(SyncLoanRepaymentTransactionUiStateProvider::class) uiState: SyncLoanRepaymentTransactionUiState,
+) {
+    SyncLoanRepaymentTransactionScreen(
+        uiState = uiState,
+        onBackPressed = {},
+        refreshState = false,
+        onRefresh = {},
+        syncLoanRepaymentTransactions = {},
+        userStatus = true,
+        isOnline = true,
     )
 }

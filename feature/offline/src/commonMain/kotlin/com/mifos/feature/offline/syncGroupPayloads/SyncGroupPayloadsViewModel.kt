@@ -17,13 +17,13 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.repository.SyncGroupPayloadsRepository
+import com.mifos.core.data.util.NetworkMonitor
 import com.mifos.core.datastore.UserPreferencesRepository
 import com.mifos.room.entities.group.GroupPayloadEntity
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
@@ -33,6 +33,7 @@ import kotlinx.coroutines.launch
 class SyncGroupPayloadsViewModel(
     private val prefManager: UserPreferencesRepository,
     private val repository: SyncGroupPayloadsRepository,
+    networkMonitor: NetworkMonitor,
 ) : ViewModel() {
 
     val syncGroupPayloadsUiState get() = _syncGroupPayloadsUiState
@@ -47,6 +48,13 @@ class SyncGroupPayloadsViewModel(
     val isRefreshing: StateFlow<Boolean> = _isRefreshing.asStateFlow()
 
     private var groupPayloadSyncIndex = 0
+
+    val isNetworkAvailable = networkMonitor.isOnline
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5_000),
+            initialValue = false,
+        )
 
     /***
      * check use cases names
@@ -67,14 +75,11 @@ class SyncGroupPayloadsViewModel(
 
     fun loanDatabaseGroupPayload() {
         viewModelScope.launch {
-            _syncGroupPayloadsUiState.value =
-                SyncGroupPayloadsUiState.Loading
-
             repository.allDatabaseGroupPayload()
-                .collect { groupPayloadsList ->
-                    when (groupPayloadsList) {
+                .collect { state ->
+                    when (state) {
                         is DataState.Success -> {
-                            val list = groupPayloadsList.data
+                            val list = state.data
                             _groupPayloadsList.value = list
                             _syncGroupPayloadsUiState.value = SyncGroupPayloadsUiState.Success(
                                 if (list.isEmpty()) {
@@ -129,16 +134,11 @@ class SyncGroupPayloadsViewModel(
     private fun deleteAndUpdateGroupPayload() {
         viewModelScope.launch {
             val id = groupPayloadsList.value[groupPayloadSyncIndex].id
-
             repository.deleteAndUpdateGroupPayloads(id)
-                .catch {
-                    _syncGroupPayloadsUiState.value =
-                        SyncGroupPayloadsUiState.Error(Res.string.feature_offline_error_failed_to_update_list)
-                }
-                .collect { groupPayloads ->
-                    when (groupPayloads) {
+                .collect { state ->
+                    when (state) {
                         is DataState.Success -> {
-                            val updatedList = groupPayloads.data
+                            val updatedList = state.data
                             groupPayloadSyncIndex = 0
                             _groupPayloadsList.value = updatedList
                             _syncGroupPayloadsUiState.value = SyncGroupPayloadsUiState.Success(
