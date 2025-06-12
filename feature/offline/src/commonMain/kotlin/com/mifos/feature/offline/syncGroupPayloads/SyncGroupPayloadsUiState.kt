@@ -9,8 +9,13 @@
  */
 package com.mifos.feature.offline.syncGroupPayloads
 
-import com.mifos.feature.offline.R
+import androidclient.feature.offline.generated.resources.Res
+import androidclient.feature.offline.generated.resources.feature_offline_all_groups_synced
+import androidclient.feature.offline.generated.resources.feature_offline_ic_assignment_turned_in_black_24dp
+import androidclient.feature.offline.generated.resources.feature_offline_no_group_payload_to_sync
 import com.mifos.room.entities.group.GroupPayloadEntity
+import org.jetbrains.compose.resources.DrawableResource
+import org.jetbrains.compose.resources.StringResource
 
 /**
  * Created by Aditya Gupta on 16/08/23.
@@ -18,20 +23,20 @@ import com.mifos.room.entities.group.GroupPayloadEntity
 sealed class SyncGroupPayloadsUiState {
     data object Loading : SyncGroupPayloadsUiState()
     data class Success(val emptyState: GroupPayloadEmptyState? = null) : SyncGroupPayloadsUiState()
-    data class Error(val messageResId: Int) : SyncGroupPayloadsUiState()
+    data class Error(val messageResId: StringResource) : SyncGroupPayloadsUiState()
 }
 
 enum class GroupPayloadEmptyState(
-    val messageResId: Int,
-    val iconResId: Int,
+    val messageResId: StringResource,
+    val iconResId: DrawableResource,
 ) {
     ALL_SYNCED(
-        messageResId = R.string.feature_offline_all_groups_synced,
-        iconResId = R.drawable.feature_offline_ic_assignment_turned_in_black_24dp,
+        messageResId = Res.string.feature_offline_all_groups_synced,
+        iconResId = Res.drawable.feature_offline_ic_assignment_turned_in_black_24dp,
     ),
     NOTHING_TO_SYNC(
-        messageResId = R.string.feature_offline_no_group_payload_to_sync,
-        iconResId = R.drawable.feature_offline_ic_assignment_turned_in_black_24dp,
+        messageResId = Res.string.feature_offline_no_group_payload_to_sync,
+        iconResId = Res.drawable.feature_offline_ic_assignment_turned_in_black_24dp,
     ),
 }
 

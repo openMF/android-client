@@ -11,6 +11,7 @@ package com.mifos.feature.offline.syncLoanRepaymentTransaction
 
 import com.mifos.room.entities.PaymentTypeOptionEntity
 import com.mifos.room.entities.accounts.loans.LoanRepaymentRequestEntity
+import org.jetbrains.compose.resources.StringResource
 
 /**
  * Created by Aditya Gupta on 16/08/23.
@@ -19,7 +20,7 @@ sealed class SyncLoanRepaymentTransactionUiState {
 
     data object ShowProgressbar : SyncLoanRepaymentTransactionUiState()
 
-    data class ShowError(val message: Int) : SyncLoanRepaymentTransactionUiState()
+    data class ShowError(val message: StringResource) : SyncLoanRepaymentTransactionUiState()
 
     data class ShowLoanRepaymentTransactions(
         val loanRepaymentRequests: List<LoanRepaymentRequestEntity>,

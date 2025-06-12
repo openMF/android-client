@@ -9,27 +9,31 @@
  */
 package com.mifos.feature.offline.syncGroupPayloads
 
+import androidclient.feature.offline.generated.resources.Res
+import androidclient.feature.offline.generated.resources.feature_offline_error_failed_to_load_groupPayload
+import androidclient.feature.offline.generated.resources.feature_offline_error_failed_to_update_list
+import androidclient.feature.offline.generated.resources.feature_offline_error_group_sync_failed
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.repository.SyncGroupPayloadsRepository
+import com.mifos.core.data.util.NetworkMonitor
 import com.mifos.core.datastore.UserPreferencesRepository
-import com.mifos.feature.offline.R
 import com.mifos.room.entities.group.GroupPayloadEntity
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-
 /**
  * Created by Aditya Gupta on 16/08/23.
  */
 class SyncGroupPayloadsViewModel(
     private val prefManager: UserPreferencesRepository,
     private val repository: SyncGroupPayloadsRepository,
+    networkMonitor: NetworkMonitor,
 ) : ViewModel() {
 
     val syncGroupPayloadsUiState get() = _syncGroupPayloadsUiState
@@ -44,6 +48,13 @@ class SyncGroupPayloadsViewModel(
     val isRefreshing: StateFlow<Boolean> = _isRefreshing.asStateFlow()
 
     private var groupPayloadSyncIndex = 0
+
+    val isNetworkAvailable = networkMonitor.isOnline
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5_000),
+            initialValue = false,
+        )
 
     /***
      * check use cases names
@@ -64,23 +75,30 @@ class SyncGroupPayloadsViewModel(
 
     fun loanDatabaseGroupPayload() {
         viewModelScope.launch {
-            _syncGroupPayloadsUiState.value =
-                SyncGroupPayloadsUiState.Loading
-
             repository.allDatabaseGroupPayload()
-                .catch {
-                    _syncGroupPayloadsUiState.value =
-                        SyncGroupPayloadsUiState.Error(R.string.feature_offline_error_failed_to_load_groupPayload)
-                }
-                .collect { groupPayloadsList ->
-                    _groupPayloadsList.value = groupPayloadsList
-                    _syncGroupPayloadsUiState.value = SyncGroupPayloadsUiState.Success(
-                        if (groupPayloadsList.isEmpty()) {
-                            GroupPayloadEmptyState.NOTHING_TO_SYNC
-                        } else {
-                            null
-                        },
-                    )
+                .collect { state ->
+                    when (state) {
+                        is DataState.Success -> {
+                            val list = state.data
+                            _groupPayloadsList.value = list
+                            _syncGroupPayloadsUiState.value = SyncGroupPayloadsUiState.Success(
+                                if (list.isEmpty()) {
+                                    GroupPayloadEmptyState.NOTHING_TO_SYNC
+                                } else {
+                                    null
+                                },
+                            )
+                        }
+
+                        is DataState.Error -> {
+                            _syncGroupPayloadsUiState.value =
+                                SyncGroupPayloadsUiState.Error(Res.string.feature_offline_error_failed_to_load_groupPayload)
+                        }
+
+                        is DataState.Loading -> {
+                            _syncGroupPayloadsUiState.value = SyncGroupPayloadsUiState.Loading
+                        }
+                    }
                 }
         }
     }
@@ -107,7 +125,7 @@ class SyncGroupPayloadsViewModel(
                 deleteAndUpdateGroupPayload()
             } catch (e: Exception) {
                 _syncGroupPayloadsUiState.value =
-                    SyncGroupPayloadsUiState.Error(R.string.feature_offline_error_group_sync_failed)
+                    SyncGroupPayloadsUiState.Error(Res.string.feature_offline_error_group_sync_failed)
                 updateGroupPayload()
             }
         }
@@ -116,23 +134,27 @@ class SyncGroupPayloadsViewModel(
     private fun deleteAndUpdateGroupPayload() {
         viewModelScope.launch {
             val id = groupPayloadsList.value[groupPayloadSyncIndex].id
-
             repository.deleteAndUpdateGroupPayloads(id)
-                .catch {
-                    _syncGroupPayloadsUiState.value =
-                        SyncGroupPayloadsUiState.Error(R.string.feature_offline_error_failed_to_update_list)
-                }
-                .collect { groupPayloads ->
-                    groupPayloadSyncIndex = 0
-                    _groupPayloadsList.value = groupPayloads
-                    _syncGroupPayloadsUiState.value = SyncGroupPayloadsUiState.Success(
-                        if ((groupPayloads.isEmpty())
-                        ) {
-                            GroupPayloadEmptyState.ALL_SYNCED
-                        } else {
-                            null
-                        },
-                    )
+                .collect { state ->
+                    when (state) {
+                        is DataState.Success -> {
+                            val updatedList = state.data
+                            groupPayloadSyncIndex = 0
+                            _groupPayloadsList.value = updatedList
+                            _syncGroupPayloadsUiState.value = SyncGroupPayloadsUiState.Success(
+                                if (updatedList.isEmpty()) GroupPayloadEmptyState.ALL_SYNCED else null,
+                            )
+                        }
+
+                        is DataState.Error -> {
+                            _syncGroupPayloadsUiState.value =
+                                SyncGroupPayloadsUiState.Error(Res.string.feature_offline_error_failed_to_update_list)
+                        }
+
+                        is DataState.Loading -> {
+                            _syncGroupPayloadsUiState.value = SyncGroupPayloadsUiState.Loading
+                        }
+                    }
                 }
         }
     }
@@ -155,7 +177,7 @@ class SyncGroupPayloadsViewModel(
                 }
             } catch (e: Exception) {
                 _syncGroupPayloadsUiState.value =
-                    SyncGroupPayloadsUiState.Error(R.string.feature_offline_error_failed_to_load_groupPayload)
+                    SyncGroupPayloadsUiState.Error(Res.string.feature_offline_error_failed_to_load_groupPayload)
             }
         }
     }

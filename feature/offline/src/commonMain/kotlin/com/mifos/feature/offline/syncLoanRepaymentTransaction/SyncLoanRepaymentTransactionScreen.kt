@@ -9,12 +9,17 @@
  */
 package com.mifos.feature.offline.syncLoanRepaymentTransaction
 
-import android.Manifest
-import android.content.Context
-import android.util.Log
-import androidx.annotation.RequiresPermission
+import androidclient.feature.offline.generated.resources.Res
+import androidclient.feature.offline.generated.resources.feature_offline_account_number
+import androidclient.feature.offline.generated.resources.feature_offline_click_to_refresh
+import androidclient.feature.offline.generated.resources.feature_offline_error_not_connected_internet
+import androidclient.feature.offline.generated.resources.feature_offline_failed_to_load_loanrepayment
+import androidclient.feature.offline.generated.resources.feature_offline_loan_id
+import androidclient.feature.offline.generated.resources.feature_offline_loan_transaction_date
+import androidclient.feature.offline.generated.resources.feature_offline_payment_type
+import androidclient.feature.offline.generated.resources.feature_offline_sync_loanrepayment
+import androidclient.feature.offline.generated.resources.feature_offline_transaction_amount
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -26,44 +31,40 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AssignmentTurnedIn
-import androidx.compose.material.icons.filled.Error
-import androidx.compose.material.pullrefresh.PullRefreshIndicator
-import androidx.compose.material.pullrefresh.pullRefresh
-import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
+import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.tooling.preview.PreviewParameter
-import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.icon.MifosIcons
-import com.mifos.feature.offline.R
 import com.mifos.feature.offline.syncSavingsAccountTransaction.getPaymentTypeName
 import com.mifos.room.entities.PaymentTypeOptionEntity
 import com.mifos.room.entities.accounts.loans.LoanRepaymentRequestEntity
-import org.koin.androidx.compose.koinViewModel
+import kotlinx.coroutines.launch
+import org.jetbrains.compose.resources.stringResource
+import org.jetbrains.compose.ui.tooling.preview.Preview
+import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
+import org.jetbrains.compose.ui.tooling.preview.PreviewParameterProvider
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 internal fun SyncLoanRepaymentTransactionScreenRoute(
@@ -73,6 +74,7 @@ internal fun SyncLoanRepaymentTransactionScreenRoute(
     val uiState by viewModel.syncLoanRepaymentTransactionUiState.collectAsStateWithLifecycle()
     val userStatus by viewModel.userStatus.collectAsStateWithLifecycle()
     val refreshState by viewModel.isRefreshing.collectAsStateWithLifecycle()
+    val isOnline by viewModel.isNetworkAvailable.collectAsStateWithLifecycle()
 
     LaunchedEffect(key1 = Unit) {
         viewModel.loadDatabaseLoanRepaymentTransactions()
@@ -90,10 +92,11 @@ internal fun SyncLoanRepaymentTransactionScreenRoute(
             viewModel.syncGroupPayload()
         },
         userStatus = userStatus,
+        isOnline = isOnline,
     )
 }
 
-@OptIn(ExperimentalMaterialApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun SyncLoanRepaymentTransactionScreen(
     uiState: SyncLoanRepaymentTransactionUiState,
@@ -102,25 +105,30 @@ internal fun SyncLoanRepaymentTransactionScreen(
     onRefresh: () -> Unit,
     syncLoanRepaymentTransactions: () -> Unit,
     userStatus: Boolean,
+    isOnline: Boolean,
     modifier: Modifier = Modifier,
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
-    val context = LocalContext.current
-    val pullRefreshState =
-        rememberPullRefreshState(refreshing = refreshState, onRefresh = onRefresh)
+    val pullToRefreshState = rememberPullToRefreshState()
+    val offlineMessage = stringResource(Res.string.feature_offline_error_not_connected_internet)
+    val scope = rememberCoroutineScope()
 
     MifosScaffold(
         modifier = modifier,
-        title = stringResource(id = R.string.feature_offline_sync_loanrepayment),
+        title = stringResource(Res.string.feature_offline_sync_loanrepayment),
         onBackPressed = onBackPressed,
         actions = {
             IconButton(
                 onClick = {
                     when (userStatus) {
-                        false -> checkNetworkConnectionAndSync(
-                            context,
-                            syncLoanRepaymentTransactions,
-                        )
+                        false -> when (isOnline) {
+                            true -> syncLoanRepaymentTransactions()
+                            false -> {
+                                scope.launch {
+                                    snackbarHostState.showSnackbar(offlineMessage)
+                                }
+                            }
+                        }
 
                         true -> TODO("Implement OfflineModeDialog()")
                     }
@@ -128,14 +136,20 @@ internal fun SyncLoanRepaymentTransactionScreen(
             ) {
                 Icon(
                     MifosIcons.Sync,
-                    contentDescription = stringResource(id = R.string.feature_offline_sync_loanrepayment),
+                    contentDescription = stringResource(Res.string.feature_offline_sync_loanrepayment),
                 )
             }
         },
         snackbarHostState = snackbarHostState,
     ) { paddingValues ->
         Column(modifier = Modifier.padding(paddingValues)) {
-            Box(modifier = Modifier.pullRefresh(pullRefreshState)) {
+            PullToRefreshBox(
+                modifier = Modifier.fillMaxSize(),
+                isRefreshing = refreshState,
+                onRefresh = onRefresh,
+                state = pullToRefreshState,
+                contentAlignment = Alignment.TopCenter,
+            ) {
                 when (uiState) {
                     is SyncLoanRepaymentTransactionUiState.ShowProgressbar -> {
                         MifosCircularProgress()
@@ -156,11 +170,6 @@ internal fun SyncLoanRepaymentTransactionScreen(
                         EmptyLoanRepaymentsScreen(uiState.message)
                     }
                 }
-                PullRefreshIndicator(
-                    refreshing = refreshState,
-                    state = pullRefreshState,
-                    modifier = Modifier.align(Alignment.TopCenter),
-                )
             }
         }
     }
@@ -198,24 +207,24 @@ private fun LoanRepaymentTransactionItem(
                 .padding(8.dp),
         ) {
             TransactionRow(
-                stringResource(R.string.feature_offline_loan_id),
+                stringResource(Res.string.feature_offline_loan_id),
                 request.loanId.toString(),
             )
             TransactionRow(
-                stringResource(R.string.feature_offline_account_number),
+                stringResource(Res.string.feature_offline_account_number),
                 request.accountNumber ?: "",
             )
             TransactionRow(
-                stringResource(R.string.feature_offline_payment_type),
+                stringResource(Res.string.feature_offline_payment_type),
                 request.paymentTypeId?.let { getPaymentTypeName(it.toInt(), paymentTypeOptions) }
                     ?: "",
             )
             TransactionRow(
-                stringResource(R.string.feature_offline_transaction_amount),
+                stringResource(Res.string.feature_offline_transaction_amount),
                 request.transactionAmount ?: "",
             )
             TransactionRow(
-                stringResource(R.string.feature_offline_loan_transaction_date),
+                stringResource(Res.string.feature_offline_loan_transaction_date),
                 request.transactionDate ?: "",
             )
 
@@ -268,13 +277,13 @@ private fun ErrorStateScreen(
         verticalArrangement = Arrangement.Center,
     ) {
         Icon(
-            imageVector = Icons.Default.Error,
+            imageVector = MifosIcons.Error,
             contentDescription = null,
             modifier = Modifier.size(48.dp),
         )
         Text(text = message, modifier = Modifier.padding(vertical = 6.dp))
         Button(onClick = onRefresh) {
-            Text(stringResource(id = R.string.feature_offline_click_to_refresh))
+            Text(stringResource(Res.string.feature_offline_click_to_refresh))
         }
     }
 }
@@ -292,7 +301,7 @@ private fun EmptyLoanRepaymentsScreen(
         verticalArrangement = Arrangement.Center,
     ) {
         Icon(
-            imageVector = Icons.Default.AssignmentTurnedIn,
+            imageVector = MifosIcons.AssignmentTurnedIn,
             contentDescription = null,
             modifier = Modifier.size(72.dp),
             tint = MaterialTheme.colorScheme.primary,
@@ -307,28 +316,11 @@ private fun EmptyLoanRepaymentsScreen(
     }
 }
 
-@RequiresPermission(Manifest.permission.ACCESS_NETWORK_STATE)
-internal fun checkNetworkConnectionAndSync(
-    context: Context,
-    syncLoanRepaymentTransactions: () -> Unit,
-) {
-    Log.d("C", context.packageName)
-//    if (Network.isOnline(context)) {
-    syncLoanRepaymentTransactions()
-//    } else {
-//        Toast.makeText(
-//            context,
-//            context.getString(R.string.feature_offline_error_not_connected_internet),
-//            Toast.LENGTH_SHORT,
-//        ).show()
-//    }
-}
-
-class SyncLoanRepaymentTransactionUiStateProvider :
+private class SyncLoanRepaymentTransactionUiStateProvider :
     PreviewParameterProvider<SyncLoanRepaymentTransactionUiState> {
     override val values = sequenceOf(
         SyncLoanRepaymentTransactionUiState.ShowProgressbar,
-        SyncLoanRepaymentTransactionUiState.ShowError(R.string.feature_offline_failed_to_load_loanrepayment),
+        SyncLoanRepaymentTransactionUiState.ShowError(Res.string.feature_offline_failed_to_load_loanrepayment),
         SyncLoanRepaymentTransactionUiState.ShowEmptyLoanRepayments("No loan repayments to sync"),
         SyncLoanRepaymentTransactionUiState.ShowLoanRepaymentTransactions(
             sampleLoanRepaymentRequests,
@@ -337,23 +329,7 @@ class SyncLoanRepaymentTransactionUiStateProvider :
     )
 }
 
-@Preview(showBackground = true)
-@Composable
-private fun SyncLoanRepaymentTransactionScreenPreview(
-    @PreviewParameter(SyncLoanRepaymentTransactionUiStateProvider::class) uiState: SyncLoanRepaymentTransactionUiState,
-) {
-    SyncLoanRepaymentTransactionScreen(
-        uiState = uiState,
-        onBackPressed = {},
-        refreshState = false,
-        onRefresh = {},
-        syncLoanRepaymentTransactions = {},
-        userStatus = true,
-    )
-}
-
-// Sample data for previews
-val sampleLoanRepaymentRequests = List(5) { index ->
+private val sampleLoanRepaymentRequests = List(5) { index ->
     LoanRepaymentRequestEntity(
         loanId = index,
         accountNumber = "LOAN-$index",
@@ -364,7 +340,7 @@ val sampleLoanRepaymentRequests = List(5) { index ->
     )
 }
 
-val samplePaymentTypeOptions = List(3) { index ->
+private val samplePaymentTypeOptions = List(3) { index ->
     PaymentTypeOptionEntity(
         id = index,
         name = "Payment Type $index",
@@ -374,12 +350,18 @@ val samplePaymentTypeOptions = List(3) { index ->
     )
 }
 
-// Individual preview for LoanRepaymentTransactionItem
-@Preview(showBackground = true)
 @Composable
-private fun LoanRepaymentTransactionItemPreview() {
-    LoanRepaymentTransactionItem(
-        request = sampleLoanRepaymentRequests[0],
-        paymentTypeOptions = samplePaymentTypeOptions,
+@Preview
+private fun SyncLoanRepaymentTransactionScreenPreview(
+    @PreviewParameter(SyncLoanRepaymentTransactionUiStateProvider::class) uiState: SyncLoanRepaymentTransactionUiState,
+) {
+    SyncLoanRepaymentTransactionScreen(
+        uiState = uiState,
+        onBackPressed = {},
+        refreshState = false,
+        onRefresh = {},
+        syncLoanRepaymentTransactions = {},
+        userStatus = true,
+        isOnline = true,
     )
 }

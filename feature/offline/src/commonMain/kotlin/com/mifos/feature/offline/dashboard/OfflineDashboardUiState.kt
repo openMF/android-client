@@ -9,6 +9,8 @@
  */
 package com.mifos.feature.offline.dashboard
 
+import org.jetbrains.compose.resources.StringResource
+
 /**
  * Created by Aditya Gupta on 16/08/23.
  */
@@ -18,7 +20,7 @@ sealed class OfflineDashboardUiState {
 
 data class SyncStateData(
     var count: Int = 0,
-    val name: Int = -1,
+    val name: StringResource,
     val type: Type,
     var errorMsg: String? = null,
 )
