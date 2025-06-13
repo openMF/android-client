@@ -24,7 +24,7 @@ class RemoveDocumentUseCase(
         entityType: String,
         entityId: Int,
         documentId: Int,
-    ): Flow<DataState<GenericResponse>> = flow {
+    ): Flow<DataState<Unit>> = flow {
         emit(repository.removeDocument(entityType, entityId, documentId))
     }.asDataStateFlow()
 }

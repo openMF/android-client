@@ -51,7 +51,7 @@ class DataManagerDocument(val mBaseApiManager: BaseApiManager) {
         entityType: String,
         entityId: Int,
         file: MultiPartFormDataContent,
-    ): Flow<GenericResponse> {
+    ): Flow<Unit> {
         return mBaseApiManager
             .documentApi
             .createDocument(entityType, entityId,  file)
@@ -92,7 +92,7 @@ class DataManagerDocument(val mBaseApiManager: BaseApiManager) {
         entityType: String,
         entityId: Int,
         documentId: Int,
-    ): GenericResponse {
+    ): Unit {
         return mBaseApiManager.documentApi.removeDocument(entityType, entityId, documentId)
     }
 

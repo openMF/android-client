@@ -18,11 +18,11 @@ sealed class DocumentDialogUiState {
 
     data class ShowUploadError(val message: String) : DocumentDialogUiState()
 
-    data class ShowDocumentedCreatedSuccessfully(val genericResponse: GenericResponse) :
+    data object ShowDocumentedCreatedSuccessfully :
         DocumentDialogUiState()
 
     data class ShowError(val message: String) : DocumentDialogUiState()
 
-    data class ShowDocumentUpdatedSuccessfully(val genericResponse: GenericResponse) :
+    data object ShowDocumentUpdatedSuccessfully :
         DocumentDialogUiState()
 }

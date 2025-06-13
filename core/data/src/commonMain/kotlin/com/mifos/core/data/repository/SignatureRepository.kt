@@ -24,5 +24,5 @@ interface SignatureRepository {
         entityType: String,
         entityId: Int,
         file: MultiPartFormDataContent,
-    ): Flow<DataState<GenericResponse>>
+    ): Flow<DataState<Unit>>
 }

@@ -159,29 +159,31 @@ internal fun DocumentDialogScreen(
         is DocumentDialogUiState.ShowDocumentedCreatedSuccessfully -> {
             LaunchedEffect(true) {
                 snackbarHostState.showSnackbar(getString(Res.string.feature_document_uploaded_successfully))
+                closeDialog.invoke()
             }
-            closeDialog.invoke()
+
         }
 
         is DocumentDialogUiState.ShowDocumentUpdatedSuccessfully -> {
             LaunchedEffect(true) {
                 snackbarHostState.showSnackbar(getString(Res.string.feature_document_document_updated_successfully))
+                closeDialog.invoke()
             }
-            closeDialog.invoke()
+
         }
 
         is DocumentDialogUiState.ShowUploadError -> {
             LaunchedEffect(true) {
                 snackbarHostState.showSnackbar(uiState.message)
+                closeDialog.invoke()
             }
-            closeScreen.invoke()
         }
 
         is DocumentDialogUiState.ShowError -> {
             LaunchedEffect(true) {
                 snackbarHostState.showSnackbar(uiState.message)
+                closeDialog.invoke()
             }
-            closeScreen.invoke()
         }
     }
 }
@@ -401,7 +403,7 @@ private fun DocumentDialogPreview() {
             closeScreen = { },
         )
         DocumentDialogScreen(
-            uiState = DocumentDialogUiState.ShowDocumentUpdatedSuccessfully(GenericResponse()),
+            uiState = DocumentDialogUiState.ShowDocumentUpdatedSuccessfully,
             snackbarHostState = remember { SnackbarHostState() },
             documentAction = Res.string.feature_document_upload_document,
             document = Document(),
@@ -412,7 +414,7 @@ private fun DocumentDialogPreview() {
             closeScreen = { },
         )
         DocumentDialogScreen(
-            uiState = DocumentDialogUiState.ShowDocumentedCreatedSuccessfully(GenericResponse()),
+            uiState = DocumentDialogUiState.ShowDocumentedCreatedSuccessfully,
             snackbarHostState = remember { SnackbarHostState() },
             documentAction = Res.string.feature_document_upload_document,
             document = Document(),

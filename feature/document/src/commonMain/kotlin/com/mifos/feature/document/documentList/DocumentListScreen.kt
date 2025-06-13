@@ -86,7 +86,7 @@ internal fun DocumentListScreen(
     val entityType by viewModel.entityType.collectAsStateWithLifecycle()
     val snackbarHostState = remember { SnackbarHostState() }
 
-//    if (isDialogBoxActive) {
+    if (isDialogBoxActive) {
         DocumentDialogScreen(
             entityType = entityType,
             snackbarHostState = snackbarHostState,
@@ -96,10 +96,10 @@ internal fun DocumentListScreen(
             closeDialog = { isDialogBoxActive = false },
             closeScreen = {
                 isDialogBoxActive = false
-                onBackPressed()
+//                onBackPressed()
             },
         )
-//    }
+    }
 
     LaunchedEffect(Unit) {
         Logger.e("documentListDebugLog") { "id : $entityId, type : $entityType" }
@@ -245,7 +245,7 @@ private fun DocumentListContent(
 ) {
     Column(modifier = modifier) {
         Card(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth().padding(8.dp),
             shape = RectangleShape,
         ) {
             Row(
@@ -287,7 +287,7 @@ private fun DocumentItem(
     onDocumentClicked: (Document) -> Unit,
 ) {
     Card(
-        modifier = modifier.fillMaxWidth(),
+        modifier = modifier.fillMaxWidth().padding(vertical = 4.dp, horizontal = 8.dp),
         onClick = {
             onDocumentClicked(document)
         },
@@ -343,7 +343,7 @@ private fun SelectOptionsDialog(
             Column(
                 modifier = Modifier
                     .padding(30.dp),
-                verticalArrangement = Arrangement.Center,
+                verticalArrangement = Arrangement.spacedBy(16.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 Text(
@@ -352,8 +352,6 @@ private fun SelectOptionsDialog(
                     style = MaterialTheme.typography.bodyLarge,
                     textAlign = TextAlign.Center,
                 )
-                Spacer(modifier = Modifier.height(20.dp))
-
                 MifosButton(
                     onClick = { downloadDocument() },
                 ) {

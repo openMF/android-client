@@ -42,7 +42,7 @@ class DocumentListRepositoryImp(
         entityType: String,
         entityId: Int,
         documentId: Int,
-    ): GenericResponse {
+    ): Unit {
         return dataManagerDocument.removeDocument(entityType, entityId, documentId)
     }
 }

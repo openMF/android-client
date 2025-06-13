@@ -24,6 +24,6 @@ class CreateDocumentUseCase(
         entityType: String,
         entityId: Int,
         file: MultiPartFormDataContent,
-    ): Flow<DataState<GenericResponse>> =
+    ): Flow<DataState<Unit>> =
         repository.createDocument(entityType, entityId,  file)
 }

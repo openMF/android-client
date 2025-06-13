@@ -11,6 +11,7 @@ package com.mifos.feature.document.documentDialog
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import co.touchlab.kermit.Logger
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.repository.DocumentDialogRepository
 import com.mifos.core.network.GenericResponse
@@ -18,7 +19,9 @@ import io.github.vinceglb.filekit.FileKit
 import io.github.vinceglb.filekit.PlatformFile
 import io.github.vinceglb.filekit.dialogs.FileKitType
 import io.github.vinceglb.filekit.dialogs.openFilePicker
+import io.github.vinceglb.filekit.name
 import io.github.vinceglb.filekit.readBytes
+import io.github.vinceglb.filekit.size
 import io.ktor.client.plugins.ClientRequestException
 import io.ktor.client.plugins.ServerResponseException
 import io.ktor.client.request.forms.MultiPartFormDataContent
@@ -27,6 +30,7 @@ import io.ktor.http.Headers
 import io.ktor.http.HttpHeaders
 import io.ktor.http.content.PartData
 import io.ktor.http.headersOf
+import io.ktor.util.DeflateEncoder.name
 import io.ktor.util.rootCause
 import io.ktor.utils.io.ByteReadChannel
 import io.ktor.utils.io.InternalAPI
@@ -64,25 +68,29 @@ class DocumentDialogViewModel(
 
 
     @OptIn(InternalAPI::class)
-    fun createDocument(type: String, id: Int, name: String, desc: String, file: PlatformFile) {
+    fun createDocument(entityType:String,entityId:Int,name: String, desc: String, file: PlatformFile) {
         _documentDialogUiState.value = DocumentDialogUiState.ShowProgressbar
         viewModelScope.launch {
             repository.createDocument(
-                entityId = id,
-                entityType = type,
-                file = createDocumentRequestBody(file,name,desc)
+                entityType = entityType,
+                entityId = entityId,
+                file = createDocumentRequestBody(file, name, desc)
             ).collect { state ->
-                when(state){
-                    is DataState.Error -> DocumentDialogUiState.ShowError(state.message)
-                    DataState.Loading -> DocumentDialogUiState.ShowProgressbar
-                    is DataState.Success -> DocumentDialogUiState.ShowDocumentUpdatedSuccessfully(state.data)
-                }
+                when (state) {
+                    is DataState.Error -> _documentDialogUiState.value =
+                        DocumentDialogUiState.ShowError(state.message)
 
+                    DataState.Loading -> _documentDialogUiState.value = DocumentDialogUiState.ShowProgressbar
+
+                    is DataState.Success -> _documentDialogUiState.value =
+                        DocumentDialogUiState.ShowDocumentedCreatedSuccessfully
+                }
             }
         }
     }
 
-     fun updateDocument(
+
+    fun updateDocument(
         entityType: String,
         entityId: Int,
         documentId: Int,
@@ -100,7 +108,7 @@ class DocumentDialogViewModel(
                  when(state){
                      is DataState.Error -> DocumentDialogUiState.ShowError(state.message)
                      DataState.Loading -> DocumentDialogUiState.ShowProgressbar
-                     is DataState.Success -> DocumentDialogUiState.ShowDocumentUpdatedSuccessfully(state.data)
+                     is DataState.Success -> DocumentDialogUiState.ShowDocumentUpdatedSuccessfully
                  }
 
              }
@@ -142,22 +150,24 @@ class DocumentDialogViewModel(
         name: String,
         description: String,
     ): MultiPartFormDataContent {
-        val byteArray = file.readBytes()
 
+        val byteArray = file.readBytes()
         return MultiPartFormDataContent(
             formData {
+                // File part
+                append(
+                    "file",
+                    byteArray,
+                    Headers.build {
+                        append(HttpHeaders.ContentType, "multipart/form-data")
+                        append(HttpHeaders.ContentDisposition, "filename=\"${file.name}\"")
+                    },
+                )
+
+                // Name and description fields
                 append("name", name)
                 append("description", description)
-                append(
-                    key = "file",
-                    value = byteArray,
-                    headers = Headers.build {
-                        append(HttpHeaders.ContentDisposition, "form-data; name=\"file\"; filename=\"$name\"")
-                        append(HttpHeaders.ContentType, "image/jpeg")
-                    }
-                )
-            }
+            },
         )
     }
-
 }

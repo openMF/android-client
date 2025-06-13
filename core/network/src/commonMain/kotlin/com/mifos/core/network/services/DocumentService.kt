@@ -45,7 +45,7 @@ interface DocumentService {
         @Path("entityType") entityType: String,
         @Path("entityId") entityId: Int,
         @Body request: MultiPartFormDataContent,
-    ): Flow<GenericResponse>
+    ): Flow<Unit>
 
     /**
      * This Service is for downloading the Document with EntityType and EntityId and Document Id
@@ -83,7 +83,7 @@ interface DocumentService {
         @Path("entityType") entityType: String,
         @Path("entityId") entityId: Int,
         @Path("documentId") documentId: Int,
-    ): GenericResponse
+    ): Unit
 
     /**
      * This Service for Updating the Document with EntityType and EntityId and Document Id.

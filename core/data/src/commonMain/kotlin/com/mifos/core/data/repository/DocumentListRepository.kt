@@ -32,5 +32,5 @@ interface DocumentListRepository {
         entityType: String,
         entityId: Int,
         documentId: Int,
-    ): GenericResponse
+    ): Unit
 }

@@ -29,7 +29,7 @@ class DocumentDialogRepositoryImp(
         entityType: String,
         entityId: Int,
         file: MultiPartFormDataContent,
-    ): Flow<DataState<GenericResponse>> {
+    ): Flow<DataState<Unit>> {
         return dataManagerDocument.createDocument(entityType, entityId,  file)
             .asDataStateFlow()
     }
