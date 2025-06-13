@@ -25,7 +25,7 @@ class SignatureRepositoryImp(
         entityType: String,
         entityId: Int,
         file: MultiPartFormDataContent,
-    ): DataState<String> {
+    ): DataState<Unit> {
         return dataManagerDocument.createDocument(entityType, entityId, file)
     }
 }

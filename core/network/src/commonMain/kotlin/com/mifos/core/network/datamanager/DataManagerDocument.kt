@@ -50,12 +50,12 @@ class DataManagerDocument(val mBaseApiManager: BaseApiManager) {
         entityType: String,
         entityId: Int,
         file: MultiPartFormDataContent,
-    ): DataState<String> {
+    ): DataState<Unit> {
         return try {
             mBaseApiManager
                 .documentApi
                 .createDocument(entityType, entityId, file)
-            DataState.Success("Document Created Successfully")
+            DataState.Success(Unit)
         } catch (e: Exception) {
             DataState.Error(e)
         }
@@ -120,11 +120,11 @@ class DataManagerDocument(val mBaseApiManager: BaseApiManager) {
         entityId: Int,
         documentId: Int,
         file: MultiPartFormDataContent,
-    ): DataState<String> {
+    ): DataState<Unit> {
         return try {
             mBaseApiManager.documentApi
                 .updateDocument(entityType, entityId, documentId, file)
-            DataState.Success("Document Updated Successfully")
+            DataState.Success(Unit)
         } catch (e: Exception) {
             DataState.Error(e)
         }

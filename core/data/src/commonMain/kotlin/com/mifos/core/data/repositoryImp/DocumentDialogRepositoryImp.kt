@@ -25,7 +25,7 @@ class DocumentDialogRepositoryImp(
         entityType: String,
         entityId: Int,
         file: MultiPartFormDataContent,
-    ): DataState<String> {
+    ): DataState<Unit> {
         return dataManagerDocument.createDocument(entityType, entityId, file)
     }
 
@@ -34,7 +34,7 @@ class DocumentDialogRepositoryImp(
         entityId: Int,
         documentId: Int,
         file: MultiPartFormDataContent,
-    ): DataState<String> {
+    ): DataState<Unit> {
         return dataManagerDocument.updateDocument(
             entityType,
             entityId,

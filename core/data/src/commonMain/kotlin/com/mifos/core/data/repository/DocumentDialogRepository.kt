@@ -21,12 +21,12 @@ interface DocumentDialogRepository {
         entityType: String,
         entityId: Int,
         file: MultiPartFormDataContent,
-    ): DataState<String>
+    ): DataState<Unit>
 
     suspend fun updateDocument(
         entityType: String,
         entityId: Int,
         documentId: Int,
         file: MultiPartFormDataContent,
-    ): DataState<String>
+    ): DataState<Unit>
 }

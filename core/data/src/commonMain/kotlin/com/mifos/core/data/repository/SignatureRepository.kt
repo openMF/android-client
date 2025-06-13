@@ -21,5 +21,5 @@ interface SignatureRepository {
         entityType: String,
         entityId: Int,
         file: MultiPartFormDataContent,
-    ): DataState<String>
+    ): DataState<Unit>
 }
