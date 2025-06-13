@@ -21,12 +21,15 @@ import com.mifos.feature.auth.navigation.navigateToLogin
 import com.mifos.feature.center.navigation.centerNavGraph
 import com.mifos.feature.center.navigation.navigateCreateCenterScreenRoute
 import com.mifos.feature.checker.inbox.task.navigation.checkerInboxTaskNavGraph
+import com.mifos.feature.dataTable.navigation.dataTableNavGraph
+import com.mifos.feature.dataTable.navigation.navigateToDataTable
 import com.mifos.feature.client.navigation.clientNavGraph
 import com.mifos.feature.groups.navigation.groupNavGraph
 import com.mifos.feature.groups.navigation.navigateToCreateNewGroupScreen
 import com.mifos.feature.individualCollectionSheet.navigation.individualCollectionSheetNavGraph
 import com.mifos.feature.note.navigation.navigateToNoteScreen
 import com.mifos.feature.note.navigation.noteNavGraph
+import com.mifos.feature.offline.navigation.offlineNavGraph
 import com.mifos.feature.pathTracking.navigation.pathTrackingNavGraph
 import com.mifos.feature.savings.navigation.navigateToAddSavingsAccount
 import com.mifos.feature.savings.navigation.navigateToSavingsAccountSummaryScreen
@@ -47,6 +50,11 @@ internal fun FeatureNavHost(
         modifier = modifier,
     ) {
         checkerInboxTaskNavGraph(appState.navController)
+
+        dataTableNavGraph(
+            navController = appState.navController,
+            clientCreated = { _, _ -> },
+        )
 
         searchNavGraph(
             paddingValues = padding,
@@ -69,6 +77,8 @@ internal fun FeatureNavHost(
 
         aboutNavGraph(onBackPressed = appState.navController::popBackStack)
 
+        offlineNavGraph(navController = appState.navController)
+
         noteNavGraph(onBackPressed = appState.navController::popBackStack)
 
         activateScreen(onBackPressed = appState.navController::popBackStack)
@@ -90,7 +100,7 @@ internal fun FeatureNavHost(
             loadDocumentList = { _, _ -> },
             clientListFragment = {},
             loadSavingsAccountSummary = appState.navController::navigateToSavingsAccountSummaryScreen,
-            loadGroupDataTables = { _, _ -> },
+            loadGroupDataTables = appState.navController::navigateToDataTable,
             loadNotes = appState.navController::navigateToNoteScreen,
             loadLoanAccountSummary = { _ -> },
             activateGroup = appState.navController::navigateToActivateScreen,
