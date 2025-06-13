@@ -37,11 +37,13 @@ class DocumentDialogRepositoryImp(
     override fun updateDocument(
         entityType: String,
         entityId: Int,
-        file: MultiPartFormDataContent,
-    ): Flow<DataState<GenericResponse>> {
+        documentId: Int,
+        file: MultiPartFormDataContent
+    ): Flow<DataState<Unit>> {
         return dataManagerDocument.updateDocument(
             entityType,
             entityId,
+            documentId,
             file,
         ).asDataStateFlow()
     }

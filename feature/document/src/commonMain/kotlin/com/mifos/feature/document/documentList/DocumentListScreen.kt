@@ -96,7 +96,7 @@ internal fun DocumentListScreen(
             closeDialog = { isDialogBoxActive = false },
             closeScreen = {
                 isDialogBoxActive = false
-//                onBackPressed()
+                onBackPressed()
             },
         )
     }

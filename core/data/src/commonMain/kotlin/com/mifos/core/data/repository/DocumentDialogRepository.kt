@@ -29,6 +29,7 @@ interface DocumentDialogRepository {
     fun updateDocument(
         entityType: String,
         entityId: Int,
+        documentId:Int,
         file: MultiPartFormDataContent,
-    ): Flow<DataState<GenericResponse>>
+    ): Flow<DataState<Unit>>
 }

@@ -103,7 +103,8 @@ class DocumentDialogViewModel(
              repository.updateDocument(
                  entityType,
                  entityId,
-                 updateDocumentRequestBody(file,name,desc,documentId),
+                 documentId,
+                 createDocumentRequestBody(file,name,desc),
              ).collect { state ->
                  when(state){
                      is DataState.Error -> DocumentDialogUiState.ShowError(state.message)
@@ -113,35 +114,6 @@ class DocumentDialogViewModel(
 
              }
          }
-    }
-
-    @OptIn(InternalAPI::class)
-    private suspend fun updateDocumentRequestBody(
-        file: PlatformFile,
-        name: String,
-        description: String,
-        documentId: Int,
-    ): MultiPartFormDataContent {
-        val byteArray = file.readBytes()
-
-
-        return MultiPartFormDataContent(
-            formData {
-                append("name", name)
-                append("description", description)
-                append("documentId", documentId.toString()) // include if your backend expects it
-                append(
-                    key = "file",
-                    value = byteArray,
-                    headers = Headers.build {
-//                        append(HttpHeaders.ContentType, "multipart/form-data")
-//                        append(HttpHeaders.ContentDisposition, "filename=\"$name\"")
-                        append(HttpHeaders.ContentDisposition, "form-data; name=\"file\"; filename=\"$name\"")
-                        append(HttpHeaders.ContentType, "image/jpeg")
-                    }
-                )
-            }
-        )
     }
 
     @OptIn(InternalAPI::class)

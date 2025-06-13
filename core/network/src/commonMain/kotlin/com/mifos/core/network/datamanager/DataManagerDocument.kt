@@ -114,9 +114,10 @@ class DataManagerDocument(val mBaseApiManager: BaseApiManager) {
     fun updateDocument(
         entityType: String,
         entityId: Int,
+        documentId:Int,
         file: MultiPartFormDataContent,
-    ): Flow<GenericResponse> {
+    ): Flow<Unit> {
         return mBaseApiManager.documentApi
-            .updateDocument(entityType, entityId,  file)
+            .updateDocument(entityType, entityId,  documentId,file)
     }
 }

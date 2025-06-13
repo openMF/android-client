@@ -157,7 +157,7 @@ internal fun DocumentDialogScreen(
         }
 
         is DocumentDialogUiState.ShowDocumentedCreatedSuccessfully -> {
-            LaunchedEffect(true) {
+            LaunchedEffect(uiState) {
                 snackbarHostState.showSnackbar(getString(Res.string.feature_document_uploaded_successfully))
                 closeDialog.invoke()
             }
@@ -165,7 +165,7 @@ internal fun DocumentDialogScreen(
         }
 
         is DocumentDialogUiState.ShowDocumentUpdatedSuccessfully -> {
-            LaunchedEffect(true) {
+            LaunchedEffect(uiState) {
                 snackbarHostState.showSnackbar(getString(Res.string.feature_document_document_updated_successfully))
                 closeDialog.invoke()
             }
@@ -173,14 +173,14 @@ internal fun DocumentDialogScreen(
         }
 
         is DocumentDialogUiState.ShowUploadError -> {
-            LaunchedEffect(true) {
+            LaunchedEffect(uiState) {
                 snackbarHostState.showSnackbar(uiState.message)
                 closeDialog.invoke()
             }
         }
 
         is DocumentDialogUiState.ShowError -> {
-            LaunchedEffect(true) {
+            LaunchedEffect(uiState) {
                 snackbarHostState.showSnackbar(uiState.message)
                 closeDialog.invoke()
             }

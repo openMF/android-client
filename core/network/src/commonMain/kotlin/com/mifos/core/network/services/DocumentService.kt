@@ -104,6 +104,7 @@ interface DocumentService {
     fun updateDocument(
         @Path("entityType") entityType: String,
         @Path("entityId") entityId: Int,
+        @Path("documentId") documentId: Int,
         @Body request: MultiPartFormDataContent,
-    ): Flow<GenericResponse>
+    ): Flow<Unit>
 }
