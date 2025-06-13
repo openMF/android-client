@@ -21,7 +21,7 @@ class CreateDocumentUseCase(
         entityType: String,
         entityId: Int,
         file: MultiPartFormDataContent,
-    ): DataState<String> {
+    ): DataState<Unit> {
         return repository.createDocument(entityType, entityId, file)
     }
 }
