@@ -27,6 +27,7 @@ import io.ktor.util.DeflateEncoder.name
 import io.ktor.utils.io.InternalAPI
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 class DocumentDialogViewModel(
@@ -36,8 +37,7 @@ class DocumentDialogViewModel(
     private val _documentDialogUiState =
         MutableStateFlow<DocumentDialogUiState>(DocumentDialogUiState.Initial)
 
-    val documentDialogUiState: StateFlow<DocumentDialogUiState>
-        get() = _documentDialogUiState
+    val documentDialogUiState = _documentDialogUiState.asStateFlow()
 
     fun openFilePicker(onFilePicked: (PlatformFile?) -> Unit) {
         viewModelScope.launch {
