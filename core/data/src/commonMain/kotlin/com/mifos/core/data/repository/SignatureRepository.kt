@@ -20,9 +20,9 @@ import kotlinx.coroutines.flow.Flow
  */
 interface SignatureRepository {
 
-    fun createDocument(
+    suspend fun createDocument(
         entityType: String,
         entityId: Int,
         file: MultiPartFormDataContent,
-    ): Flow<DataState<Unit>>
+    ): DataState<String>
 }

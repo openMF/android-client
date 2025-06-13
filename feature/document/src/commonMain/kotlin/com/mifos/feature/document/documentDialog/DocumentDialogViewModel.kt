@@ -73,23 +73,22 @@ class DocumentDialogViewModel(
 
     @OptIn(InternalAPI::class)
     fun createDocument(entityType:String,entityId:Int,name: String, desc: String, file: PlatformFile) {
-        _documentDialogUiState.value = DocumentDialogUiState.ShowProgressbar
         viewModelScope.launch {
-            repository.createDocument(
+            val result= repository.createDocument(
                 entityType = entityType,
                 entityId = entityId,
                 file = createDocumentRequestBody(file, name, desc)
-            ).collect { state ->
-                when (state) {
+            )
+                when (result) {
                     is DataState.Error -> _documentDialogUiState.value =
-                        DocumentDialogUiState.ShowError(state.message)
+                        DocumentDialogUiState.ShowError(result.message)
 
                     DataState.Loading -> _documentDialogUiState.value = DocumentDialogUiState.ShowProgressbar
 
                     is DataState.Success -> _documentDialogUiState.value =
                         DocumentDialogUiState.ShowDocumentedCreatedSuccessfully
                 }
-            }
+
         }
     }
 
@@ -102,24 +101,23 @@ class DocumentDialogViewModel(
         desc: String,
         file: PlatformFile,
     ) {
-        _documentDialogUiState.value = DocumentDialogUiState.ShowProgressbar
          viewModelScope.launch {
-             repository.updateDocument(
+             val result=repository.updateDocument(
                  entityType,
                  entityId,
                  documentId,
                  createDocumentRequestBody(file,name,desc),
-             ).collect { state ->
-                 when (state) {
+             )
+                 when (result) {
                      is DataState.Error -> _documentDialogUiState.value =
-                         DocumentDialogUiState.ShowError(state.message)
+                         DocumentDialogUiState.ShowError(result.message)
 
                      DataState.Loading -> _documentDialogUiState.value = DocumentDialogUiState.ShowProgressbar
 
                      is DataState.Success -> _documentDialogUiState.value =
                          DocumentDialogUiState.ShowDocumentUpdatedSuccessfully
                  }
-             }
+
          }
     }
 
@@ -133,7 +131,6 @@ class DocumentDialogViewModel(
         val byteArray = file.readBytes()
         return MultiPartFormDataContent(
             formData {
-                // File part
                 append(
                     "file",
                     byteArray,
@@ -142,8 +139,6 @@ class DocumentDialogViewModel(
                         append(HttpHeaders.ContentDisposition, "filename=\"${file.name}\"")
                     },
                 )
-
-                // Name and description fields
                 append("name", name)
                 append("description", description)
             },

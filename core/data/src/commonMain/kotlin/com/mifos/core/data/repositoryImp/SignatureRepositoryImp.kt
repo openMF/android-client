@@ -25,12 +25,11 @@ class SignatureRepositoryImp(
     private val dataManagerDocument: DataManagerDocument,
 ) : SignatureRepository {
 
-    override fun createDocument(
+    override suspend fun createDocument(
         entityType: String,
         entityId: Int,
         file: MultiPartFormDataContent,
-    ): Flow<DataState<Unit>> {
+    ): DataState<String> {
         return dataManagerDocument.createDocument(entityType, entityId,  file)
-            .asDataStateFlow()
     }
 }

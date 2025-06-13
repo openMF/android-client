@@ -20,16 +20,16 @@ import kotlinx.coroutines.flow.Flow
  */
 interface DocumentDialogRepository {
 
-    fun createDocument(
+    suspend fun createDocument(
         entityType: String,
         entityId: Int,
         file: MultiPartFormDataContent,
-    ): Flow<DataState<Unit>>
+    ): DataState<String>
 
-    fun updateDocument(
+    suspend fun updateDocument(
         entityType: String,
         entityId: Int,
         documentId:Int,
         file: MultiPartFormDataContent,
-    ): Flow<DataState<Unit>>
+    ): DataState<String>
 }

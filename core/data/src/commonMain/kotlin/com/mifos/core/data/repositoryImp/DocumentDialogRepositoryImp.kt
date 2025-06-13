@@ -25,26 +25,25 @@ class DocumentDialogRepositoryImp(
     private val dataManagerDocument: DataManagerDocument,
 ) : DocumentDialogRepository {
 
-    override fun createDocument(
+    override suspend fun createDocument(
         entityType: String,
         entityId: Int,
         file: MultiPartFormDataContent,
-    ): Flow<DataState<Unit>> {
+    ): DataState<String> {
         return dataManagerDocument.createDocument(entityType, entityId,  file)
-            .asDataStateFlow()
     }
 
-    override fun updateDocument(
+    override suspend fun updateDocument(
         entityType: String,
         entityId: Int,
         documentId: Int,
         file: MultiPartFormDataContent
-    ): Flow<DataState<Unit>> {
+    ): DataState<String> {
         return dataManagerDocument.updateDocument(
             entityType,
             entityId,
             documentId,
             file,
-        ).asDataStateFlow()
+        )
     }
 }

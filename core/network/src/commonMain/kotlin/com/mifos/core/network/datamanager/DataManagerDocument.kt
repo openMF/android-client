@@ -9,6 +9,7 @@
  */
 package com.mifos.core.network.datamanager
 
+import com.mifos.core.common.utils.DataState
 import com.mifos.core.model.objects.noncoreobjects.Document
 import com.mifos.core.network.BaseApiManager
 import com.mifos.core.network.GenericResponse
@@ -47,14 +48,19 @@ class DataManagerDocument(val mBaseApiManager: BaseApiManager) {
      * @param file       Document File
      * @return GenericResponse
      */
-    fun createDocument(
+    suspend fun createDocument(
         entityType: String,
         entityId: Int,
         file: MultiPartFormDataContent,
-    ): Flow<Unit> {
-        return mBaseApiManager
-            .documentApi
-            .createDocument(entityType, entityId,  file)
+    ): DataState<String> {
+        return try {
+            mBaseApiManager
+                .documentApi
+                .createDocument(entityType, entityId,  file)
+            DataState.Success("Document Created Successfully")
+        }catch (e: Exception){
+            DataState.Error(e)
+        }
     }
 
     /**
@@ -111,13 +117,18 @@ class DataManagerDocument(val mBaseApiManager: BaseApiManager) {
      * @param file       Document File
      * @return GenericResponse
      */
-    fun updateDocument(
+    suspend fun updateDocument(
         entityType: String,
         entityId: Int,
         documentId:Int,
         file: MultiPartFormDataContent,
-    ): Flow<Unit> {
-        return mBaseApiManager.documentApi
-            .updateDocument(entityType, entityId,  documentId,file)
+    ): DataState<String> {
+        return try {
+            mBaseApiManager.documentApi
+                .updateDocument(entityType, entityId,  documentId,file)
+             DataState.Success("Document Updated Successfully")
+        }catch (e: Exception){
+            DataState.Error(e)
+        }
     }
 }

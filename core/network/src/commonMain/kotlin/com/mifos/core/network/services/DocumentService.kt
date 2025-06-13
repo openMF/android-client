@@ -41,11 +41,11 @@ interface DocumentService {
      * @param typedFile               - Mandatory
      */
     @POST("{entityType}/{entityId}/" + APIEndPoint.DOCUMENTS)
-    fun createDocument(
+    suspend fun createDocument(
         @Path("entityType") entityType: String,
         @Path("entityId") entityId: Int,
         @Body request: MultiPartFormDataContent,
-    ): Flow<Unit>
+    ): Unit
 
     /**
      * This Service is for downloading the Document with EntityType and EntityId and Document Id
@@ -101,10 +101,10 @@ interface DocumentService {
      * @param typedFile               - Mandatory
      */
     @PUT("{entityType}/{entityId}/" + APIEndPoint.DOCUMENTS + "/{documentId}")
-    fun updateDocument(
+    suspend fun updateDocument(
         @Path("entityType") entityType: String,
         @Path("entityId") entityId: Int,
         @Path("documentId") documentId: Int,
         @Body request: MultiPartFormDataContent,
-    ): Flow<Unit>
+    ):Unit
 }

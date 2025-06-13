@@ -20,10 +20,12 @@ class CreateDocumentUseCase(
     private val repository: SignatureRepository,
 ) {
 
-    operator fun invoke(
+    suspend operator fun invoke(
         entityType: String,
         entityId: Int,
         file: MultiPartFormDataContent,
-    ): Flow<DataState<Unit>> =
-        repository.createDocument(entityType, entityId,  file)
+    ): DataState<String> {
+        return repository.createDocument(entityType, entityId,  file)
+    }
+
 }
