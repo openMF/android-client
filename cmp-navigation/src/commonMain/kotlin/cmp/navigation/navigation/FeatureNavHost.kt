@@ -46,7 +46,7 @@ internal fun FeatureNavHost(
 ) {
     NavHost(
         route = NavGraphRoute.MAIN_GRAPH,
-        startDestination = "doci",
+        startDestination = HomeDestinationsScreen.SearchScreen.route,
         navController = appState.navController,
         modifier = modifier,
     ) {

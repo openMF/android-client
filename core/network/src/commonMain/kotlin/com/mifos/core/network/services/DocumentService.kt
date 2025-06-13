@@ -9,6 +9,7 @@
  */
 package com.mifos.core.network.services
 
+import com.mifos.core.common.utils.DataState
 import com.mifos.core.model.objects.noncoreobjects.Document
 import com.mifos.core.network.GenericResponse
 import com.mifos.room.basemodel.APIEndPoint
@@ -45,7 +46,7 @@ interface DocumentService {
         @Path("entityType") entityType: String,
         @Path("entityId") entityId: Int,
         @Body request: MultiPartFormDataContent,
-    ): Unit
+    ): DataState<Unit>
 
     /**
      * This Service is for downloading the Document with EntityType and EntityId and Document Id
@@ -106,5 +107,5 @@ interface DocumentService {
         @Path("entityId") entityId: Int,
         @Path("documentId") documentId: Int,
         @Body request: MultiPartFormDataContent,
-    ):Unit
+    ):DataState<Unit>
 }
