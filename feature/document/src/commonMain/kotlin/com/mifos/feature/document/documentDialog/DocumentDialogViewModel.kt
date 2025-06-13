@@ -66,6 +66,10 @@ class DocumentDialogViewModel(
         }
     }
 
+    fun resetDialogUiState() {
+        _documentDialogUiState.value = DocumentDialogUiState.Initial
+    }
+
 
     @OptIn(InternalAPI::class)
     fun createDocument(entityType:String,entityId:Int,name: String, desc: String, file: PlatformFile) {
@@ -106,12 +110,15 @@ class DocumentDialogViewModel(
                  documentId,
                  createDocumentRequestBody(file,name,desc),
              ).collect { state ->
-                 when(state){
-                     is DataState.Error -> DocumentDialogUiState.ShowError(state.message)
-                     DataState.Loading -> DocumentDialogUiState.ShowProgressbar
-                     is DataState.Success -> DocumentDialogUiState.ShowDocumentUpdatedSuccessfully
-                 }
+                 when (state) {
+                     is DataState.Error -> _documentDialogUiState.value =
+                         DocumentDialogUiState.ShowError(state.message)
 
+                     DataState.Loading -> _documentDialogUiState.value = DocumentDialogUiState.ShowProgressbar
+
+                     is DataState.Success -> _documentDialogUiState.value =
+                         DocumentDialogUiState.ShowDocumentUpdatedSuccessfully
+                 }
              }
          }
     }

@@ -21,15 +21,18 @@ import androidclient.feature.document.generated.resources.feature_document_updat
 import androidclient.feature.document.generated.resources.feature_document_upload
 import androidclient.feature.document.generated.resources.feature_document_upload_document
 import androidclient.feature.document.generated.resources.feature_document_uploaded_successfully
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
@@ -80,8 +83,13 @@ internal fun DocumentDialogScreen(
     entityType: String,
     entityId: Int,
     viewModel: DocumentDialogViewModel = koinViewModel(),
+    modifier:Modifier=Modifier,
     closeScreen: () -> Unit,
 ) {
+    LaunchedEffect(Unit) {
+        viewModel.resetDialogUiState()
+    }
+
     val state by viewModel.documentDialogUiState.collectAsStateWithLifecycle()
 
     var fileName by rememberSaveable { mutableStateOf(document?.name) }
@@ -89,6 +97,7 @@ internal fun DocumentDialogScreen(
 
     DocumentDialogScreen(
         uiState = state,
+        modifier=modifier.background(MaterialTheme.colorScheme.background),
         documentAction = documentAction,
         snackbarHostState = snackbarHostState,
         document = document,
@@ -138,22 +147,27 @@ internal fun DocumentDialogScreen(
     closeDialog: () -> Unit?,
     uploadDocument: (String, String) -> Unit,
     filename: String?,
+    modifier:Modifier=Modifier,
     closeScreen: () -> Unit,
 ) {
-    DocumentDialogContent(
-        document = document,
-        documentAction = documentAction,
-        setShowDialog = { closeDialog.invoke() },
-        openFilePicker = openFilePicker,
-        uploadDocument = uploadDocument,
-        fileName = filename,
-    )
-
     when (uiState) {
-        is DocumentDialogUiState.Initial -> Unit
+        is DocumentDialogUiState.Initial -> {
+            DocumentDialogContent(
+                document = document,
+                documentAction = documentAction,
+                setShowDialog = { closeDialog.invoke() },
+                openFilePicker = openFilePicker,
+                uploadDocument = uploadDocument,
+                fileName = filename,
+                modifier=modifier
+            )
+        }
 
         is DocumentDialogUiState.ShowProgressbar -> {
-            MifosCircularProgress()
+            Box(modifier=modifier.fillMaxSize()){
+                MifosCircularProgress()
+            }
+
         }
 
         is DocumentDialogUiState.ShowDocumentedCreatedSuccessfully -> {
@@ -196,6 +210,7 @@ private fun DocumentDialogContent(
     openFilePicker: () -> Unit,
     uploadDocument: (String, String) -> Unit,
     fileName: String?,
+    modifier:Modifier=Modifier,
 ) {
     var dialogTitle = stringResource(Res.string.feature_document_upload_document)
     var name by rememberSaveable(stateSaver = TextFieldValue.Saver) {
@@ -237,7 +252,7 @@ private fun DocumentDialogContent(
 
     Dialog(onDismissRequest = { setShowDialog(false) }) {
         Box(
-            modifier = Modifier
+            modifier = modifier
                 .clip(RoundedCornerShape(16.dp)),
             contentAlignment = Alignment.Center,
         ) {
