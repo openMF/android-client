@@ -37,7 +37,7 @@ kotlin {
             implementation(projects.feature.checkerInboxTask)
 //            implementation(projects.feature.client)
             implementation(projects.feature.collectionSheet)
-//            implementation(projects.feature.dataTable)
+            implementation(projects.feature.dataTable)
 //            implementation(projects.feature.document)
             implementation(projects.feature.groups)
 //            implementation(projects.feature.loan)
@@ -49,7 +49,6 @@ kotlin {
             implementation(projects.feature.settings)
             implementation(projects.feature.search)
 
-//
 //            implementation(project.libs.mifos.passcode)
             implementation(compose.material3)
             implementation(compose.foundation)

@@ -22,7 +22,7 @@ import com.mifos.feature.dataTable.dataTable.DataTableScreen
 import com.mifos.feature.dataTable.dataTableData.DataTableDataScreen
 import com.mifos.feature.dataTable.dataTableList.DataTableListNavArgs
 import com.mifos.feature.dataTable.dataTableList.DataTableListScreen
-import com.mifos.room.entities.client.ClientEntity
+import com.mifos.room.entities.client.ClientPayloadEntity
 import com.mifos.room.entities.navigation.DataTableDataNavigationArg
 import com.mifos.room.entities.noncore.DataTableEntity
 import kotlinx.serialization.encodeToString
@@ -30,7 +30,7 @@ import kotlinx.serialization.json.Json
 
 fun NavGraphBuilder.dataTableNavGraph(
     navController: NavController,
-    clientCreated: (ClientEntity, Boolean) -> Unit,
+    clientCreated: (ClientPayloadEntity, Boolean) -> Unit,
 ) {
     navigation(
         startDestination = DataTableScreens.DataTableScreen.route,
@@ -92,7 +92,7 @@ fun NavGraphBuilder.dataTableDataRoute(
 
 fun NavGraphBuilder.dataTableListRoute(
     onBackPressed: () -> Unit,
-    clientCreated: (ClientEntity, Boolean) -> Unit,
+    clientCreated: (ClientPayloadEntity, Boolean) -> Unit,
 ) {
     composable(
         route = DataTableScreens.DataTableListScreen.route,

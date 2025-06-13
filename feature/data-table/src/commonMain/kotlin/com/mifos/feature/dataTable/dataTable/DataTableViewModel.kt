@@ -9,13 +9,15 @@
  */
 package com.mifos.feature.dataTable.dataTable
 
+import androidclient.feature.data_table.generated.resources.Res
+import androidclient.feature.data_table.generated.resources.feature_data_table_something_went_wrong
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mifos.core.common.utils.Constants
+import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.repository.DataTableRepository
 import com.mifos.core.model.objects.nav.DataTableNavigationArg
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -36,10 +38,16 @@ class DataTableViewModel(
 
     private val _dataTableUiState =
         MutableStateFlow<DataTableUiState>(DataTableUiState.ShowProgressbar)
-    val dataTableUiState: StateFlow<DataTableUiState> get() = _dataTableUiState
+    val dataTableUiState: StateFlow<DataTableUiState> get() = _dataTableUiState.asStateFlow()
 
     private val _isRefreshing = MutableStateFlow(false)
     val isRefreshing: StateFlow<Boolean> get() = _isRefreshing.asStateFlow()
+
+    init {
+        viewModelScope.launch {
+            loadDataTable(args.tableName)
+        }
+    }
 
     fun refresh(tableName: String?) {
         viewModelScope.launch {
@@ -49,13 +57,28 @@ class DataTableViewModel(
         }
     }
 
-    fun loadDataTable(tableName: String?) = viewModelScope.launch(Dispatchers.IO) {
-        _dataTableUiState.value = DataTableUiState.ShowProgressbar
-        val response = repository.getDataTable(tableName)
-        if (response.isEmpty()) {
-            _dataTableUiState.value = DataTableUiState.ShowEmptyDataTables
-        } else {
-            _dataTableUiState.value = DataTableUiState.ShowDataTables(response)
-        }
+    suspend fun loadDataTable(tableName: String?) {
+        repository.getDataTable(tableName)
+            .collect { dataState ->
+                when (dataState) {
+                    is DataState.Error -> {
+                        _dataTableUiState.value =
+                            DataTableUiState.ShowError(Res.string.feature_data_table_something_went_wrong)
+                    }
+
+                    DataState.Loading ->
+                        _dataTableUiState.value =
+                            DataTableUiState.ShowProgressbar
+
+                    is DataState.Success -> {
+                        val result = dataState.data
+                        _dataTableUiState.value = if (result.isEmpty()) {
+                            DataTableUiState.ShowEmptyDataTables
+                        } else {
+                            DataTableUiState.ShowDataTables(result)
+                        }
+                    }
+                }
+            }
     }
 }

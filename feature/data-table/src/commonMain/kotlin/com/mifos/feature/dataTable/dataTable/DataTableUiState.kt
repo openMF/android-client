@@ -10,6 +10,7 @@
 package com.mifos.feature.dataTable.dataTable
 
 import com.mifos.room.entities.noncore.DataTableEntity
+import org.jetbrains.compose.resources.StringResource
 
 /**
  * Created by Aditya Gupta on 08/08/23.
@@ -18,7 +19,7 @@ sealed class DataTableUiState {
 
     data object ShowProgressbar : DataTableUiState()
 
-    data class ShowError(val message: Int) : DataTableUiState()
+    data class ShowError(val message: StringResource) : DataTableUiState()
 
     data class ShowDataTables(val dataTables: List<DataTableEntity>) : DataTableUiState()
 

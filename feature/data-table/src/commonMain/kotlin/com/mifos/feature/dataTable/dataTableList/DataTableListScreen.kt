@@ -9,7 +9,12 @@
  */
 package com.mifos.feature.dataTable.dataTableList
 
-import android.app.DatePickerDialog
+import androidclient.feature.data_table.generated.resources.Res
+import androidclient.feature.data_table.generated.resources.feature_data_table_associated_datatables
+import androidclient.feature.data_table.generated.resources.feature_data_table_dismiss
+import androidclient.feature.data_table.generated.resources.feature_data_table_save
+import androidclient.feature.data_table.generated.resources.feature_data_table_select_date
+import androidclient.feature.data_table.generated.resources.feature_data_table_something_went_wrong
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -22,44 +27,50 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.DatePicker
+import androidx.compose.material3.DatePickerDialog
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SelectableDates
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.mifos.core.common.utils.DateHelper
 import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosDatePickerTextField
 import com.mifos.core.designsystem.component.MifosOutlinedTextField
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosTextFieldDropdown
-import com.mifos.feature.data_table.R
-import com.mifos.room.entities.client.ClientEntity
+import com.mifos.room.entities.client.ClientPayloadEntity
 import com.mifos.room.entities.noncore.DataTableEntity
-import org.koin.androidx.compose.koinViewModel
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
+import kotlinx.datetime.Clock
+import org.jetbrains.compose.resources.stringResource
+import org.jetbrains.compose.ui.tooling.preview.Preview
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun DataTableListScreen(
     onBackPressed: () -> Unit,
-    clientCreated: (ClientEntity, Boolean) -> Unit,
+    clientCreated: (ClientPayloadEntity, Boolean) -> Unit,
     viewModel: DataTableListViewModel = koinViewModel(),
 ) {
     val dataTables = viewModel.arg.dataTableList
@@ -88,14 +99,14 @@ fun DataTableListScreen(
     uiState: DataTableListUiState,
     dataTableList: List<DataTableEntity>,
     onBackPressed: () -> Unit,
-    clientCreated: (ClientEntity) -> Unit,
+    clientCreated: (ClientPayloadEntity) -> Unit,
     onSaveClicked: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val snackBarHostState = remember { SnackbarHostState() }
 
     MifosScaffold(
-        title = stringResource(id = R.string.feature_data_table_associated_datatables),
+        title = stringResource(Res.string.feature_data_table_associated_datatables),
         onBackPressed = onBackPressed,
         snackbarHostState = snackBarHostState,
     ) { paddingValues ->
@@ -113,11 +124,10 @@ fun DataTableListScreen(
             when (uiState) {
                 is DataTableListUiState.ShowMessage -> {
                     val message = when {
-                        uiState.messageResId != null -> stringResource(id = uiState.messageResId)
-                        uiState.message != null -> uiState.message
-                        else -> stringResource(id = R.string.feature_data_table_something_went_wrong)
+                        uiState.message != null -> stringResource(uiState.message)
+                        else -> stringResource(Res.string.feature_data_table_something_went_wrong)
                     }
-                    LaunchedEffect(key1 = message) {
+                    LaunchedEffect(message) {
                         snackBarHostState.showSnackbar(message = message)
                     }
                 }
@@ -128,11 +138,11 @@ fun DataTableListScreen(
                         clientCreated(client)
                     } ?: run {
                         val message = when {
-                            uiState.messageResId != null -> stringResource(id = uiState.messageResId)
-                            else -> stringResource(id = R.string.feature_data_table_something_went_wrong)
+                            uiState.message != null -> stringResource(uiState.message)
+                            else -> stringResource(Res.string.feature_data_table_something_went_wrong)
                         }
                         LaunchedEffect(key1 = message) {
-                            snackBarHostState.showSnackbar(message = message)
+                            snackBarHostState.showSnackbar(message)
                         }
                         onBackPressed()
                     }
@@ -176,21 +186,21 @@ fun DataTableListContent(
                 .padding(16.dp),
             colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
         ) {
-            Text(text = stringResource(id = R.string.feature_data_table_save), color = Color.White)
+            Text(text = stringResource(Res.string.feature_data_table_save), color = Color.White)
         }
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TableColumnHeader(
     table: DataTableEntity,
     modifier: Modifier = Modifier,
 ) {
-    val context = LocalContext.current
     Column(modifier = modifier) {
         table.columnHeaderData.filter { it.columnPrimaryKey != null }.forEach { columnHeader ->
             when (columnHeader.columnDisplayType) {
-                FormWidget.SCHEMA_KEY_STRING, FormWidget.SCHEMA_KEY_TEXT -> {
+                BaseFormWidget.SCHEMA_KEY_STRING, BaseFormWidget.SCHEMA_KEY_TEXT -> {
                     MifosOutlinedTextField(
                         value = "",
                         onValueChange = {},
@@ -201,7 +211,7 @@ fun TableColumnHeader(
                     Spacer(modifier = Modifier.height(16.dp))
                 }
 
-                FormWidget.SCHEMA_KEY_INT, FormWidget.SCHEMA_KEY_DECIMAL -> {
+                BaseFormWidget.SCHEMA_KEY_INT, BaseFormWidget.SCHEMA_KEY_DECIMAL -> {
                     MifosOutlinedTextField(
                         value = "",
                         onValueChange = {},
@@ -215,7 +225,7 @@ fun TableColumnHeader(
                     Spacer(modifier = Modifier.height(16.dp))
                 }
 
-                FormWidget.SCHEMA_KEY_CODELOOKUP, FormWidget.SCHEMA_KEY_CODEVALUE -> {
+                BaseFormWidget.SCHEMA_KEY_CODELOOKUP, BaseFormWidget.SCHEMA_KEY_CODEVALUE -> {
                     var selectedValue by remember { mutableStateOf("") }
                     val columnValueStrings = columnHeader.columnValues.map { it.value.orEmpty() }
 
@@ -227,7 +237,7 @@ fun TableColumnHeader(
                         MifosTextFieldDropdown(
                             value = selectedValue,
                             onValueChanged = { selectedValue = it },
-                            labelString = columnHeader.dataTableColumnName,
+                            label = columnHeader.dataTableColumnName,
                             modifier = Modifier.fillMaxWidth(),
                             readOnly = true,
                             options = columnValueStrings,
@@ -238,36 +248,60 @@ fun TableColumnHeader(
                     Spacer(modifier = Modifier.height(16.dp))
                 }
 
-                FormWidget.SCHEMA_KEY_DATE -> {
-                    val dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
-                    var selectedDate by remember {
-                        mutableStateOf(LocalDate.now().format(dateFormatter))
-                    }
-
-                    fun openDatePicker() {
-                        val datePickerDialog = DatePickerDialog(
-                            context,
-                            { _, year, month, dayOfMonth ->
-                                val newDate = LocalDate.of(year, month + 1, dayOfMonth)
-                                selectedDate = newDate.format(dateFormatter)
-                            },
-                            LocalDate.now().year,
-                            LocalDate.now().monthValue - 1,
-                            LocalDate.now().dayOfMonth,
+                BaseFormWidget.SCHEMA_KEY_DATE -> {
+                    var showDatePicker by rememberSaveable { mutableStateOf(false) }
+                    var selectedDate by rememberSaveable {
+                        mutableLongStateOf(
+                            Clock.System.now().toEpochMilliseconds(),
                         )
-                        datePickerDialog.show()
+                    }
+                    val datePickerState = rememberDatePickerState(
+                        initialSelectedDateMillis = selectedDate,
+                        selectableDates = object : SelectableDates {
+                            override fun isSelectableDate(utcTimeMillis: Long): Boolean {
+                                return utcTimeMillis >= Clock.System.now().toEpochMilliseconds()
+                            }
+                        },
+                    )
+
+                    if (showDatePicker) {
+                        DatePickerDialog(
+                            onDismissRequest = {
+                                showDatePicker = false
+                            },
+                            confirmButton = {
+                                TextButton(
+                                    onClick = {
+                                        showDatePicker = false
+                                        datePickerState.selectedDateMillis?.let {
+                                            selectedDate = it
+                                        }
+                                    },
+                                ) { Text(stringResource(Res.string.feature_data_table_select_date)) }
+                            },
+                            dismissButton = {
+                                TextButton(
+                                    onClick = {
+                                        showDatePicker = false
+                                    },
+                                ) { Text(stringResource(Res.string.feature_data_table_dismiss)) }
+                            },
+                        ) {
+                            DatePicker(state = datePickerState)
+                        }
                     }
 
                     MifosDatePickerTextField(
-                        value = selectedDate,
+                        value = DateHelper.getDateAsStringFromLong(selectedDate),
                         labelString = columnHeader.dataTableColumnName ?: "",
-                        openDatePicker = ::openDatePicker,
+                        openDatePicker = {
+                            showDatePicker = true
+                        },
                     )
-
                     Spacer(modifier = Modifier.height(16.dp))
                 }
 
-                FormWidget.SCHEMA_KEY_BOOL -> {
+                BaseFormWidget.SCHEMA_KEY_BOOL -> {
                     var checked by remember { mutableStateOf(false) }
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
@@ -289,7 +323,7 @@ fun TableColumnHeader(
     }
 }
 
-@Preview(showSystemUi = true)
+@Preview
 @Composable
 fun DataTableListScreenPreview() {
     DataTableListScreen(

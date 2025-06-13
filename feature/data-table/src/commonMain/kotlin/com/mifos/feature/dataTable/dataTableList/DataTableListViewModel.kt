@@ -11,31 +11,34 @@ package com.mifos.feature.dataTable.dataTableList
 
 import FormSpinnerDTO
 import FormWidgetDTO
+import androidclient.feature.data_table.generated.resources.Res
+import androidclient.feature.data_table.generated.resources.feature_data_table_generic_failure_message
+import androidclient.feature.data_table.generated.resources.feature_data_table_loan_creation_success
+import androidclient.feature.data_table.generated.resources.feature_data_table_something_went_wrong
+import androidclient.feature.data_table.generated.resources.feature_data_table_waiting_for_checker_approval
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import co.touchlab.kermit.Logger
 import com.mifos.core.common.utils.Constants
+import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.repository.DataTableListRepository
 import com.mifos.core.datastore.UserPreferencesRepository
 import com.mifos.core.model.objects.payloads.GroupLoanPayload
 import com.mifos.core.network.model.LoansPayload
-import com.mifos.feature.data_table.R
-import com.mifos.room.entities.accounts.loans.Loan
 import com.mifos.room.entities.client.ClientPayloadEntity
 import com.mifos.room.entities.noncore.DataTableEntity
 import com.mifos.room.entities.noncore.DataTablePayload
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.modules.SerializersModule
 import kotlinx.serialization.modules.polymorphic
-import rx.Subscriber
-import rx.android.schedulers.AndroidSchedulers
-import rx.schedulers.Schedulers
 
 /**
  * Created by Aditya Gupta on 10/08/23.
@@ -74,10 +77,10 @@ class DataTableListViewModel(
 
     private val _dataTableListUiState: MutableStateFlow<DataTableListUiState> =
         MutableStateFlow(DataTableListUiState.Loading)
-    val dataTableListUiState: StateFlow<DataTableListUiState> = _dataTableListUiState
+    val dataTableListUiState: StateFlow<DataTableListUiState> = _dataTableListUiState.asStateFlow()
 
     private val _dataTableList: MutableStateFlow<List<DataTableEntity>?> = MutableStateFlow(null)
-    val dataTableList: StateFlow<List<DataTableEntity>?> = _dataTableList
+    val dataTableList: StateFlow<List<DataTableEntity>?> = _dataTableList.asStateFlow()
 
     private var requestType: Int = 0
     private var dataTablePayloadElements: ArrayList<DataTablePayload>? = null
@@ -107,7 +110,7 @@ class DataTableListViewModel(
         for (i in dataTables.indices) {
             val dataTablePayload = DataTablePayload(
                 registeredTableName = dataTables[i].registeredTableName,
-                data = addDataTableInput(formWidgets = formWidgetsList[i]),
+                data = addDataTableInput(widgets = formWidgetsList[i]),
             )
 
             dataTablePayloadElements?.add(dataTablePayload)
@@ -130,45 +133,47 @@ class DataTableListViewModel(
     }
 
     private fun createLoanAccount(loansPayload: LoansPayload?) {
-        _dataTableListUiState.value = DataTableListUiState.Loading
-        repository.createLoansAccount(loansPayload)
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribeOn(Schedulers.io())
-            .subscribe(object : Subscriber<Loan>() {
-                override fun onCompleted() {
-                }
+        viewModelScope.launch {
+            repository.createLoansAccount(loansPayload)
+                .collect { dataState ->
+                    when (dataState) {
+                        is DataState.Error ->
+                            _dataTableListUiState.value =
+                                DataTableListUiState.ShowMessage(Res.string.feature_data_table_generic_failure_message)
 
-                override fun onError(e: Throwable) {
-                    _dataTableListUiState.value =
-                        DataTableListUiState.ShowMessage(R.string.feature_data_table_generic_failure_message)
-                }
+                        DataState.Loading ->
+                            _dataTableListUiState.value =
+                                DataTableListUiState.Loading
 
-                override fun onNext(loans: Loan) {
-                    _dataTableListUiState.value =
-                        DataTableListUiState.ShowMessage(R.string.feature_data_table_loan_creation_success)
+                        is DataState.Success -> {
+                            _dataTableListUiState.value =
+                                DataTableListUiState.ShowMessage(Res.string.feature_data_table_loan_creation_success)
+                        }
+                    }
                 }
-            })
+        }
     }
 
     private fun createGroupLoanAccount(loansPayload: GroupLoanPayload?) {
-        _dataTableListUiState.value = DataTableListUiState.Loading
-        repository.createGroupLoansAccount(loansPayload)
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribeOn(Schedulers.io())
-            .subscribe(object : Subscriber<Loan?>() {
-                override fun onCompleted() {
-                }
+        viewModelScope.launch {
+            repository.createGroupLoansAccount(loansPayload)
+                .collect { dataState ->
+                    when (dataState) {
+                        is DataState.Error ->
+                            _dataTableListUiState.value =
+                                DataTableListUiState.ShowMessage(Res.string.feature_data_table_generic_failure_message)
 
-                override fun onError(e: Throwable) {
-                    _dataTableListUiState.value =
-                        DataTableListUiState.ShowMessage(R.string.feature_data_table_generic_failure_message)
-                }
+                        DataState.Loading ->
+                            _dataTableListUiState.value =
+                                DataTableListUiState.Loading
 
-                override fun onNext(loans: Loan?) {
-                    _dataTableListUiState.value =
-                        DataTableListUiState.ShowMessage(R.string.feature_data_table_loan_creation_success)
+                        is DataState.Success -> {
+                            _dataTableListUiState.value =
+                                DataTableListUiState.ShowMessage(Res.string.feature_data_table_loan_creation_success)
+                        }
+                    }
                 }
-            })
+        }
     }
 
     private fun createClient(clientPayload: ClientPayloadEntity) {
@@ -179,53 +184,41 @@ class DataTableListViewModel(
                 val clientId = repository.createClient(clientPayload)
 
                 if (clientId != null) {
-                    // todo uncomment and resolve
-//                    _dataTableListUiState.value = DataTableListUiState.Success(client = clientPayload)
+                    _dataTableListUiState.value =
+                        DataTableListUiState.Success(client = clientPayload)
                 } else {
                     _dataTableListUiState.value =
-                        DataTableListUiState.Success(messageResId = R.string.feature_data_table_waiting_for_checker_approval)
+                        DataTableListUiState.Success(Res.string.feature_data_table_waiting_for_checker_approval)
                 }
             } catch (e: Exception) {
+                Logger.e("ExceptionCaught", e)
                 _dataTableListUiState.value =
-                    DataTableListUiState.ShowMessage(message = e.message.toString())
+                    DataTableListUiState.ShowMessage(Res.string.feature_data_table_something_went_wrong)
             }
         }
     }
 
-    private fun addDataTableInput(formWidgets: List<FormWidgetDTO>): HashMap<String, Any> {
-        val payload = HashMap<String, Any>()
-        payload[Constants.DATE_FORMAT] = "dd-mm-YYYY"
-        payload[Constants.LOCALE] = "en"
-        for (formWidget in formWidgets) {
-            when (formWidget.returnType) {
-                FormWidget.SCHEMA_KEY_INT -> {
-                    payload[formWidget.propertyName] = (
-                        if (formWidget.value
-                            == ""
-                        ) {
-                            "0"
-                        } else {
-                            formWidget.value?.toInt()
-                        }
-                        )!!
+    fun addDataTableInput(widgets: List<Any>): Map<String, Any> {
+        val payload = mutableMapOf<String, Any>()
+        payload["dateFormat"] = "dd-mm-YYYY"
+        payload["locale"] = "en"
+
+        for (widget in widgets) {
+            when (widget) {
+                is FormWidgetModel -> {
+                    payload[widget.propertyName] = when (widget.returnType) {
+                        BaseFormWidget.SCHEMA_KEY_INT -> widget.value.toIntOrNull() ?: 0
+                        BaseFormWidget.SCHEMA_KEY_DECIMAL -> widget.value.toDoubleOrNull() ?: 0.0
+                        else -> widget.value
+                    }
                 }
 
-                FormWidget.SCHEMA_KEY_DECIMAL -> {
-                    payload[formWidget.propertyName] =
-                        (if (formWidget.value == "") "0.0" else formWidget.value?.toDouble())!!
-                }
-
-                FormWidget.SCHEMA_KEY_CODEVALUE -> {
-                    val formSpinner = formWidget as FormSpinner
-                    payload[formWidget.propertyName] =
-                        formSpinner.getIdOfSelectedItem(formWidget.value)
-                }
-
-                else -> {
-                    payload[formWidget.propertyName] = formWidget.returnType
+                is SpinnerModel -> {
+                    payload[widget.propertyName] = widget.getSelectedId()
                 }
             }
         }
+
         return payload
     }
 }
