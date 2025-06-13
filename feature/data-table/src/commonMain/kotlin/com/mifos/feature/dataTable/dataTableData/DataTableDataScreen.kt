@@ -7,14 +7,19 @@
  *
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
-@file:OptIn(ExperimentalMaterialApi::class)
-
 package com.mifos.feature.dataTable.dataTableData
 
-import android.widget.Toast
+import androidclient.feature.data_table.generated.resources.Res
+import androidclient.feature.data_table.generated.resources.feature_data_table_client_id
+import androidclient.feature.data_table.generated.resources.feature_data_table_data_id
+import androidclient.feature.data_table.generated.resources.feature_data_table_data_table_created_successfully
+import androidclient.feature.data_table.generated.resources.feature_data_table_delete_data_table
+import androidclient.feature.data_table.generated.resources.feature_data_table_failed_to_delete_data_table
+import androidclient.feature.data_table.generated.resources.feature_data_table_no_data_table_details_to_show
+import androidclient.feature.data_table.generated.resources.feature_data_table_select_options
+import androidclient.feature.data_table.generated.resources.feature_data_table_title
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -24,24 +29,24 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.pullrefresh.PullRefreshIndicator
-import androidx.compose.material.pullrefresh.pullRefresh
-import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
+import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -50,15 +55,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Color.Companion.Black
 import androidx.compose.ui.graphics.Color.Companion.DarkGray
 import androidx.compose.ui.graphics.Color.Companion.White
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.tooling.preview.PreviewParameter
-import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
@@ -70,14 +70,18 @@ import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.ui.components.MifosEmptyUi
 import com.mifos.feature.dataTable.dataTableRowDialog.DataTableRowDialogScreen
-import com.mifos.feature.data_table.R
 import com.mifos.room.entities.noncore.DataTableEntity
+import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonArray
 import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.jsonArray
 import kotlinx.serialization.json.jsonObject
-import org.koin.androidx.compose.koinViewModel
+import org.jetbrains.compose.resources.stringResource
+import org.jetbrains.compose.ui.tooling.preview.Preview
+import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
+import org.jetbrains.compose.ui.tooling.preview.PreviewParameterProvider
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun DataTableDataScreen(
@@ -112,6 +116,7 @@ fun DataTableDataScreen(
     )
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DataTableDataScreen(
     dataTable: DataTableEntity,
@@ -125,16 +130,15 @@ fun DataTableDataScreen(
     modifier: Modifier = Modifier,
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
-    val pullRefreshState = rememberPullRefreshState(
-        refreshing = refreshState,
-        onRefresh = onRefresh,
-    )
+    val pullRefreshState = rememberPullToRefreshState()
+    val scope = rememberCoroutineScope()
     var showOptionDialog by rememberSaveable { mutableStateOf(false) }
     var deleteDataTableId by rememberSaveable { mutableIntStateOf(0) }
     var showAddDataTableRowDialog by rememberSaveable { mutableStateOf(false) }
 
     if (showAddDataTableRowDialog) {
         DataTableRowDialogScreen(
+            snackbarHostState = snackbarHostState,
             dataTable = dataTable,
             entityId = entityId,
             onDismiss = {
@@ -159,26 +163,33 @@ fun DataTableDataScreen(
     }
 
     MifosScaffold(
-        title = stringResource(id = R.string.feature_data_table_title),
+        title = stringResource(Res.string.feature_data_table_title),
         onBackPressed = onBackPressed,
         actions = {
-            IconButton(onClick = {
-                showAddDataTableRowDialog = true
-            }) {
+            IconButton(
+                onClick = {
+                    showAddDataTableRowDialog = true
+                },
+            ) {
                 Icon(imageVector = MifosIcons.Add, contentDescription = null)
             }
         },
         snackbarHostState = snackbarHostState,
     ) { paddingValues ->
-        Column(modifier = modifier.padding(paddingValues)) { // Use the passed Modifier here
-            Box(modifier = Modifier.pullRefresh(pullRefreshState)) {
+        Column(modifier = modifier.padding(paddingValues)) {
+            PullToRefreshBox(
+                state = pullRefreshState,
+                isRefreshing = refreshState,
+                onRefresh = onRefresh,
+            ) {
                 when (state) {
                     is DataTableDataUiState.DataTableDeletedSuccessfully -> {
-                        Toast.makeText(
-                            LocalContext.current,
-                            stringResource(id = R.string.feature_data_table_data_table_created_successfully),
-                            Toast.LENGTH_SHORT,
-                        ).show()
+                        val errorMessage = stringResource(
+                            (Res.string.feature_data_table_data_table_created_successfully),
+                        )
+                        scope.launch {
+                            snackbarHostState.showSnackbar(message = errorMessage)
+                        }
                         onBackPressed()
                     }
 
@@ -192,18 +203,12 @@ fun DataTableDataScreen(
                         )
                     }
 
-                    is DataTableDataUiState.Error -> MifosSweetError(message = stringResource(id = state.message)) {
+                    is DataTableDataUiState.Error -> MifosSweetError(message = stringResource(state.message)) {
                         onRetry()
                     }
 
                     is DataTableDataUiState.Loading -> MifosCircularProgress()
                 }
-
-                PullRefreshIndicator(
-                    refreshing = refreshState,
-                    state = pullRefreshState,
-                    modifier = Modifier.align(Alignment.TopCenter),
-                )
             }
         }
     }
@@ -220,7 +225,7 @@ fun DataTableDataContent(
 
     if (jsonElements.size == 0) {
         MifosEmptyUi(
-            text = stringResource(id = R.string.feature_data_table_no_data_table_details_to_show),
+            text = stringResource(Res.string.feature_data_table_no_data_table_details_to_show),
             modifier = modifier,
         )
     } else {
@@ -281,7 +286,7 @@ fun DataTableDataCardItem(
                 ) {
                     Text(
                         modifier = Modifier.weight(1f),
-                        text = stringResource(id = R.string.feature_data_table_client_id),
+                        text = stringResource(Res.string.feature_data_table_client_id),
                         style = TextStyle(
                             fontSize = 14.sp,
                             fontWeight = FontWeight.Normal,
@@ -307,7 +312,7 @@ fun DataTableDataCardItem(
                 ) {
                     Text(
                         modifier = Modifier.weight(1f),
-                        text = stringResource(id = R.string.feature_data_table_data_id),
+                        text = stringResource(Res.string.feature_data_table_data_id),
                         style = TextStyle(
                             fontSize = 14.sp,
                             fontWeight = FontWeight.Normal,
@@ -341,7 +346,7 @@ class DataTableDataUiStateProvider : PreviewParameterProvider<DataTableDataUiSta
     override val values: Sequence<DataTableDataUiState>
         get() = sequenceOf(
             DataTableDataUiState.Loading,
-            DataTableDataUiState.Error(R.string.feature_data_table_failed_to_delete_data_table),
+            DataTableDataUiState.Error(Res.string.feature_data_table_failed_to_delete_data_table),
             DataTableDataUiState.DataTableInfo(Json.parseToJsonElement(values.toString()).jsonArray),
         )
 }
@@ -371,7 +376,7 @@ fun SelectOptionsDialog(
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 Text(
-                    text = stringResource(id = R.string.feature_data_table_select_options),
+                    text = stringResource(Res.string.feature_data_table_select_options),
                     modifier = Modifier.fillMaxWidth(),
                     style = TextStyle(
                         fontSize = 18.sp,
@@ -387,7 +392,7 @@ fun SelectOptionsDialog(
                     onClick = { deleteDataTable() },
                 ) {
                     Text(
-                        text = stringResource(id = R.string.feature_data_table_delete_data_table),
+                        text = stringResource(Res.string.feature_data_table_delete_data_table),
                         modifier = Modifier.fillMaxWidth(),
                         style = TextStyle(
                             fontSize = 18.sp,
@@ -403,7 +408,7 @@ fun SelectOptionsDialog(
     }
 }
 
-@Preview(showBackground = true)
+@Preview
 @Composable
 private fun DataTableDataScreenPreview(
     @PreviewParameter(DataTableDataUiStateProvider::class) state: DataTableDataUiState,

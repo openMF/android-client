@@ -18,7 +18,7 @@ sealed class DataTableRowDialogUiState {
 
     data object Loading : DataTableRowDialogUiState()
 
-    data class Error(val message: Int) : DataTableRowDialogUiState()
+    data class Error(val message: String) : DataTableRowDialogUiState()
 
     data object DataTableEntrySuccessfully : DataTableRowDialogUiState()
 }

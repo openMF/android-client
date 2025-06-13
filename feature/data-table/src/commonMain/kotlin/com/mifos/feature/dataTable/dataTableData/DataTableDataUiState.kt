@@ -10,6 +10,7 @@
 package com.mifos.feature.dataTable.dataTableData
 
 import kotlinx.serialization.json.JsonArray
+import org.jetbrains.compose.resources.StringResource
 
 /**
  * Created by Aditya Gupta on 10/08/23.
@@ -18,7 +19,7 @@ sealed class DataTableDataUiState {
 
     data object Loading : DataTableDataUiState()
 
-    data class Error(val message: Int) : DataTableDataUiState()
+    data class Error(val message: StringResource) : DataTableDataUiState()
 
     data class DataTableInfo(val jsonElements: JsonArray) : DataTableDataUiState()
 

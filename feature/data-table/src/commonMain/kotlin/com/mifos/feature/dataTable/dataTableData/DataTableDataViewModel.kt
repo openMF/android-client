@@ -9,16 +9,17 @@
  */
 package com.mifos.feature.dataTable.dataTableData
 
+import androidclient.feature.data_table.generated.resources.Res
+import androidclient.feature.data_table.generated.resources.feature_data_table_failed_to_delete_data_table
+import androidclient.feature.data_table.generated.resources.feature_data_table_failed_to_load_data_table_details
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mifos.core.common.utils.Constants
-import com.mifos.core.common.utils.Resource
+import com.mifos.core.common.utils.DataState
 import com.mifos.core.domain.useCases.DeleteDataTableEntryUseCase
 import com.mifos.core.domain.useCases.GetDataTableInfoUseCase
-import com.mifos.feature.data_table.R
 import com.mifos.room.entities.navigation.DataTableDataNavigationArg
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
@@ -50,37 +51,45 @@ class DataTableDataViewModel(
     }
 
     fun loadDataTableInfo(table: String, entityId: Int) =
-        viewModelScope.launch(Dispatchers.IO) {
-            getDataTableInfoUseCase(table, entityId).collect { result ->
-                when (result) {
-                    is Resource.Error ->
-                        _dataTableDataUiState.value =
-                            DataTableDataUiState.Error(R.string.feature_data_table_failed_to_load_data_table_details)
+        viewModelScope.launch {
+            getDataTableInfoUseCase(table, entityId)
+                .collect { result ->
+                    when (result) {
+                        is DataState.Error -> {
+                            _dataTableDataUiState.value =
+                                DataTableDataUiState.Error(
+                                    Res.string.feature_data_table_failed_to_load_data_table_details,
+                                )
+                        }
 
-                    is Resource.Loading ->
-                        _dataTableDataUiState.value =
-                            DataTableDataUiState.Loading
+                        DataState.Loading -> {
+                            _dataTableDataUiState.value =
+                                DataTableDataUiState.Loading
+                        }
 
-                    is Resource.Success ->
-                        _dataTableDataUiState.value =
-                            DataTableDataUiState.DataTableInfo(Json.parseToJsonElement(result.data.toString()).jsonArray)
+                        is DataState.Success -> {
+                            _dataTableDataUiState.value =
+                                DataTableDataUiState.DataTableInfo(Json.parseToJsonElement(result.data.toString()).jsonArray)
+                        }
+                    }
                 }
-            }
         }
 
     fun deleteDataTableEntry(table: String, entity: Int, rowId: Int) =
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch {
             deleteDataTableEntryUseCase(table, entity, rowId).collect { result ->
                 when (result) {
-                    is Resource.Error ->
+                    is DataState.Error ->
                         _dataTableDataUiState.value =
-                            DataTableDataUiState.Error(R.string.feature_data_table_failed_to_delete_data_table)
+                            DataTableDataUiState.Error(
+                                Res.string.feature_data_table_failed_to_delete_data_table,
+                            )
 
-                    is Resource.Loading ->
+                    is DataState.Loading ->
                         _dataTableDataUiState.value =
                             DataTableDataUiState.Loading
 
-                    is Resource.Success ->
+                    is DataState.Success ->
                         _dataTableDataUiState.value =
                             DataTableDataUiState.DataTableDeletedSuccessfully
                 }

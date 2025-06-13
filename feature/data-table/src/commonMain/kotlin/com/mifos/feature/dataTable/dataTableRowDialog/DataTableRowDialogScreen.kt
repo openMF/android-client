@@ -9,8 +9,10 @@
  */
 package com.mifos.feature.dataTable.dataTableRowDialog
 
-import android.util.Log
-import android.widget.Toast
+import androidclient.feature.data_table.generated.resources.Res
+import androidclient.feature.data_table.generated.resources.feature_data_table_add_data_table
+import androidclient.feature.data_table.generated.resources.feature_data_table_added_data_table_successfully
+import androidclient.feature.data_table.generated.resources.feature_data_table_submit
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -24,32 +26,34 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.tooling.preview.PreviewParameter
-import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.icon.MifosIcons
-import com.mifos.feature.data_table.R
 import com.mifos.room.entities.noncore.DataTableEntity
-import org.koin.androidx.compose.koinViewModel
+import kotlinx.coroutines.launch
+import org.jetbrains.compose.resources.stringResource
+import org.jetbrains.compose.ui.tooling.preview.Preview
+import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
+import org.jetbrains.compose.ui.tooling.preview.PreviewParameterProvider
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun DataTableRowDialogScreen(
     dataTable: DataTableEntity,
+    snackbarHostState: SnackbarHostState,
     entityId: Int,
     onDismiss: () -> Unit,
     onSuccess: () -> Unit,
@@ -63,6 +67,7 @@ fun DataTableRowDialogScreen(
         onDismiss = onDismiss,
         onSuccess = onSuccess,
         onRetry = { },
+        snackbarHostState = snackbarHostState,
         onCreate = {
             dataTable.registeredTableName?.let { tableName ->
                 viewModel.addDataTableEntry(
@@ -79,12 +84,14 @@ fun DataTableRowDialogScreen(
 fun DataTableRowDialogScreen(
     dataTable: DataTableEntity,
     state: DataTableRowDialogUiState,
+    snackbarHostState: SnackbarHostState,
     onDismiss: () -> Unit,
     onSuccess: () -> Unit,
     onRetry: () -> Unit,
     onCreate: (HashMap<String, String>) -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val scope = rememberCoroutineScope()
     Dialog(
         onDismissRequest = { onDismiss() },
     ) {
@@ -98,18 +105,15 @@ fun DataTableRowDialogScreen(
             ) {
                 when (state) {
                     is DataTableRowDialogUiState.DataTableEntrySuccessfully -> {
-                        Toast.makeText(
-                            LocalContext.current,
-                            stringResource(id = R.string.feature_data_table_added_data_table_successfully),
-                            Toast.LENGTH_SHORT,
-                        ).show()
-                        onSuccess()
+                        val message = stringResource(Res.string.feature_data_table_added_data_table_successfully)
+                        scope.launch {
+                            snackbarHostState.showSnackbar(message)
+                        }
+                        onSuccess.invoke()
                     }
 
                     is DataTableRowDialogUiState.Error -> MifosSweetError(
-                        message = stringResource(
-                            id = state.message,
-                        ),
+                        message = state.message,
                     ) {
                         onRetry()
                     }
@@ -124,7 +128,7 @@ fun DataTableRowDialogScreen(
                                 verticalAlignment = Alignment.CenterVertically,
                             ) {
                                 Text(
-                                    text = stringResource(id = R.string.feature_data_table_add_data_table),
+                                    text = stringResource(Res.string.feature_data_table_add_data_table),
                                     fontSize = MaterialTheme.typography.titleLarge.fontSize,
                                     color = Color.Blue,
                                 )
@@ -132,7 +136,6 @@ fun DataTableRowDialogScreen(
                                     Icon(
                                         imageVector = MifosIcons.Close,
                                         contentDescription = "",
-                                        tint = colorResource(android.R.color.darker_gray),
                                         modifier = Modifier
                                             .width(30.dp)
                                             .height(30.dp),
@@ -160,9 +163,6 @@ fun DataTableRowDialogContent(
     onCreate: (HashMap<String, String>) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    Log.d("DataTable", table.toString())
-    Log.d("DataTable", onCreate.toString())
-
     // TODO dataTable is now returning null for columnHeaderData, so we will correct this and then construct a form to implement.
 
     Button(
@@ -172,15 +172,36 @@ fun DataTableRowDialogContent(
         modifier = modifier
             .fillMaxWidth()
             .height(50.dp),
-//        colors = ButtonColors(
-//            containerColor = BluePrimary,
-//            contentColor = White,
-//            disabledContainerColor = BluePrimary,
-//            disabledContentColor = Color.Gray,
-//        ),
     ) {
-        Text(text = stringResource(id = R.string.feature_data_table_submit))
+        Text(text = stringResource(Res.string.feature_data_table_submit))
     }
+}
+
+class DataTableRowDialogUiStateProvider : PreviewParameterProvider<DataTableRowDialogUiState> {
+
+    override val values: Sequence<DataTableRowDialogUiState>
+        get() = sequenceOf(
+            DataTableRowDialogUiState.Initial,
+            DataTableRowDialogUiState.Loading,
+            DataTableRowDialogUiState.Error("Something went wrong"),
+            DataTableRowDialogUiState.DataTableEntrySuccessfully,
+        )
+}
+
+@Preview
+@Composable
+private fun DataTableRowDialogScreenPreview(
+    @PreviewParameter(DataTableRowDialogUiStateProvider::class) state: DataTableRowDialogUiState,
+) {
+    DataTableRowDialogScreen(
+        dataTable = DataTableEntity(),
+        state = state,
+        onDismiss = {},
+        onSuccess = {},
+        snackbarHostState = remember { SnackbarHostState() },
+        onRetry = {},
+        onCreate = {},
+    )
 }
 
 // private fun createForm(table: DataTable?) {
@@ -271,29 +292,4 @@ fun DataTableRowDialogContent(
 //    }
 //    return payload
 // }
-
-class DataTableRowDialogUiStateProvider : PreviewParameterProvider<DataTableRowDialogUiState> {
-
-    override val values: Sequence<DataTableRowDialogUiState>
-        get() = sequenceOf(
-            DataTableRowDialogUiState.Initial,
-            DataTableRowDialogUiState.Loading,
-            DataTableRowDialogUiState.Error(R.string.feature_data_table_failed_to_add_data_table),
-            DataTableRowDialogUiState.DataTableEntrySuccessfully,
-        )
-}
-
-@Preview(showBackground = true)
-@Composable
-private fun DataTableRowDialogScreenPreview(
-    @PreviewParameter(DataTableRowDialogUiStateProvider::class) state: DataTableRowDialogUiState,
-) {
-    DataTableRowDialogScreen(
-        dataTable = DataTableEntity(),
-        state = state,
-        onDismiss = {},
-        onSuccess = {},
-        onRetry = {},
-        onCreate = {},
-    )
-}
+//

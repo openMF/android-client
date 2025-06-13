@@ -34,4 +34,8 @@
     <string name="feature_data_table_associated_datatables">Associated Data Tables</string>
     <string name="feature_data_table_something_went_wrong">Something went wrong</string>
     <string name="feature_data_table_save">Save</string>
+
+    <string name="feature_data_table_select_date">Select date</string>
+    <string name="feature_data_table_dismiss">Dismiss</string>
+
 </resources>
