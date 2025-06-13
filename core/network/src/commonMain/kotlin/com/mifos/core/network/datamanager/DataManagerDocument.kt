@@ -12,10 +12,8 @@ package com.mifos.core.network.datamanager
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.model.objects.noncoreobjects.Document
 import com.mifos.core.network.BaseApiManager
-import com.mifos.core.network.GenericResponse
 import io.ktor.client.request.forms.MultiPartFormDataContent
 import io.ktor.client.statement.HttpResponse
-import io.ktor.http.content.PartData
 import kotlinx.coroutines.flow.Flow
 
 /**
@@ -56,9 +54,9 @@ class DataManagerDocument(val mBaseApiManager: BaseApiManager) {
         return try {
             mBaseApiManager
                 .documentApi
-                .createDocument(entityType, entityId,  file)
+                .createDocument(entityType, entityId, file)
             DataState.Success("Document Created Successfully")
-        }catch (e: Exception){
+        } catch (e: Exception) {
             DataState.Error(e)
         }
     }
@@ -98,7 +96,7 @@ class DataManagerDocument(val mBaseApiManager: BaseApiManager) {
         entityType: String,
         entityId: Int,
         documentId: Int,
-    ): Unit {
+    ) {
         return mBaseApiManager.documentApi.removeDocument(entityType, entityId, documentId)
     }
 
@@ -120,14 +118,14 @@ class DataManagerDocument(val mBaseApiManager: BaseApiManager) {
     suspend fun updateDocument(
         entityType: String,
         entityId: Int,
-        documentId:Int,
+        documentId: Int,
         file: MultiPartFormDataContent,
     ): DataState<String> {
         return try {
             mBaseApiManager.documentApi
-                .updateDocument(entityType, entityId,  documentId,file)
-             DataState.Success("Document Updated Successfully")
-        }catch (e: Exception){
+                .updateDocument(entityType, entityId, documentId, file)
+            DataState.Success("Document Updated Successfully")
+        } catch (e: Exception) {
             DataState.Error(e)
         }
     }

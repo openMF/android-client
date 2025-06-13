@@ -23,9 +23,7 @@ import androidclient.feature.document.generated.resources.feature_document_uploa
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
@@ -63,11 +61,13 @@ import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.model.objects.noncoreobjects.Document
 import com.mifos.core.ui.components.MifosEmptyUi
-import com.mifos.core.ui.util.DevicePreview
 import com.mifos.feature.document.documentDialog.DocumentDialogScreen
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.getString
 import org.jetbrains.compose.resources.stringResource
+import org.jetbrains.compose.ui.tooling.preview.Preview
+import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
+import org.jetbrains.compose.ui.tooling.preview.PreviewParameterProvider
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -387,48 +387,34 @@ private fun SelectOptionsDialog(
     }
 }
 
-@DevicePreview
-@Composable
-private fun DocumentListPreview() {
-    Column {
-        DocumentListScreen(
-            state = DocumentListUiState.Error(Res.string.feature_document_failed_to_load_documents_list),
-            onBackPressed = { },
-            snackbarHostState = remember { SnackbarHostState() },
-            refreshState = false,
-            onRefresh = { },
-            onRetry = { },
-            onAddDocument = { },
-            onDownloadDocument = { },
-            onUpdateDocument = { },
-            onRemovedDocument = { },
+private class DocumentListUiStateProvider : PreviewParameterProvider<DocumentListUiState> {
+    override val values: Sequence<DocumentListUiState>
+        get() = sequenceOf(
+            DocumentListUiState.DocumentList(sampleDocumentList),
+            DocumentListUiState.Error(Res.string.feature_document_failed_to_load_documents_list),
+            DocumentListUiState.Loading,
         )
-        DocumentListScreen(
-            state = DocumentListUiState.Loading,
-            snackbarHostState = remember { SnackbarHostState() },
-            onBackPressed = { },
-            refreshState = false,
-            onRefresh = { },
-            onRetry = { },
-            onAddDocument = { },
-            onDownloadDocument = { },
-            onUpdateDocument = { },
-            onRemovedDocument = { },
-        )
-        DocumentListScreen(
-            state = DocumentListUiState.DocumentList(sampleDocumentList),
-            snackbarHostState = remember { SnackbarHostState() },
-            onBackPressed = { },
-            refreshState = false,
-            onRefresh = { },
-            onRetry = { },
-            onAddDocument = { },
-            onDownloadDocument = { },
-            onUpdateDocument = { },
-            onRemovedDocument = { },
-        )
-    }
 }
+
+@Preview
+@Composable
+private fun DocumentListPreview(
+    @PreviewParameter(DocumentListUiStateProvider::class) state: DocumentListUiState,
+) {
+    DocumentListScreen(
+        state = state,
+        onBackPressed = { },
+        refreshState = false,
+        onRefresh = { },
+        onRetry = { },
+        onAddDocument = { },
+        onDownloadDocument = { },
+        onUpdateDocument = { },
+        onRemovedDocument = { },
+        snackbarHostState = remember { SnackbarHostState() },
+    )
+}
+
 private val sampleDocumentList = List(10) {
     Document(name = "Document $it", description = "desc $it")
 }

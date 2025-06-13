@@ -32,7 +32,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
@@ -65,13 +64,14 @@ import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosOutlinedTextField
 import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.model.objects.noncoreobjects.Document
-import com.mifos.core.network.GenericResponse
-import com.mifos.core.ui.util.DevicePreview
 import io.github.vinceglb.filekit.PlatformFile
 import io.github.vinceglb.filekit.name
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.getString
 import org.jetbrains.compose.resources.stringResource
+import org.jetbrains.compose.ui.tooling.preview.Preview
+import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
+import org.jetbrains.compose.ui.tooling.preview.PreviewParameterProvider
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -83,7 +83,7 @@ internal fun DocumentDialogScreen(
     entityType: String,
     entityId: Int,
     viewModel: DocumentDialogViewModel = koinViewModel(),
-    modifier:Modifier=Modifier,
+    modifier: Modifier = Modifier,
     closeScreen: () -> Unit,
 ) {
     LaunchedEffect(Unit) {
@@ -97,7 +97,7 @@ internal fun DocumentDialogScreen(
 
     DocumentDialogScreen(
         uiState = state,
-        modifier=modifier.background(MaterialTheme.colorScheme.background),
+        modifier = modifier.background(MaterialTheme.colorScheme.background),
         documentAction = documentAction,
         snackbarHostState = snackbarHostState,
         document = document,
@@ -121,7 +121,7 @@ internal fun DocumentDialogScreen(
                         documentDescription,
                         file,
                     )
-                } else  {
+                } else {
                     viewModel.createDocument(
                         entityType,
                         entityId,
@@ -147,7 +147,7 @@ internal fun DocumentDialogScreen(
     closeDialog: () -> Unit?,
     uploadDocument: (String, String) -> Unit,
     filename: String?,
-    modifier:Modifier=Modifier,
+    modifier: Modifier = Modifier,
     closeScreen: () -> Unit,
 ) {
     when (uiState) {
@@ -159,15 +159,14 @@ internal fun DocumentDialogScreen(
                 openFilePicker = openFilePicker,
                 uploadDocument = uploadDocument,
                 fileName = filename,
-                modifier=modifier
+                modifier = modifier,
             )
         }
 
         is DocumentDialogUiState.ShowProgressbar -> {
-            Box(modifier=modifier.fillMaxSize()){
+            Box(modifier = modifier.fillMaxSize()) {
                 MifosCircularProgress()
             }
-
         }
 
         is DocumentDialogUiState.ShowDocumentedCreatedSuccessfully -> {
@@ -175,7 +174,6 @@ internal fun DocumentDialogScreen(
                 snackbarHostState.showSnackbar(getString(Res.string.feature_document_uploaded_successfully))
                 closeDialog.invoke()
             }
-
         }
 
         is DocumentDialogUiState.ShowDocumentUpdatedSuccessfully -> {
@@ -183,7 +181,6 @@ internal fun DocumentDialogScreen(
                 snackbarHostState.showSnackbar(getString(Res.string.feature_document_document_updated_successfully))
                 closeDialog.invoke()
             }
-
         }
 
         is DocumentDialogUiState.ShowUploadError -> {
@@ -210,7 +207,7 @@ private fun DocumentDialogContent(
     openFilePicker: () -> Unit,
     uploadDocument: (String, String) -> Unit,
     fileName: String?,
-    modifier:Modifier=Modifier,
+    modifier: Modifier = Modifier,
 ) {
     var dialogTitle = stringResource(Res.string.feature_document_upload_document)
     var name by rememberSaveable(stateSaver = TextFieldValue.Saver) {
@@ -380,64 +377,32 @@ private fun DialogButton(
     }
 }
 
-@DevicePreview
+private class DocumentDialogPreviewProvider : PreviewParameterProvider<DocumentDialogUiState> {
+    override val values: Sequence<DocumentDialogUiState>
+        get() = sequenceOf(
+            DocumentDialogUiState.Initial,
+            DocumentDialogUiState.ShowProgressbar,
+            DocumentDialogUiState.ShowDocumentUpdatedSuccessfully,
+            DocumentDialogUiState.ShowDocumentedCreatedSuccessfully,
+            DocumentDialogUiState.ShowError("Error"),
+            DocumentDialogUiState.ShowUploadError("Upload Error"),
+        )
+}
+
+@Preview
 @Composable
-private fun DocumentDialogPreview() {
-    Column {
-        DocumentDialogScreen(
-            uiState = DocumentDialogUiState.Initial,
-            snackbarHostState = remember { SnackbarHostState() },
-            documentAction = Res.string.feature_document_upload_document,
-            document = Document(),
-            openFilePicker = { },
-            closeDialog = { },
-            uploadDocument = { _, _ -> },
-            filename = "",
-            closeScreen = { },
-        )
-        DocumentDialogScreen(
-            uiState = DocumentDialogUiState.ShowProgressbar,
-            snackbarHostState = remember { SnackbarHostState() },
-            documentAction = Res.string.feature_document_upload_document,
-            document = Document(),
-            openFilePicker = { },
-            closeDialog = { },
-            uploadDocument = { _, _ -> },
-            filename = "",
-            closeScreen = { },
-        )
-        DocumentDialogScreen(
-            uiState = DocumentDialogUiState.ShowError("Error"),
-            snackbarHostState = remember { SnackbarHostState() },
-            documentAction = Res.string.feature_document_upload_document,
-            document = Document(),
-            openFilePicker = { },
-            closeDialog = { },
-            uploadDocument = { _, _ -> },
-            filename = "",
-            closeScreen = { },
-        )
-        DocumentDialogScreen(
-            uiState = DocumentDialogUiState.ShowDocumentUpdatedSuccessfully,
-            snackbarHostState = remember { SnackbarHostState() },
-            documentAction = Res.string.feature_document_upload_document,
-            document = Document(),
-            openFilePicker = { },
-            closeDialog = { },
-            uploadDocument = { _, _ -> },
-            filename = "",
-            closeScreen = { },
-        )
-        DocumentDialogScreen(
-            uiState = DocumentDialogUiState.ShowDocumentedCreatedSuccessfully,
-            snackbarHostState = remember { SnackbarHostState() },
-            documentAction = Res.string.feature_document_upload_document,
-            document = Document(),
-            openFilePicker = { },
-            closeDialog = { },
-            uploadDocument = { _, _ -> },
-            filename = "",
-            closeScreen = { },
-        )
-    }
+private fun DocumentDialogPreview(
+    @PreviewParameter(DocumentDialogPreviewProvider::class) state: DocumentDialogUiState,
+) {
+    DocumentDialogScreen(
+        uiState = state,
+        documentAction = Res.string.feature_document_document_updated_successfully,
+        snackbarHostState = remember { SnackbarHostState() },
+        document = Document(),
+        openFilePicker = { },
+        closeDialog = { },
+        uploadDocument = { _, _ -> },
+        filename = "",
+        closeScreen = { },
+    )
 }

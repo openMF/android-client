@@ -9,8 +9,6 @@
  */
 package com.mifos.feature.document.documentDialog
 
-import com.mifos.core.network.GenericResponse
-
 sealed class DocumentDialogUiState {
 
     object Initial : DocumentDialogUiState()

@@ -30,6 +30,7 @@ kotlin {
             implementation(libs.filekit.core)
             implementation(libs.filekit.compose)
             implementation(libs.filekit.dialog.compose)
+            implementation(compose.components.uiToolingPreview)
         }
     }
 }

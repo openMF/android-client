@@ -11,38 +11,23 @@ package com.mifos.feature.document.documentDialog
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import co.touchlab.kermit.Logger
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.repository.DocumentDialogRepository
-import com.mifos.core.network.GenericResponse
 import io.github.vinceglb.filekit.FileKit
 import io.github.vinceglb.filekit.PlatformFile
 import io.github.vinceglb.filekit.dialogs.FileKitType
 import io.github.vinceglb.filekit.dialogs.openFilePicker
 import io.github.vinceglb.filekit.name
 import io.github.vinceglb.filekit.readBytes
-import io.github.vinceglb.filekit.size
-import io.ktor.client.plugins.ClientRequestException
-import io.ktor.client.plugins.ServerResponseException
 import io.ktor.client.request.forms.MultiPartFormDataContent
 import io.ktor.client.request.forms.formData
 import io.ktor.http.Headers
 import io.ktor.http.HttpHeaders
-import io.ktor.http.content.PartData
-import io.ktor.http.headersOf
 import io.ktor.util.DeflateEncoder.name
-import io.ktor.util.rootCause
-import io.ktor.utils.io.ByteReadChannel
 import io.ktor.utils.io.InternalAPI
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import kotlinx.io.IOException
-import kotlinx.serialization.SerializationException
-import okio.ByteString.Companion.toByteString
-
 
 class DocumentDialogViewModel(
     private val repository: DocumentDialogRepository,
@@ -70,28 +55,27 @@ class DocumentDialogViewModel(
         _documentDialogUiState.value = DocumentDialogUiState.Initial
     }
 
-
     @OptIn(InternalAPI::class)
-    fun createDocument(entityType:String,entityId:Int,name: String, desc: String, file: PlatformFile) {
+    fun createDocument(entityType: String, entityId: Int, name: String, desc: String, file: PlatformFile) {
         viewModelScope.launch {
-            val result= repository.createDocument(
+            val result = repository.createDocument(
                 entityType = entityType,
                 entityId = entityId,
-                file = createDocumentRequestBody(file, name, desc)
+                file = createDocumentRequestBody(file, name, desc),
             )
-                when (result) {
-                    is DataState.Error -> _documentDialogUiState.value =
+            when (result) {
+                is DataState.Error ->
+                    _documentDialogUiState.value =
                         DocumentDialogUiState.ShowError(result.message)
 
-                    DataState.Loading -> _documentDialogUiState.value = DocumentDialogUiState.ShowProgressbar
+                DataState.Loading -> _documentDialogUiState.value = DocumentDialogUiState.ShowProgressbar
 
-                    is DataState.Success -> _documentDialogUiState.value =
+                is DataState.Success ->
+                    _documentDialogUiState.value =
                         DocumentDialogUiState.ShowDocumentedCreatedSuccessfully
-                }
-
+            }
         }
     }
-
 
     fun updateDocument(
         entityType: String,
@@ -101,24 +85,25 @@ class DocumentDialogViewModel(
         desc: String,
         file: PlatformFile,
     ) {
-         viewModelScope.launch {
-             val result=repository.updateDocument(
-                 entityType,
-                 entityId,
-                 documentId,
-                 createDocumentRequestBody(file,name,desc),
-             )
-                 when (result) {
-                     is DataState.Error -> _documentDialogUiState.value =
-                         DocumentDialogUiState.ShowError(result.message)
+        viewModelScope.launch {
+            val result = repository.updateDocument(
+                entityType,
+                entityId,
+                documentId,
+                createDocumentRequestBody(file, name, desc),
+            )
+            when (result) {
+                is DataState.Error ->
+                    _documentDialogUiState.value =
+                        DocumentDialogUiState.ShowError(result.message)
 
-                     DataState.Loading -> _documentDialogUiState.value = DocumentDialogUiState.ShowProgressbar
+                DataState.Loading -> _documentDialogUiState.value = DocumentDialogUiState.ShowProgressbar
 
-                     is DataState.Success -> _documentDialogUiState.value =
-                         DocumentDialogUiState.ShowDocumentUpdatedSuccessfully
-                 }
-
-         }
+                is DataState.Success ->
+                    _documentDialogUiState.value =
+                        DocumentDialogUiState.ShowDocumentUpdatedSuccessfully
+            }
+        }
     }
 
     @OptIn(InternalAPI::class)
@@ -127,7 +112,6 @@ class DocumentDialogViewModel(
         name: String,
         description: String,
     ): MultiPartFormDataContent {
-
         val byteArray = file.readBytes()
         return MultiPartFormDataContent(
             formData {

@@ -11,19 +11,15 @@ package com.mifos.core.network.services
 
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.model.objects.noncoreobjects.Document
-import com.mifos.core.network.GenericResponse
 import com.mifos.room.basemodel.APIEndPoint
 import de.jensklingenberg.ktorfit.http.Body
 import de.jensklingenberg.ktorfit.http.DELETE
 import de.jensklingenberg.ktorfit.http.GET
-import de.jensklingenberg.ktorfit.http.Multipart
 import de.jensklingenberg.ktorfit.http.POST
 import de.jensklingenberg.ktorfit.http.PUT
-import de.jensklingenberg.ktorfit.http.Part
 import de.jensklingenberg.ktorfit.http.Path
 import io.ktor.client.request.forms.MultiPartFormDataContent
 import io.ktor.client.statement.HttpResponse
-import io.ktor.http.content.PartData
 import kotlinx.coroutines.flow.Flow
 
 interface DocumentService {
@@ -107,5 +103,5 @@ interface DocumentService {
         @Path("entityId") entityId: Int,
         @Path("documentId") documentId: Int,
         @Body request: MultiPartFormDataContent,
-    ):DataState<Unit>
+    ): DataState<Unit>
 }
