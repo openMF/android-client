@@ -15,41 +15,37 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import cmp.navigation.App
+import cmp.navigation.navigation.NavGraphRoute.AUTH_GRAPH
 import cmp.navigation.navigation.NavGraphRoute.MAIN_GRAPH
 import com.mifos.core.data.util.NetworkMonitor
-import com.mifos.feature.auth.navigation.AuthScreens
 import com.mifos.feature.auth.navigation.authNavGraph
-import com.mifos.feature.auth.navigation.navigateToLogin
-import com.mifos.feature.splash.navigation.splashNavGraph
 
 @Composable
 fun RootNavGraph(
     networkMonitor: NetworkMonitor,
     navHostController: NavHostController,
+    startDestination: String,
+    onClickLogout: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     NavHost(
         navController = navHostController,
-        startDestination = AuthScreens.LoginScreenRoute.route,
+        startDestination = startDestination,
         route = NavGraphRoute.ROOT_GRAPH,
         modifier = modifier,
     ) {
         authNavGraph(
+            route = AUTH_GRAPH,
             navigateHome = { navHostController.navigate(MAIN_GRAPH) },
             navigatePasscode = { },
             updateServerConfig = {},
-        )
-
-        splashNavGraph(
-            navigateLogin = navHostController::navigateToLogin,
-            navigatePasscode = {},
         )
 
         composable(MAIN_GRAPH) {
             App(
                 modifier = modifier,
                 networkMonitor = networkMonitor,
-                onClickLogout = {},
+                onClickLogout = onClickLogout,
             )
         }
     }

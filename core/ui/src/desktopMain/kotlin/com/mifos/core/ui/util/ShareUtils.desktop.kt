@@ -73,4 +73,7 @@ actual object ShareUtils {
 
     actual fun ossLicensesMenuActivity() {
     }
+
+    actual fun restartApplication() {
+    }
 }

@@ -13,6 +13,7 @@ import com.mifos.core.model.utils.Parcelable
 import com.mifos.core.model.utils.Parcelize
 import com.mifos.room.utils.Entity
 import com.mifos.room.utils.PrimaryKey
+import kotlinx.serialization.Serializable
 
 @Parcelize
 @Entity(
@@ -23,6 +24,7 @@ import com.mifos.room.utils.PrimaryKey
     ignoredColumns = [],
     tableName = "GroupPayload",
 )
+@Serializable
 data class GroupPayloadEntity(
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,

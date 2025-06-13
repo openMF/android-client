@@ -291,7 +291,6 @@ fun App(
                 FeatureNavHost(
                     appState = appState,
                     padding = paddingValues,
-                    onClickLogout = onClickLogout,
                     modifier = Modifier,
                 )
                 if (dialogState) {
@@ -300,7 +299,10 @@ fun App(
                         showDialogState = dialogState,
                         confirmButtonText = "LogOut",
                         onDismiss = { dialogState = false },
-                        onConfirm = onClickLogout,
+                        onConfirm = {
+                            dialogState = false
+                            onClickLogout()
+                        },
                         dismissButtonText = "Cancel",
                     )
                 }

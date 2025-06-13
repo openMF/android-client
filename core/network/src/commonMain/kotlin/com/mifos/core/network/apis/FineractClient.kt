@@ -9,6 +9,7 @@
  */
 package com.mifos.core.network.apis
 
+import com.mifos.core.network.utils.FlowConverterFactory
 import de.jensklingenberg.ktorfit.Ktorfit
 import io.ktor.client.HttpClient
 import io.ktor.client.plugins.auth.Auth
@@ -113,6 +114,7 @@ class FineractClient private constructor(
             val ktorfitBuilder = Ktorfit.Builder()
                 .httpClient(ktorClient)
                 .baseUrl(baseURL)
+                .converterFactories(FlowConverterFactory())
                 .build()
 
             return FineractClient(ktorClient, ktorfitBuilder)
