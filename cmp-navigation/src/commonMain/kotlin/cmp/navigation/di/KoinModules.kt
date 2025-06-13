@@ -62,7 +62,6 @@ object KoinModules {
 
     private val featureModules = module {
         includes(
-//            AboutModule,
             ActivateModule,
             AuthModule,
             CenterModule,
@@ -70,11 +69,8 @@ object KoinModules {
 //            ClientModule,
             CollectionSheetModule,
             DataTableModule,
-//            DocumentModule,
             GroupsModule,
-//            DataTableModule,
             DocumentModule,
-//            GroupsModule,
 //            LoanModule,
             NoteModule,
             OfflineModule,
