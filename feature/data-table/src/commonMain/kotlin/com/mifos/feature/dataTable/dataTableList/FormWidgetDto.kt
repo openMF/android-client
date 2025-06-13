@@ -45,9 +45,3 @@ fun FormWidget.toDTO(): FormSpinnerDTO? = when (this) {
 
     else -> null
 }
-
-// fun FormWidgetDTO.toFormWidget(context: Context): FormSpinner? = when (this) {
-//    is FormSpinnerDTO -> FormSpinner(context, propertyName, columnValues, columnValueIds)
-//
-//    else -> null
-// }

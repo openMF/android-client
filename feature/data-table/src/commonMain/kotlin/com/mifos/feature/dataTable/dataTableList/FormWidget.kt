@@ -65,6 +65,18 @@ interface FormWidget {
     fun Render()
 }
 
+/**
+ * todo
+ * can be removed after resolving all the todos in datatable module,
+ * left for future reference - see DataTableDialogScreen
+ */
+
+// fun FormWidgetDTO.toFormWidget(context: Context): FormSpinner? = when (this) {
+//    is FormSpinnerDTO -> FormSpinner(context, propertyName, columnValues, columnValueIds)
+//
+//    else -> null
+// }
+
 //
 // /**
 // * Created by ishankhanna on 01/08/14.
