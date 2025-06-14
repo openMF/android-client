@@ -16,20 +16,27 @@ import androidclient.feature.client.generated.resources.feature_client_client_cr
 import androidclient.feature.client.generated.resources.feature_client_failed_to_fetch_client_template
 import androidclient.feature.client.generated.resources.feature_client_failed_to_fetch_offices
 import androidclient.feature.client.generated.resources.feature_client_failed_to_fetch_staffs
+import androidclient.feature.client.generated.resources.feature_client_waiting_for_checker_approval
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import co.touchlab.kermit.Logger
+import com.mifos.core.common.utils.MFErrorParser
 import com.mifos.core.data.repository.CreateNewClientRepository
 import com.mifos.room.entities.client.ClientPayloadEntity
 import com.mifos.room.entities.organisation.OfficeEntity
 import com.mifos.room.entities.organisation.StaffEntity
 import com.mifos.room.entities.templates.clients.ClientsTemplateEntity
-import io.ktor.client.plugins.ClientRequestException
-import io.ktor.client.plugins.ServerResponseException
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
+import io.github.vinceglb.filekit.PlatformFile
+import io.github.vinceglb.filekit.extension
+import io.github.vinceglb.filekit.name
+import io.github.vinceglb.filekit.readBytes
+import io.ktor.client.request.forms.MultiPartFormDataContent
+import io.ktor.client.request.forms.formData
+import io.ktor.http.Headers
+import io.ktor.http.HttpHeaders
 
 /**
  * Created by Aditya Gupta on 10/08/23.
@@ -76,7 +83,7 @@ class CreateNewClientViewModel(
                     _createNewClientUiState.value =
                         CreateNewClientUiState.ShowError(Res.string.feature_client_failed_to_fetch_offices)
                 }.collect { offices ->
-                    _showOffices.value = offices
+                    _showOffices.value = offices.data ?: emptyList()
                 }
         }
     }
@@ -88,7 +95,7 @@ class CreateNewClientViewModel(
                     _createNewClientUiState.value =
                         CreateNewClientUiState.ShowError(Res.string.feature_client_failed_to_fetch_staffs)
                 }.collect { staffs ->
-                    _staffInOffices.value = staffs
+                    _staffInOffices.value = staffs.data ?: emptyList()
                 }
         }
     }
@@ -108,52 +115,49 @@ class CreateNewClientViewModel(
                     _createNewClientUiState.value = CreateNewClientUiState.SetClientId(it)
                 } ?: run {
                     _createNewClientUiState.value =
-                        CreateNewClientUiState.ShowWaitingForCheckerApproval(0)
+                        CreateNewClientUiState.ShowWaitingForCheckerApproval(Res.string.feature_client_waiting_for_checker_approval)
                 }
-            } catch (e: ClientRequestException) {
-                val errorMessage = e.message
-                Logger.d("CreateClient: $errorMessage", e)
-                _createNewClientUiState.value = CreateNewClientUiState.ShowStringError(
-                    "HTTP Error: $errorMessage",
-                )
-            } catch (e: ServerResponseException) {
-                val errorMessage = e.message
-                Logger.d("CreateClient: $errorMessage", e)
-                _createNewClientUiState.value = CreateNewClientUiState.ShowStringError(
-                    "HTTP Error: $errorMessage",
-                )
             } catch (e: Exception) {
-                val errorMessage = e.message.orEmpty()
-                Logger.e("CreateClient: Unexpected error", e)
-                // Todo check if we need to assign value to uiState here. else remove
-                _createNewClientUiState.value = CreateNewClientUiState.ShowStringError(
-                    "Unexpected Error: $errorMessage",
-                )
+                MFErrorParser.errorMessage(e)
             }
         }
     }
 
-    fun uploadImage(id: Int, pngFile: File) {
+    fun uploadImage(id: Int, imageFile: PlatformFile) {
         _createNewClientUiState.value =
             CreateNewClientUiState.ShowProgress("Uploading Client's Picture...")
-//        val imagePath = pngFile.absolutePath
-
-        // create RequestBody instance from file
-        val requestFile = pngFile.asRequestBody("image/png".toMediaTypeOrNull())
-
-        // PartData is used to send also the actual file name
-        val body = PartData.createFormData("file", pngFile.name, requestFile)
 
         viewModelScope.launch {
             try {
-                repository.uploadClientImage(id, body)
+                val requestFile = createImageRequestBody(imageFile)
+
+                repository.uploadClientImage(id, requestFile)
 
                 _createNewClientUiState.value =
                     CreateNewClientUiState.OnImageUploadSuccess(Res.string.feature_client_Image_Upload_Successful)
             } catch (e: Exception) {
                 _createNewClientUiState.value =
                     CreateNewClientUiState.ShowError(Res.string.feature_client_Image_Upload_Failed)
+                MFErrorParser.errorMessage(e)
             }
         }
+    }
+
+    suspend fun createImageRequestBody(
+        file: PlatformFile,
+    ): MultiPartFormDataContent {
+        val byteArray = file.readBytes()
+        return MultiPartFormDataContent(
+            formData {
+                append(
+                    "file",
+                    byteArray,
+                    Headers.build {
+                        append(HttpHeaders.ContentType, "image/${file.extension}")
+                        append(HttpHeaders.ContentDisposition, "filename=\"${file.name}\"")
+                    }
+                )
+            }
+        )
     }
 }

@@ -11,6 +11,7 @@ package com.mifos.feature.client.syncClientDialog
 
 import androidx.compose.ui.graphics.vector.ImageVector
 import com.mifos.room.entities.client.ClientEntity
+import org.jetbrains.compose.resources.StringResource
 
 /**
  * Created by Aditya Gupta on 16/08/23.
@@ -20,7 +21,7 @@ sealed class SyncClientsDialogUiState {
     data object Loading : SyncClientsDialogUiState()
     data object Success : SyncClientsDialogUiState()
     data class Error(
-        val messageResId: Int? = null,
+        val messageResId: StringResource? = null,
         val imageVector: ImageVector? = null,
         val message: String? = null,
     ) : SyncClientsDialogUiState()

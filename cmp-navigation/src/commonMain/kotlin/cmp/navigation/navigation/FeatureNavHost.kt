@@ -21,9 +21,9 @@ import com.mifos.feature.auth.navigation.navigateToLogin
 import com.mifos.feature.center.navigation.centerNavGraph
 import com.mifos.feature.center.navigation.navigateCreateCenterScreenRoute
 import com.mifos.feature.checker.inbox.task.navigation.checkerInboxTaskNavGraph
+import com.mifos.feature.client.navigation.clientNavGraph
 import com.mifos.feature.dataTable.navigation.dataTableNavGraph
 import com.mifos.feature.dataTable.navigation.navigateToDataTable
-import com.mifos.feature.client.navigation.clientNavGraph
 import com.mifos.feature.groups.navigation.groupNavGraph
 import com.mifos.feature.groups.navigation.navigateToCreateNewGroupScreen
 import com.mifos.feature.individualCollectionSheet.navigation.individualCollectionSheetNavGraph
@@ -123,17 +123,19 @@ internal fun FeatureNavHost(
         clientNavGraph(
             navController = appState.navController,
             paddingValues = padding,
-            addLoanAccount = TODO(),
-            addSavingsAccount = TODO(),
-            documents = TODO(),
-            moreClientInfo = TODO(),
-            notes = TODO(),
-            loanAccountSelected = TODO(),
-            savingsAccountSelected = TODO(),
-            activateClient = TODO(),
-            hasDatatables = TODO(),
-            onDocumentClicked = TODO(),
-            onCardClicked = TODO(),
+            addLoanAccount = { _ -> },
+            addSavingsAccount = { clientId ->
+                appState.navController.navigateToAddSavingsAccount(0, clientId, false)
+            },
+            documents = { },
+            moreClientInfo = { },
+            notes = { },
+            loanAccountSelected = { },
+            savingsAccountSelected = { _, _ -> },
+            activateClient = { _ -> },
+            hasDatatables = { _, _, _, _ -> },
+            onDocumentClicked = { _, _ -> },
+            onCardClicked = { _, _ -> },
         )
     }
 }

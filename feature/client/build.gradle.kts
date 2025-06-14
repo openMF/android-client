@@ -21,7 +21,7 @@ kotlin {
             implementation(projects.core.data)
             implementation(projects.core.domain)
             implementation(projects.core.datastore)
-//            implementation(project(":feature:data-table"))
+            implementation(project(":feature:data-table"))
 
             implementation(compose.ui)
             implementation(compose.material3)
@@ -33,6 +33,10 @@ kotlin {
             implementation(libs.coil.kt.compose)
             implementation(libs.coil.network.ktor)
             implementation(libs.ui.backhandler)
+
+            implementation(libs.filekit.core)
+            implementation(libs.filekit.compose)
+            implementation(libs.filekit.dialog.compose)
         }
         
         androidMain.dependencies {

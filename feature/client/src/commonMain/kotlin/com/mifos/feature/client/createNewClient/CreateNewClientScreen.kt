@@ -34,13 +34,9 @@ import androidclient.feature.client.generated.resources.feature_client_middle_na
 import androidclient.feature.client.generated.resources.feature_client_mobile_no
 import androidclient.feature.client.generated.resources.feature_client_no_staff_associated_with_office
 import androidclient.feature.client.generated.resources.feature_client_office_name_mandatory
-import androidclient.feature.client.generated.resources.feature_client_permissions_required
-import androidclient.feature.client.generated.resources.feature_client_please_grant_us_the_following_permission
 import androidclient.feature.client.generated.resources.feature_client_please_select_action
-import androidclient.feature.client.generated.resources.feature_client_proceed
 import androidclient.feature.client.generated.resources.feature_client_remove_existing_photo
 import androidclient.feature.client.generated.resources.feature_client_select_date
-import androidclient.feature.client.generated.resources.feature_client_skip
 import androidclient.feature.client.generated.resources.feature_client_staff
 import androidclient.feature.client.generated.resources.feature_client_submit
 import androidclient.feature.client.generated.resources.feature_client_take_a_photo
@@ -106,7 +102,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import coil3.Uri
 import coil3.compose.rememberAsyncImagePainter
 import com.mifos.core.common.utils.DateHelper
 import com.mifos.core.common.utils.formatDate
@@ -122,10 +117,14 @@ import com.mifos.room.entities.noncore.DataTableEntity
 import com.mifos.room.entities.organisation.OfficeEntity
 import com.mifos.room.entities.organisation.StaffEntity
 import com.mifos.room.entities.templates.clients.ClientsTemplateEntity
+import io.github.vinceglb.filekit.PlatformFile
+import io.github.vinceglb.filekit.dialogs.FileKitType
+import io.github.vinceglb.filekit.dialogs.compose.rememberFilePickerLauncher
+import io.github.vinceglb.filekit.path
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
-import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.resources.getString
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameterProvider
@@ -157,8 +156,8 @@ internal fun CreateNewClientScreen(
         navigateBack = navigateBack,
         loadStaffInOffice = { viewmodel.loadStaffInOffices(it) },
         createClient = { viewmodel.createClient(clientPayload = it) },
-        uploadImage = { id, uri ->
-            viewmodel.uploadImage(id, uri.toFile())
+        uploadImage = { id, selectedFile ->
+            viewmodel.uploadImage(id, selectedFile)
         },
         hasDatatables = hasDatatables,
     )
@@ -173,18 +172,13 @@ internal fun CreateNewClientScreen(
     loadStaffInOffice: (officeId: Int) -> Unit,
     navigateBack: () -> Unit,
     createClient: (clientPayload: ClientPayloadEntity) -> Unit,
-    uploadImage: (id: Int, imageUri: Uri) -> Unit,
+    uploadImage: (id: Int, imageFile: PlatformFile) -> Unit,
     hasDatatables: (datatables: List<DataTableEntity>, clientPayload: ClientPayloadEntity) -> Unit,
 ) {
     var createClientWithImage by rememberSaveable { mutableStateOf(false) }
-    var clientImageUri: Uri? by rememberSaveable { mutableStateOf(null) }
-
+    var selectedImage by rememberSaveable { mutableStateOf<PlatformFile?>(null) }
     val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
-
-    val clientCreatedSuccess = stringResource(Res.string.feature_client_client_created_successfully)
-    val imageUploadSuccess = stringResource(Res.string.feature_client_Image_Upload_Successful)
-    val waitingForCheckerApproval = stringResource(Res.string.feature_client_waiting_for_checker_approval)
 
     MifosScaffold(
         title = stringResource(Res.string.feature_client_create_new_client),
@@ -211,18 +205,13 @@ internal fun CreateNewClientScreen(
                         loadStaffInOffice = loadStaffInOffice,
                         createClient = createClient,
                         onHasDatatables = hasDatatables,
-                        setUriForUpload = { uri ->
-                            if (uri.path?.isNotEmpty() == true) {
-                                clientImageUri = uri
-                                createClientWithImage = true
-                            }
-                        },
+                        imageForUpload = selectedImage,
                     )
                 }
 
                 is CreateNewClientUiState.SetClientId -> {
                     if (createClientWithImage) {
-                        clientImageUri?.let { uploadImage(uiState.id, it) }
+                        selectedImage?.let { uploadImage(uiState.id, it) }
                     } else {
                         navigateBack.invoke()
                     }
@@ -231,7 +220,7 @@ internal fun CreateNewClientScreen(
                 is CreateNewClientUiState.ShowClientCreatedSuccessfully -> {
                     scope.launch {
                         snackbarHostState.showSnackbar(
-                            message = clientCreatedSuccess,
+                            message = getString(Res.string.feature_client_client_created_successfully),
                             duration = SnackbarDuration.Long
                         )
                     }
@@ -240,7 +229,7 @@ internal fun CreateNewClientScreen(
                 is CreateNewClientUiState.OnImageUploadSuccess -> {
                     scope.launch {
                         snackbarHostState.showSnackbar(
-                            message = imageUploadSuccess,
+                            message = getString(Res.string.feature_client_Image_Upload_Successful),
                             duration = SnackbarDuration.Long
                         )
                     }
@@ -250,7 +239,7 @@ internal fun CreateNewClientScreen(
                 is CreateNewClientUiState.ShowWaitingForCheckerApproval -> {
                     scope.launch {
                         snackbarHostState.showSnackbar(
-                            message = waitingForCheckerApproval,
+                            message = getString(Res.string.feature_client_waiting_for_checker_approval),
                             duration = SnackbarDuration.Long
                         )
                     }
@@ -284,10 +273,10 @@ private fun CreateNewClientContent(
     officeList: List<OfficeEntity>,
     staffInOffices: List<StaffEntity>,
     clientTemplate: ClientsTemplateEntity,
-    loadStaffInOffice: (officeId: Int) -> Unit,
-    createClient: (clientPayload: ClientPayloadEntity) -> Unit,
-    onHasDatatables: (datatables: List<DataTableEntity>, clientPayload: ClientPayloadEntity) -> Unit,
-    setUriForUpload: (uri: Uri) -> Unit,
+    loadStaffInOffice: (Int) -> Unit,
+    createClient: (ClientPayloadEntity) -> Unit,
+    onHasDatatables: (List<DataTableEntity>, ClientPayloadEntity) -> Unit,
+    imageForUpload: PlatformFile?,
 ) {
     var firstName by rememberSaveable { mutableStateOf("") }
     var middleName by rememberSaveable { mutableStateOf("") }
@@ -312,40 +301,17 @@ private fun CreateNewClientContent(
     var showDateOfBirthDatepicker by rememberSaveable { mutableStateOf(false) }
     var showActivateDatepicker by rememberSaveable { mutableStateOf(false) }
     var showImagePickerDialog by rememberSaveable { mutableStateOf(false) }
+    var selectedImage by rememberSaveable { mutableStateOf(null as PlatformFile?)}
 
     val scrollState = rememberScrollState()
     val density = LocalDensity.current
 
-    val noStaffWithOffice = stringResource(Res.string.feature_client_no_staff_associated_with_office)
-
-    var handleImageSelection by remember { mutableStateOf(false) }
-    var permissionList: List<String> by rememberSaveable { mutableStateOf(listOf()) }
-    var imagePickerActionType by rememberSaveable { mutableStateOf(ImagePickerType.GALLERY) }
-    var selectedImageUri: Uri by rememberSaveable { mutableStateOf(Uri.EMPTY) }
-
-    val file = context.createTempImageFile()
-    val imgUri = FileProvider.getUriForFile(
-        Objects.requireNonNull(context),
-        context.packageName + ".provider",
-        file,
-    )
-    val cameraLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.TakePicture(),
-        onResult = { success ->
-            if (success) {
-                selectedImageUri = imgUri
-            }
-            handleImageSelection = false
-        },
-    )
-
-    val imagePickerLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.GetContent(),
-    ) { uri: Uri? ->
-        if (uri != null) {
-            selectedImageUri = uri
+    val imageLauncher = rememberFilePickerLauncher(
+        type = FileKitType.Image,
+    ) { image ->
+        if (image != null) {
+            selectedImage = image
         }
-        handleImageSelection = false
     }
 
     val hasDatatables by rememberSaveable {
@@ -362,7 +328,7 @@ private fun CreateNewClientContent(
     LaunchedEffect(key1 = staffInOffices) {
         if (staffInOffices.isEmpty()) {
             snackbarHostState.showSnackbar(
-                message = noStaffWithOffice,
+                message = getString(Res.string.feature_client_no_staff_associated_with_office),
                 duration = SnackbarDuration.Short
             )
             staff = ""
@@ -387,58 +353,21 @@ private fun CreateNewClientContent(
         },
     )
 
-    if (handleImageSelection) {
-        PermissionBox(
-            requiredPermissions = permissionList,
-            title = stringResource(Res.string.feature_client_permissions_required),
-            description = stringResource(Res.string.feature_client_please_grant_us_the_following_permission),
-            confirmButtonText = stringResource(Res.string.feature_client_proceed),
-            dismissButtonText = stringResource(Res.string.feature_client_skip),
-            onGranted = {
-                LaunchedEffect(key1 = Unit) {
-                    if (imagePickerActionType == ImagePickerType.GALLERY) {
-                        imagePickerLauncher.launch("image/png")
-                    } else {
-                        cameraLauncher.launch(imgUri)
-                    }
-                }
-            },
-        )
-    }
-
     if (showImagePickerDialog) {
         MifosSelectImageDialog(
             onDismissRequest = { showImagePickerDialog = false },
             takeImage = {
                 showImagePickerDialog = false
-                val requiredPermissions = listOf(Manifest.permission.CAMERA)
-
-                imagePickerActionType = ImagePickerType.CAMERA
-                permissionList = requiredPermissions
-                handleImageSelection = true
+                cameraLauncher.launch()
             },
             uploadImage = {
                 showImagePickerDialog = false
-
-                val requiredPermissions = if (Build.VERSION.SDK_INT >= 33) {
-                    listOf(
-                        Manifest.permission.READ_MEDIA_IMAGES,
-                    )
-                } else {
-                    listOf(
-                        Manifest.permission.READ_EXTERNAL_STORAGE,
-                        Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                    )
-                }
-
-                imagePickerActionType = ImagePickerType.GALLERY
-                permissionList = requiredPermissions
-                handleImageSelection = true
+                imageLauncher.launch()
             },
             removeImage = {
                 showImagePickerDialog = false
-                selectedImageUri = Uri.EMPTY
-            },
+                selectedImage = null
+            }
         )
     }
 
@@ -483,9 +412,10 @@ private fun CreateNewClientContent(
             .fillMaxSize()
             .verticalScroll(state = scrollState),
     ) {
-        ClientImageSection(selectedImageUri = selectedImageUri) {
+        ClientImageSection(selectedImage = imageForUpload) {
             showImagePickerDialog = true
         }
+
         ClientInputTextFields(
             firstName = firstName,
             middleName = middleName,
@@ -498,6 +428,7 @@ private fun CreateNewClientContent(
             onMobileNumberChange = { mobileNumber = it },
             onExternalIdChange = { externalId = it },
         )
+
         clientTemplate.genderOptions?.let { list ->
             MifosTextFieldDropdown(
                 value = gender,
@@ -629,11 +560,11 @@ private fun CreateNewClientContent(
             onClick = {
                 val clientNames = Name(firstName, lastName, middleName)
                 handleSubmitClick(
-                    scope, clientNames, clientTemplate, createClient, isActive, onHasDatatables,
-                    selectedImageUri, setUriForUpload, staffInOffices, hasDatatables,
+                    scope, snackbarHostState, clientNames, clientTemplate, createClient, isActive, onHasDatatables,
+                    selectedImage, staffInOffices, hasDatatables,
                     selectedOfficeId, selectedClientId, selectedClientClassificationId,
                     genderId, selectedStaffId, activationDate, dateOfBirth,
-                    mobileNumber, externalId,
+                    mobileNumber, externalId
                 )
             },
         ) {
@@ -650,13 +581,13 @@ data class Name(
 
 private fun handleSubmitClick(
     scope: CoroutineScope,
+    snackbarHostState: SnackbarHostState,
     clientNames: Name,
     clientTemplate: ClientsTemplateEntity,
     createClient: (clientPayload: ClientPayloadEntity) -> Unit,
     isActive: Boolean,
     onHasDatatables: (datatables: List<DataTableEntity>, clientPayload: ClientPayloadEntity) -> Unit,
-    selectedImageUri: Uri,
-    setUriForUpload: (uri: Uri) -> Unit,
+    selectedImage: PlatformFile,
     staffInOffices: List<StaffEntity>,
     hasDatatables: Boolean,
     selectedOfficeId: Int?,
@@ -671,7 +602,7 @@ private fun handleSubmitClick(
 ) {
     if (!isAllFieldsValid(
             scope,
-
+            snackbarHostState,
             clientNames.firstName,
             clientNames.middleName,
             clientNames.lastName,
@@ -692,7 +623,7 @@ private fun handleSubmitClick(
             onHasDatatables.invoke(it, clientPayload)
         }
     } else {
-        setUriForUpload.invoke(selectedImageUri)
+        setUriForUpload.invoke(selectedImage.path)
         clientPayload = clientPayload.copy(
             datatables = null,
         )
@@ -823,22 +754,16 @@ private fun ClientInputTextFields(
 }
 
 @Composable
-private fun ClientImageSection(selectedImageUri: Uri, onImageClick: () -> Unit) {
+private fun ClientImageSection(selectedImage: PlatformFile?, onImageClick: () -> Unit) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
             .padding(vertical = 16.dp),
     ) {
         Image(
-            painter = if (selectedImageUri.path?.isNotEmpty() == true) {
-                rememberAsyncImagePainter(
-                    selectedImageUri,
-                )
-            } else {
-                painterResource(
-                    Res.drawable.feature_client_ic_dp_placeholder,
-                )
-            },
+            painter = rememberAsyncImagePainter(
+                selectedImage,
+            ),
             contentDescription = null,
             modifier = Modifier
                 .align(Alignment.Center)
@@ -920,36 +845,27 @@ private fun MifosSelectImageDialog(
     }
 }
 
-private enum class ImagePickerType {
-    CAMERA,
-    GALLERY,
-}
-
-private fun Context.createTempImageFile(): File {
-    val imageFileName = "clients_image"
-    return File.createTempFile(
-        imageFileName,
-        ".png",
-        externalCacheDir,
-    )
-}
-
 private fun isAllFieldsValid(
     scope: CoroutineScope,
+    snackbarHostState: SnackbarHostState,
     firstName: String,
     middleName: String,
     lastName: String,
 ): Boolean {
     return when {
-        !isFirstNameValid(firstName, scope) -> {
+        !isFirstNameValid(
+            firstName,
+            scope,
+            snackbarHostState,
+            ) -> {
             false
         }
 
-        !isMiddleNameValid(middleName, scope) -> {
+        !isMiddleNameValid(middleName, scope, snackbarHostState) -> {
             false
         }
 
-        !isLastNameValid(lastName, scope) -> {
+        !isLastNameValid(lastName, scope, snackbarHostState) -> {
             false
         }
 
@@ -957,23 +873,29 @@ private fun isAllFieldsValid(
     }
 }
 
-private fun isFirstNameValid(name: String): Boolean {
+private fun isFirstNameValid(
+    name: String,
+    scope: CoroutineScope,
+    snackbarHostState: SnackbarHostState,
+): Boolean {
     return when {
         name.isEmpty() -> {
-            Toast.makeText(
-                context,
-                context.resources.getString(Res.string.feature_client_error_first_name_can_not_be_empty),
-                Toast.LENGTH_SHORT,
-            ).show()
+            scope.launch {
+                snackbarHostState.showSnackbar(
+                    message = getString(Res.string.feature_client_error_first_name_can_not_be_empty),
+                    duration = SnackbarDuration.Short
+                )
+            }
             return false
         }
 
         name.contains("[^a-zA-Z ]".toRegex()) -> {
-            Toast.makeText(
-                context,
-                context.resources.getString(Res.string.feature_client_error_first_name_should_contain_only_alphabets),
-                Toast.LENGTH_SHORT,
-            ).show()
+            scope.launch {
+                snackbarHostState.showSnackbar(
+                    message = getString(Res.string.feature_client_error_first_name_should_contain_only_alphabets),
+                    duration = SnackbarDuration.Short
+                )
+            }
             return false
         }
 
@@ -981,23 +903,30 @@ private fun isFirstNameValid(name: String): Boolean {
     }
 }
 
-private fun isLastNameValid(name: String): Boolean {
+private fun isLastNameValid(
+    name: String,
+    scope: CoroutineScope,
+    snackbarHostState: SnackbarHostState,
+): Boolean
+{
     return when {
         name.isEmpty() -> {
-            Toast.makeText(
-                context,
-                context.resources.getString(Res.string.feature_client_error_last_name_can_not_be_empty),
-                Toast.LENGTH_SHORT,
-            ).show()
+            scope.launch {
+                snackbarHostState.showSnackbar(
+                    message = getString(Res.string.feature_client_error_last_name_can_not_be_empty),
+                    duration = SnackbarDuration.Short
+                )
+            }
             return false
         }
 
         name.contains("[^a-zA-Z ]".toRegex()) -> {
-            Toast.makeText(
-                context,
-                context.resources.getString(Res.string.feature_client_error_last_name_should_contain_only_alphabets),
-                Toast.LENGTH_SHORT,
-            ).show()
+            scope.launch {
+                snackbarHostState.showSnackbar(
+                    message = getString(Res.string.feature_client_error_last_name_should_contain_only_alphabets),
+                    duration = SnackbarDuration.Short
+                )
+            }
             return false
         }
 
@@ -1005,18 +934,24 @@ private fun isLastNameValid(name: String): Boolean {
     }
 }
 
-private fun isMiddleNameValid(name: String, scope: CoroutineScope, message: String): Boolean {
+private fun isMiddleNameValid(
+    name: String,
+    scope: CoroutineScope,
+    snackbarHostState: SnackbarHostState,
+): Boolean
+{
     return when {
         name.isEmpty() -> {
             true
         }
 
         name.contains("[^a-zA-Z ]".toRegex()) -> {
-            Toast.makeText(
-                context,
-                context.resources.getString(Res.string.feature_client_error_middle_name_should_contain_only_alphabets),
-                Toast.LENGTH_SHORT,
-            ).show()
+            scope.launch {
+                snackbarHostState.showSnackbar(
+                    message = getString(Res.string.feature_client_error_middle_name_should_contain_only_alphabets),
+                    duration = SnackbarDuration.Short
+                )
+            }
             return false
         }
 

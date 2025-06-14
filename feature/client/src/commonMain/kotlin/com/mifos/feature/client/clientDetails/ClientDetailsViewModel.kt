@@ -13,6 +13,7 @@ import com.mifos.core.network.utils.ImageLoaderUtils
 import com.mifos.room.entities.accounts.loans.LoanAccountEntity
 import com.mifos.room.entities.accounts.savings.SavingsAccountEntity
 import com.mifos.room.entities.client.ClientEntity
+import io.github.vinceglb.filekit.PlatformFile
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
@@ -46,7 +47,7 @@ class ClientDetailsViewModel(
     private val _showLoading = MutableStateFlow(true)
     val showLoading = _showLoading.asStateFlow()
 
-    private fun uploadImage(id: Int, pngFile: File) = viewModelScope.launch {
+    private fun uploadImage(id: Int, pngFile: PlatformFile) = viewModelScope.launch {
         uploadClientImageUseCase(id, pngFile).collect { result ->
             when (result) {
                 is DataState.Error -> {

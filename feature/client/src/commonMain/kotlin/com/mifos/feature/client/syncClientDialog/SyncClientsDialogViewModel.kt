@@ -9,11 +9,15 @@
  */
 package com.mifos.feature.client.syncClientDialog
 
+import androidclient.feature.client.generated.resources.Res
+import androidclient.feature.client.generated.resources.feature_client_error_network_not_available
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mifos.core.common.utils.Constants
+import com.mifos.core.common.utils.MFErrorParser
 import com.mifos.core.data.repository.SyncClientsDialogRepository
 import com.mifos.core.datastore.UserPreferencesRepository
+import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.room.entities.accounts.loans.LoanAccountEntity
 import com.mifos.room.entities.accounts.savings.SavingsAccountEntity
 import com.mifos.room.entities.client.ClientEntity
@@ -21,17 +25,13 @@ import com.mifos.room.entities.zipmodels.LoanAndLoanRepayment
 import com.mifos.room.entities.zipmodels.SavingsAccountAndTransactionTemplate
 import io.ktor.client.plugins.ClientRequestException
 import io.ktor.client.plugins.ServerResponseException
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import rx.Observable
-import rx.plugins.RxJavaPlugins
 
 /**
  * Created by Aditya Gupta on 16/08/23.
@@ -132,7 +132,7 @@ class SyncClientsDialogViewModel(
         }
     }
 
-    fun onAccountSyncFailed(e: Throwable?) {
+    suspend fun onAccountSyncFailed(e: Throwable?) {
         try {
             if (e is ClientRequestException || e is ServerResponseException) {
                 val singleSyncClientMax = maxSingleSyncClientProgressBar
@@ -143,7 +143,7 @@ class SyncClientsDialogViewModel(
                 syncClient()
             }
         } catch (throwable: Throwable) {
-            RxJavaPlugins.getInstance().errorHandler.handleError(throwable)
+            MFErrorParser.errorMessage(throwable)
         }
     }
 
@@ -160,7 +160,7 @@ class SyncClientsDialogViewModel(
      *
      * @param clientId Client Id
      */
-    private fun syncClientAccounts(clientId: Int) = viewModelScope.launch(Dispatchers.IO) {
+    private fun syncClientAccounts(clientId: Int) = viewModelScope.launch {
         val clientAccounts = repository.syncClientAccounts(clientId)
         mLoanAccountList = getActiveLoanAccounts(
             clientAccounts
@@ -194,11 +194,10 @@ class SyncClientsDialogViewModel(
                     repository.syncLoanRepaymentTemplate(loanId),
                 ) { loanWithAssociations, loanRepaymentTemplate ->
                     LoanAndLoanRepayment().apply {
-                        this.loanWithAssociations = loanWithAssociations
-                        this.loanRepaymentTemplate = loanRepaymentTemplate
+                        this.loanWithAssociations = loanWithAssociations.data
+                        this.loanRepaymentTemplate = loanRepaymentTemplate.data
                     }
-                }.flowOn(Dispatchers.IO)
-                    .collect { loanAndLoanRepayment ->
+                }.collect { loanAndLoanRepayment ->
                         mLoanAndRepaymentSyncIndex += 1
                         _syncClientData.update { it.copy(singleSyncCount = mLoanAndRepaymentSyncIndex) }
                         if (mLoanAndRepaymentSyncIndex != mLoanAccountList.size) {
@@ -221,7 +220,7 @@ class SyncClientsDialogViewModel(
      * @param savingsAccountType SavingsAccount Type Example : savingsaccounts
      * @param savingsAccountId   SavingsAccount Id
      */
-    private fun syncSavingsAccountAndTemplate(savingsAccountType: String?, savingsAccountId: Int) {
+    private fun syncSavingsAccountAndTemplate(savingsAccountType: String, savingsAccountId: Int) {
         viewModelScope.launch {
             combine(
                 repository.syncSavingsAccount(
@@ -236,8 +235,8 @@ class SyncClientsDialogViewModel(
                 ),
             ) { savingsAccountWithAssociations, savingsAccountTransactionTemplate ->
                 SavingsAccountAndTransactionTemplate(
-                    savingsAccountTransactionTemplate = savingsAccountTransactionTemplate,
-                    savingsAccountWithAssociations = savingsAccountWithAssociations,
+                    savingsAccountTransactionTemplate = savingsAccountTransactionTemplate.data,
+                    savingsAccountWithAssociations = savingsAccountWithAssociations.data,
                 )
             }.catch {
                 onAccountSyncFailed(it)
@@ -297,29 +296,24 @@ class SyncClientsDialogViewModel(
         taskWhenOnline.invoke()
 //        } else {
 //            _syncClientsDialogUiState.value = SyncClientsDialogUiState.Error(
-//                messageResId = R.string.feature_client_error_network_not_available,
+//                messageResId = Res.string.feature_client_error_network_not_available,
 //                imageVector = MifosIcons.WifiOff,
 //            )
 //        }
     }
 
     fun getActiveLoanAccounts(loanAccountList: List<LoanAccountEntity>?): List<LoanAccountEntity> {
-        val loanAccounts: MutableList<LoanAccountEntity> = ArrayList()
-        Observable.from(loanAccountList)
-            .filter { loanAccount -> loanAccount.status?.active }
-            .subscribe { loanAccount -> loanAccounts.add(loanAccount) }
-        return loanAccounts
+        return loanAccountList
+            ?.filter { it.status?.active == true }
+            ?: emptyList()
     }
 
     fun getSyncableSavingsAccounts(savingsAccounts: List<SavingsAccountEntity>?): List<SavingsAccountEntity> {
-        val accounts: MutableList<SavingsAccountEntity> = ArrayList()
-        Observable.from(savingsAccounts)
-            .filter { savingsAccount ->
+        return savingsAccounts
+            ?.filter { savingsAccount ->
                 savingsAccount.depositType?.value == "Savings" &&
-                    savingsAccount.status?.active == true &&
-                    !savingsAccount.depositType!!.isRecurring
-            }
-            .subscribe { savingsAccount -> accounts.add(savingsAccount) }
-        return accounts
+                        savingsAccount.status?.active == true &&
+                        savingsAccount.depositType?.isRecurring == false
+            } ?: emptyList()
     }
 }
