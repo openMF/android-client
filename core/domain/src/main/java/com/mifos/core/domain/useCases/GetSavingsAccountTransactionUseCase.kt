@@ -25,7 +25,7 @@ import javax.inject.Inject
  */
 class GetSavingsAccountTransactionUseCase @Inject constructor(private val repository: SavingsAccountTransactionRepository) {
 
-    suspend operator fun invoke(accountId: Int): Flow<Resource<SavingsAccountTransactionRequest>> = callbackFlow {
+    suspend operator fun invoke(accountId: Int): Flow<Resource<SavingsAccountTransactionRequest?>> = callbackFlow {
         try {
             trySend(Resource.Loading())
 
@@ -39,7 +39,7 @@ class GetSavingsAccountTransactionUseCase @Inject constructor(private val reposi
                         trySend(Resource.Error(e.message.toString()))
                     }
 
-                    override fun onNext(savingsAccountTransactionRequest: SavingsAccountTransactionRequest) {
+                    override fun onNext(savingsAccountTransactionRequest: SavingsAccountTransactionRequest?) {
                         trySend(Resource.Success(savingsAccountTransactionRequest))
                     }
                 })
