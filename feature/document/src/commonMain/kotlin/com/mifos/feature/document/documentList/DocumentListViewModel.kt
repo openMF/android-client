@@ -32,8 +32,8 @@ class DocumentListViewModel(
     savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
 
-    val entityId = savedStateHandle.getStateFlow(key = Constants.ENTITY_ID, initialValue = 68)
-    val entityType = savedStateHandle.getStateFlow(key = Constants.ENTITY_TYPE, initialValue = "clients")
+    val entityId = savedStateHandle.getStateFlow(key = Constants.ENTITY_ID, initialValue = 1)
+    val entityType = savedStateHandle.getStateFlow(key = Constants.ENTITY_TYPE, initialValue = "")
 
     private val _documentListUiState = MutableStateFlow<DocumentListUiState>(DocumentListUiState.Loading)
     val documentListUiState = _documentListUiState.asStateFlow()
