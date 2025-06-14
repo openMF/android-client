@@ -17,10 +17,12 @@ import io.github.vinceglb.filekit.FileKit
 import io.github.vinceglb.filekit.PlatformFile
 import io.github.vinceglb.filekit.dialogs.FileKitType
 import io.github.vinceglb.filekit.dialogs.openFilePicker
+import io.github.vinceglb.filekit.extension
 import io.github.vinceglb.filekit.name
 import io.github.vinceglb.filekit.readBytes
 import io.ktor.client.request.forms.MultiPartFormDataContent
 import io.ktor.client.request.forms.formData
+import io.ktor.http.ContentType
 import io.ktor.http.Headers
 import io.ktor.http.HttpHeaders
 import io.ktor.util.DeflateEncoder.name
@@ -55,12 +57,18 @@ class DocumentDialogViewModel(
     }
 
     @OptIn(InternalAPI::class)
-    fun createDocument(entityType: String, entityId: Int, name: String, desc: String, file: PlatformFile) {
+    fun createDocument(
+        entityType: String,
+        entityId: Int,
+        documentName: String,
+        desciption: String,
+        file: PlatformFile
+    ) {
         viewModelScope.launch {
             val result = repository.createDocument(
                 entityType = entityType,
                 entityId = entityId,
-                file = createDocumentRequestBody(file, name, desc),
+                file = createDocumentRequestBody(file, documentName, desciption),
             )
             when (result) {
                 is DataState.Error ->
@@ -80,8 +88,8 @@ class DocumentDialogViewModel(
         entityType: String,
         entityId: Int,
         documentId: Int,
-        name: String,
-        desc: String,
+        documentName: String,
+        description: String,
         file: PlatformFile,
     ) {
         viewModelScope.launch {
@@ -89,7 +97,7 @@ class DocumentDialogViewModel(
                 entityType,
                 entityId,
                 documentId,
-                createDocumentRequestBody(file, name, desc),
+                createDocumentRequestBody(file, documentName, description),
             )
             when (result) {
                 is DataState.Error ->
@@ -111,6 +119,7 @@ class DocumentDialogViewModel(
         name: String,
         description: String,
     ): MultiPartFormDataContent {
+        val mimeType=getContentTypeFromPlatformFile(file)
         val byteArray = file.readBytes()
         return MultiPartFormDataContent(
             formData {
@@ -118,7 +127,7 @@ class DocumentDialogViewModel(
                     "file",
                     byteArray,
                     Headers.build {
-                        append(HttpHeaders.ContentType, "multipart/form-data")
+                        append(HttpHeaders.ContentType, mimeType.toString())
                         append(HttpHeaders.ContentDisposition, "filename=\"${file.name}\"")
                     },
                 )
@@ -126,5 +135,15 @@ class DocumentDialogViewModel(
                 append("description", description)
             },
         )
+    }
+
+    fun getContentTypeFromPlatformFile(file: PlatformFile): ContentType {
+        return when (file.extension.lowercase()) {
+            "jpeg", "jpg" -> ContentType.Image.JPEG
+            "png" -> ContentType.Image.PNG
+            "pdf" -> ContentType.Application.Pdf
+            "txt" -> ContentType.Text.Plain
+            else -> ContentType.Application.OctetStream
+        }
     }
 }
