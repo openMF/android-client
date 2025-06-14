@@ -9,7 +9,6 @@
  */
 package com.mifos.core.network.services
 
-import com.mifos.core.common.utils.DataState
 import com.mifos.core.model.objects.noncoreobjects.Document
 import com.mifos.room.basemodel.APIEndPoint
 import de.jensklingenberg.ktorfit.http.Body

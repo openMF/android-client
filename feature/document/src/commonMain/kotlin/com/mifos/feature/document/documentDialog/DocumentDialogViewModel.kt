@@ -62,7 +62,7 @@ class DocumentDialogViewModel(
         entityId: Int,
         documentName: String,
         desciption: String,
-        file: PlatformFile
+        file: PlatformFile,
     ) {
         viewModelScope.launch {
             val result = repository.createDocument(
@@ -119,7 +119,7 @@ class DocumentDialogViewModel(
         name: String,
         description: String,
     ): MultiPartFormDataContent {
-        val mimeType=getContentTypeFromPlatformFile(file)
+        val mimeType = getContentTypeFromPlatformFile(file)
         val byteArray = file.readBytes()
         return MultiPartFormDataContent(
             formData {
