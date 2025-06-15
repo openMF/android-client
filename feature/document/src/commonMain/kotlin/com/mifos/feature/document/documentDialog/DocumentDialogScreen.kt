@@ -113,15 +113,17 @@ internal fun DocumentDialogScreen(
         uploadDocument = { documentName, documentDescription ->
             fileChosen?.let { file ->
                 if (documentAction == Res.string.feature_document_update_document) {
-                    viewModel.updateDocument(
-                        entityType,
-                        entityId,
-                        document!!.id,
-                        documentName,
-                        documentDescription,
-                        file,
-                    )
-                } else {
+                    document?.let {
+                        viewModel.updateDocument(
+                            entityType,
+                            entityId,
+                            document.id,
+                            documentName,
+                            documentDescription,
+                            file,
+                        )
+                    }
+                } else if(documentAction== Res.string.feature_document_upload_document) {
                     viewModel.createDocument(
                         entityType,
                         entityId,
@@ -223,8 +225,8 @@ private fun DocumentDialogContent(
 
     if (documentAction == Res.string.feature_document_update_document) {
         dialogTitle = stringResource(Res.string.feature_document_update_document)
-        name = TextFieldValue(document?.name!!)
-        description = TextFieldValue(document.description!!)
+        name = TextFieldValue(document?.name?:"")
+        description = TextFieldValue(document?.description?:"")
     }
 
     fun validateInput(): Boolean {
@@ -339,7 +341,11 @@ private fun DocumentDialogContent(
                     },
                 )
 
-                Spacer(modifier = Modifier.height(20.dp))
+                Spacer(modifier = Modifier.height(12.dp))
+
+                Text("Supported formats: xls,xlsx,pdf,doc,docx,png,jpeg,jpg.")
+
+                Spacer(modifier = Modifier.height(12.dp))
 
                 DialogButton(
                     text = stringResource(Res.string.feature_document_browse),

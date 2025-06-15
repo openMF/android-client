@@ -43,7 +43,12 @@ class DocumentDialogViewModel(
     fun openFilePicker(onFilePicked: (PlatformFile?) -> Unit) {
         viewModelScope.launch {
             try {
-                val file = FileKit.openFilePicker(type = FileKitType.Image)
+                val file = FileKit.openFilePicker(
+                    type = FileKitType.File(
+                        extensions = listOf("xls", "xlsx", "pdf", "doc", "docx", "png", "jpeg", "jpg"
+                        )
+                    )
+                )
                 onFilePicked(file)
             } catch (e: Exception) {
                 e.printStackTrace()
@@ -119,7 +124,7 @@ class DocumentDialogViewModel(
         name: String,
         description: String,
     ): MultiPartFormDataContent {
-        val mimeType = getContentTypeFromPlatformFile(file)
+        val mimeType = getMimeTypeFromPlatformFile(file)
         val byteArray = file.readBytes()
         return MultiPartFormDataContent(
             formData {
@@ -127,7 +132,7 @@ class DocumentDialogViewModel(
                     "file",
                     byteArray,
                     Headers.build {
-                        append(HttpHeaders.ContentType, mimeType.toString())
+                        append(HttpHeaders.ContentType, mimeType)
                         append(HttpHeaders.ContentDisposition, "filename=\"${file.name}\"")
                     },
                 )
@@ -137,13 +142,16 @@ class DocumentDialogViewModel(
         )
     }
 
-    fun getContentTypeFromPlatformFile(file: PlatformFile): ContentType {
+    fun getMimeTypeFromPlatformFile(file: PlatformFile): String {
         return when (file.extension.lowercase()) {
-            "jpeg", "jpg" -> ContentType.Image.JPEG
-            "png" -> ContentType.Image.PNG
-            "pdf" -> ContentType.Application.Pdf
-            "txt" -> ContentType.Text.Plain
-            else -> ContentType.Application.OctetStream
+            "jpeg", "jpg" -> "image/jpeg"
+            "png" -> "image/png"
+            "pdf" -> "application/pdf"
+            "doc" -> "application/msword"
+            "docx" -> "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+            "xls" -> "application/vnd.ms-excel"
+            "xlsx" -> "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+            else -> "application/octet-stream"
         }
     }
 }
