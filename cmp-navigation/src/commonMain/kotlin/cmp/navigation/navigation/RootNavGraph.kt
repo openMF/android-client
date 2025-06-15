@@ -41,7 +41,6 @@ fun RootNavGraph(
             updateServerConfig = {},
         )
 
-
         composable(MAIN_GRAPH) {
             App(
                 modifier = modifier,
