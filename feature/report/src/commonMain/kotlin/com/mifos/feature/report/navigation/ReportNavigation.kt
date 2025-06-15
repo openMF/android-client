@@ -24,10 +24,6 @@ import com.mifos.feature.report.runReport.RunReportScreen
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
-
-
-
-
 fun NavGraphBuilder.reportNavGraph(
     navController: NavController,
 ) {
@@ -90,7 +86,6 @@ fun NavGraphBuilder.reportScreenRoute(
         )
     }
 }
-
 
 fun NavController.navigateReportDetailsScreen(clientReportTypeItem: ClientReportTypeItem) {
     val arg = Json.encodeToString(clientReportTypeItem)
