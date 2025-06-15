@@ -65,10 +65,12 @@ import com.mifos.core.designsystem.component.MifosTextFieldDropdown
 import com.mifos.core.model.objects.runreport.DataRow
 import com.mifos.core.model.objects.runreport.FullParameterListResponse
 import com.mifos.core.model.objects.runreport.client.ClientReportTypeItem
-import com.mifos.core.ui.util.DevicePreview
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
+import org.jetbrains.compose.ui.tooling.preview.Preview
+import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
+import org.jetbrains.compose.ui.tooling.preview.PreviewParameterProvider
 
 @Composable
 internal fun ReportDetailScreen(
@@ -584,89 +586,24 @@ private fun RunReportContent(
     }
 }
 
-//private class ReportDetailUiStateProvider : PreviewParameterProvider<ReportDetailUiState> {
-//
-//    override val values: Sequence<ReportDetailUiState>
-//        get() = sequenceOf(
-//            ReportDetailUiState.Error(Res.string.feature_report_failed_to_load_report_details),
-//            ReportDetailUiState.Loading,
-//            ReportDetailUiState.ParameterDetailsSuccess,
-//        )
-//}
-//
-//@DevicePreview
-//@Composable
-//private fun ReportDetailScreenPreview(
-//    @PreviewParameter(ReportDetailUiStateProvider::class) state: ReportDetailUiState,
-//) {
-//    ReportDetailScreen(
-//        reportItem = ClientReportTypeItem(),
-//        state = state,
-//        onBackPressed = {},
-//        onRetry = {},
-//        officeList = emptyList(),
-//        loanPurposeList = emptyList(),
-//        fundList = emptyList(),
-//        currencyList = emptyList(),
-//        parCalculatorList = emptyList(),
-//        savingsAccountDepositList = emptyList(),
-//        glAccountList = emptyList(),
-//        obligationDateList = emptyList(),
-//        reportOffices = emptyList(),
-//        reportProducts = emptyList(),
-//        runReport = {},
-//    )
-//}
-@DevicePreview
-@Composable
-private fun ReportDetailScreenLoadingPreview() {
-    ReportDetailScreen(
-        reportItem = ClientReportTypeItem(),
-        state = ReportDetailUiState.Loading,
-        onBackPressed = {},
-        onRetry = {},
-        officeList = emptyList(),
-        loanPurposeList = emptyList(),
-        fundList = emptyList(),
-        currencyList = emptyList(),
-        parCalculatorList = emptyList(),
-        savingsAccountDepositList = emptyList(),
-        glAccountList = emptyList(),
-        obligationDateList = emptyList(),
-        reportOffices = emptyList(),
-        reportProducts = emptyList(),
-        runReport = {},
-    )
+private class ReportDetailUiStateProvider : PreviewParameterProvider<ReportDetailUiState> {
+
+    override val values: Sequence<ReportDetailUiState>
+        get() = sequenceOf(
+            ReportDetailUiState.Error(Res.string.feature_report_failed_to_load_report_details),
+            ReportDetailUiState.Loading,
+            ReportDetailUiState.ParameterDetailsSuccess,
+        )
 }
 
-@DevicePreview
+@Preview
 @Composable
-private fun ReportDetailScreenErrorPreview() {
+private fun ReportDetailScreenPreview(
+    @PreviewParameter(ReportDetailUiStateProvider::class) state: ReportDetailUiState,
+) {
     ReportDetailScreen(
         reportItem = ClientReportTypeItem(),
-        state = ReportDetailUiState.Error(Res.string.feature_report_failed_to_load_report_details),
-        onBackPressed = {},
-        onRetry = {},
-        officeList = emptyList(),
-        loanPurposeList = emptyList(),
-        fundList = emptyList(),
-        currencyList = emptyList(),
-        parCalculatorList = emptyList(),
-        savingsAccountDepositList = emptyList(),
-        glAccountList = emptyList(),
-        obligationDateList = emptyList(),
-        reportOffices = emptyList(),
-        reportProducts = emptyList(),
-        runReport = {},
-    )
-}
-
-@DevicePreview
-@Composable
-private fun ReportDetailScreenSuccessPreview() {
-    ReportDetailScreen(
-        reportItem = ClientReportTypeItem(),
-        state = ReportDetailUiState.ParameterDetailsSuccess,
+        state = state,
         onBackPressed = {},
         onRetry = {},
         officeList = emptyList(),

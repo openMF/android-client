@@ -23,6 +23,7 @@ kotlin {
             implementation(compose.ui)
             api(projects.core.domain)
             implementation(libs.kotlinx.serialization.json)
+            implementation(compose.components.uiToolingPreview)
         }
     }
 }

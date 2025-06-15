@@ -39,10 +39,12 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.model.objects.runreport.FullParameterListResponse
-import com.mifos.core.ui.util.DevicePreview
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
+import org.jetbrains.compose.ui.tooling.preview.Preview
+import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
+import org.jetbrains.compose.ui.tooling.preview.PreviewParameterProvider
 
 
 @Composable
@@ -54,8 +56,6 @@ internal fun ReportScreen(
 ) {
     val report = viewModel.report
     val state by viewModel.reportUiState.collectAsStateWithLifecycle()
-
-   // val context = LocalContext.current
 
     ReportScreen(
         state = state,
@@ -169,49 +169,24 @@ internal fun ReportScreen(
     }
 }
 
-//private class ReportUiStateProvider : PreviewParameterProvider<ReportUiState> {
-//
-//    override val values: Sequence<ReportUiState>
-//        get() = sequenceOf(
-//            ReportUiState.Initial,
-//            ReportUiState.Message(R.string.feature_report_export_csv),
-//        )
-//}
-//
-//@Preview(showBackground = true)
-//@Composable
-//private fun ReportScreenPreview(
-//    @PreviewParameter(ReportUiStateProvider::class) state: ReportUiState,
-//) {
-//    ReportScreen(
-//        state = state,
-//        report = FullParameterListResponse(emptyList(), emptyList()),
-//        onBackPressed = { },
-//        exportReport = { },
-//    )
-//}
+private class ReportUiStateProvider : PreviewParameterProvider<ReportUiState> {
 
-@DevicePreview()
-@Composable
-fun ReportScreenPreviewInitial() {
-    ReportScreen(
-        state = ReportUiState.Initial,
-        report = FullParameterListResponse(emptyList(), emptyList()),
-        onBackPressed = {},
-        exportReport = {},
-        showMessage = {}
-    )
+    override val values: Sequence<ReportUiState>
+        get() = sequenceOf(
+            ReportUiState.Initial,
+            ReportUiState.Message(Res.string.feature_report_export_csv),
+        )
 }
 
-@DevicePreview()
+@Preview
 @Composable
-private fun ReportScreenPreviewMessage() {
+private fun ReportScreenPreview(
+    @PreviewParameter(ReportUiStateProvider::class) state: ReportUiState,
+) {
     ReportScreen(
-        state = ReportUiState.Message(Res.string.feature_report_export_csv),
+        state = state,
         report = FullParameterListResponse(emptyList(), emptyList()),
         onBackPressed = { },
         exportReport = { },
-        showMessage = {}
     )
 }
-

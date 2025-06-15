@@ -15,6 +15,7 @@ import androidclient.feature.report.generated.resources.Res
 import androidclient.feature.report.generated.resources.feature_report_accounting
 import androidclient.feature.report.generated.resources.feature_report_all
 import androidclient.feature.report.generated.resources.feature_report_client
+import androidclient.feature.report.generated.resources.feature_report_failed_to_fetch_reports
 import androidclient.feature.report.generated.resources.feature_report_fund
 import androidclient.feature.report.generated.resources.feature_report_loan
 import androidclient.feature.report.generated.resources.feature_report_savings
@@ -75,6 +76,9 @@ import com.mifos.core.model.objects.runreport.client.ClientReportTypeItem
 import com.mifos.core.ui.util.DevicePreview
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
+import org.jetbrains.compose.ui.tooling.preview.Preview
+import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
+import org.jetbrains.compose.ui.tooling.preview.PreviewParameterProvider
 
 @Composable
 internal fun RunReportScreen(
@@ -365,7 +369,7 @@ class RunReportUiStateProvider : PreviewParameterProvider<RunReportUiState> {
         )
 }
 
-@DevicePreview
+@Preview
 @Composable
 private fun RunReportPreview(
     @PreviewParameter(RunReportUiStateProvider::class) state: RunReportUiState,
