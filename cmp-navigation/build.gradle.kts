@@ -44,7 +44,7 @@ kotlin {
             implementation(projects.feature.note)
             implementation(projects.feature.offline)
             implementation(projects.feature.pathTracking)
-//            implementation(projects.feature.report)
+            implementation(projects.feature.report)
             implementation(projects.feature.savings)
             implementation(projects.feature.settings)
             implementation(projects.feature.search)
