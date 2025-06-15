@@ -71,7 +71,6 @@ koinAndroid = "4.0.1"
 koinAndroidxCompose = "3.5.0"
 kotlinxCoroutinesCoreVersion = "1.10.1"
 kotlinxCoroutinesRx2 = "1.5.1"
-kotlinxSerializationJsonVersion = "1.6.3"
 legacySupportV4 = "1.0.0"
 lifecycleCommonJava8 = "2.8.7"
 lifecycleExtensions = "2.2.0"
@@ -94,7 +93,6 @@ multidex = "2.0.1"
 navigationFragmentKtx = "2.8.5"
 navigationUiKtx = "2.8.5"
 okhttpVersion = "4.12.0"
-okio = "3.9.0"
 pagingRuntimeKtx = "3.3.5"
 playServicesLocation = "21.3.0"
 playServicesMaps = "19.0.0"
@@ -191,7 +189,6 @@ androidPackageName = "AndroidApp"
 androidPackageNamespace = "org.mifos.client"
 androidPackageVersion = "1.0.0"
 uiAndroidVersion = "1.7.8"
-uiAndroid = "1.8.2"
 
 [libraries]
 
@@ -233,11 +230,9 @@ android-maps-utils = { module = "com.google.maps.android:android-maps-utils", ve
 android-iconify-material = { module = "com.joanzapata.iconify:android-iconify-material", version.ref = "androidIconifyMaterial" }
 
 #RxAndroid
-kotlinx-serialization-json-v163 = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinxSerializationJsonVersion" }
 mifos-koin-android = { module = "io.insert-koin:koin-android", version.ref = "koinAndroid" }
 koin-androidx-compose-v350 = { module = "io.insert-koin:koin-androidx-compose", version.ref = "koinAndroidxCompose" }
 maps-compose = { module = "com.google.maps.android:maps-compose", version.ref = "mapsCompose" }
-okio-v390 = { module = "com.squareup.okio:okio", version.ref = "okio" }
 retrofit2-kotlinx-serialization-converter = { module = "com.jakewharton.retrofit:retrofit2-kotlinx-serialization-converter", version.ref = "retrofit2KotlinxSerializationConverter" }
 rxandroid = { module = "io.reactivex:rxandroid", version.ref = "rxandroidVersion" }
 rxjava = { module = "io.reactivex:rxjava", version.ref = "rxjava" }
@@ -557,7 +552,6 @@ moko-permission-compose = { group = "dev.icerock.moko", name = "permissions-comp
 
 window-size = { group = "dev.chrisbanes.material3", name = "material3-window-size-class-multiplatform", version.ref = "windowsSizeClass" }
 androidx-material3-android = { group = "androidx.compose.material3", name = "material3-android", version.ref = "material3Android" }
-
 
 [plugins]
 
