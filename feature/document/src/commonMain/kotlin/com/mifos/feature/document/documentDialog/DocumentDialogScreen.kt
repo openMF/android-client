@@ -123,7 +123,7 @@ internal fun DocumentDialogScreen(
                             file,
                         )
                     }
-                } else if(documentAction== Res.string.feature_document_upload_document) {
+                } else if (documentAction == Res.string.feature_document_upload_document) {
                     viewModel.createDocument(
                         entityType,
                         entityId,
@@ -225,8 +225,8 @@ private fun DocumentDialogContent(
 
     if (documentAction == Res.string.feature_document_update_document) {
         dialogTitle = stringResource(Res.string.feature_document_update_document)
-        name = TextFieldValue(document?.name?:"")
-        description = TextFieldValue(document?.description?:"")
+        name = TextFieldValue(document?.name ?: "")
+        description = TextFieldValue(document?.description ?: "")
     }
 
     fun validateInput(): Boolean {

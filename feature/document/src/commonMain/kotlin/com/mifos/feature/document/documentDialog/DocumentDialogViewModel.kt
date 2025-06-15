@@ -45,9 +45,17 @@ class DocumentDialogViewModel(
             try {
                 val file = FileKit.openFilePicker(
                     type = FileKitType.File(
-                        extensions = listOf("xls", "xlsx", "pdf", "doc", "docx", "png", "jpeg", "jpg"
-                        )
-                    )
+                        extensions = listOf(
+                            "xls",
+                            "xlsx",
+                            "pdf",
+                            "doc",
+                            "docx",
+                            "png",
+                            "jpeg",
+                            "jpg",
+                        ),
+                    ),
                 )
                 onFilePicked(file)
             } catch (e: Exception) {
