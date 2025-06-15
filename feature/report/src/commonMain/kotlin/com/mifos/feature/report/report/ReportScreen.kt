@@ -10,7 +10,11 @@
 package com.mifos.feature.report.report
 
 import androidclient.feature.report.generated.resources.Res
+import androidclient.feature.report.generated.resources.feature_report_dismiss
 import androidclient.feature.report.generated.resources.feature_report_export_csv
+import androidclient.feature.report.generated.resources.feature_report_external_approve_permission_description
+import androidclient.feature.report.generated.resources.feature_report_permission_required
+import androidclient.feature.report.generated.resources.feature_report_proceed
 import androidclient.feature.report.generated.resources.feature_report_title
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
@@ -36,7 +40,9 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.mifos.core.designsystem.component.MifosScaffold
+import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.model.objects.runreport.FullParameterListResponse
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
@@ -50,8 +56,6 @@ import org.jetbrains.compose.ui.tooling.preview.PreviewParameterProvider
 internal fun ReportScreen(
     onBackPressed: () -> Unit,
     viewModel: ReportViewModel = koinViewModel(),
-    platformDirPathProvider: () -> String,
-    showMessage: (String) -> Unit
 ) {
     val report = viewModel.report
     val state by viewModel.reportUiState.collectAsStateWithLifecycle()
@@ -61,17 +65,14 @@ internal fun ReportScreen(
         report = report,
         onBackPressed = onBackPressed,
         exportReport = {
-            val reportDirectoryPath = platformDirPathProvider()
+//            val reportDirectoryPath =
 //                Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
 //                    .toString() + getString(context, R.string.feature_report_export_csv_directory)
 //            viewModel.exportCsv(
 //                report = report,
 //                reportDirectoryPath = reportDirectoryPath,
 //            )
-
-            viewModel.exportCsv(report = report, reportDirectoryPath = reportDirectoryPath)
         },
-        showMessage = showMessage
     )
 }
 
@@ -82,26 +83,19 @@ internal fun ReportScreen(
     onBackPressed: () -> Unit,
     modifier: Modifier = Modifier,
     exportReport: () -> Unit,
-    showMessage: (String) -> Unit,
 ) {
-    //val context = LocalContext.current
     val scope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
-   // var checkPermission by remember { mutableStateOf(false) }
-    var triggerExport by remember { mutableStateOf(false) }
+    var checkPermission by remember { mutableStateOf(false) }
 
     when (state) {
         is ReportUiState.Initial -> Unit
         is ReportUiState.Message -> {
-            val message = stringResource(state.message)
-        // Toast.makeText(context, stringResource(id = state.message), Toast.LENGTH_SHORT).show()
-            LaunchedEffect(state.message) {
-                showMessage(message)
-            }
+//            Toast.makeText(context, stringResource(state.message), Toast.LENGTH_SHORT).show()
         }
     }
 
-    if (triggerExport) {
+    if (checkPermission) {
 //        PermissionBox(
 //            requiredPermissions = if (Build.VERSION.SDK_INT >= 33) {
 //                listOf(Manifest.permission.READ_MEDIA_IMAGES)
@@ -111,19 +105,18 @@ internal fun ReportScreen(
 //                    Manifest.permission.WRITE_EXTERNAL_STORAGE,
 //                )
 //            },
-//            title = stringResource(Res.string.feature_report_permission_required),
-//            description = stringResource(R.string.feature_report_external_approve_permission_description),
-//            confirmButtonText = stringResource(R.string.feature_report_proceed),
-//            dismissButtonText = stringResource(R.string.feature_report_dismiss),
+//            title = Res.string.feature_report_permission_required,
+//            description = Res.string.feature_report_external_approve_permission_description,
+//            confirmButtonText = Res.string.feature_report_proceed,
+//            dismissButtonText = Res.string.feature_report_dismiss,
 //            onGranted = {
-                LaunchedEffect(triggerExport) {
-                    scope.launch {
-                        exportReport()
-                        triggerExport = false
-                    }
-                }
-   //         },
-     //   )
+//                LaunchedEffect(key1 = Unit) {
+//                    scope.launch {
+//                        exportReport()
+//                    }
+//                }
+//            },
+//        )
     }
 
     MifosScaffold(
@@ -133,11 +126,11 @@ internal fun ReportScreen(
         actions = {
             TextButton(
                 onClick = {
-                    triggerExport = true
+                    checkPermission = true
                 },
                 colors = ButtonDefaults.textButtonColors(White),
             ) {
-                Text(text = stringResource(Res.string.feature_report_export_csv), color = Black)
+                Text(text = stringResource(Res.string.feature_report_export_csv))
             }
         },
         snackbarHostState = snackbarHostState,

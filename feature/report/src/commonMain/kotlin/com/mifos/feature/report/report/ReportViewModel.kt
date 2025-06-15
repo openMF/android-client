@@ -45,7 +45,7 @@ class ReportViewModel(
     val reportUiState = _reportUiState.asStateFlow()
 
     fun exportCsv(report: FullParameterListResponse, reportDirectoryPath: String) {
-        viewModelScope.launch(Dispatchers.Default) {
+        viewModelScope.launch {
             _reportUiState.value = ReportUiState.Message(Res.string.feature_report_export_started)
 
             val timestamp = Clock.System.now().toEpochMilliseconds().toString()

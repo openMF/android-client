@@ -231,7 +231,7 @@ internal fun ReportDetailScreen(
                 onClick = { runReport(runReportDetail) },
                 colors = ButtonDefaults.textButtonColors(White),
             ) {
-                Text(text = stringResource(Res.string.feature_report_run_report), color = Black)
+                Text(text = stringResource(Res.string.feature_report_run_report))
             }
         },
         snackbarHostState = snackbarHostState,

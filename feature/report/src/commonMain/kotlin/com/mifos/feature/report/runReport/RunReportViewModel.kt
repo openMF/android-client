@@ -14,6 +14,7 @@ import androidclient.feature.report.generated.resources.feature_report_failed_to
 import androidclient.feature.report.generated.resources.feature_report_no_reports_found
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.mifos.core.common.utils.DataState
 import com.mifos.core.common.utils.Resource
 import com.mifos.core.domain.useCases.GetReportCategoryUseCase
 import kotlinx.coroutines.Dispatchers
@@ -40,14 +41,14 @@ class RunReportViewModel(
             parameterType,
         ).collect { result ->
             when (result) {
-                is Resource.Error ->
+                is DataState.Error ->
                     _runReportUiState.value =
                         RunReportUiState.Error(Res.string.feature_report_failed_to_fetch_reports)
 
-                is Resource.Loading -> _runReportUiState.value = RunReportUiState.Loading
+                is DataState.Loading -> _runReportUiState.value = RunReportUiState.Loading
 
-                is Resource.Success -> {
-                    result.data?.let { reports ->
+                is DataState.Success -> {
+                    result.data.let { reports ->
                         if (reports.isNotEmpty()) {
                             _runReportUiState.value = RunReportUiState.RunReports(reports)
                         } else {

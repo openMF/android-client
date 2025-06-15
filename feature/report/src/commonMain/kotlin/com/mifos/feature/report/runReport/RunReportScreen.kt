@@ -17,6 +17,7 @@ import androidclient.feature.report.generated.resources.feature_report_all
 import androidclient.feature.report.generated.resources.feature_report_client
 import androidclient.feature.report.generated.resources.feature_report_failed_to_fetch_reports
 import androidclient.feature.report.generated.resources.feature_report_fund
+import androidclient.feature.report.generated.resources.feature_report_ic_report_item
 import androidclient.feature.report.generated.resources.feature_report_loan
 import androidclient.feature.report.generated.resources.feature_report_savings
 import androidclient.feature.report.generated.resources.feature_report_xbrl
@@ -58,13 +59,10 @@ import androidx.compose.ui.graphics.Color.Companion.Black
 import androidx.compose.ui.graphics.Color.Companion.Blue
 import androidx.compose.ui.graphics.Color.Companion.DarkGray
 import androidx.compose.ui.graphics.Color.Companion.White
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.PreviewParameter
-import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -73,7 +71,7 @@ import com.mifos.core.designsystem.component.MifosMenuDropDownItem
 import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.model.objects.runreport.client.ClientReportTypeItem
-import com.mifos.core.ui.util.DevicePreview
+import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 import org.jetbrains.compose.ui.tooling.preview.Preview
