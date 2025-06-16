@@ -72,6 +72,7 @@ import com.mifos.room.entities.organisation.OfficeEntity
 import com.mifos.room.entities.organisation.StaffEntity
 import kotlinx.datetime.Clock
 import org.jetbrains.compose.resources.stringResource
+import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -388,7 +389,7 @@ private fun CollectionSheetDialogContent(
     )
 }
 
-@DevicePreview
+@Preview
 @Composable
 private fun NewIndividualCollectionSheetPreview() {
     Column {
@@ -438,7 +439,7 @@ val sampleOfficeList = List(10) {
     OfficeEntity(id = it, name = "Name")
 }
 
-@DevicePreview
+@Preview
 @Composable
 private fun CollectionSheetDialogContentPreview() {
     CollectionSheetDialogContent(date = "19 June 2024", member = "5", fillNow = {}, onDismiss = {})

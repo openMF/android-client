@@ -62,6 +62,7 @@ import com.mifos.core.network.model.IndividualCollectionSheetPayload
 import com.mifos.core.ui.util.DevicePreview
 import com.mifos.room.entities.noncore.BulkRepaymentTransactions
 import org.jetbrains.compose.resources.stringResource
+import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -385,7 +386,7 @@ private fun MifosButtonRow(
 }
 
 @Composable
-@DevicePreview
+@Preview
 private fun PreviewPaymentDetails(modifier: Modifier = Modifier) {
     PaymentsDetailsScreen(
         modifier = modifier,

@@ -26,6 +26,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import com.mifos.core.ui.util.DevicePreview
 import org.jetbrains.compose.resources.stringResource
+import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
 internal fun SavedIndividualCollectionSheetCompose(
@@ -55,7 +56,7 @@ internal fun SavedIndividualCollectionSheetCompose(
     }
 }
 
-@DevicePreview
+@Preview
 @Composable
 private fun SavedIndividualCollectionSheetComposePreview() {
     SavedIndividualCollectionSheetCompose()

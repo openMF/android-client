@@ -66,6 +66,7 @@ import com.mifos.room.entities.noncore.BulkRepaymentTransactions
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
+import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -289,7 +290,7 @@ private fun IndividualCollectionSheetItem(
     }
 }
 
-@DevicePreview
+@Preview
 @Composable
 private fun IndividualCollectionSheetDetailsScreenEmptyPreview() {
     IndividualCollectionSheetDetailsScreen(
@@ -303,7 +304,7 @@ private fun IndividualCollectionSheetDetailsScreenEmptyPreview() {
     )
 }
 
-@DevicePreview
+@Preview
 @Composable
 private fun IndividualCollectionSheetDetailsScreenErrorPreview() {
     IndividualCollectionSheetDetailsScreen(
@@ -317,7 +318,7 @@ private fun IndividualCollectionSheetDetailsScreenErrorPreview() {
     )
 }
 
-@DevicePreview
+@Preview
 @Composable
 private fun IndividualCollectionSheetDetailsScreenLoadingPreview() {
     IndividualCollectionSheetDetailsScreen(
@@ -331,7 +332,7 @@ private fun IndividualCollectionSheetDetailsScreenLoadingPreview() {
     )
 }
 
-@DevicePreview
+@Preview
 @Composable
 private fun IndividualCollectionSheetDetailsScreenSuccessPreview() {
     IndividualCollectionSheetDetailsScreen(

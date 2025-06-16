@@ -30,6 +30,7 @@ import com.mifos.feature.individualCollectionSheet.newIndividualCollectionSheet.
 import com.mifos.feature.individualCollectionSheet.savedIndividualCollectionSheet.SavedIndividualCollectionSheetCompose
 import com.mifos.room.entities.collectionsheet.IndividualCollectionSheet
 import org.jetbrains.compose.resources.stringResource
+import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
 internal fun IndividualCollectionSheetScreen(
@@ -69,7 +70,7 @@ enum class IndividualCollectionSheetScreenContents {
     SAVED,
 }
 
-@DevicePreview
+@Preview
 @Composable
 private fun IndividualCollectionSheetScreenPreview() {
     IndividualCollectionSheetScreen(onBackPressed = {}, onDetail = { _, _ -> })

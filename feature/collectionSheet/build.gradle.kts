@@ -26,6 +26,7 @@ kotlin {
             implementation(compose.ui)
             implementation(projects.core.domain)
             implementation(libs.kotlinx.serialization.json)
+            implementation(compose.components.uiToolingPreview)
 
             implementation(libs.coil.core)
             implementation(libs.coil.kt)
@@ -33,4 +34,8 @@ kotlin {
 
         }
     }
+}
+
+dependencies {
+    debugImplementation(compose.uiTooling)
 }
