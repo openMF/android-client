@@ -158,7 +158,6 @@ internal fun RunReportScreen(
                                 fontWeight = FontWeight.Medium,
                                 fontStyle = FontStyle.Normal,
                             ),
-                            color = Black,
                             textAlign = TextAlign.Start,
                         )
                         Spacer(modifier = Modifier.width(8.dp))
@@ -279,7 +278,6 @@ private fun RunReportCardItem(
             .clickable {
                 onReportClick(report)
             },
-        colors = CardDefaults.cardColors(White),
     ) {
         Row(
             modifier = Modifier
@@ -298,7 +296,6 @@ private fun RunReportCardItem(
                 Icon(
                     painter = painterResource(Res.drawable.feature_report_ic_report_item),
                     contentDescription = null,
-                    tint = Black,
                 )
             }
             Column(
