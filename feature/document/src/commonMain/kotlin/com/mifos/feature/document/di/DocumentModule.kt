@@ -7,7 +7,7 @@
  *
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
-package com.mifos.feature.document.ui
+package com.mifos.feature.document.di
 
 import com.mifos.feature.document.documentDialog.DocumentDialogViewModel
 import com.mifos.feature.document.documentList.DocumentListViewModel

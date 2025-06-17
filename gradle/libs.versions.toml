@@ -165,7 +165,8 @@ mokoPermission = "0.18.0"
 qroseVersion = "1.0.1"
 okioVersion = "3.9.1"
 kermit = "2.0.4"
-fileKit = "0.8.7"
+fileKit = "0.8.8"
+fileKitDialog = "0.10.0-beta04"
 wire = "5.0.0"
 compose_ui = "1.8.0-alpha03"
 
@@ -536,6 +537,8 @@ back-handler = { group = "com.arkivanov.essenty", name = "back-handler", version
 constraint-layout = { group = "tech.annexflow.compose", name="constraintlayout-compose-multiplatform", version.ref = "constraintLayout" }
 filekit-core = { group = "io.github.vinceglb", name = "filekit-core", version.ref = "fileKit" }
 filekit-compose = { group = "io.github.vinceglb", name = "filekit-compose", version.ref = "fileKit" }
+filekit-dialog-compose = { group = "io.github.vinceglb", name = "filekit-dialogs-compose", version.ref = "fileKitDialog" }
+filekit-coil = { module = "io.github.vinceglb:filekit-coil", version.ref = "fileKitDialog" }
 qrose = { group = "io.github.alexzhirkevich", name="qrose", version.ref = "qroseVersion" }
 ui-backhandler = { group = "org.jetbrains.compose.ui", name = "ui-backhandler", version.ref = "compose_ui" }
 

@@ -10,15 +10,13 @@
 package com.mifos.feature.document.documentList
 
 import com.mifos.core.model.objects.noncoreobjects.Document
+import org.jetbrains.compose.resources.StringResource
 
-/**
- * Created by Aditya Gupta on 08/08/23.
- */
 sealed class DocumentListUiState {
 
     data object Loading : DocumentListUiState()
 
-    data class Error(val message: Int) : DocumentListUiState()
+    data class Error(val message: StringResource) : DocumentListUiState()
 
     data class DocumentList(val documents: List<Document>) : DocumentListUiState()
 }
