@@ -21,7 +21,7 @@ class ClientDetailsRepositoryImp(
     private val dataManagerClient: DataManagerClient,
 ) : ClientDetailsRepository {
 
-    override suspend fun uploadClientImage(clientId: Int, image: String) {
+    override suspend fun uploadClientImage(clientId: Int, image: PlatformFile) {
         dataManagerClient.uploadClientImage(
             clientId = clientId,
             typedFile = "data:image/png;base64,$image",

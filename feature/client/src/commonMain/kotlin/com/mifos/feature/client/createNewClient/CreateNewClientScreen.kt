@@ -120,7 +120,6 @@ import com.mifos.room.entities.templates.clients.ClientsTemplateEntity
 import io.github.vinceglb.filekit.PlatformFile
 import io.github.vinceglb.filekit.dialogs.FileKitType
 import io.github.vinceglb.filekit.dialogs.compose.rememberFilePickerLauncher
-import io.github.vinceglb.filekit.path
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
@@ -358,7 +357,7 @@ private fun CreateNewClientContent(
             onDismissRequest = { showImagePickerDialog = false },
             takeImage = {
                 showImagePickerDialog = false
-                cameraLauncher.launch()
+//                cameraLauncher.launch()
             },
             uploadImage = {
                 showImagePickerDialog = false
@@ -587,7 +586,7 @@ private fun handleSubmitClick(
     createClient: (clientPayload: ClientPayloadEntity) -> Unit,
     isActive: Boolean,
     onHasDatatables: (datatables: List<DataTableEntity>, clientPayload: ClientPayloadEntity) -> Unit,
-    selectedImage: PlatformFile,
+    selectedImage: PlatformFile?,
     staffInOffices: List<StaffEntity>,
     hasDatatables: Boolean,
     selectedOfficeId: Int?,
@@ -623,7 +622,6 @@ private fun handleSubmitClick(
             onHasDatatables.invoke(it, clientPayload)
         }
     } else {
-        setUriForUpload.invoke(selectedImage.path)
         clientPayload = clientPayload.copy(
             datatables = null,
         )

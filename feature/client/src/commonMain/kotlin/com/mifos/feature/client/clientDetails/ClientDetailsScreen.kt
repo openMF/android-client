@@ -7,16 +7,9 @@
  *
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
-@file:OptIn(ExperimentalMaterial3Api::class, ExperimentalPermissionsApi::class)
-
+@file:OptIn(ExperimentalMaterial3Api::class)
 package com.mifos.feature.client.clientDetails
 
-import android.Manifest
-import android.content.Context
-import android.graphics.BitmapFactory
-import android.net.Uri
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.LinearOutSlowInEasing
 import androidx.compose.animation.core.animateFloatAsState
@@ -66,8 +59,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.asAndroidBitmap
-import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidclient.feature.client.generated.resources.Res
@@ -106,12 +97,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
-import androidx.core.content.FileProvider
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.compose.AsyncImage
-import com.google.accompanist.permissions.ExperimentalPermissionsApi
-import com.google.accompanist.permissions.isGranted
-import com.google.accompanist.permissions.rememberMultiplePermissionsState
 import com.mifos.core.common.utils.Utils
 import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosMenuDropDownItem
@@ -125,8 +112,6 @@ import com.mifos.room.entities.accounts.savings.SavingsAccountEntity
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
-import java.io.File
-import java.util.Objects
 
 /**
  * Created by Aditya Gupta on 18/03/24.
@@ -159,7 +144,6 @@ internal fun ClientDetailsScreen(
     var clientNotFoundError by rememberSaveable { mutableStateOf(false) }
     var showMenu by remember { mutableStateOf(false) }
     var showSelectImageDialog by remember { mutableStateOf(false) }
-    var imageUri by remember { mutableStateOf<Uri?>(null) }
     val snackbarHostState = remember { SnackbarHostState() }
 
     val file = context.createImageFile()
