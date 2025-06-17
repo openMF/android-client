@@ -66,7 +66,6 @@ import com.mifos.core.designsystem.component.MifosDatePickerTextField
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosTextFieldDropdown
 import com.mifos.core.network.model.RequestCollectionSheetPayload
-import com.mifos.core.ui.util.DevicePreview
 import com.mifos.room.entities.collectionsheet.IndividualCollectionSheet
 import com.mifos.room.entities.organisation.OfficeEntity
 import com.mifos.room.entities.organisation.StaffEntity
@@ -121,7 +120,11 @@ internal fun NewIndividualCollectionSheetScreen(
     var showCollectionSheetDialog by rememberSaveable { mutableStateOf(false) }
 
     var showDatePicker by rememberSaveable { mutableStateOf(false) }
-    var repaymentDate by rememberSaveable { mutableLongStateOf(Clock.System.now().toEpochMilliseconds()) }
+    var repaymentDate by rememberSaveable {
+        mutableLongStateOf(
+            Clock.System.now().toEpochMilliseconds(),
+        )
+    }
     val datePickerState = rememberDatePickerState(
         initialSelectedDateMillis = repaymentDate,
         selectableDates = object : SelectableDates {
@@ -230,7 +233,10 @@ internal fun NewIndividualCollectionSheetScreen(
                         selectedStaff = ""
                     },
                     onOptionSelected = { index, value ->
-                        state.officeList[index].id.let {
+                        println("Office selection - Index: $index, List size: ${state.officeList.size}, Value: $value")
+                        val selectedOfficeEntity =
+                            state.officeList.find { it.name.toString() == value }
+                        selectedOfficeEntity?.id?.let {
                             getStaffList(it)
                             officeId = it
                         }
@@ -255,7 +261,10 @@ internal fun NewIndividualCollectionSheetScreen(
                         selectedStaff = it
                     },
                     onOptionSelected = { index, value ->
-                        state.staffList[index].id?.let {
+                        println("Staff selection - Index: $index, List size: ${state.staffList.size}, Value: $value")
+                        val selectedStaffEntity =
+                            state.staffList.find { it.displayName.toString() == value }
+                        selectedStaffEntity?.id?.let {
                             staffId = it
                         }
                         selectedStaff = value

@@ -25,7 +25,6 @@ import androidx.compose.ui.Modifier
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosTabRow
 import com.mifos.core.designsystem.utility.TabContent
-import com.mifos.core.ui.util.DevicePreview
 import com.mifos.feature.individualCollectionSheet.newIndividualCollectionSheet.NewIndividualCollectionSheetScreen
 import com.mifos.feature.individualCollectionSheet.savedIndividualCollectionSheet.SavedIndividualCollectionSheetCompose
 import com.mifos.room.entities.collectionsheet.IndividualCollectionSheet
