@@ -8,28 +8,29 @@
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
 plugins {
-    alias(libs.plugins.mifos.android.feature)
-    alias(libs.plugins.mifos.android.library.compose)
-    alias(libs.plugins.mifos.android.library.jacoco)
+    alias(libs.plugins.mifos.cmp.feature)
+    alias(libs.plugins.kotlin.parcelize)
+    alias(libs.plugins.kotlin.serialization)
 }
 
 android {
     namespace = "com.mifos.feature.document"
 }
 
-dependencies {
 
-    implementation(projects.core.domain)
-
-    //DBFlow dependencies
-    testImplementation(libs.hilt.android.testing)
-
-    implementation(libs.androidx.material)
-
-    implementation(libs.mifos.koin.android)
-    implementation(libs.koin.androidx.compose.v350)
-
-    implementation(libs.ktor.client.core)
-    implementation(libs.ktor.client.android)
-    implementation(libs.ktorfit.lib)
+kotlin {
+    sourceSets{
+        commonMain.dependencies {
+            implementation(compose.material3)
+            implementation(compose.components.resources)
+            implementation(compose.ui)
+            implementation(projects.core.domain)
+            implementation(libs.kotlinx.serialization.json)
+            
+            implementation(libs.filekit.core)
+            implementation(libs.filekit.compose)
+            implementation(libs.filekit.dialog.compose)
+            implementation(compose.components.uiToolingPreview)
+        }
+    }
 }

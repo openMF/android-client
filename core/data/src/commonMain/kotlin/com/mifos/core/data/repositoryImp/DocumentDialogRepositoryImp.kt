@@ -10,12 +10,9 @@
 package com.mifos.core.data.repositoryImp
 
 import com.mifos.core.common.utils.DataState
-import com.mifos.core.common.utils.asDataStateFlow
 import com.mifos.core.data.repository.DocumentDialogRepository
-import com.mifos.core.network.GenericResponse
 import com.mifos.core.network.datamanager.DataManagerDocument
-import io.ktor.http.content.PartData
-import kotlinx.coroutines.flow.Flow
+import io.ktor.client.request.forms.MultiPartFormDataContent
 
 /**
  * Created by Aditya Gupta on 16/08/23.
@@ -24,32 +21,25 @@ class DocumentDialogRepositoryImp(
     private val dataManagerDocument: DataManagerDocument,
 ) : DocumentDialogRepository {
 
-    override fun createDocument(
+    override suspend fun createDocument(
         entityType: String,
         entityId: Int,
-        name: String,
-        desc: String,
-        file: PartData,
-    ): Flow<DataState<GenericResponse>> {
-        return dataManagerDocument.createDocument(entityType, entityId, name, desc, file)
-            .asDataStateFlow()
+        file: MultiPartFormDataContent,
+    ): DataState<Unit> {
+        return dataManagerDocument.createDocument(entityType, entityId, file)
     }
 
-    override fun updateDocument(
+    override suspend fun updateDocument(
         entityType: String,
         entityId: Int,
         documentId: Int,
-        name: String,
-        desc: String,
-        file: PartData,
-    ): Flow<DataState<GenericResponse>> {
+        file: MultiPartFormDataContent,
+    ): DataState<Unit> {
         return dataManagerDocument.updateDocument(
             entityType,
             entityId,
             documentId,
-            name,
-            desc,
             file,
-        ).asDataStateFlow()
+        )
     }
 }
