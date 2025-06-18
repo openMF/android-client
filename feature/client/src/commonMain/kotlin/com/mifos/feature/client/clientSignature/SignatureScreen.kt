@@ -11,15 +11,12 @@
 
 package com.mifos.feature.client.clientSignature
 
-import android.graphics.BitmapFactory
 import androidclient.feature.client.generated.resources.Res
 import androidclient.feature.client.generated.resources.feature_client_failed_to_add_signature
 import androidclient.feature.client.generated.resources.feature_client_signature_gallery
 import androidclient.feature.client.generated.resources.feature_client_signature_reset
 import androidclient.feature.client.generated.resources.feature_client_signature_title
 import androidclient.feature.client.generated.resources.feature_client_signature_uploaded_successfully
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Icon
@@ -42,13 +39,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
-import androidx.compose.ui.graphics.asAndroidBitmap
-import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.boundsInRoot
 import androidx.compose.ui.layout.onGloballyPositioned
-import androidx.compose.ui.platform.LocalView
-import androidx.core.graphics.applyCanvas
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.Uri
 import com.mifos.core.common.utils.Constants
@@ -64,8 +57,6 @@ import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameterProvider
 import org.jetbrains.skia.Bitmap
 import org.koin.compose.viewmodel.koinViewModel
-import java.io.ByteArrayOutputStream
-import java.io.File
 import kotlin.math.roundToInt
 
 @Composable
@@ -102,8 +93,6 @@ internal fun SignatureScreen(
     onBackPressed: () -> Unit,
     uploadSignature: (Bitmap) -> Unit,
 ) {
-    val view = LocalView.current
-
     var navigationSelectedItem by remember {
         mutableIntStateOf(0)
     }
@@ -213,7 +202,7 @@ internal fun SignatureScreen(
                 is SignatureUiState.Initial -> {
                     paths.add(PathState(Path(), drawColor, drawBrush))
 
-                    MifosDrawingCanvas(
+                    SignatureDrawingArea (
                         drawColor = drawColor,
                         drawBrush = drawBrush,
                     )
@@ -222,6 +211,12 @@ internal fun SignatureScreen(
         }
     }
 }
+
+@Composable
+expect fun SignatureDrawingArea (
+    drawColor: Color,
+    drawBrush: Float,
+)
 
 private data class BottomNavigationItem(
     val label: String = "",

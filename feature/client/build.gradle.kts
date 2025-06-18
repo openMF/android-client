@@ -21,6 +21,7 @@ kotlin {
             implementation(projects.core.data)
             implementation(projects.core.domain)
             implementation(projects.core.datastore)
+            implementation(projects.core.designsystem)
             implementation(project(":feature:data-table"))
 
             implementation(compose.ui)

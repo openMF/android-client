@@ -16,6 +16,7 @@ import androidx.lifecycle.viewModelScope
 import com.mifos.core.common.utils.Constants
 import com.mifos.core.common.utils.MFErrorParser
 import com.mifos.core.data.repository.SyncClientsDialogRepository
+import com.mifos.core.data.util.NetworkMonitor
 import com.mifos.core.datastore.UserPreferencesRepository
 import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.room.entities.accounts.loans.LoanAccountEntity
@@ -26,10 +27,12 @@ import com.mifos.room.entities.zipmodels.SavingsAccountAndTransactionTemplate
 import io.ktor.client.plugins.ClientRequestException
 import io.ktor.client.plugins.ServerResponseException
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
@@ -39,7 +42,7 @@ import kotlinx.coroutines.launch
 class SyncClientsDialogViewModel(
     private val repository: SyncClientsDialogRepository,
     private val prefManager: UserPreferencesRepository,
-//    private val networkUtilsWrapper: NetworkUtilsWrapper,
+    networkMonitor: NetworkMonitor,
 ) : ViewModel() {
 
     private var mClientList: List<ClientEntity> = ArrayList()
@@ -61,6 +64,13 @@ class SyncClientsDialogViewModel(
         SyncClientsDialogData(),
     )
     val syncClientData: StateFlow<SyncClientsDialogData> = _syncClientData
+
+    val isNetworkAvailable = networkMonitor.isOnline
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5_000),
+            initialValue = false,
+        )
 
     fun setClientList(clientsList: List<ClientEntity>) {
         mClientList = clientsList
@@ -149,11 +159,8 @@ class SyncClientsDialogViewModel(
 
     /**
      * Sync the Client Account with Client Id. This method fetching the Client Accounts from the
-     * REST API using retrofit 2 and saving these accounts to Database with DatabaseHelperClient
+     * REST API using Ktorfit and saving these accounts to Database with DatabaseHelperClient
      * and then DataManagerClient gives the returns the Clients Accounts to Presenter.
-     *
-     *
-     *
      *
      * onNext : As Client Accounts Successfully sync then now sync the there Loan and LoanRepayment
      * onError :
@@ -292,14 +299,14 @@ class SyncClientsDialogViewModel(
     private fun checkNetworkConnection(
         taskWhenOnline: () -> Unit,
     ) {
-//        if (networkUtilsWrapper.isNetworkConnected()) {
+        if (isNetworkAvailable.value) {
         taskWhenOnline.invoke()
-//        } else {
-//            _syncClientsDialogUiState.value = SyncClientsDialogUiState.Error(
-//                messageResId = Res.string.feature_client_error_network_not_available,
-//                imageVector = MifosIcons.WifiOff,
-//            )
-//        }
+        } else {
+            _syncClientsDialogUiState.value = SyncClientsDialogUiState.Error(
+                messageResId = Res.string.feature_client_error_network_not_available,
+                imageVector = MifosIcons.WifiOff,
+            )
+        }
     }
 
     fun getActiveLoanAccounts(loanAccountList: List<LoanAccountEntity>?): List<LoanAccountEntity> {

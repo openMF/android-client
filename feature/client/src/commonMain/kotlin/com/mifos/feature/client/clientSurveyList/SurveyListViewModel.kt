@@ -50,7 +50,7 @@ class SurveyListViewModel(
                         SurveyListUiState.ShowFetchingError(Res.string.feature_client_failed_to_fetch_surveys_list)
                 }
                 .collect { surveys ->
-                    mSyncSurveyList = surveys.data
+                    mSyncSurveyList = surveys.data ?: emptyList()
                     loadDatabaseSurveys()
                 }
         }
@@ -66,7 +66,7 @@ class SurveyListViewModel(
                         SurveyListUiState.ShowFetchingError(Res.string.feature_client_failed_to_fetch_datatable)
                 }
                 .collect { surveyList ->
-                    mDbSurveyList = surveyList
+                    mDbSurveyList = surveyList.data
                     if (prefManager.userInfo.first().userStatus) {
                         for (survey in mSyncSurveyList) {
                             loadDatabaseQuestionData(survey.id, survey)
@@ -88,10 +88,10 @@ class SurveyListViewModel(
                     _surveyListUiState.value =
                         SurveyListUiState.ShowFetchingError(Res.string.feature_client_failed_to_load_db_question_data)
                 }.collect { questionDatasList ->
-                    for (questionDatas in questionDatasList) {
+                    for (questionDatas in questionDatasList.data ?: emptyList()) {
                         loadDatabaseResponseDatas(questionDatas.id, questionDatas)
                     }
-                    val updatedSurvey = survey!!.copy(questionDatas = questionDatasList)
+                    val updatedSurvey = survey!!.copy(questionDatas = questionDatasList.data ?: emptyList())
                     mSyncSurveyList = mSyncSurveyList.map {
                         if (it.id == survey.id) updatedSurvey else it
                     }
@@ -110,7 +110,7 @@ class SurveyListViewModel(
                         SurveyListUiState.ShowFetchingError(Res.string.feature_client_failed_to_load_db_question_data)
                 }
                 .collect { responseDatas ->
-                    val updatedQuestionDatas = questionDatas.copy(responseDatas = responseDatas.data)
+                    val updatedQuestionDatas = questionDatas.copy(responseDatas = responseDatas.data ?: emptyList())
 
                     mSyncSurveyList = mSyncSurveyList.map { survey ->
                         if (survey.id == questionDatas.surveyId) {
@@ -133,10 +133,10 @@ class SurveyListViewModel(
     }
 
     private fun checkSurveyAlreadySyncedOrNot(surveys: List<SurveyEntity>) {
-        if (mDbSurveyList.isNullOrEmpty()) return
+        val localDbSurveyList = mDbSurveyList ?: return
 
         mSyncSurveyList = surveys.map { syncSurvey ->
-            if (mDbSurveyList!!.any { it.id == syncSurvey.id }) {
+            if (localDbSurveyList.any { it.id == syncSurvey.id }) {
                 syncSurvey.copy(isSync = true)
             } else {
                 syncSurvey

@@ -98,9 +98,9 @@ class ClientDetailsViewModel(
                 is DataState.Loading -> _showLoading.value = true
 
                 is DataState.Success -> {
-                    _client.value = result.data?.client
-                    loanAccounts.value = result.data?.clientAccounts?.loanAccounts
-                    _savingsAccounts.value = result.data?.clientAccounts?.savingsAccounts
+                    _client.value = result.data.client
+                    loanAccounts.value = result.data.clientAccounts?.loanAccounts
+                    _savingsAccounts.value = result.data.clientAccounts?.savingsAccounts
                     _showLoading.value = false
                 }
             }
