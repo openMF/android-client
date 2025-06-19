@@ -70,6 +70,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import co.touchlab.kermit.Logger
 import com.mifos.core.common.utils.Constants
 import com.mifos.core.common.utils.DateHelper
 import com.mifos.core.designsystem.component.MifosCircularProgress
@@ -82,6 +83,9 @@ import com.mifos.room.entities.accounts.loans.LoanWithAssociationsEntity
 import com.mifos.room.entities.accounts.loans.LoansAccountSummaryEntity
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
+import org.jetbrains.compose.ui.tooling.preview.Preview
+import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
+import org.jetbrains.compose.ui.tooling.preview.PreviewParameterProvider
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -146,7 +150,6 @@ internal fun LoanAccountSummaryScreen(
     }
 
     MifosScaffold(
-//        icon = MifosIcons.arrowBack,
         title = stringResource(Res.string.feature_loan_loan_account_summary),
         onBackPressed = navigateBack,
         snackbarHostState = snackbarHostState,
@@ -365,9 +368,6 @@ private fun LoanAccountSummaryContent(
                 .fillMaxWidth()
                 .padding(horizontal = 8.dp)
                 .height(45.dp),
-//            colors = ButtonDefaults.buttonColors(
-//                containerColor = if (isSystemInDarkTheme()) BluePrimaryDark else BluePrimary,
-//            ),
             onClick = when {
                 loanWithAssociations.status.active == true -> {
                     { makeRepayment.invoke() }
@@ -382,13 +382,11 @@ private fun LoanAccountSummaryContent(
                 }
 
                 loanWithAssociations.status.closedObligationsMet == true -> {
-//                    { Log.d("LoanAccountSummary", "TRANSACTION ACTION NOT SET") }
-                    {}
+                    { Logger.e("LoanAccountSummary"){ "TRANSACTION ACTION NOT SET"} }
                 }
 
                 else -> {
-//                    { Log.d("LoanAccountSummary", "TRANSACTION ACTION NOT SET") }
-                    {}
+                    { Logger.e("LoanAccountSummary"){ "TRANSACTION ACTION NOT SET"} }
                 }
             },
         ) {
@@ -582,20 +580,76 @@ private fun getInflateLoanSummaryValue(status: LoanStatusEntity): Boolean {
     }
 }
 
-// @Composable
-// @Preview
-// private fun PreviewLoanAccountSummary() {
-//    LoanAccountSummaryScreen(
-//        uiState = loanAccountSummaryUiState,
-//        navigateBack = { },
-//        onRetry = { },
-//        onMoreInfoClicked = { },
-//        onTransactionsClicked = { },
-//        onRepaymentScheduleClicked = { },
-//        onDocumentsClicked = { },
-//        onChargesClicked = { },
-//        approveLoan = { },
-//        disburseLoan = { },
-//        makeRepayment = { },
-//    )
-// }
+private class LoanAccountSummaryPreviewProvider :
+    PreviewParameterProvider<LoanAccountSummaryUiState> {
+    private val demoSummary = LoansAccountSummaryEntity(
+        loanId = 12345,
+        principalDisbursed = 10000.0,
+        principalOutstanding = 6000.0,
+        principalOverdue = 500.0,
+        interestCharged = 500.0,
+        interestPaid = 300.0,
+        interestWaived = 0.0,
+        interestWrittenOff = 0.0,
+        interestOutstanding = 200.0,
+        interestOverdue = 50.0,
+        feeChargesCharged = 200.0,
+        feeChargesDueAtDisbursementCharged = 50.0,
+        feeChargesPaid = 150.0,
+        feeChargesWaived = 0.0,
+        feeChargesWrittenOff = 0.0,
+        feeChargesOutstanding = 50.0,
+        feeChargesOverdue = 20.0,
+        penaltyChargesCharged = 100.0,
+        penaltyChargesPaid = 50.0,
+        penaltyChargesWaived = 0.0,
+        penaltyChargesWrittenOff = 0.0,
+        penaltyChargesOutstanding = 50.0,
+        penaltyChargesOverdue = 10.0,
+        totalExpectedRepayment = 10700.0,
+        totalRepayment = 4450.0,
+        totalExpectedCostOfLoan = 750.0,
+        totalCostOfLoan = 300.0,
+        totalOutstanding = 6250.0,
+        totalOverdue = 580.0,
+        overdueSinceDate = listOf(2024, 6, 1),
+    )
+
+    override val values: Sequence<LoanAccountSummaryUiState>
+        get() = sequenceOf(
+            LoanAccountSummaryUiState.ShowProgressbar,
+            LoanAccountSummaryUiState.ShowFetchingError("Could not fetch summary"),
+            LoanAccountSummaryUiState.ShowLoanById(
+                LoanWithAssociationsEntity(
+                    accountNo = "90927493938",
+                    status = LoanStatusEntity(
+                        closedObligationsMet = true,
+                    ),
+                    clientName = "Pronay sarker",
+                    loanOfficerName = "MR. Ching",
+                    loanProductName = "Group Loan",
+                    summary = demoSummary,
+                ),
+            ),
+        )
+}
+
+@Composable
+@Preview
+private fun PreviewLoanAccountSummary(
+    @PreviewParameter(LoanAccountSummaryPreviewProvider::class) loanAccountSummaryUiState: LoanAccountSummaryUiState,
+) {
+    LoanAccountSummaryScreen(
+        uiState = loanAccountSummaryUiState,
+        navigateBack = { },
+        onRetry = { },
+        onMoreInfoClicked = { },
+        onTransactionsClicked = { },
+        onRepaymentScheduleClicked = { },
+        onDocumentsClicked = { },
+        onChargesClicked = { },
+        approveLoan = { },
+        disburseLoan = { },
+        makeRepayment = { },
+    )
+}

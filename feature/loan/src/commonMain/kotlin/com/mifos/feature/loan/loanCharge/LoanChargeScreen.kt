@@ -14,6 +14,7 @@ import androidclient.feature.loan.generated.resources.feature_loan_charge_amount
 import androidclient.feature.loan.generated.resources.feature_loan_charge_due_date
 import androidclient.feature.loan.generated.resources.feature_loan_charge_name
 import androidclient.feature.loan.generated.resources.feature_loan_client_id
+import androidclient.feature.loan.generated.resources.feature_loan_failed_to_load_loan_charges
 import androidclient.feature.loan.generated.resources.feature_loan_loan_charges
 import androidclient.feature.loan.generated.resources.feature_loan_no_loan_charges
 import androidx.compose.foundation.layout.Box
@@ -61,6 +62,9 @@ import com.mifos.core.ui.components.MifosEmptyUi
 import com.mifos.feature.loan.loanChargeDialog.LoanChargeDialogScreen
 import com.mifos.room.entities.client.ChargesEntity
 import org.jetbrains.compose.resources.stringResource
+import org.jetbrains.compose.ui.tooling.preview.Preview
+import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
+import org.jetbrains.compose.ui.tooling.preview.PreviewParameterProvider
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -139,7 +143,7 @@ internal fun LoanChargeScreen(
             ) {
                 Box {
                     when (state) {
-                        is LoanChargeUiState.Error -> MifosSweetError(message = state.message) {
+                        is LoanChargeUiState.Error -> MifosSweetError(message = stringResource(state.message)) {
                             onRetry()
                         }
 
@@ -185,9 +189,6 @@ private fun LoanChargeItem(
             .padding(8.dp),
         shape = RoundedCornerShape(0.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
-//        colors = CardDefaults.cardColors(
-//            containerColor = BlueSecondary,
-//        ),
     ) {
         Spacer(modifier = Modifier.height(8.dp))
         MifosLoanChargeDetailsText(
@@ -244,19 +245,31 @@ private fun MifosLoanChargeDetailsText(field: String, value: String) {
     }
 }
 
-// @Preview
-// @Composable
-// private fun LoanChargeScreenPreview() {
-//    LoanChargeScreen(
-//        loanAccountNumber = 1,
-//        state = state,
-//        onChargeCreated = {},
-//        onBackPressed = {},
-//        onRetry = {},
-//        refreshState = false,
-//        onRefresh = {},
-//    )
-// }
+private class LoanChargeUiStateProvider : PreviewParameterProvider<LoanChargeUiState> {
+
+    override val values: Sequence<LoanChargeUiState>
+        get() = sequenceOf(
+            LoanChargeUiState.Loading,
+            LoanChargeUiState.Error(Res.string.feature_loan_failed_to_load_loan_charges),
+            LoanChargeUiState.LoanChargesList(sampleLoanChargeList),
+        )
+}
+
+@Preview
+@Composable
+private fun LoanChargeScreenPreview(
+    @PreviewParameter(LoanChargeUiStateProvider::class) state: LoanChargeUiState,
+) {
+    LoanChargeScreen(
+        loanAccountNumber = 1,
+        state = state,
+        onChargeCreated = {},
+        onBackPressed = {},
+        onRetry = {},
+        refreshState = false,
+        onRefresh = {},
+    )
+}
 
 val sampleLoanChargeList = List(10) {
     ChargesEntity(name = "name $it", chargeId = it, amount = it.toDouble())

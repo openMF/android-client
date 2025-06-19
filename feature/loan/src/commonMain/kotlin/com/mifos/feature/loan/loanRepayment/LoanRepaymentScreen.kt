@@ -17,6 +17,7 @@ import androidclient.feature.loan.generated.resources.feature_loan_cancel
 import androidclient.feature.loan.generated.resources.feature_loan_dialog_action_ok
 import androidclient.feature.loan.generated.resources.feature_loan_dialog_action_pay_now
 import androidclient.feature.loan.generated.resources.feature_loan_dialog_message_sync_transaction
+import androidclient.feature.loan.generated.resources.feature_loan_failed_to_load_loan_repayment
 import androidclient.feature.loan.generated.resources.feature_loan_loan_amount_due
 import androidclient.feature.loan.generated.resources.feature_loan_loan_fees
 import androidclient.feature.loan.generated.resources.feature_loan_loan_in_arrears
@@ -74,11 +75,16 @@ import com.mifos.core.designsystem.component.MifosOutlinedTextField
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.component.MifosTextFieldDropdown
+import com.mifos.room.entities.PaymentTypeOptionEntity
 import com.mifos.room.entities.accounts.loans.LoanRepaymentRequestEntity
+import com.mifos.room.entities.accounts.loans.LoanRepaymentResponseEntity
 import com.mifos.room.entities.templates.loans.LoanRepaymentTemplateEntity
 import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
 import org.jetbrains.compose.resources.stringResource
+import org.jetbrains.compose.ui.tooling.preview.Preview
+import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
+import org.jetbrains.compose.ui.tooling.preview.PreviewParameterProvider
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -307,12 +313,6 @@ private fun LoanRepaymentContent(
 
         MifosDatePickerTextField(
             modifier = Modifier.fillMaxWidth(),
-//            value = SimpleDateFormat(
-//                "dd MMMM yyyy",
-//                Locale.getDefault(),
-//            ).format(
-//                repaymentDate,
-//            ),
             value = DateHelper.getDateAsStringFromLong(
                 repaymentDate,
             ),
@@ -399,9 +399,6 @@ private fun LoanRepaymentContent(
             Button(
                 modifier = Modifier
                     .heightIn(46.dp),
-//                colors = ButtonDefaults.buttonColors(
-//                    containerColor = if (isSystemInDarkTheme()) BluePrimaryDark else BluePrimary,
-//                ),
                 onClick = { navigateBack.invoke() },
             ) {
                 Text(text = stringResource(Res.string.feature_loan_cancel))
@@ -410,9 +407,6 @@ private fun LoanRepaymentContent(
             Button(
                 modifier = Modifier
                     .heightIn(46.dp),
-//                colors = ButtonDefaults.buttonColors(
-//                    containerColor = if (isSystemInDarkTheme()) BluePrimaryDark else BluePrimary,
-//                ),
                 onClick = {
                     if (isAllFieldsValid(
                             amount = amount,
@@ -472,31 +466,17 @@ private fun ShowLoanRepaymentConfirmationDialog(
             TextButton(
                 onClick = {
                     onDismiss()
-//                    if (Network.isOnline(context)) {
                     val request = LoanRepaymentRequestEntity(
                         accountNumber = loanAccountNumber,
                         paymentTypeId = paymentTypeId,
                         dateFormat = "dd MM yyyy",
                         locale = "en",
                         transactionAmount = total,
-//                        transactionDate = SimpleDateFormat(
-//                            "dd MMMM yyyy",
-//                            Locale.getDefault(),
-//                        ).format(
-//                            repaymentDate,
-//                        ),
                         transactionDate = DateHelper.getDateAsStringFromLong(
                             repaymentDate,
                         ),
                     )
                     submitPayment.invoke(request)
-//                    } else {
-//                        Toast.makeText(
-//                            context,
-//                            context.resources.getString(R.string.feature_loan_error_not_connected_internet),
-//                            Toast.LENGTH_SHORT,
-//                        ).show()
-//                    }
                 },
             ) {
                 Text(text = stringResource(Res.string.feature_loan_dialog_action_pay_now))
@@ -519,10 +499,6 @@ private fun ShowLoanRepaymentConfirmationDialog(
             Column {
                 Text(text = stringResource(Res.string.feature_loan_account_number) + " : " + loanAccountNumber)
                 Text(
-//                    text = stringResource(Res.string.feature_loan_repayment_date) + " : " + SimpleDateFormat(
-//                        "dd MMMM yyyy",
-//                        Locale.getDefault(),
-//                    ).format(repaymentDate),
                     text = stringResource(Res.string.feature_loan_repayment_date) + " : " +
                         DateHelper.getDateAsStringFromLong(repaymentDate),
                 )
@@ -580,19 +556,56 @@ private fun isAllFieldsValid(
     }
 }
 
-// @Composable
-// @Preview
-// private fun PreviewLoanRepaymentScreen() {
-//    LoanRepaymentScreen(
-//        loanId = 2,
-//        clientName = "Ben Kiko",
-//        loanProductName = "Product name",
-//        amountInArrears = 23.333,
-//        loanAccountNumber = 25.toString(),
-//        uiState = loanRepaymentUiState,
-//        navigateBack = {},
-//        onRetry = {},
-//        submitPayment = {},
-//        onLoanRepaymentDoesNotExistInDatabase = {},
-//    )
-// }
+private class LoanRepaymentScreenPreviewProvider :
+    PreviewParameterProvider<LoanRepaymentUiState> {
+
+    private val samplePaymentTypeOptions = mutableListOf(
+        PaymentTypeOptionEntity(
+            id = 1,
+            name = "Cash",
+            description = "Cash payment",
+            isCashPayment = true,
+            position = 1,
+        ),
+    )
+
+    private val sampleLoanRepaymentTemplate = LoanRepaymentTemplateEntity(
+        loanId = 101,
+        date = mutableListOf(2024, 7, 15),
+        amount = 1000.0,
+        principalPortion = 800.0,
+        interestPortion = 150.0,
+        feeChargesPortion = 30.0,
+        penaltyChargesPortion = 20.0,
+        paymentTypeOptions = samplePaymentTypeOptions,
+    )
+
+    override val values: Sequence<LoanRepaymentUiState>
+        get() = sequenceOf(
+            LoanRepaymentUiState.ShowLoanRepaymentExistInDatabase,
+            LoanRepaymentUiState.ShowLoanRepayTemplate(sampleLoanRepaymentTemplate),
+            LoanRepaymentUiState.ShowError(Res.string.feature_loan_failed_to_load_loan_repayment),
+            LoanRepaymentUiState.ShowLoanRepaymentDoesNotExistInDatabase,
+            LoanRepaymentUiState.ShowProgressbar,
+            LoanRepaymentUiState.ShowPaymentSubmittedSuccessfully(LoanRepaymentResponseEntity()),
+        )
+}
+
+@Composable
+@Preview
+private fun PreviewLoanRepaymentScreen(
+    @PreviewParameter(LoanRepaymentScreenPreviewProvider::class) loanRepaymentUiState: LoanRepaymentUiState,
+) {
+    LoanRepaymentScreen(
+        loanId = 2,
+        clientName = "Ben Kiko",
+        loanProductName = "Product name",
+        amountInArrears = 23.333,
+        loanAccountNumber = 25.toString(),
+        uiState = loanRepaymentUiState,
+        navigateBack = {},
+        onRetry = {},
+        submitPayment = {},
+        onLoanRepaymentDoesNotExistInDatabase = {},
+    )
+}

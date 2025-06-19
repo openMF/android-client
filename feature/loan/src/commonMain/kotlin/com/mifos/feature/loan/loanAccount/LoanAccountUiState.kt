@@ -9,13 +9,15 @@
  */
 package com.mifos.feature.loan.loanAccount
 
+import org.jetbrains.compose.resources.StringResource
+
 sealed class LoanAccountUiState {
 
     data object Loading : LoanAccountUiState()
 
     data class AllLoan(val productLoans: List<com.mifos.core.model.objects.organisations.LoanProducts>) : LoanAccountUiState()
 
-    data class Error(val message: String) : LoanAccountUiState()
+    data class Error(val message: StringResource) : LoanAccountUiState()
 
     data object LoanAccountCreatedSuccessfully : LoanAccountUiState()
 }

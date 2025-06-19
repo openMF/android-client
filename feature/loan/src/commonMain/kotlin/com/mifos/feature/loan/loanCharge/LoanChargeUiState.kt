@@ -10,12 +10,13 @@
 package com.mifos.feature.loan.loanCharge
 
 import com.mifos.room.entities.client.ChargesEntity
+import org.jetbrains.compose.resources.StringResource
 
 sealed class LoanChargeUiState {
 
     data object Loading : LoanChargeUiState()
 
-    data class Error(val message: String) : LoanChargeUiState()
+    data class Error(val message: StringResource) : LoanChargeUiState()
 
     data class LoanChargesList(val loanCharges: List<ChargesEntity>) : LoanChargeUiState()
 }

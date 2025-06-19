@@ -20,6 +20,7 @@ import androidclient.feature.loan.generated.resources.feature_loan_charge_due_da
 import androidclient.feature.loan.generated.resources.feature_loan_charge_name
 import androidclient.feature.loan.generated.resources.feature_loan_charge_select
 import androidclient.feature.loan.generated.resources.feature_loan_charge_submit
+import androidclient.feature.loan.generated.resources.feature_loan_failed_to_load_loan_charges
 import androidclient.feature.loan.generated.resources.feature_loan_locale
 import androidclient.feature.loan.generated.resources.feature_loan_message_field_required
 import androidx.compose.foundation.layout.Arrangement
@@ -74,6 +75,9 @@ import com.mifos.room.entities.client.ChargesEntity
 import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
 import org.jetbrains.compose.resources.stringResource
+import org.jetbrains.compose.ui.tooling.preview.Preview
+import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
+import org.jetbrains.compose.ui.tooling.preview.PreviewParameterProvider
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -189,7 +193,6 @@ internal fun LoanChargeDialogScreen(
                                 Text(
                                     text = stringResource(Res.string.feature_loan_charge_dialog),
                                     fontSize = MaterialTheme.typography.titleLarge.fontSize,
-//                                    color = BluePrimary,
                                 )
                                 IconButton(onClick = { onDismiss() }) {
                                     Icon(
@@ -247,12 +250,6 @@ internal fun LoanChargeDialogScreen(
                             )
 
                             MifosDatePickerTextField(
-//                                value = SimpleDateFormat(
-//                                    "dd MMMM yyyy",
-//                                    Locale.getDefault(),
-//                                ).format(
-//                                    dueDate,
-//                                ),
                                 value = DateHelper.getDateAsStringFromLong(
                                     dueDate,
                                 ),
@@ -280,12 +277,6 @@ internal fun LoanChargeDialogScreen(
                                             this.locale = locale
                                             this.dateFormat = "dd MMMM yyyy"
                                             this.chargeId = chargeId
-//                                            this.dueDate = SimpleDateFormat(
-//                                                "dd MMMM yyyy",
-//                                                Locale.getDefault(),
-//                                            ).format(
-//                                                dueDate,
-//                                            )
                                             this.dueDate = DateHelper.getDateAsStringFromLong(
                                                 dueDate,
                                             )
@@ -296,12 +287,6 @@ internal fun LoanChargeDialogScreen(
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .height(50.dp),
-//                                colors = ButtonColors(
-//                                    containerColor = BluePrimary,
-//                                    contentColor = White,
-//                                    disabledContainerColor = BluePrimary,
-//                                    disabledContentColor = Gray,
-//                                ),
                             ) {
                                 Text(
                                     text = stringResource(
@@ -337,11 +322,6 @@ internal fun LoanChargeDialogScreen(
                                 message = message,
                             )
                         }
-//                        Toast.makeText(
-//                            LocalContext.current,
-//                            stringResource(id = R.string.feature_loan_charge_created_successfully),
-//                            Toast.LENGTH_SHORT,
-//                        ).show()
                         onSuccess()
                     }
                 }
@@ -350,11 +330,24 @@ internal fun LoanChargeDialogScreen(
     }
 }
 
-// @Preview
-// @Composable
-// private fun LoanChargeDialogScreenPreview() {
-//    LoanChargeDialogScreen(state = state, onCreate = {}, onSuccess = { }, onDismiss = {})
-// }
+private class LoanChargeDialogUiStateProvider : PreviewParameterProvider<LoanChargeDialogUiState> {
+
+    override val values: Sequence<LoanChargeDialogUiState>
+        get() = sequenceOf(
+            LoanChargeDialogUiState.AllChargesV3(sampleChargeList),
+            LoanChargeDialogUiState.Error(Res.string.feature_loan_failed_to_load_loan_charges),
+            LoanChargeDialogUiState.Loading,
+            LoanChargeDialogUiState.LoanChargesCreatedSuccessfully,
+        )
+}
+
+@Preview
+@Composable
+private fun LoanChargeDialogScreenPreview(
+    @PreviewParameter(LoanChargeDialogUiStateProvider::class) state: LoanChargeDialogUiState,
+) {
+    LoanChargeDialogScreen(state = state, onCreate = {}, onSuccess = { }, onDismiss = {})
+}
 
 val sampleChargeList = List(10) {
     ChargesEntity(name = "name $it")

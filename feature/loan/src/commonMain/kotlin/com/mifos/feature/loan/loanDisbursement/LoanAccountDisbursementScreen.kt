@@ -60,10 +60,15 @@ import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.component.MifosTextFieldDropdown
 import com.mifos.core.model.objects.account.loan.LoanDisbursement
+import com.mifos.core.network.GenericResponse
 import com.mifos.room.entities.PaymentTypeOptionEntity
+import com.mifos.room.entities.templates.loans.LoanTransactionTemplate
 import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
 import org.jetbrains.compose.resources.stringResource
+import org.jetbrains.compose.ui.tooling.preview.Preview
+import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
+import org.jetbrains.compose.ui.tooling.preview.PreviewParameterProvider
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -111,11 +116,6 @@ internal fun LoanAccountDisbursementScreen(
         ) {
             when (uiState) {
                 is LoanAccountDisbursementUiState.ShowDisburseLoanSuccessfully -> {
-//                    Toast.makeText(
-//                        context,
-//                        stringResource(Res.string.feature_loan_loan_disburse_successfully),
-//                        Toast.LENGTH_LONG,
-//                    ).show()
                     val message = stringResource(Res.string.feature_loan_loan_disburse_successfully)
                     scope.launch {
                         snackbarHostState.showSnackbar(
@@ -216,9 +216,6 @@ private fun LoanAccountDisbursementContent(
         Spacer(modifier = Modifier.height(16.dp))
 
         MifosDatePickerTextField(
-//            value = SimpleDateFormat("dd MMMM yyyy", Locale.getDefault()).format(
-//                disbursementDate,
-//            ),
             value = DateHelper.getDateAsStringFromLong(
                 disbursementDate,
             ),
@@ -268,11 +265,7 @@ private fun LoanAccountDisbursementContent(
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp)
                 .heightIn(44.dp),
-//            colors = ButtonDefaults.buttonColors(
-//                containerColor = if (isSystemInDarkTheme()) BluePrimaryDark else BluePrimary,
-//            ),
             onClick = {
-//                if (Network.isOnline(context)) {
                 if (isFieldValid(amount = amount)) {
                     val date = DateHelper.getDateAsStringFromLong(
                         disbursementDate,
@@ -286,13 +279,6 @@ private fun LoanAccountDisbursementContent(
 
                     onDisburseLoan.invoke(loanDisbursement)
                 }
-//                } else {
-//                    Toast.makeText(
-//                        context,
-//                        context.resources.getString(R.string.feature_loan_error_network_not_available),
-//                        Toast.LENGTH_SHORT,
-//                    ).show()
-//                }
             },
         ) {
             Text(text = stringResource(Res.string.feature_loan_submit))
@@ -332,13 +318,26 @@ private fun isAmountValid(amount: String): Boolean {
     return amount.toDoubleOrNull() != null
 }
 
-// @Composable
-// @Preview
-// private fun PreviewLoanAccountDisbursementScreen() {
-//    LoanAccountDisbursementScreen(
-//        uiState = loanAccountDisbursementUiState,
-//        navigateBack = { },
-//        onRetry = { },
-//        onDisburseLoan = { },
-//    )
-// }
+private class LoanAccountDisbursementScreenPreviewProvider :
+    PreviewParameterProvider<LoanAccountDisbursementUiState> {
+    override val values: Sequence<LoanAccountDisbursementUiState>
+        get() = sequenceOf(
+            LoanAccountDisbursementUiState.ShowProgressbar,
+            LoanAccountDisbursementUiState.ShowError("An error occurred"),
+            LoanAccountDisbursementUiState.ShowDisburseLoanSuccessfully(GenericResponse()),
+            LoanAccountDisbursementUiState.ShowLoanTransactionTemplate(LoanTransactionTemplate()),
+        )
+}
+
+@Composable
+@Preview
+private fun PreviewLoanAccountDisbursementScreen(
+    @PreviewParameter(LoanAccountDisbursementScreenPreviewProvider::class) loanAccountDisbursementUiState: LoanAccountDisbursementUiState,
+) {
+    LoanAccountDisbursementScreen(
+        uiState = loanAccountDisbursementUiState,
+        navigateBack = { },
+        onRetry = { },
+        onDisburseLoan = { },
+    )
+}

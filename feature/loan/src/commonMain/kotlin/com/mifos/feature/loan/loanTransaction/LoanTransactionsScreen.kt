@@ -69,9 +69,14 @@ import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.model.objects.account.loan.Transaction
+import com.mifos.core.model.objects.account.loan.Type
 import com.mifos.core.ui.components.MifosEmptyUi
+import com.mifos.room.entities.accounts.loans.LoanWithAssociationsEntity
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
+import org.jetbrains.compose.ui.tooling.preview.Preview
+import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
+import org.jetbrains.compose.ui.tooling.preview.PreviewParameterProvider
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -395,12 +400,53 @@ private fun LoanTransactionsItemDetailsCard(
     }
 }
 
-// @Composable
-// @Preview
-// private fun PreviewLoanTransactions() {
-//    LoanTransactionsScreen(
-//        uiState = LoanTransactionsUiState.ShowLoanTransaction(LoanWithAssociationsEntity()),
-//        navigateBack = {},
-//        onRetry = {},
-//    )
-// }
+private class LoanTransactionsPreviewProvider : PreviewParameterProvider<LoanTransactionsUiState> {
+    val transaction =
+        Transaction(
+            id = 23,
+            officeName = "Main office",
+            date = listOf(2024, 6, 1),
+            principalPortion = 121.2,
+            penaltyChargesPortion = 32323.232,
+            overpaymentPortion = 23232.23,
+            feeChargesPortion = 323.3,
+            interestPortion = 232.3,
+            type = Type(
+                value = "Repayment",
+            ),
+        )
+
+    override val values: Sequence<LoanTransactionsUiState>
+        get() = sequenceOf(
+            LoanTransactionsUiState.ShowFetchingError(""),
+            LoanTransactionsUiState.ShowProgressBar,
+            LoanTransactionsUiState.ShowLoanTransaction(
+                LoanWithAssociationsEntity(
+                    transactions = listOf(
+                        transaction,
+                        transaction,
+                        transaction,
+                        transaction,
+                        transaction,
+                        transaction,
+                        transaction,
+                        transaction,
+                        transaction,
+                        transaction,
+                    ),
+                ),
+            ),
+        )
+}
+
+@Composable
+@Preview
+private fun PreviewLoanTransactions(
+    @PreviewParameter(LoanTransactionsPreviewProvider::class) loanTransactionsUiState: LoanTransactionsUiState,
+) {
+    LoanTransactionsScreen(
+        uiState = loanTransactionsUiState,
+        navigateBack = {},
+        onRetry = {},
+    )
+}

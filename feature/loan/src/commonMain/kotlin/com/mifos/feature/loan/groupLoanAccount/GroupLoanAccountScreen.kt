@@ -19,6 +19,7 @@ import androidclient.feature.loan.generated.resources.feature_loan_calculate_int
 import androidclient.feature.loan.generated.resources.feature_loan_cancel
 import androidclient.feature.loan.generated.resources.feature_loan_disbursed_date
 import androidclient.feature.loan.generated.resources.feature_loan_external_id
+import androidclient.feature.loan.generated.resources.feature_loan_failed_to_create_loan_account
 import androidclient.feature.loan.generated.resources.feature_loan_fund
 import androidclient.feature.loan.generated.resources.feature_loan_interest_calculation_period
 import androidclient.feature.loan.generated.resources.feature_loan_interest_type_method
@@ -87,6 +88,9 @@ import com.mifos.core.model.objects.template.loan.GroupLoanTemplate
 import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
 import org.jetbrains.compose.resources.stringResource
+import org.jetbrains.compose.ui.tooling.preview.Preview
+import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
+import org.jetbrains.compose.ui.tooling.preview.PreviewParameterProvider
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -158,7 +162,7 @@ internal fun GroupLoanAccountScreen(
                     )
                 }
 
-                is GroupLoanAccountUiState.Error -> MifosSweetError(message = state.message) {
+                is GroupLoanAccountUiState.Error -> MifosSweetError(message = stringResource(state.message)) {
                     onRetry()
                 }
 
@@ -172,11 +176,6 @@ internal fun GroupLoanAccountScreen(
                 }
 
                 is GroupLoanAccountUiState.GroupLoanAccountCreatedSuccessfully -> {
-//                    Toast.makeText(
-//                        LocalContext.current,
-//                        stringResource(Res.string.feature_loan_account_created_successfully),
-//                        Toast.LENGTH_SHORT,
-//                    ).show()
                     val message = stringResource(Res.string.feature_loan_account_created_successfully)
                     scope.launch {
                         snackbarHostState.showSnackbar(
@@ -369,9 +368,6 @@ private fun GroupLoanAccountContent(
         }
 
         MifosDatePickerTextField(
-//            value = SimpleDateFormat("dd MMMM yyyy", Locale.getDefault()).format(
-//                submissionDate,
-//            ),
             value = DateHelper.getDateAsStringFromLong(
                 submissionDate,
             ),
@@ -382,9 +378,6 @@ private fun GroupLoanAccountContent(
         )
 
         MifosDatePickerTextField(
-//            value = SimpleDateFormat("dd MMMM yyyy", Locale.getDefault()).format(
-//                disbursementDate,
-//            ),
             value = DateHelper.getDateAsStringFromLong(
                 disbursementDate,
             ),
@@ -593,10 +586,6 @@ private fun GroupLoanAccountContent(
                     amortizationType = selectedAmortizationId
                     this.groupId = groupId
                     dateFormat = "dd MMMM yyyy"
-//                    expectedDisbursementDate =
-//                        SimpleDateFormat("dd MMMM yyyy", Locale.getDefault()).format(
-//                            disbursementDate,
-//                        )
                     expectedDisbursementDate =
                         DateHelper.getDateAsStringFromLong(
                             disbursementDate,
@@ -627,9 +616,6 @@ private fun GroupLoanAccountContent(
                 .heightIn(44.dp)
                 .padding(start = 16.dp, end = 16.dp),
             contentPadding = PaddingValues(),
-//            colors = ButtonDefaults.buttonColors(
-//                containerColor = if (isSystemInDarkTheme()) BluePrimaryDark else BluePrimary,
-//            ),
         ) {
             Text(text = stringResource(Res.string.feature_loan_submit), fontSize = 16.sp)
         }
@@ -638,16 +624,28 @@ private fun GroupLoanAccountContent(
     }
 }
 
-// @Preview
-// @Composable
-// private fun GroupLoanAccountScreenPreview() {
-//    GroupLoanAccountScreen(
-//        groupId = 0,
-//        state = state,
-//        loanProducts = emptyList(),
-//        onBackPressed = {},
-//        onRetry = {},
-//        onLoanProductSelected = {},
-//        createLoanAccount = {},
-//    )
-// }
+private class GroupLoanAccountUiStateProvider : PreviewParameterProvider<GroupLoanAccountUiState> {
+
+    override val values: Sequence<GroupLoanAccountUiState>
+        get() = sequenceOf(
+            GroupLoanAccountUiState.Error(Res.string.feature_loan_failed_to_create_loan_account),
+            GroupLoanAccountUiState.Loading,
+            GroupLoanAccountUiState.GroupLoanAccountCreatedSuccessfully,
+        )
+}
+
+@Preview
+@Composable
+private fun GroupLoanAccountScreenPreview(
+    @PreviewParameter(GroupLoanAccountUiStateProvider::class) state: GroupLoanAccountUiState,
+) {
+    GroupLoanAccountScreen(
+        groupId = 0,
+        state = state,
+        loanProducts = emptyList(),
+        onBackPressed = {},
+        onRetry = {},
+        onLoanProductSelected = {},
+        createLoanAccount = {},
+    )
+}

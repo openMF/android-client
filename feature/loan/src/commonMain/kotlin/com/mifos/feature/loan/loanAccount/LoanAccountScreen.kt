@@ -90,6 +90,9 @@ import com.mifos.room.entities.templates.loans.LoanTemplate
 import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
 import org.jetbrains.compose.resources.stringResource
+import org.jetbrains.compose.ui.tooling.preview.Preview
+import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
+import org.jetbrains.compose.ui.tooling.preview.PreviewParameterProvider
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -143,7 +146,6 @@ fun LoanAccountScreen(
     val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
     MifosScaffold(
-//        icon = MifosIcons.arrowBack,
         title = stringResource(Res.string.feature_loan_application),
         onBackPressed = onBackPressed,
         snackbarHostState = snackbarHostState,
@@ -166,7 +168,7 @@ fun LoanAccountScreen(
                     state.productLoans[0].id?.let { fetchTemplate(it) }
                 }
 
-                is LoanAccountUiState.Error -> MifosSweetError(message = state.message) {
+                is LoanAccountUiState.Error -> MifosSweetError(message = stringResource(state.message)) {
                     onRetry()
                 }
 
@@ -368,9 +370,6 @@ private fun LoanAccountContent(
         )
 
         MifosDatePickerTextField(
-//            value = SimpleDateFormat("dd MMMM yyyy", Locale.getDefault()).format(
-//                submissionDate,
-//            ),
             value = DateHelper.getDateAsStringFromLong(
                 submissionDate,
             ),
@@ -381,9 +380,6 @@ private fun LoanAccountContent(
         )
 
         MifosDatePickerTextField(
-//            value = SimpleDateFormat("dd MMMM yyyy", Locale.getDefault()).format(
-//                disbursementDate,
-//            ),
             value = DateHelper.getDateAsStringFromLong(
                 disbursementDate,
             ),
@@ -596,10 +592,6 @@ private fun LoanAccountContent(
                     amortizationType = selectedAmortizationId
                     clientId = clientsId
                     dateFormat = "dd MMMM yyyy"
-//                    expectedDisbursementDate =
-//                        SimpleDateFormat("dd MMMM yyyy", Locale.getDefault()).format(
-//                            disbursementDate,
-//                        )
                     expectedDisbursementDate =
                         DateHelper.getDateAsStringFromLong(
                             disbursementDate,
@@ -611,8 +603,6 @@ private fun LoanAccountContent(
                     principal = principalAmount.toDouble()
                     productId = selectedLoanProductId
                     repaymentEvery = repaidEvery.toInt()
-//                    submittedOnDate =
-//                        SimpleDateFormat("dd MMMM yyyy", Locale.getDefault()).format(submissionDate)
                     submittedOnDate =
                         DateHelper.getDateAsStringFromLong(
                             disbursementDate,
@@ -630,7 +620,7 @@ private fun LoanAccountContent(
                     linkAccountId = selectedLinkSavingsId
                     interestRatePerPeriod = nominal.toDouble()
                 }
-                if (loanTemplate.dataTables.size > 0) {
+                if (loanTemplate.dataTables.isNotEmpty()) {
                     dataTable(loanTemplate.dataTables, loadPayload)
                 } else {
                     createLoanAccount(loadPayload)
@@ -641,9 +631,6 @@ private fun LoanAccountContent(
                 .heightIn(44.dp)
                 .padding(start = 16.dp, end = 16.dp),
             contentPadding = PaddingValues(),
-//            colors = ButtonDefaults.buttonColors(
-//                containerColor = if (isSystemInDarkTheme()) BluePrimaryDark else BluePrimary,
-//            ),
         ) {
             Text(text = stringResource(Res.string.feature_loan_submit), fontSize = 16.sp)
         }
@@ -652,18 +639,35 @@ private fun LoanAccountContent(
     }
 }
 
-// @Preview
-// @Composable
-// private fun LoanAccountScreenPreview() {
-//    LoanAccountScreen(
-//        clientId = 1,
-//        state = state,
-//        loanAccountTemplateState = LoanTemplate(),
-//        onBackPressed = {},
-//        onRetry = {},
-//        onLoanProductSelected = {},
-//        createLoanAccount = {},
-//        dataTable = { _, _ -> },
-//        fetchTemplate = {},
-//    )
-// }
+private class LoanAccountUiStateProvider : PreviewParameterProvider<LoanAccountUiState> {
+
+    override val values: Sequence<LoanAccountUiState>
+        get() = sequenceOf(
+            LoanAccountUiState.AllLoan(sampleLoanList),
+            LoanAccountUiState.Error(Res.string.feature_loan_application),
+            LoanAccountUiState.Loading,
+            LoanAccountUiState.LoanAccountCreatedSuccessfully,
+        )
+}
+
+@Preview
+@Composable
+private fun LoanAccountScreenPreview(
+    @PreviewParameter(LoanAccountUiStateProvider::class) state: LoanAccountUiState,
+) {
+    LoanAccountScreen(
+        clientId = 1,
+        state = state,
+        loanAccountTemplateState = LoanTemplate(),
+        onBackPressed = {},
+        onRetry = {},
+        onLoanProductSelected = {},
+        createLoanAccount = {},
+        dataTable = { _, _ -> },
+        fetchTemplate = {},
+    )
+}
+
+val sampleLoanList = List(10) {
+    LoanProducts(name = "Loan $it", id = it)
+}

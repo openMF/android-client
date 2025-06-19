@@ -49,9 +49,14 @@ import com.mifos.core.common.utils.DateHelper
 import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
+import com.mifos.core.model.objects.account.loan.Period
 import com.mifos.core.model.objects.account.loan.RepaymentSchedule
+import com.mifos.room.entities.accounts.loans.LoanWithAssociationsEntity
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
+import org.jetbrains.compose.ui.tooling.preview.Preview
+import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
+import org.jetbrains.compose.ui.tooling.preview.PreviewParameterProvider
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -307,12 +312,62 @@ private fun BottomBarLoanRepaymentSchedule(
     }
 }
 
-// @Composable
-// @Preview
-// private fun PreviewLoanRepaymentSchedule() {
-//    LoanRepaymentScheduleScreen(
-//        uiState = loanRepaymentScheduleUiState,
-//        navigateBack = { },
-//        onRetry = {},
-//    )
-// }
+private class LoanRepaymentSchedulePreviewProvider :
+    PreviewParameterProvider<LoanRepaymentScheduleUiState> {
+
+    val loanWithAssociations = LoanWithAssociationsEntity(
+        repaymentSchedule = RepaymentSchedule(
+            periods = listOf(
+                Period(
+                    complete = true,
+                    totalDueForPeriod = 123.232,
+                    totalPaidForPeriod = 34343.3434,
+                    dueDate = listOf(2024, 6, 1),
+                ),
+                Period(
+                    complete = true,
+                    totalDueForPeriod = 123.232,
+                    totalPaidForPeriod = 34343.3434,
+                    dueDate = listOf(2024, 6, 1),
+                ),
+                Period(
+                    complete = true,
+                    totalDueForPeriod = 123.232,
+                    totalPaidForPeriod = 34343.3434,
+                    dueDate = listOf(2024, 6, 1),
+                ),
+                Period(
+                    complete = true,
+                    totalDueForPeriod = 123.232,
+                    totalPaidForPeriod = 34343.3434,
+                    dueDate = listOf(2024, 6, 1),
+                ),
+                Period(
+                    complete = true,
+                    totalDueForPeriod = 123.232,
+                    totalPaidForPeriod = 34343.3434,
+                    dueDate = listOf(2024, 6, 1),
+                ),
+            ),
+        ),
+    )
+
+    override val values: Sequence<LoanRepaymentScheduleUiState>
+        get() = sequenceOf(
+            LoanRepaymentScheduleUiState.ShowFetchingError("Error fetching loan repayment schedule"),
+            LoanRepaymentScheduleUiState.ShowProgressbar,
+            LoanRepaymentScheduleUiState.ShowLoanRepaySchedule(loanWithAssociations),
+        )
+}
+
+@Composable
+@Preview
+private fun PreviewLoanRepaymentSchedule(
+    @PreviewParameter(LoanRepaymentSchedulePreviewProvider::class) loanRepaymentScheduleUiState: LoanRepaymentScheduleUiState,
+) {
+    LoanRepaymentScheduleScreen(
+        uiState = loanRepaymentScheduleUiState,
+        navigateBack = { },
+        onRetry = {},
+    )
+}

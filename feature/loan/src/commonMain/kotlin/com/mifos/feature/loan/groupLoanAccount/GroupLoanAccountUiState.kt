@@ -10,12 +10,13 @@
 package com.mifos.feature.loan.groupLoanAccount
 
 import com.mifos.core.model.objects.template.loan.GroupLoanTemplate
+import org.jetbrains.compose.resources.StringResource
 
 sealed class GroupLoanAccountUiState {
 
     data object Loading : GroupLoanAccountUiState()
 
-    data class Error(val message: String) : GroupLoanAccountUiState()
+    data class Error(val message: StringResource) : GroupLoanAccountUiState()
 
     data object GroupLoanAccountCreatedSuccessfully : GroupLoanAccountUiState()
 

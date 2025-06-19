@@ -58,10 +58,15 @@ import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosDatePickerTextField
 import com.mifos.core.designsystem.component.MifosOutlinedTextField
 import com.mifos.core.designsystem.component.MifosScaffold
+import com.mifos.core.model.objects.account.loan.LoanApproval
+import com.mifos.core.network.GenericResponse
 import com.mifos.room.entities.accounts.loans.LoanWithAssociationsEntity
 import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
 import org.jetbrains.compose.resources.stringResource
+import org.jetbrains.compose.ui.tooling.preview.Preview
+import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
+import org.jetbrains.compose.ui.tooling.preview.PreviewParameterProvider
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -96,7 +101,6 @@ internal fun LoanAccountApprovalScreen(
     MifosScaffold(
         snackbarHostState = snackBarHostState,
         title = stringResource(Res.string.feature_loan_approve_loan),
-//        icon = MifosIcons.arrowBack,
         onBackPressed = navigateBack,
     ) {
         Box(
@@ -306,9 +310,6 @@ private fun LoanAccountApprovalContent(
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp)
                 .heightIn(46.dp),
-//            colors = ButtonDefaults.buttonColors(
-//                containerColor = if (isSystemInDarkTheme()) BluePrimaryDark else BluePrimary,
-//            ),
             onClick = {
                 if (isFieldValid(amount = approvedAmount) &&
                     isFieldValid(amount = transactionAmount)
@@ -318,7 +319,7 @@ private fun LoanAccountApprovalContent(
                     )
 
                     onLoanApprove.invoke(
-                        com.mifos.core.model.objects.account.loan.LoanApproval(
+                        LoanApproval(
                             note = note,
                             approvedOnDate = approvedOnDate,
                             approvedLoanAmount = approvedAmount,
@@ -360,13 +361,26 @@ private fun isAmountValid(amount: String): Boolean {
     return amount.toDoubleOrNull() != null
 }
 
-// @Composable
-// @Preview
-// private fun PreviewLoanAccountApprovalScreen() {
-//    LoanAccountApprovalScreen(
-//        uiState = loanAccountApprovalUiState,
-//        loanWithAssociations = LoanWithAssociationsEntity(),
-//        navigateBack = { },
-//    ) {
-//    }
-// }
+private class LoanAccountApprovalScreenPreviewProvider :
+    PreviewParameterProvider<LoanAccountApprovalUiState> {
+    override val values: Sequence<LoanAccountApprovalUiState>
+        get() = sequenceOf(
+            LoanAccountApprovalUiState.Initial,
+            LoanAccountApprovalUiState.ShowProgressbar,
+            LoanAccountApprovalUiState.ShowLoanApproveSuccessfully(GenericResponse()),
+            LoanAccountApprovalUiState.ShowLoanApproveFailed("Loan approve failed"),
+        )
+}
+
+@Composable
+@Preview
+private fun PreviewLoanAccountApprovalScreen(
+    @PreviewParameter(LoanAccountApprovalScreenPreviewProvider::class) loanAccountApprovalUiState: LoanAccountApprovalUiState,
+) {
+    LoanAccountApprovalScreen(
+        uiState = loanAccountApprovalUiState,
+        loanWithAssociations = LoanWithAssociationsEntity(),
+        navigateBack = { },
+    ) {
+    }
+}
