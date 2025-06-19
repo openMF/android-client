@@ -53,13 +53,15 @@ fun MifosTextFieldDropdown(
     ) {
         OutlinedTextField(
             isError = errorMessage != null,
-            supportingText = {
-                errorMessage?.let {
+            supportingText = if (errorMessage != null) {
+                {
                     Text(
-                        text = it,
+                        text = errorMessage,
                         color = MaterialTheme.colorScheme.error,
                     )
                 }
+            } else {
+                null
             },
             value = value,
             onValueChange = onValueChanged,

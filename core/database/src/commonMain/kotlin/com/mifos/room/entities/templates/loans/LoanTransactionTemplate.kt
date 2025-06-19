@@ -14,10 +14,12 @@ import com.mifos.core.model.utils.IgnoredOnParcel
 import com.mifos.core.model.utils.Parcelable
 import com.mifos.core.model.utils.Parcelize
 import com.mifos.room.entities.PaymentTypeOptionEntity
+import kotlinx.serialization.Serializable
 
 /**
  * Created by Rajan Maurya on 14/02/17.
  */
+@Serializable
 @Parcelize
 data class LoanTransactionTemplate(
     @IgnoredOnParcel
