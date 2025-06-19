@@ -20,6 +20,7 @@ import com.mifos.room.utils.PrimaryKey
 import com.mifos.room.utils.UNDEFINED
 import com.mifos.room.utils.UNSPECIFIED
 import com.mifos.room.utils.VALUE_UNSPECIFIED
+import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 
 /**
@@ -67,6 +68,7 @@ import kotlinx.serialization.json.Json
         ),
     ],
 )
+@Serializable
 data class ChargesEntity(
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(index = true, name = INHERIT_FIELD_NAME, typeAffinity = UNDEFINED, collate = UNSPECIFIED, defaultValue = VALUE_UNSPECIFIED)

@@ -15,7 +15,9 @@ import com.mifos.core.model.objects.account.loan.InterestRateFrequencyType
 import com.mifos.core.model.objects.account.loan.InterestType
 import com.mifos.core.model.objects.account.loan.RepaymentFrequencyType
 import com.mifos.core.model.objects.account.loan.TermPeriodFrequencyType
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class Loan(
     val id: Int? = null,
 
@@ -97,7 +99,7 @@ data class Loan(
 
     val isNPA: Boolean? = null,
 
-    val overdueCharges: List<Any> = emptyList(),
-
-    val additionalProperties: MutableMap<String, Any> = mutableMapOf(),
+//    val overdueCharges: List<Any> = emptyList(),
+//
+//    val additionalProperties: MutableMap<String, Any> = mutableMapOf(),
 )

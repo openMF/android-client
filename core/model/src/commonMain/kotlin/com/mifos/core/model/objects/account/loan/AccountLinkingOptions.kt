@@ -11,10 +11,12 @@ package com.mifos.core.model.objects.account.loan
 
 import com.mifos.core.model.utils.Parcelable
 import com.mifos.core.model.utils.Parcelize
+import kotlinx.serialization.Serializable
 
 /**
  * Created by Tarun on 12/16/2016.
  */
+@Serializable
 @Parcelize
 data class AccountLinkingOptions(
     var accountNo: String? = null,

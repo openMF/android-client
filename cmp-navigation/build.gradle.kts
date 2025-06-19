@@ -40,7 +40,7 @@ kotlin {
             implementation(projects.feature.dataTable)
             implementation(projects.feature.groups)
             implementation(projects.feature.document)
-//            implementation(projects.feature.loan)
+            implementation(projects.feature.loan)
             implementation(projects.feature.note)
             implementation(projects.feature.offline)
             implementation(projects.feature.pathTracking)
