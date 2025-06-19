@@ -39,10 +39,12 @@ import com.mifos.core.model.utils.IgnoredOnParcel
 import com.mifos.core.model.utils.Parcelable
 import com.mifos.core.model.utils.Parcelize
 import com.mifos.room.entities.noncore.DataTableEntity
+import kotlinx.serialization.Serializable
 
 /**
  * Created by Rajan Maurya on 15/07/16.
  */
+@Serializable
 @Parcelize
 data class LoanTemplate(
     val clientId: Int? = null,

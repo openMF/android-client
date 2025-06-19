@@ -11,7 +11,9 @@ package com.mifos.room.entities.accounts.loans
 
 import com.mifos.room.utils.Entity
 import com.mifos.room.utils.PrimaryKey
+import kotlinx.serialization.Serializable
 
+@Serializable
 @Entity(
     tableName = "LoanRepaymentRequestEntity",
     indices = [],
