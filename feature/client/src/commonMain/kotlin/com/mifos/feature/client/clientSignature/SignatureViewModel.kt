@@ -62,7 +62,6 @@ class SignatureViewModel(
         name: String,
         description: String,
     ): MultiPartFormDataContent {
-        val mimeType = getMimeTypeFromPlatformFile(file)
         val byteArray = file.readBytes()
         return MultiPartFormDataContent(
             formData {
@@ -70,7 +69,7 @@ class SignatureViewModel(
                     "file",
                     byteArray,
                     Headers.build {
-                        append(HttpHeaders.ContentType, mimeType)
+                        append(HttpHeaders.ContentType, "image/png")
                         append(HttpHeaders.ContentDisposition, "filename=\"${file.name}\"")
                     },
                 )
@@ -78,18 +77,5 @@ class SignatureViewModel(
                 append("description", description)
             },
         )
-    }
-
-    fun getMimeTypeFromPlatformFile(file: PlatformFile): String {
-        return when (file.extension.lowercase()) {
-            "jpeg", "jpg" -> "image/jpeg"
-            "png" -> "image/png"
-            "pdf" -> "application/pdf"
-            "doc" -> "application/msword"
-            "docx" -> "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-            "xls" -> "application/vnd.ms-excel"
-            "xlsx" -> "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-            else -> "application/octet-stream"
-        }
     }
 }

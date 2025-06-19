@@ -49,9 +49,5 @@ kotlin {
             implementation(libs.androidx.paging.compose)
             implementation(libs.coil.network.okhttp)
         }
-        
-        desktopMain.dependencies {
-            implementation(libs.androidx.paging.compose)
-        }
     }
 }
