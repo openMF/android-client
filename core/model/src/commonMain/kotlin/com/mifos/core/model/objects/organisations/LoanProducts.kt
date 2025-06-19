@@ -160,7 +160,7 @@ data class LoanProducts(
     var maxTrancheCount: Int? = null,
 
     @SerialName("principalThresholdForLastInstallment")
-    var principalThresholdForLastInstallment: Int? = null,
+    var principalThresholdForLastInstallment: Double? = null,
 
     @SerialName("holdGuaranteeFunds")
     var holdGuaranteeFunds: Boolean? = null,

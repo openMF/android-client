@@ -24,6 +24,7 @@ import com.mifos.feature.dataTable.di.DataTableModule
 import com.mifos.feature.document.di.DocumentModule
 import com.mifos.feature.groups.di.GroupsModule
 import com.mifos.feature.individualCollectionSheet.di.CollectionSheetModule
+import com.mifos.feature.loan.di.LoanModule
 import com.mifos.feature.note.di.NoteModule
 import com.mifos.feature.offline.di.OfflineModule
 import com.mifos.feature.pathTracking.di.PathTrackingModule
@@ -71,7 +72,7 @@ object KoinModules {
             DataTableModule,
             GroupsModule,
             DocumentModule,
-//            LoanModule,
+            LoanModule,
             NoteModule,
             OfflineModule,
             PathTrackingModule,
