@@ -382,11 +382,11 @@ private fun LoanAccountSummaryContent(
                 }
 
                 loanWithAssociations.status.closedObligationsMet == true -> {
-                    { Logger.e("LoanAccountSummary"){ "TRANSACTION ACTION NOT SET"} }
+                    { Logger.e("LoanAccountSummary") { "TRANSACTION ACTION NOT SET" } }
                 }
 
                 else -> {
-                    { Logger.e("LoanAccountSummary"){ "TRANSACTION ACTION NOT SET"} }
+                    { Logger.e("LoanAccountSummary") { "TRANSACTION ACTION NOT SET" } }
                 }
             },
         ) {

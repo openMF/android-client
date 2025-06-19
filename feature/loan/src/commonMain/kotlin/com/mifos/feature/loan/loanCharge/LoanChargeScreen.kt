@@ -17,7 +17,6 @@ import androidclient.feature.loan.generated.resources.feature_loan_client_id
 import androidclient.feature.loan.generated.resources.feature_loan_failed_to_load_loan_charges
 import androidclient.feature.loan.generated.resources.feature_loan_loan_charges
 import androidclient.feature.loan.generated.resources.feature_loan_no_loan_charges
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -141,23 +140,21 @@ internal fun LoanChargeScreen(
                 onRefresh = onRefresh,
                 isRefreshing = refreshState,
             ) {
-                Box {
-                    when (state) {
-                        is LoanChargeUiState.Error -> MifosSweetError(message = stringResource(state.message)) {
-                            onRetry()
-                        }
+                when (state) {
+                    is LoanChargeUiState.Error -> MifosSweetError(message = stringResource(state.message)) {
+                        onRetry()
+                    }
 
-                        is LoanChargeUiState.Loading -> MifosCircularProgress()
+                    is LoanChargeUiState.Loading -> MifosCircularProgress()
 
-                        is LoanChargeUiState.LoanChargesList -> {
-                            if (state.loanCharges.isEmpty()) {
-                                MifosEmptyUi(
-                                    text = stringResource(Res.string.feature_loan_no_loan_charges),
-                                    icon = MifosIcons.FileTask,
-                                )
-                            } else {
-                                LoanChargesContent(loanCharges = state.loanCharges)
-                            }
+                    is LoanChargeUiState.LoanChargesList -> {
+                        if (state.loanCharges.isEmpty()) {
+                            MifosEmptyUi(
+                                text = stringResource(Res.string.feature_loan_no_loan_charges),
+                                icon = MifosIcons.FileTask,
+                            )
+                        } else {
+                            LoanChargesContent(loanCharges = state.loanCharges)
                         }
                     }
                 }

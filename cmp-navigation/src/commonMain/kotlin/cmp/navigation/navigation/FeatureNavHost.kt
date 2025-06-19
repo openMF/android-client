@@ -30,6 +30,7 @@ import com.mifos.feature.groups.navigation.navigateToCreateNewGroupScreen
 import com.mifos.feature.individualCollectionSheet.navigation.individualCollectionSheetNavGraph
 import com.mifos.feature.loan.navigation.loanNavGraph
 import com.mifos.feature.loan.navigation.navigateToGroupLoanScreen
+import com.mifos.feature.loan.navigation.navigateToLoanAccountSummaryScreen
 import com.mifos.feature.note.navigation.navigateToNoteScreen
 import com.mifos.feature.note.navigation.noteNavGraph
 import com.mifos.feature.offline.navigation.offlineNavGraph
@@ -69,7 +70,7 @@ internal fun FeatureNavHost(
             onClient = { id -> println("Client clicked: $id") },
             onCenter = { id -> println("Center clicked: $id") },
             onGroup = { id -> println("Group clicked: $id") },
-            onLoan = { id -> println("Loan clicked: $id") },
+            onLoan = appState.navController::navigateToLoanAccountSummaryScreen,
             onSavings = { id -> println("Savings clicked: $id") },
         )
 
@@ -107,7 +108,7 @@ internal fun FeatureNavHost(
             loadSavingsAccountSummary = appState.navController::navigateToSavingsAccountSummaryScreen,
             loadGroupDataTables = appState.navController::navigateToDataTable,
             loadNotes = appState.navController::navigateToNoteScreen,
-            loadLoanAccountSummary = { _ -> },
+            loadLoanAccountSummary = appState.navController::navigateToLoanAccountSummaryScreen,
             activateGroup = appState.navController::navigateToActivateScreen,
         )
 
