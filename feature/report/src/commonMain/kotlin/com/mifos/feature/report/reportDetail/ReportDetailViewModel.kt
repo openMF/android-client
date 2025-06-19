@@ -36,7 +36,7 @@ class ReportDetailViewModel(
     private val getRunReportProductUseCase: GetRunReportProductUseCase,
     private val getRunReportWithQueryUseCase: GetRunReportWithQueryUseCase,
     private val getRunReportOfficesUseCase: GetRunReportOfficesUseCase,
-    private val savedStateHandle: SavedStateHandle,
+    savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
 
     private val reportName =
@@ -117,36 +117,36 @@ class ReportDetailViewModel(
             }
         }
 
-//    fun fetchProduct(parameterName: String, currencyId: String, parameterType: Boolean) =
-//        viewModelScope.launch{
-//            getRunReportProductUseCase(parameterName, currencyId, parameterType).collect { result ->
-//                when (result) {
-//                    is DataState.Error ->
-//                        _reportDetailUiState.value =
-//                            ReportDetailUiState.Error(Res.string.feature_report_failed_to_load_report_details)
-//
-//                    is DataState.Loading -> Unit
-//
-//                    is DataState.Success -> {
-//                        _reportProducts.value = result.data.data
-//                        _reportDetailUiState.value = ReportDetailUiState.ParameterDetailsSuccess
-//                    }
-//                }
-//            }
-//        }
-//
-//    fun fetchRunReportWithQuery(reportName: String, options: MutableMap<String, String>) =
-//        viewModelScope.launch {
-//            getRunReportWithQueryUseCase(reportName, options).collect { result ->
-//                when (result) {
-//                    is DataState.Error ->
-//                        _reportDetailUiState.value =
-//                            ReportDetailUiState.Error(Res.string.feature_report_failed_to_load_report_details)
-//
-//                    is DataState.Loading -> _reportDetailUiState.value = ReportDetailUiState.Loading
-//
-//                    is DataState.Success -> _runReport.value = result.data
-//                }
-//            }
-//        }
+    fun fetchProduct(parameterName: String, currencyId: String, parameterType: Boolean) =
+        viewModelScope.launch{
+            getRunReportProductUseCase(parameterName, currencyId, parameterType).collect { result ->
+                when (result) {
+                    is DataState.Error ->
+                        _reportDetailUiState.value =
+                            ReportDetailUiState.Error(Res.string.feature_report_failed_to_load_report_details)
+
+                    is DataState.Loading -> Unit
+
+                    is DataState.Success -> {
+                        _reportProducts.value = result.data.data
+                        _reportDetailUiState.value = ReportDetailUiState.ParameterDetailsSuccess
+                    }
+                }
+            }
+        }
+
+    fun fetchRunReportWithQuery(reportName: String, options: MutableMap<String, String>) =
+        viewModelScope.launch {
+            getRunReportWithQueryUseCase(reportName, options).collect { result ->
+                when (result) {
+                    is DataState.Error ->
+                        _reportDetailUiState.value =
+                            ReportDetailUiState.Error(Res.string.feature_report_failed_to_load_report_details)
+
+                    is DataState.Loading -> _reportDetailUiState.value = ReportDetailUiState.Loading
+
+                    is DataState.Success -> _runReport.value = result.data
+                }
+            }
+        }
 }
