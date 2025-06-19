@@ -53,7 +53,7 @@ data class GroupLoanTemplate(
 
     var interestRateFrequencyType: InterestRateFrequencyType? = null,
 
-    var annualInterestRate: Int? = null,
+    var annualInterestRate: Double? = null,
 
     var isFloatingInterestRate: Boolean? = null,
 

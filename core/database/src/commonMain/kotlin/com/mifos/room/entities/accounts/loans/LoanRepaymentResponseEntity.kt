@@ -15,7 +15,9 @@ import com.mifos.core.model.utils.Parcelable
 import com.mifos.core.model.utils.Parcelize
 import com.mifos.room.utils.Entity
 import com.mifos.room.utils.PrimaryKey
+import kotlinx.serialization.Serializable
 
+@Serializable
 @Entity(
     tableName = "LoanRepaymentResponse",
     indices = [],

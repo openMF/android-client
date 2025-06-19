@@ -107,7 +107,7 @@ data class Product(
 
     var maxTrancheCount: Int? = null,
 
-    var principalThresholdForLastInstallment: Int? = null,
+    var principalThresholdForLastInstallment: Double? = null,
 
     var holdGuaranteeFunds: Boolean? = null,
 

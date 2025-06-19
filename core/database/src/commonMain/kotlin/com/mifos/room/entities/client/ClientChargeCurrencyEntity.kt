@@ -18,7 +18,9 @@ import com.mifos.room.utils.PrimaryKey
 import com.mifos.room.utils.UNDEFINED
 import com.mifos.room.utils.UNSPECIFIED
 import com.mifos.room.utils.VALUE_UNSPECIFIED
+import kotlinx.serialization.Serializable
 
+@Serializable
 @Parcelize
 @Entity(
     indices = [],
