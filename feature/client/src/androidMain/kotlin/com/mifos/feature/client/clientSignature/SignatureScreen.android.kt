@@ -11,7 +11,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
@@ -28,9 +27,14 @@ import io.github.vinceglb.filekit.PlatformFile
 import java.io.ByteArrayOutputStream
 import java.io.File
 
+@Composable
+actual fun SignatureScreen(onBackPressed: () -> Unit) {
+    SignatureScreen(onBackPressed = onBackPressed)
+}
+
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
-internal fun AndroidSignatureScreen (
+internal fun SignatureScreen (
     onBackPressed: () -> Unit,
     viewModel: SignatureViewModel = koinViewModel(),
     ) {
@@ -43,7 +47,6 @@ internal fun AndroidSignatureScreen (
     var image by remember { mutableStateOf<Bitmap?>(null) }
     var capturingViewBounds by remember { mutableStateOf<Rect?>(null) }
     val snackbarHostState = remember { SnackbarHostState() }
-    val scope = rememberCoroutineScope()
 
     val galleryLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent(),

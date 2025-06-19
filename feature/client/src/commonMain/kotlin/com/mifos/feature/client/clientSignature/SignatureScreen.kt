@@ -47,6 +47,12 @@ import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameterProvider
 
+
+@Composable
+expect fun SignatureScreen(
+    onBackPressed: () -> Unit,
+)
+
 @Composable
 internal fun SignatureScreen(
     state: SignatureUiState,
