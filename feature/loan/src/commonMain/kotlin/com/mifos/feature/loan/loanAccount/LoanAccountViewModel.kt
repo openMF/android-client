@@ -45,12 +45,11 @@ class LoanAccountViewModel(
     val loanAccountTemplateUiState = _loanAccountTemplateUiState.asStateFlow()
 
     fun loadAllLoans() = viewModelScope.launch {
-        val message = getString(Res.string.feature_loan_failed_to_load_loan)
         getAllLoanUseCase().collect { result ->
             when (result) {
                 is DataState.Error ->
                     _loanAccountUiState.value =
-                        LoanAccountUiState.Error(message)
+                        LoanAccountUiState.Error(Res.string.feature_loan_failed_to_load_loan)
 
                 is DataState.Loading -> _loanAccountUiState.value = LoanAccountUiState.Loading
 
@@ -63,12 +62,11 @@ class LoanAccountViewModel(
 
     fun loadLoanAccountTemplate(clientId: Int, productId: Int) =
         viewModelScope.launch {
-            val message = getString(Res.string.feature_loan_failed_to_load_template)
             getLoansAccountTemplateUseCase(clientId, productId).collect { result ->
                 when (result) {
                     is DataState.Error ->
                         _loanAccountUiState.value =
-                            LoanAccountUiState.Error(message)
+                            LoanAccountUiState.Error(Res.string.feature_loan_failed_to_load_template)
 
                     is DataState.Loading -> Unit
 
@@ -80,12 +78,11 @@ class LoanAccountViewModel(
         }
 
     fun createLoansAccount(loansPayload: LoansPayload) = viewModelScope.launch {
-        val message = getString(Res.string.feature_loan_failed_to_create_loan_account)
         createLoanAccountUseCase(loansPayload).collect { result ->
             when (result) {
                 is DataState.Error ->
                     _loanAccountUiState.value =
-                        LoanAccountUiState.Error(message)
+                        LoanAccountUiState.Error(Res.string.feature_loan_failed_to_create_loan_account)
 
                 is DataState.Loading -> _loanAccountUiState.value = LoanAccountUiState.Loading
 

@@ -42,12 +42,11 @@ class LoanChargeViewModel(
     }
 
     fun loadLoanChargesList(loanAccountNumber: Int) = viewModelScope.launch {
-        val message = getString(Res.string.feature_loan_failed_to_load_loan_charges)
         getListOfLoanChargesUseCase(loanAccountNumber).collect { result ->
             when (result) {
                 is DataState.Error ->
                     _loanChargeUiState.value =
-                        LoanChargeUiState.Error(message)
+                        LoanChargeUiState.Error(Res.string.feature_loan_failed_to_load_loan_charges)
 
                 is DataState.Loading -> _loanChargeUiState.value = LoanChargeUiState.Loading
 

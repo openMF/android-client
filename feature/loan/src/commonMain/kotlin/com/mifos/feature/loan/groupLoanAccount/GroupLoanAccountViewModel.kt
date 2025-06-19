@@ -44,12 +44,11 @@ class GroupLoanAccountViewModel(
     val loanProducts = _loanProducts.asStateFlow()
 
     fun loadAllLoans() = viewModelScope.launch {
-        val message = getString(Res.string.feature_loan_failed_to_load_loan)
         getAllLoanUseCase().collect { result ->
             when (result) {
                 is DataState.Error ->
                     _groupLoanAccountUiState.value =
-                        GroupLoanAccountUiState.Error(message)
+                        GroupLoanAccountUiState.Error(Res.string.feature_loan_failed_to_load_loan)
 
                 is DataState.Loading ->
                     _groupLoanAccountUiState.value =
@@ -62,12 +61,11 @@ class GroupLoanAccountViewModel(
 
     fun loadGroupLoansAccountTemplate(groupId: Int, productId: Int) =
         viewModelScope.launch {
-            val message = getString(Res.string.feature_loan_failed_to_load_template)
             getGroupLoansAccountTemplateUseCase(groupId, productId).collect { result ->
                 when (result) {
                     is DataState.Error ->
                         _groupLoanAccountUiState.value =
-                            GroupLoanAccountUiState.Error(message)
+                            GroupLoanAccountUiState.Error(Res.string.feature_loan_failed_to_load_template)
 
                     is DataState.Loading -> Unit
 
@@ -82,12 +80,11 @@ class GroupLoanAccountViewModel(
 
     fun createGroupLoanAccount(loansPayload: GroupLoanPayload) =
         viewModelScope.launch {
-            val message = getString(Res.string.feature_loan_failed_to_create_loan_account)
             createGroupLoansAccountUseCase(loansPayload).collect { result ->
                 when (result) {
                     is DataState.Error ->
                         _groupLoanAccountUiState.value =
-                            GroupLoanAccountUiState.Error(message)
+                            GroupLoanAccountUiState.Error(Res.string.feature_loan_failed_to_create_loan_account)
 
                     is DataState.Loading ->
                         _groupLoanAccountUiState.value =
