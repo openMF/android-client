@@ -1,5 +1,6 @@
 package com.mifos.feature.client.clientDetails
 
+import androidx.compose.ui.graphics.ImageBitmap
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -13,7 +14,23 @@ import com.mifos.core.network.utils.ImageLoaderUtils
 import com.mifos.room.entities.accounts.loans.LoanAccountEntity
 import com.mifos.room.entities.accounts.savings.SavingsAccountEntity
 import com.mifos.room.entities.client.ClientEntity
+import io.github.vinceglb.filekit.FileKit
+import io.github.vinceglb.filekit.ImageFormat
 import io.github.vinceglb.filekit.PlatformFile
+import io.github.vinceglb.filekit.absolutePath
+import io.github.vinceglb.filekit.compressImage
+import io.github.vinceglb.filekit.dialogs.compose.util.encodeToByteArray
+import io.github.vinceglb.filekit.dialogs.openFileSaver
+import io.github.vinceglb.filekit.div
+import io.github.vinceglb.filekit.filesDir
+import io.github.vinceglb.filekit.name
+import io.github.vinceglb.filekit.path
+import io.github.vinceglb.filekit.readBytes
+import io.github.vinceglb.filekit.write
+import io.ktor.client.request.forms.MultiPartFormDataContent
+import io.ktor.client.request.forms.formData
+import io.ktor.http.Headers
+import io.ktor.http.HttpHeaders
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
@@ -47,8 +64,9 @@ class ClientDetailsViewModel(
     private val _showLoading = MutableStateFlow(true)
     val showLoading = _showLoading.asStateFlow()
 
-    private fun uploadImage(id: Int, pngFile: PlatformFile) = viewModelScope.launch {
-        uploadClientImageUseCase(id, pngFile).collect { result ->
+    private fun uploadImage(id: Int, imageFile: PlatformFile)
+    = viewModelScope.launch {
+        uploadClientImageUseCase(id, createDocumentRequestBody(imageFile) ).collect { result ->
             when (result) {
                 is DataState.Error -> {
                     _clientDetailsUiState.value =
@@ -63,7 +81,7 @@ class ClientDetailsViewModel(
                 is DataState.Success -> {
                     _clientDetailsUiState.value = ClientDetailsUiState.ShowUploadImageSuccessfully(
                         result.data,
-                        pngFile.absolutePath,
+                        imageFile.absolutePath(),
                     )
                     _showLoading.value = false
                 }
@@ -107,18 +125,22 @@ class ClientDetailsViewModel(
         }
     }
 
-    fun saveClientImage(clientId: Int, bitmap: Bitmap) {
+    fun saveClientImage(clientId: Int, imageFile: PlatformFile) {
+        viewModelScope.launch {
+            saveAutoClientImage(clientId, imageFile)
+        }
+    }
+
+    suspend fun saveAutoClientImage(clientId: Int, imageFile: PlatformFile) {
         try {
-            val clientImageFile = File(
-                Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES),
-                "/client_image.png",
+            val bytes = FileKit.compressImage(
+                file = imageFile,
+                imageFormat = ImageFormat.PNG,
+                quality = 100
             )
-            clientImageFile.createNewFile()
-            val fOut = FileOutputStream(clientImageFile)
-            bitmap.compress(Bitmap.CompressFormat.PNG, 100, fOut)
-            fOut.flush()
-            fOut.close()
-            uploadImage(clientId, clientImageFile)
+            val outFile = FileKit.filesDir / "client_image_$clientId.png"
+            outFile.write(bytes)
+            uploadImage(clientId, outFile)
         } catch (e: Exception) {
             _clientDetailsUiState.value = ClientDetailsUiState.ShowError(e.message.toString())
         }
@@ -126,5 +148,22 @@ class ClientDetailsViewModel(
 
     suspend fun getClientImageUrl(clientId: Int): ImageResult {
         return imageLoaderUtils.loadImage(clientId)
+    }
+
+    private suspend fun createDocumentRequestBody(
+        imageFile: PlatformFile): MultiPartFormDataContent {
+        val byteArray = imageFile.readBytes()
+        return MultiPartFormDataContent(
+            formData {
+                append(
+                    "file",
+                    byteArray,
+                    Headers.build {
+                        append(HttpHeaders.ContentType, "image/png")
+                        append(HttpHeaders.ContentDisposition, "filename=\"${imageFile.name}\"")
+                    }
+                )
+            }
+        )
     }
 }

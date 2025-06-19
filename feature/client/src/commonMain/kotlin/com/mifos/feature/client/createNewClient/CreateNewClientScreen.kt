@@ -313,6 +313,8 @@ private fun CreateNewClientContent(
         }
     }
 
+    // TODO cameraLauncher
+
     val hasDatatables by rememberSaveable {
         mutableStateOf(
             clientTemplate.dataTables?.isNotEmpty() ?: false,

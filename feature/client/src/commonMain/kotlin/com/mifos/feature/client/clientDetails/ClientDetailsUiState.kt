@@ -5,7 +5,7 @@ package com.mifos.feature.client.clientDetails
  */
 sealed class ClientDetailsUiState {
 
-    data class ShowUploadImageSuccessfully(val response: ResponseBody?, val imagePath: String?) :
+    data class ShowUploadImageSuccessfully(val response: String, val imagePath: String?) :
         ClientDetailsUiState()
 
     data object ShowClientImageDeletedSuccessfully : ClientDetailsUiState()

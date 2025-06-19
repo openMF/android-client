@@ -109,6 +109,8 @@ import com.mifos.core.ui.util.DevicePreview
 import com.mifos.room.entities.accounts.loans.LoanAccountEntity
 import com.mifos.room.entities.accounts.savings.SavingAccountDepositTypeEntity
 import com.mifos.room.entities.accounts.savings.SavingsAccountEntity
+import io.github.vinceglb.filekit.dialogs.FileKitType
+import io.github.vinceglb.filekit.dialogs.compose.rememberFilePickerLauncher
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
@@ -146,43 +148,19 @@ internal fun ClientDetailsScreen(
     var showSelectImageDialog by remember { mutableStateOf(false) }
     val snackbarHostState = remember { SnackbarHostState() }
 
-    val file = context.createImageFile()
-    val cameraImageUri = FileProvider.getUriForFile(
-        Objects.requireNonNull(context),
-        context.packageName + ".provider",
-        file,
-    )
-    val permissionState = rememberMultiplePermissionsState(
-        permissions = listOf(
-            Manifest.permission.CAMERA,
-        ),
-    )
-
-    val galleryLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.GetContent(),
-        onResult = { uri ->
-            uri?.let {
-                imageUri = it
-                val bitmap = context.contentResolver.openInputStream(uri).use { stream ->
-                    BitmapFactory.decodeStream(stream).asImageBitmap().asAndroidBitmap()
-                }
+    val galleryLauncher = rememberFilePickerLauncher(
+        type = FileKitType.Image
+    ) { file ->
+        file?.let {
                 showSelectImageDialog = false
-                clientDetailsViewModel.saveClientImage(clientId, bitmap)
-            }
-        },
-    )
-
-    val cameraLauncher =
-        rememberLauncherForActivityResult(contract = ActivityResultContracts.TakePicture()) { status ->
-            if (status) {
-                imageUri = cameraImageUri
-                val bitmap = context.contentResolver.openInputStream(cameraImageUri).use { stream ->
-                    BitmapFactory.decodeStream(stream).asImageBitmap().asAndroidBitmap()
-                }
-                showSelectImageDialog = false
-                clientDetailsViewModel.saveClientImage(clientId, bitmap)
+                clientDetailsViewModel.saveClientImage(clientId, it)
             }
         }
+
+    val cameraLauncher = rememberPlatformPhotoLauncher(
+        clientId,
+        clientDetailsViewModel,
+    )
 
     LaunchedEffect(key1 = true) {
         clientDetailsViewModel.loadClientDetailsAndClientAccounts(clientId)
@@ -331,24 +309,10 @@ internal fun ClientDetailsScreen(
                     }
                 },
                 takeImage = {
-                    permissionState.permissions.forEach { per ->
-                        when (per.permission) {
-                            Manifest.permission.CAMERA -> {
-                                when {
-                                    per.status.isGranted -> {
-                                        cameraLauncher.launch(cameraImageUri)
-                                    }
-
-                                    else -> {
-                                        permissionState.launchMultiplePermissionRequest()
-                                    }
-                                }
-                            }
-                        }
-                    }
+                    cameraLauncher.launch()
                 },
                 uploadImage = {
-                    galleryLauncher.launch("image/*")
+                    galleryLauncher.launch()
                 },
                 deleteImage = {
                     clientDetailsViewModel.deleteClientImage(clientId)
@@ -374,6 +338,16 @@ internal fun ClientDetailsScreen(
     }
 }
 
+expect class PlatformPhotoLauncher {
+    fun launch()
+}
+
+@Composable
+expect fun rememberPlatformPhotoLauncher(
+    clientId: Int,
+    viewModel: ClientDetailsViewModel
+): PlatformPhotoLauncher
+
 @Composable
 private fun MifosClientDetailsScreen(
     loanAccountSelected: (Int) -> Unit,
@@ -386,6 +360,7 @@ private fun MifosClientDetailsScreen(
     val loanAccounts = clientDetailsViewModel.loanAccount.collectAsStateWithLifecycle().value
     val savingsAccounts = clientDetailsViewModel.savingsAccounts.collectAsStateWithLifecycle().value
     var showSelectImageDialog by remember { mutableStateOf(false) }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -501,15 +476,6 @@ private fun MifosClientDetailsScreen(
             )
         }
     }
-}
-
-private fun Context.createImageFile(): File {
-    val imageFileName = "client_image"
-    return File.createTempFile(
-        imageFileName,
-        ".jpg",
-        externalCacheDir,
-    )
 }
 
 @Composable

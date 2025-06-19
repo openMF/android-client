@@ -1,5 +1,6 @@
 package com.mifos.feature.client.clientSignature
 
+import android.annotation.SuppressLint
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Rect
@@ -15,6 +16,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.asAndroidBitmap
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.boundsInRoot
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalContext
@@ -23,6 +26,7 @@ import org.koin.androidx.compose.koinViewModel
 import androidx.core.graphics.createBitmap
 import com.mifos.core.common.utils.Constants
 import com.mifos.core.designsystem.component.MifosDrawingCanvas
+import com.mifos.core.designsystem.utility.PathState
 import io.github.vinceglb.filekit.PlatformFile
 import java.io.ByteArrayOutputStream
 import java.io.File
@@ -32,6 +36,7 @@ actual fun SignatureScreen(onBackPressed: () -> Unit) {
     SignatureScreen(onBackPressed = onBackPressed)
 }
 
+@SuppressLint("MutableCollectionMutableState")
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 internal fun SignatureScreen (
@@ -48,12 +53,14 @@ internal fun SignatureScreen (
     var capturingViewBounds by remember { mutableStateOf<Rect?>(null) }
     val snackbarHostState = remember { SnackbarHostState() }
 
+    var paths by remember { mutableStateOf(mutableListOf<PathState>()) }
+
     val galleryLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent(),
         onResult = { uri ->
             uri?.let {
                 val bitmap = context.contentResolver.openInputStream(uri)?.use { stream ->
-                    BitmapFactory.decodeStream(stream)
+                    BitmapFactory.decodeStream(stream).asImageBitmap().asAndroidBitmap()
                 }
                 bitmap?.let { uploadSignature(it, context.cacheDir, clientId, viewModel) }
             }
@@ -77,7 +84,7 @@ internal fun SignatureScreen (
         drawBrush = drawBrush,
         onResetDrawing = { },
         modifier = Modifier.onGloballyPositioned {
-            capturingViewBounds = android.graphics.Rect(
+            capturingViewBounds = Rect(
                 it.boundsInRoot().left.toInt(),
                 it.boundsInRoot().top.toInt(),
                 it.boundsInRoot().right.toInt(),
@@ -93,7 +100,7 @@ internal fun SignatureScreen (
     )
 }
 
-fun uploadSignature(
+private fun uploadSignature(
     bitmap: Bitmap,
     cacheDir: File,
     clientId: Int,

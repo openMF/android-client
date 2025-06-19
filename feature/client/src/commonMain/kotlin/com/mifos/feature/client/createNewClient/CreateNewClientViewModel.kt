@@ -71,7 +71,7 @@ class CreateNewClientViewModel(
                     CreateNewClientUiState.ShowError(Res.string.feature_client_failed_to_fetch_client_template)
             }.collect {
                 _createNewClientUiState.value =
-                    CreateNewClientUiState.ShowClientTemplate(it as ClientsTemplateEntity)
+                    CreateNewClientUiState.ShowClientTemplate(it.data ?: ClientsTemplateEntity())
             }
         }
     }
