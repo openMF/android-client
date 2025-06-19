@@ -11,20 +11,17 @@ package com.mifos.core.domain.useCases
 
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.repository.SignatureRepository
-import com.mifos.core.network.GenericResponse
-import io.ktor.http.content.PartData
-import kotlinx.coroutines.flow.Flow
+import io.ktor.client.request.forms.MultiPartFormDataContent
 
 class CreateDocumentUseCase(
     private val repository: SignatureRepository,
 ) {
 
-    operator fun invoke(
+    suspend operator fun invoke(
         entityType: String,
         entityId: Int,
-        name: String,
-        desc: String,
-        file: PartData,
-    ): Flow<DataState<GenericResponse>> =
-        repository.createDocument(entityType, entityId, name, desc, file)
+        file: MultiPartFormDataContent,
+    ): DataState<Unit> {
+        return repository.createDocument(entityType, entityId, file)
+    }
 }

@@ -17,6 +17,8 @@ import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.WindowCompat
 import cmp.shared.SharedApp
 import com.mifos.core.ui.util.ShareUtils
+import io.github.vinceglb.filekit.FileKit
+import io.github.vinceglb.filekit.dialogs.init
 
 /**
  * Main activity class.
@@ -36,6 +38,7 @@ class MainActivity : ComponentActivity() {
         installSplashScreen()
 
         ShareUtils.setActivityProvider { this }
+        FileKit.init(this)
 
         WindowCompat.setDecorFitsSystemWindows(window, false)
         enableEdgeToEdge()

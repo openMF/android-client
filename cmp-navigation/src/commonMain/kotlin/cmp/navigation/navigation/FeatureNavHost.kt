@@ -23,6 +23,7 @@ import com.mifos.feature.center.navigation.navigateCreateCenterScreenRoute
 import com.mifos.feature.checker.inbox.task.navigation.checkerInboxTaskNavGraph
 import com.mifos.feature.dataTable.navigation.dataTableNavGraph
 import com.mifos.feature.dataTable.navigation.navigateToDataTable
+import com.mifos.feature.document.navigation.documentListScreen
 import com.mifos.feature.groups.navigation.groupNavGraph
 import com.mifos.feature.groups.navigation.navigateToCreateNewGroupScreen
 import com.mifos.feature.individualCollectionSheet.navigation.individualCollectionSheetNavGraph
@@ -50,6 +51,8 @@ internal fun FeatureNavHost(
         modifier = modifier,
     ) {
         checkerInboxTaskNavGraph(appState.navController)
+
+        documentListScreen(onBackPressed = appState.navController::popBackStack)
 
         dataTableNavGraph(
             navController = appState.navController,
@@ -112,7 +115,6 @@ internal fun FeatureNavHost(
             changePasscode = {},
             languageChanged = {},
         )
-
         individualCollectionSheetNavGraph(
             navController = appState.navController,
             onBackPressed = appState.navController::popBackStack,

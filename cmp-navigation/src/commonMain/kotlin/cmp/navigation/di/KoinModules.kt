@@ -22,6 +22,7 @@ import com.mifos.feature.center.di.CenterModule
 import com.mifos.feature.checker.inbox.task.di.CheckerInboxTaskModule
 import com.mifos.feature.dataTable.di.DataTableModule
 import com.mifos.feature.report.di.ReportModule
+import com.mifos.feature.document.di.DocumentModule
 import com.mifos.feature.groups.di.GroupsModule
 import com.mifos.feature.individualCollectionSheet.di.CollectionSheetModule
 import com.mifos.feature.note.di.NoteModule
@@ -62,7 +63,6 @@ object KoinModules {
 
     private val featureModules = module {
         includes(
-//            AboutModule,
             ActivateModule,
             AuthModule,
             CenterModule,
@@ -70,8 +70,8 @@ object KoinModules {
 //            ClientModule,
             CollectionSheetModule,
             DataTableModule,
-//            DocumentModule,
             GroupsModule,
+            DocumentModule,
 //            LoanModule,
             NoteModule,
             OfflineModule,

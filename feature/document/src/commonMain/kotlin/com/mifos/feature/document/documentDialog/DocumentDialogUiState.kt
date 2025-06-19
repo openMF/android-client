@@ -9,11 +9,6 @@
  */
 package com.mifos.feature.document.documentDialog
 
-import com.mifos.core.network.GenericResponse
-
-/**
- * Created by Aditya Gupta on 16/08/23.
- */
 sealed class DocumentDialogUiState {
 
     object Initial : DocumentDialogUiState()
@@ -21,11 +16,11 @@ sealed class DocumentDialogUiState {
 
     data class ShowUploadError(val message: String) : DocumentDialogUiState()
 
-    data class ShowDocumentedCreatedSuccessfully(val genericResponse: GenericResponse) :
+    data object ShowDocumentedCreatedSuccessfully :
         DocumentDialogUiState()
 
     data class ShowError(val message: String) : DocumentDialogUiState()
 
-    data class ShowDocumentUpdatedSuccessfully(val genericResponse: GenericResponse) :
+    data object ShowDocumentUpdatedSuccessfully :
         DocumentDialogUiState()
 }
