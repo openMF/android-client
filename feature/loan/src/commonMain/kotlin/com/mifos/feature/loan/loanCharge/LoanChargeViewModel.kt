@@ -20,7 +20,6 @@ import com.mifos.core.domain.useCases.GetListOfLoanChargesUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import org.jetbrains.compose.resources.getString
 
 class LoanChargeViewModel(
     private val getListOfLoanChargesUseCase: GetListOfLoanChargesUseCase,

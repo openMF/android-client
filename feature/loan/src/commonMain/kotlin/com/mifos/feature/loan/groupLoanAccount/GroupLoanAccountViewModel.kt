@@ -25,7 +25,6 @@ import com.mifos.core.model.objects.payloads.GroupLoanPayload
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import org.jetbrains.compose.resources.getString
 
 class GroupLoanAccountViewModel(
     private val getAllLoanUseCase: GetAllLoanUseCase,

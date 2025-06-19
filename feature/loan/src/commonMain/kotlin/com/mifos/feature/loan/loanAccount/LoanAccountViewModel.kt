@@ -26,7 +26,6 @@ import com.mifos.room.entities.templates.loans.LoanTemplate
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import org.jetbrains.compose.resources.getString
 
 class LoanAccountViewModel(
     private val getAllLoanUseCase: GetAllLoanUseCase,
