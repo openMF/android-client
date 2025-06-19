@@ -152,7 +152,9 @@ internal fun ReportScreen(
                             ),
                         )
                         report.data.map { it.row }.forEach {
-                            Text(text = it[index], modifier = Modifier.padding(8.dp))
+                            if (it[index] != null) {
+                                Text(text = it[index]!!, modifier = Modifier.padding(8.dp))
+                            }
                         }
                     }
                 }

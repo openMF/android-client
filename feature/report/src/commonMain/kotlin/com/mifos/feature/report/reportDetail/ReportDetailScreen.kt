@@ -67,6 +67,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import co.touchlab.kermit.Logger
 import com.mifos.core.common.utils.Constants
 import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosScaffold
@@ -118,13 +119,16 @@ internal fun ReportDetailScreen(
     var obligationDateList by rememberSaveable { mutableStateOf(emptyList<DataRow>()) }
 
     LaunchedEffect(reportDetail) {
+        Logger.e("Revanth"){
+            reportDetail.second
+        }
         when (reportDetail.second) {
             Constants.LOAN_OFFICER_ID_SELECT -> {
                 viewModel.fetchOffices(reportDetail.second, officeId, true)
             }
 
             Constants.LOAN_PRODUCT_ID_SELECT -> {
-                viewModel.fetchProduct(reportDetail.second, currencyId, true)
+//                viewModel.fetchProduct(reportDetail.second, currencyId, true)
             }
 
             Constants.LOAN_PURPOSE_ID_SELECT -> {
@@ -136,14 +140,17 @@ internal fun ReportDetailScreen(
             }
 
             Constants.CURRENCY_ID_SELECT -> {
-                currencyId = reportDetail.first.first().row.first()
+//                currencyId = reportDetail.first.first().row.first()
                 currencyList = reportDetail.first
-                viewModel.fetchProduct(Constants.LOAN_PRODUCT_ID_SELECT, currencyId, true)
+//                viewModel.fetchProduct(Constants.LOAN_PRODUCT_ID_SELECT, currencyId, true)
             }
 
             Constants.OFFICE_ID_SELECT -> {
                 officeList = reportDetail.first
-                officeId = reportDetail.first.first().row.first().toInt()
+                officeId = reportDetail.first.first().row.first()?.toInt()?:-1
+                Logger.e("Revanth"){
+                    officeId.toString()
+                }
                 viewModel.fetchOffices(Constants.LOAN_OFFICER_ID_SELECT, officeId, true)
             }
 
@@ -172,7 +179,9 @@ internal fun ReportDetailScreen(
 
     LaunchedEffect(reportParameterList) {
         reportParameterList.forEach {
-            viewModel.fetchParameterDetails(it.row.first(), true)
+            if(it.row.first()!=null){
+                viewModel.fetchParameterDetails(it.row.first()!!, true)
+            }
         }
     }
 
@@ -194,7 +203,7 @@ internal fun ReportDetailScreen(
         runReport = { mapQuery ->
             runReportEnable = true
             reportItem.reportName?.let {
-                viewModel.fetchRunReportWithQuery(it, mapQuery)
+//                viewModel.fetchRunReportWithQuery(it, mapQuery)
             }
         },
     )
@@ -315,16 +324,16 @@ private fun RunReportContent(
         selectedGlAccount,
         selectedObligationDate,
     ) {
-        if (selectedOffice.isNotEmpty()) {
-            runReportDetail[Constants.R_OFFICE_ID] = selectedOfficeId
+        if (selectedOffice!=null && selectedOffice!!.isNotEmpty()) {
+            runReportDetail[Constants.R_OFFICE_ID] = selectedOfficeId!!
         }
 
         if (selectedLoanPurpose.isNotEmpty()) {
             runReportDetail[Constants.R_LOAN_PURPOSE_ID] = selectedLoanPurposeId
         }
 
-        if (selectedLoanOfficer.isNotEmpty()) {
-            runReportDetail[Constants.R_LOAN_OFFICER_ID] = selectedLoanOfficerId
+        if (selectedLoanOfficer!=null && selectedLoanOfficer!!.isNotEmpty()) {
+            runReportDetail[Constants.R_LOAN_OFFICER_ID] = selectedLoanOfficerId!!
         }
 
         if (selectedProducts.isNotEmpty()) {
@@ -432,11 +441,12 @@ private fun RunReportContent(
             }
         }
 
+
         Spacer(modifier = Modifier.height(16.dp))
 
-        if (officeList.isNotEmpty()) {
+        if (selectedOffice!=null &&  officeList.isNotEmpty()) {
             MifosTextFieldDropdown(
-                value = selectedOffice,
+                value = selectedOffice!!,
                 onValueChanged = {
                     selectedOffice = it
                 },
@@ -445,197 +455,197 @@ private fun RunReportContent(
                     selectedOfficeId = officeList[index].row.first()
                 },
                 label = stringResource(Res.string.feature_report_office),
-                options = officeList.map { it.row[1] },
+                options =officeList.mapNotNull { it.row.getOrNull(1) },
                 readOnly = true,
             )
             Spacer(modifier = Modifier.height(16.dp))
         }
-
-        if (loanPurposeList.isNotEmpty()) {
-            MifosTextFieldDropdown(
-                value = selectedLoanPurpose,
-                onValueChanged = {
-                    selectedLoanPurpose = it
-                },
-                onOptionSelected = { index, value ->
-                    selectedLoanPurpose = value
-                    selectedLoanPurposeId = loanPurposeList[index].row.first()
-                },
-                label = stringResource(Res.string.feature_report_loan_purpose),
-                options = loanPurposeList.map { it.row[1] },
-                readOnly = true,
-            )
-            Spacer(modifier = Modifier.height(16.dp))
-        }
-
-        if (reportOffices.isNotEmpty()) {
-            MifosTextFieldDropdown(
-                value = selectedLoanOfficer,
-                onValueChanged = {
-                    selectedLoanOfficer = it
-                },
-                onOptionSelected = { index, value ->
-                    selectedLoanOfficer = value
-                    selectedLoanOfficerId = reportOffices[index].row.first()
-                },
-                label = stringResource(Res.string.feature_report_loan_officer),
-                options = reportOffices.map { it.row[1] },
-                readOnly = true,
-            )
-            Spacer(modifier = Modifier.height(16.dp))
-        }
-
-        if (reportProducts.isNotEmpty()) {
-            MifosTextFieldDropdown(
-                value = selectedProducts,
-                onValueChanged = {
-                    selectedProducts = it
-                },
-                onOptionSelected = { index, value ->
-                    selectedProducts = value
-                    selectedProductsId = reportProducts[index].row.first()
-                },
-                label = stringResource(Res.string.feature_report_product),
-                options = reportProducts.map { it.row[1] },
-                readOnly = true,
-            )
-            Spacer(modifier = Modifier.height(16.dp))
-        }
-
-        if (fundList.isNotEmpty()) {
-            MifosTextFieldDropdown(
-                value = selectedFund,
-                onValueChanged = {
-                    selectedFund = it
-                },
-                onOptionSelected = { index, value ->
-                    selectedFund = value
-                    selectedFundId = fundList[index].row.first()
-                },
-                label = stringResource(Res.string.feature_report_fund),
-                options = fundList.map { it.row[1] },
-                readOnly = true,
-            )
-            Spacer(modifier = Modifier.height(16.dp))
-        }
-
-        if (currencyList.isNotEmpty()) {
-            MifosTextFieldDropdown(
-                value = selectedCurrency,
-                onValueChanged = {
-                    selectedCurrency = it
-                },
-                onOptionSelected = { index, value ->
-                    selectedCurrency = value
-                    selectedCurrencyId = currencyList[index].row.first()
-                },
-                label = stringResource(Res.string.feature_report_currency),
-                options = currencyList.map { it.row[1] },
-                readOnly = true,
-            )
-            Spacer(modifier = Modifier.height(16.dp))
-        }
-
-        if (parCalculatorList.isNotEmpty()) {
-            MifosTextFieldDropdown(
-                value = selectedParCalculator,
-                onValueChanged = {
-                    selectedParCalculator = it
-                },
-                onOptionSelected = { index, value ->
-                    selectedParCalculator = value
-                    selectedParCalculatorId = parCalculatorList[index].row.first()
-                },
-                label = stringResource(Res.string.feature_report_par_type),
-                options = parCalculatorList.map { it.row[1] },
-                readOnly = true,
-            )
-            Spacer(modifier = Modifier.height(16.dp))
-        }
-
-        if (savingsAccountDepositList.isNotEmpty()) {
-            MifosTextFieldDropdown(
-                value = selectedSavingsAccountDeposit,
-                onValueChanged = {
-                    selectedSavingsAccountDeposit = it
-                },
-                onOptionSelected = { index, value ->
-                    selectedSavingsAccountDeposit = value
-                    selectedSavingsAccountDepositId = savingsAccountDepositList[index].row.first()
-                },
-                label = stringResource(Res.string.feature_report_saving_account),
-                options = savingsAccountDepositList.map { it.row[1] },
-                readOnly = true,
-            )
-            Spacer(modifier = Modifier.height(16.dp))
-        }
-
-        if (glAccountList.isNotEmpty()) {
-            MifosTextFieldDropdown(
-                value = selectedGlAccount,
-                onValueChanged = {
-                    selectedGlAccount = it
-                },
-                onOptionSelected = { index, value ->
-                    selectedGlAccount = value
-                    selectedGlAccountId = glAccountList[index].row.first()
-                },
-                label = stringResource(Res.string.feature_report_gl_account),
-                options = glAccountList.map { it.row[1] },
-                readOnly = true,
-            )
-            Spacer(modifier = Modifier.height(16.dp))
-        }
-
-        if (obligationDateList.isNotEmpty()) {
-            MifosTextFieldDropdown(
-                value = selectedObligationDate,
-                onValueChanged = {
-                    selectedObligationDate = it
-                },
-                onOptionSelected = { index, value ->
-                    selectedObligationDate = value
-                    selectedObligationDateId = obligationDateList[index].row.first()
-                },
-                label = stringResource(Res.string.feature_report_obligation_date),
-                options = obligationDateList.map { it.row[1] },
-                readOnly = true,
-            )
-            Spacer(modifier = Modifier.height(16.dp))
-        }
+//
+//        if (loanPurposeList.isNotEmpty()) {
+//            MifosTextFieldDropdown(
+//                value = selectedLoanPurpose,
+//                onValueChanged = {
+//                    selectedLoanPurpose = it
+//                },
+//                onOptionSelected = { index, value ->
+//                    selectedLoanPurpose = value
+//                    selectedLoanPurposeId = loanPurposeList[index].row.first()
+//                },
+//                label = stringResource(Res.string.feature_report_loan_purpose),
+//                options = loanPurposeList.map { it.row[1] },
+//                readOnly = true,
+//            )
+//            Spacer(modifier = Modifier.height(16.dp))
+//        }
+//
+//        if (reportOffices.isNotEmpty()) {
+//            MifosTextFieldDropdown(
+//                value = selectedLoanOfficer,
+//                onValueChanged = {
+//                    selectedLoanOfficer = it
+//                },
+//                onOptionSelected = { index, value ->
+//                    selectedLoanOfficer = value
+//                    selectedLoanOfficerId = reportOffices[index].row.first()
+//                },
+//                label = stringResource(Res.string.feature_report_loan_officer),
+//                options = reportOffices.map { it.row[1] },
+//                readOnly = true,
+//            )
+//            Spacer(modifier = Modifier.height(16.dp))
+//        }
+//
+//        if (reportProducts.isNotEmpty()) {
+//            MifosTextFieldDropdown(
+//                value = selectedProducts,
+//                onValueChanged = {
+//                    selectedProducts = it
+//                },
+//                onOptionSelected = { index, value ->
+//                    selectedProducts = value
+//                    selectedProductsId = reportProducts[index].row.first()
+//                },
+//                label = stringResource(Res.string.feature_report_product),
+//                options = reportProducts.map { it.row[1] },
+//                readOnly = true,
+//            )
+//            Spacer(modifier = Modifier.height(16.dp))
+//        }
+//
+//        if (fundList.isNotEmpty()) {
+//            MifosTextFieldDropdown(
+//                value = selectedFund,
+//                onValueChanged = {
+//                    selectedFund = it
+//                },
+//                onOptionSelected = { index, value ->
+//                    selectedFund = value
+//                    selectedFundId = fundList[index].row.first()
+//                },
+//                label = stringResource(Res.string.feature_report_fund),
+//                options = fundList.map { it.row[1] },
+//                readOnly = true,
+//            )
+//            Spacer(modifier = Modifier.height(16.dp))
+//        }
+//
+//        if (currencyList.isNotEmpty()) {
+//            MifosTextFieldDropdown(
+//                value = selectedCurrency,
+//                onValueChanged = {
+//                    selectedCurrency = it
+//                },
+//                onOptionSelected = { index, value ->
+//                    selectedCurrency = value
+//                    selectedCurrencyId = currencyList[index].row.first()
+//                },
+//                label = stringResource(Res.string.feature_report_currency),
+//                options = currencyList.map { it.row[1] },
+//                readOnly = true,
+//            )
+//            Spacer(modifier = Modifier.height(16.dp))
+//        }
+//
+//        if (parCalculatorList.isNotEmpty()) {
+//            MifosTextFieldDropdown(
+//                value = selectedParCalculator,
+//                onValueChanged = {
+//                    selectedParCalculator = it
+//                },
+//                onOptionSelected = { index, value ->
+//                    selectedParCalculator = value
+//                    selectedParCalculatorId = parCalculatorList[index].row.first()
+//                },
+//                label = stringResource(Res.string.feature_report_par_type),
+//                options = parCalculatorList.map { it.row[1] },
+//                readOnly = true,
+//            )
+//            Spacer(modifier = Modifier.height(16.dp))
+//        }
+//
+//        if (savingsAccountDepositList.isNotEmpty()) {
+//            MifosTextFieldDropdown(
+//                value = selectedSavingsAccountDeposit,
+//                onValueChanged = {
+//                    selectedSavingsAccountDeposit = it
+//                },
+//                onOptionSelected = { index, value ->
+//                    selectedSavingsAccountDeposit = value
+//                    selectedSavingsAccountDepositId = savingsAccountDepositList[index].row.first()
+//                },
+//                label = stringResource(Res.string.feature_report_saving_account),
+//                options = savingsAccountDepositList.map { it.row[1] },
+//                readOnly = true,
+//            )
+//            Spacer(modifier = Modifier.height(16.dp))
+//        }
+//
+//        if (glAccountList.isNotEmpty()) {
+//            MifosTextFieldDropdown(
+//                value = selectedGlAccount,
+//                onValueChanged = {
+//                    selectedGlAccount = it
+//                },
+//                onOptionSelected = { index, value ->
+//                    selectedGlAccount = value
+//                    selectedGlAccountId = glAccountList[index].row.first()
+//                },
+//                label = stringResource(Res.string.feature_report_gl_account),
+//                options = glAccountList.map { it.row[1] },
+//                readOnly = true,
+//            )
+//            Spacer(modifier = Modifier.height(16.dp))
+//        }
+//
+//        if (obligationDateList.isNotEmpty()) {
+//            MifosTextFieldDropdown(
+//                value = selectedObligationDate,
+//                onValueChanged = {
+//                    selectedObligationDate = it
+//                },
+//                onOptionSelected = { index, value ->
+//                    selectedObligationDate = value
+//                    selectedObligationDateId = obligationDateList[index].row.first()
+//                },
+//                label = stringResource(Res.string.feature_report_obligation_date),
+//                options = obligationDateList.map { it.row[1] },
+//                readOnly = true,
+//            )
+//            Spacer(modifier = Modifier.height(16.dp))
+//        }
     }
 }
 
-private class ReportDetailUiStateProvider : PreviewParameterProvider<ReportDetailUiState> {
-
-    override val values: Sequence<ReportDetailUiState>
-        get() = sequenceOf(
-            ReportDetailUiState.Error(Res.string.feature_report_failed_to_load_report_details),
-            ReportDetailUiState.Loading,
-            ReportDetailUiState.ParameterDetailsSuccess,
-        )
-}
-
-@Preview
-@Composable
-private fun ReportDetailScreenPreview(
-    @PreviewParameter(ReportDetailUiStateProvider::class) state: ReportDetailUiState,
-) {
-    ReportDetailScreen(
-        reportItem = ClientReportTypeItem(),
-        state = state,
-        onBackPressed = {},
-        onRetry = {},
-        officeList = emptyList(),
-        loanPurposeList = emptyList(),
-        fundList = emptyList(),
-        currencyList = emptyList(),
-        parCalculatorList = emptyList(),
-        savingsAccountDepositList = emptyList(),
-        glAccountList = emptyList(),
-        obligationDateList = emptyList(),
-        reportOffices = emptyList(),
-        reportProducts = emptyList(),
-        runReport = {},
-    )
-}
+//private class ReportDetailUiStateProvider : PreviewParameterProvider<ReportDetailUiState> {
+//
+//    override val values: Sequence<ReportDetailUiState>
+//        get() = sequenceOf(
+//            ReportDetailUiState.Error(Res.string.feature_report_failed_to_load_report_details),
+//            ReportDetailUiState.Loading,
+//            ReportDetailUiState.ParameterDetailsSuccess,
+//        )
+//}
+//
+//@Preview
+//@Composable
+//private fun ReportDetailScreenPreview(
+//    @PreviewParameter(ReportDetailUiStateProvider::class) state: ReportDetailUiState,
+//) {
+//    ReportDetailScreen(
+//        reportItem = ClientReportTypeItem(),
+//        state = state,
+//        onBackPressed = {},
+//        onRetry = {},
+//        officeList = emptyList(),
+//        loanPurposeList = emptyList(),
+//        fundList = emptyList(),
+//        currencyList = emptyList(),
+//        parCalculatorList = emptyList(),
+//        savingsAccountDepositList = emptyList(),
+//        glAccountList = emptyList(),
+//        obligationDateList = emptyList(),
+//        reportOffices = emptyList(),
+//        reportProducts = emptyList(),
+//        runReport = {},
+//    )
+//}

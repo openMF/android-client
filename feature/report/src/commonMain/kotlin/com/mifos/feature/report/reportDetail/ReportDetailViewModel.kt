@@ -14,6 +14,7 @@ import androidclient.feature.report.generated.resources.feature_report_failed_to
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import co.touchlab.kermit.Logger
 import com.mifos.core.common.utils.Constants
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.domain.useCases.GetReportFullParameterListUseCase
@@ -63,6 +64,7 @@ class ReportDetailViewModel(
     val runReport = _runReport.asStateFlow()
 
     fun fetchFullParameterList(reportName: String, parameterType: Boolean) =
+
         viewModelScope.launch{
             getReportFullParameterListUseCase(reportName, parameterType).collect { result ->
                 when (result) {
@@ -82,6 +84,7 @@ class ReportDetailViewModel(
     fun fetchParameterDetails(parameterName: String, parameterType: Boolean) =
         viewModelScope.launch{
             getReportParameterDetailsUseCase(parameterName, parameterType).collect { result ->
+                Logger.e("Revanth Result"){result.toString()}
                 when (result) {
                     is DataState.Error -> Unit
 
@@ -98,6 +101,7 @@ class ReportDetailViewModel(
     fun fetchOffices(parameterName: String, officeId: Int, parameterType: Boolean) =
         viewModelScope.launch{
             getRunReportOfficesUseCase(parameterName, officeId, parameterType).collect { result ->
+                Logger.e("Revanth Result"){result.toString()}
                 when (result) {
                     is DataState.Error ->
                         _reportDetailUiState.value =
@@ -113,36 +117,36 @@ class ReportDetailViewModel(
             }
         }
 
-    fun fetchProduct(parameterName: String, currencyId: String, parameterType: Boolean) =
-        viewModelScope.launch{
-            getRunReportProductUseCase(parameterName, currencyId, parameterType).collect { result ->
-                when (result) {
-                    is DataState.Error ->
-                        _reportDetailUiState.value =
-                            ReportDetailUiState.Error(Res.string.feature_report_failed_to_load_report_details)
-
-                    is DataState.Loading -> Unit
-
-                    is DataState.Success -> {
-                        _reportProducts.value = result.data.data
-                        _reportDetailUiState.value = ReportDetailUiState.ParameterDetailsSuccess
-                    }
-                }
-            }
-        }
-
-    fun fetchRunReportWithQuery(reportName: String, options: MutableMap<String, String>) =
-        viewModelScope.launch {
-            getRunReportWithQueryUseCase(reportName, options).collect { result ->
-                when (result) {
-                    is DataState.Error ->
-                        _reportDetailUiState.value =
-                            ReportDetailUiState.Error(Res.string.feature_report_failed_to_load_report_details)
-
-                    is DataState.Loading -> _reportDetailUiState.value = ReportDetailUiState.Loading
-
-                    is DataState.Success -> _runReport.value = result.data
-                }
-            }
-        }
+//    fun fetchProduct(parameterName: String, currencyId: String, parameterType: Boolean) =
+//        viewModelScope.launch{
+//            getRunReportProductUseCase(parameterName, currencyId, parameterType).collect { result ->
+//                when (result) {
+//                    is DataState.Error ->
+//                        _reportDetailUiState.value =
+//                            ReportDetailUiState.Error(Res.string.feature_report_failed_to_load_report_details)
+//
+//                    is DataState.Loading -> Unit
+//
+//                    is DataState.Success -> {
+//                        _reportProducts.value = result.data.data
+//                        _reportDetailUiState.value = ReportDetailUiState.ParameterDetailsSuccess
+//                    }
+//                }
+//            }
+//        }
+//
+//    fun fetchRunReportWithQuery(reportName: String, options: MutableMap<String, String>) =
+//        viewModelScope.launch {
+//            getRunReportWithQueryUseCase(reportName, options).collect { result ->
+//                when (result) {
+//                    is DataState.Error ->
+//                        _reportDetailUiState.value =
+//                            ReportDetailUiState.Error(Res.string.feature_report_failed_to_load_report_details)
+//
+//                    is DataState.Loading -> _reportDetailUiState.value = ReportDetailUiState.Loading
+//
+//                    is DataState.Success -> _runReport.value = result.data
+//                }
+//            }
+//        }
 }

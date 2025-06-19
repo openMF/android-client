@@ -18,4 +18,4 @@ import kotlinx.serialization.Serializable
  */
 @Parcelize
 @Serializable
-data class DataRow(var row: List<String> = listOf()) : Parcelable
+data class DataRow(var row: List<String?> = listOf()) : Parcelable
