@@ -28,6 +28,8 @@ import com.mifos.feature.document.navigation.navigateToDocumentListScreen
 import com.mifos.feature.groups.navigation.groupNavGraph
 import com.mifos.feature.groups.navigation.navigateToCreateNewGroupScreen
 import com.mifos.feature.individualCollectionSheet.navigation.individualCollectionSheetNavGraph
+import com.mifos.feature.loan.navigation.addLoanAccountScreen
+import com.mifos.feature.loan.navigation.groupLoanScreen
 import com.mifos.feature.loan.navigation.loanNavGraph
 import com.mifos.feature.loan.navigation.navigateToGroupLoanScreen
 import com.mifos.feature.loan.navigation.navigateToLoanAccountSummaryScreen
@@ -129,6 +131,16 @@ internal fun FeatureNavHost(
             navController = appState.navController,
             onMoreInfoClicked = appState.navController::navigateToDataTable,
             onDocumentsClicked = appState.navController::navigateToDocumentListScreen,
+        )
+
+        groupLoanScreen { appState.navController.popBackStack() }
+
+        addLoanAccountScreen(
+            onBackPressed = appState.navController::popBackStack,
+            dataTable = { _, _ ->
+//                navController.navigateDataTableList(dataTable, payload, Constants.CLIENT_LOAN)
+//                TODO()
+            },
         )
     }
 }
