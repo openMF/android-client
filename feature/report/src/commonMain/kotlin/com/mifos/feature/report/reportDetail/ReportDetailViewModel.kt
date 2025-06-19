@@ -137,7 +137,13 @@ class ReportDetailViewModel(
 
     fun fetchRunReportWithQuery(reportName: String, options: MutableMap<String, String>) =
         viewModelScope.launch {
+            Logger.e("Revanth input"){
+                options.toString()
+            }
             getRunReportWithQueryUseCase(reportName, options).collect { result ->
+                Logger.e("Revanth result"){
+                    result.toString()
+                }
                 when (result) {
                     is DataState.Error ->
                         _reportDetailUiState.value =
