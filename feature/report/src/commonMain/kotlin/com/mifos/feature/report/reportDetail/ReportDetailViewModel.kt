@@ -10,7 +10,10 @@
 package com.mifos.feature.report.reportDetail
 
 import androidclient.feature.report.generated.resources.Res
+import androidclient.feature.report.generated.resources.feature_report_export_started
+import androidclient.feature.report.generated.resources.feature_report_exported_successfully
 import androidclient.feature.report.generated.resources.feature_report_failed_to_load_report_details
+import androidclient.feature.report.generated.resources.feature_report_unable_to_export
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -26,8 +29,10 @@ import com.mifos.core.model.objects.runreport.DataRow
 import com.mifos.core.model.objects.runreport.FullParameterListResponse
 import com.mifos.core.model.objects.runreport.client.ClientReportTypeItem
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import kotlinx.datetime.Clock
 import kotlinx.serialization.json.Json
 
 class ReportDetailViewModel(
@@ -47,6 +52,9 @@ class ReportDetailViewModel(
     private val _reportDetailUiState =
         MutableStateFlow<ReportDetailUiState>(ReportDetailUiState.Loading)
     val reportDetailUiState = _reportDetailUiState.asStateFlow()
+
+    private val _reportUiState = MutableStateFlow<ReportUiState>(ReportUiState.Initial)
+    val reportUiState: StateFlow<ReportUiState> = _reportUiState.asStateFlow()
 
     private val _reportParameterList = MutableStateFlow<List<DataRow>>(emptyList())
     val reportParameterList = _reportParameterList.asStateFlow()
@@ -155,4 +163,21 @@ class ReportDetailViewModel(
                 }
             }
         }
+
+    fun exportCsv(report: FullParameterListResponse) {
+        _reportUiState.value = ReportUiState.Message(Res.string.feature_report_export_started)
+
+        viewModelScope.launch {
+            val reportName = "report_${Clock.System.now()}"
+            val isSuccess = getFileHelper(reportName).exportCsv(report)
+            Logger.e("Revanth"){
+                isSuccess.toString()
+            }
+            _reportUiState.value = if (isSuccess) {
+                ReportUiState.Message(Res.string.feature_report_exported_successfully)
+            } else {
+                ReportUiState.Message(Res.string.feature_report_unable_to_export)
+            }
+        }
+    }
 }

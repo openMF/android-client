@@ -93,6 +93,7 @@ internal fun ReportDetailScreen(
     val state by viewModel.reportDetailUiState.collectAsStateWithLifecycle()
     val reportParameterList by viewModel.reportParameterList.collectAsStateWithLifecycle()
     val reportDetail by viewModel.reportDetail.collectAsStateWithLifecycle()
+    val reportUiState by viewModel.reportUiState.collectAsStateWithLifecycle()
     val reportOffices by viewModel.reportOffices.collectAsStateWithLifecycle()
     val reportProducts by viewModel.reportProducts.collectAsStateWithLifecycle()
     val runReportDetail by viewModel.runReport.collectAsStateWithLifecycle()
@@ -188,10 +189,12 @@ internal fun ReportDetailScreen(
 
     if(showReportScreen){
         ReportScreen(
-            state = ReportUiState.Initial,
+            state = reportUiState,
             report = runReportDetail!!,
             onBackPressed = onBackPressed,
-            exportReport = {}
+            exportReport = {
+                viewModel.exportCsv(runReportDetail!!)
+            }
         )
     }
     else{

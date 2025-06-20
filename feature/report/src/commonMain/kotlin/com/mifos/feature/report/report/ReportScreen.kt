@@ -42,6 +42,8 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.mifos.core.designsystem.component.MifosScaffold
+import com.mifos.core.designsystem.component.PermissionBox
+import com.mifos.core.designsystem.component.getRequiredPermissionsForExport
 import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.model.objects.runreport.FullParameterListResponse
 import com.mifos.feature.report.reportDetail.ReportUiState
@@ -97,27 +99,20 @@ import org.jetbrains.compose.ui.tooling.preview.PreviewParameterProvider
     }
 
     if (checkPermission) {
-//        PermissionBox(
-//            requiredPermissions = if (Build.VERSION.SDK_INT >= 33) {
-//                listOf(Manifest.permission.READ_MEDIA_IMAGES)
-//            } else {
-//                listOf(
-//                    Manifest.permission.READ_EXTERNAL_STORAGE,
-//                    Manifest.permission.WRITE_EXTERNAL_STORAGE,
-//                )
-//            },
-//            title = Res.string.feature_report_permission_required,
-//            description = Res.string.feature_report_external_approve_permission_description,
-//            confirmButtonText = Res.string.feature_report_proceed,
-//            dismissButtonText = Res.string.feature_report_dismiss,
-//            onGranted = {
-//                LaunchedEffect(key1 = Unit) {
-//                    scope.launch {
-//                        exportReport()
-//                    }
-//                }
-//            },
-//        )
+        PermissionBox(
+            requiredPermissions = getRequiredPermissionsForExport(),
+            title = stringResource(Res.string.feature_report_permission_required),
+            description = stringResource(Res.string.feature_report_external_approve_permission_description),
+            confirmButtonText = stringResource(Res.string.feature_report_proceed),
+            dismissButtonText = stringResource(Res.string.feature_report_dismiss),
+            onGranted = {
+                LaunchedEffect(key1 = Unit) {
+                    scope.launch {
+                        exportReport()
+                    }
+                }
+            },
+        )
     }
 
     MifosScaffold(
