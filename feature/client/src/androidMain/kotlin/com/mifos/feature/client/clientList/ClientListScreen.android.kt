@@ -1,3 +1,12 @@
+/*
+ * Copyright 2025 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ */
 package com.mifos.feature.client.clientList
 
 import androidclient.feature.client.generated.resources.Res
@@ -101,8 +110,8 @@ internal actual fun LazyColumnForClientListApi(
                             }
                         },
                     ),
-                colors = CardDefaults.outlinedCardColors(containerColor = cardColor)
-            ){
+                colors = CardDefaults.outlinedCardColors(containerColor = cardColor),
+            ) {
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -120,7 +129,7 @@ internal actual fun LazyColumnForClientListApi(
                         modifier = Modifier
                             .size(40.dp)
                             .clip(CircleShape)
-                            .border(1.dp, MaterialTheme.colorScheme.outline, CircleShape)
+                            .border(1.dp, MaterialTheme.colorScheme.outline, CircleShape),
                     )
                     Column(
                         modifier = Modifier
@@ -142,7 +151,7 @@ internal actual fun LazyColumnForClientListApi(
                         Image(
                             painter = painterResource(Res.drawable.feature_client_ic_done_all_black_24dp),
                             contentDescription = null,
-                            modifier = Modifier.size(20.dp)
+                            modifier = Modifier.size(20.dp),
                         )
                     }
                 }

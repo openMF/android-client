@@ -73,7 +73,7 @@ internal fun SurveySubmitScreen(
             LaunchedEffect(key1 = true) {
                 snackbarHostState.showSnackbar(
                     message = scorecardCreatedSuccess,
-                    duration = SnackbarDuration.Long
+                    duration = SnackbarDuration.Long,
                 )
             }
         }
@@ -87,7 +87,7 @@ internal fun SurveySubmitScreen(
             LaunchedEffect(key1 = true) {
                 snackbarHostState.showSnackbar(
                     message = uiState.message,
-                    duration = SnackbarDuration.Long
+                    duration = SnackbarDuration.Long,
                 )
             }
         }
@@ -159,7 +159,7 @@ internal fun SurveySubmitContent(
                         contentColor = MaterialTheme.colorScheme.onPrimary,
                         disabledContainerColor = MaterialTheme.colorScheme.surfaceVariant,
                         disabledContentColor = MaterialTheme.colorScheme.onSurfaceVariant,
-                    )
+                    ),
                 ) {
                     Text(text = stringResource(Res.string.feature_client_submit_survey))
                 }

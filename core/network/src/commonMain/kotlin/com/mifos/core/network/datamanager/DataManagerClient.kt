@@ -9,7 +9,6 @@
  */
 package com.mifos.core.network.datamanager
 
-import com.mifos.core.common.utils.DataState
 import com.mifos.core.common.utils.Page
 import com.mifos.core.datastore.UserPreferencesRepository
 import com.mifos.core.model.objects.clients.ActivatePayload

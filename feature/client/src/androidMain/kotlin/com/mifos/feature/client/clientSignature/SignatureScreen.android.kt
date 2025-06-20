@@ -1,3 +1,12 @@
+/*
+ * Copyright 2025 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ */
 package com.mifos.feature.client.clientSignature
 
 import android.annotation.SuppressLint
@@ -21,13 +30,13 @@ import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.boundsInRoot
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalContext
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import org.koin.androidx.compose.koinViewModel
 import androidx.core.graphics.createBitmap
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mifos.core.common.utils.Constants
 import com.mifos.core.designsystem.component.MifosDrawingCanvas
 import com.mifos.core.designsystem.utility.PathState
 import io.github.vinceglb.filekit.PlatformFile
+import org.koin.androidx.compose.koinViewModel
 import java.io.ByteArrayOutputStream
 import java.io.File
 
@@ -39,10 +48,10 @@ actual fun SignatureScreen(onBackPressed: () -> Unit) {
 @SuppressLint("MutableCollectionMutableState")
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
-internal fun SignatureScreen (
+internal fun SignatureScreen(
     onBackPressed: () -> Unit,
     viewModel: SignatureViewModel = koinViewModel(),
-    ) {
+) {
     val context = LocalContext.current
     val state by viewModel.signatureUiState.collectAsStateWithLifecycle()
     val clientId by viewModel.clientId.collectAsStateWithLifecycle()
@@ -118,6 +127,6 @@ private fun uploadSignature(
         clientId,
         file.name,
         "Signature",
-        platformFile
+        platformFile,
     )
 }

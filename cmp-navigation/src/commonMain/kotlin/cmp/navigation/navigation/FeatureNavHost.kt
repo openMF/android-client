@@ -9,7 +9,6 @@
  */
 package cmp.navigation.navigation
 
-import FormWidgetDTO
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -25,7 +24,7 @@ import com.mifos.feature.center.navigation.centerNavGraph
 import com.mifos.feature.center.navigation.navigateCreateCenterScreenRoute
 import com.mifos.feature.checker.inbox.task.navigation.checkerInboxTaskNavGraph
 import com.mifos.feature.client.navigation.clientNavGraph
-import com.mifos.feature.client.navigation.navigateClientDetailsScreen
+import com.mifos.feature.client.navigation.navigateCreateClientScreen
 import com.mifos.feature.dataTable.navigation.dataTableNavGraph
 import com.mifos.feature.dataTable.navigation.navigateDataTableList
 import com.mifos.feature.dataTable.navigation.navigateToDataTable
@@ -49,8 +48,6 @@ import com.mifos.feature.savings.navigation.navigateToSavingsAccountSummaryScree
 import com.mifos.feature.savings.navigation.savingsNavGraph
 import com.mifos.feature.search.navigation.searchNavGraph
 import com.mifos.feature.settings.navigation.settingsScreen
-import com.mifos.room.entities.noncore.DataTableEntity
-import kotlin.reflect.KFunction4
 
 @Composable
 internal fun FeatureNavHost(
@@ -75,7 +72,7 @@ internal fun FeatureNavHost(
 
         searchNavGraph(
             paddingValues = padding,
-            onCreateClient = { println("Create Client") },
+            onCreateClient = appState.navController::navigateCreateClientScreen,
             onCreateCenter = appState.navController::navigateCreateCenterScreenRoute,
             onCreateGroup = appState.navController::navigateToCreateNewGroupScreen,
             onClient = { id -> println("Client clicked: $id") },
@@ -161,10 +158,18 @@ internal fun FeatureNavHost(
             addSavingsAccount = { clientId ->
                 appState.navController.navigateToAddSavingsAccount(0, clientId, false)
             },
-            documents = { clientId -> appState.navController.navigateToDocumentListScreen(clientId,
-                Constants.ENTITY_TYPE_CLIENTS)},
-            moreClientInfo = { clientId -> appState.navController.navigateToDataTable(
-                Constants.DATA_TABLE_NAME_CLIENT, clientId) },
+            documents = { clientId ->
+                appState.navController.navigateToDocumentListScreen(
+                    clientId,
+                    Constants.ENTITY_TYPE_CLIENTS,
+                )
+            },
+            moreClientInfo = { clientId ->
+                appState.navController.navigateToDataTable(
+                    Constants.DATA_TABLE_NAME_CLIENT,
+                    clientId,
+                )
+            },
             notes = { clientId ->
                 appState.navController.navigateToNoteScreen(
                     clientId,
@@ -172,13 +177,15 @@ internal fun FeatureNavHost(
                 )
             },
             loanAccountSelected = { loanAccountNumber ->
-                appState.navController.navigateToLoanAccountSummaryScreen(loanAccountNumber) },
+                appState.navController.navigateToLoanAccountSummaryScreen(loanAccountNumber)
+            },
             savingsAccountSelected = { clientId, depositType ->
                 appState.navController.navigateToSavingsAccountSummaryScreen(clientId, depositType)
             },
             activateClient = { clientId ->
                 appState.navController.navigateToActivateScreen(
-                    clientId, Constants.ACTIVATE_CLIENT,
+                    clientId,
+                    Constants.ACTIVATE_CLIENT,
                 )
             },
             hasDatatables = appState.navController::navigateDataTableList,

@@ -156,7 +156,7 @@ internal fun ClientIdentifiersDialogScreen(
                             scope.launch {
                                 snackbarHostState.showSnackbar(
                                     message = clientIdentifierCreatedSuccess,
-                                    duration = SnackbarDuration.Short
+                                    duration = SnackbarDuration.Short,
                                 )
                             }
                             onIdentifierCreated()

@@ -139,8 +139,8 @@ internal fun ClientChargesScreen(
 
                     is ClientChargeUiState.Error ->
                         MifosSweetError(message = stringResource(state.message)) {
-                        onRetry()
-                    }
+                            onRetry()
+                        }
 
                     is ClientChargeUiState.Loading -> MifosCircularProgress()
                 }

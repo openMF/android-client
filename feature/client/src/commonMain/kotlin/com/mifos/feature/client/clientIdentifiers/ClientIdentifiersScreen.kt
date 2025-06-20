@@ -192,11 +192,10 @@ internal fun ClientIdentifiersScreen(
                         scope.launch {
                             snackbarHostState.showSnackbar(
                                 message = clientIdentifierDeleted,
-                                duration = SnackbarDuration.Short
+                                duration = SnackbarDuration.Short,
                             )
                         }
                     }
-
 
                     is ClientIdentifiersUiState.Loading -> MifosCircularProgress()
                 }

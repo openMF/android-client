@@ -1,6 +1,14 @@
+/*
+ * Copyright 2025 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ */
 package com.mifos.feature.client.clientDetails
 
-import androidx.compose.ui.graphics.ImageBitmap
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -19,12 +27,9 @@ import io.github.vinceglb.filekit.ImageFormat
 import io.github.vinceglb.filekit.PlatformFile
 import io.github.vinceglb.filekit.absolutePath
 import io.github.vinceglb.filekit.compressImage
-import io.github.vinceglb.filekit.dialogs.compose.util.encodeToByteArray
-import io.github.vinceglb.filekit.dialogs.openFileSaver
 import io.github.vinceglb.filekit.div
 import io.github.vinceglb.filekit.filesDir
 import io.github.vinceglb.filekit.name
-import io.github.vinceglb.filekit.path
 import io.github.vinceglb.filekit.readBytes
 import io.github.vinceglb.filekit.write
 import io.ktor.client.request.forms.MultiPartFormDataContent
@@ -64,9 +69,8 @@ class ClientDetailsViewModel(
     private val _showLoading = MutableStateFlow(true)
     val showLoading = _showLoading.asStateFlow()
 
-    private fun uploadImage(id: Int, imageFile: PlatformFile)
-    = viewModelScope.launch {
-        uploadClientImageUseCase(id, createDocumentRequestBody(imageFile) ).collect { result ->
+    private fun uploadImage(id: Int, imageFile: PlatformFile) = viewModelScope.launch {
+        uploadClientImageUseCase(id, createDocumentRequestBody(imageFile)).collect { result ->
             when (result) {
                 is DataState.Error -> {
                     _clientDetailsUiState.value =
@@ -136,7 +140,7 @@ class ClientDetailsViewModel(
             val bytes = FileKit.compressImage(
                 file = imageFile,
                 imageFormat = ImageFormat.PNG,
-                quality = 100
+                quality = 100,
             )
             val outFile = FileKit.filesDir / "client_image_$clientId.png"
             outFile.write(bytes)
@@ -151,7 +155,8 @@ class ClientDetailsViewModel(
     }
 
     private suspend fun createDocumentRequestBody(
-        imageFile: PlatformFile): MultiPartFormDataContent {
+        imageFile: PlatformFile,
+    ): MultiPartFormDataContent {
         val byteArray = imageFile.readBytes()
         return MultiPartFormDataContent(
             formData {
@@ -161,9 +166,9 @@ class ClientDetailsViewModel(
                     Headers.build {
                         append(HttpHeaders.ContentType, "image/png")
                         append(HttpHeaders.ContentDisposition, "filename=\"${imageFile.name}\"")
-                    }
+                    },
                 )
-            }
+            },
         )
     }
 }

@@ -60,11 +60,11 @@ import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.model.objects.clients.ClientAddressRequest
 import com.mifos.core.model.objects.clients.ClientAddressResponse
 import com.mifos.core.ui.util.DevicePreview
+import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameterProvider
 import org.koin.compose.viewmodel.koinViewModel
-import kotlinx.coroutines.launch
 
 @Composable
 internal fun PinpointClientScreen(
@@ -168,7 +168,7 @@ internal fun PinpointClientScreen(
                         )
                     }
 
-                    is PinPointClientUiState.Error -> MifosSweetError(message = stringResource( state.message)) {
+                    is PinPointClientUiState.Error -> MifosSweetError(message = stringResource(state.message)) {
                         onRetry()
                     }
 
@@ -176,12 +176,12 @@ internal fun PinpointClientScreen(
 
                     is PinPointClientUiState.SuccessMessage -> {
                         val message = stringResource(state.message)
-                            scope.launch {
-                                snackbarHostState.showSnackbar(
-                                    message = message,
-                                    duration = SnackbarDuration.Short
-                                )
-                            }
+                        scope.launch {
+                            snackbarHostState.showSnackbar(
+                                message = message,
+                                duration = SnackbarDuration.Short,
+                            )
+                        }
                     }
                 }
             }

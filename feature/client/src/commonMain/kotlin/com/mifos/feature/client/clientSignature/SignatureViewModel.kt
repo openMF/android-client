@@ -1,3 +1,12 @@
+/*
+ * Copyright 2025 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ */
 package com.mifos.feature.client.clientSignature
 
 import androidclient.feature.client.generated.resources.Res
@@ -9,7 +18,6 @@ import com.mifos.core.common.utils.Constants
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.domain.useCases.CreateDocumentUseCase
 import io.github.vinceglb.filekit.PlatformFile
-import io.github.vinceglb.filekit.extension
 import io.github.vinceglb.filekit.name
 import io.github.vinceglb.filekit.readBytes
 import io.ktor.client.request.forms.MultiPartFormDataContent
@@ -20,7 +28,6 @@ import io.ktor.utils.io.InternalAPI
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-
 
 class SignatureViewModel(
     private val createDocumentUseCase: CreateDocumentUseCase,
@@ -54,7 +61,6 @@ class SignatureViewModel(
                     SignatureUiState.SignatureUploadedSuccessfully
         }
     }
-
 
     @OptIn(InternalAPI::class)
     private suspend fun createDocumentRequestBody(

@@ -25,10 +25,6 @@ import com.mifos.room.entities.client.ClientPayloadEntity
 import com.mifos.room.entities.organisation.OfficeEntity
 import com.mifos.room.entities.organisation.StaffEntity
 import com.mifos.room.entities.templates.clients.ClientsTemplateEntity
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.launch
 import io.github.vinceglb.filekit.PlatformFile
 import io.github.vinceglb.filekit.extension
 import io.github.vinceglb.filekit.name
@@ -37,14 +33,16 @@ import io.ktor.client.request.forms.MultiPartFormDataContent
 import io.ktor.client.request.forms.formData
 import io.ktor.http.Headers
 import io.ktor.http.HttpHeaders
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.launch
 
 /**
  * Created by Aditya Gupta on 10/08/23.
  */
 class CreateNewClientViewModel(
     private val repository: CreateNewClientRepository,
-//    private val clientTemplateUseCase: ClientTemplateUseCase,
-//    private val getOfficeListUseCase: GetOfficeListUseCase,
 ) : ViewModel() {
 
     private val _createNewClientUiState =
@@ -155,9 +153,9 @@ class CreateNewClientViewModel(
                     Headers.build {
                         append(HttpHeaders.ContentType, "image/${file.extension}")
                         append(HttpHeaders.ContentDisposition, "filename=\"${file.name}\"")
-                    }
+                    },
                 )
-            }
+            },
         )
     }
 }

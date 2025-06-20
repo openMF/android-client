@@ -7,10 +7,9 @@
  *
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
-package com.mifos.feature.client.clientSignature
+package com.mifos.feature.client.utils
 
-import androidx.compose.runtime.Composable
-
-@Composable
-actual fun SignatureScreen(onBackPressed: () -> Unit) {
+actual class PlatformCameraLauncher {
+    actual fun launch() {
+    }
 }

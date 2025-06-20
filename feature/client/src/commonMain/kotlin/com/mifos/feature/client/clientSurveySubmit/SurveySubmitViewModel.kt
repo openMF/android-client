@@ -52,7 +52,7 @@ class SurveySubmitViewModel(
             .stateIn(
                 scope = viewModelScope,
                 started = SharingStarted.Lazily,
-                initialValue = SurveySubmitUiState.Initial
+                initialValue = SurveySubmitUiState.Initial,
             )
     }
 }

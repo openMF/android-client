@@ -205,15 +205,15 @@ class SyncClientsDialogViewModel(
                         this.loanRepaymentTemplate = loanRepaymentTemplate.data
                     }
                 }.collect { loanAndLoanRepayment ->
-                        mLoanAndRepaymentSyncIndex += 1
-                        _syncClientData.update { it.copy(singleSyncCount = mLoanAndRepaymentSyncIndex) }
-                        if (mLoanAndRepaymentSyncIndex != mLoanAccountList.size) {
-                            checkNetworkConnectionAndSyncLoanAndLoanRepayment()
-                        } else {
-                            setLoanAccountSyncStatusTrue()
-                            checkAccountsSyncStatusAndSyncAccounts()
-                        }
+                    mLoanAndRepaymentSyncIndex += 1
+                    _syncClientData.update { it.copy(singleSyncCount = mLoanAndRepaymentSyncIndex) }
+                    if (mLoanAndRepaymentSyncIndex != mLoanAccountList.size) {
+                        checkNetworkConnectionAndSyncLoanAndLoanRepayment()
+                    } else {
+                        setLoanAccountSyncStatusTrue()
+                        checkAccountsSyncStatusAndSyncAccounts()
                     }
+                }
             } catch (e: Throwable) {
                 onAccountSyncFailed(e)
             }
@@ -300,7 +300,7 @@ class SyncClientsDialogViewModel(
         taskWhenOnline: () -> Unit,
     ) {
         if (isNetworkAvailable.value) {
-        taskWhenOnline.invoke()
+            taskWhenOnline.invoke()
         } else {
             _syncClientsDialogUiState.value = SyncClientsDialogUiState.Error(
                 messageResId = Res.string.feature_client_error_network_not_available,
@@ -319,8 +319,8 @@ class SyncClientsDialogViewModel(
         return savingsAccounts
             ?.filter { savingsAccount ->
                 savingsAccount.depositType?.value == "Savings" &&
-                        savingsAccount.status?.active == true &&
-                        savingsAccount.depositType?.isRecurring == false
+                    savingsAccount.status?.active == true &&
+                    savingsAccount.depositType?.isRecurring == false
             } ?: emptyList()
     }
 }

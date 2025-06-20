@@ -11,6 +11,18 @@
 
 package com.mifos.feature.client.clientChargeDialog
 
+import androidclient.feature.client.generated.resources.Res
+import androidclient.feature.client.generated.resources.feature_client_charge_amount
+import androidclient.feature.client.generated.resources.feature_client_charge_cancel
+import androidclient.feature.client.generated.resources.feature_client_charge_created_successfully
+import androidclient.feature.client.generated.resources.feature_client_charge_dialog
+import androidclient.feature.client.generated.resources.feature_client_charge_locale
+import androidclient.feature.client.generated.resources.feature_client_charge_name
+import androidclient.feature.client.generated.resources.feature_client_charge_select
+import androidclient.feature.client.generated.resources.feature_client_charge_submit
+import androidclient.feature.client.generated.resources.feature_client_due_date
+import androidclient.feature.client.generated.resources.feature_client_failed_to_load_charges
+import androidclient.feature.client.generated.resources.feature_client_message_field_required
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -23,6 +35,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -30,6 +43,8 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SelectableDates
+import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -40,6 +55,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -47,23 +64,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidclient.feature.client.generated.resources.Res
-import androidclient.feature.client.generated.resources.feature_client_charge_amount
-import androidclient.feature.client.generated.resources.feature_client_charge_cancel
-import androidclient.feature.client.generated.resources.feature_client_charge_created_successfully
-import androidclient.feature.client.generated.resources.feature_client_charge_dialog
-import androidclient.feature.client.generated.resources.feature_client_charge_locale
-import androidclient.feature.client.generated.resources.feature_client_charge_name
-import androidclient.feature.client.generated.resources.feature_client_charge_select
-import androidclient.feature.client.generated.resources.feature_client_due_date
-import androidclient.feature.client.generated.resources.feature_client_failed_to_load_charges
-import androidclient.feature.client.generated.resources.feature_client_message_field_required
-import androidclient.feature.client.generated.resources.feature_client_charge_submit
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.SnackbarDuration
-import androidx.compose.material3.SnackbarHostState
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import com.mifos.core.common.utils.DateHelper
 import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosDatePickerTextField
@@ -74,12 +74,12 @@ import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.model.objects.payloads.ChargesPayload
 import com.mifos.core.model.objects.template.client.ChargeTemplate
 import com.mifos.core.ui.util.DevicePreview
+import kotlinx.coroutines.launch
+import kotlinx.datetime.Clock
+import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameterProvider
-import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
-import kotlinx.datetime.Clock
-import kotlinx.coroutines.launch
 
 @Composable
 internal fun ChargeDialogScreen(
@@ -274,7 +274,7 @@ internal fun ChargeDialogScreen(
                                     containerColor = MaterialTheme.colorScheme.primary,
                                     contentColor = MaterialTheme.colorScheme.onPrimary,
                                     disabledContainerColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.4f),
-                                    disabledContentColor = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.6f)
+                                    disabledContentColor = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.6f),
                                 ),
                             ) {
                                 Text(text = stringResource(Res.string.feature_client_charge_submit))
@@ -300,7 +300,7 @@ internal fun ChargeDialogScreen(
                         scope.launch {
                             snackbarHostState.showSnackbar(
                                 message = clientChargeCreatedSuccess,
-                                duration = SnackbarDuration.Short
+                                duration = SnackbarDuration.Short,
                             )
                         }
                         onCreated()

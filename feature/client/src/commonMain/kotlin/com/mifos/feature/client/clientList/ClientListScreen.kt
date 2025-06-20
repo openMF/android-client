@@ -132,7 +132,6 @@ internal fun ClientListScreen(
         floatingActionButton = {
             FloatingActionButton(
                 onClick = { createNewClient() },
-                containerColor = MaterialTheme.colorScheme.secondary,
             ) {
                 Icon(
                     imageVector = MifosIcons.AddFilled,
@@ -211,7 +210,7 @@ private fun SelectionModeTopAppBar(
     val selectedItems = currentSelectedItems.toMutableStateList()
     TopAppBar(
         colors = TopAppBarDefaults.topAppBarColors(
-//            containerColor = BlueSecondary,
+            containerColor = MaterialTheme.colorScheme.secondary,
         ),
         title = {
             Text(
@@ -228,7 +227,7 @@ private fun SelectionModeTopAppBar(
                 Icon(
                     imageVector = MifosIcons.Close,
                     contentDescription = "Close",
-                    tint = MaterialTheme.colorScheme.onSurface
+                    tint = MaterialTheme.colorScheme.onSurface,
                 )
             }
         },
@@ -318,7 +317,7 @@ private fun LazyColumnForClientListDb(clientList: List<ClientEntity>) {
                         modifier = Modifier
                             .size(40.dp)
                             .clip(CircleShape)
-                            .border(1.dp, MaterialTheme.colorScheme.outline, CircleShape)
+                            .border(1.dp, MaterialTheme.colorScheme.outline, CircleShape),
                     )
                     Column(
                         modifier = Modifier
@@ -340,7 +339,7 @@ private fun LazyColumnForClientListDb(clientList: List<ClientEntity>) {
                         Image(
                             painter = painterResource(Res.drawable.feature_client_ic_done_all_black_24dp),
                             contentDescription = null,
-                            modifier = Modifier.size(20.dp)
+                            modifier = Modifier.size(20.dp),
                         )
                     }
                 }

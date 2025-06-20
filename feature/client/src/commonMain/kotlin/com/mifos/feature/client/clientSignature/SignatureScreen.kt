@@ -47,7 +47,6 @@ import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameterProvider
 
-
 @Composable
 expect fun SignatureScreen(
     onBackPressed: () -> Unit,
@@ -107,7 +106,7 @@ internal fun SignatureScreen(
             }
         },
         snackbarHostState = snackbarHostState,
-        modifier = modifier
+        modifier = modifier,
     ) { paddingValues ->
         Column(modifier = Modifier.padding(paddingValues)) {
             when (state) {
@@ -120,7 +119,7 @@ internal fun SignatureScreen(
                     scope.launch {
                         snackbarHostState.showSnackbar(
                             message = getString(Res.string.feature_client_signature_uploaded_successfully),
-                            duration = SnackbarDuration.Short
+                            duration = SnackbarDuration.Short,
                         )
                     }
                     onBackPressed()
@@ -177,7 +176,7 @@ private fun SignatureScreenPreview(
         drawColor = Color.Black,
         drawBrush = 5f,
         onResetDrawing = {},
-        drawingContent = {}
+        drawingContent = {},
     )
 }
 
@@ -193,6 +192,6 @@ private fun SignatureScreenInitialPreview() {
         drawColor = Color.Black,
         drawBrush = 5f,
         onResetDrawing = {},
-        drawingContent = { Text("Drawing Content Area") }
+        drawingContent = { Text("Drawing Content Area") },
     )
 }

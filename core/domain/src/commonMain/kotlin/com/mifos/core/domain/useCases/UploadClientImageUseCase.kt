@@ -11,12 +11,12 @@ package com.mifos.core.domain.useCases
 
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.repository.ClientDetailsRepository
+import core.domain.generated.resources.Res
+import core.domain.generated.resources.core_domain_client_image_uploaded_successfully
 import io.ktor.client.request.forms.MultiPartFormDataContent
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import org.jetbrains.compose.resources.getString
-import core.domain.generated.resources.Res
-import core.domain.generated.resources.core_domain_client_image_uploaded_successfully
 
 /**
  * Created by Aditya Gupta on 18/03/24.

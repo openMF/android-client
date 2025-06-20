@@ -37,7 +37,6 @@ class ClientListViewModel(
         getClientList()
     }
 
-    // for refresh feature
     private val _isRefreshing = MutableStateFlow(false)
     val isRefreshing = _isRefreshing.asStateFlow()
 
