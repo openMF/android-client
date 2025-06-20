@@ -44,6 +44,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.model.objects.runreport.FullParameterListResponse
+import com.mifos.feature.report.reportDetail.ReportUiState
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
@@ -52,32 +53,32 @@ import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameterProvider
 
 
-@Composable
-internal fun ReportScreen(
-    onBackPressed: () -> Unit,
-    viewModel: ReportViewModel = koinViewModel(),
-) {
-    val report = viewModel.report
-    val state by viewModel.reportUiState.collectAsStateWithLifecycle()
+//@Composable
+//internal fun ReportScreen(
+//    onBackPressed: () -> Unit,
+//    viewModel: ReportViewModel = koinViewModel(),
+//) {
+//    val report = viewModel.report
+//    val state by viewModel.reportUiState.collectAsStateWithLifecycle()
+//
+//    ReportScreen(
+//        state = state,
+//        report = report,
+//        onBackPressed = onBackPressed,
+//        exportReport = {
+////            val reportDirectoryPath =
+////                Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
+////                    .toString() + getString(context, R.string.feature_report_export_csv_directory)
+////            viewModel.exportCsv(
+////                report = report,
+////                reportDirectoryPath = reportDirectoryPath,
+////            )
+//        },
+//    )
+//}
 
-    ReportScreen(
-        state = state,
-        report = report,
-        onBackPressed = onBackPressed,
-        exportReport = {
-//            val reportDirectoryPath =
-//                Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
-//                    .toString() + getString(context, R.string.feature_report_export_csv_directory)
-//            viewModel.exportCsv(
-//                report = report,
-//                reportDirectoryPath = reportDirectoryPath,
-//            )
-        },
-    )
-}
-
 @Composable
-internal fun ReportScreen(
+ fun ReportScreen(
     state: ReportUiState,
     report: FullParameterListResponse,
     onBackPressed: () -> Unit,
@@ -163,24 +164,24 @@ internal fun ReportScreen(
     }
 }
 
-private class ReportUiStateProvider : PreviewParameterProvider<ReportUiState> {
-
-    override val values: Sequence<ReportUiState>
-        get() = sequenceOf(
-            ReportUiState.Initial,
-            ReportUiState.Message(Res.string.feature_report_export_csv),
-        )
-}
-
-@Preview
-@Composable
-private fun ReportScreenPreview(
-    @PreviewParameter(ReportUiStateProvider::class) state: ReportUiState,
-) {
-    ReportScreen(
-        state = state,
-        report = FullParameterListResponse(emptyList(), emptyList()),
-        onBackPressed = { },
-        exportReport = { },
-    )
-}
+//private class ReportUiStateProvider : PreviewParameterProvider<ReportUiState> {
+//
+//    override val values: Sequence<ReportUiState>
+//        get() = sequenceOf(
+//            ReportUiState.Initial,
+//            ReportUiState.Message(Res.string.feature_report_export_csv),
+//        )
+//}
+//
+//@Preview
+//@Composable
+//private fun ReportScreenPreview(
+//    @PreviewParameter(ReportUiStateProvider::class) state: ReportUiState,
+//) {
+//    ReportScreen(
+//        state = state,
+//        report = FullParameterListResponse(emptyList(), emptyList()),
+//        onBackPressed = { },
+//        exportReport = { },
+//    )
+//}

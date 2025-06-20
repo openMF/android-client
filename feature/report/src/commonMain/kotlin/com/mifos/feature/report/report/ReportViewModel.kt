@@ -30,45 +30,45 @@ import okio.Path.Companion.toPath
 import okio.SYSTEM
 import okio.buffer
 import okio.use
-
-class ReportViewModel(
-    savedStateHandle: SavedStateHandle,
-) : ViewModel() {
-
-    private val reportParameterString =
-        savedStateHandle.getStateFlow(key = Constants.REPORT_PARAMETER_RESPONSE, initialValue = "")
-
-    val report: FullParameterListResponse =
-        Json.decodeFromString(reportParameterString.value)
-
-    private val _reportUiState = MutableStateFlow<ReportUiState>(ReportUiState.Initial)
-    val reportUiState = _reportUiState.asStateFlow()
-
-    fun exportCsv(report: FullParameterListResponse, reportDirectoryPath: String) {
-        viewModelScope.launch {
-            _reportUiState.value = ReportUiState.Message(Res.string.feature_report_export_started)
-
-            val timestamp = Clock.System.now().toEpochMilliseconds().toString()
-            val fileName = "$reportDirectoryPath/$timestamp.csv"
-            val path = fileName.toPath()
-
-            try {
-                FileSystem.SYSTEM.sink(path).buffer().use { sink ->
-                    val headers = report.columnHeaders.joinToString(",") { it.columnName }
-                    sink.writeUtf8(headers + "\n")
-
-                    for (row in report.data) {
-                        val line = row.row.joinToString(",")
-                        sink.writeUtf8(line + "\n")
-                    }
-                }
-
-                _reportUiState.value =
-                    ReportUiState.Message(Res.string.feature_report_exported_successfully)
-            } catch (e: Exception) {
-                _reportUiState.value =
-                    ReportUiState.Message(Res.string.feature_report_unable_to_export)
-            }
-        }
-    }
-}
+//
+//class ReportViewModel(
+//    savedStateHandle: SavedStateHandle,
+//) : ViewModel() {
+//
+//    private val reportParameterString =
+//        savedStateHandle.getStateFlow(key = Constants.REPORT_PARAMETER_RESPONSE, initialValue = "")
+//
+//    val report: FullParameterListResponse =
+//        Json.decodeFromString(reportParameterString.value)
+//
+//    private val _reportUiState = MutableStateFlow<ReportUiState>(ReportUiState.Initial)
+//    val reportUiState = _reportUiState.asStateFlow()
+//
+//    fun exportCsv(report: FullParameterListResponse, reportDirectoryPath: String) {
+//        viewModelScope.launch {
+//            _reportUiState.value = ReportUiState.Message(Res.string.feature_report_export_started)
+//
+//            val timestamp = Clock.System.now().toEpochMilliseconds().toString()
+//            val fileName = "$reportDirectoryPath/$timestamp.csv"
+//            val path = fileName.toPath()
+//
+//            try {
+//                FileSystem.SYSTEM.sink(path).buffer().use { sink ->
+//                    val headers = report.columnHeaders.joinToString(",") { it.columnName }
+//                    sink.writeUtf8(headers + "\n")
+//
+//                    for (row in report.data) {
+//                        val line = row.row.joinToString(",")
+//                        sink.writeUtf8(line + "\n")
+//                    }
+//                }
+//
+//                _reportUiState.value =
+//                    ReportUiState.Message(Res.string.feature_report_exported_successfully)
+//            } catch (e: Exception) {
+//                _reportUiState.value =
+//                    ReportUiState.Message(Res.string.feature_report_unable_to_export)
+//            }
+//        }
+//    }
+//}

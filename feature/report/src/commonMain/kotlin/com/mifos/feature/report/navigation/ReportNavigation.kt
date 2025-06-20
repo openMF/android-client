@@ -18,7 +18,7 @@ import androidx.navigation.navigation
 import com.mifos.core.common.utils.Constants
 import com.mifos.core.model.objects.runreport.FullParameterListResponse
 import com.mifos.core.model.objects.runreport.client.ClientReportTypeItem
-import com.mifos.feature.report.report.ReportScreen
+//import com.mifos.feature.report.report.ReportScreen
 import com.mifos.feature.report.reportDetail.ReportDetailScreen
 import com.mifos.feature.report.runReport.RunReportScreen
 import kotlinx.serialization.encodeToString
@@ -37,7 +37,6 @@ fun NavGraphBuilder.reportNavGraph(
         )
         reportDetailsScreenRoute(
             onBackPressed = navController::popBackStack,
-            runReport = navController::navigateReportScreens,
         )
         reportScreenRoute(
             onBackPressed = navController::popBackStack,
@@ -61,7 +60,6 @@ fun NavGraphBuilder.runReportScreenRoute(
 
 fun NavGraphBuilder.reportDetailsScreenRoute(
     onBackPressed: () -> Unit,
-    runReport: (FullParameterListResponse) -> Unit,
 ) {
     composable(
         route = ReportScreens.ReportDetailScreen.route,
@@ -69,7 +67,6 @@ fun NavGraphBuilder.reportDetailsScreenRoute(
     ) {
         ReportDetailScreen(
             onBackPressed = onBackPressed,
-            runReport = runReport,
         )
     }
 }
@@ -81,9 +78,9 @@ fun NavGraphBuilder.reportScreenRoute(
         route = ReportScreens.ReportScreen.route,
         arguments = listOf(navArgument(Constants.REPORT_PARAMETER_RESPONSE, builder = { type = NavType.StringType })),
     ) {
-        ReportScreen(
-            onBackPressed = onBackPressed,
-        )
+//        ReportScreen(
+//            onBackPressed = onBackPressed,
+//        )
     }
 }
 

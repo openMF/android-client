@@ -19,3 +19,10 @@ sealed class ReportDetailUiState {
 
     data object ParameterDetailsSuccess : ReportDetailUiState()
 }
+
+sealed class ReportUiState {
+
+    data object Initial : ReportUiState()
+
+    data class Message(val message: StringResource) : ReportUiState()
+}

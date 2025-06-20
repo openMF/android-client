@@ -76,6 +76,7 @@ import com.mifos.core.designsystem.component.MifosTextFieldDropdown
 import com.mifos.core.model.objects.runreport.DataRow
 import com.mifos.core.model.objects.runreport.FullParameterListResponse
 import com.mifos.core.model.objects.runreport.client.ClientReportTypeItem
+import com.mifos.feature.report.report.ReportScreen
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
@@ -86,7 +87,6 @@ import org.jetbrains.compose.ui.tooling.preview.PreviewParameterProvider
 @Composable
 internal fun ReportDetailScreen(
     onBackPressed: () -> Unit,
-    runReport: (FullParameterListResponse) -> Unit,
     viewModel: ReportDetailViewModel = koinViewModel(),
 ) {
     val reportItem = viewModel.reportItem
@@ -97,11 +97,12 @@ internal fun ReportDetailScreen(
     val reportProducts by viewModel.reportProducts.collectAsStateWithLifecycle()
     val runReportDetail by viewModel.runReport.collectAsStateWithLifecycle()
     var runReportEnable by remember { mutableStateOf(false) }
+    var showReportScreen by remember { mutableStateOf(false) }
 
     LaunchedEffect(runReportDetail) {
         runReportDetail?.let {
             if (runReportEnable) {
-                runReport(it)
+                showReportScreen=true
             }
         }
     }
@@ -185,28 +186,38 @@ internal fun ReportDetailScreen(
         }
     }
 
-    ReportDetailScreen(
-        reportItem = reportItem,
-        state = state,
-        onBackPressed = onBackPressed,
-        onRetry = {},
-        officeList = officeList,
-        loanPurposeList = loanPurposeList,
-        fundList = fundList,
-        currencyList = currencyList,
-        parCalculatorList = parCalculatorList,
-        savingsAccountDepositList = savingsAccountDepositList,
-        glAccountList = glAccountList,
-        obligationDateList = obligationDateList,
-        reportOffices = reportOffices,
-        reportProducts = reportProducts,
-        runReport = { mapQuery ->
-            runReportEnable = true
-            reportItem.reportName?.let {
-                viewModel.fetchRunReportWithQuery(it, mapQuery)
-            }
-        },
-    )
+    if(showReportScreen){
+        ReportScreen(
+            state = ReportUiState.Initial,
+            report = runReportDetail!!,
+            onBackPressed = onBackPressed,
+            exportReport = {}
+        )
+    }
+    else{
+        ReportDetailScreen(
+            reportItem = reportItem,
+            state = state,
+            onBackPressed = onBackPressed,
+            onRetry = {},
+            officeList = officeList,
+            loanPurposeList = loanPurposeList,
+            fundList = fundList,
+            currencyList = currencyList,
+            parCalculatorList = parCalculatorList,
+            savingsAccountDepositList = savingsAccountDepositList,
+            glAccountList = glAccountList,
+            obligationDateList = obligationDateList,
+            reportOffices = reportOffices,
+            reportProducts = reportProducts,
+            runReport = { mapQuery ->
+                runReportEnable = true
+                reportItem.reportName?.let {
+                    viewModel.fetchRunReportWithQuery(it, mapQuery)
+                }
+            },
+        )
+    }
 }
 
 @Composable
