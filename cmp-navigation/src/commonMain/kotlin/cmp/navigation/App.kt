@@ -66,6 +66,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.currentBackStackEntryAsState
 import cmp.navigation.components.MifosNavigationBar
 import cmp.navigation.components.NavigationConstants
@@ -195,18 +196,8 @@ fun App(
                             selected = index == selectedItemIndex,
                             onClick = {
                                 selectedItemIndex = index
-                                selectedItemIndex?.let {
-                                    appState.navController.apply {
-                                        navigate(navigationDrawerTabs[it].route) {
-                                            restoreState = true
-                                            launchSingleTop = true
-                                            graph.startDestinationRoute?.let {
-                                                popUpTo(route = HomeDestinationsScreen.SearchScreen.route) {
-                                                    saveState = true
-                                                }
-                                            }
-                                        }
-                                    }
+                                appState.navController.navigate(navigationDrawerTabs[index].route) {
+                                    launchSingleTop = true
                                 }
                                 scope.launch {
                                     drawerState.close()
@@ -275,10 +266,9 @@ fun App(
                                         navigate(target) {
                                             restoreState = true
                                             launchSingleTop = true
-                                            graph.startDestinationRoute?.let {
-                                                popUpTo(route = HomeDestinationsScreen.SearchScreen.route) {
-                                                    saveState = true
-                                                }
+                                            popUpTo(route = graph.findStartDestination().route.toString()) {
+                                                saveState = true
+                                                inclusive = false
                                             }
                                         }
                                     }
