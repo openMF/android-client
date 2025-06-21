@@ -61,6 +61,7 @@ import androidx.compose.ui.backhandler.BackHandler
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import androidx.paging.PagingData
+import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.ui.util.DevicePreview
@@ -117,7 +118,7 @@ internal fun ClientListScreen(
         }
     }
 
-    Scaffold(
+    MifosScaffold(
         modifier = Modifier
             .padding(paddingValues),
         topBar = {
@@ -132,6 +133,7 @@ internal fun ClientListScreen(
         floatingActionButton = {
             FloatingActionButton(
                 onClick = { createNewClient() },
+                containerColor = MaterialTheme.colorScheme.secondary,
             ) {
                 Icon(
                     imageVector = MifosIcons.AddFilled,
@@ -140,7 +142,7 @@ internal fun ClientListScreen(
             }
         },
         containerColor = MaterialTheme.colorScheme.surfaceContainer,
-        snackbarHost = { SnackbarHost(snackbarHostState) },
+        snackbarHostState = snackbarHostState,
     ) { padding ->
 
         PullToRefreshBox(

@@ -818,7 +818,7 @@ private fun MifosSelectImageDialog(
 
                 Button(
                     onClick = { takeImage() },
-                    colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.primary),
+                    colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.secondary),
                 ) {
                     Text(
                         text = stringResource(Res.string.feature_client_take_a_photo),
@@ -829,7 +829,7 @@ private fun MifosSelectImageDialog(
                 }
                 Button(
                     onClick = { uploadImage() },
-                    colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.primary),
+                    colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.secondary),
                 ) {
                     Text(
                         text = stringResource(Res.string.feature_client_upload_photo),
@@ -840,7 +840,7 @@ private fun MifosSelectImageDialog(
                 }
                 Button(
                     onClick = { removeImage() },
-                    colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.primary),
+                    colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.secondary),
                 ) {
                     Text(
                         text = stringResource(Res.string.feature_client_remove_existing_photo),
