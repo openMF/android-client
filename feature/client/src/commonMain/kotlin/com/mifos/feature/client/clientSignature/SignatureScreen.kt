@@ -15,122 +15,52 @@ import androidclient.feature.client.generated.resources.Res
 import androidclient.feature.client.generated.resources.feature_client_failed_to_add_signature
 import androidclient.feature.client.generated.resources.feature_client_signature_gallery
 import androidclient.feature.client.generated.resources.feature_client_signature_reset
-import androidclient.feature.client.generated.resources.feature_client_signature_title
-import androidclient.feature.client.generated.resources.feature_client_signature_uploaded_successfully
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.NavigationBar
-import androidx.compose.material3.NavigationBarItem
-import androidx.compose.material3.SnackbarDuration
-import androidx.compose.material3.SnackbarHostState
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.ExperimentalComposeUiApi
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
-import com.mifos.core.designsystem.component.MifosCircularProgress
-import com.mifos.core.designsystem.component.MifosScaffold
-import com.mifos.core.designsystem.component.MifosSweetError
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.mifos.core.common.utils.Constants
 import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.ui.util.DevicePreview
-import kotlinx.coroutines.launch
-import org.jetbrains.compose.resources.getString
+import io.github.vinceglb.filekit.PlatformFile
+import io.github.vinceglb.filekit.name
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameterProvider
-
-@Composable
-expect fun SignatureScreen(
-    onBackPressed: () -> Unit,
-)
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 internal fun SignatureScreen(
-    state: SignatureUiState,
     onBackPressed: () -> Unit,
-    onUploadFromCanvas: () -> Unit,
-    onUploadFromGallery: () -> Unit,
-    snackbarHostState: SnackbarHostState,
-    drawColor: Color,
-    drawBrush: Float,
-    onResetDrawing: () -> Unit,
-    modifier: Modifier = Modifier,
-    drawingContent: @Composable () -> Unit,
+    viewmodel: SignatureViewModel = koinViewModel(),
 ) {
-    var navigationSelectedItem by remember {
-        mutableIntStateOf(0)
-    }
+    val clientId by viewmodel.clientId.collectAsStateWithLifecycle()
+    val state by viewmodel.signatureUiState.collectAsStateWithLifecycle()
 
-    val scope = rememberCoroutineScope()
-
-    MifosScaffold(
-        title = stringResource(Res.string.feature_client_signature_title),
+    SignatureScreen(
+        state = state,
         onBackPressed = onBackPressed,
-        actions = {
-            IconButton(onClick = onUploadFromCanvas) {
-                Icon(imageVector = MifosIcons.Upload, contentDescription = null)
-            }
+        uploadSignature = { file ->
+            viewmodel.createDocument(
+                Constants.ENTITY_TYPE_CLIENTS,
+                clientId,
+                file.name,
+                "Signature",
+                file,
+            )
         },
-        bottomBar = {
-            NavigationBar {
-                BottomNavigationItem().bottomNavigationItems()
-                    .forEachIndexed { index, navigationItem ->
-                        NavigationBarItem(
-                            selected = index == navigationSelectedItem,
-                            label = {
-                                Text(navigationItem.label)
-                            },
-                            icon = {
-                                Icon(
-                                    navigationItem.icon,
-                                    contentDescription = navigationItem.label,
-                                )
-                            },
-                            onClick = {
-                                navigationSelectedItem = index
-                                when (index) {
-                                    0 -> onResetDrawing()
-                                    1 -> onUploadFromGallery()
-                                }
-                            },
-                        )
-                    }
-            }
-        },
-        snackbarHostState = snackbarHostState,
-        modifier = modifier,
-    ) { paddingValues ->
-        Column(modifier = Modifier.padding(paddingValues)) {
-            when (state) {
-                is SignatureUiState.Error ->
-                    MifosSweetError(message = stringResource(state.message)) {}
-
-                is SignatureUiState.Loading -> MifosCircularProgress()
-
-                is SignatureUiState.SignatureUploadedSuccessfully -> {
-                    scope.launch {
-                        snackbarHostState.showSnackbar(
-                            message = getString(Res.string.feature_client_signature_uploaded_successfully),
-                            duration = SnackbarDuration.Short,
-                        )
-                    }
-                    onBackPressed()
-                }
-                is SignatureUiState.Initial -> drawingContent()
-            }
-        }
-    }
+    )
 }
 
-private data class BottomNavigationItem(
+@Composable
+internal expect fun SignatureScreen(
+    state: SignatureUiState,
+    onBackPressed: () -> Unit,
+    uploadSignature: (PlatformFile) -> Unit,
+)
+
+data class BottomNavigationItem(
     val label: String = "",
     val icon: ImageVector = MifosIcons.Close,
     val route: String = "",
@@ -170,28 +100,6 @@ private fun SignatureScreenPreview(
     SignatureScreen(
         state = state,
         onBackPressed = {},
-        onUploadFromCanvas = {},
-        onUploadFromGallery = {},
-        snackbarHostState = remember { SnackbarHostState() },
-        drawColor = Color.Black,
-        drawBrush = 5f,
-        onResetDrawing = {},
-        drawingContent = {},
-    )
-}
-
-@DevicePreview
-@Composable
-private fun SignatureScreenInitialPreview() {
-    SignatureScreen(
-        state = SignatureUiState.Initial,
-        onBackPressed = {},
-        onUploadFromCanvas = {},
-        onUploadFromGallery = {},
-        snackbarHostState = remember { SnackbarHostState() },
-        drawColor = Color.Black,
-        drawBrush = 5f,
-        onResetDrawing = {},
-        drawingContent = { Text("Drawing Content Area") },
+        uploadSignature = {},
     )
 }

@@ -10,7 +10,12 @@
 package com.mifos.feature.client.clientSignature
 
 import androidx.compose.runtime.Composable
+import io.github.vinceglb.filekit.PlatformFile
 
 @Composable
-actual fun SignatureScreen(onBackPressed: () -> Unit) {
+internal actual fun SignatureScreen(
+    state: SignatureUiState,
+    onBackPressed: () -> Unit,
+    uploadSignature: (PlatformFile) -> Unit,
+) {
 }

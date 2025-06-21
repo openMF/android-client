@@ -9,124 +9,161 @@
  */
 package com.mifos.feature.client.clientSignature
 
-import android.annotation.SuppressLint
+import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import android.graphics.Rect
+import android.widget.Toast
+import androidclient.feature.client.generated.resources.Res
+import androidclient.feature.client.generated.resources.feature_client_signature_title
+import androidclient.feature.client.generated.resources.feature_client_signature_uploaded_successfully
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.asAndroidBitmap
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.boundsInRoot
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalView
+import androidx.core.graphics.applyCanvas
 import androidx.core.graphics.createBitmap
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.mifos.core.common.utils.Constants
+import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosDrawingCanvas
+import com.mifos.core.designsystem.component.MifosScaffold
+import com.mifos.core.designsystem.component.MifosSweetError
+import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.designsystem.utility.PathState
 import io.github.vinceglb.filekit.PlatformFile
-import org.koin.androidx.compose.koinViewModel
+import org.jetbrains.compose.resources.stringResource
 import java.io.ByteArrayOutputStream
 import java.io.File
+import kotlin.math.roundToInt
 
-@Composable
-actual fun SignatureScreen(onBackPressed: () -> Unit) {
-    SignatureScreen(onBackPressed = onBackPressed)
-}
-
-@SuppressLint("MutableCollectionMutableState")
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
-internal fun SignatureScreen(
+internal actual fun SignatureScreen(
+    state: SignatureUiState,
     onBackPressed: () -> Unit,
-    viewModel: SignatureViewModel = koinViewModel(),
+    uploadSignature: (PlatformFile) -> Unit,
 ) {
+    val view = LocalView.current
     val context = LocalContext.current
-    val state by viewModel.signatureUiState.collectAsStateWithLifecycle()
-    val clientId by viewModel.clientId.collectAsStateWithLifecycle()
 
-    val drawColor by remember { mutableStateOf(Color.Black) }
-    val drawBrush by remember { mutableFloatStateOf(5f) }
-    var image by remember { mutableStateOf<Bitmap?>(null) }
-    var capturingViewBounds by remember { mutableStateOf<Rect?>(null) }
+    var navigationSelectedItem by remember { mutableIntStateOf(0) }
+
     val snackbarHostState = remember { SnackbarHostState() }
+    var capturingViewBounds by remember { mutableStateOf<Rect?>(null) }
+    var image by remember { mutableStateOf<Bitmap?>(null) }
 
-    var paths by remember { mutableStateOf(mutableListOf<PathState>()) }
+    val drawColor = Color.Black
+    val drawBrush = 5f
+
+    val paths = remember { mutableStateListOf<PathState>() }
 
     val galleryLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent(),
         onResult = { uri ->
             uri?.let {
-                val bitmap = context.contentResolver.openInputStream(uri)?.use { stream ->
+                val bitmap = context.contentResolver.openInputStream(uri).use { stream ->
                     BitmapFactory.decodeStream(stream).asImageBitmap().asAndroidBitmap()
                 }
-                bitmap?.let { uploadSignature(it, context.cacheDir, clientId, viewModel) }
+                uploadSignature(bitmap.toPlatformFile(context))
             }
         },
     )
 
-    fun onUploadFromCanvas() {
-        val bounds = capturingViewBounds ?: return
-        val bitmap = createBitmap(bounds.width(), bounds.height())
-        image = bitmap
-        image?.let { uploadSignature(it, context.cacheDir, clientId, viewModel) }
-    }
-
-    SignatureScreen(
-        state = state,
+    MifosScaffold(
+        title = stringResource(Res.string.feature_client_signature_title),
         onBackPressed = onBackPressed,
-        onUploadFromCanvas = ::onUploadFromCanvas,
-        onUploadFromGallery = { galleryLauncher.launch("image/*") },
         snackbarHostState = snackbarHostState,
-        drawColor = drawColor,
-        drawBrush = drawBrush,
-        onResetDrawing = { },
-        modifier = Modifier.onGloballyPositioned {
-            capturingViewBounds = Rect(
-                it.boundsInRoot().left.toInt(),
-                it.boundsInRoot().top.toInt(),
-                it.boundsInRoot().right.toInt(),
-                it.boundsInRoot().bottom.toInt(),
-            )
+        actions = {
+            IconButton(onClick = {
+                capturingViewBounds?.let { bounds ->
+                    image = createBitmap(bounds.width.roundToInt(), bounds.height.roundToInt()).applyCanvas {
+                        translate(-bounds.left, -bounds.top)
+                        view.draw(this)
+                    }
+                    image?.let { uploadSignature(it.toPlatformFile(context)) }
+                }
+            }) {
+                Icon(imageVector = MifosIcons.Upload, contentDescription = null)
+            }
         },
-        drawingContent = {
-            MifosDrawingCanvas(
-                drawColor = drawColor,
-                drawBrush = drawBrush,
-            )
+        bottomBar = {
+            NavigationBar {
+                BottomNavigationItem().bottomNavigationItems().forEachIndexed { index, item ->
+                    NavigationBarItem(
+                        selected = index == navigationSelectedItem,
+                        label = { Text(item.label) },
+                        icon = { Icon(item.icon, contentDescription = item.label) },
+                        onClick = {
+                            navigationSelectedItem = index
+                            when (index) {
+                                0 -> paths.clear()
+                                1 -> galleryLauncher.launch("image/*")
+                            }
+                        },
+                    )
+                }
+            }
         },
-    )
+    ) { paddingValues ->
+        Column(
+            modifier = Modifier
+                .padding(paddingValues)
+                .onGloballyPositioned { capturingViewBounds = it.boundsInRoot() },
+        ) {
+            when (state) {
+                is SignatureUiState.Loading -> MifosCircularProgress()
+
+                is SignatureUiState.Error -> MifosSweetError(
+                    message = stringResource(state.message),
+                )
+
+                is SignatureUiState.SignatureUploadedSuccessfully -> {
+                    Toast.makeText(
+                        context,
+                        stringResource(Res.string.feature_client_signature_uploaded_successfully),
+                        Toast.LENGTH_SHORT,
+                    ).show()
+                    onBackPressed()
+                }
+
+                is SignatureUiState.Initial -> {
+                    paths.add(PathState(Path(), drawColor, drawBrush))
+                    MifosDrawingCanvas(drawColor = drawColor, drawBrush = drawBrush)
+                }
+            }
+        }
+    }
 }
 
-private fun uploadSignature(
-    bitmap: Bitmap,
-    cacheDir: File,
-    clientId: Int,
-    viewModel: SignatureViewModel,
-) {
-    val byteArrayOutputStream = ByteArrayOutputStream()
-    bitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream)
-    val file = File(cacheDir, "signature.png")
-    file.outputStream().use { it.write(byteArrayOutputStream.toByteArray()) }
+private fun Bitmap.toPlatformFile(context: Context): PlatformFile {
+    val outputStream = ByteArrayOutputStream()
+    compress(Bitmap.CompressFormat.PNG, 100, outputStream)
 
-    val platformFile = PlatformFile(file.absolutePath)
+    val file = File(context.cacheDir, "signature.png").apply {
+        writeBytes(outputStream.toByteArray())
+    }
 
-    viewModel.createDocument(
-        Constants.ENTITY_TYPE_CLIENTS,
-        clientId,
-        file.name,
-        "Signature",
-        platformFile,
-    )
+    return PlatformFile(file)
 }
