@@ -659,6 +659,9 @@ private fun createClientPayload(
     selectedClientId: Int,
     selectedClientClassificationId: Int,
 ): ClientPayloadEntity {
+    val dateFormat = "dd MMMM yyyy"
+    val locale = "en"
+
     var clientPayload = ClientPayloadEntity(
         // Mandatory fields
         firstname = firstName,
@@ -669,6 +672,8 @@ private fun createClientPayload(
         active = isActive,
         activationDate = formatDate(activationDate),
         dateOfBirth = formatDate(dateOfBirth),
+        dateFormat = dateFormat,
+        locale = locale
     )
 
     // Optional fields
