@@ -10,7 +10,6 @@
 package com.mifos.feature.report.report
 
 import androidclient.feature.report.generated.resources.Res
-import androidclient.feature.report.generated.resources.feature_report_dismiss
 import androidclient.feature.report.generated.resources.feature_report_export_csv
 import androidclient.feature.report.generated.resources.feature_report_external_approve_permission_description
 import androidclient.feature.report.generated.resources.feature_report_permission_required
@@ -77,7 +76,7 @@ fun ReportScreen(
             title = stringResource(Res.string.feature_report_permission_required),
             description = stringResource(Res.string.feature_report_external_approve_permission_description),
             confirmButtonText = stringResource(Res.string.feature_report_proceed),
-            dismissButtonText = stringResource(Res.string.feature_report_dismiss),
+            dismissButtonText = "",
             onGranted = {
                 LaunchedEffect(key1 = Unit) {
                     scope.launch {

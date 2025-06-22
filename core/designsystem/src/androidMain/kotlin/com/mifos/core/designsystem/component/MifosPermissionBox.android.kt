@@ -132,20 +132,18 @@ actual fun PermissionBox(
         },
     )
 
-    if (shouldShowPermissionRationale) {
-        MifosDialogBox(
-            showDialogState = true,
-            onDismiss = { shouldShowPermissionRationale = false },
-            title = title,
-            message = description,
-            confirmButtonText = confirmButtonText,
-            onConfirm = {
-                shouldShowPermissionRationale = false
-                multiplePermissionLauncher.launch(requiredPermissions.toTypedArray())
-            },
-            dismissButtonText = dismissButtonText,
-        )
-    }
+    MifosDialogBox(
+        showDialogState = shouldShowPermissionRationale,
+        onDismiss = { shouldShowPermissionRationale = false },
+        title = title,
+        message = description,
+        confirmButtonText = confirmButtonText,
+        onConfirm = {
+            shouldShowPermissionRationale = false
+            multiplePermissionLauncher.launch(requiredPermissions.toTypedArray())
+        },
+        dismissButtonText = dismissButtonText,
+    )
 
     if (shouldDirectUserToApplicationSettings) {
         Intent(

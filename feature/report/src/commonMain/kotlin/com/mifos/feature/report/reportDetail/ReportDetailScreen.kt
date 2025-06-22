@@ -67,6 +67,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import co.touchlab.kermit.Logger
 import com.mifos.core.common.utils.Constants
 import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosScaffold
@@ -295,6 +296,11 @@ private fun RunReportContent(
     runReportDetail: SnapshotStateMap<String, String>,
     modifier: Modifier = Modifier,
 ) {
+    LaunchedEffect(true) {
+        Logger.e("Revanth") {
+            loanPurposeList.toString()
+        }
+    }
     val firstOffice = officeList.firstOrNull()?.row?.getOrNull(1) ?: ""
     val firstOfficeId = officeList.firstOrNull()?.row?.getOrNull(0) ?: ""
     val firstOfficer = reportOffices.firstOrNull()?.row?.getOrNull(1) ?: ""
@@ -481,7 +487,8 @@ private fun RunReportContent(
                     selectedLoanPurposeId = loanPurposeList.getOrNull(index)?.row?.getOrNull(0) ?: ""
                 },
                 label = stringResource(Res.string.feature_report_loan_purpose),
-                options = loanPurposeList.mapNotNull { it.row.getOrNull(1) },
+                options = loanPurposeList.mapNotNull { it.row.getOrNull(1) }
+                    .filter { !it.contains("-") },
                 readOnly = true,
             )
             Spacer(modifier = Modifier.height(16.dp))
