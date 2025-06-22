@@ -36,7 +36,6 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.RadioButtonDefaults
-import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -131,7 +130,6 @@ internal fun SurveyQuestionScreen(
                     scope.launch {
                         snackbarHostState.showSnackbar(
                             message = scorecardCreatedSuccess,
-                            duration = SnackbarDuration.Short,
                         )
                     }
                 }

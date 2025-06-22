@@ -339,8 +339,9 @@ private fun CreateNewClientContent(
     LaunchedEffect(key1 = staffInOffices) {
         if (staffInOffices.isEmpty()) {
             snackbarHostState.showSnackbar(
-                message = getString(Res.string.feature_client_no_staff_associated_with_office),
-                duration = SnackbarDuration.Short,
+                message = getString(
+                    Res.string.feature_client_no_staff_associated_with_office,
+                ),
             )
             staff = ""
             selectedStaffId = 0
@@ -897,8 +898,9 @@ private fun isFirstNameValid(
         name.isEmpty() -> {
             scope.launch {
                 snackbarHostState.showSnackbar(
-                    message = getString(Res.string.feature_client_error_first_name_can_not_be_empty),
-                    duration = SnackbarDuration.Short,
+                    message = getString(
+                        Res.string.feature_client_error_first_name_can_not_be_empty,
+                    ),
                 )
             }
             return false
@@ -907,8 +909,9 @@ private fun isFirstNameValid(
         name.contains("[^a-zA-Z ]".toRegex()) -> {
             scope.launch {
                 snackbarHostState.showSnackbar(
-                    message = getString(Res.string.feature_client_error_first_name_should_contain_only_alphabets),
-                    duration = SnackbarDuration.Short,
+                    message = getString(
+                        Res.string.feature_client_error_first_name_should_contain_only_alphabets,
+                    ),
                 )
             }
             return false
@@ -927,8 +930,9 @@ private fun isLastNameValid(
         name.isEmpty() -> {
             scope.launch {
                 snackbarHostState.showSnackbar(
-                    message = getString(Res.string.feature_client_error_last_name_can_not_be_empty),
-                    duration = SnackbarDuration.Short,
+                    message = getString(
+                        Res.string.feature_client_error_last_name_can_not_be_empty,
+                    ),
                 )
             }
             return false
@@ -937,8 +941,9 @@ private fun isLastNameValid(
         name.contains("[^a-zA-Z ]".toRegex()) -> {
             scope.launch {
                 snackbarHostState.showSnackbar(
-                    message = getString(Res.string.feature_client_error_last_name_should_contain_only_alphabets),
-                    duration = SnackbarDuration.Short,
+                    message = getString(
+                        Res.string.feature_client_error_last_name_should_contain_only_alphabets,
+                    ),
                 )
             }
             return false
@@ -961,8 +966,9 @@ private fun isMiddleNameValid(
         name.contains("[^a-zA-Z ]".toRegex()) -> {
             scope.launch {
                 snackbarHostState.showSnackbar(
-                    message = getString(Res.string.feature_client_error_middle_name_should_contain_only_alphabets),
-                    duration = SnackbarDuration.Short,
+                    message = getString(
+                        Res.string.feature_client_error_middle_name_should_contain_only_alphabets,
+                    ),
                 )
             }
             return false

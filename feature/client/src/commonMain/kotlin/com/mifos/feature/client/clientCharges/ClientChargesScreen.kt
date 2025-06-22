@@ -212,7 +212,7 @@ private fun MifosCenterDetailsText(field: String, value: String) {
     }
 }
 
-class ClientChargesScreenUiStateProvider : PreviewParameterProvider<ClientChargeUiState> {
+private class ClientChargesScreenUiStateProvider : PreviewParameterProvider<ClientChargeUiState> {
 
     override val values: Sequence<ClientChargeUiState>
         get() = sequenceOf(

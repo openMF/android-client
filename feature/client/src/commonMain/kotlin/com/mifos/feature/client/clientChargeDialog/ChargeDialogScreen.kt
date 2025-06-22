@@ -43,7 +43,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SelectableDates
-import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -76,6 +75,7 @@ import com.mifos.core.model.objects.template.client.ChargeTemplate
 import com.mifos.core.ui.util.DevicePreview
 import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
+import org.jetbrains.compose.resources.getString
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameterProvider
@@ -118,7 +118,6 @@ internal fun ChargeDialogScreen(
 
     val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
-    val clientChargeCreatedSuccess = stringResource(Res.string.feature_client_charge_created_successfully)
 
     val dueDatePickerState = rememberDatePickerState(
         initialSelectedDateMillis = dueDate,
@@ -299,8 +298,9 @@ internal fun ChargeDialogScreen(
                     is ChargeDialogUiState.ChargesCreatedSuccessfully -> {
                         scope.launch {
                             snackbarHostState.showSnackbar(
-                                message = clientChargeCreatedSuccess,
-                                duration = SnackbarDuration.Short,
+                                message = getString(
+                                    Res.string.feature_client_charge_created_successfully,
+                                ),
                             )
                         }
                         onCreated()

@@ -34,7 +34,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
@@ -61,6 +60,7 @@ import com.mifos.core.model.objects.clients.ClientAddressRequest
 import com.mifos.core.model.objects.clients.ClientAddressResponse
 import com.mifos.core.ui.util.DevicePreview
 import kotlinx.coroutines.launch
+import org.jetbrains.compose.resources.getString
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameterProvider
@@ -175,11 +175,9 @@ internal fun PinpointClientScreen(
                     is PinPointClientUiState.Loading -> MifosCircularProgress()
 
                     is PinPointClientUiState.SuccessMessage -> {
-                        val message = stringResource(state.message)
                         scope.launch {
                             snackbarHostState.showSnackbar(
-                                message = message,
-                                duration = SnackbarDuration.Short,
+                                message = getString(state.message),
                             )
                         }
                     }

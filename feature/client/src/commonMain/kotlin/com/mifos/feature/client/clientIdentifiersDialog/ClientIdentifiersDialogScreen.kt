@@ -35,7 +35,6 @@ import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -61,6 +60,7 @@ import com.mifos.core.model.objects.noncoreobjects.IdentifierPayload
 import com.mifos.core.model.objects.noncoreobjects.IdentifierTemplate
 import com.mifos.core.ui.util.DevicePreview
 import kotlinx.coroutines.launch
+import org.jetbrains.compose.resources.getString
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameterProvider
@@ -102,7 +102,6 @@ internal fun ClientIdentifiersDialogScreen(
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
-    val clientIdentifierCreatedSuccess = stringResource(Res.string.feature_client_identifier_created_successfully)
 
     Dialog(
         onDismissRequest = { onDismiss() },
@@ -155,8 +154,9 @@ internal fun ClientIdentifiersDialogScreen(
                         is ClientIdentifierDialogUiState.IdentifierCreatedSuccessfully -> {
                             scope.launch {
                                 snackbarHostState.showSnackbar(
-                                    message = clientIdentifierCreatedSuccess,
-                                    duration = SnackbarDuration.Short,
+                                    message = getString(
+                                        Res.string.feature_client_identifier_created_successfully,
+                                    ),
                                 )
                             }
                             onIdentifierCreated()
