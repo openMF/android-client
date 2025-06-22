@@ -1,7 +1,15 @@
+/*
+ * Copyright 2025 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ */
 package com.mifos.core.designsystem.component
 
 import android.Manifest
-import androidx.compose.runtime.Composable
 import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -10,6 +18,7 @@ import android.os.Build
 import android.provider.Settings
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -29,7 +38,7 @@ actual fun PermissionBox(
     confirmButtonText: String,
     dismissButtonText: String,
     description: String?,
-    onGranted: @Composable (() -> Unit)?
+    onGranted: @Composable (() -> Unit)?,
 ) {
     val context = LocalContext.current
     val lifecycleOwner = LocalLifecycleOwner.current
@@ -137,7 +146,6 @@ actual fun PermissionBox(
             dismissButtonText = dismissButtonText,
         )
     }
-
 
     if (shouldDirectUserToApplicationSettings) {
         Intent(

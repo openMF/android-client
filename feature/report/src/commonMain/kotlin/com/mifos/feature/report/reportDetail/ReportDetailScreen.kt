@@ -67,22 +67,20 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import co.touchlab.kermit.Logger
 import com.mifos.core.common.utils.Constants
 import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.component.MifosTextFieldDropdown
 import com.mifos.core.model.objects.runreport.DataRow
-import com.mifos.core.model.objects.runreport.FullParameterListResponse
 import com.mifos.core.model.objects.runreport.client.ClientReportTypeItem
 import com.mifos.feature.report.report.ReportScreen
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
-import org.koin.compose.viewmodel.koinViewModel
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameterProvider
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 internal fun ReportDetailScreen(
@@ -103,7 +101,7 @@ internal fun ReportDetailScreen(
     LaunchedEffect(runReportDetail) {
         runReportDetail?.let {
             if (runReportEnable) {
-                showReportScreen=true
+                showReportScreen = true
             }
         }
     }
@@ -139,14 +137,14 @@ internal fun ReportDetailScreen(
             }
 
             Constants.CURRENCY_ID_SELECT -> {
-                currencyId = reportDetail.first.first().row.first()?:""
+                currencyId = reportDetail.first.first().row.first() ?: ""
                 currencyList = reportDetail.first
                 viewModel.fetchProduct(Constants.LOAN_PRODUCT_ID_SELECT, currencyId, true)
             }
 
             Constants.OFFICE_ID_SELECT -> {
                 officeList = reportDetail.first
-                officeId = reportDetail.first.first().row.first()?.toInt()?:-1
+                officeId = reportDetail.first.first().row.first()?.toInt() ?: -1
                 viewModel.fetchOffices(Constants.LOAN_OFFICER_ID_SELECT, officeId, true)
             }
 
@@ -175,23 +173,22 @@ internal fun ReportDetailScreen(
 
     LaunchedEffect(reportParameterList) {
         reportParameterList.forEach {
-            if(it.row.first()!=null){
-                viewModel.fetchParameterDetails(it.row.first()?:"", true)
+            if (it.row.first() != null) {
+                viewModel.fetchParameterDetails(it.row.first() ?: "", true)
             }
         }
     }
 
-    if(showReportScreen && runReportDetail!=null){
+    if (showReportScreen && runReportDetail != null) {
         ReportScreen(
             state = reportUiState,
             report = runReportDetail!!,
             onBackPressed = onBackPressed,
             exportReport = {
                 viewModel.exportCsv(runReportDetail!!)
-            }
+            },
         )
-    }
-    else{
+    } else {
         ReportDetailScreen(
             reportItem = reportItem,
             state = state,
@@ -454,10 +451,9 @@ private fun RunReportContent(
             }
         }
 
-
         Spacer(modifier = Modifier.height(16.dp))
 
-        if (selectedOffice.isNotEmpty() &&  officeList.isNotEmpty()) {
+        if (selectedOffice.isNotEmpty() && officeList.isNotEmpty()) {
             MifosTextFieldDropdown(
                 value = selectedOffice,
                 onValueChanged = {
@@ -468,7 +464,7 @@ private fun RunReportContent(
                     selectedOfficeId = officeList.getOrNull(index)?.row?.getOrNull(0) ?: ""
                 },
                 label = stringResource(Res.string.feature_report_office),
-                options =officeList.mapNotNull { it.row.getOrNull(1) },
+                options = officeList.mapNotNull { it.row.getOrNull(1) },
                 readOnly = true,
             )
             Spacer(modifier = Modifier.height(16.dp))
@@ -499,7 +495,7 @@ private fun RunReportContent(
                 },
                 onOptionSelected = { index, value ->
                     selectedLoanOfficer = value
-                    selectedLoanOfficerId =reportOffices.getOrNull(index)?.row?.getOrNull(0) ?: ""
+                    selectedLoanOfficerId = reportOffices.getOrNull(index)?.row?.getOrNull(0) ?: ""
                 },
                 label = stringResource(Res.string.feature_report_loan_officer),
                 options = reportOffices.mapNotNull { it.row.getOrNull(1) },
@@ -533,7 +529,7 @@ private fun RunReportContent(
                 },
                 onOptionSelected = { index, value ->
                     selectedFund = value
-                    selectedFundId = fundList[index].row.first()?:""
+                    selectedFundId = fundList[index].row.first() ?: ""
                 },
                 label = stringResource(Res.string.feature_report_fund),
                 options = fundList.mapNotNull { it.row.getOrNull(1) },
@@ -550,7 +546,7 @@ private fun RunReportContent(
                 },
                 onOptionSelected = { index, value ->
                     selectedCurrency = value
-                    selectedCurrencyId = currencyList[index].row.first()?:""
+                    selectedCurrencyId = currencyList[index].row.first() ?: ""
                 },
                 label = stringResource(Res.string.feature_report_currency),
                 options = currencyList.mapNotNull { it.row.getOrNull(1) },
@@ -567,7 +563,7 @@ private fun RunReportContent(
                 },
                 onOptionSelected = { index, value ->
                     selectedParCalculator = value
-                    selectedParCalculatorId = parCalculatorList[index].row.first()?:""
+                    selectedParCalculatorId = parCalculatorList[index].row.first() ?: ""
                 },
                 label = stringResource(Res.string.feature_report_par_type),
                 options = parCalculatorList.mapNotNull { it.row.getOrNull(1) },
@@ -584,7 +580,7 @@ private fun RunReportContent(
                 },
                 onOptionSelected = { index, value ->
                     selectedSavingsAccountDeposit = value
-                    selectedSavingsAccountDepositId = savingsAccountDepositList[index].row.first()?:""
+                    selectedSavingsAccountDepositId = savingsAccountDepositList[index].row.first() ?: ""
                 },
                 label = stringResource(Res.string.feature_report_saving_account),
                 options = savingsAccountDepositList.mapNotNull { it.row.getOrNull(1) },
@@ -601,7 +597,7 @@ private fun RunReportContent(
                 },
                 onOptionSelected = { index, value ->
                     selectedGlAccount = value
-                    selectedGlAccountId = glAccountList[index].row.first()?:""
+                    selectedGlAccountId = glAccountList[index].row.first() ?: ""
                 },
                 label = stringResource(Res.string.feature_report_gl_account),
                 options = glAccountList.mapNotNull { it.row.getOrNull(1) },
@@ -618,7 +614,7 @@ private fun RunReportContent(
                 },
                 onOptionSelected = { index, value ->
                     selectedObligationDate = value
-                    selectedObligationDateId = obligationDateList[index].row.first()?:""
+                    selectedObligationDateId = obligationDateList[index].row.first() ?: ""
                 },
                 label = stringResource(Res.string.feature_report_obligation_date),
                 options = obligationDateList.mapNotNull { it.row.getOrNull(1) },

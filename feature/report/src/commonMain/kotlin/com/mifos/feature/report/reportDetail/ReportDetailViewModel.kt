@@ -17,7 +17,6 @@ import androidclient.feature.report.generated.resources.feature_report_unable_to
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import co.touchlab.kermit.Logger
 import com.mifos.core.common.utils.Constants
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.domain.useCases.GetReportFullParameterListUseCase
@@ -73,7 +72,7 @@ class ReportDetailViewModel(
 
     fun fetchFullParameterList(reportName: String, parameterType: Boolean) =
 
-        viewModelScope.launch{
+        viewModelScope.launch {
             getReportFullParameterListUseCase(reportName, parameterType).collect { result ->
                 when (result) {
                     is DataState.Error ->
@@ -90,7 +89,7 @@ class ReportDetailViewModel(
         }
 
     fun fetchParameterDetails(parameterName: String, parameterType: Boolean) =
-        viewModelScope.launch{
+        viewModelScope.launch {
             getReportParameterDetailsUseCase(parameterName, parameterType).collect { result ->
                 when (result) {
                     is DataState.Error -> Unit
@@ -106,7 +105,7 @@ class ReportDetailViewModel(
         }
 
     fun fetchOffices(parameterName: String, officeId: Int, parameterType: Boolean) =
-        viewModelScope.launch{
+        viewModelScope.launch {
             getRunReportOfficesUseCase(parameterName, officeId, parameterType).collect { result ->
                 when (result) {
                     is DataState.Error ->
@@ -124,7 +123,7 @@ class ReportDetailViewModel(
         }
 
     fun fetchProduct(parameterName: String, currencyId: String, parameterType: Boolean) =
-        viewModelScope.launch{
+        viewModelScope.launch {
             getRunReportProductUseCase(parameterName, currencyId, parameterType).collect { result ->
                 when (result) {
                     is DataState.Error ->

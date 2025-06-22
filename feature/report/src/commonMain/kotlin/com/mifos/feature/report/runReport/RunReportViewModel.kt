@@ -15,7 +15,6 @@ import androidclient.feature.report.generated.resources.feature_report_no_report
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mifos.core.common.utils.DataState
-import com.mifos.core.common.utils.Resource
 import com.mifos.core.domain.useCases.GetReportCategoryUseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO

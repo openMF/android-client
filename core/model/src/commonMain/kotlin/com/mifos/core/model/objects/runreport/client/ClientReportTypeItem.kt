@@ -14,7 +14,6 @@ import com.mifos.core.model.utils.Parcelize
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
-
 /**
  * Created by Tarun on 03-08-17.
  */
