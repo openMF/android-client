@@ -18,6 +18,7 @@ import com.mifos.feature.client.utils.PlatformCameraLauncher
 import io.github.vinceglb.filekit.PlatformFile
 import io.github.vinceglb.filekit.dialogs.compose.rememberCameraPickerLauncher
 import io.github.vinceglb.filekit.dialogs.uri
+import io.github.vinceglb.filekit.path
 
 actual object PhoneNumberUtil {
     actual fun isGlobalPhoneNumber(phoneNumber: String): Boolean {
@@ -28,20 +29,16 @@ actual object PhoneNumberUtil {
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
 actual fun rememberPlatformCameraLauncher(
-    onImageCaptured: (PlatformFile?) -> Unit,
+    onImageCapturedPath: (String?) -> Unit,
 ): PlatformCameraLauncher {
     val permissionState = rememberPermissionState(Manifest.permission.CAMERA)
 
     val launcher = rememberCameraPickerLauncher { file ->
-        onImageCaptured(file)
+        onImageCapturedPath(file?.path)
     }
 
     return PlatformCameraLauncher(
         permissionState = permissionState,
         launcher = launcher,
     )
-}
-
-actual fun PlatformFile.asPainterModel(): Any? {
-    return this.uri
 }

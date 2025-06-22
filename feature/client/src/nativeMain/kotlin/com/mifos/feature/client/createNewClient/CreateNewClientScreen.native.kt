@@ -21,12 +21,6 @@ actual object PhoneNumberUtil {
 }
 
 @Composable
-actual fun rememberPlatformCameraLauncher(
-    onImageCaptured: (PlatformFile?) -> Unit,
-): PlatformCameraLauncher {
-    TODO("Not yet implemented")
-}
-
-actual fun PlatformFile.asPainterModel(): Any? {
+actual fun rememberPlatformCameraLauncher(onImageCapturedPath: (String?) -> Unit): PlatformCameraLauncher {
     TODO("Not yet implemented")
 }

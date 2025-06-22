@@ -90,6 +90,7 @@ import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.Saver
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -121,6 +122,7 @@ import com.mifos.room.entities.templates.clients.ClientsTemplateEntity
 import io.github.vinceglb.filekit.PlatformFile
 import io.github.vinceglb.filekit.dialogs.FileKitType
 import io.github.vinceglb.filekit.dialogs.compose.rememberFilePickerLauncher
+import io.github.vinceglb.filekit.path
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
@@ -157,8 +159,8 @@ internal fun CreateNewClientScreen(
         navigateBack = navigateBack,
         loadStaffInOffice = { viewmodel.loadStaffInOffices(it) },
         createClient = { viewmodel.createClient(clientPayload = it) },
-        uploadImage = { id, selectedFile ->
-            viewmodel.uploadImage(id, selectedFile)
+        uploadImage = { id, selectedFilePath ->
+            viewmodel.uploadImage(id, PlatformFile(selectedFilePath))
         },
         hasDatatables = hasDatatables,
     )
@@ -173,11 +175,11 @@ internal fun CreateNewClientScreen(
     loadStaffInOffice: (officeId: Int) -> Unit,
     navigateBack: () -> Unit,
     createClient: (clientPayload: ClientPayloadEntity) -> Unit,
-    uploadImage: (id: Int, imageFile: PlatformFile) -> Unit,
+    uploadImage: (id: Int, imageFilePath: String) -> Unit,
     hasDatatables: (datatables: List<DataTableEntity>, clientPayload: ClientPayloadEntity) -> Unit,
 ) {
     var createClientWithImage by rememberSaveable { mutableStateOf(false) }
-    var clientImage by rememberSaveable { mutableStateOf<PlatformFile?>(null) }
+    var clientImagePath by rememberSaveable { mutableStateOf<String?>(null) }
     val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
 
@@ -206,9 +208,9 @@ internal fun CreateNewClientScreen(
                         loadStaffInOffice = loadStaffInOffice,
                         createClient = createClient,
                         onHasDatatables = hasDatatables,
-                        setFileForUpload = { file ->
-                            file?.let {
-                                clientImage = it
+                        setFileForUpload = { filePath ->
+                            filePath?.let {
+                                clientImagePath = it
                                 createClientWithImage = true
                             }
                         },
@@ -217,7 +219,7 @@ internal fun CreateNewClientScreen(
 
                 is CreateNewClientUiState.SetClientId -> {
                     if (createClientWithImage) {
-                        clientImage?.let { uploadImage(uiState.id, it) }
+                        clientImagePath?.let { uploadImage(uiState.id, it) }
                     } else {
                         navigateBack.invoke()
                     }
@@ -282,7 +284,7 @@ private fun CreateNewClientContent(
     loadStaffInOffice: (Int) -> Unit,
     createClient: (ClientPayloadEntity) -> Unit,
     onHasDatatables: (List<DataTableEntity>, ClientPayloadEntity) -> Unit,
-    setFileForUpload: (file: PlatformFile?) -> Unit,
+    setFileForUpload: (filePath: String?) -> Unit,
 ) {
     var firstName by rememberSaveable { mutableStateOf("") }
     var middleName by rememberSaveable { mutableStateOf("") }
@@ -307,7 +309,8 @@ private fun CreateNewClientContent(
     var showDateOfBirthDatepicker by rememberSaveable { mutableStateOf(false) }
     var showActivateDatepicker by rememberSaveable { mutableStateOf(false) }
     var showImagePickerDialog by rememberSaveable { mutableStateOf(false) }
-    var selectedImage by rememberSaveable { mutableStateOf(null as PlatformFile?) }
+    var selectedImagePath by rememberSaveable { mutableStateOf<String?>(null) }
+
 
     val scrollState = rememberScrollState()
     val density = LocalDensity.current
@@ -315,12 +318,12 @@ private fun CreateNewClientContent(
     val galleryLauncher = rememberFilePickerLauncher(
         type = FileKitType.Image,
     ) { file ->
-        file?.let { selectedImage = file }
+        file?.let { selectedImagePath = file.path }
     }
 
     val cameraLauncher = rememberPlatformCameraLauncher {
-            file ->
-        file?.let { selectedImage = file }
+            filePath ->
+        filePath?.let { selectedImagePath = filePath }
     }
 
     val hasDatatables by rememberSaveable {
@@ -376,7 +379,7 @@ private fun CreateNewClientContent(
             },
             removeImage = {
                 showImagePickerDialog = false
-                selectedImage = null
+                selectedImagePath = null
             },
         )
     }
@@ -422,7 +425,7 @@ private fun CreateNewClientContent(
             .fillMaxSize()
             .verticalScroll(state = scrollState),
     ) {
-        ClientImageSection(selectedImage = selectedImage) {
+        ClientImageSection(selectedImagePath = selectedImagePath) {
             showImagePickerDialog = true
         }
 
@@ -571,7 +574,7 @@ private fun CreateNewClientContent(
                 val clientNames = Name(firstName, lastName, middleName)
                 handleSubmitClick(
                     scope, snackbarHostState, clientNames, clientTemplate, createClient, isActive, onHasDatatables,
-                    selectedImage, setFileForUpload, staffInOffices, hasDatatables,
+                    selectedImagePath, setFileForUpload, staffInOffices, hasDatatables,
                     selectedOfficeId, selectedClientId, selectedClientClassificationId,
                     genderId, selectedStaffId, activationDate, dateOfBirth,
                     mobileNumber, externalId,
@@ -597,8 +600,8 @@ private fun handleSubmitClick(
     createClient: (clientPayload: ClientPayloadEntity) -> Unit,
     isActive: Boolean,
     onHasDatatables: (datatables: List<DataTableEntity>, clientPayload: ClientPayloadEntity) -> Unit,
-    selectedImage: PlatformFile?,
-    setFileForUpload: (file: PlatformFile?) -> Unit,
+    selectedImagePath: String?,
+    setFileForUpload: (filePath: String?) -> Unit,
     staffInOffices: List<StaffEntity>,
     hasDatatables: Boolean,
     selectedOfficeId: Int?,
@@ -634,7 +637,7 @@ private fun handleSubmitClick(
             onHasDatatables.invoke(it, clientPayload)
         }
     } else {
-        setFileForUpload.invoke(selectedImage)
+        setFileForUpload.invoke(selectedImagePath)
         clientPayload = clientPayload.copy(
             datatables = null,
         )
@@ -766,15 +769,15 @@ private fun ClientInputTextFields(
 }
 
 @Composable
-private fun ClientImageSection(selectedImage: PlatformFile?, onImageClick: () -> Unit) {
+private fun ClientImageSection(selectedImagePath: String?, onImageClick: () -> Unit) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
             .padding(vertical = 16.dp),
     ) {
         Image(
-            painter = if (selectedImage != null) {
-                rememberAsyncImagePainter(selectedImage.asPainterModel())
+            painter = if (selectedImagePath != null) {
+                rememberAsyncImagePainter(selectedImagePath)
             } else {
                 painterResource(Res.drawable.feature_client_ic_dp_placeholder)
             },
@@ -977,10 +980,8 @@ internal expect object PhoneNumberUtil {
 
 @Composable
 expect fun rememberPlatformCameraLauncher(
-    onImageCaptured: (PlatformFile?) -> Unit,
+    onImageCapturedPath: (String?) -> Unit,
 ): PlatformCameraLauncher
-
-expect fun PlatformFile.asPainterModel(): Any?
 
 private class CreateNewClientScreenPreviewProvider :
     PreviewParameterProvider<CreateNewClientUiState> {
