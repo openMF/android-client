@@ -15,9 +15,7 @@ class AndroidFileHelper(private val reportName: String) : FileHelper {
         return try {
             val timestamp = System.currentTimeMillis()
             val fileName = "$reportName-$timestamp.csv"
-
-            val downloadsDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
-            val exportFolder = File(downloadsDir, "MifosReports")
+            val exportFolder = File("/storage/emulated/0/Download/MifosReports")
 
             if (!exportFolder.exists()) {
                 exportFolder.mkdirs()
@@ -35,9 +33,6 @@ class AndroidFileHelper(private val reportName: String) : FileHelper {
             }
             true
         } catch (e: Exception) {
-            Logger.e("Revanth"){
-                e.toString()
-            }
             false
         }
     }

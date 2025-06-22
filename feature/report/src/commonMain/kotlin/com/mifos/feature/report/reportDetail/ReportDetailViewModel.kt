@@ -92,7 +92,6 @@ class ReportDetailViewModel(
     fun fetchParameterDetails(parameterName: String, parameterType: Boolean) =
         viewModelScope.launch{
             getReportParameterDetailsUseCase(parameterName, parameterType).collect { result ->
-                Logger.e("Revanth Result"){result.toString()}
                 when (result) {
                     is DataState.Error -> Unit
 
@@ -109,7 +108,6 @@ class ReportDetailViewModel(
     fun fetchOffices(parameterName: String, officeId: Int, parameterType: Boolean) =
         viewModelScope.launch{
             getRunReportOfficesUseCase(parameterName, officeId, parameterType).collect { result ->
-                Logger.e("Revanth Result"){result.toString()}
                 when (result) {
                     is DataState.Error ->
                         _reportDetailUiState.value =
@@ -145,13 +143,7 @@ class ReportDetailViewModel(
 
     fun fetchRunReportWithQuery(reportName: String, options: MutableMap<String, String>) =
         viewModelScope.launch {
-            Logger.e("Revanth input"){
-                options.toString()
-            }
             getRunReportWithQueryUseCase(reportName, options).collect { result ->
-                Logger.e("Revanth result"){
-                    result.toString()
-                }
                 when (result) {
                     is DataState.Error ->
                         _reportDetailUiState.value =
@@ -170,9 +162,6 @@ class ReportDetailViewModel(
         viewModelScope.launch {
             val reportName = "report_${Clock.System.now()}"
             val isSuccess = getFileHelper(reportName).exportCsv(report)
-            Logger.e("Revanth"){
-                isSuccess.toString()
-            }
             _reportUiState.value = if (isSuccess) {
                 ReportUiState.Message(Res.string.feature_report_exported_successfully)
             } else {

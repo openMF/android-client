@@ -16,12 +16,9 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import androidx.navigation.navigation
 import com.mifos.core.common.utils.Constants
-import com.mifos.core.model.objects.runreport.FullParameterListResponse
 import com.mifos.core.model.objects.runreport.client.ClientReportTypeItem
-//import com.mifos.feature.report.report.ReportScreen
 import com.mifos.feature.report.reportDetail.ReportDetailScreen
 import com.mifos.feature.report.runReport.RunReportScreen
-import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
 fun NavGraphBuilder.reportNavGraph(
@@ -36,9 +33,6 @@ fun NavGraphBuilder.reportNavGraph(
             onReportSelected = navController::navigateReportDetailsScreen,
         )
         reportDetailsScreenRoute(
-            onBackPressed = navController::popBackStack,
-        )
-        reportScreenRoute(
             onBackPressed = navController::popBackStack,
         )
     }
@@ -71,25 +65,7 @@ fun NavGraphBuilder.reportDetailsScreenRoute(
     }
 }
 
-fun NavGraphBuilder.reportScreenRoute(
-    onBackPressed: () -> Unit,
-) {
-    composable(
-        route = ReportScreens.ReportScreen.route,
-        arguments = listOf(navArgument(Constants.REPORT_PARAMETER_RESPONSE, builder = { type = NavType.StringType })),
-    ) {
-//        ReportScreen(
-//            onBackPressed = onBackPressed,
-//        )
-    }
-}
-
 fun NavController.navigateReportDetailsScreen(clientReportTypeItem: ClientReportTypeItem) {
     val arg = Json.encodeToString(clientReportTypeItem)
     navigate(ReportScreens.ReportDetailScreen.argument(arg))
-}
-
-fun NavController.navigateReportScreens(fullParameterListResponse: FullParameterListResponse) {
-    val arg = Json.encodeToString(fullParameterListResponse)
-    navigate(ReportScreens.ReportScreen.argument(arg))
 }

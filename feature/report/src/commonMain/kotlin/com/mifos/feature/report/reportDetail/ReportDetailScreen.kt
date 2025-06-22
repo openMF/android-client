@@ -121,9 +121,6 @@ internal fun ReportDetailScreen(
     var obligationDateList by rememberSaveable { mutableStateOf(emptyList<DataRow>()) }
 
     LaunchedEffect(reportDetail) {
-        Logger.e("Revanth"){
-            reportDetail.second
-        }
         when (reportDetail.second) {
             Constants.LOAN_OFFICER_ID_SELECT -> {
                 viewModel.fetchOffices(reportDetail.second, officeId, true)
@@ -150,9 +147,6 @@ internal fun ReportDetailScreen(
             Constants.OFFICE_ID_SELECT -> {
                 officeList = reportDetail.first
                 officeId = reportDetail.first.first().row.first()?.toInt()?:-1
-                Logger.e("Revanth"){
-                    officeId.toString()
-                }
                 viewModel.fetchOffices(Constants.LOAN_OFFICER_ID_SELECT, officeId, true)
             }
 
