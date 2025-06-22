@@ -90,7 +90,6 @@ import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.saveable.Saver
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -310,7 +309,6 @@ private fun CreateNewClientContent(
     var showActivateDatepicker by rememberSaveable { mutableStateOf(false) }
     var showImagePickerDialog by rememberSaveable { mutableStateOf(false) }
     var selectedImagePath by rememberSaveable { mutableStateOf<String?>(null) }
-
 
     val scrollState = rememberScrollState()
     val density = LocalDensity.current
@@ -676,7 +674,7 @@ private fun createClientPayload(
         activationDate = formatDate(activationDate),
         dateOfBirth = formatDate(dateOfBirth),
         dateFormat = dateFormat,
-        locale = locale
+        locale = locale,
     )
 
     // Optional fields

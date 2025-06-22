@@ -9,7 +9,6 @@
  */
 package com.mifos.room.entities.client
 
-import com.mifos.core.model.utils.IgnoredOnParcel
 import com.mifos.core.model.utils.Parcelable
 import com.mifos.core.model.utils.Parcelize
 import com.mifos.room.entities.noncore.DataTablePayload

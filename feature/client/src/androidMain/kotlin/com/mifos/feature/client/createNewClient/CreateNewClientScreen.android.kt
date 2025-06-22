@@ -15,9 +15,7 @@ import androidx.compose.runtime.Composable
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberPermissionState
 import com.mifos.feature.client.utils.PlatformCameraLauncher
-import io.github.vinceglb.filekit.PlatformFile
 import io.github.vinceglb.filekit.dialogs.compose.rememberCameraPickerLauncher
-import io.github.vinceglb.filekit.dialogs.uri
 import io.github.vinceglb.filekit.path
 
 actual object PhoneNumberUtil {
