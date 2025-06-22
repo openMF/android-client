@@ -17,7 +17,7 @@ class AndroidFileHelper(private val reportName: String) : FileHelper {
             val fileName = "$reportName-$timestamp.csv"
 
             val downloadsDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
-            val exportFolder = File(downloadsDir, "MifosReports") // Optional: subfolder
+            val exportFolder = File(downloadsDir, "MifosReports")
 
             if (!exportFolder.exists()) {
                 exportFolder.mkdirs()

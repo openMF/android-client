@@ -48,36 +48,13 @@ import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.model.objects.runreport.FullParameterListResponse
 import com.mifos.feature.report.reportDetail.ReportUiState
 import kotlinx.coroutines.launch
+import org.jetbrains.compose.resources.getString
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameterProvider
 
-
-//@Composable
-//internal fun ReportScreen(
-//    onBackPressed: () -> Unit,
-//    viewModel: ReportViewModel = koinViewModel(),
-//) {
-//    val report = viewModel.report
-//    val state by viewModel.reportUiState.collectAsStateWithLifecycle()
-//
-//    ReportScreen(
-//        state = state,
-//        report = report,
-//        onBackPressed = onBackPressed,
-//        exportReport = {
-////            val reportDirectoryPath =
-////                Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
-////                    .toString() + getString(context, R.string.feature_report_export_csv_directory)
-////            viewModel.exportCsv(
-////                report = report,
-////                reportDirectoryPath = reportDirectoryPath,
-////            )
-//        },
-//    )
-//}
 
 @Composable
  fun ReportScreen(
@@ -94,7 +71,9 @@ import org.jetbrains.compose.ui.tooling.preview.PreviewParameterProvider
     when (state) {
         is ReportUiState.Initial -> Unit
         is ReportUiState.Message -> {
-//            Toast.makeText(context, stringResource(state.message), Toast.LENGTH_SHORT).show()
+            scope.launch {
+                snackbarHostState.showSnackbar(getString(state.message))
+            }
         }
     }
 
@@ -159,24 +138,24 @@ import org.jetbrains.compose.ui.tooling.preview.PreviewParameterProvider
     }
 }
 
-//private class ReportUiStateProvider : PreviewParameterProvider<ReportUiState> {
-//
-//    override val values: Sequence<ReportUiState>
-//        get() = sequenceOf(
-//            ReportUiState.Initial,
-//            ReportUiState.Message(Res.string.feature_report_export_csv),
-//        )
-//}
-//
-//@Preview
-//@Composable
-//private fun ReportScreenPreview(
-//    @PreviewParameter(ReportUiStateProvider::class) state: ReportUiState,
-//) {
-//    ReportScreen(
-//        state = state,
-//        report = FullParameterListResponse(emptyList(), emptyList()),
-//        onBackPressed = { },
-//        exportReport = { },
-//    )
-//}
+private class ReportUiStateProvider : PreviewParameterProvider<ReportUiState> {
+
+    override val values: Sequence<ReportUiState>
+        get() = sequenceOf(
+            ReportUiState.Initial,
+            ReportUiState.Message(Res.string.feature_report_export_csv),
+        )
+}
+
+@Preview
+@Composable
+private fun ReportScreenPreview(
+    @PreviewParameter(ReportUiStateProvider::class) state: ReportUiState,
+) {
+    ReportScreen(
+        state = state,
+        report = FullParameterListResponse(emptyList(), emptyList()),
+        onBackPressed = { },
+        exportReport = { },
+    )
+}
