@@ -28,6 +28,7 @@ import com.mifos.feature.loan.di.LoanModule
 import com.mifos.feature.note.di.NoteModule
 import com.mifos.feature.offline.di.OfflineModule
 import com.mifos.feature.pathTracking.di.PathTrackingModule
+import com.mifos.feature.report.di.ReportModule
 import com.mifos.feature.savings.di.SavingsModule
 import com.mifos.feature.search.di.SearchModule
 import com.mifos.feature.settings.di.SettingsModule
@@ -76,7 +77,7 @@ object KoinModules {
             NoteModule,
             OfflineModule,
             PathTrackingModule,
-//            ReportModule,
+            ReportModule,
             SavingsModule,
             SearchModule,
             SettingsModule,

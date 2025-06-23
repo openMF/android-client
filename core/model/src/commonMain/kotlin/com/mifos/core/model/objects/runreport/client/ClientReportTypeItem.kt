@@ -11,6 +11,7 @@ package com.mifos.core.model.objects.runreport.client
 
 import com.mifos.core.model.utils.Parcelable
 import com.mifos.core.model.utils.Parcelize
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 /**
@@ -19,19 +20,27 @@ import kotlinx.serialization.Serializable
 @Parcelize
 @Serializable
 data class ClientReportTypeItem(
+    @SerialName("parameter_id")
     var parameterId: Int? = null,
 
+    @SerialName("parameter_name")
     var parameterName: String? = null,
 
+    @SerialName("report_category")
     var reportCategory: String? = null,
 
+    @SerialName("report_id")
     var reportId: Int? = null,
 
+    @SerialName("report_name")
     var reportName: String? = null,
 
+    @SerialName("report_parameter_name")
     var reportParameterName: String? = null,
 
+    @SerialName("report_subtype")
     var reportSubtype: String? = null,
 
+    @SerialName("report_type")
     var reportType: String? = null,
 ) : Parcelable
