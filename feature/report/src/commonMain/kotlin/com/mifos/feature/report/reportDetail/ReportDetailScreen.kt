@@ -293,21 +293,6 @@ private fun RunReportContent(
     runReportDetail: SnapshotStateMap<String, String>,
     modifier: Modifier = Modifier,
 ) {
-    LaunchedEffect(true
-    ){
-        Logger.e("officeList:\n" + officeList.joinToString("\n") { it.toString() })
-        Logger.e("loanPurposeList:\n" + loanPurposeList.joinToString("\n") { it.toString() })
-        Logger.e("fundList:\n" + fundList.joinToString("\n") { it.toString() })
-        Logger.e("currencyList:\n" + currencyList.joinToString("\n") { it.toString() })
-        Logger.e("parCalculatorList:\n" + parCalculatorList.joinToString("\n") { it.toString() })
-        Logger.e("savingsAccountDepositList:\n" + savingsAccountDepositList.joinToString("\n") { it.toString() })
-        Logger.e("glAccountList:\n" + glAccountList.joinToString("\n") { it.toString() })
-        Logger.e("obligationDateList:\n" + obligationDateList.joinToString("\n") { it.toString() })
-        Logger.e("reportOffices:\n" + reportOffices.joinToString("\n") { it.toString() })
-        Logger.e("reportProducts:\n" + reportProducts.joinToString("\n") { it.toString() })
-        Logger.e("runReportDetail:\n" + runReportDetail.entries.joinToString("\n") { "${it.key} = ${it.value}" })
-
-    }
     val firstOffice = officeList.firstOrNull()?.row?.getOrNull(1) ?: ""
     val firstOfficeId = officeList.firstOrNull()?.row?.getOrNull(0) ?: ""
     val firstOfficer = reportOffices.firstOrNull()?.row?.getOrNull(1) ?: ""
