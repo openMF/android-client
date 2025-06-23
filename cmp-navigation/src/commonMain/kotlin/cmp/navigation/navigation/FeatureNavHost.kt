@@ -43,6 +43,7 @@ import com.mifos.feature.note.navigation.navigateToNoteScreen
 import com.mifos.feature.note.navigation.noteNavGraph
 import com.mifos.feature.offline.navigation.offlineNavGraph
 import com.mifos.feature.pathTracking.navigation.pathTrackingNavGraph
+import com.mifos.feature.report.navigation.reportNavGraph
 import com.mifos.feature.savings.navigation.navigateToAddSavingsAccount
 import com.mifos.feature.savings.navigation.navigateToSavingsAccountSummaryScreen
 import com.mifos.feature.savings.navigation.savingsNavGraph
@@ -132,6 +133,8 @@ internal fun FeatureNavHost(
         )
 
         pathTrackingNavGraph(appState.navController)
+
+        reportNavGraph(navController = appState.navController)
 
         loanNavGraph(
             navController = appState.navController,
