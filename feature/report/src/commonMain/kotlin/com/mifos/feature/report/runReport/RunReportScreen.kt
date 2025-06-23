@@ -131,7 +131,6 @@ internal fun RunReportScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                colors = TopAppBarDefaults.mediumTopAppBarColors(containerColor = White),
                 navigationIcon = {
                     IconButton(
                         onClick = { onBackPressed() },
