@@ -57,7 +57,7 @@ class ClientIdentifiersViewModel(
                     )
             }.collect {
                 _clientIdentifiersUiState.value =
-                    ClientIdentifiersUiState.ClientIdentifiers(it.data)
+                    ClientIdentifiersUiState.ClientIdentifiers(it.data ?: emptyList())
             }
     }
 

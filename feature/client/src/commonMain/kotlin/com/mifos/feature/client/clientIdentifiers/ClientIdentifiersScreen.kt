@@ -162,7 +162,7 @@ internal fun ClientIdentifiersScreen(
 
                 when (state) {
                     is ClientIdentifiersUiState.ClientIdentifiers -> {
-                        when (state.identifiers?.isEmpty()) {
+                        when (state.identifiers.isEmpty()) {
                             true -> {
                                 MifosEmptyUi(
                                     text = stringResource(Res.string.feature_client_there_is_no_identifier_to_show),
@@ -175,8 +175,6 @@ internal fun ClientIdentifiersScreen(
                                 onDeleteIdentifier = onDeleteIdentifier,
                                 onDocumentClicked = onDocumentClicked,
                             )
-
-                            null -> TODO()
                         }
                     }
 
