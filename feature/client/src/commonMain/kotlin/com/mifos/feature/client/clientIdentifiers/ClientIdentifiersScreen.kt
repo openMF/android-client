@@ -52,6 +52,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mifos.core.designsystem.component.MifosCircularProgress
@@ -245,7 +246,8 @@ private fun ClientIdentifiersItem(
                     .height(94.dp),
             ) {
                 drawRect(
-                    color = lightGreen,
+                    // TODO use lightGreen color
+                    color = Color.Green,
                     size = Size(size.width, size.height),
                 )
             }

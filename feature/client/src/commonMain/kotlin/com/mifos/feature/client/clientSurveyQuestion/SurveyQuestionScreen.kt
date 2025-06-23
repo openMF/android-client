@@ -29,7 +29,6 @@ import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -67,6 +66,7 @@ import com.mifos.feature.client.clientSurveySubmit.SurveySubmitViewModel
 import com.mifos.room.entities.survey.SurveyEntity
 import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
+import org.jetbrains.compose.resources.getString
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -85,7 +85,6 @@ internal fun SurveyQuestionScreen(
     var currentQuestionNumber by rememberSaveable { mutableIntStateOf(0) }
     var showSubmitScreen by rememberSaveable { mutableStateOf(false) }
 
-    val scorecardCreatedSuccess = stringResource(Res.string.feature_client_scorecard_created_successfully)
     val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
 
@@ -129,7 +128,7 @@ internal fun SurveyQuestionScreen(
                 } else {
                     scope.launch {
                         snackbarHostState.showSnackbar(
-                            message = scorecardCreatedSuccess,
+                            message = getString(Res.string.feature_client_scorecard_created_successfully),
                         )
                     }
                 }
@@ -266,12 +265,6 @@ private fun SurveyQuestionContent(
             modifier = Modifier
                 .width(160.dp)
                 .align(alignment = Alignment.CenterHorizontally),
-            colors = ButtonDefaults.buttonColors(
-                containerColor = MaterialTheme.colorScheme.primary,
-                contentColor = MaterialTheme.colorScheme.onPrimary,
-                disabledContainerColor = MaterialTheme.colorScheme.surfaceVariant,
-                disabledContentColor = MaterialTheme.colorScheme.onSurfaceVariant,
-            ),
         ) {
             Text(text = stringResource(Res.string.feature_client_next))
         }

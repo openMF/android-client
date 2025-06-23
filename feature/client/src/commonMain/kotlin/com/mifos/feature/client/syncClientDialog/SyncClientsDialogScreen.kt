@@ -107,8 +107,8 @@ internal fun SyncClientsDialogScreen(
                     ?: stringResource(Res.string.feature_client_something_went_wrong)
                 LaunchedEffect(key1 = message) {
                     snackBarHostState.showSnackbar(message.toString())
+                    dismiss()
                 }
-                dismiss()
             }
         }
     }

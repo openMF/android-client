@@ -22,7 +22,7 @@ kotlin {
             implementation(projects.core.domain)
             implementation(projects.core.datastore)
             implementation(projects.core.designsystem)
-            implementation(project(":feature:data-table"))
+            implementation(projects.feature.dataTable)
 
             implementation(compose.ui)
             implementation(compose.material3)
@@ -42,7 +42,6 @@ kotlin {
         
         androidMain.dependencies {
             implementation(libs.maps.compose)
-            implementation(libs.androidx.material)
             implementation(libs.accompanist.permission)
             implementation(libs.ktor.client.android)
 

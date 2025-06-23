@@ -47,41 +47,45 @@ actual fun ClientChargeContent(
 
         is LoadState.Loading -> MifosCircularProgress()
 
-        is LoadState.NotLoading -> Unit
-    }
+        is LoadState.NotLoading -> {
+            LazyColumn {
+                items(
+                    chargesPage.itemCount,
+                    key = { index -> chargesPage[index]?.id ?: index },
+                ) { index ->
+                    chargesPage[index]?.let { ChargesItems(it) }
+                }
 
-    LazyColumn {
-        items(chargesPage.itemCount) { index ->
-            chargesPage[index]?.let { ChargesItems(it) }
-        }
+                when (chargesPage.loadState.append) {
+                    is LoadState.Error -> {
+                    }
 
-        when (chargesPage.loadState.append) {
-            is LoadState.Error -> {
-            }
+                    is LoadState.Loading -> {
+                        item {
+                            MifosPagingAppendProgress()
+                        }
+                    }
 
-            is LoadState.Loading -> {
-                item {
-                    MifosPagingAppendProgress()
+                    is LoadState.NotLoading -> Unit
+                }
+
+                if (
+                    chargesPage.loadState.append is LoadState.NotLoading &&
+                    chargesPage.loadState.append.endOfPaginationReached &&
+                    chargesPage.itemCount > 0
+                ) {
+                    item {
+                        Text(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(6.dp),
+                            text = stringResource(Res.string.feature_client_no_more_charges_available),
+                            style = MaterialTheme.typography.bodyMedium,
+                            textAlign = TextAlign.Center,
+                        )
+                    }
                 }
             }
-
-            is LoadState.NotLoading -> Unit
-        }
-        when (chargesPage.loadState.append.endOfPaginationReached) {
-            true -> {
-                item {
-                    Text(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(6.dp),
-                        text = stringResource(Res.string.feature_client_no_more_charges_available),
-                        style = MaterialTheme.typography.bodyMedium,
-                        textAlign = TextAlign.Center,
-                    )
-                }
-            }
-
-            false -> Unit
         }
     }
 }

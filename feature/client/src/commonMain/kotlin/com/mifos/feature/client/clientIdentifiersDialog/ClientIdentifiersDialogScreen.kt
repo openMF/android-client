@@ -124,7 +124,6 @@ internal fun ClientIdentifiersDialogScreen(
                         Text(
                             text = stringResource(Res.string.feature_client_create_identifier_dialog),
                             fontSize = MaterialTheme.typography.titleLarge.fontSize,
-//                            color = BluePrimary,
                         )
                         IconButton(onClick = { onDismiss() }) {
                             Icon(

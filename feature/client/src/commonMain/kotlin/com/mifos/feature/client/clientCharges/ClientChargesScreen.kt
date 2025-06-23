@@ -163,9 +163,6 @@ fun ChargesItems(charges: ChargesEntity) {
             .padding(8.dp),
         shape = RoundedCornerShape(0.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.secondary,
-        ),
     ) {
         Spacer(modifier = Modifier.height(8.dp))
         MifosCenterDetailsText(

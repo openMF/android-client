@@ -114,6 +114,7 @@ import com.mifos.room.entities.accounts.savings.SavingsAccountEntity
 import io.github.vinceglb.filekit.dialogs.FileKitType
 import io.github.vinceglb.filekit.dialogs.compose.rememberFilePickerLauncher
 import kotlinx.coroutines.launch
+import org.jetbrains.compose.resources.getString
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -170,16 +171,14 @@ internal fun ClientDetailsScreen(
 
     when (state) {
         is ClientDetailsUiState.ShowClientImageDeletedSuccessfully -> {
-            val message = stringResource(Res.string.feature_client_client_image_deleted)
             LaunchedEffect(key1 = state) {
-                snackbarHostState.showSnackbar(message = message)
+                snackbarHostState.showSnackbar(message = getString(Res.string.feature_client_client_image_deleted))
             }
         }
 
         is ClientDetailsUiState.ShowUploadImageSuccessfully -> {
-            val message = stringResource(Res.string.feature_client_client_image_updated)
             LaunchedEffect(key1 = state.response) {
-                snackbarHostState.showSnackbar(message = message)
+                snackbarHostState.showSnackbar(message = getString(Res.string.feature_client_client_image_updated))
             }
         }
 

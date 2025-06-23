@@ -13,6 +13,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mifos.core.common.utils.Constants
+import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.repository.SurveySubmitRepository
 import com.mifos.core.datastore.UserPreferencesRepository
 import com.mifos.core.model.objects.surveys.Scorecard
@@ -21,6 +22,7 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 
 /**
  * Created by Aditya Gupta on 13/08/23.
@@ -48,11 +50,22 @@ class SurveySubmitViewModel(
         )
 
     fun submitSurvey(survey: Int, scorecardPayload: Scorecard?) {
-        repository.submitScore(survey, scorecardPayload)
-            .stateIn(
-                scope = viewModelScope,
-                started = SharingStarted.Lazily,
-                initialValue = SurveySubmitUiState.Initial,
-            )
+        viewModelScope.launch {
+            repository.submitScore(survey, scorecardPayload).collect { result ->
+                when (result) {
+                    is DataState.Loading ->
+                        _surveySubmitUiState.value =
+                            SurveySubmitUiState.ShowProgressbar
+
+                    is DataState.Success ->
+                        _surveySubmitUiState.value =
+                            SurveySubmitUiState.ShowSurveySubmittedSuccessfully(result.data)
+
+                    is DataState.Error ->
+                        _surveySubmitUiState.value =
+                            SurveySubmitUiState.ShowError(result.message)
+                }
+            }
+        }
     }
 }
