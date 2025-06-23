@@ -16,8 +16,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.domain.useCases.GetReportCategoryUseCase
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.IO
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
@@ -47,12 +45,12 @@ class RunReportViewModel(
                 is DataState.Loading -> _runReportUiState.value = RunReportUiState.Loading
 
                 is DataState.Success -> {
-                        if (result.data.isNotEmpty()) {
-                            _runReportUiState.value = RunReportUiState.RunReports(result.data)
-                        } else {
-                            _runReportUiState.value =
-                                RunReportUiState.Error(Res.string.feature_report_no_reports_found)
-                        }
+                    if (result.data.isNotEmpty()) {
+                        _runReportUiState.value = RunReportUiState.RunReports(result.data)
+                    } else {
+                        _runReportUiState.value =
+                            RunReportUiState.Error(Res.string.feature_report_no_reports_found)
+                    }
                 }
             }
         }
