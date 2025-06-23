@@ -65,6 +65,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import co.touchlab.kermit.Logger
 import com.mifos.core.common.utils.Constants
 import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosScaffold
@@ -292,6 +293,21 @@ private fun RunReportContent(
     runReportDetail: SnapshotStateMap<String, String>,
     modifier: Modifier = Modifier,
 ) {
+    LaunchedEffect(true
+    ){
+        Logger.e("officeList:\n" + officeList.joinToString("\n") { it.toString() })
+        Logger.e("loanPurposeList:\n" + loanPurposeList.joinToString("\n") { it.toString() })
+        Logger.e("fundList:\n" + fundList.joinToString("\n") { it.toString() })
+        Logger.e("currencyList:\n" + currencyList.joinToString("\n") { it.toString() })
+        Logger.e("parCalculatorList:\n" + parCalculatorList.joinToString("\n") { it.toString() })
+        Logger.e("savingsAccountDepositList:\n" + savingsAccountDepositList.joinToString("\n") { it.toString() })
+        Logger.e("glAccountList:\n" + glAccountList.joinToString("\n") { it.toString() })
+        Logger.e("obligationDateList:\n" + obligationDateList.joinToString("\n") { it.toString() })
+        Logger.e("reportOffices:\n" + reportOffices.joinToString("\n") { it.toString() })
+        Logger.e("reportProducts:\n" + reportProducts.joinToString("\n") { it.toString() })
+        Logger.e("runReportDetail:\n" + runReportDetail.entries.joinToString("\n") { "${it.key} = ${it.value}" })
+
+    }
     val firstOffice = officeList.firstOrNull()?.row?.getOrNull(1) ?: ""
     val firstOfficeId = officeList.firstOrNull()?.row?.getOrNull(0) ?: ""
     val firstOfficer = reportOffices.firstOrNull()?.row?.getOrNull(1) ?: ""
@@ -446,7 +462,7 @@ private fun RunReportContent(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        if (selectedOffice.isNotEmpty() && officeList.isNotEmpty()) {
+        if (officeList.isNotEmpty()) {
             MifosTextFieldDropdown(
                 value = selectedOffice,
                 onValueChanged = {
@@ -480,7 +496,7 @@ private fun RunReportContent(
             Spacer(modifier = Modifier.height(16.dp))
         }
 
-        if (reportOffices.isNotEmpty() && selectedLoanOfficer.isNotEmpty()) {
+        if (reportOffices.isNotEmpty()) {
             MifosTextFieldDropdown(
                 value = selectedLoanOfficer,
                 onValueChanged = {
