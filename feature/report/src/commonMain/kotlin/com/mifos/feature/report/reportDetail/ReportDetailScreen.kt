@@ -243,7 +243,6 @@ internal fun ReportDetailScreen(
         actions = {
             TextButton(
                 onClick = { runReport(runReportDetail) },
-                colors = ButtonDefaults.textButtonColors(White),
             ) {
                 Text(text = stringResource(Res.string.feature_report_run_report))
             }
@@ -384,7 +383,6 @@ private fun RunReportContent(
         OutlinedCard(
             modifier = modifier
                 .padding(8.dp),
-            colors = CardDefaults.cardColors(White),
         ) {
             Row(
                 modifier = Modifier
@@ -418,7 +416,6 @@ private fun RunReportContent(
                                 fontSize = 16.sp,
                                 fontWeight = FontWeight.Normal,
                                 fontStyle = FontStyle.Normal,
-                                color = Black,
                             ),
                         )
                     }
@@ -434,7 +431,6 @@ private fun RunReportContent(
                                 fontSize = 14.sp,
                                 fontWeight = FontWeight.Normal,
                                 fontStyle = FontStyle.Normal,
-                                color = Gray,
                             ),
                         )
                         Text(
@@ -443,7 +439,6 @@ private fun RunReportContent(
                                 fontSize = 14.sp,
                                 fontWeight = FontWeight.Normal,
                                 fontStyle = FontStyle.Normal,
-                                color = Gray,
                             ),
                         )
                     }

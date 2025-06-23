@@ -33,7 +33,7 @@ class RunReportViewModel(
         reportCategory: String,
         genericResultSet: Boolean,
         parameterType: Boolean,
-    ) = viewModelScope.launch(Dispatchers.IO) {
+    ) = viewModelScope.launch {
         getReportCategoryUseCase(
             reportCategory,
             genericResultSet,
@@ -47,14 +47,12 @@ class RunReportViewModel(
                 is DataState.Loading -> _runReportUiState.value = RunReportUiState.Loading
 
                 is DataState.Success -> {
-                    result.data.let { reports ->
-                        if (reports.isNotEmpty()) {
-                            _runReportUiState.value = RunReportUiState.RunReports(reports)
+                        if (result.data.isNotEmpty()) {
+                            _runReportUiState.value = RunReportUiState.RunReports(result.data)
                         } else {
                             _runReportUiState.value =
                                 RunReportUiState.Error(Res.string.feature_report_no_reports_found)
                         }
-                    }
                 }
             }
         }

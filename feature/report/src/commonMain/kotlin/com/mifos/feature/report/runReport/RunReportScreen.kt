@@ -139,7 +139,6 @@ internal fun RunReportScreen(
                         Icon(
                             imageVector = MifosIcons.ArrowBack,
                             contentDescription = null,
-                            tint = Black,
                         )
                     }
                 },
@@ -232,7 +231,6 @@ internal fun RunReportScreen(
             )
         },
         snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
-        containerColor = White,
     ) { paddingValues ->
         Column(modifier = Modifier.padding(paddingValues)) {
             when (state) {
@@ -309,7 +307,6 @@ private fun RunReportCardItem(
                             fontSize = 16.sp,
                             fontWeight = FontWeight.Normal,
                             fontStyle = FontStyle.Normal,
-                            color = Black,
                         ),
                     )
                 }
@@ -325,7 +322,6 @@ private fun RunReportCardItem(
                             fontSize = 14.sp,
                             fontWeight = FontWeight.Normal,
                             fontStyle = FontStyle.Normal,
-                            color = DarkGray,
                         ),
                     )
                     Text(
@@ -334,7 +330,6 @@ private fun RunReportCardItem(
                             fontSize = 14.sp,
                             fontWeight = FontWeight.Normal,
                             fontStyle = FontStyle.Normal,
-                            color = DarkGray,
                         ),
                     )
                 }

@@ -96,7 +96,6 @@ fun ReportScreen(
                 onClick = {
                     checkPermission = true
                 },
-                colors = ButtonDefaults.textButtonColors(White),
             ) {
                 Text(text = stringResource(Res.string.feature_report_export_csv))
             }
