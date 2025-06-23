@@ -19,6 +19,7 @@ import com.mifos.core.data.repository.ClientDetailsRepository
 import com.mifos.core.domain.useCases.GetClientDetailsUseCase
 import com.mifos.core.domain.useCases.UploadClientImageUseCase
 import com.mifos.core.network.utils.ImageLoaderUtils
+import com.mifos.feature.client.utils.createImageRequestBody
 import com.mifos.room.entities.accounts.loans.LoanAccountEntity
 import com.mifos.room.entities.accounts.savings.SavingsAccountEntity
 import com.mifos.room.entities.client.ClientEntity
@@ -29,13 +30,7 @@ import io.github.vinceglb.filekit.absolutePath
 import io.github.vinceglb.filekit.compressImage
 import io.github.vinceglb.filekit.div
 import io.github.vinceglb.filekit.filesDir
-import io.github.vinceglb.filekit.name
-import io.github.vinceglb.filekit.readBytes
 import io.github.vinceglb.filekit.write
-import io.ktor.client.request.forms.MultiPartFormDataContent
-import io.ktor.client.request.forms.formData
-import io.ktor.http.Headers
-import io.ktor.http.HttpHeaders
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
@@ -70,7 +65,7 @@ class ClientDetailsViewModel(
     val showLoading = _showLoading.asStateFlow()
 
     private fun uploadImage(id: Int, imageFile: PlatformFile) = viewModelScope.launch {
-        uploadClientImageUseCase(id, createDocumentRequestBody(imageFile)).collect { result ->
+        uploadClientImageUseCase(id, createImageRequestBody(imageFile)).collect { result ->
             when (result) {
                 is DataState.Error -> {
                     _clientDetailsUiState.value =
@@ -152,23 +147,5 @@ class ClientDetailsViewModel(
 
     suspend fun getClientImageUrl(clientId: Int): ImageResult {
         return imageLoaderUtils.loadImage(clientId)
-    }
-
-    private suspend fun createDocumentRequestBody(
-        imageFile: PlatformFile,
-    ): MultiPartFormDataContent {
-        val byteArray = imageFile.readBytes()
-        return MultiPartFormDataContent(
-            formData {
-                append(
-                    "file",
-                    byteArray,
-                    Headers.build {
-                        append(HttpHeaders.ContentType, "image/png")
-                        append(HttpHeaders.ContentDisposition, "filename=\"${imageFile.name}\"")
-                    },
-                )
-            },
-        )
     }
 }
