@@ -71,10 +71,6 @@ interface ClientService {
     @DELETE(APIEndPoint.CLIENTS + "/{clientId}/images")
     suspend fun deleteClientImage(@Path("clientId") clientId: Int)
 
-    // TODO: Implement when API Fixed
-    //    @GET("/clients/{clientId}/images")
-    //    Observable<TypedString> getClientImage(@Path("clientId") int clientId);
-
     @GET(APIEndPoint.CLIENTS + "/{clientId}/images")
     fun getClientImage(@Path("clientId") clientId: Int): Flow<HttpResponse>
 

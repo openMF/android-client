@@ -11,20 +11,36 @@ package com.mifos.feature.individualCollectionSheet.paymentDetails
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.mifos.core.common.utils.Constants
+import com.mifos.core.common.utils.DataState
 import com.mifos.core.common.utils.getInstanceUrl
+import com.mifos.core.data.repository.ClientDetailsRepository
 import com.mifos.core.datastore.UserPreferencesRepository
+import com.mifos.core.ui.util.ImageToByteArray
 import com.mifos.feature.individualCollectionSheet.navigation.PaymentDetailsArgs
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
 
 class PaymentDetailsViewModel(
-    private val prefManager: UserPreferencesRepository,
+    private val clientDetailsRepo: ClientDetailsRepository,
     savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
 
     private val argsJson = savedStateHandle.get<String>(Constants.PAYMENT_DETAILS_ARGS).orEmpty()
     private val args = Json.decodeFromString<PaymentDetailsArgs>(argsJson)
+
+    private var _profileImage= MutableStateFlow<ByteArray?>(null)
+    val profileImage = _profileImage.asStateFlow()
+
+    init {
+        viewModelScope.launch {
+            getUserProfile()
+        }
+    }
 
     val clientId = args.clientId
     val position = args.position
@@ -33,13 +49,16 @@ class PaymentDetailsViewModel(
     val loanAndClientName = args.loanAndClientName
     val paymentTypeOptions = args.paymentTypeOptions
 
-    suspend fun getClientImageUrl(): String {
-        val serverConfig = prefManager.serverConfig.first()
-        return (
-            serverConfig.getInstanceUrl() +
-                "clients/" +
-                clientId +
-                "/images?maxHeight=120&maxWidth=120"
-            )
+    suspend fun getUserProfile(){
+        clientDetailsRepo.getImage(clientId).collect { result->
+            when(result)
+            {
+                is DataState.Error -> {}
+                DataState.Loading -> {}
+                is DataState.Success -> {
+                    _profileImage.value=ImageToByteArray(result.data)
+                }
+            }
+        }
     }
 }

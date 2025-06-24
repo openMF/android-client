@@ -355,11 +355,6 @@ private fun MifosClientDetailsScreen(
     val profileImage=clientDetailsViewModel.profileImage.collectAsStateWithLifecycle()
     var showSelectImageDialog by remember { mutableStateOf(false) }
 
-    LaunchedEffect(profileImage){
-        Logger.e("Revanth"){
-            profileImage.toString()
-        }
-    }
     Column(
         modifier = Modifier
             .fillMaxSize()

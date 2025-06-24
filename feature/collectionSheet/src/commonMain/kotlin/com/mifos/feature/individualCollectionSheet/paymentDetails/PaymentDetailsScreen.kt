@@ -51,6 +51,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.compose.AsyncImage
 import com.mifos.core.designsystem.component.MifosButton
 import com.mifos.core.designsystem.component.MifosOutlinedTextField
@@ -58,6 +59,7 @@ import com.mifos.core.designsystem.component.MifosTextFieldDropdown
 import com.mifos.core.model.objects.account.loan.PaymentTypeOptions
 import com.mifos.core.model.objects.collectionsheets.LoanAndClientName
 import com.mifos.core.network.model.IndividualCollectionSheetPayload
+import com.mifos.core.ui.components.MifosUserImage
 import com.mifos.core.ui.util.DevicePreview
 import com.mifos.room.entities.noncore.BulkRepaymentTransactions
 import org.jetbrains.compose.resources.painterResource
@@ -68,11 +70,7 @@ import org.koin.compose.viewmodel.koinViewModel
 internal fun PaymentDetailsScreenRoute(
     viewModel: PaymentDetailsViewModel = koinViewModel(),
 ) {
-    var imageUrl by rememberSaveable { mutableStateOf<String?>(null) }
-
-    LaunchedEffect(viewModel.clientId) {
-        imageUrl = viewModel.getClientImageUrl()
-    }
+    val profileImage=viewModel.profileImage.collectAsStateWithLifecycle()
 
     PaymentsDetailsScreen(
         clientId = viewModel.clientId,
@@ -81,7 +79,7 @@ internal fun PaymentDetailsScreenRoute(
         loanAndClientNameItem = viewModel.loanAndClientName,
         paymentTypeOptionList = viewModel.paymentTypeOptionsName,
         paymentTypeOptions = viewModel.paymentTypeOptions,
-        getClientImage = imageUrl,
+        getClientImage = profileImage.value,
     )
 }
 
@@ -94,7 +92,7 @@ internal fun PaymentsDetailsScreen(
     paymentTypeOptionList: List<String>,
     paymentTypeOptions: List<PaymentTypeOptions>,
     modifier: Modifier = Modifier,
-    getClientImage: String?,
+    getClientImage: ByteArray?,
 ) {
     val loanCollectionSheetItem = loanAndClientNameItem.loan
     val scrollState = rememberScrollState()
@@ -262,14 +260,10 @@ internal fun PaymentsDetailsScreen(
                         .fillMaxWidth(),
                     horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
-                    AsyncImage(
-                        modifier = Modifier.size(60.dp),
-                        model = getClientImage,
-                        error = painterResource(
-                            Res.drawable.feature_collection_sheet_ic_dp_placeholder,
-                        ),
-                        contentDescription = null,
-                        contentScale = ContentScale.FillBounds,
+                    MifosUserImage(
+                        bitmap = getClientImage,
+                        modifier = Modifier.size(100.dp),
+                        username = null,
                     )
                 }
             }
