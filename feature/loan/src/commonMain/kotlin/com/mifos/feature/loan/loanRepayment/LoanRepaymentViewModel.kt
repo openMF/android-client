@@ -16,6 +16,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mifos.core.common.utils.Constants
+import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.repository.LoanRepaymentRepository
 import com.mifos.room.entities.accounts.loans.LoanRepaymentRequestEntity
 import com.mifos.room.entities.accounts.loans.LoanWithAssociationsEntity
@@ -48,22 +49,23 @@ class LoanRepaymentViewModel(
 
     fun loanLoanRepaymentTemplate() {
         viewModelScope.launch {
-            _loanRepaymentUiState.value = LoanRepaymentUiState.ShowProgressbar
-
-            repository.getLoanRepayTemplate(loanId)
-                .catch {
-                    _loanRepaymentUiState.value =
-                        LoanRepaymentUiState.ShowError(
-                            Res.string
-                                .feature_loan_failed_to_load_loan_repayment,
-                        )
+            repository.getLoanRepayTemplate(loanId).collect { state->
+                when(state){
+                    is DataState.Error ->
+                        _loanRepaymentUiState.value =
+                            LoanRepaymentUiState.ShowError(
+                                Res.string
+                                    .feature_loan_failed_to_load_loan_repayment,
+                            )
+                    DataState.Loading ->
+                        _loanRepaymentUiState.value = LoanRepaymentUiState.ShowProgressbar
+                    is DataState.Success ->
+                        _loanRepaymentUiState.value =
+                            LoanRepaymentUiState.ShowLoanRepayTemplate(
+                                state.data ?: LoanRepaymentTemplateEntity(),
+                            )
                 }
-                .collect {
-                    _loanRepaymentUiState.value =
-                        LoanRepaymentUiState.ShowLoanRepayTemplate(
-                            it.data ?: LoanRepaymentTemplateEntity(),
-                        )
-                }
+            }
         }
     }
 
@@ -89,25 +91,28 @@ class LoanRepaymentViewModel(
 
     fun checkDatabaseLoanRepaymentByLoanId() {
         viewModelScope.launch {
-            _loanRepaymentUiState.value = LoanRepaymentUiState.ShowProgressbar
-
-            repository.getDatabaseLoanRepaymentByLoanId(loanId)
-                .catch {
-                    _loanRepaymentUiState.value =
-                        LoanRepaymentUiState.ShowError(
-                            Res.string
-                                .feature_loan_failed_to_load_loan_repayment,
-                        )
-                }
-                .collect { loanRepaymentRequest ->
-                    if (loanRepaymentRequest.data != null) {
+            repository.getDatabaseLoanRepaymentByLoanId(loanId).collect { state->
+                when(state)
+                {
+                    is DataState.Error ->
                         _loanRepaymentUiState.value =
-                            LoanRepaymentUiState.ShowLoanRepaymentExistInDatabase
-                    } else {
-                        _loanRepaymentUiState.value =
-                            LoanRepaymentUiState.ShowLoanRepaymentDoesNotExistInDatabase
+                            LoanRepaymentUiState.ShowError(
+                                Res.string
+                                    .feature_loan_failed_to_load_loan_repayment,
+                            )
+                    DataState.Loading ->
+                        _loanRepaymentUiState.value = LoanRepaymentUiState.ShowProgressbar
+                    is DataState.Success -> {
+                        if (state.data != null) {
+                            _loanRepaymentUiState.value =
+                                LoanRepaymentUiState.ShowLoanRepaymentExistInDatabase
+                        } else {
+                            _loanRepaymentUiState.value =
+                                LoanRepaymentUiState.ShowLoanRepaymentDoesNotExistInDatabase
+                        }
                     }
                 }
+            }
         }
     }
 }

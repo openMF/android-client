@@ -375,9 +375,9 @@ private fun MifosClientDetailsScreen(
                 model = if (client?.imagePresent == true) {
                     client.clientId?.let {
                         scope.launch {
-                            clientDetailsViewModel.getClientImageUrl(
-                                it,
-                            )
+//                            clientDetailsViewModel.getClientImageUrl(
+//                                it,
+//                            )
                         }
                     }
                 } else {

@@ -12,6 +12,7 @@ package com.mifos.feature.loan.loanRepaymentSchedule
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import com.mifos.core.common.utils.Constants
+import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.repository.LoanRepaymentScheduleRepository
 import com.mifos.room.entities.accounts.loans.LoanWithAssociationsEntity
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -31,17 +32,19 @@ class LoanRepaymentScheduleViewModel(
     val loanRepaymentScheduleUiState: StateFlow<LoanRepaymentScheduleUiState> get() = _loanRepaymentScheduleUiState
 
     suspend fun loadLoanRepaySchedule(loanId: Int) {
-        _loanRepaymentScheduleUiState.value = LoanRepaymentScheduleUiState.ShowProgressbar
-        repository.getLoanRepaySchedule(loanId)
-            .catch {
-                _loanRepaymentScheduleUiState.value =
-                    LoanRepaymentScheduleUiState.ShowFetchingError(it.message.toString())
+        repository.getLoanRepaySchedule(loanId).collect { state->
+            when(state){
+                is DataState.Error ->
+                    _loanRepaymentScheduleUiState.value =
+                        LoanRepaymentScheduleUiState.ShowFetchingError(state.message)
+                DataState.Loading ->
+                    _loanRepaymentScheduleUiState.value = LoanRepaymentScheduleUiState.ShowProgressbar
+                is DataState.Success ->
+                    _loanRepaymentScheduleUiState.value =
+                        LoanRepaymentScheduleUiState.ShowLoanRepaySchedule(
+                            state.data,
+                        )
             }
-            .collect {
-                _loanRepaymentScheduleUiState.value =
-                    LoanRepaymentScheduleUiState.ShowLoanRepaySchedule(
-                        it.data ?: LoanWithAssociationsEntity(),
-                    )
-            }
+        }
     }
 }

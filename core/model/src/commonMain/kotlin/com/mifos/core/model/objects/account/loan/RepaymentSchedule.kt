@@ -53,7 +53,8 @@ data class RepaymentSchedule(
 ) : Parcelable {
 
     fun getlistOfActualPeriods(): List<Period> {
-        return periods!!.subList(1, periods!!.size)
+        val list = periods ?: return emptyList()
+        return if (list.size > 1) list.subList(1, list.size) else emptyList()
     }
 
     companion object {

@@ -41,7 +41,7 @@ import kotlinx.coroutines.launch
 class ClientDetailsViewModel(
     private val uploadClientImageUseCase: UploadClientImageUseCase,
     private val getClientDetailsUseCase: GetClientDetailsUseCase,
-    private val imageLoaderUtils: ImageLoaderUtils,
+//    private val imageLoaderUtils: ImageLoaderUtils,
     private val clientDetailsRepo: ClientDetailsRepository,
     savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
@@ -145,7 +145,7 @@ class ClientDetailsViewModel(
         }
     }
 
-    suspend fun getClientImageUrl(clientId: Int): ImageResult {
-        return imageLoaderUtils.loadImage(clientId)
-    }
+//    suspend fun getClientImageUrl(clientId: Int): ImageResult {
+//        return imageLoaderUtils.loadImage(clientId)
+//    }
 }
