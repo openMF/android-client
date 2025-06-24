@@ -113,7 +113,6 @@ import com.mifos.room.entities.accounts.savings.SavingAccountDepositTypeEntity
 import com.mifos.room.entities.accounts.savings.SavingsAccountEntity
 import io.github.vinceglb.filekit.dialogs.FileKitType
 import io.github.vinceglb.filekit.dialogs.compose.rememberFilePickerLauncher
-import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.getString
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
@@ -353,7 +352,7 @@ private fun MifosClientDetailsScreen(
     val savingsAccounts = clientDetailsViewModel.savingsAccounts.collectAsStateWithLifecycle().value
     var showSelectImageDialog by remember { mutableStateOf(false) }
 
-    var imageUrl by remember { mutableStateOf<String?>(null) }
+    var imageUrl by rememberSaveable { mutableStateOf<String?>(null) }
 
     LaunchedEffect(client?.clientId) {
         if (client?.imagePresent == true && client.clientId != null) {
