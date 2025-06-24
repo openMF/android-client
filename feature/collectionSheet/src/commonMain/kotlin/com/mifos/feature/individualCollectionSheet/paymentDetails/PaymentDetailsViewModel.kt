@@ -34,8 +34,8 @@ class PaymentDetailsViewModel(
     val loanAndClientName = args.loanAndClientName
     val paymentTypeOptions = args.paymentTypeOptions
 
-    fun getClientImageUrl(clientId: Int): ImageResult? {
-        var image: ImageResult? = null
+    fun getClientImageUrl(clientId: Int): String? {
+        var image: String? = null
         viewModelScope.launch {
             image = imageLoaderUtils.loadImage(clientId)
         }

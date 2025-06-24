@@ -76,11 +76,10 @@ val NetworkModule = module {
         baseManager
     }
 
-    single { (context: Any) ->
+    single {
         ImageLoaderUtils(
             prefManager = get<UserPreferencesRepository>(),
-            imageLoader = get<ImageLoader>(),
-            context = context,
+//            imageLoader = get<ImageLoader>(),
         )
     }
 }

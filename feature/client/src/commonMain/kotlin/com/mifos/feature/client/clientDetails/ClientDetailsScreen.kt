@@ -115,6 +115,7 @@ import io.github.vinceglb.filekit.dialogs.FileKitType
 import io.github.vinceglb.filekit.dialogs.compose.rememberFilePickerLauncher
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.getString
+import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -385,6 +386,7 @@ private fun MifosClientDetailsScreen(
                 },
                 contentDescription = null,
                 contentScale = ContentScale.FillBounds,
+                error = painterResource(Res.drawable.feature_client_ic_launcher)
             )
         }
         Spacer(modifier = Modifier.height(10.dp))

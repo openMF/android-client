@@ -12,7 +12,6 @@ package com.mifos.feature.client.clientDetails
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import coil3.request.ImageResult
 import com.mifos.core.common.utils.Constants
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.repository.ClientDetailsRepository
@@ -145,7 +144,7 @@ class ClientDetailsViewModel(
         }
     }
 
-    suspend fun getClientImageUrl(clientId: Int): ImageResult {
+    suspend fun getClientImageUrl(clientId: Int): String {
         return imageLoaderUtils.loadImage(clientId)
     }
 }

@@ -18,8 +18,7 @@ import kotlinx.coroutines.flow.first
 
 class ImageLoaderUtils(
     private val prefManager: UserPreferencesRepository,
-    private val imageLoader: ImageLoader,
-    private val context: Any,
+//    private val imageLoader: ImageLoader,
 ) {
 
     private suspend fun buildImageUrl(clientId: Int): String {
@@ -32,12 +31,21 @@ class ImageLoaderUtils(
             )
     }
 
-    suspend fun loadImage(clientId: Int): ImageResult {
+    //TODO : if in future the image getting api i.e https://tt.mifos.community/fineract-provider/api/v1/clients/75/images?maxHeight=150 works then change the things accordingly
+    suspend fun loadImage(clientId: Int): String {
         val imageUrl = buildImageUrl(clientId)
-
-        val request = buildPlatformImageRequest(context, imageUrl)
-        return imageLoader.execute(request)
+        return imageUrl
     }
+
+    //TODO : for future reference currently the api is not working
+//    suspend fun loadImage(clientId: Int): ImageResult {
+//        val request = ImageRequest.Builder(context)
+//            .data(buildImageUrl(clientId))
+//            .addHeader(MifosInterceptor.HEADER_TENANT, prefManager.serverConfig.tenant)
+//            .addHeader(MifosInterceptor.HEADER_AUTH, prefManager.token)
+//            .addHeader("Accept", "application/octet-stream")
+//            .build()
+//        return imageLoader.execute(request)
+//    }
 }
 
-expect fun buildPlatformImageRequest(context: Any, imageUrl: String): ImageRequest

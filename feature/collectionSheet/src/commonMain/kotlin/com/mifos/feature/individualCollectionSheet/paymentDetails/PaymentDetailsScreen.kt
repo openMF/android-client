@@ -88,7 +88,7 @@ internal fun PaymentsDetailsScreen(
     paymentTypeOptionList: List<String>,
     paymentTypeOptions: List<PaymentTypeOptions>,
     modifier: Modifier = Modifier,
-    getClientImage: (Int) -> ImageResult?,
+    getClientImage: (Int) -> String?,
 ) {
     val loanCollectionSheetItem = loanAndClientNameItem.loan
     val scrollState = rememberScrollState()
