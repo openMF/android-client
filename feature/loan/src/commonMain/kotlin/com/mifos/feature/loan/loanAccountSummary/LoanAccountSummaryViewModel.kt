@@ -18,7 +18,6 @@ import com.mifos.core.data.repository.LoanAccountSummaryRepository
 import com.mifos.room.entities.accounts.loans.LoanWithAssociationsEntity
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
 
 class LoanAccountSummaryViewModel(
@@ -51,7 +50,7 @@ class LoanAccountSummaryViewModel(
 
                     is DataState.Error -> {
                         _loanAccountSummaryUiState.value = LoanAccountSummaryUiState.ShowFetchingError(
-                            "Loan Account not found."
+                            "Loan Account not found.",
                         )
                     }
                 }

@@ -21,7 +21,6 @@ import com.mifos.room.utils.UNDEFINED
 import com.mifos.room.utils.UNSPECIFIED
 import com.mifos.room.utils.VALUE_UNSPECIFIED
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.json.Json
 
 /**
  * Created by nellyk on 2/15/2016.

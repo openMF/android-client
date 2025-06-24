@@ -23,7 +23,6 @@ import com.mifos.room.entities.accounts.loans.LoanWithAssociationsEntity
 import com.mifos.room.entities.templates.loans.LoanRepaymentTemplateEntity
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
 
@@ -49,8 +48,8 @@ class LoanRepaymentViewModel(
 
     fun loanLoanRepaymentTemplate() {
         viewModelScope.launch {
-            repository.getLoanRepayTemplate(loanId).collect { state->
-                when(state){
+            repository.getLoanRepayTemplate(loanId).collect { state ->
+                when (state) {
                     is DataState.Error ->
                         _loanRepaymentUiState.value =
                             LoanRepaymentUiState.ShowError(
@@ -91,9 +90,8 @@ class LoanRepaymentViewModel(
 
     fun checkDatabaseLoanRepaymentByLoanId() {
         viewModelScope.launch {
-            repository.getDatabaseLoanRepaymentByLoanId(loanId).collect { state->
-                when(state)
-                {
+            repository.getDatabaseLoanRepaymentByLoanId(loanId).collect { state ->
+                when (state) {
                     is DataState.Error ->
                         _loanRepaymentUiState.value =
                             LoanRepaymentUiState.ShowError(

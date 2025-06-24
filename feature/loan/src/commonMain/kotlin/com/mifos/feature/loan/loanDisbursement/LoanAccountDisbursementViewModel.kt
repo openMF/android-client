@@ -16,9 +16,7 @@ import com.mifos.core.common.utils.Constants
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.repository.LoanAccountDisbursementRepository
 import com.mifos.core.model.objects.account.loan.LoanDisbursement
-import com.mifos.core.network.GenericResponse
 import com.mifos.room.basemodel.APIEndPoint
-import com.mifos.room.entities.templates.loans.LoanTransactionTemplate
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -38,36 +36,39 @@ class LoanAccountDisbursementViewModel(
     fun loadLoanTemplate(loanId: Int) {
         viewModelScope.launch {
             repository.getLoanTransactionTemplate(loanId, APIEndPoint.DISBURSE)
-                .collect { state->
-                    when(state){
-                        is DataState.Error -> _loanAccountDisbursementUiState.value =
-                            LoanAccountDisbursementUiState.ShowError(state.message)
-                        DataState.Loading -> _loanAccountDisbursementUiState.value =
-                            LoanAccountDisbursementUiState.ShowProgressbar
-                        is DataState.Success -> _loanAccountDisbursementUiState.value =
-                            LoanAccountDisbursementUiState.ShowLoanTransactionTemplate(
-                                state.data,
-                            )
+                .collect { state ->
+                    when (state) {
+                        is DataState.Error ->
+                            _loanAccountDisbursementUiState.value =
+                                LoanAccountDisbursementUiState.ShowError(state.message)
+                        DataState.Loading ->
+                            _loanAccountDisbursementUiState.value =
+                                LoanAccountDisbursementUiState.ShowProgressbar
+                        is DataState.Success ->
+                            _loanAccountDisbursementUiState.value =
+                                LoanAccountDisbursementUiState.ShowLoanTransactionTemplate(
+                                    state.data,
+                                )
                     }
-
                 }
-            }
+        }
     }
 
     fun disburseLoan(loanId: Int, loanDisbursement: LoanDisbursement?) {
         viewModelScope.launch {
             repository.disburseLoan(loanId, loanDisbursement)
-                .collect { state->
-                    when(state)
-                    {
-                        is DataState.Error -> _loanAccountDisbursementUiState.value =
-                            LoanAccountDisbursementUiState.ShowError(state.message)
+                .collect { state ->
+                    when (state) {
+                        is DataState.Error ->
+                            _loanAccountDisbursementUiState.value =
+                                LoanAccountDisbursementUiState.ShowError(state.message)
                         DataState.Loading ->
                             _loanAccountDisbursementUiState.value = LoanAccountDisbursementUiState.ShowProgressbar
-                        is DataState.Success -> _loanAccountDisbursementUiState.value =
-                            LoanAccountDisbursementUiState.ShowDisburseLoanSuccessfully(
-                                state.data,
-                            )
+                        is DataState.Success ->
+                            _loanAccountDisbursementUiState.value =
+                                LoanAccountDisbursementUiState.ShowDisburseLoanSuccessfully(
+                                    state.data,
+                                )
                     }
                 }
         }
