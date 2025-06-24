@@ -267,7 +267,7 @@ internal fun PaymentsDetailsScreen(
                         modifier = Modifier.size(60.dp),
                         model = getClientImage,
                         error = painterResource(
-                            Res.drawable.feature_collection_sheet_ic_dp_placeholder
+                            Res.drawable.feature_collection_sheet_ic_dp_placeholder,
                         ),
                         contentDescription = null,
                         contentScale = ContentScale.FillBounds,

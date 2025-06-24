@@ -28,7 +28,6 @@ import androidclient.feature.client.generated.resources.feature_client_documents
 import androidclient.feature.client.generated.resources.feature_client_external_id
 import androidclient.feature.client.generated.resources.feature_client_group
 import androidclient.feature.client.generated.resources.feature_client_ic_dp_placeholder
-import androidclient.feature.client.generated.resources.feature_client_ic_launcher
 import androidclient.feature.client.generated.resources.feature_client_identifiers
 import androidclient.feature.client.generated.resources.feature_client_loan_account
 import androidclient.feature.client.generated.resources.feature_client_mobile_no
@@ -101,7 +100,6 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.compose.AsyncImage
-import coil3.compose.LocalPlatformContext
 import com.mifos.core.common.utils.Utils
 import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosMenuDropDownItem
@@ -389,7 +387,6 @@ private fun MifosClientDetailsScreen(
                 error = painterResource(Res.drawable.feature_client_ic_dp_placeholder),
                 fallback = painterResource(Res.drawable.feature_client_ic_dp_placeholder),
             )
-
         }
         Spacer(modifier = Modifier.height(10.dp))
         client?.displayName?.let {

@@ -149,10 +149,10 @@ class ClientDetailsViewModel(
     suspend fun getClientImageUrl(): String {
         val serverConfig = prefManager.serverConfig.first()
         return (
-                serverConfig.getInstanceUrl() +
-                        "clients/" +
-                        clientId +
-                        "/images?maxHeight=120&maxWidth=120"
-                )
+            serverConfig.getInstanceUrl() +
+                "clients/" +
+                clientId +
+                "/images?maxHeight=120&maxWidth=120"
+            )
     }
 }
