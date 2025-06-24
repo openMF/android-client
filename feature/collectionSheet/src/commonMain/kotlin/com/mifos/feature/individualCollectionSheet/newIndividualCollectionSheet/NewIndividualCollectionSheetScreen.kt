@@ -14,13 +14,9 @@ package com.mifos.feature.individualCollectionSheet.newIndividualCollectionSheet
 import androidclient.feature.collectionsheet.generated.resources.Res
 import androidclient.feature.collectionsheet.generated.resources.feature_collection_sheet_cancel
 import androidclient.feature.collectionsheet.generated.resources.feature_collection_sheet_clear
-import androidclient.feature.collectionsheet.generated.resources.feature_collection_sheet_date
 import androidclient.feature.collectionsheet.generated.resources.feature_collection_sheet_fill_collection_sheet_message
-import androidclient.feature.collectionsheet.generated.resources.feature_collection_sheet_fill_now
-import androidclient.feature.collectionsheet.generated.resources.feature_collection_sheet_found_sheet
 import androidclient.feature.collectionsheet.generated.resources.feature_collection_sheet_generate
 import androidclient.feature.collectionsheet.generated.resources.feature_collection_sheet_generate_new
-import androidclient.feature.collectionsheet.generated.resources.feature_collection_sheet_member
 import androidclient.feature.collectionsheet.generated.resources.feature_collection_sheet_office
 import androidclient.feature.collectionsheet.generated.resources.feature_collection_sheet_repayment_date
 import androidclient.feature.collectionsheet.generated.resources.feature_collection_sheet_select
@@ -34,7 +30,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -53,13 +48,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mifos.core.common.utils.DateHelper
-import com.mifos.core.designsystem.component.MifosBottomSheet
 import com.mifos.core.designsystem.component.MifosButton
 import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosDatePickerTextField
@@ -117,7 +110,7 @@ internal fun NewIndividualCollectionSheetScreen(
     var staffId by rememberSaveable { mutableIntStateOf(0) }
 
     val snackbarHostState = remember { SnackbarHostState() }
-    var showCollectionSheetDialog by rememberSaveable { mutableStateOf(false) }
+//    var showCollectionSheetDialog by rememberSaveable { mutableStateOf(false) }
 
     var showDatePicker by rememberSaveable { mutableStateOf(false) }
     var repaymentDate by rememberSaveable {
@@ -146,7 +139,16 @@ internal fun NewIndividualCollectionSheetScreen(
     LaunchedEffect(key1 = state.individualCollectionSheet) {
         state.individualCollectionSheet?.let {
             individualCollectionSheet = it
-            showCollectionSheetDialog = true
+            try {
+                onDetail(
+                    DateHelper.getDateAsStringFromLong(repaymentDate),
+                    it,
+                )
+                println("DEBUG: Navigation successful")
+            } catch (e: Exception) {
+                println("DEBUG: Navigation failed: ${e.message}")
+                e.printStackTrace()
+            }
         }
     }
 
@@ -182,31 +184,31 @@ internal fun NewIndividualCollectionSheetScreen(
                 DatePicker(state = datePickerState)
             }
         }
-        if (showCollectionSheetDialog) {
-            MifosBottomSheet(
-                content = {
-                    CollectionSheetDialogContent(
-                        date = DateHelper.getDateAsStringFromLong(repaymentDate),
-                        member = individualCollectionSheet?.clients?.size.toString(),
-                        fillNow = {
-                            showCollectionSheetDialog = false
-                            individualCollectionSheet?.let {
-                                onDetail(
-                                    DateHelper.getDateAsStringFromLong(repaymentDate),
-                                    it,
-                                )
-                            }
-                        },
-                        onDismiss = {
-                            showCollectionSheetDialog = false
-                        },
-                    )
-                },
-                onDismiss = {
-                    showCollectionSheetDialog = false
-                },
-            )
-        }
+//        if (showCollectionSheetDialog) {
+//            MifosBottomSheet(
+//                content = {
+//                    CollectionSheetDialogContent(
+//                        date = DateHelper.getDateAsStringFromLong(repaymentDate),
+//                        member = individualCollectionSheet?.clients?.size.toString(),
+//                        fillNow = {
+//                            showCollectionSheetDialog = false
+//                            individualCollectionSheet?.let {
+//                                onDetail(
+//                                    DateHelper.getDateAsStringFromLong(repaymentDate),
+//                                    it,
+//                                )
+//                            }
+//                        },
+//                        onDismiss = {
+//                            showCollectionSheetDialog = false
+//                        },
+//                    )
+//                },
+//                onDismiss = {
+//                    showCollectionSheetDialog = false
+//                },
+//            )
+//        }
         if (state.isLoading) {
             MifosCircularProgress()
         } else {
@@ -233,15 +235,24 @@ internal fun NewIndividualCollectionSheetScreen(
                         selectedStaff = ""
                     },
                     onOptionSelected = { index, value ->
-                        println("Office selection - Index: $index, List size: ${state.officeList.size}, Value: $value")
-                        val selectedOfficeEntity =
-                            state.officeList.find { it.name.toString() == value }
-                        selectedOfficeEntity?.id?.let {
-                            getStaffList(it)
-                            officeId = it
+                        println("DEBUG: Office selection - Index: $index, List size: ${state.officeList.size}, Value: $value")
+                        try {
+                            if (index >= 0 && index < state.officeList.size) {
+                                val selectedOfficeEntity = state.officeList[index]
+                                selectedOfficeEntity.id?.let {
+                                    getStaffList(it)
+                                    officeId = it
+                                }
+                                selectedOffice = value
+                                selectedStaff = ""
+                                println("DEBUG: Office selection successful")
+                            } else {
+                                println("DEBUG: Office index out of bounds: $index for size ${state.officeList.size}")
+                            }
+                        } catch (e: Exception) {
+                            println("DEBUG: Error in office selection: ${e.message}")
+                            println("DEBUG: Full error: ${e.stackTraceToString()}")
                         }
-                        selectedOffice = value
-                        selectedStaff = ""
                     },
                     label = stringResource(Res.string.feature_collection_sheet_office),
                     options = state.officeList.map { it.name.toString() },
@@ -262,12 +273,21 @@ internal fun NewIndividualCollectionSheetScreen(
                     },
                     onOptionSelected = { index, value ->
                         println("Staff selection - Index: $index, List size: ${state.staffList.size}, Value: $value")
-                        val selectedStaffEntity =
-                            state.staffList.find { it.displayName.toString() == value }
-                        selectedStaffEntity?.id?.let {
-                            staffId = it
+                        try {
+                            if (index >= 0 && index < state.staffList.size) {
+                                val selectedStaffEntity = state.staffList[index]
+                                selectedStaffEntity.id?.let {
+                                    staffId = it
+                                }
+                                selectedStaff = value
+                                println("DEBUG: Staff selection successful")
+                            } else {
+                                println("DEBUG: Staff index out of bounds: $index for size ${state.staffList.size}")
+                            }
+                        } catch (e: Exception) {
+                            println("DEBUG: Error in staff selection: ${e.message}")
+                            println("DEBUG: Full error: ${e.stackTraceToString()}")
                         }
-                        selectedStaff = value
                     },
                     label = stringResource(Res.string.feature_collection_sheet_staff),
                     options = state.staffList.map { it.displayName.toString() },
@@ -320,83 +340,83 @@ internal fun NewIndividualCollectionSheetScreen(
     }
 }
 
-@Composable
-private fun CollectionSheetDialogContent(
-    date: String,
-    member: String,
-    fillNow: () -> Unit,
-    modifier: Modifier = Modifier,
-    onDismiss: () -> Unit,
-) {
-    MifosBottomSheet(
-        modifier = modifier,
-        content = {
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(start = 16.dp, end = 16.dp, bottom = 16.dp),
-            ) {
-                Text(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .align(Alignment.CenterHorizontally),
-                    text = stringResource(Res.string.feature_collection_sheet_found_sheet),
-                    style = MaterialTheme.typography.titleLarge,
-                )
-                Spacer(modifier = Modifier.height(16.dp))
-                Text(
-                    text = stringResource(Res.string.feature_collection_sheet_fill_collection_sheet_message),
-                    style = MaterialTheme.typography.bodyLarge,
-                )
-                Spacer(modifier = Modifier.height(16.dp))
-                Row {
-                    Text(
-                        text = stringResource(Res.string.feature_collection_sheet_date),
-                        style = MaterialTheme.typography.bodyLarge,
-                    )
-                    Spacer(modifier = Modifier.width(16.dp))
-                    Text(
-                        text = date,
-                        style = MaterialTheme.typography.bodyLarge,
-                    )
-                }
-
-                Row {
-                    Text(
-                        text = stringResource(Res.string.feature_collection_sheet_member),
-                        style = MaterialTheme.typography.bodyLarge,
-                    )
-                    Spacer(modifier = Modifier.width(16.dp))
-                    Text(
-                        text = member,
-                        style = MaterialTheme.typography.bodyLarge,
-                    )
-                }
-                Spacer(modifier = Modifier.height(16.dp))
-                Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
-                    MifosButton(
-                        onClick = fillNow,
-                    ) {
-                        Text(
-                            text = stringResource(Res.string.feature_collection_sheet_fill_now),
-                            style = MaterialTheme.typography.bodyLarge,
-                        )
-                    }
-                    Spacer(modifier = Modifier.width(16.dp))
-                    MifosButton(
-                        onClick = onDismiss,
-                    ) {
-                        Text(
-                            text = stringResource(Res.string.feature_collection_sheet_cancel),
-                            style = MaterialTheme.typography.bodyLarge,
-                        )
-                    }
-                }
-            }
-        },
-        onDismiss = onDismiss,
-    )
-}
+// @Composable
+// private fun CollectionSheetDialogContent(
+//    date: String,
+//    member: String,
+//    fillNow: () -> Unit,
+//    modifier: Modifier = Modifier,
+//    onDismiss: () -> Unit,
+// ) {
+//    MifosBottomSheet(
+//        modifier = modifier,
+//        content = {
+//            Column(
+//                modifier = Modifier
+//                    .fillMaxWidth()
+//                    .padding(start = 16.dp, end = 16.dp, bottom = 16.dp),
+//            ) {
+//                Text(
+//                    modifier = Modifier
+//                        .fillMaxWidth()
+//                        .align(Alignment.CenterHorizontally),
+//                    text = stringResource(Res.string.feature_collection_sheet_found_sheet),
+//                    style = MaterialTheme.typography.titleLarge,
+//                )
+//                Spacer(modifier = Modifier.height(16.dp))
+//                Text(
+//                    text = stringResource(Res.string.feature_collection_sheet_fill_collection_sheet_message),
+//                    style = MaterialTheme.typography.bodyLarge,
+//                )
+//                Spacer(modifier = Modifier.height(16.dp))
+//                Row {
+//                    Text(
+//                        text = stringResource(Res.string.feature_collection_sheet_date),
+//                        style = MaterialTheme.typography.bodyLarge,
+//                    )
+//                    Spacer(modifier = Modifier.width(16.dp))
+//                    Text(
+//                        text = date,
+//                        style = MaterialTheme.typography.bodyLarge,
+//                    )
+//                }
+//
+//                Row {
+//                    Text(
+//                        text = stringResource(Res.string.feature_collection_sheet_member),
+//                        style = MaterialTheme.typography.bodyLarge,
+//                    )
+//                    Spacer(modifier = Modifier.width(16.dp))
+//                    Text(
+//                        text = member,
+//                        style = MaterialTheme.typography.bodyLarge,
+//                    )
+//                }
+//                Spacer(modifier = Modifier.height(16.dp))
+//                Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
+//                    MifosButton(
+//                        onClick = fillNow,
+//                    ) {
+//                        Text(
+//                            text = stringResource(Res.string.feature_collection_sheet_fill_now),
+//                            style = MaterialTheme.typography.bodyLarge,
+//                        )
+//                    }
+//                    Spacer(modifier = Modifier.width(16.dp))
+//                    MifosButton(
+//                        onClick = onDismiss,
+//                    ) {
+//                        Text(
+//                            text = stringResource(Res.string.feature_collection_sheet_cancel),
+//                            style = MaterialTheme.typography.bodyLarge,
+//                        )
+//                    }
+//                }
+//            }
+//        },
+//        onDismiss = onDismiss,
+//    )
+// }
 
 @Preview
 @Composable
@@ -448,8 +468,8 @@ val sampleOfficeList = List(10) {
     OfficeEntity(id = it, name = "Name")
 }
 
-@Preview
-@Composable
-private fun CollectionSheetDialogContentPreview() {
-    CollectionSheetDialogContent(date = "19 June 2024", member = "5", fillNow = {}, onDismiss = {})
-}
+// @Preview
+// @Composable
+// private fun CollectionSheetDialogContentPreview() {
+//    CollectionSheetDialogContent(date = "19 June 2024", member = "5", fillNow = {}, onDismiss = {})
+// }

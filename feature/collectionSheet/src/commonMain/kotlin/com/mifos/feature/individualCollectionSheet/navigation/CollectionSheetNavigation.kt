@@ -21,7 +21,9 @@ import com.mifos.core.model.objects.collectionsheets.LoanAndClientName
 import com.mifos.core.network.model.IndividualCollectionSheetPayload
 import com.mifos.feature.individualCollectionSheet.generateCollectionSheet.GenerateCollectionSheetScreen
 import com.mifos.feature.individualCollectionSheet.individualCollectionSheet.IndividualCollectionSheetScreen
+import com.mifos.feature.individualCollectionSheet.individualCollectionSheetDetail.IndividualCollectionSheetDetailScreen
 import com.mifos.feature.individualCollectionSheet.individualCollectionSheetDetails.IndividualCollectionSheetDetailsScreen
+import com.mifos.feature.individualCollectionSheet.newIndividualCollectionSheet.NewIndividualCollectionSheetScreen
 import com.mifos.feature.individualCollectionSheet.paymentDetails.PaymentDetailsScreenRoute
 import com.mifos.room.entities.collectionsheet.IndividualCollectionSheet
 import kotlinx.serialization.Serializable
@@ -34,8 +36,19 @@ fun NavGraphBuilder.individualCollectionSheetNavGraph(
 ) {
     navigation(
         route = "generate_collection_sheet",
-        startDestination = CollectionSheetScreens.IndividualCollectionSheetScreen.route,
+        startDestination = CollectionSheetScreens.NewIndividualCollectionSheetScreen.route,
     ) {
+        newIndividualCollectionSheetScreen(
+            onBackPressed = onBackPressed,
+            onDetail = { date, sheet ->
+                navController.navigateToNewIndividualCollectionSheetDetailScreen(date, sheet)
+            },
+        )
+
+        newIndividualCollectionSheetDetailScreen(
+            onBackPressed = onBackPressed,
+        )
+
         individualCollectionSheetScreen(
             onBackPressed = onBackPressed,
             onDetail = { _, sheet ->
@@ -50,6 +63,51 @@ fun NavGraphBuilder.individualCollectionSheetNavGraph(
         )
 
         paymentDetailsScreen()
+    }
+}
+private fun NavGraphBuilder.newIndividualCollectionSheetScreen(
+    onBackPressed: () -> Unit,
+    onDetail: (String, IndividualCollectionSheet) -> Unit,
+) {
+    composable(
+        route = CollectionSheetScreens.NewIndividualCollectionSheetScreen.route,
+    ) {
+        NewIndividualCollectionSheetScreen(
+            onDetail = onDetail,
+        )
+    }
+}
+
+private fun NavGraphBuilder.newIndividualCollectionSheetDetailScreen(
+    onBackPressed: () -> Unit,
+) {
+    composable(
+        route = CollectionSheetScreens.NewIndividualCollectionSheetDetailScreen.route,
+        arguments = listOf(
+            navArgument(name = Constants.INDIVIDUAL_SHEET_DATE) {
+                type = NavType.StringType
+            },
+            navArgument(name = Constants.INDIVIDUAL_SHEET) {
+                type = NavType.StringType
+            },
+        ),
+    ) { backStackEntry ->
+        val dateString = backStackEntry.arguments?.getString(Constants.INDIVIDUAL_SHEET_DATE) ?: ""
+        val sheetJson = backStackEntry.arguments?.getString(Constants.INDIVIDUAL_SHEET) ?: ""
+
+        val collectionSheet = Json.decodeFromString<IndividualCollectionSheet>(sheetJson)
+        IndividualCollectionSheetDetailScreen(
+            repaymentDate = dateString,
+            collectionSheet = collectionSheet,
+            onAddPayment = { loanItem ->
+                // TODO: Implement payment functionality
+                println("Add payment for loan: ${loanItem.loanId}")
+            },
+            onAddSavingsPayment = { savingsItem ->
+                // TODO: Implement savings payment functionality
+                println("Add savings payment for: ${savingsItem.clientName}")
+            },
+        )
     }
 }
 
@@ -105,6 +163,12 @@ fun NavGraphBuilder.paymentDetailsScreen() {
     ) {
         PaymentDetailsScreenRoute()
     }
+}
+fun NavController.navigateToNewIndividualCollectionSheetDetailScreen(
+    date: String,
+    sheet: IndividualCollectionSheet,
+) {
+    navigate(CollectionSheetScreens.NewIndividualCollectionSheetDetailScreen.argument(date, sheet))
 }
 
 fun NavController.navigateToIndividualCollectionSheetDetailScreen(sheet: IndividualCollectionSheet) {

@@ -39,6 +39,8 @@
     <string name="feature_collection_sheet_receipt_number">Receipt Number</string>
     <string name="feature_collection_sheet_bank_number">Bank Number</string>
     <string name="feature_collection_sheet_save">Save</string>
+    <string name="feature_collection_sheet_due_collections">Due Collections</string>
+    <string name="feature_collection_sheet_due_savings_collections">Due Savings Collections</string>
 
 
     <string name="feature_collection_sheet_individual_collection_details">Collection Details</string>
@@ -63,5 +65,15 @@
     <string name="feature_collection_sheet_productive_collection_sheet">Productive Collection Sheet</string>
     <string name="feature_collection_sheet_productive_sheet_submitted">Productive Sheet Submitted Successfully</string>
     <string name="feature_collection_sheet_collection_sheet_submitted">Collection Sheet Submitted Successfully</string>
+
+    <string name="feature_collection_sheet_loan_account">Loan Account #</string>
+    <string name="feature_collection_sheet_product_name">Product Name</string>
+    <string name="feature_collection_sheet_client_name">Client Name</string>
+    <string name="feature_collection_sheet_charges">Charges</string>
+    <string name="feature_collection_sheet_actions">Actions</string>
+    <string name="feature_collection_sheet_add_payment">Add Payment</string>
+    <string name="feature_collection_sheet_deposit_account">Deposit Account</string>
+    <string name="feature_collection_sheet_savings_account">Savings Account #</string>
+    <string name="feature_collection_sheet_account_id">Account ID</string>
 
 </resources>
