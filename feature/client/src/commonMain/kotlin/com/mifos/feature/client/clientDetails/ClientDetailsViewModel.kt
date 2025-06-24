@@ -12,17 +12,12 @@ package com.mifos.feature.client.clientDetails
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import co.touchlab.kermit.Logger
 import com.mifos.core.common.utils.Constants
 import com.mifos.core.common.utils.DataState
-import com.mifos.core.common.utils.FileUtils.Companion.logger
-import com.mifos.core.common.utils.getInstanceUrl
 import com.mifos.core.data.repository.ClientDetailsRepository
-import com.mifos.core.datastore.UserPreferencesRepository
 import com.mifos.core.domain.useCases.GetClientDetailsUseCase
 import com.mifos.core.domain.useCases.UploadClientImageUseCase
-import com.mifos.core.ui.util.ImageToByteArray
-import com.mifos.core.ui.util.ImageUtil
+import com.mifos.core.ui.util.imageToByteArray
 import com.mifos.feature.client.utils.createImageRequestBody
 import com.mifos.room.entities.accounts.loans.LoanAccountEntity
 import com.mifos.room.entities.accounts.savings.SavingsAccountEntity
@@ -37,10 +32,7 @@ import io.github.vinceglb.filekit.filesDir
 import io.github.vinceglb.filekit.write
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
-import kotlin.io.encoding.Base64
-import kotlin.io.encoding.ExperimentalEncodingApi
 
 /**
  * Created by Aditya Gupta on 06/08/23.
@@ -64,7 +56,7 @@ class ClientDetailsViewModel(
     private val _savingsAccounts = MutableStateFlow<List<SavingsAccountEntity>?>(null)
     val savingsAccounts = _savingsAccounts.asStateFlow()
 
-    private var _profileImage= MutableStateFlow<ByteArray?>(null)
+    private var _profileImage = MutableStateFlow<ByteArray?>(null)
     val profileImage = _profileImage.asStateFlow()
 
     private val _client = MutableStateFlow<ClientEntity?>(null)
@@ -159,14 +151,13 @@ class ClientDetailsViewModel(
         }
     }
 
-    suspend fun getUserProfile(){
-        clientDetailsRepo.getImage(clientId.value).collect { result->
-            when(result)
-            {
+    suspend fun getUserProfile() {
+        clientDetailsRepo.getImage(clientId.value).collect { result ->
+            when (result) {
                 is DataState.Error -> {}
                 DataState.Loading -> _showLoading.value = true
                 is DataState.Success -> {
-                    _profileImage.value=ImageToByteArray(result.data)
+                    _profileImage.value = imageToByteArray(result.data)
                 }
             }
         }

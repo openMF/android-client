@@ -27,7 +27,6 @@ import androidclient.feature.client.generated.resources.feature_client_delete_im
 import androidclient.feature.client.generated.resources.feature_client_documents
 import androidclient.feature.client.generated.resources.feature_client_external_id
 import androidclient.feature.client.generated.resources.feature_client_group
-import androidclient.feature.client.generated.resources.feature_client_ic_dp_placeholder
 import androidclient.feature.client.generated.resources.feature_client_identifiers
 import androidclient.feature.client.generated.resources.feature_client_loan_account
 import androidclient.feature.client.generated.resources.feature_client_mobile_no
@@ -89,18 +88,14 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import co.touchlab.kermit.Logger
-import coil3.compose.AsyncImage
 import com.mifos.core.common.utils.Utils
 import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosMenuDropDownItem
@@ -116,7 +111,6 @@ import com.mifos.room.entities.accounts.savings.SavingsAccountEntity
 import io.github.vinceglb.filekit.dialogs.FileKitType
 import io.github.vinceglb.filekit.dialogs.compose.rememberFilePickerLauncher
 import org.jetbrains.compose.resources.getString
-import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -352,7 +346,7 @@ private fun MifosClientDetailsScreen(
     val scope = rememberCoroutineScope()
     val loanAccounts = clientDetailsViewModel.loanAccount.collectAsStateWithLifecycle().value
     val savingsAccounts = clientDetailsViewModel.savingsAccounts.collectAsStateWithLifecycle().value
-    val profileImage=clientDetailsViewModel.profileImage.collectAsStateWithLifecycle()
+    val profileImage = clientDetailsViewModel.profileImage.collectAsStateWithLifecycle()
     var showSelectImageDialog by remember { mutableStateOf(false) }
 
     Column(
@@ -369,7 +363,7 @@ private fun MifosClientDetailsScreen(
             MifosUserImage(
                 bitmap = profileImage.value,
                 modifier = Modifier.size(100.dp),
-                username = client?.displayName?:"",
+                username = client?.displayName ?: "",
             )
         }
 

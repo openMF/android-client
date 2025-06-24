@@ -15,7 +15,6 @@ import androidclient.feature.collectionsheet.generated.resources.feature_collect
 import androidclient.feature.collectionsheet.generated.resources.feature_collection_sheet_bank_number
 import androidclient.feature.collectionsheet.generated.resources.feature_collection_sheet_cancel
 import androidclient.feature.collectionsheet.generated.resources.feature_collection_sheet_cheque_number
-import androidclient.feature.collectionsheet.generated.resources.feature_collection_sheet_ic_dp_placeholder
 import androidclient.feature.collectionsheet.generated.resources.feature_collection_sheet_no_payment_added
 import androidclient.feature.collectionsheet.generated.resources.feature_collection_sheet_payment_type
 import androidclient.feature.collectionsheet.generated.resources.feature_collection_sheet_receipt_number
@@ -47,12 +46,10 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import coil3.compose.AsyncImage
 import com.mifos.core.designsystem.component.MifosButton
 import com.mifos.core.designsystem.component.MifosOutlinedTextField
 import com.mifos.core.designsystem.component.MifosTextFieldDropdown
@@ -62,7 +59,6 @@ import com.mifos.core.network.model.IndividualCollectionSheetPayload
 import com.mifos.core.ui.components.MifosUserImage
 import com.mifos.core.ui.util.DevicePreview
 import com.mifos.room.entities.noncore.BulkRepaymentTransactions
-import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -70,7 +66,7 @@ import org.koin.compose.viewmodel.koinViewModel
 internal fun PaymentDetailsScreenRoute(
     viewModel: PaymentDetailsViewModel = koinViewModel(),
 ) {
-    val profileImage=viewModel.profileImage.collectAsStateWithLifecycle()
+    val profileImage = viewModel.profileImage.collectAsStateWithLifecycle()
 
     PaymentsDetailsScreen(
         clientId = viewModel.clientId,

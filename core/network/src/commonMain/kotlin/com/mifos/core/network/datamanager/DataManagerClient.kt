@@ -210,7 +210,7 @@ class DataManagerClient(
         return mBaseApiManager.clientsApi.uploadClientImage(clientId, file)
     }
 
-    suspend fun getClientImage(clientId: Int):Flow<DataState<String>>{
+    suspend fun getClientImage(clientId: Int): Flow<DataState<String>> {
         return mBaseApiManager.clientsApi.getClientImage(clientId)
             .asDataStateFlow()
             .map {
@@ -226,8 +226,6 @@ class DataManagerClient(
                 }
             }
     }
-
-
 
     /**
      * Return Clients from DatabaseHelperClient only one time.
