@@ -21,6 +21,7 @@ import com.mifos.core.data.repository.ClientDetailsRepository
 import com.mifos.core.datastore.UserPreferencesRepository
 import com.mifos.core.domain.useCases.GetClientDetailsUseCase
 import com.mifos.core.domain.useCases.UploadClientImageUseCase
+import com.mifos.core.ui.util.ImageToByteArray
 import com.mifos.core.ui.util.ImageUtil
 import com.mifos.feature.client.utils.createImageRequestBody
 import com.mifos.room.entities.accounts.loans.LoanAccountEntity
@@ -47,7 +48,6 @@ import kotlin.io.encoding.ExperimentalEncodingApi
 class ClientDetailsViewModel(
     private val uploadClientImageUseCase: UploadClientImageUseCase,
     private val getClientDetailsUseCase: GetClientDetailsUseCase,
-    private val prefManager: UserPreferencesRepository,
     private val clientDetailsRepo: ClientDetailsRepository,
     savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
@@ -75,7 +75,7 @@ class ClientDetailsViewModel(
 
     init {
         viewModelScope.launch {
-            getUserPhoto()
+            getUserProfile()
         }
     }
     private fun uploadImage(id: Int, imageFile: PlatformFile) = viewModelScope.launch {
@@ -159,43 +159,15 @@ class ClientDetailsViewModel(
         }
     }
 
-    suspend fun getUserPhoto(){
+    suspend fun getUserProfile(){
         clientDetailsRepo.getImage(clientId.value).collect { result->
             when(result)
             {
                 is DataState.Error -> {}
                 DataState.Loading -> _showLoading.value = true
                 is DataState.Success -> {
-                    setUserProfile(result.data)
+                    _profileImage.value=ImageToByteArray(result.data)
                 }
-            }
-
-        }
-    }
-
-    @OptIn(ExperimentalEncodingApi::class)
-    private fun setUserProfile(image: String?) {
-
-        Logger.e("Revanth"){
-            image.toString()
-        }
-        if (image.isNullOrBlank()) return
-
-//        val base64String = image.substringAfter(",", image)
-//        if (!base64String.matches(Regex("^[A-Za-z0-9+/=]+$"))) return
-        val base64String = image.substringAfter(",")
-
-        val cleanBase64 = base64String
-            .replace("\\s".toRegex(), "")
-            .replace("[^A-Za-z0-9+/=]".toRegex(), "")
-
-        try {
-            val decodedBytes = Base64.decode(cleanBase64)
-            val decodedBitmap = ImageUtil.compressImage(decodedBytes)
-            _profileImage.value=decodedBitmap
-        } catch (e: Exception) {
-            Logger.e("Mifos"){
-                e.toString()
             }
         }
     }

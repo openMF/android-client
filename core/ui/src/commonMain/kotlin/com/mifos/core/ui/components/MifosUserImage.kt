@@ -32,10 +32,9 @@ fun MifosUserImage(
 ) {
 
     val context = LocalPlatformContext.current
-    val uploadedImage by remember { mutableStateOf<ByteArray?>(null) }
 
     val painter = rememberAsyncImagePainter(
-        model = uploadedImage,
+        model = bitmap,
         imageLoader = ImageLoader(context),
     )
     if (bitmap == null) {
