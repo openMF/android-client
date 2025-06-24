@@ -12,13 +12,16 @@ package com.mifos.feature.client.clientDetails
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import co.touchlab.kermit.Logger
 import com.mifos.core.common.utils.Constants
 import com.mifos.core.common.utils.DataState
+import com.mifos.core.common.utils.FileUtils.Companion.logger
 import com.mifos.core.common.utils.getInstanceUrl
 import com.mifos.core.data.repository.ClientDetailsRepository
 import com.mifos.core.datastore.UserPreferencesRepository
 import com.mifos.core.domain.useCases.GetClientDetailsUseCase
 import com.mifos.core.domain.useCases.UploadClientImageUseCase
+import com.mifos.core.ui.util.ImageUtil
 import com.mifos.feature.client.utils.createImageRequestBody
 import com.mifos.room.entities.accounts.loans.LoanAccountEntity
 import com.mifos.room.entities.accounts.savings.SavingsAccountEntity
@@ -35,6 +38,8 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import kotlin.io.encoding.Base64
+import kotlin.io.encoding.ExperimentalEncodingApi
 
 /**
  * Created by Aditya Gupta on 06/08/23.
@@ -59,12 +64,20 @@ class ClientDetailsViewModel(
     private val _savingsAccounts = MutableStateFlow<List<SavingsAccountEntity>?>(null)
     val savingsAccounts = _savingsAccounts.asStateFlow()
 
+    private var _profileImage= MutableStateFlow<ByteArray?>(null)
+    val profileImage = _profileImage.asStateFlow()
+
     private val _client = MutableStateFlow<ClientEntity?>(null)
     val client = _client.asStateFlow()
 
     private val _showLoading = MutableStateFlow(true)
     val showLoading = _showLoading.asStateFlow()
 
+    init {
+        viewModelScope.launch {
+            getUserPhoto()
+        }
+    }
     private fun uploadImage(id: Int, imageFile: PlatformFile) = viewModelScope.launch {
         uploadClientImageUseCase(id, createImageRequestBody(imageFile)).collect { result ->
             when (result) {
@@ -146,13 +159,44 @@ class ClientDetailsViewModel(
         }
     }
 
-    suspend fun getClientImageUrl(): String {
-        val serverConfig = prefManager.serverConfig.first()
-        return (
-            serverConfig.getInstanceUrl() +
-                "clients/" +
-                clientId +
-                "/images?maxHeight=120&maxWidth=120"
-            )
+    suspend fun getUserPhoto(){
+        clientDetailsRepo.getImage(clientId.value).collect { result->
+            when(result)
+            {
+                is DataState.Error -> {}
+                DataState.Loading -> _showLoading.value = true
+                is DataState.Success -> {
+                    setUserProfile(result.data)
+                }
+            }
+
+        }
+    }
+
+    @OptIn(ExperimentalEncodingApi::class)
+    private fun setUserProfile(image: String?) {
+
+        Logger.e("Revanth"){
+            image.toString()
+        }
+        if (image.isNullOrBlank()) return
+
+//        val base64String = image.substringAfter(",", image)
+//        if (!base64String.matches(Regex("^[A-Za-z0-9+/=]+$"))) return
+        val base64String = image.substringAfter(",")
+
+        val cleanBase64 = base64String
+            .replace("\\s".toRegex(), "")
+            .replace("[^A-Za-z0-9+/=]".toRegex(), "")
+
+        try {
+            val decodedBytes = Base64.decode(cleanBase64)
+            val decodedBitmap = ImageUtil.compressImage(decodedBytes)
+            _profileImage.value=decodedBitmap
+        } catch (e: Exception) {
+            Logger.e("Mifos"){
+                e.toString()
+            }
+        }
     }
 }

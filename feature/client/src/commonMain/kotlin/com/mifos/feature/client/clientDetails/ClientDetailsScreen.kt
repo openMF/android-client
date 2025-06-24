@@ -99,6 +99,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import co.touchlab.kermit.Logger
 import coil3.compose.AsyncImage
 import com.mifos.core.common.utils.Utils
 import com.mifos.core.designsystem.component.MifosCircularProgress
@@ -106,6 +107,7 @@ import com.mifos.core.designsystem.component.MifosMenuDropDownItem
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.icon.MifosIcons
+import com.mifos.core.ui.components.MifosUserImage
 import com.mifos.core.ui.util.DevicePreview
 import com.mifos.feature.client.utils.PlatformCameraLauncher
 import com.mifos.room.entities.accounts.loans.LoanAccountEntity
@@ -350,16 +352,14 @@ private fun MifosClientDetailsScreen(
     val scope = rememberCoroutineScope()
     val loanAccounts = clientDetailsViewModel.loanAccount.collectAsStateWithLifecycle().value
     val savingsAccounts = clientDetailsViewModel.savingsAccounts.collectAsStateWithLifecycle().value
+    val profileImage=clientDetailsViewModel.profileImage.collectAsStateWithLifecycle()
     var showSelectImageDialog by remember { mutableStateOf(false) }
 
-    var imageUrl by rememberSaveable { mutableStateOf<String?>(null) }
-
-    LaunchedEffect(client?.clientId) {
-        if (client?.imagePresent == true && client.clientId != null) {
-            imageUrl = clientDetailsViewModel.getClientImageUrl()
+    LaunchedEffect(profileImage){
+        Logger.e("Revanth"){
+            profileImage.toString()
         }
     }
-
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -371,22 +371,13 @@ private fun MifosClientDetailsScreen(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.Center,
         ) {
-            AsyncImage(
-                modifier = Modifier
-                    .size(75.dp)
-                    .clip(RoundedCornerShape(100))
-                    .clickable(
-                        onClick = {
-                            showSelectImageDialog = true
-                        },
-                    ),
-                model = imageUrl,
-                contentDescription = null,
-                contentScale = ContentScale.FillBounds,
-                error = painterResource(Res.drawable.feature_client_ic_dp_placeholder),
-                fallback = painterResource(Res.drawable.feature_client_ic_dp_placeholder),
+            MifosUserImage(
+                bitmap = profileImage.value,
+                modifier = Modifier.size(100.dp),
+                username = client?.displayName?:"",
             )
         }
+
         Spacer(modifier = Modifier.height(10.dp))
         client?.displayName?.let {
             Text(
