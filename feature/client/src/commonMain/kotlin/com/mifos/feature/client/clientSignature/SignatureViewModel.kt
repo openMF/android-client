@@ -17,6 +17,7 @@ import androidx.lifecycle.viewModelScope
 import com.mifos.core.common.utils.Constants
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.domain.useCases.CreateDocumentUseCase
+import com.mifos.feature.client.utils.createImageRequestBody
 import io.github.vinceglb.filekit.PlatformFile
 import io.github.vinceglb.filekit.name
 import io.github.vinceglb.filekit.readBytes
@@ -49,7 +50,7 @@ class SignatureViewModel(
         val result = createDocumentUseCase(
             entityType = entityType,
             entityId = entityId,
-            file = createDocumentRequestBody(documentFile, documentName, description),
+            file = createImageRequestBody(documentFile, documentName, description),
         )
         when (result) {
             is DataState.Error ->
@@ -60,28 +61,5 @@ class SignatureViewModel(
                 _signatureUiState.value =
                     SignatureUiState.SignatureUploadedSuccessfully
         }
-    }
-
-    @OptIn(InternalAPI::class)
-    private suspend fun createDocumentRequestBody(
-        file: PlatformFile,
-        name: String,
-        description: String,
-    ): MultiPartFormDataContent {
-        val byteArray = file.readBytes()
-        return MultiPartFormDataContent(
-            formData {
-                append(
-                    "file",
-                    byteArray,
-                    Headers.build {
-                        append(HttpHeaders.ContentType, "image/png")
-                        append(HttpHeaders.ContentDisposition, "filename=\"${file.name}\"")
-                    },
-                )
-                append("name", name)
-                append("description", description)
-            },
-        )
     }
 }
