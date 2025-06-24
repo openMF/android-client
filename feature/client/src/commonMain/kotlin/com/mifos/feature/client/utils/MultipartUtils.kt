@@ -17,7 +17,6 @@ import io.ktor.client.request.forms.MultiPartFormDataContent
 import io.ktor.client.request.forms.formData
 import io.ktor.http.Headers
 import io.ktor.http.HttpHeaders
-import io.ktor.utils.io.InternalAPI
 
 internal suspend fun createImageRequestBody(
     imageFile: PlatformFile,
