@@ -1,0 +1,28 @@
+/*
+ * Copyright 2024 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ */
+package com.mifos.feature.report.reportDetail
+
+import org.jetbrains.compose.resources.StringResource
+
+sealed class ReportDetailUiState {
+
+    data object Loading : ReportDetailUiState()
+
+    data class Error(val message: StringResource) : ReportDetailUiState()
+
+    data object ParameterDetailsSuccess : ReportDetailUiState()
+}
+
+sealed class ReportUiState {
+
+    data object Initial : ReportUiState()
+
+    data class Message(val message: StringResource) : ReportUiState()
+}

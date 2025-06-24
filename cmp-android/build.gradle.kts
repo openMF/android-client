@@ -141,6 +141,11 @@ dependencies {
     testImplementation(kotlin("test"))
     testImplementation(libs.koin.test)
     testImplementation(libs.koin.test.junit4)
+
+    implementation(libs.filekit.coil)
+    implementation(libs.filekit.core)
+    implementation(libs.filekit.compose)
+    implementation(libs.filekit.dialog.compose)
 }
 
 dependencyGuard {

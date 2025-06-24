@@ -240,9 +240,7 @@ fun MifosOutlinedTextField(
         trailingIcon = trailingIcon,
         maxLines = maxLines,
         singleLine = singleLine,
-        textStyle = LocalDensity.current.run {
-            TextStyle(fontSize = 18.sp)
-        },
+        textStyle = MaterialTheme.typography.bodyLarge,
         keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next, keyboardType = keyboardType),
         visualTransformation = visualTransformation,
         isError = error != null,

@@ -9,11 +9,11 @@
  */
 package com.mifos.core.network.datamanager
 
+import com.mifos.core.common.utils.DataState
 import com.mifos.core.model.objects.noncoreobjects.Document
 import com.mifos.core.network.BaseApiManager
-import com.mifos.core.network.GenericResponse
+import io.ktor.client.request.forms.MultiPartFormDataContent
 import io.ktor.client.statement.HttpResponse
-import io.ktor.http.content.PartData
 import kotlinx.coroutines.flow.Flow
 
 /**
@@ -46,16 +46,19 @@ class DataManagerDocument(val mBaseApiManager: BaseApiManager) {
      * @param file       Document File
      * @return GenericResponse
      */
-    fun createDocument(
+    suspend fun createDocument(
         entityType: String,
         entityId: Int,
-        name: String,
-        desc: String,
-        file: PartData,
-    ): Flow<GenericResponse> {
-        return mBaseApiManager
-            .documentApi
-            .createDocument(entityType, entityId, name, desc, file)
+        file: MultiPartFormDataContent,
+    ): DataState<Unit> {
+        return try {
+            mBaseApiManager
+                .documentApi
+                .createDocument(entityType, entityId, file)
+            DataState.Success(Unit)
+        } catch (e: Exception) {
+            DataState.Error(e)
+        }
     }
 
     /**
@@ -93,7 +96,7 @@ class DataManagerDocument(val mBaseApiManager: BaseApiManager) {
         entityType: String,
         entityId: Int,
         documentId: Int,
-    ): GenericResponse {
+    ) {
         return mBaseApiManager.documentApi.removeDocument(entityType, entityId, documentId)
     }
 
@@ -112,15 +115,18 @@ class DataManagerDocument(val mBaseApiManager: BaseApiManager) {
      * @param file       Document File
      * @return GenericResponse
      */
-    fun updateDocument(
+    suspend fun updateDocument(
         entityType: String,
         entityId: Int,
         documentId: Int,
-        name: String,
-        desc: String,
-        file: PartData,
-    ): Flow<GenericResponse> {
-        return mBaseApiManager.documentApi
-            .updateDocument(entityType, entityId, documentId, name, desc, file)
+        file: MultiPartFormDataContent,
+    ): DataState<Unit> {
+        return try {
+            mBaseApiManager.documentApi
+                .updateDocument(entityType, entityId, documentId, file)
+            DataState.Success(Unit)
+        } catch (e: Exception) {
+            DataState.Error(e)
+        }
     }
 }

@@ -20,12 +20,16 @@ import com.mifos.feature.activate.di.ActivateModule
 import com.mifos.feature.auth.di.AuthModule
 import com.mifos.feature.center.di.CenterModule
 import com.mifos.feature.checker.inbox.task.di.CheckerInboxTaskModule
+import com.mifos.feature.client.di.ClientModule
 import com.mifos.feature.dataTable.di.DataTableModule
+import com.mifos.feature.document.di.DocumentModule
 import com.mifos.feature.groups.di.GroupsModule
 import com.mifos.feature.individualCollectionSheet.di.CollectionSheetModule
+import com.mifos.feature.loan.di.LoanModule
 import com.mifos.feature.note.di.NoteModule
 import com.mifos.feature.offline.di.OfflineModule
 import com.mifos.feature.pathTracking.di.PathTrackingModule
+import com.mifos.feature.report.di.ReportModule
 import com.mifos.feature.savings.di.SavingsModule
 import com.mifos.feature.search.di.SearchModule
 import com.mifos.feature.settings.di.SettingsModule
@@ -61,21 +65,20 @@ object KoinModules {
 
     private val featureModules = module {
         includes(
-//            AboutModule,
             ActivateModule,
             AuthModule,
             CenterModule,
             CheckerInboxTaskModule,
-//            ClientModule,
+            ClientModule,
             CollectionSheetModule,
             DataTableModule,
-//            DocumentModule,
             GroupsModule,
-//            LoanModule,
+            DocumentModule,
+            LoanModule,
             NoteModule,
             OfflineModule,
             PathTrackingModule,
-//            ReportModule,
+            ReportModule,
             SavingsModule,
             SearchModule,
             SettingsModule,

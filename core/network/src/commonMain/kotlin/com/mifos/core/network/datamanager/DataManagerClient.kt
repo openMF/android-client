@@ -31,6 +31,7 @@ import com.mifos.room.entities.client.ClientEntity
 import com.mifos.room.entities.client.ClientPayloadEntity
 import com.mifos.room.entities.templates.clients.ClientsTemplateEntity
 import com.mifos.room.helper.ClientDaoHelper
+import io.ktor.client.request.forms.MultiPartFormDataContent
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
@@ -202,8 +203,8 @@ class DataManagerClient(
      * @param file MultipartBody of the Image file
      * @return ResponseBody is the Retrofit 2 response
      */
-    suspend fun uploadClientImage(clientId: Int, typedFile: String) {
-        mBaseApiManager.clientsApi.uploadClientImage(clientId, typedFile)
+    suspend fun uploadClientImage(clientId: Int, file: MultiPartFormDataContent) {
+        return mBaseApiManager.clientsApi.uploadClientImage(clientId, file)
     }
     /**
      * Return Clients from DatabaseHelperClient only one time.

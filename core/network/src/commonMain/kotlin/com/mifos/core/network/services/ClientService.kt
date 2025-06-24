@@ -31,6 +31,7 @@ import de.jensklingenberg.ktorfit.http.POST
 import de.jensklingenberg.ktorfit.http.PUT
 import de.jensklingenberg.ktorfit.http.Path
 import de.jensklingenberg.ktorfit.http.Query
+import io.ktor.client.request.forms.MultiPartFormDataContent
 import kotlinx.coroutines.flow.Flow
 
 /**
@@ -63,7 +64,7 @@ interface ClientService {
     @POST(APIEndPoint.CLIENTS + "/{clientId}/images")
     suspend fun uploadClientImage(
         @Path("clientId") clientId: Int,
-        @Body typedFile: String,
+        @Body body: MultiPartFormDataContent,
     ): Unit
 
     @DELETE(APIEndPoint.CLIENTS + "/{clientId}/images")

@@ -59,9 +59,11 @@ import androidx.compose.material.icons.outlined.AccountCircle
 import androidx.compose.material.icons.outlined.DateRange
 import androidx.compose.material.icons.outlined.EventRepeat
 import androidx.compose.material.icons.outlined.Group
+import androidx.compose.material.icons.outlined.Groups
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.HomeWork
 import androidx.compose.material.icons.outlined.Mail
+import androidx.compose.material.icons.outlined.MobileFriendly
 import androidx.compose.material.icons.outlined.Numbers
 import androidx.compose.material.icons.outlined.PersonOutline
 import androidx.compose.material.icons.outlined.Visibility
@@ -191,4 +193,8 @@ object MifosIcons {
     val Stop = Icons.Rounded.Stop
 
     val MyLocation = Icons.Rounded.MyLocation
+    val MobileFriendly = Icons.Outlined.MobileFriendly
+    val Groups = Icons.Outlined.Groups
+    val HomeWork = Icons.Outlined.HomeWork
+    val AddFilled = Icons.Filled.Add
 }

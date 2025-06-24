@@ -13,6 +13,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.feature.about.navigation.AboutScreens
 import com.mifos.feature.checker.inbox.task.navigation.CheckerInboxTaskScreens
+import com.mifos.feature.client.navigation.ClientScreens
 import com.mifos.feature.groups.navigation.GroupScreen
 import com.mifos.feature.offline.navigation.OfflineScreens
 import com.mifos.feature.pathTracking.navigation.PathTrackingScreens
@@ -32,7 +33,7 @@ sealed class HomeDestinationsScreen(
 
     data object ClientListScreen : HomeDestinationsScreen(
         title = "Clients",
-        route = "client_list_screen",
+        route = ClientScreens.ClientListScreen.route,
         icon = MifosIcons.Person,
     )
 

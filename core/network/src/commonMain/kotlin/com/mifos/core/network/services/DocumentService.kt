@@ -10,17 +10,15 @@
 package com.mifos.core.network.services
 
 import com.mifos.core.model.objects.noncoreobjects.Document
-import com.mifos.core.network.GenericResponse
 import com.mifos.room.basemodel.APIEndPoint
+import de.jensklingenberg.ktorfit.http.Body
 import de.jensklingenberg.ktorfit.http.DELETE
 import de.jensklingenberg.ktorfit.http.GET
-import de.jensklingenberg.ktorfit.http.Multipart
 import de.jensklingenberg.ktorfit.http.POST
 import de.jensklingenberg.ktorfit.http.PUT
-import de.jensklingenberg.ktorfit.http.Part
 import de.jensklingenberg.ktorfit.http.Path
+import io.ktor.client.request.forms.MultiPartFormDataContent
 import io.ktor.client.statement.HttpResponse
-import io.ktor.http.content.PartData
 import kotlinx.coroutines.flow.Flow
 
 interface DocumentService {
@@ -39,14 +37,11 @@ interface DocumentService {
      * @param typedFile               - Mandatory
      */
     @POST("{entityType}/{entityId}/" + APIEndPoint.DOCUMENTS)
-    @Multipart
-    fun createDocument(
+    suspend fun createDocument(
         @Path("entityType") entityType: String,
         @Path("entityId") entityId: Int,
-        @Part("name") nameOfDocument: String,
-        @Part("description") description: String,
-        @Part typedFile: PartData,
-    ): Flow<GenericResponse>
+        @Body request: MultiPartFormDataContent,
+    ): Unit
 
     /**
      * This Service is for downloading the Document with EntityType and EntityId and Document Id
@@ -84,7 +79,7 @@ interface DocumentService {
         @Path("entityType") entityType: String,
         @Path("entityId") entityId: Int,
         @Path("documentId") documentId: Int,
-    ): GenericResponse
+    ): Unit
 
     /**
      * This Service for Updating the Document with EntityType and EntityId and Document Id.
@@ -102,13 +97,10 @@ interface DocumentService {
      * @param typedFile               - Mandatory
      */
     @PUT("{entityType}/{entityId}/" + APIEndPoint.DOCUMENTS + "/{documentId}")
-    @Multipart
-    fun updateDocument(
+    suspend fun updateDocument(
         @Path("entityType") entityType: String,
         @Path("entityId") entityId: Int,
         @Path("documentId") documentId: Int,
-        @Part("name") nameOfDocument: String,
-        @Part("description") description: String,
-        @Part typedFile: PartData,
-    ): Flow<GenericResponse>
+        @Body request: MultiPartFormDataContent,
+    ): Unit
 }

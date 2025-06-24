@@ -19,6 +19,7 @@ import com.mifos.room.entities.client.ClientPayloadEntity
 import com.mifos.room.entities.organisation.OfficeEntity
 import com.mifos.room.entities.organisation.StaffEntity
 import com.mifos.room.entities.templates.clients.ClientsTemplateEntity
+import io.ktor.client.request.forms.MultiPartFormDataContent
 import kotlinx.coroutines.flow.Flow
 
 /**
@@ -49,7 +50,7 @@ class CreateNewClientRepositoryImp(
         return dataManagerClient.createClient(clientPayload)
     }
 
-    override suspend fun uploadClientImage(clientId: Int, image: String) {
-        dataManagerClient.uploadClientImage(clientId, image)
+    override suspend fun uploadClientImage(clientId: Int, image: MultiPartFormDataContent) {
+        return dataManagerClient.uploadClientImage(clientId, image)
     }
 }

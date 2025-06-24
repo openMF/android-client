@@ -64,9 +64,13 @@ data class ClientPayloadEntity(
 
     val address: String? = null,
 
-    val dateFormat: String? = "dd MMMM YYYY",
+    val dateFormat: String? = null,
 
-    val locale: String? = "en",
+    val locale: String? = null,
 
     val datatables: List<DataTablePayload>? = null,
+
+    // TODO add legal form id field
+    // 1 for Person (Individual client)
+//    val legalFormId: Int? = 1,
 ) : Parcelable
