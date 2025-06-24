@@ -1,0 +1,83 @@
+/*
+ * Copyright 2024 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ */
+package com.mifos.feature.client.clientIdentifiers
+
+import androidclient.feature.client.generated.resources.Res
+import androidclient.feature.client.generated.resources.feature_client_failed_to_delete_identifier
+import androidclient.feature.client.generated.resources.feature_client_failed_to_load_client_identifiers
+import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.mifos.core.common.utils.Constants
+import com.mifos.core.common.utils.DataState
+import com.mifos.core.data.repository.ClientIdentifiersRepository
+import com.mifos.core.domain.useCases.DeleteIdentifierUseCase
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.launch
+
+class ClientIdentifiersViewModel(
+//    private val getClientIdentifiersUseCase: GetClientIdentifiersUseCase,
+    private val clientIdentifiersRepository: ClientIdentifiersRepository,
+    private val deleteIdentifierUseCase: DeleteIdentifierUseCase,
+    private val savedStateHandle: SavedStateHandle,
+) : ViewModel() {
+
+    val clientId = savedStateHandle.getStateFlow(key = Constants.CLIENT_ID, initialValue = 0)
+
+    private val _clientIdentifiersUiState =
+        MutableStateFlow<ClientIdentifiersUiState>(ClientIdentifiersUiState.Loading)
+    val clientIdentifiersUiState = _clientIdentifiersUiState.asStateFlow()
+
+    private val _isRefreshing = MutableStateFlow(false)
+    val isRefreshing = _isRefreshing.asStateFlow()
+
+    fun refreshIdentifiersList(clientId: Int) {
+        _isRefreshing.value = true
+        loadIdentifiers(clientId = clientId)
+        _isRefreshing.value = false
+    }
+
+    fun loadIdentifiers(clientId: Int) = viewModelScope.launch {
+        _clientIdentifiersUiState.value =
+            ClientIdentifiersUiState.Loading
+        clientIdentifiersRepository.getClientIdentifiers(clientId)
+            .catch {
+                _clientIdentifiersUiState.value =
+                    ClientIdentifiersUiState.Error(
+                        Res.string.feature_client_failed_to_load_client_identifiers,
+                    )
+            }.collect {
+                _clientIdentifiersUiState.value =
+                    ClientIdentifiersUiState.ClientIdentifiers(it.data ?: emptyList())
+            }
+    }
+
+    fun deleteIdentifier(clientId: Int, identifierId: Int) = viewModelScope.launch {
+        deleteIdentifierUseCase(clientId, identifierId).collect { result ->
+            when (result) {
+                is DataState.Error ->
+                    _clientIdentifiersUiState.value =
+                        ClientIdentifiersUiState.Error(Res.string.feature_client_failed_to_delete_identifier)
+
+                is DataState.Loading ->
+                    _clientIdentifiersUiState.value =
+                        ClientIdentifiersUiState.Loading
+
+                is DataState.Success -> {
+                    _clientIdentifiersUiState.value =
+                        ClientIdentifiersUiState.IdentifierDeletedSuccessfully
+                    loadIdentifiers(clientId)
+                }
+            }
+        }
+    }
+}

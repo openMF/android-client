@@ -11,8 +11,12 @@ package com.mifos.core.domain.useCases
 
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.repository.ClientDetailsRepository
+import core.domain.generated.resources.Res
+import core.domain.generated.resources.core_domain_client_image_uploaded_successfully
+import io.ktor.client.request.forms.MultiPartFormDataContent
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import org.jetbrains.compose.resources.getString
 
 /**
  * Created by Aditya Gupta on 18/03/24.
@@ -22,11 +26,11 @@ class UploadClientImageUseCase(
     private val repository: ClientDetailsRepository,
 ) {
 
-    operator fun invoke(id: Int, image: String): Flow<DataState<String>> = flow {
+    operator fun invoke(id: Int, image: MultiPartFormDataContent): Flow<DataState<String>> = flow {
         try {
             emit(DataState.Loading)
             repository.uploadClientImage(id, image)
-            DataState.Success("Client image uploaded successfully")
+            DataState.Success(getString(Res.string.core_domain_client_image_uploaded_successfully))
         } catch (e: Exception) {
             DataState.Error(e)
         }

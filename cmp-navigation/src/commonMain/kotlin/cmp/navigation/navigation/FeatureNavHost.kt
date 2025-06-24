@@ -13,7 +13,9 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.navigation
 import cmp.navigation.AppState
+import com.mifos.core.common.utils.Constants
 import com.mifos.feature.about.navigation.aboutNavGraph
 import com.mifos.feature.activate.navigation.activateScreen
 import com.mifos.feature.activate.navigation.navigateToActivateScreen
@@ -21,7 +23,10 @@ import com.mifos.feature.auth.navigation.navigateToLogin
 import com.mifos.feature.center.navigation.centerNavGraph
 import com.mifos.feature.center.navigation.navigateCreateCenterScreenRoute
 import com.mifos.feature.checker.inbox.task.navigation.checkerInboxTaskNavGraph
+import com.mifos.feature.client.navigation.clientNavGraph
+import com.mifos.feature.client.navigation.navigateCreateClientScreen
 import com.mifos.feature.dataTable.navigation.dataTableNavGraph
+import com.mifos.feature.dataTable.navigation.navigateDataTableList
 import com.mifos.feature.dataTable.navigation.navigateToDataTable
 import com.mifos.feature.document.navigation.documentListScreen
 import com.mifos.feature.document.navigation.navigateToDocumentListScreen
@@ -32,6 +37,7 @@ import com.mifos.feature.loan.navigation.addLoanAccountScreen
 import com.mifos.feature.loan.navigation.groupLoanScreen
 import com.mifos.feature.loan.navigation.loanNavGraph
 import com.mifos.feature.loan.navigation.navigateToGroupLoanScreen
+import com.mifos.feature.loan.navigation.navigateToLoanAccountScreen
 import com.mifos.feature.loan.navigation.navigateToLoanAccountSummaryScreen
 import com.mifos.feature.note.navigation.navigateToNoteScreen
 import com.mifos.feature.note.navigation.noteNavGraph
@@ -67,7 +73,7 @@ internal fun FeatureNavHost(
 
         searchNavGraph(
             paddingValues = padding,
-            onCreateClient = { println("Create Client") },
+            onCreateClient = appState.navController::navigateCreateClientScreen,
             onCreateCenter = appState.navController::navigateCreateCenterScreenRoute,
             onCreateGroup = appState.navController::navigateToCreateNewGroupScreen,
             onClient = { id -> println("Client clicked: $id") },
@@ -143,6 +149,52 @@ internal fun FeatureNavHost(
             dataTable = { _, _ ->
 //                navController.navigateDataTableList(dataTable, payload, Constants.CLIENT_LOAN)
 //                TODO()
+            },
+        )
+
+        clientNavGraph(
+            navController = appState.navController,
+            paddingValues = padding,
+            addLoanAccount = { clientId ->
+                appState.navController.navigateToLoanAccountScreen(clientId)
+            },
+            addSavingsAccount = { clientId ->
+                appState.navController.navigateToAddSavingsAccount(0, clientId, false)
+            },
+            documents = { clientId ->
+                appState.navController.navigateToDocumentListScreen(
+                    clientId,
+                    Constants.ENTITY_TYPE_CLIENTS,
+                )
+            },
+            moreClientInfo = { clientId ->
+                appState.navController.navigateToDataTable(
+                    Constants.DATA_TABLE_NAME_CLIENT,
+                    clientId,
+                )
+            },
+            notes = { clientId ->
+                appState.navController.navigateToNoteScreen(
+                    clientId,
+                    Constants.ENTITY_TYPE_CLIENTS,
+                )
+            },
+            loanAccountSelected = { loanAccountNumber ->
+                appState.navController.navigateToLoanAccountSummaryScreen(loanAccountNumber)
+            },
+            savingsAccountSelected = { clientId, depositType ->
+                appState.navController.navigateToSavingsAccountSummaryScreen(clientId, depositType)
+            },
+            activateClient = { clientId ->
+                appState.navController.navigateToActivateScreen(
+                    clientId,
+                    Constants.ACTIVATE_CLIENT,
+                )
+            },
+            hasDatatables = appState.navController::navigateDataTableList,
+            onDocumentClicked = appState.navController::navigateToDocumentListScreen,
+            onCardClicked = { _, _ ->
+                // TODO: Add Card Click
             },
         )
     }

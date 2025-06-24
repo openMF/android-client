@@ -20,6 +20,7 @@ import com.mifos.feature.activate.di.ActivateModule
 import com.mifos.feature.auth.di.AuthModule
 import com.mifos.feature.center.di.CenterModule
 import com.mifos.feature.checker.inbox.task.di.CheckerInboxTaskModule
+import com.mifos.feature.client.di.ClientModule
 import com.mifos.feature.dataTable.di.DataTableModule
 import com.mifos.feature.document.di.DocumentModule
 import com.mifos.feature.groups.di.GroupsModule
@@ -68,7 +69,7 @@ object KoinModules {
             AuthModule,
             CenterModule,
             CheckerInboxTaskModule,
-//            ClientModule,
+            ClientModule,
             CollectionSheetModule,
             DataTableModule,
             GroupsModule,
