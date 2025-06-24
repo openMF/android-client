@@ -12,13 +12,13 @@ package com.mifos.feature.client.clientDetails
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import coil3.request.ImageResult
 import com.mifos.core.common.utils.Constants
 import com.mifos.core.common.utils.DataState
+import com.mifos.core.common.utils.getInstanceUrl
 import com.mifos.core.data.repository.ClientDetailsRepository
+import com.mifos.core.datastore.UserPreferencesRepository
 import com.mifos.core.domain.useCases.GetClientDetailsUseCase
 import com.mifos.core.domain.useCases.UploadClientImageUseCase
-import com.mifos.core.network.utils.ImageLoaderUtils
 import com.mifos.feature.client.utils.createImageRequestBody
 import com.mifos.room.entities.accounts.loans.LoanAccountEntity
 import com.mifos.room.entities.accounts.savings.SavingsAccountEntity
@@ -33,6 +33,7 @@ import io.github.vinceglb.filekit.filesDir
 import io.github.vinceglb.filekit.write
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
 /**
@@ -41,7 +42,7 @@ import kotlinx.coroutines.launch
 class ClientDetailsViewModel(
     private val uploadClientImageUseCase: UploadClientImageUseCase,
     private val getClientDetailsUseCase: GetClientDetailsUseCase,
-    private val imageLoaderUtils: ImageLoaderUtils,
+    private val prefManager: UserPreferencesRepository,
     private val clientDetailsRepo: ClientDetailsRepository,
     savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
@@ -145,7 +146,13 @@ class ClientDetailsViewModel(
         }
     }
 
-    suspend fun getClientImageUrl(clientId: Int): ImageResult {
-        return imageLoaderUtils.loadImage(clientId)
+    suspend fun getClientImageUrl(): String {
+        val serverConfig = prefManager.serverConfig.first()
+        return (
+                serverConfig.getInstanceUrl() +
+                        "clients/" +
+                        clientId +
+                        "/images?maxHeight=120&maxWidth=120"
+                )
     }
 }

@@ -11,16 +11,15 @@ package com.mifos.feature.individualCollectionSheet.paymentDetails
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import coil3.request.ImageResult
 import com.mifos.core.common.utils.Constants
-import com.mifos.core.network.utils.ImageLoaderUtils
+import com.mifos.core.common.utils.getInstanceUrl
+import com.mifos.core.datastore.UserPreferencesRepository
 import com.mifos.feature.individualCollectionSheet.navigation.PaymentDetailsArgs
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.first
 import kotlinx.serialization.json.Json
 
 class PaymentDetailsViewModel(
-    private val imageLoaderUtils: ImageLoaderUtils,
+    private val prefManager: UserPreferencesRepository,
     savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
 
@@ -34,11 +33,14 @@ class PaymentDetailsViewModel(
     val loanAndClientName = args.loanAndClientName
     val paymentTypeOptions = args.paymentTypeOptions
 
-    fun getClientImageUrl(clientId: Int): ImageResult? {
-        var image: ImageResult? = null
-        viewModelScope.launch {
-            image = imageLoaderUtils.loadImage(clientId)
-        }
-        return image
+
+    suspend fun getClientImageUrl(): String {
+        val serverConfig = prefManager.serverConfig.first()
+        return (
+                serverConfig.getInstanceUrl() +
+                        "clients/" +
+                        clientId +
+                        "/images?maxHeight=120&maxWidth=120"
+                )
     }
 }

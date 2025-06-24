@@ -42,6 +42,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -52,7 +53,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
-import coil3.request.ImageResult
 import com.mifos.core.designsystem.component.MifosButton
 import com.mifos.core.designsystem.component.MifosOutlinedTextField
 import com.mifos.core.designsystem.component.MifosTextFieldDropdown
@@ -61,6 +61,7 @@ import com.mifos.core.model.objects.collectionsheets.LoanAndClientName
 import com.mifos.core.network.model.IndividualCollectionSheetPayload
 import com.mifos.core.ui.util.DevicePreview
 import com.mifos.room.entities.noncore.BulkRepaymentTransactions
+import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -68,6 +69,12 @@ import org.koin.compose.viewmodel.koinViewModel
 internal fun PaymentDetailsScreenRoute(
     viewModel: PaymentDetailsViewModel = koinViewModel(),
 ) {
+    var imageUrl by remember { mutableStateOf<String?>(null) }
+
+    LaunchedEffect(viewModel.clientId) {
+        imageUrl = viewModel.getClientImageUrl()
+    }
+
     PaymentsDetailsScreen(
         clientId = viewModel.clientId,
         position = viewModel.position,
@@ -75,7 +82,7 @@ internal fun PaymentDetailsScreenRoute(
         loanAndClientNameItem = viewModel.loanAndClientName,
         paymentTypeOptionList = viewModel.paymentTypeOptionsName,
         paymentTypeOptions = viewModel.paymentTypeOptions,
-        getClientImage = { viewModel.getClientImageUrl(it) },
+        getClientImage = imageUrl,
     )
 }
 
@@ -88,7 +95,7 @@ internal fun PaymentsDetailsScreen(
     paymentTypeOptionList: List<String>,
     paymentTypeOptions: List<PaymentTypeOptions>,
     modifier: Modifier = Modifier,
-    getClientImage: (Int) -> ImageResult?,
+    getClientImage: String?,
 ) {
     val loanCollectionSheetItem = loanAndClientNameItem.loan
     val scrollState = rememberScrollState()
@@ -258,8 +265,10 @@ internal fun PaymentsDetailsScreen(
                 ) {
                     AsyncImage(
                         modifier = Modifier.size(60.dp),
-                        model = getClientImage(clientId)
-                            ?: Res.drawable.feature_collection_sheet_ic_dp_placeholder,
+                        model = getClientImage,
+                        error = painterResource(
+                            Res.drawable.feature_collection_sheet_ic_dp_placeholder
+                        ),
                         contentDescription = null,
                         contentScale = ContentScale.FillBounds,
                     )
@@ -395,6 +404,6 @@ private fun PreviewPaymentDetails(modifier: Modifier = Modifier) {
         loanAndClientNameItem = LoanAndClientName(id = 2, loan = null, clientName = ""),
         paymentTypeOptionList = emptyList(),
         paymentTypeOptions = emptyList(),
-        getClientImage = { null },
+        getClientImage = null,
     )
 }

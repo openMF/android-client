@@ -27,6 +27,7 @@ import androidclient.feature.client.generated.resources.feature_client_delete_im
 import androidclient.feature.client.generated.resources.feature_client_documents
 import androidclient.feature.client.generated.resources.feature_client_external_id
 import androidclient.feature.client.generated.resources.feature_client_group
+import androidclient.feature.client.generated.resources.feature_client_ic_dp_placeholder
 import androidclient.feature.client.generated.resources.feature_client_ic_launcher
 import androidclient.feature.client.generated.resources.feature_client_identifiers
 import androidclient.feature.client.generated.resources.feature_client_loan_account
@@ -100,6 +101,7 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.compose.AsyncImage
+import coil3.compose.LocalPlatformContext
 import com.mifos.core.common.utils.Utils
 import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosMenuDropDownItem
@@ -115,6 +117,7 @@ import io.github.vinceglb.filekit.dialogs.FileKitType
 import io.github.vinceglb.filekit.dialogs.compose.rememberFilePickerLauncher
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.getString
+import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -352,6 +355,14 @@ private fun MifosClientDetailsScreen(
     val savingsAccounts = clientDetailsViewModel.savingsAccounts.collectAsStateWithLifecycle().value
     var showSelectImageDialog by remember { mutableStateOf(false) }
 
+    var imageUrl by remember { mutableStateOf<String?>(null) }
+
+    LaunchedEffect(client?.clientId) {
+        if (client?.imagePresent == true && client.clientId != null) {
+            imageUrl = clientDetailsViewModel.getClientImageUrl()
+        }
+    }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -372,20 +383,13 @@ private fun MifosClientDetailsScreen(
                             showSelectImageDialog = true
                         },
                     ),
-                model = if (client?.imagePresent == true) {
-                    client.clientId?.let {
-                        scope.launch {
-                            clientDetailsViewModel.getClientImageUrl(
-                                it,
-                            )
-                        }
-                    }
-                } else {
-                    Res.drawable.feature_client_ic_launcher
-                },
+                model = imageUrl,
                 contentDescription = null,
                 contentScale = ContentScale.FillBounds,
+                error = painterResource(Res.drawable.feature_client_ic_dp_placeholder),
+                fallback = painterResource(Res.drawable.feature_client_ic_dp_placeholder),
             )
+
         }
         Spacer(modifier = Modifier.height(10.dp))
         client?.displayName?.let {
