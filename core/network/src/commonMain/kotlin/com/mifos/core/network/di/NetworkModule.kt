@@ -9,7 +9,6 @@
  */
 package com.mifos.core.network.di
 
-import coil3.ImageLoader
 import com.mifos.core.common.utils.getInstanceUrl
 import com.mifos.core.datastore.UserPreferencesRepository
 import com.mifos.core.network.BaseApiManager
@@ -18,7 +17,6 @@ import com.mifos.core.network.KtorHttpClient
 import com.mifos.core.network.KtorfitClient
 import com.mifos.core.network.MifosInterceptor
 import com.mifos.core.network.utils.FlowConverterFactory
-import com.mifos.core.network.utils.ImageLoaderUtils
 import de.jensklingenberg.ktorfit.Ktorfit
 import io.ktor.client.HttpClient
 import io.ktor.client.plugins.auth.Auth
@@ -74,13 +72,5 @@ val NetworkModule = module {
             )
         }
         baseManager
-    }
-
-    single { (context: Any) ->
-        ImageLoaderUtils(
-            prefManager = get<UserPreferencesRepository>(),
-            imageLoader = get<ImageLoader>(),
-            context = context,
-        )
     }
 }

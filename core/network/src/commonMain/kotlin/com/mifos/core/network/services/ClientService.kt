@@ -32,6 +32,7 @@ import de.jensklingenberg.ktorfit.http.PUT
 import de.jensklingenberg.ktorfit.http.Path
 import de.jensklingenberg.ktorfit.http.Query
 import io.ktor.client.request.forms.MultiPartFormDataContent
+import io.ktor.client.statement.HttpResponse
 import kotlinx.coroutines.flow.Flow
 
 /**
@@ -70,9 +71,9 @@ interface ClientService {
     @DELETE(APIEndPoint.CLIENTS + "/{clientId}/images")
     suspend fun deleteClientImage(@Path("clientId") clientId: Int)
 
-    // TODO: Implement when API Fixed
-    //    @GET("/clients/{clientId}/images")
-    //    Observable<TypedString> getClientImage(@Path("clientId") int clientId);
+    @GET(APIEndPoint.CLIENTS + "/{clientId}/images")
+    fun getClientImage(@Path("clientId") clientId: Int): Flow<HttpResponse>
+
     @POST(APIEndPoint.CLIENTS)
     suspend fun createClient(@Body clientPayload: ClientPayloadEntity?): ClientEntity?
 
