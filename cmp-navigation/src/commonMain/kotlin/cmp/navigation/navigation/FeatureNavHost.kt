@@ -164,13 +164,6 @@ internal fun FeatureNavHost(
             },
         )
 
-        savingsNavGraph(
-            navController = appState.navController,
-            onBackPressed = appState.navController::popBackStack,
-            loadMoreSavingsAccountInfo = appState.navController::navigateToDataTable,
-            loadDocuments = appState.navController::navigateToDocumentListScreen,
-        )
-
         generateCollectionSheetScreen(appState.navController::popBackStack)
 
         documentListScreen(
