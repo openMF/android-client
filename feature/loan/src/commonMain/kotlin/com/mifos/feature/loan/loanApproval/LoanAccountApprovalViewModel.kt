@@ -56,7 +56,7 @@ class LoanAccountApprovalViewModel(
                     is DataState.Error -> {
                         _loanAccountApprovalUiState.value =
                             LoanAccountApprovalUiState.ShowLoanApproveFailed(
-                                getString(Res.string.feature_loan_unknown_error_occured)
+                                getString(Res.string.feature_loan_unknown_error_occured),
                             )
                     }
                 }

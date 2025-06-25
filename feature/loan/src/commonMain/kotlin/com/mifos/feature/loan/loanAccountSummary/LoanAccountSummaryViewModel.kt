@@ -53,7 +53,7 @@ class LoanAccountSummaryViewModel(
 
                     is DataState.Error -> {
                         _loanAccountSummaryUiState.value = LoanAccountSummaryUiState.ShowFetchingError(
-                            getString(Res.string.feature_loan_unknown_error_occured)
+                            getString(Res.string.feature_loan_unknown_error_occured),
                         )
                     }
                 }
