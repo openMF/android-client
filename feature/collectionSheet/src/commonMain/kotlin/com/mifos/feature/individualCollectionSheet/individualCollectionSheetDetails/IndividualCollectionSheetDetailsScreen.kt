@@ -257,7 +257,7 @@ private fun IndividualCollectionSheetItem(
                     )
                     Spacer(modifier = Modifier.width(16.dp))
                     Text(
-                        text = loan?.totalDue.toString(),
+                        text = (loan?.totalDue ?: 0).toString(),
                         style = MaterialTheme.typography.bodyMedium,
                     )
                 }
@@ -268,14 +268,16 @@ private fun IndividualCollectionSheetItem(
                     )
                     Spacer(modifier = Modifier.width(16.dp))
                     Text(
-                        text = loan?.chargesDue.toString(),
+                        text = (loan?.chargesDue ?: 0).toString(),
                         style = MaterialTheme.typography.bodyMedium,
                     )
                 }
-                Text(
-                    text = "${loan?.productShortName} (#${loan?.productShortName})",
-                    style = MaterialTheme.typography.bodyMedium,
-                )
+                if (loan?.productShortName != null) {
+                    Text(
+                        text = "${loan.productShortName} (#${loan.productShortName})",
+                        style = MaterialTheme.typography.bodyMedium,
+                    )
+                }
             }
             Icon(
                 imageVector = MifosIcons.ArrowForward,
