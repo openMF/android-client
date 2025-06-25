@@ -59,6 +59,7 @@ import com.mifos.feature.settings.navigation.settingsScreen
 internal fun FeatureNavHost(
     appState: AppState,
     padding: PaddingValues,
+    navigateToLogin:()->Unit,
     modifier: Modifier = Modifier,
 ) {
     NavHost(
@@ -135,7 +136,7 @@ internal fun FeatureNavHost(
 
         settingsScreen(
             navigateBack = appState.navController::popBackStack,
-            navigateToLoginScreen = appState.navController::navigateToLogin,
+            navigateToLoginScreen = navigateToLogin,
             changePasscode = {},
             languageChanged = {},
         )
