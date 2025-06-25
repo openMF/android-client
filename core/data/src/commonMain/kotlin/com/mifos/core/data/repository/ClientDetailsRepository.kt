@@ -9,9 +9,11 @@
  */
 package com.mifos.core.data.repository
 
+import com.mifos.core.common.utils.DataState
 import com.mifos.room.entities.accounts.ClientAccounts
 import com.mifos.room.entities.client.ClientEntity
 import io.ktor.client.request.forms.MultiPartFormDataContent
+import kotlinx.coroutines.flow.Flow
 
 /**
  * Created by Aditya Gupta on 06/08/23.
@@ -25,4 +27,6 @@ interface ClientDetailsRepository {
     suspend fun getClientAccounts(clientId: Int): ClientAccounts
 
     suspend fun getClient(clientId: Int): ClientEntity
+
+    suspend fun getImage(clientId: Int): Flow<DataState<String>>
 }

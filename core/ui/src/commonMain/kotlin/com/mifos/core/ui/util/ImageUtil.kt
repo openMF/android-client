@@ -7,13 +7,15 @@
  *
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
-package com.mifos.core.network.utils
+package com.mifos.core.ui.util
 
-import coil3.request.ImageRequest
+expect object ImageUtil {
+    val DEFAULT_MAX_WIDTH: Float
+    val DEFAULT_MAX_HEIGHT: Float
 
-actual fun buildPlatformImageRequest(
-    context: Any,
-    imageUrl: String,
-): ImageRequest {
-    TODO("Not yet implemented")
+    fun compressImage(
+        decodedBytes: ByteArray,
+        maxWidth: Float = DEFAULT_MAX_WIDTH,
+        maxHeight: Float = DEFAULT_MAX_HEIGHT,
+    ): ByteArray
 }
