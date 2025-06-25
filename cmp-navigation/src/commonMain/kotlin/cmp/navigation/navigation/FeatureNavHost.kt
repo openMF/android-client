@@ -166,16 +166,6 @@ internal fun FeatureNavHost(
 
         generateCollectionSheetScreen(appState.navController::popBackStack)
 
-        documentListScreen(
-            onBackPressed = appState.navController::popBackStack,
-        )
-
-        loanNavGraph(
-            navController = appState.navController,
-            onMoreInfoClicked = appState.navController::navigateToDataTable,
-            onDocumentsClicked = appState.navController::navigateToDocumentListScreen,
-        )
-
         clientNavGraph(
             navController = appState.navController,
             paddingValues = padding,
