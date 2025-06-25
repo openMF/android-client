@@ -9,11 +9,13 @@
  */
 package com.mifos.core.data.repositoryImp
 
+import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.repository.ClientDetailsRepository
 import com.mifos.core.network.datamanager.DataManagerClient
 import com.mifos.room.entities.accounts.ClientAccounts
 import com.mifos.room.entities.client.ClientEntity
 import io.ktor.client.request.forms.MultiPartFormDataContent
+import kotlinx.coroutines.flow.Flow
 
 /**
  * Created by Aditya Gupta on 06/08/23.
@@ -36,5 +38,9 @@ class ClientDetailsRepositoryImp(
 
     override suspend fun getClient(clientId: Int): ClientEntity {
         return dataManagerClient.getClient(clientId)
+    }
+
+    override suspend fun getImage(clientId: Int): Flow<DataState<String>> {
+        return dataManagerClient.getClientImage(clientId)
     }
 }

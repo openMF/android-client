@@ -15,7 +15,6 @@ import androidclient.feature.collectionsheet.generated.resources.feature_collect
 import androidclient.feature.collectionsheet.generated.resources.feature_collection_sheet_bank_number
 import androidclient.feature.collectionsheet.generated.resources.feature_collection_sheet_cancel
 import androidclient.feature.collectionsheet.generated.resources.feature_collection_sheet_cheque_number
-import androidclient.feature.collectionsheet.generated.resources.feature_collection_sheet_ic_dp_placeholder
 import androidclient.feature.collectionsheet.generated.resources.feature_collection_sheet_no_payment_added
 import androidclient.feature.collectionsheet.generated.resources.feature_collection_sheet_payment_type
 import androidclient.feature.collectionsheet.generated.resources.feature_collection_sheet_receipt_number
@@ -47,18 +46,17 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
-import coil3.compose.AsyncImage
-import coil3.request.ImageResult
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mifos.core.designsystem.component.MifosButton
 import com.mifos.core.designsystem.component.MifosOutlinedTextField
 import com.mifos.core.designsystem.component.MifosTextFieldDropdown
 import com.mifos.core.model.objects.account.loan.PaymentTypeOptions
 import com.mifos.core.model.objects.collectionsheets.LoanAndClientName
 import com.mifos.core.network.model.IndividualCollectionSheetPayload
+import com.mifos.core.ui.components.MifosUserImage
 import com.mifos.core.ui.util.DevicePreview
 import com.mifos.room.entities.noncore.BulkRepaymentTransactions
 import org.jetbrains.compose.resources.stringResource
@@ -68,6 +66,8 @@ import org.koin.compose.viewmodel.koinViewModel
 internal fun PaymentDetailsScreenRoute(
     viewModel: PaymentDetailsViewModel = koinViewModel(),
 ) {
+    val profileImage = viewModel.profileImage.collectAsStateWithLifecycle()
+
     PaymentsDetailsScreen(
         clientId = viewModel.clientId,
         position = viewModel.position,
@@ -75,7 +75,7 @@ internal fun PaymentDetailsScreenRoute(
         loanAndClientNameItem = viewModel.loanAndClientName,
         paymentTypeOptionList = viewModel.paymentTypeOptionsName,
         paymentTypeOptions = viewModel.paymentTypeOptions,
-        getClientImage = { viewModel.getClientImageUrl(it) },
+        getClientImage = profileImage.value,
     )
 }
 
@@ -88,7 +88,7 @@ internal fun PaymentsDetailsScreen(
     paymentTypeOptionList: List<String>,
     paymentTypeOptions: List<PaymentTypeOptions>,
     modifier: Modifier = Modifier,
-    getClientImage: (Int) -> ImageResult?,
+    getClientImage: ByteArray?,
 ) {
     val loanCollectionSheetItem = loanAndClientNameItem.loan
     val scrollState = rememberScrollState()
@@ -256,12 +256,10 @@ internal fun PaymentsDetailsScreen(
                         .fillMaxWidth(),
                     horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
-                    AsyncImage(
-                        modifier = Modifier.size(60.dp),
-                        model = getClientImage(clientId)
-                            ?: Res.drawable.feature_collection_sheet_ic_dp_placeholder,
-                        contentDescription = null,
-                        contentScale = ContentScale.FillBounds,
+                    MifosUserImage(
+                        bitmap = getClientImage,
+                        modifier = Modifier.size(100.dp),
+                        username = null,
                     )
                 }
             }
@@ -395,6 +393,6 @@ private fun PreviewPaymentDetails(modifier: Modifier = Modifier) {
         loanAndClientNameItem = LoanAndClientName(id = 2, loan = null, clientName = ""),
         paymentTypeOptionList = emptyList(),
         paymentTypeOptions = emptyList(),
-        getClientImage = { null },
+        getClientImage = null,
     )
 }
