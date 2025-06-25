@@ -30,6 +30,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Icon
@@ -58,6 +59,7 @@ import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.model.objects.account.loan.PaymentTypeOptions
 import com.mifos.core.model.objects.collectionsheets.LoanAndClientName
+import com.mifos.core.model.objects.collectionsheets.LoanCollectionSheet
 import com.mifos.core.network.model.IndividualCollectionSheetPayload
 import com.mifos.room.entities.collectionsheet.ClientCollectionSheet
 import com.mifos.room.entities.collectionsheet.IndividualCollectionSheet
@@ -178,17 +180,17 @@ internal fun IndividualCollectionSheetDetailsScreen(
             } else {
                 LazyColumn {
                     sheet.clients?.toList()?.let {
-                        itemsIndexed(it) { index, client ->
+                        items(it.zip(loansAndClientNames)) { (client, loanAndClientName) ->
                             IndividualCollectionSheetItem(
                                 client = client,
-                                index = index,
+                                loan = loanAndClientName.loan,
                                 onClick = {
                                     sheet.paymentTypeOptions?.let { paymentTypeOptions ->
                                         submit(
-                                            index,
+                                            0,
                                             payload,
-                                            paymentTypeOptions.map { paymentTypeOption -> paymentTypeOption.name.toString() },
-                                            loansAndClientNames[index],
+                                            paymentTypeOptions.map { it.name.toString() },
+                                            loanAndClientName,
                                             paymentTypeOptions.toList(),
                                             client.clientId,
                                         )
@@ -206,11 +208,10 @@ internal fun IndividualCollectionSheetDetailsScreen(
 @Composable
 private fun IndividualCollectionSheetItem(
     client: ClientCollectionSheet,
-    index: Int,
+    loan: LoanCollectionSheet?,
     modifier: Modifier = Modifier,
     onClick: () -> Unit,
 ) {
-    val loan = client.loans?.getOrNull(index)
 
     OutlinedCard(
         modifier = modifier
@@ -257,7 +258,7 @@ private fun IndividualCollectionSheetItem(
                     )
                     Spacer(modifier = Modifier.width(16.dp))
                     Text(
-                        text = (loan?.totalDue ?: 0).toString(),
+                        text = (loan?.totalDue ?: 0.0).toString(),
                         style = MaterialTheme.typography.bodyMedium,
                     )
                 }
@@ -268,7 +269,7 @@ private fun IndividualCollectionSheetItem(
                     )
                     Spacer(modifier = Modifier.width(16.dp))
                     Text(
-                        text = (loan?.chargesDue ?: 0).toString(),
+                        text = (loan?.chargesDue ?: 0.0).toString(),
                         style = MaterialTheme.typography.bodyMedium,
                     )
                 }

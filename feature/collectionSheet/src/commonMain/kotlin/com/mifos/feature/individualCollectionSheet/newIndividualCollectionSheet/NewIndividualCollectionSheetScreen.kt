@@ -233,24 +233,15 @@ internal fun NewIndividualCollectionSheetScreen(
                         selectedStaff = ""
                     },
                     onOptionSelected = { index, value ->
-                        println("DEBUG: Office selection - Index: $index, List size: ${state.officeList.size}, Value: $value")
-                        try {
-                            if (index >= 0 && index < state.officeList.size) {
-                                val selectedOfficeEntity = state.officeList[index]
-                                selectedOfficeEntity.id?.let {
-                                    getStaffList(it)
-                                    officeId = it
-                                }
-                                selectedOffice = value
-                                selectedStaff = ""
-                                println("DEBUG: Office selection successful")
-                            } else {
-                                println("DEBUG: Office index out of bounds: $index for size ${state.officeList.size}")
+                        state.officeList.getOrNull(index)?.let { selectedOfficeEntity ->
+                            selectedOfficeEntity.id.let {
+                                getStaffList(it)
+                                officeId = it
                             }
-                        } catch (e: Exception) {
-                            println("DEBUG: Error in office selection: ${e.message}")
-                            println("DEBUG: Full error: ${e.stackTraceToString()}")
+                            selectedOffice = selectedOfficeEntity.name.toString()
+                            selectedStaff = ""
                         }
+
                     },
                     label = stringResource(Res.string.feature_collection_sheet_office),
                     options = state.officeList.map { it.name.toString() },
@@ -270,21 +261,11 @@ internal fun NewIndividualCollectionSheetScreen(
                         selectedStaff = it
                     },
                     onOptionSelected = { index, value ->
-                        try {
-                            if (index >= 0 && index < state.staffList.size) {
-                                val selectedStaffEntity = state.staffList[index]
-                                selectedStaffEntity.id?.let {
-                                    staffId = it
-                                }
-                                selectedStaff = value
-                                println("DEBUG: Staff selection successful")
-                            } else {
-                                println("DEBUG: Staff index out of bounds: $index for size ${state.staffList.size}")
-                            }
-                        } catch (e: Exception) {
-                            println("DEBUG: Error in staff selection: ${e.message}")
-                            println("DEBUG: Full error: ${e.stackTraceToString()}")
+                        val selectedStaffEntity = state.staffList[index]
+                        selectedStaffEntity.id?.let {
+                            staffId = it
                         }
+                        selectedStaff = value
                     },
                     label = stringResource(Res.string.feature_collection_sheet_staff),
                     options = state.staffList.map { it.displayName.toString() },
