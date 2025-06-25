@@ -21,7 +21,6 @@ import com.mifos.room.utils.UNDEFINED
 import com.mifos.room.utils.UNSPECIFIED
 import com.mifos.room.utils.VALUE_UNSPECIFIED
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.json.Json
 
 /**
  * Created by nellyk on 2/15/2016.
@@ -88,7 +87,7 @@ data class ChargesEntity(
     @ColumnInfo(index = true, name = INHERIT_FIELD_NAME, typeAffinity = UNDEFINED, collate = UNSPECIFIED, defaultValue = VALUE_UNSPECIFIED)
     val chargeDueDate: ClientDateEntity? = null,
 
-    val dueDate: String? = null,
+    val dueDate: List<Int>? = null,
 
     @ColumnInfo(index = true, name = INHERIT_FIELD_NAME, typeAffinity = UNDEFINED, collate = UNSPECIFIED, defaultValue = VALUE_UNSPECIFIED)
     val chargeCalculationType: ChargeCalculationTypeEntity? = null,
@@ -116,20 +115,9 @@ data class ChargesEntity(
 ) : Parcelable {
 
     val formattedDueDate: String
-        get() {
-            val pattern = "%s-%s-%s"
-
-            val dueDateList = try {
-                dueDate?.let { Json.decodeFromString<List<Int>>(it) }
-            } catch (e: kotlinx.serialization.SerializationException) {
-                emptyList()
-            }
-
-            if (dueDateList != null) {
-                if (dueDateList.size > 2) {
-                    return "${dueDateList[0]}-${dueDateList[1]}-${dueDateList[2]}"
-                }
-            }
-            return "No Due Date"
+        get() = if (dueDate?.size == 3) {
+            "${dueDate[0]}-${dueDate[1]}-${dueDate[2]}"
+        } else {
+            "No Due Date"
         }
 }

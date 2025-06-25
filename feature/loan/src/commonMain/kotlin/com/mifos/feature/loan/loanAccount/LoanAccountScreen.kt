@@ -190,8 +190,8 @@ fun LoanAccountScreen(
                         snackbarHostState.showSnackbar(
                             message = message,
                         )
+                        onBackPressed()
                     }
-                    onBackPressed()
                 }
             }
         }

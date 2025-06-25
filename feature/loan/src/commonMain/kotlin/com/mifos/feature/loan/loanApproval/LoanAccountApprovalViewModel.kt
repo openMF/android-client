@@ -9,20 +9,19 @@
  */
 package com.mifos.feature.loan.loanApproval
 
+import androidclient.feature.loan.generated.resources.Res
+import androidclient.feature.loan.generated.resources.feature_loan_unknown_error_occured
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.repository.LoanAccountApprovalRepository
 import com.mifos.room.entities.accounts.loans.LoanApprovalData
-import io.ktor.client.plugins.ClientRequestException
-import io.ktor.client.plugins.ServerResponseException
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
-import kotlinx.io.IOException
-import kotlinx.serialization.SerializationException
 import kotlinx.serialization.json.Json
+import org.jetbrains.compose.resources.getString
 
 class LoanAccountApprovalViewModel(
     private val repository: LoanAccountApprovalRepository,
@@ -41,40 +40,27 @@ class LoanAccountApprovalViewModel(
 
     fun approveLoan(loanApproval: com.mifos.core.model.objects.account.loan.LoanApproval?) {
         viewModelScope.launch {
-            repository.approveLoan(loanId, loanApproval)
-                .catch {
-                    when (it) {
-                        is ClientRequestException, is ServerResponseException -> {
-                            _loanAccountApprovalUiState.value =
-                                LoanAccountApprovalUiState.ShowLoanApproveFailed(
-                                    it.message ?: "Server error occurred",
-                                )
-                        }
-                        is IOException -> {
-                            _loanAccountApprovalUiState.value =
-                                LoanAccountApprovalUiState.ShowLoanApproveFailed(
-                                    it.message ?: "Network error occurred",
-                                )
-                        }
-                        is SerializationException -> {
-                            _loanAccountApprovalUiState.value =
-                                LoanAccountApprovalUiState.ShowLoanApproveFailed(
-                                    it.message ?: "Data parsing error",
-                                )
-                        }
-                        else -> {
-                            _loanAccountApprovalUiState.value =
-                                LoanAccountApprovalUiState.ShowLoanApproveFailed(
-                                    it.message ?: "Unknown error",
-                                )
-                        }
+            repository.approveLoan(loanId, loanApproval).collect { dataState ->
+                when (dataState) {
+                    is DataState.Loading -> {
+                        _loanAccountApprovalUiState.value =
+                            LoanAccountApprovalUiState.ShowProgressbar
+                    }
+
+                    is DataState.Success -> {
+                        val response = dataState.data
+                        _loanAccountApprovalUiState.value =
+                            LoanAccountApprovalUiState.ShowLoanApproveSuccessfully(response)
+                    }
+
+                    is DataState.Error -> {
+                        _loanAccountApprovalUiState.value =
+                            LoanAccountApprovalUiState.ShowLoanApproveFailed(
+                                getString(Res.string.feature_loan_unknown_error_occured),
+                            )
                     }
                 }
-                .collect {
-                    _loanAccountApprovalUiState.value = it.data?.let { genericResponse ->
-                        LoanAccountApprovalUiState.ShowLoanApproveSuccessfully(genericResponse)
-                    } ?: LoanAccountApprovalUiState.ShowLoanApproveFailed("Something went wrong")
-                }
+            }
         }
     }
 }

@@ -13,11 +13,10 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mifos.core.common.utils.Constants
+import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.repository.LoanAccountDisbursementRepository
 import com.mifos.core.model.objects.account.loan.LoanDisbursement
-import com.mifos.core.network.GenericResponse
 import com.mifos.room.basemodel.APIEndPoint
-import com.mifos.room.entities.templates.loans.LoanTransactionTemplate
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -36,79 +35,42 @@ class LoanAccountDisbursementViewModel(
 
     fun loadLoanTemplate(loanId: Int) {
         viewModelScope.launch {
-            _loanAccountDisbursementUiState.value = LoanAccountDisbursementUiState.ShowProgressbar
-
-            try {
-                repository.getLoanTransactionTemplate(loanId, APIEndPoint.DISBURSE)
-                    .collect { loanTransactionTemplate ->
-                        _loanAccountDisbursementUiState.value =
-                            LoanAccountDisbursementUiState.ShowLoanTransactionTemplate(
-                                loanTransactionTemplate.data ?: LoanTransactionTemplate(),
-                            )
+            repository.getLoanTransactionTemplate(loanId, APIEndPoint.DISBURSE)
+                .collect { state ->
+                    when (state) {
+                        is DataState.Error ->
+                            _loanAccountDisbursementUiState.value =
+                                LoanAccountDisbursementUiState.ShowError(state.message)
+                        DataState.Loading ->
+                            _loanAccountDisbursementUiState.value =
+                                LoanAccountDisbursementUiState.ShowProgressbar
+                        is DataState.Success ->
+                            _loanAccountDisbursementUiState.value =
+                                LoanAccountDisbursementUiState.ShowLoanTransactionTemplate(
+                                    state.data,
+                                )
                     }
-            } catch (e: Exception) {
-                _loanAccountDisbursementUiState.value =
-                    LoanAccountDisbursementUiState.ShowError(e.message ?: "Unknown Error")
-            }
+                }
         }
     }
 
     fun disburseLoan(loanId: Int, loanDisbursement: LoanDisbursement?) {
         viewModelScope.launch {
-            _loanAccountDisbursementUiState.value = LoanAccountDisbursementUiState.ShowProgressbar
-
-            try {
-                repository.disburseLoan(loanId, loanDisbursement)
-                    .collect { genericResponse ->
-                        _loanAccountDisbursementUiState.value =
-                            LoanAccountDisbursementUiState.ShowDisburseLoanSuccessfully(
-                                genericResponse.data ?: GenericResponse(),
-                            )
+            repository.disburseLoan(loanId, loanDisbursement)
+                .collect { state ->
+                    when (state) {
+                        is DataState.Error ->
+                            _loanAccountDisbursementUiState.value =
+                                LoanAccountDisbursementUiState.ShowError(state.message)
+                        DataState.Loading ->
+                            _loanAccountDisbursementUiState.value = LoanAccountDisbursementUiState.ShowProgressbar
+                        is DataState.Success ->
+                            _loanAccountDisbursementUiState.value =
+                                LoanAccountDisbursementUiState.ShowDisburseLoanSuccessfully(
+                                    state.data,
+                                )
                     }
-            } catch (e: Exception) {
-                _loanAccountDisbursementUiState.value =
-                    LoanAccountDisbursementUiState.ShowError(e.message ?: "Unknown Error")
-            }
+                }
         }
     }
-
-//    fun loadLoanTemplate(loanId: Int) {
-//        _loanAccountDisbursementUiState.value = LoanAccountDisbursementUiState.ShowProgressbar
-//        repository.getLoanTransactionTemplate(loanId, APIEndPoint.DISBURSE)
-//            .observeOn(AndroidSchedulers.mainThread())
-//            .subscribeOn(Schedulers.io())
-//            .subscribe(object : Subscriber<LoanTransactionTemplate>() {
-//                override fun onCompleted() {}
-//                override fun onError(e: Throwable) {
-//                    _loanAccountDisbursementUiState.value =
-//                        LoanAccountDisbursementUiState.ShowError(e.message.toString())
-//                }
-//
-//                override fun onNext(loanTransactionTemplate: LoanTransactionTemplate) {
-//                    _loanAccountDisbursementUiState.value =
-//                        LoanAccountDisbursementUiState.ShowLoanTransactionTemplate(
-//                            loanTransactionTemplate,
-//                        )
-//                }
-//            })
-//    }
-
-//    fun disburseLoan(loanId: Int, loanDisbursement: LoanDisbursement?) {
-//        _loanAccountDisbursementUiState.value = LoanAccountDisbursementUiState.ShowProgressbar
-//        repository.disburseLoan(loanId, loanDisbursement)
-//            .observeOn(AndroidSchedulers.mainThread())
-//            .subscribeOn(Schedulers.io())
-//            .subscribe(object : Subscriber<GenericResponse?>() {
-//                override fun onCompleted() {}
-//                override fun onError(e: Throwable) {
-//                    _loanAccountDisbursementUiState.value =
-//                        LoanAccountDisbursementUiState.ShowError(e.message.toString())
-//                }
-//
-//                override fun onNext(genericResponse: GenericResponse?) {
-//                    _loanAccountDisbursementUiState.value =
-//                        LoanAccountDisbursementUiState.ShowDisburseLoanSuccessfully(genericResponse)
-//                }
-//            })
-//    }
 }

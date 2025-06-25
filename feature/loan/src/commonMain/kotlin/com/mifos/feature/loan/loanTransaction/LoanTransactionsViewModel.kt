@@ -12,11 +12,10 @@ package com.mifos.feature.loan.loanTransaction
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import com.mifos.core.common.utils.Constants
+import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.repository.LoanTransactionsRepository
-import com.mifos.room.entities.accounts.loans.LoanWithAssociationsEntity
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.catch
 
 class LoanTransactionsViewModel(
     private val repository: LoanTransactionsRepository,
@@ -31,17 +30,19 @@ class LoanTransactionsViewModel(
     val loanTransactionsUiState: StateFlow<LoanTransactionsUiState> get() = _loanTransactionsUiState
 
     suspend fun loadLoanTransaction(loanId: Int) {
-        _loanTransactionsUiState.value = LoanTransactionsUiState.ShowProgressBar
-        repository.getLoanTransactions(loanId)
-            .catch {
-                _loanTransactionsUiState.value =
-                    LoanTransactionsUiState.ShowFetchingError(it.message.toString())
+        repository.getLoanTransactions(loanId).collect { state ->
+            when (state) {
+                is DataState.Error ->
+                    _loanTransactionsUiState.value =
+                        LoanTransactionsUiState.ShowFetchingError(state.message)
+                DataState.Loading ->
+                    _loanTransactionsUiState.value = LoanTransactionsUiState.ShowProgressBar
+                is DataState.Success ->
+                    _loanTransactionsUiState.value =
+                        LoanTransactionsUiState.ShowLoanTransaction(
+                            state.data,
+                        )
             }
-            .collect {
-                _loanTransactionsUiState.value =
-                    LoanTransactionsUiState.ShowLoanTransaction(
-                        it.data ?: LoanWithAssociationsEntity(),
-                    )
-            }
+        }
     }
 }

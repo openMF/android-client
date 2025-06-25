@@ -9,16 +9,19 @@
  */
 package com.mifos.feature.loan.loanAccountSummary
 
+import androidclient.feature.loan.generated.resources.Res
+import androidclient.feature.loan.generated.resources.feature_loan_unknown_error_occured
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mifos.core.common.utils.Constants
+import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.repository.LoanAccountSummaryRepository
 import com.mifos.room.entities.accounts.loans.LoanWithAssociationsEntity
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
+import org.jetbrains.compose.resources.getString
 
 class LoanAccountSummaryViewModel(
     savedStateHandle: SavedStateHandle,
@@ -36,18 +39,25 @@ class LoanAccountSummaryViewModel(
 
     fun loadLoanById(loanAccountNumber: Int) {
         viewModelScope.launch {
-            _loanAccountSummaryUiState.value = LoanAccountSummaryUiState.ShowProgressbar
+            repository.getLoanById(loanAccountNumber).collect { dataState ->
+                when (dataState) {
+                    is DataState.Loading -> {
+                        _loanAccountSummaryUiState.value = LoanAccountSummaryUiState.ShowProgressbar
+                    }
 
-            repository.getLoanById(loanAccountNumber)
-                .catch {
-                    _loanAccountSummaryUiState.value =
-                        LoanAccountSummaryUiState.ShowFetchingError("Loan Account not found.")
-                }.collect { loanWithAssociations ->
-                    _loanAccountSummaryUiState.value =
-                        LoanAccountSummaryUiState.ShowLoanById(
-                            loanWithAssociations.data ?: LoanWithAssociationsEntity(),
+                    is DataState.Success -> {
+                        _loanAccountSummaryUiState.value = LoanAccountSummaryUiState.ShowLoanById(
+                            dataState.data ?: LoanWithAssociationsEntity(),
                         )
+                    }
+
+                    is DataState.Error -> {
+                        _loanAccountSummaryUiState.value = LoanAccountSummaryUiState.ShowFetchingError(
+                            getString(Res.string.feature_loan_unknown_error_occured),
+                        )
+                    }
                 }
+            }
         }
     }
 }
