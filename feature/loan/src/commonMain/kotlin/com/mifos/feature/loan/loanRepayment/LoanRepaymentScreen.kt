@@ -190,10 +190,9 @@ internal fun LoanRepaymentScreen(
                             snackbarHostState.showSnackbar(
                                 message = "Payment Successful, Transaction ID = " + uiState.loanRepaymentResponse.resourceId,
                             )
+                            navigateBack.invoke()
                         }
                     }
-
-                    navigateBack.invoke()
                 }
 
                 LoanRepaymentUiState.ShowProgressbar -> {
@@ -469,7 +468,7 @@ private fun ShowLoanRepaymentConfirmationDialog(
                     val request = LoanRepaymentRequestEntity(
                         accountNumber = loanAccountNumber,
                         paymentTypeId = paymentTypeId,
-                        dateFormat = "dd MM yyyy",
+                        dateFormat = "dd-MM-yyyy",
                         locale = "en",
                         transactionAmount = total,
                         transactionDate = DateHelper.getDateAsStringFromLong(
