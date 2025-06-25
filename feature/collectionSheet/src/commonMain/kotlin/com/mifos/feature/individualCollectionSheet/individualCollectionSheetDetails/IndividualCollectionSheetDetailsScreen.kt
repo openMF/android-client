@@ -210,6 +210,8 @@ private fun IndividualCollectionSheetItem(
     modifier: Modifier = Modifier,
     onClick: () -> Unit,
 ) {
+    val loan = client.loans?.getOrNull(index)
+
     OutlinedCard(
         modifier = modifier
             .padding(6.dp)
@@ -246,18 +248,16 @@ private fun IndividualCollectionSheetItem(
                     Text(
                         text = it,
                         style = MaterialTheme.typography.bodyLarge,
-
                     )
                 }
                 Row {
                     Text(
                         text = stringResource(Res.string.feature_collection_sheet_total_due),
                         style = MaterialTheme.typography.bodyMedium,
-
                     )
                     Spacer(modifier = Modifier.width(16.dp))
                     Text(
-                        text = client.loans?.get(index)?.totalDue.toString(),
+                        text = loan?.totalDue.toString(),
                         style = MaterialTheme.typography.bodyMedium,
                     )
                 }
@@ -268,16 +268,12 @@ private fun IndividualCollectionSheetItem(
                     )
                     Spacer(modifier = Modifier.width(16.dp))
                     Text(
-                        text = client.loans?.get(index)?.chargesDue.toString(),
+                        text = loan?.chargesDue.toString(),
                         style = MaterialTheme.typography.bodyMedium,
                     )
                 }
                 Text(
-                    text = "${client.loans?.get(index)?.productShortName} (#${
-                        client.loans?.get(
-                            index,
-                        )?.productShortName
-                    })",
+                    text = "${loan?.productShortName} (#${loan?.productShortName})",
                     style = MaterialTheme.typography.bodyMedium,
                 )
             }

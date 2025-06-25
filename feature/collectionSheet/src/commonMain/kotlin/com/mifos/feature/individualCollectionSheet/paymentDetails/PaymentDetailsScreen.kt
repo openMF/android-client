@@ -383,7 +383,7 @@ private fun MifosButtonRow(
 }
 
 @Composable
-@Preview
+@DevicePreview
 private fun PreviewPaymentDetails(modifier: Modifier = Modifier) {
     PaymentsDetailsScreen(
         modifier = modifier,
