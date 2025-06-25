@@ -116,13 +116,12 @@ class DataManagerLoan(
     @OptIn(ExperimentalCoroutinesApi::class)
     fun getLoanRepayTemplate(loanId: Int): Flow<LoanRepaymentTemplateEntity?> {
         return prefManager.userInfo.flatMapLatest { userData ->
-            flow {
-                when (userData.userStatus) {
-                    false -> mBaseApiManager.loanApi.getLoanRepaymentTemplate(loanId)
-                    /**
-                     * Return LoanRepaymentTemplate from DatabaseHelperLoan.
-                     */
-                    true -> loanDaoHelper.getLoanRepayTemplate(loanId)
+            if (userData.userStatus) {
+                loanDaoHelper.getLoanRepayTemplate(loanId)
+            } else {
+                flow {
+                    val result = mBaseApiManager.loanApi.getLoanRepaymentTemplate(loanId)
+                    emit(result)
                 }
             }
         }
