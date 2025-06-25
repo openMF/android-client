@@ -54,7 +54,6 @@ object Constants {
     const val SAVINGS_ACCOUNT_TRANSACTION_DEPOSIT = "Deposit"
     const val SAVINGS_ACCOUNT_TRANSACTION_WITHDRAWAL = "Withdrawal"
     const val DATA_TABLE_REGISTERED_NAME = "dataTableRegisteredName"
-    const val INDIVIDUAL_SHEET_DATE = "individual_sheet_date"
     const val CENTER_ID = "centerId"
     const val GROUP_ID = "groupId"
     const val GROUP_NAME = "groupName"

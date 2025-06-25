@@ -25,18 +25,6 @@ sealed class CollectionSheetScreens(val route: String) {
     data object IndividualCollectionSheetScreen :
         CollectionSheetScreens("individual_collection_sheet_route")
 
-    data object NewIndividualCollectionSheetScreen :
-        CollectionSheetScreens("new_individual_collection_sheet_route")
-
-    data object NewIndividualCollectionSheetDetailScreen :
-        CollectionSheetScreens("new_individual_collection_sheet_detail/{${Constants.INDIVIDUAL_SHEET_DATE}}/{${Constants.INDIVIDUAL_SHEET}}") {
-
-        fun argument(date: String, sheet: IndividualCollectionSheet): String {
-            val sheetInGsonString = Json.encodeToString(sheet)
-            return "new_individual_collection_sheet_detail/$date/$sheetInGsonString"
-        }
-    }
-
     data object PaymentDetailsScreen :
         CollectionSheetScreens("payment_details_route/{${Constants.PAYMENT_DETAILS_ARGS}}") {
 

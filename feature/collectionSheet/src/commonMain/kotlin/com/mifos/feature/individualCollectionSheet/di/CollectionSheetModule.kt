@@ -10,7 +10,6 @@
 package com.mifos.feature.individualCollectionSheet.di
 
 import com.mifos.feature.individualCollectionSheet.generateCollectionSheet.GenerateCollectionSheetViewModel
-import com.mifos.feature.individualCollectionSheet.individualCollectionSheetDetail.IndividualCollectionSheetDetailViewModel
 import com.mifos.feature.individualCollectionSheet.individualCollectionSheetDetails.IndividualCollectionSheetDetailsViewModel
 import com.mifos.feature.individualCollectionSheet.newIndividualCollectionSheet.NewIndividualCollectionSheetViewModel
 import com.mifos.feature.individualCollectionSheet.paymentDetails.PaymentDetailsViewModel
@@ -24,5 +23,4 @@ val CollectionSheetModule = module {
     viewModelOf(::NewIndividualCollectionSheetViewModel)
     viewModelOf(::PaymentDetailsViewModel)
     viewModelOf(::SavedIndividualCollectionSheetViewModel)
-    viewModelOf(::IndividualCollectionSheetDetailViewModel)
 }

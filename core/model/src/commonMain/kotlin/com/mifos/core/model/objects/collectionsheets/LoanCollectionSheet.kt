@@ -27,6 +27,5 @@ data class LoanCollectionSheet(
     val productId: Double? = null,
     val totalDue: Double = 0.0,
     val chargesDue: Double = 0.0,
-    val feeDue: Double = 0.0,
     val productShortName: String? = null,
 ) : Parcelable
