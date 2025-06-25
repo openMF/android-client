@@ -9,7 +9,9 @@
  */
 package com.mifos.core.network.datamanager
 
+import com.mifos.core.common.utils.DataState
 import com.mifos.core.common.utils.Page
+import com.mifos.core.common.utils.asDataStateFlow
 import com.mifos.core.datastore.UserPreferencesRepository
 import com.mifos.core.model.objects.clients.ActivatePayload
 import com.mifos.core.model.objects.clients.ClientAddressResponse
@@ -32,6 +34,7 @@ import com.mifos.room.entities.client.ClientPayloadEntity
 import com.mifos.room.entities.templates.clients.ClientsTemplateEntity
 import com.mifos.room.helper.ClientDaoHelper
 import io.ktor.client.request.forms.MultiPartFormDataContent
+import io.ktor.client.statement.bodyAsText
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
@@ -206,6 +209,24 @@ class DataManagerClient(
     suspend fun uploadClientImage(clientId: Int, file: MultiPartFormDataContent) {
         return mBaseApiManager.clientsApi.uploadClientImage(clientId, file)
     }
+
+    suspend fun getClientImage(clientId: Int): Flow<DataState<String>> {
+        return mBaseApiManager.clientsApi.getClientImage(clientId)
+            .asDataStateFlow()
+            .map {
+                    response ->
+                when (response) {
+                    is DataState.Success -> {
+                        val encodedString = response.data.bodyAsText()
+                        val pureBase64Encoded = encodedString.substringAfter(',')
+                        DataState.Success(pureBase64Encoded)
+                    }
+                    is DataState.Error -> DataState.Error(response.exception)
+                    DataState.Loading -> DataState.Loading
+                }
+            }
+    }
+
     /**
      * Return Clients from DatabaseHelperClient only one time.
      */

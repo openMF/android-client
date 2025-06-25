@@ -41,10 +41,10 @@ class ChargeDaoHelper(
         clientId: Int,
     ) {
         val updatedCharges = chargesPage.pageItems.map { charges ->
-            val dateParts = charges.dueDate.orEmpty().split("-").mapNotNull { it.toIntOrNull() }
+            val dateParts = charges.dueDate.orEmpty()
 
             val clientDate = if (dateParts.size == 3) {
-                charges.id?.toLong()?.let { chargeId ->
+                charges.id.toLong().let { chargeId ->
                     ClientDateEntity(
                         0,
                         chargeId,
@@ -75,7 +75,7 @@ class ChargeDaoHelper(
             .map { chargesList ->
                 Page<ChargesEntity>().apply {
                     pageItems = chargesList.map { charge ->
-                        charge.copy(dueDate = charge.chargeDueDate?.run { "$year-$month-$day" })
+                        charge.copy(dueDate = charge.dueDate)
                     }
                 }
             }

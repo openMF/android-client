@@ -9,9 +9,12 @@
  */
 package com.mifos.core.model.objects.payloads
 
+import kotlinx.serialization.Serializable
+
 /**
  * Created by nellyk on 2/10/2016.
  */
+@Serializable
 class SavingsPayload {
     var productId: Int? = null
     var clientId: Int? = null

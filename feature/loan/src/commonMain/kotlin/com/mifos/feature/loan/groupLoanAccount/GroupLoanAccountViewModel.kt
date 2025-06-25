@@ -66,7 +66,7 @@ class GroupLoanAccountViewModel(
                         _groupLoanAccountUiState.value =
                             GroupLoanAccountUiState.Error(Res.string.feature_loan_failed_to_load_template)
 
-                    is DataState.Loading -> Unit
+                    is DataState.Loading -> GroupLoanAccountUiState.Loading
 
                     is DataState.Success ->
                         _groupLoanAccountUiState.value =

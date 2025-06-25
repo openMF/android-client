@@ -130,4 +130,7 @@
     <string name="feature_loan_id">Id</string>
     <string name="feature_loan_office">Office</string>
     <string name="feature_loan_break_down">Break Down</string>
+
+    <string name="feature_loan_unknown_error_occured">An Unknown Error Occured</string>
+    <string name="feature_loan_payment_success_message">Payment Successful, Transaction ID = </string>
 </resources>
