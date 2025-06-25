@@ -78,6 +78,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import co.touchlab.kermit.Logger
 import com.mifos.core.common.utils.Constants
 import com.mifos.core.common.utils.Utils
 import com.mifos.core.designsystem.component.MifosCircularProgress

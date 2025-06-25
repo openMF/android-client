@@ -21,10 +21,13 @@ import com.mifos.feature.activate.navigation.activateScreen
 import com.mifos.feature.activate.navigation.navigateToActivateScreen
 import com.mifos.feature.auth.navigation.navigateToLogin
 import com.mifos.feature.center.navigation.centerNavGraph
+import com.mifos.feature.center.navigation.navigateCenterDetailsScreenRoute
 import com.mifos.feature.center.navigation.navigateCreateCenterScreenRoute
 import com.mifos.feature.checker.inbox.task.navigation.checkerInboxTaskNavGraph
 import com.mifos.feature.client.navigation.clientNavGraph
+import com.mifos.feature.client.navigation.navigateClientDetailsScreen
 import com.mifos.feature.client.navigation.navigateCreateClientScreen
+import com.mifos.feature.client.navigation.navigateToClientListScreen
 import com.mifos.feature.dataTable.navigation.dataTableNavGraph
 import com.mifos.feature.dataTable.navigation.navigateDataTableList
 import com.mifos.feature.dataTable.navigation.navigateToDataTable
@@ -32,6 +35,7 @@ import com.mifos.feature.document.navigation.documentListScreen
 import com.mifos.feature.document.navigation.navigateToDocumentListScreen
 import com.mifos.feature.groups.navigation.groupNavGraph
 import com.mifos.feature.groups.navigation.navigateToCreateNewGroupScreen
+import com.mifos.feature.groups.navigation.navigateToGroupDetailsScreen
 import com.mifos.feature.individualCollectionSheet.navigation.individualCollectionSheetNavGraph
 import com.mifos.feature.loan.navigation.addLoanAccountScreen
 import com.mifos.feature.loan.navigation.groupLoanScreen
@@ -68,7 +72,14 @@ internal fun FeatureNavHost(
 
         dataTableNavGraph(
             navController = appState.navController,
-            clientCreated = { _, _ -> },
+            clientCreated = { client, userStatus ->
+                appState.navController.popBackStack()
+                appState.navController.popBackStack()
+
+                if (!userStatus) {
+                    client.id?.let { appState.navController.navigateClientDetailsScreen(it) }
+                }
+            },
         )
 
         searchNavGraph(
@@ -76,11 +87,11 @@ internal fun FeatureNavHost(
             onCreateClient = appState.navController::navigateCreateClientScreen,
             onCreateCenter = appState.navController::navigateCreateCenterScreenRoute,
             onCreateGroup = appState.navController::navigateToCreateNewGroupScreen,
-            onClient = { id -> println("Client clicked: $id") },
-            onCenter = { id -> println("Center clicked: $id") },
-            onGroup = { id -> println("Group clicked: $id") },
+            onCenter = appState.navController::navigateCenterDetailsScreenRoute,
+            onClient = appState.navController::navigateClientDetailsScreen,
+            onGroup = appState.navController::navigateToGroupDetailsScreen,
             onLoan = appState.navController::navigateToLoanAccountSummaryScreen,
-            onSavings = { id -> println("Savings clicked: $id") },
+            onSavings = appState.navController::navigateClientDetailsScreen,
         )
 
         savingsNavGraph(
@@ -113,7 +124,7 @@ internal fun FeatureNavHost(
             addGroupLoanAccount = appState.navController::navigateToGroupLoanScreen,
             addSavingsAccount = appState.navController::navigateToAddSavingsAccount,
             loadDocumentList = appState.navController::navigateToDocumentListScreen,
-            clientListFragment = {},
+            clientListFragment = { _ -> appState.navController.navigateToClientListScreen() },
             loadSavingsAccountSummary = appState.navController::navigateToSavingsAccountSummaryScreen,
             loadGroupDataTables = appState.navController::navigateToDataTable,
             loadNotes = appState.navController::navigateToNoteScreen,

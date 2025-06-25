@@ -14,10 +14,12 @@ import com.mifos.core.model.utils.Parcelize
 import com.mifos.room.entities.Timeline
 import com.mifos.room.entities.client.ClientEntity
 import com.mifos.room.entities.client.ClientStatusEntity
+import kotlinx.serialization.Serializable
 
 /**
  * Created by ishankhanna on 29/06/14.
  */
+@Serializable
 @Parcelize
 data class GroupWithAssociations(
     val id: Int? = null,
