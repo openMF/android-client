@@ -9,27 +9,15 @@
  */
 package com.mifos.room.entities.client
 
-import com.mifos.room.entities.accounts.savings.SavingAccountDepositTypeEntity
+import kotlinx.serialization.Serializable
 
 /**
  * Created by nellyk on 2/19/2016.
  */
+@Serializable
 data class Savings(
-    val id: Int? = null,
-
-    val accountNo: String? = null,
-
-    val productId: Int? = null,
-
-    val productName: String? = null,
-
-    val status: ClientStatusEntity? = null,
-
-    val currency: ClientChargeCurrencyEntity? = null,
-
-    val accountBalance: Double? = null,
-
-    val additionalProperties: Map<String, Any> = emptyMap(),
-
-    val depositType: SavingAccountDepositTypeEntity? = null,
+    val clientId: Int? = null,
+    val officeId: Int? = null,
+    val resourceId: Int? = null,
+    val savingsId: Int? = null,
 )
