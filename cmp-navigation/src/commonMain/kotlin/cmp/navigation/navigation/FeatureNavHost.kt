@@ -126,7 +126,7 @@ internal fun FeatureNavHost(
             addGroupLoanAccount = appState.navController::navigateToGroupLoanScreen,
             addSavingsAccount = appState.navController::navigateToAddSavingsAccount,
             loadDocumentList = appState.navController::navigateToDocumentListScreen,
-            clientListFragment = { _ -> appState.navController.navigateToClientListScreen() },
+            clientListFragment = appState.navController.navigateToClientListScreen,
             loadSavingsAccountSummary = appState.navController::navigateToSavingsAccountSummaryScreen,
             loadGroupDataTables = appState.navController::navigateToDataTable,
             loadNotes = appState.navController::navigateToNoteScreen,

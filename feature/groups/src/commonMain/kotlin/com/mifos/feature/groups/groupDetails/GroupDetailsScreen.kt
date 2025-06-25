@@ -102,7 +102,7 @@ internal fun GroupDetailsScreen(
     addLoanAccount: (Int) -> Unit,
     addSavingsAccount: (groupId: Int, clientId: Int, isGroupAccount: Boolean) -> Unit,
     documents: (Int, String) -> Unit,
-    groupClients: (List<ClientEntity>) -> Unit,
+    groupClients: () -> Unit,
     moreGroupInfo: (String, Int) -> Unit,
     notes: (Int, String) -> Unit,
     loanAccountSelected: (Int) -> Unit,
@@ -119,7 +119,7 @@ internal fun GroupDetailsScreen(
 
     LaunchedEffect(key1 = groupAssociateClients) {
         if (groupAssociateClients.isNotEmpty() && groupClientEnable) {
-            groupClients(groupAssociateClients)
+            groupClients()
         }
     }
 
