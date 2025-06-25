@@ -52,9 +52,9 @@ data class RepaymentSchedule(
     var totalWrittenOff: Double? = null,
 ) : Parcelable {
 
-    fun getlistOfActualPeriods(): List<Period> {
+    fun getListOfActualPeriods(): List<Period> {
         val list = periods ?: return emptyList()
-        return if (list.size > 1) list.subList(1, list.size) else emptyList()
+        return if (list.size > 1) list.subList(1, list.size).toList() else emptyList()
     }
 
     companion object {

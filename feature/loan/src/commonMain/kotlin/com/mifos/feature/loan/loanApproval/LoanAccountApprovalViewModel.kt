@@ -9,6 +9,8 @@
  */
 package com.mifos.feature.loan.loanApproval
 
+import androidclient.feature.loan.generated.resources.Res
+import androidclient.feature.loan.generated.resources.feature_loan_unknown_error_occured
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -19,6 +21,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
+import org.jetbrains.compose.resources.getString
 
 class LoanAccountApprovalViewModel(
     private val repository: LoanAccountApprovalRepository,
@@ -53,7 +56,7 @@ class LoanAccountApprovalViewModel(
                     is DataState.Error -> {
                         _loanAccountApprovalUiState.value =
                             LoanAccountApprovalUiState.ShowLoanApproveFailed(
-                                "An error occurred",
+                                getString(Res.string.feature_loan_unknown_error_occured)
                             )
                     }
                 }

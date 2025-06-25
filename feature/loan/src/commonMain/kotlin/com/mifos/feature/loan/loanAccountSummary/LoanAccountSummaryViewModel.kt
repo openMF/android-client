@@ -9,6 +9,8 @@
  */
 package com.mifos.feature.loan.loanAccountSummary
 
+import androidclient.feature.loan.generated.resources.Res
+import androidclient.feature.loan.generated.resources.feature_loan_unknown_error_occured
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -19,6 +21,7 @@ import com.mifos.room.entities.accounts.loans.LoanWithAssociationsEntity
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import org.jetbrains.compose.resources.getString
 
 class LoanAccountSummaryViewModel(
     savedStateHandle: SavedStateHandle,
@@ -50,7 +53,7 @@ class LoanAccountSummaryViewModel(
 
                     is DataState.Error -> {
                         _loanAccountSummaryUiState.value = LoanAccountSummaryUiState.ShowFetchingError(
-                            "Loan Account not found.",
+                            getString(Res.string.feature_loan_unknown_error_occured)
                         )
                     }
                 }
