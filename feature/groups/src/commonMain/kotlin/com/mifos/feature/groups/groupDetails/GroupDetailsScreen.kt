@@ -88,7 +88,6 @@ import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.room.entities.accounts.loans.LoanAccountEntity
 import com.mifos.room.entities.accounts.savings.SavingAccountDepositTypeEntity
 import com.mifos.room.entities.accounts.savings.SavingsAccountEntity
-import com.mifos.room.entities.client.ClientEntity
 import com.mifos.room.entities.group.GroupEntity
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview

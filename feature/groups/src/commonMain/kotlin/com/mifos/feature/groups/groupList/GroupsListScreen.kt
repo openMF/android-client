@@ -103,12 +103,12 @@ fun GroupItem(
                 headlineContent = {
                     Text(text = it)
                 },
-                supportingContent = group.accountNo?.let {
-                    { Text(text = it) }
+                supportingContent =
+                {
+                    Text(text = group.accountNo ?: "null")
                 },
-                overlineContent = group.officeName?.let {
-                    { Text(text = it) }
-                },
+                overlineContent =
+                { Text(text = group.officeName ?: "null") },
                 trailingContent = {
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
