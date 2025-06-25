@@ -36,6 +36,7 @@ import com.mifos.feature.document.navigation.navigateToDocumentListScreen
 import com.mifos.feature.groups.navigation.groupNavGraph
 import com.mifos.feature.groups.navigation.navigateToCreateNewGroupScreen
 import com.mifos.feature.groups.navigation.navigateToGroupDetailsScreen
+import com.mifos.feature.individualCollectionSheet.navigation.generateCollectionSheetScreen
 import com.mifos.feature.individualCollectionSheet.navigation.individualCollectionSheetNavGraph
 import com.mifos.feature.loan.navigation.addLoanAccountScreen
 import com.mifos.feature.loan.navigation.groupLoanScreen
@@ -161,6 +162,25 @@ internal fun FeatureNavHost(
 //                navController.navigateDataTableList(dataTable, payload, Constants.CLIENT_LOAN)
 //                TODO()
             },
+        )
+
+        savingsNavGraph(
+            navController = appState.navController,
+            onBackPressed = appState.navController::popBackStack,
+            loadMoreSavingsAccountInfo = appState.navController::navigateToDataTable,
+            loadDocuments = appState.navController::navigateToDocumentListScreen,
+        )
+
+        generateCollectionSheetScreen(appState.navController::popBackStack)
+
+        documentListScreen(
+            onBackPressed = appState.navController::popBackStack,
+        )
+
+        loanNavGraph(
+            navController = appState.navController,
+            onMoreInfoClicked = appState.navController::navigateToDataTable,
+            onDocumentsClicked = appState.navController::navigateToDocumentListScreen,
         )
 
         clientNavGraph(
