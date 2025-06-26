@@ -326,7 +326,7 @@ private fun SimpleCountdownSnackbar(
         },
     ) {
         Text(
-            text = "$message in ${countdown}s",
+            text = "$message in $countdown seconds",
             style = MaterialTheme.typography.bodyMedium,
             fontWeight = FontWeight.SemiBold,
             textAlign = TextAlign.Center,
