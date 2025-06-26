@@ -47,10 +47,16 @@ import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedIconButton
+import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -65,13 +71,13 @@ import com.mifos.core.designsystem.component.MifosOutlinedTextField
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.ui.util.DevicePreview
+import com.mifos.core.ui.util.ShareUtils
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 internal fun UpdateServerConfigScreenRoute(
     onBackClick: () -> Unit,
-    onSuccessful: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: UpdateServerConfigViewModel = koinViewModel(),
 ) {
@@ -80,12 +86,19 @@ internal fun UpdateServerConfigScreenRoute(
     val endPointError by viewModel.endPointError.collectAsStateWithLifecycle()
     val portError by viewModel.portError.collectAsStateWithLifecycle()
     val tenantError by viewModel.tenantError.collectAsStateWithLifecycle()
-
+    val snackbarHostState = remember { SnackbarHostState() }
     val result by viewModel.result.collectAsStateWithLifecycle(false)
 
     LaunchedEffect(result) {
         if (result) {
-            onSuccessful()
+            for (i in 5 downTo 1) {
+                snackbarHostState.showSnackbar(
+                    message = "Restarting in $i seconds...",
+                    duration = SnackbarDuration.Short,
+                    withDismissAction = false,
+                )
+            }
+            ShareUtils.restartApplication()
         }
     }
 
@@ -99,6 +112,7 @@ internal fun UpdateServerConfigScreenRoute(
         tenantError = tenantError,
         onEvent = viewModel::onEvent,
         onBackClick = onBackClick,
+        snackbarHostState = snackbarHostState
     )
 }
 
@@ -114,6 +128,7 @@ internal fun UpdateServerConfigScreenContent(
     portError: String? = null,
     tenantError: String? = null,
     onBackClick: () -> Unit,
+    snackbarHostState: SnackbarHostState
 ) {
     val lazyListState = rememberLazyListState()
     val hasAnyError = listOf(
@@ -128,6 +143,7 @@ internal fun UpdateServerConfigScreenContent(
         modifier = modifier,
         title = stringResource(Res.string.feature_settings_title),
         onBackPressed = onBackClick,
+        snackbarHostState = snackbarHostState,
     ) {
             LazyColumn(
                 modifier = Modifier
@@ -288,6 +304,7 @@ private fun UpdateServerConfigScreenEmptyData() {
             ),
             onEvent = {},
             onBackClick = {},
+            snackbarHostState = remember { SnackbarHostState() }
         )
     }
 }

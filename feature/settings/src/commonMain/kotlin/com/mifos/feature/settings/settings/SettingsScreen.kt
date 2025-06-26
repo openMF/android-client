@@ -110,8 +110,9 @@ internal fun SettingsScreen(
     var showEndpointUpdateDialog by rememberSaveable { mutableStateOf(false) }
     var showThemeUpdateDialog by rememberSaveable { mutableStateOf(false) }
     var showSyncSurveyDialog by rememberSaveable { mutableStateOf(false) }
-    var restartTriggered by rememberSaveable { mutableStateOf(false) }
     val snackbarHostState = remember { SnackbarHostState() }
+
+    var restartTriggered by rememberSaveable { mutableStateOf(false) }
 
     LaunchedEffect(restartTriggered) {
         if (restartTriggered) {

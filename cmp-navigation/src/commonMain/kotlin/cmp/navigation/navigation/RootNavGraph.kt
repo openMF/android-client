@@ -46,7 +46,6 @@ fun RootNavGraph(
 
         serverConfigGraph(
             navigateBack = navHostController::popBackStack,
-            onUpdateConfig= navHostController::navigateToLogin,
         )
 
         composable(MAIN_GRAPH) {
