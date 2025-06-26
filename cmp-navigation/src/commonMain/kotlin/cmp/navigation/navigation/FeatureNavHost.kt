@@ -76,7 +76,6 @@ internal fun FeatureNavHost(
             navController = appState.navController,
             clientCreated = { client, userStatus ->
                 appState.navController.popBackStack()
-                appState.navController.popBackStack()
 
                 if (!userStatus) {
                     client.id?.let { appState.navController.navigateClientDetailsScreen(it) }
