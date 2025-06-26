@@ -42,7 +42,6 @@ import com.mifos.feature.loan.navigation.addLoanAccountScreen
 import com.mifos.feature.loan.navigation.groupLoanScreen
 import com.mifos.feature.loan.navigation.loanNavGraph
 import com.mifos.feature.loan.navigation.navigateToGroupLoanScreen
-import com.mifos.feature.loan.navigation.navigateToLoanAccountScreen
 import com.mifos.feature.loan.navigation.navigateToLoanAccountSummaryScreen
 import com.mifos.feature.note.navigation.navigateToNoteScreen
 import com.mifos.feature.note.navigation.noteNavGraph
@@ -136,9 +135,10 @@ internal fun FeatureNavHost(
         settingsScreen(
             navigateBack = appState.navController::popBackStack,
             navigateToLoginScreen = navigateToLogin,
-            changePasscode = {},
+            changePasscode = { },
             languageChanged = {},
         )
+
         individualCollectionSheetNavGraph(
             navController = appState.navController,
             onBackPressed = appState.navController::popBackStack,
@@ -170,9 +170,7 @@ internal fun FeatureNavHost(
         clientNavGraph(
             navController = appState.navController,
             paddingValues = padding,
-            addLoanAccount = { clientId ->
-                appState.navController.navigateToLoanAccountScreen(clientId)
-            },
+            addLoanAccount = appState.navController::navigateToLoanAccountSummaryScreen,
             addSavingsAccount = { clientId ->
                 appState.navController.navigateToAddSavingsAccount(0, clientId, false)
             },

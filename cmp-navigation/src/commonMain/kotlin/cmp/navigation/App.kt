@@ -46,6 +46,7 @@ import androidx.compose.material3.NavigationDrawerItem
 import androidx.compose.material3.NavigationDrawerItemDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarDuration.Indefinite
+import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
@@ -124,7 +125,7 @@ fun App(
 
         val isOffline by appState.isOffline.collectAsStateWithLifecycle()
 
-        val notConnectedMessage = "you have lost network connection"
+        val notConnectedMessage = "You have lost network connection"
         LaunchedEffect(isOffline) {
             if (isOffline) {
                 snackbarHostState.showSnackbar(
@@ -227,6 +228,7 @@ fun App(
             gesturesEnabled = isNavScreen,
         ) {
             Scaffold(
+                snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
                 topBar = {
                     if (isNavScreen) {
                         TopAppBar(
@@ -234,13 +236,15 @@ fun App(
                                 Text(NavigationConstants.getTitleForRoute(route))
                             },
                             navigationIcon = {
-                                IconButton(onClick = {
-                                    scope.launch {
-                                        drawerState.apply {
-                                            if (isClosed) open() else close()
+                                IconButton(
+                                    onClick = {
+                                        scope.launch {
+                                            drawerState.apply {
+                                                if (isClosed) open() else close()
+                                            }
                                         }
-                                    }
-                                }) {
+                                    },
+                                ) {
                                     Icon(
                                         imageVector = Icons.Default.Menu,
                                         contentDescription = "Menu",
