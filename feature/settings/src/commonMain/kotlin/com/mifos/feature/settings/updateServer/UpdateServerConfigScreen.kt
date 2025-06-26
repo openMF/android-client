@@ -42,7 +42,6 @@ import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Snackbar
-import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
@@ -104,7 +103,7 @@ internal fun UpdateServerConfigScreenRoute(
             onBackClick = onBackClick,
             snackbarHost = {
                 SnackbarHost(hostState = snackbarHostState)
-            }
+            },
         )
 
         if (showCountdown) {
@@ -115,7 +114,7 @@ internal fun UpdateServerConfigScreenRoute(
                     showCountdown = false
                     ShareUtils.restartApplication()
                 },
-                modifier = Modifier.align(Alignment.BottomCenter)
+                modifier = Modifier.align(Alignment.BottomCenter),
             )
         }
     }
@@ -298,10 +297,10 @@ internal fun UpdateServerConfigScreenContent(
 private fun SimpleCountdownSnackbar(
     message: String,
     durationSeconds: Int = 5,
-    dismissText:String?=null,
+    dismissText: String? = null,
     onDismiss: () -> Unit,
-    modifier: Modifier=Modifier,
-    onAboutToEnd: () -> Unit = {}
+    modifier: Modifier = Modifier,
+    onAboutToEnd: () -> Unit = {},
 ) {
     var countdown by rememberSaveable { mutableStateOf(durationSeconds) }
 
@@ -325,15 +324,15 @@ private fun SimpleCountdownSnackbar(
                 Text(
                     text = "${countdown}s",
                     color = MaterialTheme.colorScheme.primary,
-                    fontWeight = FontWeight.Bold
+                    fontWeight = FontWeight.Bold,
                 )
-                if(dismissText!=null){
+                if (dismissText != null) {
                     TextButton(onClick = onDismiss) {
                         Text(dismissText)
                     }
                 }
             }
-        }
+        },
     ) {
         Text(message)
     }
@@ -357,4 +356,3 @@ private fun UpdateServerConfigScreenEmptyData() {
         )
     }
 }
-
