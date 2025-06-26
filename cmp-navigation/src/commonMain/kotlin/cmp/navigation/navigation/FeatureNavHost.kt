@@ -36,6 +36,8 @@ import com.mifos.feature.document.navigation.navigateToDocumentListScreen
 import com.mifos.feature.groups.navigation.groupNavGraph
 import com.mifos.feature.groups.navigation.navigateToCreateNewGroupScreen
 import com.mifos.feature.groups.navigation.navigateToGroupDetailsScreen
+import com.mifos.feature.individualCollectionSheet.navigation.generateCollectionSheetScreen
+import com.mifos.feature.groups.navigation.navigateToGroupDetailsScreen
 import com.mifos.feature.individualCollectionSheet.navigation.individualCollectionSheetNavGraph
 import com.mifos.feature.loan.navigation.addLoanAccountScreen
 import com.mifos.feature.loan.navigation.groupLoanScreen
@@ -59,6 +61,7 @@ import com.mifos.feature.settings.navigation.settingsScreen
 internal fun FeatureNavHost(
     appState: AppState,
     padding: PaddingValues,
+    navigateToLogin: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     NavHost(
@@ -74,7 +77,6 @@ internal fun FeatureNavHost(
         dataTableNavGraph(
             navController = appState.navController,
             clientCreated = { client, userStatus ->
-                appState.navController.popBackStack()
                 appState.navController.popBackStack()
 
                 if (!userStatus) {
@@ -125,7 +127,7 @@ internal fun FeatureNavHost(
             addGroupLoanAccount = appState.navController::navigateToGroupLoanScreen,
             addSavingsAccount = appState.navController::navigateToAddSavingsAccount,
             loadDocumentList = appState.navController::navigateToDocumentListScreen,
-            clientListFragment = { _ -> appState.navController.navigateToClientListScreen() },
+            loadClientList = appState.navController::navigateToClientListScreen,
             loadSavingsAccountSummary = appState.navController::navigateToSavingsAccountSummaryScreen,
             loadGroupDataTables = appState.navController::navigateToDataTable,
             loadNotes = appState.navController::navigateToNoteScreen,
@@ -135,7 +137,7 @@ internal fun FeatureNavHost(
 
         settingsScreen(
             navigateBack = appState.navController::popBackStack,
-            navigateToLoginScreen = appState.navController::navigateToLogin,
+            navigateToLoginScreen = navigateToLogin,
             changePasscode = {},
             onClickUpdateConfig = appState.navController::navigateToUpdateServerConfig,
         )
@@ -164,6 +166,9 @@ internal fun FeatureNavHost(
             },
         )
 
+        generateCollectionSheetScreen(appState.navController::popBackStack)
+
+        // TODO : check appState.navController::navigateDataTableList after completing client creation
         clientNavGraph(
             navController = appState.navController,
             paddingValues = padding,

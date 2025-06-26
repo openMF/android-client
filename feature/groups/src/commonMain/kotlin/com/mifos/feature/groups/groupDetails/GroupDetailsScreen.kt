@@ -88,7 +88,6 @@ import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.room.entities.accounts.loans.LoanAccountEntity
 import com.mifos.room.entities.accounts.savings.SavingAccountDepositTypeEntity
 import com.mifos.room.entities.accounts.savings.SavingsAccountEntity
-import com.mifos.room.entities.client.ClientEntity
 import com.mifos.room.entities.group.GroupEntity
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
@@ -102,7 +101,7 @@ internal fun GroupDetailsScreen(
     addLoanAccount: (Int) -> Unit,
     addSavingsAccount: (groupId: Int, clientId: Int, isGroupAccount: Boolean) -> Unit,
     documents: (Int, String) -> Unit,
-    groupClients: (List<ClientEntity>) -> Unit,
+    groupClients: () -> Unit,
     moreGroupInfo: (String, Int) -> Unit,
     notes: (Int, String) -> Unit,
     loanAccountSelected: (Int) -> Unit,
@@ -119,7 +118,7 @@ internal fun GroupDetailsScreen(
 
     LaunchedEffect(key1 = groupAssociateClients) {
         if (groupAssociateClients.isNotEmpty() && groupClientEnable) {
-            groupClients(groupAssociateClients)
+            groupClients()
         }
     }
 
