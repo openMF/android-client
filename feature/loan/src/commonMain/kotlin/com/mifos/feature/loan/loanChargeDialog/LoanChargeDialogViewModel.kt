@@ -52,10 +52,6 @@ class LoanChargeDialogViewModel(
                         LoanChargeDialogUiState.Loading
 
                 is DataState.Success -> {
-//                    result.data?.let {
-//                        _loanChargeDialogUiState.value =
-//                            LoanChargeDialogUiState.AllChargesV3(it)
-//                    }
                     mapResourceBodyToChargeList(result.data)
                 }
             }
@@ -105,32 +101,5 @@ class LoanChargeDialogViewModel(
             _loanChargeDialogUiState.value =
                 LoanChargeDialogUiState.Error(Res.string.feature_loan_charge_failed_to_load_charge)
         }
-
-//        val charges: MutableList<ChargesEntity> = ArrayList()
-//        var reader: BufferedReader? = null
-//        val sb = StringBuilder()
-//        try {
-//            reader = BufferedReader(InputStreamReader(result.rawContent as InputStream?))
-//            var line: String?
-//            while (reader.readLine().also { line = it } != null) {
-//                sb.append(line)
-//            }
-//            val obj = JSONObject(sb.toString())
-//            if (obj.has("chargeOptions")) {
-//                val chargesTypes = obj.getJSONArray("chargeOptions")
-//                for (i in 0 until chargesTypes.length()) {
-//                    val chargesObject = chargesTypes.getJSONObject(i)
-//                    val charge = ChargesEntity(
-//                        id = chargesObject.optInt("id"),
-//                        name = chargesObject.optString("name"),
-//                    )
-//                    charges.add(charge)
-//                }
-//            }
-//            _loanChargeDialogUiState.value = LoanChargeDialogUiState.AllChargesV3(charges)
-//        } catch (e: Exception) {
-//            _loanChargeDialogUiState.value =
-//                LoanChargeDialogUiState.Error(R.string.feature_loan_charge_failed_to_load_charge)
-//        }
     }
 }

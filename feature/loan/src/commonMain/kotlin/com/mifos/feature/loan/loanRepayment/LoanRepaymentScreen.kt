@@ -22,6 +22,7 @@ import androidclient.feature.loan.generated.resources.feature_loan_loan_amount_d
 import androidclient.feature.loan.generated.resources.feature_loan_loan_fees
 import androidclient.feature.loan.generated.resources.feature_loan_loan_in_arrears
 import androidclient.feature.loan.generated.resources.feature_loan_loan_repayment
+import androidclient.feature.loan.generated.resources.feature_loan_payment_success_message
 import androidclient.feature.loan.generated.resources.feature_loan_payment_type
 import androidclient.feature.loan.generated.resources.feature_loan_repayment_date
 import androidclient.feature.loan.generated.resources.feature_loan_review_payment
@@ -81,6 +82,7 @@ import com.mifos.room.entities.accounts.loans.LoanRepaymentResponseEntity
 import com.mifos.room.entities.templates.loans.LoanRepaymentTemplateEntity
 import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
+import org.jetbrains.compose.resources.getString
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
@@ -188,12 +190,11 @@ internal fun LoanRepaymentScreen(
                     if (uiState.loanRepaymentResponse != null) {
                         scope.launch {
                             snackbarHostState.showSnackbar(
-                                message = "Payment Successful, Transaction ID = " + uiState.loanRepaymentResponse.resourceId,
+                                message = getString(Res.string.feature_loan_payment_success_message) + uiState.loanRepaymentResponse.resourceId,
                             )
+                            navigateBack.invoke()
                         }
                     }
-
-                    navigateBack.invoke()
                 }
 
                 LoanRepaymentUiState.ShowProgressbar -> {
@@ -469,7 +470,7 @@ private fun ShowLoanRepaymentConfirmationDialog(
                     val request = LoanRepaymentRequestEntity(
                         accountNumber = loanAccountNumber,
                         paymentTypeId = paymentTypeId,
-                        dateFormat = "dd MM yyyy",
+                        dateFormat = "dd-MM-yyyy",
                         locale = "en",
                         transactionAmount = total,
                         transactionDate = DateHelper.getDateAsStringFromLong(

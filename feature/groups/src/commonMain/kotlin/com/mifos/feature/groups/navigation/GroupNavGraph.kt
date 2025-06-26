@@ -22,7 +22,6 @@ import com.mifos.feature.groups.createNewGroup.CreateNewGroupScreen
 import com.mifos.feature.groups.groupDetails.GroupDetailsScreen
 import com.mifos.feature.groups.groupList.GroupsListRoute
 import com.mifos.room.entities.accounts.savings.SavingAccountDepositTypeEntity
-import com.mifos.room.entities.client.ClientEntity
 
 /**
  * Created by Pronay Sarker on 13/08/2024
@@ -33,7 +32,7 @@ fun NavGraphBuilder.groupNavGraph(
     addGroupLoanAccount: (Int) -> Unit,
     addSavingsAccount: (Int, Int, Boolean) -> Unit,
     loadDocumentList: (Int, String) -> Unit,
-    clientListFragment: (List<ClientEntity>) -> Unit,
+    loadClientList: () -> Unit,
     loadGroupDataTables: (String, Int) -> Unit,
     loadNotes: (Int, String) -> Unit,
     loadLoanAccountSummary: (Int) -> Unit,
@@ -55,7 +54,7 @@ fun NavGraphBuilder.groupNavGraph(
             addGroupLoanAccount = addGroupLoanAccount,
             addSavingsAccount = addSavingsAccount,
             loadDocumentList = loadDocumentList,
-            clientListFragment = clientListFragment,
+            loadClientList = loadClientList,
             loadGroupDataTables = loadGroupDataTables,
             loadNotes = loadNotes,
             loadLoanAccountSummary = loadLoanAccountSummary,
@@ -93,7 +92,7 @@ fun NavGraphBuilder.groupDetailsRoute(
     addGroupLoanAccount: (Int) -> Unit,
     addSavingsAccount: (Int, Int, Boolean) -> Unit,
     loadDocumentList: (Int, String) -> Unit,
-    clientListFragment: (List<ClientEntity>) -> Unit,
+    loadClientList: () -> Unit,
     loadGroupDataTables: (String, Int) -> Unit,
     loadNotes: (Int, String) -> Unit,
     loadLoanAccountSummary: (Int) -> Unit,
@@ -111,7 +110,7 @@ fun NavGraphBuilder.groupDetailsRoute(
             addLoanAccount = addGroupLoanAccount,
             addSavingsAccount = addSavingsAccount,
             documents = loadDocumentList,
-            groupClients = clientListFragment,
+            groupClients = loadClientList,
             moreGroupInfo = loadGroupDataTables,
             notes = loadNotes,
             loanAccountSelected = loadLoanAccountSummary,

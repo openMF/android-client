@@ -9,6 +9,8 @@
  */
 package com.mifos.core.model.objects.payloads
 
+import kotlinx.serialization.Serializable
+
 /**
  * Created by nellyk on 2/15/2016.
  */
@@ -17,12 +19,13 @@ package com.mifos.core.model.objects.payloads
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
 
-class ChargesPayload {
-    var chargeId: Int? = null
-    var clientId: Int? = null
-    var loanId: Int? = null
-    var amount: String? = null
-    var locale: String? = null
-    var dueDate: String? = null
-    var dateFormat: String? = null
-}
+@Serializable
+data class ChargesPayload(
+    var chargeId: Int? = null,
+    var clientId: Int? = null,
+    var loanId: Int? = null,
+    var amount: String? = null,
+    var locale: String? = null,
+    var dueDate: String? = null,
+    var dateFormat: String? = null,
+)

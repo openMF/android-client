@@ -87,6 +87,7 @@ import org.mifos.navigation.generated.resources.ic_dp_placeholder
 fun App(
     networkMonitor: NetworkMonitor,
     modifier: Modifier = Modifier,
+    navigateToLogin: () -> Unit,
     onClickLogout: () -> Unit,
 ) {
     val appState = rememberAppState(
@@ -281,7 +282,7 @@ fun App(
                 FeatureNavHost(
                     appState = appState,
                     padding = paddingValues,
-                    modifier = Modifier,
+                    navigateToLogin = navigateToLogin,
                 )
                 if (dialogState) {
                     MifosDialogBox(

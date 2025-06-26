@@ -275,7 +275,7 @@ internal fun LoanChargeDialogScreen(
                                         val payload = ChargesPayload().apply {
                                             this.amount = amount
                                             this.locale = locale
-                                            this.dateFormat = "dd MMMM yyyy"
+                                            this.dateFormat = "dd-MM-yyyy"
                                             this.chargeId = chargeId
                                             this.dueDate = DateHelper.getDateAsStringFromLong(
                                                 dueDate,

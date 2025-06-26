@@ -108,7 +108,7 @@ internal fun LoanRepaymentScheduleScreen(
 
                 is LoanRepaymentScheduleUiState.ShowLoanRepaySchedule -> {
                     LoanRepaymentScheduleContent(
-                        uiState.loanWithAssociations.repaymentSchedule.getlistOfActualPeriods(),
+                        uiState.loanWithAssociations.repaymentSchedule.getListOfActualPeriods(),
                     )
                 }
 

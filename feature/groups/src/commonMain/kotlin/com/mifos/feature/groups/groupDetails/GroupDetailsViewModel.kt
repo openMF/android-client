@@ -12,6 +12,7 @@ package com.mifos.feature.groups.groupDetails
 import androidclient.feature.groups.generated.resources.Res
 import androidclient.feature.groups.generated.resources.feature_groups_failed_to_fetch_group_and_account
 import androidclient.feature.groups.generated.resources.feature_groups_failed_to_load_client
+import androidclient.feature.groups.generated.resources.feature_groups_no_group_clients
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -86,11 +87,19 @@ class GroupDetailsViewModel(
                                 GroupDetailsUiState.Error(Res.string.feature_groups_failed_to_load_client)
                         }
 
-                        DataState.Loading -> Unit
+                        DataState.Loading -> {
+                            _groupDetailsUiState.value =
+                                GroupDetailsUiState.Loading
+                        }
 
                         is DataState.Success -> {
-                            _groupAssociateClients.value =
-                                dataState.data.clientMembers
+                            if (dataState.data.clientMembers.isNotEmpty()) {
+                                _groupAssociateClients.value =
+                                    dataState.data.clientMembers
+                            } else {
+                                _groupDetailsUiState.value =
+                                    GroupDetailsUiState.Error(Res.string.feature_groups_no_group_clients)
+                            }
                         }
                     }
                 }
