@@ -19,6 +19,7 @@ import cmp.navigation.navigation.NavGraphRoute.AUTH_GRAPH
 import cmp.navigation.navigation.NavGraphRoute.MAIN_GRAPH
 import com.mifos.core.data.util.NetworkMonitor
 import com.mifos.feature.auth.navigation.authNavGraph
+import com.mifos.feature.auth.navigation.navigateToLogin
 
 @Composable
 fun RootNavGraph(
@@ -46,6 +47,7 @@ fun RootNavGraph(
                 modifier = modifier,
                 networkMonitor = networkMonitor,
                 onClickLogout = onClickLogout,
+                navigateToLogin = navHostController::navigateToLogin,
             )
         }
     }

@@ -10,18 +10,19 @@
 package com.mifos.feature.groups.groupList
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Text
@@ -59,15 +60,24 @@ fun GroupItem(
     } else {
         CardDefaults.outlinedCardBorder()
     }
-    val containerColor = if (doesSelected) Color.Blue else Color.Unspecified
+    val containerColor = if (doesSelected) {
+        MaterialTheme.colorScheme.secondaryContainer
+    } else {
+        Color.Unspecified
+    }
+    // TODO: replace primary with Green after we define Theme colours of mockups
+    val indicatorColor = if (group.active == true) {
+        MaterialTheme.colorScheme.primary
+    } else {
+        MaterialTheme.colorScheme.error
+    }
 
     group.name?.let {
         OutlinedCard(
             modifier = modifier
                 .testTag(it)
-                .fillMaxWidth()
                 .padding(8.dp)
-                .height(70.dp)
+                .fillMaxWidth()
                 .clip(RoundedCornerShape(8.dp))
                 .combinedClickable(
                     onClick = {
@@ -85,22 +95,44 @@ fun GroupItem(
             ),
             border = borderStroke,
         ) {
-            Row(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(12.dp),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically,
-            ) {
-                Text(
-                    text = it,
-                    style = MaterialTheme.typography.titleSmall,
-                )
+            ListItem(
+                leadingContent = {
+                    Canvas(
+                        modifier = Modifier.size(16.dp),
+                        onDraw = {
+                            drawCircle(
+                                color = indicatorColor,
+                            )
+                        },
+                    )
+                },
+                headlineContent = {
+                    Text(text = it)
+                },
+                supportingContent =
+                {
+                    Text(text = group.accountNo ?: "")
+                },
+                overlineContent =
+                {
+                    Text(text = group.officeName ?: "")
+                },
+                trailingContent = {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(4.dp),
+                    ) {
+                        if (group.sync) {
+                            Icon(imageVector = MifosIcons.DoneAll, contentDescription = "Sync")
+                        }
 
-                if (group.sync) {
-                    Icon(imageVector = MifosIcons.DoneAll, contentDescription = "Sync")
-                }
-            }
+                        Icon(
+                            imageVector = MifosIcons.ArrowForward,
+                            contentDescription = "Arrow Forward Icon",
+                        )
+                    }
+                },
+            )
         }
     }
 }
