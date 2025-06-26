@@ -42,7 +42,6 @@ import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Snackbar
-import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -101,7 +100,7 @@ internal fun UpdateServerConfigScreenRoute(
             tenantError = tenantError,
             onEvent = viewModel::onEvent,
             onBackClick = onBackClick,
-            snackbarHostState = snackbarHostState
+            snackbarHostState = snackbarHostState,
         )
 
         if (showCountdown) {
@@ -350,7 +349,7 @@ private fun UpdateServerConfigScreenEmptyData() {
             ),
             onEvent = {},
             onBackClick = {},
-            snackbarHostState = remember { SnackbarHostState() }
+            snackbarHostState = remember { SnackbarHostState() },
         )
     }
 }
