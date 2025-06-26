@@ -42,8 +42,6 @@ fun ComposeApp(
         }
     }
 
-
-
     val isDarkTheme = when (uiState) {
         MainUiState.Loading -> isSystemInDarkTheme()
         is MainUiState.Success -> {

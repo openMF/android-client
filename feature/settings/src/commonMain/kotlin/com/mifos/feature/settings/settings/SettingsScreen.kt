@@ -112,21 +112,6 @@ internal fun SettingsScreen(
     var showSyncSurveyDialog by rememberSaveable { mutableStateOf(false) }
     val snackbarHostState = remember { SnackbarHostState() }
 
-    var restartTriggered by rememberSaveable { mutableStateOf(false) }
-
-    LaunchedEffect(restartTriggered) {
-        if (restartTriggered) {
-            for (i in 5 downTo 1) {
-                snackbarHostState.showSnackbar(
-                    message = "Restarting in $i seconds...",
-                    duration = SnackbarDuration.Short,
-                    withDismissAction = false,
-                )
-            }
-            ShareUtils.restartApplication()
-        }
-    }
-
     MifosScaffold(
         onBackPressed = onBackPressed,
         snackbarHostState = snackbarHostState,
