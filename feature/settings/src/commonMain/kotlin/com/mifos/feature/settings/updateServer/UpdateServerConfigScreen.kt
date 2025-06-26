@@ -56,6 +56,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mifos.core.common.utils.ServerConfig
@@ -317,21 +318,20 @@ private fun SimpleCountdownSnackbar(
     Snackbar(
         modifier = modifier.padding(16.dp),
         action = {
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Text(
-                    text = "${countdown}s",
-                    color = MaterialTheme.colorScheme.primary,
-                    fontWeight = FontWeight.Bold,
-                )
-                if (dismissText != null) {
-                    TextButton(onClick = onDismiss) {
-                        Text(dismissText)
-                    }
+            if (dismissText != null) {
+                TextButton(onClick = onDismiss) {
+                    Text(dismissText)
                 }
             }
         },
     ) {
-        Text(message)
+        Text(
+            text = "$message in ${countdown}s",
+            style = MaterialTheme.typography.bodyMedium,
+            fontWeight = FontWeight.SemiBold,
+            textAlign = TextAlign.Center,
+            modifier = Modifier.fillMaxWidth(),
+        )
     }
 }
 
