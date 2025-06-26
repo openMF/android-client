@@ -45,6 +45,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -58,6 +59,7 @@ import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.ui.util.DevicePreview
 import com.mifos.core.ui.util.ShareUtils
+import kotlinx.coroutines.delay
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -74,16 +76,20 @@ internal fun UpdateServerConfigScreenRoute(
     val tenantError by viewModel.tenantError.collectAsStateWithLifecycle()
     val snackbarHostState = remember { SnackbarHostState() }
     val result by viewModel.result.collectAsStateWithLifecycle(false)
+    var countdown by remember { mutableStateOf(5) }
 
     LaunchedEffect(result) {
         if (result) {
-            for (i in 5 downTo 1) {
-                snackbarHostState.showSnackbar(
-                    message = "Restarting in $i seconds...",
-                    duration = SnackbarDuration.Short,
-                    withDismissAction = false,
-                )
+            snackbarHostState.showSnackbar(
+                message = "Restarting in $countdown seconds...",
+                duration = SnackbarDuration.Indefinite,
+                withDismissAction = false
+            )
+            for (i in countdown downTo 1) {
+                countdown = i
+                delay(1000)
             }
+            snackbarHostState.currentSnackbarData?.dismiss()
             ShareUtils.restartApplication()
         }
     }
