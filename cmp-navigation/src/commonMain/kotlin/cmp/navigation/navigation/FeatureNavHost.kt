@@ -167,6 +167,7 @@ internal fun FeatureNavHost(
 
         generateCollectionSheetScreen(appState.navController::popBackStack)
 
+        // TODO : check appState.navController::navigateDataTableList after completing client creation
         clientNavGraph(
             navController = appState.navController,
             paddingValues = padding,

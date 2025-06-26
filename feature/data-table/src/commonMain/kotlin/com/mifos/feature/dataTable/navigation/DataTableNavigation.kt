@@ -25,7 +25,6 @@ import com.mifos.feature.dataTable.dataTableList.DataTableListScreen
 import com.mifos.room.entities.client.ClientPayloadEntity
 import com.mifos.room.entities.navigation.DataTableDataNavigationArg
 import com.mifos.room.entities.noncore.DataTableEntity
-import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
 fun NavGraphBuilder.dataTableNavGraph(
