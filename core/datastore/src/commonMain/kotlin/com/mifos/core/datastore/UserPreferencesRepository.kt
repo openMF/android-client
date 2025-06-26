@@ -9,6 +9,7 @@
  */
 package com.mifos.core.datastore
 
+import com.mifos.core.common.utils.DataState
 import com.mifos.core.common.utils.ServerConfig
 import com.mifos.core.datastore.model.AppSettings
 import com.mifos.core.datastore.model.AppTheme
@@ -25,17 +26,17 @@ interface UserPreferencesRepository {
     val token: String?
     val appTheme: StateFlow<AppTheme>
 
-    suspend fun updateUser(user: User): Result<Unit>
-    suspend fun updateUserStatus(status: Boolean): Result<Unit>
-    suspend fun updateSettings(appSettings: AppSettings): Result<Unit>
+    suspend fun updateUser(user: User): DataState<Unit>
+    suspend fun updateUserStatus(status: Boolean): DataState<Unit>
+    suspend fun updateSettings(appSettings: AppSettings): DataState<Unit>
 
     suspend fun logOut(): Unit
 
-    suspend fun updateServerConfig(serverConfig: ServerConfig): Result<Unit>
+    suspend fun updateServerConfig(serverConfig: ServerConfig): DataState<Unit>
 
-    suspend fun updateUserInfo(user: UserData): Result<Unit>
+    suspend fun updateUserInfo(user: UserData): DataState<Unit>
 
-    suspend fun updateTheme(theme: AppTheme): Result<Unit>
+    suspend fun updateTheme(theme: AppTheme): DataState<Unit>
 
     val getServerConfig: StateFlow<ServerConfig>
 }
