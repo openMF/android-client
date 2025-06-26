@@ -16,7 +16,6 @@ import androidclient.feature.groups.generated.resources.feature_groups_no_group_
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import co.touchlab.kermit.Logger
 import com.mifos.core.common.utils.Constants
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.repository.GroupDetailsRepository
@@ -94,14 +93,13 @@ class GroupDetailsViewModel(
                         }
 
                         is DataState.Success -> {
-                            if(dataState.data.clientMembers.isNotEmpty()){
+                            if (dataState.data.clientMembers.isNotEmpty()) {
                                 _groupAssociateClients.value =
                                     dataState.data.clientMembers
-                            }else{
+                            } else {
                                 _groupDetailsUiState.value =
                                     GroupDetailsUiState.Error(Res.string.feature_groups_no_group_clients)
                             }
-
                         }
                     }
                 }

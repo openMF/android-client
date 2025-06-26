@@ -137,7 +137,7 @@ internal fun FeatureNavHost(
             navigateBack = appState.navController::popBackStack,
             navigateToLoginScreen = appState.navController::navigateToLogin,
             changePasscode = {},
-            onClickUpdateConfig=appState.navController::navigateToUpdateServerConfig,
+            onClickUpdateConfig = appState.navController::navigateToUpdateServerConfig,
         )
         individualCollectionSheetNavGraph(
             navController = appState.navController,

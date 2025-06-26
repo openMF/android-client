@@ -35,7 +35,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -43,7 +42,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import co.touchlab.kermit.Logger
@@ -53,9 +51,7 @@ import com.mifos.core.designsystem.component.MifosRadioButtonDialog
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.UpdateEndpointDialogScreen
 import com.mifos.core.ui.util.DevicePreview
-import com.mifos.core.ui.util.ShareUtils
 import com.mifos.feature.settings.syncSurvey.SyncSurveysDialog
-import com.mifos.feature.settings.updateServer.UpdateServerConfigScreenRoute
 import kotlinx.coroutines.delay
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringArrayResource
@@ -91,7 +87,7 @@ internal fun SettingsScreen(
                 isSystemLanguage = isSystemLanguage,
             )
         },
-        onClickUpdateConfig=onClickUpdateConfig
+        onClickUpdateConfig = onClickUpdateConfig,
     )
 }
 
@@ -263,7 +259,6 @@ fun RestartCountdownSnackbar(
     seconds: Int,
     snackbarHostState: SnackbarHostState,
 ) {
-
     var secondsRemaining by remember { mutableStateOf(seconds) }
 
     LaunchedEffect(Unit) {
@@ -279,7 +274,6 @@ fun RestartCountdownSnackbar(
     }
 }
 
-
 @Composable
 @DevicePreview
 private fun PreviewSettingsScreen() {
@@ -290,6 +284,6 @@ private fun PreviewSettingsScreen() {
         updateLanguage = {},
         updateTheme = {},
         changePasscode = {},
-        onClickUpdateConfig ={},
+        onClickUpdateConfig = {},
     )
 }
