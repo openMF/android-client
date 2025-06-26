@@ -12,7 +12,6 @@ package com.mifos.core.network.services
 import com.mifos.core.common.utils.Page
 import com.mifos.core.model.objects.clients.ActivatePayload
 import com.mifos.core.model.objects.responses.SaveResponse
-import com.mifos.core.network.GenericResponse
 import com.mifos.room.basemodel.APIEndPoint
 import com.mifos.room.entities.accounts.GroupAccounts
 import com.mifos.room.entities.group.GroupEntity
@@ -24,6 +23,7 @@ import de.jensklingenberg.ktorfit.http.POST
 import de.jensklingenberg.ktorfit.http.Path
 import de.jensklingenberg.ktorfit.http.Query
 import de.jensklingenberg.ktorfit.http.QueryMap
+import io.ktor.client.statement.HttpResponse
 import kotlinx.coroutines.flow.Flow
 
 /**
@@ -64,8 +64,8 @@ interface GroupService {
      * @return GenericResponse
      */
     @POST(APIEndPoint.GROUPS + "/{groupId}?command=activate")
-    fun activateGroup(
+    suspend fun activateGroup(
         @Path("groupId") groupId: Int,
-        @Body activatePayload: ActivatePayload?,
-    ): Flow<GenericResponse>
+        @Body activatePayload: ActivatePayload,
+    ): HttpResponse
 }

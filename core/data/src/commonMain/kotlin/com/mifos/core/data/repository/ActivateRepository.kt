@@ -9,12 +9,10 @@
  */
 package com.mifos.core.data.repository
 
-import com.mifos.core.common.utils.DataState
 import com.mifos.core.model.objects.clients.ActivatePayload
-import com.mifos.core.network.GenericResponse
 import com.mifos.core.network.model.PostCentersCenterIdResponse
 import com.mifos.core.network.model.PostClientsClientIdResponse
-import kotlinx.coroutines.flow.Flow
+import io.ktor.client.statement.HttpResponse
 
 /**
  * Created by Aditya Gupta on 06/08/23.
@@ -32,8 +30,8 @@ interface ActivateRepository {
         activatePayload: ActivatePayload?,
     ): PostCentersCenterIdResponse
 
-    fun activateGroup(
+    suspend fun activateGroup(
         groupId: Int,
-        activatePayload: ActivatePayload?,
-    ): Flow<DataState<GenericResponse>>
+        activatePayload: ActivatePayload,
+    ): HttpResponse
 }

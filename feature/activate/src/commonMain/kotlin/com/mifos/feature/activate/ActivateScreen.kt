@@ -43,6 +43,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mifos.core.common.utils.Constants
+import com.mifos.core.common.utils.DateHelper
 import com.mifos.core.common.utils.formatDate
 import com.mifos.core.designsystem.component.MifosButton
 import com.mifos.core.designsystem.component.MifosCircularProgress
@@ -69,7 +70,7 @@ internal fun ActivateScreen(
         state = state,
         onActivate = {
             val clientIdAsInt: Int = try {
-                id
+                id.toInt()
             } catch (e: Exception) {
                 0
             }
@@ -173,7 +174,7 @@ private fun ActivateContent(
         }
 
         MifosDatePickerTextField(
-            value = formatDate(activateDate),
+            value = DateHelper.getDateAsStringFromLong(activateDate),
             label = stringResource(Res.string.feature_activate_activation_date),
             openDatePicker = {
                 showDatePicker = true
@@ -186,7 +187,9 @@ private fun ActivateContent(
             onClick = {
                 onActivate(
                     ActivatePayload(
-                        activationDate = activateDate.toString(),
+                        activationDate = formatDate(activateDate),
+                        dateFormat = Constants.DATE_FORMAT_LONG,
+                        locale = Constants.LOCALE_EN,
                     ),
                 )
             },

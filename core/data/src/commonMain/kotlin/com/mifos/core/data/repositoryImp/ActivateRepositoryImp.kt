@@ -9,17 +9,14 @@
  */
 package com.mifos.core.data.repositoryImp
 
-import com.mifos.core.common.utils.DataState
-import com.mifos.core.common.utils.asDataStateFlow
 import com.mifos.core.data.repository.ActivateRepository
 import com.mifos.core.model.objects.clients.ActivatePayload
-import com.mifos.core.network.GenericResponse
 import com.mifos.core.network.datamanager.DataManagerCenter
 import com.mifos.core.network.datamanager.DataManagerClient
 import com.mifos.core.network.datamanager.DataManagerGroups
 import com.mifos.core.network.model.PostCentersCenterIdResponse
 import com.mifos.core.network.model.PostClientsClientIdResponse
-import kotlinx.coroutines.flow.Flow
+import io.ktor.client.statement.HttpResponse
 
 /**
  * Created by Aditya Gupta on 06/08/23.
@@ -44,11 +41,10 @@ class ActivateRepositoryImp(
         return dataManagerCenter.activateCenter(centerId, activatePayload)
     }
 
-    override fun activateGroup(
+    override suspend fun activateGroup(
         groupId: Int,
-        activatePayload: ActivatePayload?,
-    ): Flow<DataState<GenericResponse>> {
+        activatePayload: ActivatePayload,
+    ): HttpResponse {
         return dataManagerGroups.activateGroup(groupId, activatePayload)
-            .asDataStateFlow()
     }
 }

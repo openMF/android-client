@@ -21,7 +21,7 @@ import kotlinx.serialization.Serializable
 data class ActivatePayload(
     var activationDate: String? = null,
 
-    var dateFormat: String? = "dd MMMM YYYY",
+    var dateFormat: String? = null,
 
-    var locale: String? = "en",
+    var locale: String? = null,
 ) : Parcelable
