@@ -43,7 +43,6 @@ fun MifosScaffold(
     floatingActionButtonContent: FloatingActionButtonContent? = null,
     pullToRefreshState: MifosPullToRefreshState = rememberMifosPullToRefreshState(),
     snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
-    snackbarHost: @Composable () -> Unit = { SnackbarHost(hostState = snackbarHostState) },
     actions: @Composable RowScope.() -> Unit = {},
     bottomBar: @Composable () -> Unit = {},
     content: @Composable (PaddingValues) -> Unit = {},
@@ -68,7 +67,7 @@ fun MifosScaffold(
                 )
             }
         },
-        snackbarHost = snackbarHost,
+        snackbarHost = { SnackbarHost(snackbarHostState) },
         containerColor = MaterialTheme.colorScheme.surface.copy(alpha = 0f),
         content = { paddingValues ->
             val internalPullToRefreshState = rememberPullToRefreshState()

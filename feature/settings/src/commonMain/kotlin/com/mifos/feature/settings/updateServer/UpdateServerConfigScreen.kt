@@ -101,9 +101,7 @@ internal fun UpdateServerConfigScreenRoute(
             tenantError = tenantError,
             onEvent = viewModel::onEvent,
             onBackClick = onBackClick,
-            snackbarHost = {
-                SnackbarHost(hostState = snackbarHostState)
-            },
+            snackbarHostState = snackbarHostState
         )
 
         if (showCountdown) {
@@ -132,7 +130,7 @@ internal fun UpdateServerConfigScreenContent(
     portError: String? = null,
     tenantError: String? = null,
     onBackClick: () -> Unit,
-    snackbarHost: @Composable () -> Unit,
+    snackbarHostState: SnackbarHostState,
 ) {
     val lazyListState = rememberLazyListState()
     val hasAnyError = listOf(
@@ -147,7 +145,7 @@ internal fun UpdateServerConfigScreenContent(
         modifier = modifier,
         title = stringResource(Res.string.feature_settings_title),
         onBackPressed = onBackClick,
-        snackbarHost = snackbarHost,
+        snackbarHostState = snackbarHostState,
     ) {
         LazyColumn(
             modifier = Modifier
@@ -352,7 +350,7 @@ private fun UpdateServerConfigScreenEmptyData() {
             ),
             onEvent = {},
             onBackClick = {},
-            snackbarHost = {},
+            snackbarHostState = remember { SnackbarHostState() }
         )
     }
 }
