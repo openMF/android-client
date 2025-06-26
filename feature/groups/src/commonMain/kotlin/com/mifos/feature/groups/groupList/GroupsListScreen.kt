@@ -70,7 +70,7 @@ fun GroupItem(
         OutlinedCard(
             modifier = modifier
                 .testTag(it)
-                .padding(16.dp)
+                .padding(8.dp)
                 .fillMaxWidth()
                 .clip(RoundedCornerShape(8.dp))
                 .combinedClickable(
@@ -105,10 +105,12 @@ fun GroupItem(
                 },
                 supportingContent =
                 {
-                    Text(text = group.accountNo ?: "null")
+                    Text(text = group.accountNo ?: "")
                 },
                 overlineContent =
-                { Text(text = group.officeName ?: "null") },
+                {
+                    Text(text = group.officeName ?: "")
+                },
                 trailingContent = {
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
