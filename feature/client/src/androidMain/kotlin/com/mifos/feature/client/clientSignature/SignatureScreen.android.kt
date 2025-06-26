@@ -18,7 +18,10 @@ import androidclient.feature.client.generated.resources.feature_client_signature
 import androidclient.feature.client.generated.resources.feature_client_signature_uploaded_successfully
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -150,7 +153,17 @@ internal actual fun SignatureScreen(
 
                 is SignatureUiState.Initial -> {
                     paths.add(PathState(Path(), drawColor, drawBrush))
-                    MifosDrawingCanvas(drawColor = drawColor, drawBrush = drawBrush)
+
+                    // Force white background here instead of relying on MaterialTheme
+                    // Required to maintain consistent white canvas in both light and dark modes
+                    // for legibility and official document compliance.
+                    Box(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .background(Color.White),
+                    ) {
+                        MifosDrawingCanvas(drawColor = drawColor, drawBrush = drawBrush)
+                    }
                 }
             }
         }
