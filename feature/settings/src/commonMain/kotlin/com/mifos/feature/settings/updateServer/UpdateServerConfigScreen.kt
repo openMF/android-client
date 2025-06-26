@@ -66,6 +66,7 @@ import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.ui.util.DevicePreview
 import com.mifos.core.ui.util.ShareUtils
 import kotlinx.coroutines.delay
+import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -106,7 +107,7 @@ internal fun UpdateServerConfigScreenRoute(
 
         if (showCountdown) {
             SimpleCountdownSnackbar(
-                message = stringResource(Res.string.feature_settings_restart),
+                message = Res.string.feature_settings_restart,
                 durationSeconds = 5,
                 onDismiss = {
                     showCountdown = false
@@ -293,7 +294,7 @@ internal fun UpdateServerConfigScreenContent(
 
 @Composable
 private fun SimpleCountdownSnackbar(
-    message: String,
+    message: StringResource,
     durationSeconds: Int = 5,
     dismissText: String? = null,
     onDismiss: () -> Unit,
@@ -326,7 +327,7 @@ private fun SimpleCountdownSnackbar(
         },
     ) {
         Text(
-            text = "$message in $countdown seconds",
+            text = stringResource(message,countdown),
             style = MaterialTheme.typography.bodyMedium,
             fontWeight = FontWeight.SemiBold,
             textAlign = TextAlign.Center,
