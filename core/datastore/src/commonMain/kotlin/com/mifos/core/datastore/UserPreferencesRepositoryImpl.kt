@@ -53,8 +53,8 @@ class UserPreferencesRepositoryImpl(
     override suspend fun updateUserInfo(user: UserData): DataState<Unit> {
         return withContext(ioDispatcher) {
             try {
-                val result = preferenceManager.updateUserInfo(user)
-                DataState.Success(result)
+                preferenceManager.updateUserInfo(user)
+                DataState.Success(Unit)
             } catch (e: Exception) {
                 DataState.Error(e)
             }
