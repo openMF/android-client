@@ -327,7 +327,7 @@ private fun SimpleCountdownSnackbar(
         },
     ) {
         Text(
-            text = stringResource(message,countdown),
+            text = stringResource(message, countdown),
             style = MaterialTheme.typography.bodyMedium,
             fontWeight = FontWeight.SemiBold,
             textAlign = TextAlign.Center,
