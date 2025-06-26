@@ -65,7 +65,7 @@ fun GroupItem(
     } else {
         Color.Unspecified
     }
-    //TODO: replace primary with Green after we define Theme colours of mockups
+    // TODO: replace primary with Green after we define Theme colours of mockups
     val indicatorColor = if (group.active == true) {
         MaterialTheme.colorScheme.primary
     } else {
@@ -101,7 +101,7 @@ fun GroupItem(
                         modifier = Modifier.size(16.dp),
                         onDraw = {
                             drawCircle(
-                                color = indicatorColor
+                                color = indicatorColor,
                             )
                         },
                     )
@@ -128,7 +128,7 @@ fun GroupItem(
 
                         Icon(
                             imageVector = MifosIcons.ArrowForward,
-                            contentDescription = null,
+                            contentDescription = "Arrow Forward Icon",
                         )
                     }
                 },
