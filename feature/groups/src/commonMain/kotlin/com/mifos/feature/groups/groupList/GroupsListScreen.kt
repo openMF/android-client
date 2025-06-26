@@ -65,6 +65,12 @@ fun GroupItem(
     } else {
         Color.Unspecified
     }
+    //TODO: replace primary with Green after we define Theme colours of mockups
+    val indicatorColor = if (group.active == true) {
+        MaterialTheme.colorScheme.primary
+    } else {
+        MaterialTheme.colorScheme.error
+    }
 
     group.name?.let {
         OutlinedCard(
@@ -95,7 +101,7 @@ fun GroupItem(
                         modifier = Modifier.size(16.dp),
                         onDraw = {
                             drawCircle(
-                                color = if (group.active == true) Color.Green else Color.Red,
+                                color = indicatorColor
                             )
                         },
                     )

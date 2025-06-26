@@ -47,7 +47,7 @@ fun RootNavGraph(
                 modifier = modifier,
                 networkMonitor = networkMonitor,
                 onClickLogout = onClickLogout,
-                navigateToLogin = { navHostController.navigateToLogin() },
+                navigateToLogin = navHostController::navigateToLogin,
             )
         }
     }
