@@ -67,17 +67,14 @@ internal fun SettingsScreen(
     onBackPressed: () -> Unit,
     navigateToLoginScreen: () -> Unit,
     changePasscode: (String) -> Unit,
-    languageChanged: () -> Unit,
+    onClickUpdateConfig: () -> Unit,
     viewModel: SettingsViewModel = koinViewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     SettingsScreen(
         onBackPressed = onBackPressed,
-        selectedLanguage = uiState.language.code,
-        currentTheme = uiState.theme,
-        baseURL = uiState.baseUrl,
-        tenant = uiState.tenant,
+        state = uiState,
         changePasscode = { changePasscode(uiState.passcode) },
         handleEndpointUpdate = { baseURL, tenant ->
             if (viewModel.tryUpdatingEndpoint(selectedBaseUrl = baseURL, selectedTenant = tenant)) {
@@ -93,19 +90,17 @@ internal fun SettingsScreen(
                 language = it.code,
                 isSystemLanguage = isSystemLanguage,
             )
-            languageChanged()
         },
+        onClickUpdateConfig=onClickUpdateConfig
     )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun SettingsScreen(
+    state: SettingsUiState,
     onBackPressed: () -> Unit,
-    selectedLanguage: String,
-    currentTheme: AppTheme,
-    baseURL: String,
-    tenant: String,
+    onClickUpdateConfig: () -> Unit,
     changePasscode: () -> Unit,
     handleEndpointUpdate: (baseURL: String, tenant: String) -> Unit,
     updateTheme: (theme: AppTheme) -> Unit,
@@ -115,7 +110,6 @@ internal fun SettingsScreen(
     var showEndpointUpdateDialog by rememberSaveable { mutableStateOf(false) }
     var showThemeUpdateDialog by rememberSaveable { mutableStateOf(false) }
     var showSyncSurveyDialog by rememberSaveable { mutableStateOf(false) }
-    var showServerConfig by rememberSaveable { mutableStateOf(false) }
     var restartTriggered by rememberSaveable { mutableStateOf(false) }
     val snackbarHostState = remember { SnackbarHostState() }
 
@@ -153,7 +147,7 @@ internal fun SettingsScreen(
 
                         SettingsCardItem.ENDPOINT -> showEndpointUpdateDialog = true
 
-                        SettingsCardItem.SERVER_CONFIG -> showServerConfig = true
+                        SettingsCardItem.SERVER_CONFIG -> onClickUpdateConfig()
                     }
                 },
             )
@@ -168,27 +162,13 @@ internal fun SettingsScreen(
         )
     }
 
-    if (showServerConfig) {
-        Dialog(
-            onDismissRequest = { showServerConfig = false },
-        ) {
-            UpdateServerConfigScreenRoute(
-                onCloseClick = { showServerConfig = false },
-                onSuccessful = {
-                    showServerConfig = false
-                    restartTriggered = true
-                },
-            )
-        }
-    }
-
     if (showLanguageUpdateDialog) {
         MifosRadioButtonDialog(
             title = stringResource(Res.string.feature_settings_choose_language),
             items = stringArrayResource(Res.array.feature_settings_languages).toTypedArray(),
             selectItem = { _, index -> updateLanguage(MifosAppLanguage.entries[index]) },
             onDismissRequest = { showLanguageUpdateDialog = false },
-            selectedItem = MifosAppLanguage.fromCode(selectedLanguage).displayName,
+            selectedItem = MifosAppLanguage.fromCode(state.language.code).displayName,
         )
     }
 
@@ -198,14 +178,14 @@ internal fun SettingsScreen(
             items = AppTheme.entries.map { it.themeName }.toTypedArray(),
             selectItem = { _, index -> updateTheme(AppTheme.entries[index]) },
             onDismissRequest = { showThemeUpdateDialog = false },
-            selectedItem = currentTheme.themeName,
+            selectedItem = state.theme.themeName,
         )
     }
 
     if (showEndpointUpdateDialog) {
         UpdateEndpointDialogScreen(
-            initialBaseURL = baseURL,
-            initialTenant = tenant,
+            initialBaseURL = state.baseUrl,
+            initialTenant = state.tenant,
             onDismissRequest = { showEndpointUpdateDialog = false },
             handleEndpointUpdate = { url, tenant ->
                 handleEndpointUpdate(url, tenant)
@@ -297,7 +277,7 @@ fun RestartCountdownSnackbar(
     seconds: Int,
     snackbarHostState: SnackbarHostState,
 ) {
-    val scope = rememberCoroutineScope()
+
     var secondsRemaining by remember { mutableStateOf(seconds) }
 
     LaunchedEffect(Unit) {
@@ -313,27 +293,17 @@ fun RestartCountdownSnackbar(
     }
 }
 
-// private fun Context.restartApplication() {
-//    val packageManager: PackageManager = this.packageManager
-//    val intent: Intent = packageManager.getLaunchIntentForPackage(this.packageName)!!
-//    val componentName: ComponentName = intent.component!!
-//    val restartIntent: Intent = Intent.makeRestartActivityTask(componentName)
-//    this.startActivity(restartIntent)
-//    Runtime.getRuntime().exit(0)
-// }
 
 @Composable
 @DevicePreview
 private fun PreviewSettingsScreen() {
     SettingsScreen(
         onBackPressed = {},
-        selectedLanguage = "",
-        currentTheme = AppTheme.SYSTEM,
-        baseURL = "",
-        tenant = "",
+        state = SettingsUiState.DEFAULT,
         handleEndpointUpdate = { _, _ -> },
         updateLanguage = {},
         updateTheme = {},
         changePasscode = {},
+        onClickUpdateConfig ={},
     )
 }

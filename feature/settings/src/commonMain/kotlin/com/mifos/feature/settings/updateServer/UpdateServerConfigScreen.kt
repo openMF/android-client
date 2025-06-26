@@ -32,6 +32,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
@@ -61,6 +62,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mifos.core.common.utils.ServerConfig
 import com.mifos.core.designsystem.component.MifosCard
 import com.mifos.core.designsystem.component.MifosOutlinedTextField
+import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.ui.util.DevicePreview
 import org.jetbrains.compose.resources.stringResource
@@ -68,7 +70,7 @@ import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 internal fun UpdateServerConfigScreenRoute(
-    onCloseClick: () -> Unit,
+    onBackClick: () -> Unit,
     onSuccessful: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: UpdateServerConfigViewModel = koinViewModel(),
@@ -96,7 +98,7 @@ internal fun UpdateServerConfigScreenRoute(
         portError = portError,
         tenantError = tenantError,
         onEvent = viewModel::onEvent,
-        onCloseClick = onCloseClick,
+        onBackClick = onBackClick,
     )
 }
 
@@ -111,7 +113,7 @@ internal fun UpdateServerConfigScreenContent(
     endPointError: String? = null,
     portError: String? = null,
     tenantError: String? = null,
-    onCloseClick: () -> Unit,
+    onBackClick: () -> Unit,
 ) {
     val lazyListState = rememberLazyListState()
     val hasAnyError = listOf(
@@ -121,57 +123,18 @@ internal fun UpdateServerConfigScreenContent(
         portError,
         tenantError,
     ).any { it != null }
-    MifosCard(
+
+    MifosScaffold(
         modifier = modifier,
-        shape = RoundedCornerShape(16.dp),
+        title = stringResource(Res.string.feature_settings_title),
+        onBackPressed = onBackClick,
     ) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(bottom = 24.dp)
-                .imePadding(),
-            verticalArrangement = Arrangement.spacedBy(8.dp),
-        ) {
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .background(
-                        MaterialTheme.colorScheme.secondaryContainer,
-                    )
-                    .padding(12.dp),
-            ) {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically,
-                ) {
-                    Text(
-                        text = stringResource(Res.string.feature_settings_title),
-                        style = MaterialTheme.typography.headlineSmall,
-                        fontWeight = FontWeight.SemiBold,
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis,
-                    )
-
-                    Spacer(modifier = Modifier.width(8.dp))
-
-                    OutlinedIconButton(
-                        onClick = onCloseClick,
-                    ) {
-                        Icon(
-                            imageVector = MifosIcons.Close,
-                            contentDescription = stringResource(Res.string.feature_settings_close_bottomsheet),
-                        )
-                    }
-                }
-            }
-
             LazyColumn(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 12.dp),
-                contentPadding = PaddingValues(4.dp),
+                    .fillMaxSize()
+                    .padding(it),
+                contentPadding = PaddingValues(12.dp),
+                verticalArrangement = Arrangement.spacedBy(12.dp),
                 state = lazyListState,
             ) {
                 item {
@@ -297,9 +260,6 @@ internal fun UpdateServerConfigScreenContent(
                             .fillMaxWidth()
                             .height(48.dp),
                         enabled = !hasAnyError,
-                        colors = ButtonDefaults.elevatedButtonColors(
-                            contentColor = Color.White,
-                        ),
                     ) {
                         Icon(
                             imageVector = MifosIcons.Save,
@@ -310,7 +270,7 @@ internal fun UpdateServerConfigScreenContent(
                     }
                 }
             }
-        }
+
     }
 }
 
@@ -327,7 +287,7 @@ private fun UpdateServerConfigScreenEmptyData() {
                 tenant = "",
             ),
             onEvent = {},
-            onCloseClick = {},
+            onBackClick = {},
         )
     }
 }

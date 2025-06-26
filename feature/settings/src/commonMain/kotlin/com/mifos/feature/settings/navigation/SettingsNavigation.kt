@@ -13,6 +13,7 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import com.mifos.feature.settings.settings.SettingsScreen
+import com.mifos.feature.settings.updateServer.UpdateServerConfigScreenRoute
 
 fun NavController.navigateToSettingsScreen() {
     navigate(SettingsScreens.SettingsScreen.route)
@@ -22,7 +23,8 @@ fun NavGraphBuilder.settingsScreen(
     navigateBack: () -> Unit,
     navigateToLoginScreen: () -> Unit,
     changePasscode: (String) -> Unit,
-    languageChanged: () -> Unit,
+    onUpdateConfig: () -> Unit,
+    onClickUpdateConfig: () -> Unit,
 ) {
     composable(
         route = SettingsScreens.SettingsScreen.route,
@@ -30,8 +32,41 @@ fun NavGraphBuilder.settingsScreen(
         SettingsScreen(
             onBackPressed = navigateBack,
             navigateToLoginScreen = navigateToLoginScreen,
-            languageChanged = languageChanged,
             changePasscode = changePasscode,
+            onClickUpdateConfig=onClickUpdateConfig
         )
     }
+    composable(
+        route = SettingsScreens.ChangeServerConfig.route,
+    ) {
+        UpdateServerConfigScreenRoute(
+            onBackClick = navigateBack,
+            onSuccessful = onUpdateConfig,
+        )
+    }
+}
+
+private const val SERVER_CONFIG_ROUTE = "update_server_config"
+
+fun NavGraphBuilder.serverConfigGraph(
+    navigateBack: () -> Unit,
+    onUpdateConfig: () -> Unit,
+) {
+        composable(
+            route = SERVER_CONFIG_ROUTE,
+        ) {
+            UpdateServerConfigScreenRoute(
+                onBackClick =navigateBack,
+                onSuccessful=onUpdateConfig,
+            )
+    }
+
+}
+
+fun NavController.navigateToServerConfigGraph() {
+    navigate(SERVER_CONFIG_ROUTE)
+}
+
+fun NavController.navigateToUpdateServerConfig() {
+    navigate(SettingsScreens.ChangeServerConfig.route)
 }
