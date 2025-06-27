@@ -54,7 +54,7 @@ fun RootNavGraph(
                 networkMonitor = networkMonitor,
                 onClickLogout = onClickLogout,
                 navigateToLogin = navHostController::navigateToLogin,
-                onClickUpdateConfig = navHostController::navigateToServerConfigGraph
+                onClickUpdateConfig = navHostController::navigateToServerConfigGraph,
             )
         }
     }

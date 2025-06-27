@@ -284,7 +284,7 @@ fun App(
                     appState = appState,
                     padding = paddingValues,
                     navigateToLogin = navigateToLogin,
-                    onClickUpdateConfig=onClickUpdateConfig
+                    onClickUpdateConfig = onClickUpdateConfig,
                 )
                 if (dialogState) {
                     MifosDialogBox(
