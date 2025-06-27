@@ -92,6 +92,7 @@ fun App(
     modifier: Modifier = Modifier,
     navigateToLogin: () -> Unit,
     onClickLogout: () -> Unit,
+    onClickUpdateConfig: () -> Unit,
 ) {
     val appState = rememberAppState(
         networkMonitor = networkMonitor,
@@ -289,6 +290,7 @@ fun App(
                     appState = appState,
                     padding = paddingValues,
                     navigateToLogin = navigateToLogin,
+                    onClickUpdateConfig = onClickUpdateConfig,
                 )
                 if (dialogState) {
                     MifosDialogBox(

@@ -59,6 +59,7 @@ internal fun FeatureNavHost(
     appState: AppState,
     padding: PaddingValues,
     navigateToLogin: () -> Unit,
+    onClickUpdateConfig: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     NavHost(
@@ -135,8 +136,8 @@ internal fun FeatureNavHost(
         settingsScreen(
             navigateBack = appState.navController::popBackStack,
             navigateToLoginScreen = navigateToLogin,
-            changePasscode = { },
-            languageChanged = {},
+            changePasscode = {},
+            onClickUpdateConfig = onClickUpdateConfig,
         )
 
         individualCollectionSheetNavGraph(
