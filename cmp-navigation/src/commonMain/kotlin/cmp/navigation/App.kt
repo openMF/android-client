@@ -79,7 +79,9 @@ import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.designsystem.theme.MifosBackground
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.resources.stringResource
 import org.mifos.navigation.generated.resources.Res
+import org.mifos.navigation.generated.resources.cmp_navigation_no_internet
 import org.mifos.navigation.generated.resources.drawer_profile_header
 import org.mifos.navigation.generated.resources.ic_dp_placeholder
 
@@ -125,7 +127,7 @@ fun App(
 
         val isOffline by appState.isOffline.collectAsStateWithLifecycle()
 
-        val notConnectedMessage = "You have lost network connection"
+        val notConnectedMessage = stringResource(Res.string.cmp_navigation_no_internet)
         LaunchedEffect(isOffline) {
             if (isOffline) {
                 snackbarHostState.showSnackbar(
