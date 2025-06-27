@@ -53,7 +53,6 @@ import com.mifos.feature.savings.navigation.navigateToAddSavingsAccount
 import com.mifos.feature.savings.navigation.navigateToSavingsAccountSummaryScreen
 import com.mifos.feature.savings.navigation.savingsNavGraph
 import com.mifos.feature.search.navigation.searchNavGraph
-import com.mifos.feature.settings.navigation.navigateToUpdateServerConfig
 import com.mifos.feature.settings.navigation.settingsScreen
 
 @Composable
@@ -61,6 +60,7 @@ internal fun FeatureNavHost(
     appState: AppState,
     padding: PaddingValues,
     navigateToLogin: () -> Unit,
+    onClickUpdateConfig: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     NavHost(
@@ -138,7 +138,7 @@ internal fun FeatureNavHost(
             navigateBack = appState.navController::popBackStack,
             navigateToLoginScreen = navigateToLogin,
             changePasscode = {},
-            onClickUpdateConfig = appState.navController::navigateToUpdateServerConfig,
+            onClickUpdateConfig = onClickUpdateConfig,
         )
         individualCollectionSheetNavGraph(
             navController = appState.navController,

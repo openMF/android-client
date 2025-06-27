@@ -35,13 +35,6 @@ fun NavGraphBuilder.settingsScreen(
             onClickUpdateConfig = onClickUpdateConfig,
         )
     }
-    composable(
-        route = SettingsScreens.ChangeServerConfig.route,
-    ) {
-        UpdateServerConfigScreenRoute(
-            onBackClick = navigateBack,
-        )
-    }
 }
 
 private const val SERVER_CONFIG_ROUTE = "update_server_config"
@@ -60,8 +53,4 @@ fun NavGraphBuilder.serverConfigGraph(
 
 fun NavController.navigateToServerConfigGraph() {
     navigate(SERVER_CONFIG_ROUTE)
-}
-
-fun NavController.navigateToUpdateServerConfig() {
-    navigate(SettingsScreens.ChangeServerConfig.route)
 }

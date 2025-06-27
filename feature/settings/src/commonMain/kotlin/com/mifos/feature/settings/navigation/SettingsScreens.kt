@@ -14,5 +14,4 @@ package com.mifos.feature.settings.navigation
  */
 sealed class SettingsScreens(val route: String) {
     data object SettingsScreen : SettingsScreens("settings_screen")
-    data object ChangeServerConfig : SettingsScreens("change_server_config")
 }
