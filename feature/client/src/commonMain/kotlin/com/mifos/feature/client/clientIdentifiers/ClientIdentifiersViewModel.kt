@@ -21,7 +21,6 @@ import com.mifos.core.data.repository.ClientIdentifiersRepository
 import com.mifos.core.domain.useCases.DeleteIdentifierUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
 
 class ClientIdentifiersViewModel(
@@ -47,18 +46,21 @@ class ClientIdentifiersViewModel(
     }
 
     fun loadIdentifiers(clientId: Int) = viewModelScope.launch {
-        _clientIdentifiersUiState.value =
-            ClientIdentifiersUiState.Loading
-        clientIdentifiersRepository.getClientIdentifiers(clientId)
-            .catch {
-                _clientIdentifiersUiState.value =
-                    ClientIdentifiersUiState.Error(
-                        Res.string.feature_client_failed_to_load_client_identifiers,
-                    )
-            }.collect {
-                _clientIdentifiersUiState.value =
-                    ClientIdentifiersUiState.ClientIdentifiers(it.data ?: emptyList())
+        clientIdentifiersRepository.getClientIdentifiers(clientId).collect { result ->
+            when (result) {
+                is DataState.Error ->
+                    _clientIdentifiersUiState.value =
+                        ClientIdentifiersUiState.Error(Res.string.feature_client_failed_to_load_client_identifiers)
+
+                is DataState.Loading ->
+                    _clientIdentifiersUiState.value =
+                        ClientIdentifiersUiState.Loading
+
+                is DataState.Success ->
+                    _clientIdentifiersUiState.value =
+                        ClientIdentifiersUiState.ClientIdentifiers(result.data)
             }
+        }
     }
 
     fun deleteIdentifier(clientId: Int, identifierId: Int) = viewModelScope.launch {
