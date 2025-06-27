@@ -142,7 +142,9 @@ internal fun LoginScreen(
         snackbarHost = { SnackbarHost(snackbarHostState) },
         bottomBar = {
             Box(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(12.dp),
                 contentAlignment = Alignment.Center,
             ) {
                 FilledTonalButton(

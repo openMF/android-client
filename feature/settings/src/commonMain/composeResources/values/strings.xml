@@ -42,6 +42,7 @@
     <string name="feature_settings_syncing_survey">Syncing Surveys</string>
     <string name="feature_settings_total">Total</string>
     <string name="feature_settings_name">Name</string>
+    <string name="feature_settings_restart">Restarting the app in %1$d seconds</string>
     <string name="feature_settings_sync_surveys_full_information">Sync Surveys All Information</string>
 
 
