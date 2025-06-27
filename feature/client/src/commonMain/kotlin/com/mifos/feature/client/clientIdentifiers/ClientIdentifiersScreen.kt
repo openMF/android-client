@@ -227,7 +227,6 @@ private fun ClientIdentifiersItem(
     onDocumentClicked: (Int) -> Unit,
 ) {
     var showMenu by remember { mutableStateOf(false) }
-    val lightGreen = MaterialTheme.colorScheme.tertiaryContainer // Or define a custom one
 
     ElevatedCard(
         modifier = Modifier.padding(8.dp),
