@@ -26,16 +26,17 @@ class ComposeAppViewModel(
     private val userDataFlow = userPreferencesRepository.userData
     private val appThemeFlow = userPreferencesRepository.appTheme
 
-    val uiState: StateFlow<MainUiState> = combine(userDataFlow, appThemeFlow) { userData, appTheme ->
-        MainUiState.Success(
-            isAuthenticated = userData.isAuthenticated,
-            appTheme = appTheme,
+    val uiState: StateFlow<MainUiState> =
+        combine(userDataFlow, appThemeFlow) { userData, appTheme ->
+            MainUiState.Success(
+                isAuthenticated = userData.isAuthenticated,
+                appTheme = appTheme,
+            )
+        }.stateIn(
+            scope = viewModelScope,
+            initialValue = MainUiState.Loading,
+            started = SharingStarted.Eagerly,
         )
-    }.stateIn(
-        scope = viewModelScope,
-        initialValue = MainUiState.Loading,
-        started = SharingStarted.WhileSubscribed(5_000),
-    )
 
     fun logout() {
         viewModelScope.launch {

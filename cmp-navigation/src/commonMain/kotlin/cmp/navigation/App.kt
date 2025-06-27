@@ -46,6 +46,7 @@ import androidx.compose.material3.NavigationDrawerItem
 import androidx.compose.material3.NavigationDrawerItemDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarDuration.Indefinite
+import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
@@ -78,7 +79,9 @@ import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.designsystem.theme.MifosBackground
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.resources.stringResource
 import org.mifos.navigation.generated.resources.Res
+import org.mifos.navigation.generated.resources.cmp_navigation_no_internet
 import org.mifos.navigation.generated.resources.drawer_profile_header
 import org.mifos.navigation.generated.resources.ic_dp_placeholder
 
@@ -125,7 +128,7 @@ fun App(
 
         val isOffline by appState.isOffline.collectAsStateWithLifecycle()
 
-        val notConnectedMessage = "you have lost network connection"
+        val notConnectedMessage = stringResource(Res.string.cmp_navigation_no_internet)
         LaunchedEffect(isOffline) {
             if (isOffline) {
                 snackbarHostState.showSnackbar(
@@ -228,6 +231,7 @@ fun App(
             gesturesEnabled = isNavScreen,
         ) {
             Scaffold(
+                snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
                 topBar = {
                     if (isNavScreen) {
                         TopAppBar(
@@ -235,13 +239,15 @@ fun App(
                                 Text(NavigationConstants.getTitleForRoute(route))
                             },
                             navigationIcon = {
-                                IconButton(onClick = {
-                                    scope.launch {
-                                        drawerState.apply {
-                                            if (isClosed) open() else close()
+                                IconButton(
+                                    onClick = {
+                                        scope.launch {
+                                            drawerState.apply {
+                                                if (isClosed) open() else close()
+                                            }
                                         }
-                                    }
-                                }) {
+                                    },
+                                ) {
                                     Icon(
                                         imageVector = Icons.Default.Menu,
                                         contentDescription = "Menu",
