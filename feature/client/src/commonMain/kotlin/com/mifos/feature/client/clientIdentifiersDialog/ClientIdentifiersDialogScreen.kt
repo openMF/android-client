@@ -19,6 +19,7 @@ import androidclient.feature.client.generated.resources.feature_client_identifie
 import androidclient.feature.client.generated.resources.feature_client_identifier_message_field_required
 import androidclient.feature.client.generated.resources.feature_client_identifier_submit
 import androidclient.feature.client.generated.resources.feature_client_identifier_unique_id
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -111,6 +112,10 @@ internal fun ClientIdentifiersDialogScreen(
             color = MaterialTheme.colorScheme.surface,
         ) {
             Box(
+                modifier = Modifier
+                    .height(425.dp)
+                    .fillMaxWidth()
+                    .background(MaterialTheme.colorScheme.surface),
                 contentAlignment = Alignment.Center,
             ) {
                 Column(modifier = Modifier.padding(20.dp)) {
