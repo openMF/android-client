@@ -21,8 +21,8 @@ fun NavController.navigateToSettingsScreen() {
 
 fun NavGraphBuilder.settingsScreen(
     navigateBack: () -> Unit,
-    changePasscode: () -> Unit,
-    onUpdateConfig: () -> Unit,
+    navigateToLoginScreen: () -> Unit,
+    changePasscode: (String) -> Unit,
     onClickUpdateConfig: () -> Unit,
 ) {
     composable(
@@ -30,25 +30,27 @@ fun NavGraphBuilder.settingsScreen(
     ) {
         SettingsScreen(
             onBackPressed = navigateBack,
+            navigateToLoginScreen = navigateToLoginScreen,
             changePasscode = changePasscode,
             onClickUpdateConfig = onClickUpdateConfig,
         )
     }
+}
 
+private const val SERVER_CONFIG_ROUTE = "update_server_config"
+
+fun NavGraphBuilder.serverConfigGraph(
+    navigateBack: () -> Unit,
+) {
     composable(
-        route = SettingsScreens.ChangeServerConfig.route,
+        route = SERVER_CONFIG_ROUTE,
     ) {
         UpdateServerConfigScreenRoute(
             onBackClick = navigateBack,
-            onSuccessful = onUpdateConfig,
         )
     }
 }
 
-fun NavController.navigateToSettingsScreen() {
-    navigate(SettingsScreens.SettingsScreen.route)
-}
-
-fun NavController.navigateToUpdateServerConfig() {
-    navigate(SettingsScreens.ChangeServerConfig.route)
+fun NavController.navigateToServerConfigGraph() {
+    navigate(SERVER_CONFIG_ROUTE)
 }
