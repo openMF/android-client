@@ -18,7 +18,10 @@ import androidclient.feature.client.generated.resources.feature_client_signature
 import androidclient.feature.client.generated.resources.feature_client_signature_uploaded_successfully
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -29,7 +32,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -37,7 +39,6 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.asAndroidBitmap
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.boundsInRoot
@@ -46,12 +47,12 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.core.graphics.applyCanvas
 import androidx.core.graphics.createBitmap
+import com.mifos.core.designsystem.component.DrawingState
 import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosDrawingCanvas
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.icon.MifosIcons
-import com.mifos.core.designsystem.utility.PathState
 import io.github.vinceglb.filekit.PlatformFile
 import org.jetbrains.compose.resources.stringResource
 import java.io.ByteArrayOutputStream
@@ -77,7 +78,7 @@ internal actual fun SignatureScreen(
     val drawColor = Color.Black
     val drawBrush = 5f
 
-    val paths = remember { mutableStateListOf<PathState>() }
+    val drawingState = remember { DrawingState() }
 
     val galleryLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent(),
@@ -118,7 +119,7 @@ internal actual fun SignatureScreen(
                         onClick = {
                             navigationSelectedItem = index
                             when (index) {
-                                0 -> paths.clear()
+                                0 -> drawingState.clear()
                                 1 -> galleryLauncher.launch("image/*")
                             }
                         },
@@ -149,8 +150,20 @@ internal actual fun SignatureScreen(
                 }
 
                 is SignatureUiState.Initial -> {
-                    paths.add(PathState(Path(), drawColor, drawBrush))
-                    MifosDrawingCanvas(drawColor = drawColor, drawBrush = drawBrush)
+                    // Force white background here instead of relying on MaterialTheme
+                    // Required to maintain consistent white canvas in both light and dark modes
+                    // for legibility and official document compliance.
+                    Box(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .background(Color.White),
+                    ) {
+                        MifosDrawingCanvas(
+                            drawColor = drawColor,
+                            drawBrush = drawBrush,
+                            drawingState = drawingState,
+                        )
+                    }
                 }
             }
         }

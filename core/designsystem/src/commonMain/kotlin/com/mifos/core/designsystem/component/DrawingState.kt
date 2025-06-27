@@ -40,4 +40,9 @@ class DrawingState {
     fun resetCurrentPath() {
         currentPath.value = Path()
     }
+
+    fun clear() {
+        paths.clear()
+        resetCurrentPath()
+    }
 }
