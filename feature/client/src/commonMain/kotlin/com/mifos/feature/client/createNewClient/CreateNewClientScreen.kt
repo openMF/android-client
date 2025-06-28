@@ -688,7 +688,6 @@ private fun createClientPayload(
         dateOfBirth = formatDate(dateOfBirth),
         dateFormat = dateFormat,
         locale = locale,
-
     )
 
     // Optional fields
