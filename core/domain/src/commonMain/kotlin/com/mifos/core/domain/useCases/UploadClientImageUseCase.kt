@@ -10,6 +10,7 @@
 package com.mifos.core.domain.useCases
 
 import com.mifos.core.common.utils.DataState
+import com.mifos.core.common.utils.asDataStateFlow
 import com.mifos.core.data.repository.ClientDetailsRepository
 import core.domain.generated.resources.Res
 import core.domain.generated.resources.core_domain_client_image_uploaded_successfully
@@ -26,13 +27,10 @@ class UploadClientImageUseCase(
     private val repository: ClientDetailsRepository,
 ) {
 
-    operator fun invoke(id: Int, image: MultiPartFormDataContent): Flow<DataState<String>> = flow {
-        try {
-            emit(DataState.Loading)
+    operator fun invoke(id: Int, image: MultiPartFormDataContent): Flow<DataState<String>>{
+        return flow {
             repository.uploadClientImage(id, image)
-            DataState.Success(getString(Res.string.core_domain_client_image_uploaded_successfully))
-        } catch (e: Exception) {
-            DataState.Error(e)
-        }
+            emit(getString(Res.string.core_domain_client_image_uploaded_successfully))
+        }.asDataStateFlow()
     }
 }

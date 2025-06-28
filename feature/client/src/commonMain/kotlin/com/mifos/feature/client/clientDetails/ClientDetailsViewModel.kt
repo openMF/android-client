@@ -86,8 +86,8 @@ class ClientDetailsViewModel(
                 is DataState.Success -> {
                     _clientDetailsUiState.value = ClientDetailsUiState.ShowUploadImageSuccessfully(
                         result.data,
-                        imageFile.absolutePath(),
                     )
+                    getUserProfile()
                     _showLoading.value = false
                 }
             }

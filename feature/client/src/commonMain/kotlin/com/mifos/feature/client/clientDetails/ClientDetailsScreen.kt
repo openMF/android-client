@@ -329,6 +329,9 @@ internal fun ClientDetailsScreen(
                     padding = padding,
                     loanAccountSelected = loanAccountSelected,
                     savingsAccountSelected = savingsAccountSelected,
+                    onClick = {
+                        showSelectImageDialog=true
+                    }
                 )
             }
         }
@@ -339,15 +342,14 @@ internal fun ClientDetailsScreen(
 private fun MifosClientDetailsScreen(
     loanAccountSelected: (Int) -> Unit,
     padding: PaddingValues,
+    onClick:()->Unit,
     savingsAccountSelected: (Int, SavingAccountDepositTypeEntity) -> Unit,
     clientDetailsViewModel: ClientDetailsViewModel = koinViewModel(),
 ) {
     val client = clientDetailsViewModel.client.collectAsStateWithLifecycle().value
-    val scope = rememberCoroutineScope()
     val loanAccounts = clientDetailsViewModel.loanAccount.collectAsStateWithLifecycle().value
     val savingsAccounts = clientDetailsViewModel.savingsAccounts.collectAsStateWithLifecycle().value
     val profileImage = clientDetailsViewModel.profileImage.collectAsStateWithLifecycle()
-    var showSelectImageDialog by remember { mutableStateOf(false) }
 
     Column(
         modifier = Modifier
@@ -362,7 +364,9 @@ private fun MifosClientDetailsScreen(
         ) {
             MifosUserImage(
                 bitmap = profileImage.value,
-                modifier = Modifier.size(100.dp),
+                modifier = Modifier
+                    .size(100.dp)
+                    .clickable(onClick=onClick),
                 username = client?.displayName ?: "",
             )
         }
