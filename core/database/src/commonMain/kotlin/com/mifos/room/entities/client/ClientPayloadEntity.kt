@@ -72,5 +72,5 @@ data class ClientPayloadEntity(
 
     // TODO add legal form id field
     // 1 for Person (Individual client)
-//    val legalFormId: Int? = 1,
+    val legalFormId: Int? = null,
 ) : Parcelable
