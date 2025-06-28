@@ -20,6 +20,7 @@ import androidclient.feature.client.generated.resources.feature_client_waiting_f
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import co.touchlab.kermit.Logger
+import com.mifos.core.common.utils.DataState
 import com.mifos.core.common.utils.MFErrorParser
 import com.mifos.core.data.repository.CreateNewClientRepository
 import com.mifos.feature.client.utils.createImageRequestBody
@@ -49,6 +50,12 @@ class CreateNewClientViewModel(
 
     private val _showOffices = MutableStateFlow<List<OfficeEntity>>(emptyList())
     val showOffices: StateFlow<List<OfficeEntity>> get() = _showOffices
+
+    private val selectedImage = MutableStateFlow<PlatformFile?>(null)
+
+    fun updateSelectedImage(image:PlatformFile?){
+        selectedImage.value=image
+    }
 
     fun loadOfficeAndClientTemplate() {
         _createNewClientUiState.value = CreateNewClientUiState.ShowProgressbar
@@ -83,13 +90,14 @@ class CreateNewClientViewModel(
 
     fun loadStaffInOffices(officeId: Int) {
         viewModelScope.launch {
-            repository.getStaffInOffice(officeId)
-                .catch {
-                    _createNewClientUiState.value =
+            repository.getStaffInOffice(officeId).collect { result->
+                when(result) {
+                    is DataState.Error -> _createNewClientUiState.value =
                         CreateNewClientUiState.ShowError(Res.string.feature_client_failed_to_fetch_staffs)
-                }.collect { staffs ->
-                    _staffInOffices.value = staffs.data ?: emptyList()
+                    DataState.Loading -> Unit
+                    is DataState.Success -> _staffInOffices.value = result.data
                 }
+            }
         }
     }
 
@@ -116,13 +124,16 @@ class CreateNewClientViewModel(
         }
     }
 
-    fun uploadImage(id: Int, imageFile: PlatformFile) {
+    fun uploadImage(id: Int) {
+        if(selectedImage.value==null){
+            return
+        }
         _createNewClientUiState.value =
             CreateNewClientUiState.ShowProgress("Uploading Client's Picture...")
 
         viewModelScope.launch {
             try {
-                val requestFile = createImageRequestBody(imageFile)
+                val requestFile = createImageRequestBody(selectedImage.value!!)
 
                 repository.uploadClientImage(id, requestFile)
 

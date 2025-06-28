@@ -128,6 +128,7 @@ import kotlinx.datetime.Clock
 import org.jetbrains.compose.resources.getString
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
+import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameterProvider
 import org.koin.compose.viewmodel.koinViewModel
@@ -158,10 +159,13 @@ internal fun CreateNewClientScreen(
         navigateBack = navigateBack,
         loadStaffInOffice = { viewmodel.loadStaffInOffices(it) },
         createClient = { viewmodel.createClient(clientPayload = it) },
-        uploadImage = { id, selectedFilePath ->
-            viewmodel.uploadImage(id, PlatformFile(selectedFilePath))
+        uploadImage = { id ->
+            viewmodel.uploadImage(id)
         },
         hasDatatables = hasDatatables,
+        onImageSelected = {
+            viewmodel.updateSelectedImage(it)
+        }
     )
 }
 
@@ -173,12 +177,12 @@ internal fun CreateNewClientScreen(
     staffInOffices: List<StaffEntity>,
     loadStaffInOffice: (officeId: Int) -> Unit,
     navigateBack: () -> Unit,
+    onImageSelected:(PlatformFile?)->Unit,
     createClient: (clientPayload: ClientPayloadEntity) -> Unit,
-    uploadImage: (id: Int, imageFilePath: String) -> Unit,
+    uploadImage: (id: Int) -> Unit,
     hasDatatables: (datatables: List<DataTableEntity>, clientPayload: ClientPayloadEntity) -> Unit,
 ) {
     var createClientWithImage by rememberSaveable { mutableStateOf(false) }
-    var clientImagePath by rememberSaveable { mutableStateOf<String?>(null) }
     val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
 
@@ -209,16 +213,16 @@ internal fun CreateNewClientScreen(
                         onHasDatatables = hasDatatables,
                         setFileForUpload = { filePath ->
                             filePath?.let {
-                                clientImagePath = it
                                 createClientWithImage = true
                             }
                         },
+                        onImageSelected = onImageSelected
                     )
                 }
 
                 is CreateNewClientUiState.SetClientId -> {
                     if (createClientWithImage) {
-                        clientImagePath?.let { uploadImage(uiState.id, it) }
+                        uploadImage(uiState.id)
                     } else {
                         navigateBack.invoke()
                     }
@@ -281,6 +285,7 @@ private fun CreateNewClientContent(
     staffInOffices: List<StaffEntity>,
     clientTemplate: ClientsTemplateEntity,
     loadStaffInOffice: (Int) -> Unit,
+    onImageSelected:(PlatformFile?)->Unit,
     createClient: (ClientPayloadEntity) -> Unit,
     onHasDatatables: (List<DataTableEntity>, ClientPayloadEntity) -> Unit,
     setFileForUpload: (filePath: String?) -> Unit,
@@ -316,12 +321,18 @@ private fun CreateNewClientContent(
     val galleryLauncher = rememberFilePickerLauncher(
         type = FileKitType.Image,
     ) { file ->
-        file?.let { selectedImagePath = file.path }
+        file?.let {
+            selectedImagePath = file.path
+            onImageSelected(file)
+        }
     }
 
     val cameraLauncher = rememberPlatformCameraLauncher {
-            filePath ->
-        filePath?.let { selectedImagePath = filePath }
+            file ->
+        file?.let {
+            selectedImagePath = file.path
+            onImageSelected(file)
+        }
     }
 
     val hasDatatables by rememberSaveable {
@@ -986,7 +997,7 @@ internal expect object PhoneNumberUtil {
 
 @Composable
 expect fun rememberPlatformCameraLauncher(
-    onImageCapturedPath: (String?) -> Unit,
+    onImageCapturedPath: (PlatformFile?) -> Unit,
 ): PlatformCameraLauncher
 
 private class CreateNewClientScreenPreviewProvider :
@@ -1013,11 +1024,10 @@ private class CreateNewClientScreenPreviewProvider :
 }
 
 @Composable
-@DevicePreview
+@Preview
 private fun PreviewCreateNewClientScreen(
     @PreviewParameter(CreateNewClientScreenPreviewProvider::class) createNewClientUiState: CreateNewClientUiState,
 ) {
-    // ToDo : FIX Preview
 
     CreateNewClientScreen(
         uiState = createNewClientUiState,
@@ -1027,7 +1037,8 @@ private fun PreviewCreateNewClientScreen(
         loadStaffInOffice = { },
         navigateBack = { },
         createClient = { },
-        uploadImage = { _, _ -> },
+        uploadImage = { _-> },
+        onImageSelected = {}
     ) { _, _ ->
     }
 }
