@@ -128,7 +128,7 @@ fun NavGraphBuilder.addNewGroupRoute(
     composable(route = GroupScreen.CreateNewGroupScreen.route) {
         CreateNewGroupScreen(
             onGroupCreated = onGroupCreated,
-            onBackPressed=onBackPressed
+            onBackPressed = onBackPressed,
         )
     }
 }

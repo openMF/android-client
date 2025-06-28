@@ -7,11 +7,7 @@
  *
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
-package com.mifos.feature.client.createNewClient
-
-import androidx.compose.runtime.Composable
-import com.mifos.feature.client.utils.PlatformCameraLauncher
-import io.github.vinceglb.filekit.PlatformFile
+package com.mifos.feature.client.utils
 
 actual object PhoneNumberUtil {
     actual fun isGlobalPhoneNumber(phoneNumber: String): Boolean {

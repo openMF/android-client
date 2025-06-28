@@ -134,7 +134,7 @@ class CreateNewClientViewModel(
 
         viewModelScope.launch {
             try {
-                val compressedImage= compressImage(selectedImage.value!!,id)
+                val compressedImage = compressImage(selectedImage.value!!, id)
                 val requestFile = createImageRequestBody(compressedImage)
 
                 repository.uploadClientImage(id, requestFile)

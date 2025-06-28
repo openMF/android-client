@@ -95,7 +95,7 @@ class ClientDetailsViewModel(
 
             _clientDetailsUiState.value =
                 ClientDetailsUiState.ShowClientImageDeletedSuccessfully
-            _profileImage.value=null
+            _profileImage.value = null
             _showLoading.value = false
         } catch (e: Exception) {
             _clientDetailsUiState.value =
@@ -126,7 +126,7 @@ class ClientDetailsViewModel(
     }
 
     fun saveClientImage(clientId: Int, imageFile: PlatformFile?) {
-        if(imageFile==null)return
+        if (imageFile == null)return
         viewModelScope.launch {
             saveAutoClientImage(clientId, imageFile)
         }
@@ -135,7 +135,7 @@ class ClientDetailsViewModel(
     suspend fun saveAutoClientImage(clientId: Int, imageFile: PlatformFile) {
         try {
             _showLoading.value = true
-            val outFile= compressImage(imageFile,clientId)
+            val outFile = compressImage(imageFile, clientId)
             uploadImage(clientId, outFile)
         } catch (e: Exception) {
             _showLoading.value = false

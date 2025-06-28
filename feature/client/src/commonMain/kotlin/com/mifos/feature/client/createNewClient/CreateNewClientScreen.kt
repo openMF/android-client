@@ -111,7 +111,7 @@ import com.mifos.core.designsystem.component.MifosOutlinedTextField
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.component.MifosTextFieldDropdown
-import com.mifos.feature.client.utils.PlatformCameraLauncher
+import com.mifos.feature.client.utils.PhoneNumberUtil
 import com.mifos.feature.client.utils.rememberPlatformCameraLauncher
 import com.mifos.room.entities.client.ClientPayloadEntity
 import com.mifos.room.entities.noncore.DataTableEntity
@@ -988,10 +988,6 @@ private fun isMiddleNameValid(
 
         else -> true
     }
-}
-
-internal expect object PhoneNumberUtil {
-    fun isGlobalPhoneNumber(phoneNumber: String): Boolean
 }
 
 private class CreateNewClientScreenPreviewProvider :

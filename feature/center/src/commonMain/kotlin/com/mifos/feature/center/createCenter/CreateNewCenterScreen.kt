@@ -66,7 +66,6 @@ import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.component.MifosTextFieldDropdown
 import com.mifos.core.ui.components.MifosAlertDialog
-import com.mifos.core.ui.util.DevicePreview
 import com.mifos.room.entities.center.CenterPayloadEntity
 import com.mifos.room.entities.organisation.OfficeEntity
 import kotlinx.datetime.Clock
@@ -98,7 +97,7 @@ internal fun CreateNewCenterScreen(
             viewModel.createNewCenter(it)
         },
         onCreateSuccess = onCreateSuccess,
-        onBackPressed=onBackPressed
+        onBackPressed = onBackPressed,
     )
 }
 
@@ -312,7 +311,6 @@ private fun CreateNewCenterContent(
     }
 }
 
-
 class CreateNewCenterUiStateProvider : PreviewParameterProvider<CreateNewCenterUiState> {
 
     override val values = sequenceOf(
@@ -338,5 +336,5 @@ private fun CreateNewCenterPreview(
 }
 
 val sampleOfficeList = List(10) {
-    OfficeEntity(id=it)
+    OfficeEntity(id = it)
 }

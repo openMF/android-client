@@ -7,15 +7,12 @@
  *
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
-package com.mifos.feature.client.createNewClient
+package com.mifos.feature.client.utils
 
-import androidx.compose.runtime.Composable
-import com.mifos.feature.client.utils.PlatformCameraLauncher
-import io.github.vinceglb.filekit.PlatformFile
+import android.telephony.PhoneNumberUtils
 
 actual object PhoneNumberUtil {
     actual fun isGlobalPhoneNumber(phoneNumber: String): Boolean {
-        // TODO: Implement the logic to check if the phone number is global or not
-        return phoneNumber.isNotBlank() && phoneNumber.all { it.isDigit() || it == '+' }
+        return PhoneNumberUtils.isGlobalPhoneNumber(phoneNumber)
     }
 }

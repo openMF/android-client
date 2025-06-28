@@ -9,15 +9,9 @@
  */
 package com.mifos.feature.client.utils
 
-import androidx.compose.runtime.Composable
-import io.github.vinceglb.filekit.PlatformFile
-
-actual class PlatformCameraLauncher {
-    actual fun launch() {
+actual object PhoneNumberUtil {
+    actual fun isGlobalPhoneNumber(phoneNumber: String): Boolean {
+        // TODO: Implement the logic to check if the phone number is global or not
+        return phoneNumber.isNotBlank() && phoneNumber.all { it.isDigit() || it == '+' }
     }
-}
-
-@Composable
-actual fun rememberPlatformCameraLauncher(onImageCapturedPath: (PlatformFile?) -> Unit): PlatformCameraLauncher {
-    TODO("Not yet implemented")
 }

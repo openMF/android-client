@@ -114,7 +114,7 @@ fun NavGraphBuilder.createCenterScreenRoute(
     ) {
         CreateNewCenterScreen(
             onCreateSuccess = onCreateSuccess,
-            onBackPressed=onBackPressed
+            onBackPressed = onBackPressed,
         )
     }
 }

@@ -111,7 +111,7 @@ internal fun CreateNewGroupScreen(
         },
         onGroupCreated = { onGroupCreated(it, userStatus) },
         getResponse = { viewModel.getResponse() },
-        onBackPressed=onBackPressed
+        onBackPressed = onBackPressed,
     )
 }
 
@@ -444,6 +444,6 @@ private fun PreviewCreateNewGroupScreen(
         onGroupCreated = { _ ->
         },
         getResponse = { "" },
-        onBackPressed = {}
+        onBackPressed = {},
     )
 }
