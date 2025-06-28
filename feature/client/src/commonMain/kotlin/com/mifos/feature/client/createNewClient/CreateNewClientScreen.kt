@@ -112,6 +112,7 @@ import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.component.MifosTextFieldDropdown
 import com.mifos.feature.client.utils.PlatformCameraLauncher
+import com.mifos.feature.client.utils.rememberPlatformCameraLauncher
 import com.mifos.room.entities.client.ClientPayloadEntity
 import com.mifos.room.entities.noncore.DataTableEntity
 import com.mifos.room.entities.organisation.OfficeEntity
@@ -993,11 +994,6 @@ private fun isMiddleNameValid(
 internal expect object PhoneNumberUtil {
     fun isGlobalPhoneNumber(phoneNumber: String): Boolean
 }
-
-@Composable
-expect fun rememberPlatformCameraLauncher(
-    onImageCapturedPath: (PlatformFile?) -> Unit,
-): PlatformCameraLauncher
 
 private class CreateNewClientScreenPreviewProvider :
     PreviewParameterProvider<CreateNewClientUiState> {

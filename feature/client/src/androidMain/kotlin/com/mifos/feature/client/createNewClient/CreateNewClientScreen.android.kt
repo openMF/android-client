@@ -23,20 +23,3 @@ actual object PhoneNumberUtil {
         return PhoneNumberUtils.isGlobalPhoneNumber(phoneNumber)
     }
 }
-
-@OptIn(ExperimentalPermissionsApi::class)
-@Composable
-actual fun rememberPlatformCameraLauncher(
-    onImageCapturedPath: (PlatformFile?) -> Unit,
-): PlatformCameraLauncher {
-    val permissionState = rememberPermissionState(Manifest.permission.CAMERA)
-
-    val launcher = rememberCameraPickerLauncher { file ->
-        onImageCapturedPath(file)
-    }
-
-    return PlatformCameraLauncher(
-        permissionState = permissionState,
-        launcher = launcher,
-    )
-}

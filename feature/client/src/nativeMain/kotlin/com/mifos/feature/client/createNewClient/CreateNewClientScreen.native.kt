@@ -19,8 +19,3 @@ actual object PhoneNumberUtil {
         return phoneNumber.isNotBlank() && phoneNumber.all { it.isDigit() || it == '+' }
     }
 }
-
-@Composable
-actual fun rememberPlatformCameraLauncher(onImageCapturedPath: (PlatformFile?) -> Unit): PlatformCameraLauncher {
-    TODO("Not yet implemented")
-}
