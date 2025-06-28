@@ -14,18 +14,19 @@ import androidx.compose.runtime.Composable
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberPermissionState
 import com.mifos.feature.client.utils.PlatformCameraLauncher
+import io.github.vinceglb.filekit.PlatformFile
 import io.github.vinceglb.filekit.dialogs.compose.rememberCameraPickerLauncher
+import io.github.vinceglb.filekit.path
 
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
 actual fun rememberPlatformCameraLauncher(
-    clientId: Int,
-    viewModel: ClientDetailsViewModel,
+    onImageCapturedPath: (PlatformFile?) -> Unit,
 ): PlatformCameraLauncher {
     val permissionState = rememberPermissionState(Manifest.permission.CAMERA)
 
     val launcher = rememberCameraPickerLauncher { file ->
-        file?.let { viewModel.saveClientImage(clientId, it) }
+        onImageCapturedPath(file)
     }
 
     return PlatformCameraLauncher(

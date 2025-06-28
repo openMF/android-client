@@ -12,6 +12,7 @@ package com.mifos.feature.client.clientDetails
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import co.touchlab.kermit.Logger
 import com.mifos.core.common.utils.Constants
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.repository.ClientDetailsRepository
@@ -130,7 +131,8 @@ class ClientDetailsViewModel(
         }
     }
 
-    fun saveClientImage(clientId: Int, imageFile: PlatformFile) {
+    fun saveClientImage(clientId: Int, imageFile: PlatformFile?) {
+        if(imageFile==null)return
         viewModelScope.launch {
             saveAutoClientImage(clientId, imageFile)
         }
@@ -142,6 +144,7 @@ class ClientDetailsViewModel(
                 file = imageFile,
                 imageFormat = ImageFormat.PNG,
                 quality = 100,
+                maxHeight=150
             )
             val outFile = FileKit.filesDir / "client_image_$clientId.png"
             outFile.write(bytes)

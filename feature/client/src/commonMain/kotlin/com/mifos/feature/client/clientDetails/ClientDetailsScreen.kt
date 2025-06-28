@@ -108,6 +108,7 @@ import com.mifos.feature.client.utils.PlatformCameraLauncher
 import com.mifos.room.entities.accounts.loans.LoanAccountEntity
 import com.mifos.room.entities.accounts.savings.SavingAccountDepositTypeEntity
 import com.mifos.room.entities.accounts.savings.SavingsAccountEntity
+import io.github.vinceglb.filekit.PlatformFile
 import io.github.vinceglb.filekit.dialogs.FileKitType
 import io.github.vinceglb.filekit.dialogs.compose.rememberFilePickerLauncher
 import org.jetbrains.compose.resources.getString
@@ -156,9 +157,11 @@ internal fun ClientDetailsScreen(
         }
     }
 
-    val cameraLauncher = rememberPlatformCameraLauncher(
-        clientId,
-        clientDetailsViewModel,
+    val cameraLauncher = rememberPlatformCameraLauncher( onImageCapturedPath = {
+        file->
+        showSelectImageDialog = false
+        clientDetailsViewModel.saveClientImage(clientId,file)
+    }
     )
 
     LaunchedEffect(key1 = true) {
@@ -864,8 +867,7 @@ private fun MifosClientDetailsText(icon: ImageVector, field: String, value: Stri
 
 @Composable
 expect fun rememberPlatformCameraLauncher(
-    clientId: Int,
-    viewModel: ClientDetailsViewModel,
+    onImageCapturedPath: (PlatformFile?) -> Unit,
 ): PlatformCameraLauncher
 
 @DevicePreview

@@ -13,9 +13,6 @@ import androidx.compose.runtime.Composable
 import com.mifos.feature.client.utils.PlatformCameraLauncher
 
 @Composable
-actual fun rememberPlatformCameraLauncher(
-    clientId: Int,
-    viewModel: ClientDetailsViewModel,
-): PlatformCameraLauncher {
+actual fun rememberPlatformCameraLauncher(onImageCapturedPath: (String?) -> Unit): PlatformCameraLauncher {
     TODO("Not yet implemented")
 }
