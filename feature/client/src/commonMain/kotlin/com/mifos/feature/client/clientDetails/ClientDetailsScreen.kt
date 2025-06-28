@@ -105,6 +105,7 @@ import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.ui.components.MifosUserImage
 import com.mifos.core.ui.util.DevicePreview
 import com.mifos.feature.client.utils.PlatformCameraLauncher
+import com.mifos.feature.client.utils.rememberPlatformCameraLauncher
 import com.mifos.room.entities.accounts.loans.LoanAccountEntity
 import com.mifos.room.entities.accounts.savings.SavingAccountDepositTypeEntity
 import com.mifos.room.entities.accounts.savings.SavingsAccountEntity
@@ -864,11 +865,6 @@ private fun MifosClientDetailsText(icon: ImageVector, field: String, value: Stri
         )
     }
 }
-
-@Composable
-expect fun rememberPlatformCameraLauncher(
-    onImageCapturedPath: (PlatformFile?) -> Unit,
-): PlatformCameraLauncher
 
 @DevicePreview
 @Composable
