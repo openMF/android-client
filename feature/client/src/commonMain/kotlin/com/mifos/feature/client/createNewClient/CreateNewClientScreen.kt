@@ -669,6 +669,7 @@ private fun createClientPayload(
         firstname = firstName,
         lastname = lastName,
         officeId = selectedOfficeId,
+        legalFormId=1,
 
         // Optional fields with default values
         active = isActive,
@@ -676,6 +677,7 @@ private fun createClientPayload(
         dateOfBirth = formatDate(dateOfBirth),
         dateFormat = dateFormat,
         locale = locale,
+
     )
 
     // Optional fields
