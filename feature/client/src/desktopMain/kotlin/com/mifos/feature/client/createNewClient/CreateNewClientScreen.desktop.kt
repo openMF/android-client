@@ -11,6 +11,7 @@ package com.mifos.feature.client.createNewClient
 
 import androidx.compose.runtime.Composable
 import com.mifos.feature.client.utils.PlatformCameraLauncher
+import io.github.vinceglb.filekit.PlatformFile
 
 actual object PhoneNumberUtil {
     actual fun isGlobalPhoneNumber(phoneNumber: String): Boolean {
@@ -20,6 +21,6 @@ actual object PhoneNumberUtil {
 }
 
 @Composable
-actual fun rememberPlatformCameraLauncher(onImageCapturedPath: (String?) -> Unit): PlatformCameraLauncher {
+actual fun rememberPlatformCameraLauncher(onImageCapturedPath: (PlatformFile?) -> Unit): PlatformCameraLauncher {
     TODO("Not yet implemented")
 }
