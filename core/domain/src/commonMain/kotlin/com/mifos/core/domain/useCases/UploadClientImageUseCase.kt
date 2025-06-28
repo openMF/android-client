@@ -10,7 +10,6 @@
 package com.mifos.core.domain.useCases
 
 import com.mifos.core.common.utils.DataState
-import com.mifos.core.common.utils.asDataStateFlow
 import com.mifos.core.data.repository.ClientDetailsRepository
 import core.domain.generated.resources.Res
 import core.domain.generated.resources.core_domain_client_image_uploaded_successfully
