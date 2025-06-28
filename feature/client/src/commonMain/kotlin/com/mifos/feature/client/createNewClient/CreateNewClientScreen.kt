@@ -189,7 +189,7 @@ internal fun CreateNewClientScreen(
     MifosScaffold(
         title = stringResource(Res.string.feature_client_create_new_client),
         snackbarHostState = snackbarHostState,
-        onBackPressed = {},
+        onBackPressed = navigateBack,
     ) { paddingValues ->
         Column(modifier = Modifier.padding(paddingValues)) {
             when (uiState) {
