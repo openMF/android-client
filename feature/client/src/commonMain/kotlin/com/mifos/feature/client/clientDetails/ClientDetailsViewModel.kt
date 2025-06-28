@@ -12,25 +12,18 @@ package com.mifos.feature.client.clientDetails
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import co.touchlab.kermit.Logger
 import com.mifos.core.common.utils.Constants
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.repository.ClientDetailsRepository
 import com.mifos.core.domain.useCases.GetClientDetailsUseCase
 import com.mifos.core.domain.useCases.UploadClientImageUseCase
 import com.mifos.core.ui.util.imageToByteArray
+import com.mifos.feature.client.utils.compressImage
 import com.mifos.feature.client.utils.createImageRequestBody
 import com.mifos.room.entities.accounts.loans.LoanAccountEntity
 import com.mifos.room.entities.accounts.savings.SavingsAccountEntity
 import com.mifos.room.entities.client.ClientEntity
-import io.github.vinceglb.filekit.FileKit
-import io.github.vinceglb.filekit.ImageFormat
 import io.github.vinceglb.filekit.PlatformFile
-import io.github.vinceglb.filekit.absolutePath
-import io.github.vinceglb.filekit.compressImage
-import io.github.vinceglb.filekit.div
-import io.github.vinceglb.filekit.filesDir
-import io.github.vinceglb.filekit.write
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
@@ -102,6 +95,7 @@ class ClientDetailsViewModel(
 
             _clientDetailsUiState.value =
                 ClientDetailsUiState.ShowClientImageDeletedSuccessfully
+            _profileImage.value=null
             _showLoading.value = false
         } catch (e: Exception) {
             _clientDetailsUiState.value =
@@ -140,16 +134,11 @@ class ClientDetailsViewModel(
 
     suspend fun saveAutoClientImage(clientId: Int, imageFile: PlatformFile) {
         try {
-            val bytes = FileKit.compressImage(
-                file = imageFile,
-                imageFormat = ImageFormat.PNG,
-                quality = 100,
-                maxHeight=150
-            )
-            val outFile = FileKit.filesDir / "client_image_$clientId.png"
-            outFile.write(bytes)
+            _showLoading.value = true
+            val outFile= compressImage(imageFile,clientId)
             uploadImage(clientId, outFile)
         } catch (e: Exception) {
+            _showLoading.value = false
             _clientDetailsUiState.value = ClientDetailsUiState.ShowError(e.message.toString())
         }
     }
