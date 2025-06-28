@@ -126,20 +126,16 @@ class ClientDetailsViewModel(
     }
 
     fun saveClientImage(clientId: Int, imageFile: PlatformFile?) {
-        if (imageFile == null)return
+        imageFile ?: return
         viewModelScope.launch {
-            saveAutoClientImage(clientId, imageFile)
-        }
-    }
-
-    suspend fun saveAutoClientImage(clientId: Int, imageFile: PlatformFile) {
-        try {
-            _showLoading.value = true
-            val outFile = compressImage(imageFile, clientId)
-            uploadImage(clientId, outFile)
-        } catch (e: Exception) {
-            _showLoading.value = false
-            _clientDetailsUiState.value = ClientDetailsUiState.ShowError(e.message.toString())
+            try {
+                _showLoading.value = true
+                val compressed = compressImage(imageFile, clientId)
+                uploadImage(clientId, compressed)
+            } catch (e: Exception) {
+                _showLoading.value = false
+                _clientDetailsUiState.value = ClientDetailsUiState.ShowError(e.message ?: "Unexpected error")
+            }
         }
     }
 
