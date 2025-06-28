@@ -111,7 +111,6 @@ import com.mifos.core.designsystem.component.MifosOutlinedTextField
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.component.MifosTextFieldDropdown
-import com.mifos.core.ui.util.DevicePreview
 import com.mifos.feature.client.utils.PlatformCameraLauncher
 import com.mifos.room.entities.client.ClientPayloadEntity
 import com.mifos.room.entities.noncore.DataTableEntity
@@ -165,7 +164,7 @@ internal fun CreateNewClientScreen(
         hasDatatables = hasDatatables,
         onImageSelected = {
             viewmodel.updateSelectedImage(it)
-        }
+        },
     )
 }
 
@@ -177,7 +176,7 @@ internal fun CreateNewClientScreen(
     staffInOffices: List<StaffEntity>,
     loadStaffInOffice: (officeId: Int) -> Unit,
     navigateBack: () -> Unit,
-    onImageSelected:(PlatformFile?)->Unit,
+    onImageSelected: (PlatformFile?) -> Unit,
     createClient: (clientPayload: ClientPayloadEntity) -> Unit,
     uploadImage: (id: Int) -> Unit,
     hasDatatables: (datatables: List<DataTableEntity>, clientPayload: ClientPayloadEntity) -> Unit,
@@ -216,7 +215,7 @@ internal fun CreateNewClientScreen(
                                 createClientWithImage = true
                             }
                         },
-                        onImageSelected = onImageSelected
+                        onImageSelected = onImageSelected,
                     )
                 }
 
@@ -285,7 +284,7 @@ private fun CreateNewClientContent(
     staffInOffices: List<StaffEntity>,
     clientTemplate: ClientsTemplateEntity,
     loadStaffInOffice: (Int) -> Unit,
-    onImageSelected:(PlatformFile?)->Unit,
+    onImageSelected: (PlatformFile?) -> Unit,
     createClient: (ClientPayloadEntity) -> Unit,
     onHasDatatables: (List<DataTableEntity>, ClientPayloadEntity) -> Unit,
     setFileForUpload: (filePath: String?) -> Unit,
@@ -680,7 +679,7 @@ private fun createClientPayload(
         firstname = firstName,
         lastname = lastName,
         officeId = selectedOfficeId,
-        legalFormId=1,
+        legalFormId = 1,
 
         // Optional fields with default values
         active = isActive,
@@ -1028,7 +1027,6 @@ private class CreateNewClientScreenPreviewProvider :
 private fun PreviewCreateNewClientScreen(
     @PreviewParameter(CreateNewClientScreenPreviewProvider::class) createNewClientUiState: CreateNewClientUiState,
 ) {
-
     CreateNewClientScreen(
         uiState = createNewClientUiState,
         onRetry = { },
@@ -1037,8 +1035,8 @@ private fun PreviewCreateNewClientScreen(
         loadStaffInOffice = { },
         navigateBack = { },
         createClient = { },
-        uploadImage = { _-> },
-        onImageSelected = {}
+        uploadImage = { _ -> },
+        onImageSelected = {},
     ) { _, _ ->
     }
 }
