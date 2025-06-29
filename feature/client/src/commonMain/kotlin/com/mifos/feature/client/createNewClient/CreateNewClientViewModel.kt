@@ -22,6 +22,7 @@ import androidx.lifecycle.viewModelScope
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.common.utils.MFErrorParser
 import com.mifos.core.data.repository.CreateNewClientRepository
+import com.mifos.feature.client.utils.compressImage
 import com.mifos.feature.client.utils.createImageRequestBody
 import com.mifos.room.entities.client.ClientPayloadEntity
 import com.mifos.room.entities.organisation.OfficeEntity
@@ -133,7 +134,8 @@ class CreateNewClientViewModel(
 
         viewModelScope.launch {
             try {
-                val requestFile = createImageRequestBody(selectedImage.value!!)
+                val compressedImage = compressImage(selectedImage.value!!, id)
+                val requestFile = createImageRequestBody(compressedImage)
 
                 repository.uploadClientImage(id, requestFile)
 

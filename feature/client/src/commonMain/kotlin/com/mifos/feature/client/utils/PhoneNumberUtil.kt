@@ -7,15 +7,8 @@
  *
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
-package com.mifos.feature.client.clientDetails
+package com.mifos.feature.client.utils
 
-import androidx.compose.runtime.Composable
-import com.mifos.feature.client.utils.PlatformCameraLauncher
-
-@Composable
-actual fun rememberPlatformCameraLauncher(
-    clientId: Int,
-    viewModel: ClientDetailsViewModel,
-): PlatformCameraLauncher {
-    TODO("Not yet implemented")
+expect object PhoneNumberUtil {
+    fun isGlobalPhoneNumber(phoneNumber: String): Boolean
 }

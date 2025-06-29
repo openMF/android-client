@@ -18,18 +18,12 @@ import com.mifos.core.data.repository.ClientDetailsRepository
 import com.mifos.core.domain.useCases.GetClientDetailsUseCase
 import com.mifos.core.domain.useCases.UploadClientImageUseCase
 import com.mifos.core.ui.util.imageToByteArray
+import com.mifos.feature.client.utils.compressImage
 import com.mifos.feature.client.utils.createImageRequestBody
 import com.mifos.room.entities.accounts.loans.LoanAccountEntity
 import com.mifos.room.entities.accounts.savings.SavingsAccountEntity
 import com.mifos.room.entities.client.ClientEntity
-import io.github.vinceglb.filekit.FileKit
-import io.github.vinceglb.filekit.ImageFormat
 import io.github.vinceglb.filekit.PlatformFile
-import io.github.vinceglb.filekit.absolutePath
-import io.github.vinceglb.filekit.compressImage
-import io.github.vinceglb.filekit.div
-import io.github.vinceglb.filekit.filesDir
-import io.github.vinceglb.filekit.write
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
@@ -86,8 +80,8 @@ class ClientDetailsViewModel(
                 is DataState.Success -> {
                     _clientDetailsUiState.value = ClientDetailsUiState.ShowUploadImageSuccessfully(
                         result.data,
-                        imageFile.absolutePath(),
                     )
+                    getUserProfile()
                     _showLoading.value = false
                 }
             }
@@ -101,6 +95,7 @@ class ClientDetailsViewModel(
 
             _clientDetailsUiState.value =
                 ClientDetailsUiState.ShowClientImageDeletedSuccessfully
+            _profileImage.value = null
             _showLoading.value = false
         } catch (e: Exception) {
             _clientDetailsUiState.value =
@@ -130,24 +125,17 @@ class ClientDetailsViewModel(
         }
     }
 
-    fun saveClientImage(clientId: Int, imageFile: PlatformFile) {
+    fun saveClientImage(clientId: Int, imageFile: PlatformFile?) {
+        imageFile ?: return
         viewModelScope.launch {
-            saveAutoClientImage(clientId, imageFile)
-        }
-    }
-
-    suspend fun saveAutoClientImage(clientId: Int, imageFile: PlatformFile) {
-        try {
-            val bytes = FileKit.compressImage(
-                file = imageFile,
-                imageFormat = ImageFormat.PNG,
-                quality = 100,
-            )
-            val outFile = FileKit.filesDir / "client_image_$clientId.png"
-            outFile.write(bytes)
-            uploadImage(clientId, outFile)
-        } catch (e: Exception) {
-            _clientDetailsUiState.value = ClientDetailsUiState.ShowError(e.message.toString())
+            try {
+                _showLoading.value = true
+                val compressed = compressImage(imageFile, clientId)
+                uploadImage(clientId, compressed)
+            } catch (e: Exception) {
+                _showLoading.value = false
+                _clientDetailsUiState.value = ClientDetailsUiState.ShowError(e.message ?: "Unexpected error")
+            }
         }
     }
 

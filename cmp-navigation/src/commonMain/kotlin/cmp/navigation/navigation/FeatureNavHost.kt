@@ -42,6 +42,7 @@ import com.mifos.feature.loan.navigation.addLoanAccountScreen
 import com.mifos.feature.loan.navigation.groupLoanScreen
 import com.mifos.feature.loan.navigation.loanNavGraph
 import com.mifos.feature.loan.navigation.navigateToGroupLoanScreen
+import com.mifos.feature.loan.navigation.navigateToLoanAccountScreen
 import com.mifos.feature.loan.navigation.navigateToLoanAccountSummaryScreen
 import com.mifos.feature.note.navigation.navigateToNoteScreen
 import com.mifos.feature.note.navigation.noteNavGraph
@@ -171,7 +172,7 @@ internal fun FeatureNavHost(
         clientNavGraph(
             navController = appState.navController,
             paddingValues = padding,
-            addLoanAccount = appState.navController::navigateToLoanAccountSummaryScreen,
+            addLoanAccount = appState.navController::navigateToLoanAccountScreen,
             addSavingsAccount = { clientId ->
                 appState.navController.navigateToAddSavingsAccount(0, clientId, false)
             },

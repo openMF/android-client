@@ -69,7 +69,7 @@ fun NavGraphBuilder.groupNavGraph(
                     groups?.groupId?.let { navController.navigateToGroupDetailsScreen(it) }
                 }
             },
-            navigateBack = navController::popBackStack,
+            onBackPressed = navController::popBackStack,
         )
     }
 }
@@ -122,13 +122,13 @@ fun NavGraphBuilder.groupDetailsRoute(
 }
 
 fun NavGraphBuilder.addNewGroupRoute(
+    onBackPressed: () -> Unit,
     onGroupCreated: (group: SaveResponse?, userStatus: Boolean) -> Unit,
-    navigateBack: () -> Unit,
 ) {
     composable(route = GroupScreen.CreateNewGroupScreen.route) {
         CreateNewGroupScreen(
             onGroupCreated = onGroupCreated,
-            navigateBack = navigateBack,
+            onBackPressed = onBackPressed,
         )
     }
 }

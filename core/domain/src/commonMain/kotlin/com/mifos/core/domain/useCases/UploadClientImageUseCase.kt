@@ -27,12 +27,13 @@ class UploadClientImageUseCase(
 ) {
 
     operator fun invoke(id: Int, image: MultiPartFormDataContent): Flow<DataState<String>> = flow {
+        emit(DataState.Loading)
+
         try {
-            emit(DataState.Loading)
             repository.uploadClientImage(id, image)
-            DataState.Success(getString(Res.string.core_domain_client_image_uploaded_successfully))
+            emit(DataState.Success(getString(Res.string.core_domain_client_image_uploaded_successfully)))
         } catch (e: Exception) {
-            DataState.Error(e)
+            emit(DataState.Error(e))
         }
     }
 }
