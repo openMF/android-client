@@ -300,7 +300,7 @@ private fun SavingsAccountTransactionContent(
                         val savingsAccountTransactionRequest =
                             SavingsAccountTransactionRequestEntity(
                                 locale = "en",
-                                dateFormat = "dd-MM-yyyy",
+                                dateFormat = DateHelper.SHORT_MONTH,
                                 transactionDate = DateHelper.getDateAsStringFromLong(transactionDate),
                                 transactionAmount = amount,
                                 paymentTypeId = paymentTypeId.toString(),
