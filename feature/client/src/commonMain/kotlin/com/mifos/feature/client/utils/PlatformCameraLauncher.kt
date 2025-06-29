@@ -9,6 +9,14 @@
  */
 package com.mifos.feature.client.utils
 
+import androidx.compose.runtime.Composable
+import io.github.vinceglb.filekit.PlatformFile
+
 expect class PlatformCameraLauncher {
     fun launch()
 }
+
+@Composable
+expect fun rememberPlatformCameraLauncher(
+    onImageCapturedPath: (PlatformFile?) -> Unit,
+): PlatformCameraLauncher

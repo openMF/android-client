@@ -9,7 +9,15 @@
  */
 package com.mifos.feature.client.utils
 
+import androidx.compose.runtime.Composable
+import io.github.vinceglb.filekit.PlatformFile
+
 actual class PlatformCameraLauncher {
     actual fun launch() {
     }
+}
+
+@Composable
+actual fun rememberPlatformCameraLauncher(onImageCapturedPath: (PlatformFile?) -> Unit): PlatformCameraLauncher {
+    TODO("Not yet implemented")
 }

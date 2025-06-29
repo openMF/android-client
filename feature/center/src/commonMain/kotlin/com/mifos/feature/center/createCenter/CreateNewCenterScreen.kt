@@ -66,16 +66,19 @@ import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.component.MifosTextFieldDropdown
 import com.mifos.core.ui.components.MifosAlertDialog
-import com.mifos.core.ui.util.DevicePreview
 import com.mifos.room.entities.center.CenterPayloadEntity
 import com.mifos.room.entities.organisation.OfficeEntity
 import kotlinx.datetime.Clock
 import org.jetbrains.compose.resources.getString
 import org.jetbrains.compose.resources.stringResource
+import org.jetbrains.compose.ui.tooling.preview.Preview
+import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
+import org.jetbrains.compose.ui.tooling.preview.PreviewParameterProvider
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 internal fun CreateNewCenterScreen(
+    onBackPressed: () -> Unit,
     onCreateSuccess: () -> Unit,
     viewModel: CreateNewCenterViewModel = koinViewModel(),
 ) {
@@ -94,6 +97,7 @@ internal fun CreateNewCenterScreen(
             viewModel.createNewCenter(it)
         },
         onCreateSuccess = onCreateSuccess,
+        onBackPressed = onBackPressed,
     )
 }
 
@@ -103,13 +107,14 @@ internal fun CreateNewCenterScreen(
     onRetry: () -> Unit,
     createCenter: (CenterPayloadEntity) -> Unit,
     onCreateSuccess: () -> Unit,
+    onBackPressed: () -> Unit,
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
 
     MifosScaffold(
         title = stringResource(Res.string.feature_center_create_new_center),
         snackbarHostState = snackbarHostState,
-        onBackPressed = {},
+        onBackPressed = onBackPressed,
     ) { paddingValues ->
         Column(modifier = Modifier.padding(paddingValues)) {
             when (state) {
@@ -306,46 +311,30 @@ private fun CreateNewCenterContent(
     }
 }
 
-@DevicePreview
-@Composable
-private fun CreateNewCenterLoadingPreview() {
-    CreateNewCenterScreen(
-        state = CreateNewCenterUiState.Loading,
-        onRetry = {},
-        createCenter = {},
-        onCreateSuccess = {},
+class CreateNewCenterUiStateProvider : PreviewParameterProvider<CreateNewCenterUiState> {
+
+    override val values = sequenceOf(
+        CreateNewCenterUiState.Loading,
+        CreateNewCenterUiState.Error(Res.string.feature_center_failed_to_load_offices),
+        CreateNewCenterUiState.Offices(sampleOfficeList),
+        CreateNewCenterUiState.CenterCreatedSuccessfully,
     )
 }
 
-@DevicePreview
+@Preview
 @Composable
-private fun CreateNewCenterErrorPreview() {
+private fun CreateNewCenterPreview(
+    @PreviewParameter(CreateNewCenterUiStateProvider::class) state: CreateNewCenterUiState,
+) {
     CreateNewCenterScreen(
-        state = CreateNewCenterUiState.Error(Res.string.feature_center_failed_to_load_offices),
+        state = state,
         onRetry = {},
         createCenter = {},
         onCreateSuccess = {},
+        onBackPressed = {},
     )
 }
 
-@DevicePreview
-@Composable
-private fun CreateNewCenterOfficesPreview() {
-    CreateNewCenterScreen(
-        state = CreateNewCenterUiState.Offices(emptyList()),
-        onRetry = {},
-        createCenter = {},
-        onCreateSuccess = {},
-    )
-}
-
-@DevicePreview
-@Composable
-private fun CreateNewCenterCenterCreatedSuccessfullyPreview() {
-    CreateNewCenterScreen(
-        state = CreateNewCenterUiState.CenterCreatedSuccessfully,
-        onRetry = {},
-        createCenter = {},
-        onCreateSuccess = {},
-    )
+val sampleOfficeList = List(10) {
+    OfficeEntity(id = it)
 }

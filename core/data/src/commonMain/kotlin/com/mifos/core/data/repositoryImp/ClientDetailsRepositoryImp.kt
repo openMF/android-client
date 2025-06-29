@@ -40,7 +40,7 @@ class ClientDetailsRepositoryImp(
         return dataManagerClient.getClient(clientId)
     }
 
-    override suspend fun getImage(clientId: Int): Flow<DataState<String>> {
+    override fun getImage(clientId: Int): Flow<DataState<String>> {
         return dataManagerClient.getClientImage(clientId)
     }
 }

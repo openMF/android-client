@@ -9,10 +9,15 @@
  */
 package com.mifos.feature.client.utils
 
+import android.Manifest
+import androidx.compose.runtime.Composable
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.PermissionState
 import com.google.accompanist.permissions.isGranted
+import com.google.accompanist.permissions.rememberPermissionState
+import io.github.vinceglb.filekit.PlatformFile
 import io.github.vinceglb.filekit.dialogs.compose.PhotoResultLauncher
+import io.github.vinceglb.filekit.dialogs.compose.rememberCameraPickerLauncher
 
 @OptIn(ExperimentalPermissionsApi::class)
 actual class PlatformCameraLauncher
@@ -27,4 +32,21 @@ internal constructor(
             permissionState.launchPermissionRequest()
         }
     }
+}
+
+@OptIn(ExperimentalPermissionsApi::class)
+@Composable
+actual fun rememberPlatformCameraLauncher(
+    onImageCapturedPath: (PlatformFile?) -> Unit,
+): PlatformCameraLauncher {
+    val permissionState = rememberPermissionState(Manifest.permission.CAMERA)
+
+    val launcher = rememberCameraPickerLauncher { file ->
+        onImageCapturedPath(file)
+    }
+
+    return PlatformCameraLauncher(
+        permissionState = permissionState,
+        launcher = launcher,
+    )
 }
