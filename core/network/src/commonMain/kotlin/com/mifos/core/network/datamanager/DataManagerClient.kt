@@ -210,7 +210,7 @@ class DataManagerClient(
         return mBaseApiManager.clientsApi.uploadClientImage(clientId, file)
     }
 
-    suspend fun getClientImage(clientId: Int): Flow<DataState<String>> {
+    fun getClientImage(clientId: Int): Flow<DataState<String>> {
         return mBaseApiManager.clientsApi.getClientImage(clientId)
             .asDataStateFlow()
             .map {

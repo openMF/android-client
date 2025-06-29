@@ -111,7 +111,8 @@ import com.mifos.core.designsystem.component.MifosOutlinedTextField
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.component.MifosTextFieldDropdown
-import com.mifos.feature.client.utils.PlatformCameraLauncher
+import com.mifos.feature.client.utils.PhoneNumberUtil
+import com.mifos.feature.client.utils.rememberPlatformCameraLauncher
 import com.mifos.room.entities.client.ClientPayloadEntity
 import com.mifos.room.entities.noncore.DataTableEntity
 import com.mifos.room.entities.organisation.OfficeEntity
@@ -188,7 +189,7 @@ internal fun CreateNewClientScreen(
     MifosScaffold(
         title = stringResource(Res.string.feature_client_create_new_client),
         snackbarHostState = snackbarHostState,
-        onBackPressed = {},
+        onBackPressed = navigateBack,
     ) { paddingValues ->
         Column(modifier = Modifier.padding(paddingValues)) {
             when (uiState) {
@@ -687,7 +688,6 @@ private fun createClientPayload(
         dateOfBirth = formatDate(dateOfBirth),
         dateFormat = dateFormat,
         locale = locale,
-
     )
 
     // Optional fields
@@ -989,15 +989,6 @@ private fun isMiddleNameValid(
         else -> true
     }
 }
-
-internal expect object PhoneNumberUtil {
-    fun isGlobalPhoneNumber(phoneNumber: String): Boolean
-}
-
-@Composable
-expect fun rememberPlatformCameraLauncher(
-    onImageCapturedPath: (PlatformFile?) -> Unit,
-): PlatformCameraLauncher
 
 private class CreateNewClientScreenPreviewProvider :
     PreviewParameterProvider<CreateNewClientUiState> {

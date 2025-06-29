@@ -94,6 +94,7 @@ import org.koin.compose.viewmodel.koinViewModel
 internal fun CreateNewGroupScreen(
     viewModel: CreateNewGroupViewModel = koinViewModel(),
     onGroupCreated: (group: SaveResponse?, userStatus: Boolean) -> Unit,
+    onBackPressed: () -> Unit,
 ) {
     val uiState by viewModel.createNewGroupUiState.collectAsStateWithLifecycle()
     val userStatus by viewModel.userStatus.collectAsStateWithLifecycle()
@@ -110,6 +111,7 @@ internal fun CreateNewGroupScreen(
         },
         onGroupCreated = { onGroupCreated(it, userStatus) },
         getResponse = { viewModel.getResponse() },
+        onBackPressed = onBackPressed,
     )
 }
 
@@ -118,6 +120,7 @@ internal fun CreateNewGroupScreen(
 internal fun CreateNewGroupScreen(
     uiState: CreateNewGroupUiState,
     onRetry: () -> Unit,
+    onBackPressed: () -> Unit,
     invokeGroupCreation: (GroupPayloadEntity) -> Unit,
     onGroupCreated: (group: SaveResponse?) -> Unit,
     modifier: Modifier = Modifier,
@@ -128,7 +131,7 @@ internal fun CreateNewGroupScreen(
     MifosScaffold(
         modifier = modifier,
         title = stringResource(Res.string.feature_groups_create_new_group),
-        onBackPressed = {},
+        onBackPressed = onBackPressed,
         snackbarHostState = snackbarHostState,
     ) { paddingValues ->
         Box(
@@ -441,5 +444,6 @@ private fun PreviewCreateNewGroupScreen(
         onGroupCreated = { _ ->
         },
         getResponse = { "" },
+        onBackPressed = {},
     )
 }
