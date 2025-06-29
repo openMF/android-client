@@ -20,7 +20,6 @@ dependencyResolutionManagement {
 rootProject.name = "AndroidClient"
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
-//include(":mifosng-android")
 include(":cmp-android")
 include(":cmp-desktop")
 include(":cmp-ios")
