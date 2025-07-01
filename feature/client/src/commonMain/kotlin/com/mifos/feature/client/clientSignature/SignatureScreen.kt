@@ -34,11 +34,13 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.boundsInRoot
 import androidx.compose.ui.layout.onGloballyPositioned
@@ -53,9 +55,11 @@ import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.ui.util.DevicePreview
 import com.niyajali.compose.sign.ComposeSign
+import com.niyajali.compose.sign.exportSignature
 import com.niyajali.compose.sign.rememberSignatureState
 import io.github.vinceglb.filekit.PlatformFile
 import io.github.vinceglb.filekit.name
+import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameterProvider
@@ -73,7 +77,17 @@ internal fun SignatureScreen(
     SignatureScreen(
         state= state,
         onBackPressed=onBackPressed,
-        uploadSignature = {}
+        uploadSignature = { file->
+
+
+//            viewmodel.createDocument(
+//                Constants.ENTITY_TYPE_CLIENTS,
+//                clientId,
+//                file.name,
+//                "Signature",
+//                file,
+//            )
+        }
     )
 }
 
@@ -81,22 +95,28 @@ internal fun SignatureScreen(
 fun SignatureScreen(
     state: SignatureUiState,
     onBackPressed: () -> Unit,
-    uploadSignature: (PlatformFile) -> Unit,
+    uploadSignature: (ImageBitmap?) -> Unit,
 ) {
 
     var navigationSelectedItem by remember { mutableIntStateOf(0) }
 
     val snackbarHostState = remember { SnackbarHostState() }
     val signatureState = rememberSignatureState()
-
-
+    var size = remember { androidx.compose.ui.geometry.Size.Zero }
+    val scope = rememberCoroutineScope()
     MifosScaffold(
         title = stringResource(Res.string.feature_client_signature_title),
         onBackPressed = onBackPressed,
         snackbarHostState = snackbarHostState,
         actions = {
             IconButton(onClick = {
-
+                scope.launch {
+                    val data = signatureState.exportSignature(
+                        width = size.width.toInt(),
+                        height = size.height.toInt(),
+                    )
+                    uploadSignature(data)
+                }
             }) {
                 Icon(imageVector = MifosIcons.Upload, contentDescription = null)
             }
@@ -120,7 +140,7 @@ fun SignatureScreen(
             }
         },
     ) { paddingValues ->
-        var size = remember { androidx.compose.ui.geometry.Size.Zero }
+
         ComposeSign(
             modifier = Modifier
                 .fillMaxSize()
