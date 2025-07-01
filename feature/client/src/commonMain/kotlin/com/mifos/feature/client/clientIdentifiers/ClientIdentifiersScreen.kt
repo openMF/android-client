@@ -159,8 +159,6 @@ internal fun ClientIdentifiersScreen(
                 onRefresh = onRefresh,
                 isRefreshing = refreshState,
             ) {
-                val scope = rememberCoroutineScope()
-
                 when (state) {
                     is ClientIdentifiersUiState.ClientIdentifiers -> {
                         when (state.identifiers.isEmpty()) {
