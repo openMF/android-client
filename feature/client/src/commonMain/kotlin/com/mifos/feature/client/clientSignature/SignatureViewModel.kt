@@ -38,21 +38,27 @@ class SignatureViewModel(
         entityId: Int,
         documentName: String,
         description: String,
-        documentFile: PlatformFile,
+        documentFile: PlatformFile?,
     ) = viewModelScope.launch {
-        val result = createDocumentUseCase(
-            entityType = entityType,
-            entityId = entityId,
-            file = createImageRequestBody(documentFile, documentName, description),
-        )
-        when (result) {
-            is DataState.Error ->
-                _signatureUiState.value =
-                    SignatureUiState.Error(Res.string.feature_client_failed_to_add_signature)
-            DataState.Loading -> _signatureUiState.value = SignatureUiState.Loading
-            is DataState.Success ->
-                _signatureUiState.value =
-                    SignatureUiState.SignatureUploadedSuccessfully
+        if(documentFile==null){
+            _signatureUiState.value =
+                SignatureUiState.Error(Res.string.feature_client_failed_to_add_signature)
+        }
+        else{
+            val result = createDocumentUseCase(
+                entityType = entityType,
+                entityId = entityId,
+                file = createImageRequestBody(documentFile, documentName, description),
+            )
+            when (result) {
+                is DataState.Error ->
+                    _signatureUiState.value =
+                        SignatureUiState.Error(Res.string.feature_client_failed_to_add_signature)
+                DataState.Loading -> _signatureUiState.value = SignatureUiState.Loading
+                is DataState.Success ->
+                    _signatureUiState.value =
+                        SignatureUiState.SignatureUploadedSuccessfully
+            }
         }
     }
 }
