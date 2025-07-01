@@ -23,5 +23,5 @@ sealed class ClientIdentifiersUiState {
 
     data class ClientIdentifiers(val identifiers: List<Identifier>) : ClientIdentifiersUiState()
 
-    data object IdentifierDeletedSuccessfully : ClientIdentifiersUiState()
+    data class IdentifierDeletedSuccessfully(val message: StringResource) : ClientIdentifiersUiState()
 }

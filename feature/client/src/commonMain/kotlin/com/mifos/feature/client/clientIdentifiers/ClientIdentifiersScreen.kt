@@ -123,6 +123,7 @@ internal fun ClientIdentifiersScreen(
     val snackbarHostState = remember { SnackbarHostState() }
     val pullToRefreshState = rememberPullToRefreshState()
     var showCreateIdentifierDialog by remember { mutableStateOf(false) }
+    val scope = rememberCoroutineScope()
 
     if (showCreateIdentifierDialog) {
         ClientIdentifiersDialogScreen(
@@ -322,7 +323,7 @@ private class ClientIdentifiersUiStateProvider :
         get() = sequenceOf(
             ClientIdentifiersUiState.Loading,
             ClientIdentifiersUiState.Error(Res.string.feature_client_failed_to_load_client_identifiers),
-            ClientIdentifiersUiState.IdentifierDeletedSuccessfully,
+            ClientIdentifiersUiState.IdentifierDeletedSuccessfully(Res.string.feature_client_identifier_deleted),
             ClientIdentifiersUiState.ClientIdentifiers(sampleClientIdentifiers),
         )
 }

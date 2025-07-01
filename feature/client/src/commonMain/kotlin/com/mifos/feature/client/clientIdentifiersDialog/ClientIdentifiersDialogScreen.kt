@@ -31,7 +31,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -293,12 +292,6 @@ private fun ClientIdentifiersContent(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(50.dp),
-            colors = ButtonDefaults.buttonColors(
-                containerColor = MaterialTheme.colorScheme.primary,
-                contentColor = MaterialTheme.colorScheme.onPrimary,
-                disabledContainerColor = MaterialTheme.colorScheme.surfaceVariant,
-                disabledContentColor = MaterialTheme.colorScheme.onSurfaceVariant,
-            ),
         ) {
             Text(text = stringResource(Res.string.feature_client_identifier_submit))
         }
@@ -312,7 +305,7 @@ private class ClientIdentifiersDialogUiStatePreview :
         get() = sequenceOf(
             ClientIdentifierDialogUiState.Loading,
             ClientIdentifierDialogUiState.Error(Res.string.feature_client_failed_to_load_client_identifiers),
-            ClientIdentifierDialogUiState.IdentifierCreatedSuccessfully,
+            ClientIdentifierDialogUiState.IdentifierCreatedSuccessfully(Res.string.feature_client_identifier_created_successfully),
         )
 }
 

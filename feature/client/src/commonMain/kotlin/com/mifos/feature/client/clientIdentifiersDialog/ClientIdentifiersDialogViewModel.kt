@@ -12,6 +12,7 @@ package com.mifos.feature.client.clientIdentifiersDialog
 import androidclient.feature.client.generated.resources.Res
 import androidclient.feature.client.generated.resources.feature_client_failed_to_create_identifier
 import androidclient.feature.client.generated.resources.feature_client_failed_to_load_identifiers
+import androidclient.feature.client.generated.resources.feature_client_identifier_created_successfully
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mifos.core.common.utils.DataState
@@ -63,9 +64,11 @@ class ClientIdentifiersDialogViewModel(
                         _clientIdentifierDialogUiState.value =
                             ClientIdentifierDialogUiState.Loading
 
-                    is DataState.Success ->
+                    is DataState.Success -> {
                         _clientIdentifierDialogUiState.value =
-                            ClientIdentifierDialogUiState.IdentifierCreatedSuccessfully
+                            ClientIdentifierDialogUiState
+                                .IdentifierCreatedSuccessfully(Res.string.feature_client_identifier_created_successfully)
+                    }
                 }
             }
         }
