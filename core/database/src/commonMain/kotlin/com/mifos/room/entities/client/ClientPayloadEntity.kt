@@ -63,7 +63,7 @@ data class ClientPayloadEntity(
 
     val clientClassificationId: Int? = null,
 
-    var address: List<Address>? = emptyList(),
+//    var address: List<Address>? = emptyList(),
 
     val dateFormat: String? = null,
 

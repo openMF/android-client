@@ -803,7 +803,7 @@ private fun createClientPayload(
         address.countryId = countryId
         address.postalCode = postalCode
         address.isActive = isAddressActive
-        clientPayload = clientPayload.copy(address = listOf(address))
+//        clientPayload = clientPayload.copy(address = listOf(address))
     }
 
     // Optional fields
