@@ -31,6 +31,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
@@ -101,10 +102,13 @@ fun SignatureScreen(
     val signatureState = rememberSignatureState()
     var size = remember { Size.Zero }
     val scope = rememberCoroutineScope()
+    var fileSelected by remember { mutableStateOf<PlatformFile?>(null) }
+
     val galleryLauncher = rememberFilePickerLauncher(
         type = FileKitType.Image,
     ) { file ->
         file?.let {
+            fileSelected = file
             uploadSignature(file)
         }
     }
@@ -126,6 +130,7 @@ fun SignatureScreen(
                                 message = getString(Res.string.feature_client_signature_empty),
                             )
                         } else {
+                            fileSelected = outFile
                             uploadSignature(outFile)
                         }
                     }
@@ -163,18 +168,10 @@ fun SignatureScreen(
                     message = stringResource(state.message),
                     onclick = {
                         scope.launch {
-                            val data = signatureState.exportSignature(
-                                width = size.width.toInt(),
-                                height = size.height.toInt(),
-                            )
-                            val outFile = data?.toPlatformFile("signature_$clientId")
-                            if (outFile == null) {
-                                snackbarHostState.showSnackbar(
+                            fileSelected?.let { uploadSignature(it) }
+                                ?: snackbarHostState.showSnackbar(
                                     message = getString(Res.string.feature_client_signature_empty),
                                 )
-                            } else {
-                                uploadSignature(outFile)
-                            }
                         }
                     },
                 )
