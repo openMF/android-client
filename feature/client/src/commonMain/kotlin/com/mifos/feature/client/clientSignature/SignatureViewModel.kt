@@ -11,7 +11,6 @@ package com.mifos.feature.client.clientSignature
 
 import androidclient.feature.client.generated.resources.Res
 import androidclient.feature.client.generated.resources.feature_client_failed_to_add_signature
-import androidclient.feature.client.generated.resources.feature_client_signature_empty
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
@@ -48,26 +47,24 @@ class SignatureViewModel(
         description: String,
         documentFile: PlatformFile,
     ) = viewModelScope.launch {
-
-            val result = createDocumentUseCase(
-                entityType = entityType,
-                entityId = entityId,
-                file = createImageRequestBody(documentFile, documentName, description),
-            )
-            when (result) {
-                is DataState.Error ->
-                    _signatureUiState.value =
-                        SignatureUiState.Error(Res.string.feature_client_failed_to_add_signature)
-                DataState.Loading -> _signatureUiState.value = SignatureUiState.Loading
-                is DataState.Success ->
-                    _signatureUiState.value =
-                        SignatureUiState.SignatureUploadedSuccessfully
-            }
+        val result = createDocumentUseCase(
+            entityType = entityType,
+            entityId = entityId,
+            file = createImageRequestBody(documentFile, documentName, description),
+        )
+        when (result) {
+            is DataState.Error ->
+                _signatureUiState.value =
+                    SignatureUiState.Error(Res.string.feature_client_failed_to_add_signature)
+            DataState.Loading -> _signatureUiState.value = SignatureUiState.Loading
+            is DataState.Success ->
+                _signatureUiState.value =
+                    SignatureUiState.SignatureUploadedSuccessfully
         }
-
+    }
 }
 
-suspend fun ImageBitmap.toPlatformFile(fileName:String): PlatformFile{
+suspend fun ImageBitmap.toPlatformFile(fileName: String): PlatformFile {
     val bytearray = this.encodeToByteArray(ImageFormat.PNG)
     val outFile = FileKit.filesDir / "$fileName.png"
     outFile.write(bytearray)

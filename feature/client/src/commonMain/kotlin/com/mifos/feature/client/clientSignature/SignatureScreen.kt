@@ -52,16 +52,11 @@ import com.mifos.core.ui.util.DevicePreview
 import com.niyajali.compose.sign.ComposeSign
 import com.niyajali.compose.sign.exportSignature
 import com.niyajali.compose.sign.rememberSignatureState
-import io.github.vinceglb.filekit.FileKit
-import io.github.vinceglb.filekit.ImageFormat
 import io.github.vinceglb.filekit.PlatformFile
 import io.github.vinceglb.filekit.dialogs.FileKitType
 import io.github.vinceglb.filekit.dialogs.compose.rememberFilePickerLauncher
-import io.github.vinceglb.filekit.dialogs.compose.util.encodeToByteArray
 import io.github.vinceglb.filekit.div
-import io.github.vinceglb.filekit.filesDir
 import io.github.vinceglb.filekit.name
-import io.github.vinceglb.filekit.write
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.getString
 import org.jetbrains.compose.resources.stringResource
@@ -125,13 +120,12 @@ fun SignatureScreen(
                             width = size.width.toInt(),
                             height = size.height.toInt(),
                         )
-                        val outFile=data?.toPlatformFile("signature_$clientId")
-                        if(outFile==null){
+                        val outFile = data?.toPlatformFile("signature_$clientId")
+                        if (outFile == null) {
                             snackbarHostState.showSnackbar(
-                                message = getString(Res.string.feature_client_signature_empty)
+                                message = getString(Res.string.feature_client_signature_empty),
                             )
-                        }
-                        else{
+                        } else {
                             uploadSignature(outFile)
                         }
                     }
@@ -173,13 +167,12 @@ fun SignatureScreen(
                                 width = size.width.toInt(),
                                 height = size.height.toInt(),
                             )
-                            val outFile=data?.toPlatformFile("signature_$clientId")
-                            if(outFile==null){
+                            val outFile = data?.toPlatformFile("signature_$clientId")
+                            if (outFile == null) {
                                 snackbarHostState.showSnackbar(
-                                    message = getString(Res.string.feature_client_signature_empty)
+                                    message = getString(Res.string.feature_client_signature_empty),
                                 )
-                            }
-                            else{
+                            } else {
                                 uploadSignature(outFile)
                             }
                         }
