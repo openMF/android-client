@@ -335,6 +335,7 @@ private fun CreateNewClientContent(
         }
     }
 
+
     val hasDatatables by rememberSaveable {
         mutableStateOf(
             clientTemplate.dataTables?.isNotEmpty() ?: false,
@@ -528,17 +529,19 @@ private fun CreateNewClientContent(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        MifosTextFieldDropdown(
-            value = staff,
-            onValueChanged = { staff = it },
-            onOptionSelected = { index, value ->
-                staff = value
-                selectedStaffId = staffInOffices[index].id
-            },
-            label = stringResource(Res.string.feature_client_staff),
-            options = staffInOffices.sortedBy { it.displayName }.map { it.displayName.toString() },
-            readOnly = true,
-        )
+        if(staffInOffices.isNotEmpty()){
+            MifosTextFieldDropdown(
+                value = staff,
+                onValueChanged = { staff = it },
+                onOptionSelected = { index, value ->
+                    staff = value
+                    selectedStaffId = staffInOffices[index].id
+                },
+                label = stringResource(Res.string.feature_client_staff),
+                options = staffInOffices.sortedBy { it.displayName }.map { it.displayName.toString() },
+                readOnly = true,
+            )
+        }
 
         Spacer(modifier = Modifier.height(16.dp))
 

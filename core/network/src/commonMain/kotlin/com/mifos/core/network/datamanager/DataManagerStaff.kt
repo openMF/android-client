@@ -37,15 +37,8 @@ class DataManagerStaff(
     fun getStaffInOffice(officeId: Int): Flow<List<StaffEntity>> {
         return prefManager.userInfo.flatMapLatest { userData ->
             when (userData.userStatus) {
-                false -> flow {
-                    baseApiManager.getStaffApi().retrieveAll16(
-                        officeId.toLong(),
-                        null,
-                        null,
-                        null,
-                    )
-                        .map(StaffMapper::mapFromEntity)
-                }
+                false ->
+                    mBaseApiManager.staffApi.getStaffForOffice(officeId)
 
                 /**
                  * return all List of Staffs of Office from DatabaseHelperOffices
