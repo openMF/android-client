@@ -12,6 +12,7 @@ package com.mifos.feature.client.clientSignature
 import androidclient.feature.client.generated.resources.Res
 import androidclient.feature.client.generated.resources.feature_client_failed_to_add_signature
 import androidclient.feature.client.generated.resources.feature_client_signature_empty
+import androidx.compose.ui.graphics.ImageBitmap
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -19,7 +20,13 @@ import com.mifos.core.common.utils.Constants
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.domain.useCases.CreateDocumentUseCase
 import com.mifos.feature.client.utils.createImageRequestBody
+import io.github.vinceglb.filekit.FileKit
+import io.github.vinceglb.filekit.ImageFormat
 import io.github.vinceglb.filekit.PlatformFile
+import io.github.vinceglb.filekit.dialogs.compose.util.encodeToByteArray
+import io.github.vinceglb.filekit.div
+import io.github.vinceglb.filekit.filesDir
+import io.github.vinceglb.filekit.write
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
@@ -39,12 +46,9 @@ class SignatureViewModel(
         entityId: Int,
         documentName: String,
         description: String,
-        documentFile: PlatformFile?,
+        documentFile: PlatformFile,
     ) = viewModelScope.launch {
-        if (documentFile == null) {
-            _signatureUiState.value =
-                SignatureUiState.Error(Res.string.feature_client_signature_empty)
-        } else {
+
             val result = createDocumentUseCase(
                 entityType = entityType,
                 entityId = entityId,
@@ -60,10 +64,12 @@ class SignatureViewModel(
                         SignatureUiState.SignatureUploadedSuccessfully
             }
         }
-    }
 
-    fun retry() {
-        _signatureUiState.value =
-            SignatureUiState.Initial
-    }
+}
+
+suspend fun ImageBitmap.toPlatformFile(fileName:String): PlatformFile{
+    val bytearray = this.encodeToByteArray(ImageFormat.PNG)
+    val outFile = FileKit.filesDir / "$fileName.png"
+    outFile.write(bytearray)
+    return outFile
 }

@@ -13,6 +13,7 @@ package com.mifos.feature.client.clientSignature
 
 import androidclient.feature.client.generated.resources.Res
 import androidclient.feature.client.generated.resources.feature_client_failed_to_add_signature
+import androidclient.feature.client.generated.resources.feature_client_signature_empty
 import androidclient.feature.client.generated.resources.feature_client_signature_gallery
 import androidclient.feature.client.generated.resources.feature_client_signature_reset
 import androidclient.feature.client.generated.resources.feature_client_signature_title
@@ -84,13 +85,10 @@ internal fun SignatureScreen(
             viewmodel.createDocument(
                 Constants.ENTITY_TYPE_CLIENTS,
                 clientId,
-                file?.name ?: "",
+                file.name,
                 "Signature",
                 file,
             )
-        },
-        onRetry = {
-            viewmodel.retry()
         },
     )
 }
@@ -100,8 +98,7 @@ fun SignatureScreen(
     state: SignatureUiState,
     clientId: Int,
     onBackPressed: () -> Unit,
-    uploadSignature: (PlatformFile?) -> Unit,
-    onRetry: () -> Unit,
+    uploadSignature: (PlatformFile) -> Unit,
 ) {
     var navigationSelectedItem by remember { mutableIntStateOf(0) }
 
@@ -128,19 +125,19 @@ fun SignatureScreen(
                             width = size.width.toInt(),
                             height = size.height.toInt(),
                         )
-
-                        if (data != null) {
-                            val bytearray = data.encodeToByteArray(ImageFormat.PNG)
-                            val outFile = FileKit.filesDir / "signature_$clientId.png"
-                            outFile.write(bytearray)
+                        val outFile=data?.toPlatformFile("signature_$clientId")
+                        if(outFile==null){
+                            snackbarHostState.showSnackbar(
+                                message = getString(Res.string.feature_client_signature_empty)
+                            )
+                        }
+                        else{
                             uploadSignature(outFile)
-                        } else {
-                            uploadSignature(null)
                         }
                     }
                 },
             ) {
-                Icon(imageVector = MifosIcons.Upload, contentDescription = null)
+                Icon(imageVector = MifosIcons.Upload, contentDescription = "Upload Icon")
             }
         },
         bottomBar = {
@@ -170,7 +167,23 @@ fun SignatureScreen(
             is SignatureUiState.Error -> {
                 MifosSweetError(
                     message = stringResource(state.message),
-                    onclick = onRetry,
+                    onclick = {
+                        scope.launch {
+                            val data = signatureState.exportSignature(
+                                width = size.width.toInt(),
+                                height = size.height.toInt(),
+                            )
+                            val outFile=data?.toPlatformFile("signature_$clientId")
+                            if(outFile==null){
+                                snackbarHostState.showSnackbar(
+                                    message = getString(Res.string.feature_client_signature_empty)
+                                )
+                            }
+                            else{
+                                uploadSignature(outFile)
+                            }
+                        }
+                    },
                 )
             }
             SignatureUiState.Initial -> {
@@ -244,6 +257,5 @@ private fun SignatureScreenPreview(
         onBackPressed = {},
         uploadSignature = {},
         clientId = 2,
-        onRetry = {},
     )
 }
