@@ -148,10 +148,10 @@ internal fun SavingsAccountTransactionScreen(
 
     val topbarTitle = if (transactionType == Constants.SAVINGS_ACCOUNT_TRANSACTION_DEPOSIT) {
         stringResource(Res.string.feature_savings_savingsAccount) + " " +
-                stringResource(Res.string.feature_savings_deposit)
+            stringResource(Res.string.feature_savings_deposit)
     } else {
         stringResource(Res.string.feature_savings_savingsAccount) + " " +
-                stringResource(Res.string.feature_savings_withdrawal)
+            stringResource(Res.string.feature_savings_withdrawal)
     }
     val dialogTitle by rememberSaveable { mutableStateOf("") }
     var dialogText by rememberSaveable { mutableStateOf("") }
@@ -304,7 +304,7 @@ private fun SavingsAccountTransactionContent(
                 Column {
                     Text(
                         text = stringResource(Res.string.feature_savings_transaction_date) + " : " +
-                                DateHelper.getDateAsStringFromLong(transactionDate),
+                            DateHelper.getDateAsStringFromLong(transactionDate),
                     )
                     Text(text = stringResource(Res.string.feature_savings_payment_type) + " : " + paymentType)
                     Text(text = stringResource(Res.string.feature_savings_amount) + " : " + amount)
