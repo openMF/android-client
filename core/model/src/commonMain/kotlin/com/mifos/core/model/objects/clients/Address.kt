@@ -19,9 +19,21 @@ import kotlinx.serialization.Serializable
 @Parcelize
 @Serializable
 data class Address(
-    val addressTypeId: Int? = null,
-    val active: Boolean? = null,
-    val street: String? = null,
-    val stateProvinceId: Int? = null,
-    val countryId: Int? = null,
+    var addressTypeId: Int = -1,
+
+    var isActive: Boolean = false,
+
+    var addressLine1: String = "",
+
+    var addressLine2: String = "",
+
+    var addressLine3: String = "",
+
+    var city: String = "",
+
+    var stateProvinceId: Int = -1,
+
+    var countryId: Int = -1,
+
+    var postalCode: String = "",
 ) : Parcelable
