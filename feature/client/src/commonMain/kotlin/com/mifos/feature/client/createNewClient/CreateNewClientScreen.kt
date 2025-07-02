@@ -364,7 +364,6 @@ private fun CreateNewClientContent(
         }
     }
 
-
     val hasDatatables by rememberSaveable {
         mutableStateOf(
             clientTemplate.dataTables?.isNotEmpty() ?: false,
@@ -606,7 +605,7 @@ private fun CreateNewClientContent(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        if(staffInOffices.isNotEmpty()){
+        if (staffInOffices.isNotEmpty()) {
             MifosTextFieldDropdown(
                 value = staff,
                 onValueChanged = { staff = it },
@@ -667,7 +666,7 @@ private fun CreateNewClientContent(
                     selectedImagePath, setFileForUpload, staffInOffices, hasDatatables,
                     selectedOfficeId, selectedClientTypeId, selectedClientClassificationId,
                     genderId, selectedStaffId, activationDate, dateOfBirth,
-                    mobileNumber, externalId,isAddressEnabled, isAddressActive, selectedAddressTypeId, addressLine1,
+                    mobileNumber, externalId, isAddressEnabled, isAddressActive, selectedAddressTypeId, addressLine1,
                     addressLine2, addressLine3, city, selectedStateProvinceId,
                     selectedCountryId, postalCode,
                 )
@@ -733,7 +732,7 @@ private fun handleSubmitClick(
         activationDate, dateOfBirth, clientNames.middleName, mobileNumber,
         externalId, clientTemplate, genderId, selectedStaffId,
         selectedClientId, selectedClientClassificationId, isAddressEnabled, isAddressActive, addressTypeId, addressLine1, addressLine2,
-                addressLine3, city, stateProvinceId, countryId, postalCode,
+        addressLine3, city, stateProvinceId, countryId, postalCode,
     )
 
     if (hasDatatables) {
@@ -1022,7 +1021,7 @@ private fun AddressInputTextFields(
             value = selectedAddressType,
             onValueChanged = onAddressTypeChanged,
             onOptionSelected = onAddressTypeSelected,
-            label =stringResource( Res.string.feature_client_address_type),
+            label = stringResource(Res.string.feature_client_address_type),
             options = addressTypeOptions,
             readOnly = true,
         )
@@ -1135,7 +1134,7 @@ private fun isAllFieldsValid(
             false
         }
 
-        !isAddressTypeIdValid(addressTypeId, scope,snackbarHostState) -> {
+        !isAddressTypeIdValid(addressTypeId, scope, snackbarHostState) -> {
             false
         }
 
@@ -1267,7 +1266,7 @@ private class CreateNewClientScreenPreviewProvider :
                     savingProductOptions = listOf(),
                     dataTables = listOf(),
                 ),
-                isAddressEnabled =false,
+                isAddressEnabled = false,
                 addressTemplate = AddressTemplate(),
             ),
             CreateNewClientUiState.ShowProgressbar,

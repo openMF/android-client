@@ -21,7 +21,6 @@ import androidclient.feature.client.generated.resources.feature_client_failed_to
 import androidclient.feature.client.generated.resources.feature_client_waiting_for_checker_approval
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import co.touchlab.kermit.Logger
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.common.utils.MFErrorParser
 import com.mifos.core.data.repository.CreateNewClientRepository
@@ -83,13 +82,13 @@ class CreateNewClientViewModel(
                 _createNewClientUiState.value =
                     CreateNewClientUiState.ShowError(Res.string.feature_client_failed_to_fetch_client_template)
             }.collect {
-                _clientsTemplate.value=it.data
+                _clientsTemplate.value = it.data
                 loadAddressConfiguration()
                 _createNewClientUiState.value =
                     CreateNewClientUiState.ShowClientTemplate(
                         it.data ?: ClientsTemplateEntity(),
                         isAddressEnabled = _isAddressEnabled.value,
-                        addressTemplate =_addressTemplate.value ?: AddressTemplate()
+                        addressTemplate = _addressTemplate.value ?: AddressTemplate(),
                     )
             }
         }
