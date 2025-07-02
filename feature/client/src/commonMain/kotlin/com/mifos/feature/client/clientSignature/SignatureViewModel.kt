@@ -11,6 +11,7 @@ package com.mifos.feature.client.clientSignature
 
 import androidclient.feature.client.generated.resources.Res
 import androidclient.feature.client.generated.resources.feature_client_failed_to_add_signature
+import androidclient.feature.client.generated.resources.feature_client_signature_empty
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -42,7 +43,7 @@ class SignatureViewModel(
     ) = viewModelScope.launch {
         if(documentFile==null){
             _signatureUiState.value =
-                SignatureUiState.Error(Res.string.feature_client_failed_to_add_signature)
+                SignatureUiState.Error(Res.string.feature_client_signature_empty)
         }
         else{
             val result = createDocumentUseCase(
@@ -60,5 +61,10 @@ class SignatureViewModel(
                         SignatureUiState.SignatureUploadedSuccessfully
             }
         }
+    }
+
+    fun retry(){
+        _signatureUiState.value =
+            SignatureUiState.Initial
     }
 }

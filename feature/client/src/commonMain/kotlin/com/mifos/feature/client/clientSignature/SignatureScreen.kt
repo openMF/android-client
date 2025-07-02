@@ -30,6 +30,7 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -59,13 +60,18 @@ import com.niyajali.compose.sign.ComposeSign
 import com.niyajali.compose.sign.exportSignature
 import com.niyajali.compose.sign.rememberSignatureState
 import io.github.vinceglb.filekit.FileKit
+import io.github.vinceglb.filekit.ImageFormat
 import io.github.vinceglb.filekit.PlatformFile
+import io.github.vinceglb.filekit.dialogs.FileKitType
+import io.github.vinceglb.filekit.dialogs.compose.rememberFilePickerLauncher
 import io.github.vinceglb.filekit.dialogs.compose.util.encodeToByteArray
 import io.github.vinceglb.filekit.div
 import io.github.vinceglb.filekit.filesDir
 import io.github.vinceglb.filekit.name
+import io.github.vinceglb.filekit.path
 import io.github.vinceglb.filekit.write
 import kotlinx.coroutines.launch
+import org.jetbrains.compose.resources.getString
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameterProvider
@@ -88,10 +94,13 @@ internal fun SignatureScreen(
             viewmodel.createDocument(
                 Constants.ENTITY_TYPE_CLIENTS,
                 clientId,
-                file?.name?:"hello",
+                file?.name?:"",
                 "Signature",
                 file,
             )
+        },
+        onRetry = {
+            viewmodel.retry()
         }
     )
 }
@@ -102,6 +111,7 @@ fun SignatureScreen(
     clientId:Int,
     onBackPressed: () -> Unit,
     uploadSignature: (PlatformFile?) -> Unit,
+    onRetry:()->Unit
 ) {
 
     var navigationSelectedItem by remember { mutableIntStateOf(0) }
@@ -110,6 +120,13 @@ fun SignatureScreen(
     val signatureState = rememberSignatureState()
     var size = remember { Size.Zero }
     val scope = rememberCoroutineScope()
+    val galleryLauncher = rememberFilePickerLauncher(
+        type = FileKitType.Image,
+    ) { file ->
+        file?.let {
+            uploadSignature(file)
+        }
+    }
     MifosScaffold(
         title = stringResource(Res.string.feature_client_signature_title),
         onBackPressed = onBackPressed,
@@ -124,7 +141,7 @@ fun SignatureScreen(
                         )
 
                         if(data!=null){
-                            val bytearray = data.encodeToByteArray()
+                            val bytearray = data.encodeToByteArray(ImageFormat.PNG)
                             val outFile = FileKit.filesDir / "signature_$clientId.png"
                             outFile.write(bytearray)
                             uploadSignature(outFile)
@@ -148,8 +165,12 @@ fun SignatureScreen(
                         onClick = {
                             navigationSelectedItem = index
                             when (index) {
-                                0 -> {signatureState.clear()}
-                                1 -> {}
+                                0 -> {
+                                    signatureState.clear()
+                                }
+                                1 -> {
+                                    galleryLauncher.launch()
+                                }
                             }
                         },
                     )
@@ -157,21 +178,40 @@ fun SignatureScreen(
             }
         },
     ) { paddingValues ->
+            when(state){
+                is SignatureUiState.Error -> {
+                    MifosSweetError(
+                        message = stringResource(state.message),
+                        onclick= onRetry
+                    )
+                }
+                SignatureUiState.Initial -> {
+                    ComposeSign(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(paddingValues)
+                            .padding(4.dp)
+                            .onGloballyPositioned {
+                                size = it.size.toSize()
+                            },
+                        state = signatureState,
+                        strokeColor = MaterialTheme.colorScheme.onSurface,
+                        backgroundColor = Color.Transparent,
+                        showGrid = false,
+                        onSignatureUpdate = {},
+                    )
+                }
+                SignatureUiState.Loading -> {
+                    MifosCircularProgress()
+                }
+                SignatureUiState.SignatureUploadedSuccessfully -> {
+                    LaunchedEffect(true){
+                        snackbarHostState.showSnackbar(getString(Res.string.feature_client_signature_uploaded_successfully))
+                        onBackPressed()
+                    }
+                }
+            }
 
-        ComposeSign(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(paddingValues)
-                .padding(4.dp)
-                .onGloballyPositioned {
-                    size = it.size.toSize()
-                },
-            state = signatureState,
-            strokeColor = MaterialTheme.colorScheme.onSurface,
-            backgroundColor = Color.Transparent,
-            showGrid = false,
-            onSignatureUpdate = {},
-        )
     }
 }
 
@@ -217,5 +257,6 @@ private fun SignatureScreenPreview(
         onBackPressed = {},
         uploadSignature = {},
         clientId = 2,
+        onRetry = {}
     )
 }
