@@ -17,9 +17,6 @@ import androidclient.feature.client.generated.resources.feature_client_signature
 import androidclient.feature.client.generated.resources.feature_client_signature_reset
 import androidclient.feature.client.generated.resources.feature_client_signature_title
 import androidclient.feature.client.generated.resources.feature_client_signature_uploaded_successfully
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Icon
@@ -33,24 +30,19 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.layout.boundsInRoot
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.toSize
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mifos.core.common.utils.Constants
-import com.mifos.core.designsystem.component.DrawingState
 import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
@@ -68,7 +60,6 @@ import io.github.vinceglb.filekit.dialogs.compose.util.encodeToByteArray
 import io.github.vinceglb.filekit.div
 import io.github.vinceglb.filekit.filesDir
 import io.github.vinceglb.filekit.name
-import io.github.vinceglb.filekit.path
 import io.github.vinceglb.filekit.write
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.getString
@@ -76,7 +67,6 @@ import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameterProvider
 import org.koin.compose.viewmodel.koinViewModel
-import kotlin.math.roundToInt
 
 @Composable
 internal fun SignatureScreen(
@@ -87,33 +77,32 @@ internal fun SignatureScreen(
     val state by viewmodel.signatureUiState.collectAsStateWithLifecycle()
 
     SignatureScreen(
-        state= state,
-        onBackPressed=onBackPressed,
-        clientId=clientId,
-        uploadSignature = { file->
+        state = state,
+        onBackPressed = onBackPressed,
+        clientId = clientId,
+        uploadSignature = { file ->
             viewmodel.createDocument(
                 Constants.ENTITY_TYPE_CLIENTS,
                 clientId,
-                file?.name?:"",
+                file?.name ?: "",
                 "Signature",
                 file,
             )
         },
         onRetry = {
             viewmodel.retry()
-        }
+        },
     )
 }
 
 @Composable
 fun SignatureScreen(
     state: SignatureUiState,
-    clientId:Int,
+    clientId: Int,
     onBackPressed: () -> Unit,
     uploadSignature: (PlatformFile?) -> Unit,
-    onRetry:()->Unit
+    onRetry: () -> Unit,
 ) {
-
     var navigationSelectedItem by remember { mutableIntStateOf(0) }
 
     val snackbarHostState = remember { SnackbarHostState() }
@@ -140,15 +129,14 @@ fun SignatureScreen(
                             height = size.height.toInt(),
                         )
 
-                        if(data!=null){
+                        if (data != null) {
                             val bytearray = data.encodeToByteArray(ImageFormat.PNG)
                             val outFile = FileKit.filesDir / "signature_$clientId.png"
                             outFile.write(bytearray)
                             uploadSignature(outFile)
-                        }else{
+                        } else {
                             uploadSignature(null)
                         }
-
                     }
                 },
             ) {
@@ -178,40 +166,39 @@ fun SignatureScreen(
             }
         },
     ) { paddingValues ->
-            when(state){
-                is SignatureUiState.Error -> {
-                    MifosSweetError(
-                        message = stringResource(state.message),
-                        onclick= onRetry
-                    )
-                }
-                SignatureUiState.Initial -> {
-                    ComposeSign(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(paddingValues)
-                            .padding(4.dp)
-                            .onGloballyPositioned {
-                                size = it.size.toSize()
-                            },
-                        state = signatureState,
-                        strokeColor = MaterialTheme.colorScheme.onSurface,
-                        backgroundColor = Color.Transparent,
-                        showGrid = false,
-                        onSignatureUpdate = {},
-                    )
-                }
-                SignatureUiState.Loading -> {
-                    MifosCircularProgress()
-                }
-                SignatureUiState.SignatureUploadedSuccessfully -> {
-                    LaunchedEffect(true){
-                        snackbarHostState.showSnackbar(getString(Res.string.feature_client_signature_uploaded_successfully))
-                        onBackPressed()
-                    }
+        when (state) {
+            is SignatureUiState.Error -> {
+                MifosSweetError(
+                    message = stringResource(state.message),
+                    onclick = onRetry,
+                )
+            }
+            SignatureUiState.Initial -> {
+                ComposeSign(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(paddingValues)
+                        .padding(4.dp)
+                        .onGloballyPositioned {
+                            size = it.size.toSize()
+                        },
+                    state = signatureState,
+                    strokeColor = MaterialTheme.colorScheme.onSurface,
+                    backgroundColor = Color.Transparent,
+                    showGrid = false,
+                    onSignatureUpdate = {},
+                )
+            }
+            SignatureUiState.Loading -> {
+                MifosCircularProgress()
+            }
+            SignatureUiState.SignatureUploadedSuccessfully -> {
+                LaunchedEffect(true) {
+                    snackbarHostState.showSnackbar(getString(Res.string.feature_client_signature_uploaded_successfully))
+                    onBackPressed()
                 }
             }
-
+        }
     }
 }
 
@@ -257,6 +244,6 @@ private fun SignatureScreenPreview(
         onBackPressed = {},
         uploadSignature = {},
         clientId = 2,
-        onRetry = {}
+        onRetry = {},
     )
 }

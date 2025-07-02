@@ -41,11 +41,10 @@ class SignatureViewModel(
         description: String,
         documentFile: PlatformFile?,
     ) = viewModelScope.launch {
-        if(documentFile==null){
+        if (documentFile == null) {
             _signatureUiState.value =
                 SignatureUiState.Error(Res.string.feature_client_signature_empty)
-        }
-        else{
+        } else {
             val result = createDocumentUseCase(
                 entityType = entityType,
                 entityId = entityId,
@@ -63,7 +62,7 @@ class SignatureViewModel(
         }
     }
 
-    fun retry(){
+    fun retry() {
         _signatureUiState.value =
             SignatureUiState.Initial
     }
