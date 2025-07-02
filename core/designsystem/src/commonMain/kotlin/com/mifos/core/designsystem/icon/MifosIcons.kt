@@ -105,6 +105,8 @@ import androidx.compose.ui.graphics.vector.ImageVector
 
 object MifosIcons {
     val Add = Icons.Rounded.Add
+    val Menu = Icons.Default.Menu
+    val DateRange = Icons.Outlined.DateRange
     val Person = Icons.Rounded.PersonOutline
     val Group = Icons.Outlined.Group
     val EventRepeat = Icons.Outlined.EventRepeat

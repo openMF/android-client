@@ -15,8 +15,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -27,12 +25,13 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
+import com.mifos.core.designsystem.icon.MifosIcons
 
 @Composable
 fun MifosEmptyUi(
     text: String,
     modifier: Modifier = Modifier,
-    icon: ImageVector = Icons.Default.Info,
+    icon: ImageVector = MifosIcons.Info,
 ) {
     Box(
         modifier = modifier
