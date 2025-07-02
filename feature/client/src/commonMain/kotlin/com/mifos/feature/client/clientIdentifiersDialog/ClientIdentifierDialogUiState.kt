@@ -24,5 +24,5 @@ sealed class ClientIdentifierDialogUiState {
     data class ClientIdentifierTemplate(val identifierTemplate: IdentifierTemplate) :
         ClientIdentifierDialogUiState()
 
-    data class IdentifierCreatedSuccessfully(val message: StringResource) : ClientIdentifierDialogUiState()
+    data object IdentifierCreatedSuccessfully : ClientIdentifierDialogUiState()
 }

@@ -12,7 +12,7 @@ package com.mifos.feature.client.clientIdentifiers
 import androidclient.feature.client.generated.resources.Res
 import androidclient.feature.client.generated.resources.feature_client_failed_to_delete_identifier
 import androidclient.feature.client.generated.resources.feature_client_failed_to_load_client_identifiers
-import androidclient.feature.client.generated.resources.feature_client_identifier_deleted
+import androidclient.feature.client.generated.resources.feature_client_identifier_deleted_successfully
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -77,8 +77,7 @@ class ClientIdentifiersViewModel(
                 is DataState.Success -> {
                     _clientIdentifiersUiState.value =
                         ClientIdentifiersUiState
-                            .IdentifierDeletedSuccessfully(Res.string.feature_client_identifier_deleted)
-                    loadIdentifiers(clientId)
+                            .IdentifierDeletedSuccessfully(Res.string.feature_client_identifier_deleted_successfully)
                 }
             }
         }

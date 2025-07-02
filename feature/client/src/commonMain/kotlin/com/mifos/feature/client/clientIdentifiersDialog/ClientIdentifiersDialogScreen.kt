@@ -12,7 +12,6 @@ package com.mifos.feature.client.clientIdentifiersDialog
 import androidclient.feature.client.generated.resources.Res
 import androidclient.feature.client.generated.resources.feature_client_create_identifier_dialog
 import androidclient.feature.client.generated.resources.feature_client_failed_to_load_client_identifiers
-import androidclient.feature.client.generated.resources.feature_client_identifier_created_successfully
 import androidclient.feature.client.generated.resources.feature_client_identifier_description
 import androidclient.feature.client.generated.resources.feature_client_identifier_document_type
 import androidclient.feature.client.generated.resources.feature_client_identifier_isActive
@@ -35,15 +34,12 @@ import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -59,8 +55,6 @@ import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.model.objects.noncoreobjects.IdentifierPayload
 import com.mifos.core.model.objects.noncoreobjects.IdentifierTemplate
 import com.mifos.core.ui.util.DevicePreview
-import kotlinx.coroutines.launch
-import org.jetbrains.compose.resources.getString
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameterProvider
@@ -100,8 +94,12 @@ internal fun ClientIdentifiersDialogScreen(
     onRetry: () -> Unit,
     onCreate: (IdentifierPayload) -> Unit,
 ) {
-    val snackbarHostState = remember { SnackbarHostState() }
-    val scope = rememberCoroutineScope()
+    if (state is ClientIdentifierDialogUiState.IdentifierCreatedSuccessfully) {
+        LaunchedEffect(Unit) {
+            onIdentifierCreated()
+        }
+        return
+    }
 
     Dialog(
         onDismissRequest = { onDismiss() },
@@ -154,16 +152,7 @@ internal fun ClientIdentifiersDialogScreen(
                             onRetry()
                         }
 
-                        is ClientIdentifierDialogUiState.IdentifierCreatedSuccessfully -> {
-                            scope.launch {
-                                snackbarHostState.showSnackbar(
-                                    message = getString(
-                                        Res.string.feature_client_identifier_created_successfully,
-                                    ),
-                                )
-                            }
-                            onIdentifierCreated()
-                        }
+                        is ClientIdentifierDialogUiState.IdentifierCreatedSuccessfully -> {}
 
                         is ClientIdentifierDialogUiState.Loading -> MifosCircularProgress()
                     }
@@ -305,7 +294,7 @@ private class ClientIdentifiersDialogUiStatePreview :
         get() = sequenceOf(
             ClientIdentifierDialogUiState.Loading,
             ClientIdentifierDialogUiState.Error(Res.string.feature_client_failed_to_load_client_identifiers),
-            ClientIdentifierDialogUiState.IdentifierCreatedSuccessfully(Res.string.feature_client_identifier_created_successfully),
+            ClientIdentifierDialogUiState.IdentifierCreatedSuccessfully,
         )
 }
 
