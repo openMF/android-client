@@ -73,10 +73,16 @@ internal fun ClientIdentifiersDialogScreen(
         viewModel.loadClientIdentifierTemplate(clientId)
     }
 
+    if (state is ClientIdentifierDialogUiState.IdentifierCreatedSuccessfully) {
+        LaunchedEffect(Unit) {
+            onIdentifierCreated()
+        }
+        return
+    }
+
     ClientIdentifiersDialogScreen(
         state = state,
         onDismiss = onDismiss,
-        onIdentifierCreated = onIdentifierCreated,
         onRetry = {
             viewModel.loadClientIdentifierTemplate(clientId = clientId)
         },
@@ -90,17 +96,9 @@ internal fun ClientIdentifiersDialogScreen(
 internal fun ClientIdentifiersDialogScreen(
     state: ClientIdentifierDialogUiState,
     onDismiss: () -> Unit,
-    onIdentifierCreated: () -> Unit,
     onRetry: () -> Unit,
     onCreate: (IdentifierPayload) -> Unit,
 ) {
-    if (state is ClientIdentifierDialogUiState.IdentifierCreatedSuccessfully) {
-        LaunchedEffect(Unit) {
-            onIdentifierCreated()
-        }
-        return
-    }
-
     Dialog(
         onDismissRequest = { onDismiss() },
     ) {
@@ -306,7 +304,6 @@ private fun ClientIdentifiersDialogScreenPreview(
     ClientIdentifiersDialogScreen(
         state = state,
         onDismiss = {},
-        onIdentifierCreated = {},
         onRetry = {},
         onCreate = {},
     )

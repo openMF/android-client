@@ -39,6 +39,10 @@ class ClientIdentifiersViewModel(
     private val _isRefreshing = MutableStateFlow(false)
     val isRefreshing = _isRefreshing.asStateFlow()
 
+    init {
+        loadIdentifiers(clientId = clientId.value)
+    }
+
     fun refreshIdentifiersList(clientId: Int) {
         _isRefreshing.value = true
         loadIdentifiers(clientId = clientId)

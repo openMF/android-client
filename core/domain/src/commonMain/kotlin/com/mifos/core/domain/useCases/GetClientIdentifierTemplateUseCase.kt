@@ -10,6 +10,7 @@
 package com.mifos.core.domain.useCases
 
 import com.mifos.core.common.utils.DataState
+import com.mifos.core.common.utils.asDataStateFlow
 import com.mifos.core.data.repository.ClientIdentifierDialogRepository
 import com.mifos.core.model.objects.noncoreobjects.IdentifierTemplate
 import kotlinx.coroutines.flow.Flow
@@ -20,13 +21,6 @@ class GetClientIdentifierTemplateUseCase(
 ) {
 
     operator fun invoke(clientId: Int): Flow<DataState<IdentifierTemplate>> = flow {
-        emit(DataState.Loading)
-
-        try {
-            val response = repository.getClientIdentifierTemplate(clientId)
-            emit(DataState.Success(response))
-        } catch (exception: Exception) {
-            emit(DataState.Error(exception))
-        }
-    }
+        emit(repository.getClientIdentifierTemplate(clientId))
+    }.asDataStateFlow()
 }

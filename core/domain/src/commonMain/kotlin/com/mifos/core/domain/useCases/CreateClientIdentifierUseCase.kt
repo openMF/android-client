@@ -10,6 +10,7 @@
 package com.mifos.core.domain.useCases
 
 import com.mifos.core.common.utils.DataState
+import com.mifos.core.common.utils.asDataStateFlow
 import com.mifos.core.data.repository.ClientIdentifierDialogRepository
 import com.mifos.core.model.objects.noncoreobjects.IdentifierCreationResponse
 import com.mifos.core.model.objects.noncoreobjects.IdentifierPayload
@@ -24,13 +25,6 @@ class CreateClientIdentifierUseCase(
         clientId: Int,
         identifierPayload: IdentifierPayload,
     ): Flow<DataState<IdentifierCreationResponse>> = flow {
-        emit(DataState.Loading)
-
-        try {
-            val response = repository.createClientIdentifier(clientId, identifierPayload)
-            emit(DataState.Success(response))
-        } catch (exception: Exception) {
-            emit(DataState.Error(exception))
-        }
-    }
+        emit(repository.createClientIdentifier(clientId, identifierPayload))
+    }.asDataStateFlow()
 }

@@ -44,7 +44,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -85,10 +84,6 @@ internal fun ClientIdentifiersScreen(
     val clientId by clientIdentifiersviewModel.clientId.collectAsStateWithLifecycle()
     val state by clientIdentifiersviewModel.clientIdentifiersUiState.collectAsStateWithLifecycle()
     val refreshState by clientIdentifiersviewModel.isRefreshing.collectAsStateWithLifecycle()
-
-    LaunchedEffect(Unit) {
-        clientIdentifiersviewModel.loadIdentifiers(clientId)
-    }
 
     ClientIdentifiersScreen(
         clientId = clientId,
