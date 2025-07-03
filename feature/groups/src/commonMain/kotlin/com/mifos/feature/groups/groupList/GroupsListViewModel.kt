@@ -15,6 +15,7 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.cachedIn
 import com.mifos.core.data.repository.GroupsListRepository
+import com.mifos.core.domain.useCases.GroupsListPagingDataSource
 
 const val PAGE_SIZE = 10
 
@@ -30,7 +31,7 @@ class GroupsListViewModel(
             prefetchDistance = 1,
         ),
         pagingSourceFactory = {
-            com.mifos.core.domain.useCases.GroupsListPagingDataSource(repository, PAGE_SIZE)
+            GroupsListPagingDataSource(repository, PAGE_SIZE)
         },
     ).flow.cachedIn(viewModelScope)
 }

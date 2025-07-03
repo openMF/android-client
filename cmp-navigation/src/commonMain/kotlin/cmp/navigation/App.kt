@@ -32,8 +32,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.requiredWidth
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
@@ -46,6 +44,7 @@ import androidx.compose.material3.NavigationDrawerItem
 import androidx.compose.material3.NavigationDrawerItemDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarDuration.Indefinite
+import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
@@ -78,7 +77,9 @@ import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.designsystem.theme.MifosBackground
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.resources.stringResource
 import org.mifos.navigation.generated.resources.Res
+import org.mifos.navigation.generated.resources.cmp_navigation_no_internet
 import org.mifos.navigation.generated.resources.drawer_profile_header
 import org.mifos.navigation.generated.resources.ic_dp_placeholder
 
@@ -87,7 +88,9 @@ import org.mifos.navigation.generated.resources.ic_dp_placeholder
 fun App(
     networkMonitor: NetworkMonitor,
     modifier: Modifier = Modifier,
+    navigateToLogin: () -> Unit,
     onClickLogout: () -> Unit,
+    onClickUpdateConfig: () -> Unit,
 ) {
     val appState = rememberAppState(
         networkMonitor = networkMonitor,
@@ -123,7 +126,7 @@ fun App(
 
         val isOffline by appState.isOffline.collectAsStateWithLifecycle()
 
-        val notConnectedMessage = "you have lost network connection"
+        val notConnectedMessage = stringResource(Res.string.cmp_navigation_no_internet)
         LaunchedEffect(isOffline) {
             if (isOffline) {
                 snackbarHostState.showSnackbar(
@@ -226,6 +229,7 @@ fun App(
             gesturesEnabled = isNavScreen,
         ) {
             Scaffold(
+                snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
                 topBar = {
                     if (isNavScreen) {
                         TopAppBar(
@@ -233,15 +237,17 @@ fun App(
                                 Text(NavigationConstants.getTitleForRoute(route))
                             },
                             navigationIcon = {
-                                IconButton(onClick = {
-                                    scope.launch {
-                                        drawerState.apply {
-                                            if (isClosed) open() else close()
+                                IconButton(
+                                    onClick = {
+                                        scope.launch {
+                                            drawerState.apply {
+                                                if (isClosed) open() else close()
+                                            }
                                         }
-                                    }
-                                }) {
+                                    },
+                                ) {
                                     Icon(
-                                        imageVector = Icons.Default.Menu,
+                                        imageVector = MifosIcons.Menu,
                                         contentDescription = "Menu",
                                     )
                                 }
@@ -281,7 +287,8 @@ fun App(
                 FeatureNavHost(
                     appState = appState,
                     padding = paddingValues,
-                    modifier = Modifier,
+                    navigateToLogin = navigateToLogin,
+                    onClickUpdateConfig = onClickUpdateConfig,
                 )
                 if (dialogState) {
                     MifosDialogBox(

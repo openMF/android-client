@@ -14,7 +14,6 @@ import com.mifos.core.datastore.UserPreferencesRepository
 import com.mifos.core.model.objects.clients.ActivatePayload
 import com.mifos.core.model.objects.responses.SaveResponse
 import com.mifos.core.network.BaseApiManager
-import com.mifos.core.network.GenericResponse
 import com.mifos.core.network.mappers.groups.GetGroupsResponseMapper
 import com.mifos.room.entities.accounts.GroupAccounts
 import com.mifos.room.entities.group.GroupEntity
@@ -22,6 +21,7 @@ import com.mifos.room.entities.group.GroupPayloadEntity
 import com.mifos.room.entities.group.GroupWithAssociations
 import com.mifos.room.helper.ClientDaoHelper
 import com.mifos.room.helper.GroupsDaoHelper
+import io.ktor.client.statement.HttpResponse
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
@@ -262,10 +262,10 @@ class DataManagerGroups(
      * @param groupId
      * @return GenericResponse
      */
-    fun activateGroup(
+    suspend fun activateGroup(
         groupId: Int,
-        activatePayload: ActivatePayload?,
-    ): Flow<GenericResponse> {
+        activatePayload: ActivatePayload,
+    ): HttpResponse {
         return mBaseApiManager.groupApi.activateGroup(groupId, activatePayload)
     }
 }

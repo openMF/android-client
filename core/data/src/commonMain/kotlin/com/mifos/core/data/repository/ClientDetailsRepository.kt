@@ -28,5 +28,5 @@ interface ClientDetailsRepository {
 
     suspend fun getClient(clientId: Int): ClientEntity
 
-    suspend fun getImage(clientId: Int): Flow<DataState<String>>
+    fun getImage(clientId: Int): Flow<DataState<String>>
 }

@@ -44,10 +44,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.KeyboardArrowDown
-import androidx.compose.material.icons.filled.MoreVert
-import androidx.compose.material.icons.outlined.DateRange
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -88,7 +84,6 @@ import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.room.entities.accounts.loans.LoanAccountEntity
 import com.mifos.room.entities.accounts.savings.SavingAccountDepositTypeEntity
 import com.mifos.room.entities.accounts.savings.SavingsAccountEntity
-import com.mifos.room.entities.client.ClientEntity
 import com.mifos.room.entities.group.GroupEntity
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
@@ -102,7 +97,7 @@ internal fun GroupDetailsScreen(
     addLoanAccount: (Int) -> Unit,
     addSavingsAccount: (groupId: Int, clientId: Int, isGroupAccount: Boolean) -> Unit,
     documents: (Int, String) -> Unit,
-    groupClients: (List<ClientEntity>) -> Unit,
+    groupClients: () -> Unit,
     moreGroupInfo: (String, Int) -> Unit,
     notes: (Int, String) -> Unit,
     loanAccountSelected: (Int) -> Unit,
@@ -119,7 +114,7 @@ internal fun GroupDetailsScreen(
 
     LaunchedEffect(key1 = groupAssociateClients) {
         if (groupAssociateClients.isNotEmpty() && groupClientEnable) {
-            groupClients(groupAssociateClients)
+            groupClients()
         }
     }
 
@@ -174,7 +169,7 @@ internal fun GroupDetailsScreen(
         onBackPressed = onBackPressed,
         actions = {
             IconButton(onClick = { showMenu = showMenu.not() }) {
-                Icon(imageVector = Icons.Default.MoreVert, contentDescription = null)
+                Icon(imageVector = MifosIcons.MoreVert, contentDescription = null)
             }
             DropdownMenu(
                 modifier = Modifier.background(White),
@@ -303,7 +298,7 @@ fun GroupDetailsContent(
             )
         }
         MifosCenterDetailsText(
-            icon = Icons.Outlined.DateRange,
+            icon = MifosIcons.DateRange,
             field = stringResource(Res.string.feature_groups_activation_date),
             value = Utils.getStringOfDate(group.activationDate),
         )
@@ -453,7 +448,7 @@ fun MifosLoanAccountExpendableCard(
                 ) {
                     Icon(
                         modifier = Modifier.rotate(rotateState),
-                        imageVector = Icons.Default.KeyboardArrowDown,
+                        imageVector = MifosIcons.KeyboardArrowDown,
                         contentDescription = null,
                     )
                 }
@@ -633,7 +628,7 @@ private fun MifosSavingsAccountExpendableCard(
                 ) {
                     Icon(
                         modifier = Modifier.rotate(rotateState),
-                        imageVector = Icons.Default.KeyboardArrowDown,
+                        imageVector = MifosIcons.KeyboardArrowDown,
                         contentDescription = null,
                     )
                 }

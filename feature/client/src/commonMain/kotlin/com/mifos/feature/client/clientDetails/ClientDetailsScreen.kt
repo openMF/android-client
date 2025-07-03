@@ -63,10 +63,6 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.KeyboardArrowDown
-import androidx.compose.material.icons.filled.MoreVert
-import androidx.compose.material.icons.outlined.DateRange
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
@@ -83,7 +79,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -104,7 +99,7 @@ import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.ui.components.MifosUserImage
 import com.mifos.core.ui.util.DevicePreview
-import com.mifos.feature.client.utils.PlatformCameraLauncher
+import com.mifos.feature.client.utils.rememberPlatformCameraLauncher
 import com.mifos.room.entities.accounts.loans.LoanAccountEntity
 import com.mifos.room.entities.accounts.savings.SavingAccountDepositTypeEntity
 import com.mifos.room.entities.accounts.savings.SavingsAccountEntity
@@ -157,8 +152,11 @@ internal fun ClientDetailsScreen(
     }
 
     val cameraLauncher = rememberPlatformCameraLauncher(
-        clientId,
-        clientDetailsViewModel,
+        onImageCapturedPath = {
+                file ->
+            showSelectImageDialog = false
+            clientDetailsViewModel.saveClientImage(clientId, file)
+        },
     )
 
     LaunchedEffect(key1 = true) {
@@ -200,7 +198,7 @@ internal fun ClientDetailsScreen(
         onBackPressed = onBackPressed,
         actions = {
             IconButton(onClick = { showMenu = showMenu.not() }) {
-                Icon(imageVector = Icons.Default.MoreVert, contentDescription = null)
+                Icon(imageVector = MifosIcons.MoreVert, contentDescription = null)
             }
             DropdownMenu(
                 modifier = Modifier.background(MaterialTheme.colorScheme.surface),
@@ -329,6 +327,9 @@ internal fun ClientDetailsScreen(
                     padding = padding,
                     loanAccountSelected = loanAccountSelected,
                     savingsAccountSelected = savingsAccountSelected,
+                    onClick = {
+                        showSelectImageDialog = true
+                    },
                 )
             }
         }
@@ -339,15 +340,14 @@ internal fun ClientDetailsScreen(
 private fun MifosClientDetailsScreen(
     loanAccountSelected: (Int) -> Unit,
     padding: PaddingValues,
+    onClick: () -> Unit,
     savingsAccountSelected: (Int, SavingAccountDepositTypeEntity) -> Unit,
     clientDetailsViewModel: ClientDetailsViewModel = koinViewModel(),
 ) {
     val client = clientDetailsViewModel.client.collectAsStateWithLifecycle().value
-    val scope = rememberCoroutineScope()
     val loanAccounts = clientDetailsViewModel.loanAccount.collectAsStateWithLifecycle().value
     val savingsAccounts = clientDetailsViewModel.savingsAccounts.collectAsStateWithLifecycle().value
     val profileImage = clientDetailsViewModel.profileImage.collectAsStateWithLifecycle()
-    var showSelectImageDialog by remember { mutableStateOf(false) }
 
     Column(
         modifier = Modifier
@@ -362,7 +362,9 @@ private fun MifosClientDetailsScreen(
         ) {
             MifosUserImage(
                 bitmap = profileImage.value,
-                modifier = Modifier.size(100.dp),
+                modifier = Modifier
+                    .size(100.dp)
+                    .clickable(onClick = onClick),
                 username = client?.displayName ?: "",
             )
         }
@@ -393,7 +395,7 @@ private fun MifosClientDetailsScreen(
         }
         client?.let { Utils.getStringOfDate(it.activationDate) }?.let {
             MifosClientDetailsText(
-                icon = Icons.Outlined.DateRange,
+                icon = MifosIcons.DateRange,
                 field = stringResource(Res.string.feature_client_activation_date),
                 value = it,
             )
@@ -497,7 +499,7 @@ private fun MifosLoanAccountExpendableCard(
                 ) {
                     Icon(
                         modifier = Modifier.rotate(rotateState),
-                        imageVector = Icons.Default.KeyboardArrowDown,
+                        imageVector = MifosIcons.KeyboardArrowDown,
                         contentDescription = null,
                     )
                 }
@@ -652,7 +654,7 @@ private fun MifosSavingsAccountExpandableCard(
                 ) {
                     Icon(
                         modifier = Modifier.rotate(rotateState),
-                        imageVector = Icons.Default.KeyboardArrowDown,
+                        imageVector = MifosIcons.KeyboardArrowDown,
                         contentDescription = null,
                     )
                 }
@@ -857,12 +859,6 @@ private fun MifosClientDetailsText(icon: ImageVector, field: String, value: Stri
         )
     }
 }
-
-@Composable
-expect fun rememberPlatformCameraLauncher(
-    clientId: Int,
-    viewModel: ClientDetailsViewModel,
-): PlatformCameraLauncher
 
 @DevicePreview
 @Composable

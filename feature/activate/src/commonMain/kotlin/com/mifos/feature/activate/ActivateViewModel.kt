@@ -36,8 +36,9 @@ class ActivateViewModel(
     savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
 
-    val id = savedStateHandle.getStateFlow(key = Constants.ACTIVATE_ID, initialValue = 0)
-    val activateType = savedStateHandle.getStateFlow(key = Constants.ACTIVATE_TYPE, initialValue = "")
+    val id = savedStateHandle.getStateFlow(key = Constants.ACTIVATE_ID, initialValue = "0")
+    val activateType =
+        savedStateHandle.getStateFlow(key = Constants.ACTIVATE_TYPE, initialValue = "")
 
     private val _activateUiState = MutableStateFlow<ActivateUiState>(ActivateUiState.Initial)
     val activateUiState = _activateUiState.asStateFlow()
@@ -78,18 +79,17 @@ class ActivateViewModel(
 
     fun activateGroup(groupId: Int, groupPayload: ActivatePayload) =
         viewModelScope.launch {
-            activateGroupUseCase(groupId, groupPayload).collect { result ->
-                when (result) {
-                    is DataState.Error ->
-                        _activateUiState.value =
-                            ActivateUiState.Error(Res.string.feature_activate_failed_to_activate_group)
+            val result = activateGroupUseCase(groupId, groupPayload)
+            when (result) {
+                is DataState.Error ->
+                    _activateUiState.value =
+                        ActivateUiState.Error(Res.string.feature_activate_failed_to_activate_group)
 
-                    is DataState.Loading -> _activateUiState.value = ActivateUiState.Loading
+                DataState.Loading -> Unit // unreachable
 
-                    is DataState.Success ->
-                        _activateUiState.value =
-                            ActivateUiState.ActivatedSuccessfully(Res.string.feature_activate_group)
-                }
+                is DataState.Success ->
+                    _activateUiState.value =
+                        ActivateUiState.ActivatedSuccessfully(Res.string.feature_activate_group)
             }
         }
 }

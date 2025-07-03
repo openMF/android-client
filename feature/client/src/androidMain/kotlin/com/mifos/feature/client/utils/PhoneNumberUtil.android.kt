@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Mifos Initiative
+ * Copyright 2025 Mifos Initiative
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -7,11 +7,12 @@
  *
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
-package com.mifos.mifosxdroid.navigation
+package com.mifos.feature.client.utils
 
-internal object MifosNavGraph {
-    const val ROOT_GRAPH = "root_graph"
-    const val AUTH_GRAPH = "auth_graph"
-    const val PASSCODE_GRAPH = "passcode_graph"
-    const val MAIN_GRAPH = "home_screen_route"
+import android.telephony.PhoneNumberUtils
+
+actual object PhoneNumberUtil {
+    actual fun isGlobalPhoneNumber(phoneNumber: String): Boolean {
+        return PhoneNumberUtils.isGlobalPhoneNumber(phoneNumber)
+    }
 }

@@ -9,5 +9,5 @@
     See https://github.com/openMF/android-client/blob/master/LICENSE.md
 -->
 <resources>
-    <style name="Theme.AndroidClientTheme" parent="android:Theme.Material.Light.NoActionBar" />
+    <string name="cmp_navigation_no_internet">You are not connected to the Internet!</string>
 </resources>
