@@ -13,7 +13,6 @@ plugins {
     alias(libs.plugins.kotlin.serialization)
 }
 
-
 android {
     namespace = "com.mifos.feature.collection_sheet"
 }
@@ -34,4 +33,8 @@ kotlin {
 
         }
     }
+}
+
+dependencies {
+    debugImplementation(compose.uiTooling)
 }
