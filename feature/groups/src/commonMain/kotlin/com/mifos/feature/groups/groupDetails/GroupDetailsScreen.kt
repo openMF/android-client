@@ -44,10 +44,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.KeyboardArrowDown
-import androidx.compose.material.icons.filled.MoreVert
-import androidx.compose.material.icons.outlined.DateRange
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -173,7 +169,7 @@ internal fun GroupDetailsScreen(
         onBackPressed = onBackPressed,
         actions = {
             IconButton(onClick = { showMenu = showMenu.not() }) {
-                Icon(imageVector = Icons.Default.MoreVert, contentDescription = null)
+                Icon(imageVector = MifosIcons.MoreVert, contentDescription = null)
             }
             DropdownMenu(
                 modifier = Modifier.background(White),
@@ -302,7 +298,7 @@ fun GroupDetailsContent(
             )
         }
         MifosCenterDetailsText(
-            icon = Icons.Outlined.DateRange,
+            icon = MifosIcons.DateRange,
             field = stringResource(Res.string.feature_groups_activation_date),
             value = Utils.getStringOfDate(group.activationDate),
         )
@@ -452,7 +448,7 @@ fun MifosLoanAccountExpendableCard(
                 ) {
                     Icon(
                         modifier = Modifier.rotate(rotateState),
-                        imageVector = Icons.Default.KeyboardArrowDown,
+                        imageVector = MifosIcons.KeyboardArrowDown,
                         contentDescription = null,
                     )
                 }
@@ -632,7 +628,7 @@ private fun MifosSavingsAccountExpendableCard(
                 ) {
                     Icon(
                         modifier = Modifier.rotate(rotateState),
-                        imageVector = Icons.Default.KeyboardArrowDown,
+                        imageVector = MifosIcons.KeyboardArrowDown,
                         contentDescription = null,
                     )
                 }
