@@ -18,11 +18,12 @@ import androidclient.feature.client.generated.resources.feature_client_signature
 import androidclient.feature.client.generated.resources.feature_client_signature_reset
 import androidclient.feature.client.generated.resources.feature_client_signature_title
 import androidclient.feature.client.generated.resources.feature_client_signature_uploaded_successfully
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.SnackbarHostState
@@ -49,6 +50,7 @@ import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.icon.MifosIcons
+import com.mifos.core.designsystem.theme.backgroundLight
 import com.mifos.core.ui.util.DevicePreview
 import com.niyajali.compose.sign.ComposeSign
 import com.niyajali.compose.sign.exportSignature
@@ -177,20 +179,24 @@ fun SignatureScreen(
                 )
             }
             SignatureUiState.Initial -> {
-                ComposeSign(
+                Box(
                     modifier = Modifier
                         .fillMaxSize()
                         .padding(paddingValues)
                         .padding(4.dp)
                         .onGloballyPositioned {
                             size = it.size.toSize()
-                        },
-                    state = signatureState,
-                    strokeColor = MaterialTheme.colorScheme.onSurface,
-                    backgroundColor = Color.Transparent,
-                    showGrid = false,
-                    onSignatureUpdate = {},
-                )
+                        }
+                        .background(backgroundLight),
+                ) {
+                    ComposeSign(
+                        modifier = Modifier
+                            .fillMaxSize(),
+                        state = signatureState,
+                        backgroundColor = Color.Transparent,
+                        onSignatureUpdate = {},
+                    )
+                }
             }
             SignatureUiState.Loading -> {
                 MifosCircularProgress()
