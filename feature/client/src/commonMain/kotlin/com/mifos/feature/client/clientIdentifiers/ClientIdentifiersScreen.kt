@@ -100,6 +100,11 @@ internal fun ClientIdentifiersScreen(
             clientIdentifiersviewModel.loadIdentifiers(clientId)
         },
         onIdentifierCreated = {
+            // resetUiState() is needed here to clear the success state immediately after successful
+            // client identifier creation, so that reopening the dialog doesn’t reuse stale state and
+            // accidentally retrigger main screen loading.
+            // Downside: this causes two back-to-back loading states — one in the dialog and one on
+            // the main screen.
             clientIdentifiersDialogViewModel.resetUiState()
             clientIdentifiersviewModel.loadIdentifiers(clientId)
         },
