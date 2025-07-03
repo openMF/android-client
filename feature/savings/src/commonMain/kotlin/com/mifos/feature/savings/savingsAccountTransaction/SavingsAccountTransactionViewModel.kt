@@ -93,7 +93,7 @@ class SavingsAccountTransactionViewModel(
                     request,
                 ).collect { dataState ->
                     when (dataState) {
-                        is DataState.Error<*> ->
+                        is DataState.Error ->
                             _savingsAccountTransactionUiState.value =
                                 SavingsAccountTransactionUiState.ShowError(dataState.message)
 
@@ -101,7 +101,7 @@ class SavingsAccountTransactionViewModel(
                             _savingsAccountTransactionUiState.value =
                                 SavingsAccountTransactionUiState.ShowProgressbar
 
-                        is DataState.Success<*> ->
+                        is DataState.Success ->
                             _savingsAccountTransactionUiState.value =
                                 SavingsAccountTransactionUiState.ShowTransactionSuccessfullyDone(
                                     dataState.data ?: SavingsAccountTransactionResponse(),
@@ -118,7 +118,7 @@ class SavingsAccountTransactionViewModel(
                 repository.getSavingsAccountTransaction(accountId)
                     .collect { dataState ->
                         when (dataState) {
-                            is DataState.Error<*> -> {
+                            is DataState.Error -> {
                                 _savingsAccountTransactionUiState.value =
                                     SavingsAccountTransactionUiState.ShowError(dataState.message)
                             }
@@ -127,7 +127,7 @@ class SavingsAccountTransactionViewModel(
                                 _savingsAccountTransactionUiState.value =
                                     SavingsAccountTransactionUiState.ShowProgressbar
 
-                            is DataState.Success<*> -> {
+                            is DataState.Success -> {
                                 val savings = dataState.data
                                 if (savings != null) {
                                     _savingsAccountTransactionUiState.value =
