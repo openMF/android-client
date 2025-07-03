@@ -325,8 +325,7 @@ private fun SavingsAccountSummaryContent(
                     Button(
                         modifier = Modifier
                             .weight(1f)
-                            .padding(horizontal = 8.dp)
-                            .height(45.dp),
+                            .padding(horizontal = 8.dp),
                         onClick = { onWithdrawButtonClicked.invoke(savingsAccountWithAssociations) },
                     ) {
                         Text(text = stringResource(Res.string.feature_savings_withdrawal))
@@ -335,8 +334,7 @@ private fun SavingsAccountSummaryContent(
                     Button(
                         modifier = Modifier
                             .weight(1f)
-                            .padding(horizontal = 8.dp)
-                            .height(45.dp),
+                            .padding(horizontal = 8.dp),
                         onClick = { onDepositButtonClicked.invoke(savingsAccountWithAssociations) },
                     ) {
                         Text(text = stringResource(Res.string.feature_savings_make_deposit))
@@ -347,8 +345,7 @@ private fun SavingsAccountSummaryContent(
                     Button(
                         modifier = Modifier
                             .weight(1f)
-                            .padding(horizontal = 8.dp)
-                            .height(45.dp),
+                            .padding(horizontal = 8.dp),
                         onClick = when {
                             savingsAccountWithAssociations.status?.submittedAndPendingApproval == true -> {
                                 { approveSavings.invoke() }
