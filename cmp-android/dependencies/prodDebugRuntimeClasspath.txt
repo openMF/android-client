@@ -195,6 +195,8 @@ io.coil-kt.coil3:coil-network-okhttp:3.2.0
 io.coil-kt.coil3:coil-svg-android:3.2.0
 io.coil-kt.coil3:coil-svg:3.2.0
 io.coil-kt.coil3:coil:3.2.0
+io.github.niyajali:compose-signature-android:1.0.1
+io.github.niyajali:compose-signature:1.0.1
 io.github.vinceglb:filekit-coil-android:0.10.0-beta04
 io.github.vinceglb:filekit-coil:0.10.0-beta04
 io.github.vinceglb:filekit-compose-android:0.8.8
@@ -313,8 +315,8 @@ org.jetbrains.kotlinx:kotlinx-coroutines-bom:1.10.2
 org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:1.10.2
 org.jetbrains.kotlinx:kotlinx-coroutines-core:1.10.2
 org.jetbrains.kotlinx:kotlinx-coroutines-slf4j:1.10.2
-org.jetbrains.kotlinx:kotlinx-datetime-jvm:0.6.1
-org.jetbrains.kotlinx:kotlinx-datetime:0.6.1
+org.jetbrains.kotlinx:kotlinx-datetime-jvm:0.6.2
+org.jetbrains.kotlinx:kotlinx-datetime:0.6.2
 org.jetbrains.kotlinx:kotlinx-io-bytestring-jvm:0.7.0
 org.jetbrains.kotlinx:kotlinx-io-bytestring:0.7.0
 org.jetbrains.kotlinx:kotlinx-io-core-jvm:0.7.0
