@@ -63,10 +63,6 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.KeyboardArrowDown
-import androidx.compose.material.icons.filled.MoreVert
-import androidx.compose.material.icons.outlined.DateRange
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
@@ -202,7 +198,7 @@ internal fun ClientDetailsScreen(
         onBackPressed = onBackPressed,
         actions = {
             IconButton(onClick = { showMenu = showMenu.not() }) {
-                Icon(imageVector = Icons.Default.MoreVert, contentDescription = null)
+                Icon(imageVector = MifosIcons.MoreVert, contentDescription = null)
             }
             DropdownMenu(
                 modifier = Modifier.background(MaterialTheme.colorScheme.surface),
@@ -399,7 +395,7 @@ private fun MifosClientDetailsScreen(
         }
         client?.let { Utils.getStringOfDate(it.activationDate) }?.let {
             MifosClientDetailsText(
-                icon = Icons.Outlined.DateRange,
+                icon = MifosIcons.DateRange,
                 field = stringResource(Res.string.feature_client_activation_date),
                 value = it,
             )
@@ -503,7 +499,7 @@ private fun MifosLoanAccountExpendableCard(
                 ) {
                     Icon(
                         modifier = Modifier.rotate(rotateState),
-                        imageVector = Icons.Default.KeyboardArrowDown,
+                        imageVector = MifosIcons.KeyboardArrowDown,
                         contentDescription = null,
                     )
                 }
@@ -658,7 +654,7 @@ private fun MifosSavingsAccountExpandableCard(
                 ) {
                     Icon(
                         modifier = Modifier.rotate(rotateState),
-                        imageVector = Icons.Default.KeyboardArrowDown,
+                        imageVector = MifosIcons.KeyboardArrowDown,
                         contentDescription = null,
                     )
                 }

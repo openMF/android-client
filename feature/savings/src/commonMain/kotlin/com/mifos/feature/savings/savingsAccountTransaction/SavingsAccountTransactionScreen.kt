@@ -17,7 +17,6 @@ import androidclient.feature.savings.generated.resources.feature_savings_cancel
 import androidclient.feature.savings.generated.resources.feature_savings_date
 import androidclient.feature.savings.generated.resources.feature_savings_deposit
 import androidclient.feature.savings.generated.resources.feature_savings_deposit_successful_transaction_ID
-import androidclient.feature.savings.generated.resources.feature_savings_dialog_action_ok
 import androidclient.feature.savings.generated.resources.feature_savings_dialog_message_sync_savingaccounttransaction
 import androidclient.feature.savings.generated.resources.feature_savings_error_amount_can_not_be_empty
 import androidclient.feature.savings.generated.resources.feature_savings_error_invalid_amount
@@ -61,7 +60,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
@@ -144,7 +142,6 @@ internal fun SavingsAccountTransactionScreen(
     setUserOffline: () -> Unit,
 ) {
     val snackBarHostState = remember { SnackbarHostState() }
-    val scope = rememberCoroutineScope()
 
     val topbarTitle = if (transactionType == Constants.SAVINGS_ACCOUNT_TRANSACTION_DEPOSIT) {
         stringResource(Res.string.feature_savings_savingsAccount) + " " +
@@ -153,7 +150,7 @@ internal fun SavingsAccountTransactionScreen(
         stringResource(Res.string.feature_savings_savingsAccount) + " " +
             stringResource(Res.string.feature_savings_withdrawal)
     }
-    val dialogTitle by rememberSaveable { mutableStateOf("") }
+    var dialogTitle by rememberSaveable { mutableStateOf("") }
     var dialogText by rememberSaveable { mutableStateOf("") }
     var showDialog by rememberSaveable { mutableStateOf(false) }
     var dialogMessageStr: StringResource? = null
@@ -167,12 +164,10 @@ internal fun SavingsAccountTransactionScreen(
             },
             dialogText = dialogText,
             onDismissRequest = {
-                showDialog = false
-                dialogMessageStr = null
+                navigateBack.invoke()
             },
             onConfirmation = {
-                showDialog = false
-                dialogMessageStr = null
+                navigateBack.invoke()
             },
         )
     }
@@ -219,21 +214,9 @@ internal fun SavingsAccountTransactionScreen(
                 }
 
                 SavingsAccountTransactionUiState.ShowSavingAccountTransactionExistInDatabase -> {
-                    AlertDialog(
-                        onDismissRequest = { },
-                        title = {
-                            Text(
-                                style = MaterialTheme.typography.titleLarge,
-                                text = stringResource(Res.string.feature_savings_sync_previous_transaction),
-                            )
-                        },
-                        text = { Text(text = stringResource(Res.string.feature_savings_dialog_message_sync_savingaccounttransaction)) },
-                        confirmButton = {
-                            TextButton(onClick = { navigateBack() }) {
-                                Text(text = stringResource(Res.string.feature_savings_dialog_action_ok))
-                            }
-                        },
-                    )
+                    showDialog = true
+                    dialogMessageStr = Res.string.feature_savings_sync_previous_transaction
+                    dialogText = stringResource(Res.string.feature_savings_dialog_message_sync_savingaccounttransaction)
                 }
 
                 is SavingsAccountTransactionUiState.ShowTransactionSuccessfullyDone -> {
@@ -244,14 +227,14 @@ internal fun SavingsAccountTransactionScreen(
                     } else {
                         if (transactionType == Constants.SAVINGS_ACCOUNT_TRANSACTION_DEPOSIT) {
                             dialogText =
-                                stringResource(Res.string.feature_savings_deposit_successful_transaction_ID)
+                                stringResource(Res.string.feature_savings_deposit_successful_transaction_ID) +
+                                uiState.savingsAccountTransactionResponse.resourceId.toString()
                             // todo find a way to show transactionID as well
-//                            + uiState.savingsAccountTransactionResponse.resourceId
                         } else if (transactionType == Constants.SAVINGS_ACCOUNT_TRANSACTION_WITHDRAWAL) {
                             dialogText =
-                                stringResource(Res.string.feature_savings_withdrawal_successful_transaction_ID)
+                                stringResource(Res.string.feature_savings_withdrawal_successful_transaction_ID) +
+                                uiState.savingsAccountTransactionResponse.resourceId
                             // todo find a way to show transactionID as well
-//                           + uiState.savingsAccountTransactionResponse.resourceId
                         }
                     }
                 }
@@ -317,12 +300,11 @@ private fun SavingsAccountTransactionContent(
                         val savingsAccountTransactionRequest =
                             SavingsAccountTransactionRequestEntity(
                                 locale = "en",
-                                dateFormat = "dd MM yyyy",
-                                transactionDate = transactionDate.toString(),
+                                dateFormat = DateHelper.SHORT_MONTH,
+                                transactionDate = DateHelper.getDateAsStringFromLong(transactionDate),
                                 transactionAmount = amount,
                                 paymentTypeId = paymentTypeId.toString(),
                             )
-
                         val builtTransactionRequestAsJson =
                             Json.encodeToString(savingsAccountTransactionRequest)
                         Logger.d(

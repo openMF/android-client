@@ -14,7 +14,9 @@ import com.mifos.core.model.utils.Parcelize
 import com.mifos.room.entities.PaymentTypeOptionEntity
 import com.mifos.room.utils.Entity
 import com.mifos.room.utils.PrimaryKey
+import kotlinx.serialization.Serializable
 
+@Serializable
 @Parcelize
 @Entity(
     indices = [],

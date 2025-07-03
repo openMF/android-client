@@ -18,8 +18,6 @@ import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.size
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
@@ -29,6 +27,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
+import com.mifos.core.designsystem.icon.MifosIcons
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.painterResource
 
@@ -124,7 +123,7 @@ fun MultiFloatingActionButton(
                 .rotate(rotation),
         ) {
             Icon(
-                imageVector = Icons.Default.Add,
+                imageVector = MifosIcons.Add,
                 contentDescription = "mainFabIcon",
             )
         }

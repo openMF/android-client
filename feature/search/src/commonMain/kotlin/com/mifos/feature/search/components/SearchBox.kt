@@ -25,10 +25,6 @@ import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.KeyboardArrowDown
-import androidx.compose.material.icons.filled.Search
-import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material3.AssistChip
 import androidx.compose.material3.AssistChipDefaults
 import androidx.compose.material3.Button
@@ -133,7 +129,7 @@ internal fun SearchBox(
                     .defaultMinSize(minHeight = 48.dp),
             ) {
                 Icon(
-                    imageVector = Icons.Outlined.Search,
+                    imageVector = MifosIcons.Search,
                     contentDescription = "MifosIcons",
                 )
 
