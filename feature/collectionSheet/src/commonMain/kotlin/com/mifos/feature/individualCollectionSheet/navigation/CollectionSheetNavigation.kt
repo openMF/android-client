@@ -37,7 +37,7 @@ fun NavGraphBuilder.individualCollectionSheetNavGraph(
     ) {
         individualCollectionSheetScreen(
             onBackPressed = onBackPressed,
-            onDetail = { _, sheet ->
+            onDetail = { sheet ->
                 navController.navigateToIndividualCollectionSheetDetailScreen(sheet)
             },
 
@@ -54,7 +54,7 @@ fun NavGraphBuilder.individualCollectionSheetNavGraph(
 
 private fun NavGraphBuilder.individualCollectionSheetScreen(
     onBackPressed: () -> Unit,
-    onDetail: (String, IndividualCollectionSheet) -> Unit,
+    onDetail: (IndividualCollectionSheet) -> Unit,
 ) {
     composable(
         route = CollectionSheetScreens.IndividualCollectionSheetScreen.route,

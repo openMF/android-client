@@ -14,6 +14,7 @@ import androidclient.feature.collectionsheet.generated.resources.feature_collect
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import co.touchlab.kermit.Logger
 import com.mifos.core.common.utils.Constants
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.domain.useCases.SaveIndividualCollectionSheetUseCase
@@ -38,6 +39,12 @@ class IndividualCollectionSheetDetailsViewModel(
         Json.decodeFromString<IndividualCollectionSheet>(arg.value)
     }.getOrElse {
         IndividualCollectionSheet()
+    }
+
+    init {
+        Logger.e("Revanth"){
+            sheet.toString()
+        }
     }
 
     @Suppress("ktlint:standard:property-naming")

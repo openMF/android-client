@@ -34,7 +34,7 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 @Composable
 internal fun IndividualCollectionSheetScreen(
     onBackPressed: () -> Unit,
-    onDetail: (String, IndividualCollectionSheet) -> Unit,
+    onDetail: (IndividualCollectionSheet) -> Unit,
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
 

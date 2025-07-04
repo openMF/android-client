@@ -61,11 +61,11 @@ sealed class HomeDestinationsScreen(
         icon = MifosIcons.Assignment,
     )
 
-//    data object CollectionSheetScreen : HomeDestinationsScreen(
-//        title = "Collection Sheet",
-//        route = "generate_collection_sheet",
-//        icon = MifosIcons.Assignment,
-//    )
+    data object CollectionSheetScreen : HomeDestinationsScreen(
+        title = "Collection Sheet",
+        route = "generate_collection_sheet",
+        icon = MifosIcons.Assignment,
+    )
 
     data object RunReportsScreen : HomeDestinationsScreen(
         title = "Run Reports",

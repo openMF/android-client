@@ -73,12 +73,14 @@ import com.mifos.room.entities.organisation.StaffEntity
 import kotlinx.datetime.Clock
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
+import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
+import org.jetbrains.compose.ui.tooling.preview.PreviewParameterProvider
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 internal fun NewIndividualCollectionSheetScreen(
     viewModel: NewIndividualCollectionSheetViewModel = koinViewModel(),
-    onDetail: (String, IndividualCollectionSheet) -> Unit,
+    onDetail: (IndividualCollectionSheet) -> Unit,
 ) {
     val state = viewModel.newIndividualCollectionSheetUiState.collectAsStateWithLifecycle().value
 
@@ -108,7 +110,7 @@ internal fun NewIndividualCollectionSheetScreen(
     getStaffList: (Int) -> Unit,
     generateCollection: (Int, Int, String) -> Unit,
     modifier: Modifier = Modifier,
-    onDetail: (String, IndividualCollectionSheet) -> Unit,
+    onDetail: (IndividualCollectionSheet) -> Unit,
 ) {
     val keyboardController = LocalSoftwareKeyboardController.current
 
@@ -193,7 +195,6 @@ internal fun NewIndividualCollectionSheetScreen(
                             showCollectionSheetDialog = false
                             individualCollectionSheet?.let {
                                 onDetail(
-                                    DateHelper.getDateAsStringFromLong(repaymentDate),
                                     it,
                                 )
                             }
@@ -246,6 +247,7 @@ internal fun NewIndividualCollectionSheetScreen(
                     },
                     label = stringResource(Res.string.feature_collection_sheet_office),
                     options = state.officeList.map { it.name.toString() },
+                    readOnly = true
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 MifosDatePickerTextField(
@@ -270,6 +272,7 @@ internal fun NewIndividualCollectionSheetScreen(
                     },
                     label = stringResource(Res.string.feature_collection_sheet_staff),
                     options = state.staffList.map { it.displayName.toString() },
+                    readOnly = true
                 )
                 Row(
                     modifier = Modifier
@@ -397,46 +400,32 @@ private fun CollectionSheetDialogContent(
     )
 }
 
+class NewIndividualCollectionSheetUiStateProvider :
+    PreviewParameterProvider<NewIndividualCollectionSheetUiState> {
+
+    override val values: Sequence<NewIndividualCollectionSheetUiState>
+        get() = sequenceOf(
+            NewIndividualCollectionSheetUiState(staffList = sampleStaffList),
+            NewIndividualCollectionSheetUiState(officeList = sampleOfficeList),
+            NewIndividualCollectionSheetUiState(error = "Error Occurred"),
+            NewIndividualCollectionSheetUiState(isLoading = true),
+            NewIndividualCollectionSheetUiState(individualCollectionSheet = IndividualCollectionSheet()),
+        )
+}
+
 @Preview
 @Composable
-private fun NewIndividualCollectionSheetPreview() {
-    Column {
-        NewIndividualCollectionSheetScreen(
-            state = NewIndividualCollectionSheetUiState(staffList = sampleStaffList),
-            getStaffList = {},
-            generateCollection = { _, _, _ ->
-            },
-            onDetail = { _, _ -> },
-        )
-        NewIndividualCollectionSheetScreen(
-            state = NewIndividualCollectionSheetUiState(officeList = sampleOfficeList),
-            getStaffList = {},
-            generateCollection = { _, _, _ ->
-            },
-            onDetail = { _, _ -> },
-        )
-        NewIndividualCollectionSheetScreen(
-            state = NewIndividualCollectionSheetUiState(error = "Error Occurred"),
-            getStaffList = {},
-            generateCollection = { _, _, _ ->
-            },
-            onDetail = { _, _ -> },
-        )
-        NewIndividualCollectionSheetScreen(
-            state = NewIndividualCollectionSheetUiState(isLoading = true),
-            getStaffList = {},
-            generateCollection = { _, _, _ ->
-            },
-            onDetail = { _, _ -> },
-        )
-        NewIndividualCollectionSheetScreen(
-            state = NewIndividualCollectionSheetUiState(individualCollectionSheet = IndividualCollectionSheet()),
-            getStaffList = {},
-            generateCollection = { _, _, _ ->
-            },
-            onDetail = { _, _ -> },
-        )
-    }
+private fun NewIndividualCollectionSheetPreview(
+    @PreviewParameter(NewIndividualCollectionSheetUiStateProvider::class)
+    newIndividualCollectionSheetUiState: NewIndividualCollectionSheetUiState,
+) {
+    NewIndividualCollectionSheetScreen(
+        state = newIndividualCollectionSheetUiState,
+        getStaffList = {},
+        generateCollection = { _, _, _ ->
+        },
+        onDetail = { _ -> },
+    )
 }
 
 val sampleStaffList = List(10) {
