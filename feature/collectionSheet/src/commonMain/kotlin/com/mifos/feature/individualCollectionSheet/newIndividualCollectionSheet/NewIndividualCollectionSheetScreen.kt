@@ -58,6 +58,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.mifos.core.common.utils.Constants
 import com.mifos.core.common.utils.DateHelper
 import com.mifos.core.designsystem.component.MifosBottomSheet
 import com.mifos.core.designsystem.component.MifosButton
@@ -92,8 +93,8 @@ internal fun NewIndividualCollectionSheetScreen(
                     officeId = id
                     transactionDate = date
                     staffId = idStaff
-                    locale = "en"
-                    dateFormat = "dd-MM-yyyy"
+                    locale = Constants.LOCALE_EN
+                    dateFormat = DateHelper.SHORT_MONTH
                 },
             )
         },
@@ -129,7 +130,7 @@ internal fun NewIndividualCollectionSheetScreen(
         initialSelectedDateMillis = repaymentDate,
         selectableDates = object : SelectableDates {
             override fun isSelectableDate(utcTimeMillis: Long): Boolean {
-                return utcTimeMillis >= Clock.System.now().toEpochMilliseconds()
+                return utcTimeMillis <= Clock.System.now().toEpochMilliseconds()
             }
         },
     )
