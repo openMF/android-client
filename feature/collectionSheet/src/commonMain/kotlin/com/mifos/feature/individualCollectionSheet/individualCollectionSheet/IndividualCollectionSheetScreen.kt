@@ -72,5 +72,5 @@ enum class IndividualCollectionSheetScreenContents {
 @Preview
 @Composable
 private fun IndividualCollectionSheetScreenPreview() {
-    IndividualCollectionSheetScreen(onBackPressed = {}, onDetail = { _, _ -> })
+    IndividualCollectionSheetScreen(onBackPressed = {}, onDetail = {  _ -> })
 }
