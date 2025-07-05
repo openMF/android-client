@@ -180,14 +180,14 @@ internal fun IndividualCollectionSheetDetailsScreen(
             } else {
                 LazyColumn {
                     sheet.clients?.toList()?.let {
-                        items(it.zip(loansAndClientNames)) { (client, loanAndClientName) ->
+                        itemsIndexed(it.zip(loansAndClientNames)) { index,(client, loanAndClientName) ->
                             IndividualCollectionSheetItem(
                                 client = client,
                                 loan = loanAndClientName.loan,
                                 onClick = {
                                     sheet.paymentTypeOptions?.let { paymentTypeOptions ->
                                         submit(
-                                            0,
+                                            index,
                                             payload,
                                             paymentTypeOptions.map { it.name.toString() },
                                             loanAndClientName,
