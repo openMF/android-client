@@ -15,7 +15,9 @@ import com.mifos.core.model.utils.Parcelize
 import com.mifos.room.entities.noncore.DataTablePayload
 import com.mifos.room.utils.Entity
 import com.mifos.room.utils.PrimaryKey
+import com.mifos.room.utils.TypeConverter
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.Json
 
 @Parcelize
 @Serializable
@@ -63,7 +65,7 @@ data class ClientPayloadEntity(
 
     val clientClassificationId: Int? = null,
 
-//    var address: List<Address>? = emptyList(),
+    var address: List<Address>? = emptyList(),
 
     val dateFormat: String? = null,
 
@@ -74,3 +76,4 @@ data class ClientPayloadEntity(
     // 1 for Person (Individual client)
     val legalFormId: Int? = null,
 ) : Parcelable
+

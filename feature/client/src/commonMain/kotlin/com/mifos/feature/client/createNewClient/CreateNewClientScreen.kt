@@ -85,6 +85,7 @@ import androidx.compose.material3.Checkbox
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SelectableDates
 import androidx.compose.material3.SnackbarDuration
@@ -481,52 +482,6 @@ private fun CreateNewClientContent(
             onExternalIdChange = { externalId = it },
         )
 
-        if (isAddressEnabled && addressTemplate != null) {
-            val sortedAddressTypeOptions = addressTemplate.addressTypeIdOptions.sortedBy { it.name }
-            val sortedCountryOptions = addressTemplate.countryIdOptions.sortedBy { it.name }
-            val sortedStateOptions = addressTemplate.stateProvinceIdOptions.sortedBy { it.name }
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            AddressInputTextFields(
-                addressLine1 = addressLine1,
-                onAddressLine1Change = { addressLine1 = it },
-                addressLine2 = addressLine2,
-                onAddressLine2Change = { addressLine2 = it },
-                addressLine3 = addressLine3,
-                onAddressLine3Change = { addressLine3 = it },
-                city = city,
-                onCityChange = { city = it },
-                postalCode = postalCode,
-                onPostalCodeChange = { postalCode = it },
-                selectedAddressType = selectedAddressType,
-                onAddressTypeChanged = { selectedAddressType = it },
-                onAddressTypeSelected = { index, value ->
-                    selectedAddressType = value
-                    selectedAddressTypeId = sortedAddressTypeOptions[index].id
-                },
-                addressTypeOptions = sortedAddressTypeOptions.map { it.name },
-                selectedStateName = selectedStateName,
-                onStateNameChanged = { selectedStateName = it },
-                onStateSelected = { index, value ->
-                    selectedStateName = value
-                    selectedStateProvinceId = sortedStateOptions[index].id
-                },
-                stateOptions = sortedStateOptions.map { it.name },
-
-                selectedCountryName = selectedCountryName,
-                onCountryNameChanged = { selectedCountryName = it },
-                onCountrySelected = { index, value ->
-                    selectedCountryName = value
-                    selectedCountryId = sortedCountryOptions[index].id
-                },
-                countryOptions = sortedCountryOptions.map { it.name },
-
-                isAddressActive = isAddressActive,
-                onAddressActiveChange = { isAddressActive = it },
-            )
-        }
-
         Spacer(modifier = Modifier.height(16.dp))
 
         clientTemplate.genderOptions?.let { list ->
@@ -652,6 +607,55 @@ private fun CreateNewClientContent(
             )
         }
 
+        if (isAddressEnabled && addressTemplate != null) {
+            val sortedAddressTypeOptions = addressTemplate.addressTypeIdOptions.sortedBy { it.name }
+            val sortedCountryOptions = addressTemplate.countryIdOptions.sortedBy { it.name }
+            val sortedStateOptions = addressTemplate.stateProvinceIdOptions.sortedBy { it.name }
+
+            HorizontalDivider(modifier = Modifier.padding(16.dp))
+
+            Text("Address:",Modifier.padding(horizontal=16.dp))
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            AddressInputTextFields(
+                addressLine1 = addressLine1,
+                onAddressLine1Change = { addressLine1 = it },
+                addressLine2 = addressLine2,
+                onAddressLine2Change = { addressLine2 = it },
+                addressLine3 = addressLine3,
+                onAddressLine3Change = { addressLine3 = it },
+                city = city,
+                onCityChange = { city = it },
+                postalCode = postalCode,
+                onPostalCodeChange = { postalCode = it },
+                selectedAddressType = selectedAddressType,
+                onAddressTypeChanged = { selectedAddressType = it },
+                onAddressTypeSelected = { index, value ->
+                    selectedAddressType = value
+                    selectedAddressTypeId = sortedAddressTypeOptions[index].id
+                },
+                addressTypeOptions = sortedAddressTypeOptions.map { it.name },
+                selectedStateName = selectedStateName,
+                onStateNameChanged = { selectedStateName = it },
+                onStateSelected = { index, value ->
+                    selectedStateName = value
+                    selectedStateProvinceId = sortedStateOptions[index].id
+                },
+                stateOptions = sortedStateOptions.map { it.name },
+
+                selectedCountryName = selectedCountryName,
+                onCountryNameChanged = { selectedCountryName = it },
+                onCountrySelected = { index, value ->
+                    selectedCountryName = value
+                    selectedCountryId = sortedCountryOptions[index].id
+                },
+                countryOptions = sortedCountryOptions.map { it.name },
+
+                isAddressActive = isAddressActive,
+                onAddressActiveChange = { isAddressActive = it },
+            )
+        }
         Spacer(modifier = Modifier.height(16.dp))
 
         Button(
@@ -803,7 +807,7 @@ private fun createClientPayload(
         address.countryId = countryId
         address.postalCode = postalCode
         address.isActive = isAddressActive
-//        clientPayload = clientPayload.copy(address = listOf(address))
+        clientPayload = clientPayload.copy(address = listOf(address))
     }
 
     // Optional fields
