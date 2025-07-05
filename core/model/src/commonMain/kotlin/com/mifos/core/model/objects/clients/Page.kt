@@ -18,5 +18,5 @@ import kotlinx.serialization.Serializable
 data class Page<T>(
     var totalFilteredRecords: Int = 0,
 
-    var pageItems: List<T> = ArrayList(),
+    var pageItems: List<T> = emptyList(),
 )

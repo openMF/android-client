@@ -84,6 +84,7 @@
     <string name="feature_client_charge_locale">Locale</string>
     <string name="feature_client_failed_to_load_charges">Failed To Load Charges</string>
     <string name="feature_client_failed_to_create_charge">Failed To Create Charge</string>
+    <string name="feature_client_no_charges_found">No Charges Found</string>
 
     <string name="feature_client_failed_to_load_identifiers">Failed To Load Identifiers</string>
     <string name="feature_client_failed_to_create_identifier">Failed To Create Identifier</string>

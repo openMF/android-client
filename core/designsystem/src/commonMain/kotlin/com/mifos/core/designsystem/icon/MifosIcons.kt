@@ -45,6 +45,7 @@ import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.Paid
+import androidx.compose.material.icons.filled.Payments
 import androidx.compose.material.icons.filled.People
 import androidx.compose.material.icons.filled.Phone
 import androidx.compose.material.icons.filled.RealEstateAgent
@@ -199,4 +200,6 @@ object MifosIcons {
     val Groups = Icons.Outlined.Groups
     val HomeWork = Icons.Outlined.HomeWork
     val AddFilled = Icons.Filled.Add
+
+    val Payments = Icons.Filled.Payments
 }
