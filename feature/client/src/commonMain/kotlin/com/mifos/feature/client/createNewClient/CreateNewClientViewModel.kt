@@ -21,7 +21,6 @@ import androidclient.feature.client.generated.resources.feature_client_failed_to
 import androidclient.feature.client.generated.resources.feature_client_waiting_for_checker_approval
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import co.touchlab.kermit.Logger
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.common.utils.MFErrorParser
 import com.mifos.core.data.repository.CreateNewClientRepository
@@ -55,10 +54,9 @@ class CreateNewClientViewModel(
     private val _showOffices = MutableStateFlow<List<OfficeEntity>>(emptyList())
     val showOffices: StateFlow<List<OfficeEntity>> get() = _showOffices
 
-    private val _isAddressEnabled = MutableStateFlow(false)
+    private val isAddressEnabled = MutableStateFlow(false)
 
-    private val _addressTemplate = MutableStateFlow<AddressTemplate?>(null)
-
+    private val addressTemplate = MutableStateFlow<AddressTemplate?>(null)
 
     private val selectedImage = MutableStateFlow<PlatformFile?>(null)
 
@@ -83,8 +81,8 @@ class CreateNewClientViewModel(
                 _createNewClientUiState.value =
                     CreateNewClientUiState.ShowClientTemplate(
                         clientsTemplate = it.data ?: ClientsTemplateEntity(),
-                        isAddressEnabled = _isAddressEnabled.value,
-                        addressTemplate = _addressTemplate.value ?: AddressTemplate(),
+                        isAddressEnabled = isAddressEnabled.value,
+                        addressTemplate = addressTemplate.value ?: AddressTemplate(),
                     )
             }
         }
@@ -119,7 +117,7 @@ class CreateNewClientViewModel(
     suspend fun loadAddressConfiguration() {
         try {
             val addressConfig = repository.getAddressConfiguration()
-            _isAddressEnabled.value = addressConfig.enabled
+            isAddressEnabled.value = addressConfig.enabled
 
             if (addressConfig.enabled) {
                 loadAddressTemplate()
@@ -133,7 +131,7 @@ class CreateNewClientViewModel(
     suspend fun loadAddressTemplate() {
         try {
             val template = repository.getAddressTemplate()
-            _addressTemplate.value = template
+            addressTemplate.value = template
         } catch (e: Exception) {
             _createNewClientUiState.value =
                 CreateNewClientUiState.ShowError(Res.string.feature_client_failed_to_fetch_address_template)
@@ -142,7 +140,6 @@ class CreateNewClientViewModel(
 
     fun createClient(clientPayload: ClientPayloadEntity) {
         viewModelScope.launch {
-
             _createNewClientUiState.value = CreateNewClientUiState.ShowProgressbar
 
             try {

@@ -617,7 +617,7 @@ private fun CreateNewClientContent(
 
             Text(
                 stringResource(Res.string.feature_client_address),
-                Modifier.padding(horizontal=16.dp)
+                Modifier.padding(horizontal = 16.dp),
             )
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -801,16 +801,17 @@ private fun createClientPayload(
         locale = locale,
     )
     if (isAddressEnabled) {
-        val address = Address()
-        address.addressTypeId = addressTypeId
-        address.addressLine1 = addressLine1
-        address.addressLine2 = addressLine2
-        address.addressLine3 = addressLine3
-        address.city = city
-        address.stateProvinceId = stateProvinceId
-        address.countryId = countryId
-        address.postalCode = postalCode
-        address.isActive = isAddressActive
+        val address = Address(
+            addressTypeId = addressTypeId,
+            isActive = isAddressActive,
+            addressLine1 = addressLine1,
+            addressLine2 = addressLine2,
+            addressLine3 = addressLine3,
+            city = city,
+            stateProvinceId = stateProvinceId,
+            countryId = countryId,
+            postalCode = postalCode,
+        )
         clientPayload = clientPayload.copy(address = listOf(address))
     }
 
