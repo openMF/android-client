@@ -56,13 +56,9 @@ class CreateNewClientViewModel(
     val showOffices: StateFlow<List<OfficeEntity>> get() = _showOffices
 
     private val _isAddressEnabled = MutableStateFlow(false)
-    val isAddressEnabled: StateFlow<Boolean> get() = _isAddressEnabled
 
     private val _addressTemplate = MutableStateFlow<AddressTemplate?>(null)
-    val addressTemplate: StateFlow<AddressTemplate?> get() = _addressTemplate
 
-    private val _clientsTemplate = MutableStateFlow<ClientsTemplateEntity?>(null)
-    val clientsTemplate: StateFlow<ClientsTemplateEntity?> get() = _clientsTemplate
 
     private val selectedImage = MutableStateFlow<PlatformFile?>(null)
 
@@ -83,11 +79,10 @@ class CreateNewClientViewModel(
                 _createNewClientUiState.value =
                     CreateNewClientUiState.ShowError(Res.string.feature_client_failed_to_fetch_client_template)
             }.collect {
-                _clientsTemplate.value = it.data
                 loadAddressConfiguration()
                 _createNewClientUiState.value =
                     CreateNewClientUiState.ShowClientTemplate(
-                        it.data ?: ClientsTemplateEntity(),
+                        clientsTemplate = it.data ?: ClientsTemplateEntity(),
                         isAddressEnabled = _isAddressEnabled.value,
                         addressTemplate = _addressTemplate.value ?: AddressTemplate(),
                     )
