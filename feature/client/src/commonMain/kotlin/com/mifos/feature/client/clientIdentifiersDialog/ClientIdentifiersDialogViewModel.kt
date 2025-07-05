@@ -65,8 +65,13 @@ class ClientIdentifiersDialogViewModel(
 
                     is DataState.Success ->
                         _clientIdentifierDialogUiState.value =
-                            ClientIdentifierDialogUiState.IdentifierCreatedSuccessfully
+                            ClientIdentifierDialogUiState
+                                .IdentifierCreatedSuccessfully
                 }
             }
         }
+
+    fun resetUiState() {
+        _clientIdentifierDialogUiState.value = ClientIdentifierDialogUiState.Loading
+    }
 }
