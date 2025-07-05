@@ -21,7 +21,11 @@ sealed class ChargeDialogUiState {
 
     data class Error(val message: StringResource) : ChargeDialogUiState()
 
-    data class AllChargesV2(val chargeTemplate: ChargeTemplate) : ChargeDialogUiState()
+    data class AllChargesV2(
+        val chargeTemplate: ChargeTemplate,
+        val selectedChargeName: String,
+        val selectedChargeId: Int,
+    ) : ChargeDialogUiState()
 
     data object ChargesCreatedSuccessfully : ChargeDialogUiState()
 }

@@ -62,7 +62,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.mifos.core.common.utils.Constants.DATE_FORMAT_LONG
+import com.mifos.core.common.utils.Constants.LOCALE_EN
 import com.mifos.core.common.utils.DateHelper
+import com.mifos.core.common.utils.formatDate
 import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosDatePickerTextField
 import com.mifos.core.designsystem.component.MifosOutlinedTextField
@@ -112,7 +115,7 @@ internal fun ChargeDialogScreen(
 ) {
     var amount by rememberSaveable { mutableStateOf("") }
     var amountError by rememberSaveable { mutableStateOf(false) }
-    val locale by rememberSaveable { mutableStateOf("en") }
+    val locale by rememberSaveable { mutableStateOf(LOCALE_EN) }
     var dueDate by rememberSaveable { mutableLongStateOf(Clock.System.now().toEpochMilliseconds()) }
 
     val snackbarHostState = remember { SnackbarHostState() }
@@ -175,8 +178,8 @@ internal fun ChargeDialogScreen(
             ) {
                 when (state) {
                     is ChargeDialogUiState.AllChargesV2 -> {
-                        var name by rememberSaveable { mutableStateOf(state.chargeTemplate.chargeOptions.first().name) }
-                        var chargeId by rememberSaveable { mutableIntStateOf(state.chargeTemplate.chargeOptions.first().id) }
+                        var name by rememberSaveable { mutableStateOf(state.selectedChargeName) }
+                        var chargeId by rememberSaveable { mutableIntStateOf(state.selectedChargeId) }
 
                         Column(modifier = Modifier.padding(20.dp)) {
                             Row(
@@ -255,13 +258,12 @@ internal fun ChargeDialogScreen(
                             Button(
                                 onClick = {
                                     if (validateInput()) {
-                                        val payload = ChargesPayload().apply {
-                                            this.amount = amount
-                                            this.locale = locale
-                                            this.dateFormat = "dd MMMM yyyy"
-                                            this.chargeId = chargeId
-                                            this.dueDate = DateHelper.getDateAsStringFromLong(dueDate)
-                                        }
+                                        val payload = ChargesPayload(
+                                            locale = locale,
+                                            dateFormat = DATE_FORMAT_LONG,
+                                            chargeId = chargeId,
+                                            dueDate = formatDate(dueDate),
+                                        )
                                         onCreate(payload)
                                     }
                                 },
@@ -308,7 +310,11 @@ private class ChargeDialogScreenUiStateProvider : PreviewParameterProvider<Charg
 
     override val values: Sequence<ChargeDialogUiState>
         get() = sequenceOf(
-            ChargeDialogUiState.AllChargesV2(ChargeTemplate(false, emptyList())),
+            ChargeDialogUiState.AllChargesV2(
+                ChargeTemplate(false, emptyList()),
+                selectedChargeName = "Charges Name",
+                selectedChargeId = 0,
+            ),
             ChargeDialogUiState.Error(Res.string.feature_client_failed_to_load_charges),
             ChargeDialogUiState.Loading,
             ChargeDialogUiState.ChargesCreatedSuccessfully,

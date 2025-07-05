@@ -40,11 +40,20 @@ class ChargeDialogViewModel(
 
                 is DataState.Loading -> _chargeDialogUiState.value = ChargeDialogUiState.Loading
 
-                is DataState.Success ->
+                is DataState.Success -> {
+                    val chargeTemplate = result.data
+
+                    val firstOption = chargeTemplate.chargeOptions.firstOrNull()
+                    val initialName = firstOption?.name ?: ""
+                    val initialId = firstOption?.id ?: -1
+
                     _chargeDialogUiState.value =
                         ChargeDialogUiState.AllChargesV2(
-                            result.data,
+                            chargeTemplate = chargeTemplate,
+                            selectedChargeName = initialName,
+                            selectedChargeId = initialId,
                         )
+                }
             }
         }
     }
