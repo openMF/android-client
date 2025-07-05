@@ -16,7 +16,8 @@ import androidclient.feature.client.generated.resources.feature_client_descripti
 import androidclient.feature.client.generated.resources.feature_client_documents
 import androidclient.feature.client.generated.resources.feature_client_failed_to_load_client_identifiers
 import androidclient.feature.client.generated.resources.feature_client_id
-import androidclient.feature.client.generated.resources.feature_client_identifier_deleted
+import androidclient.feature.client.generated.resources.feature_client_identifier_created_successfully
+import androidclient.feature.client.generated.resources.feature_client_identifier_deleted_successfully
 import androidclient.feature.client.generated.resources.feature_client_identifiers
 import androidclient.feature.client.generated.resources.feature_client_remove
 import androidclient.feature.client.generated.resources.feature_client_there_is_no_identifier_to_show
@@ -43,7 +44,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -66,6 +66,7 @@ import com.mifos.core.model.objects.noncoreobjects.Identifier
 import com.mifos.core.ui.components.MifosEmptyUi
 import com.mifos.core.ui.util.DevicePreview
 import com.mifos.feature.client.clientIdentifiersDialog.ClientIdentifiersDialogScreen
+import com.mifos.feature.client.clientIdentifiersDialog.ClientIdentifiersDialogViewModel
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.getString
 import org.jetbrains.compose.resources.stringResource
@@ -77,34 +78,40 @@ import org.koin.compose.viewmodel.koinViewModel
 internal fun ClientIdentifiersScreen(
     onBackPressed: () -> Unit,
     onDocumentClicked: (Int) -> Unit,
-    viewModel: ClientIdentifiersViewModel = koinViewModel(),
+    clientIdentifiersviewModel: ClientIdentifiersViewModel = koinViewModel(),
+    clientIdentifiersDialogViewModel: ClientIdentifiersDialogViewModel = koinViewModel(),
 ) {
-    val clientId by viewModel.clientId.collectAsStateWithLifecycle()
-    val state by viewModel.clientIdentifiersUiState.collectAsStateWithLifecycle()
-    val refreshState by viewModel.isRefreshing.collectAsStateWithLifecycle()
-
-    LaunchedEffect(Unit) {
-        viewModel.loadIdentifiers(clientId)
-    }
+    val clientId by clientIdentifiersviewModel.clientId.collectAsStateWithLifecycle()
+    val state by clientIdentifiersviewModel.clientIdentifiersUiState.collectAsStateWithLifecycle()
+    val refreshState by clientIdentifiersviewModel.isRefreshing.collectAsStateWithLifecycle()
 
     ClientIdentifiersScreen(
         clientId = clientId,
         state = state,
         onBackPressed = onBackPressed,
         onDeleteIdentifier = { identifierId ->
-            viewModel.deleteIdentifier(clientId, identifierId)
+            clientIdentifiersviewModel.deleteIdentifier(clientId, identifierId)
         },
         refreshState = refreshState,
         onRefresh = {
-            viewModel.refreshIdentifiersList(clientId)
+            clientIdentifiersviewModel.refreshIdentifiersList(clientId)
         },
         onRetry = {
-            viewModel.loadIdentifiers(clientId)
+            clientIdentifiersviewModel.loadIdentifiers(clientId)
         },
         onIdentifierCreated = {
-            viewModel.loadIdentifiers(clientId)
+            // resetUiState() is needed here to clear the success state immediately after successful
+            // client identifier creation, so that reopening the dialog doesn’t reuse stale state and
+            // accidentally retrigger main screen loading.
+            // Downside: this causes two back-to-back loading states — one in the dialog and one on
+            // the main screen.
+            clientIdentifiersDialogViewModel.resetUiState()
+            clientIdentifiersviewModel.loadIdentifiers(clientId)
         },
         onDocumentClicked = onDocumentClicked,
+        onIdentifierDeleted = {
+            clientIdentifiersviewModel.loadIdentifiers(clientId)
+        },
     )
 }
 
@@ -119,10 +126,13 @@ internal fun ClientIdentifiersScreen(
     onRetry: () -> Unit,
     onIdentifierCreated: () -> Unit,
     onDocumentClicked: (Int) -> Unit,
+    onIdentifierDeleted: () -> Unit,
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
     val pullToRefreshState = rememberPullToRefreshState()
     var showCreateIdentifierDialog by remember { mutableStateOf(false) }
+    val scope = rememberCoroutineScope()
+    var showCreateSuccessMessage by remember { mutableStateOf(false) }
 
     if (showCreateIdentifierDialog) {
         ClientIdentifiersDialogScreen(
@@ -130,6 +140,7 @@ internal fun ClientIdentifiersScreen(
             onDismiss = { showCreateIdentifierDialog = false },
             onIdentifierCreated = {
                 showCreateIdentifierDialog = false
+                showCreateSuccessMessage = true
                 onIdentifierCreated()
             },
         )
@@ -158,8 +169,6 @@ internal fun ClientIdentifiersScreen(
                 onRefresh = onRefresh,
                 isRefreshing = refreshState,
             ) {
-                val scope = rememberCoroutineScope()
-
                 when (state) {
                     is ClientIdentifiersUiState.ClientIdentifiers -> {
                         when (state.identifiers.isEmpty()) {
@@ -187,11 +196,10 @@ internal fun ClientIdentifiersScreen(
                     }
 
                     is ClientIdentifiersUiState.IdentifierDeletedSuccessfully -> {
+                        onIdentifierDeleted()
                         scope.launch {
                             snackbarHostState.showSnackbar(
-                                message = getString(
-                                    Res.string.feature_client_identifier_deleted,
-                                ),
+                                message = getString(state.message),
                             )
                         }
                     }
@@ -200,6 +208,16 @@ internal fun ClientIdentifiersScreen(
                 }
             }
         }
+    }
+    if (showCreateSuccessMessage) {
+        scope.launch {
+            snackbarHostState.showSnackbar(
+                message = getString(
+                    Res.string.feature_client_identifier_created_successfully,
+                ),
+            )
+        }
+        showCreateSuccessMessage = false
     }
 }
 
@@ -322,7 +340,7 @@ private class ClientIdentifiersUiStateProvider :
         get() = sequenceOf(
             ClientIdentifiersUiState.Loading,
             ClientIdentifiersUiState.Error(Res.string.feature_client_failed_to_load_client_identifiers),
-            ClientIdentifiersUiState.IdentifierDeletedSuccessfully,
+            ClientIdentifiersUiState.IdentifierDeletedSuccessfully(Res.string.feature_client_identifier_deleted_successfully),
             ClientIdentifiersUiState.ClientIdentifiers(sampleClientIdentifiers),
         )
 }
@@ -342,9 +360,9 @@ private fun ClientIdentifiersScreenPreview(
         onRetry = {},
         onIdentifierCreated = {},
         onDocumentClicked = {},
+        onIdentifierDeleted = {},
     )
 }
-
 val sampleClientIdentifiers = List(10) {
     Identifier(id = it, description = "description $it")
 }
