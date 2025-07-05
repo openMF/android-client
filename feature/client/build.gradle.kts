@@ -38,6 +38,8 @@ kotlin {
             implementation(libs.filekit.core)
             implementation(libs.filekit.compose)
             implementation(libs.filekit.dialog.compose)
+
+            implementation(libs.compose.signature)
         }
         
         androidMain.dependencies {
