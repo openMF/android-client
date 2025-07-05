@@ -11,6 +11,7 @@ package com.mifos.feature.client.createNewClient
 
 import androidclient.feature.client.generated.resources.Res
 import androidclient.feature.client.generated.resources.feature_client_Image_Upload_Successful
+import androidclient.feature.client.generated.resources.feature_client_address
 import androidclient.feature.client.generated.resources.feature_client_address_active
 import androidclient.feature.client.generated.resources.feature_client_address_line_1
 import androidclient.feature.client.generated.resources.feature_client_address_line_2
@@ -614,7 +615,10 @@ private fun CreateNewClientContent(
 
             HorizontalDivider(modifier = Modifier.padding(16.dp))
 
-            Text("Address:",Modifier.padding(horizontal=16.dp))
+            Text(
+                stringResource(Res.string.feature_client_address),
+                Modifier.padding(horizontal=16.dp)
+            )
 
             Spacer(modifier = Modifier.height(16.dp))
 
