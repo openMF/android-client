@@ -46,7 +46,7 @@ class LoansPayload(
     var repaymentFrequencyDayOfWeekType: Int? = null,
     var repaymentFrequencyNthDayType: Int? = null,
     var submittedOnDate: String? = null,
-    var transactionProcessingStrategyId: Int? = null,
+//    var transactionProcessingStrategyId: Int? = null,
     var loanPurposeId: Int? = null,
     var loanOfficerId: Int? = null,
     var fundId: Int? = null,
