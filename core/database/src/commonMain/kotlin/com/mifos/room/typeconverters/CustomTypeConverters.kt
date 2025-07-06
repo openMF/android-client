@@ -24,6 +24,7 @@ import com.mifos.core.model.objects.account.saving.InterestCalculationType
 import com.mifos.core.model.objects.account.saving.InterestCompoundingPeriodType
 import com.mifos.core.model.objects.account.saving.InterestPostingPeriodType
 import com.mifos.core.model.objects.account.saving.LockinPeriodFrequencyType
+import com.mifos.core.model.objects.clients.Address
 import com.mifos.room.entities.PaymentTypeOptionEntity
 import com.mifos.room.entities.Timeline
 import com.mifos.room.entities.accounts.loans.ActualDisbursementDateEntity
@@ -692,4 +693,12 @@ class CustomTypeConverters {
     fun toResponseDatasList(json: String?): List<ResponseDatasEntity>? {
         return json?.let { Json.decodeFromString(it) }
     }
+
+    @TypeConverter
+    fun fromAddressList(addressList: List<Address>?): String? =
+        addressList?.let { Json.encodeToString(it) }
+
+    @TypeConverter
+    fun toAddressList(json: String?): List<Address>? =
+        json?.let { Json.decodeFromString(it) }
 }
