@@ -589,7 +589,6 @@ private fun LoanAccountContent(
         Button(
             onClick = {
                 val loadPayload = LoansPayload(
-
                     allowPartialPeriodInterestCalcualtion = selectedCalculateExactDaysIn,
                     amortizationType = selectedAmortizationId,
                     clientId = clientsId,
