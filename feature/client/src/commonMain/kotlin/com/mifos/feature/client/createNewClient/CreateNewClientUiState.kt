@@ -9,6 +9,7 @@
  */
 package com.mifos.feature.client.createNewClient
 
+import com.mifos.room.entities.client.AddressTemplate
 import com.mifos.room.entities.templates.clients.ClientsTemplateEntity
 import org.jetbrains.compose.resources.StringResource
 
@@ -27,7 +28,11 @@ sealed class CreateNewClientUiState {
 
     data class OnImageUploadSuccess(val message: StringResource) : CreateNewClientUiState()
 
-    data class ShowClientTemplate(val clientsTemplate: ClientsTemplateEntity) : CreateNewClientUiState()
+    data class ShowClientTemplate(
+        val clientsTemplate: ClientsTemplateEntity,
+        val isAddressEnabled: Boolean,
+        val addressTemplate: AddressTemplate? = null,
+    ) : CreateNewClientUiState()
 
     data class ShowClientCreatedSuccessfully(val message: StringResource) : CreateNewClientUiState()
 

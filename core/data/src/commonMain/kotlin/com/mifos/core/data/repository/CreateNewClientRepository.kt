@@ -10,6 +10,8 @@
 package com.mifos.core.data.repository
 
 import com.mifos.core.common.utils.DataState
+import com.mifos.room.entities.client.AddressConfiguration
+import com.mifos.room.entities.client.AddressTemplate
 import com.mifos.room.entities.client.ClientPayloadEntity
 import com.mifos.room.entities.organisation.OfficeEntity
 import com.mifos.room.entities.organisation.StaffEntity
@@ -31,4 +33,8 @@ interface CreateNewClientRepository {
     suspend fun createClient(clientPayload: ClientPayloadEntity): Int?
 
     suspend fun uploadClientImage(clientId: Int, image: MultiPartFormDataContent)
+
+    suspend fun getAddressConfiguration(): AddressConfiguration
+
+    suspend fun getAddressTemplate(): AddressTemplate
 }

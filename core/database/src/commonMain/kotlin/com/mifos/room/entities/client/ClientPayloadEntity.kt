@@ -9,6 +9,7 @@
  */
 package com.mifos.room.entities.client
 
+import com.mifos.core.model.objects.clients.Address
 import com.mifos.core.model.utils.Parcelable
 import com.mifos.core.model.utils.Parcelize
 import com.mifos.room.entities.noncore.DataTablePayload
@@ -62,7 +63,7 @@ data class ClientPayloadEntity(
 
     val clientClassificationId: Int? = null,
 
-    val address: String? = null,
+    val address: List<Address>? = emptyList(),
 
     val dateFormat: String? = null,
 
@@ -70,7 +71,6 @@ data class ClientPayloadEntity(
 
     val datatables: List<DataTablePayload>? = null,
 
-    // TODO add legal form id field
     // 1 for Person (Individual client)
     val legalFormId: Int? = null,
 ) : Parcelable
