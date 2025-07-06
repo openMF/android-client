@@ -613,7 +613,7 @@ private fun LoanAccountContent(
                     loanTermFrequencyType = loanTermsTypeFrequency
                     repaymentFrequencyType = loanTermsTypeFrequency
                     repaymentFrequencyDayOfWeekType = repaidEveryTypeFrequency
-                    repaymentFrequencyNthDayType = 1 // todo : based on new ui pass this value from textfield
+                    repaymentFrequencyNthDayType = 1 // todo : based on new ui pass this value from textfield in web app it is select on in repaid Every
                     transactionProcessingStrategyCode = selectedRepaymentStrategyId
                     fundId = selectedFundId
                     interestType = selectedInterestTypeMethodId
