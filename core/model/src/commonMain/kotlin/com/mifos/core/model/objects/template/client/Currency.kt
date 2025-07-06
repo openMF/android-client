@@ -16,11 +16,11 @@ import kotlinx.serialization.Serializable
 @Serializable
 @Parcelize
 data class Currency(
-    val code: String,
-    val name: String,
-    val decimalPlaces: Double,
-    val inMultiplesOf: Int,
-    val displaySymbol: String,
-    val nameCode: String,
-    val displayLabel: String,
+    val code: String? = null,
+    val name: String? = null,
+    val decimalPlaces: Double? = null,
+    val inMultiplesOf: Int? = null,
+    val displaySymbol: String? = null,
+    val nameCode: String? = null,
+    val displayLabel: String? = null,
 ) : Parcelable

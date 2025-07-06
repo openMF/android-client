@@ -13,9 +13,9 @@ package com.mifos.feature.client.clientCharges
 
 import androidclient.feature.client.generated.resources.Res
 import androidclient.feature.client.generated.resources.feature_client_charge_amount
+import androidclient.feature.client.generated.resources.feature_client_charge_id
 import androidclient.feature.client.generated.resources.feature_client_charge_name
 import androidclient.feature.client.generated.resources.feature_client_charges
-import androidclient.feature.client.generated.resources.feature_client_client_id
 import androidclient.feature.client.generated.resources.feature_client_due_date
 import androidclient.feature.client.generated.resources.feature_client_failed_to_load_client_charges
 import androidx.compose.foundation.layout.Column
@@ -48,6 +48,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.PagingData
+import com.mifos.core.common.utils.CurrencyFormatter
+import com.mifos.core.common.utils.DateHelper
 import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
@@ -157,6 +159,8 @@ expect fun ClientChargeContent(
 
 @Composable
 fun ChargesItems(charges: ChargesEntity) {
+    val currencyCode = charges.currency?.code ?: ""
+
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -166,7 +170,7 @@ fun ChargesItems(charges: ChargesEntity) {
     ) {
         Spacer(modifier = Modifier.height(8.dp))
         MifosCenterDetailsText(
-            stringResource(Res.string.feature_client_client_id),
+            stringResource(Res.string.feature_client_charge_id),
             charges.chargeId.toString(),
         )
         MifosCenterDetailsText(
@@ -175,11 +179,15 @@ fun ChargesItems(charges: ChargesEntity) {
         )
         MifosCenterDetailsText(
             stringResource(Res.string.feature_client_charge_amount),
-            charges.amount.toString(),
+            CurrencyFormatter.format(
+                charges.amount,
+                currencyCode,
+                2,
+            ),
         )
         MifosCenterDetailsText(
             stringResource(Res.string.feature_client_due_date),
-            charges.formattedDueDate,
+            DateHelper.getDateAsString(charges.dueDate ?: emptyList()),
         )
         Spacer(modifier = Modifier.height(8.dp))
     }
