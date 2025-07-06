@@ -22,14 +22,6 @@ class LoansPayload(
     var amortizationType: Int? = null,
     var clientId: Int? = null,
     var dateFormat: String? = null,
-
-    /* public String getDisbursementData() {
-       return disbursementData;
-   }
-
-   public void setDisbursementData(String disbursementData) {
-       this.disbursementData = disbursementData;
-   }*/
     var expectedDisbursementDate: String? = null,
     var interestCalculationPeriodType: Int? = null,
     var interestRatePerPeriod: Double? = null,
@@ -46,7 +38,7 @@ class LoansPayload(
     var repaymentFrequencyDayOfWeekType: Int? = null,
     var repaymentFrequencyNthDayType: Int? = null,
     var submittedOnDate: String? = null,
-//    var transactionProcessingStrategyId: Int? = null,
+    var transactionProcessingStrategyCode: String? = null,
     var loanPurposeId: Int? = null,
     var loanOfficerId: Int? = null,
     var fundId: Int? = null,
