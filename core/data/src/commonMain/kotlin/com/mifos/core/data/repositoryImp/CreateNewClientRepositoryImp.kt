@@ -15,6 +15,8 @@ import com.mifos.core.data.repository.CreateNewClientRepository
 import com.mifos.core.network.datamanager.DataManagerClient
 import com.mifos.core.network.datamanager.DataManagerOffices
 import com.mifos.core.network.datamanager.DataManagerStaff
+import com.mifos.room.entities.client.AddressConfiguration
+import com.mifos.room.entities.client.AddressTemplate
 import com.mifos.room.entities.client.ClientPayloadEntity
 import com.mifos.room.entities.organisation.OfficeEntity
 import com.mifos.room.entities.organisation.StaffEntity
@@ -52,5 +54,13 @@ class CreateNewClientRepositoryImp(
 
     override suspend fun uploadClientImage(clientId: Int, image: MultiPartFormDataContent) {
         return dataManagerClient.uploadClientImage(clientId, image)
+    }
+
+    override suspend fun getAddressConfiguration(): AddressConfiguration {
+        return dataManagerClient.getAddressConfiguration()
+    }
+
+    override suspend fun getAddressTemplate(): AddressTemplate {
+        return dataManagerClient.getAddressTemplate()
     }
 }

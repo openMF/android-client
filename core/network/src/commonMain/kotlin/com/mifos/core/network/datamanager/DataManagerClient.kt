@@ -29,6 +29,8 @@ import com.mifos.core.network.model.DeleteClientsClientIdIdentifiersIdentifierId
 import com.mifos.core.network.model.PostClientsClientIdRequest
 import com.mifos.core.network.model.PostClientsClientIdResponse
 import com.mifos.room.entities.accounts.ClientAccounts
+import com.mifos.room.entities.client.AddressConfiguration
+import com.mifos.room.entities.client.AddressTemplate
 import com.mifos.room.entities.client.ClientEntity
 import com.mifos.room.entities.client.ClientPayloadEntity
 import com.mifos.room.entities.templates.clients.ClientsTemplateEntity
@@ -445,5 +447,26 @@ class DataManagerClient(
             ),
             "activate",
         )
+    }
+
+    /**Add commentMore actions
+     * Gets the address configuration.
+     *
+     * @return The address configuration.
+     */
+    suspend fun getAddressConfiguration(): AddressConfiguration {
+        return mBaseApiManager.clientsApi.getAddressConfiguration()
+    }
+
+    /**
+     * Gets the address template.
+     *
+     * The address template is a predefined format for addresses that can be used to ensure consistency
+     * and accuracy when collecting and storing address information.
+     *
+     * @return The address template.
+     */
+    suspend fun getAddressTemplate(): AddressTemplate {
+        return mBaseApiManager.clientsApi.getAddressTemplate()
     }
 }

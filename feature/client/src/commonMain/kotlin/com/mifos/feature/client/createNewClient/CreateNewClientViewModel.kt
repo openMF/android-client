@@ -13,6 +13,8 @@ import androidclient.feature.client.generated.resources.Res
 import androidclient.feature.client.generated.resources.feature_client_Image_Upload_Failed
 import androidclient.feature.client.generated.resources.feature_client_Image_Upload_Successful
 import androidclient.feature.client.generated.resources.feature_client_client_created_successfully
+import androidclient.feature.client.generated.resources.feature_client_failed_to_fetch_address_configuration
+import androidclient.feature.client.generated.resources.feature_client_failed_to_fetch_address_template
 import androidclient.feature.client.generated.resources.feature_client_failed_to_fetch_client_template
 import androidclient.feature.client.generated.resources.feature_client_failed_to_fetch_offices
 import androidclient.feature.client.generated.resources.feature_client_failed_to_fetch_staffs
@@ -24,6 +26,7 @@ import com.mifos.core.common.utils.MFErrorParser
 import com.mifos.core.data.repository.CreateNewClientRepository
 import com.mifos.feature.client.utils.compressImage
 import com.mifos.feature.client.utils.createImageRequestBody
+import com.mifos.room.entities.client.AddressTemplate
 import com.mifos.room.entities.client.ClientPayloadEntity
 import com.mifos.room.entities.organisation.OfficeEntity
 import com.mifos.room.entities.organisation.StaffEntity
@@ -51,6 +54,10 @@ class CreateNewClientViewModel(
     private val _showOffices = MutableStateFlow<List<OfficeEntity>>(emptyList())
     val showOffices: StateFlow<List<OfficeEntity>> get() = _showOffices
 
+    private val isAddressEnabled = MutableStateFlow(false)
+
+    private val addressTemplate = MutableStateFlow<AddressTemplate?>(null)
+
     private val selectedImage = MutableStateFlow<PlatformFile?>(null)
 
     fun updateSelectedImage(image: PlatformFile?) {
@@ -70,8 +77,13 @@ class CreateNewClientViewModel(
                 _createNewClientUiState.value =
                     CreateNewClientUiState.ShowError(Res.string.feature_client_failed_to_fetch_client_template)
             }.collect {
+                loadAddressConfiguration()
                 _createNewClientUiState.value =
-                    CreateNewClientUiState.ShowClientTemplate(it.data ?: ClientsTemplateEntity())
+                    CreateNewClientUiState.ShowClientTemplate(
+                        clientsTemplate = it.data ?: ClientsTemplateEntity(),
+                        isAddressEnabled = isAddressEnabled.value,
+                        addressTemplate = addressTemplate.value ?: AddressTemplate(),
+                    )
             }
         }
     }
@@ -99,6 +111,30 @@ class CreateNewClientViewModel(
                     is DataState.Success -> _staffInOffices.value = result.data
                 }
             }
+        }
+    }
+
+    suspend fun loadAddressConfiguration() {
+        try {
+            val addressConfig = repository.getAddressConfiguration()
+            isAddressEnabled.value = addressConfig.enabled
+
+            if (addressConfig.enabled) {
+                loadAddressTemplate()
+            }
+        } catch (e: Exception) {
+            _createNewClientUiState.value =
+                CreateNewClientUiState.ShowError(Res.string.feature_client_failed_to_fetch_address_configuration)
+        }
+    }
+
+    suspend fun loadAddressTemplate() {
+        try {
+            val template = repository.getAddressTemplate()
+            addressTemplate.value = template
+        } catch (e: Exception) {
+            _createNewClientUiState.value =
+                CreateNewClientUiState.ShowError(Res.string.feature_client_failed_to_fetch_address_template)
         }
     }
 
