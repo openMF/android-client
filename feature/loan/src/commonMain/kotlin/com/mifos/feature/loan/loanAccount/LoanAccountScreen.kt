@@ -591,36 +591,36 @@ private fun LoanAccountContent(
                 val loadPayload = LoansPayload(
 
                     allowPartialPeriodInterestCalcualtion = selectedCalculateExactDaysIn,
-                            amortizationType = selectedAmortizationId,
-                            clientId = clientsId,
-                            dateFormat = DateHelper.SHORT_MONTH,
-                            expectedDisbursementDate =
-                        DateHelper.getDateAsStringFromLong(
-                            disbursementDate,
-                        ),
-                                interestCalculationPeriodType = selectedInterestCalculationPeriodId,
-                                loanType = "individual",
-                            locale = Constants.LOCALE_EN,
-                            numberOfRepayments = numberOfRepayment.toInt(),
-                            principal = principalAmount.toDouble(),
-                            productId = selectedLoanProductId,
-                            repaymentEvery = repaidEvery.toInt(),
-                            submittedOnDate =
-                            DateHelper.getDateAsStringFromLong(
-                            submissionDate,
-                ),
-                loanPurposeId = selectedLoanPurposeId,
-                loanTermFrequency = loanTerms.toInt(),
-                loanTermFrequencyType = loanTermsTypeFrequency,
-                repaymentFrequencyType = loanTermsTypeFrequency,
-                repaymentFrequencyDayOfWeekType = repaidEveryTypeFrequency,
-                repaymentFrequencyNthDayType = 1 ,// todo : based on new ui pass this value from textfield in web app it is select on in repaid Every
-                transactionProcessingStrategyCode = selectedRepaymentStrategyId,
-                fundId = selectedFundId,
-                interestType = selectedInterestTypeMethodId,
-                loanOfficerId = selectedLoanOfficerId,
-                linkAccountId = selectedLinkSavingsId,
-                interestRatePerPeriod = nominal.toDouble(),
+                    amortizationType = selectedAmortizationId,
+                    clientId = clientsId,
+                    dateFormat = DateHelper.SHORT_MONTH,
+                    expectedDisbursementDate =
+                    DateHelper.getDateAsStringFromLong(
+                        disbursementDate,
+                    ),
+                    interestCalculationPeriodType = selectedInterestCalculationPeriodId,
+                    loanType = "individual",
+                    locale = Constants.LOCALE_EN,
+                    numberOfRepayments = numberOfRepayment.toInt(),
+                    principal = principalAmount.toDouble(),
+                    productId = selectedLoanProductId,
+                    repaymentEvery = repaidEvery.toInt(),
+                    submittedOnDate =
+                    DateHelper.getDateAsStringFromLong(
+                        submissionDate,
+                    ),
+                    loanPurposeId = selectedLoanPurposeId,
+                    loanTermFrequency = loanTerms.toInt(),
+                    loanTermFrequencyType = loanTermsTypeFrequency,
+                    repaymentFrequencyType = loanTermsTypeFrequency,
+                    repaymentFrequencyDayOfWeekType = repaidEveryTypeFrequency,
+                    repaymentFrequencyNthDayType = 1,
+                    transactionProcessingStrategyCode = selectedRepaymentStrategyId,
+                    fundId = selectedFundId,
+                    interestType = selectedInterestTypeMethodId,
+                    loanOfficerId = selectedLoanOfficerId,
+                    linkAccountId = selectedLinkSavingsId,
+                    interestRatePerPeriod = nominal.toDouble(),
                 )
                 if (loanTemplate.dataTables.isNotEmpty()) {
                     dataTable(loanTemplate.dataTables, loadPayload)
