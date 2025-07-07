@@ -12,7 +12,6 @@ class AndroidFeatureConventionPlugin : Plugin<Project> {
         with(target) {
             pluginManager.apply {
                 apply("mifos.android.library")
-                apply("mifos.android.hilt")
                 apply("mifos.android.koin")
             }
             extensions.configure<LibraryExtension> {
