@@ -1,12 +1,6 @@
 [versions]
-accompanistDrawablepainter = "0.36.0"
-accompanistSwiperefresh = "0.27.0"
 accompanistPermission = "0.34.0"
-adapterRxjava = "2.9.0"
 androidDesugarJdkLibs = "2.1.4"
-androidIconifyMaterial = "2.2.2"
-androidJob = "1.2.6"
-androidMapsUtils = "0.4.2"
 androidGradlePlugin = "8.7.3"
 androidTools = "31.8.0"
 androidxActivity = "1.10.0"
@@ -21,7 +15,6 @@ androidxComposeMaterial3 = "1.3.1"
 androidxCore = "1.15.0"
 androidxCoreSplashscreen = "1.0.1"
 androidxEspresso = "3.6.1"
-androidxHiltNavigationCompose = "1.2.0"
 androidxLifecycle = "2.8.7"
 androidxMacroBenchmark = "1.3.3"
 androidxBaselineProfile = "1.3.3"
@@ -44,11 +37,8 @@ androidxWindowManager = "1.3.0"
 androidxWork = "2.10.0"
 annotation = "1.9.1"
 compiler = "1.5.15"
-converterGson = "2.11.0"
 converterScalars = "2.11.0"
 coreTesting = "2.2.0"
-dbflow = "3.1.1"
-dbflowProcessor = "4.2.4"
 espressoIdlingResource = "3.6.1"
 espressoIntents = "3.6.1"
 fineractClientVersion = "0.0.1"
@@ -60,8 +50,6 @@ glide = "4.15.1"
 gmsPlugin = "4.4.2"
 googleOss = "17.1.0"
 googleOssPlugin = "0.10.6"
-hilt = "2.54"
-hiltExt = "1.2.0"
 jacoco = "0.8.7"
 junit4 = "4.13.2"
 junitJupiter = "5.8.2"
@@ -76,7 +64,6 @@ lifecycleExtensions = "2.2.0"
 lifecycleReactivestreamsKtx = "2.8.7"
 lint = "31.3.0"
 libphonenumberAndroidVersion = "8.13.35"
-leakcanaryVersion = '2.10'
 mapsCompose = "4.4.1"
 material = "1.12.0"
 materialIconsExtended = "1.6.2"
@@ -89,9 +76,6 @@ mockitoCore = "5.6.0"
 moshiVersion = '1.15.1'
 mockkVersion = "1.13.5"
 multidex = "2.0.1"
-navigationFragmentKtx = "2.8.5"
-navigationUiKtx = "2.8.5"
-okhttpVersion = "4.12.0"
 pagingRuntimeKtx = "3.3.5"
 playServicesLocation = "21.3.0"
 playServicesMaps = "19.0.0"
@@ -104,18 +88,13 @@ playUpdate = "2.1.0"
 playScanner = "16.1.0"
 playService = "18.5.0"
 realmVersion = "1.13.0"
-recyclerview = "1.4.0"
-retrofit2KotlinxSerializationConverter = "1.0.0"
 roborazzi = "1.26.0"
 room = "2.7.0-rc02"
 sqliteBundled = "2.5.0-alpha12"
 roomKtxVersion = "2.7.0-rc02"
 roomRuntimeVersion = "2.7.0-rc02"
 roomTestingVersion = "2.7.0-rc02"
-retrofit = "2.11.0"
 rxandroidVersion = "1.1.0"
-rxjava = "1.3.8"
-rxjava3 = "3.1.8" # 1.3.8
 rxandroid = "3.0.2" # 1.1.0
 dependencyGuard = "0.5.0"
 spotlessVersion = "6.25.0"
@@ -125,12 +104,6 @@ twitter-detekt-compose = "0.0.26"
 moduleGraph = "2.7.1"
 
 secrets = "2.0.1"
-stetho = "1.3.1"
-stethoOkhttp3 = "1.3.1"
-sweetError = "1.0.9"
-textdrawable = "558677ea31"
-turbine = "1.1.0"
-timberVersion = '5.0.1'
 truthVersion = '1.4.4'
 runtimeLivedata = "1.7.6"
 appcompat = "1.7.0"
@@ -156,7 +129,6 @@ koinAnnotationsVersion = "1.4.0-RC4"
 # CMP Libraries
 compose-plugin = "1.8.2"
 coil = "3.2.0"
-coil2 = "2.7.0"
 backHandlerVersion = "2.1.0"
 constraintLayout = "0.4.0"
 multiplatformSettings = "1.2.0"
@@ -213,25 +185,12 @@ androidx-paging-compose = { module = "androidx.paging:paging-compose", version.r
 androidx-paging-runtime-ktx = { module = "androidx.paging:paging-runtime-ktx", version.ref = "pagingRuntimeKtx" }
 androidx-paging-common-ktx = { module = "androidx.paging:paging-common-ktx", version.ref = "pagingRuntimeKtx" }
 androidx-paging-testing = { module = "androidx.paging:paging-testing", version.ref = "pagingRuntimeKtx" }
-
 androidx-preference-ktx = { module = "androidx.preference:preference-ktx", version.ref = "preferenceKtx" }
 
-#Androidx RecyclerView
-androidx-recyclerview = { module = "androidx.recyclerview:recyclerview", version.ref = "recyclerview" }
-
-#Android Maps
-android-maps-utils = { module = "com.google.maps.android:android-maps-utils", version.ref = "androidMapsUtils" }
-
-#Android Iconify
-android-iconify-material = { module = "com.joanzapata.iconify:android-iconify-material", version.ref = "androidIconifyMaterial" }
-
-#RxAndroid
+# RxAndroid
 mifos-koin-android = { module = "io.insert-koin:koin-android", version.ref = "koinAndroid" }
 koin-androidx-compose-v350 = { module = "io.insert-koin:koin-androidx-compose", version.ref = "koinAndroidxCompose" }
 maps-compose = { module = "com.google.maps.android:maps-compose", version.ref = "mapsCompose" }
-retrofit2-kotlinx-serialization-converter = { module = "com.jakewharton.retrofit:retrofit2-kotlinx-serialization-converter", version.ref = "retrofit2KotlinxSerializationConverter" }
-rxandroid = { module = "io.reactivex:rxandroid", version.ref = "rxandroidVersion" }
-rxjava = { module = "io.reactivex:rxjava", version.ref = "rxjava" }
 
 # Androidx Compose UI
 androidx-compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "androidxComposeBom" }
@@ -478,10 +437,7 @@ androidx-benchmark = { id = "androidx.benchmark", version.ref = "androidxBenchma
 androidx-navigation = {id = "androidx.navigation.safeargs", version.ref = "androidxNavigation"}
 
 # Hilt & Room Plugins
-hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
 room = { id = "androidx.room", version.ref = "room" }
-
-mifos-android-hilt = { id = "mifos.android.hilt", version = "unspecified" }
 mifos-android-room = { id = "mifos.android.room", version = "unspecified" }
 mifos-android-application = { id = "mifos.android.application", version = "unspecified" }
 mifos-android-application-compose = { id = "mifos.android.application.compose", version = "unspecified" }
