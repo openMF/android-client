@@ -481,10 +481,5 @@ dependencyGuard = { id = "com.dropbox.dependency-guard", version.ref = "dependen
 roborazzi = { id = "io.github.takahirom.roborazzi", version.ref = "roborazzi" }
 
 # Plugins defined by this project
-
 mifos-android-application-firebase = { id = "mifos.android.application.firebase", version = "unspecified" }
-mifos-android-application-jacoco = { id = "mifos.android.application.jacoco", version = "unspecified" }
-mifos-android-library-jacoco = { id = "mifos.android.library.jacoco", version = "unspecified" }
 mifos-android-lint = { id = "mifos.android.lint", version = "unspecified" }
-mifos-android-test = { id = "mifos.android.test", version = "unspecified" }
-mifos-jvm-library = { id = "mifos.jvm.library", version = "unspecified" }
