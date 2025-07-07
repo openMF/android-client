@@ -11,6 +11,7 @@ package com.mifos.feature.client.clientCharges
 
 import androidclient.feature.client.generated.resources.Res
 import androidclient.feature.client.generated.resources.feature_client_failed_to_load_client_charges
+import androidclient.feature.client.generated.resources.feature_client_failed_to_load_more_charges
 import androidclient.feature.client.generated.resources.feature_client_no_charges_found
 import androidclient.feature.client.generated.resources.feature_client_no_more_charges_available
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -66,7 +67,13 @@ actual fun ClientChargeContent(
                     }
 
                     when (chargesPagingList.loadState.append) {
-                        is LoadState.Error -> {}
+                        is LoadState.Error -> {
+                            item {
+                                MifosSweetError(message = stringResource(Res.string.feature_client_failed_to_load_more_charges)) {
+                                    onRetry()
+                                }
+                            }
+                        }
 
                         is LoadState.Loading -> {
                             item {
