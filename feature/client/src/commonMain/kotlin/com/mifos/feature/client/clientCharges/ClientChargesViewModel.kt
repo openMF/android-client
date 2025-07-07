@@ -25,19 +25,21 @@ class ClientChargesViewModel(
 
     val clientId = savedStateHandle.getStateFlow(key = Constants.CLIENT_ID, initialValue = 0)
 
-    // for refresh feature
+    private val _clientChargesUiState =
+        MutableStateFlow<ClientChargeUiState>(ClientChargeUiState.Loading)
+    val clientChargesUiState = _clientChargesUiState.asStateFlow()
     private val _isRefreshing = MutableStateFlow(false)
     val isRefreshing = _isRefreshing.asStateFlow()
+
+    init {
+        loadCharges(clientId = clientId.value)
+    }
 
     fun refreshCenterList(clientId: Int) {
         _isRefreshing.value = true
         loadCharges(clientId = clientId)
         _isRefreshing.value = false
     }
-
-    private val _clientChargesUiState =
-        MutableStateFlow<ClientChargeUiState>(ClientChargeUiState.Loading)
-    val clientChargesUiState = _clientChargesUiState.asStateFlow()
 
     fun loadCharges(clientId: Int) = viewModelScope.launch {
         val response = repository.getClientCharges(clientId)

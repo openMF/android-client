@@ -74,4 +74,8 @@ class ChargeDialogViewModel(
                 }
             }
         }
+
+    fun resetUiState() {
+        _chargeDialogUiState.value = ChargeDialogUiState.Loading
+    }
 }

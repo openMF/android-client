@@ -30,5 +30,5 @@ data class ChargeOptions(
     val chargeAppliesTo: ChargeAppliesTo,
     val chargeCalculationType: ChargeCalculationType,
     val chargePaymentMode: ChargePaymentMode,
-    val incomeOrLiabilityAccount: IncomeOrLiabilityAccount,
+    val incomeOrLiabilityAccount: IncomeOrLiabilityAccount? = null,
 ) : Parcelable

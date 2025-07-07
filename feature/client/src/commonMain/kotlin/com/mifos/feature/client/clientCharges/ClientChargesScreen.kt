@@ -13,6 +13,7 @@ package com.mifos.feature.client.clientCharges
 
 import androidclient.feature.client.generated.resources.Res
 import androidclient.feature.client.generated.resources.feature_client_charge_amount
+import androidclient.feature.client.generated.resources.feature_client_charge_created_successfully
 import androidclient.feature.client.generated.resources.feature_client_charge_id
 import androidclient.feature.client.generated.resources.feature_client_charge_name
 import androidclient.feature.client.generated.resources.feature_client_charges
@@ -36,10 +37,10 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -56,9 +57,12 @@ import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.ui.util.DevicePreview
 import com.mifos.feature.client.clientChargeDialog.ChargeDialogScreen
+import com.mifos.feature.client.clientChargeDialog.ChargeDialogViewModel
 import com.mifos.room.entities.client.ChargesEntity
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.launch
+import org.jetbrains.compose.resources.getString
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameterProvider
@@ -67,25 +71,23 @@ import org.koin.compose.viewmodel.koinViewModel
 @Composable
 internal fun ClientChargesScreen(
     onBackPressed: () -> Unit,
-    viewModel: ClientChargesViewModel = koinViewModel(),
+    clientChargesViewModel: ClientChargesViewModel = koinViewModel(),
+    chargeDialogViewModel: ChargeDialogViewModel = koinViewModel(),
 ) {
-    val clientId by viewModel.clientId.collectAsStateWithLifecycle()
-    val clientChargeUiState by viewModel.clientChargesUiState.collectAsStateWithLifecycle()
-    val refreshState by viewModel.isRefreshing.collectAsStateWithLifecycle()
-
-    LaunchedEffect(Unit) {
-        viewModel.loadCharges(clientId)
-    }
+    val clientId by clientChargesViewModel.clientId.collectAsStateWithLifecycle()
+    val clientChargeUiState by clientChargesViewModel.clientChargesUiState.collectAsStateWithLifecycle()
+    val refreshState by clientChargesViewModel.isRefreshing.collectAsStateWithLifecycle()
 
     ClientChargesScreen(
         clientId = clientId,
         state = clientChargeUiState,
         onBackPressed = onBackPressed,
-        onRetry = { viewModel.loadCharges(clientId) },
-        onRefresh = { viewModel.refreshCenterList(clientId) },
+        onRetry = { clientChargesViewModel.loadCharges(clientId) },
+        onRefresh = { clientChargesViewModel.refreshCenterList(clientId) },
         refreshState = refreshState,
         onChargeCreated = {
-            viewModel.loadCharges(clientId)
+            chargeDialogViewModel.resetUiState()
+            clientChargesViewModel.loadCharges(clientId)
         },
     )
 }
@@ -100,9 +102,11 @@ internal fun ClientChargesScreen(
     refreshState: Boolean,
     onChargeCreated: () -> Unit,
 ) {
+    val scope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
     val pullRefreshState = rememberPullToRefreshState()
     var showClientChargeDialog by rememberSaveable { mutableStateOf(false) }
+    var showCreatedSuccessMessage by rememberSaveable { mutableStateOf(false) }
 
     if (showClientChargeDialog) {
         ChargeDialogScreen(
@@ -111,8 +115,9 @@ internal fun ClientChargesScreen(
                 showClientChargeDialog = false
             },
             onCreated = {
-                onChargeCreated()
                 showClientChargeDialog = false
+                showCreatedSuccessMessage = true
+                onChargeCreated()
             },
         )
     }
@@ -148,6 +153,16 @@ internal fun ClientChargesScreen(
                 }
             }
         }
+    }
+    if (showCreatedSuccessMessage) {
+        scope.launch {
+            snackbarHostState.showSnackbar(
+                message = getString(
+                    Res.string.feature_client_charge_created_successfully,
+                ),
+            )
+        }
+        showCreatedSuccessMessage = false
     }
 }
 

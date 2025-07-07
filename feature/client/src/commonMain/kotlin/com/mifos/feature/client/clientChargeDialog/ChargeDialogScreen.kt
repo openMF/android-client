@@ -14,7 +14,6 @@ package com.mifos.feature.client.clientChargeDialog
 import androidclient.feature.client.generated.resources.Res
 import androidclient.feature.client.generated.resources.feature_client_charge_amount
 import androidclient.feature.client.generated.resources.feature_client_charge_cancel
-import androidclient.feature.client.generated.resources.feature_client_charge_created_successfully
 import androidclient.feature.client.generated.resources.feature_client_charge_dialog
 import androidclient.feature.client.generated.resources.feature_client_charge_locale
 import androidclient.feature.client.generated.resources.feature_client_charge_name
@@ -23,6 +22,7 @@ import androidclient.feature.client.generated.resources.feature_client_charge_su
 import androidclient.feature.client.generated.resources.feature_client_due_date
 import androidclient.feature.client.generated.resources.feature_client_failed_to_load_charges
 import androidclient.feature.client.generated.resources.feature_client_message_field_required
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -30,7 +30,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -42,7 +41,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SelectableDates
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -53,8 +51,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -75,9 +71,7 @@ import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.model.objects.payloads.ChargesPayload
 import com.mifos.core.model.objects.template.client.ChargeTemplate
 import com.mifos.core.ui.util.DevicePreview
-import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
-import org.jetbrains.compose.resources.getString
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameterProvider
@@ -113,13 +107,62 @@ internal fun ChargeDialogScreen(
     onCreate: (ChargesPayload) -> Unit,
     onCreated: () -> Unit,
 ) {
+    Dialog(
+        onDismissRequest = { onDismiss() },
+    ) {
+        Surface(
+            shape = RoundedCornerShape(16.dp),
+            color = MaterialTheme.colorScheme.background,
+        ) {
+            Box(
+                modifier = Modifier
+                    .height(455.dp)
+                    .fillMaxWidth()
+                    .background(MaterialTheme.colorScheme.surface),
+                contentAlignment = Alignment.Center,
+            ) {
+                when (state) {
+                    is ChargeDialogUiState.AllChargesV2 -> {
+                        ChargeDialogContent(
+                            chargeTemplate = state.chargeTemplate,
+                            selectedChargeId = state.selectedChargeId,
+                            selectedChargeName = state.selectedChargeName,
+                            onDismiss = onDismiss,
+                            onCreate = onCreate,
+                        )
+                    }
+
+                    is ChargeDialogUiState.Error -> MifosSweetError(
+                        message = stringResource(state.message),
+                    ) {
+                    }
+
+                    is ChargeDialogUiState.Loading -> MifosCircularProgress()
+
+                    is ChargeDialogUiState.ChargesCreatedSuccessfully -> {
+                        onCreated()
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun ChargeDialogContent(
+    chargeTemplate: ChargeTemplate,
+    selectedChargeId: Int,
+    selectedChargeName: String,
+    onDismiss: () -> Unit,
+    onCreate: (ChargesPayload) -> Unit,
+) {
     var amount by rememberSaveable { mutableStateOf("") }
     var amountError by rememberSaveable { mutableStateOf(false) }
+    var chargeNameError by rememberSaveable { mutableStateOf(false) }
     val locale by rememberSaveable { mutableStateOf(LOCALE_EN) }
     var dueDate by rememberSaveable { mutableLongStateOf(Clock.System.now().toEpochMilliseconds()) }
-
-    val snackbarHostState = remember { SnackbarHostState() }
-    val scope = rememberCoroutineScope()
+    var chargeName by rememberSaveable { mutableStateOf(selectedChargeName) }
+    var chargeId by rememberSaveable { mutableIntStateOf(selectedChargeId) }
 
     val dueDatePickerState = rememberDatePickerState(
         initialSelectedDateMillis = dueDate,
@@ -131,9 +174,17 @@ internal fun ChargeDialogScreen(
     )
     var showDatePicker by rememberSaveable { mutableStateOf(false) }
 
-    fun validateInput(): Boolean {
+    fun validateAmount(): Boolean {
         if (amount.isEmpty()) {
             amountError = true
+            return false
+        }
+        return true
+    }
+
+    fun validateChargeName(): Boolean {
+        if (chargeName.isEmpty()) {
+            chargeNameError = true
             return false
         }
         return true
@@ -166,142 +217,103 @@ internal fun ChargeDialogScreen(
         }
     }
 
-    Dialog(
-        onDismissRequest = { onDismiss() },
-    ) {
-        Surface(
-            shape = RoundedCornerShape(16.dp),
-            color = MaterialTheme.colorScheme.background,
+    Column(modifier = Modifier.padding(20.dp)) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = 16.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically,
         ) {
-            Box(
-                contentAlignment = Alignment.Center,
-            ) {
-                when (state) {
-                    is ChargeDialogUiState.AllChargesV2 -> {
-                        var name by rememberSaveable { mutableStateOf(state.selectedChargeName) }
-                        var chargeId by rememberSaveable { mutableIntStateOf(state.selectedChargeId) }
-
-                        Column(modifier = Modifier.padding(20.dp)) {
-                            Row(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(bottom = 16.dp),
-                                horizontalArrangement = Arrangement.SpaceBetween,
-                                verticalAlignment = Alignment.CenterVertically,
-                            ) {
-                                Text(
-                                    text = stringResource(Res.string.feature_client_charge_dialog),
-                                    fontSize = MaterialTheme.typography.titleLarge.fontSize,
-                                )
-                                IconButton(onClick = { onDismiss() }) {
-                                    Icon(
-                                        imageVector = MifosIcons.Close,
-                                        contentDescription = "",
-                                        tint = MaterialTheme.colorScheme.onSurface,
-                                        modifier = Modifier
-                                            .width(30.dp)
-                                            .height(30.dp),
-                                    )
-                                }
-                            }
-
-                            MifosTextFieldDropdown(
-                                value = name,
-                                onValueChanged = { value ->
-                                    name = value
-                                },
-                                label = stringResource(Res.string.feature_client_charge_name),
-                                readOnly = true,
-                                onOptionSelected = { index, value ->
-                                    chargeId = state.chargeTemplate.chargeOptions[index].id
-                                    name = value
-                                },
-                                options = state.chargeTemplate.chargeOptions.map { it.name },
-                            )
-
-                            MifosOutlinedTextField(
-                                value = amount,
-                                onValueChange = { value ->
-                                    amount = value
-                                    amountError = false
-                                },
-                                label = stringResource(Res.string.feature_client_charge_amount),
-                                error = if (amountError) stringResource(Res.string.feature_client_message_field_required) else null,
-                                trailingIcon = {
-                                    if (amountError) {
-                                        Icon(
-                                            imageVector = MifosIcons.Error,
-                                            contentDescription = null,
-                                        )
-                                    }
-                                },
-                            )
-
-                            MifosDatePickerTextField(
-                                value = DateHelper.getDateAsStringFromLong(dueDate),
-                                label = stringResource(Res.string.feature_client_due_date),
-                                openDatePicker = {
-                                    showDatePicker = true
-                                },
-                            )
-
-                            MifosOutlinedTextField(
-                                value = locale,
-                                onValueChange = {},
-                                label = stringResource(Res.string.feature_client_charge_locale),
-                                error = null,
-                                readOnly = true,
-                            )
-
-                            Spacer(modifier = Modifier.height(16.dp))
-
-                            Button(
-                                onClick = {
-                                    if (validateInput()) {
-                                        val payload = ChargesPayload(
-                                            locale = locale,
-                                            dateFormat = DATE_FORMAT_LONG,
-                                            chargeId = chargeId,
-                                            dueDate = formatDate(dueDate),
-                                        )
-                                        onCreate(payload)
-                                    }
-                                },
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .height(50.dp),
-                            ) {
-                                Text(text = stringResource(Res.string.feature_client_charge_submit))
-                            }
-                        }
-                    }
-
-                    is ChargeDialogUiState.Error -> MifosSweetError(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(300.dp),
-                        message = stringResource(state.message),
-                    ) {
-                    }
-
-                    is ChargeDialogUiState.Loading -> MifosCircularProgress(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .heightIn(300.dp),
-                    )
-
-                    is ChargeDialogUiState.ChargesCreatedSuccessfully -> {
-                        scope.launch {
-                            snackbarHostState.showSnackbar(
-                                message = getString(
-                                    Res.string.feature_client_charge_created_successfully,
-                                ),
-                            )
-                        }
-                        onCreated()
-                    }
-                }
+            Text(
+                text = stringResource(Res.string.feature_client_charge_dialog),
+                fontSize = MaterialTheme.typography.titleLarge.fontSize,
+            )
+            IconButton(onClick = { onDismiss() }) {
+                Icon(
+                    imageVector = MifosIcons.Close,
+                    contentDescription = "",
+                    tint = MaterialTheme.colorScheme.onSurface,
+                    modifier = Modifier
+                        .width(30.dp)
+                        .height(30.dp),
+                )
             }
+        }
+
+        MifosTextFieldDropdown(
+            value = chargeName,
+            onValueChanged = { value ->
+                chargeName = value
+                chargeNameError = false
+            },
+            label = stringResource(Res.string.feature_client_charge_name),
+            readOnly = true,
+            onOptionSelected = { index, value ->
+                chargeId = chargeTemplate.chargeOptions[index].id
+                chargeName = value
+                chargeNameError = false
+            },
+            options = chargeTemplate.chargeOptions.map { it.name },
+            errorMessage = if (chargeNameError) stringResource(Res.string.feature_client_message_field_required) else null,
+        )
+
+        MifosOutlinedTextField(
+            value = amount,
+            onValueChange = { value ->
+                amount = value
+                amountError = false
+            },
+            label = stringResource(Res.string.feature_client_charge_amount),
+            error = if (amountError) stringResource(Res.string.feature_client_message_field_required) else null,
+            trailingIcon = {
+                if (amountError) {
+                    Icon(
+                        imageVector = MifosIcons.Error,
+                        contentDescription = null,
+                    )
+                }
+            },
+        )
+
+        MifosDatePickerTextField(
+            value = DateHelper.getDateAsStringFromLong(dueDate),
+            label = stringResource(Res.string.feature_client_due_date),
+            openDatePicker = {
+                showDatePicker = true
+            },
+        )
+
+        MifosOutlinedTextField(
+            value = locale,
+            onValueChange = {},
+            label = stringResource(Res.string.feature_client_charge_locale),
+            error = null,
+            readOnly = true,
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        val isFormValid = validateAmount() && validateChargeName()
+
+        Button(
+            enabled = isFormValid,
+            onClick = {
+                if (!isFormValid) return@Button
+                val payload = ChargesPayload(
+                    amount = amount,
+                    locale = locale,
+                    dateFormat = DATE_FORMAT_LONG,
+                    chargeId = chargeId,
+                    dueDate = formatDate(dueDate),
+                )
+                onCreate(payload)
+            },
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(50.dp),
+        ) {
+            Text(text = stringResource(Res.string.feature_client_charge_submit))
         }
     }
 }
