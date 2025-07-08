@@ -30,7 +30,7 @@ actual fun CenterListContent(
         contentAlignment = Alignment.Center,
     ) {
         Text(
-            text = "Not available in desktop yet",
+            text = "Not available in this platform yet",
         )
     }
 }

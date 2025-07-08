@@ -28,7 +28,7 @@ actual fun HandleLocationPermissionRequest(
         contentAlignment = Alignment.Center,
     ) {
         Text(
-            text = "Not available in desktop yet",
+            text = "Not available in this platform yet",
         )
     }
 }
@@ -44,7 +44,7 @@ actual fun PinpointLocationItem(
         contentAlignment = Alignment.Center,
     ) {
         Text(
-            text = "Not available in desktop yet",
+            text = "Not available in this platform yet",
         )
     }
 }
