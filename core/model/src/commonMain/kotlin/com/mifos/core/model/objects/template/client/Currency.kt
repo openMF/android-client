@@ -16,8 +16,8 @@ import kotlinx.serialization.Serializable
 @Serializable
 @Parcelize
 data class Currency(
-    val code: String,
-    val name: String,
+    val code: String? = null,
+    val name: String? = null,
     val decimalPlaces: Double? = null,
     val inMultiplesOf: Int? = null,
     val displaySymbol: String? = null,
