@@ -76,6 +76,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.mifos.core.common.utils.Constants
 import com.mifos.core.common.utils.DateHelper
 import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosDatePickerTextField
@@ -210,11 +211,11 @@ private fun LoanAccountContent(
     var selectedLoanProduct by rememberSaveable { mutableStateOf("") }
     var selectedLoanProductId by rememberSaveable { mutableIntStateOf(0) }
     var selectedLoanPurpose by rememberSaveable { mutableStateOf("") }
-    var selectedLoanPurposeId by rememberSaveable { mutableIntStateOf(0) }
+    var selectedLoanPurposeId by rememberSaveable { mutableStateOf<Int?>(null) }
     var selectedLoanOfficer by rememberSaveable { mutableStateOf("") }
     var selectedLoanOfficerId by rememberSaveable { mutableIntStateOf(0) }
     var selectedFund by rememberSaveable { mutableStateOf("") }
-    var selectedFundId by rememberSaveable { mutableIntStateOf(0) }
+    var selectedFundId by rememberSaveable { mutableStateOf<Int?>(null) }
 
     var showSubmissionDatePicker by rememberSaveable { mutableStateOf(false) }
     var submissionDate by rememberSaveable { mutableLongStateOf(Clock.System.now().toEpochMilliseconds()) }
@@ -244,21 +245,21 @@ private fun LoanAccountContent(
     var nominal by rememberSaveable { mutableStateOf("5.0") }
     var repaidEvery by rememberSaveable { mutableStateOf("2") }
     var repaidEveryType by rememberSaveable { mutableStateOf("") }
-    var repaidEveryTypeFrequency by rememberSaveable { mutableIntStateOf(0) }
+    var repaidEveryTypeFrequency by rememberSaveable { mutableStateOf<Int?>(null) }
     var loanTerms by rememberSaveable { mutableStateOf("20") }
     var loanTermsType by rememberSaveable { mutableStateOf("") }
     var loanTermsTypeFrequency by rememberSaveable { mutableIntStateOf(0) }
 
     var selectedLinkSavings by rememberSaveable { mutableStateOf("") }
-    var selectedLinkSavingsId by rememberSaveable { mutableIntStateOf(0) }
+    var selectedLinkSavingsId by rememberSaveable { mutableStateOf<Int?>(null) }
     var selectedAmortization by rememberSaveable { mutableStateOf("") }
-    var selectedAmortizationId by rememberSaveable { mutableIntStateOf(0) }
+    var selectedAmortizationId by rememberSaveable { mutableStateOf<Int?>(null) }
     var selectedInterestCalculationPeriod by rememberSaveable { mutableStateOf("") }
-    var selectedInterestCalculationPeriodId by rememberSaveable { mutableIntStateOf(0) }
+    var selectedInterestCalculationPeriodId by rememberSaveable { mutableStateOf<Int?>(null) }
     var selectedRepaymentStrategy by rememberSaveable { mutableStateOf("") }
-    var selectedRepaymentStrategyId by rememberSaveable { mutableIntStateOf(0) }
+    var selectedRepaymentStrategyId by rememberSaveable { mutableStateOf("") }
     var selectedInterestTypeMethod by rememberSaveable { mutableStateOf("") }
-    var selectedInterestTypeMethodId by rememberSaveable { mutableIntStateOf(0) }
+    var selectedInterestTypeMethodId by rememberSaveable { mutableStateOf<Int?>(null) }
     var selectedCalculateExactDaysIn by rememberSaveable { mutableStateOf(false) }
 
     if (showSubmissionDatePicker) {
@@ -546,7 +547,7 @@ private fun LoanAccountContent(
             onValueChanged = { selectedRepaymentStrategy = it },
             onOptionSelected = { index, value ->
                 selectedRepaymentStrategy = value
-                loanTemplate.transactionProcessingStrategyOptions[index].id?.let {
+                loanTemplate.transactionProcessingStrategyOptions[index].code?.let {
                     selectedRepaymentStrategyId = it
                 }
             },
@@ -587,39 +588,39 @@ private fun LoanAccountContent(
 
         Button(
             onClick = {
-                val loadPayload = LoansPayload().apply {
-                    allowPartialPeriodInterestCalcualtion = selectedCalculateExactDaysIn
-                    amortizationType = selectedAmortizationId
-                    clientId = clientsId
-                    dateFormat = "dd MMMM yyyy"
+                val loadPayload = LoansPayload(
+                    allowPartialPeriodInterestCalcualtion = selectedCalculateExactDaysIn,
+                    amortizationType = selectedAmortizationId,
+                    clientId = clientsId,
+                    dateFormat = DateHelper.SHORT_MONTH,
                     expectedDisbursementDate =
-                        DateHelper.getDateAsStringFromLong(
-                            disbursementDate,
-                        )
-                    interestCalculationPeriodType = selectedInterestCalculationPeriodId
-                    loanType = "individual"
-                    locale = "en"
-                    numberOfRepayments = numberOfRepayment.toInt()
-                    principal = principalAmount.toDouble()
-                    productId = selectedLoanProductId
-                    repaymentEvery = repaidEvery.toInt()
+                    DateHelper.getDateAsStringFromLong(
+                        disbursementDate,
+                    ),
+                    interestCalculationPeriodType = selectedInterestCalculationPeriodId,
+                    loanType = "individual",
+                    locale = Constants.LOCALE_EN,
+                    numberOfRepayments = numberOfRepayment.toInt(),
+                    principal = principalAmount.toDouble(),
+                    productId = selectedLoanProductId,
+                    repaymentEvery = repaidEvery.toInt(),
                     submittedOnDate =
-                        DateHelper.getDateAsStringFromLong(
-                            disbursementDate,
-                        )
-                    loanPurposeId = selectedLoanPurposeId
-                    loanTermFrequency = loanTerms.toInt()
-                    loanTermFrequencyType = loanTermsTypeFrequency
-                    repaymentFrequencyType = loanTermsTypeFrequency
-                    repaymentFrequencyDayOfWeekType = repaidEveryTypeFrequency
-                    repaymentFrequencyNthDayType = repaidEveryTypeFrequency
-                    transactionProcessingStrategyId = selectedRepaymentStrategyId
-                    fundId = selectedFundId
-                    interestType = selectedInterestTypeMethodId
-                    loanOfficerId = selectedLoanOfficerId
-                    linkAccountId = selectedLinkSavingsId
-                    interestRatePerPeriod = nominal.toDouble()
-                }
+                    DateHelper.getDateAsStringFromLong(
+                        submissionDate,
+                    ),
+                    loanPurposeId = selectedLoanPurposeId,
+                    loanTermFrequency = loanTerms.toInt(),
+                    loanTermFrequencyType = loanTermsTypeFrequency,
+                    repaymentFrequencyType = loanTermsTypeFrequency,
+                    repaymentFrequencyDayOfWeekType = repaidEveryTypeFrequency,
+                    repaymentFrequencyNthDayType = 1,
+                    transactionProcessingStrategyCode = selectedRepaymentStrategyId,
+                    fundId = selectedFundId,
+                    interestType = selectedInterestTypeMethodId,
+                    loanOfficerId = selectedLoanOfficerId,
+                    linkAccountId = selectedLinkSavingsId,
+                    interestRatePerPeriod = nominal.toDouble(),
+                )
                 if (loanTemplate.dataTables.isNotEmpty()) {
                     dataTable(loanTemplate.dataTables, loadPayload)
                 } else {
