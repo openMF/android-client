@@ -56,7 +56,7 @@ data class SavingsAccountWithAssociationsEntity(
     @PrimaryKey(autoGenerate = true)
     val id: Int? = null,
 
-    val accountNo: Int? = null,
+    val accountNo: String? = null,
 
     val clientId: Int? = null,
 
