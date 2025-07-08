@@ -12,10 +12,15 @@
 package com.mifos.feature.client.clientPinpoint
 
 import androidclient.feature.client.generated.resources.Res
-import androidclient.feature.client.generated.resources.feature_client_delete_image
+import androidclient.feature.client.generated.resources.feature_client_approve_permission_description_location
+import androidclient.feature.client.generated.resources.feature_client_delete_client_address
+import androidclient.feature.client.generated.resources.feature_client_dismiss
 import androidclient.feature.client.generated.resources.feature_client_failed_to_load_pinpoint
+import androidclient.feature.client.generated.resources.feature_client_permission_required
+import androidclient.feature.client.generated.resources.feature_client_pinpoint_client
 import androidclient.feature.client.generated.resources.feature_client_pinpoint_location_added
 import androidclient.feature.client.generated.resources.feature_client_please_select
+import androidclient.feature.client.generated.resources.feature_client_proceed
 import androidclient.feature.client.generated.resources.feature_client_update_client_address
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Arrangement
@@ -55,6 +60,8 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
+import com.mifos.core.designsystem.component.PermissionBox
+import com.mifos.core.designsystem.component.getRequiredPermissionsForLocation
 import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.model.objects.clients.ClientAddressRequest
 import com.mifos.core.model.objects.clients.ClientAddressResponse
@@ -128,18 +135,31 @@ internal fun PinpointClientScreen(
 
     var showPermissionDialog by remember { mutableStateOf(false) }
 
+    println("[titan] outside if statement PinpointScreen $showPermissionDialog")
     if (showPermissionDialog) {
-        HandleLocationPermissionRequest(
-            show = showPermissionDialog,
-            onPermissionResult = { granted ->
-                if (granted) onAddAddress(ClientAddressRequest())
+        println("[titan] inside if statement PinpointScreen $showPermissionDialog")
+
+        PermissionBox(
+            requiredPermissions = getRequiredPermissionsForLocation(),
+            title = stringResource(Res.string.feature_client_permission_required),
+            description = stringResource(Res.string.feature_client_approve_permission_description_location),
+            confirmButtonText = stringResource(Res.string.feature_client_proceed),
+            dismissButtonText = stringResource(Res.string.feature_client_dismiss),
+            onGranted = {
+                LaunchedEffect(Unit) {
+                    scope.launch {
+                        println("[titan] I am inside scope function")
+                        onAddAddress(ClientAddressRequest())
+                    }
+                }
                 showPermissionDialog = false
             },
         )
+        println("[titan] inside if statement PinpointScreen past Permission Box $showPermissionDialog")
     }
 
     MifosScaffold(
-        title = "Pinpoint Client",
+        title = stringResource(Res.string.feature_client_pinpoint_client),
         onBackPressed = onBackPressed,
         actions = {
             IconButton(onClick = {
@@ -186,12 +206,6 @@ internal fun PinpointClientScreen(
         }
     }
 }
-
-@Composable
-expect fun HandleLocationPermissionRequest(
-    show: Boolean,
-    onPermissionResult: (granted: Boolean) -> Unit,
-)
 
 @Composable
 private fun PinPointClientContent(
@@ -250,7 +264,6 @@ internal fun PinPointSelectDialog(
 
                 Button(
                     onClick = { updateAddress() },
-//                    colors = ButtonDefaults.buttonColors(BlueSecondary),
                 ) {
                     Text(
                         text = stringResource(Res.string.feature_client_update_client_address),
@@ -261,10 +274,9 @@ internal fun PinPointSelectDialog(
                 }
                 Button(
                     onClick = { deleteAddress() },
-//                    colors = ButtonDefaults.buttonColors(BlueSecondary),
                 ) {
                     Text(
-                        text = stringResource(Res.string.feature_client_delete_image),
+                        text = stringResource(Res.string.feature_client_delete_client_address),
                         modifier = Modifier.fillMaxWidth(),
                         style = MaterialTheme.typography.bodyLarge,
                         textAlign = TextAlign.Center,

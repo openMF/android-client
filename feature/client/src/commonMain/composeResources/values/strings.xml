@@ -70,6 +70,7 @@
     <string name="feature_client_pinpoint_location_added">Pinpoint Location Added Successfully</string>
     <string name="feature_client_pinpoint_location_deleted">Pinpoint Location Deleted Successfully</string>
     <string name="feature_client_pinpoint_location_updated">Pinpoint Location Updated Successfully</string>
+    <string name="feature_client_pinpoint_client">Pinpoint Client</string>
 
     <string name="feature_client_update_client_address">Update Address</string>
     <string name="feature_client_delete_client_address">Delete Address</string>

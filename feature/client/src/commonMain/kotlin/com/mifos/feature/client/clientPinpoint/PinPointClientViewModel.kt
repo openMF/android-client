@@ -26,6 +26,7 @@ import com.mifos.core.domain.useCases.AddClientPinpointLocationUseCase
 import com.mifos.core.domain.useCases.DeleteClientAddressPinpointUseCase
 import com.mifos.core.domain.useCases.GetClientPinpointLocationsUseCase
 import com.mifos.core.domain.useCases.UpdateClientPinpointUseCase
+import com.mifos.core.model.objects.clients.ClientAddressRequest
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
@@ -71,13 +72,14 @@ class PinPointClientViewModel(
                         if (result.data.isEmpty()) {
                             PinPointClientUiState.Error(Res.string.feature_client_no_pinpoint_found)
                         } else {
-                            PinPointClientUiState.ClientPinpointLocations(result.data ?: emptyList())
+                            println("[titan] ${result.data}")
+                            PinPointClientUiState.ClientPinpointLocations(result.data)
                         }
             }
         }
     }
 
-    fun addClientPinpointLocation(clientId: Int, addressRequest: com.mifos.core.model.objects.clients.ClientAddressRequest) =
+    fun addClientPinpointLocation(clientId: Int, addressRequest: ClientAddressRequest) =
         viewModelScope.launch {
             addClientPinpointLocationUseCase(clientId, addressRequest).collect { result ->
                 when (result) {
@@ -118,7 +120,7 @@ class PinPointClientViewModel(
     fun updateClientPinpointLocation(
         apptableId: Int,
         datatableId: Int,
-        addressRequest: com.mifos.core.model.objects.clients.ClientAddressRequest,
+        addressRequest: ClientAddressRequest,
     ) = viewModelScope.launch {
         updateClientPinpointUseCase(apptableId, datatableId, addressRequest).collect { result ->
             when (result) {

@@ -11,7 +11,9 @@ package com.mifos.core.model.objects.clients
 
 import com.mifos.core.model.utils.Parcelable
 import com.mifos.core.model.utils.Parcelize
+import kotlinx.serialization.Serializable
 
+@Serializable
 @Parcelize
 data class ClientAddressRequest(
     var placeId: String? = null,
@@ -23,7 +25,7 @@ data class ClientAddressRequest(
     var longitude: Double? = null,
 
     // Defaults
-    var dateFormat: String? = "dd MMMM YYYY",
+    var dateFormat: String? = null,
 
-    var locale: String? = "en",
+    var locale: String? = null,
 ) : Parcelable

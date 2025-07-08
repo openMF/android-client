@@ -14,14 +14,6 @@ import com.mifos.core.model.objects.clients.ClientAddressRequest
 import com.mifos.core.model.objects.clients.ClientAddressResponse
 
 @Composable
-actual fun HandleLocationPermissionRequest(
-    show: Boolean,
-    onPermissionResult: (Boolean) -> Unit,
-) {
-    TODO("Not yet implemented")
-}
-
-@Composable
 actual fun PinpointLocationItem(
     pinpointLocation: ClientAddressResponse,
     onUpdateAddress: (Int, Int, ClientAddressRequest) -> Unit,

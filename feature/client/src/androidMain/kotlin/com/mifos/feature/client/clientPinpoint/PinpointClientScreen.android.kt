@@ -9,13 +9,8 @@
  */
 package com.mifos.feature.client.clientPinpoint
 
-import android.Manifest
-import androidclient.feature.client.generated.resources.Res
-import androidclient.feature.client.generated.resources.feature_client_approve_permission_description_location
-import androidclient.feature.client.generated.resources.feature_client_dismiss
-import androidclient.feature.client.generated.resources.feature_client_permission_required
-import androidclient.feature.client.generated.resources.feature_client_proceed
 import androidx.compose.foundation.combinedClickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -35,33 +30,11 @@ import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.MapUiSettings
+import com.google.maps.android.compose.Marker
+import com.google.maps.android.compose.MarkerState
 import com.google.maps.android.compose.rememberCameraPositionState
-import com.mifos.core.designsystem.component.PermissionBox
 import com.mifos.core.model.objects.clients.ClientAddressRequest
 import com.mifos.core.model.objects.clients.ClientAddressResponse
-import org.jetbrains.compose.resources.stringResource
-
-@Composable
-actual fun HandleLocationPermissionRequest(
-    show: Boolean,
-    onPermissionResult: (granted: Boolean) -> Unit,
-) {
-    if (show) {
-        PermissionBox(
-            requiredPermissions = listOf(
-                Manifest.permission.ACCESS_FINE_LOCATION,
-                Manifest.permission.ACCESS_COARSE_LOCATION,
-            ),
-            title = stringResource(Res.string.feature_client_permission_required),
-            description = stringResource(Res.string.feature_client_approve_permission_description_location),
-            confirmButtonText = stringResource(Res.string.feature_client_proceed),
-            dismissButtonText = stringResource(Res.string.feature_client_dismiss),
-            onGranted = {
-                onPermissionResult(true)
-            },
-        )
-    }
-}
 
 @Composable
 internal actual fun PinpointLocationItem(
@@ -76,6 +49,7 @@ internal actual fun PinpointLocationItem(
             }
         }
     }
+
     val uiSettings by remember {
         mutableStateOf(MapUiSettings(zoomControlsEnabled = false))
     }
@@ -86,7 +60,6 @@ internal actual fun PinpointLocationItem(
         PinPointSelectDialog(
             onDismissRequest = { showPinPointDialog = false },
             updateAddress = {
-                // TODO Implement Place picker intent and fetch data and put into ClientAddressRequest
                 pinpointLocation.id?.let { id ->
                     pinpointLocation.clientId?.let { clientId ->
                         onUpdateAddress(
@@ -114,25 +87,42 @@ internal actual fun PinpointLocationItem(
 
     OutlinedCard(
         modifier = Modifier
-            .padding(8.dp)
-            .combinedClickable(
-                onClick = {},
-                onLongClick = {
-                    showPinPointDialog = true
-                },
-            ),
+            .padding(8.dp),
         colors = CardDefaults.outlinedCardColors(MaterialTheme.colorScheme.surface),
     ) {
-        GoogleMap(
-            modifier = Modifier
+        Box(
+            Modifier
                 .fillMaxWidth()
                 .height(150.dp),
-            cameraPositionState = cameraPositionState,
-            uiSettings = uiSettings,
-        )
+        ) {
+            GoogleMap(
+                modifier = Modifier.matchParentSize(),
+                cameraPositionState = cameraPositionState,
+                uiSettings = uiSettings,
+            ) {
+                pinpointLocation.latitude?.let { latitude ->
+                    pinpointLocation.longitude?.let { longitude ->
+                        Marker(
+                            state = MarkerState(position = LatLng(latitude, longitude)),
+                            title = "Pinpoint Location",
+                        )
+                    }
+                }
+            }
+
+            Box(
+                Modifier
+                    .matchParentSize()
+                    .combinedClickable(
+                        onClick = {},
+                        onLongClick = { showPinPointDialog = true },
+                    ),
+            )
+        }
+
         Text(
             modifier = Modifier.padding(8.dp),
-            text = pinpointLocation.placeAddress.toString(),
+            text = pinpointLocation.placeAddress.orEmpty(),
             style = MaterialTheme.typography.bodyLarge,
         )
     }
