@@ -52,6 +52,10 @@ class PinPointClientViewModel(
     private val _isRefreshing = MutableStateFlow(false)
     val isRefreshing = _isRefreshing.asStateFlow()
 
+    init {
+        getClientPinpointLocations(clientId = clientId.value)
+    }
+
     fun refreshPinpointLocations(clientId: Int) {
         _isRefreshing.value = true
         getClientPinpointLocations(clientId = clientId)
@@ -72,7 +76,6 @@ class PinPointClientViewModel(
                         if (result.data.isEmpty()) {
                             PinPointClientUiState.Error(Res.string.feature_client_no_pinpoint_found)
                         } else {
-                            println("[titan] ${result.data}")
                             PinPointClientUiState.ClientPinpointLocations(result.data)
                         }
             }
@@ -110,9 +113,10 @@ class PinPointClientViewModel(
                         _pinPointClientUiState.value =
                             PinPointClientUiState.Loading
 
-                    is DataState.Success ->
+                    is DataState.Success -> {
                         _pinPointClientUiState.value =
                             PinPointClientUiState.SuccessMessage(Res.string.feature_client_pinpoint_location_deleted)
+                    }
                 }
             }
         }
@@ -130,9 +134,10 @@ class PinPointClientViewModel(
 
                 is DataState.Loading -> _pinPointClientUiState.value = PinPointClientUiState.Loading
 
-                is DataState.Success ->
+                is DataState.Success -> {
                     _pinPointClientUiState.value =
                         PinPointClientUiState.SuccessMessage(Res.string.feature_client_pinpoint_location_updated)
+                }
             }
         }
     }

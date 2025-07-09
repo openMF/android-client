@@ -14,18 +14,19 @@ import com.mifos.core.common.utils.Page
 import com.mifos.core.common.utils.asDataStateFlow
 import com.mifos.core.datastore.UserPreferencesRepository
 import com.mifos.core.model.objects.clients.ActivatePayload
+import com.mifos.core.model.objects.clients.ClientAddressRequest
 import com.mifos.core.model.objects.clients.ClientAddressResponse
 import com.mifos.core.model.objects.noncoreobjects.Identifier
 import com.mifos.core.model.objects.noncoreobjects.IdentifierCreationResponse
 import com.mifos.core.model.objects.noncoreobjects.IdentifierPayload
 import com.mifos.core.model.objects.noncoreobjects.IdentifierTemplate
 import com.mifos.core.network.BaseApiManager
-import com.mifos.core.network.GenericResponse
 import com.mifos.core.network.mappers.clients.GetClientResponseMapper
 import com.mifos.core.network.mappers.clients.GetClientsClientIdAccountMapper
 import com.mifos.core.network.mappers.clients.GetIdentifiersTemplateMapper
 import com.mifos.core.network.mappers.clients.IdentifierMapper
 import com.mifos.core.network.model.DeleteClientsClientIdIdentifiersIdentifierIdResponse
+import com.mifos.core.network.model.PinpointLocationActionResponse
 import com.mifos.core.network.model.PostClientsClientIdRequest
 import com.mifos.core.network.model.PostClientsClientIdResponse
 import com.mifos.room.entities.accounts.ClientAccounts
@@ -388,8 +389,8 @@ class DataManagerClient(
      */
     suspend fun addClientPinpointLocation(
         clientId: Int,
-        address: com.mifos.core.model.objects.clients.ClientAddressRequest?,
-    ): GenericResponse {
+        address: ClientAddressRequest?,
+    ): PinpointLocationActionResponse {
         return mBaseApiManager.clientsApi.addClientPinpointLocation(clientId, address)
     }
 
@@ -403,9 +404,11 @@ class DataManagerClient(
     suspend fun deleteClientAddressPinpointLocation(
         apptableId: Int,
         datatableId: Int,
-    ): GenericResponse {
-        return mBaseApiManager.clientsApi
-            .deleteClientPinpointLocation(apptableId, datatableId)
+    ): PinpointLocationActionResponse {
+        return mBaseApiManager.clientsApi.deleteClientPinpointLocation(
+            apptableId,
+            datatableId,
+        )
     }
 
     /**
@@ -419,8 +422,8 @@ class DataManagerClient(
     suspend fun updateClientPinpointLocation(
         apptableId: Int,
         datatableId: Int,
-        address: com.mifos.core.model.objects.clients.ClientAddressRequest?,
-    ): GenericResponse {
+        address: ClientAddressRequest?,
+    ): PinpointLocationActionResponse {
         return mBaseApiManager.clientsApi.updateClientPinpointLocation(
             apptableId,
             datatableId,

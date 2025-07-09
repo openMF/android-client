@@ -49,6 +49,8 @@ kotlin {
 
             implementation(libs.androidx.paging.compose)
             implementation(libs.coil.network.okhttp)
+            implementation(libs.play.services.location)
+            implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.8.0")
         }
     }
 }

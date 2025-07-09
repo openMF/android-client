@@ -21,3 +21,10 @@ actual fun PinpointLocationItem(
 ) {
     TODO("Not yet implemented")
 }
+
+@Composable
+actual fun PinpointMapDialogScreen(
+    onSubmit: (Double, Double, String) -> Unit,
+    onCancel: () -> Unit,
+) {
+}

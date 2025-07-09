@@ -44,7 +44,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -82,10 +81,6 @@ internal fun PinpointClientScreen(
     val state by viewModel.pinPointClientUiState.collectAsStateWithLifecycle()
     val refreshState by viewModel.isRefreshing.collectAsStateWithLifecycle()
 
-    LaunchedEffect(Unit) {
-        viewModel.getClientPinpointLocations(clientId = clientId)
-    }
-
     PinpointClientScreen(
         state = state,
         onBackPressed = onBackPressed,
@@ -115,6 +110,9 @@ internal fun PinpointClientScreen(
                 dapptableId,
             )
         },
+        onAddressesChanged = {
+            viewModel.getClientPinpointLocations(clientId)
+        },
     )
 }
 
@@ -128,17 +126,16 @@ internal fun PinpointClientScreen(
     onAddAddress: (ClientAddressRequest) -> Unit,
     onUpdateAddress: (Int, Int, ClientAddressRequest) -> Unit,
     onDeleteAddress: (Int, Int) -> Unit,
+    onAddressesChanged: () -> Unit,
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
     val pullRefreshState = rememberPullToRefreshState()
 
     var showPermissionDialog by remember { mutableStateOf(false) }
+    var showMapDialogScreen by remember { mutableStateOf(false) }
 
-    println("[titan] outside if statement PinpointScreen $showPermissionDialog")
     if (showPermissionDialog) {
-        println("[titan] inside if statement PinpointScreen $showPermissionDialog")
-
         PermissionBox(
             requiredPermissions = getRequiredPermissionsForLocation(),
             title = stringResource(Res.string.feature_client_permission_required),
@@ -146,16 +143,26 @@ internal fun PinpointClientScreen(
             confirmButtonText = stringResource(Res.string.feature_client_proceed),
             dismissButtonText = stringResource(Res.string.feature_client_dismiss),
             onGranted = {
-                LaunchedEffect(Unit) {
-                    scope.launch {
-                        println("[titan] I am inside scope function")
-                        onAddAddress(ClientAddressRequest())
-                    }
-                }
                 showPermissionDialog = false
+                showMapDialogScreen = true
             },
         )
-        println("[titan] inside if statement PinpointScreen past Permission Box $showPermissionDialog")
+    }
+
+    if (showMapDialogScreen) {
+        PinpointMapDialogScreen(
+            onSubmit = { lat, lng, description ->
+                onAddAddress(
+                    ClientAddressRequest(
+                        latitude = lat,
+                        longitude = lng,
+                        placeAddress = description,
+                    ),
+                )
+                showMapDialogScreen = false
+            },
+            onCancel = { showMapDialogScreen = false },
+        )
     }
 
     MifosScaffold(
@@ -200,6 +207,7 @@ internal fun PinpointClientScreen(
                                 message = getString(state.message),
                             )
                         }
+                        onAddressesChanged()
                     }
                 }
             }
@@ -223,6 +231,12 @@ private fun PinPointClientContent(
         }
     }
 }
+
+@Composable
+expect fun PinpointMapDialogScreen(
+    onSubmit: (lat: Double, lng: Double, description: String) -> Unit,
+    onCancel: () -> Unit,
+)
 
 @Composable
 internal expect fun PinpointLocationItem(
@@ -260,6 +274,7 @@ internal fun PinPointSelectDialog(
                     style = MaterialTheme.typography.bodyLarge,
                     textAlign = TextAlign.Center,
                 )
+
                 Spacer(modifier = Modifier.height(20.dp))
 
                 Button(
@@ -312,6 +327,7 @@ private fun PinpointClientScreenPreview(
         onAddAddress = {},
         onUpdateAddress = { _, _, _ -> },
         onDeleteAddress = { _, _ -> },
+        onAddressesChanged = {},
     )
 }
 
