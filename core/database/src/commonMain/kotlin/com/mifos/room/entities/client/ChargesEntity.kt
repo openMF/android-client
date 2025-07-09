@@ -25,6 +25,7 @@ import kotlinx.serialization.Serializable
 /**
  * Created by nellyk on 2/15/2016.
  */
+@Serializable
 @Parcelize
 @Entity(
     tableName = "Charges",
@@ -67,7 +68,6 @@ import kotlinx.serialization.Serializable
         ),
     ],
 )
-@Serializable
 data class ChargesEntity(
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(index = true, name = INHERIT_FIELD_NAME, typeAffinity = UNDEFINED, collate = UNSPECIFIED, defaultValue = VALUE_UNSPECIFIED)
