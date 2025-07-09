@@ -97,6 +97,7 @@ internal fun ChargeDialogScreen(
             viewModel.createCharges(clientId, payload)
         },
         onCreated = onCreated,
+        onRetry = { viewModel.loadAllChargesV2(clientId) },
     )
 }
 
@@ -106,6 +107,7 @@ internal fun ChargeDialogScreen(
     onDismiss: () -> Unit,
     onCreate: (ChargesPayload) -> Unit,
     onCreated: () -> Unit,
+    onRetry: () -> Unit,
 ) {
     Dialog(
         onDismissRequest = { onDismiss() },
@@ -135,6 +137,7 @@ internal fun ChargeDialogScreen(
                     is ChargeDialogUiState.Error -> MifosSweetError(
                         message = stringResource(state.message),
                     ) {
+                        onRetry()
                     }
 
                     is ChargeDialogUiState.Loading -> MifosCircularProgress()
@@ -343,5 +346,6 @@ private fun ChargeDialogScreenPreview(
         onDismiss = {},
         onCreate = {},
         onCreated = {},
+        onRetry = {},
     )
 }
