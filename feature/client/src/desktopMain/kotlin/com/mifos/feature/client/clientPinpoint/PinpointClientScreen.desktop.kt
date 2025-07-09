@@ -9,7 +9,12 @@
  */
 package com.mifos.feature.client.clientPinpoint
 
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import com.mifos.core.model.objects.clients.ClientAddressRequest
 import com.mifos.core.model.objects.clients.ClientAddressResponse
 
@@ -18,7 +23,14 @@ actual fun HandleLocationPermissionRequest(
     show: Boolean,
     onPermissionResult: (Boolean) -> Unit,
 ) {
-    TODO("Not yet implemented")
+    Box(
+        modifier = Modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center,
+    ) {
+        Text(
+            text = "Not available in desktop yet",
+        )
+    }
 }
 
 @Composable
@@ -27,5 +39,12 @@ actual fun PinpointLocationItem(
     onUpdateAddress: (Int, Int, ClientAddressRequest) -> Unit,
     onDeleteAddress: (Int, Int) -> Unit,
 ) {
-    TODO("Not yet implemented")
+    Box(
+        modifier = Modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center,
+    ) {
+        Text(
+            text = "Not available in desktop yet",
+        )
+    }
 }
