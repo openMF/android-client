@@ -131,7 +131,7 @@ internal fun SavingsAccountTransactionScreen(
 @Composable
 internal fun SavingsAccountTransactionScreen(
     clientName: String?,
-    savingsAccountNumber: Int?,
+    savingsAccountNumber: String?,
     uiState: SavingsAccountTransactionUiState,
     navigateBack: () -> Unit,
     onRetry: () -> Unit,
@@ -247,7 +247,7 @@ internal fun SavingsAccountTransactionScreen(
 @Composable
 private fun SavingsAccountTransactionContent(
     clientName: String?,
-    savingsAccountNumber: Int?,
+    savingsAccountNumber: String?,
     navigateBack: () -> Unit,
     savingsAccountTransactionTemplate: SavingsAccountTransactionTemplateEntity,
     onProcessTransaction: (savingsAccountTransactionRequest: SavingsAccountTransactionRequestEntity) -> Unit,
@@ -519,7 +519,7 @@ private fun PreviewSavingsAccountTransactionScreen(
 ) {
     SavingsAccountTransactionScreen(
         clientName = "Jean Charles",
-        savingsAccountNumber = 0,
+        savingsAccountNumber = "Jakarta000000172",
         uiState = savingsAccountTransactionUiState,
         navigateBack = { },
         onRetry = { },
