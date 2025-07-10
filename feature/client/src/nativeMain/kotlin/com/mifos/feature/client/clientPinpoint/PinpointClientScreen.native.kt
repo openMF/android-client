@@ -10,20 +10,21 @@
 package com.mifos.feature.client.clientPinpoint
 
 import androidx.compose.runtime.Composable
-import com.mifos.core.model.objects.clients.ClientAddressRequest
 import com.mifos.core.model.objects.clients.ClientAddressResponse
 
 @Composable
-actual fun PinpointLocationItem(
+internal actual fun PinpointLocationItem(
     pinpointLocation: ClientAddressResponse,
-    onUpdateAddress: (Int, Int, ClientAddressRequest) -> Unit,
+    onStartUpdateAddress: (ClientAddressResponse) -> Unit,
     onDeleteAddress: (Int, Int) -> Unit,
 ) {
-    TODO("Not yet implemented")
 }
 
 @Composable
 actual fun PinpointMapDialogScreen(
+    initialLat: Double?,
+    initialLng: Double?,
+    initialDescription: String?,
     onSubmit: (Double, Double, String) -> Unit,
     onCancel: () -> Unit,
 ) {

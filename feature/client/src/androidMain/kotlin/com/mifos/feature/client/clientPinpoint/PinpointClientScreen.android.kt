@@ -9,13 +9,19 @@
  */
 package com.mifos.feature.client.clientPinpoint
 
-import android.Manifest
-import android.annotation.SuppressLint
-import android.content.pm.PackageManager
+import androidclient.feature.client.generated.resources.Res
+import androidclient.feature.client.generated.resources.feature_client_address_label
+import androidclient.feature.client.generated.resources.feature_client_cancel_button
+import androidclient.feature.client.generated.resources.feature_client_latitude_label
+import androidclient.feature.client.generated.resources.feature_client_longitude_label
+import androidclient.feature.client.generated.resources.feature_client_pinpoint_location_marker_title
+import androidclient.feature.client.generated.resources.feature_client_select_location_dialog_title
+import androidclient.feature.client.generated.resources.feature_client_submit_button
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -38,8 +44,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
-import androidx.core.content.ContextCompat
-import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.GoogleMap
@@ -48,14 +52,14 @@ import com.google.maps.android.compose.Marker
 import com.google.maps.android.compose.MarkerState
 import com.google.maps.android.compose.rememberCameraPositionState
 import com.google.maps.android.compose.rememberMarkerState
-import com.mifos.core.model.objects.clients.ClientAddressRequest
 import com.mifos.core.model.objects.clients.ClientAddressResponse
-import kotlinx.coroutines.tasks.await
+import org.jetbrains.compose.resources.stringResource
+import java.util.Locale
 
 @Composable
 internal actual fun PinpointLocationItem(
     pinpointLocation: ClientAddressResponse,
-    onUpdateAddress: (Int, Int, ClientAddressRequest) -> Unit,
+    onStartUpdateAddress: (ClientAddressResponse) -> Unit,
     onDeleteAddress: (Int, Int) -> Unit,
 ) {
     val cameraPositionState = rememberCameraPositionState {
@@ -76,24 +80,13 @@ internal actual fun PinpointLocationItem(
         PinPointSelectDialog(
             onDismissRequest = { showPinPointDialog = false },
             updateAddress = {
-                pinpointLocation.id?.let { id ->
-                    pinpointLocation.clientId?.let { clientId ->
-                        onUpdateAddress(
-                            clientId,
-                            id,
-                            ClientAddressRequest(),
-                        )
-                    }
-                }
+                onStartUpdateAddress(pinpointLocation)
                 showPinPointDialog = false
             },
             deleteAddress = {
                 pinpointLocation.id?.let { id ->
                     pinpointLocation.clientId?.let { clientId ->
-                        onDeleteAddress(
-                            clientId,
-                            id,
-                        )
+                        onDeleteAddress(clientId, id)
                     }
                 }
                 showPinPointDialog = false
@@ -120,7 +113,7 @@ internal actual fun PinpointLocationItem(
                     pinpointLocation.longitude?.let { longitude ->
                         Marker(
                             state = MarkerState(position = LatLng(latitude, longitude)),
-                            title = "Pinpoint Location",
+                            title = stringResource(Res.string.feature_client_pinpoint_location_marker_title),
                         )
                     }
                 }
@@ -146,41 +139,54 @@ internal actual fun PinpointLocationItem(
 
 @Composable
 actual fun PinpointMapDialogScreen(
+    initialLat: Double?,
+    initialLng: Double?,
+    initialDescription: String?,
     onSubmit: (lat: Double, lng: Double, description: String) -> Unit,
     onCancel: () -> Unit,
 ) {
     // Mifos Initiative latitude and longitude
-    val initialLat = 47.66
-    val initialLng = -122.37
+    val mifosLat = 47.66
+    val mifosLng = -122.37
 
     val context = LocalContext.current
-    var latlng by remember { mutableStateOf(LatLng(initialLat, initialLng)) }
-    var description by remember { mutableStateOf("") }
+    var latlng by remember {
+        mutableStateOf(
+            LatLng(
+                initialLat ?: mifosLat,
+                initialLng ?: mifosLng,
+            ),
+        )
+    }
+    var description by remember { mutableStateOf(initialDescription ?: "") }
     val markerState = rememberMarkerState(position = latlng)
 
-    @SuppressLint("MissingPermission")
-    LaunchedEffect(Unit) {
-        val fused = LocationServices.getFusedLocationProviderClient(context)
+// TODO: Currently using default values — fix fetching the user’s current location when
+//  adding an address after permission is granted.
 
-        val fineGranted = ContextCompat.checkSelfPermission(
-            context,
-            Manifest.permission.ACCESS_FINE_LOCATION,
-        ) == PackageManager.PERMISSION_GRANTED
-
-        val coarseGranted = ContextCompat.checkSelfPermission(
-            context,
-            Manifest.permission.ACCESS_FINE_LOCATION,
-        ) == PackageManager.PERMISSION_GRANTED
-
-        if (fineGranted || coarseGranted) {
-            try {
-                val location = fused.lastLocation.await()
-                latlng = LatLng(location.latitude, location.longitude)
-            } catch (e: Exception) {
-                latlng = LatLng(initialLat, initialLng)
-            }
-        }
-    }
+//    @SuppressLint("MissingPermission")
+//    LaunchedEffect(Unit) {
+//        val fused = LocationServices.getFusedLocationProviderClient(context)
+//
+//        val fineGranted = ContextCompat.checkSelfPermission(
+//            context,
+//            Manifest.permission.ACCESS_FINE_LOCATION,
+//        ) == PackageManager.PERMISSION_GRANTED
+//
+//        val coarseGranted = ContextCompat.checkSelfPermission(
+//            context,
+//            Manifest.permission.ACCESS_FINE_LOCATION,
+//        ) == PackageManager.PERMISSION_GRANTED
+//
+//        if (fineGranted || coarseGranted) {
+//            try {
+//                val location = fused.lastLocation.await()
+//                latlng = LatLng(location.latitude, location.longitude)
+//            } catch (e: Exception) {
+//                latlng = LatLng(MIFOS_LAT, MIFOS_LNG)
+//            }
+//        }
+//    }
 
     LaunchedEffect(markerState.position) {
         latlng = markerState.position
@@ -192,7 +198,10 @@ actual fun PinpointMapDialogScreen(
             tonalElevation = 4.dp,
         ) {
             Column(modifier = Modifier.padding(16.dp)) {
-                Text("Select Location", style = MaterialTheme.typography.titleLarge)
+                Text(
+                    stringResource(Res.string.feature_client_select_location_dialog_title),
+                    style = MaterialTheme.typography.titleLarge,
+                )
 
                 GoogleMap(
                     modifier = Modifier
@@ -207,23 +216,23 @@ actual fun PinpointMapDialogScreen(
                     Marker(
                         state = markerState,
                         draggable = true,
-                        title = "Pinpoint Location",
+                        title = stringResource(Res.string.feature_client_pinpoint_location_marker_title),
                     )
                 }
 
                 Row {
                     OutlinedTextField(
-                        value = latlng.latitude.toString(),
+                        value = String.format(Locale.US, "%.7f", latlng.latitude),
                         onValueChange = {},
-                        label = { Text("Latitude") },
+                        label = { Text(stringResource(Res.string.feature_client_latitude_label)) },
                         enabled = false,
                         modifier = Modifier.weight(1f),
                     )
 
                     OutlinedTextField(
-                        value = latlng.longitude.toString(),
+                        value = String.format(Locale.US, "%.7f", latlng.longitude),
                         onValueChange = {},
-                        label = { Text("Longitude") },
+                        label = { Text(stringResource(Res.string.feature_client_longitude_label)) },
                         enabled = false,
                         modifier = Modifier.weight(1f),
                     )
@@ -232,20 +241,22 @@ actual fun PinpointMapDialogScreen(
                 OutlinedTextField(
                     value = description,
                     onValueChange = { description = it },
-                    label = { Text("Address") },
+                    label = { Text(stringResource(Res.string.feature_client_address_label)) },
                     modifier = Modifier.fillMaxWidth(),
                 )
 
+                Spacer(Modifier.height(8.dp))
+
                 Row {
                     Button(onClick = { onCancel() }, modifier = Modifier.weight(1f)) {
-                        Text("Cancel")
+                        Text(stringResource(Res.string.feature_client_cancel_button))
                     }
 
                     Button(
                         onClick = { onSubmit(latlng.latitude, latlng.longitude, description) },
                         modifier = Modifier.weight(1f),
                     ) {
-                        Text("Submit")
+                        Text(stringResource(Res.string.feature_client_submit_button))
                     }
                 }
             }

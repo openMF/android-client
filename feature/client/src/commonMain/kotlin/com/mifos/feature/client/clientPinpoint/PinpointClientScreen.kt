@@ -134,6 +134,8 @@ internal fun PinpointClientScreen(
 
     var showPermissionDialog by remember { mutableStateOf(false) }
     var showMapDialogScreen by remember { mutableStateOf(false) }
+    var updateMode by remember { mutableStateOf(false) }
+    var addressToUpdate by remember { mutableStateOf<ClientAddressResponse?>(null) }
 
     if (showPermissionDialog) {
         PermissionBox(
@@ -151,17 +153,40 @@ internal fun PinpointClientScreen(
 
     if (showMapDialogScreen) {
         PinpointMapDialogScreen(
+            initialLat = addressToUpdate?.latitude,
+            initialLng = addressToUpdate?.longitude,
+            initialDescription = addressToUpdate?.placeAddress,
             onSubmit = { lat, lng, description ->
-                onAddAddress(
-                    ClientAddressRequest(
-                        latitude = lat,
-                        longitude = lng,
-                        placeAddress = description,
-                    ),
-                )
+                if (updateMode && addressToUpdate != null) {
+                    val address = requireNotNull(addressToUpdate)
+                    val id = requireNotNull(address.id)
+                    val clientId = requireNotNull(address.clientId)
+
+                    onUpdateAddress(
+                        clientId,
+                        id,
+                        ClientAddressRequest(
+                            latitude = lat,
+                            longitude = lng,
+                            placeAddress = description,
+                        ),
+                    )
+                } else {
+                    onAddAddress(
+                        ClientAddressRequest(
+                            latitude = lat,
+                            longitude = lng,
+                            placeAddress = description,
+                        ),
+                    )
+                }
                 showMapDialogScreen = false
+                addressToUpdate = null
             },
-            onCancel = { showMapDialogScreen = false },
+            onCancel = {
+                showMapDialogScreen = false
+                addressToUpdate = null
+            },
         )
     }
 
@@ -171,6 +196,8 @@ internal fun PinpointClientScreen(
         actions = {
             IconButton(onClick = {
                 showPermissionDialog = true
+                updateMode = false
+                addressToUpdate = null
             }) {
                 Icon(
                     imageVector = MifosIcons.AddLocation,
@@ -190,7 +217,11 @@ internal fun PinpointClientScreen(
                     is PinPointClientUiState.ClientPinpointLocations -> {
                         PinPointClientContent(
                             pinpointLocations = state.clientAddressResponses,
-                            onUpdateAddress = onUpdateAddress,
+                            onStartUpdateAddress = { address ->
+                                updateMode = true
+                                addressToUpdate = address
+                                showMapDialogScreen = true
+                            },
                             onDeleteAddress = onDeleteAddress,
                         )
                     }
@@ -218,14 +249,14 @@ internal fun PinpointClientScreen(
 @Composable
 private fun PinPointClientContent(
     pinpointLocations: List<ClientAddressResponse>,
-    onUpdateAddress: (Int, Int, ClientAddressRequest) -> Unit,
+    onStartUpdateAddress: (ClientAddressResponse) -> Unit,
     onDeleteAddress: (Int, Int) -> Unit,
 ) {
     LazyColumn {
         items(pinpointLocations) { pinpointLocation ->
             PinpointLocationItem(
                 pinpointLocation = pinpointLocation,
-                onUpdateAddress = onUpdateAddress,
+                onStartUpdateAddress = onStartUpdateAddress,
                 onDeleteAddress = onDeleteAddress,
             )
         }
@@ -234,6 +265,9 @@ private fun PinPointClientContent(
 
 @Composable
 expect fun PinpointMapDialogScreen(
+    initialLat: Double? = null,
+    initialLng: Double? = null,
+    initialDescription: String? = null,
     onSubmit: (lat: Double, lng: Double, description: String) -> Unit,
     onCancel: () -> Unit,
 )
@@ -241,7 +275,7 @@ expect fun PinpointMapDialogScreen(
 @Composable
 internal expect fun PinpointLocationItem(
     pinpointLocation: ClientAddressResponse,
-    onUpdateAddress: (Int, Int, ClientAddressRequest) -> Unit,
+    onStartUpdateAddress: (ClientAddressResponse) -> Unit,
     onDeleteAddress: (Int, Int) -> Unit,
 )
 
@@ -336,5 +370,7 @@ val samplePinpointLocations = List(10) {
         placeAddress = "Address $it",
         latitude = 0.0,
         longitude = 0.0,
+        clientId = 1,
+        id = 1,
     )
 }
