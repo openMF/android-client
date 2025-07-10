@@ -13,7 +13,6 @@ import co.touchlab.kermit.Logger
 import com.mifos.core.common.utils.getInstanceUrl
 import com.mifos.core.datastore.UserPreferencesRepository
 import com.mifos.core.network.BaseApiManager
-import com.mifos.core.network.BaseUrl
 import com.mifos.core.network.KtorHttpClient
 import com.mifos.core.network.KtorfitClient
 import com.mifos.core.network.MifosInterceptor
@@ -25,6 +24,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import org.koin.dsl.module
 
 val NetworkModule = module {
@@ -40,9 +40,16 @@ val NetworkModule = module {
     }
 
     single<KtorfitClient>(MifosClient) {
+        val preferencesRepository = get<UserPreferencesRepository>()
+
+        val serverConfigUrl = runBlocking {
+            val serverConfig = preferencesRepository.getServerConfig.first()
+            serverConfig.getInstanceUrl()
+        }
+
         KtorfitClient.builder()
             .httpClient(get(KtorClient))
-            .baseURL(BaseUrl().url)
+            .baseURL(serverConfigUrl)
             .build()
     }
 
@@ -51,8 +58,15 @@ val NetworkModule = module {
     single { BaseApiManager(get(), get()) }
 
     single<Ktorfit> {
+        val preferencesRepository = get<UserPreferencesRepository>()
+
+        val serverConfigUrl = runBlocking {
+            val serverConfig = preferencesRepository.getServerConfig.first()
+            serverConfig.getInstanceUrl()
+        }
+
         Ktorfit.Builder()
-            .baseUrl(BaseUrl().url)
+            .baseUrl(serverConfigUrl)
             .httpClient(get<HttpClient>(KtorClient))
             .converterFactories(FlowConverterFactory())
             .build()
