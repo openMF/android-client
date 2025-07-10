@@ -24,7 +24,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import org.koin.core.qualifier.named
 import org.koin.dsl.module
+import kotlin.coroutines.EmptyCoroutineContext.get
 
 val NetworkModule = module {
     single<HttpClient>(KtorClient) {
@@ -38,17 +40,18 @@ val NetworkModule = module {
         }
     }
 
-    single<KtorfitClient>(MifosClient) {
+    single<String>(named("baseUrl")) {
         val preferencesRepository = get<UserPreferencesRepository>()
-
-        val serverConfigUrl = runBlocking {
-            val serverConfig = preferencesRepository.getServerConfig.first()
-            serverConfig.getInstanceUrl()
+        runBlocking {
+            preferencesRepository.getServerConfig.first().getInstanceUrl()
         }
+    }
+
+    single<KtorfitClient>(MifosClient) {
 
         KtorfitClient.builder()
             .httpClient(get(KtorClient))
-            .baseURL(serverConfigUrl)
+            .baseURL(get<String>(named("baseUrl")))
             .build()
     }
 
@@ -57,15 +60,8 @@ val NetworkModule = module {
     single { BaseApiManager(get(), get()) }
 
     single<Ktorfit> {
-        val preferencesRepository = get<UserPreferencesRepository>()
-
-        val serverConfigUrl = runBlocking {
-            val serverConfig = preferencesRepository.getServerConfig.first()
-            serverConfig.getInstanceUrl()
-        }
-
         Ktorfit.Builder()
-            .baseUrl(serverConfigUrl)
+            .baseUrl(get<String>(named("baseUrl")))
             .httpClient(get<HttpClient>(KtorClient))
             .converterFactories(FlowConverterFactory())
             .build()
