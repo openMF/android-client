@@ -641,7 +641,7 @@ class SavingsAccountSummaryScreenPreviewProvider :
             SavingsAccountSummaryUiState.ShowSavingAccount(
                 SavingsAccountWithAssociationsEntity(
                     clientId = 343434343,
-                    accountNo = 3830948,
+                    accountNo = "3830948",
                     clientName = "Pronay",
                     transactions = listOf(
                         transaction,

@@ -9,7 +9,12 @@
  */
 package com.mifos.feature.client.clientList
 
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import androidx.paging.PagingData
 import com.mifos.room.entities.client.ClientEntity
 import kotlinx.coroutines.flow.Flow
@@ -23,5 +28,12 @@ actual fun LazyColumnForClientListApi(
     onClientSelect: (Int) -> Unit,
     selectedMode: () -> Unit,
 ) {
-    TODO("Not yet implemented")
+    Box(
+        modifier = Modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center,
+    ) {
+        Text(
+            text = "Not available in this platform yet",
+        )
+    }
 }

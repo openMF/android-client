@@ -9,7 +9,12 @@
  */
 package com.mifos.feature.client.clientPinpoint
 
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import com.mifos.core.model.objects.clients.ClientAddressResponse
 
 @Composable
@@ -18,6 +23,14 @@ internal actual fun PinpointLocationItem(
     onStartUpdateAddress: (ClientAddressResponse) -> Unit,
     onDeleteAddress: (Int, Int) -> Unit,
 ) {
+    Box(
+        modifier = Modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center,
+    ) {
+        Text(
+            text = "Not available in desktop yet",
+        )
+    }
 }
 
 @Composable
@@ -28,4 +41,12 @@ actual fun PinpointMapDialogScreen(
     onSubmit: (Double, Double, String) -> Unit,
     onCancel: () -> Unit,
 ) {
+    Box(
+        modifier = Modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center,
+    ) {
+        Text(
+            text = "Not available in desktop yet",
+        )
+    }
 }
