@@ -37,5 +37,4 @@ interface UserPreferencesRepository {
     suspend fun updateUserInfo(user: UserData): DataState<Unit>
 
     suspend fun updateTheme(theme: AppTheme): DataState<Unit>
-
 }
