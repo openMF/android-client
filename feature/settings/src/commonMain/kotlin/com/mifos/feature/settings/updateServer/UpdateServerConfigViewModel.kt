@@ -14,9 +14,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.snapshotFlow
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import co.touchlab.kermit.Logger
 import com.mifos.core.common.utils.ServerConfig
 import com.mifos.core.datastore.UserPreferencesRepository
 import com.mifos.core.domain.useCases.ServerConfigValidatorUseCase
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asSharedFlow
@@ -119,6 +121,7 @@ class UpdateServerConfigViewModel(
                     ).any { it.value != null }
 
                     if (!hasAnyError) {
+                        prefManager.logOut()
                         prefManager.updateServerConfig(_state.value)
                         _result.emit(true)
                     }

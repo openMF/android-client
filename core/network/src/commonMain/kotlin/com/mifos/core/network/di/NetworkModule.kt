@@ -9,6 +9,7 @@
  */
 package com.mifos.core.network.di
 
+import co.touchlab.kermit.Logger
 import com.mifos.core.common.utils.getInstanceUrl
 import com.mifos.core.datastore.UserPreferencesRepository
 import com.mifos.core.network.BaseApiManager
@@ -63,6 +64,7 @@ val NetworkModule = module {
         CoroutineScope(Dispatchers.Default).launch {
             val user = prefManager.userData.first()
             val serverConfig = prefManager.getServerConfig.first()
+            Logger.e("serverConfigPro $serverConfig")
             baseManager.createService(
                 user.username ?: "",
                 user.password ?: "",

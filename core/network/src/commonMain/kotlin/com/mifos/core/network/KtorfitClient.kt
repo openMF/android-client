@@ -21,6 +21,7 @@ class KtorfitClient(
         private lateinit var httpClient: HttpClient
 
         fun baseURL(baseURL: String): Builder {
+
             this.baseURL = baseURL
             return this
         }

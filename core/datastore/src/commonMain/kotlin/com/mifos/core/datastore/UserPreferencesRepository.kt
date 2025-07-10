@@ -22,9 +22,9 @@ interface UserPreferencesRepository {
     val userInfo: Flow<UserData>
     val userData: Flow<User>
     val settingsInfo: Flow<AppSettings>
-    val serverConfig: Flow<ServerConfig>
     val token: String?
     val appTheme: StateFlow<AppTheme>
+    val getServerConfig: StateFlow<ServerConfig>
 
     suspend fun updateUser(user: User): DataState<Unit>
     suspend fun updateUserStatus(status: Boolean): DataState<Unit>
@@ -38,5 +38,4 @@ interface UserPreferencesRepository {
 
     suspend fun updateTheme(theme: AppTheme): DataState<Unit>
 
-    val getServerConfig: StateFlow<ServerConfig>
 }
