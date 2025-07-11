@@ -253,11 +253,11 @@ private fun ChargeDialogContent(
             label = stringResource(Res.string.feature_client_charge_name),
             readOnly = true,
             onOptionSelected = { index, value ->
-                chargeId = chargeTemplate.chargeOptions[index].id
+                chargeId = chargeTemplate.chargeOptions[index].id ?: -1
                 chargeName = value
                 chargeNameError = false
             },
-            options = chargeTemplate.chargeOptions.map { it.name },
+            options = chargeTemplate.chargeOptions.map { it.name ?: "" },
             errorMessage = if (chargeNameError) stringResource(Res.string.feature_client_message_field_required) else null,
         )
 
