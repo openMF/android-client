@@ -29,7 +29,10 @@ import com.mifos.feature.client.clientSurveyQuestion.SurveyQuestionScreen
 import com.mifos.feature.client.createNewClient.CreateNewClientScreen
 import com.mifos.room.entities.accounts.savings.SavingAccountDepositTypeEntity
 import com.mifos.room.entities.noncore.DataTableEntity
+import com.mifos.room.entities.survey.QuestionDatasEntity
+import com.mifos.room.entities.survey.ResponseDatasEntity
 import com.mifos.room.entities.survey.SurveyEntity
+import kotlinx.serialization.json.Json
 import kotlin.reflect.KFunction4
 
 fun NavGraphBuilder.clientNavGraph(
@@ -87,7 +90,9 @@ fun NavGraphBuilder.clientNavGraph(
         )
         clientSurveyListRoute(
             onBackPressed = navController::popBackStack,
-            onCardClicked = onCardClicked,
+            onCardClicked = {clientId,list->
+                navController.navigateToClientSurveyQuestionScreen(clientId,list)
+            },
         )
         clientSurveyQuestionRoute(
             onBackPressed = navController::popBackStack,
@@ -210,7 +215,7 @@ fun NavGraphBuilder.clientSignatureRoute(
 
 fun NavGraphBuilder.clientSurveyListRoute(
     onBackPressed: () -> Unit,
-    onCardClicked: (Int, List<SurveyEntity>) -> Unit,
+    onCardClicked: (Int, SurveyEntity) -> Unit,
 ) {
     composable(
         route = ClientScreens.ClientSurveyListScreen.route,
@@ -232,7 +237,6 @@ fun NavGraphBuilder.clientSurveyQuestionRoute(
     ) {
         SurveyQuestionScreen(
             navigateBack = onBackPressed,
-            survey = SurveyEntity(),
         )
     }
 }
@@ -275,6 +279,11 @@ fun NavController.navigateClientSignatureScreen(clientId: Int) {
 
 fun NavController.navigateClientSurveyListScreen(clientId: Int) {
     navigate(ClientScreens.ClientSurveyListScreen.argument(clientId))
+}
+
+fun NavController.navigateToClientSurveyQuestionScreen(clientId: Int,survey:SurveyEntity){
+    val arg = Json.encodeToString(survey)
+    navigate(ClientScreens.ClientSurveyQuestionScreen.argument(clientId,arg))
 }
 
 fun NavController.navigateCreateClientScreen() {

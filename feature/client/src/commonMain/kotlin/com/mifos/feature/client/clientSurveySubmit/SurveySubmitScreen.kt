@@ -121,13 +121,11 @@ internal fun SurveySubmitContent(
             Card(
                 modifier = Modifier.padding(horizontal = 40.dp),
                 shape = RoundedCornerShape(4.dp),
-                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primaryContainer),
             ) {
                 Card(
                     modifier = Modifier
                         .padding(top = 4.dp),
                     shape = RoundedCornerShape(4.dp),
-                    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
                 ) {
                     Box(
                         modifier = Modifier
@@ -154,12 +152,6 @@ internal fun SurveySubmitContent(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = 40.dp),
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = MaterialTheme.colorScheme.primary,
-                        contentColor = MaterialTheme.colorScheme.onPrimary,
-                        disabledContainerColor = MaterialTheme.colorScheme.surfaceVariant,
-                        disabledContentColor = MaterialTheme.colorScheme.onSurfaceVariant,
-                    ),
                 ) {
                     Text(text = stringResource(Res.string.feature_client_submit_survey))
                 }

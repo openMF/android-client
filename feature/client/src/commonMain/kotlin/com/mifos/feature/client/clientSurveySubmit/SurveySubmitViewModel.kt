@@ -12,17 +12,21 @@ package com.mifos.feature.client.clientSurveySubmit
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import co.touchlab.kermit.Logger
 import com.mifos.core.common.utils.Constants
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.repository.SurveySubmitRepository
 import com.mifos.core.datastore.UserPreferencesRepository
+import com.mifos.core.model.objects.runreport.client.ClientReportTypeItem
 import com.mifos.core.model.objects.surveys.Scorecard
+import com.mifos.room.entities.survey.SurveyEntity
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import kotlinx.serialization.json.Json
 
 /**
  * Created by Aditya Gupta on 13/08/23.
@@ -34,6 +38,10 @@ class SurveySubmitViewModel(
 ) : ViewModel() {
 
     val clientId = savedStateHandle.getStateFlow(key = Constants.CLIENT_ID, initialValue = -1)
+    private val surveyItem =
+        savedStateHandle.getStateFlow(key = Constants.CLIENT_SURVEY, initialValue = "")
+    val survey: SurveyEntity =
+        Json.decodeFromString<SurveyEntity>(surveyItem.value)
 
     private val _surveySubmitUiState =
         MutableStateFlow<SurveySubmitUiState>(SurveySubmitUiState.Initial)
@@ -52,6 +60,9 @@ class SurveySubmitViewModel(
     fun submitSurvey(survey: Int, scorecardPayload: Scorecard?) {
         viewModelScope.launch {
             repository.submitScore(survey, scorecardPayload).collect { result ->
+                Logger.e("Result"){
+                    result.toString()
+                }
                 when (result) {
                     is DataState.Loading ->
                         _surveySubmitUiState.value =

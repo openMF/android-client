@@ -13,8 +13,10 @@ import androidclient.feature.client.generated.resources.Res
 import androidclient.feature.client.generated.resources.feature_client_failed_to_fetch_datatable
 import androidclient.feature.client.generated.resources.feature_client_failed_to_fetch_surveys_list
 import androidclient.feature.client.generated.resources.feature_client_failed_to_load_db_question_data
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.mifos.core.common.utils.Constants
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.repository.SurveyListRepository
 import com.mifos.core.datastore.UserPreferencesRepository
@@ -33,7 +35,10 @@ import kotlinx.coroutines.launch
 class SurveyListViewModel(
     private val repository: SurveyListRepository,
     private val prefManager: UserPreferencesRepository,
+    private val savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
+
+    val clientId = savedStateHandle.getStateFlow(key = Constants.CLIENT_ID, initialValue = -1)
 
     private val _surveyListUiState =
         MutableStateFlow<SurveyListUiState>(SurveyListUiState.ShowProgressbar)
@@ -82,76 +87,7 @@ class SurveyListViewModel(
                         }
                         // OnCompleted
                         setAlreadySurveySyncStatus(mSyncSurveyList)
-                        val sampleSurveys = listOf(
-                            SurveyEntity(
-                                id = 1,
-                                key = "Survey",
-                                name = "Sample Survey",
-                                description = null,
-                                countryCode = "PH",
-                                questionDatas = listOf(
-                                    QuestionDatasEntity(
-                                        id = 1,
-                                        key = "house",
-                                        text = "Size of House",
-                                        sequenceNo = 1,
-                                        responseDatas = listOf(
-                                            ResponseDatasEntity(
-                                                id = 2,
-                                                text = "No House",
-                                                value = 5,
-                                                sequenceNo = 1
-                                            ),
-                                            ResponseDatasEntity(
-                                                id = 1,
-                                                text = "Big House",
-                                                value = 3,
-                                                sequenceNo = 2
-                                            )
-                                        )
-                                    )
-                                ),
-                                componentDatas = emptyList()
-                            ),
-                            SurveyEntity(
-                                id = 2,
-                                key = "12345",
-                                name = "asfghjk",
-                                description = "This is a test",
-                                countryCode = "IN",
-                                questionDatas = listOf(
-                                    QuestionDatasEntity(
-                                        id = 19,
-                                        key = "WHat do you like?",
-                                        text = "What do you like the most?",
-                                        sequenceNo = 1,
-                                        responseDatas = listOf(
-                                            ResponseDatasEntity(
-                                                id = 63,
-                                                text = "something",
-                                                value = 456,
-                                                sequenceNo = 1
-                                            ),
-                                            ResponseDatasEntity(
-                                                id = 64,
-                                                text = "nothing",
-                                                value = 654,
-                                                sequenceNo = 2
-                                            ),
-                                            ResponseDatasEntity(
-                                                id = 65,
-                                                text = "everything",
-                                                value = 123,
-                                                sequenceNo = 3
-                                            )
-                                        )
-                                    )
-                                ),
-                                componentDatas = emptyList()
-                            )
-                        )
-
-                        _surveyListUiState.value = SurveyListUiState.ShowAllSurvey(sampleSurveys)
+                        _surveyListUiState.value = SurveyListUiState.ShowAllSurvey(mSyncSurveyList)
                     }
                 }
             }

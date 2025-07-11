@@ -73,7 +73,6 @@ import org.koin.compose.viewmodel.koinViewModel
 @Composable
 internal fun SurveyQuestionScreen(
     navigateBack: () -> Unit,
-    survey: SurveyEntity?,
     viewModel: SurveySubmitViewModel = koinViewModel(),
 ) {
     val uiState by viewModel.surveySubmitUiState.collectAsStateWithLifecycle()
@@ -87,6 +86,7 @@ internal fun SurveyQuestionScreen(
 
     val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
+    val survey=viewModel.survey
 
     if (survey != null) {
         val (questionData, optionsData) = processSurveyData(survey)
@@ -232,7 +232,6 @@ private fun SurveyQuestionContent(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .background(MaterialTheme.colorScheme.primary)
                 .padding(24.dp),
         ) {
             Text(
@@ -243,10 +242,6 @@ private fun SurveyQuestionContent(
             )
         }
 
-        Column(
-            modifier = Modifier
-                .background(Color.White),
-        ) {
             RadioGroup(
                 options = optionsData,
                 selectedOptionIndex = selectedOption,
@@ -254,9 +249,6 @@ private fun SurveyQuestionContent(
                     selectedOption = it
                 },
             )
-        }
-
-        Spacer(modifier = Modifier.weight(1f))
 
         Button(
             onClick = {
