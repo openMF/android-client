@@ -48,7 +48,6 @@ fun NavGraphBuilder.clientNavGraph(
     activateClient: (Int) -> Unit,
     hasDatatables: KFunction4<List<DataTableEntity>, Any?, Int, MutableList<List<FormWidgetDTO>>, Unit>,
     onDocumentClicked: (Int, String) -> Unit,
-    onCardClicked: (Int, List<SurveyEntity>) -> Unit,
 ) {
     navigation(
         startDestination = ClientScreens.ClientListScreen.route,
