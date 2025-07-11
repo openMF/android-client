@@ -35,7 +35,7 @@ class ClientChargesViewModel(
         loadCharges(clientId = clientId.value)
     }
 
-    fun refreshCenterList(clientId: Int) {
+    fun refreshChargesList(clientId: Int) {
         _isRefreshing.value = true
         loadCharges(clientId = clientId)
         _isRefreshing.value = false

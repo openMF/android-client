@@ -83,7 +83,7 @@ internal fun ClientChargesScreen(
         state = clientChargeUiState,
         onBackPressed = onBackPressed,
         onRetry = { clientChargesViewModel.loadCharges(clientId) },
-        onRefresh = { clientChargesViewModel.refreshCenterList(clientId) },
+        onRefresh = { clientChargesViewModel.refreshChargesList(clientId) },
         refreshState = refreshState,
         onChargeCreated = {
             // resetUiState() is needed here to clear the success state immediately after successful
