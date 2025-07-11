@@ -60,9 +60,6 @@ class SurveySubmitViewModel(
     fun submitSurvey(survey: Int, scorecardPayload: Scorecard?) {
         viewModelScope.launch {
             repository.submitScore(survey, scorecardPayload).collect { result ->
-                Logger.e("Result"){
-                    result.toString()
-                }
                 when (result) {
                     is DataState.Loading ->
                         _surveySubmitUiState.value =
