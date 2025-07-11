@@ -47,6 +47,7 @@ import com.mifos.core.ui.components.MifosEmptyUi
 import com.mifos.core.ui.util.DevicePreview
 import com.mifos.room.entities.survey.SurveyEntity
 import org.jetbrains.compose.resources.stringResource
+import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameterProvider
 import org.koin.compose.viewmodel.koinViewModel
@@ -216,7 +217,7 @@ private class SurveyListPreviewProvider : PreviewParameterProvider<SurveyListUiS
 }
 
 @Composable
-@DevicePreview
+@Preview
 private fun PreviewSurveyListScreen(
     @PreviewParameter(SurveyListPreviewProvider::class) surveyListUiState: SurveyListUiState,
 ) {

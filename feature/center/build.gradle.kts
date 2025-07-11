@@ -26,6 +26,7 @@ kotlin{
             implementation(compose.components.uiToolingPreview)
             implementation(compose.ui)
             implementation(libs.androidx.paging.common)
+            implementation(libs.androidx.paging.compose)
             implementation(libs.coil.kt.compose)
         }
         androidMain.dependencies{

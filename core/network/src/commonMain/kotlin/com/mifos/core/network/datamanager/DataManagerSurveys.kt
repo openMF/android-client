@@ -44,7 +44,7 @@ class DataManagerSurveys(
     val allSurvey: Flow<List<SurveyEntity>>
         get() = prefManager.userInfo.flatMapLatest { userData ->
             when (userData.userStatus) {
-                false -> flow { mBaseApiManager.surveyApi.allSurveys() }
+                false -> mBaseApiManager.surveyApi.allSurveys()
                 true -> surveyDatabaseHelper.readAllSurveys()
             }
         }
