@@ -196,7 +196,9 @@
     <string name="feature_client_select_location_dialog_title">Select Location</string>
     <string name="feature_client_latitude_label">Latitude</string>
     <string name="feature_client_longitude_label">Longitude</string>
-    <string name="feature_client_address_label">Address</string>
+    <string name="feature_client_description_label">Description</string>
     <string name="feature_client_cancel_button">Cancel</string>
     <string name="feature_client_submit_button">Submit</string>
+    <string name="feature_client_saved_latitude">Saved Latitude: %1$s</string>
+    <string name="feature_client_saved_longitude">Saved Longitude: %1$s</string>
 </resources>
