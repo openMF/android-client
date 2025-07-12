@@ -44,7 +44,6 @@ import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.ui.components.MifosEmptyUi
-import com.mifos.core.ui.util.DevicePreview
 import com.mifos.room.entities.survey.SurveyEntity
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
@@ -74,7 +73,7 @@ internal fun SurveyListScreen(
         navigateBack = navigateBack,
         onRetry = { viewModel.loadSurveyList() },
         onCardClicked = {
-            onCardClicked(clientId,it)
+            onCardClicked(clientId, it)
         },
     )
 }
@@ -126,7 +125,7 @@ internal fun SurveyListScreen(
 @Composable
 private fun SurveyListContent(
     surveyList: List<SurveyEntity>,
-    onCardClicked: (survey:SurveyEntity) -> Unit,
+    onCardClicked: (survey: SurveyEntity) -> Unit,
 ) {
     Column(
         modifier = Modifier.fillMaxSize(),

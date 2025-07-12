@@ -12,12 +12,10 @@ package com.mifos.feature.client.clientSurveySubmit
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import co.touchlab.kermit.Logger
 import com.mifos.core.common.utils.Constants
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.repository.SurveySubmitRepository
 import com.mifos.core.datastore.UserPreferencesRepository
-import com.mifos.core.model.objects.runreport.client.ClientReportTypeItem
 import com.mifos.core.model.objects.surveys.Scorecard
 import com.mifos.room.entities.survey.SurveyEntity
 import kotlinx.coroutines.flow.MutableStateFlow

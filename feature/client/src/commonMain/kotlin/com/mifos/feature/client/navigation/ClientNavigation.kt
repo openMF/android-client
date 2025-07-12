@@ -29,8 +29,6 @@ import com.mifos.feature.client.clientSurveyQuestion.SurveyQuestionScreen
 import com.mifos.feature.client.createNewClient.CreateNewClientScreen
 import com.mifos.room.entities.accounts.savings.SavingAccountDepositTypeEntity
 import com.mifos.room.entities.noncore.DataTableEntity
-import com.mifos.room.entities.survey.QuestionDatasEntity
-import com.mifos.room.entities.survey.ResponseDatasEntity
 import com.mifos.room.entities.survey.SurveyEntity
 import kotlinx.serialization.json.Json
 import kotlin.reflect.KFunction4
@@ -89,8 +87,8 @@ fun NavGraphBuilder.clientNavGraph(
         )
         clientSurveyListRoute(
             onBackPressed = navController::popBackStack,
-            onCardClicked = {clientId,list->
-                navController.navigateToClientSurveyQuestionScreen(clientId,list)
+            onCardClicked = { clientId, list ->
+                navController.navigateToClientSurveyQuestionScreen(clientId, list)
             },
         )
         clientSurveyQuestionRoute(
@@ -280,9 +278,9 @@ fun NavController.navigateClientSurveyListScreen(clientId: Int) {
     navigate(ClientScreens.ClientSurveyListScreen.argument(clientId))
 }
 
-fun NavController.navigateToClientSurveyQuestionScreen(clientId: Int,survey:SurveyEntity){
+fun NavController.navigateToClientSurveyQuestionScreen(clientId: Int, survey: SurveyEntity) {
     val arg = Json.encodeToString(survey)
-    navigate(ClientScreens.ClientSurveyQuestionScreen.argument(clientId,arg))
+    navigate(ClientScreens.ClientSurveyQuestionScreen.argument(clientId, arg))
 }
 
 fun NavController.navigateCreateClientScreen() {

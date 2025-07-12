@@ -21,11 +21,9 @@ import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.repository.SurveyListRepository
 import com.mifos.core.datastore.UserPreferencesRepository
 import com.mifos.room.entities.survey.QuestionDatasEntity
-import com.mifos.room.entities.survey.ResponseDatasEntity
 import com.mifos.room.entities.survey.SurveyEntity
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
@@ -49,8 +47,8 @@ class SurveyListViewModel(
 
     fun loadSurveyList() {
         viewModelScope.launch {
-            repository.allSurvey().collect { result->
-                when(result){
+            repository.allSurvey().collect { result ->
+                when (result) {
                     is DataState.Error -> {
                         _surveyListUiState.value =
                             SurveyListUiState.ShowFetchingError(Res.string.feature_client_failed_to_fetch_surveys_list)
@@ -69,9 +67,9 @@ class SurveyListViewModel(
 
     private fun loadDatabaseSurveys() {
         viewModelScope.launch {
-            repository.databaseSurveys().collect { result->
-                when(result){
-                    is DataState.Error-> {
+            repository.databaseSurveys().collect { result ->
+                when (result) {
+                    is DataState.Error -> {
                         _surveyListUiState.value =
                             SurveyListUiState.ShowFetchingError(Res.string.feature_client_failed_to_fetch_datatable)
                     }
@@ -96,8 +94,8 @@ class SurveyListViewModel(
 
     private fun loadDatabaseQuestionData(surveyId: Int, survey: SurveyEntity?) {
         viewModelScope.launch {
-            repository.getDatabaseQuestionData(surveyId).collect { result->
-                when(result){
+            repository.getDatabaseQuestionData(surveyId).collect { result ->
+                when (result) {
                     is DataState.Error -> {
                         _surveyListUiState.value =
                             SurveyListUiState.ShowFetchingError(Res.string.feature_client_failed_to_load_db_question_data)
@@ -122,8 +120,8 @@ class SurveyListViewModel(
 
     private fun loadDatabaseResponseDatas(questionId: Int, questionDatas: QuestionDatasEntity) {
         viewModelScope.launch {
-            repository.getDatabaseResponseDatas(questionId).collect { result->
-                when(result){
+            repository.getDatabaseResponseDatas(questionId).collect { result ->
+                when (result) {
                     is DataState.Error -> {
                         _surveyListUiState.value =
                             SurveyListUiState.ShowFetchingError(Res.string.feature_client_failed_to_load_db_question_data)
@@ -132,7 +130,7 @@ class SurveyListViewModel(
                         _surveyListUiState.value = SurveyListUiState.ShowProgressbar
                     }
                     is DataState.Success -> {
-                        val updatedQuestionDatas = questionDatas.copy(responseDatas = result.data )
+                        val updatedQuestionDatas = questionDatas.copy(responseDatas = result.data)
 
                         mSyncSurveyList = mSyncSurveyList.map { survey ->
                             if (survey.id == questionDatas.surveyId) {
