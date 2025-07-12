@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Mifos Initiative
+ * Copyright 2025 Mifos Initiative
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -7,16 +7,12 @@
  *
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
-package com.mifos.core.model.objects.clients
+package com.mifos.core.common.utils
 
-import kotlinx.serialization.Serializable
+expect object CurrencyFormatter {
+    fun format(balance: Double?, currencyCode: String?, maximumFractionDigits: Int?): String
+}
 
-/**
- * Created by ishankhanna on 09/02/14.
- */
-@Serializable
-data class Page<T>(
-    var totalFilteredRecords: Int = 0,
-
-    var pageItems: List<T> = emptyList(),
-)
+fun <T> List<T>.toArrayList(): ArrayList<T> {
+    return ArrayList(this)
+}

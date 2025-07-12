@@ -11,10 +11,12 @@ package com.mifos.core.model.objects.template.client
 
 import com.mifos.core.model.utils.Parcelable
 import com.mifos.core.model.utils.Parcelize
+import kotlinx.serialization.Serializable
 
 /**
  * Created by mayankjindal on 13/12/16.
  */
+@Serializable
 @Parcelize
 data class IncomeOrLiabilityAccount(
     val id: Int,
