@@ -41,6 +41,7 @@ object Constants {
     const val SEARCH_ENTITY_CENTER = "CENTER"
     const val CLIENT_NAME = "clientName"
     const val CLIENT_ID = "clientId"
+    const val CLIENT_SURVEY = "clientSurvey"
     const val ID = "id"
     const val CLIENT = "Client"
     const val CLIENTS = "clients"
