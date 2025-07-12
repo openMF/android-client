@@ -14,7 +14,6 @@ import androidclient.feature.client.generated.resources.feature_client_next
 import androidclient.feature.client.generated.resources.feature_client_scorecard_created_successfully
 import androidclient.feature.client.generated.resources.feature_client_survey
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -51,7 +50,6 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -73,7 +71,6 @@ import org.koin.compose.viewmodel.koinViewModel
 @Composable
 internal fun SurveyQuestionScreen(
     navigateBack: () -> Unit,
-    survey: SurveyEntity?,
     viewModel: SurveySubmitViewModel = koinViewModel(),
 ) {
     val uiState by viewModel.surveySubmitUiState.collectAsStateWithLifecycle()
@@ -87,6 +84,7 @@ internal fun SurveyQuestionScreen(
 
     val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
+    val survey = viewModel.survey
 
     if (survey != null) {
         val (questionData, optionsData) = processSurveyData(survey)
@@ -232,7 +230,6 @@ private fun SurveyQuestionContent(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .background(MaterialTheme.colorScheme.primary)
                 .padding(24.dp),
         ) {
             Text(
@@ -243,20 +240,13 @@ private fun SurveyQuestionContent(
             )
         }
 
-        Column(
-            modifier = Modifier
-                .background(Color.White),
-        ) {
-            RadioGroup(
-                options = optionsData,
-                selectedOptionIndex = selectedOption,
-                onOptionSelected = {
-                    selectedOption = it
-                },
-            )
-        }
-
-        Spacer(modifier = Modifier.weight(1f))
+        RadioGroup(
+            options = optionsData,
+            selectedOptionIndex = selectedOption,
+            onOptionSelected = {
+                selectedOption = it
+            },
+        )
 
         Button(
             onClick = {

@@ -30,7 +30,6 @@ import kotlinx.coroutines.flow.onEach
  */
 class DataManagerCharge(
     val mBaseApiManager: BaseApiManager,
-//    val mDatabaseHelperCharge: DatabaseHelperCharge,
     val chargeDatabase: ChargeDaoHelper,
     private val prefManager: UserPreferencesRepository,
 ) {

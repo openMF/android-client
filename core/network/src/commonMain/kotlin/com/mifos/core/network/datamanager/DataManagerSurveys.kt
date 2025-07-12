@@ -19,7 +19,6 @@ import com.mifos.room.helper.SurveyDaoHelper
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.flow
 
 /**
  * This DataManager is for Managing Survey API, In which Request is going to Server
@@ -44,7 +43,7 @@ class DataManagerSurveys(
     val allSurvey: Flow<List<SurveyEntity>>
         get() = prefManager.userInfo.flatMapLatest { userData ->
             when (userData.userStatus) {
-                false -> flow { mBaseApiManager.surveyApi.allSurveys() }
+                false -> mBaseApiManager.surveyApi.allSurveys()
                 true -> surveyDatabaseHelper.readAllSurveys()
             }
         }

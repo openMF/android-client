@@ -11,13 +11,11 @@ package com.mifos.core.network.datamanager
 
 import com.mifos.core.datastore.UserPreferencesRepository
 import com.mifos.core.network.BaseApiManager
-import com.mifos.core.network.mappers.staffs.StaffMapper
 import com.mifos.room.entities.organisation.StaffEntity
 import com.mifos.room.helper.StaffDaoHelper
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.flow
 
 /**
  * Created by Rajan Maurya on 7/7/16.
@@ -37,15 +35,8 @@ class DataManagerStaff(
     fun getStaffInOffice(officeId: Int): Flow<List<StaffEntity>> {
         return prefManager.userInfo.flatMapLatest { userData ->
             when (userData.userStatus) {
-                false -> flow {
-                    baseApiManager.getStaffApi().retrieveAll16(
-                        officeId.toLong(),
-                        null,
-                        null,
-                        null,
-                    )
-                        .map(StaffMapper::mapFromEntity)
-                }
+                false ->
+                    mBaseApiManager.staffApi.getStaffForOffice(officeId)
 
                 /**
                  * return all List of Staffs of Office from DatabaseHelperOffices

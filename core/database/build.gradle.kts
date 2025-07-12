@@ -11,7 +11,6 @@ plugins {
     alias(libs.plugins.mifos.kmp.library)
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.mifos.kmp.room)
-    alias(libs.plugins.mifos.android.library.jacoco)
     alias(libs.plugins.kotlin.parcelize)
 }
 

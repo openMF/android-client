@@ -202,9 +202,6 @@ internal fun PaymentsDetailsScreen(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(16.dp),
-            colors = CardDefaults.cardColors(
-                containerColor = Color.White,
-            ),
         ) {
             Row(
                 modifier = Modifier

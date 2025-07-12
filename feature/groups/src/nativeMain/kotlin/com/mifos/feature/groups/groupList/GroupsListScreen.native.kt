@@ -29,7 +29,7 @@ internal actual fun GroupsListRoute(
         contentAlignment = Alignment.Center,
     ) {
         Text(
-            text = "Not available in IOS yet",
+            text = "Not available in this platform yet",
         )
     }
 }

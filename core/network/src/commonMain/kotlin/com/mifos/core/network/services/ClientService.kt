@@ -21,6 +21,8 @@ import com.mifos.core.network.model.PostAuthenticationRequest
 import com.mifos.core.network.model.PostAuthenticationResponse
 import com.mifos.room.basemodel.APIEndPoint
 import com.mifos.room.entities.accounts.ClientAccounts
+import com.mifos.room.entities.client.AddressConfiguration
+import com.mifos.room.entities.client.AddressTemplate
 import com.mifos.room.entities.client.ClientEntity
 import com.mifos.room.entities.client.ClientPayloadEntity
 import com.mifos.room.entities.templates.clients.ClientsTemplateEntity
@@ -221,4 +223,21 @@ interface ClientService {
         @Path("clientId") clientId: Int,
         @Body clientActivate: ActivatePayload?,
     ): Flow<GenericResponse>
+
+    /**Add commentMore actions
+     * Retrieves address configuration from Global Configuration.
+     *
+     * @return The AddressConfiguration object
+     */
+    @GET("configurations/name/enable-address")
+    suspend fun getAddressConfiguration(): AddressConfiguration
+
+    /**
+     * Retrieves an address template.
+     * This template can be used to pre-fill address forms or guide users in providing address information.
+     *
+     * @return An [AddressTemplate] object containing the structure for an address.
+     */
+    @GET("client/addresses/template")
+    suspend fun getAddressTemplate(): AddressTemplate
 }
