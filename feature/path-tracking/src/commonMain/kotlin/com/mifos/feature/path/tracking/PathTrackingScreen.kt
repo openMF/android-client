@@ -10,8 +10,12 @@
 package com.mifos.feature.path.tracking
 
 import androidclient.feature.path_tracking.generated.resources.Res
+import androidclient.feature.path_tracking.generated.resources.feature_path_tracking_approve_permission_description_location
+import androidclient.feature.path_tracking.generated.resources.feature_path_tracking_dismiss
 import androidclient.feature.path_tracking.generated.resources.feature_path_tracking_failed_to_load_path_tracking
 import androidclient.feature.path_tracking.generated.resources.feature_path_tracking_no_path_tracking_found
+import androidclient.feature.path_tracking.generated.resources.feature_path_tracking_permission_required
+import androidclient.feature.path_tracking.generated.resources.feature_path_tracking_proceed
 import androidclient.feature.path_tracking.generated.resources.feature_path_tracking_track_my_path
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
@@ -37,6 +41,8 @@ import androidx.compose.ui.unit.dp
 import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
+import com.mifos.core.designsystem.component.PermissionBox
+import com.mifos.core.designsystem.component.getRequiredPermissionsForLocation
 import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.model.objects.users.UserLatLng
 import com.mifos.core.model.objects.users.UserLocation
@@ -74,11 +80,14 @@ fun PathTrackingScreen(
     var checkPermission by remember { mutableStateOf(false) }
 
     if (checkPermission) {
-        HandleLocationPermissionRequest(
-            show = checkPermission,
-            onPermissionResult = { granted ->
-                if (granted) updateUserStatus(true)
-                checkPermission = false
+        PermissionBox(
+            requiredPermissions = getRequiredPermissionsForLocation(),
+            title = stringResource(Res.string.feature_path_tracking_permission_required),
+            description = stringResource(Res.string.feature_path_tracking_approve_permission_description_location),
+            confirmButtonText = stringResource(Res.string.feature_path_tracking_proceed),
+            dismissButtonText = stringResource(Res.string.feature_path_tracking_dismiss),
+            onGranted = {
+                updateUserStatus(true)
             },
         )
     }
@@ -170,12 +179,6 @@ private fun PathTrackingItem(
         )
     }
 }
-
-@Composable
-expect fun HandleLocationPermissionRequest(
-    show: Boolean,
-    onPermissionResult: (granted: Boolean) -> Unit,
-)
 
 @Composable
 expect fun PathTrackingMapView(latLngList: List<UserLatLng>)

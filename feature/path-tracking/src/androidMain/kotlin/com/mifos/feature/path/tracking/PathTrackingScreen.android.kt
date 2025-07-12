@@ -13,16 +13,10 @@
 
 package com.mifos.feature.path.tracking
 
-import android.Manifest
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
-import androidclient.feature.path_tracking.generated.resources.Res
-import androidclient.feature.path_tracking.generated.resources.feature_path_tracking_approve_permission_description_location
-import androidclient.feature.path_tracking.generated.resources.feature_path_tracking_dismiss
-import androidclient.feature.path_tracking.generated.resources.feature_path_tracking_permission_required
-import androidclient.feature.path_tracking.generated.resources.feature_path_tracking_proceed
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -46,10 +40,8 @@ import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.MapUiSettings
 import com.google.maps.android.compose.rememberCameraPositionState
 import com.mifos.core.common.utils.Constants
-import com.mifos.core.designsystem.component.PermissionBox
 import com.mifos.core.model.objects.users.UserLatLng
 import com.mifos.feature.pathTracking.PathTrackingViewModel
-import org.jetbrains.compose.resources.stringResource
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -136,26 +128,4 @@ actual fun PathTrackingMapView(latLngList: List<UserLatLng>) {
         cameraPositionState = cameraPositionState,
         uiSettings = uiSettings,
     )
-}
-
-@Composable
-actual fun HandleLocationPermissionRequest(
-    show: Boolean,
-    onPermissionResult: (granted: Boolean) -> Unit,
-) {
-    if (show) {
-        PermissionBox(
-            requiredPermissions = listOf(
-                Manifest.permission.ACCESS_FINE_LOCATION,
-                Manifest.permission.ACCESS_COARSE_LOCATION,
-            ),
-            title = stringResource(Res.string.feature_path_tracking_permission_required),
-            description = stringResource(Res.string.feature_path_tracking_approve_permission_description_location),
-            confirmButtonText = stringResource(Res.string.feature_path_tracking_proceed),
-            dismissButtonText = stringResource(Res.string.feature_path_tracking_dismiss),
-            onGranted = {
-                onPermissionResult(true)
-            },
-        )
-    }
 }

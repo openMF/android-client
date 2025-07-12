@@ -22,14 +22,6 @@ actual fun PathTrackingScreen(
 }
 
 @Composable
-actual fun HandleLocationPermissionRequest(
-    show: Boolean,
-    onPermissionResult: (Boolean) -> Unit,
-) {
-    TODO("Not yet implemented")
-}
-
-@Composable
 actual fun PathTrackingMapView(latLngList: List<UserLatLng>) {
     TODO("Not yet implemented")
 }
