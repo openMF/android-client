@@ -82,8 +82,8 @@ internal fun ClientChargesScreen(
         clientId = clientId,
         state = clientChargeUiState,
         onBackPressed = onBackPressed,
-        onRetry = { clientChargesViewModel.loadCharges(clientId) },
-        onRefresh = { clientChargesViewModel.refreshChargesList(clientId) },
+        onRetry = clientChargesViewModel::loadCharges,
+        onRefresh = clientChargesViewModel::refreshChargesList,
         refreshState = refreshState,
         onChargeCreated = {
             // resetUiState() is needed here to clear the success state immediately after successful
@@ -92,7 +92,7 @@ internal fun ClientChargesScreen(
             // Downside: this causes two back-to-back loading states — one in the dialog and one on
             // the main screen.
             chargeDialogViewModel.resetUiState()
-            clientChargesViewModel.loadCharges(clientId)
+            clientChargesViewModel::loadCharges
         },
     )
 }

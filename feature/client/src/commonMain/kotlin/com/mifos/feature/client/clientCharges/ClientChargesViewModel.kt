@@ -32,17 +32,17 @@ class ClientChargesViewModel(
     val isRefreshing = _isRefreshing.asStateFlow()
 
     init {
-        loadCharges(clientId = clientId.value)
+        loadCharges()
     }
 
-    fun refreshChargesList(clientId: Int) {
+    fun refreshChargesList() {
         _isRefreshing.value = true
-        loadCharges(clientId = clientId)
+        loadCharges()
         _isRefreshing.value = false
     }
 
-    fun loadCharges(clientId: Int) = viewModelScope.launch {
-        val response = repository.getClientCharges(clientId)
+    fun loadCharges() = viewModelScope.launch {
+        val response = repository.getClientCharges(clientId.value)
         _clientChargesUiState.value = ClientChargeUiState.ChargesList(response)
     }
 }
