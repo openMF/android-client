@@ -57,7 +57,6 @@ import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.ui.util.DevicePreview
 import com.mifos.feature.client.clientChargeDialog.ChargeDialogScreen
-import com.mifos.feature.client.clientChargeDialog.ChargeDialogViewModel
 import com.mifos.room.entities.client.ChargesEntity
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
@@ -72,7 +71,6 @@ import org.koin.compose.viewmodel.koinViewModel
 internal fun ClientChargesScreen(
     onBackPressed: () -> Unit,
     clientChargesViewModel: ClientChargesViewModel = koinViewModel(),
-    chargeDialogViewModel: ChargeDialogViewModel = koinViewModel(),
 ) {
     val clientId by clientChargesViewModel.clientId.collectAsStateWithLifecycle()
     val clientChargeUiState by clientChargesViewModel.clientChargesUiState.collectAsStateWithLifecycle()
@@ -85,15 +83,7 @@ internal fun ClientChargesScreen(
         onRetry = clientChargesViewModel::loadCharges,
         onRefresh = clientChargesViewModel::refreshChargesList,
         refreshState = refreshState,
-        onChargeCreated = {
-            // resetUiState() is needed here to clear the success state immediately after successful
-            // client charge creation, so that reopening the dialog doesn’t reuse stale state and
-            // accidentally retrigger main screen loading.
-            // Downside: this causes two back-to-back loading states — one in the dialog and one on
-            // the main screen.
-            chargeDialogViewModel.resetUiState()
-            clientChargesViewModel::loadCharges
-        },
+        onChargeCreated = clientChargesViewModel::loadCharges,
     )
 }
 
