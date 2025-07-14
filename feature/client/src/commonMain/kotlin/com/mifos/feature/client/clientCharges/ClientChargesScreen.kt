@@ -82,7 +82,7 @@ fun ClientChargesScreen(
         state = clientChargeUiState,
         dialogState = chargeDialogUiState,
         onShowDialog = viewModel::loadChargeTemplate,
-        onChargeCreate = { payload -> viewModel.createCharge(payload) },
+        onCreateCharge = { payload -> viewModel.createCharge(payload) },
         onChargeCreated = viewModel::loadCharges,
         onBackPressed = onBackPressed,
         onRetry = viewModel::loadCharges,
@@ -96,7 +96,7 @@ fun ClientChargesScreen(
     state: ClientChargeUiState,
     dialogState: ChargeDialogUiState,
     onShowDialog: () -> Unit,
-    onChargeCreate: (ChargesPayload) -> Unit,
+    onCreateCharge: (ChargesPayload) -> Unit,
     onChargeCreated: () -> Unit,
     onBackPressed: () -> Unit,
     onRetry: () -> Unit,
@@ -115,7 +115,7 @@ fun ClientChargesScreen(
             onDismiss = {
                 showClientChargeDialog = false
             },
-            onChargeCreate = onChargeCreate,
+            onCreateCharge = onCreateCharge,
             onRetry = onRetry,
             onChargeCreated = {
                 onChargeCreated()
@@ -260,7 +260,7 @@ private fun ClientChargesScreenPreview(
         state = state,
         dialogState = ChargeDialogUiState.Loading,
         onShowDialog = {},
-        onChargeCreate = {},
+        onCreateCharge = {},
         onChargeCreated = {},
         onBackPressed = {},
         onRetry = {},

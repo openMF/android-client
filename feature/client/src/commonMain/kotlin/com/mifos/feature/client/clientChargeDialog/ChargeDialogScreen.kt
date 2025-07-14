@@ -79,7 +79,7 @@ import org.jetbrains.compose.ui.tooling.preview.PreviewParameterProvider
 internal fun ChargeDialogScreen(
     state: ChargeDialogUiState,
     onDismiss: () -> Unit,
-    onChargeCreate: (ChargesPayload) -> Unit,
+    onCreateCharge: (ChargesPayload) -> Unit,
     onChargeCreated: () -> Unit,
     onRetry: () -> Unit,
 ) {
@@ -104,7 +104,7 @@ internal fun ChargeDialogScreen(
                             selectedChargeId = state.selectedChargeId,
                             selectedChargeName = state.selectedChargeName,
                             onDismiss = onDismiss,
-                            onCreate = onChargeCreate,
+                            onCreate = onCreateCharge,
                         )
                     }
 
@@ -341,7 +341,7 @@ private fun ChargeDialogScreenPreview(
     ChargeDialogScreen(
         state = state,
         onDismiss = {},
-        onChargeCreate = {},
+        onCreateCharge = {},
         onChargeCreated = {},
         onRetry = {},
     )
