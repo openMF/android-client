@@ -15,6 +15,7 @@ import androidclient.feature.client.generated.resources.Res
 import androidclient.feature.client.generated.resources.feature_client_charge_amount
 import androidclient.feature.client.generated.resources.feature_client_charge_cancel
 import androidclient.feature.client.generated.resources.feature_client_charge_dialog
+import androidclient.feature.client.generated.resources.feature_client_charge_invalid_amount_format
 import androidclient.feature.client.generated.resources.feature_client_charge_locale
 import androidclient.feature.client.generated.resources.feature_client_charge_name
 import androidclient.feature.client.generated.resources.feature_client_charge_select
@@ -160,12 +161,18 @@ private fun ChargeDialogContent(
     onCreate: (ChargesPayload) -> Unit,
 ) {
     var amount by rememberSaveable { mutableStateOf("") }
-    var amountError by rememberSaveable { mutableStateOf(false) }
-    var chargeNameError by rememberSaveable { mutableStateOf(false) }
+    var amountTouched by rememberSaveable { mutableStateOf(false) }
+
+    var chargeName by rememberSaveable { mutableStateOf(selectedChargeName) }
+    var chargeNameTouched by rememberSaveable { mutableStateOf(false) }
+
     val locale by rememberSaveable { mutableStateOf(LOCALE_EN) }
     var dueDate by rememberSaveable { mutableLongStateOf(Clock.System.now().toEpochMilliseconds()) }
-    var chargeName by rememberSaveable { mutableStateOf(selectedChargeName) }
     var chargeId by rememberSaveable { mutableIntStateOf(selectedChargeId) }
+    val selectedChargeOption = chargeTemplate.chargeOptions.find { it.id == chargeId }
+    val currencyDecimalPlaces = selectedChargeOption?.currency?.decimalPlaces?.toInt() ?: 2
+    val amountValidation = validateAmount(amount, currencyDecimalPlaces)
+    val isAmountValid = amountValidation == AmountValidationResult.VALID
 
     val dueDatePickerState = rememberDatePickerState(
         initialSelectedDateMillis = dueDate,
@@ -177,27 +184,9 @@ private fun ChargeDialogContent(
     )
     var showDatePicker by rememberSaveable { mutableStateOf(false) }
 
-    fun validateAmount(): Boolean {
-        if (amount.isEmpty()) {
-            amountError = true
-            return false
-        }
-        return true
-    }
-
-    fun validateChargeName(): Boolean {
-        if (chargeName.isEmpty()) {
-            chargeNameError = true
-            return false
-        }
-        return true
-    }
-
     if (showDatePicker) {
         DatePickerDialog(
-            onDismissRequest = {
-                showDatePicker = false
-            },
+            onDismissRequest = { showDatePicker = false },
             confirmButton = {
                 TextButton(
                     onClick = {
@@ -210,15 +199,16 @@ private fun ChargeDialogContent(
             },
             dismissButton = {
                 TextButton(
-                    onClick = {
-                        showDatePicker = false
-                    },
+                    onClick = { showDatePicker = false },
                 ) { Text(stringResource(Res.string.feature_client_charge_cancel)) }
             },
         ) {
             DatePicker(state = dueDatePickerState)
         }
     }
+
+    val isChargeNameValid = validateChargeName(chargeName)
+    val isFormValid = isAmountValid && isChargeNameValid
 
     Column(modifier = Modifier.padding(20.dp)) {
         Row(
@@ -232,7 +222,7 @@ private fun ChargeDialogContent(
                 text = stringResource(Res.string.feature_client_charge_dialog),
                 fontSize = MaterialTheme.typography.titleLarge.fontSize,
             )
-            IconButton(onClick = { onDismiss() }) {
+            IconButton(onClick = onDismiss) {
                 Icon(
                     imageVector = MifosIcons.Close,
                     contentDescription = "",
@@ -248,33 +238,40 @@ private fun ChargeDialogContent(
             value = chargeName,
             onValueChanged = { value ->
                 chargeName = value
-                chargeNameError = false
+                chargeNameTouched = true
             },
             label = stringResource(Res.string.feature_client_charge_name),
             readOnly = true,
             onOptionSelected = { index, value ->
                 chargeId = chargeTemplate.chargeOptions[index].id ?: -1
                 chargeName = value
-                chargeNameError = false
+                chargeNameTouched = true
             },
             options = chargeTemplate.chargeOptions.map { it.name ?: "" },
-            errorMessage = if (chargeNameError) stringResource(Res.string.feature_client_message_field_required) else null,
+            errorMessage = if (!isChargeNameValid && chargeNameTouched) {
+                stringResource(Res.string.feature_client_message_field_required)
+            } else {
+                null
+            },
         )
 
         MifosOutlinedTextField(
             value = amount,
             onValueChange = { value ->
                 amount = value
-                amountError = false
+                amountTouched = true
             },
             label = stringResource(Res.string.feature_client_charge_amount),
-            error = if (amountError) stringResource(Res.string.feature_client_message_field_required) else null,
+            error = when {
+                amountValidation == AmountValidationResult.EMPTY && amountTouched ->
+                    stringResource(Res.string.feature_client_message_field_required)
+                amountValidation == AmountValidationResult.INVALID_FORMAT && amountTouched ->
+                    stringResource(Res.string.feature_client_charge_invalid_amount_format)
+                else -> null
+            },
             trailingIcon = {
-                if (amountError) {
-                    Icon(
-                        imageVector = MifosIcons.Error,
-                        contentDescription = null,
-                    )
+                if (!isAmountValid && amountTouched) {
+                    Icon(imageVector = MifosIcons.Error, contentDescription = null)
                 }
             },
         )
@@ -297,20 +294,22 @@ private fun ChargeDialogContent(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        val isFormValid = validateAmount() && validateChargeName()
-
         Button(
             enabled = isFormValid,
             onClick = {
-                if (!isFormValid) return@Button
-                val payload = ChargesPayload(
-                    amount = amount,
-                    locale = locale,
-                    dateFormat = DATE_FORMAT_LONG,
-                    chargeId = chargeId,
-                    dueDate = formatDate(dueDate),
-                )
-                onCreate(payload)
+                amountTouched = true
+                chargeNameTouched = true
+
+                if (isFormValid) {
+                    val payload = ChargesPayload(
+                        amount = amount,
+                        locale = locale,
+                        dateFormat = DATE_FORMAT_LONG,
+                        chargeId = chargeId,
+                        dueDate = formatDate(dueDate),
+                    )
+                    onCreate(payload)
+                }
             },
             modifier = Modifier
                 .fillMaxWidth()
@@ -319,6 +318,31 @@ private fun ChargeDialogContent(
             Text(text = stringResource(Res.string.feature_client_charge_submit))
         }
     }
+}
+
+fun validateAmount(amount: String, decimalPlaces: Int): AmountValidationResult {
+    if (amount.isBlank()) return AmountValidationResult.EMPTY
+
+    val trimmed = amount.trim()
+    val regex = if (decimalPlaces == 0) {
+        Regex("^[1-9]\\d*$")
+    } else {
+        Regex("^\\s*(?=.*[1-9])\\d*(\\.\\d{1,$decimalPlaces})?\\s*$")
+    }
+
+    return if (regex.matches(trimmed)) {
+        AmountValidationResult.VALID
+    } else {
+        AmountValidationResult.INVALID_FORMAT
+    }
+}
+
+fun validateChargeName(name: String): Boolean = name.isNotBlank()
+
+enum class AmountValidationResult {
+    EMPTY,
+    INVALID_FORMAT,
+    VALID,
 }
 
 private class ChargeDialogScreenUiStateProvider : PreviewParameterProvider<ChargeDialogUiState> {
