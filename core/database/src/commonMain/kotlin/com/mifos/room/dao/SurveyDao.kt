@@ -39,6 +39,6 @@ interface SurveyDao {
     @Query("SELECT * FROM QuestionDatas WHERE surveyId = :surveyId ORDER BY sequenceNo ASC")
     fun getQuestionDatas(surveyId: Int): Flow<List<QuestionDatasEntity>>
 
-    @Query("SELECT * FROM ResponseDatas WHERE questionId = :questionId ORDER BY sequenceNo ASC")
+    @Query("SELECT * FROM ResponseDatas WHERE id = :questionId ORDER BY sequenceNo ASC")
     fun getResponseDatas(questionId: Int): Flow<List<ResponseDatasEntity>>
 }

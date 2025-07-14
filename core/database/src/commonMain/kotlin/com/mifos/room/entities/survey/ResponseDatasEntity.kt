@@ -29,7 +29,7 @@ data class ResponseDatasEntity(
     @PrimaryKey(autoGenerate = true)
     val responseId: Int = 0,
 
-    val questionId: Int = 0,
+    val id: Int = 0,
 
     val text: String? = null,
 
