@@ -55,8 +55,10 @@ import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.icon.MifosIcons
+import com.mifos.core.model.objects.payloads.ChargesPayload
 import com.mifos.core.ui.util.DevicePreview
 import com.mifos.feature.client.clientChargeDialog.ChargeDialogScreen
+import com.mifos.feature.client.clientChargeDialog.ChargeDialogUiState
 import com.mifos.room.entities.client.ChargesEntity
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
@@ -68,51 +70,57 @@ import org.jetbrains.compose.ui.tooling.preview.PreviewParameterProvider
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
-internal fun ClientChargesScreen(
+fun ClientChargesScreen(
     onBackPressed: () -> Unit,
-    clientChargesViewModel: ClientChargesViewModel = koinViewModel(),
+    viewModel: ClientChargesViewModel = koinViewModel(),
 ) {
-    val clientId by clientChargesViewModel.clientId.collectAsStateWithLifecycle()
-    val clientChargeUiState by clientChargesViewModel.clientChargesUiState.collectAsStateWithLifecycle()
-    val refreshState by clientChargesViewModel.isRefreshing.collectAsStateWithLifecycle()
+    val clientChargeUiState by viewModel.clientChargesUiState.collectAsStateWithLifecycle()
+    val refreshState by viewModel.isRefreshing.collectAsStateWithLifecycle()
+    val chargeDialogUiState by viewModel.chargeDialogUiState.collectAsStateWithLifecycle()
 
     ClientChargesScreen(
-        clientId = clientId,
         state = clientChargeUiState,
+        dialogState = chargeDialogUiState,
+        onShowDialog = viewModel::loadChargeTemplate,
+        onChargeCreate = { payload -> viewModel.createCharge(payload) },
+        onChargeCreated = viewModel::loadCharges,
         onBackPressed = onBackPressed,
-        onRetry = clientChargesViewModel::loadCharges,
-        onRefresh = clientChargesViewModel::refreshChargesList,
+        onRetry = viewModel::loadCharges,
+        onRefresh = viewModel::refreshChargesList,
         refreshState = refreshState,
-        onChargeCreated = clientChargesViewModel::loadCharges,
     )
 }
 
 @Composable
-internal fun ClientChargesScreen(
-    clientId: Int,
+fun ClientChargesScreen(
     state: ClientChargeUiState,
+    dialogState: ChargeDialogUiState,
+    onShowDialog: () -> Unit,
+    onChargeCreate: (ChargesPayload) -> Unit,
+    onChargeCreated: () -> Unit,
     onBackPressed: () -> Unit,
     onRetry: () -> Unit,
     onRefresh: () -> Unit,
     refreshState: Boolean,
-    onChargeCreated: () -> Unit,
 ) {
     val scope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
     val pullRefreshState = rememberPullToRefreshState()
     var showClientChargeDialog by rememberSaveable { mutableStateOf(false) }
-    var showCreatedSuccessMessage by rememberSaveable { mutableStateOf(false) }
+    var showChargeCreatedSuccess by rememberSaveable { mutableStateOf(false) }
 
     if (showClientChargeDialog) {
         ChargeDialogScreen(
-            clientId = clientId,
+            state = dialogState,
             onDismiss = {
                 showClientChargeDialog = false
             },
-            onCreated = {
-                showClientChargeDialog = false
-                showCreatedSuccessMessage = true
+            onChargeCreate = onChargeCreate,
+            onRetry = onRetry,
+            onChargeCreated = {
                 onChargeCreated()
+                showClientChargeDialog = false
+                showChargeCreatedSuccess = true
             },
         )
     }
@@ -121,7 +129,12 @@ internal fun ClientChargesScreen(
         title = stringResource(Res.string.feature_client_charges),
         onBackPressed = onBackPressed,
         actions = {
-            IconButton(onClick = { showClientChargeDialog = true }) {
+            IconButton(
+                onClick = {
+                    onShowDialog()
+                    showClientChargeDialog = true
+                },
+            ) {
                 Icon(imageVector = MifosIcons.Add, contentDescription = null)
             }
         },
@@ -140,7 +153,9 @@ internal fun ClientChargesScreen(
                     )
 
                     is ClientChargeUiState.Error ->
-                        MifosSweetError(message = stringResource(state.message)) {
+                        MifosSweetError(
+                            message = stringResource(state.message),
+                        ) {
                             onRetry()
                         }
 
@@ -149,15 +164,14 @@ internal fun ClientChargesScreen(
             }
         }
     }
-    if (showCreatedSuccessMessage) {
+
+    if (showChargeCreatedSuccess) {
         scope.launch {
             snackbarHostState.showSnackbar(
-                message = getString(
-                    Res.string.feature_client_charge_created_successfully,
-                ),
+                message = getString(Res.string.feature_client_charge_created_successfully),
             )
         }
-        showCreatedSuccessMessage = false
+        showChargeCreatedSuccess = false
     }
 }
 
@@ -243,13 +257,15 @@ private fun ClientChargesScreenPreview(
     @PreviewParameter(ClientChargesScreenUiStateProvider::class) state: ClientChargeUiState,
 ) {
     ClientChargesScreen(
-        clientId = 1,
         state = state,
+        dialogState = ChargeDialogUiState.Loading,
+        onShowDialog = {},
+        onChargeCreate = {},
+        onChargeCreated = {},
         onBackPressed = {},
         onRetry = {},
         onRefresh = {},
         refreshState = false,
-        onChargeCreated = {},
     )
 }
 

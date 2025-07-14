@@ -47,7 +47,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableLongStateOf
@@ -58,7 +57,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mifos.core.common.utils.Constants.DATE_FORMAT_LONG
 import com.mifos.core.common.utils.Constants.LOCALE_EN
 import com.mifos.core.common.utils.DateHelper
@@ -76,38 +74,13 @@ import kotlinx.datetime.Clock
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameterProvider
-import org.koin.compose.viewmodel.koinViewModel
-
-@Composable
-internal fun ChargeDialogScreen(
-    clientId: Int,
-    onDismiss: () -> Unit,
-    onCreated: () -> Unit,
-    viewModel: ChargeDialogViewModel = koinViewModel(),
-) {
-    val state by viewModel.chargeDialogUiState.collectAsStateWithLifecycle()
-
-    LaunchedEffect(Unit) {
-        viewModel.loadAllChargesV2(clientId)
-    }
-
-    ChargeDialogScreen(
-        state = state,
-        onDismiss = onDismiss,
-        onCreate = { payload ->
-            viewModel.createCharges(clientId, payload)
-        },
-        onCreated = onCreated,
-        onRetry = { viewModel.loadAllChargesV2(clientId) },
-    )
-}
 
 @Composable
 internal fun ChargeDialogScreen(
     state: ChargeDialogUiState,
     onDismiss: () -> Unit,
-    onCreate: (ChargesPayload) -> Unit,
-    onCreated: () -> Unit,
+    onChargeCreate: (ChargesPayload) -> Unit,
+    onChargeCreated: () -> Unit,
     onRetry: () -> Unit,
 ) {
     Dialog(
@@ -131,7 +104,7 @@ internal fun ChargeDialogScreen(
                             selectedChargeId = state.selectedChargeId,
                             selectedChargeName = state.selectedChargeName,
                             onDismiss = onDismiss,
-                            onCreate = onCreate,
+                            onCreate = onChargeCreate,
                         )
                     }
 
@@ -144,7 +117,7 @@ internal fun ChargeDialogScreen(
                     is ChargeDialogUiState.Loading -> MifosCircularProgress()
 
                     is ChargeDialogUiState.ChargesCreatedSuccessfully -> {
-                        onCreated()
+                        onChargeCreated()
                     }
                 }
             }
@@ -368,8 +341,8 @@ private fun ChargeDialogScreenPreview(
     ChargeDialogScreen(
         state = state,
         onDismiss = {},
-        onCreate = {},
-        onCreated = {},
+        onChargeCreate = {},
+        onChargeCreated = {},
         onRetry = {},
     )
 }
