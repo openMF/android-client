@@ -23,7 +23,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
 import kotlin.coroutines.EmptyCoroutineContext.get
@@ -42,9 +41,7 @@ val NetworkModule = module {
 
     single<String>(named("baseUrl")) {
         val preferencesRepository = get<UserPreferencesRepository>()
-        runBlocking {
-            preferencesRepository.getServerConfig.first().getInstanceUrl()
-        }
+        preferencesRepository.instanceUrl
     }
 
     single<KtorfitClient>(MifosClient) {

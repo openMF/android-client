@@ -10,6 +10,7 @@
 package com.mifos.core.datastore
 
 import com.mifos.core.common.utils.ServerConfig
+import com.mifos.core.common.utils.getInstanceUrl
 import com.mifos.core.datastore.model.AppSettings
 import com.mifos.core.datastore.model.AppTheme
 import com.mifos.core.datastore.model.UserData
@@ -107,6 +108,8 @@ class UserPreferencesDataSource(
 
     val token: String
         get() = _userData.value.base64EncodedAuthenticationKey?.let { "Basic $it" } ?: ""
+
+    val instanceUrl: String get() = _serverConfig.value.getInstanceUrl()
 
     fun updateUserStatus(status: Boolean) {
         settings.putBoolean(USER_STATUS, status)

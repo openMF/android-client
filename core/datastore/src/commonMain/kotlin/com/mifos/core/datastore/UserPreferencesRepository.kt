@@ -23,6 +23,7 @@ interface UserPreferencesRepository {
     val userData: Flow<User>
     val settingsInfo: Flow<AppSettings>
     val token: String?
+    val instanceUrl: String
     val appTheme: StateFlow<AppTheme>
     val getServerConfig: StateFlow<ServerConfig>
 
