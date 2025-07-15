@@ -16,9 +16,10 @@ import com.mifos.room.entities.client.ChargesEntity
 import com.mifos.room.helper.ChargeDaoHelper
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
-import kotlinx.coroutines.flow.onEach
 
 /**
  * This DataManager is for Managing Charge API, In which Request is going to Server
@@ -50,19 +51,74 @@ class DataManagerCharge(
         offset: Int,
         limit: Int,
     ): Flow<Page<ChargesEntity>> {
-        return prefManager.userInfo.flatMapLatest { userData ->
-            when (userData.userStatus) {
-                false -> mBaseApiManager.chargeApi.getListOfCharges(clientId, offset, limit)
-                    .onEach { chargeDatabase.saveClientCharges(it, clientId) }
+        println("[titan] getClientCharges called with clientId=$clientId, offset=$offset, limit=$limit")
 
-                true -> {
-                    if (offset == 0) {
-                        chargeDatabase.readClientCharges(clientId)
-                    } else {
-                        flowOf(Page())
+        return prefManager.userInfo.flatMapLatest { userData ->
+            println("[titan] userStatus: ${userData.userStatus}")
+
+            try {
+                when (userData.userStatus) {
+                    false -> {
+                        println("[titan] Fetching from API and saving to DB")
+                        flow {
+                            try {
+                                val apiResponse = mBaseApiManager.chargeApi.getListOfCharges(clientId, offset, limit)
+                                    .first()
+                                println("[titan] API response: $apiResponse")
+                                try {
+                                    chargeDatabase.saveClientCharges(apiResponse, clientId)
+                                    println("[titan] Saved charges to DB")
+                                } catch (e: Exception) {
+                                    println("[titan] Exception saving to DB: ${e.message}")
+                                }
+                            } catch (e: Exception) {
+                                println("[titan] Exception fetching from API or saving to DB: ${e.message}")
+                            }
+
+//                            val page = chargeDatabase.readClientCharges(clientId).first()
+//                            emit(page)
+                        }
+                    }
+                    true -> {
+                        if (offset == 0) {
+                            println("[titan] Fetching from local DB")
+                            try {
+                                chargeDatabase.readClientCharges(clientId)
+                            } catch (e: Exception) {
+                                println("[titan] Exception fetching from DB: ${e.message}")
+                                flowOf(Page())
+                            }
+                        } else {
+                            println("[titan] Returning empty page from DB (offset != 0)")
+                            flowOf(Page())
+                        }
                     }
                 }
+            } catch (e: Exception) {
+                println("[titan] Exception in getClientCharges: ${e.message}")
+                flowOf(Page())
             }
         }
     }
+// original code
+//    @OptIn(ExperimentalCoroutinesApi::class)
+//
+//    fun getClientCharges(
+//        clientId: Int,
+//        offset: Int,
+//        limit: Int,
+//    ): Flow<Page<ChargesEntity>> {
+//        return prefManager.userInfo.flatMapLatest { userData ->
+//            when (userData.userStatus) {
+//                false -> mBaseApiManager.chargeApi.getListOfCharges(clientId, offset, limit)
+//                    .onEach { chargeDatabase.saveClientCharges(it, clientId) }
+//                true -> {
+//                    if (offset == 0) {
+//                        chargeDatabase.readClientCharges(clientId)
+//                    } else {
+//                        flowOf(Page())
+//                    }
+//                }
+//            }
+//        }
 }

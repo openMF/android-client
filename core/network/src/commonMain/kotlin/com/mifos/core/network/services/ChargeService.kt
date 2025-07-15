@@ -13,6 +13,7 @@ import com.mifos.core.model.objects.clients.ChargeCreationResponse
 import com.mifos.core.model.objects.clients.Page
 import com.mifos.core.model.objects.payloads.ChargesPayload
 import com.mifos.core.model.objects.template.client.ChargeTemplate
+import com.mifos.core.network.model.ChargesResponse
 import com.mifos.room.basemodel.APIEndPoint
 import com.mifos.room.entities.client.ChargesEntity
 import de.jensklingenberg.ktorfit.http.Body
@@ -41,7 +42,7 @@ interface ChargeService {
         @Path("clientId") clientId: Int,
         @Query("offset") offset: Int,
         @Query("limit") limit: Int,
-    ): Flow<Page<ChargesEntity>>
+    ): Flow<Page<ChargesResponse>>
 
     @POST(APIEndPoint.CLIENTS + "/{clientId}/charges")
     suspend fun createCharges(
@@ -50,7 +51,7 @@ interface ChargeService {
     ): ChargeCreationResponse
 
     @GET(APIEndPoint.LOANS + "/{loanId}/charges")
-    fun getListOfLoanCharges(@Path("loanId") loanId: Int): Flow<Page<ChargesEntity>>
+    fun getListOfLoanCharges(@Path("loanId") loanId: Int): Flow<Page<ChargesResponse>>
 
     @POST(APIEndPoint.LOANS + "/{loanId}/charges")
     suspend fun createLoanCharges(

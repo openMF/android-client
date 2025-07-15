@@ -37,7 +37,7 @@ import kotlinx.serialization.Serializable
         ForeignKey(
             entity = ChargeTimeTypeEntity::class,
             parentColumns = ["id"],
-            childColumns = ["chargeTimeType"],
+            childColumns = ["chargeTimeTypeId"],
             onDelete = ForeignKeyAction.CASCADE,
             onUpdate = ForeignKeyAction.NO_ACTION,
             deferred = false,
@@ -45,7 +45,7 @@ import kotlinx.serialization.Serializable
         ForeignKey(
             entity = ClientDateEntity::class,
             parentColumns = ["clientId"],
-            childColumns = ["chargeDueDate"],
+            childColumns = ["chargeDueDateClientId"],
             onDelete = ForeignKeyAction.CASCADE,
             onUpdate = ForeignKeyAction.NO_ACTION,
             deferred = false,
@@ -53,7 +53,7 @@ import kotlinx.serialization.Serializable
         ForeignKey(
             entity = ChargeCalculationTypeEntity::class,
             parentColumns = ["id"],
-            childColumns = ["id"],
+            childColumns = ["chargeCalculationTypeId"],
             onDelete = ForeignKeyAction.CASCADE,
             onUpdate = ForeignKeyAction.NO_ACTION,
             deferred = false,
@@ -61,7 +61,7 @@ import kotlinx.serialization.Serializable
         ForeignKey(
             entity = ClientChargeCurrencyEntity::class,
             parentColumns = ["id"],
-            childColumns = ["id"],
+            childColumns = ["currencyId"],
             onDelete = ForeignKeyAction.CASCADE,
             onUpdate = ForeignKeyAction.NO_ACTION,
             deferred = false,
@@ -82,18 +82,18 @@ data class ChargesEntity(
     val name: String? = null,
 
     @ColumnInfo(index = true, name = INHERIT_FIELD_NAME, typeAffinity = UNDEFINED, collate = UNSPECIFIED, defaultValue = VALUE_UNSPECIFIED)
-    val chargeTimeType: ChargeTimeTypeEntity? = null,
+    val chargeTimeTypeId: Int? = null,
 
     @ColumnInfo(index = true, name = INHERIT_FIELD_NAME, typeAffinity = UNDEFINED, collate = UNSPECIFIED, defaultValue = VALUE_UNSPECIFIED)
-    val chargeDueDate: ClientDateEntity? = null,
+    val chargeDueDateClientId: Int? = null,
 
     val dueDate: List<Int>? = null,
 
     @ColumnInfo(index = true, name = INHERIT_FIELD_NAME, typeAffinity = UNDEFINED, collate = UNSPECIFIED, defaultValue = VALUE_UNSPECIFIED)
-    val chargeCalculationType: ChargeCalculationTypeEntity? = null,
+    val chargeCalculationTypeId: Int? = null,
 
     @ColumnInfo(index = true, name = INHERIT_FIELD_NAME, typeAffinity = UNDEFINED, collate = UNSPECIFIED, defaultValue = VALUE_UNSPECIFIED)
-    val currency: ClientChargeCurrencyEntity? = null,
+    val currencyId: Int? = null,
 
     val amount: Double? = null,
 
