@@ -13,6 +13,7 @@ package com.mifos.feature.client.clientCharges
 
 import androidclient.feature.client.generated.resources.Res
 import androidclient.feature.client.generated.resources.feature_client_charge_amount
+import androidclient.feature.client.generated.resources.feature_client_charge_created_successfully
 import androidclient.feature.client.generated.resources.feature_client_charge_id
 import androidclient.feature.client.generated.resources.feature_client_charge_name
 import androidclient.feature.client.generated.resources.feature_client_charges
@@ -36,10 +37,10 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -54,65 +55,72 @@ import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.icon.MifosIcons
+import com.mifos.core.model.objects.payloads.ChargesPayload
 import com.mifos.core.ui.util.DevicePreview
 import com.mifos.feature.client.clientChargeDialog.ChargeDialogScreen
+import com.mifos.feature.client.clientChargeDialog.ChargeDialogUiState
 import com.mifos.room.entities.client.ChargesEntity
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.launch
+import org.jetbrains.compose.resources.getString
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameterProvider
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
-internal fun ClientChargesScreen(
+fun ClientChargesScreen(
     onBackPressed: () -> Unit,
     viewModel: ClientChargesViewModel = koinViewModel(),
 ) {
-    val clientId by viewModel.clientId.collectAsStateWithLifecycle()
     val clientChargeUiState by viewModel.clientChargesUiState.collectAsStateWithLifecycle()
     val refreshState by viewModel.isRefreshing.collectAsStateWithLifecycle()
-
-    LaunchedEffect(Unit) {
-        viewModel.loadCharges(clientId)
-    }
+    val chargeDialogUiState by viewModel.chargeDialogUiState.collectAsStateWithLifecycle()
 
     ClientChargesScreen(
-        clientId = clientId,
         state = clientChargeUiState,
+        dialogState = chargeDialogUiState,
+        onShowDialog = viewModel::loadChargeTemplate,
+        onCreateCharge = { payload -> viewModel.createCharge(payload) },
+        onChargeCreated = viewModel::loadCharges,
         onBackPressed = onBackPressed,
-        onRetry = { viewModel.loadCharges(clientId) },
-        onRefresh = { viewModel.refreshCenterList(clientId) },
+        onRetry = viewModel::loadCharges,
+        onRefresh = viewModel::refreshChargesList,
         refreshState = refreshState,
-        onChargeCreated = {
-            viewModel.loadCharges(clientId)
-        },
     )
 }
 
 @Composable
-internal fun ClientChargesScreen(
-    clientId: Int,
+fun ClientChargesScreen(
     state: ClientChargeUiState,
+    dialogState: ChargeDialogUiState,
+    onShowDialog: () -> Unit,
+    onCreateCharge: (ChargesPayload) -> Unit,
+    onChargeCreated: () -> Unit,
     onBackPressed: () -> Unit,
     onRetry: () -> Unit,
     onRefresh: () -> Unit,
     refreshState: Boolean,
-    onChargeCreated: () -> Unit,
 ) {
+    val scope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
     val pullRefreshState = rememberPullToRefreshState()
     var showClientChargeDialog by rememberSaveable { mutableStateOf(false) }
+    var showChargeCreatedSuccess by rememberSaveable { mutableStateOf(false) }
 
     if (showClientChargeDialog) {
         ChargeDialogScreen(
-            clientId = clientId,
+            state = dialogState,
             onDismiss = {
                 showClientChargeDialog = false
             },
-            onCreated = {
+            onCreateCharge = onCreateCharge,
+            onRetry = onRetry,
+            onChargeCreated = {
                 onChargeCreated()
                 showClientChargeDialog = false
+                showChargeCreatedSuccess = true
             },
         )
     }
@@ -121,7 +129,12 @@ internal fun ClientChargesScreen(
         title = stringResource(Res.string.feature_client_charges),
         onBackPressed = onBackPressed,
         actions = {
-            IconButton(onClick = { showClientChargeDialog = true }) {
+            IconButton(
+                onClick = {
+                    onShowDialog()
+                    showClientChargeDialog = true
+                },
+            ) {
                 Icon(imageVector = MifosIcons.Add, contentDescription = null)
             }
         },
@@ -140,7 +153,9 @@ internal fun ClientChargesScreen(
                     )
 
                     is ClientChargeUiState.Error ->
-                        MifosSweetError(message = stringResource(state.message)) {
+                        MifosSweetError(
+                            message = stringResource(state.message),
+                        ) {
                             onRetry()
                         }
 
@@ -148,6 +163,15 @@ internal fun ClientChargesScreen(
                 }
             }
         }
+    }
+
+    if (showChargeCreatedSuccess) {
+        scope.launch {
+            snackbarHostState.showSnackbar(
+                message = getString(Res.string.feature_client_charge_created_successfully),
+            )
+        }
+        showChargeCreatedSuccess = false
     }
 }
 
@@ -233,13 +257,15 @@ private fun ClientChargesScreenPreview(
     @PreviewParameter(ClientChargesScreenUiStateProvider::class) state: ClientChargeUiState,
 ) {
     ClientChargesScreen(
-        clientId = 1,
         state = state,
+        dialogState = ChargeDialogUiState.Loading,
+        onShowDialog = {},
+        onCreateCharge = {},
+        onChargeCreated = {},
         onBackPressed = {},
         onRetry = {},
         onRefresh = {},
         refreshState = false,
-        onChargeCreated = {},
     )
 }
 

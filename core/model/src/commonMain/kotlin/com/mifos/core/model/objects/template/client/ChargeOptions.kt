@@ -20,15 +20,15 @@ import kotlinx.serialization.Serializable
 @Serializable
 @Parcelize
 data class ChargeOptions(
-    val id: Int,
-    val name: String,
-    val active: Boolean,
-    val penalty: Boolean,
-    val currency: Currency,
-    val amount: Double,
-    val chargeTimeType: ChargeTimeType,
-    val chargeAppliesTo: ChargeAppliesTo,
-    val chargeCalculationType: ChargeCalculationType,
-    val chargePaymentMode: ChargePaymentMode,
-    val incomeOrLiabilityAccount: IncomeOrLiabilityAccount,
+    val id: Int? = null,
+    val name: String? = null,
+    val active: Boolean? = null,
+    val penalty: Boolean? = null,
+    val currency: Currency? = null,
+    val amount: Double? = null,
+    val chargeTimeType: ChargeTimeType? = null,
+    val chargeAppliesTo: ChargeAppliesTo? = null,
+    val chargeCalculationType: ChargeCalculationType? = null,
+    val chargePaymentMode: ChargePaymentMode? = null,
+    val incomeOrLiabilityAccount: IncomeOrLiabilityAccount? = null,
 ) : Parcelable
