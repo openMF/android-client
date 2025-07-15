@@ -22,3 +22,5 @@ expect fun PermissionBox(
 )
 
 expect fun getRequiredPermissionsForExport(): List<String>
+
+expect fun getRequiredPermissionsForLocation(): List<String>
