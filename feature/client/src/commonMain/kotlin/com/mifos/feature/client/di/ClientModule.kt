@@ -13,7 +13,6 @@ import com.mifos.feature.client.clientChargeDialog.ChargeDialogViewModel
 import com.mifos.feature.client.clientCharges.ClientChargesViewModel
 import com.mifos.feature.client.clientDetails.ClientDetailsViewModel
 import com.mifos.feature.client.clientIdentifiers.ClientIdentifiersViewModel
-import com.mifos.feature.client.clientIdentifiersDialog.ClientIdentifiersDialogViewModel
 import com.mifos.feature.client.clientList.ClientListViewModel
 import com.mifos.feature.client.clientPinpoint.PinPointClientViewModel
 import com.mifos.feature.client.clientSignature.SignatureViewModel

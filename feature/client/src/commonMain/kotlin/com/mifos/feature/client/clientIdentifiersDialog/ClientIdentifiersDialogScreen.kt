@@ -55,6 +55,7 @@ import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.model.objects.noncoreobjects.IdentifierPayload
 import com.mifos.core.model.objects.noncoreobjects.IdentifierTemplate
 import com.mifos.core.ui.util.DevicePreview
+import com.mifos.feature.client.clientChargeDialog.ChargeDialogUiState
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameterProvider
@@ -62,22 +63,15 @@ import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 internal fun ClientIdentifiersDialogScreen(
-    clientId: Int,
+    state: ClientIdentifierDialogUiState,
     onDismiss: () -> Unit,
-    onIdentifierCreated: () -> Unit,
-    viewModel: ClientIdentifiersDialogViewModel = koinViewModel(),
+    reloadIdentifiers: () -> Unit,
+    onRetry: () -> Unit,
+    onCreate: () -> Unit,
 ) {
-    val state by viewModel.clientIdentifierDialogUiState.collectAsStateWithLifecycle()
 
     LaunchedEffect(Unit) {
-        viewModel.loadClientIdentifierTemplate(clientId)
-    }
 
-    if (state is ClientIdentifierDialogUiState.IdentifierCreatedSuccessfully) {
-        LaunchedEffect(Unit) {
-            onIdentifierCreated()
-        }
-        return
     }
 
     ClientIdentifiersDialogScreen(
