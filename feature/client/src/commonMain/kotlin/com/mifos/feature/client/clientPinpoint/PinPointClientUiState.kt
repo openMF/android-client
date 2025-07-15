@@ -9,6 +9,7 @@
  */
 package com.mifos.feature.client.clientPinpoint
 
+import com.mifos.core.model.objects.clients.ClientAddressResponse
 import org.jetbrains.compose.resources.StringResource
 
 /**
@@ -20,7 +21,7 @@ sealed class PinPointClientUiState {
 
     data class Error(val message: StringResource) : PinPointClientUiState()
 
-    data class ClientPinpointLocations(val clientAddressResponses: List<com.mifos.core.model.objects.clients.ClientAddressResponse>) :
+    data class ClientPinpointLocations(val clientAddressResponses: List<ClientAddressResponse>) :
         PinPointClientUiState()
 
     data class SuccessMessage(val message: StringResource) : PinPointClientUiState()

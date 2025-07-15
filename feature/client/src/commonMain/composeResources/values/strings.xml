@@ -71,6 +71,7 @@
     <string name="feature_client_pinpoint_location_added">Pinpoint Location Added Successfully</string>
     <string name="feature_client_pinpoint_location_deleted">Pinpoint Location Deleted Successfully</string>
     <string name="feature_client_pinpoint_location_updated">Pinpoint Location Updated Successfully</string>
+    <string name="feature_client_pinpoint_client">Pinpoint Client</string>
 
     <string name="feature_client_update_client_address">Update Address</string>
     <string name="feature_client_delete_client_address">Delete Address</string>
@@ -190,4 +191,14 @@
     <string name="feature_client_error_address_type_is_required">Address Type is required</string>
     <string name="feature_client_failed_to_fetch_address_configuration">Failed to fetch address configuration</string>
     <string name="feature_client_failed_to_fetch_address_template">Failed to fetch address template</string>
+
+    <string name="feature_client_pinpoint_location_marker_title">Pinpoint Location</string>
+    <string name="feature_client_select_location_dialog_title">Select Location</string>
+    <string name="feature_client_latitude_label">Latitude</string>
+    <string name="feature_client_longitude_label">Longitude</string>
+    <string name="feature_client_description_label">Description</string>
+    <string name="feature_client_cancel_button">Cancel</string>
+    <string name="feature_client_submit_button">Submit</string>
+    <string name="feature_client_saved_latitude">Saved Latitude: %1$s</string>
+    <string name="feature_client_saved_longitude">Saved Longitude: %1$s</string>
 </resources>
