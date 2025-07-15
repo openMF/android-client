@@ -12,9 +12,10 @@ package com.mifos.core.data.repositoryImp
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.common.utils.asDataStateFlow
 import com.mifos.core.data.repository.PinPointClientRepository
+import com.mifos.core.model.objects.clients.ClientAddressRequest
 import com.mifos.core.model.objects.clients.ClientAddressResponse
-import com.mifos.core.network.GenericResponse
 import com.mifos.core.network.datamanager.DataManagerClient
+import com.mifos.core.network.model.PinpointLocationActionResponse
 import kotlinx.coroutines.flow.Flow
 
 /**
@@ -31,23 +32,23 @@ class PinPointClientRepositoryImp(
 
     override suspend fun addClientPinpointLocation(
         clientId: Int,
-        address: com.mifos.core.model.objects.clients.ClientAddressRequest,
-    ): GenericResponse {
+        address: ClientAddressRequest,
+    ): PinpointLocationActionResponse {
         return dataManagerClient.addClientPinpointLocation(clientId, address)
     }
 
     override suspend fun deleteClientAddressPinpointLocation(
         apptableId: Int,
         datatableId: Int,
-    ): GenericResponse {
+    ): PinpointLocationActionResponse {
         return dataManagerClient.deleteClientAddressPinpointLocation(apptableId, datatableId)
     }
 
     override suspend fun updateClientPinpointLocation(
         apptableId: Int,
         datatableId: Int,
-        address: com.mifos.core.model.objects.clients.ClientAddressRequest,
-    ): GenericResponse {
+        address: ClientAddressRequest,
+    ): PinpointLocationActionResponse {
         return dataManagerClient.updateClientPinpointLocation(apptableId, datatableId, address)
     }
 }

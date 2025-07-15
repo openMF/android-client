@@ -26,6 +26,7 @@ import com.mifos.core.domain.useCases.AddClientPinpointLocationUseCase
 import com.mifos.core.domain.useCases.DeleteClientAddressPinpointUseCase
 import com.mifos.core.domain.useCases.GetClientPinpointLocationsUseCase
 import com.mifos.core.domain.useCases.UpdateClientPinpointUseCase
+import com.mifos.core.model.objects.clients.ClientAddressRequest
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
@@ -51,6 +52,10 @@ class PinPointClientViewModel(
     private val _isRefreshing = MutableStateFlow(false)
     val isRefreshing = _isRefreshing.asStateFlow()
 
+    init {
+        getClientPinpointLocations(clientId = clientId.value)
+    }
+
     fun refreshPinpointLocations(clientId: Int) {
         _isRefreshing.value = true
         getClientPinpointLocations(clientId = clientId)
@@ -71,13 +76,13 @@ class PinPointClientViewModel(
                         if (result.data.isEmpty()) {
                             PinPointClientUiState.Error(Res.string.feature_client_no_pinpoint_found)
                         } else {
-                            PinPointClientUiState.ClientPinpointLocations(result.data ?: emptyList())
+                            PinPointClientUiState.ClientPinpointLocations(result.data)
                         }
             }
         }
     }
 
-    fun addClientPinpointLocation(clientId: Int, addressRequest: com.mifos.core.model.objects.clients.ClientAddressRequest) =
+    fun addClientPinpointLocation(clientId: Int, addressRequest: ClientAddressRequest) =
         viewModelScope.launch {
             addClientPinpointLocationUseCase(clientId, addressRequest).collect { result ->
                 when (result) {
@@ -108,9 +113,10 @@ class PinPointClientViewModel(
                         _pinPointClientUiState.value =
                             PinPointClientUiState.Loading
 
-                    is DataState.Success ->
+                    is DataState.Success -> {
                         _pinPointClientUiState.value =
                             PinPointClientUiState.SuccessMessage(Res.string.feature_client_pinpoint_location_deleted)
+                    }
                 }
             }
         }
@@ -118,7 +124,7 @@ class PinPointClientViewModel(
     fun updateClientPinpointLocation(
         apptableId: Int,
         datatableId: Int,
-        addressRequest: com.mifos.core.model.objects.clients.ClientAddressRequest,
+        addressRequest: ClientAddressRequest,
     ) = viewModelScope.launch {
         updateClientPinpointUseCase(apptableId, datatableId, addressRequest).collect { result ->
             when (result) {
@@ -128,9 +134,10 @@ class PinPointClientViewModel(
 
                 is DataState.Loading -> _pinPointClientUiState.value = PinPointClientUiState.Loading
 
-                is DataState.Success ->
+                is DataState.Success -> {
                     _pinPointClientUiState.value =
                         PinPointClientUiState.SuccessMessage(Res.string.feature_client_pinpoint_location_updated)
+                }
             }
         }
     }

@@ -26,3 +26,7 @@ actual fun PermissionBox(
 actual fun getRequiredPermissionsForExport(): List<String> {
     TODO("Not yet implemented")
 }
+
+actual fun getRequiredPermissionsForLocation(): List<String> {
+    TODO("Not yet implemented")
+}
