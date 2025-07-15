@@ -12,10 +12,15 @@
 package com.mifos.feature.client.clientPinpoint
 
 import androidclient.feature.client.generated.resources.Res
-import androidclient.feature.client.generated.resources.feature_client_delete_image
+import androidclient.feature.client.generated.resources.feature_client_approve_permission_description_location
+import androidclient.feature.client.generated.resources.feature_client_delete_client_address
+import androidclient.feature.client.generated.resources.feature_client_dismiss
 import androidclient.feature.client.generated.resources.feature_client_failed_to_load_pinpoint
+import androidclient.feature.client.generated.resources.feature_client_permission_required
+import androidclient.feature.client.generated.resources.feature_client_pinpoint_client
 import androidclient.feature.client.generated.resources.feature_client_pinpoint_location_added
 import androidclient.feature.client.generated.resources.feature_client_please_select
+import androidclient.feature.client.generated.resources.feature_client_proceed
 import androidclient.feature.client.generated.resources.feature_client_update_client_address
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Arrangement
@@ -39,7 +44,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -55,6 +59,8 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
+import com.mifos.core.designsystem.component.PermissionBox
+import com.mifos.core.designsystem.component.getRequiredPermissionsForLocation
 import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.model.objects.clients.ClientAddressRequest
 import com.mifos.core.model.objects.clients.ClientAddressResponse
@@ -74,10 +80,6 @@ internal fun PinpointClientScreen(
     val clientId by viewModel.clientId.collectAsStateWithLifecycle()
     val state by viewModel.pinPointClientUiState.collectAsStateWithLifecycle()
     val refreshState by viewModel.isRefreshing.collectAsStateWithLifecycle()
-
-    LaunchedEffect(Unit) {
-        viewModel.getClientPinpointLocations(clientId = clientId)
-    }
 
     PinpointClientScreen(
         state = state,
@@ -108,6 +110,9 @@ internal fun PinpointClientScreen(
                 dapptableId,
             )
         },
+        onAddressesChanged = {
+            viewModel.getClientPinpointLocations(clientId)
+        },
     )
 }
 
@@ -121,29 +126,78 @@ internal fun PinpointClientScreen(
     onAddAddress: (ClientAddressRequest) -> Unit,
     onUpdateAddress: (Int, Int, ClientAddressRequest) -> Unit,
     onDeleteAddress: (Int, Int) -> Unit,
+    onAddressesChanged: () -> Unit,
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
     val pullRefreshState = rememberPullToRefreshState()
 
     var showPermissionDialog by remember { mutableStateOf(false) }
+    var showMapDialogScreen by remember { mutableStateOf(false) }
+    var updateMode by remember { mutableStateOf(false) }
+    var addressToUpdate by remember { mutableStateOf<ClientAddressResponse?>(null) }
 
     if (showPermissionDialog) {
-        HandleLocationPermissionRequest(
-            show = showPermissionDialog,
-            onPermissionResult = { granted ->
-                if (granted) onAddAddress(ClientAddressRequest())
+        PermissionBox(
+            requiredPermissions = getRequiredPermissionsForLocation(),
+            title = stringResource(Res.string.feature_client_permission_required),
+            description = stringResource(Res.string.feature_client_approve_permission_description_location),
+            confirmButtonText = stringResource(Res.string.feature_client_proceed),
+            dismissButtonText = stringResource(Res.string.feature_client_dismiss),
+            onGranted = {
                 showPermissionDialog = false
+                showMapDialogScreen = true
+            },
+        )
+    }
+
+    if (showMapDialogScreen) {
+        PinpointMapDialogScreen(
+            initialLat = addressToUpdate?.latitude,
+            initialLng = addressToUpdate?.longitude,
+            initialDescription = addressToUpdate?.placeAddress,
+            onSubmit = { lat, lng, description ->
+                if (updateMode && addressToUpdate != null) {
+                    val address = requireNotNull(addressToUpdate)
+                    val id = requireNotNull(address.id)
+                    val clientId = requireNotNull(address.clientId)
+
+                    onUpdateAddress(
+                        clientId,
+                        id,
+                        ClientAddressRequest(
+                            latitude = lat,
+                            longitude = lng,
+                            placeAddress = description,
+                        ),
+                    )
+                } else {
+                    onAddAddress(
+                        ClientAddressRequest(
+                            latitude = lat,
+                            longitude = lng,
+                            placeAddress = description,
+                        ),
+                    )
+                }
+                showMapDialogScreen = false
+                addressToUpdate = null
+            },
+            onCancel = {
+                showMapDialogScreen = false
+                addressToUpdate = null
             },
         )
     }
 
     MifosScaffold(
-        title = "Pinpoint Client",
+        title = stringResource(Res.string.feature_client_pinpoint_client),
         onBackPressed = onBackPressed,
         actions = {
             IconButton(onClick = {
                 showPermissionDialog = true
+                updateMode = false
+                addressToUpdate = null
             }) {
                 Icon(
                     imageVector = MifosIcons.AddLocation,
@@ -163,7 +217,11 @@ internal fun PinpointClientScreen(
                     is PinPointClientUiState.ClientPinpointLocations -> {
                         PinPointClientContent(
                             pinpointLocations = state.clientAddressResponses,
-                            onUpdateAddress = onUpdateAddress,
+                            onStartUpdateAddress = { address ->
+                                updateMode = true
+                                addressToUpdate = address
+                                showMapDialogScreen = true
+                            },
                             onDeleteAddress = onDeleteAddress,
                         )
                     }
@@ -180,6 +238,7 @@ internal fun PinpointClientScreen(
                                 message = getString(state.message),
                             )
                         }
+                        onAddressesChanged()
                     }
                 }
             }
@@ -188,22 +247,16 @@ internal fun PinpointClientScreen(
 }
 
 @Composable
-expect fun HandleLocationPermissionRequest(
-    show: Boolean,
-    onPermissionResult: (granted: Boolean) -> Unit,
-)
-
-@Composable
 private fun PinPointClientContent(
     pinpointLocations: List<ClientAddressResponse>,
-    onUpdateAddress: (Int, Int, ClientAddressRequest) -> Unit,
+    onStartUpdateAddress: (ClientAddressResponse) -> Unit,
     onDeleteAddress: (Int, Int) -> Unit,
 ) {
     LazyColumn {
         items(pinpointLocations) { pinpointLocation ->
             PinpointLocationItem(
                 pinpointLocation = pinpointLocation,
-                onUpdateAddress = onUpdateAddress,
+                onStartUpdateAddress = onStartUpdateAddress,
                 onDeleteAddress = onDeleteAddress,
             )
         }
@@ -211,9 +264,18 @@ private fun PinPointClientContent(
 }
 
 @Composable
+expect fun PinpointMapDialogScreen(
+    initialLat: Double? = null,
+    initialLng: Double? = null,
+    initialDescription: String? = null,
+    onSubmit: (lat: Double, lng: Double, description: String) -> Unit,
+    onCancel: () -> Unit,
+)
+
+@Composable
 internal expect fun PinpointLocationItem(
     pinpointLocation: ClientAddressResponse,
-    onUpdateAddress: (Int, Int, ClientAddressRequest) -> Unit,
+    onStartUpdateAddress: (ClientAddressResponse) -> Unit,
     onDeleteAddress: (Int, Int) -> Unit,
 )
 
@@ -246,11 +308,11 @@ internal fun PinPointSelectDialog(
                     style = MaterialTheme.typography.bodyLarge,
                     textAlign = TextAlign.Center,
                 )
+
                 Spacer(modifier = Modifier.height(20.dp))
 
                 Button(
                     onClick = { updateAddress() },
-//                    colors = ButtonDefaults.buttonColors(BlueSecondary),
                 ) {
                     Text(
                         text = stringResource(Res.string.feature_client_update_client_address),
@@ -261,10 +323,9 @@ internal fun PinPointSelectDialog(
                 }
                 Button(
                     onClick = { deleteAddress() },
-//                    colors = ButtonDefaults.buttonColors(BlueSecondary),
                 ) {
                     Text(
-                        text = stringResource(Res.string.feature_client_delete_image),
+                        text = stringResource(Res.string.feature_client_delete_client_address),
                         modifier = Modifier.fillMaxWidth(),
                         style = MaterialTheme.typography.bodyLarge,
                         textAlign = TextAlign.Center,
@@ -300,6 +361,7 @@ private fun PinpointClientScreenPreview(
         onAddAddress = {},
         onUpdateAddress = { _, _, _ -> },
         onDeleteAddress = { _, _ -> },
+        onAddressesChanged = {},
     )
 }
 
@@ -308,5 +370,7 @@ val samplePinpointLocations = List(10) {
         placeAddress = "Address $it",
         latitude = 0.0,
         longitude = 0.0,
+        clientId = 1,
+        id = 1,
     )
 }

@@ -13,7 +13,7 @@ import com.mifos.core.common.utils.DataState
 import com.mifos.core.common.utils.asDataStateFlow
 import com.mifos.core.data.repository.PinPointClientRepository
 import com.mifos.core.model.objects.clients.ClientAddressRequest
-import com.mifos.core.network.GenericResponse
+import com.mifos.core.network.model.PinpointLocationActionResponse
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
@@ -24,7 +24,7 @@ class AddClientPinpointLocationUseCase(
     operator fun invoke(
         clientId: Int,
         address: ClientAddressRequest,
-    ): Flow<DataState<GenericResponse>> = flow {
+    ): Flow<DataState<PinpointLocationActionResponse>> = flow {
         emit(pinPointClientRepository.addClientPinpointLocation(clientId, address))
     }.asDataStateFlow()
 }
