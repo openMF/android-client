@@ -23,7 +23,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
-import org.koin.core.qualifier.named
 import org.koin.dsl.module
 import kotlin.coroutines.EmptyCoroutineContext.get
 
@@ -39,16 +38,15 @@ val NetworkModule = module {
         }
     }
 
-    single<String>(named("baseUrl")) {
+    single<String>(BaseUrl) {
         val preferencesRepository = get<UserPreferencesRepository>()
         preferencesRepository.instanceUrl
     }
 
     single<KtorfitClient>(MifosClient) {
-
         KtorfitClient.builder()
             .httpClient(get(KtorClient))
-            .baseURL(get<String>(named("baseUrl")))
+            .baseURL(get<String>(BaseUrl))
             .build()
     }
 
@@ -58,7 +56,7 @@ val NetworkModule = module {
 
     single<Ktorfit> {
         Ktorfit.Builder()
-            .baseUrl(get<String>(named("baseUrl")))
+            .baseUrl(get<String>(BaseUrl))
             .httpClient(get<HttpClient>(KtorClient))
             .converterFactories(FlowConverterFactory())
             .build()
