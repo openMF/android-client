@@ -37,7 +37,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -62,31 +61,9 @@ import org.jetbrains.compose.ui.tooling.preview.PreviewParameterProvider
 internal fun ClientIdentifiersDialogScreen(
     state: ClientIdentifierDialogUiState,
     onDismiss: () -> Unit,
-    reloadIdentifiers: () -> Unit,
     onRetry: () -> Unit,
-    onCreate: () -> Unit,
-) {
-    LaunchedEffect(Unit) {
-    }
-
-    ClientIdentifiersDialogScreen(
-        state = state,
-        onDismiss = onDismiss,
-        onRetry = {
-            viewModel.loadClientIdentifierTemplate(clientId = clientId)
-        },
-        onCreate = {
-            viewModel.createClientIdentifier(clientId, it)
-        },
-    )
-}
-
-@Composable
-internal fun ClientIdentifiersDialogScreen(
-    state: ClientIdentifierDialogUiState,
-    onDismiss: () -> Unit,
-    onRetry: () -> Unit,
-    onCreate: (IdentifierPayload) -> Unit,
+    onCreateIdentifier: (IdentifierPayload) -> Unit,
+    onIdentifierCreated: () -> Unit,
 ) {
     Dialog(
         onDismissRequest = { onDismiss() },
@@ -129,7 +106,7 @@ internal fun ClientIdentifiersDialogScreen(
                         is ClientIdentifierDialogUiState.ClientIdentifierTemplate -> {
                             ClientIdentifiersContent(
                                 clientIdentifierTemplate = state.identifierTemplate,
-                                onCreate = onCreate,
+                                onCreate = onCreateIdentifier,
                             )
                         }
 
@@ -139,7 +116,9 @@ internal fun ClientIdentifiersDialogScreen(
                             onRetry()
                         }
 
-                        is ClientIdentifierDialogUiState.IdentifierCreatedSuccessfully -> {}
+                        is ClientIdentifierDialogUiState.IdentifierCreatedSuccessfully -> {
+                            onIdentifierCreated()
+                        }
 
                         is ClientIdentifierDialogUiState.Loading -> MifosCircularProgress()
                     }
@@ -294,6 +273,7 @@ private fun ClientIdentifiersDialogScreenPreview(
         state = state,
         onDismiss = {},
         onRetry = {},
-        onCreate = {},
+        onCreateIdentifier = {},
+        onIdentifierCreated = {},
     )
 }

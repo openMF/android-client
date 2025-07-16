@@ -354,6 +354,7 @@ private fun ClientIdentifiersScreenPreview(
         onDocumentClicked = {},
         onShowDialog = {},
         reloadIdentifiers = {},
+        onCreateIdentifier = {},
     )
 }
 val sampleClientIdentifiers = List(10) {
