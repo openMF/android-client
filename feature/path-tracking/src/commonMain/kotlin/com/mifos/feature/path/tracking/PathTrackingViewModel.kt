@@ -7,7 +7,7 @@
  *
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
-package com.mifos.feature.pathTracking
+package com.mifos.feature.path.tracking
 
 import androidclient.feature.path_tracking.generated.resources.Res
 import androidclient.feature.path_tracking.generated.resources.feature_path_tracking_failed_to_load_path_tracking
@@ -17,6 +17,7 @@ import androidx.lifecycle.viewModelScope
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.datastore.UserPreferencesRepository
 import com.mifos.core.domain.useCases.GetUserPathTrackingUseCase
+import com.mifos.feature.pathTracking.PathTrackingUiState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
