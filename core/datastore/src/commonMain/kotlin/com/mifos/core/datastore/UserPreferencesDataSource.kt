@@ -31,8 +31,6 @@ private const val USER_DATA = "userData"
 private const val AUTH_USER = "user_details"
 private const val SERVER_CONFIG_KEY = "server_config"
 private const val USER_STATUS = "user_status"
-private const val AUTH_USERNAME = "auth_username"
-private const val AUTH_PASSWORD = "auth_password"
 private const val APP_SETTINGS = "appSettings"
 
 @OptIn(ExperimentalSerializationApi::class, ExperimentalSettingsApi::class)
@@ -93,16 +91,6 @@ class UserPreferencesDataSource(
     val userStatus: Boolean
         get() = settings.getBoolean(USER_STATUS, false)
 
-    var usernamePassword: Pair<String, String>
-        get() = Pair(
-            settings.getString(AUTH_USERNAME, "") ?: "",
-            settings.getString(AUTH_PASSWORD, "") ?: "",
-        )
-        set(value) {
-            settings.putString(AUTH_USERNAME, value.first)
-            settings.putString(AUTH_PASSWORD, value.second)
-        }
-
     val isAuthenticated: Boolean
         get() = _userData.value.isAuthenticated
 
@@ -145,7 +133,7 @@ class UserPreferencesDataSource(
 
     suspend fun clearInfo() {
         withContext(dispatcher) {
-            settings.remove(AUTH_USER)
+            settings.putAuth(User())
         }
     }
 
