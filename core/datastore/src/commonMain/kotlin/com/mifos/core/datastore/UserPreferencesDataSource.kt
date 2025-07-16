@@ -145,7 +145,7 @@ class UserPreferencesDataSource(
 
     suspend fun clearInfo() {
         withContext(dispatcher) {
-            settings.clear()
+            settings.remove(AUTH_USER)
         }
     }
 
