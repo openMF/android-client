@@ -1,3 +1,12 @@
+/*
+ * Copyright 2025 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ */
 package com.mifos.core.network.mappers.clients
 
 import com.mifos.core.network.model.ChargesResponse
@@ -6,7 +15,7 @@ import com.mifos.room.entities.client.ChargesEntity
 class ChargesMapper {
     fun ChargesResponse.toEntity(): ChargesEntity {
         return ChargesEntity(
-            id = 0, // or from response if server provides unique id
+            id = 0,
             clientId = this.clientId,
             loanId = this.loanId,
             chargeId = this.chargeId,

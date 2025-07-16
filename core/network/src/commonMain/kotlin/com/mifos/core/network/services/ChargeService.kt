@@ -15,7 +15,6 @@ import com.mifos.core.model.objects.payloads.ChargesPayload
 import com.mifos.core.model.objects.template.client.ChargeTemplate
 import com.mifos.core.network.model.ChargesResponse
 import com.mifos.room.basemodel.APIEndPoint
-import com.mifos.room.entities.client.ChargesEntity
 import de.jensklingenberg.ktorfit.http.Body
 import de.jensklingenberg.ktorfit.http.GET
 import de.jensklingenberg.ktorfit.http.POST
