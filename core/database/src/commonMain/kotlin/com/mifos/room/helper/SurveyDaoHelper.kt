@@ -60,7 +60,7 @@ class SurveyDaoHelper(
         responseDatas: ResponseDatasEntity,
     ): Flow<ResponseDatasEntity> {
         return flow {
-            val updatedResponseData = responseDatas.copy(questionId = questionId)
+            val updatedResponseData = responseDatas.copy(id = questionId)
             surveyDao.insertResponseData(updatedResponseData)
             emit(updatedResponseData)
         }

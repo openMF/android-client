@@ -44,9 +44,9 @@ import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.ui.components.MifosEmptyUi
-import com.mifos.core.ui.util.DevicePreview
 import com.mifos.room.entities.survey.SurveyEntity
 import org.jetbrains.compose.resources.stringResource
+import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameterProvider
 import org.koin.compose.viewmodel.koinViewModel
@@ -58,9 +58,10 @@ import org.koin.compose.viewmodel.koinViewModel
 @Composable
 internal fun SurveyListScreen(
     navigateBack: () -> Unit,
-    onCardClicked: (index: Int, surveys: List<SurveyEntity>) -> Unit,
+    onCardClicked: (index: Int, surveys: SurveyEntity) -> Unit,
     viewModel: SurveyListViewModel = koinViewModel(),
 ) {
+    val clientId by viewModel.clientId.collectAsStateWithLifecycle()
     val uiState by viewModel.surveyListUiState.collectAsStateWithLifecycle()
 
     LaunchedEffect(key1 = Unit) {
@@ -71,7 +72,9 @@ internal fun SurveyListScreen(
         uiState = uiState,
         navigateBack = navigateBack,
         onRetry = { viewModel.loadSurveyList() },
-        onCardClicked = onCardClicked,
+        onCardClicked = {
+            onCardClicked(clientId, it)
+        },
     )
 }
 
@@ -80,7 +83,7 @@ internal fun SurveyListScreen(
     uiState: SurveyListUiState,
     navigateBack: () -> Unit,
     onRetry: () -> Unit,
-    onCardClicked: (index: Int, surveys: List<SurveyEntity>) -> Unit,
+    onCardClicked: (survey: SurveyEntity) -> Unit,
 ) {
     val snackbarHostState = remember {
         SnackbarHostState()
@@ -122,7 +125,7 @@ internal fun SurveyListScreen(
 @Composable
 private fun SurveyListContent(
     surveyList: List<SurveyEntity>,
-    onCardClicked: (index: Int, surveys: List<SurveyEntity>) -> Unit,
+    onCardClicked: (survey: SurveyEntity) -> Unit,
 ) {
     Column(
         modifier = Modifier.fillMaxSize(),
@@ -144,7 +147,7 @@ private fun SurveyListContent(
                 SurveyCardItem(
                     surveyName = survey.name,
                     description = survey.description,
-                    onCardClicked = { onCardClicked.invoke(surveyList.indexOf(survey), surveyList) },
+                    onCardClicked = { onCardClicked.invoke(survey) },
                 )
             }
         }
@@ -216,7 +219,7 @@ private class SurveyListPreviewProvider : PreviewParameterProvider<SurveyListUiS
 }
 
 @Composable
-@DevicePreview
+@Preview
 private fun PreviewSurveyListScreen(
     @PreviewParameter(SurveyListPreviewProvider::class) surveyListUiState: SurveyListUiState,
 ) {
@@ -224,7 +227,7 @@ private fun PreviewSurveyListScreen(
         uiState = surveyListUiState,
         navigateBack = { },
         onRetry = { },
-        onCardClicked = { _, _ ->
+        onCardClicked = { _ ->
         },
     )
 }

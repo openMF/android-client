@@ -208,9 +208,6 @@ internal fun FeatureNavHost(
             },
             hasDatatables = appState.navController::navigateDataTableList,
             onDocumentClicked = appState.navController::navigateToDocumentListScreen,
-            onCardClicked = { _, _ ->
-                // TODO: Add Card Click
-            },
         )
     }
 }
