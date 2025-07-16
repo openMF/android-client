@@ -9,7 +9,6 @@
  */
 package com.mifos.feature.client.di
 
-import com.mifos.feature.client.clientChargeDialog.ChargeDialogViewModel
 import com.mifos.feature.client.clientCharges.ClientChargesViewModel
 import com.mifos.feature.client.clientDetails.ClientDetailsViewModel
 import com.mifos.feature.client.clientIdentifiers.ClientIdentifiersViewModel
@@ -25,7 +24,6 @@ import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.module
 
 val ClientModule = module {
-    viewModelOf(::ChargeDialogViewModel)
     viewModelOf(::ClientChargesViewModel)
     viewModelOf(::ClientDetailsViewModel)
     viewModelOf(::ClientIdentifiersViewModel)

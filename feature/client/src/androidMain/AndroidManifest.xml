@@ -15,4 +15,12 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
     <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
+
+    <application>
+
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="@string/feature_client_pinpoint_google_maps_key" />
+
+    </application>
 </manifest>

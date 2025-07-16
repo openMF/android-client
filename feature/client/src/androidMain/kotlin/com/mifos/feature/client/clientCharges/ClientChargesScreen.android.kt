@@ -58,10 +58,15 @@ actual fun ClientChargeContent(
                     icon = MifosIcons.Payments,
                 )
             } else {
+                // Use a composite key of id and index to guarantee uniqueness,
+                // preventing LazyColumn crashes when duplicate ids are present in paged data.
                 LazyColumn {
                     items(
                         chargesPagingList.itemCount,
-                        key = { index -> chargesPagingList[index]?.id ?: index },
+                        key = { index ->
+                            val id = chargesPagingList[index]?.id
+                            if (id != null) "id_${id}_index_$index" else "index_$index"
+                        },
                     ) { index ->
                         chargesPagingList[index]?.let { ChargesItems(it) }
                     }

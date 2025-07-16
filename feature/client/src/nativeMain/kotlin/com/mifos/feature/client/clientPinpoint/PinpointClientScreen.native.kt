@@ -15,13 +15,13 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import com.mifos.core.model.objects.clients.ClientAddressRequest
 import com.mifos.core.model.objects.clients.ClientAddressResponse
 
 @Composable
-actual fun HandleLocationPermissionRequest(
-    show: Boolean,
-    onPermissionResult: (Boolean) -> Unit,
+internal actual fun PinpointLocationItem(
+    pinpointLocation: ClientAddressResponse,
+    onStartUpdateAddress: (ClientAddressResponse) -> Unit,
+    onDeleteAddress: (Int, Int) -> Unit,
 ) {
     Box(
         modifier = Modifier.fillMaxSize(),
@@ -34,10 +34,12 @@ actual fun HandleLocationPermissionRequest(
 }
 
 @Composable
-actual fun PinpointLocationItem(
-    pinpointLocation: ClientAddressResponse,
-    onUpdateAddress: (Int, Int, ClientAddressRequest) -> Unit,
-    onDeleteAddress: (Int, Int) -> Unit,
+actual fun PinpointMapDialogScreen(
+    initialLat: Double?,
+    initialLng: Double?,
+    initialDescription: String?,
+    onSubmit: (Double, Double, String) -> Unit,
+    onCancel: () -> Unit,
 ) {
     Box(
         modifier = Modifier.fillMaxSize(),

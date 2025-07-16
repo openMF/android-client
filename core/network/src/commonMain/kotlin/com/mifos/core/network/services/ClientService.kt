@@ -11,12 +11,14 @@ package com.mifos.core.network.services
 
 import com.mifos.core.common.utils.Page
 import com.mifos.core.model.objects.clients.ActivatePayload
+import com.mifos.core.model.objects.clients.ClientAddressRequest
 import com.mifos.core.model.objects.clients.ClientAddressResponse
 import com.mifos.core.model.objects.noncoreobjects.Identifier
 import com.mifos.core.model.objects.noncoreobjects.IdentifierCreationResponse
 import com.mifos.core.model.objects.noncoreobjects.IdentifierPayload
 import com.mifos.core.model.objects.noncoreobjects.IdentifierTemplate
 import com.mifos.core.network.GenericResponse
+import com.mifos.core.network.model.PinpointLocationActionResponse
 import com.mifos.core.network.model.PostAuthenticationRequest
 import com.mifos.core.network.model.PostAuthenticationResponse
 import com.mifos.room.basemodel.APIEndPoint
@@ -171,8 +173,8 @@ interface ClientService {
     @POST(APIEndPoint.DATATABLES + "/client_pinpoint_location/{clientId}")
     suspend fun addClientPinpointLocation(
         @Path("clientId") clientId: Int,
-        @Body clientAddressRequest: com.mifos.core.model.objects.clients.ClientAddressRequest?,
-    ): GenericResponse
+        @Body clientAddressRequest: ClientAddressRequest?,
+    ): PinpointLocationActionResponse
 
     /**
      * This is the service for deleting the pinpoint location from the DataTable
@@ -189,7 +191,7 @@ interface ClientService {
     suspend fun deleteClientPinpointLocation(
         @Path("apptableId") apptableId: Int,
         @Path("datatableId") datatableId: Int,
-    ): GenericResponse
+    ): PinpointLocationActionResponse
 
     /**
      * This is the service for updating the pinpoint location from DataTable
@@ -207,8 +209,8 @@ interface ClientService {
     suspend fun updateClientPinpointLocation(
         @Path("apptableId") apptableId: Int,
         @Path("datatableId") datatableId: Int,
-        @Body address: com.mifos.core.model.objects.clients.ClientAddressRequest?,
-    ): GenericResponse
+        @Body address: ClientAddressRequest?,
+    ): PinpointLocationActionResponse
 
     /**
      * This is the service to activate the client
