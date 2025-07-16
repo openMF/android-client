@@ -17,7 +17,6 @@ import androidx.lifecycle.viewModelScope
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.datastore.UserPreferencesRepository
 import com.mifos.core.domain.useCases.GetUserPathTrackingUseCase
-import com.mifos.feature.pathTracking.PathTrackingUiState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow

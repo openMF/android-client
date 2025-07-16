@@ -28,7 +28,7 @@ import com.mifos.feature.individualCollectionSheet.di.CollectionSheetModule
 import com.mifos.feature.loan.di.LoanModule
 import com.mifos.feature.note.di.NoteModule
 import com.mifos.feature.offline.di.OfflineModule
-import com.mifos.feature.pathTracking.di.PathTrackingModule
+import com.mifos.feature.path.tracking.di.PathTrackingModule
 import com.mifos.feature.report.di.ReportModule
 import com.mifos.feature.savings.di.SavingsModule
 import com.mifos.feature.search.di.SearchModule

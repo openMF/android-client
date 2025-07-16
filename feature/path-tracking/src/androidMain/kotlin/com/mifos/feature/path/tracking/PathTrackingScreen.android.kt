@@ -41,7 +41,6 @@ import com.google.maps.android.compose.MapUiSettings
 import com.google.maps.android.compose.rememberCameraPositionState
 import com.mifos.core.common.utils.Constants
 import com.mifos.core.model.objects.users.UserLatLng
-import com.mifos.feature.pathTracking.PathTrackingViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

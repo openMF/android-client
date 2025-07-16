@@ -47,7 +47,6 @@ import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.model.objects.users.UserLatLng
 import com.mifos.core.model.objects.users.UserLocation
 import com.mifos.core.ui.util.DevicePreview
-import com.mifos.feature.pathTracking.PathTrackingUiState
 import kotlinx.serialization.json.Json
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
