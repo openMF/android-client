@@ -50,12 +50,12 @@ interface DataTableService {
         @Path("dataTableRowId") dataTableRowId: Int,
     ): Flow<GenericResponse>
 
-    @POST(APIEndPoint.DATATABLES + "/user_tracking/{userId}")
+    @POST(APIEndPoint.DATATABLES + "/m_staff_path_tracking/{userId}")
     fun addUserPathTracking(
         @Path("userId") userId: Int,
         @Body userLocation: UserLocation?,
     ): Flow<GenericResponse>
 
-    @GET(APIEndPoint.DATATABLES + "/user_tracking/{userId}")
+    @GET(APIEndPoint.DATATABLES + "/m_staff_path_tracking/{userId}")
     fun getUserPathTracking(@Path("userId") userId: Int): Flow<List<UserLocation>>
 }

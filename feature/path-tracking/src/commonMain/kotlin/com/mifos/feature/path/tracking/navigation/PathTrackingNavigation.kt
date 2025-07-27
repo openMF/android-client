@@ -7,7 +7,7 @@
  *
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
-package com.mifos.feature.pathTracking.navigation
+package com.mifos.feature.path.tracking.navigation
 
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder

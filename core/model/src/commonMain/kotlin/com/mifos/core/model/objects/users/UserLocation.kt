@@ -11,10 +11,12 @@ package com.mifos.core.model.objects.users
 
 import com.mifos.core.model.utils.Parcelable
 import com.mifos.core.model.utils.Parcelize
+import kotlinx.serialization.Serializable
 
 /**
  * Created by Rajan Maurya on 24/01/17.
  */
+@Serializable
 @Parcelize
 data class UserLocation(
     var userId: Int? = null,
