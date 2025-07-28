@@ -12,7 +12,6 @@ package com.mifos.core.network.di
 import com.mifos.core.common.utils.getInstanceUrl
 import com.mifos.core.datastore.UserPreferencesRepository
 import com.mifos.core.network.BaseApiManager
-import com.mifos.core.network.BaseUrl
 import com.mifos.core.network.KtorHttpClient
 import com.mifos.core.network.KtorfitClient
 import com.mifos.core.network.MifosInterceptor
@@ -25,6 +24,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import org.koin.dsl.module
+import kotlin.coroutines.EmptyCoroutineContext.get
 
 val NetworkModule = module {
     single<HttpClient>(KtorClient) {
@@ -38,10 +38,15 @@ val NetworkModule = module {
         }
     }
 
+    single<String>(BaseUrl) {
+        val preferencesRepository = get<UserPreferencesRepository>()
+        preferencesRepository.instanceUrl
+    }
+
     single<KtorfitClient>(MifosClient) {
         KtorfitClient.builder()
             .httpClient(get(KtorClient))
-            .baseURL(BaseUrl().url)
+            .baseURL(get<String>(BaseUrl))
             .build()
     }
 
@@ -51,7 +56,7 @@ val NetworkModule = module {
 
     single<Ktorfit> {
         Ktorfit.Builder()
-            .baseUrl(BaseUrl().url)
+            .baseUrl(get<String>(BaseUrl))
             .httpClient(get<HttpClient>(KtorClient))
             .converterFactories(FlowConverterFactory())
             .build()
