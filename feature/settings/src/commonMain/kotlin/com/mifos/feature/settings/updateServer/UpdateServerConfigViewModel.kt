@@ -119,6 +119,7 @@ class UpdateServerConfigViewModel(
                     ).any { it.value != null }
 
                     if (!hasAnyError) {
+                        prefManager.logOut()
                         prefManager.updateServerConfig(_state.value)
                         _result.emit(true)
                     }
