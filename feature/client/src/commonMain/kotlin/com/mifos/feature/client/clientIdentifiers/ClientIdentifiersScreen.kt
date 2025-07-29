@@ -63,10 +63,11 @@ import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.designsystem.theme.identifierTextStyleDark
 import com.mifos.core.designsystem.theme.identifierTextStyleLight
 import com.mifos.core.model.objects.noncoreobjects.Identifier
+import com.mifos.core.model.objects.noncoreobjects.IdentifierPayload
 import com.mifos.core.ui.components.MifosEmptyUi
 import com.mifos.core.ui.util.DevicePreview
+import com.mifos.feature.client.clientIdentifiersDialog.ClientIdentifierDialogUiState
 import com.mifos.feature.client.clientIdentifiersDialog.ClientIdentifiersDialogScreen
-import com.mifos.feature.client.clientIdentifiersDialog.ClientIdentifiersDialogViewModel
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.getString
 import org.jetbrains.compose.resources.stringResource
@@ -78,55 +79,44 @@ import org.koin.compose.viewmodel.koinViewModel
 internal fun ClientIdentifiersScreen(
     onBackPressed: () -> Unit,
     onDocumentClicked: (Int) -> Unit,
-    clientIdentifiersviewModel: ClientIdentifiersViewModel = koinViewModel(),
-    clientIdentifiersDialogViewModel: ClientIdentifiersDialogViewModel = koinViewModel(),
+    viewModel: ClientIdentifiersViewModel = koinViewModel(),
 ) {
-    val clientId by clientIdentifiersviewModel.clientId.collectAsStateWithLifecycle()
-    val state by clientIdentifiersviewModel.clientIdentifiersUiState.collectAsStateWithLifecycle()
-    val refreshState by clientIdentifiersviewModel.isRefreshing.collectAsStateWithLifecycle()
+    val clientIdentifiersUiState by viewModel.clientIdentifiersUiState.collectAsStateWithLifecycle()
+    val clientIdentifiersDialogUiState by viewModel.clientIdentifierDialogUiState.collectAsStateWithLifecycle()
+    val refreshState by viewModel.isRefreshing.collectAsStateWithLifecycle()
 
     ClientIdentifiersScreen(
-        clientId = clientId,
-        state = state,
+        state = clientIdentifiersUiState,
+        dialogState = clientIdentifiersDialogUiState,
+        onShowDialog = viewModel::loadClientIdentifierTemplate,
         onBackPressed = onBackPressed,
         onDeleteIdentifier = { identifierId ->
-            clientIdentifiersviewModel.deleteIdentifier(clientId, identifierId)
+            viewModel.deleteIdentifier(identifierId)
+        },
+        onCreateIdentifier = { identifierPayload ->
+            viewModel.createClientIdentifier(identifierPayload)
         },
         refreshState = refreshState,
-        onRefresh = {
-            clientIdentifiersviewModel.refreshIdentifiersList(clientId)
-        },
-        onRetry = {
-            clientIdentifiersviewModel.loadIdentifiers(clientId)
-        },
-        onIdentifierCreated = {
-            // resetUiState() is needed here to clear the success state immediately after successful
-            // client identifier creation, so that reopening the dialog doesn’t reuse stale state and
-            // accidentally retrigger main screen loading.
-            // Downside: this causes two back-to-back loading states — one in the dialog and one on
-            // the main screen.
-            clientIdentifiersDialogViewModel.resetUiState()
-            clientIdentifiersviewModel.loadIdentifiers(clientId)
-        },
+        onRefresh = viewModel::refreshIdentifiersList,
+        onRetry = viewModel::loadIdentifiers,
         onDocumentClicked = onDocumentClicked,
-        onIdentifierDeleted = {
-            clientIdentifiersviewModel.loadIdentifiers(clientId)
-        },
+        reloadIdentifiers = viewModel::loadIdentifiers,
     )
 }
 
 @Composable
 internal fun ClientIdentifiersScreen(
-    clientId: Int,
     state: ClientIdentifiersUiState,
+    dialogState: ClientIdentifierDialogUiState,
+    onShowDialog: () -> Unit,
     onBackPressed: () -> Unit,
     onDeleteIdentifier: (Int) -> Unit,
+    onCreateIdentifier: (IdentifierPayload) -> Unit,
     refreshState: Boolean,
     onRefresh: () -> Unit,
     onRetry: () -> Unit,
-    onIdentifierCreated: () -> Unit,
     onDocumentClicked: (Int) -> Unit,
-    onIdentifierDeleted: () -> Unit,
+    reloadIdentifiers: () -> Unit,
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
     val pullToRefreshState = rememberPullToRefreshState()
@@ -136,13 +126,15 @@ internal fun ClientIdentifiersScreen(
 
     if (showCreateIdentifierDialog) {
         ClientIdentifiersDialogScreen(
-            clientId = clientId,
+            state = dialogState,
             onDismiss = { showCreateIdentifierDialog = false },
             onIdentifierCreated = {
                 showCreateIdentifierDialog = false
                 showCreateSuccessMessage = true
-                onIdentifierCreated()
+                reloadIdentifiers()
             },
+            onRetry = onRetry,
+            onCreateIdentifier = onCreateIdentifier,
         )
     }
 
@@ -152,6 +144,7 @@ internal fun ClientIdentifiersScreen(
         actions = {
             IconButton(
                 onClick = {
+                    onShowDialog()
                     showCreateIdentifierDialog = true
                 },
             ) {
@@ -196,7 +189,7 @@ internal fun ClientIdentifiersScreen(
                     }
 
                     is ClientIdentifiersUiState.IdentifierDeletedSuccessfully -> {
-                        onIdentifierDeleted()
+                        reloadIdentifiers()
                         scope.launch {
                             snackbarHostState.showSnackbar(
                                 message = getString(state.message),
@@ -351,16 +344,17 @@ private fun ClientIdentifiersScreenPreview(
     @PreviewParameter(ClientIdentifiersUiStateProvider::class) state: ClientIdentifiersUiState,
 ) {
     ClientIdentifiersScreen(
-        clientId = 1,
         state = state,
+        dialogState = ClientIdentifierDialogUiState.Loading,
         onBackPressed = {},
         onDeleteIdentifier = {},
         refreshState = true,
         onRefresh = {},
         onRetry = {},
-        onIdentifierCreated = {},
         onDocumentClicked = {},
-        onIdentifierDeleted = {},
+        onShowDialog = {},
+        reloadIdentifiers = {},
+        onCreateIdentifier = {},
     )
 }
 val sampleClientIdentifiers = List(10) {
