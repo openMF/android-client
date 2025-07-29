@@ -19,7 +19,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 @Parcelize
 data class UserLocation(
-    var userId: Int? = null,
+    var staffId: Int? = null,
 
     var latLng: String? = null,
 

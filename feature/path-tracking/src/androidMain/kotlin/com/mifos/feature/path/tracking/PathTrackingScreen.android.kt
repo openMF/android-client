@@ -45,8 +45,6 @@ import com.google.maps.android.compose.Polyline
 import com.google.maps.android.compose.rememberCameraPositionState
 import com.mifos.core.common.utils.Constants
 import com.mifos.core.model.objects.users.UserLatLng
-import kotlin.div
-import kotlin.times
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

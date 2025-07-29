@@ -53,9 +53,9 @@ class PathTrackingViewModel(
     }
 
     fun loadPathTracking() = viewModelScope.launch {
-        val userId = prefManager.userData.firstOrNull()?.userId
-        if (userId != null) {
-            getUserPathTrackingUseCase(userId.toInt()).collect { result ->
+        val officeId = prefManager.userData.firstOrNull()?.officeId
+        if (officeId != null) {
+            getUserPathTrackingUseCase(officeId.toInt()).collect { result ->
                 when (result) {
                     is DataState.Error ->
                         _pathTrackingUiState.value =

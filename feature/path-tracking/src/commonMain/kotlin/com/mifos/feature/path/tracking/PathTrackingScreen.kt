@@ -216,7 +216,7 @@ private fun PathTrackingScreenPreview(
 
 val samplePathTrackingList = List(10) {
     UserLocation(
-        userId = it,
+        staffId = it,
         latLng = "123,456",
         date = "date $it",
         startTime = "start time $it",
