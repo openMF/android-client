@@ -70,14 +70,4 @@ class BaseApiManager(
     val noteApi: NoteService = ktorfit.createNoteService()
     val runReportsService: RunReportsService = ktorfit.createRunReportsService()
 
-    companion object {
-        fun build(prefManager: UserPreferencesRepository): BaseApiManager {
-            val ktorfitClient = KtorfitClient.builder()
-                .httpClient(KtorHttpClient)
-                .baseURL(prefManager.getServerConfig.value.getInstanceUrl())
-                .build()
-
-            return BaseApiManager(prefManager, ktorfitClient.ktorfit)
-        }
-    }
 }

@@ -24,7 +24,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import org.koin.dsl.module
-import kotlin.coroutines.EmptyCoroutineContext.get
 
 val NetworkModule = module {
     single<HttpClient>(KtorClient) {
@@ -42,15 +41,6 @@ val NetworkModule = module {
         val preferencesRepository = get<UserPreferencesRepository>()
         preferencesRepository.instanceUrl
     }
-
-    single<KtorfitClient>(MifosClient) {
-        KtorfitClient.builder()
-            .httpClient(get(KtorClient))
-            .baseURL(get<String>(BaseUrl))
-            .build()
-    }
-
-    single { BaseApiManager.build(get()) }
 
     single { BaseApiManager(get(), get()) }
 
