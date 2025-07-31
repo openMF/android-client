@@ -184,7 +184,6 @@ private fun PathTrackingItem(
                 lng = latLngList.last().lng,
             )
         }
-
     }
     OutlinedCard(
         modifier = modifier.padding(8.dp),
@@ -195,7 +194,7 @@ private fun PathTrackingItem(
 
         Text(
             modifier = Modifier.padding(vertical = 4.dp, horizontal = 8.dp),
-            text = "${pathTracking.startAddress ?: startAdd} to ${pathTracking.endAddress?:endAdd}",
+            text = "${pathTracking.startAddress ?: startAdd} to ${pathTracking.endAddress ?: endAdd}",
             style = MaterialTheme.typography.bodyMedium,
             fontWeight = FontWeight.Medium,
         )

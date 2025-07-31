@@ -95,7 +95,7 @@ actual fun PathTrackingScreen(
                 val originLatLng = userLatLngs[0]
                 val destinationLatLng = userLatLngs[userLatLngs.size - 1]
                 "https://maps.google.com/maps?f=d&hl=en&saddr=${originLatLng.lat},${originLatLng.lng}" +
-                        "&daddr=${destinationLatLng.lat},${destinationLatLng.lng}"
+                    "&daddr=${destinationLatLng.lat},${destinationLatLng.lng}"
             } else {
                 // Handle the case when userLatLngs is empty
                 ""
@@ -142,7 +142,7 @@ actual fun PathTrackingMapView(latLngList: List<UserLatLng>) {
                 title = getAddressFromLatLng(
                     lat = startPoint.lat,
                     lng = startPoint.lng,
-                    context = context
+                    context = context,
                 )?.trim(),
                 draggable = true,
             )
@@ -153,7 +153,7 @@ actual fun PathTrackingMapView(latLngList: List<UserLatLng>) {
                     title = getAddressFromLatLng(
                         lat = endPoint.lat,
                         lng = endPoint.lng,
-                        context = context
+                        context = context,
                     )?.trim(),
                     draggable = true,
                 )
@@ -167,7 +167,8 @@ actual fun PathTrackingMapView(latLngList: List<UserLatLng>) {
         }
     }
 }
-fun getAddressFromLatLng(context: Context, lat: Double, lng: Double): String? {
+
+private fun getAddressFromLatLng(context: Context, lat: Double, lng: Double): String? {
     return try {
         val geocoder = Geocoder(context, Locale.getDefault())
         val addresses = geocoder.getFromLocation(lat, lng, 1)
