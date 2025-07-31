@@ -29,6 +29,10 @@ data class UserLocation(
 
     var date: String? = null,
 
+    var startAddress: String? = null,
+
+    var endAddress: String? = null,
+
     var dateFormat: String? = "dd MMMM yyyy HH:mm",
 
     var locale: String? = "en",

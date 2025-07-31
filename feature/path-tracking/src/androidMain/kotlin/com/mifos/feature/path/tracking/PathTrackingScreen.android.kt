@@ -17,6 +17,7 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.location.Geocoder
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -45,6 +46,7 @@ import com.google.maps.android.compose.Polyline
 import com.google.maps.android.compose.rememberCameraPositionState
 import com.mifos.core.common.utils.Constants
 import com.mifos.core.model.objects.users.UserLatLng
+import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -93,7 +95,7 @@ actual fun PathTrackingScreen(
                 val originLatLng = userLatLngs[0]
                 val destinationLatLng = userLatLngs[userLatLngs.size - 1]
                 "https://maps.google.com/maps?f=d&hl=en&saddr=${originLatLng.lat},${originLatLng.lng}" +
-                    "&daddr=${destinationLatLng.lat},${destinationLatLng.lng}"
+                        "&daddr=${destinationLatLng.lat},${destinationLatLng.lng}"
             } else {
                 // Handle the case when userLatLngs is empty
                 ""
@@ -134,16 +136,26 @@ actual fun PathTrackingMapView(latLngList: List<UserLatLng>) {
         if (latLngList.isNotEmpty()) {
             val startPoint = latLngList.first()
             val endPoint = latLngList.last()
-
+            val context = LocalContext.current
             Marker(
                 state = MarkerState(position = LatLng(startPoint.lat, startPoint.lng)),
-                title = "Start",
+                title = getAddressFromLatLng(
+                    lat = startPoint.lat,
+                    lng = startPoint.lng,
+                    context = context
+                )?.trim(),
+                draggable = true,
             )
 
             if (latLngList.size > 1) {
                 Marker(
                     state = MarkerState(position = LatLng(endPoint.lat, endPoint.lng)),
-                    title = "End",
+                    title = getAddressFromLatLng(
+                        lat = endPoint.lat,
+                        lng = endPoint.lng,
+                        context = context
+                    )?.trim(),
+                    draggable = true,
                 )
 
                 Polyline(
@@ -153,5 +165,14 @@ actual fun PathTrackingMapView(latLngList: List<UserLatLng>) {
                 )
             }
         }
+    }
+}
+fun getAddressFromLatLng(context: Context, lat: Double, lng: Double): String? {
+    return try {
+        val geocoder = Geocoder(context, Locale.getDefault())
+        val addresses = geocoder.getFromLocation(lat, lng, 1)
+        addresses?.firstOrNull()?.getAddressLine(0)
+    } catch (e: Exception) {
+        null
     }
 }
