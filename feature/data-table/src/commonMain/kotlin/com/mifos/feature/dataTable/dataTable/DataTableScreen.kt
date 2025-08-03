@@ -67,7 +67,7 @@ fun DataTableScreen(
         onRefresh = { viewModel.refresh(tableName) },
         isRefreshing = isRefreshing,
         onClick = {
-            onClick(it.registeredTableName ?: "tableName", entityId, it)
+            onClick(it.registeredTableName ?: "", entityId, it)
         },
     )
 }

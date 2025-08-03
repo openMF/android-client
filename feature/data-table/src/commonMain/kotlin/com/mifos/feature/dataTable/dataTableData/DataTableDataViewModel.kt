@@ -49,21 +49,18 @@ class DataTableDataViewModel(
         loadDataTableInfo(arg.tableName, arg.entityId)
     }
 
-    fun refreshDataTableData(table: String, entity: Int) {
+    fun refreshDataTableData(table: String, entityId: Int) {
         _isRefreshing.value = true
-        loadDataTableInfo(table, entity)
+        loadDataTableInfo(table, entityId)
         _isRefreshing.value = false
     }
 
-    fun loadDataTableInfo(table: String, entity: Int) =
+    fun loadDataTableInfo(table: String, entityId: Int) =
         viewModelScope.launch {
-            getDataTableInfoUseCase(table, entity)
+            getDataTableInfoUseCase(table, entityId)
                 .collect { result ->
                     when (result) {
                         is DataState.Error -> {
-                            Logger.e("LoggedError ${result.message}")
-                            Logger.e("LoggedError tablename ${table}")
-
                             _dataTableDataUiState.value =
                                 DataTableDataUiState.Error(
                                     Res.string.feature_data_table_failed_to_load_data_table_details,
@@ -85,28 +82,23 @@ class DataTableDataViewModel(
 
     fun deleteDataTableEntry(table: String, entity: Int, rowId: Int) =
         viewModelScope.launch {
-            Logger.e("LoggedError ${table}, $entity $rowId")
-
             deleteDataTableEntryUseCase(table, entity, rowId).collect { result ->
                 when (result) {
                     is DataState.Error -> {
-                        Logger.e("LoggedError ${result.message}")
                         _dataTableDataUiState.value =
                             DataTableDataUiState.Error(
                                 Res.string.feature_data_table_failed_to_delete_data_table,
                             )
-                        }
+                    }
 
                     is DataState.Loading ->
                         _dataTableDataUiState.value =
                             DataTableDataUiState.Loading
 
                     is DataState.Success -> {
-                        Logger.e("LoggedError ${result.data}")
                         _dataTableDataUiState.value =
                             DataTableDataUiState.DataTableDeletedSuccessfully
                     }
-
                 }
             }
         }

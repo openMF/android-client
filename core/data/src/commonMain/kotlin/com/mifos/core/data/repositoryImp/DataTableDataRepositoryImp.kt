@@ -21,8 +21,8 @@ class DataTableDataRepositoryImp(
     private val dataManagerDataTable: DataManagerDataTable,
 ) : DataTableDataRepository {
 
-    override suspend fun getDataTableInfo(table: String, entity: Int): JsonArray {
-        return dataManagerDataTable.getDataTableInfo(table, entity)
+    override suspend fun getDataTableInfo(table: String, entityId: Int): JsonArray {
+        return dataManagerDataTable.getDataTableInfo(table, entityId)
     }
 
     override suspend fun deleteDataTableEntry(

@@ -20,7 +20,7 @@ class GetDataTableInfoUseCase(
     private val repository: DataTableDataRepository,
 ) {
 
-    operator fun invoke(table: String, entity : Int): Flow<DataState<JsonArray>> = flow {
-        emit(repository.getDataTableInfo(table, entity))
+    operator fun invoke(table: String, entityId: Int): Flow<DataState<JsonArray>> = flow {
+        emit(repository.getDataTableInfo(table, entityId))
     }.asDataStateFlow()
 }
