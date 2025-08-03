@@ -64,6 +64,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import co.touchlab.kermit.Logger
 import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
@@ -93,10 +94,6 @@ fun DataTableDataScreen(
     val table = viewModel.arg.tableName
     val state by viewModel.dataTableDataUiState.collectAsStateWithLifecycle()
     val isRefreshing by viewModel.isRefreshing.collectAsStateWithLifecycle()
-
-    LaunchedEffect(Unit) {
-        viewModel.loadDataTableInfo(table, entityId)
-    }
 
     DataTableDataScreen(
         dataTable = dataTable,
@@ -294,6 +291,7 @@ fun DataTableDataCardItem(
                             color = Black,
                         ),
                     )
+                    Logger.e("LoggedError ${dataItem.clientId} ${dataItem.id} , ")
                     Text(
                         modifier = Modifier.weight(1f),
                         text = dataItem.clientId ?: "-",

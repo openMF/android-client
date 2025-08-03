@@ -15,6 +15,7 @@ import androidclient.feature.data_table.generated.resources.feature_data_table_f
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import co.touchlab.kermit.Logger
 import com.mifos.core.common.utils.Constants
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.domain.useCases.DeleteDataTableEntryUseCase
@@ -44,18 +45,25 @@ class DataTableDataViewModel(
     private val _isRefreshing = MutableStateFlow(false)
     val isRefreshing = _isRefreshing.asStateFlow()
 
-    fun refreshDataTableData(table: String, entityId: Int) {
+    init {
+        loadDataTableInfo(arg.tableName, arg.entityId)
+    }
+
+    fun refreshDataTableData(table: String, entity: Int) {
         _isRefreshing.value = true
-        loadDataTableInfo(table = table, entityId = entityId)
+        loadDataTableInfo(table, entity)
         _isRefreshing.value = false
     }
 
-    fun loadDataTableInfo(table: String, entityId: Int) =
+    fun loadDataTableInfo(table: String, entity: Int) =
         viewModelScope.launch {
-            getDataTableInfoUseCase(table, entityId)
+            getDataTableInfoUseCase(table, entity)
                 .collect { result ->
                     when (result) {
                         is DataState.Error -> {
+                            Logger.e("LoggedError ${result.message}")
+                            Logger.e("LoggedError tablename ${table}")
+
                             _dataTableDataUiState.value =
                                 DataTableDataUiState.Error(
                                     Res.string.feature_data_table_failed_to_load_data_table_details,
@@ -77,21 +85,28 @@ class DataTableDataViewModel(
 
     fun deleteDataTableEntry(table: String, entity: Int, rowId: Int) =
         viewModelScope.launch {
+            Logger.e("LoggedError ${table}, $entity $rowId")
+
             deleteDataTableEntryUseCase(table, entity, rowId).collect { result ->
                 when (result) {
-                    is DataState.Error ->
+                    is DataState.Error -> {
+                        Logger.e("LoggedError ${result.message}")
                         _dataTableDataUiState.value =
                             DataTableDataUiState.Error(
                                 Res.string.feature_data_table_failed_to_delete_data_table,
                             )
+                        }
 
                     is DataState.Loading ->
                         _dataTableDataUiState.value =
                             DataTableDataUiState.Loading
 
-                    is DataState.Success ->
+                    is DataState.Success -> {
+                        Logger.e("LoggedError ${result.data}")
                         _dataTableDataUiState.value =
                             DataTableDataUiState.DataTableDeletedSuccessfully
+                    }
+
                 }
             }
         }

@@ -37,7 +37,7 @@ class DataManagerDataTable(
      * 3. m_loan
      * @param tableName DataTable Name
      * @return List<DataTable>
-     </DataTable> */
+    </DataTable> */
     fun getDataTable(tableName: String?): Flow<List<DataTableEntity>> {
         return baseApiManager.getDataTableApi().getDatatables(tableName)
             .map { responseList ->
@@ -45,8 +45,8 @@ class DataManagerDataTable(
             }
     }
 
-    suspend fun getDataTableInfo(table: String, entityId: Int): JsonArray {
-        return mBaseApiManager.dataTableApi.getDataOfDataTable(table, entityId)
+    suspend fun getDataTableInfo(table: String, entity: Int): JsonArray {
+        return mBaseApiManager.dataTableApi.getDataOfDataTable(table, entity)
     }
 
     suspend fun addDataTableEntry(
@@ -89,7 +89,7 @@ class DataManagerDataTable(
      *
      * @param userId UserId Id
      * @return List<UserLocation>
-     </UserLocation> */
+    </UserLocation> */
     fun getUserPathTracking(userId: Int): Flow<List<UserLocation>> {
         return mBaseApiManager.dataTableApi.getUserPathTracking(userId)
     }

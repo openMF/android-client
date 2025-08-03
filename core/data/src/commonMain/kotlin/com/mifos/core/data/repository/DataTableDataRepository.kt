@@ -17,7 +17,7 @@ import kotlinx.serialization.json.JsonArray
  */
 interface DataTableDataRepository {
 
-    suspend fun getDataTableInfo(table: String, entityId: Int): JsonArray
+    suspend fun getDataTableInfo(table: String, entity : Int): JsonArray
 
     suspend fun deleteDataTableEntry(
         table: String,
