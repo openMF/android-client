@@ -13,19 +13,15 @@
 
 package com.mifos.feature.path.tracking
 
-import android.Manifest
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
-import androidclient.feature.path_tracking.generated.resources.Res
-import androidclient.feature.path_tracking.generated.resources.feature_path_tracking_approve_permission_description_location
-import androidclient.feature.path_tracking.generated.resources.feature_path_tracking_dismiss
-import androidclient.feature.path_tracking.generated.resources.feature_path_tracking_permission_required
-import androidclient.feature.path_tracking.generated.resources.feature_path_tracking_proceed
+import android.location.Geocoder
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
@@ -44,12 +40,13 @@ import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.MapUiSettings
+import com.google.maps.android.compose.Marker
+import com.google.maps.android.compose.MarkerState
+import com.google.maps.android.compose.Polyline
 import com.google.maps.android.compose.rememberCameraPositionState
 import com.mifos.core.common.utils.Constants
-import com.mifos.core.designsystem.component.PermissionBox
 import com.mifos.core.model.objects.users.UserLatLng
-import com.mifos.feature.pathTracking.PathTrackingViewModel
-import org.jetbrains.compose.resources.stringResource
+import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -97,7 +94,7 @@ actual fun PathTrackingScreen(
             val uri = if (userLatLngs.isNotEmpty()) {
                 val originLatLng = userLatLngs[0]
                 val destinationLatLng = userLatLngs[userLatLngs.size - 1]
-                "http://maps.google.com/maps?f=d&hl=en&saddr=${originLatLng.lat},${originLatLng.lng}" +
+                "https://maps.google.com/maps?f=d&hl=en&saddr=${originLatLng.lat},${originLatLng.lng}" +
                     "&daddr=${destinationLatLng.lat},${destinationLatLng.lng}"
             } else {
                 // Handle the case when userLatLngs is empty
@@ -127,7 +124,7 @@ actual fun PathTrackingMapView(latLngList: List<UserLatLng>) {
     val cameraPositionState = rememberCameraPositionState {
         position = CameraPosition.fromLatLngZoom(LatLng(latLng.lat, latLng.lng), 15f)
     }
-    val uiSettings by remember { mutableStateOf(MapUiSettings(zoomControlsEnabled = false)) }
+    val uiSettings by remember { mutableStateOf(MapUiSettings(zoomControlsEnabled = true)) }
 
     GoogleMap(
         modifier = Modifier
@@ -135,27 +132,48 @@ actual fun PathTrackingMapView(latLngList: List<UserLatLng>) {
             .height(150.dp),
         cameraPositionState = cameraPositionState,
         uiSettings = uiSettings,
-    )
+    ) {
+        if (latLngList.isNotEmpty()) {
+            val startPoint = latLngList.first()
+            val endPoint = latLngList.last()
+            val context = LocalContext.current
+            Marker(
+                state = MarkerState(position = LatLng(startPoint.lat, startPoint.lng)),
+                title = getAddressFromLatLng(
+                    lat = startPoint.lat,
+                    lng = startPoint.lng,
+                    context = context,
+                )?.trim(),
+                draggable = true,
+            )
+
+            if (latLngList.size > 1) {
+                Marker(
+                    state = MarkerState(position = LatLng(endPoint.lat, endPoint.lng)),
+                    title = getAddressFromLatLng(
+                        lat = endPoint.lat,
+                        lng = endPoint.lng,
+                        context = context,
+                    )?.trim(),
+                    draggable = true,
+                )
+
+                Polyline(
+                    points = latLngList.map { LatLng(it.lat, it.lng) },
+                    color = MaterialTheme.colorScheme.primary,
+                    width = 10f,
+                )
+            }
+        }
+    }
 }
 
-@Composable
-actual fun HandleLocationPermissionRequest(
-    show: Boolean,
-    onPermissionResult: (granted: Boolean) -> Unit,
-) {
-    if (show) {
-        PermissionBox(
-            requiredPermissions = listOf(
-                Manifest.permission.ACCESS_FINE_LOCATION,
-                Manifest.permission.ACCESS_COARSE_LOCATION,
-            ),
-            title = stringResource(Res.string.feature_path_tracking_permission_required),
-            description = stringResource(Res.string.feature_path_tracking_approve_permission_description_location),
-            confirmButtonText = stringResource(Res.string.feature_path_tracking_proceed),
-            dismissButtonText = stringResource(Res.string.feature_path_tracking_dismiss),
-            onGranted = {
-                onPermissionResult(true)
-            },
-        )
+private fun getAddressFromLatLng(context: Context, lat: Double, lng: Double): String? {
+    return try {
+        val geocoder = Geocoder(context, Locale.getDefault())
+        val addresses = geocoder.getFromLocation(lat, lng, 1)
+        addresses?.firstOrNull()?.getAddressLine(0)
+    } catch (e: Exception) {
+        null
     }
 }

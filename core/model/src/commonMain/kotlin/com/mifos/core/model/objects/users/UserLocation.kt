@@ -11,13 +11,15 @@ package com.mifos.core.model.objects.users
 
 import com.mifos.core.model.utils.Parcelable
 import com.mifos.core.model.utils.Parcelize
+import kotlinx.serialization.Serializable
 
 /**
  * Created by Rajan Maurya on 24/01/17.
  */
+@Serializable
 @Parcelize
 data class UserLocation(
-    var userId: Int? = null,
+    var staffId: Int? = null,
 
     var latLng: String? = null,
 
@@ -26,6 +28,10 @@ data class UserLocation(
     var stopTime: String? = null,
 
     var date: String? = null,
+
+    var startAddress: String? = null,
+
+    var endAddress: String? = null,
 
     var dateFormat: String? = "dd MMMM yyyy HH:mm",
 

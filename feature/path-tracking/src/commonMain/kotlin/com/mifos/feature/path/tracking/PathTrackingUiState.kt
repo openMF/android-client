@@ -7,7 +7,7 @@
  *
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
-package com.mifos.feature.pathTracking
+package com.mifos.feature.path.tracking
 
 import com.mifos.core.model.objects.users.UserLocation
 import org.jetbrains.compose.resources.StringResource
