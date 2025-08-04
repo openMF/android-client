@@ -41,7 +41,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -93,10 +92,6 @@ fun DataTableDataScreen(
     val table = viewModel.arg.tableName
     val state by viewModel.dataTableDataUiState.collectAsStateWithLifecycle()
     val isRefreshing by viewModel.isRefreshing.collectAsStateWithLifecycle()
-
-    LaunchedEffect(Unit) {
-        viewModel.loadDataTableInfo(table, entityId)
-    }
 
     DataTableDataScreen(
         dataTable = dataTable,
@@ -294,6 +289,7 @@ fun DataTableDataCardItem(
                             color = Black,
                         ),
                     )
+
                     Text(
                         modifier = Modifier.weight(1f),
                         text = dataItem.clientId ?: "-",
