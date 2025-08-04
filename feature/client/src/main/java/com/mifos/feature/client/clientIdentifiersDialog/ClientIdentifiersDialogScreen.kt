@@ -93,6 +93,14 @@ internal fun ClientIdentifiersDialogScreen(
     onRetry: () -> Unit,
     onCreate: (IdentifierPayload) -> Unit,
 ) {
+    if (state is ClientIdentifierDialogUiState.IdentifierCreatedSuccessfully) {
+        Toast.makeText(
+            LocalContext.current,
+            stringResource(id = R.string.feature_client_identifier_created_successfully),
+            Toast.LENGTH_SHORT,
+        ).show()
+        onIdentifierCreated()
+    }
     Dialog(
         onDismissRequest = { onDismiss() },
     ) {
