@@ -31,7 +31,7 @@ class DataManagerDocument(val mBaseApiManager: BaseApiManager) {
      * @return List<Document>
      </Document> */
     fun getDocumentsList(entityType: String, entityId: Int): Flow<List<Document>> {
-        return mBaseApiManager.documentApi.getDocuments(entityType, entityId)
+        return mBaseApiManager.documentService.getDocuments(entityType, entityId)
     }
 
     /**
@@ -53,7 +53,7 @@ class DataManagerDocument(val mBaseApiManager: BaseApiManager) {
     ): DataState<Unit> {
         return try {
             mBaseApiManager
-                .documentApi
+                .documentService
                 .createDocument(entityType, entityId, file)
             DataState.Success(Unit)
         } catch (e: Exception) {
@@ -77,7 +77,7 @@ class DataManagerDocument(val mBaseApiManager: BaseApiManager) {
         entityId: Int,
         documentId: Int,
     ): HttpResponse {
-        return mBaseApiManager.documentApi.downloadDocument(entityType, entityId, documentId)
+        return mBaseApiManager.documentService.downloadDocument(entityType, entityId, documentId)
     }
 
     /**
@@ -97,7 +97,7 @@ class DataManagerDocument(val mBaseApiManager: BaseApiManager) {
         entityId: Int,
         documentId: Int,
     ) {
-        return mBaseApiManager.documentApi.removeDocument(entityType, entityId, documentId)
+        return mBaseApiManager.documentService.removeDocument(entityType, entityId, documentId)
     }
 
     /**
@@ -122,7 +122,7 @@ class DataManagerDocument(val mBaseApiManager: BaseApiManager) {
         file: MultiPartFormDataContent,
     ): DataState<Unit> {
         return try {
-            mBaseApiManager.documentApi
+            mBaseApiManager.documentService
                 .updateDocument(entityType, entityId, documentId, file)
             DataState.Success(Unit)
         } catch (e: Exception) {

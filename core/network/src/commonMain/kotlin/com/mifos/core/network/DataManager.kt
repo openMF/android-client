@@ -40,28 +40,27 @@ import org.koin.core.component.inject
 class DataManager : KoinComponent {
 
     private val mBaseApiManager: BaseApiManager by inject()
-//    private val mDataManagerClient: DataManagerClient by inject()
 
     /**
      * Center API
      */
     fun getGroupsByCenter(id: Int): Flow<CenterWithAssociations> {
-        return mBaseApiManager.centerApi.getAllGroupsForCenter(id)
+        return mBaseApiManager.centerService.getAllGroupsForCenter(id)
     }
 
     fun getCentersInOffice(id: Int, params: Map<String, String>): Flow<List<CenterEntity>> {
-        return mBaseApiManager.centerApi.getAllCentersInOffice(id, params)
+        return mBaseApiManager.centerService.getAllCentersInOffice(id, params)
     }
 
     fun getCollectionSheet(id: Long, payload: Payload?): Flow<CollectionSheet> {
-        return mBaseApiManager.centerApi.getCollectionSheet(id, payload)
+        return mBaseApiManager.centerService.getCollectionSheet(id, payload)
     }
 
     fun saveCollectionSheet(
         centerId: Int,
         collectionSheetPayload: CollectionSheetPayload?,
     ): Flow<SaveResponse> {
-        return mBaseApiManager.centerApi.saveCollectionSheet(
+        return mBaseApiManager.centerService.saveCollectionSheet(
             centerId,
             collectionSheetPayload,
         )
@@ -71,7 +70,7 @@ class DataManager : KoinComponent {
         id: Int,
         payload: CollectionSheetPayload?,
     ): Flow<SaveResponse> {
-        return mBaseApiManager.centerApi.saveCollectionSheetAsync(id, payload)
+        return mBaseApiManager.centerService.saveCollectionSheetAsync(id, payload)
     }
 
     fun getCenterList(
@@ -81,7 +80,7 @@ class DataManager : KoinComponent {
         officeId: Int,
         staffId: Int,
     ): Flow<List<OfflineCenter>> {
-        return mBaseApiManager.centerApi.getCenterList(
+        return mBaseApiManager.centerService.getCenterList(
             dateFormat,
             locale,
             meetingDate,
@@ -95,96 +94,96 @@ class DataManager : KoinComponent {
      */
     // TODO Remove this Method After fixing the Charge Test
     fun getClientCharges(clientId: Int, offset: Int, limit: Int): Flow<Page<ChargesEntity>> {
-        return mBaseApiManager.chargeApi.getListOfCharges(clientId, offset, limit)
+        return mBaseApiManager.chargeService.getListOfCharges(clientId, offset, limit)
     }
 
     suspend fun getAllChargesV2(clientId: Int): ChargeTemplate {
-        return mBaseApiManager.chargeApi.getAllChargesS(clientId)
+        return mBaseApiManager.chargeService.getAllChargesS(clientId)
     }
 
     suspend fun createCharges(
         clientId: Int,
         payload: ChargesPayload,
     ): ChargeCreationResponse {
-        return mBaseApiManager.chargeApi.createCharges(clientId, payload)
+        return mBaseApiManager.chargeService.createCharges(clientId, payload)
     }
 
     suspend fun getAllChargesV3(loanId: Int): HttpResponse {
-        return mBaseApiManager.chargeApi.getAllChargeV3(loanId)
+        return mBaseApiManager.chargeService.getAllChargeV3(loanId)
     }
 
     suspend fun createLoanCharges(
         loanId: Int,
         chargesPayload: ChargesPayload,
     ): ChargeCreationResponse {
-        return mBaseApiManager.chargeApi.createLoanCharges(loanId, chargesPayload)
+        return mBaseApiManager.chargeService.createLoanCharges(loanId, chargesPayload)
     }
 
     /**
      * Groups API
      */
     fun getGroups(groupid: Int): Flow<GroupWithAssociations> {
-        return mBaseApiManager.groupApi.getGroupWithAssociations(groupid)
+        return mBaseApiManager.groupService.getGroupWithAssociations(groupid)
     }
 
     fun getGroupsByOffice(
         office: Int,
         params: Map<String, String>,
     ): Flow<List<GroupEntity>> {
-        return mBaseApiManager.groupApi.getAllGroupsInOffice(office, params)
+        return mBaseApiManager.groupService.getAllGroupsInOffice(office, params)
     }
 
     /**
      * Offices API
      */
     fun offices(): Flow<List<OfficeEntity>> {
-        return mBaseApiManager.officeApi.allOffices()
+        return mBaseApiManager.officeService.allOffices()
     }
 
     /**
      * Staff API
      */
     fun getStaffInOffice(officeId: Int): Flow<List<StaffEntity>> {
-        return mBaseApiManager.staffApi.getStaffForOffice(officeId)
+        return mBaseApiManager.staffService.getStaffForOffice(officeId)
     }
 
     val allStaff: Flow<List<StaffEntity>>
-        get() = mBaseApiManager.staffApi.allStaff()
+        get() = mBaseApiManager.staffService.allStaff()
 
     /**
      * Loans API
      */
     fun getLoanTransactions(loan: Int): Flow<LoanWithAssociationsEntity> {
-        return mBaseApiManager.loanApi.getLoanWithTransactions(loan)
+        return mBaseApiManager.loanService.getLoanWithTransactions(loan)
     }
 
     val allLoans: Flow<List<com.mifos.core.model.objects.organisations.LoanProducts>>
-        get() = mBaseApiManager.loanApi.getAllLoans()
+        get() = mBaseApiManager.loanService.getAllLoans()
 
     fun getGroupLoansAccountTemplate(groupId: Int, productId: Int): Flow<GroupLoanTemplate> {
-        return mBaseApiManager.loanApi.getGroupLoansAccountTemplate(groupId, productId)
+        return mBaseApiManager.loanService.getGroupLoansAccountTemplate(groupId, productId)
     }
 
     fun createGroupLoansAccount(loansPayload: GroupLoanPayload?): Flow<Loan> {
-        return mBaseApiManager.loanApi.createGroupLoansAccount(loansPayload)
+        return mBaseApiManager.loanService.createGroupLoansAccount(loansPayload)
     }
 
     fun getLoanRepaySchedule(loanId: Int): Flow<LoanWithAssociationsEntity> {
-        return mBaseApiManager.loanApi.getLoanRepaymentSchedule(loanId)
+        return mBaseApiManager.loanService.getLoanRepaymentSchedule(loanId)
     }
 
     fun approveLoan(
         loanId: Int,
         loanApproval: com.mifos.core.model.objects.account.loan.LoanApproval?,
     ): Flow<GenericResponse> {
-        return mBaseApiManager.loanApi.approveLoanApplication(loanId, loanApproval)
+        return mBaseApiManager.loanService.approveLoanApplication(loanId, loanApproval)
     }
 
     fun getListOfLoanCharges(loanId: Int): Flow<List<ChargesEntity>> {
-        return mBaseApiManager.loanApi.getListOfLoanCharges(loanId)
+        return mBaseApiManager.loanService.getListOfLoanCharges(loanId)
     }
 
     fun getListOfCharges(clientId: Int): Flow<Page<ChargesEntity>> {
-        return mBaseApiManager.loanApi.getListOfCharges(clientId)
+        return mBaseApiManager.loanService.getListOfCharges(clientId)
     }
 }

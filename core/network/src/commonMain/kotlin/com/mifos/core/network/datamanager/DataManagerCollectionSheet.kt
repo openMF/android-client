@@ -34,13 +34,13 @@ class DataManagerCollectionSheet(
     suspend fun getIndividualCollectionSheet(
         payload: RequestCollectionSheetPayload?,
     ): IndividualCollectionSheet {
-        return mBaseApiManager.collectionSheetApi.getIndividualCollectionSheet(payload)
+        return mBaseApiManager.collectionSheetService.getIndividualCollectionSheet(payload)
     }
 
     suspend fun saveIndividualCollectionSheet(
         payload: IndividualCollectionSheetPayload?,
     ): GenericResponse {
-        return mBaseApiManager.collectionSheetApi.saveIndividualCollectionSheet(payload)
+        return mBaseApiManager.collectionSheetService.saveIndividualCollectionSheet(payload)
     }
 
     /**
@@ -53,7 +53,7 @@ class DataManagerCollectionSheet(
         officeId: Int,
         staffId: Int,
     ): Flow<List<CenterDetail>> {
-        return mBaseApiManager.collectionSheetApi.fetchCenterDetails(
+        return mBaseApiManager.collectionSheetService.fetchCenterDetails(
             format,
             locale,
             meetingDate,
@@ -66,14 +66,14 @@ class DataManagerCollectionSheet(
         centerId: Int,
         payload: CollectionSheetRequestPayload?,
     ): CollectionSheetResponse {
-        return mBaseApiManager.collectionSheetApi.fetchProductiveSheet(centerId, payload)
+        return mBaseApiManager.collectionSheetService.fetchProductiveSheet(centerId, payload)
     }
 
     suspend fun submitProductiveSheet(
         centerId: Int,
         payload: ProductiveCollectionSheetPayload?,
     ): GenericResponse {
-        return mBaseApiManager.collectionSheetApi.submitProductiveSheet(centerId, payload)
+        return mBaseApiManager.collectionSheetService.submitProductiveSheet(centerId, payload)
     }
 
     /**
@@ -83,20 +83,20 @@ class DataManagerCollectionSheet(
         groupId: Int,
         payload: CollectionSheetRequestPayload?,
     ): CollectionSheetResponse {
-        return mBaseApiManager.collectionSheetApi.fetchCollectionSheet(groupId, payload)
+        return mBaseApiManager.collectionSheetService.fetchCollectionSheet(groupId, payload)
     }
 
     suspend fun submitCollectionSheet(
         groupId: Int,
         payload: CollectionSheetPayload?,
     ): GenericResponse {
-        return mBaseApiManager.collectionSheetApi.submitCollectionSheet(groupId, payload)
+        return mBaseApiManager.collectionSheetService.submitCollectionSheet(groupId, payload)
     }
 
     /**
      * Associated groups API
      */
     suspend fun fetchGroupsAssociatedWithCenter(centerId: Int): CenterWithAssociations {
-        return mBaseApiManager.collectionSheetApi.fetchGroupsAssociatedWithCenter(centerId)
+        return mBaseApiManager.collectionSheetService.fetchGroupsAssociatedWithCenter(centerId)
     }
 }

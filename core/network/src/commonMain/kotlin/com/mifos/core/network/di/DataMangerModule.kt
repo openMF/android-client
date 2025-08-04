@@ -33,20 +33,20 @@ import org.koin.dsl.module
 val DataManagerModule = module {
     single { DataManager() }
     single { DataManagerAuth(get<BaseApiManager>()) }
-    single { DataManagerCenter(get(), get(), get(), get()) }
+    single { DataManagerCenter(get(), get(), get()) }
     single { DataManagerCharge(get(), get(), get()) }
     single { DataManagerCheckerInbox(get()) }
-    single { DataManagerClient(get(), get(), get(), get()) }
+    single { DataManagerClient(get(), get(), get()) }
     single { DataManagerCollectionSheet(get()) }
-    single { DataManagerDataTable(get(), get()) }
+    single { DataManagerDataTable(get()) }
     single { DataManagerDocument(get()) }
-    single { DataManagerGroups(get(), get(), get(), get(), get()) }
+    single { DataManagerGroups(get(), get(), get(), get()) }
     single { DataManagerLoan(get(), get(), get()) }
     single { DataManagerNote(get()) }
-    single { DataManagerOffices(get(), get(), get(), get()) }
+    single { DataManagerOffices(get(), get(), get()) }
     single { DataManagerRunReport(get()) }
     single { DataManagerSavings(get(), get(), get()) }
     single { DataManagerSearch(get()) }
-    single { DataManagerStaff(get(), get(), get(), get()) }
+    single { DataManagerStaff(get(), get(), get()) }
     single { DataManagerSurveys(get(), get(), get()) }
 }

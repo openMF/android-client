@@ -24,6 +24,6 @@ class DataManagerSearch(
         resource: String?,
         exactMatch: Boolean?,
     ): Flow<List<SearchedEntity>> {
-        return baseApiManager.searchApi.searchResources(query, resource, exactMatch)
+        return baseApiManager.searchService.searchResources(query, resource, exactMatch)
     }
 }

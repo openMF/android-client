@@ -34,7 +34,7 @@ interface GroupsApi {
      * @param orphansOnly orphansOnly (optional)
      * @return [GetGroupsResponse]
      */
-    @GET("v1/groups")
+    @GET("groups")
     suspend fun retrieveAll24(
         @Query("officeId") officeId: Long? = null,
         @Query("staffId") staffId: Long? = null,

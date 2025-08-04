@@ -54,7 +54,6 @@ class DataManagerClient(
     val mBaseApiManager: BaseApiManager,
 //    private val mDatabaseHelperClient: DatabaseHelperClient,
     private val clientDatabaseHelper: ClientDaoHelper,
-    private val baseApiManager: com.mifos.core.network.apimanager.BaseApiManager,
     private val prefManager: UserPreferencesRepository,
 ) {
     /**
@@ -74,7 +73,7 @@ class DataManagerClient(
      * @return Client List from offset to max Limit
      */
     suspend fun getAllClients(offset: Int, limit: Int): Page<ClientEntity> {
-        return baseApiManager.getClientsApi().retrieveAll21(
+        return mBaseApiManager.clientsApi.retrieveAll21(
             null, null, null,
             null, null, null,
             null, offset,
@@ -117,7 +116,7 @@ class DataManagerClient(
      * @return The Client Details
      */
     suspend fun getClient(clientId: Int): ClientEntity {
-        return mBaseApiManager.clientsApi.getClient(clientId)
+        return mBaseApiManager.clientService.getClient(clientId)
     }
 //    fun getClient(clientId: Int): Observable<Client> {
 //        return when (prefManager.userStatus) {
@@ -148,7 +147,7 @@ class DataManagerClient(
      * @return All Clients Account, Like Savings, Loan etc Accounts.
      */
     suspend fun getClientAccounts(clientId: Int): ClientAccounts {
-        return baseApiManager.getClientsApi().retrieveAssociatedAccounts(clientId.toLong())
+        return mBaseApiManager.clientsApi.retrieveAssociatedAccounts(clientId.toLong())
             .let(GetClientsClientIdAccountMapper::mapFromEntity)
     }
 //    fun getClientAccounts(clientId: Int): Observable<ClientAccounts> {
@@ -173,7 +172,7 @@ class DataManagerClient(
      * @return ClientAccounts
      */
     suspend fun syncClientAccounts(clientId: Int): ClientAccounts {
-        return baseApiManager.getClientsApi().retrieveAssociatedAccounts(clientId.toLong())
+        return mBaseApiManager.clientsApi.retrieveAssociatedAccounts(clientId.toLong())
             .let(GetClientsClientIdAccountMapper::mapFromEntity)
     }
 //    fun syncClientAccounts(clientId: Int): Observable<ClientAccounts> {
@@ -197,7 +196,7 @@ class DataManagerClient(
      * @return ResponseBody is the Retrofit 2 response
      */
     suspend fun deleteClientImage(clientId: Int) {
-        mBaseApiManager.clientsApi.deleteClientImage(clientId)
+        mBaseApiManager.clientService.deleteClientImage(clientId)
     }
 
     /**
@@ -210,11 +209,11 @@ class DataManagerClient(
      * @return ResponseBody is the Retrofit 2 response
      */
     suspend fun uploadClientImage(clientId: Int, file: MultiPartFormDataContent) {
-        return mBaseApiManager.clientsApi.uploadClientImage(clientId, file)
+        return mBaseApiManager.clientService.uploadClientImage(clientId, file)
     }
 
     fun getClientImage(clientId: Int): Flow<DataState<String>> {
-        return mBaseApiManager.clientsApi.getClientImage(clientId)
+        return mBaseApiManager.clientService.getClientImage(clientId)
             .asDataStateFlow()
             .map {
                     response ->
@@ -248,7 +247,7 @@ class DataManagerClient(
             when (userData.userStatus) {
                 false ->
                     flow {
-                        val clientsTemplate = mBaseApiManager.clientsApi.getClientTemplate()
+                        val clientsTemplate = mBaseApiManager.clientService.getClientTemplate()
                         clientDatabaseHelper.saveClientTemplate(clientsTemplate)
                         emit(clientsTemplate)
                     }
@@ -277,7 +276,7 @@ class DataManagerClient(
             clientDatabaseHelper.saveClientPayloadToDB(clientPayload)
             null
         } else {
-            mBaseApiManager.clientsApi.createClient(clientPayload)?.clientId
+            mBaseApiManager.clientService.createClient(clientPayload)?.clientId
         }
     }
 
@@ -321,7 +320,7 @@ class DataManagerClient(
      * @return List<Identifier>
      </Identifier> */
     fun getClientIdentifiers(clientId: Int): Flow<List<Identifier>> {
-        return baseApiManager.getClient().clientIdentifiers.retrieveAllClientIdentifiers(clientId.toLong())
+        return mBaseApiManager.clientIdentifiersApi.retrieveAllClientIdentifiers(clientId.toLong())
             .map { responseList ->
                 responseList.map(IdentifierMapper::mapFromEntity)
             }
@@ -338,7 +337,7 @@ class DataManagerClient(
         clientId: Int,
         identifierPayload: IdentifierPayload,
     ): IdentifierCreationResponse {
-        return mBaseApiManager.clientsApi.createClientIdentifier(clientId, identifierPayload)
+        return mBaseApiManager.clientService.createClientIdentifier(clientId, identifierPayload)
     }
 
     /**
@@ -348,7 +347,7 @@ class DataManagerClient(
      * @return IdentifierTemplate
      */
     suspend fun getClientIdentifierTemplate(clientId: Int): IdentifierTemplate {
-        return baseApiManager.getClient().clientIdentifiers.newClientIdentifierDetails(clientId.toLong())
+        return mBaseApiManager.clientIdentifiersApi.newClientIdentifierDetails(clientId.toLong())
             .let(GetIdentifiersTemplateMapper::mapFromEntity)
     }
 
@@ -363,7 +362,7 @@ class DataManagerClient(
         clientId: Int,
         identifierId: Int,
     ): DeleteClientsClientIdIdentifiersIdentifierIdResponse {
-        return baseApiManager.getClient().clientIdentifiers.deleteClientIdentifier(
+        return mBaseApiManager.clientIdentifiersApi.deleteClientIdentifier(
             clientId.toLong(),
             identifierId.toLong(),
         )
@@ -377,7 +376,7 @@ class DataManagerClient(
      * @return ClientAddressResponse
      */
     fun getClientPinpointLocations(clientId: Int): Flow<List<ClientAddressResponse>> {
-        return mBaseApiManager.clientsApi.getClientPinpointLocations(clientId)
+        return mBaseApiManager.clientService.getClientPinpointLocations(clientId)
     }
 
     /**
@@ -391,7 +390,7 @@ class DataManagerClient(
         clientId: Int,
         address: ClientAddressRequest?,
     ): PinpointLocationActionResponse {
-        return mBaseApiManager.clientsApi.addClientPinpointLocation(clientId, address)
+        return mBaseApiManager.clientService.addClientPinpointLocation(clientId, address)
     }
 
     /**
@@ -405,7 +404,7 @@ class DataManagerClient(
         apptableId: Int,
         datatableId: Int,
     ): PinpointLocationActionResponse {
-        return mBaseApiManager.clientsApi.deleteClientPinpointLocation(
+        return mBaseApiManager.clientService.deleteClientPinpointLocation(
             apptableId,
             datatableId,
         )
@@ -424,7 +423,7 @@ class DataManagerClient(
         datatableId: Int,
         address: ClientAddressRequest?,
     ): PinpointLocationActionResponse {
-        return mBaseApiManager.clientsApi.updateClientPinpointLocation(
+        return mBaseApiManager.clientService.updateClientPinpointLocation(
             apptableId,
             datatableId,
             address,
@@ -441,7 +440,7 @@ class DataManagerClient(
         clientId: Int,
         clientActivate: ActivatePayload?,
     ): PostClientsClientIdResponse {
-        return baseApiManager.getClientsApi().activate1(
+        return mBaseApiManager.clientsApi.activate1(
             clientId.toLong(),
             PostClientsClientIdRequest(
                 activationDate = clientActivate?.activationDate,
@@ -458,7 +457,7 @@ class DataManagerClient(
      * @return The address configuration.
      */
     suspend fun getAddressConfiguration(): AddressConfiguration {
-        return mBaseApiManager.clientsApi.getAddressConfiguration()
+        return mBaseApiManager.clientService.getAddressConfiguration()
     }
 
     /**
@@ -470,6 +469,6 @@ class DataManagerClient(
      * @return The address template.
      */
     suspend fun getAddressTemplate(): AddressTemplate {
-        return mBaseApiManager.clientsApi.getAddressTemplate()
+        return mBaseApiManager.clientService.getAddressTemplate()
     }
 }

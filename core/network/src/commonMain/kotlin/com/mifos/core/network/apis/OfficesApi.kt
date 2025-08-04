@@ -27,7 +27,7 @@ interface OfficesApi {
      * @param sortOrder sortOrder (optional)
      * @return [kotlin.collections.List<GetOfficesResponse]
      */
-    @GET("v1/offices")
+    @GET("offices")
     fun retrieveOffices(
         @Query("includeAllOffices") includeAllOffices: Boolean? = false,
         @Query("orderBy") orderBy: String? = null,

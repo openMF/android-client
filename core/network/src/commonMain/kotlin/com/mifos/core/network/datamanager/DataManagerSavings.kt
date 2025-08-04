@@ -59,7 +59,7 @@ class DataManagerSavings(
     ): Flow<SavingsAccountWithAssociationsEntity?> {
         return prefManager.userInfo.flatMapLatest { userData ->
             when (userData.userStatus) {
-                false -> mBaseApiManager.savingsApi.getSavingsAccountWithAssociations(
+                false -> mBaseApiManager.savingsService.getSavingsAccountWithAssociations(
                     type,
                     savingsAccountId,
                     association ?: "",
@@ -97,7 +97,7 @@ class DataManagerSavings(
         association: String?,
     ): Flow<SavingsAccountWithAssociationsEntity> {
         return flow {
-            mBaseApiManager.savingsApi.getSavingsAccountWithAssociations(type, savingsAccountId, association)
+            mBaseApiManager.savingsService.getSavingsAccountWithAssociations(type, savingsAccountId, association)
                 .collect { savingsWithTransaction ->
                     databaseHelperSavings.saveSavingsAccount(savingsWithTransaction)
                     emit(savingsWithTransaction)
@@ -109,7 +109,7 @@ class DataManagerSavings(
         savingsAccountId: Int,
         request: HashMap<String, String>,
     ): Flow<GenericResponse> {
-        return mBaseApiManager.savingsApi.activateSavings(savingsAccountId, request)
+        return mBaseApiManager.savingsService.activateSavings(savingsAccountId, request)
     }
 
     /**
@@ -134,7 +134,7 @@ class DataManagerSavings(
     ): Flow<SavingsAccountTransactionTemplateEntity?> {
         return prefManager.userInfo.flatMapLatest { userData ->
             when (userData.userStatus) {
-                false -> mBaseApiManager.savingsApi.getSavingsAccountTransactionTemplate(
+                false -> mBaseApiManager.savingsService.getSavingsAccountTransactionTemplate(
                     type,
                     savingsAccountId,
                     transactionType,
@@ -167,7 +167,7 @@ class DataManagerSavings(
         savingsAccountId: Int,
         transactionType: String?,
     ): Flow<SavingsAccountTransactionTemplateEntity> {
-        return mBaseApiManager.savingsApi.getSavingsAccountTransactionTemplate(
+        return mBaseApiManager.savingsService.getSavingsAccountTransactionTemplate(
             savingsAccountType,
             savingsAccountId,
             transactionType,
@@ -202,7 +202,7 @@ class DataManagerSavings(
             when (userData.userStatus) {
                 false -> flow {
                     emit(
-                        mBaseApiManager.savingsApi.processTransaction(
+                        mBaseApiManager.savingsService.processTransaction(
                             savingsAccountType,
                             savingsAccountId,
                             transactionType,
@@ -282,20 +282,20 @@ class DataManagerSavings(
     }
 
     val getSavingsAccounts: Flow<List<ProductSavings>>
-        get() = mBaseApiManager.savingsApi.allSavingsAccounts()
+        get() = mBaseApiManager.savingsService.allSavingsAccounts()
 
     fun createSavingsAccount(savingsPayload: SavingsPayload?): Flow<Savings> {
-        return mBaseApiManager.savingsApi.createSavingsAccount(savingsPayload)
+        return mBaseApiManager.savingsService.createSavingsAccount(savingsPayload)
     }
 
     val getSavingsAccountTemplate: Flow<SavingProductsTemplate>
-        get() = mBaseApiManager.savingsApi.savingsAccountTemplate()
+        get() = mBaseApiManager.savingsService.savingsAccountTemplate()
 
     fun getClientSavingsAccountTemplateByProduct(
         clientId: Int,
         productId: Int,
     ): Flow<SavingProductsTemplate> {
-        return mBaseApiManager.savingsApi.getClientSavingsAccountTemplateByProduct(
+        return mBaseApiManager.savingsService.getClientSavingsAccountTemplateByProduct(
             clientId,
             productId,
         )
@@ -305,7 +305,7 @@ class DataManagerSavings(
         groupId: Int,
         productId: Int,
     ): Flow<SavingProductsTemplate> {
-        return mBaseApiManager.savingsApi.getGroupSavingsAccountTemplateByProduct(
+        return mBaseApiManager.savingsService.getGroupSavingsAccountTemplateByProduct(
             groupId,
             productId,
         )
@@ -315,7 +315,7 @@ class DataManagerSavings(
         savingsAccountId: Int,
         savingsApproval: SavingsApproval?,
     ): Flow<GenericResponse> {
-        return mBaseApiManager.savingsApi.approveSavingsApplication(
+        return mBaseApiManager.savingsService.approveSavingsApplication(
             savingsAccountId,
             savingsApproval,
         )

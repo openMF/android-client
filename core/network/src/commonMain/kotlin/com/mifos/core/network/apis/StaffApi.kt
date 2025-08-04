@@ -26,7 +26,7 @@ interface StaffApi {
      * @param status status (optional, default to "active")
      * @return [kotlin.collections.List<RetrieveOneResponse]
      */
-    @GET("v1/staff")
+    @GET("staff")
     suspend fun retrieveAll16(
         @Query("officeId") officeId: Long? = null,
         @Query("staffInOfficeHierarchy") staffInOfficeHierarchy: Boolean? = false,

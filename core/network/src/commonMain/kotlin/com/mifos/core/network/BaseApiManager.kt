@@ -11,6 +11,20 @@ package com.mifos.core.network
 
 import com.mifos.core.common.utils.getInstanceUrl
 import com.mifos.core.datastore.UserPreferencesRepository
+import com.mifos.core.network.apis.CentersApi
+import com.mifos.core.network.apis.ClientApi
+import com.mifos.core.network.apis.ClientIdentifierApi
+import com.mifos.core.network.apis.DataTablesApi
+import com.mifos.core.network.apis.GroupsApi
+import com.mifos.core.network.apis.OfficesApi
+import com.mifos.core.network.apis.StaffApi
+import com.mifos.core.network.apis.createCentersApi
+import com.mifos.core.network.apis.createClientApi
+import com.mifos.core.network.apis.createClientIdentifierApi
+import com.mifos.core.network.apis.createDataTablesApi
+import com.mifos.core.network.apis.createGroupsApi
+import com.mifos.core.network.apis.createOfficesApi
+import com.mifos.core.network.apis.createStaffApi
 import com.mifos.core.network.services.CenterService
 import com.mifos.core.network.services.ChargeService
 import com.mifos.core.network.services.CheckerInboxService
@@ -52,23 +66,32 @@ class BaseApiManager(
     private val ktorfit: Ktorfit,
 ) {
 
-    val centerApi: CenterService = ktorfit.createCenterService()
-    val accountsApi: ClientAccountsService = ktorfit.createClientAccountsService()
-    val clientsApi: ClientService = ktorfit.createClientService()
-    val dataTableApi: DataTableService = ktorfit.createDataTableService()
-    val loanApi: LoanService = ktorfit.createLoanService()
-    val savingsApi: SavingsAccountService = ktorfit.createSavingsAccountService()
-    val searchApi: SearchService = ktorfit.createSearchService()
-    val groupApi: GroupService = ktorfit.createGroupService()
-    val documentApi: DocumentService = ktorfit.createDocumentService()
-    val officeApi: OfficeService = ktorfit.createOfficeService()
-    val staffApi: StaffService = ktorfit.createStaffService()
-    val surveyApi: SurveyService = ktorfit.createSurveyService()
-    val chargeApi: ChargeService = ktorfit.createChargeService()
-    val checkerInboxApi: CheckerInboxService = ktorfit.createCheckerInboxService()
-    val collectionSheetApi: CollectionSheetService = ktorfit.createCollectionSheetService()
-    val noteApi: NoteService = ktorfit.createNoteService()
+    val centerService: CenterService = ktorfit.createCenterService()
+    val accountsService: ClientAccountsService = ktorfit.createClientAccountsService()
+    val clientService: ClientService = ktorfit.createClientService()
+    val dataTableService: DataTableService = ktorfit.createDataTableService()
+    val loanService: LoanService = ktorfit.createLoanService()
+    val savingsService: SavingsAccountService = ktorfit.createSavingsAccountService()
+    val searchService: SearchService = ktorfit.createSearchService()
+    val groupService: GroupService = ktorfit.createGroupService()
+    val documentService: DocumentService = ktorfit.createDocumentService()
+    val officeService: OfficeService = ktorfit.createOfficeService()
+    val staffService: StaffService = ktorfit.createStaffService()
+    val surveyService: SurveyService = ktorfit.createSurveyService()
+    val chargeService: ChargeService = ktorfit.createChargeService()
+    val checkerInboxService: CheckerInboxService = ktorfit.createCheckerInboxService()
+    val collectionSheetService: CollectionSheetService = ktorfit.createCollectionSheetService()
+    val noteService: NoteService = ktorfit.createNoteService()
     val runReportsService: RunReportsService = ktorfit.createRunReportsService()
+
+    // sdk apis
+    val clientIdentifiersApi: ClientIdentifierApi = ktorfit.createClientIdentifierApi()
+    val centerApi: CentersApi = ktorfit.createCentersApi()
+    val officeApi: OfficesApi = ktorfit.createOfficesApi()
+    val clientsApi: ClientApi = ktorfit.createClientApi()
+    val groupApi: GroupsApi = ktorfit.createGroupsApi()
+    val staffApi: StaffApi = ktorfit.createStaffApi()
+    val dataTableApi: DataTablesApi = ktorfit.createDataTablesApi()
 
     companion object {
         fun build(prefManager: UserPreferencesRepository): BaseApiManager {

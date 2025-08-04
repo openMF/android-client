@@ -28,7 +28,6 @@ import kotlinx.coroutines.flow.map
  */
 class DataManagerOffices(
     val mBaseApiManager: BaseApiManager,
-    private val baseApiManager: com.mifos.core.network.apimanager.BaseApiManager,
     private val officeDaoHelper: OfficeDaoHelper,
     private val prefManager: UserPreferencesRepository,
 ) {
@@ -36,7 +35,7 @@ class DataManagerOffices(
      * return all List of Offices from DatabaseHelperOffices
      */
     fun fetchOffices(): Flow<List<OfficeEntity>> {
-        return mBaseApiManager.officeApi.allOffices()
+        return mBaseApiManager.officeService.allOffices()
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)
@@ -44,7 +43,7 @@ class DataManagerOffices(
         get() = prefManager.userInfo.flatMapLatest { userData ->
             when (userData.userStatus) {
                 false ->
-                    baseApiManager.getOfficeApi().retrieveOffices(null, null, null)
+                    mBaseApiManager.officeApi.retrieveOffices(null, null, null)
                         .map { responseList ->
                             responseList.map(GetOfficeResponseMapper::mapFromEntity)
                         }

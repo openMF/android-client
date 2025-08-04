@@ -52,7 +52,7 @@ class DataManagerCharge(
     ): Flow<Page<ChargesEntity>> {
         return prefManager.userInfo.flatMapLatest { userData ->
             when (userData.userStatus) {
-                false -> mBaseApiManager.chargeApi.getListOfCharges(clientId, offset, limit)
+                false -> mBaseApiManager.chargeService.getListOfCharges(clientId, offset, limit)
                     .onEach { chargeDatabase.saveClientCharges(it, clientId) }
 
                 true -> {

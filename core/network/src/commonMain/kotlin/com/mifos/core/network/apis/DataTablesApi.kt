@@ -28,7 +28,7 @@ interface DataTablesApi {
      * @param apptable apptable (optional)
      * @return [kotlin.collections.List<GetDataTablesResponse>]
      */
-    @GET("v1/datatables")
+    @GET("datatables")
     fun getDatatables(@Query("apptable") apptable: String? = null): Flow<List<GetDataTablesResponse>>
 
     /**
@@ -42,7 +42,7 @@ interface DataTablesApi {
      * @param datatableId datatableId
      * @return [DeleteDataTablesDatatableAppTableIdDatatableIdResponse]
      */
-    @DELETE("v1/datatables/{datatable}/{apptableId}/{datatableId}")
+    @DELETE("datatables/{datatable}/{apptableId}/{datatableId}")
     suspend fun deleteDatatableEntry(
         @Path("datatable") datatable: String,
         @Path("apptableId") apptableId: Long,

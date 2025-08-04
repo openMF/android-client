@@ -38,6 +38,7 @@ import androidx.compose.ui.unit.dp
 import androidx.paging.LoadState
 import androidx.paging.PagingData
 import androidx.paging.compose.collectAsLazyPagingItems
+import co.touchlab.kermit.Logger
 import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosPagingAppendProgress
 import com.mifos.core.designsystem.component.MifosSweetError
@@ -58,6 +59,8 @@ internal actual fun LazyColumnForClientListApi(
     val clientPagingList = pagingFlow.collectAsLazyPagingItems()
     when (clientPagingList.loadState.refresh) {
         is LoadState.Error -> {
+            val error = (clientPagingList.loadState.refresh as LoadState.Error).error
+            Logger.e { "LoggedError $error" }
             MifosSweetError(message = stringResource(Res.string.feature_client_failed_to_fetch_clients)) {
                 failedRefresh()
             }
