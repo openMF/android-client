@@ -16,12 +16,10 @@ import kotlinx.serialization.Serializable
 /**
  * Created by Rajan Maurya on 24/01/17.
  */
-// todo recheck
 @Parcelize
 @Serializable
 data class UserLatLng(
     val lat: Double = 0.0,
-
     val lng: Double = 0.0,
 ) : Parcelable {
     override fun toString(): String {

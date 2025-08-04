@@ -13,3 +13,4 @@ mifosng-android/mifosng-android.iml
 android-client.iml
 /secrets.properties
 .kotlin/
+build-logic/convention/bin/

@@ -7,7 +7,7 @@
  *
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
-package com.mifos.feature.pathTracking
+package com.mifos.feature.path.tracking
 
 import androidclient.feature.path_tracking.generated.resources.Res
 import androidclient.feature.path_tracking.generated.resources.feature_path_tracking_failed_to_load_path_tracking
@@ -53,9 +53,9 @@ class PathTrackingViewModel(
     }
 
     fun loadPathTracking() = viewModelScope.launch {
-        val userId = prefManager.userData.firstOrNull()?.userId
-        if (userId != null) {
-            getUserPathTrackingUseCase(userId.toInt()).collect { result ->
+        val officeId = prefManager.userData.firstOrNull()?.officeId
+        if (officeId != null) {
+            getUserPathTrackingUseCase(officeId.toInt()).collect { result ->
                 when (result) {
                     is DataState.Error ->
                         _pathTrackingUiState.value =

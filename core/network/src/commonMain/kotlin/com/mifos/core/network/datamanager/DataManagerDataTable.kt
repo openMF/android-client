@@ -71,7 +71,7 @@ class DataManagerDataTable(
     }
 
     /**
-     * This Method is adding the User Tracking Data in the data Table "user_tracking"
+     * This Method is adding the User Tracking Data in the data Table "m_staff_path_tracking"
      *
      * @param userId UserId Id
      * @param userLocation  UserLocation
@@ -85,7 +85,7 @@ class DataManagerDataTable(
     }
 
     /**
-     * This Method is fetching the User Path Tracking from the DataTable "user_tracking"
+     * This Method is fetching the User Path Tracking from the DataTable "m_staff_path_tracking"
      *
      * @param userId UserId Id
      * @return List<UserLocation>

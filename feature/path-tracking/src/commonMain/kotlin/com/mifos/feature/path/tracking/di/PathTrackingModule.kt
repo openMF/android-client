@@ -7,9 +7,9 @@
  *
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
-package com.mifos.feature.pathTracking.di
+package com.mifos.feature.path.tracking.di
 
-import com.mifos.feature.pathTracking.PathTrackingViewModel
+import com.mifos.feature.path.tracking.PathTrackingViewModel
 import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.module
 
