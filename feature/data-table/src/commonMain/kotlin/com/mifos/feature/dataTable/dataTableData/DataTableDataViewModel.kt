@@ -44,9 +44,13 @@ class DataTableDataViewModel(
     private val _isRefreshing = MutableStateFlow(false)
     val isRefreshing = _isRefreshing.asStateFlow()
 
+    init {
+        loadDataTableInfo(arg.tableName, arg.entityId)
+    }
+
     fun refreshDataTableData(table: String, entityId: Int) {
         _isRefreshing.value = true
-        loadDataTableInfo(table = table, entityId = entityId)
+        loadDataTableInfo(table, entityId)
         _isRefreshing.value = false
     }
 
