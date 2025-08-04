@@ -59,8 +59,6 @@ internal actual fun LazyColumnForClientListApi(
     val clientPagingList = pagingFlow.collectAsLazyPagingItems()
     when (clientPagingList.loadState.refresh) {
         is LoadState.Error -> {
-            val error = (clientPagingList.loadState.refresh as LoadState.Error).error
-            Logger.e { "LoggedError $error" }
             MifosSweetError(message = stringResource(Res.string.feature_client_failed_to_fetch_clients)) {
                 failedRefresh()
             }
