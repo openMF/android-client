@@ -41,7 +41,7 @@ interface CentersApi {
      * @param locale locale (optional)
      * @return [GetCentersResponse]
      */
-    @GET("v1/centers")
+    @GET("centers")
     suspend fun retrieveAll23(
         @Query("officeId") officeId: Long? = null,
         @Query("staffId") staffId: Long? = null,
@@ -69,7 +69,7 @@ interface CentersApi {
      * @param command command (optional)
      * @return [PostCentersCenterIdResponse]
      */
-    @POST("v1/centers/{centerId}")
+    @POST("centers/{centerId}")
     suspend fun activate2(
         @Path("centerId") centerId: Long,
         @Body postCentersCenterIdRequest: PostCentersCenterIdRequest,

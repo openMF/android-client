@@ -22,8 +22,6 @@ import kotlinx.coroutines.flow.flatMapLatest
  */
 class DataManagerStaff(
     val mBaseApiManager: BaseApiManager,
-//    private val mDatabaseHelperStaff: DatabaseHelperStaff,
-    private val baseApiManager: com.mifos.core.network.apimanager.BaseApiManager,
     private val prefManager: UserPreferencesRepository,
     private val staffDaoHelper: StaffDaoHelper,
 ) {
@@ -36,7 +34,7 @@ class DataManagerStaff(
         return prefManager.userInfo.flatMapLatest { userData ->
             when (userData.userStatus) {
                 false ->
-                    mBaseApiManager.staffApi.getStaffForOffice(officeId)
+                    mBaseApiManager.staffService.getStaffForOffice(officeId)
 
                 /**
                  * return all List of Staffs of Office from DatabaseHelperOffices

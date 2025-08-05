@@ -31,7 +31,7 @@ interface ClientApi {
      * @param command command (optional)
      * @return [PostClientsClientIdResponse]
      */
-    @POST("v1/clients/{clientId}")
+    @POST("clients/{clientId}")
     suspend fun activate1(
         @Path("clientId") clientId: Long,
         @Body postClientsClientIdRequest: PostClientsClientIdRequest,
@@ -58,7 +58,7 @@ interface ClientApi {
      * @param orphansOnly orphansOnly (optional)
      * @return [GetClientsResponse]
      */
-    @GET("v1/clients")
+    @GET("clients")
     suspend fun retrieveAll21(
         @Query("officeId") officeId: Long? = null,
         @Query("externalId") externalId: String? = null,
@@ -84,6 +84,6 @@ interface ClientApi {
      * @param clientId clientId
      * @return [GetClientsClientIdAccountsResponse]
      */
-    @GET("v1/clients/{clientId}/accounts")
+    @GET("clients/{clientId}/accounts")
     suspend fun retrieveAssociatedAccounts(@Path("clientId") clientId: Long): GetClientsClientIdAccountsResponse
 }

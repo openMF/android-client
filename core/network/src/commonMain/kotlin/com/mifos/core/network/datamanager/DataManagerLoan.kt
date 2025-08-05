@@ -56,7 +56,7 @@ class DataManagerLoan(
     fun getLoanById(loanId: Int): Flow<LoanWithAssociationsEntity?> {
         return prefManager.userInfo.flatMapLatest { userData ->
             when (userData.userStatus) {
-                false -> flow { emit(mBaseApiManager.loanApi.getLoanByIdWithAllAssociations(loanId)) }
+                false -> flow { emit(mBaseApiManager.loanService.getLoanByIdWithAllAssociations(loanId)) }
                 true ->
                     /**
                      * offline Mode, Return LoanWithAssociation from LoanDaoHelper.
@@ -77,21 +77,21 @@ class DataManagerLoan(
      */
     fun syncLoanById(loanId: Int): Flow<LoanWithAssociationsEntity> {
         return flow {
-            val loanWithAssociations = mBaseApiManager.loanApi.getLoanByIdWithAllAssociations(loanId)
+            val loanWithAssociations = mBaseApiManager.loanService.getLoanByIdWithAllAssociations(loanId)
             loanDaoHelper.saveLoanById(loanWithAssociations)
             emit(loanWithAssociations)
         }
     }
 
     val allLoans: Flow<List<com.mifos.core.model.objects.organisations.LoanProducts>>
-        get() = mBaseApiManager.loanApi.getAllLoans()
+        get() = mBaseApiManager.loanService.getAllLoans()
 
     fun getLoansAccountTemplate(clientId: Int, productId: Int): Flow<LoanTemplate> {
-        return mBaseApiManager.loanApi.getLoansAccountTemplate(clientId, productId)
+        return mBaseApiManager.loanService.getLoansAccountTemplate(clientId, productId)
     }
 
     fun createLoansAccount(loansPayload: LoansPayload?): Flow<Loan> {
-        return mBaseApiManager.loanApi.createLoansAccount(loansPayload)
+        return mBaseApiManager.loanService.createLoansAccount(loansPayload)
     }
 
     /**
@@ -120,7 +120,7 @@ class DataManagerLoan(
                 loanDaoHelper.getLoanRepayTemplate(loanId)
             } else {
                 flow {
-                    val result = mBaseApiManager.loanApi.getLoanRepaymentTemplate(loanId)
+                    val result = mBaseApiManager.loanService.getLoanRepaymentTemplate(loanId)
                     emit(result)
                 }
             }
@@ -143,7 +143,7 @@ class DataManagerLoan(
 
     fun syncLoanRepaymentTemplate(loanId: Int): Flow<LoanRepaymentTemplateEntity> {
         return flow {
-            mBaseApiManager.loanApi.getLoanRepaymentTemplate(loanId).also {
+            mBaseApiManager.loanService.getLoanRepaymentTemplate(loanId).also {
                 loanDaoHelper.saveLoanRepaymentTemplate(loanId, it)
             }
         }
@@ -168,7 +168,7 @@ class DataManagerLoan(
         request: LoanRepaymentRequestEntity,
     ): LoanRepaymentResponseEntity {
         return when (prefManager.userInfo.first().userStatus) {
-            false -> mBaseApiManager.loanApi.submitPayment(loanId, request)
+            false -> mBaseApiManager.loanService.submitPayment(loanId, request)
 
             true ->
                 /**
@@ -262,13 +262,13 @@ class DataManagerLoan(
         loanId: Int,
         command: String?,
     ): Flow<LoanTransactionTemplate> {
-        return mBaseApiManager.loanApi.getLoanTransactionTemplate(loanId, command)
+        return mBaseApiManager.loanService.getLoanTransactionTemplate(loanId, command)
     }
 
     fun disburseLoan(
         loanId: Int,
         loanDisbursement: LoanDisbursement?,
     ): Flow<GenericResponse> {
-        return mBaseApiManager.loanApi.disburseLoan(loanId, loanDisbursement)
+        return mBaseApiManager.loanService.disburseLoan(loanId, loanDisbursement)
     }
 }

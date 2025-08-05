@@ -25,7 +25,7 @@ class DataManagerCheckerInbox(
         entityName: String? = null,
         resourceId: Int? = null,
     ): Flow<List<CheckerTask>> {
-        return mBaseApiManager.checkerInboxApi.getCheckerList(
+        return mBaseApiManager.checkerInboxService.getCheckerList(
             actionName,
             entityName,
             resourceId,
@@ -33,23 +33,23 @@ class DataManagerCheckerInbox(
     }
 
     suspend fun approveCheckerEntry(auditId: Int): GenericResponse {
-        return mBaseApiManager.checkerInboxApi.approveCheckerEntry(auditId)
+        return mBaseApiManager.checkerInboxService.approveCheckerEntry(auditId)
     }
 
     suspend fun rejectCheckerEntry(auditId: Int): GenericResponse {
-        return mBaseApiManager.checkerInboxApi.rejectCheckerEntry(auditId)
+        return mBaseApiManager.checkerInboxService.rejectCheckerEntry(auditId)
     }
 
     suspend fun deleteCheckerEntry(auditId: Int): GenericResponse {
-        return mBaseApiManager.checkerInboxApi.deleteCheckerEntry(auditId)
+        return mBaseApiManager.checkerInboxService.deleteCheckerEntry(auditId)
     }
 
     fun getRescheduleLoansTaskList(): Flow<List<RescheduleLoansTask>> {
-        return mBaseApiManager.checkerInboxApi.getRescheduleLoansTaskList()
+        return mBaseApiManager.checkerInboxService.getRescheduleLoansTaskList()
     }
 
     fun getCheckerInboxSearchTemplate(): Flow<CheckerInboxSearchTemplate> {
-        return mBaseApiManager.checkerInboxApi.getCheckerInboxSearchTemplate()
+        return mBaseApiManager.checkerInboxService.getCheckerInboxSearchTemplate()
     }
 
     fun getCheckerTaskFromResourceId(
@@ -57,7 +57,7 @@ class DataManagerCheckerInbox(
         entityName: String? = null,
         resourceId: Int? = null,
     ): Flow<List<CheckerTask>> {
-        return mBaseApiManager.checkerInboxApi.getCheckerTasksFromResourceId(
+        return mBaseApiManager.checkerInboxService.getCheckerTasksFromResourceId(
             actionName,
             entityName,
             resourceId,

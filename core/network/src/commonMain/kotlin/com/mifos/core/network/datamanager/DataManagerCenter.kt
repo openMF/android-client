@@ -37,7 +37,6 @@ import kotlinx.coroutines.flow.map
 class DataManagerCenter(
     val mBaseApiManager: BaseApiManager,
     private val centerDatabaseHelper: CenterDaoHelper,
-    private val baseApiManager: com.mifos.core.network.apimanager.BaseApiManager,
     private val prefManager: UserPreferencesRepository,
 ) {
     /**
@@ -57,7 +56,7 @@ class DataManagerCenter(
      * @return Centers List page from offset to max Limit
      */
     suspend fun getCenters(paged: Boolean, offset: Int, limit: Int): Page<CenterEntity> {
-        return baseApiManager.getCenterApi()
+        return mBaseApiManager.centerApi
             .retrieveAll23(
                 null, null, null, null, null, paged,
                 offset, limit, null, null, null, null, null,
@@ -101,7 +100,7 @@ class DataManagerCenter(
      */
     fun syncCenterAccounts(centerId: Int): Flow<CenterAccounts> {
         return flow {
-            val centerAccounts = mBaseApiManager.centerApi.getCenterAccounts(centerId).also {
+            val centerAccounts = mBaseApiManager.centerService.getCenterAccounts(centerId).also {
                 centerDatabaseHelper.saveCenterAccounts(it, centerId)
             }
             emit(centerAccounts)
@@ -118,13 +117,13 @@ class DataManagerCenter(
      */
     suspend fun getCentersGroupAndMeeting(id: Int): CenterWithAssociations {
         return mBaseApiManager
-            .centerApi
+            .centerService
             .getCenterWithGroupMembersAndCollectionMeetingCalendar(id)
     }
 
     suspend fun createCenter(centerPayload: CenterPayloadEntity?) {
         when (prefManager.userInfo.first().userStatus) {
-            false -> mBaseApiManager.centerApi.createCenter(centerPayload)
+            false -> mBaseApiManager.centerService.createCenter(centerPayload)
             true ->
                 /**
                  * Save CenterPayload in Database table.
@@ -141,7 +140,7 @@ class DataManagerCenter(
     fun getCenterWithAssociations(centerId: Int): Flow<CenterWithAssociations> {
         return flow {
             when (prefManager.userInfo.first().userStatus) {
-                false -> mBaseApiManager.centerApi.getAllGroupsForCenter(centerId)
+                false -> mBaseApiManager.centerService.getAllGroupsForCenter(centerId)
                 true ->
                     /**
                      * Return Groups from DatabaseHelperGroups.
@@ -161,7 +160,7 @@ class DataManagerCenter(
         get() = centerDatabaseHelper.readAllCenters()
 
     fun offices(): Flow<List<OfficeEntity>> {
-        return baseApiManager.getOfficeApi().retrieveOffices(null, null, null)
+        return mBaseApiManager.officeApi.retrieveOffices(null, null, null)
             .map { responseList ->
                 responseList.map(GetOfficeResponseMapper::mapFromEntity)
             }
@@ -207,7 +206,7 @@ class DataManagerCenter(
         centerId: Int,
         activatePayload: ActivatePayload?,
     ): PostCentersCenterIdResponse {
-        return baseApiManager.getCenterApi().activate2(
+        return mBaseApiManager.centerApi.activate2(
             centerId.toLong(),
             PostCentersCenterIdRequest(
                 closureDate = activatePayload?.activationDate,

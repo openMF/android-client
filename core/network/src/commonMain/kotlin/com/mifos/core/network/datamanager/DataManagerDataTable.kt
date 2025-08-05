@@ -27,7 +27,6 @@ import kotlinx.serialization.json.JsonArray
  */
 class DataManagerDataTable(
     val mBaseApiManager: BaseApiManager,
-    private val baseApiManager: com.mifos.core.network.apimanager.BaseApiManager,
 ) {
     /**
      * This Method Request the REST API of Datatable and In response give the List of DataTable
@@ -39,14 +38,14 @@ class DataManagerDataTable(
      * @return List<DataTable>
      </DataTable> */
     fun getDataTable(tableName: String?): Flow<List<DataTableEntity>> {
-        return baseApiManager.getDataTableApi().getDatatables(tableName)
+        return mBaseApiManager.dataTableApi.getDatatables(tableName)
             .map { responseList ->
                 responseList.map(GetDataTablesResponseMapper::mapFromEntity)
             }
     }
 
     suspend fun getDataTableInfo(table: String, entityId: Int): JsonArray {
-        return mBaseApiManager.dataTableApi.getDataOfDataTable(table, entityId)
+        return mBaseApiManager.dataTableService.getDataOfDataTable(table, entityId)
     }
 
     suspend fun addDataTableEntry(
@@ -54,7 +53,7 @@ class DataManagerDataTable(
         entityId: Int,
         payload: Map<String, String>,
     ): GenericResponse {
-        return mBaseApiManager.dataTableApi
+        return mBaseApiManager.dataTableService
             .createEntryInDataTable(table, entityId, payload)
     }
 
@@ -63,7 +62,7 @@ class DataManagerDataTable(
         entity: Int,
         rowId: Int,
     ): DeleteDataTablesDatatableAppTableIdDatatableIdResponse {
-        return baseApiManager.getDataTableApi().deleteDatatableEntry(
+        return mBaseApiManager.dataTableApi.deleteDatatableEntry(
             datatable = table,
             apptableId = entity.toLong(),
             datatableId = rowId.toLong(),
@@ -81,7 +80,7 @@ class DataManagerDataTable(
         userId: Int,
         userLocation: UserLocation?,
     ): Flow<GenericResponse> {
-        return mBaseApiManager.dataTableApi.addUserPathTracking(userId, userLocation)
+        return mBaseApiManager.dataTableService.addUserPathTracking(userId, userLocation)
     }
 
     /**
@@ -91,6 +90,6 @@ class DataManagerDataTable(
      * @return List<UserLocation>
      </UserLocation> */
     fun getUserPathTracking(userId: Int): Flow<List<UserLocation>> {
-        return mBaseApiManager.dataTableApi.getUserPathTracking(userId)
+        return mBaseApiManager.dataTableService.getUserPathTracking(userId)
     }
 }

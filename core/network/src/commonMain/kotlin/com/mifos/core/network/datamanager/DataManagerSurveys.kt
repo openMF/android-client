@@ -43,7 +43,7 @@ class DataManagerSurveys(
     val allSurvey: Flow<List<SurveyEntity>>
         get() = prefManager.userInfo.flatMapLatest { userData ->
             when (userData.userStatus) {
-                false -> mBaseApiManager.surveyApi.allSurveys()
+                false -> mBaseApiManager.surveyService.allSurveys()
                 true -> surveyDatabaseHelper.readAllSurveys()
             }
         }
@@ -85,11 +85,11 @@ class DataManagerSurveys(
      * @return Scorecard
      */
     fun submitScore(surveyId: Int, scorecardPayload: Scorecard?): Flow<Scorecard> {
-        return mBaseApiManager.surveyApi.submitScore(surveyId, scorecardPayload)
+        return mBaseApiManager.surveyService.submitScore(surveyId, scorecardPayload)
     }
 
     fun getSurvey(surveyId: Int): Flow<SurveyEntity> {
-        return mBaseApiManager.surveyApi.getSurvey(surveyId)
+        return mBaseApiManager.surveyService.getSurvey(surveyId)
     }
 
     /**

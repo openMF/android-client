@@ -339,8 +339,16 @@ private fun CreateNewClientContent(
     var selectedStaffId: Int? by rememberSaveable { mutableStateOf(0) }
 
     var isActive by rememberSaveable { mutableStateOf(false) }
-    var dateOfBirth by rememberSaveable { mutableLongStateOf(Clock.System.now().toEpochMilliseconds()) }
-    var activationDate by rememberSaveable { mutableLongStateOf(Clock.System.now().toEpochMilliseconds()) }
+    var dateOfBirth by rememberSaveable {
+        mutableLongStateOf(
+            Clock.System.now().toEpochMilliseconds(),
+        )
+    }
+    var activationDate by rememberSaveable {
+        mutableLongStateOf(
+            Clock.System.now().toEpochMilliseconds(),
+        )
+    }
     var showDateOfBirthDatepicker by rememberSaveable { mutableStateOf(false) }
     var showActivateDatepicker by rememberSaveable { mutableStateOf(false) }
     var showImagePickerDialog by rememberSaveable { mutableStateOf(false) }
@@ -358,8 +366,7 @@ private fun CreateNewClientContent(
         }
     }
 
-    val cameraLauncher = rememberPlatformCameraLauncher {
-            file ->
+    val cameraLauncher = rememberPlatformCameraLauncher { file ->
         file?.let {
             selectedImagePath = file.path
             onImageSelected(file)
@@ -561,19 +568,18 @@ private fun CreateNewClientContent(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        if (staffInOffices.isNotEmpty()) {
-            MifosTextFieldDropdown(
-                value = staff,
-                onValueChanged = { staff = it },
-                onOptionSelected = { index, value ->
-                    staff = value
-                    selectedStaffId = staffInOffices[index].id
-                },
-                label = stringResource(Res.string.feature_client_staff),
-                options = staffInOffices.sortedBy { it.displayName }.map { it.displayName.toString() },
-                readOnly = true,
-            )
-        }
+        MifosTextFieldDropdown(
+            value = staff,
+            onValueChanged = { staff = it },
+            onOptionSelected = { index, value ->
+                staff = value
+                selectedStaffId = staffInOffices[index].id
+            },
+            label = stringResource(Res.string.feature_client_staff),
+            options = staffInOffices.sortedBy { it.displayName }.map { it.displayName.toString() },
+            readOnly = true,
+            enabled = staffInOffices.isNotEmpty(),
+        )
 
         Spacer(modifier = Modifier.height(16.dp))
 
@@ -670,13 +676,36 @@ private fun CreateNewClientContent(
             onClick = {
                 val clientNames = Name(firstName, lastName, middleName)
                 handleSubmitClick(
-                    scope, snackbarHostState, clientNames, clientTemplate, createClient, isActive, onHasDatatables,
-                    selectedImagePath, setFileForUpload, staffInOffices, hasDatatables,
-                    selectedOfficeId, selectedClientTypeId, selectedClientClassificationId,
-                    genderId, selectedStaffId, activationDate, dateOfBirth,
-                    mobileNumber, externalId, isAddressEnabled, isAddressActive, selectedAddressTypeId, addressLine1,
-                    addressLine2, addressLine3, city, selectedStateProvinceId,
-                    selectedCountryId, postalCode,
+                    scope,
+                    snackbarHostState,
+                    clientNames,
+                    clientTemplate,
+                    createClient,
+                    isActive,
+                    onHasDatatables,
+                    selectedImagePath,
+                    setFileForUpload,
+                    staffInOffices,
+                    hasDatatables,
+                    selectedOfficeId,
+                    selectedClientTypeId,
+                    selectedClientClassificationId,
+                    genderId,
+                    selectedStaffId,
+                    activationDate,
+                    dateOfBirth,
+                    mobileNumber,
+                    externalId,
+                    isAddressEnabled,
+                    isAddressActive,
+                    selectedAddressTypeId,
+                    addressLine1,
+                    addressLine2,
+                    addressLine3,
+                    city,
+                    selectedStateProvinceId,
+                    selectedCountryId,
+                    postalCode,
                 )
             },
         ) {
@@ -736,11 +765,31 @@ private fun handleSubmitClick(
     }
 
     var clientPayload = createClientPayload(
-        clientNames.firstName, clientNames.lastName, selectedOfficeId, staffInOffices, isActive,
-        activationDate, dateOfBirth, clientNames.middleName, mobileNumber,
-        externalId, clientTemplate, genderId, selectedStaffId,
-        selectedClientId, selectedClientClassificationId, isAddressEnabled, isAddressActive, addressTypeId, addressLine1, addressLine2,
-        addressLine3, city, stateProvinceId, countryId, postalCode,
+        clientNames.firstName,
+        clientNames.lastName,
+        selectedOfficeId,
+        staffInOffices,
+        isActive,
+        activationDate,
+        dateOfBirth,
+        clientNames.middleName,
+        mobileNumber,
+        externalId,
+        clientTemplate,
+        genderId,
+        selectedStaffId,
+        selectedClientId,
+        selectedClientClassificationId,
+        isAddressEnabled,
+        isAddressActive,
+        addressTypeId,
+        addressLine1,
+        addressLine2,
+        addressLine3,
+        city,
+        stateProvinceId,
+        countryId,
+        postalCode,
     )
 
     if (hasDatatables) {
@@ -921,7 +970,11 @@ private fun ClientImageSection(selectedImagePath: String?, onImageClick: () -> U
             modifier = Modifier
                 .align(Alignment.Center)
                 .clickable { onImageClick() }
-                .border(color = MaterialTheme.colorScheme.outline, width = 2.dp, shape = CircleShape)
+                .border(
+                    color = MaterialTheme.colorScheme.outline,
+                    width = 2.dp,
+                    shape = CircleShape,
+                )
                 .size(80.dp)
                 .clip(CircleShape),
         )
@@ -1256,6 +1309,7 @@ private fun isAddressTypeIdValid(
             }
             return false
         }
+
         else -> true
     }
 }

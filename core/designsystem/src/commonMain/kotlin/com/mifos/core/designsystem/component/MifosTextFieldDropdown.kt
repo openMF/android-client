@@ -34,6 +34,7 @@ import androidx.compose.ui.unit.dp
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MifosTextFieldDropdown(
+    enabled: Boolean = true,
     value: String,
     onValueChanged: (String) -> Unit,
     onOptionSelected: (Int, String) -> Unit,
@@ -52,6 +53,7 @@ fun MifosTextFieldDropdown(
         onExpandedChange = { isExpanded = !isExpanded },
     ) {
         OutlinedTextField(
+            enabled = enabled,
             isError = errorMessage != null,
             supportingText = if (errorMessage != null) {
                 {

@@ -26,6 +26,6 @@ class DataManagerAuth(
      */
     suspend fun login(username: String, password: String): PostAuthenticationResponse {
         val body = PostAuthenticationRequest(username = username, password = password)
-        return baseApiManager.clientsApi.authenticate(body, true)
+        return baseApiManager.clientService.authenticate(body, true)
     }
 }

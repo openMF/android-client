@@ -27,7 +27,7 @@ interface ClientIdentifierApi {
      * @param clientId clientId
      * @return [kotlin.collections.List<GetClientsClientIdIdentifiersResponse>]
      */
-    @GET("v1/clients/{clientId}/identifiers")
+    @GET("clients/{clientId}/identifiers")
     fun retrieveAllClientIdentifiers(@Path("clientId") clientId: Long): Flow<List<GetClientsClientIdIdentifiersResponse>>
 
     /**
@@ -39,7 +39,7 @@ interface ClientIdentifierApi {
      * @param clientId clientId
      * @return [GetClientsClientIdIdentifiersTemplateResponse]
      */
-    @GET("v1/clients/{clientId}/identifiers/template")
+    @GET("clients/{clientId}/identifiers/template")
     suspend fun newClientIdentifierDetails(@Path("clientId") clientId: Long): GetClientsClientIdIdentifiersTemplateResponse
 
     /**
@@ -52,7 +52,7 @@ interface ClientIdentifierApi {
      * @param identifierId identifierId
      * @return [DeleteClientsClientIdIdentifiersIdentifierIdResponse]
      */
-    @DELETE("v1/clients/{clientId}/identifiers/{identifierId}")
+    @DELETE("clients/{clientId}/identifiers/{identifierId}")
     suspend fun deleteClientIdentifier(
         @Path("clientId") clientId: Long,
         @Path("identifierId") identifierId: Long,

@@ -25,6 +25,6 @@ class DataManagerNote(
      * This Method Request the REST API of Note and In response give the List of Notes
      */
     fun getNotes(entityType: String, entityId: Int): Flow<List<Note>> {
-        return mBaseApiManager.noteApi.getNotes(entityType, entityId)
+        return mBaseApiManager.noteService.getNotes(entityType, entityId)
     }
 }
