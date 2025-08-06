@@ -71,7 +71,7 @@ on:
 
       target_branch:
         type: string
-        default: 'kmp-impl'
+        default: 'development'
         description: 'Target branch for release'
 
       build_ios:
