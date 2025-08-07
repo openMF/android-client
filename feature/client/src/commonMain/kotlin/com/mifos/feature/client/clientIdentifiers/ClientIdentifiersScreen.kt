@@ -44,6 +44,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -85,10 +86,14 @@ internal fun ClientIdentifiersScreen(
     val clientIdentifiersDialogUiState by viewModel.clientIdentifierDialogUiState.collectAsStateWithLifecycle()
     val refreshState by viewModel.isRefreshing.collectAsStateWithLifecycle()
 
+    val showCreateDialog by viewModel.showCreateDialog.collectAsStateWithLifecycle()
+
     ClientIdentifiersScreen(
         state = clientIdentifiersUiState,
         dialogState = clientIdentifiersDialogUiState,
-        onShowDialog = viewModel::loadClientIdentifierTemplate,
+        showCreateDialog = showCreateDialog,
+        onShowDialog = viewModel::showCreateIdentifierDialog,
+        onHideDialog = viewModel::hideCreateIdentifierDialog,
         onBackPressed = onBackPressed,
         onDeleteIdentifier = { identifierId ->
             viewModel.deleteIdentifier(identifierId)
@@ -108,7 +113,9 @@ internal fun ClientIdentifiersScreen(
 internal fun ClientIdentifiersScreen(
     state: ClientIdentifiersUiState,
     dialogState: ClientIdentifierDialogUiState,
+    showCreateDialog: Boolean,
     onShowDialog: () -> Unit,
+    onHideDialog: () -> Unit,
     onBackPressed: () -> Unit,
     onDeleteIdentifier: (Int) -> Unit,
     onCreateIdentifier: (IdentifierPayload) -> Unit,
@@ -120,18 +127,22 @@ internal fun ClientIdentifiersScreen(
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
     val pullToRefreshState = rememberPullToRefreshState()
-    var showCreateIdentifierDialog by remember { mutableStateOf(false) }
     val scope = rememberCoroutineScope()
-    var showCreateSuccessMessage by remember { mutableStateOf(false) }
 
-    if (showCreateIdentifierDialog) {
+    LaunchedEffect(dialogState) {
+        if (dialogState is ClientIdentifierDialogUiState.IdentifierCreatedSuccessfully) {
+            snackbarHostState.showSnackbar(
+                message = getString(Res.string.feature_client_identifier_created_successfully),
+            )
+        }
+    }
+    if (showCreateDialog) {
         ClientIdentifiersDialogScreen(
             state = dialogState,
-            onDismiss = { showCreateIdentifierDialog = false },
+            onDismiss = {
+                onHideDialog()
+            },
             onIdentifierCreated = {
-                showCreateIdentifierDialog = false
-                showCreateSuccessMessage = true
-                reloadIdentifiers()
             },
             onRetry = onRetry,
             onCreateIdentifier = onCreateIdentifier,
@@ -145,7 +156,6 @@ internal fun ClientIdentifiersScreen(
             IconButton(
                 onClick = {
                     onShowDialog()
-                    showCreateIdentifierDialog = true
                 },
             ) {
                 Icon(
@@ -201,16 +211,6 @@ internal fun ClientIdentifiersScreen(
                 }
             }
         }
-    }
-    if (showCreateSuccessMessage) {
-        scope.launch {
-            snackbarHostState.showSnackbar(
-                message = getString(
-                    Res.string.feature_client_identifier_created_successfully,
-                ),
-            )
-        }
-        showCreateSuccessMessage = false
     }
 }
 
@@ -355,8 +355,11 @@ private fun ClientIdentifiersScreenPreview(
         onShowDialog = {},
         reloadIdentifiers = {},
         onCreateIdentifier = {},
+        showCreateDialog = false,
+        onHideDialog = {},
     )
 }
+
 val sampleClientIdentifiers = List(10) {
     Identifier(id = it, description = "description $it")
 }

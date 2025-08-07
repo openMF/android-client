@@ -40,6 +40,9 @@ class ClientIdentifiersViewModel(
 
     val clientId = savedStateHandle.getStateFlow(key = Constants.CLIENT_ID, initialValue = 0)
 
+    private val _showCreateDialog = MutableStateFlow(false)
+    val showCreateDialog = _showCreateDialog.asStateFlow()
+
     private val _clientIdentifiersUiState =
         MutableStateFlow<ClientIdentifiersUiState>(ClientIdentifiersUiState.Loading)
     val clientIdentifiersUiState = _clientIdentifiersUiState.asStateFlow()
@@ -53,6 +56,15 @@ class ClientIdentifiersViewModel(
 
     init {
         loadIdentifiers()
+    }
+
+    fun showCreateIdentifierDialog() {
+        loadClientIdentifierTemplate()
+        _showCreateDialog.value = true
+    }
+
+    fun hideCreateIdentifierDialog() {
+        _showCreateDialog.value = false
     }
 
     fun refreshIdentifiersList() {
@@ -131,10 +143,13 @@ class ClientIdentifiersViewModel(
                         _clientIdentifierDialogUiState.value =
                             ClientIdentifierDialogUiState.Loading
 
-                    is DataState.Success ->
+                    is DataState.Success -> {
                         _clientIdentifierDialogUiState.value =
                             ClientIdentifierDialogUiState
                                 .IdentifierCreatedSuccessfully
+                        _showCreateDialog.value = false
+                        loadIdentifiers()
+                    }
                 }
             }
         }
