@@ -50,10 +50,6 @@ gradlePlugin {
             id = "mifos.android.application"
             implementationClass = "AndroidApplicationConventionPlugin"
         }
-        register("androidLibraryCompose") {
-            id = "mifos.android.library.compose"
-            implementationClass = "AndroidLibraryComposeConventionPlugin"
-        }
         register("androidFeature") {
             id = "mifos.android.feature"
             implementationClass = "AndroidFeatureConventionPlugin"
