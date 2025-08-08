@@ -29,6 +29,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -63,6 +64,7 @@ import androidx.paging.PagingData
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.icon.MifosIcons
+import com.mifos.core.ui.components.SelectionModeTopAppBar
 import com.mifos.core.ui.util.DevicePreview
 import com.mifos.feature.client.syncClientDialog.SyncClientsDialogScreen
 import com.mifos.room.entities.client.ClientEntity
@@ -123,10 +125,27 @@ internal fun ClientListScreen(
         topBar = {
             if (isInSelectionMode) {
                 SelectionModeTopAppBar(
-                    currentSelectedItems = selectedItems.selectedItems.value,
-                    syncClicked = { sync.value = true },
+                    itemCount = selectedItems.size(),
                     resetSelectionMode = resetSelectionMode,
+                    actions = {
+                        FilledTonalButton(
+                            onClick = {
+                                sync.value = true
+                            },
+                        ) {
+                            Icon(
+                                imageVector = MifosIcons.Sync,
+                                contentDescription = "Sync Items",
+                            )
+                            Text("Test")
+                        }
+                    },
                 )
+//                SelectionModeTopAppBar(
+//                    currentSelectedItems = selectedItems.selectedItems.value,
+//                    syncClicked = { sync.value = true },
+//                    resetSelectionMode = resetSelectionMode,
+//                )
             }
         },
         floatingActionButton = {
@@ -143,18 +162,17 @@ internal fun ClientListScreen(
         containerColor = MaterialTheme.colorScheme.surfaceContainer,
         snackbarHostState = snackbarHostState,
     ) { padding ->
-
-        PullToRefreshBox(
-            state = pullToRefreshState,
-            onRefresh = {
-                viewModel.refreshClientList()
-            },
-            isRefreshing = isRefreshing,
+        Column(
+            modifier = Modifier
+                .padding(
+                    top = if (isInSelectionMode) paddingValues.calculateTopPadding() else 0.dp,
+                ),
+            verticalArrangement = Arrangement.Center,
         ) {
-            Column(
-                modifier = Modifier
-                    .padding(padding),
-                verticalArrangement = Arrangement.Center,
+            PullToRefreshBox(
+                state = pullToRefreshState,
+                onRefresh = viewModel::refreshClientList,
+                isRefreshing = isRefreshing,
             ) {
                 when (state) {
                     is ClientListUiState.ClientListApi -> {
@@ -250,7 +268,8 @@ private fun SelectionModeTopAppBar(
 }
 
 class ClientSelectionState(initialSelectedItems: List<ClientEntity> = emptyList()) {
-    private val _selectedItems = mutableStateListOf<ClientEntity>().also { it.addAll(initialSelectedItems) }
+    private val _selectedItems =
+        mutableStateListOf<ClientEntity>().also { it.addAll(initialSelectedItems) }
     var selectedItems: State<List<ClientEntity>> = derivedStateOf { _selectedItems }
 
     fun add(client: ClientEntity) {
@@ -264,6 +283,7 @@ class ClientSelectionState(initialSelectedItems: List<ClientEntity> = emptyList(
     fun contains(client: ClientEntity): Boolean {
         return _selectedItems.contains(client)
     }
+
     fun isEmpty(): Boolean {
         return _selectedItems.isEmpty()
     }
@@ -275,6 +295,7 @@ class ClientSelectionState(initialSelectedItems: List<ClientEntity> = emptyList(
     fun size(): Int {
         return _selectedItems.size
     }
+
     fun toList(): List<ClientEntity> {
         return _selectedItems.toList()
     }

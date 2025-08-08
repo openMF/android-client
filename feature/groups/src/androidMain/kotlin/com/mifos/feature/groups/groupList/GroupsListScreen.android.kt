@@ -19,6 +19,7 @@ import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -172,32 +173,39 @@ fun GroupsListScreen(
             }
         },
     ) { paddingValues ->
-        PullToRefreshBox(
-            modifier = Modifier.semantics {
-                contentDescription = "SwipeRefresh::GroupList"
-            },
-            state = pullRefreshState,
-            isRefreshing = isRefreshing,
-            onRefresh = { data.refresh() },
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(
+                    top = if (selectedItems.isNotEmpty()) paddingValues.calculateTopPadding() else 0.dp,
+                ),
         ) {
-            LazyColumn(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(paddingValues),
-                state = lazyListState,
-                verticalArrangement = if (data.itemCount < 1) Arrangement.Center else Arrangement.Top,
+            PullToRefreshBox(
+                modifier = Modifier.semantics {
+                    contentDescription = "SwipeRefresh::GroupList"
+                },
+                state = pullRefreshState,
+                isRefreshing = isRefreshing,
+                onRefresh = { data.refresh() },
             ) {
-                refreshState(data)
+                LazyColumn(
+                    modifier = Modifier
+                        .fillMaxSize(),
+                    state = lazyListState,
+                    verticalArrangement = if (data.itemCount < 1) Arrangement.Center else Arrangement.Top,
+                ) {
+                    refreshState(data)
 
-                successState(
-                    pagingItems = data,
-                    isInSelectionMode = selectedItems.isNotEmpty(),
-                    isSelected = selectedItems::contains,
-                    onGroupClick = onGroupClick,
-                    onSelectItem = onSelectItem,
-                )
+                    successState(
+                        pagingItems = data,
+                        isInSelectionMode = selectedItems.isNotEmpty(),
+                        isSelected = selectedItems::contains,
+                        onGroupClick = onGroupClick,
+                        onSelectItem = onSelectItem,
+                    )
 
-                appendState(data)
+                    appendState(data)
+                }
             }
         }
     }
