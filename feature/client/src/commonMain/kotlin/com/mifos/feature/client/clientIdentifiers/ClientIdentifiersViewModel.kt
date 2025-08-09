@@ -73,7 +73,7 @@ class ClientIdentifiersViewModel(
         _isRefreshing.value = false
     }
 
-    fun loadIdentifiers() = viewModelScope.launch {
+    fun loadIdentifiers(showLoading: Boolean = true) = viewModelScope.launch {
         clientIdentifiersRepository.getClientIdentifiers(clientId.value).collect { result ->
             when (result) {
                 is DataState.Error ->
@@ -81,9 +81,9 @@ class ClientIdentifiersViewModel(
                         ClientIdentifiersUiState.Error(Res.string.feature_client_failed_to_load_client_identifiers)
 
                 is DataState.Loading ->
-                    _clientIdentifiersUiState.value =
-                        ClientIdentifiersUiState.Loading
-
+                    if (showLoading) {
+                        _clientIdentifiersUiState.value = ClientIdentifiersUiState.Loading
+                    }
                 is DataState.Success ->
                     _clientIdentifiersUiState.value =
                         ClientIdentifiersUiState.ClientIdentifiers(result.data)
@@ -148,7 +148,7 @@ class ClientIdentifiersViewModel(
                             ClientIdentifierDialogUiState
                                 .IdentifierCreatedSuccessfully
                         _showCreateDialog.value = false
-                        loadIdentifiers()
+                        loadIdentifiers(showLoading = false)
                     }
                 }
             }
