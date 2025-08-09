@@ -67,6 +67,7 @@ import com.mifos.core.ui.components.MifosEmptyUi
 import com.mifos.core.ui.util.DevicePreview
 import com.mifos.feature.client.clientIdentifiersDialog.ClientIdentifierDialogUiState
 import com.mifos.feature.client.clientIdentifiersDialog.ClientIdentifiersDialogScreen
+import kotlinx.coroutines.flow.Flow
 import org.jetbrains.compose.resources.getString
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
@@ -120,7 +121,7 @@ internal fun ClientIdentifiersScreen(
     onRefresh: () -> Unit,
     onRetry: () -> Unit,
     onDocumentClicked: (Int) -> Unit,
-    events: kotlinx.coroutines.flow.Flow<ClientIdentifiersViewModel.ClientIdentifiersEvent>,
+    events: Flow<ClientIdentifiersViewModel.ClientIdentifiersEvent>,
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
     val pullToRefreshState = rememberPullToRefreshState()
