@@ -16,7 +16,6 @@ import androidclient.feature.client.generated.resources.feature_client_descripti
 import androidclient.feature.client.generated.resources.feature_client_documents
 import androidclient.feature.client.generated.resources.feature_client_failed_to_load_client_identifiers
 import androidclient.feature.client.generated.resources.feature_client_id
-import androidclient.feature.client.generated.resources.feature_client_identifier_created_successfully
 import androidclient.feature.client.generated.resources.feature_client_identifier_deleted_successfully
 import androidclient.feature.client.generated.resources.feature_client_identifiers
 import androidclient.feature.client.generated.resources.feature_client_remove
@@ -48,7 +47,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -69,7 +67,6 @@ import com.mifos.core.ui.components.MifosEmptyUi
 import com.mifos.core.ui.util.DevicePreview
 import com.mifos.feature.client.clientIdentifiersDialog.ClientIdentifierDialogUiState
 import com.mifos.feature.client.clientIdentifiersDialog.ClientIdentifiersDialogScreen
-import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.getString
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
@@ -105,7 +102,7 @@ internal fun ClientIdentifiersScreen(
         onRefresh = viewModel::refreshIdentifiersList,
         onRetry = viewModel::loadIdentifiers,
         onDocumentClicked = onDocumentClicked,
-        reloadIdentifiers = viewModel::loadIdentifiers,
+        events = viewModel.events,
     )
 }
 
@@ -123,17 +120,18 @@ internal fun ClientIdentifiersScreen(
     onRefresh: () -> Unit,
     onRetry: () -> Unit,
     onDocumentClicked: (Int) -> Unit,
-    reloadIdentifiers: () -> Unit,
+    events: kotlinx.coroutines.flow.Flow<ClientIdentifiersViewModel.ClientIdentifiersEvent>,
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
     val pullToRefreshState = rememberPullToRefreshState()
-    val scope = rememberCoroutineScope()
 
-    LaunchedEffect(dialogState) {
-        if (dialogState is ClientIdentifierDialogUiState.IdentifierCreatedSuccessfully) {
-            snackbarHostState.showSnackbar(
-                message = getString(Res.string.feature_client_identifier_created_successfully),
-            )
+    LaunchedEffect(events) {
+        events.collect { event ->
+            when (event) {
+                is ClientIdentifiersViewModel.ClientIdentifiersEvent.ShowMessage -> {
+                    snackbarHostState.showSnackbar(message = getString(event.message))
+                }
+            }
         }
     }
     if (showCreateDialog) {
@@ -141,8 +139,6 @@ internal fun ClientIdentifiersScreen(
             state = dialogState,
             onDismiss = {
                 onHideDialog()
-            },
-            onIdentifierCreated = {
             },
             onRetry = onRetry,
             onCreateIdentifier = onCreateIdentifier,
@@ -199,12 +195,6 @@ internal fun ClientIdentifiersScreen(
                     }
 
                     is ClientIdentifiersUiState.IdentifierDeletedSuccessfully -> {
-                        reloadIdentifiers()
-                        scope.launch {
-                            snackbarHostState.showSnackbar(
-                                message = getString(state.message),
-                            )
-                        }
                     }
 
                     is ClientIdentifiersUiState.Loading -> MifosCircularProgress()
@@ -353,10 +343,10 @@ private fun ClientIdentifiersScreenPreview(
         onRetry = {},
         onDocumentClicked = {},
         onShowDialog = {},
-        reloadIdentifiers = {},
         onCreateIdentifier = {},
         showCreateDialog = false,
         onHideDialog = {},
+        events = kotlinx.coroutines.flow.emptyFlow(),
     )
 }
 
