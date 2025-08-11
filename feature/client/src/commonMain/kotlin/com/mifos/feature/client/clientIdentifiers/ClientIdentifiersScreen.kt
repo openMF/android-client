@@ -68,6 +68,7 @@ import com.mifos.core.ui.util.DevicePreview
 import com.mifos.feature.client.clientIdentifiersDialog.ClientIdentifierDialogUiState
 import com.mifos.feature.client.clientIdentifiersDialog.ClientIdentifiersDialogScreen
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.emptyFlow
 import org.jetbrains.compose.resources.getString
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
@@ -347,7 +348,7 @@ private fun ClientIdentifiersScreenPreview(
         onCreateIdentifier = {},
         showCreateDialog = false,
         onHideDialog = {},
-        events = kotlinx.coroutines.flow.emptyFlow(),
+        events = emptyFlow(),
     )
 }
 
