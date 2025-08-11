@@ -158,11 +158,17 @@ class ClientIdentifiersViewModel(
     fun createClientIdentifier(identifierPayload: IdentifierPayload) =
         viewModelScope.launch {
             hideCreateIdentifierDialog()
+            _clientIdentifiersUiState.value = ClientIdentifiersUiState.Loading
             createClientIdentifierUseCase(clientId.value, identifierPayload).collect { result ->
                 when (result) {
-                    is DataState.Error ->
-                        _clientIdentifierDialogUiState.value =
-                            ClientIdentifierDialogUiState.Error(Res.string.feature_client_failed_to_create_identifier)
+                    is DataState.Error -> {
+                        _events.tryEmit(
+                            ClientIdentifiersEvent.ShowMessage(
+                                Res.string.feature_client_failed_to_create_identifier,
+                            ),
+                        )
+                        loadIdentifiers()
+                    }
 
                     is DataState.Loading -> {
                     }
