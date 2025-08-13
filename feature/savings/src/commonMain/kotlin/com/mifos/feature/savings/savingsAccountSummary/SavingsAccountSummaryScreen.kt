@@ -237,137 +237,145 @@ private fun SavingsAccountSummaryContent(
     val isWithdrawalAndDepositButtonVisible by rememberSaveable {
         mutableStateOf(depositAndWithdrawButtonVisibility(savingsAccountWithAssociations.status))
     }
-
-    Box(
-        modifier = modifier.padding(horizontal = 24.dp),
+    Column(
+        modifier = Modifier
+            .verticalScroll(rememberScrollState()),
     ) {
-        Column(
-            modifier = Modifier.fillMaxSize(),
+        Box(
+            modifier = modifier.padding(horizontal = 24.dp),
         ) {
-            Text(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 8.dp, bottom = 8.dp),
-                text = savingsAccountWithAssociations.clientName
-                    ?: stringResource(Res.string.feature_savings_client_name),
-                style = MaterialTheme.typography.bodyLarge,
-            )
-
-            HorizontalDivider(color = DarkGray)
-
-            FarApartTextItem(
-                title = savingsAccountWithAssociations.savingsProductName
-                    ?: stringResource(Res.string.feature_savings_product_name),
-                value = savingsAccountWithAssociations.accountNo?.toString() ?: "",
-            )
-
-            HorizontalDivider(modifier = Modifier.padding(top = 6.dp), color = DarkGray)
-
-            FarApartTextItem(
-                title = stringResource(Res.string.feature_savings_account_balance),
-                value = savingsAccountWithAssociations.summary?.accountBalance?.toString()
-                    ?: "0.0",
-            )
-
-            FarApartTextItem(
-                title = stringResource(Res.string.feature_savings_total_deposits),
-                value = savingsAccountWithAssociations.summary?.totalDeposits?.toString()
-                    ?: "0.0",
-            )
-
-            FarApartTextItem(
-                title = stringResource(Res.string.feature_savings_total_withdrawals),
-                value = savingsAccountWithAssociations.summary?.totalWithdrawals?.toString()
-                    ?: "0.0",
-            )
-
-            FarApartTextItem(
-                title = stringResource(Res.string.feature_savings_interest_earned),
-                value = savingsAccountWithAssociations.summary?.totalInterestEarned?.toString()
-                    ?: "0.0",
-            )
-
-            HorizontalDivider(
-                modifier = Modifier.padding(vertical = 8.dp),
-                color = DarkGray,
-            )
-
-            if (savingsAccountWithAssociations.transactions.isEmpty()) {
-                MifosEmptyUi(text = stringResource(Res.string.feature_savings_no_transactions))
-            } else {
+            Column(
+                modifier = Modifier.fillMaxSize(),
+            ) {
                 Text(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 8.dp, bottom = 8.dp),
+                    text = savingsAccountWithAssociations.clientName
+                        ?: stringResource(Res.string.feature_savings_client_name),
                     style = MaterialTheme.typography.bodyLarge,
-                    text = stringResource(Res.string.feature_savings_transactions),
-                    color = MaterialTheme.colorScheme.onBackground,
                 )
 
-                LazyColumn {
-                    items(savingsAccountWithAssociations.transactions) { transaction ->
-                        TransactionItemRow(transaction = transaction)
+                HorizontalDivider(color = DarkGray)
+
+                FarApartTextItem(
+                    title = savingsAccountWithAssociations.savingsProductName
+                        ?: stringResource(Res.string.feature_savings_product_name),
+                    value = savingsAccountWithAssociations.accountNo?.toString() ?: "",
+                )
+
+                HorizontalDivider(modifier = Modifier.padding(top = 6.dp), color = DarkGray)
+
+                FarApartTextItem(
+                    title = stringResource(Res.string.feature_savings_account_balance),
+                    value = savingsAccountWithAssociations.summary?.accountBalance?.toString()
+                        ?: "0.0",
+                )
+
+                FarApartTextItem(
+                    title = stringResource(Res.string.feature_savings_total_deposits),
+                    value = savingsAccountWithAssociations.summary?.totalDeposits?.toString()
+                        ?: "0.0",
+                )
+
+                FarApartTextItem(
+                    title = stringResource(Res.string.feature_savings_total_withdrawals),
+                    value = savingsAccountWithAssociations.summary?.totalWithdrawals?.toString()
+                        ?: "0.0",
+                )
+
+                FarApartTextItem(
+                    title = stringResource(Res.string.feature_savings_interest_earned),
+                    value = savingsAccountWithAssociations.summary?.totalInterestEarned?.toString()
+                        ?: "0.0",
+                )
+
+                HorizontalDivider(
+                    modifier = Modifier.padding(vertical = 8.dp),
+                    color = DarkGray,
+                )
+
+                if (savingsAccountWithAssociations.transactions.isEmpty()) {
+                    MifosEmptyUi(text = stringResource(Res.string.feature_savings_no_transactions))
+                } else {
+                    Text(
+                        style = MaterialTheme.typography.bodyLarge,
+                        text = stringResource(Res.string.feature_savings_transactions),
+                        color = MaterialTheme.colorScheme.onBackground,
+                    )
+
+                    LazyColumn {
+                        items(savingsAccountWithAssociations.transactions) { transaction ->
+                            TransactionItemRow(transaction = transaction)
+                        }
                     }
                 }
             }
-        }
-        Box(
-            modifier = Modifier
-                .align(Alignment.BottomStart)
-                .background(
-                    color = Color.White,
-                ),
-        ) {
-            Row(
+            Box(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 8.dp),
-                horizontalArrangement = Arrangement.SpaceBetween,
+                    .align(Alignment.BottomStart)
+                    .background(
+                        color = Color.White,
+                    ),
             ) {
-                if (isWithdrawalAndDepositButtonVisible) {
-                    Button(
-                        modifier = Modifier
-                            .weight(1f)
-                            .padding(horizontal = 8.dp),
-                        onClick = { onWithdrawButtonClicked.invoke(savingsAccountWithAssociations) },
-                    ) {
-                        Text(text = stringResource(Res.string.feature_savings_withdrawal))
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 8.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                ) {
+                    if (isWithdrawalAndDepositButtonVisible) {
+                        Button(
+                            modifier = Modifier
+                                .weight(1f)
+                                .padding(horizontal = 8.dp),
+                            onClick = {
+                                onWithdrawButtonClicked.invoke(
+                                    savingsAccountWithAssociations,
+                                )
+                            },
+                        ) {
+                            Text(text = stringResource(Res.string.feature_savings_withdrawal))
+                        }
+
+                        Button(
+                            modifier = Modifier
+                                .weight(1f)
+                                .padding(horizontal = 8.dp),
+                            onClick = { onDepositButtonClicked.invoke(savingsAccountWithAssociations) },
+                        ) {
+                            Text(text = stringResource(Res.string.feature_savings_make_deposit))
+                        }
                     }
 
-                    Button(
-                        modifier = Modifier
-                            .weight(1f)
-                            .padding(horizontal = 8.dp),
-                        onClick = { onDepositButtonClicked.invoke(savingsAccountWithAssociations) },
-                    ) {
-                        Text(text = stringResource(Res.string.feature_savings_make_deposit))
-                    }
-                }
+                    if (isSavingsButtonVisible) {
+                        Button(
+                            modifier = Modifier
+                                .weight(1f)
+                                .padding(horizontal = 8.dp),
+                            onClick = when {
+                                savingsAccountWithAssociations.status?.submittedAndPendingApproval == true -> {
+                                    { approveSavings.invoke() }
+                                }
 
-                if (isSavingsButtonVisible) {
-                    Button(
-                        modifier = Modifier
-                            .weight(1f)
-                            .padding(horizontal = 8.dp),
-                        onClick = when {
-                            savingsAccountWithAssociations.status?.submittedAndPendingApproval == true -> {
-                                { approveSavings.invoke() }
-                            }
+                                !savingsAccountWithAssociations.status?.active!! -> {
+                                    { activateSavings.invoke() }
+                                }
 
-                            !savingsAccountWithAssociations.status?.active!! -> {
-                                { activateSavings.invoke() }
-                            }
+                                else -> {
+                                    { }
+                                }
+                            },
 
-                            else -> {
-                                { }
-                            }
-                        },
-
-                    ) {
-                        Text(
-                            text = stringResource(
-                                getSavingsButtonText(
-                                    savingsAccountWithAssociations.status,
+                        ) {
+                            Text(
+                                text = stringResource(
+                                    getSavingsButtonText(
+                                        savingsAccountWithAssociations.status,
+                                    ),
                                 ),
-                            ),
-                        )
+                            )
+                        }
                     }
                 }
             }
