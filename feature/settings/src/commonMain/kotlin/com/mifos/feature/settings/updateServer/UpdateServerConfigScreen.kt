@@ -24,6 +24,8 @@ import androidclient.feature.settings.generated.resources.feature_settings_resta
 import androidclient.feature.settings.generated.resources.feature_settings_tenant_placeholder
 import androidclient.feature.settings.generated.resources.feature_settings_title
 import androidclient.feature.settings.generated.resources.feature_settings_update_config_btn_text
+import androidclient.feature.settings.generated.resources.feature_settings_use_localhost_btn_text
+import androidclient.feature.settings.generated.resources.feature_settings_use_default_config_btn_text
 import androidx.annotation.VisibleForTesting
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -286,6 +288,46 @@ internal fun UpdateServerConfigScreenContent(
                     )
                     Spacer(modifier = Modifier.width(4.dp))
                     Text(stringResource(Res.string.feature_settings_update_config_btn_text).uppercase())
+                }
+            }
+
+            item {
+                ElevatedButton(
+                    onClick = {
+                        onEvent(UpdateServerConfigEvent.UpdateProtocol(ServerConfig.LOCALHOST.protocol))
+                        onEvent(UpdateServerConfigEvent.UpdateEndPoint(ServerConfig.LOCALHOST.endPoint))
+                        onEvent(UpdateServerConfigEvent.UpdatePort(ServerConfig.LOCALHOST.port))
+                    },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(48.dp),
+                    enabled = !hasAnyError,
+                ) {
+                    Icon(
+                        imageVector = MifosIcons.Save,
+                        contentDescription = "updateConfig",
+                    )
+                    Spacer(modifier = Modifier.width(4.dp))
+                    Text(stringResource(Res.string.feature_settings_use_localhost_btn_text).uppercase())
+                }
+            }
+
+            item {
+                ElevatedButton(
+                    onClick = {
+                        onEvent(UpdateServerConfigEvent.UseDefaultConfig)
+                    },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(48.dp),
+                    enabled = !hasAnyError,
+                ) {
+                    Icon(
+                        imageVector = MifosIcons.Update,
+                        contentDescription = "reset config to default",
+                    )
+                    Spacer(modifier = Modifier.width(4.dp))
+                    Text(stringResource(Res.string.feature_settings_use_default_config_btn_text).uppercase())
                 }
             }
         }
