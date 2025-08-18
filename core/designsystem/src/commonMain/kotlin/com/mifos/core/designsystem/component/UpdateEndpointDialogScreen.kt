@@ -111,7 +111,7 @@ fun UpdateEndpointDialogScreenPreview() {
             initialBaseURL = "https://demo.mifos.org",
             initialTenant = "default",
             onDismissRequest = {},
-            handleEndpointUpdate = { _, _ -> }
+            handleEndpointUpdate = { _, _ -> },
         )
     }
 }

@@ -132,7 +132,7 @@ private fun MifosSweetErrorPreview() {
         MifosSweetError(
             message = "Something went wrong. Please check your network.",
             buttonText = "Retry",
-            onclick = {}
+            onclick = {},
         )
     }
 }
@@ -143,7 +143,7 @@ private fun MifosSweetError_NoRetryPreview() {
     MifosTheme {
         MifosSweetError(
             message = "Failed to fetch data.",
-            isRetryEnabled = false
+            isRetryEnabled = false,
         )
     }
 }
@@ -153,7 +153,7 @@ private fun MifosSweetError_NoRetryPreview() {
 private fun MifosPaginationSweetErrorPreview() {
     MifosTheme {
         MifosPaginationSweetError(
-            onclick = {}
+            onclick = {},
         )
     }
 }

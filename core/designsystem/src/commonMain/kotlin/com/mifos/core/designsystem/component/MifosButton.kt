@@ -262,7 +262,7 @@ private fun MifosButtonWithTextPreview() {
     MifosTheme {
         MifosButton(
             onClick = {},
-            text = { Text("Text Button") }
+            text = { Text("Text Button") },
         )
     }
 }
@@ -272,7 +272,7 @@ private fun MifosButtonWithTextPreview() {
 private fun MifosOutlinedButtonPreview() {
     MifosTheme {
         MifosOutlinedButton(
-            onClick = {}
+            onClick = {},
         ) {
             Text("Outlined Button")
         }
@@ -284,7 +284,7 @@ private fun MifosOutlinedButtonPreview() {
 private fun MifosTextButtonPreview() {
     MifosTheme {
         MifosTextButton(
-            onClick = {}
+            onClick = {},
         ) {
             Text("Text Button")
         }
@@ -301,10 +301,9 @@ private fun MifosTextButtonWithIconPreview() {
             leadingIcon = {
                 Icon(
                     imageVector = Icons.Default.Star,
-                    contentDescription = null
+                    contentDescription = null,
                 )
-            }
+            },
         )
     }
 }
-

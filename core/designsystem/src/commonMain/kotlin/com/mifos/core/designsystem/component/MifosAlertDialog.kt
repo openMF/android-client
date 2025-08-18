@@ -171,7 +171,6 @@ fun MifosCustomDialog(
     )
 }
 
-
 @Preview
 @Composable
 fun MifosDialogBoxWithMessagePreview() {
@@ -183,7 +182,7 @@ fun MifosDialogBoxWithMessagePreview() {
             dismissButtonText = "No",
             onConfirm = {},
             onDismiss = {},
-            message = "Are you sure you want to delete this item?"
+            message = "Are you sure you want to delete this item?",
         )
     }
 }
@@ -205,7 +204,7 @@ fun MifosDialogBoxWithComposableMessagePreview() {
                     Spacer(modifier = Modifier.height(8.dp))
                     Text("You can place anything here, like a list or input field.")
                 }
-            }
+            },
         )
     }
 }
@@ -219,7 +218,7 @@ fun MifosRadioButtonDialogPreview() {
             selectedItem = "Option 2",
             items = arrayOf("Option 1", "Option 2", "Option 3", "Option 4"),
             selectItem = { _, _ -> },
-            onDismissRequest = {}
+            onDismissRequest = {},
         )
     }
 }
@@ -232,7 +231,7 @@ fun MifosCustomDialogPreview() {
             onDismiss = {},
             content = {
                 Card(
-                    modifier = Modifier.padding(16.dp)
+                    modifier = Modifier.padding(16.dp),
                 ) {
                     Column(modifier = Modifier.padding(16.dp)) {
                         Text("This is a custom dialog.")
@@ -240,8 +239,7 @@ fun MifosCustomDialogPreview() {
                         Text("You can fully customize this content.")
                     }
                 }
-            }
+            },
         )
     }
 }
-

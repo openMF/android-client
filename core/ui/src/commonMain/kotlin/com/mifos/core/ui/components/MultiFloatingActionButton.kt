@@ -139,7 +139,7 @@ fun SelectionModeTopAppBarPrevieww() {
     MifosTheme {
         SelectionModeTopAppBar(
             itemCount = 3,
-            resetSelectionMode = {}
+            resetSelectionMode = {},
         )
     }
 }
@@ -155,11 +155,10 @@ fun SelectionModeTopAppBarWithActionsPreview() {
                 IconButton(onClick = {}) {
                     Icon(
                         imageVector = MifosIcons.Delete,
-                        contentDescription = "delete"
+                        contentDescription = "delete",
                     )
                 }
-            }
+            },
         )
     }
 }
-

@@ -77,11 +77,11 @@ fun MifosTabRowPreview() {
     val pagerState = rememberPagerState { 2 }
     val tabContents = listOf(
         TabContent("Home") { Text("Home Content") },
-        TabContent("Profile") { Text("Profile Content") }
+        TabContent("Profile") { Text("Profile Content") },
     )
 
     MifosTabRow(
         tabContents = tabContents,
-        pagerState = pagerState
+        pagerState = pagerState,
     )
 }

@@ -71,7 +71,7 @@ fun MifosEmptyUiPreview() {
     MifosTheme {
         MifosEmptyUi(
             text = "No data available",
-            icon = MifosIcons.Info
+            icon = MifosIcons.Info,
         )
     }
 }

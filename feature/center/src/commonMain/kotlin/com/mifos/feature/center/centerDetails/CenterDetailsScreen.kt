@@ -65,7 +65,6 @@ import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.model.objects.groups.CenterInfo
-import com.mifos.core.ui.util.DevicePreview
 import com.mifos.room.entities.group.CenterWithAssociations
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
@@ -326,14 +325,14 @@ class CenterDetailsUiStateProvider : PreviewParameterProvider<CenterDetailsUiSta
     override val values = sequenceOf(
         CenterDetailsUiState.Loading,
         CenterDetailsUiState.Error(Res.string.feature_center_error_loading_centers),
-        CenterDetailsUiState.CenterDetails(CenterWithAssociations(), CenterInfo())
+        CenterDetailsUiState.CenterDetails(CenterWithAssociations(), CenterInfo()),
     )
 }
 
 @Preview
 @Composable
 fun CenterDetailsScreenPreview(
-    @PreviewParameter(CenterDetailsUiStateProvider::class) state: CenterDetailsUiState
+    @PreviewParameter(CenterDetailsUiStateProvider::class) state: CenterDetailsUiState,
 ) {
     CenterDetailsScreen(
         state = state,

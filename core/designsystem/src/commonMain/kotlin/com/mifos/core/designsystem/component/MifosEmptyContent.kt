@@ -64,7 +64,7 @@ fun MifosErrorContent(
 private fun MifosErrorContentPreview() {
     MifosTheme {
         MifosErrorContent(
-            message = "Something went wrong. Please try again later."
+            message = "Something went wrong. Please try again later.",
         )
     }
 }
@@ -77,7 +77,7 @@ private fun MifosErrorContentWithRefreshPreview() {
             message = "Failed to load data.",
             isRefreshEnabled = true,
             refreshButtonText = "Retry",
-            onRefresh = { /* Handle refresh */ }
+            onRefresh = { /* Handle refresh */ },
         )
     }
 }

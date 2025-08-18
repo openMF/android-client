@@ -350,7 +350,7 @@ private fun MifosOutlinedTextField_ValuePreview() {
             value = text,
             onValueChanged = { text = it },
             label = "Username",
-            icon = Icons.Default.Person
+            icon = Icons.Default.Person,
         )
     }
 }
@@ -370,7 +370,7 @@ private fun MifosOutlinedTextField_PasswordPreview() {
             isPasswordVisible = passwordVisible,
             onPasswordToggleClick = { passwordVisible = it },
             showClearIcon = true,
-            onClickClearIcon = { text = "" }
+            onClickClearIcon = { text = "" },
         )
     }
 }
@@ -385,7 +385,7 @@ private fun MifosOutlinedTextField_ErrorPreview() {
             onValueChange = { text = it },
             label = "Email",
             error = "Invalid email address",
-            icon = Icons.Default.Email
+            icon = Icons.Default.Email,
         )
     }
 }
@@ -397,8 +397,7 @@ private fun MifosDatePickerTextFieldPreview() {
         MifosDatePickerTextField(
             value = "2025-08-18",
             label = "Date of Birth",
-            openDatePicker = { /* open picker */ }
+            openDatePicker = { /* open picker */ },
         )
     }
 }
-

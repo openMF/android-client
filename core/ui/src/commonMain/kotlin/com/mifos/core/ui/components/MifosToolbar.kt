@@ -54,7 +54,7 @@ fun SelectionModeTopAppBarPreview() {
     MifosTheme {
         SelectionModeTopAppBar(
             itemCount = 3,
-            resetSelectionMode = {}
+            resetSelectionMode = {},
         )
     }
 }

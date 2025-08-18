@@ -147,12 +147,12 @@ class BasicDialogStatePreviewProvider : PreviewParameterProvider<BasicDialogStat
     override val values: Sequence<BasicDialogState> = sequenceOf(
         BasicDialogState.Shown(
             title = "An error has occurred.",
-            message = "Username or password is incorrect. Try again."
+            message = "Username or password is incorrect. Try again.",
         ),
         BasicDialogState.Shown(
             title = "Confirm Action",
-            message = "Are you sure you want to continue?"
-        )
+            message = "Are you sure you want to continue?",
+        ),
     )
 }
 
@@ -160,13 +160,13 @@ class BasicDialogStatePreviewProvider : PreviewParameterProvider<BasicDialogStat
 @Composable
 private fun MifosBasicDialogPreview(
     @PreviewParameter(BasicDialogStatePreviewProvider::class)
-    state: BasicDialogState
+    state: BasicDialogState,
 ) {
     MifosTheme {
         MifosBasicDialog(
             visibilityState = state,
             onConfirm = {},
-            onDismissRequest = {}
+            onDismissRequest = {},
         )
     }
 }

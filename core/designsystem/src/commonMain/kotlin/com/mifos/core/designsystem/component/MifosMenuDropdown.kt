@@ -45,19 +45,19 @@ private fun MifosMenuDropDownItemPreview() {
     MifosTheme {
         DropdownMenu(
             expanded = true,
-            onDismissRequest = {}
+            onDismissRequest = {},
         ) {
             MifosMenuDropDownItem(
                 option = "Profile",
-                onClick = {}
+                onClick = {},
             )
             MifosMenuDropDownItem(
                 option = "Settings",
-                onClick = {}
+                onClick = {},
             )
             MifosMenuDropDownItem(
                 option = "Logout",
-                onClick = {}
+                onClick = {},
             )
         }
     }

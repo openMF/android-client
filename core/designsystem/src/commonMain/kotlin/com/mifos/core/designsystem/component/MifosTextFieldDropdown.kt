@@ -109,6 +109,6 @@ fun MifosTextFieldDropdownPreview() {
         onValueChanged = { selectedValue = it },
         onOptionSelected = { _, option -> selectedValue = option },
         options = options,
-        label = "Select Option"
+        label = "Select Option",
     )
 }

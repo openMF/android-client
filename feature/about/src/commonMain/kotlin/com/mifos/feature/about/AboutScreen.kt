@@ -155,10 +155,9 @@ private fun AboutCardItem(
 
 @DevicePreview
 @Composable
-fun AboutScreenPreview(){
+fun AboutScreenPreview() {
     MifosTheme {
         AboutScreen {
-
         }
     }
 }

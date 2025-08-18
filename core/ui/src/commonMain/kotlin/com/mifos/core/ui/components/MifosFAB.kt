@@ -47,8 +47,7 @@ fun MifosFABPreview() {
     MifosTheme {
         MifosFAB(
             icon = MifosIcons.Info,
-            onClick = {}
+            onClick = {},
         )
     }
 }
-

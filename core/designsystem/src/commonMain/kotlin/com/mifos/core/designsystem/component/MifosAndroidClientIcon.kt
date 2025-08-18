@@ -37,7 +37,7 @@ fun MifosAndroidClientIconPreview() {
     MifosTheme {
         MifosAndroidClientIcon(
             imageVector = rememberVectorPainter(Icons.Default.Android),
-            modifier = Modifier.padding(16.dp)
+            modifier = Modifier.padding(16.dp),
         )
     }
 }

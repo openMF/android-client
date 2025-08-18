@@ -54,7 +54,6 @@ import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.model.objects.clients.ActivatePayload
 import com.mifos.core.ui.components.MifosAlertDialog
-import com.mifos.core.ui.util.DevicePreview
 import kotlinx.datetime.Clock
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
@@ -220,14 +219,14 @@ class ActivateUiStateProvider : PreviewParameterProvider<ActivateUiState> {
         ActivateUiState.Initial,
         ActivateUiState.Loading,
         ActivateUiState.ActivatedSuccessfully(Res.string.feature_activate_client),
-        ActivateUiState.Error(Res.string.feature_activate_failed_to_activate_client)
+        ActivateUiState.Error(Res.string.feature_activate_failed_to_activate_client),
     )
 }
 
 @Preview
 @Composable
 fun ActivateScreenPreview(
-    @PreviewParameter(ActivateUiStateProvider::class) state: ActivateUiState
+    @PreviewParameter(ActivateUiStateProvider::class) state: ActivateUiState,
 ) {
     ActivateScreen(
         state = state,
