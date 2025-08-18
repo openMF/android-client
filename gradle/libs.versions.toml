@@ -289,14 +289,7 @@ fineract-client-kmp-sdk = { module = "com.github.openMF:fineract-client-kmp-sdk"
 mifos-passcode = { module = "com.mifos.mobile:mifos-passcode", version.ref = "mifosPasscode" }
 
 #Google Play
-play-app-update = { group = "com.google.android.play", name = "app-update", version.ref="playUpdate"}
-play-app-update-ktx = { group = "com.google.android.play", name = "app-update-ktx", version.ref="playUpdate"}
-play-gms-scanner = { group = "com.google.android.gms", name = "play-services-code-scanner", version.ref = "playScanner"}
-play-integrity = { group = "com.google.android.play", name = "integrity", version.ref = "playIntegrity"}
-play-service = {group = "com.google.android.gms", name = "play-services-base", version.ref = "playService"}
 play-services-location = { module = "com.google.android.gms:play-services-location", version.ref = "playServicesLocation" }
-play-services-maps = { module = "com.google.android.gms:play-services-maps", version.ref = "playServicesMaps" }
-play-services-places = { module = "com.google.android.gms:play-services-places", version.ref = "playServicesPlaces" }
 
 # Truth
 truth = { group = "com.google.truth", name = "truth", version.ref = "truthVersion" }
