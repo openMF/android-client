@@ -52,6 +52,9 @@ import com.mifos.room.entities.client.ClientStatusEntity
 import com.mifos.room.entities.group.CenterWithAssociations
 import com.mifos.room.entities.group.GroupEntity
 import org.jetbrains.compose.resources.stringResource
+import org.jetbrains.compose.ui.tooling.preview.Preview
+import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
+import org.jetbrains.compose.ui.tooling.preview.PreviewParameterProvider
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -195,33 +198,21 @@ private fun GroupItem(
     HorizontalDivider()
 }
 
-@DevicePreview
-@Composable
-private fun GroupListScreenLoadingPreview() {
-    GroupListScreen(
-        state = GroupListUiState.Loading,
-        onBackPressed = {},
-        onGroupClick = {},
-        onRetry = {},
+class GroupListUiStateProvider : PreviewParameterProvider<GroupListUiState> {
+    override val values = sequenceOf(
+        GroupListUiState.Loading,
+        GroupListUiState.Error(Res.string.feature_center_failed_to_load_group_list),
+        GroupListUiState.GroupList(CenterWithAssociations())
     )
 }
 
-@DevicePreview
+@Preview
 @Composable
-private fun GroupListScreenErrorPreview() {
+fun GroupListScreenPreview(
+    @PreviewParameter(GroupListUiStateProvider::class) state: GroupListUiState
+) {
     GroupListScreen(
-        state = GroupListUiState.Error(Res.string.feature_center_failed_to_load_group_list),
-        onBackPressed = {},
-        onGroupClick = {},
-        onRetry = {},
-    )
-}
-
-@DevicePreview
-@Composable
-private fun GroupListScreenGroupListPreview() {
-    GroupListScreen(
-        state = GroupListUiState.GroupList(CenterWithAssociations()),
+        state = state,
         onBackPressed = {},
         onGroupClick = {},
         onRetry = {},
