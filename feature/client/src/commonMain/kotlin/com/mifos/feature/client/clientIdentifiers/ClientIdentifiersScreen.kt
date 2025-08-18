@@ -16,7 +16,6 @@ import androidclient.feature.client.generated.resources.feature_client_descripti
 import androidclient.feature.client.generated.resources.feature_client_documents
 import androidclient.feature.client.generated.resources.feature_client_failed_to_load_client_identifiers
 import androidclient.feature.client.generated.resources.feature_client_id
-import androidclient.feature.client.generated.resources.feature_client_identifier_created_successfully
 import androidclient.feature.client.generated.resources.feature_client_identifier_deleted_successfully
 import androidclient.feature.client.generated.resources.feature_client_identifiers
 import androidclient.feature.client.generated.resources.feature_client_remove
@@ -44,10 +43,10 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -68,7 +67,8 @@ import com.mifos.core.ui.components.MifosEmptyUi
 import com.mifos.core.ui.util.DevicePreview
 import com.mifos.feature.client.clientIdentifiersDialog.ClientIdentifierDialogUiState
 import com.mifos.feature.client.clientIdentifiersDialog.ClientIdentifiersDialogScreen
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.emptyFlow
 import org.jetbrains.compose.resources.getString
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
@@ -84,11 +84,14 @@ internal fun ClientIdentifiersScreen(
     val clientIdentifiersUiState by viewModel.clientIdentifiersUiState.collectAsStateWithLifecycle()
     val clientIdentifiersDialogUiState by viewModel.clientIdentifierDialogUiState.collectAsStateWithLifecycle()
     val refreshState by viewModel.isRefreshing.collectAsStateWithLifecycle()
+    val showCreateDialog by viewModel.showCreateDialog.collectAsStateWithLifecycle()
 
     ClientIdentifiersScreen(
         state = clientIdentifiersUiState,
         dialogState = clientIdentifiersDialogUiState,
-        onShowDialog = viewModel::loadClientIdentifierTemplate,
+        showCreateDialog = showCreateDialog,
+        onShowDialog = viewModel::showCreateIdentifierDialog,
+        onHideDialog = viewModel::hideCreateIdentifierDialog,
         onBackPressed = onBackPressed,
         onDeleteIdentifier = { identifierId ->
             viewModel.deleteIdentifier(identifierId)
@@ -100,7 +103,7 @@ internal fun ClientIdentifiersScreen(
         onRefresh = viewModel::refreshIdentifiersList,
         onRetry = viewModel::loadIdentifiers,
         onDocumentClicked = onDocumentClicked,
-        reloadIdentifiers = viewModel::loadIdentifiers,
+        events = viewModel.events,
     )
 }
 
@@ -108,7 +111,9 @@ internal fun ClientIdentifiersScreen(
 internal fun ClientIdentifiersScreen(
     state: ClientIdentifiersUiState,
     dialogState: ClientIdentifierDialogUiState,
+    showCreateDialog: Boolean,
     onShowDialog: () -> Unit,
+    onHideDialog: () -> Unit,
     onBackPressed: () -> Unit,
     onDeleteIdentifier: (Int) -> Unit,
     onCreateIdentifier: (IdentifierPayload) -> Unit,
@@ -116,22 +121,26 @@ internal fun ClientIdentifiersScreen(
     onRefresh: () -> Unit,
     onRetry: () -> Unit,
     onDocumentClicked: (Int) -> Unit,
-    reloadIdentifiers: () -> Unit,
+    events: Flow<ClientIdentifiersViewModel.ClientIdentifiersEvent>,
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
     val pullToRefreshState = rememberPullToRefreshState()
-    var showCreateIdentifierDialog by remember { mutableStateOf(false) }
-    val scope = rememberCoroutineScope()
-    var showCreateSuccessMessage by remember { mutableStateOf(false) }
 
-    if (showCreateIdentifierDialog) {
+    LaunchedEffect(events) {
+        events.collect { event ->
+            when (event) {
+                is ClientIdentifiersViewModel.ClientIdentifiersEvent.ShowMessage -> {
+                    snackbarHostState.showSnackbar(message = getString(event.message))
+                }
+            }
+        }
+    }
+
+    if (showCreateDialog) {
         ClientIdentifiersDialogScreen(
             state = dialogState,
-            onDismiss = { showCreateIdentifierDialog = false },
-            onIdentifierCreated = {
-                showCreateIdentifierDialog = false
-                showCreateSuccessMessage = true
-                reloadIdentifiers()
+            onDismiss = {
+                onHideDialog()
             },
             onRetry = onRetry,
             onCreateIdentifier = onCreateIdentifier,
@@ -145,7 +154,6 @@ internal fun ClientIdentifiersScreen(
             IconButton(
                 onClick = {
                     onShowDialog()
-                    showCreateIdentifierDialog = true
                 },
             ) {
                 Icon(
@@ -189,28 +197,12 @@ internal fun ClientIdentifiersScreen(
                     }
 
                     is ClientIdentifiersUiState.IdentifierDeletedSuccessfully -> {
-                        reloadIdentifiers()
-                        scope.launch {
-                            snackbarHostState.showSnackbar(
-                                message = getString(state.message),
-                            )
-                        }
                     }
 
                     is ClientIdentifiersUiState.Loading -> MifosCircularProgress()
                 }
             }
         }
-    }
-    if (showCreateSuccessMessage) {
-        scope.launch {
-            snackbarHostState.showSnackbar(
-                message = getString(
-                    Res.string.feature_client_identifier_created_successfully,
-                ),
-            )
-        }
-        showCreateSuccessMessage = false
     }
 }
 
@@ -353,10 +345,13 @@ private fun ClientIdentifiersScreenPreview(
         onRetry = {},
         onDocumentClicked = {},
         onShowDialog = {},
-        reloadIdentifiers = {},
         onCreateIdentifier = {},
+        showCreateDialog = false,
+        onHideDialog = {},
+        events = emptyFlow(),
     )
 }
+
 val sampleClientIdentifiers = List(10) {
     Identifier(id = it, description = "description $it")
 }

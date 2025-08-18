@@ -31,7 +31,9 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.requiredWidth
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
@@ -141,87 +143,91 @@ fun App(
             drawerState = drawerState,
             drawerContent = {
                 ModalDrawerSheet(modifier = Modifier.requiredWidth(320.dp)) {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(200.dp),
+                    Column(
+                        modifier = Modifier.verticalScroll(rememberScrollState()),
                     ) {
-                        Image(
-                            modifier = Modifier.fillMaxSize(),
-                            contentScale = ContentScale.Crop,
-                            painter = painterResource(Res.drawable.drawer_profile_header),
-                            contentDescription = "Profile header",
-                        )
-                        Column(modifier = Modifier.padding(32.dp)) {
-                            Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                                Image(
-                                    modifier = Modifier
-                                        .size(64.dp)
-                                        .clip(CircleShape),
-                                    painter = painterResource(Res.drawable.ic_dp_placeholder),
-                                    contentDescription = "DP place holder",
-                                )
-                                Text(
-                                    text = "Mifos",
-                                    color = Color.White,
-                                    style = MaterialTheme.typography.titleMedium,
-                                )
-                            }
-                            Spacer(modifier = Modifier.height(16.dp))
-                            Row(
-                                modifier = Modifier.fillMaxWidth(),
-                                horizontalArrangement = Arrangement.SpaceBetween,
-                                verticalAlignment = Alignment.CenterVertically,
-                            ) {
-                                Text(
-                                    text = "Offline Mode",
-                                    style = MaterialTheme.typography.bodyMedium,
-                                    color = Color.White,
-                                )
-                                Switch(
-                                    checked = offline,
-                                    onCheckedChange = {
-                                        offline = it
-                                    },
-                                )
-                            }
-                        }
-                    }
-                    Spacer(modifier = Modifier.height(8.dp))
-                    navigationDrawerTabs.forEachIndexed { index, item ->
-                        NavigationDrawerItem(
-                            label = {
-                                Text(
-                                    text = item.title,
-                                    style = MaterialTheme.typography.bodyMedium,
-                                )
-                            },
-                            selected = index == selectedItemIndex,
-                            onClick = {
-                                selectedItemIndex = index
-                                appState.navController.navigate(navigationDrawerTabs[index].route) {
-                                    launchSingleTop = true
-                                }
-                                scope.launch {
-                                    drawerState.close()
-                                }
-                            },
-                            icon = {
-                                item.icon?.let {
-                                    Icon(
-                                        imageVector = if (index == selectedItemIndex) {
-                                            it
-                                        } else {
-                                            it
-                                        },
-                                        contentDescription = item.title,
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(200.dp),
+                        ) {
+                            Image(
+                                modifier = Modifier.fillMaxSize(),
+                                contentScale = ContentScale.Crop,
+                                painter = painterResource(Res.drawable.drawer_profile_header),
+                                contentDescription = "Profile header",
+                            )
+                            Column(modifier = Modifier.padding(32.dp)) {
+                                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                                    Image(
+                                        modifier = Modifier
+                                            .size(64.dp)
+                                            .clip(CircleShape),
+                                        painter = painterResource(Res.drawable.ic_dp_placeholder),
+                                        contentDescription = "DP place holder",
+                                    )
+                                    Text(
+                                        text = "Mifos",
+                                        color = Color.White,
+                                        style = MaterialTheme.typography.titleMedium,
                                     )
                                 }
-                            },
-                            modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding),
-                        )
-                        if (index == (navigationDrawerTabs.size - 2)) {
-                            HorizontalDivider(modifier = Modifier.padding(horizontal = 16.dp))
+                                Spacer(modifier = Modifier.height(16.dp))
+                                Row(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    horizontalArrangement = Arrangement.SpaceBetween,
+                                    verticalAlignment = Alignment.CenterVertically,
+                                ) {
+                                    Text(
+                                        text = "Offline Mode",
+                                        style = MaterialTheme.typography.bodyMedium,
+                                        color = Color.White,
+                                    )
+                                    Switch(
+                                        checked = offline,
+                                        onCheckedChange = {
+                                            offline = it
+                                        },
+                                    )
+                                }
+                            }
+                        }
+                        Spacer(modifier = Modifier.height(8.dp))
+                        navigationDrawerTabs.forEachIndexed { index, item ->
+                            NavigationDrawerItem(
+                                label = {
+                                    Text(
+                                        text = item.title,
+                                        style = MaterialTheme.typography.bodyMedium,
+                                    )
+                                },
+                                selected = index == selectedItemIndex,
+                                onClick = {
+                                    selectedItemIndex = index
+                                    appState.navController.navigate(navigationDrawerTabs[index].route) {
+                                        launchSingleTop = true
+                                    }
+                                    scope.launch {
+                                        drawerState.close()
+                                    }
+                                },
+                                icon = {
+                                    item.icon?.let {
+                                        Icon(
+                                            imageVector = if (index == selectedItemIndex) {
+                                                it
+                                            } else {
+                                                it
+                                            },
+                                            contentDescription = item.title,
+                                        )
+                                    }
+                                },
+                                modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding),
+                            )
+                            if (index == (navigationDrawerTabs.size - 2)) {
+                                HorizontalDivider(modifier = Modifier.padding(horizontal = 16.dp))
+                            }
                         }
                     }
                 }

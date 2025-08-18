@@ -14,6 +14,7 @@ import androidclient.feature.client.generated.resources.feature_client_failed_to
 import androidclient.feature.client.generated.resources.feature_client_failed_to_delete_identifier
 import androidclient.feature.client.generated.resources.feature_client_failed_to_load_client_identifiers
 import androidclient.feature.client.generated.resources.feature_client_failed_to_load_identifiers
+import androidclient.feature.client.generated.resources.feature_client_identifier_created_successfully
 import androidclient.feature.client.generated.resources.feature_client_identifier_deleted_successfully
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
@@ -26,10 +27,12 @@ import com.mifos.core.domain.useCases.DeleteIdentifierUseCase
 import com.mifos.core.domain.useCases.GetClientIdentifierTemplateUseCase
 import com.mifos.core.model.objects.noncoreobjects.IdentifierPayload
 import com.mifos.feature.client.clientIdentifiersDialog.ClientIdentifierDialogUiState
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-
+import org.jetbrains.compose.resources.StringResource
 class ClientIdentifiersViewModel(
     private val clientIdentifiersRepository: ClientIdentifiersRepository,
     private val deleteIdentifierUseCase: DeleteIdentifierUseCase,
@@ -40,6 +43,11 @@ class ClientIdentifiersViewModel(
 
     val clientId = savedStateHandle.getStateFlow(key = Constants.CLIENT_ID, initialValue = 0)
 
+    private val _showCreateDialog = MutableStateFlow(false)
+    val showCreateDialog = _showCreateDialog.asStateFlow()
+
+    private val _events = MutableSharedFlow<ClientIdentifiersEvent>(extraBufferCapacity = 1)
+    val events = _events.asSharedFlow()
     private val _clientIdentifiersUiState =
         MutableStateFlow<ClientIdentifiersUiState>(ClientIdentifiersUiState.Loading)
     val clientIdentifiersUiState = _clientIdentifiersUiState.asStateFlow()
@@ -55,10 +63,35 @@ class ClientIdentifiersViewModel(
         loadIdentifiers()
     }
 
-    fun refreshIdentifiersList() {
+    fun showCreateIdentifierDialog() {
+        loadClientIdentifierTemplate()
+        _showCreateDialog.value = true
+    }
+
+    fun hideCreateIdentifierDialog() {
+        _showCreateDialog.value = false
+    }
+
+    fun refreshIdentifiersList() = viewModelScope.launch {
         _isRefreshing.value = true
-        loadIdentifiers()
-        _isRefreshing.value = false
+        clientIdentifiersRepository.getClientIdentifiers(clientId.value).collect { result ->
+            when (result) {
+                is DataState.Error -> {
+                    _clientIdentifiersUiState.value =
+                        ClientIdentifiersUiState.Error(Res.string.feature_client_failed_to_load_client_identifiers)
+                    _isRefreshing.value = false
+                }
+                is DataState.Loading -> {
+                    _clientIdentifiersUiState.value =
+                        ClientIdentifiersUiState.Loading
+                }
+                is DataState.Success -> {
+                    _clientIdentifiersUiState.value =
+                        ClientIdentifiersUiState.ClientIdentifiers(result.data)
+                    _isRefreshing.value = false
+                }
+            }
+        }
     }
 
     fun loadIdentifiers() = viewModelScope.launch {
@@ -86,14 +119,16 @@ class ClientIdentifiersViewModel(
                     _clientIdentifiersUiState.value =
                         ClientIdentifiersUiState.Error(Res.string.feature_client_failed_to_delete_identifier)
 
-                is DataState.Loading ->
-                    _clientIdentifiersUiState.value =
-                        ClientIdentifiersUiState.Loading
+                is DataState.Loading -> {
+                }
 
                 is DataState.Success -> {
-                    _clientIdentifiersUiState.value =
-                        ClientIdentifiersUiState
-                            .IdentifierDeletedSuccessfully(Res.string.feature_client_identifier_deleted_successfully)
+                    _events.tryEmit(
+                        ClientIdentifiersEvent.ShowMessage(
+                            Res.string.feature_client_identifier_deleted_successfully,
+                        ),
+                    )
+                    loadIdentifiers()
                 }
             }
         }
@@ -121,21 +156,34 @@ class ClientIdentifiersViewModel(
 
     fun createClientIdentifier(identifierPayload: IdentifierPayload) =
         viewModelScope.launch {
+            hideCreateIdentifierDialog()
+            _clientIdentifiersUiState.value = ClientIdentifiersUiState.Loading
             createClientIdentifierUseCase(clientId.value, identifierPayload).collect { result ->
                 when (result) {
-                    is DataState.Error ->
-                        _clientIdentifierDialogUiState.value =
-                            ClientIdentifierDialogUiState.Error(Res.string.feature_client_failed_to_create_identifier)
+                    is DataState.Error -> {
+                        _events.tryEmit(
+                            ClientIdentifiersEvent.ShowMessage(
+                                Res.string.feature_client_failed_to_create_identifier,
+                            ),
+                        )
+                        loadIdentifiers()
+                    }
 
-                    is DataState.Loading ->
-                        _clientIdentifierDialogUiState.value =
-                            ClientIdentifierDialogUiState.Loading
+                    is DataState.Loading -> {
+                    }
 
-                    is DataState.Success ->
-                        _clientIdentifierDialogUiState.value =
-                            ClientIdentifierDialogUiState
-                                .IdentifierCreatedSuccessfully
+                    is DataState.Success -> {
+                        _events.tryEmit(
+                            ClientIdentifiersEvent.ShowMessage(
+                                Res.string.feature_client_identifier_created_successfully,
+                            ),
+                        )
+                        loadIdentifiers()
+                    }
                 }
             }
         }
+    sealed interface ClientIdentifiersEvent {
+        data class ShowMessage(val message: StringResource) : ClientIdentifiersEvent
+    }
 }
