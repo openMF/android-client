@@ -173,9 +173,6 @@ androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version
 androidx-benchmark-macro = { group = "androidx.benchmark", name = "benchmark-macro-junit4", version.ref = "androidxMacroBenchmark" }
 androidx-annotation = { module = "androidx.annotation:annotation", version.ref = "annotation" }
 
-#Androidx Multidex
-androidx-material-v168 = { module = "androidx.compose.material:material", version.ref = "androidxMaterialVersion" }
-androidx-multidex = { module = "androidx.multidex:multidex", version.ref = "multidex" }
 
 # Androidx Preference
 androidx-paging-common = { module = "androidx.paging:paging-common", version.ref = "androidxPagingCommon" }
