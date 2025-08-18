@@ -227,16 +227,23 @@ val surfaceContainerDarkHighContrast = Color(0xFF2F3036)
 val surfaceContainerHighDarkHighContrast = Color(0xFF3A3B41)
 val surfaceContainerHighestDarkHighContrast = Color(0xFF45474C)
 
-/*
-Older colors
+object AppColors {
 
-val White = Color(0xFFFFFFFF)
-val Black = Color(0xFF000000)
-val DarkGray = Color(0xFF696969)
-val LightGray = Color(0xFFD3D3D3)
-val BluePrimary = Color(0xFF2D5BA8)
-val BluePrimaryDark = Color(0xFF9BB1E3)
-val BlueSecondary = Color(0xFFD7E2FC)
-val LightGreen = Color(0xFF99CC00)
-val SummerSky = Color(0xFF29B6F6)
- */
+    // Other colours rather than Material Colours
+
+    val primaryBlue = Color(0xFF33618D)
+    val borderColor = Color(0xFF42474E)
+    val borderColorOne = Color(0xFFD6E4F7)
+
+    val customBlack = Color(0xFF3A3A3A)
+    val customWhite = Color(0xFFFFFFFF)
+
+    val customEnable = Color(0xFF009325)
+    val customYellow = Color(0xFFAE9703)
+
+    val lightBlueBackground = Color(0xFFD8F0FF)
+
+    val lightRed = Color(0xFFFF6E6E)
+    val peach = Color(0xFFFF926E)
+    val lightPurple = Color(0xFF706EFF)
+}
