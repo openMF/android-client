@@ -22,6 +22,11 @@ kotlin {
             implementation(compose.components.resources)
             implementation(compose.ui)
             implementation(projects.core.domain)
+            implementation(compose.components.uiToolingPreview)
         }
     }
+}
+
+dependencies {
+    debugImplementation(compose.uiTooling)
 }

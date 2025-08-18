@@ -26,6 +26,11 @@ kotlin {
             api(projects.core.ui)
             api(projects.core.domain)
             api(projects.core.datastore)
+            implementation(compose.components.uiToolingPreview)
         }
     }
+}
+
+dependencies {
+    debugImplementation(compose.uiTooling)
 }

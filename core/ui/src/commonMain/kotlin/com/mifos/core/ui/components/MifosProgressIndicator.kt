@@ -18,6 +18,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import com.mifos.core.designsystem.theme.MifosTheme
+import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
 fun MifosProgressIndicator(
@@ -43,5 +45,21 @@ fun MifosProgressIndicatorOverlay(
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         CircularProgressIndicator()
+    }
+}
+
+@Preview
+@Composable
+fun MifosProgressIndicatorPreview() {
+    MifosTheme {
+        MifosProgressIndicator()
+    }
+}
+
+@Preview
+@Composable
+fun MifosProgressIndicatorOverlayPreview() {
+    MifosTheme {
+        MifosProgressIndicatorOverlay()
     }
 }

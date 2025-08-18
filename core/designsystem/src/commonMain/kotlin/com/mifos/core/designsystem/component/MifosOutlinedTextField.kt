@@ -19,6 +19,8 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CalendarToday
 import androidx.compose.material.icons.filled.Clear
+import androidx.compose.material.icons.filled.Email
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.Icon
@@ -29,7 +31,9 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalDensity
@@ -44,6 +48,8 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.mifos.core.designsystem.theme.MifosTheme
+import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
 fun MifosOutlinedTextField(
@@ -334,3 +340,65 @@ fun MifosDatePickerTextField(
         },
     )
 }
+
+@Preview
+@Composable
+private fun MifosOutlinedTextField_ValuePreview() {
+    var text by remember { mutableStateOf(TextFieldValue("Hello")) }
+    MifosTheme {
+        MifosOutlinedTextField(
+            value = text,
+            onValueChanged = { text = it },
+            label = "Username",
+            icon = Icons.Default.Person
+        )
+    }
+}
+
+@Preview
+@Composable
+private fun MifosOutlinedTextField_PasswordPreview() {
+    var text by remember { mutableStateOf("secret123") }
+    var passwordVisible by remember { mutableStateOf(false) }
+
+    MifosTheme {
+        MifosOutlinedTextField(
+            value = text,
+            onValueChange = { text = it },
+            label = "Password",
+            keyboardType = KeyboardType.Password,
+            isPasswordVisible = passwordVisible,
+            onPasswordToggleClick = { passwordVisible = it },
+            showClearIcon = true,
+            onClickClearIcon = { text = "" }
+        )
+    }
+}
+
+@Preview
+@Composable
+private fun MifosOutlinedTextField_ErrorPreview() {
+    var text by remember { mutableStateOf("") }
+    MifosTheme {
+        MifosOutlinedTextField(
+            value = text,
+            onValueChange = { text = it },
+            label = "Email",
+            error = "Invalid email address",
+            icon = Icons.Default.Email
+        )
+    }
+}
+
+@Preview
+@Composable
+private fun MifosDatePickerTextFieldPreview() {
+    MifosTheme {
+        MifosDatePickerTextField(
+            value = "2025-08-18",
+            label = "Date of Birth",
+            openDatePicker = { /* open picker */ }
+        )
+    }
+}
+

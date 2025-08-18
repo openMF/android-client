@@ -29,7 +29,11 @@ kotlin {
             implementation(libs.coil.core)
             implementation(libs.coil.kt)
             implementation(libs.coil.kt.compose)
-
+            implementation(compose.components.uiToolingPreview)
         }
     }
+}
+
+dependencies {
+    debugImplementation(compose.uiTooling)
 }
