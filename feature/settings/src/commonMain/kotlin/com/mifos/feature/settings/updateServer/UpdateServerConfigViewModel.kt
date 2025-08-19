@@ -135,10 +135,6 @@ class UpdateServerConfigViewModel(
                         port = ServerConfig.DEFAULT.port,
                         tenant = ServerConfig.DEFAULT.tenant,
                     )
-
-                    prefManager.logOut()
-                    prefManager.updateServerConfig(_state.value)
-                    _result.emit(true)
                 }
             }
         }
