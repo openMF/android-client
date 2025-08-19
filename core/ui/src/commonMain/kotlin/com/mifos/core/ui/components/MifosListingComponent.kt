@@ -128,7 +128,7 @@ fun MifosDefaultListingComponent(
     MifosListingComponentOutline {
         Column(
             modifier = Modifier.fillMaxWidth(),
-            verticalArrangement = Arrangement.spacedBy(DesignToken.padding.extraExtraSmall)
+            verticalArrangement = Arrangement.spacedBy(DesignToken.padding.extraExtraSmall),
         ) {
             data.forEach { (key, value) ->
                 MifosListingRowItem(
@@ -390,9 +390,9 @@ fun MifosDelinquencyListingComponent(
     MifosListingComponentOutline {
         Column {
             MifosListingRowItem(
-                key = "$date; $time",
-                value = "",
-                keyStyle = MifosTypography.titleSmallEmphasized,
+                value = "$date; $time",
+                key = "",
+                valueStyle = MifosTypography.titleSmallEmphasized,
             )
             Spacer(Modifier.height(DesignToken.padding.large))
             Column(
@@ -430,9 +430,9 @@ fun MifosChargesListingComponent(
     MifosListingComponentOutline {
         Column {
             MifosListingRowItem(
-                key = title,
-                value = "",
-                keyStyle = MifosTypography.titleSmallEmphasized,
+                key = "",
+                value = title,
+                valueStyle = MifosTypography.titleSmallEmphasized,
             )
             Spacer(Modifier.height(DesignToken.padding.large))
             Column(
