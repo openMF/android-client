@@ -128,6 +128,7 @@ fun MifosDefaultListingComponent(
     MifosListingComponentOutline {
         Column(
             modifier = Modifier.fillMaxWidth(),
+            verticalArrangement = Arrangement.spacedBy(DesignToken.padding.extraExtraSmall)
         ) {
             data.forEach { (key, value) ->
                 MifosListingRowItem(
