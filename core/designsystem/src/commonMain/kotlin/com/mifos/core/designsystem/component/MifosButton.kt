@@ -32,6 +32,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.unit.dp
+import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.designsystem.theme.MifosTheme
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
@@ -51,10 +52,12 @@ fun MifosButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
-    shape: Shape = ButtonDefaults.shape,
+    shape: Shape = DesignToken.shapes.medium,
     contentPadding: PaddingValues = ButtonDefaults.ContentPadding,
     elevation: ButtonElevation? = ButtonDefaults.buttonElevation(),
-    colors: ButtonColors = ButtonDefaults.buttonColors(),
+    colors: ButtonColors = ButtonDefaults.buttonColors(
+        containerColor = MaterialTheme.colorScheme.background,
+    ),
     content: @Composable RowScope.() -> Unit = {},
 ) {
     Button(

@@ -198,6 +198,8 @@ io.coil-kt.coil3:coil-svg:3.2.0
 io.coil-kt.coil3:coil:3.2.0
 io.github.niyajali:compose-signature-android:1.0.1
 io.github.niyajali:compose-signature:1.0.1
+io.github.niyajali:fluentui-system-icons-android:1.0.0
+io.github.niyajali:fluentui-system-icons:1.0.0
 io.github.vinceglb:filekit-coil-android:0.10.0-beta04
 io.github.vinceglb:filekit-coil:0.10.0-beta04
 io.github.vinceglb:filekit-compose-android:0.8.8

@@ -101,6 +101,7 @@ ktlint = "12.1.1"
 detekt = "1.23.7"
 twitter-detekt-compose = "0.0.26"
 moduleGraph = "2.7.1"
+fluentui-icons = "1.0.0"
 
 secrets = "2.0.1"
 truthVersion = '1.4.4'
@@ -202,6 +203,7 @@ androidx-compose-material-iconsExtended = { group = "androidx.compose.material",
 # Android Material
 material = { module = "com.google.android.material:material", version.ref = "material" }
 materialshowcaseview = { module = "com.github.deano2390:MaterialShowcaseView", version.ref = "materialshowcaseview" }
+fluentui-system-icons = { module = "io.github.niyajali:fluentui-system-icons", version.ref = "fluentui-icons" }
 
 # Androidx Compose Runtime
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "androidxCore" }
