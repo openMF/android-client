@@ -1,3 +1,12 @@
+/*
+ * Copyright 2025 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ */
 package com.mifos.core.designsystem.theme
 
 import androidx.compose.foundation.layout.Arrangement
@@ -121,6 +130,7 @@ data class AppSpacing(
 @Immutable
 data class AppPadding(
     val none: Dp = 0.dp,
+    val extraExtraSmall: Dp = 2.dp,
     val extraSmall: Dp = 4.dp,
     val small: Dp = 8.dp,
     val medium: Dp = 12.dp,
