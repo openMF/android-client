@@ -112,7 +112,11 @@ fun MifosListingRowItem(
     valueColor: Color = MaterialTheme.colorScheme.onSurface,
 ) {
     MifosListingRowItem(
-        keyContent = { Text(text = "$key:", style = keyStyle) },
+        keyContent = {
+            if (key.isNotBlank()) {
+                Text(text = "$key:", style = keyStyle)
+            }
+        },
         valueContent = { Text(text = value, style = valueStyle.copy(color = valueColor)) },
     )
 }
@@ -487,13 +491,14 @@ fun MifosSellLoanListingComponent(
     MifosListingComponentOutline {
         Column {
             MifosListingRowItem(
-                key = when (status) {
+                value = when (status) {
                     Status.InActive -> stringResource(Res.string.core_ui_cancelled)
                     Status.Pending -> stringResource(Res.string.core_ui_pending)
                     Status.Active -> stringResource(Res.string.core_ui_completed)
                 },
-                value = "",
-                keyStyle = MifosTypography.titleSmallEmphasized,
+                key = "",
+                valueStyle = MifosTypography.titleSmallEmphasized,
+                valueColor = status.color,
             )
             Spacer(Modifier.height(DesignToken.padding.large))
             Column(
