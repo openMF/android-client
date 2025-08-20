@@ -143,14 +143,14 @@ private fun ClientActions(
 //            }
         }
         Spacer(Modifier.width(DesignToken.padding.largeIncreased))
-        Icon(
-            imageVector = MifosIcons.Filter,
-            contentDescription = null,
-            modifier = Modifier
-                .size(DesignToken.sizes.iconAverage)
-                .clickable {
-                },
-        )
+//        Icon(
+//            imageVector = MifosIcons.Filter,
+//            contentDescription = null,
+//            modifier = Modifier
+//                .size(DesignToken.sizes.iconAverage)
+//                .clickable {
+//                },
+//        )
     }
 }
 
