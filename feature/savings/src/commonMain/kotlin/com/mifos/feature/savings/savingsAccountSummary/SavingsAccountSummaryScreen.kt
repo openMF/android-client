@@ -40,17 +40,14 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -74,14 +71,17 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Color.Companion.DarkGray
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mifos.core.common.utils.DateHelper
+import com.mifos.core.designsystem.component.MifosCard
 import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosMenuDropDownItem
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.ui.components.MifosEmptyUi
+import com.mifos.feature.savings.savingsAccountTransactionReceipt.SavingsAccountTransactionReceiptScreen
 import com.mifos.room.entities.accounts.savings.SavingAccountCurrencyEntity
 import com.mifos.room.entities.accounts.savings.SavingAccountDepositTypeEntity
 import com.mifos.room.entities.accounts.savings.SavingsAccountStatusEntity
@@ -237,10 +237,7 @@ private fun SavingsAccountSummaryContent(
     val isWithdrawalAndDepositButtonVisible by rememberSaveable {
         mutableStateOf(depositAndWithdrawButtonVisibility(savingsAccountWithAssociations.status))
     }
-    Column(
-        modifier = Modifier
-            .verticalScroll(rememberScrollState()),
-    ) {
+    Column {
         Box(
             modifier = modifier.padding(horizontal = 24.dp),
         ) {
@@ -458,53 +455,55 @@ private fun SummaryDialogBox(
     onDismissCall: () -> Unit,
     transaction: SavingsAccountTransactionEntity,
 ) {
-    AlertDialog(
+    Dialog(
         onDismissRequest = { onDismissCall.invoke() },
-        confirmButton = { },
-        text = {
-            Column(
-                modifier = Modifier.verticalScroll(rememberScrollState()),
-            ) {
-                DialogBoxRowItem(
-                    title = stringResource(Res.string.feature_savings_transaction_id),
-                    value = transaction.id?.toString() ?: "",
-                )
-                Spacer(modifier = Modifier.height(4.dp))
+        content = {
+            MifosCard {
+                Column(
+                    modifier = Modifier.verticalScroll(rememberScrollState())
+                        .padding(16.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.spacedBy(5.dp),
+                ) {
+                    DialogBoxRowItem(
+                        title = stringResource(Res.string.feature_savings_transaction_id),
+                        value = transaction.id?.toString() ?: "",
+                    )
 
-                DialogBoxRowItem(
-                    title = stringResource(Res.string.feature_savings_date),
-                    value = DateHelper.getDateAsString(transaction.date as List<Int>),
-                )
-                Spacer(modifier = Modifier.height(4.dp))
+                    DialogBoxRowItem(
+                        title = stringResource(Res.string.feature_savings_date),
+                        value = DateHelper.getDateAsString(transaction.date as List<Int>),
+                    )
 
-                DialogBoxRowItem(
-                    title = stringResource(Res.string.feature_savings_transaction_type),
-                    value = transaction.transactionType?.value ?: "",
-                )
-                Spacer(modifier = Modifier.height(4.dp))
+                    DialogBoxRowItem(
+                        title = stringResource(Res.string.feature_savings_transaction_type),
+                        value = transaction.transactionType?.value ?: "",
+                    )
 
-                DialogBoxRowItem(
-                    title = stringResource(Res.string.feature_savings_running_balance),
-                    value = transaction.runningBalance.toString(),
-                )
-                Spacer(modifier = Modifier.height(4.dp))
+                    DialogBoxRowItem(
+                        title = stringResource(Res.string.feature_savings_running_balance),
+                        value = transaction.runningBalance.toString(),
+                    )
 
-                DialogBoxRowItem(
-                    title = stringResource(Res.string.feature_savings_saving_account_id),
-                    value = transaction.accountId.toString(),
-                )
-                Spacer(modifier = Modifier.height(4.dp))
+                    DialogBoxRowItem(
+                        title = stringResource(Res.string.feature_savings_saving_account_id),
+                        value = transaction.accountId.toString(),
+                    )
 
-                DialogBoxRowItem(
-                    title = stringResource(Res.string.feature_savings_account_number),
-                    value = transaction.accountNo ?: "",
-                )
-                Spacer(modifier = Modifier.height(4.dp))
+                    DialogBoxRowItem(
+                        title = stringResource(Res.string.feature_savings_account_number),
+                        value = transaction.accountNo ?: "",
+                    )
 
-                DialogBoxRowItem(
-                    title = stringResource(Res.string.feature_savings_currency),
-                    value = transaction.currency?.name ?: "",
-                )
+                    DialogBoxRowItem(
+                        title = stringResource(Res.string.feature_savings_currency),
+                        value = transaction.currency?.name ?: "",
+                    )
+
+                    SavingsAccountTransactionReceiptScreen(
+                        transactionId = transaction.id,
+                    )
+                }
             }
         },
     )
@@ -520,7 +519,7 @@ private fun DialogBoxRowItem(
             .fillMaxWidth()
             .border(
                 width = 2.dp,
-                color = Color.Blue.copy(alpha = .5f),
+                color = MaterialTheme.colorScheme.primary,
                 shape = RoundedCornerShape(0.dp),
             )
             .padding(horizontal = 8.dp, vertical = 16.dp),
@@ -531,7 +530,6 @@ private fun DialogBoxRowItem(
             modifier = Modifier.weight(5f),
             style = MaterialTheme.typography.bodyMedium,
             text = title,
-            color = DarkGray,
         )
 
         Text(
