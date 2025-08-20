@@ -66,7 +66,6 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mifos.core.common.utils.ServerConfig
 import com.mifos.core.designsystem.component.MifosOutlinedTextField
@@ -166,23 +165,21 @@ internal fun UpdateServerConfigScreenContent(
             verticalArrangement = Arrangement.spacedBy(4.dp),
             state = lazyListState,
         ) {
-
             item {
                 Text(
                     "Quick Setup",
-                    modifier =Modifier.padding(horizontal = 16.dp, vertical = 4.dp),
+                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 4.dp),
                     fontWeight = FontWeight.SemiBold,
                     style = MaterialTheme.typography.titleMedium,
-                    fontFamily = FontFamily.SansSerif
+                    fontFamily = FontFamily.SansSerif,
                 )
             }
 
             item {
-
                 Row(
-                    modifier =Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 12.dp),
+                    modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 12.dp),
                     horizontalArrangement = Arrangement.Center,
-                    verticalAlignment = Alignment.CenterVertically
+                    verticalAlignment = Alignment.CenterVertically,
                 ) {
                     ElevatedButton(
                         onClick = {
@@ -199,12 +196,12 @@ internal fun UpdateServerConfigScreenContent(
                             containerColor = Color(0xff007AFF),
                             disabledContainerColor = Color.White,
                             disabledContentColor = Color(0xff007AFF),
-                            contentColor = Color.White
-                        )
+                            contentColor = Color.White,
+                        ),
                     ) {
                         Column(
                             verticalArrangement = Arrangement.Center,
-                            horizontalAlignment = Alignment.CenterHorizontally
+                            horizontalAlignment = Alignment.CenterHorizontally,
                         ) {
                             Text(
                                 "\uD83C\uDFE0 Local",
@@ -214,13 +211,13 @@ internal fun UpdateServerConfigScreenContent(
                             Text(
                                 "Development",
                                 style = MaterialTheme.typography.bodyMedium,
-                                fontFamily = FontFamily.SansSerif
+                                fontFamily = FontFamily.SansSerif,
                             )
                         }
                     }
 
                     Spacer(
-                        modifier = Modifier.width(12.dp)
+                        modifier = Modifier.width(12.dp),
                     )
 
                     ElevatedButton(
@@ -236,22 +233,22 @@ internal fun UpdateServerConfigScreenContent(
                             containerColor = Color(0xff007AFF),
                             disabledContainerColor = Color.White,
                             disabledContentColor = Color(0xff007AFF),
-                            contentColor = Color.White
-                        )
+                            contentColor = Color.White,
+                        ),
                     ) {
                         Column(
                             verticalArrangement = Arrangement.Center,
-                            horizontalAlignment = Alignment.CenterHorizontally
+                            horizontalAlignment = Alignment.CenterHorizontally,
                         ) {
                             Text(
                                 "\uD83C\uDF10 Demo",
                                 style = MaterialTheme.typography.bodyMedium,
-                                fontFamily = FontFamily.SansSerif
+                                fontFamily = FontFamily.SansSerif,
                             )
                             Text(
                                 "Environment",
                                 style = MaterialTheme.typography.bodyMedium,
-                                fontFamily = FontFamily.SansSerif
+                                fontFamily = FontFamily.SansSerif,
                             )
                         }
                     }
@@ -262,34 +259,33 @@ internal fun UpdateServerConfigScreenContent(
                 Row(
                     Modifier.fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.Center
-                ){
+                    horizontalArrangement = Arrangement.Center,
+                ) {
                     HorizontalDivider(
                         modifier = Modifier.weight(1f),
-                        color= Color.LightGray
+                        color = Color.LightGray,
                     )
 
                     Text(
                         "OR",
                         modifier = Modifier
                             .padding(horizontal = 8.dp),
-                        fontFamily = FontFamily.SansSerif
+                        fontFamily = FontFamily.SansSerif,
                     )
 
                     HorizontalDivider(
                         modifier = Modifier.weight(1f),
-                        color= Color.LightGray
+                        color = Color.LightGray,
                     )
                 }
             }
 
-
             item {
                 Text(
                     stringResource(Res.string.feature_settings_label_protocol),
-                    style=MaterialTheme.typography.labelMedium,
+                    style = MaterialTheme.typography.labelMedium,
                     modifier = Modifier.padding(start = 16.dp),
-                    fontFamily = FontFamily.SansSerif
+                    fontFamily = FontFamily.SansSerif,
                 )
                 MifosOutlinedTextField(
                     value = serverConfig.protocol,
@@ -301,29 +297,29 @@ internal fun UpdateServerConfigScreenContent(
                     onValueChange = {
                         onEvent(UpdateServerConfigEvent.UpdateProtocol(it))
                     },
-                    shape =RoundedCornerShape(16),
+                    shape = RoundedCornerShape(16),
                     colors = OutlinedTextFieldDefaults.colors(
                         focusedBorderColor = Color(0xffdddddd),
                         unfocusedBorderColor = Color(0xffdddddd),
                         focusedContainerColor = Color.White,
-                        unfocusedContainerColor = Color.White
+                        unfocusedContainerColor = Color.White,
                     ),
                     modifier = Modifier.fillMaxWidth().padding(start = 16.dp, end = 16.dp),
                     label = "",
                     textStyle = TextStyle(
                         fontFamily = FontFamily.SansSerif,
                         fontSize = MaterialTheme.typography.bodyLarge.fontSize,
-                        fontWeight = FontWeight.Medium
-                    )
+                        fontWeight = FontWeight.Medium,
+                    ),
                 )
             }
 
             item {
                 Text(
                     stringResource(Res.string.feature_settings_label_hostname),
-                    style=MaterialTheme.typography.labelMedium,
+                    style = MaterialTheme.typography.labelMedium,
                     modifier = Modifier.padding(start = 16.dp),
-                    fontFamily = FontFamily.SansSerif
+                    fontFamily = FontFamily.SansSerif,
                 )
                 MifosOutlinedTextField(
                     value = serverConfig.endPoint,
@@ -335,34 +331,34 @@ internal fun UpdateServerConfigScreenContent(
                     onValueChange = {
                         onEvent(UpdateServerConfigEvent.UpdateEndPoint(it))
                     },
-                    shape =RoundedCornerShape(16),
+                    shape = RoundedCornerShape(16),
                     colors = OutlinedTextFieldDefaults.colors(
                         focusedBorderColor = Color(0xffdddddd),
                         unfocusedBorderColor = Color(0xffdddddd),
                         focusedContainerColor = Color.White,
-                        unfocusedContainerColor = Color.White
+                        unfocusedContainerColor = Color.White,
                     ),
                     modifier = Modifier.fillMaxWidth().padding(start = 16.dp, end = 16.dp),
                     textStyle = TextStyle(
                         fontFamily = FontFamily.SansSerif,
                         fontSize = MaterialTheme.typography.bodyLarge.fontSize,
-                        fontWeight = FontWeight.Medium
-                    )
+                        fontWeight = FontWeight.Medium,
+                    ),
                 )
             }
 
             item {
                 Text(
                     stringResource(Res.string.feature_settings_label_api_path),
-                    style=MaterialTheme.typography.labelMedium,
+                    style = MaterialTheme.typography.labelMedium,
                     modifier = Modifier.padding(start = 16.dp),
-                    fontFamily = FontFamily.SansSerif
+                    fontFamily = FontFamily.SansSerif,
                 )
 
                 MifosOutlinedTextField(
                     value = serverConfig.apiPath,
                     leadingIcon = MifosIcons.Link,
-                    isError = apiPathError!=null,
+                    isError = apiPathError != null,
                     errorText = apiPathError,
                     keyboardType = KeyboardType.Uri,
                     errorTextTag = serverConfig.apiPath,
@@ -370,29 +366,29 @@ internal fun UpdateServerConfigScreenContent(
                     onValueChange = {
                         onEvent(UpdateServerConfigEvent.UpdateApiPath(it))
                     },
-                    shape =RoundedCornerShape(16),
+                    shape = RoundedCornerShape(16),
                     colors = OutlinedTextFieldDefaults.colors(
                         focusedBorderColor = Color(0xffdddddd),
                         unfocusedBorderColor = Color(0xffdddddd),
                         focusedContainerColor = Color.White,
-                        unfocusedContainerColor = Color.White
+                        unfocusedContainerColor = Color.White,
                     ),
                     modifier = Modifier.fillMaxWidth().padding(start = 16.dp, end = 16.dp),
                     label = "",
                     textStyle = TextStyle(
                         fontFamily = FontFamily.SansSerif,
                         fontSize = MaterialTheme.typography.bodyLarge.fontSize,
-                        fontWeight = FontWeight.Medium
-                    )
+                        fontWeight = FontWeight.Medium,
+                    ),
                 )
             }
 
             item {
                 Text(
                     stringResource(Res.string.feature_settings_label_port),
-                    style=MaterialTheme.typography.labelMedium,
+                    style = MaterialTheme.typography.labelMedium,
                     modifier = Modifier.padding(start = 16.dp),
-                    fontFamily = FontFamily.SansSerif
+                    fontFamily = FontFamily.SansSerif,
                 )
                 MifosOutlinedTextField(
                     value = serverConfig.port,
@@ -404,29 +400,29 @@ internal fun UpdateServerConfigScreenContent(
                     onValueChange = {
                         onEvent(UpdateServerConfigEvent.UpdatePort(it))
                     },
-                    shape =RoundedCornerShape(16),
+                    shape = RoundedCornerShape(16),
                     colors = OutlinedTextFieldDefaults.colors(
                         focusedBorderColor = Color(0xffdddddd),
                         unfocusedBorderColor = Color(0xffdddddd),
                         focusedContainerColor = Color.White,
-                        unfocusedContainerColor = Color.White
+                        unfocusedContainerColor = Color.White,
                     ),
                     modifier = Modifier.fillMaxWidth().padding(start = 16.dp, end = 16.dp),
                     label = "",
                     textStyle = TextStyle(
                         fontFamily = FontFamily.SansSerif,
                         fontSize = MaterialTheme.typography.bodyLarge.fontSize,
-                        fontWeight = FontWeight.Medium
-                    )
+                        fontWeight = FontWeight.Medium,
+                    ),
                 )
             }
 
             item {
                 Text(
                     stringResource(Res.string.feature_settings_label_tenant),
-                    style=MaterialTheme.typography.labelMedium,
+                    style = MaterialTheme.typography.labelMedium,
                     modifier = Modifier.padding(start = 16.dp),
-                    fontFamily = FontFamily.SansSerif
+                    fontFamily = FontFamily.SansSerif,
                 )
                 MifosOutlinedTextField(
                     value = serverConfig.tenant,
@@ -438,22 +434,21 @@ internal fun UpdateServerConfigScreenContent(
                     onValueChange = {
                         onEvent(UpdateServerConfigEvent.UpdateTenant(it))
                     },
-                    shape =RoundedCornerShape(16),
+                    shape = RoundedCornerShape(16),
                     colors = OutlinedTextFieldDefaults.colors(
                         focusedBorderColor = Color(0xffdddddd),
                         unfocusedBorderColor = Color(0xffdddddd),
                         focusedContainerColor = Color.White,
-                        unfocusedContainerColor = Color.White
+                        unfocusedContainerColor = Color.White,
                     ),
                     modifier = Modifier.fillMaxWidth().padding(start = 16.dp, end = 16.dp),
                     label = "",
                     textStyle = TextStyle(
                         fontFamily = FontFamily.SansSerif,
                         fontSize = MaterialTheme.typography.bodyLarge.fontSize,
-                        fontWeight = FontWeight.Medium
-                    )
+                        fontWeight = FontWeight.Medium,
+                    ),
                 )
-
             }
 
             item {
@@ -465,10 +460,11 @@ internal fun UpdateServerConfigScreenContent(
                         .padding(horizontal = 16.dp)
                         .clip(RoundedCornerShape(16))
                         .border(
-                            1.dp, Color(0xffffeaa7),
-                            RoundedCornerShape(16)
+                            1.dp,
+                            Color(0xffffeaa7),
+                            RoundedCornerShape(16),
                         )
-                        .background(Color(0xfffff3cd))
+                        .background(Color(0xfffff3cd)),
                 ) {
                     Row(
                         modifier = Modifier.padding(horizontal = 8.dp),
@@ -506,15 +502,15 @@ internal fun UpdateServerConfigScreenContent(
                         containerColor = Color(0xff007AFF),
                         disabledContainerColor = Color.White,
                         disabledContentColor = Color(0xff007AFF),
-                        contentColor = Color.White
-                    )
+                        contentColor = Color.White,
+                    ),
                 ) {
                     Text(
                         "⬇\uFE0F  " +
-                        stringResource(
-                            Res.string.feature_settings_update_config_btn_text
-                        ).uppercase(),
-                        fontFamily = FontFamily.SansSerif
+                            stringResource(
+                                Res.string.feature_settings_update_config_btn_text,
+                            ).uppercase(),
+                        fontFamily = FontFamily.SansSerif,
                     )
                 }
             }
