@@ -22,4 +22,7 @@ sealed interface UpdateServerConfigEvent {
     data class UpdateTenant(val tenant: String) : UpdateServerConfigEvent
 
     data object UpdateServerConfig : UpdateServerConfigEvent
+
+    data object UseDefaultConfig: UpdateServerConfigEvent
+
 }
