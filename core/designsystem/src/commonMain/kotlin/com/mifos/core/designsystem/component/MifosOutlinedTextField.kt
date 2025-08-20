@@ -137,7 +137,7 @@ fun MifosOutlinedTextField(
     suffix: @Composable (() -> Unit)? = null,
     interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
     shape: Shape = OutlinedTextFieldDefaults.shape,
-    colors: TextFieldColors = OutlinedTextFieldDefaults.colors()
+    colors: TextFieldColors = OutlinedTextFieldDefaults.colors(),
 ) {
     val isFocused by interactionSource.collectIsFocusedAsState()
 
@@ -213,7 +213,7 @@ fun MifosOutlinedTextField(
         maxLines = maxLines,
         interactionSource = interactionSource,
         shape = shape,
-        colors = colors
+        colors = colors,
     )
 }
 
