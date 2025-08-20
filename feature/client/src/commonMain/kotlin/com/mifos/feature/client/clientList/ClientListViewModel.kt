@@ -13,6 +13,7 @@ import androidclient.feature.client.generated.resources.Res
 import androidclient.feature.client.generated.resources.feature_client_failed_to_load_client
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import co.touchlab.kermit.Logger
 import com.mifos.core.data.repository.ClientListRepository
 import com.mifos.core.datastore.UserPreferencesRepository
 import kotlinx.coroutines.flow.MutableStateFlow

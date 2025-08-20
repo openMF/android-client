@@ -21,11 +21,11 @@ import com.mifos.core.common.utils.Constants
 import com.mifos.feature.client.clientCharges.ClientChargesScreen
 import com.mifos.feature.client.clientDetails.ClientDetailsScreen
 import com.mifos.feature.client.clientIdentifiers.ClientIdentifiersScreen
-import com.mifos.feature.client.clientList.ClientListScreen
 import com.mifos.feature.client.clientPinpoint.PinpointClientScreen
 import com.mifos.feature.client.clientSignature.SignatureScreen
 import com.mifos.feature.client.clientSurveyList.SurveyListScreen
 import com.mifos.feature.client.clientSurveyQuestion.SurveyQuestionScreen
+import com.mifos.feature.client.clientsList.ClientListScreen
 import com.mifos.feature.client.createNewClient.CreateNewClientScreen
 import com.mifos.room.entities.accounts.savings.SavingAccountDepositTypeEntity
 import com.mifos.room.entities.noncore.DataTableEntity
@@ -110,9 +110,8 @@ fun NavGraphBuilder.clientListScreenRoute(
         route = ClientScreens.ClientListScreen.route,
     ) {
         ClientListScreen(
-            paddingValues = paddingValues,
             createNewClient = createNewClient,
-            onClientSelect = onClientSelect,
+            onClientClick = onClientSelect,
         )
     }
 }

@@ -15,7 +15,7 @@ import kotlinx.serialization.Serializable
  *
  *
  * @param code
- * @param description
+ * @param value
  * @param id
  */
 
@@ -24,7 +24,7 @@ data class GetClientStatus(
 
     val code: String? = null,
 
-    val description: String? = null,
+    val value: String? = null,
 
     val id: Long? = null,
 

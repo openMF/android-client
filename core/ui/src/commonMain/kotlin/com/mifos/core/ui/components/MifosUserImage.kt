@@ -11,10 +11,12 @@ package com.mifos.core.ui.components
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import coil3.ImageLoader
 import coil3.compose.LocalPlatformContext
@@ -63,12 +65,13 @@ fun MifosUserImage(
         imageLoader = ImageLoader(context),
     )
     if (bitmap == null) {
-        Image(
+        Icon(
             modifier = modifier
                 .clip(CircleShape),
             imageVector = MifosIcons.ProfileSet,
             contentDescription = "Profile Image",
-            contentScale = ContentScale.Crop,
+            tint = Color.Gray,
+
         )
     } else {
         Image(

@@ -32,8 +32,9 @@ object ClientMapper : AbstractMapper<GetClientsPageItemsResponse, ClientEntity>(
             status = ClientStatusEntity(
                 id = entity.status?.id!!.toInt(),
                 code = entity.status.code,
-                value = entity.status.description,
+                value = entity.status.value,
             ),
+            externalId = entity.externalId,
         )
     }
 
@@ -49,8 +50,9 @@ object ClientMapper : AbstractMapper<GetClientsPageItemsResponse, ClientEntity>(
             status = GetClientStatus(
                 id = domainModel.status?.id?.toLong(),
                 code = domainModel.status?.code,
-                description = domainModel.status?.value,
+                value = domainModel.status?.value,
             ),
+            externalId = domainModel.externalId,
         )
     }
 }

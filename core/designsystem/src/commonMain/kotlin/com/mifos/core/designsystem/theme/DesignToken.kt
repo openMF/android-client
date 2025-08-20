@@ -282,6 +282,7 @@ data class AppElevation(
 data class AppSizes(
     val iconMiny: Dp = 12.dp,
     val iconSmall: Dp = 16.dp,
+    val iconAverage: Dp = 20.dp,
     val iconMedium: Dp = 24.dp,
     val iconLarge: Dp = 32.dp,
     val iconExtraLarge: Dp = 36.dp,
