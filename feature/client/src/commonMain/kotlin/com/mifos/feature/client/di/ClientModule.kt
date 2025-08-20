@@ -26,12 +26,11 @@ val ClientModule = module {
     viewModelOf(::ClientChargesViewModel)
     viewModelOf(::ClientDetailsViewModel)
     viewModelOf(::ClientIdentifiersViewModel)
-//    viewModelOf(::ClientListViewModel)
+    viewModelOf(::ClientListViewModel)
     viewModelOf(::PinPointClientViewModel)
     viewModelOf(::SignatureViewModel)
     viewModelOf(::SurveyListViewModel)
     viewModelOf(::SurveySubmitViewModel)
     viewModelOf(::CreateNewClientViewModel)
     viewModelOf(::SyncClientsDialogViewModel)
-    viewModelOf(::ClientListViewModel)
 }

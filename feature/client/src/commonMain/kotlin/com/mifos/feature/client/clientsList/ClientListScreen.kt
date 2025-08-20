@@ -1,3 +1,12 @@
+/*
+ * Copyright 2025 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ */
 package com.mifos.feature.client.clientsList
 
 import androidclient.feature.client.generated.resources.Res
@@ -21,7 +30,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -34,14 +42,10 @@ import com.mifos.core.designsystem.theme.AppColors
 import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.designsystem.theme.MifosTypography
 import com.mifos.core.ui.components.MifosEmptyCard
-import com.mifos.core.ui.components.MifosIcon
 import com.mifos.core.ui.components.MifosProgressIndicator
 import com.mifos.core.ui.components.MifosRowCard
-import com.mifos.core.ui.components.MifosSearchBar
-import com.mifos.core.ui.components.MifosUserImage
 import com.mifos.core.ui.util.EventsEffect
 import com.mifos.core.ui.util.TextUtil
-import com.mifos.feature.client.clientList.ClientSelectionState
 import com.mifos.room.entities.client.ClientEntity
 import kotlinx.coroutines.flow.Flow
 import org.jetbrains.compose.resources.stringResource
@@ -81,62 +85,62 @@ internal fun ClientListScreen(
 private fun ClientActions(
     state: ClientListState,
     onAction: (ClientListAction) -> Unit,
-    modifier: Modifier=Modifier
-){
+    modifier: Modifier = Modifier,
+) {
     Row(
-        modifier=modifier.fillMaxWidth().padding(DesignToken.padding.large),
+        modifier = modifier.fillMaxWidth().padding(DesignToken.padding.large),
         horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = Alignment.CenterVertically,
     ) {
         Row(
-            modifier=Modifier.weight(1f),
-            horizontalArrangement = Arrangement.SpaceBetween
+            modifier = Modifier.weight(1f),
+            horizontalArrangement = Arrangement.SpaceBetween,
         ) {
-            if(!state.isSearchActive){
+            if (!state.isSearchActive) {
                 Row(
-                    modifier=Modifier.clickable{
+                    modifier = Modifier.clickable {
                         onAction(ClientListAction.NavigateToCreateClient)
                     },
-                    horizontalArrangement = Arrangement.spacedBy(DesignToken.padding.small)
+                    horizontalArrangement = Arrangement.spacedBy(DesignToken.padding.small),
                 ) {
                     Text(
-                        text="Clients",
+                        text = "Clients",
                         style = MifosTypography.titleMediumEmphasized,
-                        color = MaterialTheme.colorScheme.primary
+                        color = MaterialTheme.colorScheme.primary,
                     )
                     Icon(
                         imageVector = MifosIcons.Add,
                         contentDescription = null,
                         tint = MaterialTheme.colorScheme.primary,
                         modifier = Modifier
-                            .size(DesignToken.sizes.iconAverage)
+                            .size(DesignToken.sizes.iconAverage),
                     )
                 }
-                Icon(
-                    imageVector = MifosIcons.Search,
-                    contentDescription = null,
-                    modifier = Modifier
-                        .size(DesignToken.sizes.iconAverage)
-                        .clickable{
-                            onAction(ClientListAction.ActivateSearch)
-                        },
-                )
+//                Icon(
+//                    imageVector = MifosIcons.Search,
+//                    contentDescription = null,
+//                    modifier = Modifier
+//                        .size(DesignToken.sizes.iconAverage)
+//                        .clickable{
+//                            onAction(ClientListAction.ActivateSearch)
+//                        },
+//                )
             }
-            else{
-                MifosSearchBar(
-                    query = state.searchQuery,
-                    onQueryChange = {
-                        onAction(ClientListAction.OnQueryChange(it))
-                    },
-                    onBackClick = {
-                        onAction(ClientListAction.DismissSearch)
-                    },
-                    onSearchClick = {
-
-                    },
-                    modifier = Modifier.fillMaxWidth()
-                )
-            }
+//            else{
+//                MifosSearchBar(
+//                    query = state.searchQuery,
+//                    onQueryChange = {
+//                        onAction(ClientListAction.OnQueryChange(it))
+//                    },
+//                    onBackClick = {
+//                        onAction(ClientListAction.DismissSearch)
+//                    },
+//                    onSearchClick = {
+//
+//                    },
+//                    modifier = Modifier.fillMaxWidth()
+//                )
+//            }
         }
         Spacer(Modifier.width(DesignToken.padding.largeIncreased))
         Icon(
@@ -144,8 +148,7 @@ private fun ClientActions(
             contentDescription = null,
             modifier = Modifier
                 .size(DesignToken.sizes.iconAverage)
-                .clickable{
-
+                .clickable {
                 },
         )
     }
@@ -159,13 +162,13 @@ private fun ClientListContentScreen(
 ) {
     MifosScaffold(
         title = stringResource(Res.string.feature_client_client),
-        onBackPressed= { },
+        onBackPressed = { },
         modifier = modifier,
     ) { paddingValues ->
         if (state.isEmpty) {
             MifosEmptyCard("No clients found")
         }
-        if(state.clients.isNotEmpty()){
+        if (state.clients.isNotEmpty()) {
             ClientListContent(
                 clientsList = state.clients,
                 onClientClick = { clientId ->
@@ -178,11 +181,11 @@ private fun ClientListContentScreen(
                 images = state.clientImages,
             )
         }
-        if(state.clientsFlow!=null){
+        if (state.clientsFlow != null) {
             Column(
-                Modifier.fillMaxSize().padding(paddingValues)
+                Modifier.fillMaxSize().padding(paddingValues),
             ) {
-                if(state.dialogState==null){
+                if (state.dialogState == null) {
                     ClientActions(
                         state = state,
                         onAction = onAction,
@@ -203,9 +206,7 @@ private fun ClientListContentScreen(
                     images = state.clientImages,
                 )
             }
-
         }
-
     }
 }
 
@@ -214,8 +215,7 @@ fun ClientListContent(
     clientsList: List<ClientEntity>,
     onClientClick: (Int) -> Unit,
     fetchImage: (Int) -> Unit,
-    images:Map<Int,ByteArray?>,
-    trailingContent: (@Composable () -> Unit)? = null,
+    images: Map<Int, ByteArray?>,
     modifier: Modifier = Modifier,
 ) {
     LazyColumn(
@@ -228,29 +228,26 @@ fun ClientListContent(
             ClientItem(
                 client = client,
                 byteArray = images[client.id],
-                onClientClick = onClientClick
+                onClientClick = onClientClick,
             )
-        }
-        trailingContent?.let {
-            item { it() }
         }
     }
 }
 
 @Composable
-fun ClientItem(client: ClientEntity,byteArray: ByteArray?, onClientClick: (Int) -> Unit){
+fun ClientItem(client: ClientEntity, byteArray: ByteArray?, onClientClick: (Int) -> Unit) {
     MifosRowCard(
-        title = client.displayName?:"",
+        title = client.displayName ?: "",
         byteArray = byteArray,
         leftValues = listOf(
             TextUtil(
-                text=client.accountNo?:"",
-                style = MifosTypography.bodySmall
-            ) ,
+                text = client.accountNo ?: "",
+                style = MifosTypography.bodySmall,
+            ),
             TextUtil(
-                text=client.officeName?:"",
-                style = MifosTypography.bodySmall
-            )
+                text = client.officeName ?: "",
+                style = MifosTypography.bodySmall,
+            ),
         ),
         rightValues = buildList {
             client.status?.value?.let { status ->
@@ -262,8 +259,8 @@ fun ClientItem(client: ClientEntity,byteArray: ByteArray?, onClientClick: (Int) 
                             "Active" -> AppColors.customEnable
                             "Pending" -> AppColors.customYellow
                             else -> MaterialTheme.colorScheme.error
-                        }
-                    )
+                        },
+                    ),
                 )
             }
 
@@ -271,16 +268,16 @@ fun ClientItem(client: ClientEntity,byteArray: ByteArray?, onClientClick: (Int) 
                 add(
                     TextUtil(
                         text = externalId,
-                        style = MifosTypography.bodySmall
-                    )
+                        style = MifosTypography.bodySmall,
+                    ),
                 )
             }
         },
         modifier = Modifier
-            .clickable{
+            .clickable {
                 onClientClick(client.id)
             }
-            .padding(DesignToken.padding.large)
+            .padding(DesignToken.padding.large),
     )
 }
 
@@ -311,6 +308,6 @@ internal expect fun LazyColumnForClientListApi(
     onRefresh: () -> Unit,
     onClientSelect: (Int) -> Unit,
     fetchImage: (Int) -> Unit,
-    images:Map<Int,ByteArray?>,
-    modifier: Modifier= Modifier,
+    images: Map<Int, ByteArray?>,
+    modifier: Modifier = Modifier,
 )
