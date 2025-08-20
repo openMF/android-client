@@ -57,8 +57,13 @@ import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material.icons.filled.WifiOff
 import androidx.compose.material.icons.outlined.AccountCircle
+import androidx.compose.material.icons.outlined.CheckCircle
 import androidx.compose.material.icons.outlined.DateRange
+import androidx.compose.material.icons.outlined.Delete
+import androidx.compose.material.icons.outlined.DeleteOutline
+import androidx.compose.material.icons.outlined.DocumentScanner
 import androidx.compose.material.icons.outlined.EventRepeat
+import androidx.compose.material.icons.outlined.FileUpload
 import androidx.compose.material.icons.outlined.Group
 import androidx.compose.material.icons.outlined.Groups
 import androidx.compose.material.icons.outlined.Home
@@ -67,6 +72,7 @@ import androidx.compose.material.icons.outlined.Mail
 import androidx.compose.material.icons.outlined.MobileFriendly
 import androidx.compose.material.icons.outlined.Numbers
 import androidx.compose.material.icons.outlined.PersonOutline
+import androidx.compose.material.icons.outlined.Savings
 import androidx.compose.material.icons.outlined.Visibility
 import androidx.compose.material.icons.outlined.VisibilityOff
 import androidx.compose.material.icons.outlined.Wallet
@@ -210,4 +216,10 @@ object MifosIcons {
     val ChevronLeft = FluentIcons.Regular.ChevronLeft
     val ChevronRight = FluentIcons.Filled.ChevronRight
     val ProfileSet = FluentIcons.Filled.Person
+
+    val ViewAccount = Icons.Outlined.Savings
+    val ViewDocument = Icons.Outlined.DocumentScanner
+    val ApproveAccount = Icons.Outlined.CheckCircle
+    val UploadAgain = Icons.Outlined.FileUpload
+    val DeleteDocument = Icons.Outlined.DeleteOutline
 }
