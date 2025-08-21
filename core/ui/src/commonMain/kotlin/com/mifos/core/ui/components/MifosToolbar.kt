@@ -18,6 +18,8 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.mifos.core.designsystem.icon.MifosIcons
+import com.mifos.core.designsystem.theme.MifosTheme
+import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -44,4 +46,15 @@ fun SelectionModeTopAppBar(
         },
         actions = actions,
     )
+}
+
+@Preview
+@Composable
+fun SelectionModeTopAppBarPreview() {
+    MifosTheme {
+        SelectionModeTopAppBar(
+            itemCount = 3,
+            resetSelectionMode = {},
+        )
+    }
 }

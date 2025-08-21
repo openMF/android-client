@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Card
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -35,6 +36,7 @@ import core.designsystem.generated.resources.core_designsystem_enter_base_url
 import core.designsystem.generated.resources.core_designsystem_enter_tenant
 import core.designsystem.generated.resources.core_designsystem_pref_base_url_title
 import org.jetbrains.compose.resources.stringResource
+import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
 fun UpdateEndpointDialogScreen(
@@ -98,5 +100,18 @@ fun UpdateEndpointDialogScreen(
                 }
             }
         }
+    }
+}
+
+@Preview
+@Composable
+fun UpdateEndpointDialogScreenPreview() {
+    MaterialTheme {
+        UpdateEndpointDialogScreen(
+            initialBaseURL = "https://demo.mifos.org",
+            initialTenant = "default",
+            onDismissRequest = {},
+            handleEndpointUpdate = { _, _ -> },
+        )
     }
 }

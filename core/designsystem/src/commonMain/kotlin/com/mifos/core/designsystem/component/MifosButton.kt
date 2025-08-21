@@ -17,17 +17,24 @@ import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.sizeIn
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ButtonElevation
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.unit.dp
+import com.mifos.core.designsystem.theme.DesignToken
+import com.mifos.core.designsystem.theme.MifosTheme
+import org.jetbrains.compose.ui.tooling.preview.Preview
 
 /**
  * Mifos button with generic content slot. Wraps Material 3 [Button].
@@ -45,10 +52,12 @@ fun MifosButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
-    shape: Shape = ButtonDefaults.shape,
+    shape: Shape = DesignToken.shapes.medium,
     contentPadding: PaddingValues = ButtonDefaults.ContentPadding,
     elevation: ButtonElevation? = ButtonDefaults.buttonElevation(),
-    colors: ButtonColors = ButtonDefaults.buttonColors(),
+    colors: ButtonColors = ButtonDefaults.buttonColors(
+        containerColor = MaterialTheme.colorScheme.background,
+    ),
     content: @Composable RowScope.() -> Unit = {},
 ) {
     Button(
@@ -236,4 +245,68 @@ object MifosButtonDefaults {
     // TODO: File bug
     // OutlinedButton default border width isn't exposed via ButtonDefaults
     val OutlinedButtonBorderWidth = 1.dp
+}
+
+@Preview
+@Composable
+private fun MifosButtonPreview() {
+    MifosTheme {
+        MifosButton(
+            onClick = {},
+        ) {
+            Text("Default Button")
+        }
+    }
+}
+
+@Preview
+@Composable
+private fun MifosButtonWithTextPreview() {
+    MifosTheme {
+        MifosButton(
+            onClick = {},
+            text = { Text("Text Button") },
+        )
+    }
+}
+
+@Preview
+@Composable
+private fun MifosOutlinedButtonPreview() {
+    MifosTheme {
+        MifosOutlinedButton(
+            onClick = {},
+        ) {
+            Text("Outlined Button")
+        }
+    }
+}
+
+@Preview
+@Composable
+private fun MifosTextButtonPreview() {
+    MifosTheme {
+        MifosTextButton(
+            onClick = {},
+        ) {
+            Text("Text Button")
+        }
+    }
+}
+
+@Preview
+@Composable
+private fun MifosTextButtonWithIconPreview() {
+    MifosTheme {
+        MifosTextButton(
+            text = { Text("With Icon") },
+            onClick = {},
+            leadingIcon = {
+                Icon(
+                    imageVector = Icons.Default.Star,
+                    contentDescription = null,
+                )
+            },
+        )
+    }
 }

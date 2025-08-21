@@ -32,7 +32,6 @@ kotlin {
             implementation(compose.components.resources)
             implementation(libs.kotlinx.serialization.json)
             implementation(libs.androidx.paging.common)
-            // implementation(libs.fineract.client.kmp)
         }
     }
 }

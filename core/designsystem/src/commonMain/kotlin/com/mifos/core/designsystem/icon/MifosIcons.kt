@@ -103,6 +103,10 @@ import androidx.compose.material.icons.rounded.Sync
 import androidx.compose.material.icons.rounded.Task
 import androidx.compose.material.icons.rounded.Translate
 import androidx.compose.ui.graphics.vector.ImageVector
+import fluent.ui.system.icons.FluentIcons
+import fluent.ui.system.icons.filled.ChevronRight
+import fluent.ui.system.icons.filled.Person
+import fluent.ui.system.icons.regular.ChevronLeft
 
 object MifosIcons {
     val Add = Icons.Rounded.Add
@@ -202,4 +206,8 @@ object MifosIcons {
     val AddFilled = Icons.Filled.Add
 
     val Payments = Icons.Filled.Payments
+
+    val ChevronLeft = FluentIcons.Regular.ChevronLeft
+    val ChevronRight = FluentIcons.Filled.ChevronRight
+    val ProfileSet = FluentIcons.Filled.Person
 }

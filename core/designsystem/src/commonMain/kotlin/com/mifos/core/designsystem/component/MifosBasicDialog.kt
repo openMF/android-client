@@ -19,6 +19,8 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.testTag
 import com.mifos.core.designsystem.theme.MifosTheme
 import org.jetbrains.compose.ui.tooling.preview.Preview
+import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
+import org.jetbrains.compose.ui.tooling.preview.PreviewParameterProvider
 
 @Composable
 fun MifosBasicDialog(
@@ -139,4 +141,32 @@ sealed class BasicDialogState {
         val message: String,
         val title: String = "An Error Occurred!",
     ) : BasicDialogState()
+}
+
+class BasicDialogStatePreviewProvider : PreviewParameterProvider<BasicDialogState> {
+    override val values: Sequence<BasicDialogState> = sequenceOf(
+        BasicDialogState.Shown(
+            title = "An error has occurred.",
+            message = "Username or password is incorrect. Try again.",
+        ),
+        BasicDialogState.Shown(
+            title = "Confirm Action",
+            message = "Are you sure you want to continue?",
+        ),
+    )
+}
+
+@Preview
+@Composable
+private fun MifosBasicDialogPreview(
+    @PreviewParameter(BasicDialogStatePreviewProvider::class)
+    state: BasicDialogState,
+) {
+    MifosTheme {
+        MifosBasicDialog(
+            visibilityState = state,
+            onConfirm = {},
+            onDismissRequest = {},
+        )
+    }
 }

@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PagerState
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
@@ -26,6 +27,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import com.mifos.core.designsystem.utility.TabContent
 import kotlinx.coroutines.launch
+import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
 fun MifosTabRow(
@@ -67,4 +69,19 @@ fun MifosTabRow(
             tabContents.getOrNull(page)?.content?.invoke() ?: Text("Page $page")
         }
     }
+}
+
+@Preview
+@Composable
+fun MifosTabRowPreview() {
+    val pagerState = rememberPagerState { 2 }
+    val tabContents = listOf(
+        TabContent("Home") { Text("Home Content") },
+        TabContent("Profile") { Text("Profile Content") },
+    )
+
+    MifosTabRow(
+        tabContents = tabContents,
+        pagerState = pagerState,
+    )
 }

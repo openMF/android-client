@@ -10,7 +10,7 @@
 package com.mifos.feature.center.centerList.ui
 
 import androidclient.feature.center.generated.resources.Res
-import androidclient.feature.center.generated.resources.feature_center_error_loading_centers
+import androidclient.feature.center.generated.resources.feature_center_failed_to_load_db_centers
 import androidclient.feature.center.generated.resources.feature_center_ic_done_all_black_24dp
 import androidclient.feature.center.generated.resources.feature_center_sync
 import androidx.compose.foundation.Canvas
@@ -61,11 +61,13 @@ import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.ui.components.SelectionModeTopAppBar
-import com.mifos.core.ui.util.DevicePreview
 import com.mifos.feature.center.syncCentersDialog.SyncCenterDialogScreen
 import com.mifos.room.entities.group.CenterEntity
 import kotlinx.coroutines.flow.flowOf
 import org.jetbrains.compose.resources.stringResource
+import org.jetbrains.compose.ui.tooling.preview.Preview
+import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
+import org.jetbrains.compose.ui.tooling.preview.PreviewParameterProvider
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -355,51 +357,6 @@ fun CenterListDbContent(
     }
 }
 
-@DevicePreview
-@Composable
-private fun CenterListDbContentPreview() {
-    CenterListDbContent(sampleCenterListDb)
-}
-
-@DevicePreview
-@Composable
-private fun CenterListScreenPreview() {
-    CenterListScreen(
-        paddingValues = PaddingValues(),
-        state = CenterListUiState.CenterListDb(sampleCenterListDb),
-        createNewCenter = {},
-        onRefresh = {},
-        refreshState = false,
-        onCenterSelect = {},
-    )
-}
-
-@DevicePreview
-@Composable
-private fun CenterListScreenErrorPreview() {
-    CenterListScreen(
-        paddingValues = PaddingValues(),
-        state = CenterListUiState.Error(Res.string.feature_center_error_loading_centers),
-        createNewCenter = {},
-        onRefresh = {},
-        refreshState = false,
-        onCenterSelect = {},
-    )
-}
-
-@DevicePreview
-@Composable
-private fun CenterListScreenListPreview() {
-    CenterListScreen(
-        paddingValues = PaddingValues(),
-        state = CenterListUiState.CenterList(sampleCenterList),
-        createNewCenter = {},
-        onRefresh = {},
-        refreshState = false,
-        onCenterSelect = {},
-    )
-}
-
 val sampleCenterListDb = List(10) {
     CenterEntity(
         name = "Center $it",
@@ -412,3 +369,26 @@ val sampleCenterListDb = List(10) {
 }
 
 val sampleCenterList = flowOf(PagingData.from(sampleCenterListDb))
+
+class CenterListUiStateProvider : PreviewParameterProvider<CenterListUiState> {
+    override val values = sequenceOf(
+        CenterListUiState.CenterListDb(sampleCenterListDb),
+        CenterListUiState.Error(Res.string.feature_center_failed_to_load_db_centers),
+        CenterListUiState.CenterList(sampleCenterList),
+    )
+}
+
+@Preview
+@Composable
+fun CenterListScreenPreview(
+    @PreviewParameter(CenterListUiStateProvider::class) state: CenterListUiState,
+) {
+    CenterListScreen(
+        paddingValues = PaddingValues(),
+        state = state,
+        createNewCenter = {},
+        onRefresh = {},
+        refreshState = false,
+        onCenterSelect = {},
+    )
+}

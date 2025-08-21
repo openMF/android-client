@@ -45,6 +45,7 @@ kotlin {
             implementation(compose.components.uiToolingPreview)
             api(libs.back.handler)
             api(libs.window.size)
+            implementation(libs.fluentui.system.icons)
         }
 
         nativeMain.dependencies {
@@ -61,6 +62,9 @@ kotlin {
     }
 }
 
+dependencies {
+    debugImplementation(compose.uiTooling)
+}
 
 compose.resources {
     publicResClass = true

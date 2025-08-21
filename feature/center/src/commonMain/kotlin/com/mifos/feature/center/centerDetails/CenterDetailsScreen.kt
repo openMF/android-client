@@ -65,9 +65,11 @@ import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.model.objects.groups.CenterInfo
-import com.mifos.core.ui.util.DevicePreview
 import com.mifos.room.entities.group.CenterWithAssociations
 import org.jetbrains.compose.resources.stringResource
+import org.jetbrains.compose.ui.tooling.preview.Preview
+import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
+import org.jetbrains.compose.ui.tooling.preview.PreviewParameterProvider
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -319,42 +321,27 @@ private fun MifosCenterDetailsText(icon: ImageVector, field: String, value: Stri
     }
 }
 
-@DevicePreview
+class CenterDetailsUiStateProvider : PreviewParameterProvider<CenterDetailsUiState> {
+    override val values = sequenceOf(
+        CenterDetailsUiState.Loading,
+        CenterDetailsUiState.Error(Res.string.feature_center_error_loading_centers),
+        CenterDetailsUiState.CenterDetails(CenterWithAssociations(), CenterInfo()),
+    )
+}
+
+@Preview
 @Composable
-private fun CenterDetailsScreenLoadingPreview() {
+fun CenterDetailsScreenPreview(
+    @PreviewParameter(CenterDetailsUiStateProvider::class) state: CenterDetailsUiState,
+) {
     CenterDetailsScreen(
-        state = CenterDetailsUiState.Loading,
+        state = state,
         onBackPressed = {},
         onMenuClick = {},
         onRetryClick = {},
         onActivateCenter = {},
     )
 }
-
-@DevicePreview
-@Composable
-private fun CenterDetailsScreenErrorPreview() {
-    CenterDetailsScreen(
-        state = CenterDetailsUiState.Error(Res.string.feature_center_error_loading_centers),
-        onBackPressed = {},
-        onMenuClick = {},
-        onRetryClick = {},
-        onActivateCenter = {},
-    )
-}
-
-@DevicePreview
-@Composable
-private fun CenterDetailsScreenCenterDetailsPreview() {
-    CenterDetailsScreen(
-        state = CenterDetailsUiState.CenterDetails(CenterWithAssociations(), CenterInfo()),
-        onBackPressed = {},
-        onMenuClick = {},
-        onRetryClick = {},
-        onActivateCenter = {},
-    )
-}
-
 enum class MenuItems {
     ADD_SAVINGS_ACCOUNT,
     GROUP_LIST,

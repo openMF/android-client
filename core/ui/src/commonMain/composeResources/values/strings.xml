@@ -14,4 +14,59 @@
     <string name="core_ui_no_data">No Data</string>
     <string name="core_ui_something_went_wrong">Something went wrong</string>
     <string name="core_ui_core_common_working">Core Common Working</string>
+
+    <!-- Mifos Client Fee -->
+    <string name="core_ui_name">Name</string>
+    <string name="core_ui_due_as_of">Due as of</string>
+    <string name="core_ui_due">Due</string>
+    <string name="core_ui_paid">Paid</string>
+    <string name="core_ui_waived">Waived</string>
+    <string name="core_ui_outstanding">Outstanding</string>
+
+    <!-- Mifos Loan -->
+    <string name="core_ui_account_no">Account No</string>
+    <string name="core_ui_loan_product">Loan Product</string>
+    <string name="core_ui_original_loan">Original Loan</string>
+    <string name="core_ui_amount_paid">Amount Paid</string>
+    <string name="core_ui_loan_balance">Loan Balance</string>
+    <string name="core_ui_type">Type</string>
+
+    <!-- Mifos Savings -->
+    <string name="core_ui_savings_product">Savings Product</string>
+    <string name="core_ui_last_active">Last Active</string>
+    <string name="core_ui_balance">Balance</string>
+
+    <!-- Mifos Collateral -->
+    <string name="core_ui_quantity">Quantity</string>
+    <string name="core_ui_total_value">Total Value</string>
+    <string name="core_ui_total_collateral_value">Total Collateral Value</string>
+
+    <!-- Mifos Identifier -->
+    <string name="core_ui_document_type">Document Type</string>
+    <string name="core_ui_document_id">Document ID</string>
+    <string name="core_ui_document_key">Document Key</string>
+    <string name="core_ui_status">Status</string>
+    <string name="core_ui_description">Description</string>
+    <string name="core_ui_identify_documents">Identify Documents</string>
+
+    <!-- Mifos Delinquency -->
+    <string name="core_ui_action">Action</string>
+    <string name="core_ui_pause">Pause</string>
+    <string name="core_ui_resume">Resume</string>
+    <string name="core_ui_start_date">Start Date</string>
+    <string name="core_ui_end_date">End Date</string>
+
+    <!-- Mifos Charges -->
+    <string name="core_ui_calculation_type">Calculation Type</string>
+    <string name="core_ui_title_processing_fee">Processing Fee</string>
+
+    <!-- Mifos Sell Loan -->
+    <string name="core_ui_cancelled">Cancelled</string>
+    <string name="core_ui_completed">Completed</string>
+    <string name="core_ui_pending">Pending</string>
+    <string name="core_ui_effective_from">Effective From</string>
+    <string name="core_ui_owner_external_id">Owner External ID</string>
+    <string name="core_ui_transfer_external_id">Transfer External ID</string>
+    <string name="core_ui_settlement_date">Settlement Date</string>
+    <string name="core_ui_purchase_price_ratio">Purchase Price Ratio</string>
 </resources>

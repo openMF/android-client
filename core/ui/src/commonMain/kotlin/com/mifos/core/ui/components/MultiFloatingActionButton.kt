@@ -20,6 +20,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -28,8 +29,10 @@ import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 import com.mifos.core.designsystem.icon.MifosIcons
+import com.mifos.core.designsystem.theme.MifosTheme
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.ui.tooling.preview.Preview
 
 enum class FabType {
     CLIENT,
@@ -127,5 +130,35 @@ fun MultiFloatingActionButton(
                 contentDescription = "mainFabIcon",
             )
         }
+    }
+}
+
+@Preview
+@Composable
+fun SelectionModeTopAppBarPrevieww() {
+    MifosTheme {
+        SelectionModeTopAppBar(
+            itemCount = 3,
+            resetSelectionMode = {},
+        )
+    }
+}
+
+@Preview
+@Composable
+fun SelectionModeTopAppBarWithActionsPreview() {
+    MifosTheme {
+        SelectionModeTopAppBar(
+            itemCount = 5,
+            resetSelectionMode = {},
+            actions = {
+                IconButton(onClick = {}) {
+                    Icon(
+                        imageVector = MifosIcons.Delete,
+                        contentDescription = "delete",
+                    )
+                }
+            },
+        )
     }
 }

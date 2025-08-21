@@ -125,6 +125,18 @@ class UpdateServerConfigViewModel(
                     }
                 }
             }
+
+            is UpdateServerConfigEvent.UseDefaultConfig -> {
+                viewModelScope.launch {
+                    _state.value = _state.value.copy(
+                        protocol = ServerConfig.DEFAULT.protocol,
+                        endPoint = ServerConfig.DEFAULT.endPoint,
+                        apiPath = ServerConfig.DEFAULT.apiPath,
+                        port = ServerConfig.DEFAULT.port,
+                        tenant = ServerConfig.DEFAULT.tenant,
+                    )
+                }
+            }
         }
     }
 }

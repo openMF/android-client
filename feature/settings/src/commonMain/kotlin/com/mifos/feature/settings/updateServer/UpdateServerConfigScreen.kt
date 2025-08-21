@@ -11,22 +11,23 @@ package com.mifos.feature.settings.updateServer
 
 import androidclient.feature.settings.generated.resources.Res
 import androidclient.feature.settings.generated.resources.feature_settings_api_path_placeholder
-import androidclient.feature.settings.generated.resources.feature_settings_endpoint_placeholder
+import androidclient.feature.settings.generated.resources.feature_settings_hostname_placeholder
 import androidclient.feature.settings.generated.resources.feature_settings_label_api_path
-import androidclient.feature.settings.generated.resources.feature_settings_label_endpoint
+import androidclient.feature.settings.generated.resources.feature_settings_label_hostname
 import androidclient.feature.settings.generated.resources.feature_settings_label_port
 import androidclient.feature.settings.generated.resources.feature_settings_label_protocol
 import androidclient.feature.settings.generated.resources.feature_settings_label_tenant
 import androidclient.feature.settings.generated.resources.feature_settings_note_text
-import androidclient.feature.settings.generated.resources.feature_settings_port_placeholder
 import androidclient.feature.settings.generated.resources.feature_settings_protocol_placeholder
 import androidclient.feature.settings.generated.resources.feature_settings_restart
-import androidclient.feature.settings.generated.resources.feature_settings_tenant_placeholder
 import androidclient.feature.settings.generated.resources.feature_settings_title
 import androidclient.feature.settings.generated.resources.feature_settings_update_config_btn_text
 import androidx.annotation.VisibleForTesting
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -34,13 +35,15 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ElevatedButton
-import androidx.compose.material3.Icon
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Snackbar
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
@@ -54,10 +57,16 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mifos.core.common.utils.ServerConfig
 import com.mifos.core.designsystem.component.MifosOutlinedTextField
@@ -151,120 +160,332 @@ internal fun UpdateServerConfigScreenContent(
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(it),
-            contentPadding = PaddingValues(12.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp),
+                .padding(it)
+                .background(Color(0xfff8f9fa).copy(alpha = .1f)),
+            contentPadding = PaddingValues(4.dp),
+            verticalArrangement = Arrangement.spacedBy(4.dp),
             state = lazyListState,
         ) {
+
             item {
-                MifosOutlinedTextField(
-                    value = serverConfig.protocol,
-                    label = stringResource(Res.string.feature_settings_label_protocol),
-                    leadingIcon = MifosIcons.AddLink,
-                    isError = protocolError != null,
-                    errorText = protocolError,
-                    placeholder = stringResource(Res.string.feature_settings_protocol_placeholder),
-                    keyboardType = KeyboardType.Uri,
-                    showClearIcon = serverConfig.protocol.isNotEmpty(),
-                    onClickClearIcon = {
-                        onEvent(UpdateServerConfigEvent.UpdateProtocol(""))
-                    },
-                    onValueChange = {
-                        onEvent(UpdateServerConfigEvent.UpdateProtocol(it))
-                    },
+                Text(
+                    "Quick Setup",
+                    modifier =Modifier.padding(horizontal = 16.dp, vertical = 4.dp),
+                    fontWeight = FontWeight.SemiBold,
+                    style = MaterialTheme.typography.titleMedium,
+                    fontFamily = FontFamily.SansSerif
                 )
             }
 
             item {
-                MifosOutlinedTextField(
-                    value = serverConfig.endPoint,
-                    label = stringResource(Res.string.feature_settings_label_endpoint),
-                    leadingIcon = MifosIcons.Link,
-                    isError = endPointError != null,
-                    errorText = endPointError,
-                    placeholder = stringResource(Res.string.feature_settings_endpoint_placeholder),
-                    showClearIcon = serverConfig.endPoint.isNotEmpty(),
-                    onClickClearIcon = {
-                        onEvent(UpdateServerConfigEvent.UpdateEndPoint(""))
-                    },
-                    onValueChange = {
-                        onEvent(UpdateServerConfigEvent.UpdateEndPoint(it))
-                    },
-                )
-            }
 
-            item {
-                MifosOutlinedTextField(
-                    value = serverConfig.apiPath,
-                    label = stringResource(Res.string.feature_settings_label_api_path),
-                    leadingIcon = MifosIcons.Link,
-                    isError = apiPathError != null,
-                    errorText = apiPathError,
-                    placeholder = stringResource(Res.string.feature_settings_api_path_placeholder),
-                    showClearIcon = serverConfig.endPoint.isNotEmpty(),
-                    onClickClearIcon = {
-                        onEvent(UpdateServerConfigEvent.UpdateEndPoint(""))
-                    },
-                    onValueChange = {
-                        onEvent(UpdateServerConfigEvent.UpdateApiPath(it))
-                    },
-                )
-            }
+                Row(
+                    modifier =Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 12.dp),
+                    horizontalArrangement = Arrangement.Center,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    ElevatedButton(
+                        onClick = {
+                            onEvent(UpdateServerConfigEvent.UpdateProtocol(ServerConfig.LOCALHOST.protocol))
+                            onEvent(UpdateServerConfigEvent.UpdateEndPoint(ServerConfig.LOCALHOST.endPoint))
+                            onEvent(UpdateServerConfigEvent.UpdatePort(ServerConfig.LOCALHOST.port))
+                        },
+                        modifier = Modifier
+                            .height(72.dp)
+                            .weight(1f),
+                        enabled = !hasAnyError,
+                        shape = RoundedCornerShape(20),
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = Color(0xff007AFF),
+                            disabledContainerColor = Color.White,
+                            disabledContentColor = Color(0xff007AFF),
+                            contentColor = Color.White
+                        )
+                    ) {
+                        Column(
+                            verticalArrangement = Arrangement.Center,
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+                            Text(
+                                "\uD83C\uDFE0 Local",
+                                style = MaterialTheme.typography.bodyMedium,
+                                fontFamily = FontFamily.SansSerif,
+                            )
+                            Text(
+                                "Development",
+                                style = MaterialTheme.typography.bodyMedium,
+                                fontFamily = FontFamily.SansSerif
+                            )
+                        }
+                    }
 
-            item {
-                MifosOutlinedTextField(
-                    value = serverConfig.port,
-                    label = stringResource(Res.string.feature_settings_label_port),
-                    leadingIcon = MifosIcons.Link,
-                    isError = portError != null,
-                    errorText = portError,
-                    placeholder = stringResource(Res.string.feature_settings_port_placeholder),
-                    keyboardType = KeyboardType.Number,
-                    showClearIcon = serverConfig.port.isNotEmpty(),
-                    onClickClearIcon = {
-                        onEvent(UpdateServerConfigEvent.UpdatePort(""))
-                    },
-                    onValueChange = {
-                        onEvent(UpdateServerConfigEvent.UpdatePort(it))
-                    },
-                )
-            }
+                    Spacer(
+                        modifier = Modifier.width(12.dp)
+                    )
 
-            item {
-                MifosOutlinedTextField(
-                    value = serverConfig.tenant,
-                    label = stringResource(Res.string.feature_settings_label_tenant),
-                    leadingIcon = MifosIcons.Link,
-                    isError = tenantError != null,
-                    errorText = tenantError,
-                    placeholder = stringResource(Res.string.feature_settings_tenant_placeholder),
-                    showClearIcon = serverConfig.tenant.isNotEmpty(),
-                    onClickClearIcon = {
-                        onEvent(UpdateServerConfigEvent.UpdateTenant(""))
-                    },
-                    onValueChange = {
-                        onEvent(UpdateServerConfigEvent.UpdateTenant(it))
-                    },
-                )
+                    ElevatedButton(
+                        onClick = {
+                            onEvent(UpdateServerConfigEvent.UseDefaultConfig)
+                        },
+                        modifier = Modifier
+                            .height(72.dp)
+                            .weight(1f),
+                        enabled = !hasAnyError,
+                        shape = RoundedCornerShape(20),
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = Color(0xff007AFF),
+                            disabledContainerColor = Color.White,
+                            disabledContentColor = Color(0xff007AFF),
+                            contentColor = Color.White
+                        )
+                    ) {
+                        Column(
+                            verticalArrangement = Arrangement.Center,
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+                            Text(
+                                "\uD83C\uDF10 Demo",
+                                style = MaterialTheme.typography.bodyMedium,
+                                fontFamily = FontFamily.SansSerif
+                            )
+                            Text(
+                                "Environment",
+                                style = MaterialTheme.typography.bodyMedium,
+                                fontFamily = FontFamily.SansSerif
+                            )
+                        }
+                    }
+                }
             }
 
             item {
                 Row(
-                    modifier = Modifier.fillMaxWidth(),
+                    Modifier.fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(4.dp, Alignment.Start),
-                ) {
-                    Icon(
-                        imageVector = MifosIcons.Info,
-                        contentDescription = "infoIcon",
-                        tint = MaterialTheme.colorScheme.error,
-                        modifier = Modifier.size(20.dp),
+                    horizontalArrangement = Arrangement.Center
+                ){
+                    HorizontalDivider(
+                        modifier = Modifier.weight(1f),
+                        color= Color.LightGray
                     )
 
                     Text(
-                        text = stringResource(Res.string.feature_settings_note_text),
-                        style = MaterialTheme.typography.labelSmall,
+                        "OR",
+                        modifier = Modifier
+                            .padding(horizontal = 8.dp),
+                        fontFamily = FontFamily.SansSerif
                     )
+
+                    HorizontalDivider(
+                        modifier = Modifier.weight(1f),
+                        color= Color.LightGray
+                    )
+                }
+            }
+
+
+            item {
+                Text(
+                    stringResource(Res.string.feature_settings_label_protocol),
+                    style=MaterialTheme.typography.labelMedium,
+                    modifier = Modifier.padding(start = 16.dp),
+                    fontFamily = FontFamily.SansSerif
+                )
+                MifosOutlinedTextField(
+                    value = serverConfig.protocol,
+                    placeholder = stringResource(Res.string.feature_settings_protocol_placeholder),
+                    leadingIcon = MifosIcons.AddLink,
+                    errorText = protocolError,
+                    keyboardType = KeyboardType.Uri,
+                    errorTextTag = serverConfig.protocol,
+                    onValueChange = {
+                        onEvent(UpdateServerConfigEvent.UpdateProtocol(it))
+                    },
+                    shape =RoundedCornerShape(16),
+                    colors = OutlinedTextFieldDefaults.colors(
+                        focusedBorderColor = Color(0xffdddddd),
+                        unfocusedBorderColor = Color(0xffdddddd),
+                        focusedContainerColor = Color.White,
+                        unfocusedContainerColor = Color.White
+                    ),
+                    modifier = Modifier.fillMaxWidth().padding(start = 16.dp, end = 16.dp),
+                    label = "",
+                    textStyle = TextStyle(
+                        fontFamily = FontFamily.SansSerif,
+                        fontSize = MaterialTheme.typography.bodyLarge.fontSize,
+                        fontWeight = FontWeight.Medium
+                    )
+                )
+            }
+
+            item {
+                Text(
+                    stringResource(Res.string.feature_settings_label_hostname),
+                    style=MaterialTheme.typography.labelMedium,
+                    modifier = Modifier.padding(start = 16.dp),
+                    fontFamily = FontFamily.SansSerif
+                )
+                MifosOutlinedTextField(
+                    value = serverConfig.endPoint,
+                    label = "",
+                    leadingIcon = MifosIcons.Link,
+                    isError = endPointError != null,
+                    errorText = endPointError,
+                    placeholder = stringResource(Res.string.feature_settings_hostname_placeholder),
+                    onValueChange = {
+                        onEvent(UpdateServerConfigEvent.UpdateEndPoint(it))
+                    },
+                    shape =RoundedCornerShape(16),
+                    colors = OutlinedTextFieldDefaults.colors(
+                        focusedBorderColor = Color(0xffdddddd),
+                        unfocusedBorderColor = Color(0xffdddddd),
+                        focusedContainerColor = Color.White,
+                        unfocusedContainerColor = Color.White
+                    ),
+                    modifier = Modifier.fillMaxWidth().padding(start = 16.dp, end = 16.dp),
+                    textStyle = TextStyle(
+                        fontFamily = FontFamily.SansSerif,
+                        fontSize = MaterialTheme.typography.bodyLarge.fontSize,
+                        fontWeight = FontWeight.Medium
+                    )
+                )
+            }
+
+            item {
+                Text(
+                    stringResource(Res.string.feature_settings_label_api_path),
+                    style=MaterialTheme.typography.labelMedium,
+                    modifier = Modifier.padding(start = 16.dp),
+                    fontFamily = FontFamily.SansSerif
+                )
+
+                MifosOutlinedTextField(
+                    value = serverConfig.apiPath,
+                    leadingIcon = MifosIcons.Link,
+                    isError = apiPathError!=null,
+                    errorText = apiPathError,
+                    keyboardType = KeyboardType.Uri,
+                    errorTextTag = serverConfig.apiPath,
+                    placeholder = stringResource(Res.string.feature_settings_api_path_placeholder),
+                    onValueChange = {
+                        onEvent(UpdateServerConfigEvent.UpdateApiPath(it))
+                    },
+                    shape =RoundedCornerShape(16),
+                    colors = OutlinedTextFieldDefaults.colors(
+                        focusedBorderColor = Color(0xffdddddd),
+                        unfocusedBorderColor = Color(0xffdddddd),
+                        focusedContainerColor = Color.White,
+                        unfocusedContainerColor = Color.White
+                    ),
+                    modifier = Modifier.fillMaxWidth().padding(start = 16.dp, end = 16.dp),
+                    label = "",
+                    textStyle = TextStyle(
+                        fontFamily = FontFamily.SansSerif,
+                        fontSize = MaterialTheme.typography.bodyLarge.fontSize,
+                        fontWeight = FontWeight.Medium
+                    )
+                )
+            }
+
+            item {
+                Text(
+                    stringResource(Res.string.feature_settings_label_port),
+                    style=MaterialTheme.typography.labelMedium,
+                    modifier = Modifier.padding(start = 16.dp),
+                    fontFamily = FontFamily.SansSerif
+                )
+                MifosOutlinedTextField(
+                    value = serverConfig.port,
+                    leadingIcon = MifosIcons.Link,
+                    isError = portError != null,
+                    errorText = portError,
+                    keyboardType = KeyboardType.Number,
+                    errorTextTag = serverConfig.port,
+                    onValueChange = {
+                        onEvent(UpdateServerConfigEvent.UpdatePort(it))
+                    },
+                    shape =RoundedCornerShape(16),
+                    colors = OutlinedTextFieldDefaults.colors(
+                        focusedBorderColor = Color(0xffdddddd),
+                        unfocusedBorderColor = Color(0xffdddddd),
+                        focusedContainerColor = Color.White,
+                        unfocusedContainerColor = Color.White
+                    ),
+                    modifier = Modifier.fillMaxWidth().padding(start = 16.dp, end = 16.dp),
+                    label = "",
+                    textStyle = TextStyle(
+                        fontFamily = FontFamily.SansSerif,
+                        fontSize = MaterialTheme.typography.bodyLarge.fontSize,
+                        fontWeight = FontWeight.Medium
+                    )
+                )
+            }
+
+            item {
+                Text(
+                    stringResource(Res.string.feature_settings_label_tenant),
+                    style=MaterialTheme.typography.labelMedium,
+                    modifier = Modifier.padding(start = 16.dp),
+                    fontFamily = FontFamily.SansSerif
+                )
+                MifosOutlinedTextField(
+                    value = serverConfig.tenant,
+                    leadingIcon = MifosIcons.Link,
+                    isError = tenantError != null,
+                    errorText = tenantError,
+                    keyboardType = KeyboardType.Uri,
+                    errorTextTag = serverConfig.tenant,
+                    onValueChange = {
+                        onEvent(UpdateServerConfigEvent.UpdateTenant(it))
+                    },
+                    shape =RoundedCornerShape(16),
+                    colors = OutlinedTextFieldDefaults.colors(
+                        focusedBorderColor = Color(0xffdddddd),
+                        unfocusedBorderColor = Color(0xffdddddd),
+                        focusedContainerColor = Color.White,
+                        unfocusedContainerColor = Color.White
+                    ),
+                    modifier = Modifier.fillMaxWidth().padding(start = 16.dp, end = 16.dp),
+                    label = "",
+                    textStyle = TextStyle(
+                        fontFamily = FontFamily.SansSerif,
+                        fontSize = MaterialTheme.typography.bodyLarge.fontSize,
+                        fontWeight = FontWeight.Medium
+                    )
+                )
+
+            }
+
+            item {
+                Box(
+                    contentAlignment = Alignment.CenterStart,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(68.dp)
+                        .padding(horizontal = 16.dp)
+                        .clip(RoundedCornerShape(16))
+                        .border(
+                            1.dp, Color(0xffffeaa7),
+                            RoundedCornerShape(16)
+                        )
+                        .background(Color(0xfffff3cd))
+                ) {
+                    Row(
+                        modifier = Modifier.padding(horizontal = 8.dp),
+                        horizontalArrangement = Arrangement.Center,
+                    ) {
+                        Text(
+                            "⚠\uFE0F",
+                            modifier = Modifier.padding(horizontal = 8.dp),
+                        )
+                        Text(
+                            text = stringResource(Res.string.feature_settings_note_text),
+                            style = MaterialTheme.typography.titleSmall,
+                            color = Color(0xff856404),
+                            overflow = TextOverflow.Ellipsis,
+                            fontFamily = FontFamily.SansSerif,
+                        )
+                    }
                 }
 
                 Spacer(Modifier.height(8.dp))
@@ -277,15 +498,24 @@ internal fun UpdateServerConfigScreenContent(
                     },
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(48.dp),
+                        .height(56.dp)
+                        .padding(horizontal = 16.dp),
                     enabled = !hasAnyError,
-                ) {
-                    Icon(
-                        imageVector = MifosIcons.Save,
-                        contentDescription = "updateConfig",
+                    shape = RoundedCornerShape(16),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Color(0xff007AFF),
+                        disabledContainerColor = Color.White,
+                        disabledContentColor = Color(0xff007AFF),
+                        contentColor = Color.White
                     )
-                    Spacer(modifier = Modifier.width(4.dp))
-                    Text(stringResource(Res.string.feature_settings_update_config_btn_text).uppercase())
+                ) {
+                    Text(
+                        "⬇\uFE0F  " +
+                        stringResource(
+                            Res.string.feature_settings_update_config_btn_text
+                        ).uppercase(),
+                        fontFamily = FontFamily.SansSerif
+                    )
                 }
             }
         }

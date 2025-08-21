@@ -33,6 +33,14 @@ data class ServerConfig(
             port = "80",
             tenant = "default",
         )
+
+        val LOCALHOST = ServerConfig(
+            protocol = "http://",
+            endPoint = "localhost",
+            apiPath = "/fineract-provider/api/v1/",
+            port = "8080",
+            tenant = "default",
+        )
     }
 }
 

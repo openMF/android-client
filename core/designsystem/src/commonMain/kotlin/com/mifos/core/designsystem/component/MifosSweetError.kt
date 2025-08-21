@@ -33,11 +33,13 @@ import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
+import com.mifos.core.designsystem.theme.MifosTheme
 import core.designsystem.generated.resources.Res
 import core.designsystem.generated.resources.core_designsystem_ic_error_black_24dp
 import core.designsystem.generated.resources.core_designsystem_try_again
 import core.designsystem.generated.resources.core_designsystem_unable_to_load
 import org.jetbrains.compose.resources.stringResource
+import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
 fun MifosSweetError(
@@ -120,5 +122,38 @@ fun MifosPaginationSweetError(
                 style = MaterialTheme.typography.bodyLarge,
             )
         }
+    }
+}
+
+@Preview
+@Composable
+private fun MifosSweetErrorPreview() {
+    MifosTheme {
+        MifosSweetError(
+            message = "Something went wrong. Please check your network.",
+            buttonText = "Retry",
+            onclick = {},
+        )
+    }
+}
+
+@Preview
+@Composable
+private fun MifosSweetError_NoRetryPreview() {
+    MifosTheme {
+        MifosSweetError(
+            message = "Failed to fetch data.",
+            isRetryEnabled = false,
+        )
+    }
+}
+
+@Preview
+@Composable
+private fun MifosPaginationSweetErrorPreview() {
+    MifosTheme {
+        MifosPaginationSweetError(
+            onclick = {},
+        )
     }
 }

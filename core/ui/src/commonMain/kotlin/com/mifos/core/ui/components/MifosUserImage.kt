@@ -19,6 +19,7 @@ import androidx.compose.ui.layout.ContentScale
 import coil3.ImageLoader
 import coil3.compose.LocalPlatformContext
 import coil3.compose.rememberAsyncImagePainter
+import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.designsystem.theme.MifosTheme
 import com.mifos.core.ui.util.DevicePreview
 
@@ -38,6 +39,36 @@ fun MifosUserImage(
         MifosTextUserImage(
             text = username?.firstOrNull()?.toString() ?: "M",
             modifier = modifier,
+        )
+    } else {
+        Image(
+            modifier = modifier
+                .clip(CircleShape),
+            painter = painter,
+            contentDescription = "Profile Image",
+            contentScale = ContentScale.Crop,
+        )
+    }
+}
+
+@Composable
+fun MifosUserImage(
+    bitmap: ByteArray?,
+    modifier: Modifier = Modifier,
+) {
+    val context = LocalPlatformContext.current
+
+    val painter = rememberAsyncImagePainter(
+        model = bitmap,
+        imageLoader = ImageLoader(context),
+    )
+    if (bitmap == null) {
+        Image(
+            modifier = modifier
+                .clip(CircleShape),
+            imageVector = MifosIcons.ProfileSet,
+            contentDescription = "Profile Image",
+            contentScale = ContentScale.Crop,
         )
     } else {
         Image(

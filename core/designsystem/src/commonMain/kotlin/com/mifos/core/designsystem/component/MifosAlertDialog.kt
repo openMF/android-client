@@ -12,7 +12,9 @@ package com.mifos.core.designsystem.component
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -29,6 +31,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
+import com.mifos.core.designsystem.theme.MifosTheme
+import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
 fun MifosDialogBox(
@@ -165,4 +169,77 @@ fun MifosCustomDialog(
         content = content,
         modifier = modifier,
     )
+}
+
+@Preview
+@Composable
+fun MifosDialogBoxWithMessagePreview() {
+    MifosTheme {
+        MifosDialogBox(
+            title = "Delete Item",
+            showDialogState = true,
+            confirmButtonText = "Yes",
+            dismissButtonText = "No",
+            onConfirm = {},
+            onDismiss = {},
+            message = "Are you sure you want to delete this item?",
+        )
+    }
+}
+
+@Preview
+@Composable
+fun MifosDialogBoxWithComposableMessagePreview() {
+    MifosTheme {
+        MifosDialogBox(
+            title = "Info",
+            showDialogState = true,
+            confirmButtonText = "Okay",
+            dismissButtonText = "Cancel",
+            onConfirm = {},
+            onDismiss = {},
+            message = {
+                Column {
+                    Text("This is a custom composable inside the dialog.")
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Text("You can place anything here, like a list or input field.")
+                }
+            },
+        )
+    }
+}
+
+@Preview
+@Composable
+fun MifosRadioButtonDialogPreview() {
+    MifosTheme {
+        MifosRadioButtonDialog(
+            title = "Choose Option",
+            selectedItem = "Option 2",
+            items = arrayOf("Option 1", "Option 2", "Option 3", "Option 4"),
+            selectItem = { _, _ -> },
+            onDismissRequest = {},
+        )
+    }
+}
+
+@Preview
+@Composable
+fun MifosCustomDialogPreview() {
+    MifosTheme {
+        MifosCustomDialog(
+            onDismiss = {},
+            content = {
+                Card(
+                    modifier = Modifier.padding(16.dp),
+                ) {
+                    Column(modifier = Modifier.padding(16.dp)) {
+                        Text("This is a custom dialog.")
+                        Spacer(modifier = Modifier.height(8.dp))
+                        Text("You can fully customize this content.")
+                    }
+                }
+            },
+        )
+    }
 }

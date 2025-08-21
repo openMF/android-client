@@ -24,6 +24,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
+import com.mifos.core.designsystem.theme.MifosTheme
+import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
 fun MifosErrorContent(
@@ -54,5 +56,28 @@ fun MifosErrorContent(
                 Text(text = refreshButtonText)
             }
         }
+    }
+}
+
+@Preview
+@Composable
+private fun MifosErrorContentPreview() {
+    MifosTheme {
+        MifosErrorContent(
+            message = "Something went wrong. Please try again later.",
+        )
+    }
+}
+
+@Preview
+@Composable
+private fun MifosErrorContentWithRefreshPreview() {
+    MifosTheme {
+        MifosErrorContent(
+            message = "Failed to load data.",
+            isRefreshEnabled = true,
+            refreshButtonText = "Retry",
+            onRefresh = { /* Handle refresh */ },
+        )
     }
 }

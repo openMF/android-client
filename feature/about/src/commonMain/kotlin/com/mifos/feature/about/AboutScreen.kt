@@ -38,8 +38,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.mifos.core.designsystem.component.MifosScaffold
+import com.mifos.core.designsystem.theme.MifosTheme
 import com.mifos.core.designsystem.theme.aboutItemTextStyle
 import com.mifos.core.designsystem.theme.aboutItemTextStyleBold
+import com.mifos.core.ui.util.DevicePreview
 import com.mifos.core.ui.util.ShareUtils
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
@@ -147,6 +149,15 @@ private fun AboutCardItem(
                     )
                 }
             }
+        }
+    }
+}
+
+@DevicePreview
+@Composable
+fun AboutScreenPreview() {
+    MifosTheme {
+        AboutScreen {
         }
     }
 }

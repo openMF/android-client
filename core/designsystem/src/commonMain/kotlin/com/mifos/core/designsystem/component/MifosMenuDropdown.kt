@@ -10,12 +10,15 @@
 package com.mifos.core.designsystem.component
 
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.mifos.core.designsystem.theme.MifosTheme
+import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
 fun MifosMenuDropDownItem(
@@ -34,4 +37,28 @@ fun MifosMenuDropDownItem(
         onClick = { onClick() },
         modifier = modifier,
     )
+}
+
+@Preview
+@Composable
+private fun MifosMenuDropDownItemPreview() {
+    MifosTheme {
+        DropdownMenu(
+            expanded = true,
+            onDismissRequest = {},
+        ) {
+            MifosMenuDropDownItem(
+                option = "Profile",
+                onClick = {},
+            )
+            MifosMenuDropDownItem(
+                option = "Settings",
+                onClick = {},
+            )
+            MifosMenuDropDownItem(
+                option = "Logout",
+                onClick = {},
+            )
+        }
+    }
 }

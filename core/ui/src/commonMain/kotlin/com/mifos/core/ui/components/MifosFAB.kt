@@ -16,6 +16,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import com.mifos.core.designsystem.icon.MifosIcons
+import com.mifos.core.designsystem.theme.MifosTheme
+import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
 fun MifosFAB(
@@ -35,5 +38,16 @@ fun MifosFAB(
                 contentDescription = "MifosFab",
             )
         }
+    }
+}
+
+@Preview
+@Composable
+fun MifosFABPreview() {
+    MifosTheme {
+        MifosFAB(
+            icon = MifosIcons.Info,
+            onClick = {},
+        )
     }
 }
