@@ -123,6 +123,7 @@ fun MifosRowCard(
         ) {
             Column(
                 verticalArrangement = Arrangement.spacedBy(DesignToken.padding.extraExtraSmall),
+                horizontalAlignment = Alignment.End,
             ) {
                 rightValues.forEach {
                     PrintTextUtil(it)

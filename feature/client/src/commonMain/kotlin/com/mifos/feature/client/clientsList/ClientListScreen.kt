@@ -241,12 +241,14 @@ fun ClientItem(client: ClientEntity, byteArray: ByteArray?, onClientClick: (Int)
         byteArray = byteArray,
         leftValues = listOf(
             TextUtil(
-                text = client.accountNo ?: "",
+                text = "Acc. No. " + (client.accountNo ?: ""),
                 style = MifosTypography.bodySmall,
+                color = MaterialTheme.colorScheme.secondary,
             ),
             TextUtil(
                 text = client.officeName ?: "",
                 style = MifosTypography.bodySmall,
+                color = MaterialTheme.colorScheme.secondary,
             ),
         ),
         rightValues = buildList {
@@ -254,7 +256,7 @@ fun ClientItem(client: ClientEntity, byteArray: ByteArray?, onClientClick: (Int)
                 add(
                     TextUtil(
                         text = status,
-                        style = MifosTypography.bodySmall,
+                        style = MifosTypography.labelSmall,
                         color = when (status) {
                             "Active" -> AppColors.customEnable
                             "Pending" -> AppColors.customYellow
@@ -268,7 +270,8 @@ fun ClientItem(client: ClientEntity, byteArray: ByteArray?, onClientClick: (Int)
                 add(
                     TextUtil(
                         text = externalId,
-                        style = MifosTypography.bodySmall,
+                        style = MifosTypography.labelSmall,
+                        color = MaterialTheme.colorScheme.secondary,
                     ),
                 )
             }
