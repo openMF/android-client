@@ -21,6 +21,8 @@ import com.mifos.core.common.utils.DataState
 import com.mifos.core.domain.useCases.DownloadDocumentUseCase
 import com.mifos.core.domain.useCases.GetDocumentsListUseCase
 import com.mifos.core.domain.useCases.RemoveDocumentUseCase
+import com.mifos.core.model.objects.noncoreobjects.Document
+import io.ktor.client.statement.HttpResponse
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
@@ -105,4 +107,19 @@ class DocumentListViewModel(
                 }
             }
         }
+
+
+    fun previewDocument(entityType: String, entityId: Int, documentId: Int, onPreviewReady: (String) -> Unit) =
+        viewModelScope.launch {
+            downloadDocumentUseCase(entityType, entityId, documentId).collect { result ->
+                when (result) {
+                    is DataState.Success -> {
+                        val localPath: HttpResponse = result.data
+                      //  onPreviewReady(localPath)
+                    }
+                    else -> { }
+                }
+            }
+        }
+
 }

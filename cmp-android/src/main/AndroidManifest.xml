@@ -64,13 +64,18 @@
 
         <provider
             android:name="androidx.core.content.FileProvider"
-            android:authorities="${applicationId}.provider"
+            android:authorities="${applicationId}.fileprovider"
             android:exported="false"
-            android:grantUriPermissions="true">
+            android:grantUriPermissions="true"
+            tools:replace="android:authorities">
+
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/fileproviderpath" />
+                android:resource="@xml/file_paths"
+                tools:replace="android:resource" />
         </provider>
+
+
 
         <!-- Disable Firebase analytics by default. This setting is overwritten for the `prod` flavor -->
         <meta-data

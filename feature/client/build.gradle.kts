@@ -51,6 +51,7 @@ kotlin {
             implementation(libs.coil.network.okhttp)
             implementation(libs.play.services.location)
             implementation(libs.kotlinx.coroutines.play.services)
+           // implementation("io.github.swapnil-musale:kmp-pdf-viewer:1.0.3")
         }
     }
 }

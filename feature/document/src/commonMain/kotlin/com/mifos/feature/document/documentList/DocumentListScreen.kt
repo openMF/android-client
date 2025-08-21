@@ -144,6 +144,9 @@ internal fun DocumentListScreen(
         onRemovedDocument = { documentId ->
             viewModel.removeDocument(entityType, entityId, documentId)
         },
+        onPreviewDocument = { documentId ->
+
+            }
     )
 }
 
@@ -159,6 +162,7 @@ internal fun DocumentListScreen(
     onAddDocument: () -> Unit,
     onDownloadDocument: (Int) -> Unit,
     onUpdateDocument: (Document) -> Unit,
+    onPreviewDocument: (Document) -> Unit,
     modifier: Modifier = Modifier,
     onRemovedDocument: (Int) -> Unit,
 ) {
@@ -182,6 +186,11 @@ internal fun DocumentListScreen(
                 selectedDocument?.let { onUpdateDocument(it) }
                 showSelectOptionsDialog = !showSelectOptionsDialog
             },
+            previewDocument={
+                selectedDocument?.let{onPreviewDocument(it)}
+
+            },
+
             removeDocument = {
                 selectedDocument?.id?.let { onRemovedDocument(it) }
                 showSelectOptionsDialog = !showSelectOptionsDialog
@@ -323,12 +332,15 @@ private fun DocumentItem(
     }
 }
 
+
+
 @Composable
 private fun SelectOptionsDialog(
     onDismissRequest: () -> Unit,
     downloadDocument: () -> Unit,
     updateDocument: () -> Unit,
     removeDocument: () -> Unit,
+    previewDocument: () -> Unit,
 ) {
     Dialog(
         onDismissRequest = { onDismissRequest() },
@@ -382,6 +394,18 @@ private fun SelectOptionsDialog(
                         textAlign = TextAlign.Center,
                     )
                 }
+
+                MifosButton(
+                    onClick = { previewDocument() },
+                ) {
+                    Text(
+                        text = "Preview Document",
+                        modifier = Modifier.fillMaxWidth(),
+                        style = MaterialTheme.typography.bodyLarge,
+                        textAlign = TextAlign.Center,
+                    )
+                }
+
             }
         }
     }
@@ -400,6 +424,7 @@ private class DocumentListUiStateProvider : PreviewParameterProvider<DocumentLis
 @Composable
 private fun DocumentListPreview(
     @PreviewParameter(DocumentListUiStateProvider::class) state: DocumentListUiState,
+
 ) {
     DocumentListScreen(
         state = state,
@@ -411,6 +436,7 @@ private fun DocumentListPreview(
         onDownloadDocument = { },
         onUpdateDocument = { },
         onRemovedDocument = { },
+        onPreviewDocument = { },
         snackbarHostState = remember { SnackbarHostState() },
     )
 }

@@ -309,6 +309,7 @@ internal fun ClientDetailsScreen(
                 uploadImage = {
                     galleryLauncher.launch()
                 },
+
                 deleteImage = {
                     clientDetailsViewModel.deleteClientImage(clientId)
                     showSelectImageDialog = false
@@ -407,6 +408,7 @@ private fun MifosClientDetailsScreen(
                 value = it,
             )
         }
+
         client?.mobileNo?.let {
             MifosClientDetailsText(
                 icon = MifosIcons.MobileFriendly,
@@ -814,6 +816,7 @@ private fun MifosSelectImageDialog(
                         textAlign = TextAlign.Center,
                     )
                 }
+
                 Button(
                     onClick = { deleteImage() },
                     colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.secondary),

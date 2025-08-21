@@ -13,9 +13,16 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import cmp.navigation.ComposeApp
 
+
+
 @Composable
 fun SharedApp(
     modifier: Modifier = Modifier,
 ) {
     ComposeApp(modifier)
+
 }
+
+
+
+

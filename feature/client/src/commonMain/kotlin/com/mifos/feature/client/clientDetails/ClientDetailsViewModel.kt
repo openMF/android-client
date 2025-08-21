@@ -20,10 +20,12 @@ import com.mifos.core.domain.useCases.UploadClientImageUseCase
 import com.mifos.core.ui.util.imageToByteArray
 import com.mifos.feature.client.utils.compressImage
 import com.mifos.feature.client.utils.createImageRequestBody
+import com.mifos.feature.client.utils.openPdf
 import com.mifos.room.entities.accounts.loans.LoanAccountEntity
 import com.mifos.room.entities.accounts.savings.SavingsAccountEntity
 import com.mifos.room.entities.client.ClientEntity
 import io.github.vinceglb.filekit.PlatformFile
+import io.github.vinceglb.filekit.path
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
@@ -59,12 +61,40 @@ class ClientDetailsViewModel(
     private val _showLoading = MutableStateFlow(true)
     val showLoading = _showLoading.asStateFlow()
 
+//    private val _lastUploadedFilePath = MutableStateFlow<String?>(null)
+//    val lastUploadedFilePath = _lastUploadedFilePath.asStateFlow()
+
+
     init {
         viewModelScope.launch {
             getUserProfile()
         }
     }
     private fun uploadImage(id: Int, imageFile: PlatformFile) = viewModelScope.launch {
+        uploadClientImageUseCase(id, createImageRequestBody(imageFile)).collect { result ->
+            when (result) {
+                is DataState.Error -> {
+                    _clientDetailsUiState.value =
+                        ClientDetailsUiState.ShowError(result.message)
+                    _showLoading.value = false
+                }
+
+                is DataState.Loading -> {
+                    _showLoading.value = true
+                }
+
+                is DataState.Success -> {
+                    _clientDetailsUiState.value = ClientDetailsUiState.ShowUploadImageSuccessfully(
+                        result.data,
+                    )
+                    getUserProfile()
+                    _showLoading.value = false
+                }
+            }
+        }
+    }
+
+    private fun uploadImages(id: Int, imageFile: PlatformFile) = viewModelScope.launch {
         uploadClientImageUseCase(id, createImageRequestBody(imageFile)).collect { result ->
             when (result) {
                 is DataState.Error -> {
@@ -131,7 +161,10 @@ class ClientDetailsViewModel(
             try {
                 _showLoading.value = true
                 val compressed = compressImage(imageFile, clientId)
+               // _lastUploadedFilePath.value = compressed.path // Save for preview
                 uploadImage(clientId, compressed)
+                uploadImages(clientId, compressed)
+
             } catch (e: Exception) {
                 _showLoading.value = false
                 _clientDetailsUiState.value = ClientDetailsUiState.ShowError(e.message ?: "Unexpected error")
@@ -150,4 +183,6 @@ class ClientDetailsViewModel(
             }
         }
     }
+
+
 }

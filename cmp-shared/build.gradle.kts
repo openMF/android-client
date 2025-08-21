@@ -49,10 +49,18 @@ kotlin {
             implementation(libs.koin.compose.viewmodel)
         }
 
+
+
+
+
+
+
         desktopMain.dependencies {
             // Desktop specific dependencies
             implementation(compose.desktop.currentOs)
             implementation(compose.desktop.common)
+
+
         }
     }
 }
