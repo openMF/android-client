@@ -92,51 +92,48 @@ fun MifosRowCard(
     byteArray: ByteArray?,
     leftValues: List<TextUtil>,
     rightValues: List<TextUtil>,
-    onClick: () -> Unit,
 ) {
-    MifosListingComponentOutline {
+    Row(
+        modifier
+            .fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        MifosUserImage(
+            bitmap = byteArray,
+            modifier = Modifier.size(DesignToken.sizes.iconExtraLarge),
+        )
+        Spacer(Modifier.width(DesignToken.padding.medium))
+        Column(
+            modifier = Modifier.weight(1f),
+            verticalArrangement = Arrangement.spacedBy(DesignToken.padding.extraExtraSmall),
+        ) {
+            PrintTextUtil(
+                TextUtil(
+                    text = title,
+                    style = MifosTypography.titleSmallEmphasized,
+                ),
+            )
+            leftValues.forEach {
+                PrintTextUtil(it)
+            }
+        }
+        Spacer(Modifier.width(DesignToken.padding.medium))
         Row(
-            modifier
-                .fillMaxWidth()
-                .clickable { onClick() },
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            MifosUserImage(
-                bitmap = byteArray,
-                modifier = Modifier.size(DesignToken.sizes.iconMedium),
-            )
-            Spacer(Modifier.width(DesignToken.padding.medium))
             Column(
-                modifier = Modifier.weight(1f),
                 verticalArrangement = Arrangement.spacedBy(DesignToken.padding.extraExtraSmall),
+                horizontalAlignment = Alignment.End,
             ) {
-                PrintTextUtil(
-                    TextUtil(
-                        text = title,
-                        style = MifosTypography.titleSmallEmphasized,
-                    ),
-                )
-                leftValues.forEach {
+                rightValues.forEach {
                     PrintTextUtil(it)
                 }
             }
-            Spacer(Modifier.width(DesignToken.padding.medium))
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-            ) {
-                Column(
-                    verticalArrangement = Arrangement.spacedBy(DesignToken.padding.extraExtraSmall),
-                ) {
-                    rightValues.forEach {
-                        PrintTextUtil(it)
-                    }
-                }
-                Icon(
-                    imageVector = MifosIcons.ChevronRight,
-                    contentDescription = null,
-                    modifier = Modifier.size(DesignToken.sizes.iconSmall),
-                )
-            }
+            Icon(
+                imageVector = MifosIcons.ChevronRight,
+                contentDescription = null,
+                modifier = Modifier.size(DesignToken.sizes.iconSmall),
+            )
         }
     }
 }
@@ -365,7 +362,6 @@ fun PreviewMifosRowCardWithImage() {
                 TextUtil(text = "Closed", style = MifosTypography.labelMedium, color = Color.Red),
                 TextUtil(text = "455", style = MifosTypography.labelMedium),
             ),
-            onClick = {},
             byteArray = null,
         )
     }

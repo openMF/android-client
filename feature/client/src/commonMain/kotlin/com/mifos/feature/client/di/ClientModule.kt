@@ -12,11 +12,11 @@ package com.mifos.feature.client.di
 import com.mifos.feature.client.clientCharges.ClientChargesViewModel
 import com.mifos.feature.client.clientDetails.ClientDetailsViewModel
 import com.mifos.feature.client.clientIdentifiers.ClientIdentifiersViewModel
-import com.mifos.feature.client.clientList.ClientListViewModel
 import com.mifos.feature.client.clientPinpoint.PinPointClientViewModel
 import com.mifos.feature.client.clientSignature.SignatureViewModel
 import com.mifos.feature.client.clientSurveyList.SurveyListViewModel
 import com.mifos.feature.client.clientSurveySubmit.SurveySubmitViewModel
+import com.mifos.feature.client.clientsList.ClientListViewModel
 import com.mifos.feature.client.createNewClient.CreateNewClientViewModel
 import com.mifos.feature.client.syncClientDialog.SyncClientsDialogViewModel
 import org.koin.core.module.dsl.viewModelOf

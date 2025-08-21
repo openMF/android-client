@@ -46,4 +46,6 @@ data class GetClientsPageItemsResponse(
 
     val status: GetClientStatus? = null,
 
+    val externalId: String? = null,
+
 )

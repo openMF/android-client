@@ -23,6 +23,5 @@ sealed interface UpdateServerConfigEvent {
 
     data object UpdateServerConfig : UpdateServerConfigEvent
 
-    data object UseDefaultConfig: UpdateServerConfigEvent
-
+    data object UseDefaultConfig : UpdateServerConfigEvent
 }

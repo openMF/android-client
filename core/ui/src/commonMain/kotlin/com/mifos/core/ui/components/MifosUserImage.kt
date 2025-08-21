@@ -9,6 +9,8 @@
  */
 package com.mifos.core.ui.components
 
+import androidclient.core.ui.generated.resources.Res
+import androidclient.core.ui.generated.resources.profile
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.runtime.Composable
@@ -19,9 +21,9 @@ import androidx.compose.ui.layout.ContentScale
 import coil3.ImageLoader
 import coil3.compose.LocalPlatformContext
 import coil3.compose.rememberAsyncImagePainter
-import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.designsystem.theme.MifosTheme
 import com.mifos.core.ui.util.DevicePreview
+import org.jetbrains.compose.resources.painterResource
 
 @Composable
 fun MifosUserImage(
@@ -58,27 +60,21 @@ fun MifosUserImage(
 ) {
     val context = LocalPlatformContext.current
 
-    val painter = rememberAsyncImagePainter(
-        model = bitmap,
-        imageLoader = ImageLoader(context),
-    )
-    if (bitmap == null) {
-        Image(
-            modifier = modifier
-                .clip(CircleShape),
-            imageVector = MifosIcons.ProfileSet,
-            contentDescription = "Profile Image",
-            contentScale = ContentScale.Crop,
+    val painter = if (bitmap != null) {
+        rememberAsyncImagePainter(
+            model = bitmap,
+            imageLoader = ImageLoader(context),
         )
     } else {
-        Image(
-            modifier = modifier
-                .clip(CircleShape),
-            painter = painter,
-            contentDescription = "Profile Image",
-            contentScale = ContentScale.Crop,
-        )
+        painterResource(Res.drawable.profile)
     }
+
+    Image(
+        modifier = modifier.clip(CircleShape),
+        painter = painter,
+        contentDescription = "Profile Image",
+        contentScale = if (bitmap != null) ContentScale.Crop else ContentScale.Fit,
+    )
 }
 
 @DevicePreview
