@@ -20,12 +20,10 @@ import com.mifos.core.domain.useCases.UploadClientImageUseCase
 import com.mifos.core.ui.util.imageToByteArray
 import com.mifos.feature.client.utils.compressImage
 import com.mifos.feature.client.utils.createImageRequestBody
-import com.mifos.feature.client.utils.openPdf
 import com.mifos.room.entities.accounts.loans.LoanAccountEntity
 import com.mifos.room.entities.accounts.savings.SavingsAccountEntity
 import com.mifos.room.entities.client.ClientEntity
 import io.github.vinceglb.filekit.PlatformFile
-import io.github.vinceglb.filekit.path
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch

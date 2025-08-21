@@ -31,6 +31,7 @@ kotlin {
             implementation(libs.filekit.compose)
             implementation(libs.filekit.dialog.compose)
             implementation(compose.components.uiToolingPreview)
+
         }
     }
 }
@@ -38,3 +39,8 @@ kotlin {
 dependencies {
     debugImplementation(compose.uiTooling)
 }
+
+//dependencies {
+//    implementation(libs.material)
+//
+//}

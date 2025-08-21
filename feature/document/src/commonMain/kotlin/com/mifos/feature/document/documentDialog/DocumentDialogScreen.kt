@@ -66,8 +66,11 @@ import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosOutlinedTextField
 import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.model.objects.noncoreobjects.Document
+import com.mifos.feature.document.utils.openImage
+import com.mifos.feature.document.utils.openPdf
 import io.github.vinceglb.filekit.PlatformFile
 import io.github.vinceglb.filekit.name
+import io.github.vinceglb.filekit.path
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.getString
 import org.jetbrains.compose.resources.stringResource
@@ -96,6 +99,7 @@ internal fun DocumentDialogScreen(
 
     var fileName by rememberSaveable { mutableStateOf(document?.name) }
     var fileChosen by rememberSaveable { mutableStateOf<PlatformFile?>(null) }
+
 
     DocumentDialogScreen(
         uiState = state,
@@ -138,6 +142,22 @@ internal fun DocumentDialogScreen(
         },
         filename = fileName,
         closeScreen = closeScreen,
+
+        onPreviewFile = { // 🔹 Added callback
+            fileChosen?.let { file ->
+                val path = file.path ?: return@let
+                if (file.name.endsWith(".pdf", ignoreCase = true)) {
+                    openPdf(path) // 🔹 Use your expect/actual implementation
+                } else if (
+                    file.name.endsWith(".jpg", true) ||
+                    file.name.endsWith(".jpeg", true) ||
+                    file.name.endsWith(".png", true)
+                ) {
+                    openImage(path) // 🔹 New expect/actual function for image
+                }
+            }
+        }
+
     )
 }
 
@@ -148,12 +168,15 @@ internal fun DocumentDialogScreen(
     snackbarHostState: SnackbarHostState,
     document: Document?,
     openFilePicker: () -> Unit,
-    closeDialog: () -> Unit?,
+    closeDialog: () -> Unit,
     uploadDocument: (String, String) -> Unit,
     filename: String?,
     modifier: Modifier = Modifier,
     closeScreen: () -> Unit,
+    onPreviewFile: () -> Unit
+
 ) {
+
     when (uiState) {
         is DocumentDialogUiState.Initial -> {
             DocumentDialogContent(
@@ -163,7 +186,8 @@ internal fun DocumentDialogScreen(
                 openFilePicker = openFilePicker,
                 uploadDocument = uploadDocument,
                 fileName = filename,
-                modifier = modifier,
+                onPreviewFile = onPreviewFile,
+                modifier = modifier
             )
         }
 
@@ -211,7 +235,9 @@ private fun DocumentDialogContent(
     openFilePicker: () -> Unit,
     uploadDocument: (String, String) -> Unit,
     fileName: String?,
+    onPreviewFile: () -> Unit,
     modifier: Modifier = Modifier,
+
 ) {
     var dialogTitle = stringResource(Res.string.feature_document_upload_document)
     var name by rememberSaveable(stateSaver = TextFieldValue.Saver) {
@@ -357,6 +383,17 @@ private fun DocumentDialogContent(
                     onClick = openFilePicker,
                 )
 
+
+                Spacer(modifier = Modifier.height(12.dp))
+
+                if (!fileName.isNullOrEmpty()) {
+                    DialogButton(
+                        text = "Preview File",
+                        onClick = onPreviewFile
+                    )
+                    Spacer(modifier = Modifier.height(12.dp))
+                }
+
                 Spacer(modifier = Modifier.height(20.dp))
 
                 DialogButton(
@@ -388,6 +425,8 @@ private fun DialogButton(
     }
 }
 
+
+
 private class DocumentDialogPreviewProvider : PreviewParameterProvider<DocumentDialogUiState> {
     override val values: Sequence<DocumentDialogUiState>
         get() = sequenceOf(
@@ -415,5 +454,7 @@ private fun DocumentDialogPreview(
         uploadDocument = { _, _ -> },
         filename = "",
         closeScreen = { },
+        onPreviewFile = { }
+
     )
 }

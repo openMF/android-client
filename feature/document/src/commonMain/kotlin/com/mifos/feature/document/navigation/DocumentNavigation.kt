@@ -9,6 +9,7 @@
  */
 package com.mifos.feature.document.navigation
 
+import androidx.compose.ui.text.input.KeyboardType.Companion.Uri
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavType
@@ -39,3 +40,11 @@ fun NavGraphBuilder.documentListScreen(
 fun NavController.navigateToDocumentListScreen(entityId: Int, entityType: String) {
     navigate(DocumentScreens.DocumentListScreen.argument(entityId, entityType))
 }
+
+
+
+
+
+
+
+

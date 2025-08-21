@@ -1,4 +1,4 @@
-package com.mifos.feature.client.utils
+package com.mifos.feature.document.utils
 
 
 import java.awt.Desktop
@@ -9,4 +9,7 @@ actual fun openPdf(path: String) {
     if (Desktop.isDesktopSupported()) {
         Desktop.getDesktop().open(file)
     }
+}
+
+actual fun openImage(filePath: String) {
 }

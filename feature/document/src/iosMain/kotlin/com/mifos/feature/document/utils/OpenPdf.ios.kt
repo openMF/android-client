@@ -1,4 +1,4 @@
-package com.mifos.feature.client.utils
+package com.mifos.feature.document.utils
 
 import platform.Foundation.NSURL
 import platform.UIKit.UIApplication
@@ -8,4 +8,7 @@ actual fun openPdf(path: String) {
     if (UIApplication.sharedApplication.canOpenURL(url)) {
         UIApplication.sharedApplication.openURL(url)
     }
+}
+
+actual fun openImage(filePath: String) {
 }

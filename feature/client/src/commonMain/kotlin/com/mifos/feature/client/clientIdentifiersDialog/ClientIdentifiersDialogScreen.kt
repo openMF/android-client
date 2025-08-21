@@ -263,7 +263,9 @@ private class ClientIdentifiersDialogUiStatePreview :
         get() = sequenceOf(
             ClientIdentifierDialogUiState.Loading,
             ClientIdentifierDialogUiState.Error(Res.string.feature_client_failed_to_load_client_identifiers),
+
             ClientIdentifierDialogUiState.IdentifierCreatedSuccessfully,
+
         )
 }
 

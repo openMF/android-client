@@ -65,6 +65,7 @@ class DocumentDialogViewModel(
         }
     }
 
+
     fun resetDialogUiState() {
         _documentDialogUiState.value = DocumentDialogUiState.Initial
     }
