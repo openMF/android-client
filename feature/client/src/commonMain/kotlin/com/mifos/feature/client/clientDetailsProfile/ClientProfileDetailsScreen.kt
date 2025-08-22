@@ -123,7 +123,7 @@ private fun ClientProfileDetailsScaffold(
                     .padding(paddingValues)
                     .verticalScroll(rememberScrollState())
                     .padding(
-                        vertical = DesignToken.padding.extraLarge,
+                        vertical = DesignToken.padding.small,
                         horizontal = DesignToken.padding.large,
                     ),
             ) {
