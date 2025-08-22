@@ -21,7 +21,6 @@ import platform.UIKit.UIApplication
  */
 @Composable
 actual fun PdfViewer(pdfBytes: ByteArray) {
-
     val tmpDir = NSTemporaryDirectory()
     val pdfPath = "$tmpDir/receipt.pdf".toPath()
 
@@ -31,5 +30,4 @@ actual fun PdfViewer(pdfBytes: ByteArray) {
 
     val url = NSURL.fileURLWithPath(pdfPath.toString())
     UIApplication.sharedApplication.openURL(url)
-
 }

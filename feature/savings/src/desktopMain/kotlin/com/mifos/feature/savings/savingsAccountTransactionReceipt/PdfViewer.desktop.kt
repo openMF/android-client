@@ -18,7 +18,6 @@ import java.io.File
  */
 @Composable
 actual fun PdfViewer(pdfBytes: ByteArray) {
-
     val pdfFile = File(System.getProperty("java.io.tmpdir"), "receipt.pdf")
 
     pdfFile.writeBytes(pdfBytes)
