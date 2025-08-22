@@ -151,7 +151,7 @@ fun MifosRowCard(
             Icon(
                 imageVector = MifosIcons.ChevronRight,
                 contentDescription = null,
-                modifier = Modifier.size(DesignToken.sizes.iconMinyMiny),
+                modifier = Modifier.size(DesignToken.sizes.iconMiny),
             )
         }
     }
