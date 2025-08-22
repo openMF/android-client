@@ -14,6 +14,7 @@ import com.mifos.feature.savings.savingsAccountActivate.SavingsAccountActivateVi
 import com.mifos.feature.savings.savingsAccountApproval.SavingsAccountApprovalViewModel
 import com.mifos.feature.savings.savingsAccountSummary.SavingsAccountSummaryViewModel
 import com.mifos.feature.savings.savingsAccountTransaction.SavingsAccountTransactionViewModel
+import com.mifos.feature.savings.savingsAccountTransactionReceipt.SavingsAccountTransactionReceiptViewModel
 import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.module
 
@@ -23,4 +24,5 @@ val SavingsModule = module {
     viewModelOf(::SavingsAccountApprovalViewModel)
     viewModelOf(::SavingsAccountSummaryViewModel)
     viewModelOf(::SavingsAccountTransactionViewModel)
+    viewModelOf(::SavingsAccountTransactionReceiptViewModel)
 }
