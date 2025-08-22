@@ -281,6 +281,7 @@ data class AppElevation(
  */
 @Immutable
 data class AppSizes(
+    val iconMinyMiny: Dp = 8.dp,
     val iconMiny: Dp = 12.dp,
     val iconSmall: Dp = 16.dp,
     val iconAverage: Dp = 20.dp,
