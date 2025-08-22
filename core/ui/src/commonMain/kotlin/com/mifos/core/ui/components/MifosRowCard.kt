@@ -121,7 +121,6 @@ fun MifosRowCard(
                 contentDescription = null,
             )
         }
-
         Spacer(Modifier.width(DesignToken.padding.medium))
         Column(
             modifier = Modifier.weight(1f),

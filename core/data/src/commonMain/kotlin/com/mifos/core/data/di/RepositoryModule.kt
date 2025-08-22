@@ -57,6 +57,7 @@ import com.mifos.core.data.repository.SavingsAccountActivateRepository
 import com.mifos.core.data.repository.SavingsAccountApprovalRepository
 import com.mifos.core.data.repository.SavingsAccountRepository
 import com.mifos.core.data.repository.SavingsAccountSummaryRepository
+import com.mifos.core.data.repository.SavingsAccountTransactionReceiptRepository
 import com.mifos.core.data.repository.SavingsAccountTransactionRepository
 import com.mifos.core.data.repository.SearchRepository
 import com.mifos.core.data.repository.SignatureRepository
@@ -117,6 +118,7 @@ import com.mifos.core.data.repositoryImp.SavingsAccountActivateRepositoryImp
 import com.mifos.core.data.repositoryImp.SavingsAccountApprovalRepositoryImp
 import com.mifos.core.data.repositoryImp.SavingsAccountRepositoryImp
 import com.mifos.core.data.repositoryImp.SavingsAccountSummaryRepositoryImp
+import com.mifos.core.data.repositoryImp.SavingsAccountTransactionReceiptRepositoryImpl
 import com.mifos.core.data.repositoryImp.SavingsAccountTransactionRepositoryImp
 import com.mifos.core.data.repositoryImp.SearchRepositoryImp
 import com.mifos.core.data.repositoryImp.SignatureRepositoryImp
@@ -181,6 +183,7 @@ val RepositoryModule = module {
     singleOf(::SavingsAccountApprovalRepositoryImp) bind SavingsAccountApprovalRepository::class
     singleOf(::SavingsAccountSummaryRepositoryImp) bind SavingsAccountSummaryRepository::class
     singleOf(::SavingsAccountTransactionRepositoryImp) bind SavingsAccountTransactionRepository::class
+    singleOf(::SavingsAccountTransactionReceiptRepositoryImpl) bind SavingsAccountTransactionReceiptRepository::class
 
     // Sync
     singleOf(::SyncCenterPayloadsRepositoryImp) bind SyncCenterPayloadsRepository::class

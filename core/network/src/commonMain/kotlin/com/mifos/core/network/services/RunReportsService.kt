@@ -92,4 +92,24 @@ interface RunReportsService {
         @Query("R_groupId") centerId: Int,
         @Query("genericResultSet") genericResultSet: Boolean,
     ): Flow<List<CenterInfo>>
+
+    /**
+     * Fetches the savings account transaction receipt from the server.
+     *
+     * This endpoint generates a receipt for the given transaction and returns it
+     * in the requested output format (default: PDF).
+     *
+     * @param transactionId The unique identifier of the savings account transaction.
+     * @param dateFormat The date format to be applied in the receipt (default: "dd MMMM yyyy").
+     * @param outputType The type of output to generate for the receipt (default: "PDF").
+     *
+     * @return A [Flow] emitting the raw bytes of the receipt file (e.g., PDF).
+     */
+    @GET(APIEndPoint.RUN_REPORTS + "/Savings Transaction Receipt")
+    fun getSavingsAccountTransactionReceipt(
+        @Query("R_transactionId") transactionId: Int,
+        @Query("dateFormat") dateFormat: String = "dd MMMM yyyy",
+        @Query("output-type") outputType: String = "PDF",
+        @Query("locale") locale: String = "en",
+    ): Flow<ByteArray>
 }

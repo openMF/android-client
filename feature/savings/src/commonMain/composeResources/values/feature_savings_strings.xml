@@ -93,6 +93,7 @@
     <string name="feature_savings_retry">Retry</string>
     <string name="feature_savings_transaction_amount">Transaction amount*</string>
     <string name="feature_savings_savings_account_id">Savings Account Id</string>
+    <string name="feature_savings_transaction_view_receipt">View Receipt</string>
 
 </resources>
 

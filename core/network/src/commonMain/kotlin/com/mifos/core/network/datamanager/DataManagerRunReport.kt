@@ -86,4 +86,12 @@ class DataManagerRunReport(val mBaseApiManager: BaseApiManager) {
             parameterType,
         )
     }
+
+    fun getSavingAccountTransactionReceipt(
+        transactionId: Int,
+    ): Flow<ByteArray> {
+        return mBaseApiManager.runReportsService.getSavingsAccountTransactionReceipt(
+            transactionId = transactionId,
+        )
+    }
 }
