@@ -107,13 +107,10 @@ fun NavGraphBuilder.clientNavGraph(
             notes = notes,
             documents = documents,
             identifiers = navController::navigateClientIdentifierScreen,
-            navigateToClientDetailsScreen = navController::navigateToClientDetailsProfileRoute
+            navigateToClientDetailsScreen = navController::navigateToClientDetailsProfileRoute,
         )
         clientProfileDetailsDestination(
             onNavigateBack = navController::popBackStack,
-            notes = notes,
-            documents = documents,
-            identifiers = navController::navigateClientIdentifierScreen,
         )
     }
 }

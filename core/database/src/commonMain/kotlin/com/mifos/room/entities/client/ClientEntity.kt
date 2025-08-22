@@ -72,7 +72,7 @@ data class ClientEntity(
 
     val activationDate: List<Int?> = emptyList(),
 
-    val dobDate: List<Int?> = emptyList(),
+    val dateOfBirth: List<Int?> = emptyList(),
 
     val groups: List<GroupEntity>? = emptyList(),
 
@@ -105,4 +105,6 @@ data class ClientEntity(
     val externalId: String? = null,
 
     val emailAddress: String? = null,
+
+    val legalForm: ClientStatusEntity? = null,
 ) : Parcelable

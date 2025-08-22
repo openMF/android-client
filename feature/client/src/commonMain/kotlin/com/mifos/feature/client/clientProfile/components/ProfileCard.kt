@@ -40,10 +40,10 @@ fun ProfileCard(
     name: String,
     accountNo: String?,
     office: String,
-    onClick:()->Unit
+    onClick: () -> Unit,
 ) {
     MifosCard(
-        modifier = Modifier.clickable{
+        modifier = Modifier.clickable {
             onClick()
         },
         colors = CardColors(

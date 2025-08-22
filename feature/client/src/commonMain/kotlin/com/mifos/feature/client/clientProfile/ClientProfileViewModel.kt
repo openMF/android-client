@@ -158,7 +158,7 @@ sealed interface ClientProfileEvent {
     /** Triggered when an action item is clicked */
     data class OnActionClick(val action: ClientProfileActionItem) : ClientProfileEvent
 
-    data object NavigateToClientDetailsScreen:ClientProfileEvent
+    data object NavigateToClientDetailsScreen : ClientProfileEvent
 }
 
 /**
@@ -174,5 +174,5 @@ sealed interface ClientProfileAction {
     /** User clicks on Retry */
     data object OnRetry : ClientProfileAction
 
-    data object NavigateToClientDetailsScreen:ClientProfileAction
+    data object NavigateToClientDetailsScreen : ClientProfileAction
 }

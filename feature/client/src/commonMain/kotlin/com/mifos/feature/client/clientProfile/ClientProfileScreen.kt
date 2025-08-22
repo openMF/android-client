@@ -48,7 +48,7 @@ internal fun ClientProfileScreen(
     documents: (Int) -> Unit,
     identifiers: (Int) -> Unit,
     onNavigateBack: () -> Unit,
-    navigateToClientDetailsScreen:(Int)->Unit,
+    navigateToClientDetailsScreen: (Int) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: ClientProfileViewModel = koinViewModel(),
 ) {
@@ -133,7 +133,7 @@ private fun ClientProfileScaffold(
                     office = state.client?.officeName ?: "",
                     onClick = {
                         onAction(
-                            ClientProfileAction.NavigateToClientDetailsScreen
+                            ClientProfileAction.NavigateToClientDetailsScreen,
                         )
                     },
                 )

@@ -1,14 +1,37 @@
+/*
+ * Copyright 2025 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ */
 package com.mifos.feature.client.clientDetailsProfile
 
+import androidclient.feature.client.generated.resources.Res
+import androidclient.feature.client.generated.resources.account_no
+import androidclient.feature.client.generated.resources.activation_date
+import androidclient.feature.client.generated.resources.client_classification
+import androidclient.feature.client.generated.resources.client_type
+import androidclient.feature.client.generated.resources.date_of_birth
+import androidclient.feature.client.generated.resources.external_id
+import androidclient.feature.client.generated.resources.gender
+import androidclient.feature.client.generated.resources.legal_form
+import androidclient.feature.client.generated.resources.office
+import androidclient.feature.client.generated.resources.staff
+import androidclient.feature.client.generated.resources.submission_date
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
+import co.touchlab.kermit.Logger
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.repository.ClientDetailsRepository
 import com.mifos.core.data.util.NetworkMonitor
 import com.mifos.core.domain.useCases.GetClientDetailsUseCase
 import com.mifos.core.ui.util.BaseViewModel
 import com.mifos.core.ui.util.imageToByteArray
+import com.mifos.core.ui.util.toDateString
 import com.mifos.feature.client.clientDetailsProfile.components.ClientProfileDetailsActionItem
 import com.mifos.room.entities.client.ClientEntity
 import kotlinx.coroutines.flow.update
@@ -58,6 +81,7 @@ internal class ClientProfileDetailsViewModel(
                         mutableStateFlow.update {
                             it.copy(
                                 client = result.data.client,
+                                details = buildClientDetails(result.data.client),
                                 dialogState = null,
                             )
                         }
@@ -108,12 +132,48 @@ internal class ClientProfileDetailsViewModel(
         }
     }
 
+    private fun buildClientDetails(client: ClientEntity?): Map<String, Map<StringResource, String>> {
+        if (client == null) return emptyMap()
+
+        val personalInfo = buildMap {
+            put(Res.string.gender, "")
+            client.dateOfBirth.toDateString().takeIf { it.isNotBlank() }?.let {
+                put(Res.string.date_of_birth, it)
+            }
+        }
+
+        val accountInfo = buildMap {
+            client.accountNo?.takeIf { it.isNotBlank() }?.let { put(Res.string.account_no, it) }
+            client.officeName?.takeIf { it.isNotBlank() }?.let { put(Res.string.office, it) }
+            client.externalId?.takeIf { it.isNotBlank() }?.let { put(Res.string.external_id, it) }
+        }
+
+        val otherInfo = buildMap {
+            client.legalForm?.value?.takeIf { it.isNotBlank() }?.let { put(Res.string.legal_form, it) }
+            put(Res.string.client_type, "")
+            put(Res.string.client_classification, "")
+            client.timeline?.submittedOnDate?.toDateString()?.takeIf { it.isNotBlank() }?.let { put(Res.string.submission_date, it) }
+            client.activationDate.toDateString()
+                .takeIf { it.isNotBlank() }?.let { put(Res.string.activation_date, it) }
+            client.staffName?.takeIf { it.isNotBlank() }?.let { put(Res.string.staff, it) }
+        }
+
+        return mapOf(
+            "Personal Info" to personalInfo,
+            "Account Info" to accountInfo,
+            "Other Info" to otherInfo,
+        )
+    }
+
     override fun handleAction(action: ClientProfileDetailsAction) {
         when (action) {
             ClientProfileDetailsAction.NavigateBack -> sendEvent(ClientProfileDetailsEvent.NavigateBack)
             is ClientProfileDetailsAction.OnActionClick ->
                 sendEvent(ClientProfileDetailsEvent.OnActionClick(action.action))
             ClientProfileDetailsAction.OnRetry -> getClientAndObserveNetwork()
+            ClientProfileDetailsAction.OnUpdateDetailsClick -> {}
+            ClientProfileDetailsAction.OnUpdatePhotoClick -> {}
+            ClientProfileDetailsAction.OnUpdateSignatureClick -> {}
         }
     }
 }
@@ -126,7 +186,7 @@ data class ClientProfileDetailsState(
     val profileImage: ByteArray? = null,
     val client: ClientEntity? = null,
     val dialogState: DialogState? = null,
-    val details: Map<StringResource, String> = emptyMap(),
+    val details: Map<String, Map<StringResource, String>> = emptyMap(),
     val networkConnection: Boolean = false,
 ) {
     /**
@@ -161,4 +221,10 @@ sealed interface ClientProfileDetailsAction {
 
     /** User clicks on Retry */
     data object OnRetry : ClientProfileDetailsAction
+
+    data object OnUpdatePhotoClick : ClientProfileDetailsAction
+
+    data object OnUpdateSignatureClick : ClientProfileDetailsAction
+
+    data object OnUpdateDetailsClick : ClientProfileDetailsAction
 }

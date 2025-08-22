@@ -1,28 +1,29 @@
+/*
+ * Copyright 2025 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ */
 package com.mifos.feature.client.clientDetailsProfile.components
-
 
 import androidclient.feature.client.generated.resources.Res
 import androidclient.feature.client.generated.resources.adf_scanner
-import androidclient.feature.client.generated.resources.contact_emergency
 import androidclient.feature.client.generated.resources.create_new_folder
-import androidclient.feature.client.generated.resources.design_services
 import androidclient.feature.client.generated.resources.directions
 import androidclient.feature.client.generated.resources.manage_accounts
 import androidclient.feature.client.generated.resources.meeting_room
-import androidclient.feature.client.generated.resources.note_add
-import androidclient.feature.client.generated.resources.note_alt
-import androidclient.feature.client.generated.resources.people
 import androidclient.feature.client.generated.resources.person_remove
 import androidclient.feature.client.generated.resources.request_quote
 import androidclient.feature.client.generated.resources.room_preferences
-import androidclient.feature.client.generated.resources.sign_language
 import androidclient.feature.client.generated.resources.switch_account
 import androidclient.feature.client.generated.resources.text_snippet
 import androidclient.feature.client.generated.resources.transfer_within_a_station
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import org.jetbrains.compose.resources.DrawableResource
-
 
 sealed class ClientProfileDetailsActionItem(
     val title: String,
@@ -97,7 +98,6 @@ sealed class ClientProfileDetailsActionItem(
     )
 }
 
-
 internal val clientsDetailsActionItems: ImmutableList<ClientProfileDetailsActionItem> =
     persistentListOf(
         ClientProfileDetailsActionItem.ApplyNewApplication,
@@ -112,5 +112,3 @@ internal val clientsDetailsActionItems: ImmutableList<ClientProfileDetailsAction
         ClientProfileDetailsActionItem.ViewStandingInstructions,
         ClientProfileDetailsActionItem.CreateSelfServiceUsers,
     )
-
-

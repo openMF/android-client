@@ -167,7 +167,7 @@ fun MifosTextButton(
         enabled = enabled,
         colors = ButtonDefaults.textButtonColors(
             contentColor = AppColors.customWhite,
-            containerColor = MaterialTheme.colorScheme.primary
+            containerColor = MaterialTheme.colorScheme.primary,
         ),
         content = content,
         shape = DesignToken.shapes.medium,
@@ -217,7 +217,7 @@ private fun MifosButtonContent(
     leadingIcon: @Composable (() -> Unit)? = null,
 ) {
     Row(
-        modifier=modifier,
+        modifier = modifier,
         verticalAlignment = Alignment.CenterVertically,
     ) {
         if (leadingIcon != null) {

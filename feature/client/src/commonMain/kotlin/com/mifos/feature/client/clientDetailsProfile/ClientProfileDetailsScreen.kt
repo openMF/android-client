@@ -1,10 +1,23 @@
+/*
+ * Copyright 2025 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ */
 package com.mifos.feature.client.clientDetailsProfile
 
 import androidclient.feature.client.generated.resources.Res
+import androidclient.feature.client.generated.resources.arrow_downward
 import androidclient.feature.client.generated.resources.arrow_up
 import androidclient.feature.client.generated.resources.client_profile_actions
-import androidclient.feature.client.generated.resources.client_profile_profile
-import androidclient.feature.client.generated.resources.client_profile_title
+import androidclient.feature.client.generated.resources.client_profile_details_title
+import androidclient.feature.client.generated.resources.pen_icon
+import androidclient.feature.client.generated.resources.scroll_for_more_options
+import androidclient.feature.client.generated.resources.update_details
+import androidclient.feature.client.generated.resources.update_photo
 import androidclient.feature.client.generated.resources.update_signature
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -24,15 +37,14 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.mifos.core.designsystem.component.MifosButton
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosTextButton
-import com.mifos.core.designsystem.theme.AppColors
 import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.designsystem.theme.MifosTypography
-import com.mifos.core.ui.components.MifosDefaultListingComponent
+import com.mifos.core.ui.components.MifosDefaultListingComponentFromStringResources
 import com.mifos.core.ui.components.MifosErrorComponent
 import com.mifos.core.ui.components.MifosProgressIndicator
 import com.mifos.core.ui.components.MifosRowCard
@@ -41,17 +53,12 @@ import com.mifos.core.ui.util.TextUtil
 import com.mifos.feature.client.clientDetailsProfile.components.ClientDetailsProfile
 import com.mifos.feature.client.clientDetailsProfile.components.ClientProfileDetailsActionItem
 import com.mifos.feature.client.clientDetailsProfile.components.clientsDetailsActionItems
-import com.mifos.feature.client.clientProfile.components.ProfileCard
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
-
 @Composable
 internal fun ClientProfileDetailsScreen(
-    notes: (Int) -> Unit,
-    documents: (Int) -> Unit,
-    identifiers: (Int) -> Unit,
     onNavigateBack: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: ClientProfileDetailsViewModel = koinViewModel(),
@@ -66,17 +73,17 @@ internal fun ClientProfileDetailsScreen(
 
             is ClientProfileDetailsEvent.OnActionClick -> {
                 when (event.action) {
-                    ClientProfileDetailsActionItem.AddCharge -> TODO()
-                    ClientProfileDetailsActionItem.ApplyNewApplication -> TODO()
-                    ClientProfileDetailsActionItem.AssignStaff -> TODO()
-                    ClientProfileDetailsActionItem.ClientScreenReports -> TODO()
-                    ClientProfileDetailsActionItem.ClosureApplication -> TODO()
-                    ClientProfileDetailsActionItem.CreateCollateral -> TODO()
-                    ClientProfileDetailsActionItem.CreateSelfServiceUsers -> TODO()
-                    ClientProfileDetailsActionItem.CreateStandingInstructions -> TODO()
-                    ClientProfileDetailsActionItem.TransferClient -> TODO()
-                    ClientProfileDetailsActionItem.UpdateDefaultAccount -> TODO()
-                    ClientProfileDetailsActionItem.ViewStandingInstructions -> TODO()
+                    ClientProfileDetailsActionItem.AddCharge -> {}
+                    ClientProfileDetailsActionItem.ApplyNewApplication -> {}
+                    ClientProfileDetailsActionItem.AssignStaff -> {}
+                    ClientProfileDetailsActionItem.ClientScreenReports -> {}
+                    ClientProfileDetailsActionItem.ClosureApplication -> {}
+                    ClientProfileDetailsActionItem.CreateCollateral -> {}
+                    ClientProfileDetailsActionItem.CreateSelfServiceUsers -> {}
+                    ClientProfileDetailsActionItem.CreateStandingInstructions -> {}
+                    ClientProfileDetailsActionItem.TransferClient -> {}
+                    ClientProfileDetailsActionItem.UpdateDefaultAccount -> {}
+                    ClientProfileDetailsActionItem.ViewStandingInstructions -> {}
                 }
             }
         }
@@ -105,7 +112,7 @@ private fun ClientProfileDetailsScaffold(
     onAction: (ClientProfileDetailsAction) -> Unit,
 ) {
     MifosScaffold(
-        title = "Client Profile Details",
+        title = stringResource(Res.string.client_profile_details_title),
         onBackPressed = { onAction(ClientProfileDetailsAction.NavigateBack) },
         modifier = modifier,
     ) { paddingValues ->
@@ -120,87 +127,115 @@ private fun ClientProfileDetailsScaffold(
                         horizontal = DesignToken.padding.large,
                     ),
             ) {
-                Spacer(Modifier.height(DesignToken.padding.medium))
                 ClientDetailsProfile(
                     image = state.profileImage,
                     name = state.client?.displayName,
                     mobile = state.client?.mobileNo,
-                    email = state.client?.emailAddress
+                    email = state.client?.emailAddress,
                 )
-                Spacer(Modifier.height(DesignToken.padding.large))
+                Spacer(Modifier.height(DesignToken.padding.medium))
                 Row(
-                    modifier=Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth(),
                 ) {
                     MifosTextButton(
                         onClick = {
-
+                            onAction(ClientProfileDetailsAction.OnUpdatePhotoClick)
                         },
                         leadingIcon = {
                             Icon(
-                                painter= painterResource(Res.drawable.arrow_up),
+                                painter = painterResource(Res.drawable.arrow_up),
                                 contentDescription = null,
-                                modifier=Modifier.size(DesignToken.sizes.iconAverage)
+                                modifier = Modifier.size(DesignToken.sizes.iconAverage),
                             )
                         },
                         text = {
                             Text(
-                                text="Update Photo",
-                                style= MifosTypography.labelMediumEmphasized,
+                                text = stringResource(Res.string.update_photo),
+                                style = MifosTypography.labelMediumEmphasized,
                             )
                         },
-                        modifier=Modifier.weight(1f)
+                        modifier = Modifier.weight(1f),
                     )
                     Spacer(Modifier.width(DesignToken.padding.small))
                     MifosTextButton(
                         onClick = {
-
+                            onAction(ClientProfileDetailsAction.OnUpdateSignatureClick)
                         },
                         leadingIcon = {
                             Icon(
-                                painter= painterResource(Res.drawable.update_signature),
+                                painter = painterResource(Res.drawable.update_signature),
                                 contentDescription = null,
-                                modifier=Modifier.size(DesignToken.sizes.iconAverage)
+                                modifier = Modifier.size(DesignToken.sizes.iconAverage),
                             )
                         },
                         text = {
                             Text(
-                                text="Update Signature",
-                                style= MifosTypography.labelMediumEmphasized,
+                                text = stringResource(Res.string.update_signature),
+                                style = MifosTypography.labelMediumEmphasized,
                             )
                         },
-                        modifier=Modifier.weight(1f)
+                        modifier = Modifier.weight(1f),
                     )
                 }
+
                 Spacer(Modifier.height(DesignToken.padding.large))
-                MifosDefaultListingComponent(
-                    color = MaterialTheme.colorScheme.primary,
-                    data = mapOf(
-                        "Gender" to "Male",
-                        "Date of Birth" to "20-06-2020"
+
+                state.details.forEach { (sectionName, dataMap) ->
+                    if (dataMap.isNotEmpty()) {
+                        MifosDefaultListingComponentFromStringResources(data = dataMap)
+                        Spacer(Modifier.height(DesignToken.padding.large))
+                    }
+                }
+
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Row(
+                        modifier = Modifier.weight(1f),
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        Icon(
+                            painterResource(Res.drawable.arrow_downward),
+                            contentDescription = null,
+                            modifier = Modifier.size(DesignToken.sizes.iconAverage),
+                            tint = MaterialTheme.colorScheme.secondary.copy(alpha = 0.5f),
+                        )
+                        Spacer(Modifier.width(DesignToken.padding.small))
+                        Text(
+                            text = stringResource(Res.string.scroll_for_more_options),
+                            style = MifosTypography.tag,
+                            color = MaterialTheme.colorScheme.secondary.copy(alpha = 0.5f),
+                        )
+                    }
+                    Spacer(Modifier.width(DesignToken.padding.small))
+                    MifosTextButton(
+                        onClick = {
+                            onAction(ClientProfileDetailsAction.OnUpdateDetailsClick)
+                        },
+                        leadingIcon = {
+                            Icon(
+                                painter = painterResource(Res.drawable.pen_icon),
+                                contentDescription = null,
+                                modifier = Modifier.size(DesignToken.sizes.iconAverage),
+                            )
+                        },
+                        text = {
+                            Text(
+                                text = stringResource(Res.string.update_details),
+                                style = MifosTypography.labelMediumEmphasized,
+                            )
+                        },
+                        modifier = Modifier.weight(1f),
                     )
-                )
-                Spacer(Modifier.height(DesignToken.padding.large))
-                MifosDefaultListingComponent(
-                    color = MaterialTheme.colorScheme.primary,
-                    data = mapOf(
-                        "Gender" to "Male",
-                        "Date of Birth" to "20-06-2020"
-                    )
-                )
-                Spacer(Modifier.height(DesignToken.padding.large))
-                MifosDefaultListingComponent(
-                    color = MaterialTheme.colorScheme.primary,
-                    data = mapOf(
-                        "Gender" to "Male",
-                        "Date of Birth" to "20-06-2020"
-                    )
-                )
+                }
                 Spacer(Modifier.height(DesignToken.padding.large))
                 Text(
                     text = stringResource(Res.string.client_profile_actions),
                     style = MifosTypography.labelLargeEmphasized,
                 )
-                Spacer(Modifier.height(DesignToken.padding.medium))
+
+                Spacer(Modifier.height(DesignToken.padding.large))
                 clientsDetailsActionItems.forEach {
                     MifosRowCard(
                         title = it.title,
