@@ -24,7 +24,6 @@ import androidclient.feature.client.generated.resources.submission_date
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
-import co.touchlab.kermit.Logger
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.repository.ClientDetailsRepository
 import com.mifos.core.data.util.NetworkMonitor

@@ -238,11 +238,11 @@ private fun ClientProfileDetailsScaffold(
                 Spacer(Modifier.height(DesignToken.padding.large))
                 clientsDetailsActionItems.forEach {
                     MifosRowCard(
-                        title = it.title,
+                        title = stringResource(it.title),
                         imageVector = it.icon,
                         leftValues = listOf(
                             TextUtil(
-                                text = it.subTitle,
+                                text = stringResource(it.subTitle),
                                 style = MifosTypography.bodySmall,
                                 color = MaterialTheme.colorScheme.secondary,
                             ),
