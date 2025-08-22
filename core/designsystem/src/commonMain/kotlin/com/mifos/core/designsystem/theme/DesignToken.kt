@@ -136,6 +136,7 @@ data class AppPadding(
     val medium: Dp = 12.dp,
     val large: Dp = 16.dp,
     val largeIncreased: Dp = 20.dp,
+    val largeIncreasedExtra: Dp = 24.dp,
     val extraLarge: Dp = 28.dp,
     val extraLargeIncreased: Dp = 32.dp,
     val extraExtraLarge: Dp = 48.dp,

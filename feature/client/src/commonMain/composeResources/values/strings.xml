@@ -202,4 +202,20 @@
     <string name="feature_client_submit_button">Submit</string>
     <string name="feature_client_saved_latitude">Saved Latitude: %1$s</string>
     <string name="feature_client_saved_longitude">Saved Longitude: %1$s</string>
+
+    <string name="client_profile_title">Client Profile</string>
+    <string name="client_profile_profile">Profile</string>
+    <string name="client_profile_actions">Actions</string>
+    <string name="client_profile_general_title">General</string>
+    <string name="client_profile_general_subtitle">Check all linked accounts</string>
+    <string name="client_profile_address_title">Address</string>
+    <string name="client_profile_address_subtitle">View or Edit Address</string>
+    <string name="client_profile_family_title">Family Members</string>
+    <string name="client_profile_family_subtitle">Check or edit the linked accounts</string>
+    <string name="client_profile_identifiers_title">Identifiers</string>
+    <string name="client_profile_identifiers_subtitle">Check or update identifiers</string>
+    <string name="client_profile_documents_title">Documents</string>
+    <string name="client_profile_documents_subtitle">Check or upload documents</string>
+    <string name="client_profile_notes_title">Notes</string>
+    <string name="client_profile_notes_subtitle">Check or update note accounts</string>
 </resources>
