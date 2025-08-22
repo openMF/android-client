@@ -69,13 +69,15 @@ fun ProfileCard(
                 )
                 accountNo.let {
                     Text(
-                        text = "Account No. $it",
+                        text = "Acc. No. $it",
                         style = MifosTypography.bodySmall,
+                        color = MaterialTheme.colorScheme.secondaryContainer
                     )
                 }
                 Text(
                     text = office,
                     style = MifosTypography.bodySmall,
+                    color = MaterialTheme.colorScheme.secondaryContainer
                 )
             }
             Spacer(Modifier.width(DesignToken.padding.medium))
