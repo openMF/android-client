@@ -20,6 +20,7 @@ import com.mifos.feature.client.clientSurveySubmit.SurveySubmitViewModel
 import com.mifos.feature.client.clientsList.ClientListViewModel
 import com.mifos.feature.client.createNewClient.CreateNewClientViewModel
 import com.mifos.feature.client.syncClientDialog.SyncClientsDialogViewModel
+import com.mifos.feature.client.clientDetailsProfile.ClientProfileDetailsViewModel
 import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.module
 
@@ -35,4 +36,5 @@ val ClientModule = module {
     viewModelOf(::CreateNewClientViewModel)
     viewModelOf(::SyncClientsDialogViewModel)
     viewModelOf(::ClientProfileViewModel)
+    viewModelOf(::ClientProfileDetailsViewModel)
 }

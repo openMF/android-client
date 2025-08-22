@@ -103,4 +103,6 @@ data class ClientEntity(
     val imagePresent: Boolean = false,
 
     val externalId: String? = null,
+
+    val emailAddress: String? = null,
 ) : Parcelable

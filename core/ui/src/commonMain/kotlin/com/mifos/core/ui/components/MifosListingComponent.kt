@@ -72,6 +72,7 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 @Composable
 fun MifosListingComponentOutline(
     modifier: Modifier = Modifier,
+    color:Color = MaterialTheme.colorScheme.secondaryContainer,
     content: @Composable () -> Unit,
 ) {
     Box(
@@ -81,7 +82,7 @@ fun MifosListingComponentOutline(
             .border(
                 width = 1.dp,
                 shape = DesignToken.shapes.medium,
-                color = MaterialTheme.colorScheme.secondaryContainer,
+                color = color,
             )
             .padding(DesignToken.padding.large),
     ) {
@@ -123,9 +124,12 @@ fun MifosListingRowItem(
 
 @Composable
 fun MifosDefaultListingComponent(
+    color: Color = MaterialTheme.colorScheme.secondaryContainer,
     data: Map<String, String>,
 ) {
-    MifosListingComponentOutline {
+    MifosListingComponentOutline(
+        color = color,
+    ) {
         Column(
             modifier = Modifier.fillMaxWidth(),
             verticalArrangement = Arrangement.spacedBy(DesignToken.padding.extraExtraSmall),

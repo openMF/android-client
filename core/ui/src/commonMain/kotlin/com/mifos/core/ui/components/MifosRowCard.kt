@@ -114,7 +114,7 @@ fun MifosRowCard(
                 modifier = Modifier
                     .size(DesignToken.sizes.iconExtraLarge)
                     .background(
-                        color = Color.LightGray.copy(alpha = 0.15f),
+                        color = Color.LightGray.copy(alpha = 0.1f),
                         shape = CircleShape,
                     )
                     .padding(DesignToken.padding.small),

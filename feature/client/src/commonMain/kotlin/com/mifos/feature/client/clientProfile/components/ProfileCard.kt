@@ -9,6 +9,7 @@
  */
 package com.mifos.feature.client.clientProfile.components
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -39,9 +40,12 @@ fun ProfileCard(
     name: String,
     accountNo: String?,
     office: String,
+    onClick:()->Unit
 ) {
     MifosCard(
-        modifier = Modifier,
+        modifier = Modifier.clickable{
+            onClick()
+        },
         colors = CardColors(
             containerColor = MaterialTheme.colorScheme.primary,
             contentColor = AppColors.customWhite,
@@ -99,6 +103,7 @@ fun ProfileCardPreview() {
             name = "John",
             accountNo = "2344",
             office = "Head Office",
+            onClick = {},
         )
     }
 }

@@ -14,6 +14,7 @@ package com.mifos.feature.client.clientProfile
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
+import com.mifos.feature.client.clientDetailsProfile.ClientProfileDetailsScreen
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -26,6 +27,7 @@ fun NavGraphBuilder.clientProfileDestination(
     notes: (Int) -> Unit,
     documents: (Int) -> Unit,
     identifiers: (Int) -> Unit,
+    navigateToClientDetailsScreen:(Int)->Unit,
 ) {
     composable<ClientProfileRoute> {
         ClientProfileScreen(
@@ -33,6 +35,7 @@ fun NavGraphBuilder.clientProfileDestination(
             documents = documents,
             identifiers = identifiers,
             onNavigateBack = onNavigateBack,
+            navigateToClientDetailsScreen = navigateToClientDetailsScreen,
         )
     }
 }

@@ -35,6 +35,7 @@ object ClientMapper : AbstractMapper<GetClientsPageItemsResponse, ClientEntity>(
                 value = entity.status.value,
             ),
             externalId = entity.externalId,
+            emailAddress = entity.emailAddress
         )
     }
 
@@ -53,6 +54,7 @@ object ClientMapper : AbstractMapper<GetClientsPageItemsResponse, ClientEntity>(
                 value = domainModel.status?.value,
             ),
             externalId = domainModel.externalId,
+            emailAddress = domainModel.emailAddress
         )
     }
 }

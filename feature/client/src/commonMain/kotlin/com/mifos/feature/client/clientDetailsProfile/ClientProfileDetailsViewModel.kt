@@ -1,13 +1,4 @@
-/*
- * Copyright 2025 Mifos Initiative
- *
- * This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at https://mozilla.org/MPL/2.0/.
- *
- * See https://github.com/openMF/android-client/blob/master/LICENSE.md
- */
-package com.mifos.feature.client.clientProfile
+package com.mifos.feature.client.clientDetailsProfile
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
@@ -18,7 +9,7 @@ import com.mifos.core.data.util.NetworkMonitor
 import com.mifos.core.domain.useCases.GetClientDetailsUseCase
 import com.mifos.core.ui.util.BaseViewModel
 import com.mifos.core.ui.util.imageToByteArray
-import com.mifos.feature.client.clientProfile.components.ClientProfileActionItem
+import com.mifos.feature.client.clientDetailsProfile.components.ClientProfileDetailsActionItem
 import com.mifos.room.entities.client.ClientEntity
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -33,16 +24,16 @@ import org.jetbrains.compose.resources.StringResource
  * @param clientDetailsRepo Repository to fetch client details and profile image.
  * @param networkMonitor Observes network connectivity status.
  */
-internal class ClientProfileViewModel(
+internal class ClientProfileDetailsViewModel(
     savedStateHandle: SavedStateHandle,
     private val getClientDetailsUseCase: GetClientDetailsUseCase,
     private val clientDetailsRepo: ClientDetailsRepository,
     private val networkMonitor: NetworkMonitor,
-) : BaseViewModel<ClientProfileState, ClientProfileEvent, ClientProfileAction>(
-    initialState = ClientProfileState(),
+) : BaseViewModel<ClientProfileDetailsState, ClientProfileDetailsEvent, ClientProfileDetailsAction>(
+    initialState = ClientProfileDetailsState(),
 ) {
 
-    private val route = savedStateHandle.toRoute<ClientProfileRoute>()
+    private val route = savedStateHandle.toRoute<ClientProfileDetailsRoute>()
 
     init {
         getClientAndObserveNetwork()
@@ -75,7 +66,7 @@ internal class ClientProfileViewModel(
                     is DataState.Error -> {
                         mutableStateFlow.update {
                             it.copy(
-                                dialogState = ClientProfileState.DialogState.Error(result.message),
+                                dialogState = ClientProfileDetailsState.DialogState.Error(result.message),
                             )
                         }
                     }
@@ -83,7 +74,7 @@ internal class ClientProfileViewModel(
                     DataState.Loading -> {
                         mutableStateFlow.update {
                             it.copy(
-                                dialogState = ClientProfileState.DialogState.Loading,
+                                dialogState = ClientProfileDetailsState.DialogState.Loading,
                             )
                         }
                     }
@@ -117,13 +108,12 @@ internal class ClientProfileViewModel(
         }
     }
 
-    override fun handleAction(action: ClientProfileAction) {
+    override fun handleAction(action: ClientProfileDetailsAction) {
         when (action) {
-            ClientProfileAction.NavigateBack -> sendEvent(ClientProfileEvent.NavigateBack)
-            is ClientProfileAction.OnActionClick ->
-                sendEvent(ClientProfileEvent.OnActionClick(action.action))
-            ClientProfileAction.OnRetry -> getClientAndObserveNetwork()
-            ClientProfileAction.NavigateToClientDetailsScreen -> sendEvent(ClientProfileEvent.NavigateToClientDetailsScreen)
+            ClientProfileDetailsAction.NavigateBack -> sendEvent(ClientProfileDetailsEvent.NavigateBack)
+            is ClientProfileDetailsAction.OnActionClick ->
+                sendEvent(ClientProfileDetailsEvent.OnActionClick(action.action))
+            ClientProfileDetailsAction.OnRetry -> getClientAndObserveNetwork()
         }
     }
 }
@@ -132,7 +122,7 @@ internal class ClientProfileViewModel(
  * State holder for the Client Profile screen.
  * Contains all values needed to render the UI and manage logic.
  */
-data class ClientProfileState(
+data class ClientProfileDetailsState(
     val profileImage: ByteArray? = null,
     val client: ClientEntity? = null,
     val dialogState: DialogState? = null,
@@ -151,28 +141,24 @@ data class ClientProfileState(
 /**
  * One-time UI events for the Client Profile screen.
  */
-sealed interface ClientProfileEvent {
+sealed interface ClientProfileDetailsEvent {
     /** Navigates back to the previous screen */
-    data object NavigateBack : ClientProfileEvent
+    data object NavigateBack : ClientProfileDetailsEvent
 
     /** Triggered when an action item is clicked */
-    data class OnActionClick(val action: ClientProfileActionItem) : ClientProfileEvent
-
-    data object NavigateToClientDetailsScreen:ClientProfileEvent
+    data class OnActionClick(val action: ClientProfileDetailsActionItem) : ClientProfileDetailsEvent
 }
 
 /**
  * Represents user or system actions for the Client Profile screen.
  */
-sealed interface ClientProfileAction {
+sealed interface ClientProfileDetailsAction {
     /** Navigate back from the screen */
-    data object NavigateBack : ClientProfileAction
+    data object NavigateBack : ClientProfileDetailsAction
 
     /** User clicks on an action item */
-    data class OnActionClick(val action: ClientProfileActionItem) : ClientProfileAction
+    data class OnActionClick(val action: ClientProfileDetailsActionItem) : ClientProfileDetailsAction
 
     /** User clicks on Retry */
-    data object OnRetry : ClientProfileAction
-
-    data object NavigateToClientDetailsScreen:ClientProfileAction
+    data object OnRetry : ClientProfileDetailsAction
 }

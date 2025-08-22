@@ -20,6 +20,8 @@ import androidx.navigation.navigation
 import com.mifos.core.common.utils.Constants
 import com.mifos.feature.client.clientCharges.ClientChargesScreen
 import com.mifos.feature.client.clientDetails.ClientDetailsScreen
+import com.mifos.feature.client.clientDetailsProfile.clientProfileDetailsDestination
+import com.mifos.feature.client.clientDetailsProfile.navigateToClientDetailsProfileRoute
 import com.mifos.feature.client.clientIdentifiers.ClientIdentifiersScreen
 import com.mifos.feature.client.clientPinpoint.PinpointClientScreen
 import com.mifos.feature.client.clientProfile.clientProfileDestination
@@ -101,6 +103,13 @@ fun NavGraphBuilder.clientNavGraph(
             hasDatatables = hasDatatables,
         )
         clientProfileDestination(
+            onNavigateBack = navController::popBackStack,
+            notes = notes,
+            documents = documents,
+            identifiers = navController::navigateClientIdentifierScreen,
+            navigateToClientDetailsScreen = navController::navigateToClientDetailsProfileRoute
+        )
+        clientProfileDetailsDestination(
             onNavigateBack = navController::popBackStack,
             notes = notes,
             documents = documents,

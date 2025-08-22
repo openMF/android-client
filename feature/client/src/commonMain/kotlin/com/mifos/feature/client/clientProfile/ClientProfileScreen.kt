@@ -48,6 +48,7 @@ internal fun ClientProfileScreen(
     documents: (Int) -> Unit,
     identifiers: (Int) -> Unit,
     onNavigateBack: () -> Unit,
+    navigateToClientDetailsScreen:(Int)->Unit,
     modifier: Modifier = Modifier,
     viewModel: ClientProfileViewModel = koinViewModel(),
 ) {
@@ -74,6 +75,10 @@ internal fun ClientProfileScreen(
                         notes(state.client?.id ?: -1)
                     }
                 }
+            }
+
+            ClientProfileEvent.NavigateToClientDetailsScreen -> {
+                navigateToClientDetailsScreen(state.client?.id ?: -1)
             }
         }
     }
@@ -126,6 +131,11 @@ private fun ClientProfileScaffold(
                     name = state.client?.displayName ?: "",
                     accountNo = state.client?.accountNo,
                     office = state.client?.officeName ?: "",
+                    onClick = {
+                        onAction(
+                            ClientProfileAction.NavigateToClientDetailsScreen
+                        )
+                    },
                 )
                 Spacer(Modifier.height(DesignToken.padding.large))
                 Text(
