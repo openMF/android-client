@@ -11,6 +11,7 @@ package com.mifos.core.designsystem.component
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -20,6 +21,7 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.testTag
 import androidx.compose.ui.text.style.TextAlign
+import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.designsystem.theme.MifosTheme
 import com.mifos.core.designsystem.theme.MifosTypography
 import org.jetbrains.compose.ui.tooling.preview.Preview
@@ -87,9 +89,11 @@ fun MifosBasicDialog(
                         text = confirmText,
                         style = MifosTypography.labelLarge,
                         color = MaterialTheme.colorScheme.primary,
-                        modifier = Modifier.clickable {
-                            onConfirm()
-                        },
+                        modifier = Modifier
+                            .padding(horizontal = DesignToken.padding.large)
+                            .clickable {
+                                onConfirm()
+                            },
                     )
                 },
                 dismissButton = {
@@ -97,9 +101,11 @@ fun MifosBasicDialog(
                         text = dismissText,
                         style = MifosTypography.labelLarge,
                         color = MaterialTheme.colorScheme.primary,
-                        modifier = Modifier.clickable {
-                            onDismissRequest()
-                        },
+                        modifier = Modifier
+                            .padding(horizontal = DesignToken.padding.large)
+                            .clickable {
+                                onDismissRequest()
+                            },
                     )
                 },
                 icon = icon,
