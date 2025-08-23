@@ -291,6 +291,7 @@ data class AppSizes(
     val avatarSmall: Dp = 32.dp,
     val avatarMedium: Dp = 48.dp,
     val avatarLarge: Dp = 64.dp,
+    val avatarLargeLarge: Dp = 128.dp,
     val buttonHeight: Dp = 56.dp,
     val inputHeight: Dp = 56.dp,
     val cardMinHeight: Dp = 120.dp,

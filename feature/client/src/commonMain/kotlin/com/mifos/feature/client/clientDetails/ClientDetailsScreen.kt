@@ -365,7 +365,6 @@ private fun MifosClientDetailsScreen(
                 modifier = Modifier
                     .size(100.dp)
                     .clickable(onClick = onClick),
-                username = client?.displayName ?: "",
             )
         }
 

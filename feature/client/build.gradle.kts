@@ -42,6 +42,8 @@ kotlin {
             implementation(libs.filekit.dialog.compose)
 
             implementation(libs.compose.signature)
+
+            implementation(libs.cmp.image.pick.n.crop)
         }
         
         androidMain.dependencies {

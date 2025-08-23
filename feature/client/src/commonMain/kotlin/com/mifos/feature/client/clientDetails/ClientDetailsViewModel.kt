@@ -130,7 +130,7 @@ class ClientDetailsViewModel(
         viewModelScope.launch {
             try {
                 _showLoading.value = true
-                val compressed = compressImage(imageFile, clientId)
+                val compressed = compressImage(imageFile, clientId.toString())
                 uploadImage(clientId, compressed)
             } catch (e: Exception) {
                 _showLoading.value = false

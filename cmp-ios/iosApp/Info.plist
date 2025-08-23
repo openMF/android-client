@@ -4,6 +4,10 @@
 <dict>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
+	<key>NSCameraUsageDescription</key>
+	<string>$(PRODUCT_NAME) camera description.</string>
+    <key>NSPhotoLibraryUsageDescription</key>
+    <string>$(PRODUCT_NAME)photos description.</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>

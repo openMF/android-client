@@ -22,6 +22,8 @@ import com.mifos.feature.client.clientCharges.ClientChargesScreen
 import com.mifos.feature.client.clientDetails.ClientDetailsScreen
 import com.mifos.feature.client.clientDetailsProfile.clientProfileDetailsDestination
 import com.mifos.feature.client.clientDetailsProfile.navigateToClientDetailsProfileRoute
+import com.mifos.feature.client.clientEditProfile.clientEditProfileDestination
+import com.mifos.feature.client.clientEditProfile.navigateToClientProfileEditProfileRoute
 import com.mifos.feature.client.clientIdentifiers.ClientIdentifiersScreen
 import com.mifos.feature.client.clientPinpoint.PinpointClientScreen
 import com.mifos.feature.client.clientProfile.clientProfileDestination
@@ -110,6 +112,10 @@ fun NavGraphBuilder.clientNavGraph(
             navigateToClientDetailsScreen = navController::navigateToClientDetailsProfileRoute,
         )
         clientProfileDetailsDestination(
+            onNavigateBack = navController::popBackStack,
+            navigateToUpdatePhoto = navController::navigateToClientProfileEditProfileRoute,
+        )
+        clientEditProfileDestination(
             onNavigateBack = navController::popBackStack,
         )
     }

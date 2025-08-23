@@ -171,7 +171,7 @@ internal class ClientProfileDetailsViewModel(
                 sendEvent(ClientProfileDetailsEvent.OnActionClick(action.action))
             ClientProfileDetailsAction.OnRetry -> getClientAndObserveNetwork()
             ClientProfileDetailsAction.OnUpdateDetailsClick -> {}
-            ClientProfileDetailsAction.OnUpdatePhotoClick -> {}
+            ClientProfileDetailsAction.OnUpdatePhotoClick -> sendEvent(ClientProfileDetailsEvent.NavigateToUpdatePhoto)
             ClientProfileDetailsAction.OnUpdateSignatureClick -> {}
         }
     }
@@ -206,6 +206,8 @@ sealed interface ClientProfileDetailsEvent {
 
     /** Triggered when an action item is clicked */
     data class OnActionClick(val action: ClientProfileDetailsActionItem) : ClientProfileDetailsEvent
+
+    data object NavigateToUpdatePhoto : ClientProfileDetailsEvent
 }
 
 /**
