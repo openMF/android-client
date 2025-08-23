@@ -10,7 +10,19 @@
 package com.mifos.feature.client.clientEditProfile
 
 import androidclient.feature.client.generated.resources.Res
+import androidclient.feature.client.generated.resources.account_number_prefix
 import androidclient.feature.client.generated.resources.arrow_up
+import androidclient.feature.client.generated.resources.cancel
+import androidclient.feature.client.generated.resources.choose_from_option
+import androidclient.feature.client.generated.resources.delete_dialog_message
+import androidclient.feature.client.generated.resources.delete_dialog_title
+import androidclient.feature.client.generated.resources.delete_photo
+import androidclient.feature.client.generated.resources.edit_profile_title
+import androidclient.feature.client.generated.resources.from_camera
+import androidclient.feature.client.generated.resources.from_gallery
+import androidclient.feature.client.generated.resources.remove
+import androidclient.feature.client.generated.resources.update_profile_photo_message
+import androidclient.feature.client.generated.resources.upload_new_photo
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -206,6 +218,7 @@ private fun ClientProfileEditDialogs(
                     Icon(
                         imageVector = MifosIcons.DeleteDocument,
                         contentDescription = null,
+                        tint = MaterialTheme.colorScheme.primary,
                         modifier = Modifier.size(DesignToken.sizes.iconMedium),
                     )
                 },

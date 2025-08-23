@@ -9,6 +9,7 @@
  */
 package com.mifos.core.designsystem.component
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.MaterialTheme
@@ -20,6 +21,7 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.testTag
 import androidx.compose.ui.text.style.TextAlign
 import com.mifos.core.designsystem.theme.MifosTheme
+import com.mifos.core.designsystem.theme.MifosTypography
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameterProvider
@@ -81,17 +83,23 @@ fun MifosBasicDialog(
             AlertDialog(
                 onDismissRequest = onDismissRequest,
                 confirmButton = {
-                    MifosTextButton(
-                        content = { Text(text = confirmText) },
-                        onClick = onConfirm,
-                        modifier = Modifier.testTag("AcceptAlertButton"),
+                    Text(
+                        text = confirmText,
+                        style = MifosTypography.labelLarge,
+                        color = MaterialTheme.colorScheme.primary,
+                        modifier = Modifier.clickable {
+                            onConfirm()
+                        },
                     )
                 },
                 dismissButton = {
-                    MifosTextButton(
-                        content = { Text(text = dismissText) },
-                        onClick = onDismissRequest,
-                        modifier = Modifier.testTag("DismissAlertButton"),
+                    Text(
+                        text = dismissText,
+                        style = MifosTypography.labelLarge,
+                        color = MaterialTheme.colorScheme.primary,
+                        modifier = Modifier.clickable {
+                            onDismissRequest()
+                        },
                     )
                 },
                 icon = icon,
@@ -108,7 +116,6 @@ fun MifosBasicDialog(
                         text = visibilityState.message,
                         style = MaterialTheme.typography.bodyMedium,
                         modifier = Modifier.fillMaxWidth().testTag("AlertContentText"),
-                        textAlign = TextAlign.Center,
                     )
                 },
                 containerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
