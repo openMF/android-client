@@ -48,4 +48,8 @@ data class GetClientsPageItemsResponse(
 
     val externalId: String? = null,
 
+    val legalForm: GetClientStatus? = null,
+
+    val dateOfBirth: List<Int?> = emptyList(),
+
 )

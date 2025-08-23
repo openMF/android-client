@@ -111,7 +111,6 @@ import androidx.compose.material.icons.rounded.Translate
 import androidx.compose.ui.graphics.vector.ImageVector
 import fluent.ui.system.icons.FluentIcons
 import fluent.ui.system.icons.filled.ChevronRight
-import fluent.ui.system.icons.filled.Person
 import fluent.ui.system.icons.regular.ChevronLeft
 
 object MifosIcons {
@@ -215,8 +214,6 @@ object MifosIcons {
 
     val ChevronLeft = FluentIcons.Regular.ChevronLeft
     val ChevronRight = FluentIcons.Filled.ChevronRight
-    val ProfileSet = FluentIcons.Filled.Person
-
     val ViewAccount = Icons.Outlined.Savings
     val ViewDocument = Icons.Outlined.DocumentScanner
     val ApproveAccount = Icons.Outlined.CheckCircle

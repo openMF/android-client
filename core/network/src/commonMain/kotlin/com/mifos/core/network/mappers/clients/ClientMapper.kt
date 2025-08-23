@@ -35,6 +35,13 @@ object ClientMapper : AbstractMapper<GetClientsPageItemsResponse, ClientEntity>(
                 value = entity.status.value,
             ),
             externalId = entity.externalId,
+            emailAddress = entity.emailAddress,
+            legalForm = ClientStatusEntity(
+                id = entity.legalForm?.id?.toInt() ?: -1,
+                code = entity.legalForm?.code,
+                value = entity.legalForm?.value,
+            ),
+            dateOfBirth = entity.dateOfBirth ?: emptyList(),
         )
     }
 
@@ -53,6 +60,13 @@ object ClientMapper : AbstractMapper<GetClientsPageItemsResponse, ClientEntity>(
                 value = domainModel.status?.value,
             ),
             externalId = domainModel.externalId,
+            emailAddress = domainModel.emailAddress,
+            legalForm = GetClientStatus(
+                id = domainModel.legalForm?.id?.toLong(),
+                code = domainModel.legalForm?.code,
+                value = domainModel.legalForm?.value,
+            ),
+            dateOfBirth = domainModel.dateOfBirth,
         )
     }
 }

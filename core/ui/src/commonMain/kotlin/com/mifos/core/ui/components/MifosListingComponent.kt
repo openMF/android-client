@@ -66,12 +66,14 @@ import com.mifos.core.designsystem.theme.AppColors
 import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.designsystem.theme.MifosTheme
 import com.mifos.core.designsystem.theme.MifosTypography
+import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
 fun MifosListingComponentOutline(
     modifier: Modifier = Modifier,
+    color: Color = MaterialTheme.colorScheme.secondaryContainer,
     content: @Composable () -> Unit,
 ) {
     Box(
@@ -81,7 +83,7 @@ fun MifosListingComponentOutline(
             .border(
                 width = 1.dp,
                 shape = DesignToken.shapes.medium,
-                color = MaterialTheme.colorScheme.secondaryContainer,
+                color = color,
             )
             .padding(DesignToken.padding.large),
     ) {
@@ -123,9 +125,12 @@ fun MifosListingRowItem(
 
 @Composable
 fun MifosDefaultListingComponent(
+    color: Color = MaterialTheme.colorScheme.primary.copy(alpha = 0.5f),
     data: Map<String, String>,
 ) {
-    MifosListingComponentOutline {
+    MifosListingComponentOutline(
+        color = color,
+    ) {
         Column(
             modifier = Modifier.fillMaxWidth(),
             verticalArrangement = Arrangement.spacedBy(DesignToken.padding.extraExtraSmall),
@@ -133,6 +138,28 @@ fun MifosDefaultListingComponent(
             data.forEach { (key, value) ->
                 MifosListingRowItem(
                     key = key,
+                    value = value,
+                )
+            }
+        }
+    }
+}
+
+@Composable
+fun MifosDefaultListingComponentFromStringResources(
+    color: Color = MaterialTheme.colorScheme.primary.copy(alpha = 0.5f),
+    data: Map<StringResource, String>,
+) {
+    MifosListingComponentOutline(
+        color = color,
+    ) {
+        Column(
+            modifier = Modifier.fillMaxWidth(),
+            verticalArrangement = Arrangement.spacedBy(DesignToken.padding.extraExtraSmall),
+        ) {
+            data.forEach { (key, value) ->
+                MifosListingRowItem(
+                    key = stringResource(key),
                     value = value,
                 )
             }

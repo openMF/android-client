@@ -20,8 +20,12 @@ import androidx.navigation.navigation
 import com.mifos.core.common.utils.Constants
 import com.mifos.feature.client.clientCharges.ClientChargesScreen
 import com.mifos.feature.client.clientDetails.ClientDetailsScreen
+import com.mifos.feature.client.clientDetailsProfile.clientProfileDetailsDestination
+import com.mifos.feature.client.clientDetailsProfile.navigateToClientDetailsProfileRoute
 import com.mifos.feature.client.clientIdentifiers.ClientIdentifiersScreen
 import com.mifos.feature.client.clientPinpoint.PinpointClientScreen
+import com.mifos.feature.client.clientProfile.clientProfileDestination
+import com.mifos.feature.client.clientProfile.navigateToClientProfileRoute
 import com.mifos.feature.client.clientSignature.SignatureScreen
 import com.mifos.feature.client.clientSurveyList.SurveyListScreen
 import com.mifos.feature.client.clientSurveyQuestion.SurveyQuestionScreen
@@ -53,7 +57,7 @@ fun NavGraphBuilder.clientNavGraph(
     ) {
         clientListScreenRoute(
             paddingValues = paddingValues,
-            onClientSelect = navController::navigateClientDetailsScreen,
+            onClientSelect = navController::navigateToClientProfileRoute,
             createNewClient = navController::navigateCreateClientScreen,
         )
         clientDetailRoute(
@@ -97,6 +101,16 @@ fun NavGraphBuilder.clientNavGraph(
         createClientRoute(
             onBackPressed = navController::popBackStack,
             hasDatatables = hasDatatables,
+        )
+        clientProfileDestination(
+            onNavigateBack = navController::popBackStack,
+            notes = notes,
+            documents = documents,
+            identifiers = navController::navigateClientIdentifierScreen,
+            navigateToClientDetailsScreen = navController::navigateToClientDetailsProfileRoute,
+        )
+        clientProfileDetailsDestination(
+            onNavigateBack = navController::popBackStack,
         )
     }
 }

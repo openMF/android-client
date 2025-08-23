@@ -29,9 +29,11 @@ import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.unit.dp
+import com.mifos.core.designsystem.theme.AppColors
 import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.designsystem.theme.MifosTheme
 import org.jetbrains.compose.ui.tooling.preview.Preview
@@ -164,9 +166,11 @@ fun MifosTextButton(
         modifier = modifier,
         enabled = enabled,
         colors = ButtonDefaults.textButtonColors(
-            contentColor = MaterialTheme.colorScheme.onBackground,
+            contentColor = AppColors.customWhite,
+            containerColor = MaterialTheme.colorScheme.primary,
         ),
         content = content,
+        shape = DesignToken.shapes.medium,
     )
 }
 
@@ -212,7 +216,10 @@ private fun MifosButtonContent(
     modifier: Modifier = Modifier,
     leadingIcon: @Composable (() -> Unit)? = null,
 ) {
-    Row(modifier) {
+    Row(
+        modifier = modifier,
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
         if (leadingIcon != null) {
             Box(Modifier.sizeIn(maxHeight = ButtonDefaults.IconSize)) {
                 leadingIcon()

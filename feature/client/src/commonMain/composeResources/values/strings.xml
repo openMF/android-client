@@ -202,4 +202,75 @@
     <string name="feature_client_submit_button">Submit</string>
     <string name="feature_client_saved_latitude">Saved Latitude: %1$s</string>
     <string name="feature_client_saved_longitude">Saved Longitude: %1$s</string>
+
+    <string name="client_profile_title">Client Profile</string>
+    <string name="client_profile_profile">Profile</string>
+    <string name="client_profile_actions">Actions</string>
+    <string name="client_profile_general_title">General</string>
+    <string name="client_profile_general_subtitle">Check all linked accounts</string>
+    <string name="client_profile_address_title">Address</string>
+    <string name="client_profile_address_subtitle">View or Edit Address</string>
+    <string name="client_profile_family_title">Family Members</string>
+    <string name="client_profile_family_subtitle">Check or edit the linked accounts</string>
+    <string name="client_profile_identifiers_title">Identifiers</string>
+    <string name="client_profile_identifiers_subtitle">Check or update identifiers</string>
+    <string name="client_profile_documents_title">Documents</string>
+    <string name="client_profile_documents_subtitle">Check or upload documents</string>
+    <string name="client_profile_notes_title">Notes</string>
+    <string name="client_profile_notes_subtitle">Check or update note accounts</string>
+
+    <!-- Personal Info -->
+    <string name="gender">Gender</string>
+    <string name="date_of_birth">Date of Birth</string>
+
+    <!-- Account Info -->
+    <string name="account_no">Account No.</string>
+    <string name="office">Office</string>
+    <string name="external_id">External Id</string>
+
+    <!-- Other Info -->
+    <string name="legal_form">Legal Form</string>
+    <string name="client_type">Client Type</string>
+    <string name="client_classification">Client Classification</string>
+    <string name="submission_date">Submission Date</string>
+    <string name="activation_date">Activation Date</string>
+    <string name="staff">Staff</string>
+
+    <!-- Scaffold Title -->
+    <string name="client_profile_details_title">Client Profile Details</string>
+
+    <!-- Buttons -->
+    <string name="update_photo">Update Photo</string>
+    <string name="update_signature">Update Signature</string>
+    <string name="update_details">Update Details</string>
+
+    <!-- Scroll Hint -->
+    <string name="scroll_for_more_options">Scroll for More Options</string>
+
+    <!-- Action Item Titles -->
+    <string name="apply_new_application_title">Apply New Application</string>
+    <string name="closure_application_title">Closure Application</string>
+    <string name="transfer_client_title">Transfer Client</string>
+    <string name="assign_staff_title">Assign Staff</string>
+    <string name="add_charge_title">Add Charge</string>
+    <string name="create_collateral_title">Create Collateral</string>
+    <string name="update_default_account_title">Update Default Account</string>
+    <string name="client_screen_reports_title">Client Screen Reports</string>
+    <string name="create_standing_instructions_title">Create Standing Instructions</string>
+    <string name="view_standing_instructions_title">View Standing Instructions</string>
+    <string name="create_self_service_users_title">Create Self Service Users</string>
+
+    <!-- Action Item SubTitles -->
+    <string name="apply_new_application_subtitle">Create and apply for new accounts</string>
+    <string name="closure_application_subtitle">Apply for ID closure</string>
+    <string name="transfer_client_subtitle">Apply for transfer of the ID</string>
+    <string name="assign_staff_subtitle">Assign or change the service staff</string>
+    <string name="add_charge_subtitle">Add new charge over the ID</string>
+    <string name="create_collateral_subtitle">Add or create a new collateral</string>
+    <string name="update_default_account_subtitle">Update the default savings account</string>
+    <string name="client_screen_reports_subtitle">Generate the screening reports</string>
+    <string name="create_standing_instructions_subtitle">Create new standing instruction over ID</string>
+    <string name="view_standing_instructions_subtitle">View standing instruction over ID</string>
+    <string name="create_self_service_users_subtitle">Change the status of ID to self service</string>
+
 </resources>

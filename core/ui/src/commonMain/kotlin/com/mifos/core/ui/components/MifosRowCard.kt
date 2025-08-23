@@ -9,6 +9,7 @@
  */
 package com.mifos.core.ui.components
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -18,6 +19,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -33,6 +35,8 @@ import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.designsystem.theme.MifosTheme
 import com.mifos.core.designsystem.theme.MifosTypography
 import com.mifos.core.ui.util.TextUtil
+import org.jetbrains.compose.resources.DrawableResource
+import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -89,7 +93,8 @@ fun MifosRowCard(
 fun MifosRowCard(
     modifier: Modifier = Modifier,
     title: String,
-    byteArray: ByteArray?,
+    byteArray: ByteArray? = null,
+    imageVector: DrawableResource? = null,
     leftValues: List<TextUtil>,
     rightValues: List<TextUtil>,
 ) {
@@ -98,10 +103,24 @@ fun MifosRowCard(
             .fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        MifosUserImage(
-            bitmap = byteArray,
-            modifier = Modifier.size(DesignToken.sizes.iconExtraLarge),
-        )
+        if (imageVector == null) {
+            MifosUserImage(
+                bitmap = byteArray,
+                modifier = Modifier.size(DesignToken.sizes.iconExtraLarge),
+            )
+        } else {
+            Icon(
+                painter = painterResource(imageVector),
+                modifier = Modifier
+                    .size(DesignToken.sizes.iconExtraLarge)
+                    .background(
+                        color = Color.LightGray.copy(alpha = 0.1f),
+                        shape = CircleShape,
+                    )
+                    .padding(DesignToken.padding.small),
+                contentDescription = null,
+            )
+        }
         Spacer(Modifier.width(DesignToken.padding.medium))
         Column(
             modifier = Modifier.weight(1f),
@@ -132,7 +151,7 @@ fun MifosRowCard(
             Icon(
                 imageVector = MifosIcons.ChevronRight,
                 contentDescription = null,
-                modifier = Modifier.size(DesignToken.sizes.iconSmall),
+                modifier = Modifier.size(DesignToken.sizes.iconMiny),
             )
         }
     }

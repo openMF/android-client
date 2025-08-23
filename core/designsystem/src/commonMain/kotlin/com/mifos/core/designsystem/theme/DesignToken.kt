@@ -136,6 +136,7 @@ data class AppPadding(
     val medium: Dp = 12.dp,
     val large: Dp = 16.dp,
     val largeIncreased: Dp = 20.dp,
+    val largeIncreasedExtra: Dp = 24.dp,
     val extraLarge: Dp = 28.dp,
     val extraLargeIncreased: Dp = 32.dp,
     val extraExtraLarge: Dp = 48.dp,
@@ -280,6 +281,7 @@ data class AppElevation(
  */
 @Immutable
 data class AppSizes(
+    val iconMinyMiny: Dp = 8.dp,
     val iconMiny: Dp = 12.dp,
     val iconSmall: Dp = 16.dp,
     val iconAverage: Dp = 20.dp,
