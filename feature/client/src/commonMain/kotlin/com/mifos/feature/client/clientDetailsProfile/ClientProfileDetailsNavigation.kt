@@ -22,11 +22,13 @@ data class ClientProfileDetailsRoute(
 fun NavGraphBuilder.clientProfileDetailsDestination(
     onNavigateBack: () -> Unit,
     navigateToUpdatePhoto: (Int, String, String) -> Unit,
+    navigateToAssignStaff:(Int)->Unit,
 ) {
     composable<ClientProfileDetailsRoute> {
         ClientProfileDetailsScreen(
             onNavigateBack = onNavigateBack,
-            navigateToUpdatePhoto,
+            navigateToUpdatePhoto=navigateToUpdatePhoto,
+            navigateToAssignStaff=navigateToAssignStaff
         )
     }
 }

@@ -14,6 +14,7 @@ import com.mifos.core.common.utils.Page
 import com.mifos.core.common.utils.asDataStateFlow
 import com.mifos.core.datastore.UserPreferencesRepository
 import com.mifos.core.model.objects.clients.ActivatePayload
+import com.mifos.core.model.objects.clients.AssignStaffRequest
 import com.mifos.core.model.objects.clients.ClientAddressRequest
 import com.mifos.core.model.objects.clients.ClientAddressResponse
 import com.mifos.core.model.objects.noncoreobjects.Identifier
@@ -29,6 +30,7 @@ import com.mifos.core.network.model.DeleteClientsClientIdIdentifiersIdentifierId
 import com.mifos.core.network.model.PinpointLocationActionResponse
 import com.mifos.core.network.model.PostClientsClientIdRequest
 import com.mifos.core.network.model.PostClientsClientIdResponse
+import com.mifos.core.network.model.StaffOption
 import com.mifos.room.entities.accounts.ClientAccounts
 import com.mifos.room.entities.client.AddressConfiguration
 import com.mifos.room.entities.client.AddressTemplate
@@ -162,6 +164,10 @@ class DataManagerClient(
 //                mDatabaseHelperClient.realClientAccounts(clientId)
 //        }
 //    }
+
+    suspend fun getClientStaff(clientId: Int): List<StaffOption> {
+        return mBaseApiManager.clientService.getStaffList(clientId).staffOptions
+    }
 
     /**
      * This Method Fetching the Client Accounts (Loan, saving, etc Accounts ) from REST API
@@ -471,4 +477,20 @@ class DataManagerClient(
     suspend fun getAddressTemplate(): AddressTemplate {
         return mBaseApiManager.clientService.getAddressTemplate()
     }
+
+    suspend fun updateClientStaff(
+        clientId: Int,
+        staffId: Int,
+    ): DataState<Unit> {
+        return try {
+            mBaseApiManager.clientService.assignStaff(
+                clientId = clientId,
+                payload = AssignStaffRequest(staffId)
+            )
+            DataState.Success(Unit)
+        } catch (e: Exception) {
+            DataState.Error(e)
+        }
+    }
+
 }

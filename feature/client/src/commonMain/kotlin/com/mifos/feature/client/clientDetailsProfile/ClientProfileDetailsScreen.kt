@@ -40,8 +40,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.mifos.core.designsystem.component.BasicDialogState
+import com.mifos.core.designsystem.component.MifosBasicDialog
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosTextButton
+import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.designsystem.theme.MifosTypography
 import com.mifos.core.ui.components.MifosDefaultListingComponentFromStringResources
@@ -61,6 +64,7 @@ import org.koin.compose.viewmodel.koinViewModel
 internal fun ClientProfileDetailsScreen(
     onNavigateBack: () -> Unit,
     navigateToUpdatePhoto: (Int, String, String) -> Unit,
+    navigateToAssignStaff:(Int)->Unit,
     modifier: Modifier = Modifier,
     viewModel: ClientProfileDetailsViewModel = koinViewModel(),
 ) {
@@ -76,7 +80,9 @@ internal fun ClientProfileDetailsScreen(
                 when (event.action) {
                     ClientProfileDetailsActionItem.AddCharge -> {}
                     ClientProfileDetailsActionItem.ApplyNewApplication -> {}
-                    ClientProfileDetailsActionItem.AssignStaff -> {}
+                    ClientProfileDetailsActionItem.AssignStaff -> {
+                        navigateToAssignStaff(state.client?.id ?: -1)
+                    }
                     ClientProfileDetailsActionItem.ClientScreenReports -> {}
                     ClientProfileDetailsActionItem.ClosureApplication -> {}
                     ClientProfileDetailsActionItem.CreateCollateral -> {}
@@ -106,9 +112,9 @@ internal fun ClientProfileDetailsScreen(
 
     ClientProfileDetailsDialogs(
         state = state,
-        onRetry = remember(viewModel) {
+        onAction = remember(viewModel) {
             {
-                viewModel.trySendAction(ClientProfileDetailsAction.OnRetry)
+                viewModel.trySendAction(it)
             }
         },
     )
@@ -125,7 +131,7 @@ private fun ClientProfileDetailsScaffold(
         onBackPressed = { onAction(ClientProfileDetailsAction.NavigateBack) },
         modifier = modifier,
     ) { paddingValues ->
-        if (state.dialogState == null) {
+        if (state.dialogState != ClientProfileDetailsState.DialogState.Loading) {
             Column(
                 modifier = Modifier
                     .fillMaxSize()
@@ -270,7 +276,7 @@ private fun ClientProfileDetailsScaffold(
 @Composable
 private fun ClientProfileDetailsDialogs(
     state: ClientProfileDetailsState,
-    onRetry: () -> Unit,
+    onAction: (ClientProfileDetailsAction) -> Unit,
 ) {
     when (state.dialogState) {
         is ClientProfileDetailsState.DialogState.Loading -> MifosProgressIndicator()
@@ -281,11 +287,32 @@ private fun ClientProfileDetailsDialogs(
                 message = state.dialogState.message,
                 isRetryEnabled = true,
                 onRetry = {
-                    onRetry()
+                    onAction(ClientProfileDetailsAction.OnRetry)
                 },
             )
         }
 
         null -> Unit
+
+        ClientProfileDetailsState.DialogState.UnAssignStaff -> {
+            MifosBasicDialog(
+                visibilityState = BasicDialogState.Shown(
+                    message = "Are you sure you want to unassign staff for this client? ." +
+                            "Once unassigned can only be assigned again after some minutes",
+                    title = "Unassigning staff?"
+                ),
+                onConfirm = {
+                    onAction(ClientProfileDetailsAction.ConfirmUnAssignStaff)
+                },
+                onDismissRequest = {
+                    onAction(ClientProfileDetailsAction.DismissDialog)
+                },
+                confirmText = "I Confirm",
+                dismissText = "Cancel",
+                icon ={
+
+                }
+            )
+        }
     }
 }

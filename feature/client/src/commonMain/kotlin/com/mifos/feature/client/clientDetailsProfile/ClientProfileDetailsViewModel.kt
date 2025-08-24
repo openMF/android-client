@@ -32,6 +32,7 @@ import com.mifos.core.domain.useCases.GetClientDetailsUseCase
 import com.mifos.core.ui.util.BaseViewModel
 import com.mifos.core.ui.util.imageToByteArray
 import com.mifos.core.ui.util.toDateString
+import com.mifos.feature.client.clientDetailsProfile.ClientProfileDetailsEvent.*
 import com.mifos.feature.client.clientDetailsProfile.components.ClientProfileDetailsActionItem
 import com.mifos.room.entities.client.ClientEntity
 import kotlinx.coroutines.flow.update
@@ -191,12 +192,32 @@ internal class ClientProfileDetailsViewModel(
     override fun handleAction(action: ClientProfileDetailsAction) {
         when (action) {
             ClientProfileDetailsAction.NavigateBack -> sendEvent(ClientProfileDetailsEvent.NavigateBack)
-            is ClientProfileDetailsAction.OnActionClick ->
-                sendEvent(ClientProfileDetailsEvent.OnActionClick(action.action))
+            is ClientProfileDetailsAction.OnActionClick ->{
+                if(action.action==ClientProfileDetailsActionItem.AssignStaff && state.client?.staffName!=null){
+                    mutableStateFlow.update {
+                        it.copy(
+                            dialogState = ClientProfileDetailsState.DialogState.UnAssignStaff
+                        )
+                    }
+                }else{
+                    sendEvent(OnActionClick(action.action))
+
+                }
+            }
             ClientProfileDetailsAction.OnRetry -> getClientAndObserveNetwork()
             ClientProfileDetailsAction.OnUpdateDetailsClick -> {}
             ClientProfileDetailsAction.OnUpdatePhotoClick -> sendEvent(ClientProfileDetailsEvent.NavigateToUpdatePhoto)
             ClientProfileDetailsAction.OnUpdateSignatureClick -> {}
+            ClientProfileDetailsAction.ConfirmUnAssignStaff -> {
+
+            }
+            ClientProfileDetailsAction.DismissDialog -> {
+                mutableStateFlow.update {
+                    it.copy(
+                        dialogState = null
+                    )
+                }
+            }
         }
     }
 }
@@ -218,6 +239,7 @@ data class ClientProfileDetailsState(
     sealed interface DialogState {
         data class Error(val message: String) : DialogState
         data object Loading : DialogState
+        data object UnAssignStaff: DialogState
     }
 }
 
@@ -252,4 +274,8 @@ sealed interface ClientProfileDetailsAction {
     data object OnUpdateSignatureClick : ClientProfileDetailsAction
 
     data object OnUpdateDetailsClick : ClientProfileDetailsAction
+
+    data object DismissDialog:ClientProfileDetailsAction
+
+    data object ConfirmUnAssignStaff:ClientProfileDetailsAction
 }
