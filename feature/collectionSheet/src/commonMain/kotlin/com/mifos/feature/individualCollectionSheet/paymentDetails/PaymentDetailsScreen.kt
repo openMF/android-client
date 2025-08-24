@@ -256,7 +256,6 @@ internal fun PaymentsDetailsScreen(
                     MifosUserImage(
                         bitmap = getClientImage,
                         modifier = Modifier.size(100.dp),
-                        username = null,
                     )
                 }
             }

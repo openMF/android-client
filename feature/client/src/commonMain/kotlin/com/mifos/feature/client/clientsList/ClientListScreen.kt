@@ -10,7 +10,9 @@
 package com.mifos.feature.client.clientsList
 
 import androidclient.feature.client.generated.resources.Res
+import androidclient.feature.client.generated.resources.account_number_prefix
 import androidclient.feature.client.generated.resources.feature_client_client
+import androidclient.feature.client.generated.resources.string_not_available
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -241,12 +243,15 @@ fun ClientItem(client: ClientEntity, byteArray: ByteArray?, onClientClick: (Int)
         byteArray = byteArray,
         leftValues = listOf(
             TextUtil(
-                text = "Acc. No. " + (client.accountNo ?: ""),
+                text = stringResource(
+                    Res.string.account_number_prefix,
+                    (client.accountNo ?: stringResource(Res.string.string_not_available)),
+                ),
                 style = MifosTypography.bodySmall,
                 color = MaterialTheme.colorScheme.secondary,
             ),
             TextUtil(
-                text = client.officeName ?: "",
+                text = client.officeName ?: stringResource(Res.string.string_not_available),
                 style = MifosTypography.bodySmall,
                 color = MaterialTheme.colorScheme.secondary,
             ),

@@ -18,6 +18,7 @@ import androidx.lifecycle.viewModelScope
 import com.mifos.core.common.utils.Constants
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.domain.useCases.CreateDocumentUseCase
+import com.mifos.feature.client.utils.compressImage
 import com.mifos.feature.client.utils.createImageRequestBody
 import io.github.vinceglb.filekit.FileKit
 import io.github.vinceglb.filekit.ImageFormat
@@ -68,5 +69,5 @@ suspend fun ImageBitmap.toPlatformFile(fileName: String): PlatformFile {
     val bytearray = this.encodeToByteArray(ImageFormat.PNG)
     val outFile = FileKit.filesDir / "$fileName.png"
     outFile.write(bytearray)
-    return outFile
+    return compressImage(outFile, fileName)
 }

@@ -60,6 +60,7 @@ import org.koin.compose.viewmodel.koinViewModel
 @Composable
 internal fun ClientProfileDetailsScreen(
     onNavigateBack: () -> Unit,
+    navigateToUpdatePhoto: (Int, String, String) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: ClientProfileDetailsViewModel = koinViewModel(),
 ) {
@@ -85,6 +86,14 @@ internal fun ClientProfileDetailsScreen(
                     ClientProfileDetailsActionItem.UpdateDefaultAccount -> {}
                     ClientProfileDetailsActionItem.ViewStandingInstructions -> {}
                 }
+            }
+
+            ClientProfileDetailsEvent.NavigateToUpdatePhoto -> {
+                navigateToUpdatePhoto(
+                    state.client?.id ?: -1,
+                    state.client?.displayName ?: "",
+                    state.client?.accountNo ?: "",
+                )
             }
         }
     }
@@ -180,11 +189,9 @@ private fun ClientProfileDetailsScaffold(
 
                 Spacer(Modifier.height(DesignToken.padding.large))
 
-                state.details.forEach { (sectionName, dataMap) ->
-                    if (dataMap.isNotEmpty()) {
-                        MifosDefaultListingComponentFromStringResources(data = dataMap)
-                        Spacer(Modifier.height(DesignToken.padding.large))
-                    }
+                state.details.forEach { list ->
+                    MifosDefaultListingComponentFromStringResources(data = list)
+                    Spacer(Modifier.height(DesignToken.padding.large))
                 }
 
                 Row(

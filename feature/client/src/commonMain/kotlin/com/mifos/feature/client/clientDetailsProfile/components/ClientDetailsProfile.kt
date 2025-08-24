@@ -9,6 +9,10 @@
  */
 package com.mifos.feature.client.clientDetailsProfile.components
 
+import androidclient.feature.client.generated.resources.Res
+import androidclient.feature.client.generated.resources.email_na
+import androidclient.feature.client.generated.resources.mobile_na
+import androidclient.feature.client.generated.resources.name_na
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -26,6 +30,7 @@ import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.designsystem.theme.MifosTheme
 import com.mifos.core.designsystem.theme.MifosTypography
 import com.mifos.core.ui.components.MifosUserImage
+import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
@@ -49,26 +54,20 @@ fun ClientDetailsProfile(
             Modifier.fillMaxWidth(),
             verticalArrangement = Arrangement.spacedBy(DesignToken.padding.extraExtraSmall),
         ) {
-            name?.let {
-                Text(
-                    text = it,
-                    style = MifosTypography.titleMediumEmphasized,
-                )
-            }
-            mobile?.let {
-                Text(
-                    text = it,
-                    style = MifosTypography.bodySmall,
-                    color = MaterialTheme.colorScheme.secondary,
-                )
-            }
-            email?.let {
-                Text(
-                    text = it,
-                    style = MifosTypography.bodySmall,
-                    color = MaterialTheme.colorScheme.secondary,
-                )
-            }
+            Text(
+                text = name ?: stringResource(Res.string.name_na),
+                style = MifosTypography.titleMediumEmphasized,
+            )
+            Text(
+                text = mobile ?: stringResource(Res.string.mobile_na),
+                style = MifosTypography.bodySmall,
+                color = MaterialTheme.colorScheme.secondary,
+            )
+            Text(
+                text = email ?: stringResource(Res.string.email_na),
+                style = MifosTypography.bodySmall,
+                color = MaterialTheme.colorScheme.secondary,
+            )
         }
     }
 }

@@ -158,8 +158,7 @@ class ClientDetailsViewModel(
         viewModelScope.launch {
             try {
                 _showLoading.value = true
-                val compressed = compressImage(imageFile, clientId)
-               // _lastUploadedFilePath.value = compressed.path // Save for preview
+
                 uploadImage(clientId, compressed)
                 uploadImages(clientId, compressed)
 

@@ -273,4 +273,28 @@
     <string name="view_standing_instructions_subtitle">View standing instruction over ID</string>
     <string name="create_self_service_users_subtitle">Change the status of ID to self service</string>
 
+    <!-- Client Profile Edit -->
+    <string name="edit_profile_title">Edit Profile</string>
+    <string name="account_number_prefix">Acc. No. %1$s</string>
+    <string name="update_profile_photo_message">Please update your profile photo at earliest!</string>
+    <string name="delete_photo">Delete Photo</string>
+    <string name="upload_new_photo">Upload New Photo</string>
+
+    <!-- Delete Confirmation Dialog -->
+    <string name="delete_dialog_title">Are you sure?</string>
+    <string name="delete_dialog_message">Please confirm that you want to remove the photo? You can upload the new photo again through the app or website.</string>
+    <string name="remove">Remove</string>
+    <string name="cancel">Cancel</string>
+
+    <!-- Upload Options -->
+    <string name="choose_from_option">Choose from option</string>
+    <string name="from_camera">From Camera</string>
+    <string name="from_gallery">From Gallery</string>
+
+    <string name="string_not_available">N/A</string>
+    <string name="name_na">Name: N/A</string>
+    <string name="mobile_na">Mobile: N/A</string>
+    <string name="email_na">Email: N/A</string>
+    <string name="office_na">Office: N/A</string>
+
 </resources>

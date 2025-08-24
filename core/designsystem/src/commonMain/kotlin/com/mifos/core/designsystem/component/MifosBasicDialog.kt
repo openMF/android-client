@@ -9,6 +9,9 @@
  */
 package com.mifos.core.designsystem.component
 
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -17,7 +20,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.testTag
+import androidx.compose.ui.text.style.TextAlign
+import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.designsystem.theme.MifosTheme
+import com.mifos.core.designsystem.theme.MifosTypography
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameterProvider
@@ -69,50 +75,61 @@ fun MifosBasicDialog(
     visibilityState: BasicDialogState,
     onConfirm: () -> Unit,
     onDismissRequest: () -> Unit,
-): Unit = when (visibilityState) {
-    BasicDialogState.Hidden -> Unit
-    is BasicDialogState.Shown -> {
-        AlertDialog(
-            onDismissRequest = onDismissRequest,
-            confirmButton = {
-                MifosTextButton(
-                    content = {
-                        Text(text = "Ok")
-                    },
-                    onClick = onConfirm,
-                    modifier = Modifier.testTag("AcceptAlertButton"),
-                )
-            },
-            dismissButton = {
-                MifosTextButton(
-                    content = {
-                        Text(text = "Cancel")
-                    },
-                    onClick = onDismissRequest,
-                    modifier = Modifier.testTag("DismissAlertButton"),
-                )
-            },
-            title = visibilityState.title.let {
-                {
+    confirmText: String = "Ok",
+    dismissText: String = "Cancel",
+    icon: @Composable (() -> Unit)? = null,
+) {
+    when (visibilityState) {
+        BasicDialogState.Hidden -> Unit
+        is BasicDialogState.Shown -> {
+            AlertDialog(
+                onDismissRequest = onDismissRequest,
+                confirmButton = {
                     Text(
-                        text = it,
-                        style = MaterialTheme.typography.headlineSmall,
-                        modifier = Modifier.testTag("AlertTitleText"),
+                        text = confirmText,
+                        style = MifosTypography.labelLarge,
+                        color = MaterialTheme.colorScheme.primary,
+                        modifier = Modifier
+                            .padding(horizontal = DesignToken.padding.large)
+                            .clickable {
+                                onConfirm()
+                            },
                     )
-                }
-            },
-            text = {
-                Text(
-                    text = visibilityState.message,
-                    style = MaterialTheme.typography.bodyMedium,
-                    modifier = Modifier.testTag("AlertContentText"),
-                )
-            },
-            containerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
-            modifier = Modifier.semantics {
-                testTag = "AlertPopup"
-            },
-        )
+                },
+                dismissButton = {
+                    Text(
+                        text = dismissText,
+                        style = MifosTypography.labelLarge,
+                        color = MaterialTheme.colorScheme.primary,
+                        modifier = Modifier
+                            .padding(horizontal = DesignToken.padding.large)
+                            .clickable {
+                                onDismissRequest()
+                            },
+                    )
+                },
+                icon = icon,
+                title = {
+                    Text(
+                        text = visibilityState.title,
+                        style = MaterialTheme.typography.headlineSmall,
+                        modifier = Modifier.fillMaxWidth().testTag("AlertTitleText"),
+                        textAlign = TextAlign.Center,
+                    )
+                },
+                text = {
+                    Text(
+                        text = visibilityState.message,
+                        style = MaterialTheme.typography.bodyMedium,
+                        modifier = Modifier.fillMaxWidth().testTag("AlertContentText"),
+                    )
+                },
+                containerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
+                modifier = Modifier.semantics {
+                    testTag = "AlertPopup"
+                },
+            )
+        }
     }
 }
 

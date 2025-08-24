@@ -17,7 +17,7 @@ import io.github.vinceglb.filekit.div
 import io.github.vinceglb.filekit.filesDir
 import io.github.vinceglb.filekit.write
 
-suspend fun compressImage(imageFile: PlatformFile, clientId: Int): PlatformFile {
+suspend fun compressImage(imageFile: PlatformFile, clientId: String): PlatformFile {
     val bytes = FileKit.compressImage(
         file = imageFile,
         imageFormat = ImageFormat.PNG,

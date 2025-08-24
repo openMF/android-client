@@ -12,12 +12,15 @@ package com.mifos.core.ui.components
 import androidclient.core.ui.generated.resources.Res
 import androidclient.core.ui.generated.resources.profile
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.border
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.unit.dp
 import coil3.ImageLoader
 import coil3.compose.LocalPlatformContext
 import coil3.compose.rememberAsyncImagePainter
@@ -29,34 +32,7 @@ import org.jetbrains.compose.resources.painterResource
 fun MifosUserImage(
     bitmap: ByteArray?,
     modifier: Modifier = Modifier,
-    username: String? = null,
-) {
-    val context = LocalPlatformContext.current
-
-    val painter = rememberAsyncImagePainter(
-        model = bitmap,
-        imageLoader = ImageLoader(context),
-    )
-    if (bitmap == null) {
-        MifosTextUserImage(
-            text = username?.firstOrNull()?.toString() ?: "M",
-            modifier = modifier,
-        )
-    } else {
-        Image(
-            modifier = modifier
-                .clip(CircleShape),
-            painter = painter,
-            contentDescription = "Profile Image",
-            contentScale = ContentScale.Crop,
-        )
-    }
-}
-
-@Composable
-fun MifosUserImage(
-    bitmap: ByteArray?,
-    modifier: Modifier = Modifier,
+    hasBorder: Boolean = false,
 ) {
     val context = LocalPlatformContext.current
 
@@ -69,8 +45,22 @@ fun MifosUserImage(
         painterResource(Res.drawable.profile)
     }
 
+    val imageModifier = modifier
+        .clip(CircleShape)
+        .then(
+            if (hasBorder) {
+                Modifier.border(
+                    width = 2.dp,
+                    color = MaterialTheme.colorScheme.primary,
+                    shape = CircleShape,
+                )
+            } else {
+                Modifier
+            },
+        )
+
     Image(
-        modifier = modifier.clip(CircleShape),
+        modifier = imageModifier,
         painter = painter,
         contentDescription = "Profile Image",
         contentScale = if (bitmap != null) ContentScale.Crop else ContentScale.Fit,
@@ -86,7 +76,6 @@ fun MifosUserImagePreview(
         MifosUserImage(
             bitmap = null,
             modifier = modifier,
-            username = "John Doe",
         )
     }
 }

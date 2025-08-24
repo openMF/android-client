@@ -146,6 +146,49 @@ fun MifosOutlinedButton(
 }
 
 /**
+ * Mifos outlined button with text and optional leading icon.
+ *
+ * @param onClick Will be called when the user clicks the button.
+ * @param modifier Modifier to be applied to the button.
+ * @param enabled Controls the enabled state of the button. When `false`, this button will not be
+ * clickable and will appear disabled to accessibility services.
+ * @param text The button text label content.
+ * @param leadingIcon The button leading icon content. Pass `null` here for no leading icon.
+ */
+@Composable
+fun MifosOutlinedButton(
+    text: @Composable () -> Unit,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+    enabled: Boolean = true,
+    leadingIcon: @Composable (() -> Unit)? = null,
+    shape: Shape = DesignToken.shapes.medium,
+    border: BorderStroke = BorderStroke(
+        width = MifosButtonDefaults.OutlinedButtonBorderWidth,
+        color = MaterialTheme.colorScheme.primary,
+    ),
+    colors: ButtonColors = ButtonDefaults.outlinedButtonColors(
+        contentColor = MaterialTheme.colorScheme.primary,
+    ),
+    contentPadding: PaddingValues = ButtonDefaults.ContentPadding,
+) {
+    OutlinedButton(
+        onClick = onClick,
+        modifier = modifier.height(48.dp),
+        enabled = enabled,
+        shape = shape,
+        colors = colors,
+        border = border,
+        contentPadding = contentPadding,
+    ) {
+        MifosButtonContent(
+            text = text,
+            leadingIcon = leadingIcon,
+        )
+    }
+}
+
+/**
  * Mifos text button with generic content slot. Wraps Material 3 [TextButton].
  *
  * @param onClick Will be called when the user clicks the button.
@@ -163,7 +206,7 @@ fun MifosTextButton(
 ) {
     TextButton(
         onClick = onClick,
-        modifier = modifier,
+        modifier = modifier.height(48.dp),
         enabled = enabled,
         colors = ButtonDefaults.textButtonColors(
             contentColor = AppColors.customWhite,
