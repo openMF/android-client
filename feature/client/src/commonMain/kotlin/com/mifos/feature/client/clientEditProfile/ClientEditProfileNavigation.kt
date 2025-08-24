@@ -17,8 +17,8 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class ClientEditProfileRoute(
     val id: Int = -1,
-    val name: String = "",
-    val accountNo: String = "",
+    val name: String = "N/A",
+    val accountNo: String = "N/A",
 )
 
 fun NavGraphBuilder.clientEditProfileDestination(

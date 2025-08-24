@@ -241,12 +241,12 @@ fun ClientItem(client: ClientEntity, byteArray: ByteArray?, onClientClick: (Int)
         byteArray = byteArray,
         leftValues = listOf(
             TextUtil(
-                text = "Acc. No. " + (client.accountNo ?: ""),
+                text = "Acc. No. " + (client.accountNo ?: "N/A"),
                 style = MifosTypography.bodySmall,
                 color = MaterialTheme.colorScheme.secondary,
             ),
             TextUtil(
-                text = client.officeName ?: "",
+                text = client.officeName ?: "N/A",
                 style = MifosTypography.bodySmall,
                 color = MaterialTheme.colorScheme.secondary,
             ),

@@ -134,28 +134,25 @@ internal class ClientProfileDetailsViewModel(
     private fun buildClientDetails(client: ClientEntity?): Map<String, Map<StringResource, String>> {
         if (client == null) return emptyMap()
 
-        val personalInfo = buildMap {
-            put(Res.string.gender, "")
-            client.dateOfBirth.toDateString().takeIf { it.isNotBlank() }?.let {
-                put(Res.string.date_of_birth, it)
-            }
-        }
+        val personalInfo = mapOf(
+            Res.string.gender to "N/A",
+            Res.string.date_of_birth to (client.dateOfBirth.toDateString().takeIf { it.isNotBlank() } ?: "N/A"),
+        )
 
-        val accountInfo = buildMap {
-            client.accountNo?.takeIf { it.isNotBlank() }?.let { put(Res.string.account_no, it) }
-            client.officeName?.takeIf { it.isNotBlank() }?.let { put(Res.string.office, it) }
-            client.externalId?.takeIf { it.isNotBlank() }?.let { put(Res.string.external_id, it) }
-        }
+        val accountInfo = mapOf(
+            Res.string.account_no to (client.accountNo?.takeIf { it.isNotBlank() } ?: "N/A"),
+            Res.string.office to (client.officeName?.takeIf { it.isNotBlank() } ?: "N/A"),
+            Res.string.external_id to (client.externalId?.takeIf { it.isNotBlank() } ?: "N/A"),
+        )
 
-        val otherInfo = buildMap {
-            client.legalForm?.value?.takeIf { it.isNotBlank() }?.let { put(Res.string.legal_form, it) }
-            put(Res.string.client_type, "")
-            put(Res.string.client_classification, "")
-            client.timeline?.submittedOnDate?.toDateString()?.takeIf { it.isNotBlank() }?.let { put(Res.string.submission_date, it) }
-            client.activationDate.toDateString()
-                .takeIf { it.isNotBlank() }?.let { put(Res.string.activation_date, it) }
-            client.staffName?.takeIf { it.isNotBlank() }?.let { put(Res.string.staff, it) }
-        }
+        val otherInfo = mapOf(
+            Res.string.legal_form to (client.legalForm?.value?.takeIf { it.isNotBlank() } ?: "N/A"),
+            Res.string.client_type to "N/A",
+            Res.string.client_classification to "N/A",
+            Res.string.submission_date to (client.timeline?.submittedOnDate?.toDateString()?.takeIf { it.isNotBlank() } ?: "N/A"),
+            Res.string.activation_date to (client.activationDate.toDateString().takeIf { it.isNotBlank() } ?: "N/A"),
+            Res.string.staff to (client.staffName?.takeIf { it.isNotBlank() } ?: "N/A"),
+        )
 
         return mapOf(
             "Personal Info" to personalInfo,
