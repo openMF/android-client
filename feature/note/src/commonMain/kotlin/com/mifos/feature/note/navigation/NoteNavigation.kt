@@ -11,31 +11,54 @@ package com.mifos.feature.note.navigation
 
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
-import androidx.navigation.NavType
 import androidx.navigation.compose.composable
-import androidx.navigation.navArgument
-import com.mifos.core.common.utils.Constants
-import com.mifos.feature.note.NoteScreen
+import androidx.navigation.navigation
+import com.mifos.feature.note.notes.NoteScreen
 
-/**
- * Created by Pronay Sarker on 17/08/2024 (12:05 AM)
- */
 fun NavGraphBuilder.noteNavGraph(
+    navController: NavController,
     onBackPressed: () -> Unit,
 ) {
-    composable(
-        route = NoteScreens.NoteScreen.route,
-        arguments = listOf(
-            navArgument(name = Constants.ENTITY_ID, builder = { NavType.IntType }),
-            navArgument(name = Constants.ENTITY_TYPE, builder = { NavType.StringType }),
-        ),
+    navigation<NoteNavigationRoute>(
+        startDestination = NoteScreenRoute::class,
     ) {
-        NoteScreen(
-            onBackPressed = onBackPressed,
+        noteScreen(
+            onNavigateBack = onBackPressed,
+            onNavigateNext = navController::navigateToAddNoteScreen,
+        )
+
+        addNoteRoute(
+            onBackPressed = navController::popBackStack,
         )
     }
 }
 
+fun NavGraphBuilder.noteScreen(
+    onNavigateBack: () -> Unit,
+    onNavigateNext: (Int, String?) -> Unit,
+) {
+    composable<NoteScreenRoute> {
+        NoteScreen(
+            onNavigateBack = onNavigateBack,
+            onNavigateNext = onNavigateNext,
+        )
+    }
+}
+
+fun NavGraphBuilder.addNoteRoute(
+    onBackPressed: () -> Unit,
+) {
+    composable<AddNoteScreenRoute> {
+//        AddNoteScreen(
+//            onBackPressed = onBackPressed,
+//        )
+    }
+}
+
 fun NavController.navigateToNoteScreen(entityId: Int, entityType: String?) {
-    navigate(NoteScreens.NoteScreen.argument(entityId, entityType))
+    this.navigate(NoteScreenRoute(entityId, entityType))
+}
+
+fun NavController.navigateToAddNoteScreen(entityId: Int, entityType: String?) {
+    this.navigate(AddNoteScreenRoute(entityId, entityType))
 }

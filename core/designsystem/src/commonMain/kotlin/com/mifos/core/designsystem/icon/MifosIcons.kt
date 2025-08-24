@@ -97,6 +97,7 @@ import androidx.compose.material.icons.rounded.KeyboardArrowDown
 import androidx.compose.material.icons.rounded.KeyboardArrowUp
 import androidx.compose.material.icons.rounded.Link
 import androidx.compose.material.icons.rounded.Lock
+import androidx.compose.material.icons.rounded.MoreHoriz
 import androidx.compose.material.icons.rounded.MoreVert
 import androidx.compose.material.icons.rounded.MyLocation
 import androidx.compose.material.icons.rounded.PersonOutline
@@ -138,6 +139,7 @@ object MifosIcons {
     val ArrowUp = Icons.Rounded.KeyboardArrowUp
     val ArrowDown = Icons.Rounded.KeyboardArrowDown
     val MoreVert = Icons.Rounded.MoreVert
+    val MoreHoriz = Icons.Rounded.MoreHoriz
     val ArrowForward = Icons.Filled.ChevronRight
     val FileTask = Icons.Default.AssignmentTurnedIn
     val AddLocation = Icons.Rounded.AddLocation
