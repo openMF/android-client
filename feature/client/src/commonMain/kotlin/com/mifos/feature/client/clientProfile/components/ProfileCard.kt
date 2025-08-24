@@ -38,7 +38,7 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 fun ProfileCard(
     image: ByteArray?,
     name: String,
-    accountNo: String?,
+    accountNo: String,
     office: String,
     onClick: () -> Unit,
 ) {
@@ -71,13 +71,12 @@ fun ProfileCard(
                     text = name,
                     style = MifosTypography.titleMediumEmphasized,
                 )
-                accountNo.let {
-                    Text(
-                        text = "Acc. No. $it",
-                        style = MifosTypography.bodySmall,
-                        color = MaterialTheme.colorScheme.secondaryContainer,
-                    )
-                }
+
+                Text(
+                    text = "Acc. No. $accountNo",
+                    style = MifosTypography.bodySmall,
+                    color = MaterialTheme.colorScheme.secondaryContainer,
+                )
                 Text(
                     text = office,
                     style = MifosTypography.bodySmall,

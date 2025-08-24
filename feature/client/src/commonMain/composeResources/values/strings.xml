@@ -290,4 +290,9 @@
     <string name="choose_from_option">Choose from option</string>
     <string name="from_camera">From Camera</string>
     <string name="from_gallery">From Gallery</string>
+
+    <string name="name_na">Name: N/A</string>
+    <string name="mobile_na">Mobile: N/A</string>
+    <string name="email_na">Email: N/A</string>
+    <string name="office_na">Office: N/A</string>
 </resources>
