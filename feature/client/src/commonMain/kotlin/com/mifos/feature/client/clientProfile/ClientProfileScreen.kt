@@ -15,6 +15,7 @@ import androidclient.feature.client.generated.resources.client_profile_profile
 import androidclient.feature.client.generated.resources.client_profile_title
 import androidclient.feature.client.generated.resources.name_na
 import androidclient.feature.client.generated.resources.office_na
+import androidclient.feature.client.generated.resources.string_not_available
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -131,7 +132,7 @@ private fun ClientProfileScaffold(
                 ProfileCard(
                     image = state.profileImage,
                     name = state.client?.displayName ?: stringResource(Res.string.name_na),
-                    accountNo = state.client?.accountNo ?: "N/A",
+                    accountNo = state.client?.accountNo ?: stringResource(Res.string.string_not_available),
                     office = state.client?.officeName ?: stringResource(Res.string.office_na),
                     onClick = {
                         onAction(

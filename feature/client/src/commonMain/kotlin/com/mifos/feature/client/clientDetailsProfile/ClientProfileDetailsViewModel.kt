@@ -20,6 +20,7 @@ import androidclient.feature.client.generated.resources.gender
 import androidclient.feature.client.generated.resources.legal_form
 import androidclient.feature.client.generated.resources.office
 import androidclient.feature.client.generated.resources.staff
+import androidclient.feature.client.generated.resources.string_not_available
 import androidclient.feature.client.generated.resources.submission_date
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
@@ -36,6 +37,7 @@ import com.mifos.room.entities.client.ClientEntity
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.StringResource
+import org.jetbrains.compose.resources.getString
 
 /**
  * ViewModel responsible for managing client profile UI state, fetching details,
@@ -131,33 +133,58 @@ internal class ClientProfileDetailsViewModel(
         }
     }
 
-    private fun buildClientDetails(client: ClientEntity?): Map<String, Map<StringResource, String>> {
-        if (client == null) return emptyMap()
+    private suspend fun buildClientDetails(client: ClientEntity?): List<Map<StringResource, String>> {
+        if (client == null) return emptyList()
 
         val personalInfo = mapOf(
-            Res.string.gender to "N/A",
-            Res.string.date_of_birth to (client.dateOfBirth.toDateString().takeIf { it.isNotBlank() } ?: "N/A"),
+            Res.string.gender to getString(Res.string.string_not_available),
+            Res.string.date_of_birth to
+                (
+                    client.dateOfBirth.toDateString().takeIf { it.isNotBlank() }
+                        ?: getString(Res.string.string_not_available)
+                    ),
         )
 
         val accountInfo = mapOf(
-            Res.string.account_no to (client.accountNo?.takeIf { it.isNotBlank() } ?: "N/A"),
-            Res.string.office to (client.officeName?.takeIf { it.isNotBlank() } ?: "N/A"),
-            Res.string.external_id to (client.externalId?.takeIf { it.isNotBlank() } ?: "N/A"),
+            Res.string.account_no to (
+                client.accountNo?.takeIf { it.isNotBlank() }
+                    ?: getString(Res.string.string_not_available)
+                ),
+            Res.string.office to (
+                client.officeName?.takeIf { it.isNotBlank() }
+                    ?: getString(Res.string.string_not_available)
+                ),
+            Res.string.external_id to (
+                client.externalId?.takeIf { it.isNotBlank() }
+                    ?: getString(Res.string.string_not_available)
+                ),
         )
 
         val otherInfo = mapOf(
-            Res.string.legal_form to (client.legalForm?.value?.takeIf { it.isNotBlank() } ?: "N/A"),
-            Res.string.client_type to "N/A",
-            Res.string.client_classification to "N/A",
-            Res.string.submission_date to (client.timeline?.submittedOnDate?.toDateString()?.takeIf { it.isNotBlank() } ?: "N/A"),
-            Res.string.activation_date to (client.activationDate.toDateString().takeIf { it.isNotBlank() } ?: "N/A"),
-            Res.string.staff to (client.staffName?.takeIf { it.isNotBlank() } ?: "N/A"),
+            Res.string.legal_form to (
+                client.legalForm?.value?.takeIf { it.isNotBlank() }
+                    ?: getString(Res.string.string_not_available)
+                ),
+            Res.string.client_type to getString(Res.string.string_not_available),
+            Res.string.client_classification to getString(Res.string.string_not_available),
+            Res.string.submission_date to (
+                client.timeline?.submittedOnDate?.toDateString()?.takeIf { it.isNotBlank() }
+                    ?: getString(Res.string.string_not_available)
+                ),
+            Res.string.activation_date to (
+                client.activationDate.toDateString().takeIf { it.isNotBlank() }
+                    ?: getString(Res.string.string_not_available)
+                ),
+            Res.string.staff to (
+                client.staffName?.takeIf { it.isNotBlank() }
+                    ?: getString(Res.string.string_not_available)
+                ),
         )
 
-        return mapOf(
-            "Personal Info" to personalInfo,
-            "Account Info" to accountInfo,
-            "Other Info" to otherInfo,
+        return listOf(
+            personalInfo,
+            accountInfo,
+            otherInfo,
         )
     }
 
@@ -182,7 +209,7 @@ data class ClientProfileDetailsState(
     val profileImage: ByteArray? = null,
     val client: ClientEntity? = null,
     val dialogState: DialogState? = null,
-    val details: Map<String, Map<StringResource, String>> = emptyMap(),
+    val details: List<Map<StringResource, String>> = emptyList(),
     val networkConnection: Boolean = false,
 ) {
     /**

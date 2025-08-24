@@ -189,11 +189,9 @@ private fun ClientProfileDetailsScaffold(
 
                 Spacer(Modifier.height(DesignToken.padding.large))
 
-                state.details.forEach { (sectionName, dataMap) ->
-                    if (dataMap.isNotEmpty()) {
-                        MifosDefaultListingComponentFromStringResources(data = dataMap)
-                        Spacer(Modifier.height(DesignToken.padding.large))
-                    }
+                state.details.forEach { list ->
+                    MifosDefaultListingComponentFromStringResources(data = list)
+                    Spacer(Modifier.height(DesignToken.padding.large))
                 }
 
                 Row(
