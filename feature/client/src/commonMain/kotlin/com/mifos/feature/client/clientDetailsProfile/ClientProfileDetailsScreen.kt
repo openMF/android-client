@@ -12,13 +12,23 @@ package com.mifos.feature.client.clientDetailsProfile
 import androidclient.feature.client.generated.resources.Res
 import androidclient.feature.client.generated.resources.arrow_downward
 import androidclient.feature.client.generated.resources.arrow_up
+import androidclient.feature.client.generated.resources.cancel
 import androidclient.feature.client.generated.resources.client_profile_actions
 import androidclient.feature.client.generated.resources.client_profile_details_title
+import androidclient.feature.client.generated.resources.confirm_text
+import androidclient.feature.client.generated.resources.dialog_continue
+import androidclient.feature.client.generated.resources.dialog_unassign_message
+import androidclient.feature.client.generated.resources.dismiss_text
 import androidclient.feature.client.generated.resources.pen_icon
 import androidclient.feature.client.generated.resources.scroll_for_more_options
+import androidclient.feature.client.generated.resources.staff_unassign_failure_title
+import androidclient.feature.client.generated.resources.staff_unassign_success_message
+import androidclient.feature.client.generated.resources.staff_unassign_success_title
+import androidclient.feature.client.generated.resources.title_unassign_staff
 import androidclient.feature.client.generated.resources.update_details
 import androidclient.feature.client.generated.resources.update_photo
 import androidclient.feature.client.generated.resources.update_signature
+import androidclient.feature.client.generated.resources.warning_amber
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -41,6 +51,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mifos.core.designsystem.component.BasicDialogState
+import com.mifos.core.designsystem.component.BasicDialogState.*
 import com.mifos.core.designsystem.component.MifosBasicDialog
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosTextButton
@@ -51,11 +62,13 @@ import com.mifos.core.ui.components.MifosDefaultListingComponentFromStringResour
 import com.mifos.core.ui.components.MifosErrorComponent
 import com.mifos.core.ui.components.MifosProgressIndicator
 import com.mifos.core.ui.components.MifosRowCard
+import com.mifos.core.ui.components.MifosStatusDialog
 import com.mifos.core.ui.util.EventsEffect
 import com.mifos.core.ui.util.TextUtil
 import com.mifos.feature.client.clientDetailsProfile.components.ClientDetailsProfile
 import com.mifos.feature.client.clientDetailsProfile.components.ClientProfileDetailsActionItem
 import com.mifos.feature.client.clientDetailsProfile.components.clientsDetailsActionItems
+import com.mifos.feature.client.clientStaff.ClientStaffAction
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
@@ -65,6 +78,7 @@ internal fun ClientProfileDetailsScreen(
     onNavigateBack: () -> Unit,
     navigateToUpdatePhoto: (Int, String, String) -> Unit,
     navigateToAssignStaff:(Int)->Unit,
+    navigateToHome:()->Unit,
     modifier: Modifier = Modifier,
     viewModel: ClientProfileDetailsViewModel = koinViewModel(),
 ) {
@@ -101,6 +115,8 @@ internal fun ClientProfileDetailsScreen(
                     state.client?.accountNo ?: "",
                 )
             }
+
+            ClientProfileDetailsEvent.NavigateNext -> navigateToHome()
         }
     }
 
@@ -110,14 +126,6 @@ internal fun ClientProfileDetailsScreen(
         onAction = remember(viewModel) { { viewModel.trySendAction(it) } },
     )
 
-    ClientProfileDetailsDialogs(
-        state = state,
-        onAction = remember(viewModel) {
-            {
-                viewModel.trySendAction(it)
-            }
-        },
-    )
 }
 
 @Composable
@@ -131,7 +139,13 @@ private fun ClientProfileDetailsScaffold(
         onBackPressed = { onAction(ClientProfileDetailsAction.NavigateBack) },
         modifier = modifier,
     ) { paddingValues ->
-        if (state.dialogState != ClientProfileDetailsState.DialogState.Loading) {
+        ClientProfileDetailsDialogs(
+            state = state,
+            onAction = onAction
+        )
+        if (state.dialogState != ClientProfileDetailsState.DialogState.Loading &&
+            state.dialogState !is ClientProfileDetailsState.DialogState.ShowStatusDialog
+        ) {
             Column(
                 modifier = Modifier
                     .fillMaxSize()
@@ -296,10 +310,9 @@ private fun ClientProfileDetailsDialogs(
 
         ClientProfileDetailsState.DialogState.UnAssignStaff -> {
             MifosBasicDialog(
-                visibilityState = BasicDialogState.Shown(
-                    message = "Are you sure you want to unassign staff for this client? ." +
-                            "Once unassigned can only be assigned again after some minutes",
-                    title = "Unassigning staff?"
+                visibilityState = Shown(
+                    message = stringResource(Res.string.dialog_unassign_message),
+                    title = stringResource(Res.string.title_unassign_staff)
                 ),
                 onConfirm = {
                     onAction(ClientProfileDetailsAction.ConfirmUnAssignStaff)
@@ -307,11 +320,29 @@ private fun ClientProfileDetailsDialogs(
                 onDismissRequest = {
                     onAction(ClientProfileDetailsAction.DismissDialog)
                 },
-                confirmText = "I Confirm",
-                dismissText = "Cancel",
+                confirmText = stringResource(Res.string.confirm_text),
+                dismissText = stringResource(Res.string.dismiss_text),
                 icon ={
-
+                    Icon(
+                        painter = painterResource(Res.drawable.warning_amber),
+                        contentDescription = null,
+                        modifier = Modifier.size(DesignToken.sizes.iconMedium),
+                    )
                 }
+            )
+        }
+
+        is ClientProfileDetailsState.DialogState.ShowStatusDialog -> {
+            MifosStatusDialog(
+                status = state.dialogState.status,
+                btnText = stringResource(Res.string.dialog_continue),
+                onConfirm = {
+                    onAction(ClientProfileDetailsAction.OnNext)
+                },
+                successTitle = stringResource(Res.string.staff_unassign_success_title),
+                successMessage= stringResource(Res.string.staff_unassign_success_message),
+                failureTitle= stringResource(Res.string.staff_unassign_failure_title),
+                failureMessage = state.dialogState.msg
             )
         }
     }

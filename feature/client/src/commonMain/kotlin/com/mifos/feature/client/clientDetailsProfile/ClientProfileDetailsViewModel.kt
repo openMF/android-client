@@ -29,11 +29,15 @@ import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.repository.ClientDetailsRepository
 import com.mifos.core.data.util.NetworkMonitor
 import com.mifos.core.domain.useCases.GetClientDetailsUseCase
+import com.mifos.core.ui.components.ResultStatus
 import com.mifos.core.ui.util.BaseViewModel
 import com.mifos.core.ui.util.imageToByteArray
 import com.mifos.core.ui.util.toDateString
 import com.mifos.feature.client.clientDetailsProfile.ClientProfileDetailsEvent.*
 import com.mifos.feature.client.clientDetailsProfile.components.ClientProfileDetailsActionItem
+import com.mifos.feature.client.clientStaff.ClientStaffAction
+import com.mifos.feature.client.clientStaff.ClientStaffEvent
+import com.mifos.feature.client.clientStaff.ClientStaffState
 import com.mifos.room.entities.client.ClientEntity
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -191,7 +195,7 @@ internal class ClientProfileDetailsViewModel(
 
     override fun handleAction(action: ClientProfileDetailsAction) {
         when (action) {
-            ClientProfileDetailsAction.NavigateBack -> sendEvent(ClientProfileDetailsEvent.NavigateBack)
+            ClientProfileDetailsAction.NavigateBack -> sendEvent(NavigateBack)
             is ClientProfileDetailsAction.OnActionClick ->{
                 if(action.action==ClientProfileDetailsActionItem.AssignStaff && state.client?.staffName!=null){
                     mutableStateFlow.update {
@@ -201,15 +205,16 @@ internal class ClientProfileDetailsViewModel(
                     }
                 }else{
                     sendEvent(OnActionClick(action.action))
-
                 }
             }
             ClientProfileDetailsAction.OnRetry -> getClientAndObserveNetwork()
             ClientProfileDetailsAction.OnUpdateDetailsClick -> {}
-            ClientProfileDetailsAction.OnUpdatePhotoClick -> sendEvent(ClientProfileDetailsEvent.NavigateToUpdatePhoto)
+            ClientProfileDetailsAction.OnUpdatePhotoClick -> sendEvent(NavigateToUpdatePhoto)
             ClientProfileDetailsAction.OnUpdateSignatureClick -> {}
             ClientProfileDetailsAction.ConfirmUnAssignStaff -> {
-
+                viewModelScope.launch {
+                    unAssignStaff()
+                }
             }
             ClientProfileDetailsAction.DismissDialog -> {
                 mutableStateFlow.update {
@@ -218,6 +223,44 @@ internal class ClientProfileDetailsViewModel(
                     )
                 }
             }
+
+            ClientProfileDetailsAction.OnNext -> sendEvent(ClientProfileDetailsEvent.NavigateNext)
+        }
+    }
+
+    suspend fun unAssignStaff(){
+        if(state.client==null || state.client?.staffId==null) {
+            mutableStateFlow.update {
+                it.copy(
+                    dialogState = null
+                )
+            }
+            return
+        }
+        mutableStateFlow.update {
+            it.copy(
+                dialogState = ClientProfileDetailsState.DialogState.Loading
+            )
+        }
+        val result=clientDetailsRepo.unassignStaff(route.id, state.client!!.staffId)
+        when{
+            result is DataState.Success->{
+                mutableStateFlow.update {
+                    it.copy(
+                        dialogState = ClientProfileDetailsState.DialogState
+                            .ShowStatusDialog(ResultStatus.SUCCESS)
+                    )
+                }
+            }
+            result is DataState.Error->{
+                mutableStateFlow.update {
+                    it.copy(
+                        dialogState = ClientProfileDetailsState.DialogState
+                            .ShowStatusDialog(ResultStatus.FAILURE,result.message)
+                    )
+                }
+            }
+
         }
     }
 }
@@ -240,6 +283,7 @@ data class ClientProfileDetailsState(
         data class Error(val message: String) : DialogState
         data object Loading : DialogState
         data object UnAssignStaff: DialogState
+        data class ShowStatusDialog(val status: ResultStatus,val msg:String=""): DialogState
     }
 }
 
@@ -254,6 +298,8 @@ sealed interface ClientProfileDetailsEvent {
     data class OnActionClick(val action: ClientProfileDetailsActionItem) : ClientProfileDetailsEvent
 
     data object NavigateToUpdatePhoto : ClientProfileDetailsEvent
+
+    data object NavigateNext : ClientProfileDetailsEvent
 }
 
 /**
@@ -278,4 +324,6 @@ sealed interface ClientProfileDetailsAction {
     data object DismissDialog:ClientProfileDetailsAction
 
     data object ConfirmUnAssignStaff:ClientProfileDetailsAction
+
+    data object OnNext : ClientProfileDetailsAction
 }

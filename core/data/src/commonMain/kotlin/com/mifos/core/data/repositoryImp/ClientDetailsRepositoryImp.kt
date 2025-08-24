@@ -55,4 +55,11 @@ class ClientDetailsRepositoryImp(
     ): DataState<Unit> {
         return dataManagerClient.updateClientStaff(clientId, staffId)
     }
+
+    override suspend fun unassignStaff(
+        clientId: Int,
+        staffId: Int,
+    ): DataState<Unit> {
+        return dataManagerClient.unAssignClientStaff(clientId, staffId)
+    }
 }

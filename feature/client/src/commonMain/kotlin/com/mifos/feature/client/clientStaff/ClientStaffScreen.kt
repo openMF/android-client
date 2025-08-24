@@ -1,5 +1,17 @@
 package com.mifos.feature.client.clientStaff
 
+import androidclient.feature.client.generated.resources.Res
+import androidclient.feature.client.generated.resources.btn_back
+import androidclient.feature.client.generated.resources.btn_submit
+import androidclient.feature.client.generated.resources.dialog_continue
+import androidclient.feature.client.generated.resources.feature_client_go_back
+import androidclient.feature.client.generated.resources.label_assign_staff
+import androidclient.feature.client.generated.resources.label_choose_staff
+import androidclient.feature.client.generated.resources.msg_cannot_assign_staff
+import androidclient.feature.client.generated.resources.staff_assign_failure_title
+import androidclient.feature.client.generated.resources.staff_assign_success_message
+import androidclient.feature.client.generated.resources.staff_assign_success_title
+import androidclient.feature.client.generated.resources.title_client_assign_staff
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -29,6 +41,7 @@ import com.mifos.core.ui.components.MifosProgressIndicator
 import com.mifos.core.ui.components.MifosStatusDialog
 import com.mifos.core.ui.components.ResultStatus
 import com.mifos.core.ui.util.EventsEffect
+import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -61,7 +74,7 @@ private fun ClientStaffScaffold(
     modifier: Modifier = Modifier,
 ) {
     MifosScaffold(
-        title = "Client Staff",
+        title = stringResource(Res.string.title_client_assign_staff),
         onBackPressed = { onAction(ClientStaffAction.NavigateBack) },
         modifier = modifier,
     ) { paddingValues ->
@@ -80,7 +93,7 @@ private fun ClientStaffScaffold(
             ) {
                 if(state.staffOptions.isNotEmpty()){
                     Text(
-                        text="Assign Staff",
+                        text=stringResource(Res.string.label_assign_staff),
                         style = MifosTypography.labelLargeEmphasized,
                     )
                     Spacer(Modifier.height(DesignToken.padding.largeIncreased))
@@ -91,7 +104,7 @@ private fun ClientStaffScaffold(
                             onAction(ClientStaffAction.OptionChanged(index))
                         } ,
                         options = state.staffOptions.map { it.displayName },
-                        label = "Choose the service staff",
+                        label = stringResource(Res.string.label_choose_staff),
                         modifier = Modifier.fillMaxWidth(),
                     )
                     Spacer(Modifier.height(DesignToken.padding.largeIncreased))
@@ -112,7 +125,7 @@ private fun ClientStaffScaffold(
                             },
                             text = {
                                 Text(
-                                    text="Back",
+                                    text=stringResource(Res.string.btn_back),
                                     color = MaterialTheme.colorScheme.primary,
                                     style = MifosTypography.labelLarge
                                 )
@@ -133,7 +146,7 @@ private fun ClientStaffScaffold(
                             },
                             text = {
                                 Text(
-                                    text="Submit",
+                                    text=stringResource(Res.string.btn_submit),
                                     style = MifosTypography.labelLarge
                                 )
                             },
@@ -142,7 +155,7 @@ private fun ClientStaffScaffold(
                     }
                 }
                 else{
-                    Text("Can't Assign a Staff to this client")
+                    Text(stringResource(Res.string.msg_cannot_assign_staff))
                 }
 
             }
@@ -173,13 +186,13 @@ private fun ClientStaffDialogs(
         is ClientStaffState.DialogState.ShowStatusDialog -> {
             MifosStatusDialog(
                 status = state.dialogState.status,
-                btnText = "Continue",
+                btnText = stringResource(Res.string.dialog_continue),
                 onConfirm = {
                     onAction(ClientStaffAction.OnNext)
                 },
-                successTitle = "Staff Assigned Successfully!!",
-            successMessage= "Your request was completed successfully.",
-            failureTitle= "Staff Assigning Failed!",
+                successTitle = stringResource(Res.string.staff_assign_success_title),
+            successMessage= stringResource(Res.string.staff_assign_success_message),
+            failureTitle= stringResource(Res.string.staff_assign_failure_title),
             failureMessage = state.dialogState.msg
             )
         }

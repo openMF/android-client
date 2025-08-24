@@ -36,4 +36,6 @@ interface ClientDetailsRepository {
 
     suspend fun updateStaff(clientId:Int,staffId:Int): DataState<Unit>
 
+    suspend fun unassignStaff(clientId:Int,staffId:Int): DataState<Unit>
+
 }
