@@ -67,13 +67,13 @@ internal class ClientStaffViewModel(
         }
     }
 
-    private suspend fun updateStaff() {
+    private suspend fun assignStaff() {
         mutableStateFlow.update {
             it.copy(
                 dialogState = ClientStaffState.DialogState.Loading,
             )
         }
-        val result = repo.updateStaff(clientId = route.id, staffId = state.staffOptions[state.currentSelectedIndex].id)
+        val result = repo.assignStaff(clientId = route.id, staffId = state.staffOptions[state.currentSelectedIndex].id)
         when {
             result is DataState.Success -> {
                 mutableStateFlow.update {
@@ -117,7 +117,7 @@ internal class ClientStaffViewModel(
 
             ClientStaffAction.OnSubmit -> {
                 viewModelScope.launch {
-                    updateStaff()
+                    assignStaff()
                 }
             }
         }

@@ -33,7 +33,7 @@ interface ClientDetailsRepository {
 
     fun getImage(clientId: Int): Flow<DataState<String>>
 
-    suspend fun updateStaff(clientId: Int, staffId: Int): DataState<Unit>
+    suspend fun assignStaff(clientId: Int, staffId: Int): DataState<Unit>
 
     suspend fun unassignStaff(clientId: Int, staffId: Int): DataState<Unit>
 }
