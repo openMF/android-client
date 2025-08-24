@@ -302,11 +302,7 @@
     <string name="title_unassign_staff">Unassigning staff?</string>
 
     <!-- Dialogs -->
-    <string name="dialog_unassign_message">
-        This client already has a staff member assigned.
-        Do you want to unassign the staff for this client?
-        Once unassigned, a new staff member can only be assigned again after a few minutes.
-    </string>
+    <string name="dialog_unassign_message">This client already has a staff member assigned.Do you want to unassign the staff for this client?Once unassigned, a new staff member can only be assigned again after a few minutes.</string>
     <string name="confirm_text">I Confirm</string>
     <string name="dismiss_text">Cancel</string>
     <string name="dialog_continue">Continue</string>

@@ -1,3 +1,12 @@
+/*
+ * Copyright 2025 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ */
 package com.mifos.feature.client.clientStaff
 
 import androidx.lifecycle.SavedStateHandle
@@ -43,40 +52,40 @@ internal class ClientStaffViewModel(
                 mutableStateFlow.update {
                     it.copy(
                         staffOptions = options,
-                        dialogState = null
+                        dialogState = null,
                     )
                 }
             } catch (e: Exception) {
                 mutableStateFlow.update {
                     it.copy(
                         dialogState = ClientStaffState.DialogState.Error(
-                            e.message ?: "Unknown error"
-                        )
+                            e.message ?: "Unknown error",
+                        ),
                     )
                 }
             }
         }
     }
 
-    private suspend fun updateStaff(){
+    private suspend fun updateStaff() {
         mutableStateFlow.update {
             it.copy(
-                dialogState = ClientStaffState.DialogState.Loading
+                dialogState = ClientStaffState.DialogState.Loading,
             )
         }
-        val result=repo.updateStaff(clientId = route.id, staffId = state.staffOptions[state.currentSelectedIndex].id)
-        when{
-            result is DataState.Success->{
+        val result = repo.updateStaff(clientId = route.id, staffId = state.staffOptions[state.currentSelectedIndex].id)
+        when {
+            result is DataState.Success -> {
                 mutableStateFlow.update {
                     it.copy(
-                        dialogState = ClientStaffState.DialogState.ShowStatusDialog(ResultStatus.SUCCESS)
+                        dialogState = ClientStaffState.DialogState.ShowStatusDialog(ResultStatus.SUCCESS),
                     )
                 }
             }
-            result is DataState.Error ->{
+            result is DataState.Error -> {
                 mutableStateFlow.update {
                     it.copy(
-                        dialogState = ClientStaffState.DialogState.ShowStatusDialog(ResultStatus.FAILURE,result.message)
+                        dialogState = ClientStaffState.DialogState.ShowStatusDialog(ResultStatus.FAILURE, result.message),
                     )
                 }
             }
@@ -101,12 +110,12 @@ internal class ClientStaffViewModel(
             is ClientStaffAction.OptionChanged -> {
                 mutableStateFlow.update {
                     it.copy(
-                        currentSelectedIndex = action.index
+                        currentSelectedIndex = action.index,
                     )
                 }
             }
 
-            ClientStaffAction.OnSubmit ->{
+            ClientStaffAction.OnSubmit -> {
                 viewModelScope.launch {
                     updateStaff()
                 }
@@ -117,14 +126,14 @@ internal class ClientStaffViewModel(
 
 data class ClientStaffState(
     val staffOptions: List<StaffOption> = emptyList(),
-    val currentSelectedIndex:Int=0,
+    val currentSelectedIndex: Int = 0,
     val dialogState: DialogState? = null,
     val networkConnection: Boolean = false,
 ) {
     sealed interface DialogState {
         data class Error(val message: String) : DialogState
         data object Loading : DialogState
-        data class ShowStatusDialog(val status: ResultStatus,val msg:String=""):DialogState
+        data class ShowStatusDialog(val status: ResultStatus, val msg: String = "") : DialogState
     }
 }
 
@@ -137,6 +146,6 @@ sealed interface ClientStaffAction {
     data object NavigateBack : ClientStaffAction
     data object OnRetry : ClientStaffAction
     data object OnNext : ClientStaffAction
-    data class OptionChanged(val index:Int):ClientStaffAction
-    data object OnSubmit:ClientStaffAction
+    data class OptionChanged(val index: Int) : ClientStaffAction
+    data object OnSubmit : ClientStaffAction
 }

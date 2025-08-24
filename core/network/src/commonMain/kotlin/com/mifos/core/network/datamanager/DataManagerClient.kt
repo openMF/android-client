@@ -483,13 +483,13 @@ class DataManagerClient(
         staffId: Int,
     ): DataState<Unit> {
         return try {
-            val res=mBaseApiManager.clientService.assignStaff(
+            val res = mBaseApiManager.clientService.assignStaff(
                 clientId = clientId,
-                payload = AssignStaffRequest(staffId)
+                payload = AssignStaffRequest(staffId),
             )
-            if(res.status.value==200){
+            if (res.status.value == 200) {
                 DataState.Success(Unit)
-            }else{
+            } else {
                 val errorBody = res.bodyAsText()
                 DataState.Error(Exception(errorBody))
             }
@@ -503,13 +503,13 @@ class DataManagerClient(
         staffId: Int,
     ): DataState<Unit> {
         return try {
-            val res=mBaseApiManager.clientService.unassignStaff(
+            val res = mBaseApiManager.clientService.unassignStaff(
                 clientId = clientId,
-                payload = AssignStaffRequest(staffId)
+                payload = AssignStaffRequest(staffId),
             )
-            if(res.status.value==200){
+            if (res.status.value == 200) {
                 DataState.Success(Unit)
-            }else{
+            } else {
                 val errorBody = res.bodyAsText()
                 DataState.Error(Exception(errorBody))
             }
@@ -517,5 +517,4 @@ class DataManagerClient(
             DataState.Error(e)
         }
     }
-
 }

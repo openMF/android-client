@@ -251,12 +251,12 @@ interface ClientService {
     @POST("clients/{clientId}?command=assignStaff")
     suspend fun assignStaff(
         @Path("clientId") clientId: Int,
-        @Body payload: AssignStaffRequest
+        @Body payload: AssignStaffRequest,
     ): HttpResponse
 
     @POST("clients/{clientId}?command=unassignStaff")
     suspend fun unassignStaff(
         @Path("clientId") clientId: Int,
-        @Body payload: AssignStaffRequest
+        @Body payload: AssignStaffRequest,
     ): HttpResponse
 }

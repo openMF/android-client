@@ -1,10 +1,18 @@
+/*
+ * Copyright 2025 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ */
 package com.mifos.feature.client.clientStaff
 
 import androidclient.feature.client.generated.resources.Res
 import androidclient.feature.client.generated.resources.btn_back
 import androidclient.feature.client.generated.resources.btn_submit
 import androidclient.feature.client.generated.resources.dialog_continue
-import androidclient.feature.client.generated.resources.feature_client_go_back
 import androidclient.feature.client.generated.resources.label_assign_staff
 import androidclient.feature.client.generated.resources.label_choose_staff
 import androidclient.feature.client.generated.resources.msg_cannot_assign_staff
@@ -28,7 +36,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.mifos.core.designsystem.component.MifosButton
 import com.mifos.core.designsystem.component.MifosOutlinedButton
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosTextButton
@@ -39,7 +46,6 @@ import com.mifos.core.designsystem.theme.MifosTypography
 import com.mifos.core.ui.components.MifosErrorComponent
 import com.mifos.core.ui.components.MifosProgressIndicator
 import com.mifos.core.ui.components.MifosStatusDialog
-import com.mifos.core.ui.components.ResultStatus
 import com.mifos.core.ui.util.EventsEffect
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
@@ -80,7 +86,7 @@ private fun ClientStaffScaffold(
     ) { paddingValues ->
         ClientStaffDialogs(
             state = state,
-            onAction = onAction
+            onAction = onAction,
         )
         if (state.dialogState == null) {
             Column(
@@ -88,28 +94,28 @@ private fun ClientStaffScaffold(
                     .fillMaxSize()
                     .padding(paddingValues)
                     .padding(
-                         DesignToken.padding.large,
+                        DesignToken.padding.large,
                     ),
             ) {
-                if(state.staffOptions.isNotEmpty()){
+                if (state.staffOptions.isNotEmpty()) {
                     Text(
-                        text=stringResource(Res.string.label_assign_staff),
+                        text = stringResource(Res.string.label_assign_staff),
                         style = MifosTypography.labelLargeEmphasized,
                     )
                     Spacer(Modifier.height(DesignToken.padding.largeIncreased))
                     MifosTextFieldDropdown(
                         value = state.staffOptions[state.currentSelectedIndex].displayName,
                         onValueChanged = {},
-                        onOptionSelected = { index,value->
+                        onOptionSelected = { index, value ->
                             onAction(ClientStaffAction.OptionChanged(index))
-                        } ,
+                        },
                         options = state.staffOptions.map { it.displayName },
                         label = stringResource(Res.string.label_choose_staff),
                         modifier = Modifier.fillMaxWidth(),
                     )
                     Spacer(Modifier.height(DesignToken.padding.largeIncreased))
                     Row(
-                        modifier= Modifier.fillMaxWidth()
+                        modifier = Modifier.fillMaxWidth(),
                     ) {
                         MifosOutlinedButton(
                             onClick = {
@@ -120,17 +126,17 @@ private fun ClientStaffScaffold(
                                     imageVector = MifosIcons.ChevronLeft,
                                     contentDescription = null,
                                     modifier = Modifier.size(DesignToken.sizes.iconAverage),
-                                    tint = MaterialTheme.colorScheme.primary
+                                    tint = MaterialTheme.colorScheme.primary,
                                 )
                             },
                             text = {
                                 Text(
-                                    text=stringResource(Res.string.btn_back),
+                                    text = stringResource(Res.string.btn_back),
                                     color = MaterialTheme.colorScheme.primary,
-                                    style = MifosTypography.labelLarge
+                                    style = MifosTypography.labelLarge,
                                 )
                             },
-                            modifier=Modifier.weight(1f)
+                            modifier = Modifier.weight(1f),
                         )
                         Spacer(Modifier.padding(DesignToken.padding.small))
                         MifosTextButton(
@@ -146,18 +152,16 @@ private fun ClientStaffScaffold(
                             },
                             text = {
                                 Text(
-                                    text=stringResource(Res.string.btn_submit),
-                                    style = MifosTypography.labelLarge
+                                    text = stringResource(Res.string.btn_submit),
+                                    style = MifosTypography.labelLarge,
                                 )
                             },
-                            modifier=Modifier.weight(1f)
+                            modifier = Modifier.weight(1f),
                         )
                     }
-                }
-                else{
+                } else {
                     Text(stringResource(Res.string.msg_cannot_assign_staff))
                 }
-
             }
         }
     }
@@ -166,7 +170,7 @@ private fun ClientStaffScaffold(
 @Composable
 private fun ClientStaffDialogs(
     state: ClientStaffState,
-    onAction: (ClientStaffAction) -> Unit
+    onAction: (ClientStaffAction) -> Unit,
 ) {
     when (state.dialogState) {
         is ClientStaffState.DialogState.Loading -> MifosProgressIndicator()
@@ -191,9 +195,9 @@ private fun ClientStaffDialogs(
                     onAction(ClientStaffAction.OnNext)
                 },
                 successTitle = stringResource(Res.string.staff_assign_success_title),
-            successMessage= stringResource(Res.string.staff_assign_success_message),
-            failureTitle= stringResource(Res.string.staff_assign_failure_title),
-            failureMessage = state.dialogState.msg
+                successMessage = stringResource(Res.string.staff_assign_success_message),
+                failureTitle = stringResource(Res.string.staff_assign_failure_title),
+                failureMessage = state.dialogState.msg,
             )
         }
     }

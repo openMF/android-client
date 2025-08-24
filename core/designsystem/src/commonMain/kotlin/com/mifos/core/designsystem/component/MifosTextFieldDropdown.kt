@@ -20,22 +20,17 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.MenuItemColors
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
-import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.designsystem.theme.MifosTypography
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
@@ -75,12 +70,14 @@ fun MifosTextFieldDropdown(
             },
             value = value,
             onValueChange = onValueChanged,
-            label = { label?.let {
-                Text(
-                    text=it,
-                    style = MifosTypography.bodySmall,
-                )
-            } },
+            label = {
+                label?.let {
+                    Text(
+                        text = it,
+                        style = MifosTypography.bodySmall,
+                    )
+                }
+            },
             modifier = modifier
                 .menuAnchor()
                 .clickable(enabled = readOnly) { isExpanded = true },

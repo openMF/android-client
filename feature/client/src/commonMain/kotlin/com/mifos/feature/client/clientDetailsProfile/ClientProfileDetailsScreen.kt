@@ -12,7 +12,6 @@ package com.mifos.feature.client.clientDetailsProfile
 import androidclient.feature.client.generated.resources.Res
 import androidclient.feature.client.generated.resources.arrow_downward
 import androidclient.feature.client.generated.resources.arrow_up
-import androidclient.feature.client.generated.resources.cancel
 import androidclient.feature.client.generated.resources.client_profile_actions
 import androidclient.feature.client.generated.resources.client_profile_details_title
 import androidclient.feature.client.generated.resources.confirm_text
@@ -51,11 +50,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mifos.core.designsystem.component.BasicDialogState
-import com.mifos.core.designsystem.component.BasicDialogState.*
 import com.mifos.core.designsystem.component.MifosBasicDialog
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosTextButton
-import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.designsystem.theme.MifosTypography
 import com.mifos.core.ui.components.MifosDefaultListingComponentFromStringResources
@@ -68,7 +65,6 @@ import com.mifos.core.ui.util.TextUtil
 import com.mifos.feature.client.clientDetailsProfile.components.ClientDetailsProfile
 import com.mifos.feature.client.clientDetailsProfile.components.ClientProfileDetailsActionItem
 import com.mifos.feature.client.clientDetailsProfile.components.clientsDetailsActionItems
-import com.mifos.feature.client.clientStaff.ClientStaffAction
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
@@ -77,8 +73,8 @@ import org.koin.compose.viewmodel.koinViewModel
 internal fun ClientProfileDetailsScreen(
     onNavigateBack: () -> Unit,
     navigateToUpdatePhoto: (Int, String, String) -> Unit,
-    navigateToAssignStaff:(Int)->Unit,
-    navigateToHome:()->Unit,
+    navigateToAssignStaff: (Int) -> Unit,
+    navigateToHome: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: ClientProfileDetailsViewModel = koinViewModel(),
 ) {
@@ -125,7 +121,6 @@ internal fun ClientProfileDetailsScreen(
         state = state,
         onAction = remember(viewModel) { { viewModel.trySendAction(it) } },
     )
-
 }
 
 @Composable
@@ -141,7 +136,7 @@ private fun ClientProfileDetailsScaffold(
     ) { paddingValues ->
         ClientProfileDetailsDialogs(
             state = state,
-            onAction = onAction
+            onAction = onAction,
         )
         if (state.dialogState != ClientProfileDetailsState.DialogState.Loading &&
             state.dialogState !is ClientProfileDetailsState.DialogState.ShowStatusDialog
@@ -310,9 +305,9 @@ private fun ClientProfileDetailsDialogs(
 
         ClientProfileDetailsState.DialogState.UnAssignStaff -> {
             MifosBasicDialog(
-                visibilityState = Shown(
+                visibilityState = BasicDialogState.Shown(
                     message = stringResource(Res.string.dialog_unassign_message),
-                    title = stringResource(Res.string.title_unassign_staff)
+                    title = stringResource(Res.string.title_unassign_staff),
                 ),
                 onConfirm = {
                     onAction(ClientProfileDetailsAction.ConfirmUnAssignStaff)
@@ -322,13 +317,13 @@ private fun ClientProfileDetailsDialogs(
                 },
                 confirmText = stringResource(Res.string.confirm_text),
                 dismissText = stringResource(Res.string.dismiss_text),
-                icon ={
+                icon = {
                     Icon(
                         painter = painterResource(Res.drawable.warning_amber),
                         contentDescription = null,
                         modifier = Modifier.size(DesignToken.sizes.iconMedium),
                     )
-                }
+                },
             )
         }
 
@@ -340,9 +335,9 @@ private fun ClientProfileDetailsDialogs(
                     onAction(ClientProfileDetailsAction.OnNext)
                 },
                 successTitle = stringResource(Res.string.staff_unassign_success_title),
-                successMessage= stringResource(Res.string.staff_unassign_success_message),
-                failureTitle= stringResource(Res.string.staff_unassign_failure_title),
-                failureMessage = state.dialogState.msg
+                successMessage = stringResource(Res.string.staff_unassign_success_message),
+                failureTitle = stringResource(Res.string.staff_unassign_failure_title),
+                failureMessage = state.dialogState.msg,
             )
         }
     }

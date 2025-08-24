@@ -96,7 +96,7 @@ fun MifosButton(
     elevation: ButtonElevation? = ButtonDefaults.buttonElevation(),
     colors: ButtonColors = ButtonDefaults.buttonColors(
         containerColor = MaterialTheme.colorScheme.primary,
-        contentColor = AppColors.customWhite
+        contentColor = AppColors.customWhite,
     ),
 ) {
     Button(

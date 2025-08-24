@@ -33,11 +33,7 @@ import com.mifos.core.ui.components.ResultStatus
 import com.mifos.core.ui.util.BaseViewModel
 import com.mifos.core.ui.util.imageToByteArray
 import com.mifos.core.ui.util.toDateString
-import com.mifos.feature.client.clientDetailsProfile.ClientProfileDetailsEvent.*
 import com.mifos.feature.client.clientDetailsProfile.components.ClientProfileDetailsActionItem
-import com.mifos.feature.client.clientStaff.ClientStaffAction
-import com.mifos.feature.client.clientStaff.ClientStaffEvent
-import com.mifos.feature.client.clientStaff.ClientStaffState
 import com.mifos.room.entities.client.ClientEntity
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -195,21 +191,21 @@ internal class ClientProfileDetailsViewModel(
 
     override fun handleAction(action: ClientProfileDetailsAction) {
         when (action) {
-            ClientProfileDetailsAction.NavigateBack -> sendEvent(NavigateBack)
-            is ClientProfileDetailsAction.OnActionClick ->{
-                if(action.action==ClientProfileDetailsActionItem.AssignStaff && state.client?.staffName!=null){
+            ClientProfileDetailsAction.NavigateBack -> sendEvent(ClientProfileDetailsEvent.NavigateBack)
+            is ClientProfileDetailsAction.OnActionClick -> {
+                if (action.action == ClientProfileDetailsActionItem.AssignStaff && state.client?.staffName != null) {
                     mutableStateFlow.update {
                         it.copy(
-                            dialogState = ClientProfileDetailsState.DialogState.UnAssignStaff
+                            dialogState = ClientProfileDetailsState.DialogState.UnAssignStaff,
                         )
                     }
-                }else{
-                    sendEvent(OnActionClick(action.action))
+                } else {
+                    sendEvent(ClientProfileDetailsEvent.OnActionClick(action.action))
                 }
             }
             ClientProfileDetailsAction.OnRetry -> getClientAndObserveNetwork()
             ClientProfileDetailsAction.OnUpdateDetailsClick -> {}
-            ClientProfileDetailsAction.OnUpdatePhotoClick -> sendEvent(NavigateToUpdatePhoto)
+            ClientProfileDetailsAction.OnUpdatePhotoClick -> sendEvent(ClientProfileDetailsEvent.NavigateToUpdatePhoto)
             ClientProfileDetailsAction.OnUpdateSignatureClick -> {}
             ClientProfileDetailsAction.ConfirmUnAssignStaff -> {
                 viewModelScope.launch {
@@ -219,7 +215,7 @@ internal class ClientProfileDetailsViewModel(
             ClientProfileDetailsAction.DismissDialog -> {
                 mutableStateFlow.update {
                     it.copy(
-                        dialogState = null
+                        dialogState = null,
                     )
                 }
             }
@@ -228,39 +224,38 @@ internal class ClientProfileDetailsViewModel(
         }
     }
 
-    suspend fun unAssignStaff(){
-        if(state.client==null || state.client?.staffId==null) {
+    suspend fun unAssignStaff() {
+        if (state.client == null || state.client?.staffId == null) {
             mutableStateFlow.update {
                 it.copy(
-                    dialogState = null
+                    dialogState = null,
                 )
             }
             return
         }
         mutableStateFlow.update {
             it.copy(
-                dialogState = ClientProfileDetailsState.DialogState.Loading
+                dialogState = ClientProfileDetailsState.DialogState.Loading,
             )
         }
-        val result=clientDetailsRepo.unassignStaff(route.id, state.client!!.staffId)
-        when{
-            result is DataState.Success->{
+        val result = clientDetailsRepo.unassignStaff(route.id, state.client!!.staffId)
+        when {
+            result is DataState.Success -> {
                 mutableStateFlow.update {
                     it.copy(
                         dialogState = ClientProfileDetailsState.DialogState
-                            .ShowStatusDialog(ResultStatus.SUCCESS)
+                            .ShowStatusDialog(ResultStatus.SUCCESS),
                     )
                 }
             }
-            result is DataState.Error->{
+            result is DataState.Error -> {
                 mutableStateFlow.update {
                     it.copy(
                         dialogState = ClientProfileDetailsState.DialogState
-                            .ShowStatusDialog(ResultStatus.FAILURE,result.message)
+                            .ShowStatusDialog(ResultStatus.FAILURE, result.message),
                     )
                 }
             }
-
         }
     }
 }
@@ -282,8 +277,8 @@ data class ClientProfileDetailsState(
     sealed interface DialogState {
         data class Error(val message: String) : DialogState
         data object Loading : DialogState
-        data object UnAssignStaff: DialogState
-        data class ShowStatusDialog(val status: ResultStatus,val msg:String=""): DialogState
+        data object UnAssignStaff : DialogState
+        data class ShowStatusDialog(val status: ResultStatus, val msg: String = "") : DialogState
     }
 }
 
@@ -321,9 +316,9 @@ sealed interface ClientProfileDetailsAction {
 
     data object OnUpdateDetailsClick : ClientProfileDetailsAction
 
-    data object DismissDialog:ClientProfileDetailsAction
+    data object DismissDialog : ClientProfileDetailsAction
 
-    data object ConfirmUnAssignStaff:ClientProfileDetailsAction
+    data object ConfirmUnAssignStaff : ClientProfileDetailsAction
 
     data object OnNext : ClientProfileDetailsAction
 }

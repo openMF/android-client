@@ -54,7 +54,7 @@ fun NavGraphBuilder.clientNavGraph(
     activateClient: (Int) -> Unit,
     hasDatatables: KFunction4<List<DataTableEntity>, Any?, Int, MutableList<List<FormWidgetDTO>>, Unit>,
     onDocumentClicked: (Int, String) -> Unit,
-    navigateToHome:()->Unit
+    navigateToHome: () -> Unit,
 ) {
     navigation(
         startDestination = ClientScreens.ClientListScreen.route,
@@ -118,14 +118,14 @@ fun NavGraphBuilder.clientNavGraph(
             onNavigateBack = navController::popBackStack,
             navigateToUpdatePhoto = navController::navigateToClientProfileEditProfileRoute,
             navigateToAssignStaff = navController::navigateToClientStaffRoute,
-            navigateToHome=navigateToHome
+            navigateToHome = navigateToHome,
         )
         clientEditProfileDestination(
             onNavigateBack = navController::popBackStack,
         )
         clientStaffDestination(
             onNavigateBack = navController::popBackStack,
-            navigateToHome=navigateToHome
+            navigateToHome = navigateToHome,
         )
     }
 }

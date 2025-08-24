@@ -1,3 +1,12 @@
+/*
+ * Copyright 2025 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ */
 package com.mifos.core.ui.components
 
 import androidclient.core.ui.generated.resources.Res
@@ -26,44 +35,44 @@ import org.jetbrains.compose.resources.painterResource
 fun MifosStatusDialog(
     status: ResultStatus,
     onConfirm: () -> Unit,
-    btnText: String = "OK",
-    successTitle: String = "Success",
-    successMessage: String = "Your request was completed successfully.",
-    failureTitle: String = "Error",
-    failureMessage: String = "Something went wrong. Please try again."
+    btnText: String,
+    successTitle: String,
+    successMessage: String,
+    failureTitle: String,
+    failureMessage: String,
 ) {
     val (title, message, icon) = when (status) {
         ResultStatus.SUCCESS -> Triple(
             successTitle,
             successMessage,
-            painterResource(Res.drawable.ic_icon_success)
+            painterResource(Res.drawable.ic_icon_success),
         )
         ResultStatus.FAILURE -> Triple(
             failureTitle,
             failureMessage,
-            painterResource(Res.drawable.ic_icon_error)
+            painterResource(Res.drawable.ic_icon_error),
         )
     }
 
     Box(
         Modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center
+        contentAlignment = Alignment.Center,
     ) {
         Column(
             Modifier.fillMaxWidth().padding(horizontal = DesignToken.padding.large),
-            horizontalAlignment = Alignment.CenterHorizontally
+            horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Image(
                 painter = icon,
                 contentDescription = null,
-                modifier = Modifier.size(DesignToken.sizes.avatarLargeLarge)
+                modifier = Modifier.size(DesignToken.sizes.avatarLargeLarge),
             )
             Spacer(Modifier.height(DesignToken.padding.largeIncreasedExtra))
 
             Text(
                 text = title,
                 style = MifosTypography.titleLargeEmphasized,
-                textAlign = TextAlign.Center
+                textAlign = TextAlign.Center,
             )
 
             Spacer(Modifier.height(DesignToken.padding.small))
@@ -71,7 +80,7 @@ fun MifosStatusDialog(
             Text(
                 text = message,
                 style = MifosTypography.bodySmall,
-                textAlign = TextAlign.Center
+                textAlign = TextAlign.Center,
             )
 
             Spacer(Modifier.height(DesignToken.padding.extraLargeIncreased))
@@ -81,18 +90,16 @@ fun MifosStatusDialog(
                 text = {
                     Text(
                         text = btnText,
-                        style = MifosTypography.labelLarge
+                        style = MifosTypography.labelLarge,
                     )
                 },
-                modifier=Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
             )
         }
     }
 }
 
-
-
 enum class ResultStatus {
     SUCCESS,
-    FAILURE
+    FAILURE,
 }

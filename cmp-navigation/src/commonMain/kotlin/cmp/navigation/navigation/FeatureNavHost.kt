@@ -217,7 +217,7 @@ internal fun FeatureNavHost(
     }
 }
 
-//id showing error in ide eventhough syntax correct and app is building fine so don't pay attention to id red colour
+// id showing error in ide eventhough syntax correct and app is building fine so don't pay attention to id red colour
 fun NavController.navigateAndClearBackStack(route: String) {
     this.navigate(route) {
         popUpTo(graph.findStartDestination().id) {
