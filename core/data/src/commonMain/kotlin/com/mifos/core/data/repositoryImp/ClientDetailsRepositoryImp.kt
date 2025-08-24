@@ -49,11 +49,11 @@ class ClientDetailsRepositoryImp(
         return dataManagerClient.getClientImage(clientId)
     }
 
-    override suspend fun updateStaff(
+    override suspend fun assignStaff(
         clientId: Int,
         staffId: Int,
     ): DataState<Unit> {
-        return dataManagerClient.updateClientStaff(clientId, staffId)
+        return dataManagerClient.assignClientStaff(clientId, staffId)
     }
 
     override suspend fun unassignStaff(

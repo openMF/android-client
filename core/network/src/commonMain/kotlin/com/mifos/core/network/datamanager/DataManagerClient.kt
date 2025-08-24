@@ -478,7 +478,7 @@ class DataManagerClient(
         return mBaseApiManager.clientService.getAddressTemplate()
     }
 
-    suspend fun updateClientStaff(
+    suspend fun assignClientStaff(
         clientId: Int,
         staffId: Int,
     ): DataState<Unit> {
