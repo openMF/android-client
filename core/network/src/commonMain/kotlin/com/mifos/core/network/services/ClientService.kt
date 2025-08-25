@@ -23,6 +23,7 @@ import com.mifos.core.model.objects.noncoreobjects.IdentifierPayload
 import com.mifos.core.model.objects.noncoreobjects.IdentifierTemplate
 import com.mifos.core.network.GenericResponse
 import com.mifos.core.network.model.ClientCloseTemplateResponse
+import com.mifos.core.network.model.CollateralItem
 import com.mifos.core.network.model.GetClientsPageItemsResponse
 import com.mifos.core.network.model.PinpointLocationActionResponse
 import com.mifos.core.network.model.PostAuthenticationRequest
@@ -254,6 +255,9 @@ interface ClientService {
 
     @GET("clients/template?commandParam=close")
     suspend fun getClientCloseTemplate(): ClientCloseTemplateResponse
+
+    @GET("collateral-management")
+    suspend fun getCollateralItems():List<CollateralItem>
 
     @POST("clients/{clientId}?command=assignStaff")
     suspend fun assignStaff(

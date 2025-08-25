@@ -23,6 +23,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mifos.core.designsystem.component.MifosOutlinedButton
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosTextButton
+import com.mifos.core.designsystem.component.MifosTextFieldDropdown
 import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.designsystem.theme.MifosTypography
@@ -88,16 +89,18 @@ private fun ClientCollateralScaffold(
                     )
                     Spacer(Modifier.height(DesignToken.padding.largeIncreased))
 
-//                    MifosTextFieldDropdown(
-//                        value = state.collaterals[state.currentSelectedIndex].name,
-//                        onValueChanged = {},
-//                        onOptionSelected = { index, _ ->
-//                            onAction(ClientCollateralAction.OptionChanged(index))
-//                        },
-//                        options = state.collaterals.map { it.name },
-//                        label = stringResource(Res.string.client_collateral_choose),
-//                        modifier = Modifier.fillMaxWidth(),
-//                    )
+                    MifosTextFieldDropdown(
+                        value = state.collaterals[state.currentSelectedIndex].name,
+                        onValueChanged = {
+                            onAction(ClientCollateralAction.OptionChanged(state.currentSelectedIndex))
+                        },
+                        onOptionSelected = { index, _ ->
+                            onAction(ClientCollateralAction.OptionChanged(index))
+                        },
+                        options = state.collaterals.map { it.name },
+                        label = "Choose Collateral Type",
+                        modifier = Modifier.fillMaxWidth(),
+                    )
 
                     Spacer(Modifier.height(DesignToken.padding.largeIncreased))
 

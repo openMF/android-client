@@ -14,6 +14,7 @@ import com.mifos.core.data.repository.ClientDetailsRepository
 import com.mifos.core.data.util.extractErrorMessage
 import com.mifos.core.network.datamanager.DataManagerClient
 import com.mifos.core.network.model.ClientCloseTemplateResponse
+import com.mifos.core.network.model.CollateralItem
 import com.mifos.core.network.model.SavingAccountOption
 import com.mifos.core.network.model.StaffOption
 import com.mifos.room.entities.accounts.ClientAccounts
@@ -51,6 +52,15 @@ class ClientDetailsRepositoryImp(
     override suspend fun getClientCloseTemplate(): DataState<ClientCloseTemplateResponse> {
         return try {
             val res = dataManagerClient.getClientCloseTemplate()
+            return DataState.Success(res)
+        } catch (e: Exception) {
+            DataState.Error(e)
+        }
+    }
+
+    override suspend fun getCollateralItems(): DataState<List<CollateralItem>> {
+        return try {
+            val res = dataManagerClient.getCollateralItems()
             return DataState.Success(res)
         } catch (e: Exception) {
             DataState.Error(e)
