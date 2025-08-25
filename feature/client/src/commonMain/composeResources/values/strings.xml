@@ -297,4 +297,29 @@
     <string name="email_na">Email: N/A</string>
     <string name="office_na">Office: N/A</string>
 
+    <!-- Titles -->
+    <string name="title_client_assign_staff">Client Assign Staff</string>
+    <string name="title_unassign_staff">Unassigning staff?</string>
+
+    <!-- Dialogs -->
+    <string name="dialog_unassign_message">This client already has a staff member assigned.Do you want to unassign the staff for this client?Once unassigned, a new staff member can only be assigned again after a few minutes.</string>
+    <string name="confirm_text">I Confirm</string>
+    <string name="dismiss_text">Cancel</string>
+    <string name="dialog_continue">Continue</string>
+
+    <!-- Assign Staff Screen -->
+    <string name="label_assign_staff">Assign Staff</string>
+    <string name="label_choose_staff">Choose the service staff</string>
+    <string name="btn_back">Back</string>
+    <string name="btn_submit">Submit</string>
+    <string name="msg_cannot_assign_staff">Can't Assign a Staff to this client</string>
+
+    <!-- Success & Failure Messages -->
+    <string name="staff_unassign_success_title">Staff Unassigned Successfully!!</string>
+    <string name="staff_unassign_success_message">Your request was completed successfully.</string>
+    <string name="staff_unassign_failure_title">Staff Unassigning Failed!</string>
+    <string name="staff_assign_success_title">Staff Assigned Successfully!!</string>
+    <string name="staff_assign_success_message">Your request was completed successfully.</string>
+    <string name="staff_assign_failure_title">Staff Assigning Failed!</string>
+
 </resources>

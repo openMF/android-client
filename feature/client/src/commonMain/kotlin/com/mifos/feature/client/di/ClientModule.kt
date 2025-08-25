@@ -17,6 +17,7 @@ import com.mifos.feature.client.clientIdentifiers.ClientIdentifiersViewModel
 import com.mifos.feature.client.clientPinpoint.PinPointClientViewModel
 import com.mifos.feature.client.clientProfile.ClientProfileViewModel
 import com.mifos.feature.client.clientSignature.SignatureViewModel
+import com.mifos.feature.client.clientStaff.ClientStaffViewModel
 import com.mifos.feature.client.clientSurveyList.SurveyListViewModel
 import com.mifos.feature.client.clientSurveySubmit.SurveySubmitViewModel
 import com.mifos.feature.client.clientsList.ClientListViewModel
@@ -39,4 +40,5 @@ val ClientModule = module {
     viewModelOf(::ClientProfileViewModel)
     viewModelOf(::ClientProfileDetailsViewModel)
     viewModelOf(::ClientProfileEditViewModel)
+    viewModelOf(::ClientStaffViewModel)
 }

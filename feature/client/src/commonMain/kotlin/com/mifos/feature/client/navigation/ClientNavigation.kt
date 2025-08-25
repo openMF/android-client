@@ -29,6 +29,8 @@ import com.mifos.feature.client.clientPinpoint.PinpointClientScreen
 import com.mifos.feature.client.clientProfile.clientProfileDestination
 import com.mifos.feature.client.clientProfile.navigateToClientProfileRoute
 import com.mifos.feature.client.clientSignature.SignatureScreen
+import com.mifos.feature.client.clientStaff.clientStaffDestination
+import com.mifos.feature.client.clientStaff.navigateToClientStaffRoute
 import com.mifos.feature.client.clientSurveyList.SurveyListScreen
 import com.mifos.feature.client.clientSurveyQuestion.SurveyQuestionScreen
 import com.mifos.feature.client.clientsList.ClientListScreen
@@ -52,6 +54,7 @@ fun NavGraphBuilder.clientNavGraph(
     activateClient: (Int) -> Unit,
     hasDatatables: KFunction4<List<DataTableEntity>, Any?, Int, MutableList<List<FormWidgetDTO>>, Unit>,
     onDocumentClicked: (Int, String) -> Unit,
+    navigateToHome: () -> Unit,
 ) {
     navigation(
         startDestination = ClientScreens.ClientListScreen.route,
@@ -114,9 +117,15 @@ fun NavGraphBuilder.clientNavGraph(
         clientProfileDetailsDestination(
             onNavigateBack = navController::popBackStack,
             navigateToUpdatePhoto = navController::navigateToClientProfileEditProfileRoute,
+            navigateToAssignStaff = navController::navigateToClientStaffRoute,
+            navigateToHome = navigateToHome,
         )
         clientEditProfileDestination(
             onNavigateBack = navController::popBackStack,
+        )
+        clientStaffDestination(
+            onNavigateBack = navController::popBackStack,
+            navigateToHome = navigateToHome,
         )
     }
 }

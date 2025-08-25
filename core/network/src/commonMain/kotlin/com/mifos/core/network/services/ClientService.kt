@@ -11,6 +11,7 @@ package com.mifos.core.network.services
 
 import com.mifos.core.common.utils.Page
 import com.mifos.core.model.objects.clients.ActivatePayload
+import com.mifos.core.model.objects.clients.AssignStaffRequest
 import com.mifos.core.model.objects.clients.ClientAddressRequest
 import com.mifos.core.model.objects.clients.ClientAddressResponse
 import com.mifos.core.model.objects.noncoreobjects.Identifier
@@ -18,6 +19,7 @@ import com.mifos.core.model.objects.noncoreobjects.IdentifierCreationResponse
 import com.mifos.core.model.objects.noncoreobjects.IdentifierPayload
 import com.mifos.core.model.objects.noncoreobjects.IdentifierTemplate
 import com.mifos.core.network.GenericResponse
+import com.mifos.core.network.model.GetClientsPageItemsResponse
 import com.mifos.core.network.model.PinpointLocationActionResponse
 import com.mifos.core.network.model.PostAuthenticationRequest
 import com.mifos.core.network.model.PostAuthenticationResponse
@@ -242,4 +244,19 @@ interface ClientService {
      */
     @GET("client/addresses/template")
     suspend fun getAddressTemplate(): AddressTemplate
+
+    @GET("clients/{clientId}?template=true&staffInSelectedOfficeOnly=true")
+    suspend fun getStaffList(@Path("clientId") clientId: Int): GetClientsPageItemsResponse
+
+    @POST("clients/{clientId}?command=assignStaff")
+    suspend fun assignStaff(
+        @Path("clientId") clientId: Int,
+        @Body payload: AssignStaffRequest,
+    ): HttpResponse
+
+    @POST("clients/{clientId}?command=unassignStaff")
+    suspend fun unassignStaff(
+        @Path("clientId") clientId: Int,
+        @Body payload: AssignStaffRequest,
+    ): HttpResponse
 }

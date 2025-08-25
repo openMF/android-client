@@ -12,6 +12,8 @@ package cmp.navigation.navigation
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.navigation.NavController
+import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.navigation
 import cmp.navigation.AppState
@@ -208,6 +210,20 @@ internal fun FeatureNavHost(
             },
             hasDatatables = appState.navController::navigateDataTableList,
             onDocumentClicked = appState.navController::navigateToDocumentListScreen,
+            navigateToHome = {
+                appState.navController.navigateAndClearBackStack(HomeDestinationsScreen.SearchScreen.route)
+            },
         )
+    }
+}
+
+// id showing error in ide eventhough syntax correct and app is building fine so don't pay attention to id red colour
+fun NavController.navigateAndClearBackStack(route: String) {
+    this.navigate(route) {
+        popUpTo(graph.findStartDestination().id) {
+            inclusive = true
+        }
+        launchSingleTop = true
+        restoreState = false
     }
 }

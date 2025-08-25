@@ -10,6 +10,7 @@
 package com.mifos.core.data.repository
 
 import com.mifos.core.common.utils.DataState
+import com.mifos.core.network.model.StaffOption
 import com.mifos.room.entities.accounts.ClientAccounts
 import com.mifos.room.entities.client.ClientEntity
 import io.ktor.client.request.forms.MultiPartFormDataContent
@@ -26,7 +27,13 @@ interface ClientDetailsRepository {
 
     suspend fun getClientAccounts(clientId: Int): ClientAccounts
 
+    suspend fun getClientStaffOptions(clientId: Int): List<StaffOption>
+
     suspend fun getClient(clientId: Int): ClientEntity
 
     fun getImage(clientId: Int): Flow<DataState<String>>
+
+    suspend fun assignStaff(clientId: Int, staffId: Int): DataState<Unit>
+
+    suspend fun unassignStaff(clientId: Int, staffId: Int): DataState<Unit>
 }

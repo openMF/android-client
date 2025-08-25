@@ -52,4 +52,5 @@ data class GetClientsPageItemsResponse(
 
     val dateOfBirth: List<Int?> = emptyList(),
 
+    val staffOptions: List<StaffOption> = emptyList(),
 )
