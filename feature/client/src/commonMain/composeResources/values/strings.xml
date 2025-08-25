@@ -333,4 +333,10 @@
     <string name="client_transfer_success_title">Transfer Request Sent</string>
     <string name="client_transfer_success_message">Transfer Request Sent Successfully. Please Continue to get back to Home</string>
     <string name="client_transfer_failure_title">Transfer Failed!</string>
+
+    <!-- Update Default Account Dialog -->
+    <string name="update_default_account_choose">Choose Default Savings Account</string>
+    <string name="update_default_account_failure_title">Failed to update default account</string>
+    <string name="update_default_account_success_message">Default account updated successfully. Please Continue to get back to Home</string>
+    <string name="update_default_account_success_title">Update Successful</string>
 </resources>

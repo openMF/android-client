@@ -1,0 +1,133 @@
+/*
+ * Copyright 2025 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ */
+package com.mifos.feature.client.clientUpdateDefaultAccount
+
+import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.viewModelScope
+import com.mifos.core.common.utils.DataState
+import com.mifos.core.data.repository.ClientDetailsRepository
+import com.mifos.core.data.util.NetworkMonitor
+import com.mifos.core.ui.components.ResultStatus
+import com.mifos.core.ui.util.BaseViewModel
+import com.mifos.room.entities.accounts.savings.SavingsAccountEntity
+import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
+
+internal class UpdateDefaultAccountViewModel(
+    savedStateHandle: SavedStateHandle,
+    private val repo: ClientDetailsRepository,
+    private val networkMonitor: NetworkMonitor,
+) : BaseViewModel<UpdateDefaultAccountState, UpdateDefaultAccountEvent, UpdateDefaultAccountAction>(
+    initialState = UpdateDefaultAccountState(),
+) {
+
+    init {
+        getAccountsAndObserveNetwork()
+    }
+
+    private fun getAccountsAndObserveNetwork() {
+        viewModelScope.launch {
+            observeNetwork()
+            loadAccounts()
+        }
+    }
+
+    private suspend fun loadAccounts() {
+//        repo.savingsAccounts().collect { result ->
+//            when (result) {
+//                is DataState.Error -> {
+//                    mutableStateFlow.update {
+//                        it.copy(dialogState = UpdateDefaultAccountState.DialogState.Error(result.message))
+//                    }
+//                }
+//                DataState.Loading -> {
+//                    mutableStateFlow.update { it.copy(dialogState = UpdateDefaultAccountState.DialogState.Loading) }
+//                }
+//                is DataState.Success -> {
+//                    mutableStateFlow.update {
+//                        it.copy(dialogState = null, accounts = result.data)
+//                    }
+//                }
+//            }
+//        }
+    }
+
+    private suspend fun updateDefaultAccount() {
+        mutableStateFlow.update { it.copy(dialogState = UpdateDefaultAccountState.DialogState.Loading) }
+        val accountId = state.accounts[state.currentSelectedIndex].id
+//        val result = repo.updateDefaultSavingsAccount(accountId)
+//        when (result) {
+//            is DataState.Success -> {
+//                mutableStateFlow.update {
+//                    it.copy(dialogState = UpdateDefaultAccountState.DialogState.ShowStatusDialog(ResultStatus.SUCCESS))
+//                }
+//            }
+//            is DataState.Error -> {
+//                mutableStateFlow.update {
+//                    it.copy(
+//                        dialogState = UpdateDefaultAccountState.DialogState.ShowStatusDialog(
+//                            ResultStatus.FAILURE,
+//                            result.message
+//                        )
+//                    )
+//                }
+//            }
+//            else -> Unit
+//        }
+    }
+
+    private fun observeNetwork() {
+        viewModelScope.launch {
+            networkMonitor.isOnline.collect { isConnected ->
+                mutableStateFlow.update { it.copy(networkConnection = isConnected) }
+            }
+        }
+    }
+
+    override fun handleAction(action: UpdateDefaultAccountAction) {
+        when (action) {
+            UpdateDefaultAccountAction.NavigateBack -> sendEvent(UpdateDefaultAccountEvent.NavigateBack)
+            UpdateDefaultAccountAction.OnRetry -> getAccountsAndObserveNetwork()
+            UpdateDefaultAccountAction.OnNext -> sendEvent(UpdateDefaultAccountEvent.NavigateNext)
+            is UpdateDefaultAccountAction.OptionChanged -> {
+                mutableStateFlow.update { it.copy(currentSelectedIndex = action.index) }
+            }
+            UpdateDefaultAccountAction.OnSave -> {
+                viewModelScope.launch { updateDefaultAccount() }
+            }
+        }
+    }
+}
+
+data class UpdateDefaultAccountState(
+    val accounts: List<SavingsAccountEntity> = emptyList(),
+    val currentSelectedIndex: Int = 0,
+    val dialogState: DialogState? = null,
+    val networkConnection: Boolean = false,
+) {
+    sealed interface DialogState {
+        data class Error(val message: String) : DialogState
+        data object Loading : DialogState
+        data class ShowStatusDialog(val status: ResultStatus, val msg: String = "") : DialogState
+    }
+}
+
+sealed interface UpdateDefaultAccountEvent {
+    data object NavigateBack : UpdateDefaultAccountEvent
+    data object NavigateNext : UpdateDefaultAccountEvent
+}
+
+sealed interface UpdateDefaultAccountAction {
+    data object NavigateBack : UpdateDefaultAccountAction
+    data object OnRetry : UpdateDefaultAccountAction
+    data object OnNext : UpdateDefaultAccountAction
+    data class OptionChanged(val index: Int) : UpdateDefaultAccountAction
+    data object OnSave : UpdateDefaultAccountAction
+}

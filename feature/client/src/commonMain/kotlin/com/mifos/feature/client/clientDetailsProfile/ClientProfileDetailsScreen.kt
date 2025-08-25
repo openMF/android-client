@@ -76,6 +76,7 @@ internal fun ClientProfileDetailsScreen(
     navigateToAssignStaff: (Int) -> Unit,
     navigateToHome: () -> Unit,
     navigateToClientTransfer: (Int) -> Unit,
+    navigateToUpdateDefaultAccount:(Int)->Unit,
     modifier: Modifier = Modifier,
     viewModel: ClientProfileDetailsViewModel = koinViewModel(),
 ) {
@@ -102,7 +103,9 @@ internal fun ClientProfileDetailsScreen(
                     ClientProfileDetailsActionItem.TransferClient -> {
                         navigateToClientTransfer(state.client?.id ?: -1)
                     }
-                    ClientProfileDetailsActionItem.UpdateDefaultAccount -> {}
+                    ClientProfileDetailsActionItem.UpdateDefaultAccount -> {
+                        navigateToUpdateDefaultAccount(state.client?.id ?: -1)
+                    }
                     ClientProfileDetailsActionItem.ViewStandingInstructions -> {}
                 }
             }
