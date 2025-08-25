@@ -152,6 +152,7 @@ data class ClientTransferState(
         data object Loading : DialogState
         data class ShowStatusDialog(val status: ResultStatus, val msg: String = "") : DialogState
     }
+    val isEnabled: Boolean = note.isNotEmpty()
 }
 
 sealed interface ClientTransferEvent {
