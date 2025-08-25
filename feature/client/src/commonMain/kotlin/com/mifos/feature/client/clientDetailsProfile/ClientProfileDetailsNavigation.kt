@@ -24,6 +24,8 @@ fun NavGraphBuilder.clientProfileDetailsDestination(
     navigateToUpdatePhoto: (Int, String, String) -> Unit,
     navigateToUpdateDetails: (Int, String, String) -> Unit,
     navigateToAssignStaff: (Int) -> Unit,
+    navigateToClientTransfer: (Int) -> Unit,
+    navigateToUpdateDefaultAccount: (Int) -> Unit,
     navigateToHome: () -> Unit,
 ) {
     composable<ClientProfileDetailsRoute> {
@@ -33,6 +35,8 @@ fun NavGraphBuilder.clientProfileDetailsDestination(
             navigateToAssignStaff = navigateToAssignStaff,
             navigateToHome = navigateToHome,
             navigateToUpdateDetails = navigateToUpdateDetails
+            navigateToClientTransfer = navigateToClientTransfer,
+            navigateToUpdateDefaultAccount = navigateToUpdateDefaultAccount,
         )
     }
 }
@@ -43,4 +47,13 @@ fun NavController.navigateToClientDetailsProfileRoute(id: Int) {
             id = id,
         ),
     )
+}
+
+fun NavController.navigateToClientDetailsProfileRouteOnStatus(id: Int) {
+    this.navigate(
+        ClientProfileDetailsRoute(id = id),
+    ) {
+        popUpTo(ClientProfileDetailsRoute(id = id)) { inclusive = true }
+        launchSingleTop = true
+    }
 }

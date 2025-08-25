@@ -168,7 +168,7 @@ fun MifosOutlinedButton(
     shape: Shape = DesignToken.shapes.medium,
     border: BorderStroke = BorderStroke(
         width = MifosButtonDefaults.OutlinedButtonBorderWidth,
-        color = MaterialTheme.colorScheme.primary,
+        color = MaterialTheme.colorScheme.secondaryContainer,
     ),
     colors: ButtonColors = ButtonDefaults.outlinedButtonColors(
         contentColor = MaterialTheme.colorScheme.primary,

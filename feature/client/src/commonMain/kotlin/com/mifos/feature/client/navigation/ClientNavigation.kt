@@ -24,6 +24,7 @@ import com.mifos.feature.client.clientDetailsProfile.clientProfileDetailsDestina
 import com.mifos.feature.client.clientDetailsProfile.navigateToClientDetailsProfileRoute
 import com.mifos.feature.client.clientEditDetails.clientEditDetailsDestination
 import com.mifos.feature.client.clientEditDetails.navigateToClientEditDetailsRoute
+import com.mifos.feature.client.clientDetailsProfile.navigateToClientDetailsProfileRouteOnStatus
 import com.mifos.feature.client.clientEditProfile.clientEditProfileDestination
 import com.mifos.feature.client.clientEditProfile.navigateToClientProfileEditProfileRoute
 import com.mifos.feature.client.clientIdentifiers.ClientIdentifiersScreen
@@ -35,6 +36,10 @@ import com.mifos.feature.client.clientStaff.clientStaffDestination
 import com.mifos.feature.client.clientStaff.navigateToClientStaffRoute
 import com.mifos.feature.client.clientSurveyList.SurveyListScreen
 import com.mifos.feature.client.clientSurveyQuestion.SurveyQuestionScreen
+import com.mifos.feature.client.clientTransfer.clientTransferDestination
+import com.mifos.feature.client.clientTransfer.navigateToClientTransferRoute
+import com.mifos.feature.client.clientUpdateDefaultAccount.navigateToUpdateDefaultAccountRoute
+import com.mifos.feature.client.clientUpdateDefaultAccount.updateDefaultAccountDestination
 import com.mifos.feature.client.clientsList.ClientListScreen
 import com.mifos.feature.client.createNewClient.CreateNewClientScreen
 import com.mifos.room.entities.accounts.savings.SavingAccountDepositTypeEntity
@@ -122,6 +127,8 @@ fun NavGraphBuilder.clientNavGraph(
             navigateToAssignStaff = navController::navigateToClientStaffRoute,
             navigateToHome = navigateToHome,
             navigateToUpdateDetails = navController::navigateToClientEditDetailsRoute
+            navigateToClientTransfer = navController::navigateToClientTransferRoute,
+            navigateToUpdateDefaultAccount = navController::navigateToUpdateDefaultAccountRoute,
         )
         clientEditProfileDestination(
             onNavigateBack = navController::popBackStack,
@@ -132,6 +139,14 @@ fun NavGraphBuilder.clientNavGraph(
         clientStaffDestination(
             onNavigateBack = navController::popBackStack,
             navigateToHome = navigateToHome,
+        )
+        clientTransferDestination(
+            onNavigateBack = navController::popBackStack,
+            onNavigateNext = navController::navigateToClientDetailsProfileRouteOnStatus,
+        )
+        updateDefaultAccountDestination(
+            onNavigateBack = navController::popBackStack,
+            onNavigateNext = navController::navigateToClientDetailsProfileRouteOnStatus,
         )
     }
 }

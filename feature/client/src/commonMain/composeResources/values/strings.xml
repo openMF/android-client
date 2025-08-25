@@ -327,4 +327,22 @@
     <string name="staff_assign_success_message">Your request was completed successfully.</string>
     <string name="staff_assign_failure_title">Staff Assigning Failed!</string>
 
+    <!-- Client Transfer Screen -->
+    <string name="client_transfer_title">Client Transfer</string>
+    <string name="client_transfer_choose_office">Choose Destination Office</string>
+    <string name="client_transfer_expected_date">Expected Transfer Date</string>
+    <string name="client_transfer_add_notes">Add Notes</string>
+    <string name="client_transfer_add_note_here">Add Note Here</string>
+
+    <!-- Status Dialog -->
+    <string name="client_transfer_success_title">Transfer Request Sent</string>
+    <string name="client_transfer_success_message">Transfer Request Sent Successfully. Please Continue to get back to Profile Details Screen</string>
+    <string name="client_transfer_failure_title">Transfer Failed!</string>
+
+    <!-- Update Default Account Dialog -->
+    <string name="update_default_account_choose">Choose Default Savings Account</string>
+    <string name="update_default_account_failure_title">Failed to update default account</string>
+    <string name="update_default_account_success_message">Default account updated successfully. Please Continue to get back to Profile Details Screen</string>
+    <string name="update_default_account_success_title">Update Successful</string>
+    <string name="update_default_no_accounts_found">No Savings Accounts found for this client</string>
 </resources>

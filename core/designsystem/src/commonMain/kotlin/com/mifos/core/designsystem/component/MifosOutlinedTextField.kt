@@ -80,7 +80,12 @@ fun MifosOutlinedTextField(
     OutlinedTextField(
         value = value,
         onValueChange = onValueChanged,
-        label = { Text(label) },
+        label = {
+            Text(
+                text = label,
+                style = MifosTypography.bodySmall,
+            )
+        },
         modifier = modifier
             .fillMaxWidth()
             .padding(start = 16.dp, end = 16.dp),
@@ -112,6 +117,10 @@ fun MifosOutlinedTextField(
                 )
             }
         },
+        colors = OutlinedTextFieldDefaults.colors(
+            focusedBorderColor = MaterialTheme.colorScheme.secondaryContainer,
+            unfocusedBorderColor = MaterialTheme.colorScheme.secondaryContainer,
+        ),
     )
 }
 
@@ -147,7 +156,10 @@ fun MifosOutlinedTextField(
     suffix: @Composable (() -> Unit)? = null,
     interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
     shape: Shape = OutlinedTextFieldDefaults.shape,
-    colors: TextFieldColors = OutlinedTextFieldDefaults.colors(),
+    colors: TextFieldColors = OutlinedTextFieldDefaults.colors(
+        focusedBorderColor = MaterialTheme.colorScheme.secondaryContainer,
+        unfocusedBorderColor = MaterialTheme.colorScheme.secondaryContainer,
+    ),
 ) {
     val isFocused by interactionSource.collectIsFocusedAsState()
 
@@ -163,13 +175,17 @@ fun MifosOutlinedTextField(
         label = {
             Text(
                 text = label,
-                style = MaterialTheme.typography.labelMedium,
+                style = MaterialTheme.typography.bodySmall,
                 maxLines = maxLines,
                 overflow = TextOverflow.Ellipsis,
             )
         },
-        leadingIcon = {
-            leadingIcon?.let { Icon(imageVector = it, contentDescription = "leadingIcon") }
+        leadingIcon = if (leadingIcon != null) {
+            {
+                Icon(imageVector = leadingIcon, contentDescription = "leadingIcon")
+            }
+        } else {
+            null
         },
         trailingIcon = @Composable {
             if (isPasswordToggleDisplayed) {
@@ -289,6 +305,10 @@ fun MifosOutlinedTextField(
         } else {
             null
         },
+        colors = OutlinedTextFieldDefaults.colors(
+            focusedBorderColor = MaterialTheme.colorScheme.secondaryContainer,
+            unfocusedBorderColor = MaterialTheme.colorScheme.secondaryContainer,
+        ),
     )
 }
 
@@ -353,7 +373,6 @@ fun MifosDatePickerTextField(
         .fillMaxSize()
         .clip(DesignToken.shapes.medium),
     label: String? = null,
-    labelString: String? = null,
     openDatePicker: () -> Unit,
 ) {
     OutlinedTextField(
@@ -364,7 +383,7 @@ fun MifosDatePickerTextField(
         ),
         value = value,
         onValueChange = { },
-        label = { Text(text = labelString ?: label?.let { label } ?: "") },
+        label = { Text(text = label?.let { label } ?: "") },
         readOnly = true,
         modifier = modifier,
         shape = DesignToken.shapes.medium,
@@ -384,6 +403,10 @@ fun MifosDatePickerTextField(
                 Icon(imageVector = Icons.Default.CalendarMonth, null)
             }
         },
+        colors = OutlinedTextFieldDefaults.colors(
+            focusedBorderColor = MaterialTheme.colorScheme.secondaryContainer,
+            unfocusedBorderColor = MaterialTheme.colorScheme.secondaryContainer,
+        ),
     )
 }
 

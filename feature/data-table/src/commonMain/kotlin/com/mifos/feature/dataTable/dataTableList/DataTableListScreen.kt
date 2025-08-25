@@ -293,7 +293,7 @@ fun TableColumnHeader(
 
                     MifosDatePickerTextField(
                         value = DateHelper.getDateAsStringFromLong(selectedDate),
-                        labelString = columnHeader.dataTableColumnName ?: "",
+                        label = columnHeader.dataTableColumnName ?: "",
                         openDatePicker = {
                             showDatePicker = true
                         },

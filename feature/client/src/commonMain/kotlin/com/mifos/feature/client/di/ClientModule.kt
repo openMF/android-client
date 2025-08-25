@@ -21,6 +21,8 @@ import com.mifos.feature.client.clientSignature.SignatureViewModel
 import com.mifos.feature.client.clientStaff.ClientStaffViewModel
 import com.mifos.feature.client.clientSurveyList.SurveyListViewModel
 import com.mifos.feature.client.clientSurveySubmit.SurveySubmitViewModel
+import com.mifos.feature.client.clientTransfer.ClientTransferViewModel
+import com.mifos.feature.client.clientUpdateDefaultAccount.UpdateDefaultAccountViewModel
 import com.mifos.feature.client.clientsList.ClientListViewModel
 import com.mifos.feature.client.createNewClient.CreateNewClientViewModel
 import com.mifos.feature.client.syncClientDialog.SyncClientsDialogViewModel
@@ -43,4 +45,6 @@ val ClientModule = module {
     viewModelOf(::ClientProfileDetailsViewModel)
     viewModelOf(::ClientProfileEditViewModel)
     viewModelOf(::ClientStaffViewModel)
+    viewModelOf(::ClientTransferViewModel)
+    viewModelOf(::UpdateDefaultAccountViewModel)
 }

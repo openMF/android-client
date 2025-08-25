@@ -17,6 +17,8 @@ import com.mifos.core.model.objects.clients.ActivatePayload
 import com.mifos.core.model.objects.clients.AssignStaffRequest
 import com.mifos.core.model.objects.clients.ClientAddressRequest
 import com.mifos.core.model.objects.clients.ClientAddressResponse
+import com.mifos.core.model.objects.clients.ProposeTransferRequest
+import com.mifos.core.model.objects.clients.UpdateSavingsAccountRequest
 import com.mifos.core.model.objects.noncoreobjects.Identifier
 import com.mifos.core.model.objects.noncoreobjects.IdentifierCreationResponse
 import com.mifos.core.model.objects.noncoreobjects.IdentifierPayload
@@ -30,6 +32,7 @@ import com.mifos.core.network.model.DeleteClientsClientIdIdentifiersIdentifierId
 import com.mifos.core.network.model.PinpointLocationActionResponse
 import com.mifos.core.network.model.PostClientsClientIdRequest
 import com.mifos.core.network.model.PostClientsClientIdResponse
+import com.mifos.core.network.model.SavingAccountOption
 import com.mifos.core.network.model.StaffOption
 import com.mifos.room.entities.accounts.ClientAccounts
 import com.mifos.room.entities.client.AddressConfiguration
@@ -39,6 +42,7 @@ import com.mifos.room.entities.client.ClientPayloadEntity
 import com.mifos.room.entities.templates.clients.ClientsTemplateEntity
 import com.mifos.room.helper.ClientDaoHelper
 import io.ktor.client.request.forms.MultiPartFormDataContent
+import io.ktor.client.statement.HttpResponse
 import io.ktor.client.statement.bodyAsText
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
@@ -166,7 +170,11 @@ class DataManagerClient(
 //    }
 
     suspend fun getClientStaff(clientId: Int): List<StaffOption> {
-        return mBaseApiManager.clientService.getStaffList(clientId).staffOptions
+        return mBaseApiManager.clientService.getClientTemplate(clientId).staffOptions
+    }
+
+    suspend fun getSavingsAccounts(clientId: Int): List<SavingAccountOption> {
+        return mBaseApiManager.clientService.getClientTemplate(clientId).savingAccountOptions
     }
 
     /**
@@ -490,40 +498,48 @@ class DataManagerClient(
     suspend fun assignClientStaff(
         clientId: Int,
         staffId: Int,
-    ): DataState<Unit> {
-        return try {
-            val res = mBaseApiManager.clientService.assignStaff(
-                clientId = clientId,
-                payload = AssignStaffRequest(staffId),
-            )
-            if (res.status.value == 200) {
-                DataState.Success(Unit)
-            } else {
-                val errorBody = res.bodyAsText()
-                DataState.Error(Exception(errorBody))
-            }
-        } catch (e: Exception) {
-            DataState.Error(e)
-        }
+    ): HttpResponse {
+        return mBaseApiManager.clientService.assignStaff(
+            clientId = clientId,
+            payload = AssignStaffRequest(staffId),
+        )
     }
 
     suspend fun unAssignClientStaff(
         clientId: Int,
         staffId: Int,
-    ): DataState<Unit> {
-        return try {
-            val res = mBaseApiManager.clientService.unassignStaff(
-                clientId = clientId,
-                payload = AssignStaffRequest(staffId),
-            )
-            if (res.status.value == 200) {
-                DataState.Success(Unit)
-            } else {
-                val errorBody = res.bodyAsText()
-                DataState.Error(Exception(errorBody))
-            }
-        } catch (e: Exception) {
-            DataState.Error(e)
-        }
+    ): HttpResponse {
+        return mBaseApiManager.clientService.unassignStaff(
+            clientId = clientId,
+            payload = AssignStaffRequest(staffId),
+        )
+    }
+
+    suspend fun proposeClientTransfer(
+        clientId: Int,
+        destinationOfficeId: Int,
+        transferDate: String,
+        note: String,
+    ): HttpResponse {
+        return mBaseApiManager.clientService.proposeTransfer(
+            clientId = clientId,
+            payload = ProposeTransferRequest(
+                destinationOfficeId = destinationOfficeId,
+                transferDate = transferDate,
+                note = note,
+                locale = "en",
+                dateFormat = "dd-MM-yyyy",
+            ),
+        )
+    }
+
+    suspend fun updateDefaultSavingsAccount(
+        clientId: Int,
+        savingsId: Long,
+    ): HttpResponse {
+        return mBaseApiManager.clientService.updateSavingsAccount(
+            clientId = clientId,
+            payload = UpdateSavingsAccountRequest(savingsId),
+        )
     }
 }

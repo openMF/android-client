@@ -69,6 +69,8 @@ fun MifosTextFieldDropdown(
                         color = MaterialTheme.colorScheme.error,
                     )
                 }
+            } else {
+                null
             },
             value = value,
             onValueChange = onValueChanged,
@@ -106,7 +108,7 @@ fun MifosTextFieldDropdown(
         )
 
         ExposedDropdownMenu(
-            expanded = isExpanded && enabled,
+            expanded = isExpanded,
             onDismissRequest = { isExpanded = false },
         ) {
             options.forEachIndexed { index, item ->

@@ -14,6 +14,8 @@ import com.mifos.core.model.objects.clients.ActivatePayload
 import com.mifos.core.model.objects.clients.AssignStaffRequest
 import com.mifos.core.model.objects.clients.ClientAddressRequest
 import com.mifos.core.model.objects.clients.ClientAddressResponse
+import com.mifos.core.model.objects.clients.ProposeTransferRequest
+import com.mifos.core.model.objects.clients.UpdateSavingsAccountRequest
 import com.mifos.core.model.objects.noncoreobjects.Identifier
 import com.mifos.core.model.objects.noncoreobjects.IdentifierCreationResponse
 import com.mifos.core.model.objects.noncoreobjects.IdentifierPayload
@@ -252,7 +254,7 @@ interface ClientService {
     suspend fun getAddressTemplate(): AddressTemplate
 
     @GET("clients/{clientId}?template=true&staffInSelectedOfficeOnly=true")
-    suspend fun getStaffList(@Path("clientId") clientId: Int): GetClientsPageItemsResponse
+    suspend fun getClientTemplate(@Path("clientId") clientId: Int): GetClientsPageItemsResponse
 
     @POST("clients/{clientId}?command=assignStaff")
     suspend fun assignStaff(
@@ -264,5 +266,17 @@ interface ClientService {
     suspend fun unassignStaff(
         @Path("clientId") clientId: Int,
         @Body payload: AssignStaffRequest,
+    ): HttpResponse
+
+    @POST("clients/{clientId}?command=proposeTransfer")
+    suspend fun proposeTransfer(
+        @Path("clientId") clientId: Int,
+        @Body payload: ProposeTransferRequest,
+    ): HttpResponse
+
+    @POST("clients/{clientId}?command=updateSavingsAccount")
+    suspend fun updateSavingsAccount(
+        @Path("clientId") clientId: Int,
+        @Body payload: UpdateSavingsAccountRequest,
     ): HttpResponse
 }

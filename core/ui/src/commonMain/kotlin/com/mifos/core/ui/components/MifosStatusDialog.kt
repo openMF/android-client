@@ -40,6 +40,7 @@ fun MifosStatusDialog(
     successMessage: String,
     failureTitle: String,
     failureMessage: String,
+    modifier: Modifier = Modifier,
 ) {
     val (title, message, icon) = when (status) {
         ResultStatus.SUCCESS -> Triple(
@@ -55,7 +56,7 @@ fun MifosStatusDialog(
     }
 
     Box(
-        Modifier.fillMaxSize(),
+        modifier.fillMaxSize(),
         contentAlignment = Alignment.Center,
     ) {
         Column(
