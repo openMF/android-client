@@ -11,6 +11,7 @@ package com.mifos.feature.client.di
 
 import com.mifos.feature.client.clientCharges.ClientChargesViewModel
 import com.mifos.feature.client.clientClosure.ClientClosureViewModel
+import com.mifos.feature.client.clientCollateral.ClientCollateralViewModel
 import com.mifos.feature.client.clientDetails.ClientDetailsViewModel
 import com.mifos.feature.client.clientDetailsProfile.ClientProfileDetailsViewModel
 import com.mifos.feature.client.clientEditProfile.ClientProfileEditViewModel
@@ -47,4 +48,5 @@ val ClientModule = module {
     viewModelOf(::ClientTransferViewModel)
     viewModelOf(::UpdateDefaultAccountViewModel)
     viewModelOf(::ClientClosureViewModel)
+    viewModelOf(::ClientCollateralViewModel)
 }

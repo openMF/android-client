@@ -78,6 +78,7 @@ internal fun ClientProfileDetailsScreen(
     navigateToClientTransfer: (Int) -> Unit,
     navigateToClientClosure: (Int) -> Unit,
     navigateToUpdateDefaultAccount: (Int) -> Unit,
+    navigateToCollateral:(Int)->Unit,
     modifier: Modifier = Modifier,
     viewModel: ClientProfileDetailsViewModel = koinViewModel(),
 ) {
@@ -100,7 +101,9 @@ internal fun ClientProfileDetailsScreen(
                     ClientProfileDetailsActionItem.ClosureApplication -> {
                         navigateToClientClosure(state.client?.id ?: -1)
                     }
-                    ClientProfileDetailsActionItem.CreateCollateral -> {}
+                    ClientProfileDetailsActionItem.CreateCollateral -> {
+                        navigateToCollateral(state.client?.id ?: -1)
+                    }
                     ClientProfileDetailsActionItem.CreateSelfServiceUsers -> {}
                     ClientProfileDetailsActionItem.CreateStandingInstructions -> {}
                     ClientProfileDetailsActionItem.TransferClient -> {
