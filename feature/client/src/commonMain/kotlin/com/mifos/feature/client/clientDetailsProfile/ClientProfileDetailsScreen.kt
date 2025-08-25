@@ -106,7 +106,6 @@ internal fun ClientProfileDetailsScreen(
                     ClientProfileDetailsActionItem.UpdateDefaultAccount -> {
                         navigateToUpdateDefaultAccount(state.client?.id ?: -1)
                     }
-                    ClientProfileDetailsActionItem.UpdateDefaultAccount -> {}
                     ClientProfileDetailsActionItem.ViewStandingInstructions -> {}
                 }
             }
