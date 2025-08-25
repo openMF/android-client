@@ -40,7 +40,7 @@ fun MifosStatusDialog(
     successMessage: String,
     failureTitle: String,
     failureMessage: String,
-    modifier: Modifier= Modifier
+    modifier: Modifier = Modifier,
 ) {
     val (title, message, icon) = when (status) {
         ResultStatus.SUCCESS -> Triple(

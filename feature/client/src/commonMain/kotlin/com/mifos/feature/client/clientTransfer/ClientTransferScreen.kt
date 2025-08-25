@@ -1,3 +1,12 @@
+/*
+ * Copyright 2025 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ */
 package com.mifos.feature.client.clientTransfer
 
 import androidclient.feature.client.generated.resources.Res
@@ -33,15 +42,11 @@ import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableLongStateOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mifos.core.common.utils.DateHelper
-import com.mifos.core.common.utils.formatDate
 import com.mifos.core.designsystem.component.MifosDatePickerTextField
 import com.mifos.core.designsystem.component.MifosOutlinedButton
 import com.mifos.core.designsystem.component.MifosOutlinedTextField
@@ -55,8 +60,6 @@ import com.mifos.core.ui.components.MifosErrorComponent
 import com.mifos.core.ui.components.MifosProgressIndicator
 import com.mifos.core.ui.components.MifosStatusDialog
 import com.mifos.core.ui.util.EventsEffect
-import com.mifos.feature.client.clientDetailsProfile.ClientProfileDetailsState
-import com.mifos.feature.client.clientStaff.ClientStaffAction
 import kotlinx.datetime.Clock
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
@@ -83,9 +86,9 @@ internal fun ClientTransferScreen(
         modifier = modifier,
     )
     ClientTransferDialogs(
-        state=state,
-        onAction = remember(viewModel) { { viewModel.trySendAction(it) } }
-        )
+        state = state,
+        onAction = remember(viewModel) { { viewModel.trySendAction(it) } },
+    )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -112,7 +115,7 @@ private fun ClientTransferScaffold(
 
         if (state.dialogState != ClientTransferState.DialogState.Loading &&
             state.dialogState !is ClientTransferState.DialogState.ShowStatusDialog
-            ) {
+        ) {
             Column(
                 modifier = Modifier
                     .fillMaxSize()
@@ -127,12 +130,12 @@ private fun ClientTransferScaffold(
                     Spacer(Modifier.height(DesignToken.padding.largeIncreased))
 
                     MifosTextFieldDropdown(
-                        value = state.offices[state.currentSelectedIndex].name?:"",
+                        value = state.offices[state.currentSelectedIndex].name ?: "",
                         onValueChanged = {},
                         onOptionSelected = { index, value ->
                             onAction(ClientTransferAction.OptionChanged(index))
                         },
-                        options = state.offices.map { it.name?:"" },
+                        options = state.offices.map { it.name ?: "" },
                         label = stringResource(Res.string.client_transfer_choose_office),
                         modifier = Modifier.fillMaxWidth(),
                     )
@@ -144,7 +147,7 @@ private fun ClientTransferScaffold(
                         label = stringResource(Res.string.client_transfer_expected_date),
                         openDatePicker = {
                             onAction(ClientTransferAction.UpdateDatePicker(true))
-                        }
+                        },
                     )
                     if (state.showDatePicker) {
                         DatePickerDialog(
@@ -232,7 +235,6 @@ private fun ClientTransferScaffold(
                             modifier = Modifier.weight(1f),
                         )
                     }
-
                 }
             }
         }
@@ -263,7 +265,7 @@ private fun ClientTransferDialogs(
                 successMessage = stringResource(Res.string.client_transfer_success_message),
                 failureTitle = stringResource(Res.string.client_transfer_failure_title),
                 failureMessage = state.dialogState.msg,
-                modifier = Modifier.fillMaxSize()
+                modifier = Modifier.fillMaxSize(),
             )
         }
         null -> Unit

@@ -1,3 +1,12 @@
+/*
+ * Copyright 2025 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ */
 package com.mifos.feature.client.clientTransfer
 
 import androidx.lifecycle.SavedStateHandle
@@ -10,7 +19,6 @@ import com.mifos.core.data.repository.CreateNewGroupRepository
 import com.mifos.core.data.util.NetworkMonitor
 import com.mifos.core.ui.components.ResultStatus
 import com.mifos.core.ui.util.BaseViewModel
-import com.mifos.feature.client.clientStaff.ClientStaffState
 import com.mifos.room.entities.organisation.OfficeEntity
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -37,29 +45,28 @@ internal class ClientTransferViewModel(
         }
     }
 
-
-    private suspend fun loadOffices(){
-        repository.offices().collect { result->
-            when(result){
+    private suspend fun loadOffices() {
+        repository.offices().collect { result ->
+            when (result) {
                 is DataState.Error -> {
                     mutableStateFlow.update {
                         it.copy(
-                            dialogState = ClientTransferState.DialogState.Error(result.message)
+                            dialogState = ClientTransferState.DialogState.Error(result.message),
                         )
                     }
                 }
                 DataState.Loading -> {
                     mutableStateFlow.update {
                         it.copy(
-                            dialogState = ClientTransferState.DialogState.Loading
+                            dialogState = ClientTransferState.DialogState.Loading,
                         )
                     }
                 }
-                is DataState.Success ->{
+                is DataState.Success -> {
                     mutableStateFlow.update {
                         it.copy(
                             dialogState = null,
-                            offices = result.data
+                            offices = result.data,
                         )
                     }
                 }
@@ -69,11 +76,11 @@ internal class ClientTransferViewModel(
 
     private suspend fun transferClient() {
         mutableStateFlow.update { it.copy(dialogState = ClientTransferState.DialogState.Loading) }
-        val result=repo.proposeTransfer(
+        val result = repo.proposeTransfer(
             clientId = route.id,
             destinationOfficeId = state.offices[state.currentSelectedIndex].id,
             transferDate = DateHelper.getDateAsStringFromLong(state.date),
-            note = state.note
+            note = state.note,
         )
         when {
             result is DataState.Success -> {
@@ -91,7 +98,6 @@ internal class ClientTransferViewModel(
                 }
             }
         }
-
     }
 
     private fun observeNetwork() {
@@ -133,11 +139,11 @@ internal class ClientTransferViewModel(
 }
 
 data class ClientTransferState(
-    val offices:List<OfficeEntity> =emptyList(),
-    val showDatePicker:Boolean=false,
+    val offices: List<OfficeEntity> = emptyList(),
+    val showDatePicker: Boolean = false,
     val currentSelectedIndex: Int = 0,
     val note: String = "",
-    val date:Long=Clock.System.now().toEpochMilliseconds(),
+    val date: Long = Clock.System.now().toEpochMilliseconds(),
     val dialogState: DialogState? = null,
     val networkConnection: Boolean = false,
 ) {
@@ -160,6 +166,6 @@ sealed interface ClientTransferAction {
     data class OptionChanged(val index: Int) : ClientTransferAction
     data class NoteChanged(val note: String) : ClientTransferAction
     data object OnSubmit : ClientTransferAction
-    data class UpdateDatePicker(val status:Boolean):ClientTransferAction
-    data class UpdateDate(val date: Long):ClientTransferAction
+    data class UpdateDatePicker(val status: Boolean) : ClientTransferAction
+    data class UpdateDate(val date: Long) : ClientTransferAction
 }

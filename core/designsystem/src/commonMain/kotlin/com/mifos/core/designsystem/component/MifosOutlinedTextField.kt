@@ -73,10 +73,10 @@ fun MifosOutlinedTextField(
         onValueChange = onValueChanged,
         label = {
             Text(
-                text=label,
-                style = MifosTypography.bodySmall
+                text = label,
+                style = MifosTypography.bodySmall,
             )
-                },
+        },
         modifier = modifier
             .fillMaxWidth()
             .padding(start = 16.dp, end = 16.dp),
@@ -175,7 +175,9 @@ fun MifosOutlinedTextField(
             {
                 Icon(imageVector = leadingIcon, contentDescription = "leadingIcon")
             }
-        } else null,
+        } else {
+            null
+        },
         trailingIcon = @Composable {
             if (isPasswordToggleDisplayed) {
                 PasswordToggleIcon(

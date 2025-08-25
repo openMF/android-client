@@ -485,9 +485,9 @@ class DataManagerClient(
         staffId: Int,
     ): HttpResponse {
         return mBaseApiManager.clientService.assignStaff(
-                clientId = clientId,
-                payload = AssignStaffRequest(staffId),
-            )
+            clientId = clientId,
+            payload = AssignStaffRequest(staffId),
+        )
     }
 
     suspend fun unAssignClientStaff(
@@ -495,9 +495,9 @@ class DataManagerClient(
         staffId: Int,
     ): HttpResponse {
         return mBaseApiManager.clientService.unassignStaff(
-                clientId = clientId,
-                payload = AssignStaffRequest(staffId),
-            )
+            clientId = clientId,
+            payload = AssignStaffRequest(staffId),
+        )
     }
 
     suspend fun proposeClientTransfer(
@@ -507,15 +507,14 @@ class DataManagerClient(
         note: String,
     ): HttpResponse {
         return mBaseApiManager.clientService.proposeTransfer(
-                clientId = clientId,
-                payload = ProposeTransferRequest(
-                    destinationOfficeId = destinationOfficeId,
-                    transferDate = transferDate,
-                    note = note,
-                    locale = "en",
-                    dateFormat = "dd-MM-yyyy"
-                ),
-            )
+            clientId = clientId,
+            payload = ProposeTransferRequest(
+                destinationOfficeId = destinationOfficeId,
+                transferDate = transferDate,
+                note = note,
+                locale = "en",
+                dateFormat = "dd-MM-yyyy",
+            ),
+        )
     }
-
 }

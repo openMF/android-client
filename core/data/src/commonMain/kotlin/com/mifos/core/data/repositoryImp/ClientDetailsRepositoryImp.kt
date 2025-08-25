@@ -12,13 +12,11 @@ package com.mifos.core.data.repositoryImp
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.repository.ClientDetailsRepository
 import com.mifos.core.data.util.extractErrorMessage
-import com.mifos.core.model.objects.clients.AssignStaffRequest
 import com.mifos.core.network.datamanager.DataManagerClient
 import com.mifos.core.network.model.StaffOption
 import com.mifos.room.entities.accounts.ClientAccounts
 import com.mifos.room.entities.client.ClientEntity
 import io.ktor.client.request.forms.MultiPartFormDataContent
-import io.ktor.client.statement.bodyAsText
 import kotlinx.coroutines.flow.Flow
 
 /**
@@ -97,7 +95,7 @@ class ClientDetailsRepositoryImp(
                 clientId = clientId,
                 destinationOfficeId = destinationOfficeId,
                 transferDate = transferDate,
-                note = note
+                note = note,
             )
             if (res.status.value == 200) {
                 DataState.Success(Unit)
@@ -109,5 +107,4 @@ class ClientDetailsRepositoryImp(
             DataState.Error(e)
         }
     }
-
 }

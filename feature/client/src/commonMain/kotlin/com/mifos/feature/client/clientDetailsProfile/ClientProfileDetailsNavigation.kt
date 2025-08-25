@@ -32,7 +32,7 @@ fun NavGraphBuilder.clientProfileDetailsDestination(
             navigateToUpdatePhoto = navigateToUpdatePhoto,
             navigateToAssignStaff = navigateToAssignStaff,
             navigateToHome = navigateToHome,
-            navigateToClientTransfer=navigateToClientTransfer
+            navigateToClientTransfer = navigateToClientTransfer,
         )
     }
 }

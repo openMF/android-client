@@ -121,7 +121,7 @@ fun NavGraphBuilder.clientNavGraph(
             navigateToUpdatePhoto = navController::navigateToClientProfileEditProfileRoute,
             navigateToAssignStaff = navController::navigateToClientStaffRoute,
             navigateToHome = navigateToHome,
-            navigateToClientTransfer = navController::navigateToClientTransferRoute
+            navigateToClientTransfer = navController::navigateToClientTransferRoute,
         )
         clientEditProfileDestination(
             onNavigateBack = navController::popBackStack,
