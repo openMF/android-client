@@ -18,6 +18,7 @@ import com.mifos.core.model.objects.clients.AssignStaffRequest
 import com.mifos.core.model.objects.clients.ClientAddressRequest
 import com.mifos.core.model.objects.clients.ClientAddressResponse
 import com.mifos.core.model.objects.clients.ProposeTransferRequest
+import com.mifos.core.model.objects.clients.UpdateSavingsAccountRequest
 import com.mifos.core.model.objects.noncoreobjects.Identifier
 import com.mifos.core.model.objects.noncoreobjects.IdentifierCreationResponse
 import com.mifos.core.model.objects.noncoreobjects.IdentifierPayload
@@ -31,6 +32,7 @@ import com.mifos.core.network.model.DeleteClientsClientIdIdentifiersIdentifierId
 import com.mifos.core.network.model.PinpointLocationActionResponse
 import com.mifos.core.network.model.PostClientsClientIdRequest
 import com.mifos.core.network.model.PostClientsClientIdResponse
+import com.mifos.core.network.model.SavingAccountOption
 import com.mifos.core.network.model.StaffOption
 import com.mifos.room.entities.accounts.ClientAccounts
 import com.mifos.room.entities.client.AddressConfiguration
@@ -168,7 +170,11 @@ class DataManagerClient(
 //    }
 
     suspend fun getClientStaff(clientId: Int): List<StaffOption> {
-        return mBaseApiManager.clientService.getStaffList(clientId).staffOptions
+        return mBaseApiManager.clientService.getClientTemplate(clientId).staffOptions
+    }
+
+    suspend fun getSavingsAccounts(clientId: Int): List<SavingAccountOption> {
+        return mBaseApiManager.clientService.getClientTemplate(clientId).savingAccountOptions
     }
 
     /**
@@ -515,6 +521,16 @@ class DataManagerClient(
                 locale = "en",
                 dateFormat = "dd-MM-yyyy",
             ),
+        )
+    }
+
+    suspend fun updateDefaultSavingsAccount(
+        clientId: Int,
+        savingsId: Long,
+    ): HttpResponse {
+        return mBaseApiManager.clientService.updateSavingsAccount(
+            clientId = clientId,
+            payload = UpdateSavingsAccountRequest(savingsId),
         )
     }
 }

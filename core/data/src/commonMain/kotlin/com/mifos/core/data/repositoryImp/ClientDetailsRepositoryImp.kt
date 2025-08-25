@@ -13,6 +13,7 @@ import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.repository.ClientDetailsRepository
 import com.mifos.core.data.util.extractErrorMessage
 import com.mifos.core.network.datamanager.DataManagerClient
+import com.mifos.core.network.model.SavingAccountOption
 import com.mifos.core.network.model.StaffOption
 import com.mifos.room.entities.accounts.ClientAccounts
 import com.mifos.room.entities.client.ClientEntity
@@ -40,6 +41,10 @@ class ClientDetailsRepositoryImp(
 
     override suspend fun getClientStaffOptions(clientId: Int): List<StaffOption> {
         return dataManagerClient.getClientStaff(clientId)
+    }
+
+    override suspend fun getSavingsAccounts(clientId: Int): List<SavingAccountOption> {
+        return dataManagerClient.getSavingsAccounts(clientId)
     }
 
     override suspend fun getClient(clientId: Int): ClientEntity {
@@ -96,6 +101,26 @@ class ClientDetailsRepositoryImp(
                 destinationOfficeId = destinationOfficeId,
                 transferDate = transferDate,
                 note = note,
+            )
+            if (res.status.value == 200) {
+                DataState.Success(Unit)
+            } else {
+                val errorBody = extractErrorMessage(res)
+                DataState.Error(Exception(errorBody))
+            }
+        } catch (e: Exception) {
+            DataState.Error(e)
+        }
+    }
+
+    override suspend fun updateDefaultSavingsAccount(
+        clientId: Int,
+        accountId: Long,
+    ): DataState<Unit> {
+        return try {
+            val res = dataManagerClient.updateDefaultSavingsAccount(
+                clientId = clientId,
+                savingsId = accountId,
             )
             if (res.status.value == 200) {
                 DataState.Success(Unit)

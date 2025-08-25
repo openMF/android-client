@@ -76,7 +76,7 @@ internal fun ClientProfileDetailsScreen(
     navigateToAssignStaff: (Int) -> Unit,
     navigateToHome: () -> Unit,
     navigateToClientTransfer: (Int) -> Unit,
-    navigateToUpdateDefaultAccount:(Int)->Unit,
+    navigateToUpdateDefaultAccount: (Int) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: ClientProfileDetailsViewModel = koinViewModel(),
 ) {

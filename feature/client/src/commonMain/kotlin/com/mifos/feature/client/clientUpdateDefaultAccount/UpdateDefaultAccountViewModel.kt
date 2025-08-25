@@ -11,12 +11,13 @@ package com.mifos.feature.client.clientUpdateDefaultAccount
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.toRoute
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.repository.ClientDetailsRepository
 import com.mifos.core.data.util.NetworkMonitor
+import com.mifos.core.network.model.SavingAccountOption
 import com.mifos.core.ui.components.ResultStatus
 import com.mifos.core.ui.util.BaseViewModel
-import com.mifos.room.entities.accounts.savings.SavingsAccountEntity
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
@@ -27,6 +28,7 @@ internal class UpdateDefaultAccountViewModel(
 ) : BaseViewModel<UpdateDefaultAccountState, UpdateDefaultAccountEvent, UpdateDefaultAccountAction>(
     initialState = UpdateDefaultAccountState(),
 ) {
+    private val route = savedStateHandle.toRoute<UpdateDefaultAccountRoute>()
 
     init {
         getAccountsAndObserveNetwork()
@@ -40,47 +42,51 @@ internal class UpdateDefaultAccountViewModel(
     }
 
     private suspend fun loadAccounts() {
-//        repo.savingsAccounts().collect { result ->
-//            when (result) {
-//                is DataState.Error -> {
-//                    mutableStateFlow.update {
-//                        it.copy(dialogState = UpdateDefaultAccountState.DialogState.Error(result.message))
-//                    }
-//                }
-//                DataState.Loading -> {
-//                    mutableStateFlow.update { it.copy(dialogState = UpdateDefaultAccountState.DialogState.Loading) }
-//                }
-//                is DataState.Success -> {
-//                    mutableStateFlow.update {
-//                        it.copy(dialogState = null, accounts = result.data)
-//                    }
-//                }
-//            }
-//        }
+        mutableStateFlow.update {
+            it.copy(dialogState = UpdateDefaultAccountState.DialogState.Loading)
+        }
+
+        try {
+            val options = repo.getSavingsAccounts(route.clientId)
+            mutableStateFlow.update {
+                it.copy(
+                    accounts = options,
+                    dialogState = null,
+                )
+            }
+        } catch (e: Exception) {
+            mutableStateFlow.update {
+                it.copy(
+                    dialogState = UpdateDefaultAccountState.DialogState.Error(
+                        e.message ?: "Unknown error",
+                    ),
+                )
+            }
+        }
     }
 
     private suspend fun updateDefaultAccount() {
         mutableStateFlow.update { it.copy(dialogState = UpdateDefaultAccountState.DialogState.Loading) }
         val accountId = state.accounts[state.currentSelectedIndex].id
-//        val result = repo.updateDefaultSavingsAccount(accountId)
-//        when (result) {
-//            is DataState.Success -> {
-//                mutableStateFlow.update {
-//                    it.copy(dialogState = UpdateDefaultAccountState.DialogState.ShowStatusDialog(ResultStatus.SUCCESS))
-//                }
-//            }
-//            is DataState.Error -> {
-//                mutableStateFlow.update {
-//                    it.copy(
-//                        dialogState = UpdateDefaultAccountState.DialogState.ShowStatusDialog(
-//                            ResultStatus.FAILURE,
-//                            result.message
-//                        )
-//                    )
-//                }
-//            }
-//            else -> Unit
-//        }
+        val result = repo.updateDefaultSavingsAccount(route.clientId, accountId)
+        when (result) {
+            is DataState.Success -> {
+                mutableStateFlow.update {
+                    it.copy(dialogState = UpdateDefaultAccountState.DialogState.ShowStatusDialog(ResultStatus.SUCCESS))
+                }
+            }
+            is DataState.Error -> {
+                mutableStateFlow.update {
+                    it.copy(
+                        dialogState = UpdateDefaultAccountState.DialogState.ShowStatusDialog(
+                            ResultStatus.FAILURE,
+                            result.message,
+                        ),
+                    )
+                }
+            }
+            else -> Unit
+        }
     }
 
     private fun observeNetwork() {
@@ -107,7 +113,7 @@ internal class UpdateDefaultAccountViewModel(
 }
 
 data class UpdateDefaultAccountState(
-    val accounts: List<SavingsAccountEntity> = emptyList(),
+    val accounts: List<SavingAccountOption> = emptyList(),
     val currentSelectedIndex: Int = 0,
     val dialogState: DialogState? = null,
     val networkConnection: Boolean = false,

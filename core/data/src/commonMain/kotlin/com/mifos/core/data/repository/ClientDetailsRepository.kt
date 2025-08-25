@@ -10,6 +10,7 @@
 package com.mifos.core.data.repository
 
 import com.mifos.core.common.utils.DataState
+import com.mifos.core.network.model.SavingAccountOption
 import com.mifos.core.network.model.StaffOption
 import com.mifos.room.entities.accounts.ClientAccounts
 import com.mifos.room.entities.client.ClientEntity
@@ -27,6 +28,8 @@ interface ClientDetailsRepository {
 
     suspend fun getClientAccounts(clientId: Int): ClientAccounts
 
+    suspend fun getSavingsAccounts(clientId: Int): List<SavingAccountOption>
+
     suspend fun getClientStaffOptions(clientId: Int): List<StaffOption>
 
     suspend fun getClient(clientId: Int): ClientEntity
@@ -43,4 +46,6 @@ interface ClientDetailsRepository {
         transferDate: String,
         note: String,
     ): DataState<Unit>
+
+    suspend fun updateDefaultSavingsAccount(clientId: Int, accountId: Long): DataState<Unit>
 }
