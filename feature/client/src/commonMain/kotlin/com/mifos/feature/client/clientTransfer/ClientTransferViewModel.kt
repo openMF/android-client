@@ -35,6 +35,11 @@ internal class ClientTransferViewModel(
     private val route = savedStateHandle.toRoute<ClientTransferRoute>()
 
     init {
+        mutableStateFlow.update {
+            it.copy(
+                id = route.id,
+            )
+        }
         getTransferOptionsAndObserveNetwork()
     }
 
@@ -134,11 +139,23 @@ internal class ClientTransferViewModel(
                     it.copy(date = action.date)
                 }
             }
+
+            ClientTransferAction.DismissDialogAndClearAll -> {
+                mutableStateFlow.update {
+                    it.copy(
+                        dialogState = null,
+                        currentSelectedIndex = 0,
+                        note = "",
+                        date = Clock.System.now().toEpochMilliseconds(),
+                    )
+                }
+            }
         }
     }
 }
 
 data class ClientTransferState(
+    val id: Int = -1,
     val offices: List<OfficeEntity> = emptyList(),
     val showDatePicker: Boolean = false,
     val currentSelectedIndex: Int = 0,
@@ -169,4 +186,5 @@ sealed interface ClientTransferAction {
     data object OnSubmit : ClientTransferAction
     data class UpdateDatePicker(val status: Boolean) : ClientTransferAction
     data class UpdateDate(val date: Long) : ClientTransferAction
+    data object DismissDialogAndClearAll : ClientTransferAction
 }
