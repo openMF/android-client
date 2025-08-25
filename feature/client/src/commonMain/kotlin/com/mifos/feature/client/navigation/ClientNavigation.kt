@@ -140,7 +140,7 @@ fun NavGraphBuilder.clientNavGraph(
         )
         updateDefaultAccountDestination(
             onNavigateBack = navController::popBackStack,
-            onNavigateNext = navigateToHome,
+            onNavigateNext = navController::navigateToClientDetailsProfileRouteOnStatus,
         )
     }
 }

@@ -44,6 +44,7 @@ import com.mifos.core.designsystem.theme.MifosTypography
 import com.mifos.core.ui.components.MifosErrorComponent
 import com.mifos.core.ui.components.MifosProgressIndicator
 import com.mifos.core.ui.components.MifosStatusDialog
+import com.mifos.core.ui.components.ResultStatus
 import com.mifos.core.ui.util.EventsEffect
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
@@ -52,7 +53,7 @@ import kotlin.text.get
 @Composable
 internal fun UpdateDefaultAccountScreen(
     onNavigateBack: () -> Unit,
-    onNavigateNext: () -> Unit,
+    onNavigateNext: (Int) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: UpdateDefaultAccountViewModel = koinViewModel(),
 ) {
@@ -61,7 +62,7 @@ internal fun UpdateDefaultAccountScreen(
     EventsEffect(viewModel.eventFlow) { event ->
         when (event) {
             UpdateDefaultAccountEvent.NavigateBack -> onNavigateBack()
-            UpdateDefaultAccountEvent.NavigateNext -> onNavigateNext()
+            UpdateDefaultAccountEvent.NavigateNext -> onNavigateNext(state.id)
         }
     }
 
@@ -183,7 +184,16 @@ private fun UpdateDefaultAccountDialogs(
             MifosStatusDialog(
                 status = state.dialogState.status,
                 btnText = stringResource(Res.string.dialog_continue),
-                onConfirm = { onAction(UpdateDefaultAccountAction.OnNext) },
+                onConfirm = {
+                    when (state.dialogState.status) {
+                        ResultStatus.SUCCESS -> {
+                            onAction(UpdateDefaultAccountAction.OnNext)
+                        }
+                        ResultStatus.FAILURE -> {
+                            onAction(UpdateDefaultAccountAction.Dismiss)
+                        }
+                    }
+                },
                 successTitle = stringResource(Res.string.update_default_account_success_title),
                 successMessage = stringResource(Res.string.update_default_account_success_message),
                 failureTitle = stringResource(Res.string.update_default_account_failure_title),
