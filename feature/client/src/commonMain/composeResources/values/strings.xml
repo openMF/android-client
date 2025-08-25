@@ -337,7 +337,7 @@
     <!-- Update Default Account Dialog -->
     <string name="update_default_account_choose">Choose Default Savings Account</string>
     <string name="update_default_account_failure_title">Failed to update default account</string>
-    <string name="update_default_account_success_message">Default account updated successfully. Please Continue to get back to Home</string>
+    <string name="update_default_account_success_message">Default account updated successfully. Please Continue to get back to Profile Details Screen</string>
     <string name="update_default_account_success_title">Update Successful</string>
     <string name="update_default_no_accounts_found">No Savings Accounts found for this client</string>
 </resources>
