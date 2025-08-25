@@ -233,6 +233,7 @@ private fun ClientTransferScaffold(
                                 )
                             },
                             modifier = Modifier.weight(1f),
+                            enabled = state.isEnabled,
                         )
                     }
                 }
