@@ -17,6 +17,7 @@ import com.mifos.core.model.objects.clients.ActivatePayload
 import com.mifos.core.model.objects.clients.AssignStaffRequest
 import com.mifos.core.model.objects.clients.ClientAddressRequest
 import com.mifos.core.model.objects.clients.ClientAddressResponse
+import com.mifos.core.model.objects.clients.ClientCloseRequest
 import com.mifos.core.model.objects.clients.ProposeTransferRequest
 import com.mifos.core.model.objects.clients.UpdateSavingsAccountRequest
 import com.mifos.core.model.objects.noncoreobjects.Identifier
@@ -28,6 +29,7 @@ import com.mifos.core.network.mappers.clients.GetClientResponseMapper
 import com.mifos.core.network.mappers.clients.GetClientsClientIdAccountMapper
 import com.mifos.core.network.mappers.clients.GetIdentifiersTemplateMapper
 import com.mifos.core.network.mappers.clients.IdentifierMapper
+import com.mifos.core.network.model.ClientCloseTemplateResponse
 import com.mifos.core.network.model.DeleteClientsClientIdIdentifiersIdentifierIdResponse
 import com.mifos.core.network.model.PinpointLocationActionResponse
 import com.mifos.core.network.model.PostClientsClientIdRequest
@@ -175,6 +177,10 @@ class DataManagerClient(
 
     suspend fun getSavingsAccounts(clientId: Int): List<SavingAccountOption> {
         return mBaseApiManager.clientService.getClientTemplate(clientId).savingAccountOptions
+    }
+
+    suspend fun getClientCloseTemplate(): ClientCloseTemplateResponse {
+        return mBaseApiManager.clientService.getClientCloseTemplate()
     }
 
     /**
@@ -520,6 +526,22 @@ class DataManagerClient(
                 note = note,
                 locale = "en",
                 dateFormat = "dd-MM-yyyy",
+            ),
+        )
+    }
+
+    suspend fun closeClient(
+        clientId: Int,
+        closureDate: String,
+        closureReasonId: Int,
+    ): HttpResponse {
+        return mBaseApiManager.clientService.closeClient(
+            clientId = clientId,
+            payload = ClientCloseRequest(
+                closureDate = closureDate,
+                closureReasonId = closureReasonId,
+                dateFormat = "dd-MM-yyyy",
+                locale = "en",
             ),
         )
     }

@@ -10,6 +10,7 @@
 package com.mifos.core.data.repository
 
 import com.mifos.core.common.utils.DataState
+import com.mifos.core.network.model.ClientCloseTemplateResponse
 import com.mifos.core.network.model.SavingAccountOption
 import com.mifos.core.network.model.StaffOption
 import com.mifos.room.entities.accounts.ClientAccounts
@@ -32,6 +33,8 @@ interface ClientDetailsRepository {
 
     suspend fun getClientStaffOptions(clientId: Int): List<StaffOption>
 
+    suspend fun getClientCloseTemplate(): DataState<ClientCloseTemplateResponse>
+
     suspend fun getClient(clientId: Int): ClientEntity
 
     fun getImage(clientId: Int): Flow<DataState<String>>
@@ -48,4 +51,10 @@ interface ClientDetailsRepository {
     ): DataState<Unit>
 
     suspend fun updateDefaultSavingsAccount(clientId: Int, accountId: Long): DataState<Unit>
+
+    suspend fun closeClient(
+        clientId: Int,
+        closureDate: String,
+        closureReasonId: Int,
+    ): DataState<Unit>
 }

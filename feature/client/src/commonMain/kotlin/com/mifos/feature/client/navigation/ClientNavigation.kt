@@ -19,6 +19,8 @@ import androidx.navigation.navArgument
 import androidx.navigation.navigation
 import com.mifos.core.common.utils.Constants
 import com.mifos.feature.client.clientCharges.ClientChargesScreen
+import com.mifos.feature.client.clientClosure.clientClosureDestination
+import com.mifos.feature.client.clientClosure.navigateToClientClosureRoute
 import com.mifos.feature.client.clientDetails.ClientDetailsScreen
 import com.mifos.feature.client.clientDetailsProfile.clientProfileDetailsDestination
 import com.mifos.feature.client.clientDetailsProfile.navigateToClientDetailsProfileRoute
@@ -125,6 +127,7 @@ fun NavGraphBuilder.clientNavGraph(
             navigateToHome = navigateToHome,
             navigateToClientTransfer = navController::navigateToClientTransferRoute,
             navigateToUpdateDefaultAccount = navController::navigateToUpdateDefaultAccountRoute,
+            navigateToClientClosure = navController::navigateToClientClosureRoute,
         )
         clientEditProfileDestination(
             onNavigateBack = navController::popBackStack,
@@ -140,6 +143,10 @@ fun NavGraphBuilder.clientNavGraph(
         updateDefaultAccountDestination(
             onNavigateBack = navController::popBackStack,
             onNavigateNext = navigateToHome,
+        )
+        clientClosureDestination(
+            onNavigateBack = navController::popBackStack,
+            navigateToHome = navigateToHome,
         )
     }
 }

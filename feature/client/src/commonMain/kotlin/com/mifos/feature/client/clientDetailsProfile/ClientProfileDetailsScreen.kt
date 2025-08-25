@@ -76,6 +76,7 @@ internal fun ClientProfileDetailsScreen(
     navigateToAssignStaff: (Int) -> Unit,
     navigateToHome: () -> Unit,
     navigateToClientTransfer: (Int) -> Unit,
+    navigateToClientClosure: (Int) -> Unit,
     navigateToUpdateDefaultAccount: (Int) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: ClientProfileDetailsViewModel = koinViewModel(),
@@ -96,7 +97,9 @@ internal fun ClientProfileDetailsScreen(
                         navigateToAssignStaff(state.client?.id ?: -1)
                     }
                     ClientProfileDetailsActionItem.ClientScreenReports -> {}
-                    ClientProfileDetailsActionItem.ClosureApplication -> {}
+                    ClientProfileDetailsActionItem.ClosureApplication -> {
+                        navigateToClientClosure(state.client?.id ?: -1)
+                    }
                     ClientProfileDetailsActionItem.CreateCollateral -> {}
                     ClientProfileDetailsActionItem.CreateSelfServiceUsers -> {}
                     ClientProfileDetailsActionItem.CreateStandingInstructions -> {}
