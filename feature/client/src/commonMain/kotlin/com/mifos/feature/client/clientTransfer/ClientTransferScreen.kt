@@ -59,6 +59,7 @@ import com.mifos.core.designsystem.theme.MifosTypography
 import com.mifos.core.ui.components.MifosErrorComponent
 import com.mifos.core.ui.components.MifosProgressIndicator
 import com.mifos.core.ui.components.MifosStatusDialog
+import com.mifos.core.ui.components.ResultStatus
 import com.mifos.core.ui.util.EventsEffect
 import kotlinx.datetime.Clock
 import org.jetbrains.compose.resources.stringResource
@@ -67,7 +68,7 @@ import org.koin.compose.viewmodel.koinViewModel
 @Composable
 internal fun ClientTransferScreen(
     onNavigateBack: () -> Unit,
-    onNavigateNext: () -> Unit,
+    onNavigateNext: (Int) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: ClientTransferViewModel = koinViewModel(),
 ) {
@@ -76,7 +77,7 @@ internal fun ClientTransferScreen(
     EventsEffect(viewModel.eventFlow) { event ->
         when (event) {
             ClientTransferEvent.NavigateBack -> onNavigateBack()
-            ClientTransferEvent.NavigateNext -> onNavigateNext()
+            ClientTransferEvent.NavigateNext -> onNavigateNext(state.id)
         }
     }
 
@@ -261,7 +262,16 @@ private fun ClientTransferDialogs(
             MifosStatusDialog(
                 status = state.dialogState.status,
                 btnText = stringResource(Res.string.dialog_continue),
-                onConfirm = { onAction(ClientTransferAction.OnNext) },
+                onConfirm = {
+                    when (state.dialogState.status) {
+                        ResultStatus.SUCCESS -> {
+                            onAction(ClientTransferAction.OnNext)
+                        }
+                        ResultStatus.FAILURE -> {
+                            onAction(ClientTransferAction.DismissDialogAndClearAll)
+                        }
+                    }
+                },
                 successTitle = stringResource(Res.string.client_transfer_success_title),
                 successMessage = stringResource(Res.string.client_transfer_success_message),
                 failureTitle = stringResource(Res.string.client_transfer_failure_title),

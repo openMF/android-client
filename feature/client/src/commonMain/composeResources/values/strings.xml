@@ -331,6 +331,6 @@
 
     <!-- Status Dialog -->
     <string name="client_transfer_success_title">Transfer Request Sent</string>
-    <string name="client_transfer_success_message">Transfer Request Sent Successfully. Please Continue to get back to Home</string>
+    <string name="client_transfer_success_message">Transfer Request Sent Successfully. Please Continue to get back to Profile Details Screen</string>
     <string name="client_transfer_failure_title">Transfer Failed!</string>
 </resources>
