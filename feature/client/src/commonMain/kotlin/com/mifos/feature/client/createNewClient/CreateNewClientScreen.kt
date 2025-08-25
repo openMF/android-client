@@ -40,9 +40,9 @@ import androidclient.feature.client.generated.resources.feature_client_go_back
 import androidclient.feature.client.generated.resources.feature_client_ic_dp_placeholder
 import androidclient.feature.client.generated.resources.feature_client_last_name_mandatory
 import androidclient.feature.client.generated.resources.feature_client_middle_name
-import androidclient.feature.client.generated.resources.feature_client_mobile_no
 import androidclient.feature.client.generated.resources.feature_client_no_staff_associated_with_office
 import androidclient.feature.client.generated.resources.feature_client_office_name_mandatory
+import androidclient.feature.client.generated.resources.feature_client_phone_no
 import androidclient.feature.client.generated.resources.feature_client_please_select_action
 import androidclient.feature.client.generated.resources.feature_client_postal_code
 import androidclient.feature.client.generated.resources.feature_client_remove_existing_photo
@@ -935,7 +935,7 @@ private fun ClientInputTextFields(
         MifosOutlinedTextField(
             value = mobileNumber,
             onValueChange = onMobileNumberChange,
-            label = stringResource(Res.string.feature_client_mobile_no),
+            label = stringResource(Res.string.feature_client_phone_no),
             error = null,
             keyboardType = KeyboardType.Number,
         )

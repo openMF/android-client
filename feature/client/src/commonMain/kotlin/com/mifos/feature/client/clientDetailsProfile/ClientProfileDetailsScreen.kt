@@ -75,6 +75,7 @@ internal fun ClientProfileDetailsScreen(
     navigateToUpdatePhoto: (Int, String, String) -> Unit,
     navigateToAssignStaff: (Int) -> Unit,
     navigateToHome: () -> Unit,
+    navigateToUpdateDetails: (Int, String, String) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: ClientProfileDetailsViewModel = koinViewModel(),
 ) {
@@ -102,6 +103,14 @@ internal fun ClientProfileDetailsScreen(
                     ClientProfileDetailsActionItem.UpdateDefaultAccount -> {}
                     ClientProfileDetailsActionItem.ViewStandingInstructions -> {}
                 }
+            }
+
+            ClientProfileDetailsEvent.NavigateToUpdateDetails -> {
+                navigateToUpdateDetails(
+                    state.client?.id ?: -1,
+                    state.client?.displayName ?: "",
+                    state.client?.accountNo ?: "",
+                )
             }
 
             ClientProfileDetailsEvent.NavigateToUpdatePhoto -> {

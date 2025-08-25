@@ -13,13 +13,13 @@ package com.mifos.core.designsystem.component
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.MenuAnchorType
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
@@ -29,9 +29,13 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.unit.dp
-import com.mifos.core.designsystem.theme.MifosTypography
+import androidx.compose.ui.unit.sp
+import com.mifos.core.designsystem.theme.DesignToken
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -43,8 +47,8 @@ fun MifosTextFieldDropdown(
     onOptionSelected: (Int, String) -> Unit,
     options: List<String>,
     modifier: Modifier = Modifier
-        .fillMaxWidth()
-        .padding(horizontal = 16.dp),
+        .clip(DesignToken.shapes.medium)
+        .fillMaxWidth(),
     label: String? = null,
     readOnly: Boolean = false,
     errorMessage: String? = null,
@@ -52,21 +56,19 @@ fun MifosTextFieldDropdown(
     var isExpanded by remember { mutableStateOf(false) }
 
     ExposedDropdownMenuBox(
-        expanded = isExpanded,
+        expanded = isExpanded && enabled,
         onExpandedChange = { isExpanded = !isExpanded },
     ) {
         OutlinedTextField(
             enabled = enabled,
             isError = errorMessage != null,
-            supportingText = if (errorMessage != null) {
-                {
+            supportingText = {
+                errorMessage?.let {
                     Text(
-                        text = errorMessage,
+                        text = it,
                         color = MaterialTheme.colorScheme.error,
                     )
                 }
-            } else {
-                null
             },
             value = value,
             onValueChange = onValueChanged,
@@ -74,28 +76,37 @@ fun MifosTextFieldDropdown(
                 label?.let {
                     Text(
                         text = it,
-                        style = MifosTypography.bodySmall,
                     )
                 }
             },
             modifier = modifier
-                .menuAnchor()
-                .clickable(enabled = readOnly) { isExpanded = true },
+                .menuAnchor(type = MenuAnchorType.PrimaryEditable,enabled = enabled)
+                .clickable(enabled = readOnly && enabled) { isExpanded = true },
+            shape = DesignToken.shapes.medium,
+            colors = OutlinedTextFieldDefaults.colors(
+                focusedBorderColor = MaterialTheme.colorScheme.secondaryContainer,
+                unfocusedBorderColor = MaterialTheme.colorScheme.secondaryContainer,
+                disabledTextColor = MaterialTheme.colorScheme.onSurface
+            ),
             maxLines = 1,
-            textStyle = MifosTypography.bodyLarge,
+            textStyle = LocalDensity.current.run {
+                TextStyle(
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    fontSize = MaterialTheme.typography.bodyLarge.fontSize,
+                    lineHeight = 24.sp,
+                    letterSpacing = 0.5f.sp,
+                    fontWeight = FontWeight.Normal,
+                )
+            },
             keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Next),
             trailingIcon = {
                 ExposedDropdownMenuDefaults.TrailingIcon(expanded = isExpanded)
             },
             readOnly = readOnly,
-            colors = OutlinedTextFieldDefaults.colors(
-                focusedBorderColor = MaterialTheme.colorScheme.primary,
-                unfocusedBorderColor = MaterialTheme.colorScheme.primary,
-            ),
         )
 
         ExposedDropdownMenu(
-            expanded = isExpanded,
+            expanded = isExpanded && enabled,
             onDismissRequest = { isExpanded = false },
         ) {
             options.forEachIndexed { index, item ->

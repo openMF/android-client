@@ -22,6 +22,7 @@ data class ClientProfileDetailsRoute(
 fun NavGraphBuilder.clientProfileDetailsDestination(
     onNavigateBack: () -> Unit,
     navigateToUpdatePhoto: (Int, String, String) -> Unit,
+    navigateToUpdateDetails: (Int, String, String) -> Unit,
     navigateToAssignStaff: (Int) -> Unit,
     navigateToHome: () -> Unit,
 ) {
@@ -31,6 +32,7 @@ fun NavGraphBuilder.clientProfileDetailsDestination(
             navigateToUpdatePhoto = navigateToUpdatePhoto,
             navigateToAssignStaff = navigateToAssignStaff,
             navigateToHome = navigateToHome,
+            navigateToUpdateDetails = navigateToUpdateDetails
         )
     }
 }
