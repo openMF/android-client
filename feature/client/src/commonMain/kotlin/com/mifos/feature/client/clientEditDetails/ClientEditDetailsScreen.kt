@@ -1,3 +1,12 @@
+/*
+ * Copyright 2025 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ */
 package com.mifos.feature.client.clientEditDetails
 
 import androidclient.feature.client.generated.resources.Res
@@ -8,7 +17,6 @@ import androidclient.feature.client.generated.resources.feature_client_account_i
 import androidclient.feature.client.generated.resources.feature_client_cancel
 import androidclient.feature.client.generated.resources.feature_client_client
 import androidclient.feature.client.generated.resources.feature_client_client_classification
-import androidclient.feature.client.generated.resources.feature_client_client_created_successfully
 import androidclient.feature.client.generated.resources.feature_client_dob
 import androidclient.feature.client.generated.resources.feature_client_error
 import androidclient.feature.client.generated.resources.feature_client_error_first_name_can_not_be_empty
@@ -58,7 +66,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextFieldDefaults.colors
 import androidx.compose.material3.SelectableDates
-import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -93,7 +100,8 @@ import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.designsystem.theme.MifosTypography
 import com.mifos.core.ui.util.EventsEffect
-import com.mifos.feature.client.clientEditDetails.ClientEditDetailsViewModel.*
+import com.mifos.feature.client.clientEditDetails.ClientEditDetailsViewModel.ClientEditDetailsEvent
+import com.mifos.feature.client.clientEditDetails.ClientEditDetailsViewModel.ClientEditDetailsState
 import com.mifos.feature.client.utils.PhoneNumberUtil
 import com.mifos.room.entities.client.ClientPayloadEntity
 import com.mifos.room.entities.organisation.OfficeEntity
@@ -147,7 +155,6 @@ internal fun ClientEditDetailsScreen(
         staffInOffices = staffInOffice,
         loadStaffInOffice = { viewModel.loadStaffInOffices(officeId = it) },
         updateClient = { viewModel.updateClient(clientPayload = it) },
-        onAction = remember(viewModel) { { viewModel.trySendAction(it) } },
     )
 }
 
@@ -162,7 +169,6 @@ private fun ClientEditDetailsScaffold(
     loadStaffInOffice: (officeId: Int) -> Unit,
     updateClient: (clientPayload: ClientPayloadEntity) -> Unit,
     modifier: Modifier = Modifier,
-    onAction: (ClientEditDetailsAction) -> Unit,
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
@@ -170,15 +176,15 @@ private fun ClientEditDetailsScaffold(
     MifosScaffold(
         title = stringResource(Res.string.update_details),
         snackbarHostState = snackbarHostState,
-        onBackPressed = { onAction(ClientEditDetailsAction.NavigateBack) },
+        onBackPressed = { navigateBack.invoke() },
         modifier = modifier,
     ) { paddingValues ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(paddingValues)
+                .padding(paddingValues),
         ) {
-            when(uiState) {
+            when (uiState) {
                 EditClientDetailsUiState.ShowProgressbar -> {
                     MifosCircularProgress()
                 }
@@ -224,19 +230,19 @@ private fun UpdateClientDetailsContent(
     updateClient: (ClientPayloadEntity) -> Unit,
     navigateBack: () -> Unit,
 ) {
-    var firstName by rememberSaveable { mutableStateOf( "" ) }
+    var firstName by rememberSaveable { mutableStateOf("") }
     var middleName by rememberSaveable { mutableStateOf("") }
-    var lastName by rememberSaveable { mutableStateOf( "") }
-    var mobileNumber by rememberSaveable { mutableStateOf( "") }
-    var externalId by rememberSaveable { mutableStateOf( "") }
+    var lastName by rememberSaveable { mutableStateOf("") }
+    var mobileNumber by rememberSaveable { mutableStateOf("") }
+    var externalId by rememberSaveable { mutableStateOf("") }
     var emailAddress by rememberSaveable { mutableStateOf("") }
-    var acccountNo by rememberSaveable { mutableStateOf( "") }
+    var acccountNo by rememberSaveable { mutableStateOf("") }
     var gender by rememberSaveable { mutableStateOf("") }
-    var genderId by rememberSaveable { mutableIntStateOf( 0) }
+    var genderId by rememberSaveable { mutableIntStateOf(0) }
 
-    var legalForm by rememberSaveable { mutableStateOf( "") }
+    var legalForm by rememberSaveable { mutableStateOf("") }
     var clientType by rememberSaveable { mutableStateOf("") }
-    var selectedLegalFormId by rememberSaveable { mutableIntStateOf( 1) }
+    var selectedLegalFormId by rememberSaveable { mutableIntStateOf(1) }
     var selectedClientTypeId by rememberSaveable { mutableIntStateOf(0) }
     var clientClassification by rememberSaveable { mutableStateOf("") }
     var selectedClientClassificationId by rememberSaveable { mutableIntStateOf(0) }
@@ -411,9 +417,9 @@ private fun UpdateClientDetailsContent(
                         emailAddress,
                         mobileNumber,
                         externalId,
-                        selectedLegalFormId
+                        selectedLegalFormId,
                     )
-                }
+                },
             )
         },
     ) { contentPadding ->
@@ -440,7 +446,7 @@ private fun UpdateClientDetailsContent(
                 fontWeight = FontWeight.SemiBold,
                 fontSize = MaterialTheme.typography.labelLarge.fontSize,
                 letterSpacing = MaterialTheme.typography.labelLarge.letterSpacing,
-                color = MaterialTheme.colorScheme.onSurface
+                color = MaterialTheme.colorScheme.onSurface,
             )
             ClientInputTextFields(
                 firstName = firstName,
@@ -452,7 +458,7 @@ private fun UpdateClientDetailsContent(
                 onMiddleNameChange = { middleName = it },
                 onLastNameChange = { lastName = it },
                 onMobileNumberChange = { mobileNumber = it },
-                onEmailAddressChange = { emailAddress = it }
+                onEmailAddressChange = { emailAddress = it },
             )
 
             Spacer(modifier = Modifier.height(DesignToken.spacing.small))
@@ -483,7 +489,7 @@ private fun UpdateClientDetailsContent(
                 fontWeight = FontWeight.SemiBold,
                 fontSize = MaterialTheme.typography.labelLarge.fontSize,
                 letterSpacing = MaterialTheme.typography.labelLarge.letterSpacing,
-                color = MaterialTheme.colorScheme.onSurface
+                color = MaterialTheme.colorScheme.onSurface,
             )
             Spacer(modifier = Modifier.height(DesignToken.spacing.small))
 
@@ -568,7 +574,7 @@ private fun UpdateClientDetailsContent(
                 fontWeight = FontWeight.SemiBold,
                 fontSize = MaterialTheme.typography.labelLarge.fontSize,
                 letterSpacing = MaterialTheme.typography.labelLarge.letterSpacing,
-                color = MaterialTheme.colorScheme.onSurface
+                color = MaterialTheme.colorScheme.onSurface,
             )
             Spacer(modifier = Modifier.height(DesignToken.spacing.small))
 
@@ -815,15 +821,15 @@ private fun ClientInputTextFields(
 @Composable
 private fun UpdateClientDetailsBottomBar(
     onCancelClick: () -> Unit,
-    onSubmitClick: () -> Unit
-){
+    onSubmitClick: () -> Unit,
+) {
     Box(
         modifier = Modifier.background(MaterialTheme.colorScheme.surface),
     ) {
         Row(
             modifier = Modifier
                 .fillMaxWidth().padding(DesignToken.padding.small),
-            horizontalArrangement = Arrangement.SpaceEvenly
+            horizontalArrangement = Arrangement.SpaceEvenly,
         ) {
             OutlinedButton(
                 modifier = Modifier
@@ -832,12 +838,12 @@ private fun UpdateClientDetailsBottomBar(
                     .heightIn(DesignToken.sizes.avatarMedium),
                 colors = ButtonDefaults.outlinedButtonColors(
                     containerColor = MaterialTheme.colorScheme.onPrimary,
-                    contentColor = MaterialTheme.colorScheme.primary
+                    contentColor = MaterialTheme.colorScheme.primary,
                 ),
                 shape = RoundedCornerShape(DesignToken.sizes.iconMinyMiny),
                 border = BorderStroke(
                     width = Dp.Hairline,
-                    color = MaterialTheme.colorScheme.secondaryContainer
+                    color = MaterialTheme.colorScheme.secondaryContainer,
                 ),
                 onClick = { onCancelClick.invoke() },
             ) {
@@ -928,7 +934,7 @@ private fun handleSubmitClick(
         selectedStaffId,
         selectedClientId,
         selectedClientClassificationId,
-        selectedLegalFormId
+        selectedLegalFormId,
     )
 
     updateClient.invoke(clientPayload)
@@ -951,7 +957,7 @@ private fun createClientPayload(
     selectedStaffId: Int?,
     selectedClientId: Int,
     selectedClientClassificationId: Int,
-    legalFormId: Int?
+    legalFormId: Int?,
 ): ClientPayloadEntity {
     val dateFormat = "dd MMMM yyyy"
     val locale = "en"

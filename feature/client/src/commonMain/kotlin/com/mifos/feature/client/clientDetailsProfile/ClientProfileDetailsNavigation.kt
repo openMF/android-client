@@ -34,7 +34,7 @@ fun NavGraphBuilder.clientProfileDetailsDestination(
             navigateToUpdatePhoto = navigateToUpdatePhoto,
             navigateToAssignStaff = navigateToAssignStaff,
             navigateToHome = navigateToHome,
-            navigateToUpdateDetails = navigateToUpdateDetails
+            navigateToUpdateDetails = navigateToUpdateDetails,
             navigateToClientTransfer = navigateToClientTransfer,
             navigateToUpdateDefaultAccount = navigateToUpdateDefaultAccount,
         )

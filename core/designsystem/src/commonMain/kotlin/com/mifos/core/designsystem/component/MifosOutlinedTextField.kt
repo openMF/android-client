@@ -262,7 +262,7 @@ fun MifosOutlinedTextField(
     OutlinedTextField(
         colors = OutlinedTextFieldDefaults.colors(
             focusedBorderColor = MaterialTheme.colorScheme.secondaryContainer,
-            unfocusedBorderColor = MaterialTheme.colorScheme.secondaryContainer
+            unfocusedBorderColor = MaterialTheme.colorScheme.secondaryContainer,
         ),
         value = value,
         onValueChange = onValueChange,
@@ -379,7 +379,7 @@ fun MifosDatePickerTextField(
         enabled = enabled,
         colors = OutlinedTextFieldDefaults.colors(
             focusedBorderColor = MaterialTheme.colorScheme.secondaryContainer,
-            unfocusedBorderColor = MaterialTheme.colorScheme.secondaryContainer
+            unfocusedBorderColor = MaterialTheme.colorScheme.secondaryContainer,
         ),
         value = value,
         onValueChange = { },
@@ -493,7 +493,6 @@ data class MifosTextFieldConfig(
     val trailingIcon: @Composable (() -> Unit)? = null,
     val leadingIcon: @Composable (() -> Unit)? = null,
 )
-
 
 @Preview
 @Composable

@@ -69,8 +69,6 @@ fun MifosTextFieldDropdown(
                         color = MaterialTheme.colorScheme.error,
                     )
                 }
-            } else {
-                null
             },
             value = value,
             onValueChange = onValueChanged,
@@ -82,13 +80,13 @@ fun MifosTextFieldDropdown(
                 }
             },
             modifier = modifier
-                .menuAnchor(type = MenuAnchorType.PrimaryEditable,enabled = enabled)
+                .menuAnchor(type = MenuAnchorType.PrimaryEditable, enabled = enabled)
                 .clickable(enabled = readOnly && enabled) { isExpanded = true },
             shape = DesignToken.shapes.medium,
             colors = OutlinedTextFieldDefaults.colors(
                 focusedBorderColor = MaterialTheme.colorScheme.secondaryContainer,
                 unfocusedBorderColor = MaterialTheme.colorScheme.secondaryContainer,
-                disabledTextColor = MaterialTheme.colorScheme.onSurface
+                disabledTextColor = MaterialTheme.colorScheme.onSurface,
             ),
             maxLines = 1,
             textStyle = LocalDensity.current.run {

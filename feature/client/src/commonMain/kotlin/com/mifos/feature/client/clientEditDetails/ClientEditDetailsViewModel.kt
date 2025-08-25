@@ -1,3 +1,12 @@
+/*
+ * Copyright 2025 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ */
 package com.mifos.feature.client.clientEditDetails
 
 import androidclient.feature.client.generated.resources.Res
@@ -13,9 +22,9 @@ import com.mifos.core.data.repository.ClientDetailsEditRepository
 import com.mifos.core.data.repository.CreateNewClientRepository
 import com.mifos.core.domain.useCases.GetClientDetailsUseCase
 import com.mifos.core.ui.util.BaseViewModel
+import com.mifos.feature.client.clientEditDetails.ClientEditDetailsViewModel.ClientEditDetailsAction
 import com.mifos.feature.client.clientEditDetails.ClientEditDetailsViewModel.ClientEditDetailsEvent
 import com.mifos.feature.client.clientEditDetails.ClientEditDetailsViewModel.ClientEditDetailsState
-import com.mifos.feature.client.clientEditDetails.ClientEditDetailsViewModel.ClientEditDetailsAction
 import com.mifos.room.entities.client.ClientEntity
 import com.mifos.room.entities.client.ClientPayloadEntity
 import com.mifos.room.entities.organisation.OfficeEntity
@@ -166,5 +175,4 @@ sealed class EditClientDetailsUiState {
     ) : EditClientDetailsUiState()
 
     data class ShowError(val message: StringResource) : EditClientDetailsUiState()
-
 }
