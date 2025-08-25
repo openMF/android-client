@@ -46,7 +46,7 @@ fun MifosTextFieldDropdown(
         .fillMaxWidth()
         .padding(horizontal = 16.dp),
     label: String? = null,
-    readOnly: Boolean = false,
+    readOnly: Boolean = true,
     errorMessage: String? = null,
 ) {
     var isExpanded by remember { mutableStateOf(false) }
@@ -83,7 +83,7 @@ fun MifosTextFieldDropdown(
                 .clickable(enabled = readOnly) { isExpanded = true },
             maxLines = 1,
             textStyle = MifosTypography.bodyLarge,
-            keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Next),
+            keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.None),
             trailingIcon = {
                 ExposedDropdownMenuDefaults.TrailingIcon(expanded = isExpanded)
             },
