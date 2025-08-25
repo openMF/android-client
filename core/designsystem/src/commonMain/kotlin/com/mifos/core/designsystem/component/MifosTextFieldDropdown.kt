@@ -89,8 +89,8 @@ fun MifosTextFieldDropdown(
             },
             readOnly = readOnly,
             colors = OutlinedTextFieldDefaults.colors(
-                focusedBorderColor = MaterialTheme.colorScheme.primary,
-                unfocusedBorderColor = MaterialTheme.colorScheme.primary,
+                focusedBorderColor = MaterialTheme.colorScheme.secondaryContainer,
+                unfocusedBorderColor = MaterialTheme.colorScheme.secondaryContainer,
             ),
         )
 

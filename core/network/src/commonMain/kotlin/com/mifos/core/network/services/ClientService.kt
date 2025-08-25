@@ -14,6 +14,7 @@ import com.mifos.core.model.objects.clients.ActivatePayload
 import com.mifos.core.model.objects.clients.AssignStaffRequest
 import com.mifos.core.model.objects.clients.ClientAddressRequest
 import com.mifos.core.model.objects.clients.ClientAddressResponse
+import com.mifos.core.model.objects.clients.ProposeTransferRequest
 import com.mifos.core.model.objects.noncoreobjects.Identifier
 import com.mifos.core.model.objects.noncoreobjects.IdentifierCreationResponse
 import com.mifos.core.model.objects.noncoreobjects.IdentifierPayload
@@ -258,5 +259,11 @@ interface ClientService {
     suspend fun unassignStaff(
         @Path("clientId") clientId: Int,
         @Body payload: AssignStaffRequest,
+    ): HttpResponse
+
+    @POST("clients/{clientId}?command=proposeTransfer")
+    suspend fun proposeTransfer(
+        @Path("clientId") clientId: Int,
+        @Body payload: ProposeTransferRequest,
     ): HttpResponse
 }

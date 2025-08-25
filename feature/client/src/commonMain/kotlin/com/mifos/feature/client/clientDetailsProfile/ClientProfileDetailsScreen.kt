@@ -75,6 +75,7 @@ internal fun ClientProfileDetailsScreen(
     navigateToUpdatePhoto: (Int, String, String) -> Unit,
     navigateToAssignStaff: (Int) -> Unit,
     navigateToHome: () -> Unit,
+    navigateToClientTransfer: (Int) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: ClientProfileDetailsViewModel = koinViewModel(),
 ) {
@@ -98,7 +99,9 @@ internal fun ClientProfileDetailsScreen(
                     ClientProfileDetailsActionItem.CreateCollateral -> {}
                     ClientProfileDetailsActionItem.CreateSelfServiceUsers -> {}
                     ClientProfileDetailsActionItem.CreateStandingInstructions -> {}
-                    ClientProfileDetailsActionItem.TransferClient -> {}
+                    ClientProfileDetailsActionItem.TransferClient -> {
+                        navigateToClientTransfer(state.client?.id ?: -1)
+                    }
                     ClientProfileDetailsActionItem.UpdateDefaultAccount -> {}
                     ClientProfileDetailsActionItem.ViewStandingInstructions -> {}
                 }

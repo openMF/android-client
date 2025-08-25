@@ -11,11 +11,14 @@ package com.mifos.core.data.repositoryImp
 
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.repository.ClientDetailsRepository
+import com.mifos.core.data.util.extractErrorMessage
+import com.mifos.core.model.objects.clients.AssignStaffRequest
 import com.mifos.core.network.datamanager.DataManagerClient
 import com.mifos.core.network.model.StaffOption
 import com.mifos.room.entities.accounts.ClientAccounts
 import com.mifos.room.entities.client.ClientEntity
 import io.ktor.client.request.forms.MultiPartFormDataContent
+import io.ktor.client.statement.bodyAsText
 import kotlinx.coroutines.flow.Flow
 
 /**
@@ -53,13 +56,58 @@ class ClientDetailsRepositoryImp(
         clientId: Int,
         staffId: Int,
     ): DataState<Unit> {
-        return dataManagerClient.assignClientStaff(clientId, staffId)
+        return try {
+            val res = dataManagerClient.assignClientStaff(clientId, staffId)
+            if (res.status.value == 200) {
+                DataState.Success(Unit)
+            } else {
+                val errorBody = extractErrorMessage(res)
+                DataState.Error(Exception(errorBody))
+            }
+        } catch (e: Exception) {
+            DataState.Error(e)
+        }
     }
 
     override suspend fun unassignStaff(
         clientId: Int,
         staffId: Int,
     ): DataState<Unit> {
-        return dataManagerClient.unAssignClientStaff(clientId, staffId)
+        return try {
+            val res = dataManagerClient.unAssignClientStaff(clientId, staffId)
+            if (res.status.value == 200) {
+                DataState.Success(Unit)
+            } else {
+                val errorBody = extractErrorMessage(res)
+                DataState.Error(Exception(errorBody))
+            }
+        } catch (e: Exception) {
+            DataState.Error(e)
+        }
     }
+
+    override suspend fun proposeTransfer(
+        clientId: Int,
+        destinationOfficeId: Int,
+        transferDate: String,
+        note: String,
+    ): DataState<Unit> {
+        return try {
+            val res = dataManagerClient.proposeClientTransfer(
+                clientId = clientId,
+                destinationOfficeId = destinationOfficeId,
+                transferDate = transferDate,
+                note = note
+            )
+            if (res.status.value == 200) {
+                DataState.Success(Unit)
+            } else {
+                val errorBody = extractErrorMessage(res)
+                DataState.Error(Exception(errorBody))
+            }
+        } catch (e: Exception) {
+            DataState.Error(e)
+        }
+    }
+
 }

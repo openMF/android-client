@@ -3,16 +3,23 @@ package com.mifos.feature.client.clientTransfer
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
+import com.mifos.core.common.utils.DataState
+import com.mifos.core.common.utils.DateHelper
 import com.mifos.core.data.repository.ClientDetailsRepository
+import com.mifos.core.data.repository.CreateNewGroupRepository
 import com.mifos.core.data.util.NetworkMonitor
 import com.mifos.core.ui.components.ResultStatus
 import com.mifos.core.ui.util.BaseViewModel
+import com.mifos.feature.client.clientStaff.ClientStaffState
+import com.mifos.room.entities.organisation.OfficeEntity
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.datetime.Clock
 
 internal class ClientTransferViewModel(
     savedStateHandle: SavedStateHandle,
     private val repo: ClientDetailsRepository,
+    private val repository: CreateNewGroupRepository,
     private val networkMonitor: NetworkMonitor,
 ) : BaseViewModel<ClientTransferState, ClientTransferEvent, ClientTransferAction>(
     initialState = ClientTransferState(),
@@ -20,23 +27,41 @@ internal class ClientTransferViewModel(
     private val route = savedStateHandle.toRoute<ClientTransferRoute>()
 
     init {
-        getTransferOptionsAndObserveNetwork(route.id)
+        getTransferOptionsAndObserveNetwork()
     }
 
-    private fun getTransferOptionsAndObserveNetwork(clientId: Int) {
-        observeNetwork()
-        loadTransferOptions(clientId)
-    }
-
-    private fun loadTransferOptions(clientId: Int) {
+    private fun getTransferOptionsAndObserveNetwork() {
         viewModelScope.launch {
-            mutableStateFlow.update { it.copy(dialogState = ClientTransferState.DialogState.Loading) }
-            try {
-//                val options = repo.getClientTransferOptions(clientId)
-//                mutableStateFlow.update { it.copy(transferOptions = options, dialogState = null) }
-            } catch (e: Exception) {
-                mutableStateFlow.update {
-                    it.copy(dialogState = ClientTransferState.DialogState.Error(e.message ?: "Unknown error"))
+            observeNetwork()
+            loadOffices()
+        }
+    }
+
+
+    private suspend fun loadOffices(){
+        repository.offices().collect { result->
+            when(result){
+                is DataState.Error -> {
+                    mutableStateFlow.update {
+                        it.copy(
+                            dialogState = ClientTransferState.DialogState.Error(result.message)
+                        )
+                    }
+                }
+                DataState.Loading -> {
+                    mutableStateFlow.update {
+                        it.copy(
+                            dialogState = ClientTransferState.DialogState.Loading
+                        )
+                    }
+                }
+                is DataState.Success ->{
+                    mutableStateFlow.update {
+                        it.copy(
+                            dialogState = null,
+                            offices = result.data
+                        )
+                    }
                 }
             }
         }
@@ -44,25 +69,29 @@ internal class ClientTransferViewModel(
 
     private suspend fun transferClient() {
         mutableStateFlow.update { it.copy(dialogState = ClientTransferState.DialogState.Loading) }
+        val result=repo.proposeTransfer(
+            clientId = route.id,
+            destinationOfficeId = state.offices[state.currentSelectedIndex].id,
+            transferDate = DateHelper.getDateAsStringFromLong(state.date),
+            note = state.note
+        )
+        when {
+            result is DataState.Success -> {
+                mutableStateFlow.update {
+                    it.copy(
+                        dialogState = ClientTransferState.DialogState.ShowStatusDialog(ResultStatus.SUCCESS),
+                    )
+                }
+            }
+            result is DataState.Error -> {
+                mutableStateFlow.update {
+                    it.copy(
+                        dialogState = ClientTransferState.DialogState.ShowStatusDialog(ResultStatus.FAILURE, result.message),
+                    )
+                }
+            }
+        }
 
-//        val result = repo.transferClient(
-//            clientId = route.id,
-//            officeId = state.transferOptions[state.currentSelectedIndex].id,
-//            note = state.note,
-//        )
-//
-//        when (result) {
-//            is DataState.Success -> {
-//                mutableStateFlow.update {
-//                    it.copy(dialogState = ClientTransferState.DialogState.ShowStatusDialog(ResultStatus.SUCCESS))
-//                }
-//            }
-//            is DataState.Error -> {
-//                mutableStateFlow.update {
-//                    it.copy(dialogState = ClientTransferState.DialogState.ShowStatusDialog(ResultStatus.FAILURE, result.message))
-//                }
-//            }
-//        }
     }
 
     private fun observeNetwork() {
@@ -76,7 +105,7 @@ internal class ClientTransferViewModel(
     override fun handleAction(action: ClientTransferAction) {
         when (action) {
             ClientTransferAction.NavigateBack -> sendEvent(ClientTransferEvent.NavigateBack)
-            ClientTransferAction.OnRetry -> getTransferOptionsAndObserveNetwork(route.id)
+            ClientTransferAction.OnRetry -> getTransferOptionsAndObserveNetwork()
             ClientTransferAction.OnNext -> sendEvent(ClientTransferEvent.NavigateNext)
             is ClientTransferAction.OptionChanged -> {
                 mutableStateFlow.update { it.copy(currentSelectedIndex = action.index) }
@@ -87,14 +116,28 @@ internal class ClientTransferViewModel(
             ClientTransferAction.OnSubmit -> {
                 viewModelScope.launch { transferClient() }
             }
+
+            is ClientTransferAction.UpdateDatePicker -> {
+                mutableStateFlow.update {
+                    it.copy(showDatePicker = action.status)
+                }
+            }
+
+            is ClientTransferAction.UpdateDate -> {
+                mutableStateFlow.update {
+                    it.copy(date = action.date)
+                }
+            }
         }
     }
 }
 
 data class ClientTransferState(
-    val transferOptions: List<String> = emptyList(),
+    val offices:List<OfficeEntity> =emptyList(),
+    val showDatePicker:Boolean=false,
     val currentSelectedIndex: Int = 0,
     val note: String = "",
+    val date:Long=Clock.System.now().toEpochMilliseconds(),
     val dialogState: DialogState? = null,
     val networkConnection: Boolean = false,
 ) {
@@ -117,4 +160,6 @@ sealed interface ClientTransferAction {
     data class OptionChanged(val index: Int) : ClientTransferAction
     data class NoteChanged(val note: String) : ClientTransferAction
     data object OnSubmit : ClientTransferAction
+    data class UpdateDatePicker(val status:Boolean):ClientTransferAction
+    data class UpdateDate(val date: Long):ClientTransferAction
 }

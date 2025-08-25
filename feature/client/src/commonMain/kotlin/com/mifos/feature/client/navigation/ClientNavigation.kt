@@ -33,6 +33,8 @@ import com.mifos.feature.client.clientStaff.clientStaffDestination
 import com.mifos.feature.client.clientStaff.navigateToClientStaffRoute
 import com.mifos.feature.client.clientSurveyList.SurveyListScreen
 import com.mifos.feature.client.clientSurveyQuestion.SurveyQuestionScreen
+import com.mifos.feature.client.clientTransfer.clientTransferDestination
+import com.mifos.feature.client.clientTransfer.navigateToClientTransferRoute
 import com.mifos.feature.client.clientsList.ClientListScreen
 import com.mifos.feature.client.createNewClient.CreateNewClientScreen
 import com.mifos.room.entities.accounts.savings.SavingAccountDepositTypeEntity
@@ -119,6 +121,7 @@ fun NavGraphBuilder.clientNavGraph(
             navigateToUpdatePhoto = navController::navigateToClientProfileEditProfileRoute,
             navigateToAssignStaff = navController::navigateToClientStaffRoute,
             navigateToHome = navigateToHome,
+            navigateToClientTransfer = navController::navigateToClientTransferRoute
         )
         clientEditProfileDestination(
             onNavigateBack = navController::popBackStack,

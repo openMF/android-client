@@ -36,4 +36,11 @@ interface ClientDetailsRepository {
     suspend fun assignStaff(clientId: Int, staffId: Int): DataState<Unit>
 
     suspend fun unassignStaff(clientId: Int, staffId: Int): DataState<Unit>
+
+    suspend fun proposeTransfer(
+        clientId: Int,
+        destinationOfficeId: Int,
+        transferDate: String,
+        note: String,
+    ): DataState<Unit>
 }

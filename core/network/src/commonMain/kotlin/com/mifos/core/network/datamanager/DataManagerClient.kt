@@ -17,6 +17,7 @@ import com.mifos.core.model.objects.clients.ActivatePayload
 import com.mifos.core.model.objects.clients.AssignStaffRequest
 import com.mifos.core.model.objects.clients.ClientAddressRequest
 import com.mifos.core.model.objects.clients.ClientAddressResponse
+import com.mifos.core.model.objects.clients.ProposeTransferRequest
 import com.mifos.core.model.objects.noncoreobjects.Identifier
 import com.mifos.core.model.objects.noncoreobjects.IdentifierCreationResponse
 import com.mifos.core.model.objects.noncoreobjects.IdentifierPayload
@@ -39,6 +40,7 @@ import com.mifos.room.entities.client.ClientPayloadEntity
 import com.mifos.room.entities.templates.clients.ClientsTemplateEntity
 import com.mifos.room.helper.ClientDaoHelper
 import io.ktor.client.request.forms.MultiPartFormDataContent
+import io.ktor.client.statement.HttpResponse
 import io.ktor.client.statement.bodyAsText
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
@@ -481,40 +483,39 @@ class DataManagerClient(
     suspend fun assignClientStaff(
         clientId: Int,
         staffId: Int,
-    ): DataState<Unit> {
-        return try {
-            val res = mBaseApiManager.clientService.assignStaff(
+    ): HttpResponse {
+        return mBaseApiManager.clientService.assignStaff(
                 clientId = clientId,
                 payload = AssignStaffRequest(staffId),
             )
-            if (res.status.value == 200) {
-                DataState.Success(Unit)
-            } else {
-                val errorBody = res.bodyAsText()
-                DataState.Error(Exception(errorBody))
-            }
-        } catch (e: Exception) {
-            DataState.Error(e)
-        }
     }
 
     suspend fun unAssignClientStaff(
         clientId: Int,
         staffId: Int,
-    ): DataState<Unit> {
-        return try {
-            val res = mBaseApiManager.clientService.unassignStaff(
+    ): HttpResponse {
+        return mBaseApiManager.clientService.unassignStaff(
                 clientId = clientId,
                 payload = AssignStaffRequest(staffId),
             )
-            if (res.status.value == 200) {
-                DataState.Success(Unit)
-            } else {
-                val errorBody = res.bodyAsText()
-                DataState.Error(Exception(errorBody))
-            }
-        } catch (e: Exception) {
-            DataState.Error(e)
-        }
     }
+
+    suspend fun proposeClientTransfer(
+        clientId: Int,
+        destinationOfficeId: Int,
+        transferDate: String,
+        note: String,
+    ): HttpResponse {
+        return mBaseApiManager.clientService.proposeTransfer(
+                clientId = clientId,
+                payload = ProposeTransferRequest(
+                    destinationOfficeId = destinationOfficeId,
+                    transferDate = transferDate,
+                    note = note,
+                    locale = "en",
+                    dateFormat = "dd-MM-yyyy"
+                ),
+            )
+    }
+
 }

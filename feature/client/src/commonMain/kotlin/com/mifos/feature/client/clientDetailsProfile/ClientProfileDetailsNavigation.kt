@@ -23,6 +23,7 @@ fun NavGraphBuilder.clientProfileDetailsDestination(
     onNavigateBack: () -> Unit,
     navigateToUpdatePhoto: (Int, String, String) -> Unit,
     navigateToAssignStaff: (Int) -> Unit,
+    navigateToClientTransfer: (Int) -> Unit,
     navigateToHome: () -> Unit,
 ) {
     composable<ClientProfileDetailsRoute> {
@@ -31,6 +32,7 @@ fun NavGraphBuilder.clientProfileDetailsDestination(
             navigateToUpdatePhoto = navigateToUpdatePhoto,
             navigateToAssignStaff = navigateToAssignStaff,
             navigateToHome = navigateToHome,
+            navigateToClientTransfer=navigateToClientTransfer
         )
     }
 }
