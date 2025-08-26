@@ -142,7 +142,7 @@ class ClientDetailsRepositoryImp(
             DataState.Error(e)
         }
     }
-
+    
     override suspend fun closeClient(
         clientId: Int,
         closureDate: String,

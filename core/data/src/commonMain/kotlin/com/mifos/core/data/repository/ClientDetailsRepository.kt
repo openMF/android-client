@@ -51,7 +51,7 @@ interface ClientDetailsRepository {
     ): DataState<Unit>
 
     suspend fun updateDefaultSavingsAccount(clientId: Int, accountId: Long): DataState<Unit>
-
+  
     suspend fun closeClient(
         clientId: Int,
         closureDate: String,
