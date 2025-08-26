@@ -530,7 +530,6 @@ class DataManagerClient(
         )
     }
 
-
     suspend fun closeClient(
         clientId: Int,
         closureDate: String,
