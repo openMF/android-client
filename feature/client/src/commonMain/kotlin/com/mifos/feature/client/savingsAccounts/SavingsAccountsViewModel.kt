@@ -13,7 +13,6 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import com.mifos.core.data.repository.ClientDetailsRepository
-import com.mifos.core.ui.components.ResultStatus
 import com.mifos.core.ui.util.BaseViewModel
 import com.mifos.room.entities.accounts.savings.SavingsAccountEntity
 import kotlinx.coroutines.flow.update
@@ -60,6 +59,12 @@ internal class SavingsAccountsViewModel(
             is SavingsAccountAction.UpdateSearchValue -> {
                 mutableStateFlow.update {
                     it.copy(searchText = action.query)
+                }
+            }
+
+            SavingsAccountAction.CloseDialog -> {
+                mutableStateFlow.update {
+                    it.copy(dialogState = null)
                 }
             }
         }
@@ -110,7 +115,6 @@ data class SavingsAccountState(
     sealed interface DialogState {
         data class Error(val message: String) : DialogState
         data object Loading : DialogState
-        data class ShowStatusDialog(val status: ResultStatus, val msg: String = "") : DialogState
     }
 }
 
@@ -129,4 +133,5 @@ sealed interface SavingsAccountAction {
     data class ViewAccount(val accountId: Int) : SavingsAccountAction
     data class UpdateSearchValue(val query: String) : SavingsAccountAction
     data object OnSearchClick : SavingsAccountAction
+    data object CloseDialog : SavingsAccountAction
 }
