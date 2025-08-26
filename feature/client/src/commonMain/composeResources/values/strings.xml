@@ -345,4 +345,13 @@
     <string name="update_default_account_success_message">Default account updated successfully. Please Continue to get back to Profile Details Screen</string>
     <string name="update_default_account_success_title">Update Successful</string>
     <string name="update_default_no_accounts_found">No Savings Accounts found for this client</string>
+
+    <!-- Client Closure -->
+    <string name="client_closure_success_title">Client Closure Successful</string>
+    <string name="client_closure_success_message">The client account has been closed successfully. Please Continue to get back to Home</string>
+    <string name="client_closure_failure_title">Client Closure Failed</string>
+    <string name="client_closure_reason">Closure Reason</string>
+    <string name="client_closure_expected_date">Expected Closing Date</string>
+    <string name="client_closure_title">Closure Application</string>
+    <string name="client_closure_no_reasons_found">No closure reasons found</string>
 </resources>

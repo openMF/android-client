@@ -24,6 +24,7 @@ fun NavGraphBuilder.clientProfileDetailsDestination(
     navigateToUpdatePhoto: (Int, String, String) -> Unit,
     navigateToUpdateDetails: (Int, String, String) -> Unit,
     navigateToAssignStaff: (Int) -> Unit,
+    navigateToClientClosure: (Int) -> Unit,
     navigateToClientTransfer: (Int) -> Unit,
     navigateToUpdateDefaultAccount: (Int) -> Unit,
     navigateToHome: () -> Unit,
@@ -37,6 +38,7 @@ fun NavGraphBuilder.clientProfileDetailsDestination(
             navigateToUpdateDetails = navigateToUpdateDetails,
             navigateToClientTransfer = navigateToClientTransfer,
             navigateToUpdateDefaultAccount = navigateToUpdateDefaultAccount,
+            navigateToClientClosure = navigateToClientClosure,
         )
     }
 }
