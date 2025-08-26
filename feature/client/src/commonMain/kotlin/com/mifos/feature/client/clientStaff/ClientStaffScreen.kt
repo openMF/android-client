@@ -53,7 +53,7 @@ import org.koin.compose.viewmodel.koinViewModel
 @Composable
 internal fun ClientStaffScreen(
     onNavigateBack: () -> Unit,
-    onNavigateNext: () -> Unit,
+    onNavigateNext: (Int) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: ClientStaffViewModel = koinViewModel(),
 ) {
@@ -62,7 +62,7 @@ internal fun ClientStaffScreen(
     EventsEffect(viewModel.eventFlow) { event ->
         when (event) {
             ClientStaffEvent.NavigateBack -> onNavigateBack()
-            ClientStaffEvent.NavigateNext -> onNavigateNext()
+            ClientStaffEvent.NavigateNext -> onNavigateNext(state.id)
         }
     }
 

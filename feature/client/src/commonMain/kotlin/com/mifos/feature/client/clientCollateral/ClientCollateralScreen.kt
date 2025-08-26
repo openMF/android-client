@@ -37,7 +37,7 @@ import org.koin.compose.viewmodel.koinViewModel
 @Composable
 internal fun ClientCollateralScreen(
     onNavigateBack: () -> Unit,
-    onNavigateNext: () -> Unit,
+    onNavigateNext: (Int) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: ClientCollateralViewModel = koinViewModel(),
 ) {
@@ -46,7 +46,7 @@ internal fun ClientCollateralScreen(
     EventsEffect(viewModel.eventFlow) { event ->
         when (event) {
             ClientCollateralEvent.NavigateBack -> onNavigateBack()
-            ClientCollateralEvent.NavigateNext -> onNavigateNext()
+            ClientCollateralEvent.NavigateNext -> onNavigateNext(state.id)
         }
     }
 

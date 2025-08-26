@@ -17,9 +17,11 @@ internal class ClientCollateralViewModel(
     private val repo: ClientDetailsRepository,
     private val networkMonitor: NetworkMonitor,
 ) : BaseViewModel<ClientCollateralState, ClientCollateralEvent, ClientCollateralAction>(
-    initialState = ClientCollateralState(),
+    initialState = run{
+        ClientCollateralState(savedStateHandle.toRoute<ClientCollateralRoute>().clientId)
+    },
 ) {
-    private val route = savedStateHandle.toRoute<ClientCollateralRoute>()
+
 
     init {
         getCollateralsAndObserveNetwork()
@@ -105,6 +107,7 @@ internal class ClientCollateralViewModel(
 }
 
 data class ClientCollateralState(
+    val id:Int=-1,
     val collaterals: List<CollateralItem> = emptyList(),
     val currentSelectedIndex: Int = 0,
     val dialogState: DialogState? = null,

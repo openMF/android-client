@@ -138,7 +138,7 @@ fun NavGraphBuilder.clientNavGraph(
         )
         clientStaffDestination(
             onNavigateBack = navController::popBackStack,
-            navigateToHome = navigateToHome,
+            onNavigateNext = navController::navigateToClientDetailsProfileRouteOnStatus,
         )
         clientTransferDestination(
             onNavigateBack = navController::popBackStack,
@@ -154,7 +154,7 @@ fun NavGraphBuilder.clientNavGraph(
         )
         clientCollateralDestination(
             onNavigateBack = navController::popBackStack,
-            onNavigateNext = navigateToHome,
+            onNavigateNext = navController::navigateToClientDetailsProfileRouteOnStatus,
         )
     }
 }
