@@ -42,6 +42,8 @@ import com.mifos.feature.client.clientUpdateDefaultAccount.navigateToUpdateDefau
 import com.mifos.feature.client.clientUpdateDefaultAccount.updateDefaultAccountDestination
 import com.mifos.feature.client.clientsList.ClientListScreen
 import com.mifos.feature.client.createNewClient.CreateNewClientScreen
+import com.mifos.feature.client.savingsAccounts.navigateToClientSavingsAccountsRoute
+import com.mifos.feature.client.savingsAccounts.savingsAccountsDestination
 import com.mifos.room.entities.accounts.savings.SavingAccountDepositTypeEntity
 import com.mifos.room.entities.noncore.DataTableEntity
 import com.mifos.room.entities.survey.SurveyEntity
@@ -120,7 +122,9 @@ fun NavGraphBuilder.clientNavGraph(
             documents = documents,
             identifiers = navController::navigateClientIdentifierScreen,
             navigateToClientDetailsScreen = navController::navigateToClientDetailsProfileRoute,
+            viewAssociatedAccounts = navController::navigateToClientSavingsAccountsRoute,
         )
+
         clientProfileDetailsDestination(
             onNavigateBack = navController::popBackStack,
             navigateToUpdatePhoto = navController::navigateToClientProfileEditProfileRoute,
@@ -148,6 +152,10 @@ fun NavGraphBuilder.clientNavGraph(
         clientClosureDestination(
             onNavigateBack = navController::popBackStack,
             onNavigateNext = navController::navigateToClientDetailsProfileRouteOnStatus,
+        )
+        savingsAccountsDestination(
+            navigateBack = navController::popBackStack,
+            navigateToViewAccount = { },
         )
     }
 }
