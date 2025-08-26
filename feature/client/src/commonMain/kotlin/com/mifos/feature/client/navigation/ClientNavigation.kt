@@ -24,6 +24,7 @@ import com.mifos.feature.client.clientClosure.navigateToClientClosureRoute
 import com.mifos.feature.client.clientDetails.ClientDetailsScreen
 import com.mifos.feature.client.clientDetailsProfile.clientProfileDetailsDestination
 import com.mifos.feature.client.clientDetailsProfile.navigateToClientDetailsProfileRoute
+import com.mifos.feature.client.clientDetailsProfile.navigateToClientDetailsProfileRouteOnStatus
 import com.mifos.feature.client.clientEditProfile.clientEditProfileDestination
 import com.mifos.feature.client.clientEditProfile.navigateToClientProfileEditProfileRoute
 import com.mifos.feature.client.clientIdentifiers.ClientIdentifiersScreen
@@ -138,11 +139,11 @@ fun NavGraphBuilder.clientNavGraph(
         )
         clientTransferDestination(
             onNavigateBack = navController::popBackStack,
-            navigateToHome = navigateToHome,
+            onNavigateNext = navController::navigateToClientDetailsProfileRouteOnStatus,
         )
         updateDefaultAccountDestination(
             onNavigateBack = navController::popBackStack,
-            onNavigateNext = navigateToHome,
+            onNavigateNext = navController::navigateToClientDetailsProfileRouteOnStatus,
         )
         clientClosureDestination(
             onNavigateBack = navController::popBackStack,

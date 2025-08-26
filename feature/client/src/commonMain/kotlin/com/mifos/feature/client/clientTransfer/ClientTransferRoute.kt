@@ -21,12 +21,12 @@ data class ClientTransferRoute(
 
 fun NavGraphBuilder.clientTransferDestination(
     onNavigateBack: () -> Unit,
-    navigateToHome: () -> Unit,
+    onNavigateNext: (Int) -> Unit,
 ) {
     composable<ClientTransferRoute> {
         ClientTransferScreen(
             onNavigateBack = onNavigateBack,
-            onNavigateNext = navigateToHome,
+            onNavigateNext = onNavigateNext,
         )
     }
 }

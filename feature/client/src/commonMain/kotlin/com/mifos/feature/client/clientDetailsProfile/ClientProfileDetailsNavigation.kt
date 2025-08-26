@@ -48,3 +48,12 @@ fun NavController.navigateToClientDetailsProfileRoute(id: Int) {
         ),
     )
 }
+
+fun NavController.navigateToClientDetailsProfileRouteOnStatus(id: Int) {
+    this.navigate(
+        ClientProfileDetailsRoute(id = id),
+    ) {
+        popUpTo(ClientProfileDetailsRoute(id = id)) { inclusive = true }
+        launchSingleTop = true
+    }
+}
