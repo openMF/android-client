@@ -21,12 +21,12 @@ data class ClientClosureRoute(
 
 fun NavGraphBuilder.clientClosureDestination(
     onNavigateBack: () -> Unit,
-    navigateToHome: () -> Unit,
+    onNavigateNext: (Int) -> Unit,
 ) {
     composable<ClientClosureRoute> {
         ClientClosureScreen(
             onNavigateBack = onNavigateBack,
-            onNavigateNext = navigateToHome,
+            onNavigateNext = onNavigateNext,
         )
     }
 }

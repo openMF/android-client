@@ -21,7 +21,7 @@ data class UpdateDefaultAccountRoute(
 
 fun NavGraphBuilder.updateDefaultAccountDestination(
     onNavigateBack: () -> Unit,
-    onNavigateNext: () -> Unit,
+    onNavigateNext: (Int) -> Unit,
 ) {
     composable<UpdateDefaultAccountRoute> {
         UpdateDefaultAccountScreen(

@@ -64,7 +64,7 @@ import org.koin.compose.viewmodel.koinViewModel
 @Composable
 internal fun ClientClosureScreen(
     onNavigateBack: () -> Unit,
-    onNavigateNext: () -> Unit,
+    onNavigateNext: (Int) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: ClientClosureViewModel = koinViewModel(),
 ) {
@@ -73,7 +73,7 @@ internal fun ClientClosureScreen(
     EventsEffect(viewModel.eventFlow) { event ->
         when (event) {
             ClientClosureEvent.NavigateBack -> onNavigateBack()
-            ClientClosureEvent.NavigateNext -> onNavigateNext()
+            ClientClosureEvent.NavigateNext -> onNavigateNext(state.id)
         }
     }
 

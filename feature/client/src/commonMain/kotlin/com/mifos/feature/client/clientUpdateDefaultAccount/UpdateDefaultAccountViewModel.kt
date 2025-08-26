@@ -31,6 +31,9 @@ internal class UpdateDefaultAccountViewModel(
     private val route = savedStateHandle.toRoute<UpdateDefaultAccountRoute>()
 
     init {
+        mutableStateFlow.update {
+            it.copy(id = route.clientId)
+        }
         getAccountsAndObserveNetwork()
     }
 
@@ -108,11 +111,16 @@ internal class UpdateDefaultAccountViewModel(
             UpdateDefaultAccountAction.OnSave -> {
                 viewModelScope.launch { updateDefaultAccount() }
             }
+
+            UpdateDefaultAccountAction.Dismiss -> {
+                mutableStateFlow.update { it.copy(dialogState = null) }
+            }
         }
     }
 }
 
 data class UpdateDefaultAccountState(
+    val id: Int = -1,
     val accounts: List<SavingAccountOption> = emptyList(),
     val currentSelectedIndex: Int = 0,
     val dialogState: DialogState? = null,
@@ -136,4 +144,5 @@ sealed interface UpdateDefaultAccountAction {
     data object OnNext : UpdateDefaultAccountAction
     data class OptionChanged(val index: Int) : UpdateDefaultAccountAction
     data object OnSave : UpdateDefaultAccountAction
+    data object Dismiss : UpdateDefaultAccountAction
 }
