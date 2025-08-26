@@ -74,11 +74,10 @@ internal fun ClientProfileDetailsScreen(
     onNavigateBack: () -> Unit,
     navigateToUpdatePhoto: (Int, String, String) -> Unit,
     navigateToAssignStaff: (Int) -> Unit,
-    navigateToHome: () -> Unit,
     navigateToClientTransfer: (Int) -> Unit,
     navigateToClientClosure: (Int) -> Unit,
     navigateToUpdateDefaultAccount: (Int) -> Unit,
-    navigateToCollateral:(Int)->Unit,
+    navigateToCollateral: (Int) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: ClientProfileDetailsViewModel = koinViewModel(),
 ) {
@@ -123,8 +122,6 @@ internal fun ClientProfileDetailsScreen(
                     state.client?.accountNo ?: "",
                 )
             }
-
-            ClientProfileDetailsEvent.NavigateNext -> navigateToHome()
         }
     }
 

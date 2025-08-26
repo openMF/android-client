@@ -18,6 +18,7 @@ import com.mifos.core.model.objects.clients.AssignStaffRequest
 import com.mifos.core.model.objects.clients.ClientAddressRequest
 import com.mifos.core.model.objects.clients.ClientAddressResponse
 import com.mifos.core.model.objects.clients.ClientCloseRequest
+import com.mifos.core.model.objects.clients.CollateralPayload
 import com.mifos.core.model.objects.clients.ProposeTransferRequest
 import com.mifos.core.model.objects.clients.UpdateSavingsAccountRequest
 import com.mifos.core.model.objects.noncoreobjects.Identifier
@@ -558,6 +559,21 @@ class DataManagerClient(
         return mBaseApiManager.clientService.updateSavingsAccount(
             clientId = clientId,
             payload = UpdateSavingsAccountRequest(savingsId),
+        )
+    }
+
+    suspend fun createCollateral(
+        clientId: Int,
+        collateralId: Int,
+        quantity: String,
+    ): HttpResponse {
+        return mBaseApiManager.clientService.createCollateral(
+            clientId = clientId,
+            payload = CollateralPayload(
+                collateralId = collateralId,
+                quantity = quantity,
+                locale = "en",
+            ),
         )
     }
 }

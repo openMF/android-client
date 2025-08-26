@@ -27,7 +27,7 @@ internal class ClientStaffViewModel(
     private val networkMonitor: NetworkMonitor,
 ) : BaseViewModel<ClientStaffState, ClientStaffEvent, ClientStaffAction>(
     initialState = run {
-        ClientStaffState(id=savedStateHandle.toRoute<ClientStaffRoute>().id)
+        ClientStaffState(id = savedStateHandle.toRoute<ClientStaffRoute>().id)
     },
 ) {
 
@@ -125,7 +125,7 @@ internal class ClientStaffViewModel(
 }
 
 data class ClientStaffState(
-    val id:Int=-1,
+    val id: Int = -1,
     val staffOptions: List<StaffOption> = emptyList(),
     val currentSelectedIndex: Int = 0,
     val dialogState: DialogState? = null,

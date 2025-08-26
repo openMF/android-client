@@ -15,6 +15,7 @@ import com.mifos.core.model.objects.clients.AssignStaffRequest
 import com.mifos.core.model.objects.clients.ClientAddressRequest
 import com.mifos.core.model.objects.clients.ClientAddressResponse
 import com.mifos.core.model.objects.clients.ClientCloseRequest
+import com.mifos.core.model.objects.clients.CollateralPayload
 import com.mifos.core.model.objects.clients.ProposeTransferRequest
 import com.mifos.core.model.objects.clients.UpdateSavingsAccountRequest
 import com.mifos.core.model.objects.noncoreobjects.Identifier
@@ -257,7 +258,7 @@ interface ClientService {
     suspend fun getClientCloseTemplate(): ClientCloseTemplateResponse
 
     @GET("collateral-management")
-    suspend fun getCollateralItems():List<CollateralItem>
+    suspend fun getCollateralItems(): List<CollateralItem>
 
     @POST("clients/{clientId}?command=assignStaff")
     suspend fun assignStaff(
@@ -287,5 +288,11 @@ interface ClientService {
     suspend fun closeClient(
         @Path("clientId") clientId: Int,
         @Body payload: ClientCloseRequest,
+    ): HttpResponse
+
+    @POST("clients/{clientId}/collaterals")
+    suspend fun createCollateral(
+        @Path("clientId") clientId: Int,
+        @Body payload: CollateralPayload,
     ): HttpResponse
 }

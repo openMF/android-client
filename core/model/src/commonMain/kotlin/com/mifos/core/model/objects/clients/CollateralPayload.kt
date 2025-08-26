@@ -7,17 +7,13 @@
  *
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
-package com.mifos.core.network.model
+package com.mifos.core.model.objects.clients
 
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class CollateralItem(
-    val quality: String,
-    val basePrice: Double,
-    val unitType: String,
-    val pctToBase: Double,
-    val currency: String,
-    val name: String,
-    val id: Int,
+data class CollateralPayload(
+    val collateralId: Int,
+    val quantity: String,
+    val locale: String,
 )

@@ -174,4 +174,26 @@ class ClientDetailsRepositoryImp(
             DataState.Error(e)
         }
     }
+
+    override suspend fun createCollateral(
+        clientId: Int,
+        collateralId: Int,
+        quantity: String,
+    ): DataState<Unit> {
+        return try {
+            val res = dataManagerClient.createCollateral(
+                clientId = clientId,
+                collateralId = collateralId,
+                quantity = quantity,
+            )
+            if (res.status.value == 200) {
+                DataState.Success(Unit)
+            } else {
+                val errorBody = extractErrorMessage(res)
+                DataState.Error(Exception(errorBody))
+            }
+        } catch (e: Exception) {
+            DataState.Error(e)
+        }
+    }
 }

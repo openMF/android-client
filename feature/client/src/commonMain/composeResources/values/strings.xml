@@ -349,4 +349,19 @@
     <string name="client_closure_expected_date">Expected Closing Date</string>
     <string name="client_closure_title">Closure Application</string>
     <string name="client_closure_no_reasons_found">No closure reasons found</string>
+
+    <string name="client_collateral_title">Client Collateral</string>
+    <string name="client_collateral_choose_type">Choose Collateral Type</string>
+    <string name="client_collateral_name">Collateral Name</string>
+    <string name="client_collateral_quality">Type/Quality</string>
+    <string name="client_collateral_unit_type">Unit Type</string>
+    <string name="client_collateral_base_price">Base Price</string>
+    <string name="client_collateral_pct_to_base">Percentage to Base</string>
+    <string name="client_collateral_quantity">Quantity</string>
+    <string name="client_collateral_total">Total</string>
+    <string name="client_collateral_total_collateral">Total Collateral Value</string>
+    <string name="client_collateral_no_options">No Collateral options found for this client</string>
+    <string name="client_collateral_success_title">Collateral Created Successfully</string>
+    <string name="client_collateral_success_message">Collateral created successfully. Click Continue to navigate to Client detail profile.</string>
+    <string name="client_collateral_failure_title">Collateral Creation Failed</string>
 </resources>

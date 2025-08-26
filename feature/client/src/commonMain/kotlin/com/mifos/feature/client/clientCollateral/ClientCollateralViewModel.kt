@@ -1,3 +1,12 @@
+/*
+ * Copyright 2025 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ */
 package com.mifos.feature.client.clientCollateral
 
 import androidx.lifecycle.SavedStateHandle
@@ -17,11 +26,10 @@ internal class ClientCollateralViewModel(
     private val repo: ClientDetailsRepository,
     private val networkMonitor: NetworkMonitor,
 ) : BaseViewModel<ClientCollateralState, ClientCollateralEvent, ClientCollateralAction>(
-    initialState = run{
+    initialState = run {
         ClientCollateralState(savedStateHandle.toRoute<ClientCollateralRoute>().clientId)
     },
 ) {
-
 
     init {
         getCollateralsAndObserveNetwork()
@@ -36,8 +44,8 @@ internal class ClientCollateralViewModel(
 
     private suspend fun loadCollaterals() {
         mutableStateFlow.update { it.copy(dialogState = ClientCollateralState.DialogState.Loading) }
-        val result=repo.getCollateralItems()
-        when(result){
+        val result = repo.getCollateralItems()
+        when (result) {
             is DataState.Error -> {
                 mutableStateFlow.update {
                     it.copy(
@@ -61,26 +69,33 @@ internal class ClientCollateralViewModel(
 
     private suspend fun saveCollateral() {
         mutableStateFlow.update { it.copy(dialogState = ClientCollateralState.DialogState.Loading) }
-//        val collateralId = state.collaterals[state.currentSelectedIndex].id
-//        val result = repo.saveClientCollateral(route.clientId, collateralId)
-//        when (result) {
-//            is DataState.Success -> {
-//                mutableStateFlow.update {
-//                    it.copy(dialogState = ClientCollateralState.DialogState.ShowStatusDialog(ResultStatus.SUCCESS))
-//                }
-//            }
-//            is DataState.Error -> {
-//                mutableStateFlow.update {
-//                    it.copy(
-//                        dialogState = ClientCollateralState.DialogState.ShowStatusDialog(
-//                            ResultStatus.FAILURE,
-//                            result.message,
-//                        ),
-//                    )
-//                }
-//            }
-//            else -> Unit
-//        }
+        val collateralId = state.collaterals[state.currentSelectedIndex].id
+        val result = repo.createCollateral(
+            state.id,
+            collateralId = collateralId,
+            quantity = state.quantity.toString(),
+        )
+        when (result) {
+            is DataState.Success -> {
+                mutableStateFlow.update {
+                    it.copy(
+                        dialogState = ClientCollateralState
+                            .DialogState.ShowStatusDialog(ResultStatus.SUCCESS),
+                    )
+                }
+            }
+            is DataState.Error -> {
+                mutableStateFlow.update {
+                    it.copy(
+                        dialogState = ClientCollateralState.DialogState.ShowStatusDialog(
+                            ResultStatus.FAILURE,
+                            result.message,
+                        ),
+                    )
+                }
+            }
+            else -> Unit
+        }
     }
 
     private fun observeNetwork() {
@@ -102,13 +117,31 @@ internal class ClientCollateralViewModel(
             ClientCollateralAction.OnSave -> {
                 viewModelScope.launch { saveCollateral() }
             }
+
+            is ClientCollateralAction.OnQuantityChange -> {
+                mutableStateFlow.update { state ->
+                    val currentCollateral = state.collaterals[state.currentSelectedIndex]
+
+                    val total = currentCollateral.basePrice * action.quantity
+                    val totalCollateral = (total * currentCollateral.pctToBase) / 100
+
+                    state.copy(
+                        quantity = action.quantity,
+                        total = if (action.quantity == -1)0.0 else total,
+                        totalCollateral = if (action.quantity == -1)0.0 else totalCollateral,
+                    )
+                }
+            }
         }
     }
 }
 
 data class ClientCollateralState(
-    val id:Int=-1,
+    val id: Int = -1,
     val collaterals: List<CollateralItem> = emptyList(),
+    val quantity: Int = -1,
+    val total: Double = 0.0,
+    val totalCollateral: Double = 0.0,
     val currentSelectedIndex: Int = 0,
     val dialogState: DialogState? = null,
     val networkConnection: Boolean = false,
@@ -118,6 +151,7 @@ data class ClientCollateralState(
         data object Loading : DialogState
         data class ShowStatusDialog(val status: ResultStatus, val msg: String = "") : DialogState
     }
+    val isEnabled = quantity != -1
 }
 
 sealed interface ClientCollateralEvent {
@@ -131,4 +165,5 @@ sealed interface ClientCollateralAction {
     data object OnNext : ClientCollateralAction
     data class OptionChanged(val index: Int) : ClientCollateralAction
     data object OnSave : ClientCollateralAction
+    data class OnQuantityChange(val quantity: Int) : ClientCollateralAction
 }
