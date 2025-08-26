@@ -60,7 +60,7 @@ interface ClientDetailsRepository {
         closureDate: String,
         closureReasonId: Int,
     ): DataState<Unit>
-  
+
     suspend fun createCollateral(
         clientId: Int,
         collateralId: Int,
