@@ -14,6 +14,7 @@ import com.mifos.core.data.repository.ClientDetailsRepository
 import com.mifos.core.data.util.extractErrorMessage
 import com.mifos.core.network.datamanager.DataManagerClient
 import com.mifos.core.network.model.ClientCloseTemplateResponse
+import com.mifos.core.network.model.CollateralItem
 import com.mifos.core.network.model.SavingAccountOption
 import com.mifos.core.network.model.StaffOption
 import com.mifos.room.entities.accounts.ClientAccounts
@@ -51,6 +52,15 @@ class ClientDetailsRepositoryImp(
     override suspend fun getClientCloseTemplate(): DataState<ClientCloseTemplateResponse> {
         return try {
             val res = dataManagerClient.getClientCloseTemplate()
+            return DataState.Success(res)
+        } catch (e: Exception) {
+            DataState.Error(e)
+        }
+    }
+
+    override suspend fun getCollateralItems(): DataState<List<CollateralItem>> {
+        return try {
+            val res = dataManagerClient.getCollateralItems()
             return DataState.Success(res)
         } catch (e: Exception) {
             DataState.Error(e)
@@ -153,6 +163,28 @@ class ClientDetailsRepositoryImp(
                 clientId = clientId,
                 closureDate = closureDate,
                 closureReasonId = closureReasonId,
+            )
+            if (res.status.value == 200) {
+                DataState.Success(Unit)
+            } else {
+                val errorBody = extractErrorMessage(res)
+                DataState.Error(Exception(errorBody))
+            }
+        } catch (e: Exception) {
+            DataState.Error(e)
+        }
+    }
+
+    override suspend fun createCollateral(
+        clientId: Int,
+        collateralId: Int,
+        quantity: String,
+    ): DataState<Unit> {
+        return try {
+            val res = dataManagerClient.createCollateral(
+                clientId = clientId,
+                collateralId = collateralId,
+                quantity = quantity,
             )
             if (res.status.value == 200) {
                 DataState.Success(Unit)

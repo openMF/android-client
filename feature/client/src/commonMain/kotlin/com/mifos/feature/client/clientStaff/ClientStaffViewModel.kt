@@ -26,28 +26,28 @@ internal class ClientStaffViewModel(
     private val repo: ClientDetailsRepository,
     private val networkMonitor: NetworkMonitor,
 ) : BaseViewModel<ClientStaffState, ClientStaffEvent, ClientStaffAction>(
-    initialState = ClientStaffState(),
+    initialState = run {
+        ClientStaffState(id = savedStateHandle.toRoute<ClientStaffRoute>().id)
+    },
 ) {
 
-    private val route = savedStateHandle.toRoute<ClientStaffRoute>()
-
     init {
-        getStaffOptionsAndObserveNetwork(route.id)
+        getStaffOptionsAndObserveNetwork()
     }
 
-    private fun getStaffOptionsAndObserveNetwork(clientId: Int) {
+    private fun getStaffOptionsAndObserveNetwork() {
         observeNetwork()
-        loadStaffOptions(clientId)
+        loadStaffOptions()
     }
 
-    private fun loadStaffOptions(clientId: Int) {
+    private fun loadStaffOptions() {
         viewModelScope.launch {
             mutableStateFlow.update {
                 it.copy(dialogState = ClientStaffState.DialogState.Loading)
             }
 
             try {
-                val options = repo.getClientStaffOptions(clientId)
+                val options = repo.getClientStaffOptions(state.id)
 
                 mutableStateFlow.update {
                     it.copy(
@@ -73,7 +73,7 @@ internal class ClientStaffViewModel(
                 dialogState = ClientStaffState.DialogState.Loading,
             )
         }
-        val result = repo.assignStaff(clientId = route.id, staffId = state.staffOptions[state.currentSelectedIndex].id)
+        val result = repo.assignStaff(clientId = state.id, staffId = state.staffOptions[state.currentSelectedIndex].id)
         when {
             result is DataState.Success -> {
                 mutableStateFlow.update {
@@ -105,7 +105,7 @@ internal class ClientStaffViewModel(
     override fun handleAction(action: ClientStaffAction) {
         when (action) {
             ClientStaffAction.NavigateBack -> sendEvent(ClientStaffEvent.NavigateBack)
-            ClientStaffAction.OnRetry -> getStaffOptionsAndObserveNetwork(route.id)
+            ClientStaffAction.OnRetry -> getStaffOptionsAndObserveNetwork()
             ClientStaffAction.OnNext -> sendEvent(ClientStaffEvent.NavigateNext)
             is ClientStaffAction.OptionChanged -> {
                 mutableStateFlow.update {
@@ -125,6 +125,7 @@ internal class ClientStaffViewModel(
 }
 
 data class ClientStaffState(
+    val id: Int = -1,
     val staffOptions: List<StaffOption> = emptyList(),
     val currentSelectedIndex: Int = 0,
     val dialogState: DialogState? = null,

@@ -74,10 +74,10 @@ internal fun ClientProfileDetailsScreen(
     onNavigateBack: () -> Unit,
     navigateToUpdatePhoto: (Int, String, String) -> Unit,
     navigateToAssignStaff: (Int) -> Unit,
-    navigateToHome: () -> Unit,
     navigateToClientTransfer: (Int) -> Unit,
     navigateToClientClosure: (Int) -> Unit,
     navigateToUpdateDefaultAccount: (Int) -> Unit,
+    navigateToCollateral: (Int) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: ClientProfileDetailsViewModel = koinViewModel(),
 ) {
@@ -100,7 +100,9 @@ internal fun ClientProfileDetailsScreen(
                     ClientProfileDetailsActionItem.ClosureApplication -> {
                         navigateToClientClosure(state.client?.id ?: -1)
                     }
-                    ClientProfileDetailsActionItem.CreateCollateral -> {}
+                    ClientProfileDetailsActionItem.CreateCollateral -> {
+                        navigateToCollateral(state.client?.id ?: -1)
+                    }
                     ClientProfileDetailsActionItem.CreateSelfServiceUsers -> {}
                     ClientProfileDetailsActionItem.CreateStandingInstructions -> {}
                     ClientProfileDetailsActionItem.TransferClient -> {
@@ -120,8 +122,6 @@ internal fun ClientProfileDetailsScreen(
                     state.client?.accountNo ?: "",
                 )
             }
-
-            ClientProfileDetailsEvent.NavigateNext -> navigateToHome()
         }
     }
 

@@ -21,6 +21,8 @@ import com.mifos.core.common.utils.Constants
 import com.mifos.feature.client.clientCharges.ClientChargesScreen
 import com.mifos.feature.client.clientClosure.clientClosureDestination
 import com.mifos.feature.client.clientClosure.navigateToClientClosureRoute
+import com.mifos.feature.client.clientCollateral.clientCollateralDestination
+import com.mifos.feature.client.clientCollateral.navigateToClientCollateralRoute
 import com.mifos.feature.client.clientDetails.ClientDetailsScreen
 import com.mifos.feature.client.clientDetailsProfile.clientProfileDetailsDestination
 import com.mifos.feature.client.clientDetailsProfile.navigateToClientDetailsProfileRoute
@@ -129,17 +131,17 @@ fun NavGraphBuilder.clientNavGraph(
             onNavigateBack = navController::popBackStack,
             navigateToUpdatePhoto = navController::navigateToClientProfileEditProfileRoute,
             navigateToAssignStaff = navController::navigateToClientStaffRoute,
-            navigateToHome = navigateToHome,
             navigateToClientTransfer = navController::navigateToClientTransferRoute,
             navigateToUpdateDefaultAccount = navController::navigateToUpdateDefaultAccountRoute,
             navigateToClientClosure = navController::navigateToClientClosureRoute,
+            navigateToCollateral = navController::navigateToClientCollateralRoute,
         )
         clientEditProfileDestination(
             onNavigateBack = navController::popBackStack,
         )
         clientStaffDestination(
             onNavigateBack = navController::popBackStack,
-            navigateToHome = navigateToHome,
+            onNavigateNext = navController::navigateToClientDetailsProfileRouteOnStatus,
         )
         clientTransferDestination(
             onNavigateBack = navController::popBackStack,
@@ -156,6 +158,10 @@ fun NavGraphBuilder.clientNavGraph(
         savingsAccountsDestination(
             navigateBack = navController::popBackStack,
             navigateToViewAccount = { },
+        )
+        clientCollateralDestination(
+            onNavigateBack = navController::popBackStack,
+            onNavigateNext = navController::navigateToClientDetailsProfileRouteOnStatus,
         )
     }
 }

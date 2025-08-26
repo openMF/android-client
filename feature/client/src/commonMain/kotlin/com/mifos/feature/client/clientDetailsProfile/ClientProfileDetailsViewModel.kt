@@ -220,7 +220,7 @@ internal class ClientProfileDetailsViewModel(
                 }
             }
 
-            ClientProfileDetailsAction.OnNext -> sendEvent(ClientProfileDetailsEvent.NavigateNext)
+            ClientProfileDetailsAction.OnNext -> getClientAndObserveNetwork()
         }
     }
 
@@ -293,8 +293,6 @@ sealed interface ClientProfileDetailsEvent {
     data class OnActionClick(val action: ClientProfileDetailsActionItem) : ClientProfileDetailsEvent
 
     data object NavigateToUpdatePhoto : ClientProfileDetailsEvent
-
-    data object NavigateNext : ClientProfileDetailsEvent
 }
 
 /**
