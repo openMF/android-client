@@ -150,8 +150,6 @@ fun MifosOutlinedTextField(
     colors: TextFieldColors = OutlinedTextFieldDefaults.colors(
         focusedBorderColor = MaterialTheme.colorScheme.secondaryContainer,
         unfocusedBorderColor = MaterialTheme.colorScheme.secondaryContainer,
-        disabledBorderColor = MaterialTheme.colorScheme.secondary,
-        disabledTextColor = MaterialTheme.colorScheme.secondary,
     ),
 ) {
     val isFocused by interactionSource.collectIsFocusedAsState()

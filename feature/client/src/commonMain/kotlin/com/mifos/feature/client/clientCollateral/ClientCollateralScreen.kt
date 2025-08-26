@@ -143,6 +143,7 @@ private fun ClientCollateralScaffold(
                             value = state.collaterals[state.currentSelectedIndex].name,
                             onValueChange = {},
                             readOnly = true,
+                            enabled = false,
                             label = stringResource(Res.string.client_collateral_name),
                             modifier = Modifier.fillMaxWidth(),
                         )
@@ -150,6 +151,7 @@ private fun ClientCollateralScaffold(
                             value = state.collaterals[state.currentSelectedIndex].quality,
                             onValueChange = {},
                             readOnly = true,
+                            enabled = false,
                             label = stringResource(Res.string.client_collateral_quality),
                             modifier = Modifier.fillMaxWidth(),
                         )
@@ -157,6 +159,7 @@ private fun ClientCollateralScaffold(
                             value = state.collaterals[state.currentSelectedIndex].unitType,
                             onValueChange = {},
                             readOnly = true,
+                            enabled = false,
                             label = stringResource(Res.string.client_collateral_unit_type),
                             modifier = Modifier.fillMaxWidth(),
                         )
@@ -164,6 +167,7 @@ private fun ClientCollateralScaffold(
                             value = "${state.collaterals[state.currentSelectedIndex].basePrice}",
                             onValueChange = {},
                             readOnly = true,
+                            enabled = false,
                             label = stringResource(Res.string.client_collateral_base_price),
                             modifier = Modifier.fillMaxWidth(),
                         )
@@ -171,6 +175,7 @@ private fun ClientCollateralScaffold(
                             value = state.collaterals[state.currentSelectedIndex].pctToBase.toString(),
                             onValueChange = {},
                             readOnly = true,
+                            enabled = false,
                             label = stringResource(Res.string.client_collateral_pct_to_base),
                             modifier = Modifier.fillMaxWidth(),
                         )
@@ -189,6 +194,7 @@ private fun ClientCollateralScaffold(
                             value = state.total.toString(),
                             onValueChange = {},
                             readOnly = true,
+                            enabled = false,
                             label = stringResource(Res.string.client_collateral_total),
                             modifier = Modifier.fillMaxWidth(),
                         )
@@ -197,6 +203,7 @@ private fun ClientCollateralScaffold(
                             value = state.totalCollateral.toString(),
                             onValueChange = {},
                             readOnly = true,
+                            enabled = false,
                             label = stringResource(Res.string.client_collateral_total_collateral),
                             modifier = Modifier.fillMaxWidth(),
                         )
