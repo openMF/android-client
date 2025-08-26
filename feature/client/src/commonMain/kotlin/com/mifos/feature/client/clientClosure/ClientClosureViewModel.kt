@@ -28,9 +28,10 @@ internal class ClientClosureViewModel(
     private val repo: ClientDetailsRepository,
     private val networkMonitor: NetworkMonitor,
 ) : BaseViewModel<ClientClosureState, ClientClosureEvent, ClientClosureAction>(
-    initialState = ClientClosureState(),
+    initialState = run {
+        ClientClosureState(savedStateHandle.toRoute<ClientClosureRoute>().id)
+    },
 ) {
-    private val route = savedStateHandle.toRoute<ClientClosureRoute>()
 
     init {
         viewModelScope.launch {
@@ -70,7 +71,7 @@ internal class ClientClosureViewModel(
     private suspend fun closeClient() {
         mutableStateFlow.update { it.copy(dialogState = ClientClosureState.DialogState.Loading) }
         val result = repo.closeClient(
-            clientId = route.id,
+            clientId = state.id,
             closureDate = DateHelper.getDateAsStringFromLong(state.date),
             closureReasonId = state.reasons[state.currentSelectedIndex].id,
         )
@@ -129,6 +130,7 @@ internal class ClientClosureViewModel(
 }
 
 data class ClientClosureState(
+    val id: Int = -1,
     val reasons: List<Narration> = emptyList(),
     val showDatePicker: Boolean = false,
     val currentSelectedIndex: Int = 0,

@@ -147,7 +147,7 @@ fun NavGraphBuilder.clientNavGraph(
         )
         clientClosureDestination(
             onNavigateBack = navController::popBackStack,
-            navigateToHome = navigateToHome,
+            onNavigateNext = navController::navigateToClientDetailsProfileRouteOnStatus,
         )
     }
 }
