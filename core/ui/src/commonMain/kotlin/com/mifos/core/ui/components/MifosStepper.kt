@@ -28,7 +28,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.mifos.core.designsystem.theme.AppColors
@@ -53,7 +52,7 @@ fun MifosStepper(
             .fillMaxWidth()
             .padding(
                 vertical = DesignToken.padding.small,
-                horizontal = DesignToken.padding.large
+                horizontal = DesignToken.padding.large,
             ),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
@@ -72,7 +71,7 @@ fun MifosStepper(
                 ) {
                     Column(
                         horizontalAlignment = Alignment.CenterHorizontally,
-                        modifier=Modifier.width(DesignToken.sizes.avatarMediumExtra)
+                        modifier = Modifier.width(DesignToken.sizes.avatarMediumExtra),
                     ) {
                         Box(
                             modifier = Modifier
@@ -97,20 +96,20 @@ fun MifosStepper(
 
                         Spacer(modifier = Modifier.height(DesignToken.padding.small))
                         Text(
-                            text=step.name,
+                            text = step.name,
                             color = AppColors.customWhite,
                             style = MifosTypography.labelSmall,
                             maxLines = 1,
-                            overflow = TextOverflow.Ellipsis
+                            overflow = TextOverflow.Ellipsis,
                         )
                     }
                     if (index != steps.lastIndex) {
                         Box(
                             modifier = Modifier
                                 .padding(vertical = DesignToken.padding.large)
-                                .width(8.dp)
+                                .width(DesignToken.padding.small)
                                 .height(1.dp)
-                                .background(AppColors.customWhite)
+                                .background(AppColors.stepperColor),
                         )
                     }
                 }
