@@ -18,8 +18,8 @@ import androidx.navigation.compose.NavHost
 import cmp.navigation.AppState
 import com.mifos.core.common.utils.Constants
 import com.mifos.feature.about.aboutDestination
-import com.mifos.feature.activate.navigation.activateScreen
-import com.mifos.feature.activate.navigation.navigateToActivateScreen
+import com.mifos.feature.activate.activateDestination
+import com.mifos.feature.activate.navigateToActivateRoute
 import com.mifos.feature.center.navigation.centerNavGraph
 import com.mifos.feature.center.navigation.navigateCenterDetailsScreenRoute
 import com.mifos.feature.center.navigation.navigateCreateCenterScreenRoute
@@ -112,12 +112,12 @@ internal fun FeatureNavHost(
             onBackPressed = appState.navController::popBackStack,
         )
 
-        activateScreen(onBackPressed = appState.navController::popBackStack)
+        activateDestination(onBackPressed = appState.navController::popBackStack)
 
         centerNavGraph(
             navController = appState.navController,
             paddingValues = padding,
-            onActivateCenter = appState.navController::navigateToActivateScreen,
+            onActivateCenter = appState.navController::navigateToActivateRoute,
             addSavingsAccount = { centerId ->
                 appState.navController.navigateToAddSavingsAccount(0, centerId, false)
             },
@@ -134,7 +134,7 @@ internal fun FeatureNavHost(
             loadGroupDataTables = appState.navController::navigateToDataTable,
             loadNotes = appState.navController::navigateToNoteScreen,
             loadLoanAccountSummary = appState.navController::navigateToLoanAccountSummaryScreen,
-            activateGroup = appState.navController::navigateToActivateScreen,
+            activateGroup = appState.navController::navigateToActivateRoute,
         )
 
         settingsScreen(
@@ -204,7 +204,7 @@ internal fun FeatureNavHost(
                 appState.navController.navigateToSavingsAccountSummaryScreen(clientId, depositType)
             },
             activateClient = { clientId ->
-                appState.navController.navigateToActivateScreen(
+                appState.navController.navigateToActivateRoute(
                     clientId,
                     Constants.ACTIVATE_CLIENT,
                 )

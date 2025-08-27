@@ -19,6 +19,7 @@ import androidclient.feature.activate.generated.resources.feature_activate_group
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.toRoute
 import com.mifos.core.common.utils.Constants
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.domain.useCases.ActivateCenterUseCase
@@ -36,9 +37,9 @@ class ActivateViewModel(
     savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
 
-    val id = savedStateHandle.getStateFlow(key = Constants.ACTIVATE_ID, initialValue = "0")
-    val activateType =
-        savedStateHandle.getStateFlow(key = Constants.ACTIVATE_TYPE, initialValue = "")
+    val id=savedStateHandle.toRoute<ActivateRoute>().id
+    val activateType=savedStateHandle.toRoute<ActivateRoute>().type
+
 
     private val _activateUiState = MutableStateFlow<ActivateUiState>(ActivateUiState.Initial)
     val activateUiState = _activateUiState.asStateFlow()

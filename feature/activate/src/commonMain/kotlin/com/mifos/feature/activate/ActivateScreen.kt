@@ -67,18 +67,16 @@ internal fun ActivateScreen(
     viewModel: ActivateViewModel = koinViewModel(),
 ) {
     val state by viewModel.activateUiState.collectAsStateWithLifecycle()
-    val id by viewModel.id.collectAsStateWithLifecycle()
-    val activateType by viewModel.activateType.collectAsStateWithLifecycle()
 
     ActivateScreen(
         state = state,
         onActivate = {
             val clientIdAsInt: Int = try {
-                id.toInt()
+                viewModel.id
             } catch (e: Exception) {
                 0
             }
-            when (activateType) {
+            when (viewModel.activateType) {
                 Constants.ACTIVATE_CLIENT -> viewModel.activateClient(
                     clientId = clientIdAsInt,
                     clientPayload = it,
