@@ -346,8 +346,6 @@
     <string name="update_default_account_success_title">Update Successful</string>
     <string name="update_default_no_accounts_found">No Savings Accounts found for this client</string>
 
-
-
     <!-- Client Edit Details -->
     <string name="client_details_updated">Client Details Updated</string>
     <string name="client_details_updated_success_message">The client details has been updated successfully. Please Continue to get back to Home</string>

@@ -30,12 +30,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.unit.sp
 import com.mifos.core.designsystem.theme.DesignToken
+import com.mifos.core.designsystem.theme.MifosTypography
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -50,7 +47,7 @@ fun MifosTextFieldDropdown(
         .clip(DesignToken.shapes.medium)
         .fillMaxWidth(),
     label: String? = null,
-    readOnly: Boolean = false,
+    readOnly: Boolean = true,
     errorMessage: String? = null,
 ) {
     var isExpanded by remember { mutableStateOf(false) }
@@ -86,18 +83,9 @@ fun MifosTextFieldDropdown(
             colors = OutlinedTextFieldDefaults.colors(
                 focusedBorderColor = MaterialTheme.colorScheme.secondaryContainer,
                 unfocusedBorderColor = MaterialTheme.colorScheme.secondaryContainer,
-                disabledTextColor = MaterialTheme.colorScheme.onSurface,
             ),
             maxLines = 1,
-            textStyle = LocalDensity.current.run {
-                TextStyle(
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    fontSize = MaterialTheme.typography.bodyLarge.fontSize,
-                    lineHeight = 24.sp,
-                    letterSpacing = 0.5f.sp,
-                    fontWeight = FontWeight.Normal,
-                )
-            },
+            textStyle = MifosTypography.bodyLarge,
             keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Next),
             trailingIcon = {
                 ExposedDropdownMenuDefaults.TrailingIcon(expanded = isExpanded)

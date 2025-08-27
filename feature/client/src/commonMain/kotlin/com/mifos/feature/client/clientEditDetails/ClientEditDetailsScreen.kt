@@ -117,6 +117,7 @@ import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toInstant
+import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.getString
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
@@ -248,6 +249,10 @@ private fun UpdateClientDetailsContent(
     var acccountNo by rememberSaveable { mutableStateOf("") }
     var gender by rememberSaveable { mutableStateOf("") }
     var genderId by rememberSaveable { mutableIntStateOf(0) }
+
+    var firstNameError by rememberSaveable { mutableStateOf<String?>(null) }
+    var middleNameError by rememberSaveable { mutableStateOf<String?>(null) }
+    var lastNameError by rememberSaveable { mutableStateOf<String?>(null) }
 
     var legalForm by rememberSaveable { mutableStateOf("") }
     var clientType by rememberSaveable { mutableStateOf("") }
@@ -408,9 +413,8 @@ private fun UpdateClientDetailsContent(
                 onCancelClick = { navigateBack.invoke() },
                 onSubmitClick = {
                     val clientNames = Name(firstName, lastName, middleName)
-                    val isFormCorrect = handleSubmitClick(
+                    handleSubmitClick(
                         scope,
-                        snackbarHostState,
                         clientNames,
                         clientTemplate,
                         updateClient,
@@ -427,6 +431,9 @@ private fun UpdateClientDetailsContent(
                         mobileNumber,
                         externalId,
                         selectedLegalFormId,
+                        onFirstNameError = { firstNameError = it },
+                        onMiddleNameError =  { middleNameError = it },
+                        onLastNameError =  { lastNameError = it },
                     )
                 },
             )
@@ -463,6 +470,9 @@ private fun UpdateClientDetailsContent(
                 lastName = lastName,
                 mobileNumber = mobileNumber,
                 emailAddress = emailAddress,
+                firstNameError = firstNameError,
+                middleNameError = middleNameError,
+                lastNameError = lastNameError,
                 onFirstNameChange = { firstName = it },
                 onMiddleNameChange = { middleName = it },
                 onLastNameChange = { lastName = it },
@@ -679,6 +689,9 @@ private fun ClientInputTextFields(
     lastName: String,
     mobileNumber: String,
     emailAddress: String,
+    firstNameError: String?,
+    middleNameError: String?,
+    lastNameError: String?,
     onFirstNameChange: (String) -> Unit,
     onMiddleNameChange: (String) -> Unit,
     onLastNameChange: (String) -> Unit,
@@ -699,8 +712,9 @@ private fun ClientInputTextFields(
                 errorBorderColor = MaterialTheme.colorScheme.error,
             ),
             config = MifosTextFieldConfig(
-                isError = false,
-                trailingIcon = if (false) {
+                isError = firstNameError != null,
+                errorText = firstNameError,
+                trailingIcon = if (firstNameError != null) {
                     {
                         Icon(
                             imageVector = MifosIcons.Error,
@@ -727,8 +741,9 @@ private fun ClientInputTextFields(
                 errorBorderColor = MaterialTheme.colorScheme.error,
             ),
             config = MifosTextFieldConfig(
-                isError = false,
-                trailingIcon = if (false) {
+                isError = middleNameError!=null,
+                errorText = middleNameError,
+                trailingIcon = if (middleNameError!=null) {
                     {
                         Icon(
                             imageVector = MifosIcons.Error,
@@ -755,8 +770,9 @@ private fun ClientInputTextFields(
                 errorBorderColor = MaterialTheme.colorScheme.error,
             ),
             config = MifosTextFieldConfig(
-                isError = false,
-                trailingIcon = if (false) {
+                isError = lastNameError!=null,
+                errorText = lastNameError,
+                trailingIcon = if (lastNameError!=null) {
                     {
                         Icon(
                             imageVector = MifosIcons.Error,
@@ -897,7 +913,6 @@ private fun UpdateClientDetailsBottomBar(
 
 private fun handleSubmitClick(
     scope: CoroutineScope,
-    snackbarHostState: SnackbarHostState,
     clientNames: Name,
     clientTemplate: ClientsTemplateEntity,
     updateClient: (clientPayload: ClientPayloadEntity) -> Unit,
@@ -914,13 +929,18 @@ private fun handleSubmitClick(
     mobileNumber: String,
     externalId: String,
     selectedLegalFormId: Int?,
+    onFirstNameError: (String?) -> Unit,
+    onMiddleNameError: (String?) -> Unit,
+    onLastNameError: (String?) -> Unit,
 ): Boolean {
     if (!isAllFieldsValid(
             scope,
-            snackbarHostState,
             clientNames.firstName,
             clientNames.middleName,
             clientNames.lastName,
+            onFirstNameError,
+            onMiddleNameError,
+            onLastNameError
         )
     ) {
         return false
@@ -1014,25 +1034,27 @@ private fun createClientPayload(
 
 private fun isAllFieldsValid(
     scope: CoroutineScope,
-    snackbarHostState: SnackbarHostState,
     firstName: String,
     middleName: String,
     lastName: String,
+    onFirstNameError: (String?) -> Unit,
+    onMiddleNameError: (String?) -> Unit,
+    onLastNameError: (String?) -> Unit
 ): Boolean {
     return when {
         !isFirstNameValid(
             firstName,
+            onFirstNameError,
             scope,
-            snackbarHostState,
         ) -> {
             false
         }
 
-        !isMiddleNameValid(middleName, scope, snackbarHostState) -> {
+        !isMiddleNameValid(middleName, scope, onMiddleNameError) -> {
             false
         }
 
-        !isLastNameValid(lastName, scope, snackbarHostState) -> {
+        !isLastNameValid(lastName, onLastNameError ,scope) -> {
             false
         }
 
@@ -1042,16 +1064,16 @@ private fun isAllFieldsValid(
 
 private fun isFirstNameValid(
     name: String,
+    onFirstNameError: (String?) -> Unit,
     scope: CoroutineScope,
-    snackbarHostState: SnackbarHostState,
 ): Boolean {
     return when {
         name.isEmpty() -> {
             scope.launch {
-                snackbarHostState.showSnackbar(
-                    message = getString(
+                onFirstNameError(
+                    getString(
                         Res.string.feature_client_error_first_name_can_not_be_empty,
-                    ),
+                    )
                 )
             }
             return false
@@ -1059,31 +1081,38 @@ private fun isFirstNameValid(
 
         name.contains("[^a-zA-Z ]".toRegex()) -> {
             scope.launch {
-                snackbarHostState.showSnackbar(
-                    message = getString(
+                onFirstNameError(
+                    getString(
                         Res.string.feature_client_error_first_name_should_contain_only_alphabets,
-                    ),
+                    )
                 )
             }
             return false
         }
 
-        else -> true
+        else -> {
+            scope.launch {
+                onFirstNameError(
+                    null
+                )
+            }
+            return true
+        }
     }
 }
 
 private fun isLastNameValid(
     name: String,
+    onLastNameError: (String?) -> Unit,
     scope: CoroutineScope,
-    snackbarHostState: SnackbarHostState,
 ): Boolean {
     return when {
         name.isEmpty() -> {
             scope.launch {
-                snackbarHostState.showSnackbar(
-                    message = getString(
+                onLastNameError(
+                    getString(
                         Res.string.feature_client_error_last_name_can_not_be_empty,
-                    ),
+                    )
                 )
             }
             return false
@@ -1091,23 +1120,30 @@ private fun isLastNameValid(
 
         name.contains("[^a-zA-Z ]".toRegex()) -> {
             scope.launch {
-                snackbarHostState.showSnackbar(
-                    message = getString(
+                onLastNameError(
+                    getString(
                         Res.string.feature_client_error_last_name_should_contain_only_alphabets,
-                    ),
+                    )
                 )
             }
             return false
         }
 
-        else -> true
+        else -> {
+            scope.launch {
+                onLastNameError(
+                    null
+                )
+            }
+            return true
+        }
     }
 }
 
 private fun isMiddleNameValid(
     name: String,
     scope: CoroutineScope,
-    snackbarHostState: SnackbarHostState,
+    onMiddleNameError: (String?) -> Unit
 ): Boolean {
     return when {
         name.isEmpty() -> {
@@ -1116,16 +1152,23 @@ private fun isMiddleNameValid(
 
         name.contains("[^a-zA-Z ]".toRegex()) -> {
             scope.launch {
-                snackbarHostState.showSnackbar(
-                    message = getString(
+                onMiddleNameError(
+                    getString(
                         Res.string.feature_client_error_middle_name_should_contain_only_alphabets,
-                    ),
+                    )
                 )
             }
             return false
         }
 
-        else -> true
+        else -> {
+            scope.launch {
+                onMiddleNameError(
+                    null
+                )
+            }
+            return true
+        }
     }
 }
 

@@ -10,6 +10,7 @@
 package com.mifos.feature.client.clientEditDetails
 
 import androidclient.feature.client.generated.resources.Res
+import androidclient.feature.client.generated.resources.client_details_update_failure_title
 import androidclient.feature.client.generated.resources.feature_client_failed_to_fetch_client_template
 import androidclient.feature.client.generated.resources.feature_client_failed_to_fetch_offices
 import androidclient.feature.client.generated.resources.feature_client_failed_to_fetch_staffs
@@ -54,16 +55,7 @@ internal class ClientEditDetailsViewModel(
                     is DataState.Success -> {
                         mutableStateFlow.update {
                             it.copy(
-                                dialogState = ClientEditDetailsState.DialogState.Loading,
-                            )
-                        }
-                        mutableStateFlow.update {
-                            it.copy(
                                 client = result.data.client,
-                            )
-                        }
-                        mutableStateFlow.update {
-                            it.copy(
                                 dialogState = ClientEditDetailsState.DialogState.ShowUpdateDetailsContent,
                             )
                         }
@@ -71,7 +63,13 @@ internal class ClientEditDetailsViewModel(
 
                     is DataState.Error -> {}
 
-                    DataState.Loading -> {}
+                    DataState.Loading -> {
+                        mutableStateFlow.update {
+                            it.copy(
+                                dialogState = ClientEditDetailsState.DialogState.Loading,
+                            )
+                        }
+                    }
                 }
             }
         }
@@ -134,6 +132,7 @@ internal class ClientEditDetailsViewModel(
                                 dialogState = ClientEditDetailsState.DialogState.Error(getString(Res.string.feature_client_failed_to_fetch_staffs)),
                             )
                         }
+
                     DataState.Loading -> Unit
                     is DataState.Success -> {
                         mutableStateFlow.update {
@@ -163,7 +162,14 @@ internal class ClientEditDetailsViewModel(
                     )
                 }
             } catch (e: Exception) {
-                MFErrorParser.errorMessage(e)
+                mutableStateFlow.update {
+                    it.copy(
+                        dialogState = ClientEditDetailsState.DialogState.ShowStatusDialog(
+                            ResultStatus.FAILURE,
+                            e.message ?: getString(Res.string.client_details_update_failure_title),
+                        ),
+                    )
+                }
             }
         }
     }
