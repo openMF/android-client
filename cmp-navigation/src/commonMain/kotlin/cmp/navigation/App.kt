@@ -80,6 +80,7 @@ import com.mifos.core.designsystem.theme.MifosBackground
 import com.mifos.feature.about.navigateToAboutScreen
 import com.mifos.feature.center.navigation.navigateToCenterListScreenRoute
 import com.mifos.feature.checker.inbox.task.navigation.navigateToCheckerInboxTasksScreenRoute
+import com.mifos.feature.individualCollectionSheet.navigation.navigateToIndividualCollectionSheetScreen
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
@@ -213,6 +214,9 @@ fun App(
                                         }
                                         HomeDestinationsScreen.CheckerInboxAndTasksScreen -> {
                                             appState.navController.navigateToCheckerInboxTasksScreenRoute()
+                                        }
+                                        HomeDestinationsScreen.CollectionSheetScreen -> {
+                                            appState.navController.navigateToIndividualCollectionSheetScreen()
                                         }
                                         else ->{
                                             appState.navController.navigate(navigationDrawerTabs[index].route) {

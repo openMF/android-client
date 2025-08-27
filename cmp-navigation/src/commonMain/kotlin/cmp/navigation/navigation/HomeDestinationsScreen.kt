@@ -53,15 +53,9 @@ sealed class HomeDestinationsScreen(
         icon = MifosIcons.Checkbox,
     )
 
-    data object IndividualCollectionSheetScreen : HomeDestinationsScreen(
-        title = "Individual Collection Sheet",
-        route = "individual_collection_sheet_route",
-        icon = MifosIcons.Assignment,
-    )
-
     data object CollectionSheetScreen : HomeDestinationsScreen(
         title = "Collection Sheet",
-        route = "generate_collection_sheet",
+        route = "",
         icon = MifosIcons.Assignment,
     )
 
