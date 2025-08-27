@@ -111,7 +111,6 @@ fun App(
     val navigationDrawerTabs = remember {
         listOf(
             HomeDestinationsScreen.CheckerInboxAndTasksScreen,
-            HomeDestinationsScreen.IndividualCollectionSheetScreen,
             HomeDestinationsScreen.CollectionSheetScreen,
             HomeDestinationsScreen.RunReportsScreen,
             HomeDestinationsScreen.PathTrackerScreen,

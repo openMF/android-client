@@ -14,10 +14,12 @@ import androidclient.feature.data_table.generated.resources.feature_data_table_s
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.toRoute
 import com.mifos.core.common.utils.Constants
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.repository.DataTableRepository
 import com.mifos.core.model.objects.nav.DataTableNavigationArg
+import com.mifos.feature.dataTable.navigation.DataTableRoute
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -32,9 +34,7 @@ class DataTableViewModel(
     private val savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
 
-    private val arg =
-        savedStateHandle.getStateFlow(Constants.DATA_TABLE_NAV_DATA, initialValue = "")
-    val args = Json.decodeFromString<DataTableNavigationArg>(arg.value)
+    val route=savedStateHandle.toRoute<DataTableRoute>()
 
     private val _dataTableUiState =
         MutableStateFlow<DataTableUiState>(DataTableUiState.ShowProgressbar)
@@ -45,7 +45,7 @@ class DataTableViewModel(
 
     init {
         viewModelScope.launch {
-            loadDataTable(args.tableName)
+            loadDataTable(route.tableName)
         }
     }
 

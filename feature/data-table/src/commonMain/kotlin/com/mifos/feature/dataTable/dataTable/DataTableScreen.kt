@@ -56,8 +56,8 @@ fun DataTableScreen(
     viewModel: DataTableViewModel = koinViewModel(),
     onClick: (table: String, entityId: Int, dataTable: DataTableEntity) -> Unit,
 ) {
-    val tableName = viewModel.args.tableName
-    val entityId = viewModel.args.entityId
+    val tableName = viewModel.route.tableName
+    val entityId = viewModel.route.entityId
     val uiState by viewModel.dataTableUiState.collectAsStateWithLifecycle()
     val isRefreshing by viewModel.isRefreshing.collectAsStateWithLifecycle()
 
