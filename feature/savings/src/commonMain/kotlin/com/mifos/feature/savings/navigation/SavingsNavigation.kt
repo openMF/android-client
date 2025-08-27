@@ -21,6 +21,7 @@ import com.mifos.feature.savings.savingsAccountActivate.SavingsAccountActivateSc
 import com.mifos.feature.savings.savingsAccountApproval.SavingsAccountApprovalScreen
 import com.mifos.feature.savings.savingsAccountSummary.SavingsAccountSummaryScreen
 import com.mifos.feature.savings.savingsAccountTransaction.SavingsAccountTransactionScreen
+import com.mifos.feature.savings.savingsAccountv2.savingsAccountDestination
 import com.mifos.room.entities.accounts.savings.SavingAccountDepositTypeEntity
 import com.mifos.room.entities.accounts.savings.SavingsAccountWithAssociationsEntity
 
@@ -83,6 +84,8 @@ fun NavGraphBuilder.savingsNavGraph(
         savingsAccountTransactionScreen {
             onBackPressed()
         }
+
+        savingsAccountDestination()
     }
 }
 

@@ -95,6 +95,10 @@
     <string name="feature_savings_savings_account_id">Savings Account Id</string>
     <string name="feature_savings_transaction_view_receipt">View Receipt</string>
 
+    <string name="step_details">Details</string>
+    <string name="step_terms">Terms</string>
+    <string name="step_charges">Charges</string>
+    <string name="step_preview">Preview</string>
 </resources>
 
 
