@@ -23,6 +23,8 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.text.BasicText
+import androidx.compose.foundation.text.TextAutoSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -103,11 +105,14 @@ fun MifosStepper(
                             }
 
                             Spacer(modifier = Modifier.height(DesignToken.padding.small))
-                            MifosAutoResizeText(
+                            BasicText(
                                 text = step.name,
-                                color = AppColors.customWhite,
-                                style = MifosTypography.labelSmall,
-                                fontSizeRange = FontSizeRange(2.sp, 11.sp),
+                                autoSize = TextAutoSize.StepBased(
+                                    minFontSize = 2.sp, maxFontSize = 11.sp
+                                ),
+                                style = MifosTypography.labelSmall.copy(
+                                    color = AppColors.customWhite
+                                ),
                             )
                         }
                         if (index != steps.lastIndex) {

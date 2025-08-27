@@ -54,6 +54,7 @@ import com.mifos.feature.report.navigation.reportNavGraph
 import com.mifos.feature.savings.navigation.navigateToAddSavingsAccount
 import com.mifos.feature.savings.navigation.navigateToSavingsAccountSummaryScreen
 import com.mifos.feature.savings.navigation.savingsNavGraph
+import com.mifos.feature.savings.savingsAccountv2.navigateToSavingsAccountRoute
 import com.mifos.feature.search.navigation.searchNavGraph
 import com.mifos.feature.settings.navigation.settingsScreen
 
@@ -118,7 +119,8 @@ internal fun FeatureNavHost(
             paddingValues = padding,
             onActivateCenter = appState.navController::navigateToActivateScreen,
             addSavingsAccount = { centerId ->
-                appState.navController.navigateToAddSavingsAccount(0, centerId, false)
+                appState.navController.navigateToSavingsAccountRoute()
+//                appState.navController.navigateToAddSavingsAccount(0, centerId, false)
             },
         )
 
