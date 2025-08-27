@@ -9,6 +9,12 @@
  */
 package com.mifos.feature.savings.savingsAccountv2
 
+import androidclient.feature.savings.generated.resources.Res
+import androidclient.feature.savings.generated.resources.feature_savings_create_savings_account
+import androidclient.feature.savings.generated.resources.step_charges
+import androidclient.feature.savings.generated.resources.step_details
+import androidclient.feature.savings.generated.resources.step_preview
+import androidclient.feature.savings.generated.resources.step_terms
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
@@ -23,6 +29,7 @@ import com.mifos.feature.savings.savingsAccountv2.pages.ChargesPage
 import com.mifos.feature.savings.savingsAccountv2.pages.DetailsPage
 import com.mifos.feature.savings.savingsAccountv2.pages.PreviewPage
 import com.mifos.feature.savings.savingsAccountv2.pages.TermsPage
+import org.jetbrains.compose.resources.stringResource
 
 @Composable
 internal fun SavingsAccountScreen(
@@ -54,37 +61,22 @@ private fun SavingsAccountScaffold(
     onAction: (SavingsAccountAction) -> Unit,
 ) {
     val steps = listOf(
-        Step("Details") {
+        Step(stringResource(Res.string.step_details)) {
             DetailsPage {
                 onAction(SavingsAccountAction.NextStep)
             }
         },
-        Step("Terms") {
+        Step(stringResource(Res.string.step_terms)) {
             TermsPage {
                 onAction(SavingsAccountAction.NextStep)
             }
         },
-        Step("Charges") {
+        Step(stringResource(Res.string.step_charges)) {
             ChargesPage {
                 onAction(SavingsAccountAction.NextStep)
             }
         },
-        Step("Details") {
-            DetailsPage {
-                onAction(SavingsAccountAction.NextStep)
-            }
-        },
-        Step("Terms of Service") {
-            TermsPage {
-                onAction(SavingsAccountAction.NextStep)
-            }
-        },
-        Step("Charges") {
-            ChargesPage {
-                onAction(SavingsAccountAction.NextStep)
-            }
-        },
-        Step("Preview") {
+        Step(stringResource(Res.string.step_preview)) {
             PreviewPage {
                 onAction(SavingsAccountAction.NextStep)
             }
@@ -92,7 +84,7 @@ private fun SavingsAccountScaffold(
     )
 
     MifosScaffold(
-        title = "Savings Account",
+        title = stringResource(Res.string.feature_savings_create_savings_account),
         onBackPressed = { onAction(SavingsAccountAction.NavigateBack) },
         modifier = modifier,
     ) { paddingValues ->

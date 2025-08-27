@@ -108,10 +108,11 @@ fun MifosStepper(
                             BasicText(
                                 text = step.name,
                                 autoSize = TextAutoSize.StepBased(
-                                    minFontSize = 2.sp, maxFontSize = 11.sp
+                                    minFontSize = 2.sp,
+                                    maxFontSize = 11.sp,
                                 ),
                                 style = MifosTypography.labelSmall.copy(
-                                    color = AppColors.customWhite
+                                    color = AppColors.customWhite,
                                 ),
                             )
                         }

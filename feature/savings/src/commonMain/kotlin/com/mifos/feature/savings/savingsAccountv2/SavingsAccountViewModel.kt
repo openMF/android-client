@@ -44,7 +44,7 @@ internal class SavingsAccountViewModel :
 
 data class SavingsAccountState(
     val currentStep: Int = 0,
-    val totalSteps: Int = 7,
+    val totalSteps: Int = 4,
     val dialogState: DialogState? = null,
 ) {
     sealed interface DialogState {

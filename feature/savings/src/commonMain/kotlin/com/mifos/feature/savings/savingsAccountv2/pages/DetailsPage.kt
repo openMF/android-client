@@ -9,6 +9,9 @@
  */
 package com.mifos.feature.savings.savingsAccountv2.pages
 
+import androidclient.feature.savings.generated.resources.Res
+import androidclient.feature.savings.generated.resources.feature_savings_submit
+import androidclient.feature.savings.generated.resources.step_details
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
@@ -18,14 +21,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun DetailsPage(onNext: () -> Unit) {
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
-        Text("Details Content")
+        Text(stringResource(Res.string.step_details))
         Spacer(Modifier.height(8.dp))
         Button(onClick = onNext) {
-            Text("Next")
+            Text(stringResource(Res.string.feature_savings_submit))
         }
     }
 }
