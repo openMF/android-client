@@ -74,6 +74,7 @@ internal fun ClientProfileDetailsScreen(
     onNavigateBack: () -> Unit,
     navigateToUpdatePhoto: (Int, String, String) -> Unit,
     navigateToAssignStaff: (Int) -> Unit,
+    navigateToUpdateDetails: (Int) -> Unit,
     navigateToClientTransfer: (Int) -> Unit,
     navigateToClientClosure: (Int) -> Unit,
     navigateToUpdateDefaultAccount: (Int) -> Unit,
@@ -113,6 +114,12 @@ internal fun ClientProfileDetailsScreen(
                     }
                     ClientProfileDetailsActionItem.ViewStandingInstructions -> {}
                 }
+            }
+
+            ClientProfileDetailsEvent.NavigateToUpdateDetails -> {
+                navigateToUpdateDetails(
+                    state.client?.id ?: -1,
+                )
             }
 
             ClientProfileDetailsEvent.NavigateToUpdatePhoto -> {

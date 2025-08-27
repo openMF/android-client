@@ -9,15 +9,17 @@
  */
 package com.mifos.core.designsystem.component
 
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsFocusedAsState
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.CalendarToday
+import androidx.compose.material.icons.filled.CalendarMonth
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Person
@@ -35,13 +37,18 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
@@ -51,6 +58,8 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.mifos.core.designsystem.icon.MifosIcons
+import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.designsystem.theme.MifosTheme
 import com.mifos.core.designsystem.theme.MifosTypography
 import org.jetbrains.compose.ui.tooling.preview.Preview
@@ -240,7 +249,7 @@ fun MifosOutlinedTextField(
     onValueChange: (String) -> Unit,
     label: String,
     error: String?,
-    modifier: Modifier = Modifier.fillMaxWidth().padding(start = 16.dp, end = 16.dp),
+    modifier: Modifier = Modifier.fillMaxWidth().clip(DesignToken.shapes.medium),
     maxLines: Int = 1,
     readOnly: Boolean = false,
     singleLine: Boolean = true,
@@ -251,6 +260,10 @@ fun MifosOutlinedTextField(
     enabled: Boolean = true,
 ) {
     OutlinedTextField(
+        colors = OutlinedTextFieldDefaults.colors(
+            focusedBorderColor = MaterialTheme.colorScheme.secondaryContainer,
+            unfocusedBorderColor = MaterialTheme.colorScheme.secondaryContainer,
+        ),
         value = value,
         onValueChange = onValueChange,
         label = { Text(label) },
@@ -267,10 +280,17 @@ fun MifosOutlinedTextField(
         } else {
             null
         },
+        shape = DesignToken.shapes.medium,
         trailingIcon = trailingIcon,
         maxLines = maxLines,
         singleLine = singleLine,
-        textStyle = MaterialTheme.typography.bodyLarge,
+        textStyle = TextStyle(
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            fontSize = MaterialTheme.typography.bodyLarge.fontSize,
+            lineHeight = 24.sp,
+            letterSpacing = 0.5f.sp,
+            fontWeight = FontWeight.Normal,
+        ),
         keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next, keyboardType = keyboardType),
         visualTransformation = visualTransformation,
         isError = error != null,
@@ -285,10 +305,6 @@ fun MifosOutlinedTextField(
         } else {
             null
         },
-        colors = OutlinedTextFieldDefaults.colors(
-            focusedBorderColor = MaterialTheme.colorScheme.secondaryContainer,
-            unfocusedBorderColor = MaterialTheme.colorScheme.secondaryContainer,
-        ),
     )
 }
 
@@ -324,15 +340,18 @@ private fun PasswordToggleIcon(
 private fun ClearIconButton(
     showClearIcon: Boolean,
     clearIcon: ImageVector,
-    modifier: Modifier = Modifier,
     onClickClearIcon: () -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     AnimatedVisibility(
         visible = showClearIcon,
+        modifier = modifier,
     ) {
         IconButton(
             onClick = onClickClearIcon,
-            modifier = modifier,
+            modifier = Modifier.semantics {
+                contentDescription = "clearIcon"
+            },
         ) {
             Icon(
                 imageVector = clearIcon,
@@ -344,33 +363,128 @@ private fun ClearIconButton(
 
 @Composable
 fun MifosDatePickerTextField(
+    enabled: Boolean = true,
     value: String,
-    modifier: Modifier = Modifier.fillMaxWidth().padding(start = 16.dp, end = 16.dp),
+    modifier: Modifier = Modifier
+        .fillMaxSize()
+        .clip(DesignToken.shapes.medium),
     label: String? = null,
     openDatePicker: () -> Unit,
 ) {
     OutlinedTextField(
+        enabled = enabled,
+        colors = OutlinedTextFieldDefaults.colors(
+            focusedBorderColor = MaterialTheme.colorScheme.secondaryContainer,
+            unfocusedBorderColor = MaterialTheme.colorScheme.secondaryContainer,
+        ),
         value = value,
         onValueChange = { },
         label = { Text(text = label?.let { label } ?: "") },
         readOnly = true,
         modifier = modifier,
+        shape = DesignToken.shapes.medium,
         maxLines = 1,
         textStyle = LocalDensity.current.run {
-            TextStyle(fontSize = 18.sp)
+            TextStyle(
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                fontSize = MaterialTheme.typography.bodyLarge.fontSize,
+                lineHeight = 24.sp,
+                letterSpacing = 0.5f.sp,
+                fontWeight = FontWeight.Normal,
+            )
         },
         keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
         trailingIcon = {
             IconButton(onClick = { openDatePicker() }) {
-                Icon(imageVector = Icons.Default.CalendarToday, null)
+                Icon(imageVector = Icons.Default.CalendarMonth, null)
             }
         },
-        colors = OutlinedTextFieldDefaults.colors(
-            focusedBorderColor = MaterialTheme.colorScheme.secondaryContainer,
-            unfocusedBorderColor = MaterialTheme.colorScheme.secondaryContainer,
-        ),
     )
 }
+
+@Composable
+fun MifosOutlinedTextField(
+    value: String,
+    onValueChange: (String) -> Unit,
+    label: String,
+    modifier: Modifier = Modifier,
+    shape: Shape = OutlinedTextFieldDefaults.shape,
+    colors: TextFieldColors = OutlinedTextFieldDefaults.colors(
+        focusedBorderColor = MaterialTheme.colorScheme.secondaryContainer,
+        unfocusedBorderColor = MaterialTheme.colorScheme.secondaryContainer,
+        errorBorderColor = MaterialTheme.colorScheme.error,
+    ),
+    textStyle: TextStyle = LocalTextStyle.current,
+    interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
+    config: MifosTextFieldConfig = MifosTextFieldConfig(),
+    onClickClearIcon: () -> Unit = { onValueChange("") },
+) {
+    val isFocused by interactionSource.collectIsFocusedAsState()
+    val showIcon by rememberUpdatedState(value.isNotEmpty())
+
+    OutlinedTextField(
+        shape = shape,
+        colors = colors,
+        value = value,
+        label = { Text(text = label) },
+        onValueChange = onValueChange,
+        textStyle = textStyle,
+        modifier = modifier.fillMaxWidth(),
+        enabled = config.enabled,
+        readOnly = config.readOnly,
+        visualTransformation = config.visualTransformation,
+        keyboardOptions = config.keyboardOptions,
+        keyboardActions = config.keyboardActions,
+        interactionSource = interactionSource,
+        singleLine = config.singleLine,
+        maxLines = config.maxLines,
+        minLines = config.minLines,
+        leadingIcon = config.leadingIcon,
+        isError = config.isError,
+        trailingIcon = @Composable {
+            AnimatedContent(
+                targetState = config.showClearIcon && isFocused && showIcon,
+            ) {
+                if (it) {
+                    ClearIconButton(
+                        showClearIcon = true,
+                        clearIcon = config.clearIcon,
+                        onClickClearIcon = onClickClearIcon,
+                    )
+                } else {
+                    config.trailingIcon?.invoke()
+                }
+            }
+        },
+        supportingText = config.errorText?.let {
+            {
+                Text(
+                    modifier = Modifier.testTag("errorTag"),
+                    text = it,
+                    style = MifosTypography.bodySmall,
+                    color = MaterialTheme.colorScheme.error,
+                )
+            }
+        },
+    )
+}
+
+data class MifosTextFieldConfig(
+    val enabled: Boolean = true,
+    val showClearIcon: Boolean = true,
+    val readOnly: Boolean = false,
+    val clearIcon: ImageVector = MifosIcons.Close,
+    val isError: Boolean = false,
+    val errorText: String? = null,
+    val visualTransformation: VisualTransformation = VisualTransformation.None,
+    val keyboardActions: KeyboardActions = KeyboardActions.Default,
+    val singleLine: Boolean = true,
+    val maxLines: Int = if (singleLine) 1 else Int.MAX_VALUE,
+    val minLines: Int = 1,
+    val keyboardOptions: KeyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
+    val trailingIcon: @Composable (() -> Unit)? = null,
+    val leadingIcon: @Composable (() -> Unit)? = null,
+)
 
 @Preview
 @Composable

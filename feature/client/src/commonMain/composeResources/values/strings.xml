@@ -14,11 +14,15 @@
     <string name="feature_client_failed_to_load_db_clients">Failed to load Database Clients</string>
     <string name="feature_client_no_more_clients_available">No more Clients Available!</string>
 
+    <string name="feature_client_personal_details">Personal Details</string>
+    <string name="feature_client_account_information">Account Information</string>
+    <string name="feature_client_office_use">Office Use</string>
+    <string name="feature_client_error">Error</string>
     <string name="feature_client_account_number">Account Number</string>
     <string name="feature_client_external_id">External ID</string>
     <string name="feature_client_activation_date">Activation Date</string>
     <string name="feature_client_office">Office</string>
-    <string name="feature_client_mobile_no">Mobile Number</string>
+    <string name="feature_client_phone_no">Phone Number</string>
     <string name="feature_client_group">Group</string>
     <string name="feature_client_loan_account">Loan Accounts</string>
     <string name="feature_client_savings_account">Savings Accounts</string>
@@ -175,7 +179,7 @@
 
     <string name="feature_client_failed_to_fetch_clients">Failed to Fetch Clients</string>
     <string name="feature_client_failed_to_more_clients">Failed to load more Clients</string>
-    <string name="feature_client_address">Address :</string>
+    <string name="feature_client_address">Address</string>
     <string name="feature_client_add_address">Add Address</string>
     <string name="feature_client_address_type">Address Type*</string>
     <string name="feature_client_address_line_1">Address Line 1</string>
@@ -224,9 +228,10 @@
     <string name="date_of_birth">Date of Birth</string>
 
     <!-- Account Info -->
-    <string name="account_no">Account No.</string>
+    <string name="account_no">Account No</string>
     <string name="office">Office</string>
     <string name="external_id">External Id</string>
+    <string name="email_address">Email Address</string>
 
     <!-- Other Info -->
     <string name="legal_form">Legal Form</string>
@@ -340,6 +345,11 @@
     <string name="update_default_account_success_message">Default account updated successfully. Please Continue to get back to Profile Details Screen</string>
     <string name="update_default_account_success_title">Update Successful</string>
     <string name="update_default_no_accounts_found">No Savings Accounts found for this client</string>
+
+    <!-- Client Edit Details -->
+    <string name="client_details_updated">Client Details Updated</string>
+    <string name="client_details_updated_success_message">The client details has been updated successfully. Please Continue to get back to Home</string>
+    <string name="client_details_update_failure_title">Client Details Update Failed</string>
 
     <!-- Client Closure -->
     <string name="client_closure_success_title">Client Closure Successful</string>

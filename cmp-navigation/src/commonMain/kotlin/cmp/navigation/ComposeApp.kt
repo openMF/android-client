@@ -64,7 +64,7 @@ fun ComposeApp(
 
     MifosTheme(
         isDarkTheme,
-        dynamicColor = useDynamicColors
+        dynamicColor = useDynamicColors,
     ) {
         RootNavGraph(
             networkMonitor = networkMonitor,

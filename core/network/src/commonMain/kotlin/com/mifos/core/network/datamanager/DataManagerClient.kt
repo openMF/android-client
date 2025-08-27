@@ -307,6 +307,15 @@ class DataManagerClient(
     }
 
     /**
+     * This Method updates the client details
+     * @param clientPayload Client details filled by user
+     * @return Client
+     */
+    suspend fun updateClient(clientId: Int, clientPayload: ClientPayloadEntity): Int? {
+        return mBaseApiManager.clientService.updateClient(clientId, clientPayload)?.clientId
+    }
+
+    /**
      * Loading All Client payload from database to sync to the server
      *
      * @return List<ClientPayload></ClientPayload>>

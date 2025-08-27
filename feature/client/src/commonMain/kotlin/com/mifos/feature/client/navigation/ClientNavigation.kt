@@ -27,6 +27,8 @@ import com.mifos.feature.client.clientDetails.ClientDetailsScreen
 import com.mifos.feature.client.clientDetailsProfile.clientProfileDetailsDestination
 import com.mifos.feature.client.clientDetailsProfile.navigateToClientDetailsProfileRoute
 import com.mifos.feature.client.clientDetailsProfile.navigateToClientDetailsProfileRouteOnStatus
+import com.mifos.feature.client.clientEditDetails.clientEditDetailsDestination
+import com.mifos.feature.client.clientEditDetails.navigateToClientEditDetailsRoute
 import com.mifos.feature.client.clientEditProfile.clientEditProfileDestination
 import com.mifos.feature.client.clientEditProfile.navigateToClientProfileEditProfileRoute
 import com.mifos.feature.client.clientIdentifiers.ClientIdentifiersScreen
@@ -131,6 +133,7 @@ fun NavGraphBuilder.clientNavGraph(
             onNavigateBack = navController::popBackStack,
             navigateToUpdatePhoto = navController::navigateToClientProfileEditProfileRoute,
             navigateToAssignStaff = navController::navigateToClientStaffRoute,
+            navigateToUpdateDetails = navController::navigateToClientEditDetailsRoute,
             navigateToClientTransfer = navController::navigateToClientTransferRoute,
             navigateToUpdateDefaultAccount = navController::navigateToUpdateDefaultAccountRoute,
             navigateToClientClosure = navController::navigateToClientClosureRoute,
@@ -138,6 +141,10 @@ fun NavGraphBuilder.clientNavGraph(
         )
         clientEditProfileDestination(
             onNavigateBack = navController::popBackStack,
+        )
+        clientEditDetailsDestination(
+            onNavigateBack = navController::popBackStack,
+            onNavigateNext = navController::navigateToClientDetailsProfileRouteOnStatus,
         )
         clientStaffDestination(
             onNavigateBack = navController::popBackStack,
