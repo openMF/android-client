@@ -70,7 +70,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextFieldDefaults.colors
 import androidx.compose.material3.SelectableDates
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberDatePickerState
@@ -117,7 +116,6 @@ import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toInstant
-import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.getString
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
@@ -172,12 +170,10 @@ private fun ClientEditDetailsScaffold(
     modifier: Modifier = Modifier,
     onAction: (ClientEditDetailsAction) -> Unit,
 ) {
-    val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
 
     MifosScaffold(
         title = stringResource(Res.string.update_details),
-        snackbarHostState = snackbarHostState,
         onBackPressed = { navigateBack.invoke() },
         modifier = modifier,
     ) { paddingValues ->
@@ -194,7 +190,6 @@ private fun ClientEditDetailsScaffold(
                     UpdateClientDetailsContent(
                         state = state,
                         scope = scope,
-                        snackbarHostState = snackbarHostState,
                         officeList = officeList,
                         staffInOffices = staffInOffices,
                         clientTemplate = state.clientsTemplate,
@@ -232,7 +227,6 @@ private fun ClientEditDetailsScaffold(
 private fun UpdateClientDetailsContent(
     state: ClientEditDetailsState,
     scope: CoroutineScope,
-    snackbarHostState: SnackbarHostState,
     officeList: List<OfficeEntity>,
     staffInOffices: List<StaffEntity>,
     clientTemplate: ClientsTemplateEntity,
@@ -432,8 +426,8 @@ private fun UpdateClientDetailsContent(
                         externalId,
                         selectedLegalFormId,
                         onFirstNameError = { firstNameError = it },
-                        onMiddleNameError =  { middleNameError = it },
-                        onLastNameError =  { lastNameError = it },
+                        onMiddleNameError = { middleNameError = it },
+                        onLastNameError = { lastNameError = it },
                     )
                 },
             )
@@ -741,9 +735,9 @@ private fun ClientInputTextFields(
                 errorBorderColor = MaterialTheme.colorScheme.error,
             ),
             config = MifosTextFieldConfig(
-                isError = middleNameError!=null,
+                isError = middleNameError != null,
                 errorText = middleNameError,
-                trailingIcon = if (middleNameError!=null) {
+                trailingIcon = if (middleNameError != null) {
                     {
                         Icon(
                             imageVector = MifosIcons.Error,
@@ -770,9 +764,9 @@ private fun ClientInputTextFields(
                 errorBorderColor = MaterialTheme.colorScheme.error,
             ),
             config = MifosTextFieldConfig(
-                isError = lastNameError!=null,
+                isError = lastNameError != null,
                 errorText = lastNameError,
-                trailingIcon = if (lastNameError!=null) {
+                trailingIcon = if (lastNameError != null) {
                     {
                         Icon(
                             imageVector = MifosIcons.Error,
@@ -940,7 +934,7 @@ private fun handleSubmitClick(
             clientNames.lastName,
             onFirstNameError,
             onMiddleNameError,
-            onLastNameError
+            onLastNameError,
         )
     ) {
         return false
@@ -1039,7 +1033,7 @@ private fun isAllFieldsValid(
     lastName: String,
     onFirstNameError: (String?) -> Unit,
     onMiddleNameError: (String?) -> Unit,
-    onLastNameError: (String?) -> Unit
+    onLastNameError: (String?) -> Unit,
 ): Boolean {
     return when {
         !isFirstNameValid(
@@ -1054,7 +1048,7 @@ private fun isAllFieldsValid(
             false
         }
 
-        !isLastNameValid(lastName, onLastNameError ,scope) -> {
+        !isLastNameValid(lastName, onLastNameError, scope) -> {
             false
         }
 
@@ -1073,7 +1067,7 @@ private fun isFirstNameValid(
                 onFirstNameError(
                     getString(
                         Res.string.feature_client_error_first_name_can_not_be_empty,
-                    )
+                    ),
                 )
             }
             return false
@@ -1084,7 +1078,7 @@ private fun isFirstNameValid(
                 onFirstNameError(
                     getString(
                         Res.string.feature_client_error_first_name_should_contain_only_alphabets,
-                    )
+                    ),
                 )
             }
             return false
@@ -1093,7 +1087,7 @@ private fun isFirstNameValid(
         else -> {
             scope.launch {
                 onFirstNameError(
-                    null
+                    null,
                 )
             }
             return true
@@ -1112,7 +1106,7 @@ private fun isLastNameValid(
                 onLastNameError(
                     getString(
                         Res.string.feature_client_error_last_name_can_not_be_empty,
-                    )
+                    ),
                 )
             }
             return false
@@ -1123,7 +1117,7 @@ private fun isLastNameValid(
                 onLastNameError(
                     getString(
                         Res.string.feature_client_error_last_name_should_contain_only_alphabets,
-                    )
+                    ),
                 )
             }
             return false
@@ -1132,7 +1126,7 @@ private fun isLastNameValid(
         else -> {
             scope.launch {
                 onLastNameError(
-                    null
+                    null,
                 )
             }
             return true
@@ -1143,7 +1137,7 @@ private fun isLastNameValid(
 private fun isMiddleNameValid(
     name: String,
     scope: CoroutineScope,
-    onMiddleNameError: (String?) -> Unit
+    onMiddleNameError: (String?) -> Unit,
 ): Boolean {
     return when {
         name.isEmpty() -> {
@@ -1155,7 +1149,7 @@ private fun isMiddleNameValid(
                 onMiddleNameError(
                     getString(
                         Res.string.feature_client_error_middle_name_should_contain_only_alphabets,
-                    )
+                    ),
                 )
             }
             return false
@@ -1164,7 +1158,7 @@ private fun isMiddleNameValid(
         else -> {
             scope.launch {
                 onMiddleNameError(
-                    null
+                    null,
                 )
             }
             return true
