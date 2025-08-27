@@ -220,7 +220,7 @@ internal class ClientProfileDetailsViewModel(
                 }
             }
 
-            ClientProfileDetailsAction.OnNext -> sendEvent(ClientProfileDetailsEvent.NavigateNext)
+            ClientProfileDetailsAction.OnNext -> getClientAndObserveNetwork()
         }
     }
 

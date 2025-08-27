@@ -11,6 +11,7 @@ package com.mifos.core.data.repository
 
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.network.model.ClientCloseTemplateResponse
+import com.mifos.core.network.model.CollateralItem
 import com.mifos.core.network.model.SavingAccountOption
 import com.mifos.core.network.model.StaffOption
 import com.mifos.room.entities.accounts.ClientAccounts
@@ -35,6 +36,8 @@ interface ClientDetailsRepository {
 
     suspend fun getClientCloseTemplate(): DataState<ClientCloseTemplateResponse>
 
+    suspend fun getCollateralItems(): DataState<List<CollateralItem>>
+
     suspend fun getClient(clientId: Int): ClientEntity
 
     fun getImage(clientId: Int): Flow<DataState<String>>
@@ -56,5 +59,11 @@ interface ClientDetailsRepository {
         clientId: Int,
         closureDate: String,
         closureReasonId: Int,
+    ): DataState<Unit>
+
+    suspend fun createCollateral(
+        clientId: Int,
+        collateralId: Int,
+        quantity: String,
     ): DataState<Unit>
 }

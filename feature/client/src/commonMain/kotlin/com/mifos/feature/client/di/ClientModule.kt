@@ -11,6 +11,7 @@ package com.mifos.feature.client.di
 
 import com.mifos.feature.client.clientCharges.ClientChargesViewModel
 import com.mifos.feature.client.clientClosure.ClientClosureViewModel
+import com.mifos.feature.client.clientCollateral.ClientCollateralViewModel
 import com.mifos.feature.client.clientDetails.ClientDetailsViewModel
 import com.mifos.feature.client.clientDetailsProfile.ClientProfileDetailsViewModel
 import com.mifos.feature.client.clientEditDetails.ClientEditDetailsViewModel
@@ -26,6 +27,7 @@ import com.mifos.feature.client.clientTransfer.ClientTransferViewModel
 import com.mifos.feature.client.clientUpdateDefaultAccount.UpdateDefaultAccountViewModel
 import com.mifos.feature.client.clientsList.ClientListViewModel
 import com.mifos.feature.client.createNewClient.CreateNewClientViewModel
+import com.mifos.feature.client.savingsAccounts.SavingsAccountsViewModel
 import com.mifos.feature.client.syncClientDialog.SyncClientsDialogViewModel
 import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.module
@@ -49,4 +51,6 @@ val ClientModule = module {
     viewModelOf(::ClientTransferViewModel)
     viewModelOf(::UpdateDefaultAccountViewModel)
     viewModelOf(::ClientClosureViewModel)
+    viewModelOf(::SavingsAccountsViewModel)
+    viewModelOf(::ClientCollateralViewModel)
 }
