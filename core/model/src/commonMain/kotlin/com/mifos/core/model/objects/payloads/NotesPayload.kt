@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Mifos Initiative
+ * Copyright 2025 Mifos Initiative
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -7,21 +7,11 @@
  *
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
-package com.mifos.feature.note.navigation
+package com.mifos.core.model.objects.payloads
 
 import kotlinx.serialization.Serializable
 
 @Serializable
-object NoteNavigationRoute
-
-@Serializable
-data class NoteScreenRoute(
-    val entityId: Int,
-    val entityType: String?,
-)
-
-@Serializable
-data class AddNoteScreenRoute(
-    val entityId: Int,
-    val entityType: String?,
+data class NotesPayload(
+    val note: String? = null,
 )

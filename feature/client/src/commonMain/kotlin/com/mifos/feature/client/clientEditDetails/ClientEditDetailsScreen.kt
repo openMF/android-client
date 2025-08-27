@@ -12,9 +12,6 @@ package com.mifos.feature.client.clientEditDetails
 import androidclient.feature.client.generated.resources.Res
 import androidclient.feature.client.generated.resources.account_no
 import androidclient.feature.client.generated.resources.activation_date
-import androidclient.feature.client.generated.resources.client_closure_failure_title
-import androidclient.feature.client.generated.resources.client_closure_success_message
-import androidclient.feature.client.generated.resources.client_closure_success_title
 import androidclient.feature.client.generated.resources.client_details_update_failure_title
 import androidclient.feature.client.generated.resources.client_details_updated
 import androidclient.feature.client.generated.resources.client_details_updated_success_message
@@ -106,10 +103,8 @@ import com.mifos.core.designsystem.component.MifosTextFieldDropdown
 import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.designsystem.theme.MifosTypography
-import com.mifos.core.model.objects.databaseobjects.Client
 import com.mifos.core.ui.components.MifosStatusDialog
 import com.mifos.core.ui.util.EventsEffect
-import com.mifos.feature.client.clientClosure.ClientClosureAction
 import com.mifos.feature.client.utils.PhoneNumberUtil
 import com.mifos.room.entities.client.ClientPayloadEntity
 import com.mifos.room.entities.organisation.OfficeEntity
@@ -138,7 +133,6 @@ internal fun ClientEditDetailsScreen(
 ) {
     val state by viewModel.stateFlow.collectAsStateWithLifecycle()
 
-
     LaunchedEffect(key1 = Unit) {
         viewModel.loadClientDetails()
         viewModel.loadOfficeAndClientTemplate()
@@ -161,7 +155,7 @@ internal fun ClientEditDetailsScreen(
         staffInOffices = state.staffInOffices,
         loadStaffInOffice = { viewModel.loadStaffInOffices(officeId = it) },
         updateClient = { viewModel.updateClient(clientPayload = it) },
-        onAction = remember(viewModel) { { viewModel.trySendAction(it) } }
+        onAction = remember(viewModel) { { viewModel.trySendAction(it) } },
     )
 }
 
@@ -191,7 +185,7 @@ private fun ClientEditDetailsScaffold(
                 .fillMaxSize()
                 .padding(paddingValues),
         ) {
-            when(state.dialogState) {
+            when (state.dialogState) {
                 is ClientEditDetailsState.DialogState.Loading -> {
                     MifosCircularProgress()
                 }
@@ -217,7 +211,7 @@ private fun ClientEditDetailsScaffold(
                     MifosStatusDialog(
                         status = state.dialogState.status,
                         btnText = stringResource(Res.string.dialog_continue),
-                        onConfirm = { onAction(ClientEditDetailsAction.onNext) },
+                        onConfirm = { onAction(ClientEditDetailsAction.OnNext) },
                         successTitle = stringResource(Res.string.client_details_updated),
                         successMessage = stringResource(Res.string.client_details_updated_success_message),
                         failureTitle = stringResource(Res.string.client_details_update_failure_title),

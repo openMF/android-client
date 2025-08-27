@@ -10,10 +10,43 @@
 package com.mifos.core.data.repository
 
 import com.mifos.core.common.utils.DataState
-import com.mifos.core.model.objects.Note
+import com.mifos.core.model.objects.notes.Note
+import com.mifos.core.model.objects.payloads.NotesPayload
+import com.mifos.core.network.GenericResponse
 import kotlinx.coroutines.flow.Flow
 
+/**
+ * Created by Arin Yadav on 24/08/2025.
+ */
 interface NoteRepository {
 
-    fun getNotes(entityType: String, entityId: Int): Flow<DataState<List<Note>>>
+    suspend fun addNewNote(
+        resourceType: String,
+        resourceId: Long,
+        notesPayload: NotesPayload,
+    ): GenericResponse
+
+    suspend fun deleteNote(
+        resourceType: String,
+        resourceId: Long,
+        noteId: Long,
+    ): GenericResponse
+
+    fun retrieveNote(
+        resourceType: String,
+        resourceId: Long,
+        noteId: Long,
+    ): Flow<DataState<Note>>
+
+    fun retrieveListNotes(
+        resourceType: String,
+        resourceId: Long,
+    ): Flow<DataState<List<Note>>>
+
+    suspend fun updateNote(
+        resourceType: String,
+        resourceId: Long,
+        noteId: Long,
+        notesPayload: NotesPayload,
+    ): GenericResponse
 }
