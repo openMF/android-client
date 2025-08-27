@@ -110,7 +110,10 @@ internal fun FeatureNavHost(
 
         offlineNavGraph(navController = appState.navController)
 
-        noteNavGraph(onBackPressed = appState.navController::popBackStack)
+        noteNavGraph(
+            navController = appState.navController,
+            onBackPressed = appState.navController::popBackStack,
+        )
 
         activateScreen(onBackPressed = appState.navController::popBackStack)
 
