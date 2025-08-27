@@ -14,41 +14,25 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import com.mifos.feature.auth.login.LoginScreen
+import kotlinx.serialization.Serializable
+
+@Serializable
+object LoginRoute
 
 fun NavGraphBuilder.authNavGraph(
-    route: String,
     navigateHome: () -> Unit,
     navigatePasscode: () -> Unit,
-    updateServerConfig: () -> Unit,
+    updateServerConfig: () -> Unit
 ) {
-    navigation(
-        startDestination = AuthScreens.LoginScreen.route,
-        route = route,
-    ) {
-        loginRoute(
-            navigatePasscode = navigatePasscode,
-            navigateHome = navigateHome,
-            updateServerConfig = updateServerConfig,
-        )
-    }
-}
-
-private fun NavGraphBuilder.loginRoute(
-    navigateHome: () -> Unit,
-    navigatePasscode: () -> Unit,
-    updateServerConfig: () -> Unit,
-) {
-    composable(
-        route = AuthScreens.LoginScreen.route,
-    ) {
-        LoginScreen(
-            homeIntent = navigateHome,
-            passcodeIntent = navigatePasscode,
-            onClickToUpdateServerConfig = updateServerConfig,
-        )
-    }
+        composable<LoginRoute> {
+            LoginScreen(
+                homeIntent = navigateHome,
+                passcodeIntent = navigatePasscode,
+                onClickToUpdateServerConfig = updateServerConfig
+            )
+        }
 }
 
 fun NavController.navigateToLogin() {
-    navigate(AuthScreens.LoginScreen.route)
+    this.navigate(LoginRoute)
 }

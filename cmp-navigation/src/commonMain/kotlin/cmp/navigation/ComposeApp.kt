@@ -21,6 +21,7 @@ import cmp.navigation.navigation.RootNavGraph
 import com.mifos.core.data.util.NetworkMonitor
 import com.mifos.core.datastore.model.AppTheme
 import com.mifos.core.designsystem.theme.MifosTheme
+import com.mifos.feature.auth.navigation.LoginRoute
 import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -72,7 +73,7 @@ fun ComposeApp(
             startDestination = navDestination,
             onClickLogout = {
                 viewModel.logout()
-                navController.navigate(AUTH_GRAPH) {
+                navController.navigate(LoginRoute) {
                     popUpTo(navController.graph.id) {
                         inclusive = true
                     }
