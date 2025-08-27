@@ -62,7 +62,6 @@ internal fun GroupListScreen(
     loadClientsOfGroup: (List<ClientEntity>) -> Unit,
     viewModel: GroupListViewModel = koinViewModel(),
 ) {
-    val centerId by viewModel.centerId.collectAsStateWithLifecycle()
     val state by viewModel.groupListUiState.collectAsStateWithLifecycle()
     val groupAssociationState by viewModel.groupAssociationState.collectAsStateWithLifecycle()
     var groupClicked by remember { mutableStateOf(false) }
@@ -76,7 +75,7 @@ internal fun GroupListScreen(
     }
 
     LaunchedEffect(key1 = Unit) {
-        viewModel.loadGroupByCenter(centerId)
+        viewModel.loadGroupByCenter()
     }
 
     GroupListScreen(
@@ -87,7 +86,7 @@ internal fun GroupListScreen(
             viewModel.loadGroups(it)
         },
         onRetry = {
-            viewModel.loadGroupByCenter(centerId)
+            viewModel.loadGroupByCenter()
         },
     )
 }

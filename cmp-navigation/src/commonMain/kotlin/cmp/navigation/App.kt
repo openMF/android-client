@@ -78,6 +78,7 @@ import com.mifos.core.designsystem.component.MifosDialogBox
 import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.designsystem.theme.MifosBackground
 import com.mifos.feature.about.navigateToAboutScreen
+import com.mifos.feature.center.navigation.navigateToCenterListScreenRoute
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
@@ -282,13 +283,20 @@ fun App(
                         Column {
                             route?.let {
                                 MifosNavigationBar(route = it) { target ->
-                                    appState.navController.apply {
-                                        navigate(target) {
-                                            restoreState = true
-                                            launchSingleTop = true
-                                            popUpTo(route = graph.findStartDestination().route.toString()) {
-                                                saveState = true
-                                                inclusive = false
+                                    when(target){
+                                        HomeDestinationsScreen.CenterListScreen.route -> {
+                                            appState.navController.navigateToCenterListScreenRoute()
+                                        }
+                                        else->{
+                                            appState.navController.apply {
+                                                navigate(target) {
+                                                    restoreState = true
+                                                    launchSingleTop = true
+                                                    popUpTo(route = graph.findStartDestination().route.toString()) {
+                                                        saveState = true
+                                                        inclusive = false
+                                                    }
+                                                }
                                             }
                                         }
                                     }

@@ -80,11 +80,10 @@ internal fun CenterDetailsScreen(
     groupList: (Int) -> Unit,
     viewModel: CenterDetailsViewModel = koinViewModel(),
 ) {
-    val centerId by viewModel.centerId.collectAsStateWithLifecycle()
     val state by viewModel.centerDetailsUiState.collectAsStateWithLifecycle()
 
     LaunchedEffect(Unit) {
-        viewModel.loadClientDetails(centerId)
+        viewModel.loadClientDetails()
     }
 
     CenterDetailsScreen(
@@ -92,15 +91,15 @@ internal fun CenterDetailsScreen(
         onBackPressed = onBackPressed,
         onMenuClick = {
             when (it) {
-                MenuItems.ADD_SAVINGS_ACCOUNT -> addSavingsAccount(centerId)
+                MenuItems.ADD_SAVINGS_ACCOUNT -> addSavingsAccount(viewModel.centerId)
 
-                MenuItems.GROUP_LIST -> groupList(centerId)
+                MenuItems.GROUP_LIST -> groupList(viewModel.centerId)
             }
         },
         onRetryClick = {
-            viewModel.loadClientDetails(centerId)
+            viewModel.loadClientDetails()
         },
-        onActivateCenter = { onActivateCenter(centerId) },
+        onActivateCenter = { onActivateCenter(viewModel.centerId) },
     )
 }
 

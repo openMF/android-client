@@ -10,6 +10,7 @@
 package com.mifos.feature.center.navigation
 
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.material3.Text
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavType
@@ -22,6 +23,10 @@ import com.mifos.feature.center.centerGroupList.GroupListScreen
 import com.mifos.feature.center.centerList.ui.CenterListScreen
 import com.mifos.feature.center.createCenter.CreateNewCenterScreen
 import com.mifos.room.entities.client.ClientEntity
+import kotlinx.serialization.Serializable
+
+@Serializable
+data object CenterNavGraph
 
 fun NavGraphBuilder.centerNavGraph(
     navController: NavController,
@@ -29,9 +34,8 @@ fun NavGraphBuilder.centerNavGraph(
     onActivateCenter: (Int, String) -> Unit,
     addSavingsAccount: (Int) -> Unit,
 ) {
-    navigation(
-        startDestination = CenterScreens.CenterListScreen.route,
-        route = "center_screen_route",
+    navigation<CenterNavGraph>(
+        startDestination = CenterListRoute,
     ) {
         centerListScreenRoute(
             paddingValues = paddingValues,
@@ -55,14 +59,15 @@ fun NavGraphBuilder.centerNavGraph(
     }
 }
 
+@Serializable
+data object CenterListRoute
+
 fun NavGraphBuilder.centerListScreenRoute(
     paddingValues: PaddingValues,
     createNewCenter: () -> Unit,
     onCenterSelect: (Int) -> Unit,
 ) {
-    composable(
-        route = CenterScreens.CenterListScreen.route,
-    ) {
+    composable<CenterListRoute> {
         CenterListScreen(
             paddingValues = paddingValues,
             createNewCenter = createNewCenter,
@@ -71,16 +76,18 @@ fun NavGraphBuilder.centerListScreenRoute(
     }
 }
 
+@Serializable
+data class CenterDetailRoute(
+    val centerId:Int =0
+)
+
 fun NavGraphBuilder.centerDetailScreenRoute(
     onBackPressed: () -> Unit,
     onActivateCenter: (Int, String) -> Unit,
     addSavingsAccount: (Int) -> Unit,
     groupList: (Int) -> Unit,
 ) {
-    composable(
-        route = CenterScreens.CenterDetailScreen.route,
-        arguments = listOf(navArgument(Constants.CENTER_ID, builder = { type = NavType.IntType })),
-    ) {
+    composable<CenterDetailRoute>{
         CenterDetailsScreen(
             onBackPressed = onBackPressed,
             onActivateCenter = { onActivateCenter(it, Constants.ACTIVATE_CENTER) },
@@ -90,14 +97,16 @@ fun NavGraphBuilder.centerDetailScreenRoute(
     }
 }
 
+@Serializable
+data class CenterGroupListRoute(
+    val centerId:Int=0
+)
+
 fun NavGraphBuilder.centerGroupListScreenRoute(
     onBackPressed: () -> Unit,
     loadClientsOfGroup: (List<ClientEntity>) -> Unit,
 ) {
-    composable(
-        route = CenterScreens.CenterGroupListScreen.route,
-        arguments = listOf(navArgument(Constants.CENTER_ID, builder = { type = NavType.IntType })),
-    ) {
+    composable<CenterGroupListRoute>{
         GroupListScreen(
             onBackPressed = onBackPressed,
             loadClientsOfGroup = loadClientsOfGroup,
@@ -105,13 +114,14 @@ fun NavGraphBuilder.centerGroupListScreenRoute(
     }
 }
 
+@Serializable
+data object CreateCenterRoute
+
 fun NavGraphBuilder.createCenterScreenRoute(
     onBackPressed: () -> Unit,
     onCreateSuccess: () -> Unit,
 ) {
-    composable(
-        route = CenterScreens.CreateCenterScreen.route,
-    ) {
+    composable<CreateCenterRoute>{
         CreateNewCenterScreen(
             onCreateSuccess = onCreateSuccess,
             onBackPressed = onBackPressed,
@@ -120,13 +130,17 @@ fun NavGraphBuilder.createCenterScreenRoute(
 }
 
 fun NavController.navigateCenterDetailsScreenRoute(centerId: Int) {
-    navigate(CenterScreens.CenterDetailScreen.argument(centerId))
+    navigate(CenterDetailRoute(centerId))
 }
 
 fun NavController.navigateCreateCenterScreenRoute() {
-    navigate(CenterScreens.CreateCenterScreen.route)
+    navigate(CreateCenterRoute)
 }
 
 fun NavController.navigateCenterGroupListScreenRoute(centerId: Int) {
-    navigate(CenterScreens.CenterGroupListScreen.arguments(centerId))
+    navigate(CenterGroupListRoute(centerId))
+}
+
+fun NavController.navigateToCenterListScreenRoute() {
+    navigate(CenterListRoute)
 }
