@@ -52,8 +52,20 @@ fun ComposeApp(
             }
         }
     }
+    val useDynamicColors = when (uiState) {
+        MainUiState.Loading -> isSystemInDarkTheme()
+        is MainUiState.Success -> {
+            when ((uiState as MainUiState.Success).appTheme) {
+                AppTheme.SYSTEM -> true
+                else -> false
+            }
+        }
+    }
 
-    MifosTheme(isDarkTheme) {
+    MifosTheme(
+        isDarkTheme,
+        dynamicColor = useDynamicColors
+    ) {
         RootNavGraph(
             networkMonitor = networkMonitor,
             navHostController = navController,
