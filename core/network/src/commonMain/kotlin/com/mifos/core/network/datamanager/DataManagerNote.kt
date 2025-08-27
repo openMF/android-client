@@ -64,7 +64,7 @@ class DataManagerNote(
         )
     }
 
-    fun updateNote(
+    suspend fun updateNote(
         resourceType: String,
         resourceId: Long,
         noteId: Long,

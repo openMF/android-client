@@ -103,7 +103,7 @@ interface NoteService {
      * @param notesPayload
      */
     @PUT("{resourceType}/{resourceId}/" + APIEndPoint.NOTES + "/{noteId}")
-    fun updateNote(
+    suspend fun updateNote(
         @Path("resourceType") resourceType: String,
         @Path("resourceId") resourceId: Long,
         @Path("noteId") noteId: Long,

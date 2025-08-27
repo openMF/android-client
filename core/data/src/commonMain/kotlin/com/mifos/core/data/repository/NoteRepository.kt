@@ -43,7 +43,7 @@ interface NoteRepository {
         resourceId: Long,
     ): Flow<DataState<List<Note>>>
 
-    fun updateNote(
+    suspend fun updateNote(
         resourceType: String,
         resourceId: Long,
         noteId: Long,

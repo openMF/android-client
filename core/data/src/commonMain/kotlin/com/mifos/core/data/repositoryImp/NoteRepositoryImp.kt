@@ -53,7 +53,7 @@ class NoteRepositoryImp(
         return dataManagerNote.retrieveListNotes(resourceType, resourceId).asDataStateFlow()
     }
 
-    override fun updateNote(
+    override suspend fun updateNote(
         resourceType: String,
         resourceId: Long,
         noteId: Long,
