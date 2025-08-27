@@ -72,9 +72,9 @@ kotlin {
             implementation(libs.kotlinx.coroutines.swing)
             implementation(libs.kotlin.reflect)
         }
-        jsMain.dependencies {
-            api(libs.jb.kotlin.stdlib.js)
-            api(libs.jb.kotlin.dom)
-        }
+//        jsMain.dependencies {
+//            api(libs.jb.kotlin.stdlib.js)
+//            api(libs.jb.kotlin.dom)
+//        }
     }
 }
