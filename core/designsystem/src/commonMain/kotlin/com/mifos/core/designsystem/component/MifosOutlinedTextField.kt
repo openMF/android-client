@@ -305,10 +305,6 @@ fun MifosOutlinedTextField(
         } else {
             null
         },
-        colors = OutlinedTextFieldDefaults.colors(
-            focusedBorderColor = MaterialTheme.colorScheme.secondaryContainer,
-            unfocusedBorderColor = MaterialTheme.colorScheme.secondaryContainer,
-        ),
     )
 }
 
@@ -403,10 +399,6 @@ fun MifosDatePickerTextField(
                 Icon(imageVector = Icons.Default.CalendarMonth, null)
             }
         },
-        colors = OutlinedTextFieldDefaults.colors(
-            focusedBorderColor = MaterialTheme.colorScheme.secondaryContainer,
-            unfocusedBorderColor = MaterialTheme.colorScheme.secondaryContainer,
-        ),
     )
 }
 

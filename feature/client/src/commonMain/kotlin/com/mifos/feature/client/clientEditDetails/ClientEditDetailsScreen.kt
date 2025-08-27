@@ -12,6 +12,13 @@ package com.mifos.feature.client.clientEditDetails
 import androidclient.feature.client.generated.resources.Res
 import androidclient.feature.client.generated.resources.account_no
 import androidclient.feature.client.generated.resources.activation_date
+import androidclient.feature.client.generated.resources.client_closure_failure_title
+import androidclient.feature.client.generated.resources.client_closure_success_message
+import androidclient.feature.client.generated.resources.client_closure_success_title
+import androidclient.feature.client.generated.resources.client_details_update_failure_title
+import androidclient.feature.client.generated.resources.client_details_updated
+import androidclient.feature.client.generated.resources.client_details_updated_success_message
+import androidclient.feature.client.generated.resources.dialog_continue
 import androidclient.feature.client.generated.resources.email_address
 import androidclient.feature.client.generated.resources.feature_client_account_information
 import androidclient.feature.client.generated.resources.feature_client_cancel
@@ -99,9 +106,10 @@ import com.mifos.core.designsystem.component.MifosTextFieldDropdown
 import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.designsystem.theme.MifosTypography
+import com.mifos.core.model.objects.databaseobjects.Client
+import com.mifos.core.ui.components.MifosStatusDialog
 import com.mifos.core.ui.util.EventsEffect
-import com.mifos.feature.client.clientEditDetails.ClientEditDetailsViewModel.ClientEditDetailsEvent
-import com.mifos.feature.client.clientEditDetails.ClientEditDetailsViewModel.ClientEditDetailsState
+import com.mifos.feature.client.clientClosure.ClientClosureAction
 import com.mifos.feature.client.utils.PhoneNumberUtil
 import com.mifos.room.entities.client.ClientPayloadEntity
 import com.mifos.room.entities.organisation.OfficeEntity
@@ -125,13 +133,11 @@ import org.koin.compose.viewmodel.koinViewModel
 @Composable
 internal fun ClientEditDetailsScreen(
     navigateBack: () -> Unit,
+    onNavigateNext: (Int) -> Unit,
     viewModel: ClientEditDetailsViewModel = koinViewModel(),
 ) {
     val state by viewModel.stateFlow.collectAsStateWithLifecycle()
 
-    val uiState by viewModel.editClientDetailsUiState.collectAsStateWithLifecycle()
-    val officeList by viewModel.showOffices.collectAsStateWithLifecycle()
-    val staffInOffice by viewModel.staffInOffices.collectAsStateWithLifecycle()
 
     LaunchedEffect(key1 = Unit) {
         viewModel.loadClientDetails()
@@ -141,7 +147,8 @@ internal fun ClientEditDetailsScreen(
     EventsEffect(viewModel.eventFlow) { event ->
         when (event) {
             ClientEditDetailsEvent.NavigateBack -> navigateBack()
-            ClientEditDetailsEvent.OnSaveSuccess -> {
+            ClientEditDetailsEvent.NavigateNext -> onNavigateNext(state.id)
+            ClientEditDetailsEvent.OnUpdateSuccess -> {
                 navigateBack()
             }
         }
@@ -150,11 +157,11 @@ internal fun ClientEditDetailsScreen(
     ClientEditDetailsScaffold(
         navigateBack = navigateBack,
         state = state,
-        uiState = uiState,
-        officeList = officeList,
-        staffInOffices = staffInOffice,
+        officeList = state.showOffices,
+        staffInOffices = state.staffInOffices,
         loadStaffInOffice = { viewModel.loadStaffInOffices(officeId = it) },
         updateClient = { viewModel.updateClient(clientPayload = it) },
+        onAction = remember(viewModel) { { viewModel.trySendAction(it) } }
     )
 }
 
@@ -162,13 +169,13 @@ internal fun ClientEditDetailsScreen(
 @Composable
 private fun ClientEditDetailsScaffold(
     state: ClientEditDetailsState,
-    uiState: EditClientDetailsUiState,
     navigateBack: () -> Unit,
     officeList: List<OfficeEntity>,
     staffInOffices: List<StaffEntity>,
     loadStaffInOffice: (officeId: Int) -> Unit,
     updateClient: (clientPayload: ClientPayloadEntity) -> Unit,
     modifier: Modifier = Modifier,
+    onAction: (ClientEditDetailsAction) -> Unit,
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
@@ -184,34 +191,42 @@ private fun ClientEditDetailsScaffold(
                 .fillMaxSize()
                 .padding(paddingValues),
         ) {
-            when (uiState) {
-                EditClientDetailsUiState.ShowProgressbar -> {
+            when(state.dialogState) {
+                is ClientEditDetailsState.DialogState.Loading -> {
                     MifosCircularProgress()
                 }
-
-                is EditClientDetailsUiState.ShowClientTemplate -> {
+                is ClientEditDetailsState.DialogState.ShowUpdateDetailsContent -> {
                     UpdateClientDetailsContent(
                         state = state,
                         scope = scope,
                         snackbarHostState = snackbarHostState,
                         officeList = officeList,
                         staffInOffices = staffInOffices,
-                        clientTemplate = uiState.clientsTemplate,
+                        clientTemplate = state.clientsTemplate,
                         loadStaffInOffice = loadStaffInOffice,
                         updateClient = updateClient,
                         navigateBack = navigateBack,
                     )
                 }
-
-                is EditClientDetailsUiState.SetClientId -> {
-                    navigateBack.invoke()
-                }
-
-                is EditClientDetailsUiState.ShowError -> {
+                is ClientEditDetailsState.DialogState.Error -> {
                     MifosSweetError(
-                        message = stringResource(uiState.message),
+                        message = state.dialogState.message,
                     )
                 }
+                is ClientEditDetailsState.DialogState.ShowStatusDialog -> {
+                    MifosStatusDialog(
+                        status = state.dialogState.status,
+                        btnText = stringResource(Res.string.dialog_continue),
+                        onConfirm = { onAction(ClientEditDetailsAction.onNext) },
+                        successTitle = stringResource(Res.string.client_details_updated),
+                        successMessage = stringResource(Res.string.client_details_updated_success_message),
+                        failureTitle = stringResource(Res.string.client_details_update_failure_title),
+                        failureMessage = state.dialogState.msg,
+                        modifier = Modifier.fillMaxSize(),
+                    )
+                }
+
+                else -> {}
             }
         }
     }
@@ -399,7 +414,7 @@ private fun UpdateClientDetailsContent(
                 onCancelClick = { navigateBack.invoke() },
                 onSubmitClick = {
                     val clientNames = Name(firstName, lastName, middleName)
-                    handleSubmitClick(
+                    val isFormCorrect = handleSubmitClick(
                         scope,
                         snackbarHostState,
                         clientNames,
@@ -905,7 +920,7 @@ private fun handleSubmitClick(
     mobileNumber: String,
     externalId: String,
     selectedLegalFormId: Int?,
-) {
+): Boolean {
     if (!isAllFieldsValid(
             scope,
             snackbarHostState,
@@ -914,7 +929,7 @@ private fun handleSubmitClick(
             clientNames.lastName,
         )
     ) {
-        return
+        return false
     }
 
     val clientPayload = createClientPayload(
@@ -938,6 +953,7 @@ private fun handleSubmitClick(
     )
 
     updateClient.invoke(clientPayload)
+    return true
 }
 
 private fun createClientPayload(

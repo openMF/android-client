@@ -21,10 +21,9 @@ import com.mifos.core.common.utils.MFErrorParser
 import com.mifos.core.data.repository.ClientDetailsEditRepository
 import com.mifos.core.data.repository.CreateNewClientRepository
 import com.mifos.core.domain.useCases.GetClientDetailsUseCase
+import com.mifos.core.ui.components.ResultStatus
 import com.mifos.core.ui.util.BaseViewModel
-import com.mifos.feature.client.clientEditDetails.ClientEditDetailsViewModel.ClientEditDetailsAction
-import com.mifos.feature.client.clientEditDetails.ClientEditDetailsViewModel.ClientEditDetailsEvent
-import com.mifos.feature.client.clientEditDetails.ClientEditDetailsViewModel.ClientEditDetailsState
+import com.mifos.feature.client.clientClosure.ClientClosureState
 import com.mifos.room.entities.client.ClientEntity
 import com.mifos.room.entities.client.ClientPayloadEntity
 import com.mifos.room.entities.organisation.OfficeEntity
@@ -36,6 +35,7 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.StringResource
+import org.jetbrains.compose.resources.getString
 
 internal class ClientEditDetailsViewModel(
     savedStateHandle: SavedStateHandle,
@@ -51,16 +51,6 @@ internal class ClientEditDetailsViewModel(
         loadClientDetails(route.id)
     }
 
-    private val _editClientDetailsUiState =
-        MutableStateFlow<EditClientDetailsUiState>(EditClientDetailsUiState.ShowProgressbar)
-    val editClientDetailsUiState: StateFlow<EditClientDetailsUiState> get() = _editClientDetailsUiState
-
-    private val _staffInOffices = MutableStateFlow<List<StaffEntity>>(emptyList())
-    val staffInOffices: StateFlow<List<StaffEntity>> get() = _staffInOffices
-
-    private val _showOffices = MutableStateFlow<List<OfficeEntity>>(emptyList())
-    val showOffices: StateFlow<List<OfficeEntity>> get() = _showOffices
-
     fun loadClientDetails(clientId: Int = route.id) {
         viewModelScope.launch {
             getClientDetailsUseCase(clientId).collect { result ->
@@ -68,7 +58,17 @@ internal class ClientEditDetailsViewModel(
                     is DataState.Success -> {
                         mutableStateFlow.update {
                             it.copy(
+                                dialogState = ClientEditDetailsState.DialogState.Loading
+                            )
+                        }
+                        mutableStateFlow.update {
+                            it.copy(
                                 client = result.data.client,
+                            )
+                        }
+                        mutableStateFlow.update {
+                            it.copy(
+                                dialogState = ClientEditDetailsState.DialogState.ShowUpdateDetailsContent
                             )
                         }
                     }
@@ -82,7 +82,11 @@ internal class ClientEditDetailsViewModel(
     }
 
     fun loadOfficeAndClientTemplate() {
-        _editClientDetailsUiState.value = EditClientDetailsUiState.ShowProgressbar
+        mutableStateFlow.update {
+            it.copy(
+                dialogState = ClientEditDetailsState.DialogState.Loading
+            )
+        }
         loadClientTemplate()
         loadOffices()
     }
@@ -90,13 +94,17 @@ internal class ClientEditDetailsViewModel(
     private fun loadClientTemplate() {
         viewModelScope.launch {
             newClientRepository.clientTemplate().catch {
-                _editClientDetailsUiState.value =
-                    EditClientDetailsUiState.ShowError(Res.string.feature_client_failed_to_fetch_client_template)
-            }.collect {
-                _editClientDetailsUiState.value =
-                    EditClientDetailsUiState.ShowClientTemplate(
-                        clientsTemplate = it.data ?: ClientsTemplateEntity(),
+                mutableStateFlow.update {
+                    it.copy(
+                        dialogState = ClientEditDetailsState.DialogState.Error(getString(Res.string.feature_client_failed_to_fetch_client_template))
                     )
+                }
+            }.collect {
+                mutableStateFlow.update { currState ->
+                    currState.copy(
+                        clientsTemplate = it.data ?: ClientsTemplateEntity()
+                    )
+                }
             }
         }
     }
@@ -105,10 +113,17 @@ internal class ClientEditDetailsViewModel(
         viewModelScope.launch {
             newClientRepository.offices()
                 .catch {
-                    _editClientDetailsUiState.value =
-                        EditClientDetailsUiState.ShowError(Res.string.feature_client_failed_to_fetch_offices)
+                    mutableStateFlow.update {
+                        it.copy(
+                            dialogState = ClientEditDetailsState.DialogState.Error(getString(Res.string.feature_client_failed_to_fetch_offices))
+                        )
+                    }
                 }.collect { offices ->
-                    _showOffices.value = offices.data ?: emptyList()
+                    mutableStateFlow.update {
+                        it.copy(
+                            showOffices = offices.data ?: emptyList(),
+                        )
+                    }
                 }
         }
     }
@@ -118,11 +133,19 @@ internal class ClientEditDetailsViewModel(
             newClientRepository.getStaffInOffice(officeId).collect { result ->
                 when (result) {
                     is DataState.Error ->
-                        _editClientDetailsUiState.value =
-                            EditClientDetailsUiState.ShowError(Res.string.feature_client_failed_to_fetch_staffs)
-
+                        mutableStateFlow.update {
+                            it.copy(
+                                dialogState = ClientEditDetailsState.DialogState.Error(getString(Res.string.feature_client_failed_to_fetch_staffs))
+                            )
+                        }
                     DataState.Loading -> Unit
-                    is DataState.Success -> _staffInOffices.value = result.data
+                    is DataState.Success -> {
+                        mutableStateFlow.update {
+                            it.copy(
+                                staffInOffices = result.data,
+                            )
+                        }
+                    }
                 }
             }
         }
@@ -130,13 +153,18 @@ internal class ClientEditDetailsViewModel(
 
     fun updateClient(clientPayload: ClientPayloadEntity) {
         viewModelScope.launch {
-            _editClientDetailsUiState.value = EditClientDetailsUiState.ShowProgressbar
-
+            mutableStateFlow.update {
+                it.copy(
+                    dialogState = ClientEditDetailsState.DialogState.Loading
+                )
+            }
             try {
-                val clientId = repository.updateClient(clientId = route.id, clientPayload = clientPayload)
-
-                clientId?.let {
-                    _editClientDetailsUiState.value = EditClientDetailsUiState.SetClientId(it)
+               val clientId = repository.updateClient(clientId = route.id, clientPayload = clientPayload)
+                mutableStateFlow.update {
+                    it.copy(
+                        id = clientId ?: -1,
+                        dialogState = ClientEditDetailsState.DialogState.ShowStatusDialog(ResultStatus.SUCCESS)
+                    )
                 }
             } catch (e: Exception) {
                 MFErrorParser.errorMessage(e)
@@ -147,32 +175,34 @@ internal class ClientEditDetailsViewModel(
     override fun handleAction(action: ClientEditDetailsAction) {
         when (action) {
             ClientEditDetailsAction.NavigateBack -> sendEvent(ClientEditDetailsEvent.NavigateBack)
+            ClientEditDetailsAction.onNext -> sendEvent(ClientEditDetailsEvent.NavigateNext)
         }
-    }
-
-    data class ClientEditDetailsState(
-        val client: ClientEntity? = null,
-    )
-
-    sealed interface ClientEditDetailsEvent {
-        data object NavigateBack : ClientEditDetailsEvent
-        data object OnSaveSuccess : ClientEditDetailsEvent
-    }
-
-    sealed interface ClientEditDetailsAction {
-        data object NavigateBack : ClientEditDetailsAction
     }
 }
 
-sealed class EditClientDetailsUiState {
+data class ClientEditDetailsState(
+    val id: Int = -1,
+    val client: ClientEntity? = null,
+    val staffInOffices: List<StaffEntity> = emptyList(),
+    val showOffices: List<OfficeEntity> = emptyList(),
+    val clientsTemplate: ClientsTemplateEntity = ClientsTemplateEntity(),
+    val dialogState: DialogState? = null,
+) {
+    sealed interface DialogState {
+        data class Error(val message: String) : DialogState
+        data object Loading : DialogState
+        data object ShowUpdateDetailsContent: DialogState
+        data class ShowStatusDialog(val status: ResultStatus, val msg: String = "") : DialogState
+    }
+}
 
-    data object ShowProgressbar : EditClientDetailsUiState()
+sealed interface ClientEditDetailsEvent {
+    data object NavigateBack : ClientEditDetailsEvent
+    data object NavigateNext : ClientEditDetailsEvent
+    data object OnUpdateSuccess : ClientEditDetailsEvent
+}
 
-    data class SetClientId(val id: Int) : EditClientDetailsUiState()
-
-    data class ShowClientTemplate(
-        val clientsTemplate: ClientsTemplateEntity,
-    ) : EditClientDetailsUiState()
-
-    data class ShowError(val message: StringResource) : EditClientDetailsUiState()
+sealed interface ClientEditDetailsAction {
+    data object NavigateBack : ClientEditDetailsAction
+    data object onNext: ClientEditDetailsAction
 }

@@ -294,8 +294,6 @@ sealed interface ClientProfileDetailsEvent {
 
     data object NavigateToUpdatePhoto : ClientProfileDetailsEvent
 
-    data object NavigateNext : ClientProfileDetailsEvent
-
     data object NavigateToUpdateDetails : ClientProfileDetailsEvent
 }
 

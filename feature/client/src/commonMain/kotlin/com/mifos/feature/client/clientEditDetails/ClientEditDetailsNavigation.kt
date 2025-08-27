@@ -17,30 +17,26 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class ClientEditDetailsRoute(
     val id: Int = -1,
-    val name: String = "",
-    val accountNo: String = "",
 )
 
 fun NavGraphBuilder.clientEditDetailsDestination(
     onNavigateBack: () -> Unit,
+    onNavigateNext: (Int) -> Unit,
 ) {
     composable<ClientEditDetailsRoute> {
         ClientEditDetailsScreen(
             onNavigateBack,
+            onNavigateNext = onNavigateNext,
         )
     }
 }
 
 fun NavController.navigateToClientEditDetailsRoute(
     id: Int,
-    name: String,
-    account: String,
 ) {
     this.navigate(
         ClientEditDetailsRoute(
             id = id,
-            name = name,
-            accountNo = account,
         ),
     )
 }
