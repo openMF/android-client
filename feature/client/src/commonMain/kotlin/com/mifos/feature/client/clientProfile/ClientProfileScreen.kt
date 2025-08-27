@@ -49,6 +49,7 @@ import org.koin.compose.viewmodel.koinViewModel
 internal fun ClientProfileScreen(
     notes: (Int) -> Unit,
     documents: (Int) -> Unit,
+    viewAssociatedAccounts: (Int) -> Unit,
     identifiers: (Int) -> Unit,
     onNavigateBack: () -> Unit,
     navigateToClientDetailsScreen: (Int) -> Unit,
@@ -69,11 +70,16 @@ internal fun ClientProfileScreen(
                     ClientProfileActionItem.Documents -> {
                         documents(state.client?.id ?: -1)
                     }
+
                     ClientProfileActionItem.FamilyMembers -> {}
-                    ClientProfileActionItem.General -> {}
+                    ClientProfileActionItem.General -> viewAssociatedAccounts(
+                        state.client?.id ?: -1,
+                    )
+
                     ClientProfileActionItem.Identifiers -> {
                         identifiers(state.client?.id ?: -1)
                     }
+
                     ClientProfileActionItem.Notes -> {
                         notes(state.client?.id ?: -1)
                     }
@@ -132,7 +138,8 @@ private fun ClientProfileScaffold(
                 ProfileCard(
                     image = state.profileImage,
                     name = state.client?.displayName ?: stringResource(Res.string.name_na),
-                    accountNo = state.client?.accountNo ?: stringResource(Res.string.string_not_available),
+                    accountNo = state.client?.accountNo
+                        ?: stringResource(Res.string.string_not_available),
                     office = state.client?.officeName ?: stringResource(Res.string.office_na),
                     onClick = {
                         onAction(

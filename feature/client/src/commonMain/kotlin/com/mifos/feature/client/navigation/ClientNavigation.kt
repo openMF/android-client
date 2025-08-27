@@ -19,6 +19,10 @@ import androidx.navigation.navArgument
 import androidx.navigation.navigation
 import com.mifos.core.common.utils.Constants
 import com.mifos.feature.client.clientCharges.ClientChargesScreen
+import com.mifos.feature.client.clientClosure.clientClosureDestination
+import com.mifos.feature.client.clientClosure.navigateToClientClosureRoute
+import com.mifos.feature.client.clientCollateral.clientCollateralDestination
+import com.mifos.feature.client.clientCollateral.navigateToClientCollateralRoute
 import com.mifos.feature.client.clientDetails.ClientDetailsScreen
 import com.mifos.feature.client.clientDetailsProfile.clientProfileDetailsDestination
 import com.mifos.feature.client.clientDetailsProfile.navigateToClientDetailsProfileRoute
@@ -40,6 +44,8 @@ import com.mifos.feature.client.clientUpdateDefaultAccount.navigateToUpdateDefau
 import com.mifos.feature.client.clientUpdateDefaultAccount.updateDefaultAccountDestination
 import com.mifos.feature.client.clientsList.ClientListScreen
 import com.mifos.feature.client.createNewClient.CreateNewClientScreen
+import com.mifos.feature.client.savingsAccounts.navigateToClientSavingsAccountsRoute
+import com.mifos.feature.client.savingsAccounts.savingsAccountsDestination
 import com.mifos.room.entities.accounts.savings.SavingAccountDepositTypeEntity
 import com.mifos.room.entities.noncore.DataTableEntity
 import com.mifos.room.entities.survey.SurveyEntity
@@ -118,27 +124,42 @@ fun NavGraphBuilder.clientNavGraph(
             documents = documents,
             identifiers = navController::navigateClientIdentifierScreen,
             navigateToClientDetailsScreen = navController::navigateToClientDetailsProfileRoute,
+            viewAssociatedAccounts = navController::navigateToClientSavingsAccountsRoute,
         )
+
         clientProfileDetailsDestination(
             onNavigateBack = navController::popBackStack,
             navigateToUpdatePhoto = navController::navigateToClientProfileEditProfileRoute,
             navigateToAssignStaff = navController::navigateToClientStaffRoute,
-            navigateToHome = navigateToHome,
             navigateToClientTransfer = navController::navigateToClientTransferRoute,
             navigateToUpdateDefaultAccount = navController::navigateToUpdateDefaultAccountRoute,
+            navigateToClientClosure = navController::navigateToClientClosureRoute,
+            navigateToCollateral = navController::navigateToClientCollateralRoute,
         )
         clientEditProfileDestination(
             onNavigateBack = navController::popBackStack,
         )
         clientStaffDestination(
             onNavigateBack = navController::popBackStack,
-            navigateToHome = navigateToHome,
+            onNavigateNext = navController::navigateToClientDetailsProfileRouteOnStatus,
         )
         clientTransferDestination(
             onNavigateBack = navController::popBackStack,
             onNavigateNext = navController::navigateToClientDetailsProfileRouteOnStatus,
         )
         updateDefaultAccountDestination(
+            onNavigateBack = navController::popBackStack,
+            onNavigateNext = navController::navigateToClientDetailsProfileRouteOnStatus,
+        )
+        clientClosureDestination(
+            onNavigateBack = navController::popBackStack,
+            onNavigateNext = navController::navigateToClientDetailsProfileRouteOnStatus,
+        )
+        savingsAccountsDestination(
+            navigateBack = navController::popBackStack,
+            navigateToViewAccount = { },
+        )
+        clientCollateralDestination(
             onNavigateBack = navController::popBackStack,
             onNavigateNext = navController::navigateToClientDetailsProfileRouteOnStatus,
         )

@@ -7,7 +7,7 @@
  *
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
-package com.mifos.feature.client.clientStaff
+package com.mifos.feature.client.savingsAccounts
 
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
@@ -15,28 +15,24 @@ import androidx.navigation.compose.composable
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class ClientStaffRoute(
-    val id: Int = -1,
+data class SavingsAccountsRoute(
+    val clientId: Int = -1,
 )
 
-fun NavGraphBuilder.clientStaffDestination(
-    onNavigateBack: () -> Unit,
-    onNavigateNext: (Int) -> Unit,
+fun NavGraphBuilder.savingsAccountsDestination(
+    navigateBack: () -> Unit,
+    navigateToViewAccount: (Int) -> Unit,
 ) {
-    composable<ClientStaffRoute> {
-        ClientStaffScreen(
-            onNavigateBack = onNavigateBack,
-            onNavigateNext = onNavigateNext,
+    composable<SavingsAccountsRoute> {
+        SavingsAccountsScreenRoute(
+            navigateBack = navigateBack,
+            navigateToViewAccount = navigateToViewAccount,
         )
     }
 }
 
-fun NavController.navigateToClientStaffRoute(
-    id: Int,
+fun NavController.navigateToClientSavingsAccountsRoute(
+    clientId: Int,
 ) {
-    this.navigate(
-        ClientStaffRoute(
-            id = id,
-        ),
-    )
+    this.navigate(SavingsAccountsRoute(clientId = clientId))
 }

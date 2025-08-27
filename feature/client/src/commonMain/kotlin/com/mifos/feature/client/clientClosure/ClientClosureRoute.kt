@@ -7,7 +7,7 @@
  *
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
-package com.mifos.feature.client.clientStaff
+package com.mifos.feature.client.clientClosure
 
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
@@ -15,28 +15,24 @@ import androidx.navigation.compose.composable
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class ClientStaffRoute(
+data class ClientClosureRoute(
     val id: Int = -1,
 )
 
-fun NavGraphBuilder.clientStaffDestination(
+fun NavGraphBuilder.clientClosureDestination(
     onNavigateBack: () -> Unit,
     onNavigateNext: (Int) -> Unit,
 ) {
-    composable<ClientStaffRoute> {
-        ClientStaffScreen(
+    composable<ClientClosureRoute> {
+        ClientClosureScreen(
             onNavigateBack = onNavigateBack,
             onNavigateNext = onNavigateNext,
         )
     }
 }
 
-fun NavController.navigateToClientStaffRoute(
+fun NavController.navigateToClientClosureRoute(
     id: Int,
 ) {
-    this.navigate(
-        ClientStaffRoute(
-            id = id,
-        ),
-    )
+    this.navigate(ClientClosureRoute(id = id))
 }
