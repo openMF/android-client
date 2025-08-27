@@ -11,7 +11,6 @@ package cmp.navigation.navigation
 
 import androidx.compose.ui.graphics.vector.ImageVector
 import com.mifos.core.designsystem.icon.MifosIcons
-import com.mifos.feature.about.navigation.AboutScreens
 import com.mifos.feature.checker.inbox.task.navigation.CheckerInboxTaskScreens
 import com.mifos.feature.client.navigation.ClientScreens
 import com.mifos.feature.groups.navigation.GroupScreen
@@ -87,7 +86,7 @@ sealed class HomeDestinationsScreen(
 
     data object AboutScreen : HomeDestinationsScreen(
         title = "About",
-        route = AboutScreens.AboutScreen.route,
+        route = "",
         icon = MifosIcons.Info,
     )
 

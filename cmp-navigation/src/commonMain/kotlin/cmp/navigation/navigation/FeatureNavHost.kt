@@ -15,13 +15,11 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.navigation
 import cmp.navigation.AppState
 import com.mifos.core.common.utils.Constants
-import com.mifos.feature.about.navigation.aboutNavGraph
+import com.mifos.feature.about.aboutDestination
 import com.mifos.feature.activate.navigation.activateScreen
 import com.mifos.feature.activate.navigation.navigateToActivateScreen
-import com.mifos.feature.auth.navigation.navigateToLogin
 import com.mifos.feature.center.navigation.centerNavGraph
 import com.mifos.feature.center.navigation.navigateCenterDetailsScreenRoute
 import com.mifos.feature.center.navigation.navigateCreateCenterScreenRoute
@@ -105,7 +103,7 @@ internal fun FeatureNavHost(
             loadDocuments = appState.navController::navigateToDocumentListScreen,
         )
 
-        aboutNavGraph(onBackPressed = appState.navController::popBackStack)
+        aboutDestination(onBackPressed = appState.navController::popBackStack)
 
         offlineNavGraph(navController = appState.navController)
 

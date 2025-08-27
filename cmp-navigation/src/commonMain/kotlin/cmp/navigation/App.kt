@@ -77,6 +77,7 @@ import com.mifos.core.data.util.NetworkMonitor
 import com.mifos.core.designsystem.component.MifosDialogBox
 import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.designsystem.theme.MifosBackground
+import com.mifos.feature.about.navigateToAboutScreen
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
@@ -204,8 +205,15 @@ fun App(
                                 selected = index == selectedItemIndex,
                                 onClick = {
                                     selectedItemIndex = index
-                                    appState.navController.navigate(navigationDrawerTabs[index].route) {
-                                        launchSingleTop = true
+                                    when(navigationDrawerTabs[index].route){
+                                        HomeDestinationsScreen.AboutScreen.route -> {
+                                            appState.navController.navigateToAboutScreen()
+                                        }
+                                        else ->{
+                                            appState.navController.navigate(navigationDrawerTabs[index].route) {
+                                                launchSingleTop = true
+                                            }
+                                        }
                                     }
                                     scope.launch {
                                         drawerState.close()
