@@ -79,6 +79,7 @@ import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.designsystem.theme.MifosBackground
 import com.mifos.feature.about.navigateToAboutScreen
 import com.mifos.feature.center.navigation.navigateToCenterListScreenRoute
+import com.mifos.feature.checker.inbox.task.navigation.navigateToCheckerInboxTasksScreenRoute
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
@@ -206,9 +207,12 @@ fun App(
                                 selected = index == selectedItemIndex,
                                 onClick = {
                                     selectedItemIndex = index
-                                    when(navigationDrawerTabs[index].route){
-                                        HomeDestinationsScreen.AboutScreen.route -> {
+                                    when(navigationDrawerTabs[index]){
+                                        HomeDestinationsScreen.AboutScreen -> {
                                             appState.navController.navigateToAboutScreen()
+                                        }
+                                        HomeDestinationsScreen.CheckerInboxAndTasksScreen -> {
+                                            appState.navController.navigateToCheckerInboxTasksScreenRoute()
                                         }
                                         else ->{
                                             appState.navController.navigate(navigationDrawerTabs[index].route) {

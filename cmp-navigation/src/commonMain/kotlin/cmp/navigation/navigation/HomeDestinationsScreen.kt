@@ -11,7 +11,6 @@ package cmp.navigation.navigation
 
 import androidx.compose.ui.graphics.vector.ImageVector
 import com.mifos.core.designsystem.icon.MifosIcons
-import com.mifos.feature.checker.inbox.task.navigation.CheckerInboxTaskScreens
 import com.mifos.feature.client.navigation.ClientScreens
 import com.mifos.feature.groups.navigation.GroupScreen
 import com.mifos.feature.offline.navigation.OfflineScreens
@@ -50,7 +49,7 @@ sealed class HomeDestinationsScreen(
 
     data object CheckerInboxAndTasksScreen : HomeDestinationsScreen(
         title = "Checker Inbox & Tasks",
-        route = CheckerInboxTaskScreens.CheckerInboxTaskScreenRoute.route,
+        route = "",
         icon = MifosIcons.Checkbox,
     )
 
