@@ -3,11 +3,13 @@ package com.mifos.feature.client.clientGeneral
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
+import co.touchlab.kermit.BaseLogger
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.util.NetworkMonitor
 import com.mifos.core.domain.useCases.GetClientDetailsUseCase
 import com.mifos.core.ui.util.BaseViewModel
 import com.mifos.room.entities.client.ClientEntity
+import com.mifos.room.entities.zipmodels.ClientAndClientAccounts
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
@@ -16,9 +18,9 @@ internal class ClientProfileGeneralViewmodel(
     savedStateHandle: SavedStateHandle,
     private val getClientDetailsUseCase: GetClientDetailsUseCase,
     private val networkMonitor: NetworkMonitor,
-): BaseViewModel<ClientProfileGeneralState, ClientProfileGeneralEvent, ClientProfileGeneralAction>(
-    initialState = ClientProfileGeneralState()
-){
+) : BaseViewModel<ClientProfileGeneralState, ClientProfileGeneralEvent, ClientProfileGeneralAction>(
+    initialState = ClientProfileGeneralState(),
+) {
     private val route = savedStateHandle.toRoute<ClientProfileGeneralRoute>()
 
     init {
@@ -29,15 +31,58 @@ internal class ClientProfileGeneralViewmodel(
         when (action) {
             ClientProfileGeneralAction.NavigateBack -> sendEvent(ClientProfileGeneralEvent.NavigateBack)
             is ClientProfileGeneralAction.OnActionClick ->
-            sendEvent(ClientProfileGeneralEvent.OnActionClick(action.action))
+                sendEvent(ClientProfileGeneralEvent.OnActionClick(action.action))
+
             ClientProfileGeneralAction.OnRetry -> null
         }
     }
+
+    private fun loadPerformanceHistory(
+        clientAndClientAccounts: ClientAndClientAccounts,
+    ): ClientProfileGeneralState.PerformanceHistory {
+
+        val loanAccounts = clientAndClientAccounts.clientAccounts?.loanAccounts
+        val savingAccounts = clientAndClientAccounts.clientAccounts?.savingsAccounts
+
+        savingAccounts?.forEach {
+            println(it)
+        }
+
+        loanAccounts?.forEach {
+            println(it)
+        }
+
+        val loanCyclesCount = loanAccounts
+            ?.filter { it.status?.active == true }
+            ?.sumOf { it.loanCycle ?: 0 } ?: 0
+
+        val activeLoanAccounts = loanAccounts?.count { it.status?.active == true } ?: 0
+
+        val activeSavingsCount = savingAccounts?.count { it.status?.active == true } ?: 0
+
+        val totalSaving = savingAccounts
+            ?.filter { it.status?.active == true }
+            ?.sumOf { it.accountBalance ?: 0.0 } ?: 0.0
+
+        // TODO: No function yet created for calculating this value.
+        val lastLoanAmount = 0.0
+
+        return ClientProfileGeneralState.PerformanceHistory(
+            loanCyclesCount = loanCyclesCount,
+            activeLoans = activeLoanAccounts,
+            lastLoanAmount = lastLoanAmount,
+            activeSavingsCount = activeSavingsCount,
+            totalSaving = totalSaving
+        )
+
+    }
+
 
     private fun getClientAndObserveNetwork() {
         observeNetwork()
         loadClientDetails(route.id)
     }
+
     /**
      * Observes the network connectivity status and updates state accordingly.
      */
@@ -57,15 +102,20 @@ internal class ClientProfileGeneralViewmodel(
      * @param clientId ID of the client whose details need to be fetched.
      */
     private fun loadClientDetails(clientId: Int) {
+        state.copy(loading = true)
         // Fetch client details
         viewModelScope.launch {
             getClientDetailsUseCase(clientId).collect { result ->
                 when (result) {
                     is DataState.Success -> {
+                        val performanceHistory = loadPerformanceHistory(result.data)
                         mutableStateFlow.update {
                             it.copy(
+                                currency = result.data.clientAccounts?.savingsAccounts?.firstOrNull()?.currency?.code ?: "$",
                                 client = result.data.client,
+                                performanceHistory = performanceHistory,
                                 dialogState = null,
+                                loading = false
                             )
                         }
                     }
@@ -74,6 +124,7 @@ internal class ClientProfileGeneralViewmodel(
                         mutableStateFlow.update {
                             it.copy(
                                 dialogState = ClientProfileGeneralState.DialogState.Error(result.message),
+                                loading = false
                             )
                         }
                     }
@@ -82,6 +133,7 @@ internal class ClientProfileGeneralViewmodel(
                         mutableStateFlow.update {
                             it.copy(
                                 dialogState = ClientProfileGeneralState.DialogState.Loading,
+                                loading = false
                             )
                         }
                     }
@@ -89,20 +141,29 @@ internal class ClientProfileGeneralViewmodel(
             }
         }
     }
-
-
 }
 
 data class ClientProfileGeneralState(
+    val currency: String = "$",
     val client: ClientEntity? = null,
-    val dialogState: ClientProfileGeneralState.DialogState? = null,
+    val performanceHistory: PerformanceHistory = PerformanceHistory(),
+    val dialogState: DialogState? = null,
     val networkConnection: Boolean = false,
+    val loading: Boolean = false,
 ) {
 
     sealed interface DialogState {
-        data class Error(val message: String) : ClientProfileGeneralState.DialogState
-        data object Loading : ClientProfileGeneralState.DialogState
+        data class Error(val message: String) : DialogState
+        data object Loading : DialogState
     }
+
+    data class PerformanceHistory(
+        var loanCyclesCount: Int = 0,
+        var activeLoans: Int = 0,
+        var lastLoanAmount: Double = 0.0,
+        var activeSavingsCount: Int = 0,
+        var totalSaving: Double = 0.0,
+    )
 
 }
 
@@ -120,7 +181,8 @@ sealed interface ClientProfileGeneralAction {
     data object NavigateBack : ClientProfileGeneralAction
 
     /** User clicks on an action item */
-    data class OnActionClick(val action: ClientProfileGeneralActionItem) : ClientProfileGeneralAction
+    data class OnActionClick(val action: ClientProfileGeneralActionItem) :
+        ClientProfileGeneralAction
 
     /** User clicks on Retry */
     data object OnRetry : ClientProfileGeneralAction

@@ -18,6 +18,7 @@ fun NavGraphBuilder.clientProfileGeneralDestination(
     fixedDepositAccounts: (Int) -> Unit= {},
     recurringDepositAccounts: (Int) -> Unit= {},
     sharesAccounts: (Int) -> Unit= {},
+    collateralData: (Int) -> Unit = {},
 ) {
     composable<ClientProfileGeneralRoute> {
         ClientProfileGeneralScreen(
@@ -27,7 +28,8 @@ fun NavGraphBuilder.clientProfileGeneralDestination(
             savingAccounts,
             fixedDepositAccounts,
             recurringDepositAccounts,
-            sharesAccounts
+            sharesAccounts,
+            collateralData
         )
     }
 }

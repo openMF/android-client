@@ -223,6 +223,11 @@
     <string name="client_profile_notes_title">Notes</string>
     <string name="client_profile_notes_subtitle">Check or update note accounts</string>
 
+    <!-- Client_Profile-General-Headers -->
+    <string name="client_profile_general_header_performance_history">Performance History</string>
+    <string name="client_profile_general_header_actions">Actions</string>
+    <string name="client_profile_general_header_linked_accounts">Linked Accounts</string>
+
     <!-- Client_Profile-General-Performance History -->
     <string name="client_performance_history_loan_cycle_count_label">No. Of Loan Cycles : </string>
     <string name="client_performance_history_active_loans_count_label">No. Of Active Loans : </string>

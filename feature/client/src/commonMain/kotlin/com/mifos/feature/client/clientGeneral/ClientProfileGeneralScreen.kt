@@ -6,7 +6,9 @@ import androidclient.feature.client.generated.resources.client_performance_histo
 import androidclient.feature.client.generated.resources.client_performance_history_last_loan_amount_label
 import androidclient.feature.client.generated.resources.client_performance_history_loan_cycle_count_label
 import androidclient.feature.client.generated.resources.client_performance_history_total_savings_label
-import androidclient.feature.client.generated.resources.client_profile_title
+import androidclient.feature.client.generated.resources.client_profile_general_header_actions
+import androidclient.feature.client.generated.resources.client_profile_general_header_linked_accounts
+import androidclient.feature.client.generated.resources.client_profile_general_header_performance_history
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -22,6 +24,7 @@ import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -32,9 +35,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.theme.AppColors
 import com.mifos.core.designsystem.theme.DesignToken
@@ -43,7 +44,6 @@ import com.mifos.core.designsystem.theme.MifosTypography
 import com.mifos.core.ui.components.MifosRowCard
 import com.mifos.core.ui.util.EventsEffect
 import com.mifos.core.ui.util.TextUtil
-import com.mifos.feature.client.clientProfile.ClientProfileAction
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.viewmodel.koinViewModel
@@ -57,9 +57,10 @@ internal fun ClientProfileGeneralScreen(
     fixedDepositAccounts: (Int) -> Unit,
     recurringDepositAccounts: (Int) -> Unit,
     sharesAccounts: (Int) -> Unit,
+    collateralData: (Int) -> Unit,
     modifier: Modifier = Modifier,
-    viewModel: ClientProfileGeneralViewmodel = koinViewModel()
-){
+    viewModel: ClientProfileGeneralViewmodel = koinViewModel(),
+) {
 
     val state by viewModel.stateFlow.collectAsStateWithLifecycle()
 
@@ -68,25 +69,43 @@ internal fun ClientProfileGeneralScreen(
             ClientProfileGeneralEvent.NavigateBack -> {
                 onNavigateBack.invoke()
             }
+
             is ClientProfileGeneralEvent.OnActionClick -> {
-                when(event.action){
-                    ClientProfileGeneralActionItem.CollateralData -> {}
-                    ClientProfileGeneralActionItem.FixedDepositAccounts -> {}
-                    ClientProfileGeneralActionItem.LoanAccount -> {}
-                    ClientProfileGeneralActionItem.RecurringDepositAccounts -> {}
-                    ClientProfileGeneralActionItem.SavingAccounts -> {
-                        savingAccounts(
-                            state.client?.id ?: -1
-                        )
-                    }
-                    ClientProfileGeneralActionItem.SharesAccounts -> {}
-                    ClientProfileGeneralActionItem.UpcomingCharges -> {}
+                when (event.action) {
+                    ClientProfileGeneralActionItem.CollateralData -> collateralData(
+                        state.client?.id ?: -1,
+                    )
+
+                    ClientProfileGeneralActionItem.FixedDepositAccounts -> fixedDepositAccounts(
+                        state.client?.id ?: -1,
+                    )
+
+                    ClientProfileGeneralActionItem.LoanAccount -> loanAccounts(
+                        state.client?.id ?: -1,
+                    )
+
+                    ClientProfileGeneralActionItem.RecurringDepositAccounts -> recurringDepositAccounts(
+                        state.client?.id ?: -1,
+                    )
+
+                    ClientProfileGeneralActionItem.SavingAccounts -> savingAccounts(
+                        state.client?.id ?: -1,
+                    )
+
+                    ClientProfileGeneralActionItem.SharesAccounts -> sharesAccounts(
+                        state.client?.id ?: -1,
+                    )
+
+                    ClientProfileGeneralActionItem.UpcomingCharges -> upcomingCharges(
+                        state.client?.id ?: -1,
+                    )
                 }
             }
         }
     }
 
     ClientProfileGeneralScaffold(
+        state = state,
         modifier = modifier,
         onAction = remember(viewModel) { { viewModel.trySendAction(it) } },
     )
@@ -94,42 +113,47 @@ internal fun ClientProfileGeneralScreen(
 }
 
 
-@Preview()
 @Composable
-fun ClientProfileGeneralScaffold(
-    onAction: (ClientProfileGeneralAction) -> Unit = {},
-    modifier: Modifier = Modifier
-){
-    MifosTheme {
-        MifosScaffold(
-            title = "Linked Accounts",
-            onBackPressed = { onAction(ClientProfileGeneralAction.NavigateBack) },
-            modifier = modifier,
-        ) { paddingValues ->
+internal fun ClientProfileGeneralScaffold(
+    state: ClientProfileGeneralState,
+    onAction: (ClientProfileGeneralAction) -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    MifosScaffold(
+        title = stringResource(Res.string.client_profile_general_header_linked_accounts),
+        onBackPressed = { onAction(ClientProfileGeneralAction.NavigateBack) },
+        modifier = modifier,
+    ) { paddingValues ->
 
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(paddingValues)
-                    .verticalScroll(rememberScrollState())
-                    .padding(
-                        vertical = DesignToken.padding.extraLarge,
-                        horizontal = DesignToken.padding.large,
-                    ),
-            ) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(paddingValues)
+                .verticalScroll(rememberScrollState())
+                .padding(
+                    vertical = DesignToken.padding.extraLarge,
+                    horizontal = DesignToken.padding.large,
+                ),
+        ) {
+            if (state.loading) {
+                CircularProgressIndicator()
+            } else {
+
                 Text(
-                    "Performance History",
-                    style = MaterialTheme.typography.labelLarge
+                    stringResource(Res.string.client_profile_general_header_performance_history),
+                    style = MaterialTheme.typography.labelLarge,
                 )
 
                 Spacer(Modifier.height(DesignToken.spacing.medium))
 
-                PerformanceHistory()
+                PerformanceHistoryCard(
+                    state = state,
+                )
 
                 Spacer(Modifier.height(DesignToken.spacing.largeIncreased))
 
                 Text(
-                    "Actions",
+                    stringResource(Res.string.client_profile_general_header_actions),
                     style = MaterialTheme.typography.labelLarge,
                 )
 
@@ -155,67 +179,72 @@ fun ClientProfileGeneralScaffold(
                         ),
                         modifier = Modifier
                             .padding(vertical = DesignToken.padding.medium)
-                            .clickable{
+                            .clickable {
                                 onAction(
-                                    ClientProfileGeneralAction.OnActionClick(it)
+                                    ClientProfileGeneralAction.OnActionClick(it),
                                 )
                             },
                     )
                 }
+
             }
 
         }
+
     }
+
 
 }
 
 @Preview()
 @Composable
-fun PerformanceHistory() {
-    Column(
-        Modifier.background(color = Color.White)
+fun PerformanceHistoryCard(state: ClientProfileGeneralState) {
+    Box(
+        modifier = Modifier.fillMaxWidth()
+            .wrapContentHeight()
+            .clip(
+                RoundedCornerShape(12),
+            )
+            .background(MaterialTheme.colorScheme.primary)
+            .padding(DesignToken.padding.largeIncreasedExtra), //24
+        contentAlignment = Alignment.Center,
     ) {
-        Box(
-            modifier = Modifier.fillMaxWidth()
-                .wrapContentHeight()
-                .clip(
-                    RoundedCornerShape(12)
-                )
-                .background(MaterialTheme.colorScheme.primary)
-                .padding(DesignToken.padding.largeIncreasedExtra), //24
-            contentAlignment = Alignment.Center,
+        Column(
+            verticalArrangement = Arrangement.spacedBy(
+                DesignToken.spacing.small,   //8
+            ),
+            horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            Column(
-                verticalArrangement = Arrangement.spacedBy(
-                    DesignToken.spacing.small   //8
-                ),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                PerformanceHistoryRows(
-                    stringResource(Res.string.client_performance_history_loan_cycle_count_label),
-                    "24"
-                )
+            val performanceHistory = state.performanceHistory
+            PerformanceHistoryRows(
+                stringResource(Res.string.client_performance_history_loan_cycle_count_label),
+                if (performanceHistory.loanCyclesCount > 0) "${performanceHistory.loanCyclesCount}"
+                else "N/A",
+            )
 
-                PerformanceHistoryRows(
-                    stringResource(Res.string.client_performance_history_active_loans_count_label),
-                    "12"
-                )
+            PerformanceHistoryRows(
+                stringResource(Res.string.client_performance_history_active_loans_count_label),
+                if (performanceHistory.activeLoans > 0) "${performanceHistory.activeLoans}"
+                else "N/A",
+            )
 
-                PerformanceHistoryRows(
-                    stringResource(Res.string.client_performance_history_last_loan_amount_label),
-                    "$ 24, 000"
-                )
+            PerformanceHistoryRows(
+                stringResource(Res.string.client_performance_history_last_loan_amount_label),
+                if (performanceHistory.lastLoanAmount > 0.0) "${state.currency} ${performanceHistory.lastLoanAmount}"
+                else "N/A",
+            )
 
-                PerformanceHistoryRows(
-                    stringResource(Res.string.client_performance_history_active_savings_label),
-                    "8"
-                )
+            PerformanceHistoryRows(
+                stringResource(Res.string.client_performance_history_active_savings_label),
+                if (performanceHistory.activeSavingsCount > 0) "${performanceHistory.activeSavingsCount}"
+                else "N/A",
+            )
 
-                PerformanceHistoryRows(
-                    stringResource(Res.string.client_performance_history_total_savings_label),
-                    "$ 16, 000"
-                )
-            }
+            PerformanceHistoryRows(
+                stringResource(Res.string.client_performance_history_total_savings_label),
+                if (performanceHistory.totalSaving > 0.0) "${state.currency} ${performanceHistory.lastLoanAmount}"
+                else "N/A",
+            )
         }
     }
 }
@@ -227,15 +256,15 @@ fun PerformanceHistoryRows(
     modifier: Modifier = Modifier,
     textStyle: TextStyle = TextStyle(
         color = AppColors.customWhite,
-        fontStyle = MaterialTheme.typography.labelMedium.fontStyle
-    )
-){
+        fontStyle = MaterialTheme.typography.labelMedium.fontStyle,
+    ),
+) {
     Row(
         modifier = modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.SpaceBetween
-    ){
+        horizontalArrangement = Arrangement.SpaceBetween,
+    ) {
         Text(label, style = textStyle)
-        Text(value , style = textStyle)
+        Text(value, style = textStyle)
     }
 }
 

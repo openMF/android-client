@@ -30,6 +30,13 @@ data class ClientAccounts(
         return result
     }
 
+    fun getActiveLoanAccounts(): List<LoanAccountEntity> {
+        val activeLoanAccounts =  loanAccounts.filter{
+            it.status?.active == true
+        }
+        return activeLoanAccounts
+    }
+
     fun getRecurringSavingsAccounts(): List<SavingsAccountEntity> {
         return getSavingsAccounts(true)
     }

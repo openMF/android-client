@@ -15,6 +15,7 @@ import com.mifos.core.network.model.CollateralItem
 import com.mifos.core.network.model.SavingAccountOption
 import com.mifos.core.network.model.StaffOption
 import com.mifos.room.entities.accounts.ClientAccounts
+import com.mifos.room.entities.accounts.loans.LoanAccountEntity
 import com.mifos.room.entities.client.ClientEntity
 import io.ktor.client.request.forms.MultiPartFormDataContent
 import kotlinx.coroutines.flow.Flow
