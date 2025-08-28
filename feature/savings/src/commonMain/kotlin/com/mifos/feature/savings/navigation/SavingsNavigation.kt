@@ -24,10 +24,10 @@ import com.mifos.feature.savings.savingsAccountTransaction.SavingsAccountTransac
 import com.mifos.feature.savings.savingsAccountv2.savingsAccountDestination
 import com.mifos.room.entities.accounts.savings.SavingAccountDepositTypeEntity
 import com.mifos.room.entities.accounts.savings.SavingsAccountWithAssociationsEntity
+import kotlinx.serialization.Serializable
 
-/**
- * Created by Pronay Sarker on 14/08/2024 (1:10 PM)
- */
+@Serializable
+data object SavingsNavGraph
 
 fun NavGraphBuilder.savingsNavGraph(
     navController: NavController,
@@ -35,9 +35,8 @@ fun NavGraphBuilder.savingsNavGraph(
     loadMoreSavingsAccountInfo: (String, Int) -> Unit,
     loadDocuments: (Int, String) -> Unit,
 ) {
-    navigation(
+    navigation<SavingsNavGraph>(
         startDestination = SavingsScreens.SavingsAccountSummary.route,
-        route = "savings_summary_route",
     ) {
         savingsSummaryScreen(
             onBackPressed = navController::popBackStack,

@@ -17,9 +17,6 @@ import com.mifos.room.entities.accounts.savings.SavingsTransactionData
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
-/**
- * Created by Pronay Sarker on 14/08/2024 (1:11 PM)
- */
 sealed class SavingsScreens(val route: String) {
 
     data object SavingsAccount :
