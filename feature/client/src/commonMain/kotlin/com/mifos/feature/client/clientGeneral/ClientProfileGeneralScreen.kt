@@ -6,6 +6,7 @@ import androidclient.feature.client.generated.resources.client_performance_histo
 import androidclient.feature.client.generated.resources.client_performance_history_last_loan_amount_label
 import androidclient.feature.client.generated.resources.client_performance_history_loan_cycle_count_label
 import androidclient.feature.client.generated.resources.client_performance_history_total_savings_label
+import androidclient.feature.client.generated.resources.client_profile_title
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -24,31 +25,55 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.theme.AppColors
 import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.designsystem.theme.MifosTheme
 import com.mifos.core.designsystem.theme.MifosTypography
 import com.mifos.core.ui.components.MifosRowCard
+import com.mifos.core.ui.util.EventsEffect
 import com.mifos.core.ui.util.TextUtil
+import com.mifos.feature.client.clientProfile.ClientProfileAction
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
+import org.koin.compose.viewmodel.koinViewModel
+
+@Composable
+internal fun ClientProfileGeneralScreen(
+    onNavigateBack: () -> Unit,
+    upcomingCharges: (Int) -> Unit,
+    loanAccounts: (Int) -> Unit,
+    savingAccounts: (Int) -> Unit,
+    fixedDepositAccounts: (Int) -> Unit,
+    recurringDepositAccounts: (Int) -> Unit,
+    sharesAccounts: (Int) -> Unit,
+){
+
+    ClientProfileGeneralScaffold()
+
+}
 
 
 @Preview()
 @Composable
 fun ClientProfileGeneralScaffold(
+    onAction: (ClientProfileGeneralAction) -> Unit = {},
     modifier: Modifier = Modifier
 ){
     MifosTheme {
         MifosScaffold(
-            modifier.background(Color.White)
+            title = "Linked Accounts",
+            onBackPressed = { onAction(ClientProfileGeneralAction.NavigateBack) },
+            modifier = modifier,
         ) { paddingValues ->
 
             Column(
