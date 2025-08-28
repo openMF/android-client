@@ -2,9 +2,13 @@ package com.mifos.feature.client.clientLoanAccounts
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.toRoute
 import com.mifos.core.data.repository.ClientDetailsRepository
+import com.mifos.core.data.util.NetworkMonitor
 import com.mifos.core.ui.util.BaseViewModel
+import com.mifos.feature.client.clientLoanAccounts.ClientLoanAccountsEvent.*
 import com.mifos.feature.client.savingsAccounts.SavingsAccountState
+import com.mifos.feature.client.savingsAccounts.SavingsAccountsRoute
 import com.mifos.room.entities.accounts.loans.LoanAccountEntity
 import com.mifos.room.entities.accounts.savings.SavingsAccountEntity
 import kotlinx.coroutines.flow.update
@@ -12,12 +16,15 @@ import kotlinx.coroutines.launch
 
 class ClientLoanAccountsViewModel(
     savedStateHandle: SavedStateHandle,
+    private val networkMonitor: NetworkMonitor,
     private val repository: ClientDetailsRepository,
 ) : BaseViewModel<ClientLoanAccountsState, ClientLoanAccountsEvent, ClientLoanAccountsAction>(
     initialState = ClientLoanAccountsState(),
 ) {
+    private val route = savedStateHandle.toRoute<ClientLoanAccountsRoute>()
+
     override fun handleAction(action: ClientLoanAccountsAction) {
-        when(action){
+        when (action) {
             ClientLoanAccountsAction.CloseDialog -> {
                 mutableStateFlow.update {
                     it.copy(dialogState = null)
@@ -25,39 +32,67 @@ class ClientLoanAccountsViewModel(
             }
 
             is ClientLoanAccountsAction.MakeRepayment -> {
-                sendEvent(ClientLoanAccountsEvent.MakeRepayment(state.clientId))
-            }
-
-            ClientLoanAccountsAction.NavigateBack -> {
-                // implement if needed, else remove
+                sendEvent(MakeRepayment(state.clientId))
             }
 
             ClientLoanAccountsAction.OnSearchClick -> {
-
+                checkNetworkAndGetLoanAccounts()
             }
 
             ClientLoanAccountsAction.Refresh -> {
-
+                checkNetworkAndGetLoanAccounts()
             }
 
             ClientLoanAccountsAction.ToggleFilter -> {
                 mutableStateFlow.update {
-                    it.copy(isFilterDialogOpen =! it.isFilterDialogOpen)
+                    it.copy(isFilterDialogOpen = !it.isFilterDialogOpen)
                 }
             }
 
-            ClientLoanAccountsAction.ToggleSearch -> TODO()
-            is ClientLoanAccountsAction.UpdateSearchValue -> TODO()
-            is ClientLoanAccountsAction.ViewAccount -> TODO()
-            ClientLoanAccountsEvent.NavigateBack -> TODO()
+            ClientLoanAccountsAction.ToggleSearch -> {
+                mutableStateFlow.update {
+                    it.copy(isSearchBarActive = !it.isSearchBarActive)
+                }
+            }
+
+            is ClientLoanAccountsAction.UpdateSearchValue -> {
+                mutableStateFlow.update {
+                    it.copy(searchText = action.query)
+                }
+            }
+
+            is ClientLoanAccountsAction.ViewAccount -> sendEvent(
+                ViewAccount(
+                    state.clientId
+                )
+            )
+
+            ClientLoanAccountsAction.NavigateBack -> {
+                //implement if needed later, else remove
+            }
         }
     }
 
     init {
-        getLoanAccounts()
+        checkNetworkAndGetLoanAccounts()
     }
 
-    fun getLoanAccounts () {
+    private fun checkNetworkAndGetLoanAccounts() {
+        viewModelScope.launch {
+            networkMonitor.isOnline.collect { isConnected ->
+                when (isConnected) {
+                    true -> getLoanAccounts()
+                    false -> {
+                        mutableStateFlow.update {
+                            it.copy(dialogState = ClientLoanAccountsState.DialogState.Error("No internet connection, Try Again"))
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private fun getLoanAccounts() {
         viewModelScope.launch {
             mutableStateFlow.update {
                 it.copy(dialogState = ClientLoanAccountsState.DialogState.Loading)
@@ -66,7 +101,7 @@ class ClientLoanAccountsViewModel(
             try {
                 // Todo modify search accordingly
                 // currently only supporting searching by account no
-                val loanAccounts = repository.getClientAccounts(3)
+                val loanAccounts = repository.getClientAccounts(route.clientId)
                     .loanAccounts
                     .filter { it.accountNo?.contains(state.searchText.trim()) == true }
 
@@ -86,9 +121,7 @@ class ClientLoanAccountsViewModel(
                 }
             }
         }
-
     }
-
 }
 
 data class ClientLoanAccountsState(
@@ -113,11 +146,12 @@ sealed interface ClientLoanAccountsEvent {
 
 sealed interface ClientLoanAccountsAction {
     data object ToggleSearch : ClientLoanAccountsAction
+
     data object NavigateBack : ClientLoanAccountsAction
     data object ToggleFilter : ClientLoanAccountsAction
     data object Refresh : ClientLoanAccountsAction
-    data class MakeRepayment(val accountId: Int) : ClientLoanAccountsAction
-    data class ViewAccount(val accountId: Int) : ClientLoanAccountsAction
+    data object MakeRepayment : ClientLoanAccountsAction
+    data object ViewAccount : ClientLoanAccountsAction
     data class UpdateSearchValue(val query: String) : ClientLoanAccountsAction
     data object OnSearchClick : ClientLoanAccountsAction
     data object CloseDialog : ClientLoanAccountsAction

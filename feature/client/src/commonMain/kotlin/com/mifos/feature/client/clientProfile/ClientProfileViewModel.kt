@@ -18,6 +18,7 @@ import com.mifos.core.data.util.NetworkMonitor
 import com.mifos.core.domain.useCases.GetClientDetailsUseCase
 import com.mifos.core.ui.util.BaseViewModel
 import com.mifos.core.ui.util.imageToByteArray
+import com.mifos.feature.client.clientProfile.ClientProfileEvent.*
 import com.mifos.feature.client.clientProfile.components.ClientProfileActionItem
 import com.mifos.room.entities.client.ClientEntity
 import kotlinx.coroutines.flow.update
@@ -98,6 +99,7 @@ internal class ClientProfileViewModel(
                     is DataState.Success -> mutableStateFlow.update {
                         it.copy(profileImage = imageToByteArray(result.data))
                     }
+
                     else -> Unit
                 }
             }
@@ -119,11 +121,30 @@ internal class ClientProfileViewModel(
 
     override fun handleAction(action: ClientProfileAction) {
         when (action) {
-            ClientProfileAction.NavigateBack -> sendEvent(ClientProfileEvent.NavigateBack)
-            is ClientProfileAction.OnActionClick ->
-                sendEvent(ClientProfileEvent.OnActionClick(action.action))
+            ClientProfileAction.NavigateBack -> sendEvent(NavigateBack)
+
+            is ClientProfileAction.OnActionClick -> {
+                when (action.action) {
+                    ClientProfileActionItem.General -> mutableStateFlow.update {
+                        it.copy(showAccountChooserDialog = true)
+                    }
+                    else -> sendEvent(OnActionClick(action.action))
+                }
+            }
+
             ClientProfileAction.OnRetry -> getClientAndObserveNetwork()
-            ClientProfileAction.NavigateToClientDetailsScreen -> sendEvent(ClientProfileEvent.NavigateToClientDetailsScreen)
+
+            ClientProfileAction.NavigateToClientDetailsScreen -> sendEvent(
+                NavigateToClientDetailsScreen,
+            )
+
+            ClientProfileAction.ToggleAccountChooserDialog -> {
+                mutableStateFlow.update { it.copy(showAccountChooserDialog = !it.showAccountChooserDialog) }
+            }
+
+            ClientProfileAction.NavigateToClientLoanAccounts -> sendEvent(ClientProfileEvent.OpenClientLoanAccounts(state.client?.id ?: -1))
+
+            ClientProfileAction.NavigateToClientSavingsAccounts -> sendEvent(ClientProfileEvent.OpenClientSavingsAccounts(state.client?.id ?: -1))
         }
     }
 }
@@ -138,6 +159,7 @@ data class ClientProfileState(
     val dialogState: DialogState? = null,
     val details: Map<StringResource, String> = emptyMap(),
     val networkConnection: Boolean = false,
+    val showAccountChooserDialog: Boolean = false,
 ) {
     /**
      * Sealed class representing possible dialog states.
@@ -159,6 +181,10 @@ sealed interface ClientProfileEvent {
     data class OnActionClick(val action: ClientProfileActionItem) : ClientProfileEvent
 
     data object NavigateToClientDetailsScreen : ClientProfileEvent
+
+    data class OpenClientSavingsAccounts(val clientId: Int) : ClientProfileEvent
+
+    data class OpenClientLoanAccounts(val clientId: Int) : ClientProfileEvent
 }
 
 /**
@@ -175,4 +201,10 @@ sealed interface ClientProfileAction {
     data object OnRetry : ClientProfileAction
 
     data object NavigateToClientDetailsScreen : ClientProfileAction
+
+    data object ToggleAccountChooserDialog : ClientProfileAction
+
+    data object NavigateToClientSavingsAccounts : ClientProfileAction
+
+    data object NavigateToClientLoanAccounts : ClientProfileAction
 }

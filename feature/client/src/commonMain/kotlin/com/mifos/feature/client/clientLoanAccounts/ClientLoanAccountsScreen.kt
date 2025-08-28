@@ -6,6 +6,7 @@ import androidclient.feature.client.generated.resources.client_savings_not_avila
 import androidclient.feature.client.generated.resources.client_savings_pending_approval
 import androidclient.feature.client.generated.resources.client_savings_savings_accounts
 import androidclient.feature.client.generated.resources.feature_client_dialog_action_ok
+import androidclient.feature.client.generated.resources.feature_client_loan_account
 import androidclient.feature.client.generated.resources.filter
 import androidclient.feature.client.generated.resources.search
 import androidclient.feature.client.generated.resources.update_default_account_title
@@ -28,7 +29,10 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -50,12 +54,13 @@ import com.mifos.feature.client.savingsAccounts.SavingsAccountsHeader
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
+import kotlin.collections.listOf
 
 @Composable
 internal fun ClientLoanAccountsScreenRoute(
     navigateBack: () -> Unit,
     viewModel: ClientLoanAccountsViewModel = koinViewModel(),
-){
+) {
     val state by viewModel.stateFlow.collectAsStateWithLifecycle()
 
     EventsEffect(viewModel.eventFlow) { event ->
@@ -80,11 +85,11 @@ internal fun ClientLoanAccountsScreenRoute(
 @Composable
 private fun ClientLoanAccountsScreen(
     state: ClientLoanAccountsState,
-    onAction: (ClientLoanAccountsAction) -> Unit
-){
+    onAction: (ClientLoanAccountsAction) -> Unit,
+) {
     MifosScaffold(
         title = stringResource(Res.string.update_default_account_title),
-        onBackPressed = { onAction(SavingsAccountAction.NavigateBack) },
+        onBackPressed = { onAction(ClientLoanAccountsAction.NavigateBack) },
         modifier = Modifier,
     ) { paddingValues ->
         Column(
@@ -92,18 +97,17 @@ private fun ClientLoanAccountsScreen(
                 .fillMaxSize()
                 .padding(start = 16.dp, end = 16.dp, top = 16.dp),
         ) {
-            SavingsAccountsHeader(
+            ClientsAccountHeader(
                 totalItem = state.loanAccounts.size.toString(),
                 onAction = onAction,
             )
 
-            // todo implement search bar functionality
             if (state.isSearchBarActive) {
                 MifosSearchBar(
                     query = state.searchText,
-                    onQueryChange = { onAction.invoke(SavingsAccountAction.UpdateSearchValue(it)) },
-                    onSearchClick = { onAction.invoke(SavingsAccountAction.OnSearchClick) },
-                    onBackClick = { onAction.invoke(SavingsAccountAction.ToggleSearch) },
+                    onQueryChange = { onAction.invoke(ClientLoanAccountsAction.UpdateSearchValue(it)) },
+                    onSearchClick = { onAction.invoke(ClientLoanAccountsAction.OnSearchClick) },
+                    onBackClick = { onAction.invoke(ClientLoanAccountsAction.ToggleSearch) },
                 )
             }
 
@@ -114,60 +118,40 @@ private fun ClientLoanAccountsScreen(
             } else {
                 LazyColumn {
                     items(state.loanAccounts) { loan ->
+                        val symbol = loan.currency?.displaySymbol ?: ""
+                        MifosActionsLoanListingComponent(
+                            accountNo = (loan.accountNo ?: "Not Available"),
+                            loanProduct = loan.productName ?: "Not Available",
+                            originalLoan = symbol + ((loan.originalLoan
+                                ?: "Not Available").toString()),
+                            amountPaid = symbol + ((loan.amountPaid ?: "Not Available").toString()),
+                            loanBalance = symbol + ((loan.amountPaid
+                                ?: "Not Available").toString()),
+                            type = loan.loanType?.value ?: "Not Available",
+                            //todo check if we need to add other options as well, such as disburse and all
+                            // currently didn't add it cuz its not in the UI design
+                            menuList = when {
+                                loan.status?.active == true -> {
+                                    listOf(
+                                        Actions.MakeRepayment,
+                                        Actions.ViewAccount,
+                                    )
+                                }
 
-                       MifosActionsLoanListingComponent(
-                           accountNo = loan.accountNo,
-                           loanProduct = loan.productName,
-                           originalLoan = loan .toString(),
-                           type = loan.loanType.value.toString(),
-
-
-
-                       )
-
-                            MifosActionsSavingsListingComponent(
-                            accountNo = savings.accountNo.toString(),
-                            savingsProduct = savings.productName.toString(),
-                            // todo modify with currency symbol when not getting null from api, currently getting null
-                            balance = if (savings.accountBalance != null) {
-                                savings.accountBalance.toString()
-                            } else {
-                                "Not Available"
-                            },
-                            menuList = if (savings.status?.submittedAndPendingApproval == true) {
-                                listOf(
-                                    Actions.ViewAccount,
-                                    Actions.ApproveAccount,
-                                )
-                            } else {
-                                listOf(
-                                    Actions.ViewAccount,
-                                )
+                                else -> {
+                                    listOf(
+                                        Actions.ViewAccount,
+                                    )
+                                }
                             },
                             onActionClicked = { actions ->
                                 when (actions) {
-                                    Actions.ViewAccount -> onAction.invoke(
-                                        SavingsAccountAction.ViewAccount(
-                                            state.clientId,
-                                        ),
-                                    )
-
-                                    Actions.ApproveAccount -> onAction.invoke(
-                                        SavingsAccountAction.ApproveAccount(
-                                            state.clientId,
-                                        ),
-                                    )
-
+                                    Actions.ViewAccount -> onAction(ClientLoanAccountsAction.ViewAccount)
+                                    Actions.MakeRepayment -> onAction(ClientLoanAccountsAction.MakeRepayment)
                                     else -> null
                                 }
                             },
-                            lastActive = if (savings.lastActiveTransactionDate != null) {
-                                DateHelper.getDateAsString(savings.lastActiveTransactionDate!!)
-                            } else if (savings.status?.submittedAndPendingApproval == true) {
-                                stringResource(Res.string.client_savings_pending_approval)
-                            } else {
-                                stringResource(Res.string.client_savings_not_avilable)
-                            },
+                            isActive =
                         )
 
                         Spacer(modifier = Modifier.height(8.dp))
@@ -179,16 +163,16 @@ private fun ClientLoanAccountsScreen(
 }
 
 @Composable
-private fun SavingsAccountsHeader(
+private fun ClientsAccountHeader(
     totalItem: String,
-    onAction: (SavingsAccountAction) -> Unit,
+    onAction: (ClientLoanAccountsAction) -> Unit,
 ) {
     Row(
         modifier = Modifier.fillMaxWidth(),
     ) {
         Column {
             Text(
-                text = stringResource(Res.string.client_savings_savings_accounts),
+                text = stringResource(Res.string.feature_client_loan_account),
                 style = MifosTypography.titleMedium,
             )
 
@@ -200,26 +184,26 @@ private fun SavingsAccountsHeader(
 
         Spacer(modifier = Modifier.weight(1f))
 
-        IconButton(
-            onClick = { onAction.invoke(SavingsAccountAction.ToggleSearch) },
-        ) {
-            // add a cross icon when its active, talk with design team
-            Icon(
-                painter = painterResource(Res.drawable.search),
-                contentDescription = null,
-            )
-        }
-
-        DesignToken.padding
-
-        IconButton(
-            onClick = { onAction.invoke(SavingsAccountAction.ToggleFilter) },
-        ) {
-            Icon(
-                painter = painterResource(Res.drawable.filter),
-                contentDescription = null,
-            )
-        }
+//        IconButton(
+//            onClick = { onAction.invoke(ClientLoanAccountsAction.ToggleSearch) },
+//        ) {
+//            // add a cross icon when its active, talk with design team
+//            Icon(
+//                painter = painterResource(Res.drawable.search),
+//                contentDescription = null,
+//            )
+//        }
+//
+//        DesignToken.padding
+//
+//        IconButton(
+//            onClick = { onAction.invoke(ClientLoanAccountsAction.ToggleFilter) },
+//        ) {
+//            Icon(
+//                painter = painterResource(Res.drawable.filter),
+//                contentDescription = null,
+//            )
+//        }
     }
 }
 

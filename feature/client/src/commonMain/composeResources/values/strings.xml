@@ -369,4 +369,9 @@
     <string name="client_collateral_success_title">Collateral Created Successfully</string>
     <string name="client_collateral_success_message">Collateral created successfully. Click Continue to navigate to Client detail profile.</string>
     <string name="client_collateral_failure_title">Collateral Creation Failed</string>
+
+    <string name="client_profile_select_account_type">Select Account Type</string>
+    <string name="client_profile_savings_account">Savings Account</string>
+    <string name="client_profile_loan_account">Loan Account</string>
+
 </resources>

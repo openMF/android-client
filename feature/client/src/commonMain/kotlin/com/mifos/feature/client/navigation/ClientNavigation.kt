@@ -30,6 +30,8 @@ import com.mifos.feature.client.clientDetailsProfile.navigateToClientDetailsProf
 import com.mifos.feature.client.clientEditProfile.clientEditProfileDestination
 import com.mifos.feature.client.clientEditProfile.navigateToClientProfileEditProfileRoute
 import com.mifos.feature.client.clientIdentifiers.ClientIdentifiersScreen
+import com.mifos.feature.client.clientLoanAccounts.clientLoanAccountsDestination
+import com.mifos.feature.client.clientLoanAccounts.navigateToClientLoanAccountsRoute
 import com.mifos.feature.client.clientPinpoint.PinpointClientScreen
 import com.mifos.feature.client.clientProfile.clientProfileDestination
 import com.mifos.feature.client.clientProfile.navigateToClientProfileRoute
@@ -124,7 +126,8 @@ fun NavGraphBuilder.clientNavGraph(
             documents = documents,
             identifiers = navController::navigateClientIdentifierScreen,
             navigateToClientDetailsScreen = navController::navigateToClientDetailsProfileRoute,
-            viewAssociatedAccounts = navController::navigateToClientSavingsAccountsRoute,
+            viewAssociatedSavingsAccounts = navController::navigateToClientSavingsAccountsRoute,
+            viewAssociatedLoanAccounts = navController::navigateToClientLoanAccountsRoute
         )
 
         clientProfileDetailsDestination(
@@ -162,6 +165,10 @@ fun NavGraphBuilder.clientNavGraph(
         clientCollateralDestination(
             onNavigateBack = navController::popBackStack,
             onNavigateNext = navController::navigateToClientDetailsProfileRouteOnStatus,
+        )
+        clientLoanAccountsDestination(
+            navigateBack = navController::popBackStack,
+            navigateToViewAccount = {}
         )
     }
 }

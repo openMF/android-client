@@ -11,8 +11,14 @@ package com.mifos.feature.client.clientProfile
 
 import androidclient.feature.client.generated.resources.Res
 import androidclient.feature.client.generated.resources.client_profile_actions
+import androidclient.feature.client.generated.resources.client_profile_loan_account
 import androidclient.feature.client.generated.resources.client_profile_profile
+import androidclient.feature.client.generated.resources.client_profile_savings_account
+import androidclient.feature.client.generated.resources.client_profile_select_account_type
 import androidclient.feature.client.generated.resources.client_profile_title
+import androidclient.feature.client.generated.resources.client_savings_savings_accounts
+import androidclient.feature.client.generated.resources.dismiss_text
+import androidclient.feature.client.generated.resources.feature_client_loan_account
 import androidclient.feature.client.generated.resources.name_na
 import androidclient.feature.client.generated.resources.office_na
 import androidclient.feature.client.generated.resources.string_not_available
@@ -20,17 +26,23 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import coil3.util.Logger
+import com.mifos.core.designsystem.component.MifosButton
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.designsystem.theme.MifosTypography
@@ -49,7 +61,8 @@ import org.koin.compose.viewmodel.koinViewModel
 internal fun ClientProfileScreen(
     notes: (Int) -> Unit,
     documents: (Int) -> Unit,
-    viewAssociatedAccounts: (Int) -> Unit,
+    viewAssociatedLoanAccounts: (Int) -> Unit,
+    viewAssociatedSavingsAccounts: (Int) -> Unit,
     identifiers: (Int) -> Unit,
     onNavigateBack: () -> Unit,
     navigateToClientDetailsScreen: (Int) -> Unit,
@@ -67,14 +80,12 @@ internal fun ClientProfileScreen(
             is ClientProfileEvent.OnActionClick -> {
                 when (event.action) {
                     ClientProfileActionItem.Address -> {}
+
                     ClientProfileActionItem.Documents -> {
                         documents(state.client?.id ?: -1)
                     }
 
                     ClientProfileActionItem.FamilyMembers -> {}
-                    ClientProfileActionItem.General -> viewAssociatedAccounts(
-                        state.client?.id ?: -1,
-                    )
 
                     ClientProfileActionItem.Identifiers -> {
                         identifiers(state.client?.id ?: -1)
@@ -83,12 +94,22 @@ internal fun ClientProfileScreen(
                     ClientProfileActionItem.Notes -> {
                         notes(state.client?.id ?: -1)
                     }
+
+                    else -> null
                 }
             }
 
             ClientProfileEvent.NavigateToClientDetailsScreen -> {
                 navigateToClientDetailsScreen(state.client?.id ?: -1)
             }
+
+            is ClientProfileEvent.OpenClientLoanAccounts -> viewAssociatedLoanAccounts(
+                state.client?.id ?: -1,
+            )
+
+            is ClientProfileEvent.OpenClientSavingsAccounts -> viewAssociatedSavingsAccounts(
+                state.client?.id ?: -1,
+            )
         }
     }
 
@@ -174,6 +195,36 @@ private fun ClientProfileScaffold(
                 }
             }
         }
+    }
+
+    if (state.showAccountChooserDialog) {
+        AlertDialog(
+            onDismissRequest = { onAction.invoke(ClientProfileAction.ToggleAccountChooserDialog) },
+            confirmButton = {},
+            dismissButton = {
+                TextButton(onClick = { onAction.invoke(ClientProfileAction.ToggleAccountChooserDialog) }) {
+                    Text(stringResource(Res.string.dismiss_text))
+                }
+            },
+            title = { Text(stringResource(Res.string.client_profile_select_account_type)) },
+            text = {
+                Column {
+                    MifosButton(
+                        modifier = Modifier.fillMaxWidth(),
+                        onClick = { onAction.invoke(ClientProfileAction.NavigateToClientSavingsAccounts) },
+                        text = { Text(stringResource(Res.string.client_profile_savings_account)) },
+                    )
+
+                    Spacer(modifier = Modifier.height(8.dp))
+
+                    MifosButton(
+                        modifier = Modifier.fillMaxWidth(),
+                        onClick = { onAction.invoke(ClientProfileAction.NavigateToClientLoanAccounts) },
+                        text = { Text(stringResource(Res.string.client_profile_loan_account)) },
+                    )
+                }
+            },
+        )
     }
 }
 

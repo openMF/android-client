@@ -27,7 +27,8 @@ fun NavGraphBuilder.clientProfileDestination(
     documents: (Int) -> Unit,
     identifiers: (Int) -> Unit,
     navigateToClientDetailsScreen: (Int) -> Unit,
-    viewAssociatedAccounts: (Int) -> Unit,
+    viewAssociatedSavingsAccounts: (Int) -> Unit,
+    viewAssociatedLoanAccounts: (Int) -> Unit,
 ) {
     composable<ClientProfileRoute> {
         ClientProfileScreen(
@@ -36,7 +37,8 @@ fun NavGraphBuilder.clientProfileDestination(
             identifiers = identifiers,
             onNavigateBack = onNavigateBack,
             navigateToClientDetailsScreen = navigateToClientDetailsScreen,
-            viewAssociatedAccounts = viewAssociatedAccounts,
+            viewAssociatedLoanAccounts = viewAssociatedLoanAccounts,
+            viewAssociatedSavingsAccounts = viewAssociatedSavingsAccounts,
         )
     }
 }

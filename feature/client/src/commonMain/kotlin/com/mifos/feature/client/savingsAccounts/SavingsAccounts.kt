@@ -188,7 +188,6 @@ fun SavingsAccountsHeader(
                 text = stringResource(Res.string.client_savings_savings_accounts),
                 style = MifosTypography.titleMedium,
             )
-
             Text(
                 text = totalItem + " " + stringResource(Res.string.client_savings_item),
                 style = MifosTypography.labelMedium,
@@ -197,26 +196,26 @@ fun SavingsAccountsHeader(
 
         Spacer(modifier = Modifier.weight(1f))
 
-        IconButton(
-            onClick = { onAction.invoke(SavingsAccountAction.ToggleSearch) },
-        ) {
-            // add a cross icon when its active, talk with design team
-            Icon(
-                painter = painterResource(Res.drawable.search),
-                contentDescription = null,
-            )
-        }
-
-        DesignToken.padding
-
-        IconButton(
-            onClick = { onAction.invoke(SavingsAccountAction.ToggleFilter) },
-        ) {
-            Icon(
-                painter = painterResource(Res.drawable.filter),
-                contentDescription = null,
-            )
-        }
+//        IconButton(
+//            onClick = { onAction.invoke(SavingsAccountAction.ToggleSearch) },
+//        ) {
+//            // add a cross icon when its active, talk with design team
+//            Icon(
+//                painter = painterResource(Res.drawable.search),
+//                contentDescription = null,
+//            )
+//        }
+//
+//        DesignToken.padding
+//
+//        IconButton(
+//            onClick = { onAction.invoke(SavingsAccountAction.ToggleFilter) },
+//        ) {
+//            Icon(
+//                painter = painterResource(Res.drawable.filter),
+//                contentDescription = null,
+//            )
+//        }
     }
 }
 

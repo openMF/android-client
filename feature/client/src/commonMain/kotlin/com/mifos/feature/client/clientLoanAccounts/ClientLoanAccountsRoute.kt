@@ -12,7 +12,6 @@ package com.mifos.feature.client.clientLoanAccounts
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
-import com.mifos.feature.client.savingsAccounts.SavingsAccountsRoute
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -20,7 +19,7 @@ data class ClientLoanAccountsRoute(
     val clientId: Int = -1,
 )
 
-fun NavGraphBuilder.ClientLoanAccountsDestination(
+fun NavGraphBuilder.clientLoanAccountsDestination(
     navigateBack: () -> Unit,
     navigateToViewAccount: (Int) -> Unit,
 ) {

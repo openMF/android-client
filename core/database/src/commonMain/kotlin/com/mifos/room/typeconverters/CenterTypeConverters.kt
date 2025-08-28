@@ -9,6 +9,9 @@
  */
 package com.mifos.room.typeconverters
 
+import com.mifos.core.model.objects.account.loan.Currency
+import com.mifos.room.entities.accounts.loans.LoanAccountEntity
+import com.mifos.room.entities.accounts.loans.LoanStatusEntity
 import com.mifos.room.entities.accounts.savings.SavingAccountDepositTypeEntity
 import com.mifos.room.entities.group.CenterDateEntity
 import com.mifos.room.entities.group.GroupDateEntity
@@ -47,4 +50,6 @@ class CenterTypeConverters {
     fun toGroupDate(json: String?): GroupDateEntity? {
         return json?.let { Json.decodeFromString(it) }
     }
+
+
 }
