@@ -8,6 +8,8 @@ import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.util.NetworkMonitor
 import com.mifos.core.domain.useCases.GetClientDetailsUseCase
 import com.mifos.core.ui.util.BaseViewModel
+import com.mifos.feature.client.clientGeneral.ClientProfileGeneralEvent.*
+import com.mifos.feature.client.clientProfile.ClientProfileAction
 import com.mifos.room.entities.client.ClientEntity
 import com.mifos.room.entities.zipmodels.ClientAndClientAccounts
 import kotlinx.coroutines.flow.update
@@ -30,10 +32,9 @@ internal class ClientProfileGeneralViewmodel(
     override fun handleAction(action: ClientProfileGeneralAction) {
         when (action) {
             ClientProfileGeneralAction.NavigateBack -> sendEvent(ClientProfileGeneralEvent.NavigateBack)
-            is ClientProfileGeneralAction.OnActionClick ->
-                sendEvent(ClientProfileGeneralEvent.OnActionClick(action.action))
+            is ClientProfileGeneralAction.OnActionClick -> sendEvent(OnActionClick(action.action))
 
-            ClientProfileGeneralAction.OnRetry -> null
+            ClientProfileGeneralAction.OnRetry -> getClientAndObserveNetwork()
         }
     }
 
@@ -52,17 +53,16 @@ internal class ClientProfileGeneralViewmodel(
             println(it)
         }
 
-        val loanCyclesCount = loanAccounts
-            ?.filter { it.status?.active == true }
-            ?.sumOf { it.loanCycle ?: 0 } ?: 0
+        val loanCyclesCount =
+            loanAccounts?.filter { it.status?.active == true }?.sumOf { it.loanCycle ?: 0 } ?: 0
 
         val activeLoanAccounts = loanAccounts?.count { it.status?.active == true } ?: 0
 
         val activeSavingsCount = savingAccounts?.count { it.status?.active == true } ?: 0
 
-        val totalSaving = savingAccounts
-            ?.filter { it.status?.active == true }
-            ?.sumOf { it.accountBalance ?: 0.0 } ?: 0.0
+        val totalSaving =
+            savingAccounts?.filter { it.status?.active == true }?.sumOf { it.accountBalance ?: 0.0 }
+                ?: 0.0
 
         // TODO: No function yet created for calculating this value.
         val lastLoanAmount = 0.0
@@ -72,7 +72,7 @@ internal class ClientProfileGeneralViewmodel(
             activeLoans = activeLoanAccounts,
             lastLoanAmount = lastLoanAmount,
             activeSavingsCount = activeSavingsCount,
-            totalSaving = totalSaving
+            totalSaving = totalSaving,
         )
 
     }
@@ -102,8 +102,7 @@ internal class ClientProfileGeneralViewmodel(
      * @param clientId ID of the client whose details need to be fetched.
      */
     private fun loadClientDetails(clientId: Int) {
-        state.copy(loading = true)
-        // Fetch client details
+
         viewModelScope.launch {
             getClientDetailsUseCase(clientId).collect { result ->
                 when (result) {
@@ -111,11 +110,11 @@ internal class ClientProfileGeneralViewmodel(
                         val performanceHistory = loadPerformanceHistory(result.data)
                         mutableStateFlow.update {
                             it.copy(
-                                currency = result.data.clientAccounts?.savingsAccounts?.firstOrNull()?.currency?.code ?: "$",
+                                currency = result.data.clientAccounts?.savingsAccounts?.firstOrNull()?.currency?.displaySymbol
+                                    ?: "$",
                                 client = result.data.client,
                                 performanceHistory = performanceHistory,
                                 dialogState = null,
-                                loading = false
                             )
                         }
                     }
@@ -124,7 +123,6 @@ internal class ClientProfileGeneralViewmodel(
                         mutableStateFlow.update {
                             it.copy(
                                 dialogState = ClientProfileGeneralState.DialogState.Error(result.message),
-                                loading = false
                             )
                         }
                     }
@@ -133,7 +131,6 @@ internal class ClientProfileGeneralViewmodel(
                         mutableStateFlow.update {
                             it.copy(
                                 dialogState = ClientProfileGeneralState.DialogState.Loading,
-                                loading = false
                             )
                         }
                     }
@@ -149,7 +146,6 @@ data class ClientProfileGeneralState(
     val performanceHistory: PerformanceHistory = PerformanceHistory(),
     val dialogState: DialogState? = null,
     val networkConnection: Boolean = false,
-    val loading: Boolean = false,
 ) {
 
     sealed interface DialogState {

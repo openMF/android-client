@@ -14,10 +14,10 @@ fun NavGraphBuilder.clientProfileGeneralDestination(
     onNavigateBack: () -> Unit = {},
     upcomingCharges: (Int) -> Unit = {},
     loanAccounts: (Int) -> Unit = {},
-    savingAccounts: (Int) -> Unit= {},
-    fixedDepositAccounts: (Int) -> Unit= {},
-    recurringDepositAccounts: (Int) -> Unit= {},
-    sharesAccounts: (Int) -> Unit= {},
+    savingAccounts: (Int) -> Unit = {},
+    fixedDepositAccounts: (Int) -> Unit = {},
+    recurringDepositAccounts: (Int) -> Unit = {},
+    sharesAccounts: (Int) -> Unit = {},
     collateralData: (Int) -> Unit = {},
 ) {
     composable<ClientProfileGeneralRoute> {
@@ -36,8 +36,6 @@ fun NavGraphBuilder.clientProfileGeneralDestination(
 
 fun NavController.navigateToClientProfileGeneralRoute(id: Int){
     this.navigate(
-        ClientProfileGeneralRoute(
-            id = id,
-        )
+        ClientProfileGeneralRoute(id = id,)
     )
 }

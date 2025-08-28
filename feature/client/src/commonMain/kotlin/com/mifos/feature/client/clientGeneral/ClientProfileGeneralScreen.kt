@@ -24,7 +24,6 @@ import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -33,14 +32,14 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.theme.AppColors
 import com.mifos.core.designsystem.theme.DesignToken
-import com.mifos.core.designsystem.theme.MifosTheme
 import com.mifos.core.designsystem.theme.MifosTypography
+import com.mifos.core.ui.components.MifosErrorComponent
+import com.mifos.core.ui.components.MifosProgressIndicator
 import com.mifos.core.ui.components.MifosRowCard
 import com.mifos.core.ui.util.EventsEffect
 import com.mifos.core.ui.util.TextUtil
@@ -110,6 +109,36 @@ internal fun ClientProfileGeneralScreen(
         onAction = remember(viewModel) { { viewModel.trySendAction(it) } },
     )
 
+    ClientProfileGeneralDialogs(
+        state = state,
+        onRetry = remember(viewModel) {
+            {
+                viewModel.trySendAction(ClientProfileGeneralAction.OnRetry)
+            }
+        },
+    )
+}
+
+@Composable
+private fun ClientProfileGeneralDialogs(
+    state: ClientProfileGeneralState,
+    onRetry: () -> Unit,
+) {
+    when (state.dialogState) {
+        is ClientProfileGeneralState.DialogState.Loading -> MifosProgressIndicator()
+
+        is ClientProfileGeneralState.DialogState.Error -> {
+            MifosErrorComponent(
+                isNetworkConnected = state.networkConnection,
+                message = state.dialogState.message,
+                isRetryEnabled = true,
+                onRetry = {
+                    onRetry()
+                },
+            )
+        }
+        null -> Unit
+    }
 }
 
 
@@ -124,21 +153,14 @@ internal fun ClientProfileGeneralScaffold(
         onBackPressed = { onAction(ClientProfileGeneralAction.NavigateBack) },
         modifier = modifier,
     ) { paddingValues ->
-
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(paddingValues)
-                .verticalScroll(rememberScrollState())
-                .padding(
-                    vertical = DesignToken.padding.extraLarge,
-                    horizontal = DesignToken.padding.large,
-                ),
-        ) {
-            if (state.loading) {
-                CircularProgressIndicator()
-            } else {
-
+        if (state.dialogState == null) {
+            Column(
+                modifier = Modifier.fillMaxSize().padding(paddingValues)
+                    .verticalScroll(rememberScrollState()).padding(
+                        vertical = DesignToken.padding.extraLarge,
+                        horizontal = DesignToken.padding.large,
+                    ),
+            ) {
                 Text(
                     stringResource(Res.string.client_profile_general_header_performance_history),
                     style = MaterialTheme.typography.labelLarge,
@@ -177,8 +199,7 @@ internal fun ClientProfileGeneralScaffold(
                                 color = AppColors.customEnable,
                             ),
                         ),
-                        modifier = Modifier
-                            .padding(vertical = DesignToken.padding.medium)
+                        modifier = Modifier.padding(vertical = DesignToken.padding.medium)
                             .clickable {
                                 onAction(
                                     ClientProfileGeneralAction.OnActionClick(it),
@@ -188,24 +209,18 @@ internal fun ClientProfileGeneralScaffold(
                 }
 
             }
-
         }
 
     }
 
-
 }
 
-@Preview()
 @Composable
 fun PerformanceHistoryCard(state: ClientProfileGeneralState) {
     Box(
-        modifier = Modifier.fillMaxWidth()
-            .wrapContentHeight()
-            .clip(
+        modifier = Modifier.fillMaxWidth().wrapContentHeight().clip(
                 RoundedCornerShape(12),
-            )
-            .background(MaterialTheme.colorScheme.primary)
+            ).background(MaterialTheme.colorScheme.primary)
             .padding(DesignToken.padding.largeIncreasedExtra), //24
         contentAlignment = Alignment.Center,
     ) {
@@ -218,32 +233,28 @@ fun PerformanceHistoryCard(state: ClientProfileGeneralState) {
             val performanceHistory = state.performanceHistory
             PerformanceHistoryRows(
                 stringResource(Res.string.client_performance_history_loan_cycle_count_label),
-                if (performanceHistory.loanCyclesCount > 0) "${performanceHistory.loanCyclesCount}"
-                else "N/A",
+                "${performanceHistory.loanCyclesCount}"
+
             )
 
             PerformanceHistoryRows(
                 stringResource(Res.string.client_performance_history_active_loans_count_label),
-                if (performanceHistory.activeLoans > 0) "${performanceHistory.activeLoans}"
-                else "N/A",
+                "${performanceHistory.activeLoans}"
             )
 
             PerformanceHistoryRows(
                 stringResource(Res.string.client_performance_history_last_loan_amount_label),
-                if (performanceHistory.lastLoanAmount > 0.0) "${state.currency} ${performanceHistory.lastLoanAmount}"
-                else "N/A",
+                "${state.currency} ${performanceHistory.lastLoanAmount}"
             )
 
             PerformanceHistoryRows(
                 stringResource(Res.string.client_performance_history_active_savings_label),
-                if (performanceHistory.activeSavingsCount > 0) "${performanceHistory.activeSavingsCount}"
-                else "N/A",
+                "${performanceHistory.activeSavingsCount}"
             )
 
             PerformanceHistoryRows(
                 stringResource(Res.string.client_performance_history_total_savings_label),
-                if (performanceHistory.totalSaving > 0.0) "${state.currency} ${performanceHistory.lastLoanAmount}"
-                else "N/A",
+                "${state.currency} ${performanceHistory.lastLoanAmount}"
             )
         }
     }
