@@ -47,7 +47,7 @@ import com.mifos.feature.loan.navigation.loanNavGraph
 import com.mifos.feature.note.navigation.navigateToNoteScreen
 import com.mifos.feature.note.navigation.noteNavGraph
 import com.mifos.feature.offline.navigation.offlineNavGraph
-import com.mifos.feature.path.tracking.navigation.pathTrackingNavGraph
+import com.mifos.feature.path.tracking.navigation.pathTrackingRoute
 import com.mifos.feature.report.navigation.reportNavGraph
 import com.mifos.feature.savings.navigation.navigateToAddSavingsAccount
 import com.mifos.feature.savings.navigation.navigateToSavingsAccountSummaryScreen
@@ -149,7 +149,7 @@ internal fun FeatureNavHost(
             onBackPressed = appState.navController::popBackStack,
         )
 
-        pathTrackingNavGraph(appState.navController)
+        pathTrackingRoute(appState.navController::popBackStack)
 
         reportNavGraph(navController = appState.navController)
 

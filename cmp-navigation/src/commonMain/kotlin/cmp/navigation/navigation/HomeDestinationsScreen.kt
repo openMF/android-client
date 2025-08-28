@@ -12,7 +12,6 @@ package cmp.navigation.navigation
 import androidx.compose.ui.graphics.vector.ImageVector
 import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.feature.client.navigation.ClientScreens
-import com.mifos.feature.path.tracking.navigation.PathTrackingScreens
 import com.mifos.feature.search.navigation.SearchScreens
 import com.mifos.feature.settings.navigation.SettingsScreens
 
@@ -65,7 +64,7 @@ sealed class HomeDestinationsScreen(
 
     data object PathTrackerScreen : HomeDestinationsScreen(
         title = "Path Tracker",
-        route = PathTrackingScreens.PathTrackingScreen.route,
+        route = "",
         icon = MifosIcons.PersonPinCircle,
     )
 
