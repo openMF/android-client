@@ -26,6 +26,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -56,9 +57,39 @@ internal fun ClientProfileGeneralScreen(
     fixedDepositAccounts: (Int) -> Unit,
     recurringDepositAccounts: (Int) -> Unit,
     sharesAccounts: (Int) -> Unit,
+    modifier: Modifier = Modifier,
+    viewModel: ClientProfileGeneralViewmodel = koinViewModel()
 ){
 
-    ClientProfileGeneralScaffold()
+    val state by viewModel.stateFlow.collectAsStateWithLifecycle()
+
+    EventsEffect(viewModel.eventFlow) { event ->
+        when (event) {
+            ClientProfileGeneralEvent.NavigateBack -> {
+                onNavigateBack.invoke()
+            }
+            is ClientProfileGeneralEvent.OnActionClick -> {
+                when(event.action){
+                    ClientProfileGeneralActionItem.CollateralData -> {}
+                    ClientProfileGeneralActionItem.FixedDepositAccounts -> {}
+                    ClientProfileGeneralActionItem.LoanAccount -> {}
+                    ClientProfileGeneralActionItem.RecurringDepositAccounts -> {}
+                    ClientProfileGeneralActionItem.SavingAccounts -> {
+                        savingAccounts(
+                            state.client?.id ?: -1
+                        )
+                    }
+                    ClientProfileGeneralActionItem.SharesAccounts -> {}
+                    ClientProfileGeneralActionItem.UpcomingCharges -> {}
+                }
+            }
+        }
+    }
+
+    ClientProfileGeneralScaffold(
+        modifier = modifier,
+        onAction = remember(viewModel) { { viewModel.trySendAction(it) } },
+    )
 
 }
 
@@ -125,7 +156,9 @@ fun ClientProfileGeneralScaffold(
                         modifier = Modifier
                             .padding(vertical = DesignToken.padding.medium)
                             .clickable{
-
+                                onAction(
+                                    ClientProfileGeneralAction.OnActionClick(it)
+                                )
                             },
                     )
                 }

@@ -132,7 +132,10 @@ fun NavGraphBuilder.clientNavGraph(
         )
 
         clientProfileGeneralDestination(
-            onNavigateBack = navController::popBackStack
+            onNavigateBack = navController::popBackStack,
+            savingAccounts = { clientId ->
+                navController.navigateToClientSavingsAccountsRoute(clientId)
+            }
         )
 
         clientProfileDetailsDestination(
