@@ -1,13 +1,4 @@
-/*
- * Copyright 2025 Mifos Initiative
- *
- * This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at https://mozilla.org/MPL/2.0/.
- *
- * See https://github.com/openMF/android-client/blob/master/LICENSE.md
- */
-package com.mifos.feature.client.savingsAccounts
+package com.mifos.feature.client.clientLoanAccounts
 
 import androidclient.feature.client.generated.resources.Res
 import androidclient.feature.client.generated.resources.client_savings_item
@@ -26,7 +17,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.AlertDialog
@@ -39,7 +29,6 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -50,46 +39,49 @@ import com.mifos.core.designsystem.theme.AppColors
 import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.designsystem.theme.MifosTypography
 import com.mifos.core.ui.components.Actions
+import com.mifos.core.ui.components.MifosActionsLoanListingComponent
 import com.mifos.core.ui.components.MifosActionsSavingsListingComponent
 import com.mifos.core.ui.components.MifosEmptyCard
 import com.mifos.core.ui.components.MifosSearchBar
 import com.mifos.core.ui.util.EventsEffect
+import com.mifos.feature.client.savingsAccounts.SavingsAccountAction
+import com.mifos.feature.client.savingsAccounts.SavingsAccountState
+import com.mifos.feature.client.savingsAccounts.SavingsAccountsHeader
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
-internal fun SavingsAccountsScreenRoute(
+internal fun ClientLoanAccountsScreenRoute(
     navigateBack: () -> Unit,
-    viewModel: SavingsAccountsViewModel = koinViewModel(),
-    navigateToViewAccount: (Int) -> Unit,
-) {
+    viewModel: ClientLoanAccountsViewModel = koinViewModel(),
+){
     val state by viewModel.stateFlow.collectAsStateWithLifecycle()
 
     EventsEffect(viewModel.eventFlow) { event ->
         when (event) {
-            SavingsAccountEvent.NavigateBack -> navigateBack()
-            is SavingsAccountEvent.ViewAccount -> navigateToViewAccount(2) // todo
-            SavingsAccountEvent.ApproveAccount -> {}
+            is ClientLoanAccountsEvent.MakeRepayment -> TODO()
+            ClientLoanAccountsEvent.NavigateBack -> TODO()
+            is ClientLoanAccountsEvent.ViewAccount -> TODO()
         }
     }
 
-    SavingsAccountsDialog(
+    ClientLoanAccountsDialog(
         state = state,
         onAction = remember(viewModel) { { viewModel.trySendAction(it) } },
     )
 
-    SavingsAccountsScreen(
+    ClientLoanAccountsScreen(
         state = state,
         onAction = remember(viewModel) { { viewModel.trySendAction(it) } },
     )
 }
 
 @Composable
-fun SavingsAccountsScreen(
-    onAction: (SavingsAccountAction) -> Unit,
-    state: SavingsAccountState,
-) {
+private fun ClientLoanAccountsScreen(
+    state: ClientLoanAccountsState,
+    onAction: (ClientLoanAccountsAction) -> Unit
+){
     MifosScaffold(
         title = stringResource(Res.string.update_default_account_title),
         onBackPressed = { onAction(SavingsAccountAction.NavigateBack) },
@@ -101,7 +93,7 @@ fun SavingsAccountsScreen(
                 .padding(start = 16.dp, end = 16.dp, top = 16.dp),
         ) {
             SavingsAccountsHeader(
-                totalItem = state.savingsAccounts.size.toString(),
+                totalItem = state.loanAccounts.size.toString(),
                 onAction = onAction,
             )
 
@@ -117,12 +109,23 @@ fun SavingsAccountsScreen(
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            if (state.savingsAccounts.isEmpty()) {
+            if (state.loanAccounts.isEmpty()) {
                 MifosEmptyCard()
             } else {
                 LazyColumn {
-                    items(state.savingsAccounts) { savings ->
-                        MifosActionsSavingsListingComponent(
+                    items(state.loanAccounts) { loan ->
+
+                       MifosActionsLoanListingComponent(
+                           accountNo = loan.accountNo,
+                           loanProduct = loan.productName,
+                           originalLoan = loan .toString(),
+                           type = loan.loanType.value.toString(),
+
+
+
+                       )
+
+                            MifosActionsSavingsListingComponent(
                             accountNo = savings.accountNo.toString(),
                             savingsProduct = savings.productName.toString(),
                             // todo modify with currency symbol when not getting null from api, currently getting null
@@ -176,7 +179,7 @@ fun SavingsAccountsScreen(
 }
 
 @Composable
-fun SavingsAccountsHeader(
+private fun SavingsAccountsHeader(
     totalItem: String,
     onAction: (SavingsAccountAction) -> Unit,
 ) {
@@ -222,18 +225,18 @@ fun SavingsAccountsHeader(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun SavingsAccountsDialog(
-    state: SavingsAccountState,
-    onAction: (SavingsAccountAction) -> Unit,
+private fun ClientLoanAccountsDialog(
+    state: ClientLoanAccountsState,
+    onAction: (ClientLoanAccountsAction) -> Unit,
 ) {
     when (state.dialogState) {
-        is SavingsAccountState.DialogState.Error -> {
+        is ClientLoanAccountsState.DialogState.Error -> {
             AlertDialog(
                 title = { Text("Error") },
                 text = { Text(text = state.dialogState.message) },
                 confirmButton = {
                     TextButton(
-                        onClick = { onAction.invoke(SavingsAccountAction.CloseDialog) },
+                        onClick = { onAction.invoke(ClientLoanAccountsAction.CloseDialog) },
                     ) {
                         Text(stringResource(Res.string.feature_client_dialog_action_ok))
                     }
@@ -242,7 +245,7 @@ private fun SavingsAccountsDialog(
             )
         }
 
-        SavingsAccountState.DialogState.Loading -> MifosCircularProgress()
+        ClientLoanAccountsState.DialogState.Loading -> MifosCircularProgress()
 
         else -> null
     }

@@ -23,7 +23,7 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
 fun MifosEmptyCard(
-    msg: String,
+    msg: String = "Click Here To View Filled State.",
     modifier: Modifier = Modifier,
 ) {
     MifosListingComponentOutline {
