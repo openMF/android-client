@@ -44,7 +44,6 @@ import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.designsystem.theme.MifosTypography
 import com.mifos.core.ui.components.Actions
 import com.mifos.core.ui.components.MifosActionsLoanListingComponent
-import com.mifos.core.ui.components.MifosActionsSavingsListingComponent
 import com.mifos.core.ui.components.MifosEmptyCard
 import com.mifos.core.ui.components.MifosSearchBar
 import com.mifos.core.ui.util.EventsEffect
@@ -151,7 +150,6 @@ private fun ClientLoanAccountsScreen(
                                     else -> null
                                 }
                             },
-                            isActive =
                         )
 
                         Spacer(modifier = Modifier.height(8.dp))
@@ -184,26 +182,24 @@ private fun ClientsAccountHeader(
 
         Spacer(modifier = Modifier.weight(1f))
 
-//        IconButton(
-//            onClick = { onAction.invoke(ClientLoanAccountsAction.ToggleSearch) },
-//        ) {
-//            // add a cross icon when its active, talk with design team
-//            Icon(
-//                painter = painterResource(Res.drawable.search),
-//                contentDescription = null,
-//            )
-//        }
-//
-//        DesignToken.padding
-//
-//        IconButton(
-//            onClick = { onAction.invoke(ClientLoanAccountsAction.ToggleFilter) },
-//        ) {
-//            Icon(
-//                painter = painterResource(Res.drawable.filter),
-//                contentDescription = null,
-//            )
-//        }
+        IconButton(
+            onClick = { onAction.invoke(ClientLoanAccountsAction.ToggleSearch) },
+        ) {
+            // add a cross icon when its active, talk with design team
+            Icon(
+                painter = painterResource(Res.drawable.search),
+                contentDescription = null,
+            )
+        }
+
+        IconButton(
+            onClick = { onAction.invoke(ClientLoanAccountsAction.ToggleFilter) },
+        ) {
+            Icon(
+                painter = painterResource(Res.drawable.filter),
+                contentDescription = null,
+            )
+        }
     }
 }
 

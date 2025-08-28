@@ -6,7 +6,6 @@ import androidx.navigation.toRoute
 import com.mifos.core.data.repository.ClientDetailsRepository
 import com.mifos.core.data.util.NetworkMonitor
 import com.mifos.core.ui.util.BaseViewModel
-import com.mifos.feature.client.clientLoanAccounts.ClientLoanAccountsEvent.*
 import com.mifos.feature.client.savingsAccounts.SavingsAccountState
 import com.mifos.feature.client.savingsAccounts.SavingsAccountsRoute
 import com.mifos.room.entities.accounts.loans.LoanAccountEntity
@@ -32,7 +31,7 @@ class ClientLoanAccountsViewModel(
             }
 
             is ClientLoanAccountsAction.MakeRepayment -> {
-                sendEvent(MakeRepayment(state.clientId))
+                sendEvent(ClientLoanAccountsEvent.MakeRepayment(state.clientId))
             }
 
             ClientLoanAccountsAction.OnSearchClick -> {
@@ -62,7 +61,7 @@ class ClientLoanAccountsViewModel(
             }
 
             is ClientLoanAccountsAction.ViewAccount -> sendEvent(
-                ViewAccount(
+                ClientLoanAccountsEvent.ViewAccount(
                     state.clientId
                 )
             )

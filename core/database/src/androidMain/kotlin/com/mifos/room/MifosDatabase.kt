@@ -152,7 +152,7 @@ import com.mifos.room.typeconverters.CustomTypeConverters
 )
 @TypeConverters(
     CustomTypeConverters::class,
-    ClientTypeConverters::class
+    ClientTypeConverters::class,
 )
 actual abstract class MifosDatabase : RoomDatabase() {
     actual abstract val centerDao: CenterDao

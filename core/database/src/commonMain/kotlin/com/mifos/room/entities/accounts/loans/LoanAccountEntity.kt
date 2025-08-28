@@ -12,7 +12,6 @@ package com.mifos.room.entities.accounts.loans
 import com.mifos.core.model.objects.account.loan.Currency
 import com.mifos.core.model.utils.Parcelable
 import com.mifos.core.model.utils.Parcelize
-import com.mifos.room.entities.templates.loans.LoanType
 import com.mifos.room.utils.ColumnInfo
 import com.mifos.room.utils.Entity
 import com.mifos.room.utils.ForeignKey
@@ -81,10 +80,9 @@ data class LoanAccountEntity(
 
     val inArrears: Boolean? = null,
 
-    val originalLoan : Double? = null,
+    val originalLoan: Double? = null,
 
-    val loanBalance : Double? = null,
+    val loanBalance: Double? = null,
 
-    val amountPaid : Double? = null,
+    val amountPaid: Double? = null,
 ) : Parcelable
-
