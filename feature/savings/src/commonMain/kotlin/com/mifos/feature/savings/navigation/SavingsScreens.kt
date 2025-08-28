@@ -61,7 +61,4 @@ sealed class SavingsScreens(val route: String) {
             return "savings_account_transaction_screen/$savingsTransactionDataToJson"
         }
     }
-
-    data object SavingsSyncAccountTransaction :
-        SavingsScreens("savings_sync_account_transaction")
 }

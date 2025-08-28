@@ -84,6 +84,7 @@ import com.mifos.feature.groups.navigation.navigateToGroupListScreen
 import com.mifos.feature.individualCollectionSheet.navigation.navigateToIndividualCollectionSheetScreen
 import com.mifos.feature.offline.navigation.navigateToOfflineDashBoardScreen
 import com.mifos.feature.path.tracking.navigation.navigateToPathTrackingScreen
+import com.mifos.feature.report.navigation.navigateToReportScreen
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
@@ -226,6 +227,9 @@ fun App(
                                         HomeDestinationsScreen.PathTrackerScreen -> {
                                             appState.navController.navigateToPathTrackingScreen()
                                         }
+                                        HomeDestinationsScreen.RunReportsScreen -> {
+                                            appState.navController.navigateToReportScreen()
+                                        }
                                         else -> {
                                             appState.navController.navigate(navigationDrawerTabs[index].route) {
                                                 launchSingleTop = true
@@ -262,7 +266,6 @@ fun App(
             Scaffold(
                 snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
                 topBar = {
-                    if (isNavScreen) {
                         TopAppBar(
                             title = {
                                 Text(NavigationConstants.getTitleForRoute(route))
@@ -292,23 +295,21 @@ fun App(
                                 }
                             },
                         )
-                    }
                 },
                 bottomBar = {
-                    if (isNavScreen) {
                         Column {
                             route?.let {
                                 MifosNavigationBar(route = it) { target ->
                                     when (target) {
-                                        HomeDestinationsScreen.CenterListScreen.route -> {
+                                        HomeDestinationsScreen.CenterListScreen -> {
                                             appState.navController.navigateToCenterListScreenRoute()
                                         }
-                                        HomeDestinationsScreen.GroupListScreen.route -> {
+                                        HomeDestinationsScreen.GroupListScreen -> {
                                             appState.navController.navigateToGroupListScreen()
                                         }
                                         else -> {
                                             appState.navController.apply {
-                                                navigate(target) {
+                                                navigate(target.route) {
                                                     restoreState = true
                                                     launchSingleTop = true
                                                     popUpTo(route = graph.findStartDestination().route.toString()) {
@@ -322,7 +323,6 @@ fun App(
                                 }
                             }
                         }
-                    }
                 },
             ) { paddingValues ->
                 FeatureNavHost(
