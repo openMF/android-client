@@ -11,54 +11,39 @@ package com.mifos.feature.note.navigation
 
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
-import androidx.navigation.compose.composable
 import androidx.navigation.navigation
-import com.mifos.feature.note.notes.NoteScreen
+import com.mifos.feature.note.addEditNotes.addEditNoteRoute
+import com.mifos.feature.note.addEditNotes.navigateToAddEditNoteScreen
+import com.mifos.feature.note.notes.NoteRoute
+import com.mifos.feature.note.notes.noteRoute
+import kotlinx.serialization.Serializable
+
+@Serializable
+object NoteNavigationRoute
+
+object Update {
+    const val NOTE_LIST = "update note list"
+}
 
 fun NavGraphBuilder.noteNavGraph(
     navController: NavController,
     onBackPressed: () -> Unit,
 ) {
     navigation<NoteNavigationRoute>(
-        startDestination = NoteScreenRoute::class,
+        startDestination = NoteRoute::class,
     ) {
-        noteScreen(
+        noteRoute(
             onNavigateBack = onBackPressed,
-            onNavigateNext = navController::navigateToAddNoteScreen,
+            onNavigateAddEditNote = navController::navigateToAddEditNoteScreen,
         )
 
-        addNoteRoute(
-            onBackPressed = navController::popBackStack,
+        addEditNoteRoute(
+            onBackPressed = { updateNoteList ->
+                navController.previousBackStackEntry
+                    ?.savedStateHandle
+                    ?.set(Update.NOTE_LIST, updateNoteList)
+                navController.popBackStack()
+            },
         )
     }
-}
-
-fun NavGraphBuilder.noteScreen(
-    onNavigateBack: () -> Unit,
-    onNavigateNext: (Int, String?) -> Unit,
-) {
-    composable<NoteScreenRoute> {
-        NoteScreen(
-            onNavigateBack = onNavigateBack,
-            onNavigateNext = onNavigateNext,
-        )
-    }
-}
-
-fun NavGraphBuilder.addNoteRoute(
-    onBackPressed: () -> Unit,
-) {
-    composable<AddNoteScreenRoute> {
-//        AddNoteScreen(
-//            onBackPressed = onBackPressed,
-//        )
-    }
-}
-
-fun NavController.navigateToNoteScreen(entityId: Int, entityType: String?) {
-    this.navigate(NoteScreenRoute(entityId, entityType))
-}
-
-fun NavController.navigateToAddNoteScreen(entityId: Int, entityType: String?) {
-    this.navigate(AddNoteScreenRoute(entityId, entityType))
 }
