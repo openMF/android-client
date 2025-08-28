@@ -162,7 +162,7 @@ private fun ClientProfileScaffold(
                                 text = stringResource(it.subTitle),
                                 style = MifosTypography.bodySmall,
                                 color = MaterialTheme.colorScheme.secondary,
-                            ),
+                            )
                         ),
                         rightValues = emptyList(),
                         modifier = Modifier
