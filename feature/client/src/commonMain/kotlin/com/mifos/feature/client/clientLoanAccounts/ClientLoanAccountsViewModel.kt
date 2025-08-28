@@ -1,3 +1,12 @@
+/*
+ * Copyright 2025 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ */
 package com.mifos.feature.client.clientLoanAccounts
 
 import androidx.lifecycle.SavedStateHandle
@@ -6,10 +15,7 @@ import androidx.navigation.toRoute
 import com.mifos.core.data.repository.ClientDetailsRepository
 import com.mifos.core.data.util.NetworkMonitor
 import com.mifos.core.ui.util.BaseViewModel
-import com.mifos.feature.client.savingsAccounts.SavingsAccountState
-import com.mifos.feature.client.savingsAccounts.SavingsAccountsRoute
 import com.mifos.room.entities.accounts.loans.LoanAccountEntity
-import com.mifos.room.entities.accounts.savings.SavingsAccountEntity
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
@@ -62,12 +68,12 @@ class ClientLoanAccountsViewModel(
 
             is ClientLoanAccountsAction.ViewAccount -> sendEvent(
                 ClientLoanAccountsEvent.ViewAccount(
-                    state.clientId
-                )
+                    state.clientId,
+                ),
             )
 
             ClientLoanAccountsAction.NavigateBack -> {
-                //implement if needed later, else remove
+                // implement if needed later, else remove
             }
         }
     }
@@ -155,4 +161,3 @@ sealed interface ClientLoanAccountsAction {
     data object OnSearchClick : ClientLoanAccountsAction
     data object CloseDialog : ClientLoanAccountsAction
 }
-

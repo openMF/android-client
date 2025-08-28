@@ -1,16 +1,21 @@
+/*
+ * Copyright 2025 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ */
 package com.mifos.feature.client.clientLoanAccounts
 
 import androidclient.feature.client.generated.resources.Res
 import androidclient.feature.client.generated.resources.client_savings_item
-import androidclient.feature.client.generated.resources.client_savings_not_avilable
-import androidclient.feature.client.generated.resources.client_savings_pending_approval
-import androidclient.feature.client.generated.resources.client_savings_savings_accounts
 import androidclient.feature.client.generated.resources.feature_client_dialog_action_ok
 import androidclient.feature.client.generated.resources.feature_client_loan_account
 import androidclient.feature.client.generated.resources.filter
 import androidclient.feature.client.generated.resources.search
 import androidclient.feature.client.generated.resources.update_default_account_title
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -24,32 +29,23 @@ import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.mifos.core.common.utils.DateHelper
 import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosScaffold
-import com.mifos.core.designsystem.theme.AppColors
-import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.designsystem.theme.MifosTypography
 import com.mifos.core.ui.components.Actions
 import com.mifos.core.ui.components.MifosActionsLoanListingComponent
 import com.mifos.core.ui.components.MifosEmptyCard
 import com.mifos.core.ui.components.MifosSearchBar
 import com.mifos.core.ui.util.EventsEffect
-import com.mifos.feature.client.savingsAccounts.SavingsAccountAction
-import com.mifos.feature.client.savingsAccounts.SavingsAccountState
-import com.mifos.feature.client.savingsAccounts.SavingsAccountsHeader
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
@@ -121,13 +117,21 @@ private fun ClientLoanAccountsScreen(
                         MifosActionsLoanListingComponent(
                             accountNo = (loan.accountNo ?: "Not Available"),
                             loanProduct = loan.productName ?: "Not Available",
-                            originalLoan = symbol + ((loan.originalLoan
-                                ?: "Not Available").toString()),
+                            originalLoan = symbol + (
+                                (
+                                    loan.originalLoan
+                                        ?: "Not Available"
+                                    ).toString()
+                                ),
                             amountPaid = symbol + ((loan.amountPaid ?: "Not Available").toString()),
-                            loanBalance = symbol + ((loan.amountPaid
-                                ?: "Not Available").toString()),
+                            loanBalance = symbol + (
+                                (
+                                    loan.amountPaid
+                                        ?: "Not Available"
+                                    ).toString()
+                                ),
                             type = loan.loanType?.value ?: "Not Available",
-                            //todo check if we need to add other options as well, such as disburse and all
+                            // TODO check if we need to add other options as well, such as disburse and all
                             // currently didn't add it cuz its not in the UI design
                             menuList = when {
                                 loan.status?.active == true -> {

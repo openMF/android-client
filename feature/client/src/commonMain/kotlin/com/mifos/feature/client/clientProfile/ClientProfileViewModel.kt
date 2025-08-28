@@ -18,7 +18,6 @@ import com.mifos.core.data.util.NetworkMonitor
 import com.mifos.core.domain.useCases.GetClientDetailsUseCase
 import com.mifos.core.ui.util.BaseViewModel
 import com.mifos.core.ui.util.imageToByteArray
-import com.mifos.feature.client.clientProfile.ClientProfileEvent.*
 import com.mifos.feature.client.clientProfile.components.ClientProfileActionItem
 import com.mifos.room.entities.client.ClientEntity
 import kotlinx.coroutines.flow.update
@@ -121,21 +120,21 @@ internal class ClientProfileViewModel(
 
     override fun handleAction(action: ClientProfileAction) {
         when (action) {
-            ClientProfileAction.NavigateBack -> sendEvent(NavigateBack)
+            ClientProfileAction.NavigateBack -> sendEvent(ClientProfileEvent.NavigateBack)
 
             is ClientProfileAction.OnActionClick -> {
                 when (action.action) {
                     ClientProfileActionItem.General -> mutableStateFlow.update {
                         it.copy(showAccountChooserDialog = true)
                     }
-                    else -> sendEvent(OnActionClick(action.action))
+                    else -> sendEvent(ClientProfileEvent.OnActionClick(action.action))
                 }
             }
 
             ClientProfileAction.OnRetry -> getClientAndObserveNetwork()
 
             ClientProfileAction.NavigateToClientDetailsScreen -> sendEvent(
-                NavigateToClientDetailsScreen,
+                ClientProfileEvent.NavigateToClientDetailsScreen,
             )
 
             ClientProfileAction.ToggleAccountChooserDialog -> {

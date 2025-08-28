@@ -129,7 +129,7 @@ fun NavGraphBuilder.clientNavGraph(
             identifiers = navController::navigateClientIdentifierScreen,
             navigateToClientDetailsScreen = navController::navigateToClientDetailsProfileRoute,
             viewAssociatedSavingsAccounts = navController::navigateToClientSavingsAccountsRoute,
-            viewAssociatedLoanAccounts = navController::navigateToClientLoanAccountsRoute
+            viewAssociatedLoanAccounts = navController::navigateToClientLoanAccountsRoute,
         )
 
         clientProfileDetailsDestination(
@@ -175,7 +175,7 @@ fun NavGraphBuilder.clientNavGraph(
         )
         clientLoanAccountsDestination(
             navigateBack = navController::popBackStack,
-            navigateToViewAccount = {}
+            navigateToViewAccount = {},
         )
     }
 }

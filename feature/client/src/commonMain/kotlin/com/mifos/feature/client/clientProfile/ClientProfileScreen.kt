@@ -16,9 +16,7 @@ import androidclient.feature.client.generated.resources.client_profile_profile
 import androidclient.feature.client.generated.resources.client_profile_savings_account
 import androidclient.feature.client.generated.resources.client_profile_select_account_type
 import androidclient.feature.client.generated.resources.client_profile_title
-import androidclient.feature.client.generated.resources.client_savings_savings_accounts
 import androidclient.feature.client.generated.resources.dismiss_text
-import androidclient.feature.client.generated.resources.feature_client_loan_account
 import androidclient.feature.client.generated.resources.name_na
 import androidclient.feature.client.generated.resources.office_na
 import androidclient.feature.client.generated.resources.string_not_available
@@ -41,7 +39,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import coil3.util.Logger
 import com.mifos.core.designsystem.component.MifosButton
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.theme.DesignToken
@@ -86,7 +83,6 @@ internal fun ClientProfileScreen(
                     }
 
                     ClientProfileActionItem.FamilyMembers -> {}
-              
 
                     ClientProfileActionItem.Identifiers -> {
                         identifiers(state.client?.id ?: -1)

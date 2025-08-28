@@ -17,6 +17,7 @@ import com.mifos.feature.client.clientDetailsProfile.ClientProfileDetailsViewMod
 import com.mifos.feature.client.clientEditDetails.ClientEditDetailsViewModel
 import com.mifos.feature.client.clientEditProfile.ClientProfileEditViewModel
 import com.mifos.feature.client.clientIdentifiers.ClientIdentifiersViewModel
+import com.mifos.feature.client.clientLoanAccounts.ClientLoanAccountsViewModel
 import com.mifos.feature.client.clientPinpoint.PinPointClientViewModel
 import com.mifos.feature.client.clientProfile.ClientProfileViewModel
 import com.mifos.feature.client.clientSignature.SignatureViewModel
@@ -29,7 +30,6 @@ import com.mifos.feature.client.clientsList.ClientListViewModel
 import com.mifos.feature.client.createNewClient.CreateNewClientViewModel
 import com.mifos.feature.client.savingsAccounts.SavingsAccountsViewModel
 import com.mifos.feature.client.syncClientDialog.SyncClientsDialogViewModel
-import com.mifos.feature.client.clientLoanAccounts.ClientLoanAccountsViewModel
 import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.module
 
