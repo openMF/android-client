@@ -13,7 +13,9 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import com.mifos.room.entities.accounts.loans.LoanWithAssociationsEntity
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class LoanAccountSummaryScreenRoute(
     val loanAccountNumber: Int,
 )

@@ -12,7 +12,9 @@ package com.mifos.feature.loan.loanTransaction
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class LoanTransactionScreenRoute(
     val loanAccountNumber: Int,
 )

@@ -82,6 +82,7 @@ import com.mifos.feature.center.navigation.navigateToCenterListScreenRoute
 import com.mifos.feature.checker.inbox.task.navigation.navigateToCheckerInboxTasksScreenRoute
 import com.mifos.feature.groups.navigation.navigateToGroupListScreen
 import com.mifos.feature.individualCollectionSheet.navigation.navigateToIndividualCollectionSheetScreen
+import com.mifos.feature.offline.navigation.navigateToOfflineDashBoardScreen
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
@@ -217,6 +218,9 @@ fun App(
                                         }
                                         HomeDestinationsScreen.CollectionSheetScreen -> {
                                             appState.navController.navigateToIndividualCollectionSheetScreen()
+                                        }
+                                        HomeDestinationsScreen.OfflineSyncScreen -> {
+                                            appState.navController.navigateToOfflineDashBoardScreen()
                                         }
                                         else -> {
                                             appState.navController.navigate(navigationDrawerTabs[index].route) {
