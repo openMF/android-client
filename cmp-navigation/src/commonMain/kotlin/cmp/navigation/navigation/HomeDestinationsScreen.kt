@@ -12,7 +12,6 @@ package cmp.navigation.navigation
 import androidx.compose.ui.graphics.vector.ImageVector
 import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.feature.client.navigation.ClientScreens
-import com.mifos.feature.groups.navigation.GroupScreen
 import com.mifos.feature.offline.navigation.OfflineScreens
 import com.mifos.feature.path.tracking.navigation.PathTrackingScreens
 import com.mifos.feature.search.navigation.SearchScreens
@@ -37,13 +36,13 @@ sealed class HomeDestinationsScreen(
 
     data object CenterListScreen : HomeDestinationsScreen(
         title = "Centers",
-        route = "center_list_screen",
+        route = "",
         icon = MifosIcons.Business,
     )
 
     data object GroupListScreen : HomeDestinationsScreen(
         title = "Groups",
-        route = GroupScreen.GroupListScreen.route,
+        route = "",
         icon = MifosIcons.Group,
     )
 

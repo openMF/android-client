@@ -22,10 +22,11 @@ import com.mifos.feature.groups.createNewGroup.CreateNewGroupScreen
 import com.mifos.feature.groups.groupDetails.GroupDetailsScreen
 import com.mifos.feature.groups.groupList.GroupsListRoute
 import com.mifos.room.entities.accounts.savings.SavingAccountDepositTypeEntity
+import kotlinx.serialization.Serializable
 
-/**
- * Created by Pronay Sarker on 13/08/2024
- */
+@Serializable
+data object GroupNavGraph
+
 fun NavGraphBuilder.groupNavGraph(
     paddingValues: PaddingValues,
     navController: NavController,
@@ -39,9 +40,8 @@ fun NavGraphBuilder.groupNavGraph(
     loadSavingsAccountSummary: (Int, SavingAccountDepositTypeEntity) -> Unit,
     activateGroup: (Int, String) -> Unit,
 ) {
-    navigation(
-        startDestination = GroupScreen.GroupListScreen.route,
-        route = "groups_screen_graph",
+    navigation<GroupNavGraph>(
+        startDestination = GroupListRoute,
     ) {
         groupListScreenRoute(
             paddingValues = paddingValues,
@@ -74,12 +74,15 @@ fun NavGraphBuilder.groupNavGraph(
     }
 }
 
+@Serializable
+data object GroupListRoute
+
 fun NavGraphBuilder.groupListScreenRoute(
     paddingValues: PaddingValues,
     onAddGroupClick: () -> Unit,
     onGroupClick: (groupId: Int) -> Unit,
 ) {
-    composable(route = GroupScreen.GroupListScreen.route) {
+    composable<GroupListRoute> {
         GroupsListRoute(
             paddingValues = paddingValues,
             onAddGroupClick = onAddGroupClick,
@@ -87,6 +90,15 @@ fun NavGraphBuilder.groupListScreenRoute(
         )
     }
 }
+
+fun NavController.navigateToGroupListScreen() {
+    navigate(GroupListRoute)
+}
+
+@Serializable
+data class GroupDetailsRoute(
+    val groupId: Int
+)
 
 fun NavGraphBuilder.groupDetailsRoute(
     onBackPressed: () -> Unit,
@@ -100,12 +112,7 @@ fun NavGraphBuilder.groupDetailsRoute(
     loadSavingsAccountSummary: (Int, SavingAccountDepositTypeEntity) -> Unit,
     activateGroup: (Int, String) -> Unit,
 ) {
-    composable(
-        route = GroupScreen.GroupDetailsScreen.route,
-        arguments = listOf(
-            navArgument(name = Constants.GROUP_ID, builder = { type = NavType.IntType }),
-        ),
-    ) {
+    composable<GroupDetailsRoute>{
         GroupDetailsScreen(
             onBackPressed = onBackPressed,
             addLoanAccount = addGroupLoanAccount,
@@ -121,11 +128,18 @@ fun NavGraphBuilder.groupDetailsRoute(
     }
 }
 
+fun NavController.navigateToGroupDetailsScreen(groupId: Int) {
+    navigate(GroupDetailsRoute(groupId))
+}
+
+@Serializable
+data object AddNewGroupRoute
+
 fun NavGraphBuilder.addNewGroupRoute(
     onBackPressed: () -> Unit,
     onGroupCreated: (group: SaveResponse?, userStatus: Boolean) -> Unit,
 ) {
-    composable(route = GroupScreen.CreateNewGroupScreen.route) {
+    composable<AddNewGroupRoute> {
         CreateNewGroupScreen(
             onGroupCreated = onGroupCreated,
             onBackPressed = onBackPressed,
@@ -134,9 +148,6 @@ fun NavGraphBuilder.addNewGroupRoute(
 }
 
 fun NavController.navigateToCreateNewGroupScreen() {
-    navigate(GroupScreen.CreateNewGroupScreen.route)
+    navigate(AddNewGroupRoute)
 }
 
-fun NavController.navigateToGroupDetailsScreen(groupId: Int) {
-    navigate(GroupScreen.GroupDetailsScreen.argument(groupId))
-}
