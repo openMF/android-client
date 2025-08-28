@@ -17,7 +17,6 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
-import com.mifos.core.common.utils.Constants
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.domain.useCases.DownloadDocumentUseCase
 import com.mifos.core.domain.useCases.GetDocumentsListUseCase
@@ -34,7 +33,7 @@ class DocumentListViewModel(
     savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
 
-    val entityId=savedStateHandle.toRoute<DocumentListRoute>().entityId
+    val entityId = savedStateHandle.toRoute<DocumentListRoute>().entityId
     val entityType = savedStateHandle.toRoute<DocumentListRoute>().entityType
 
     private val _documentListUiState = MutableStateFlow<DocumentListUiState>(DocumentListUiState.Loading)

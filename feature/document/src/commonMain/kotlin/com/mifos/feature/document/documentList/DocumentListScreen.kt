@@ -53,7 +53,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import co.touchlab.kermit.Logger
 import com.mifos.core.designsystem.component.MifosButton
 import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosScaffold
@@ -131,7 +130,7 @@ internal fun DocumentListScreen(
             isDialogBoxActive = true
         },
         onDownloadDocument = { documentId ->
-            viewModel.downloadDocument( documentId)
+            viewModel.downloadDocument(documentId)
         },
         onUpdateDocument = { document ->
             dialogDocument = document
@@ -139,7 +138,7 @@ internal fun DocumentListScreen(
             isDialogBoxActive = true
         },
         onRemovedDocument = { documentId ->
-            viewModel.removeDocument( documentId)
+            viewModel.removeDocument(documentId)
         },
     )
 }

@@ -12,9 +12,7 @@ package com.mifos.feature.groups.navigation
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
-import androidx.navigation.NavType
 import androidx.navigation.compose.composable
-import androidx.navigation.navArgument
 import androidx.navigation.navigation
 import com.mifos.core.common.utils.Constants
 import com.mifos.core.model.objects.responses.SaveResponse
@@ -97,7 +95,7 @@ fun NavController.navigateToGroupListScreen() {
 
 @Serializable
 data class GroupDetailsRoute(
-    val groupId: Int
+    val groupId: Int,
 )
 
 fun NavGraphBuilder.groupDetailsRoute(
@@ -112,7 +110,7 @@ fun NavGraphBuilder.groupDetailsRoute(
     loadSavingsAccountSummary: (Int, SavingAccountDepositTypeEntity) -> Unit,
     activateGroup: (Int, String) -> Unit,
 ) {
-    composable<GroupDetailsRoute>{
+    composable<GroupDetailsRoute> {
         GroupDetailsScreen(
             onBackPressed = onBackPressed,
             addLoanAccount = addGroupLoanAccount,
@@ -150,4 +148,3 @@ fun NavGraphBuilder.addNewGroupRoute(
 fun NavController.navigateToCreateNewGroupScreen() {
     navigate(AddNewGroupRoute)
 }
-

@@ -208,7 +208,7 @@ fun App(
                                 selected = index == selectedItemIndex,
                                 onClick = {
                                     selectedItemIndex = index
-                                    when(navigationDrawerTabs[index]){
+                                    when (navigationDrawerTabs[index]) {
                                         HomeDestinationsScreen.AboutScreen -> {
                                             appState.navController.navigateToAboutScreen()
                                         }
@@ -218,7 +218,7 @@ fun App(
                                         HomeDestinationsScreen.CollectionSheetScreen -> {
                                             appState.navController.navigateToIndividualCollectionSheetScreen()
                                         }
-                                        else ->{
+                                        else -> {
                                             appState.navController.navigate(navigationDrawerTabs[index].route) {
                                                 launchSingleTop = true
                                             }
@@ -291,14 +291,14 @@ fun App(
                         Column {
                             route?.let {
                                 MifosNavigationBar(route = it) { target ->
-                                    when(target){
+                                    when (target) {
                                         HomeDestinationsScreen.CenterListScreen.route -> {
                                             appState.navController.navigateToCenterListScreenRoute()
                                         }
                                         HomeDestinationsScreen.GroupListScreen.route -> {
                                             appState.navController.navigateToGroupListScreen()
                                         }
-                                        else->{
+                                        else -> {
                                             appState.navController.apply {
                                                 navigate(target) {
                                                     restoreState = true

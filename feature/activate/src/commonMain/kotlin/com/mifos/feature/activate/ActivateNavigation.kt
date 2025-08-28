@@ -17,7 +17,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class ActivateRoute(
     val id: Int = -1,
-    val type: String = ""
+    val type: String = "",
 )
 
 fun NavGraphBuilder.activateDestination(
@@ -25,19 +25,19 @@ fun NavGraphBuilder.activateDestination(
 ) {
     composable<ActivateRoute> {
         ActivateScreen(
-            onBackPressed = onBackPressed
+            onBackPressed = onBackPressed,
         )
     }
 }
 
 fun NavController.navigateToActivateRoute(
     id: Int,
-    type: String
+    type: String,
 ) {
     this.navigate(
         ActivateRoute(
             id = id,
-            type = type
-        )
+            type = type,
+        ),
     )
 }

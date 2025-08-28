@@ -7,28 +7,26 @@
  *
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
-package com.mifos.feature.about
+package com.mifos.feature.loan.loanTransaction
 
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
-import kotlinx.serialization.Serializable
 
-@Serializable
-data object AboutNavRoute
+data class LoanTransactionScreenRoute(
+    val loanAccountNumber: Int,
+)
 
-fun NavGraphBuilder.aboutDestination(
-    onBackPressed: () -> Unit,
-) {
-    composable<AboutNavRoute> {
-        AboutScreen(
-            onBackPressed = onBackPressed,
-        )
-    }
+fun NavController.navigateToLoanTransactionScreen(loanAccountNumber: Int) {
+    navigate(LoanTransactionScreenRoute(loanAccountNumber))
 }
 
-fun NavController.navigateToAboutScreen() {
-    this.navigate(
-        AboutNavRoute,
-    )
+fun NavGraphBuilder.loanTransactionScreen(
+    onBackPressed: () -> Unit,
+) {
+    composable<LoanTransactionScreenRoute> {
+        LoanTransactionsScreen(
+            navigateBack = onBackPressed,
+        )
+    }
 }

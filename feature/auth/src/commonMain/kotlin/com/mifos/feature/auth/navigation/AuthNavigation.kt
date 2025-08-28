@@ -22,15 +22,15 @@ object LoginRoute
 fun NavGraphBuilder.authNavGraph(
     navigateHome: () -> Unit,
     navigatePasscode: () -> Unit,
-    updateServerConfig: () -> Unit
+    updateServerConfig: () -> Unit,
 ) {
-        composable<LoginRoute> {
-            LoginScreen(
-                homeIntent = navigateHome,
-                passcodeIntent = navigatePasscode,
-                onClickToUpdateServerConfig = updateServerConfig
-            )
-        }
+    composable<LoginRoute> {
+        LoginScreen(
+            homeIntent = navigateHome,
+            passcodeIntent = navigatePasscode,
+            onClickToUpdateServerConfig = updateServerConfig,
+        )
+    }
 }
 
 fun NavController.navigateToLogin() {

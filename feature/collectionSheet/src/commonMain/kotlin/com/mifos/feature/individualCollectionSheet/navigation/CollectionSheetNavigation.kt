@@ -62,7 +62,7 @@ private fun NavGraphBuilder.individualCollectionSheetScreen(
     onBackPressed: () -> Unit,
     onDetail: (String, IndividualCollectionSheet) -> Unit,
 ) {
-    composable<IndividualCollectionSheetScreenRoute>{
+    composable<IndividualCollectionSheetScreenRoute> {
         IndividualCollectionSheetScreen(
             onBackPressed = onBackPressed,
             onDetail = onDetail,
@@ -70,7 +70,7 @@ private fun NavGraphBuilder.individualCollectionSheetScreen(
     }
 }
 
-//TODO : change while implementing screens because this is not primitive
+// TODO : change while implementing screens because this is not primitive
 private fun NavGraphBuilder.individualCollectionSheetDetailScreen(
     onBackPressed: () -> Unit,
     submit: (Int, IndividualCollectionSheetPayload, List<String>, LoanAndClientName, List<PaymentTypeOptions>, Int) -> Unit,
@@ -94,14 +94,14 @@ data object GenerateCollectionSheetScreenRoute
 fun NavGraphBuilder.generateCollectionSheetScreen(
     onBackPressed: () -> Unit,
 ) {
-    composable<GenerateCollectionSheetScreenRoute>{
+    composable<GenerateCollectionSheetScreenRoute> {
         GenerateCollectionSheetScreen(
             onBackPressed = onBackPressed,
         )
     }
 }
 
-//TODO:change while implementing screens because this is not primitive
+// TODO:change while implementing screens because this is not primitive
 fun NavGraphBuilder.paymentDetailsScreen() {
     composable(
         route = CollectionSheetScreens.PaymentDetailsScreen.route,

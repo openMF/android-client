@@ -15,7 +15,6 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
-import com.mifos.core.common.utils.Constants
 import com.mifos.core.data.repository.GroupListRepository
 import com.mifos.feature.center.navigation.CenterGroupListRoute
 import com.mifos.room.entities.group.CenterWithAssociations
@@ -31,7 +30,7 @@ class GroupListViewModel(
     savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
 
-    val centerId=savedStateHandle.toRoute<CenterGroupListRoute>().centerId
+    val centerId = savedStateHandle.toRoute<CenterGroupListRoute>().centerId
 
     private val _groupListUiState = MutableStateFlow<GroupListUiState>(GroupListUiState.Loading)
     val groupListUiState = _groupListUiState.asStateFlow()

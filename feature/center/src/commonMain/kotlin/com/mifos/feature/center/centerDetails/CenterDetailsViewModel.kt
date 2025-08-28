@@ -15,7 +15,6 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
-import com.mifos.core.common.utils.Constants
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.domain.useCases.GetCenterDetailsUseCase
 import com.mifos.core.model.objects.groups.CenterInfo
@@ -29,7 +28,7 @@ class CenterDetailsViewModel(
     savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
 
-    val centerId=savedStateHandle.toRoute<CenterDetailRoute>().centerId
+    val centerId = savedStateHandle.toRoute<CenterDetailRoute>().centerId
 
     private val _centerDetailsUiState =
         MutableStateFlow<CenterDetailsUiState>(CenterDetailsUiState.Loading)

@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Mifos Initiative
+ * Copyright 2025 Mifos Initiative
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -7,30 +7,28 @@
  *
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
-package com.mifos.feature.document.navigation
+package com.mifos.feature.loan.loanRepaymentSchedule
 
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
-import com.mifos.feature.document.documentList.DocumentListScreen
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class DocumentListRoute(
-    val entityId: Int,
-    val entityType: String,
+data class LoanRepaymentScheduleScreenRoute(
+    val loanAccountNumber: Int,
 )
 
-fun NavGraphBuilder.documentListScreen(
-    onBackPressed: () -> Unit,
-) {
-    composable<DocumentListRoute> {
-        DocumentListScreen(
-            onBackPressed = onBackPressed,
-        )
-    }
+fun NavController.navigateToLoanRepaymentScheduleScreen(loanAccountNumber: Int) {
+    navigate(LoanRepaymentScheduleScreenRoute(loanAccountNumber))
 }
 
-fun NavController.navigateToDocumentListScreen(entityId: Int, entityType: String) {
-    navigate(DocumentListRoute(entityId, entityType))
+fun NavGraphBuilder.loanRepaymentSchedule(
+    onBackPressed: () -> Unit,
+) {
+    composable<LoanRepaymentScheduleScreenRoute> {
+        LoanRepaymentScheduleScreen(
+            navigateBack = onBackPressed,
+        )
+    }
 }

@@ -10,12 +10,9 @@
 package com.mifos.feature.center.navigation
 
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.material3.Text
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
-import androidx.navigation.NavType
 import androidx.navigation.compose.composable
-import androidx.navigation.navArgument
 import androidx.navigation.navigation
 import com.mifos.core.common.utils.Constants
 import com.mifos.feature.center.centerDetails.CenterDetailsScreen
@@ -78,7 +75,7 @@ fun NavGraphBuilder.centerListScreenRoute(
 
 @Serializable
 data class CenterDetailRoute(
-    val centerId:Int =0
+    val centerId: Int = 0,
 )
 
 fun NavGraphBuilder.centerDetailScreenRoute(
@@ -87,7 +84,7 @@ fun NavGraphBuilder.centerDetailScreenRoute(
     addSavingsAccount: (Int) -> Unit,
     groupList: (Int) -> Unit,
 ) {
-    composable<CenterDetailRoute>{
+    composable<CenterDetailRoute> {
         CenterDetailsScreen(
             onBackPressed = onBackPressed,
             onActivateCenter = { onActivateCenter(it, Constants.ACTIVATE_CENTER) },
@@ -99,14 +96,14 @@ fun NavGraphBuilder.centerDetailScreenRoute(
 
 @Serializable
 data class CenterGroupListRoute(
-    val centerId:Int=0
+    val centerId: Int = 0,
 )
 
 fun NavGraphBuilder.centerGroupListScreenRoute(
     onBackPressed: () -> Unit,
     loadClientsOfGroup: (List<ClientEntity>) -> Unit,
 ) {
-    composable<CenterGroupListRoute>{
+    composable<CenterGroupListRoute> {
         GroupListScreen(
             onBackPressed = onBackPressed,
             loadClientsOfGroup = loadClientsOfGroup,
@@ -121,7 +118,7 @@ fun NavGraphBuilder.createCenterScreenRoute(
     onBackPressed: () -> Unit,
     onCreateSuccess: () -> Unit,
 ) {
-    composable<CreateCenterRoute>{
+    composable<CreateCenterRoute> {
         CreateNewCenterScreen(
             onCreateSuccess = onCreateSuccess,
             onBackPressed = onBackPressed,

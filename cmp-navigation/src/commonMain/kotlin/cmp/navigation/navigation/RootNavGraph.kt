@@ -15,7 +15,6 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import cmp.navigation.App
-import cmp.navigation.navigation.NavGraphRoute.AUTH_GRAPH
 import cmp.navigation.navigation.NavGraphRoute.MAIN_GRAPH
 import com.mifos.core.data.util.NetworkMonitor
 import com.mifos.feature.auth.navigation.authNavGraph

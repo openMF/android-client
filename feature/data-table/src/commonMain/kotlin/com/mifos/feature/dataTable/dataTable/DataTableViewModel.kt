@@ -15,16 +15,13 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
-import com.mifos.core.common.utils.Constants
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.repository.DataTableRepository
-import com.mifos.core.model.objects.nav.DataTableNavigationArg
 import com.mifos.feature.dataTable.navigation.DataTableRoute
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import kotlinx.serialization.json.Json
 
 /**
  * Created by Aditya Gupta on 08/08/23.
@@ -34,7 +31,7 @@ class DataTableViewModel(
     private val savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
 
-    val route=savedStateHandle.toRoute<DataTableRoute>()
+    val route = savedStateHandle.toRoute<DataTableRoute>()
 
     private val _dataTableUiState =
         MutableStateFlow<DataTableUiState>(DataTableUiState.ShowProgressbar)

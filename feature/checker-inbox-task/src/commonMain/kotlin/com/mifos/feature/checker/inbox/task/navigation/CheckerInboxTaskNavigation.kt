@@ -43,7 +43,7 @@ fun NavGraphBuilder.checkerInboxTaskRoute(
     onBackPressed: () -> Unit,
     checkerInbox: () -> Unit,
 ) {
-    composable<CheckerInboxTaskScreenRoute>{
+    composable<CheckerInboxTaskScreenRoute> {
         CheckerInboxTasksScreen(
             onBackPressed = onBackPressed,
             checkerInbox = checkerInbox,
@@ -58,13 +58,12 @@ data object CheckerInboxScreenRoute
 fun NavGraphBuilder.checkerInboxRoute(
     onBackPressed: () -> Unit,
 ) {
-    composable<CheckerInboxScreenRoute>{
+    composable<CheckerInboxScreenRoute> {
         CheckerInboxScreen(
             onBackPressed = onBackPressed,
         )
     }
 }
-
 
 fun NavController.navigateCheckerInbox() {
     navigate(CheckerInboxScreenRoute)
