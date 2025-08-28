@@ -204,7 +204,7 @@ internal class ClientProfileDetailsViewModel(
                 }
             }
             ClientProfileDetailsAction.OnRetry -> getClientAndObserveNetwork()
-            ClientProfileDetailsAction.OnUpdateDetailsClick -> {}
+            ClientProfileDetailsAction.OnUpdateDetailsClick -> sendEvent(ClientProfileDetailsEvent.NavigateToUpdateDetails)
             ClientProfileDetailsAction.OnUpdatePhotoClick -> sendEvent(ClientProfileDetailsEvent.NavigateToUpdatePhoto)
             ClientProfileDetailsAction.OnUpdateSignatureClick -> {}
             ClientProfileDetailsAction.ConfirmUnAssignStaff -> {
@@ -293,6 +293,8 @@ sealed interface ClientProfileDetailsEvent {
     data class OnActionClick(val action: ClientProfileDetailsActionItem) : ClientProfileDetailsEvent
 
     data object NavigateToUpdatePhoto : ClientProfileDetailsEvent
+
+    data object NavigateToUpdateDetails : ClientProfileDetailsEvent
 }
 
 /**

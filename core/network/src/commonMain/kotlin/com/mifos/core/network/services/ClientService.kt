@@ -89,6 +89,12 @@ interface ClientService {
     @POST(APIEndPoint.CLIENTS)
     suspend fun createClient(@Body clientPayload: ClientPayloadEntity?): ClientEntity?
 
+    @PUT(APIEndPoint.CLIENTS + "/{clientId}")
+    suspend fun updateClient(
+        @Path("clientId") clientId: Int,
+        @Body clientPayload: ClientPayloadEntity?,
+    ): ClientEntity?
+
     @GET(APIEndPoint.CLIENTS + "/template")
     suspend fun getClientTemplate(): ClientsTemplateEntity
 

@@ -41,6 +41,8 @@ data class ClientPayloadEntity(
 
     val middlename: String? = null,
 
+    val emailAddress: String? = null,
+
     val officeId: Int? = null,
 
     val staffId: Int? = null,

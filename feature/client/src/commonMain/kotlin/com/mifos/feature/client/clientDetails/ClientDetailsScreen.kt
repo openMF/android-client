@@ -29,10 +29,10 @@ import androidclient.feature.client.generated.resources.feature_client_external_
 import androidclient.feature.client.generated.resources.feature_client_group
 import androidclient.feature.client.generated.resources.feature_client_identifiers
 import androidclient.feature.client.generated.resources.feature_client_loan_account
-import androidclient.feature.client.generated.resources.feature_client_mobile_no
 import androidclient.feature.client.generated.resources.feature_client_more_client_info
 import androidclient.feature.client.generated.resources.feature_client_notes
 import androidclient.feature.client.generated.resources.feature_client_office
+import androidclient.feature.client.generated.resources.feature_client_phone_no
 import androidclient.feature.client.generated.resources.feature_client_pinpoint_location
 import androidclient.feature.client.generated.resources.feature_client_please_select
 import androidclient.feature.client.generated.resources.feature_client_savings_account
@@ -409,7 +409,7 @@ private fun MifosClientDetailsScreen(
         client?.mobileNo?.let {
             MifosClientDetailsText(
                 icon = MifosIcons.MobileFriendly,
-                field = stringResource(Res.string.feature_client_mobile_no),
+                field = stringResource(Res.string.feature_client_phone_no),
                 value = it,
             )
         }

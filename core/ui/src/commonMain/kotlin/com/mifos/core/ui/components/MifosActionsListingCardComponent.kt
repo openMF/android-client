@@ -339,6 +339,21 @@ fun MifosActionsLoanListingComponent(
                                     imageVector = menuItem.icon,
                                     contentDescription = "",
                                 )
+                    menuList.map { menuItem ->
+                        Row(
+                            modifier = Modifier.fillMaxWidth()
+                                .height(DesignToken.sizes.avatarMedium)
+                                .clickable {
+                                    onActionClicked(menuItem)
+                                },
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.Start,
+                        ) {
+                            Icon(
+                                modifier = Modifier.padding(horizontal = DesignToken.padding.large),
+                                imageVector = menuItem.icon,
+                                contentDescription = "",
+                            )
 
                                 Text(
                                     modifier = Modifier.fillMaxWidth(),

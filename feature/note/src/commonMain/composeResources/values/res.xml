@@ -9,9 +9,18 @@
     See https://github.com/openMF/android-client/blob/master/LICENSE.md
 -->
 <resources>
-    <string name="feature_note_Note">Notes</string>
-    <string name="feature_note_no_notes_found">No notes found</string>
+    <string name="feature_note_notes">Notes</string>
+    <string name="feature_note_no_item_found">No Item Found</string>
+    <string name="feature_note_add_item">Click on "+" Button to add an Item</string>
     <string name="feature_note_failed_to_fetch_notes">Failed to fetch notes</string>
     <string name="feature_note_internet_not_connected">No Internet</string>
-
+    <string name="feature_note_createdBy">Created By:</string>
+    <string name="feature_note_date">Date</string>
+    <string name="feature_note_note">Note</string>
+    <string name="feature_note_edit_note">Edit Note</string>
+    <string name="feature_note_delete_note">Delete Note</string>
+    <string name="feature_note_delete">Delete</string>
+    <string name="feature_note_item">Item</string>
+    <string name="feature_note_Unexpected_error">"Unexpected error"</string>
+    <string name="feature_note_delete_note_confirmation">Once deleted, this note cannot be recovered. Do you want to continue?</string>
 </resources>

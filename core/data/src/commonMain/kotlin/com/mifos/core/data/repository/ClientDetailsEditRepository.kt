@@ -7,12 +7,10 @@
  *
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
-package com.mifos.feature.note.di
+package com.mifos.core.data.repository
 
-import com.mifos.feature.note.notes.NoteViewModel
-import org.koin.core.module.dsl.viewModelOf
-import org.koin.dsl.module
+import com.mifos.room.entities.client.ClientPayloadEntity
 
-val NoteModule = module {
-    viewModelOf(::NoteViewModel)
+interface ClientDetailsEditRepository {
+    suspend fun updateClient(clientId: Int, clientPayload: ClientPayloadEntity): Int?
 }

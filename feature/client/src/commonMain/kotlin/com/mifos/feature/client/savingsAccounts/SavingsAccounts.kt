@@ -188,6 +188,7 @@ fun SavingsAccountsHeader(
                 text = stringResource(Res.string.client_savings_savings_accounts),
                 style = MifosTypography.titleMedium,
             )
+
             Text(
                 text = totalItem + " " + stringResource(Res.string.client_savings_item),
                 style = MifosTypography.labelMedium,
@@ -216,6 +217,34 @@ fun SavingsAccountsHeader(
 //                contentDescription = null,
 //            )
 //        }
+     
+    }
+}
+
+@Composable
+private fun EmptySavingsCard() {
+    OutlinedCard(
+        modifier = Modifier.fillMaxWidth(),
+        border = BorderStroke(
+            width = 1.dp,
+            color = AppColors.cardBorders,
+        ),
+    ) {
+        Column(
+            modifier = Modifier.padding(16.dp),
+        ) {
+            Text(
+                text = "No Item Found",
+                style = MifosTypography.titleSmallEmphasized,
+            )
+
+            Spacer(modifier = Modifier.height(12.dp))
+
+            Text(
+                text = "Click Here To View Filled State. ",
+                style = MifosTypography.bodySmall,
+            )
+        }
     }
 }
 

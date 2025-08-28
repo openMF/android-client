@@ -86,6 +86,7 @@ internal fun ClientProfileScreen(
                     }
 
                     ClientProfileActionItem.FamilyMembers -> {}
+              
 
                     ClientProfileActionItem.Identifiers -> {
                         identifiers(state.client?.id ?: -1)

@@ -24,6 +24,20 @@ plugins {
     alias(libs.plugins.ktorfit) apply false
 }
 
+
+object DynamicVersion {
+    fun setDynamicVersion(file: File, version: String) {
+        val cleanedVersion = version.split('+')[0]
+        file.writeText(cleanedVersion)
+    }
+}
+
+tasks.register("versionFile") {
+    val file = File(projectDir, "version.txt")
+
+    DynamicVersion.setDynamicVersion(file, project.version.toString())
+}
+
 // Task to print all the module paths in the project e.g. :core:data
 // Used by module graph generator script
 tasks.register("printModulePaths") {
