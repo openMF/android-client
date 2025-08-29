@@ -22,11 +22,13 @@ data class AddEditNoteRoute(
 )
 
 fun NavGraphBuilder.addEditNoteRoute(
-    onBackPressed: (Boolean?) -> Unit,
+    onBackPressed: () -> Unit,
+    onNavigateWithUpdatedList: (Int, String?) -> Unit,
 ) {
     composable<AddEditNoteRoute> {
         AddEditNoteScreen(
             onBackPressed = onBackPressed,
+            onNavigateWithUpdatedList = onNavigateWithUpdatedList,
         )
     }
 }

@@ -15,15 +15,12 @@ import androidx.navigation.navigation
 import com.mifos.feature.note.addEditNotes.addEditNoteRoute
 import com.mifos.feature.note.addEditNotes.navigateToAddEditNoteScreen
 import com.mifos.feature.note.notes.NoteRoute
+import com.mifos.feature.note.notes.navigateToNoteScreenWithUpdatedList
 import com.mifos.feature.note.notes.noteRoute
 import kotlinx.serialization.Serializable
 
 @Serializable
 object NoteNavigationRoute
-
-object Update {
-    const val NOTE_LIST = "update note list"
-}
 
 fun NavGraphBuilder.noteNavGraph(
     navController: NavController,
@@ -38,12 +35,10 @@ fun NavGraphBuilder.noteNavGraph(
         )
 
         addEditNoteRoute(
-            onBackPressed = { updateNoteList ->
-                navController.previousBackStackEntry
-                    ?.savedStateHandle
-                    ?.set(Update.NOTE_LIST, updateNoteList)
+            onBackPressed = {
                 navController.popBackStack()
             },
+            onNavigateWithUpdatedList = navController::navigateToNoteScreenWithUpdatedList,
         )
     }
 }

@@ -47,7 +47,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -78,16 +77,9 @@ import org.koin.compose.viewmodel.koinViewModel
 internal fun NoteScreenScaffold(
     onNavigateBack: () -> Unit,
     onNavigateAddEditNote: (Int, String?, Long?) -> Unit,
-    updateNoteList: Boolean? = null,
     viewModel: NoteViewModel = koinViewModel(),
 ) {
     val state by viewModel.stateFlow.collectAsStateWithLifecycle()
-
-    LaunchedEffect(updateNoteList) {
-        if (updateNoteList == true) {
-            viewModel.trySendAction(NoteAction.OnRetry)
-        }
-    }
 
     EventsEffect(viewModel.eventFlow) { event ->
         when (event) {

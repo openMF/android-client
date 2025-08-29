@@ -15,6 +15,7 @@ import androidx.navigation.toRoute
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.repositoryImp.NoteRepositoryImp
 import com.mifos.core.data.util.NetworkMonitor
+import com.mifos.core.domain.useCases.DeleteNoteUseCase
 import com.mifos.core.model.objects.notes.Note
 import com.mifos.core.ui.util.BaseViewModel
 import kotlinx.coroutines.flow.update
@@ -22,6 +23,7 @@ import kotlinx.coroutines.launch
 
 class NoteViewModel(
     private val repository: NoteRepositoryImp,
+    private val deleteNoteUseCase: DeleteNoteUseCase,
     savedStateHandle: SavedStateHandle,
     private val networkMonitor: NetworkMonitor,
 ) : BaseViewModel<NoteState, NoteEvent, NoteAction>(
@@ -30,6 +32,7 @@ class NoteViewModel(
     private val route = savedStateHandle.toRoute<NoteRoute>()
 
     init {
+
         getNoteOptionsAndObserveNetwork()
         mutableStateFlow.update {
             it.copy(
@@ -95,30 +98,37 @@ class NoteViewModel(
     }
 
     private suspend fun deleteNote(id: Long?) {
-        mutableStateFlow.update {
-            it.copy(
-                dialogState = NoteState.DialogState.Loading,
-            )
-        }
+        route.resourceType?.let { type ->
+            id?.let { id ->
+                deleteNoteUseCase(type, route.resourceId.toLong(), id).collect { dataState ->
+                    when (dataState) {
+                        is DataState.Error -> {
+                            mutableStateFlow.update {
+                                it.copy(
+                                    dialogState = NoteState.DialogState.Error(dataState.message),
+                                    isError = true,
+                                )
+                            }
+                        }
 
-        try {
-            route.resourceType?.let { type ->
-                id?.let { id ->
-                    repository.deleteNote(type, route.resourceId.toLong(), id)
+                        is DataState.Loading -> {
+                            mutableStateFlow.update {
+                                it.copy(
+                                    dialogState = NoteState.DialogState.Loading,
+                                )
+                            }
+                        }
+
+                        is DataState.Success -> {
+                            mutableStateFlow.update {
+                                it.copy(
+                                    dialogState = null,
+                                )
+                            }
+                            getNoteOptionsAndObserveNetwork()
+                        }
+                    }
                 }
-            }
-            mutableStateFlow.update {
-                it.copy(
-                    dialogState = null,
-                )
-            }
-            getNoteOptionsAndObserveNetwork()
-        } catch (e: Exception) {
-            mutableStateFlow.update {
-                it.copy(
-                    dialogState = NoteState.DialogState.Error(e.message.toString()),
-                    isError = true,
-                )
             }
         }
     }

@@ -26,7 +26,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -38,6 +37,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosOutlinedButton
+import com.mifos.core.designsystem.component.MifosOutlinedTextField
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.designsystem.theme.MifosTypography
@@ -49,14 +49,19 @@ import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 internal fun AddEditNoteScreen(
-    onBackPressed: (Boolean?) -> Unit,
+    onBackPressed: () -> Unit,
+    onNavigateWithUpdatedList: (Int, String?) -> Unit,
     viewModel: AddEditNoteViewModel = koinViewModel(),
 ) {
     val state by viewModel.stateFlow.collectAsStateWithLifecycle()
 
     EventsEffect(viewModel.eventFlow) { event ->
         when (event) {
-            AddEditNoteEvent.NavigateBack -> onBackPressed(state.isRequiredUpdateListNote)
+            AddEditNoteEvent.NavigateBack -> onBackPressed()
+            AddEditNoteEvent.NavigateBackWithUpdateList -> onNavigateWithUpdatedList(
+                state.resourceId,
+                state.resourceType,
+            )
         }
     }
 
@@ -87,9 +92,11 @@ fun AddEditNoteScreenDialog(
                 },
             )
         }
+
         AddEditNoteState.DialogState.Loading -> {
             MifosCircularProgress()
         }
+
         AddEditNoteState.DialogState.MisTouchBack -> {
             MifosAlertDialog(
                 onDismissRequest = {
@@ -104,6 +111,7 @@ fun AddEditNoteScreenDialog(
                 icon = null,
             )
         }
+
         null -> Unit
     }
 }
@@ -140,9 +148,11 @@ private fun AddEditNote(
 
     Column(
         modifier = Modifier
-            .verticalScroll(scrollState)
             .fillMaxWidth()
-            .padding(horizontal = DesignToken.spacing.large),
+            .padding(
+                horizontal = DesignToken.spacing.large,
+                vertical = DesignToken.spacing.small,
+            ),
         verticalArrangement = Arrangement.spacedBy(DesignToken.spacing.large),
     ) {
         Text(
@@ -151,70 +161,77 @@ private fun AddEditNote(
             color = MaterialTheme.colorScheme.onSurface,
         )
 
-        OutlinedTextField(
-            value = state.textFieldNotesPayload.note ?: "",
-            onValueChange = {
-                onAction(AddEditNoteAction.TextFieldNotesPayload(state.textFieldNotesPayload.copy(note = it)))
-            },
-            singleLine = false,
-            shape = DesignToken.shapes.large,
-            label = {
-                Text(
-                    text = stringResource(state.label),
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                )
-            },
+        Column(
             modifier = Modifier
-                .fillMaxWidth()
-                .heightIn(min = 600.dp),
-            textStyle = MaterialTheme.typography.bodyLarge.copy(textAlign = TextAlign.Start),
-            colors = OutlinedTextFieldDefaults.colors(
-                unfocusedBorderColor = MaterialTheme.colorScheme.secondaryContainer,
-            ),
-        )
-
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(DesignToken.spacing.extraSmall),
+                .verticalScroll(scrollState),
+            verticalArrangement = Arrangement.spacedBy(DesignToken.spacing.large),
         ) {
-            MifosOutlinedButton(
-                modifier = Modifier.weight(1f),
-                text = {
-                    Text(
-                        text = stringResource(Res.string.feature_note_button_back),
+            MifosOutlinedTextField(
+                value = state.textFieldNotesPayload.note ?: "",
+                onValueChange = {
+                    onAction(
+                        AddEditNoteAction.TextFieldNotesPayload(
+                            state.textFieldNotesPayload.copy(
+                                note = it,
+                            ),
+                        ),
                     )
                 },
-                colors = ButtonDefaults.outlinedButtonColors(
-                    contentColor = MaterialTheme.colorScheme.primary,
-                    containerColor = MaterialTheme.colorScheme.onPrimary,
+                maxLines = 18,
+                singleLine = false,
+                shape = DesignToken.shapes.large,
+                label = stringResource(state.label),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .heightIn(min = 550.dp),
+                textStyle = MaterialTheme.typography.bodyLarge.copy(textAlign = TextAlign.Start),
+                colors = OutlinedTextFieldDefaults.colors(
+                    unfocusedBorderColor = MaterialTheme.colorScheme.secondaryContainer,
                 ),
-                onClick = {
-                    onAction(AddEditNoteAction.MisTouchBackDialog)
-                },
             )
 
-            MifosOutlinedButton(
-                modifier = Modifier.weight(1f),
-                text = {
-                    Text(text = stringResource(state.addUpdateButton))
-                },
-                onClick = {
-                    if (state.editEnabled) {
-                        onAction(AddEditNoteAction.EditNote(state.textFieldNotesPayload))
-                    } else {
-                        onAction(AddEditNoteAction.AddNote(state.textFieldNotesPayload))
-                    }
-                    if (state.isError) {
-                        onAction(AddEditNoteAction.NavigateBack)
-                    }
-                },
-                colors = ButtonDefaults.outlinedButtonColors(
-                    contentColor = MaterialTheme.colorScheme.onPrimary,
-                    containerColor = MaterialTheme.colorScheme.primary,
-                ),
-                enabled = !state.textFieldNotesPayload.note.isNullOrEmpty(),
-            )
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(DesignToken.spacing.extraSmall),
+            ) {
+                MifosOutlinedButton(
+                    modifier = Modifier.weight(1f),
+                    text = {
+                        Text(
+                            text = stringResource(Res.string.feature_note_button_back),
+                        )
+                    },
+                    colors = ButtonDefaults.outlinedButtonColors(
+                        contentColor = MaterialTheme.colorScheme.primary,
+                        containerColor = MaterialTheme.colorScheme.onPrimary,
+                    ),
+                    onClick = {
+                        onAction(AddEditNoteAction.MisTouchBackDialog)
+                    },
+                )
+
+                MifosOutlinedButton(
+                    modifier = Modifier.weight(1f),
+                    text = {
+                        Text(text = stringResource(state.addUpdateButton))
+                    },
+                    onClick = {
+                        if (state.editEnabled) {
+                            onAction(AddEditNoteAction.EditNote(state.textFieldNotesPayload))
+                        } else {
+                            onAction(AddEditNoteAction.AddNote(state.textFieldNotesPayload))
+                        }
+                        if (state.isError) {
+                            onAction(AddEditNoteAction.NavigateBack)
+                        }
+                    },
+                    colors = ButtonDefaults.outlinedButtonColors(
+                        contentColor = MaterialTheme.colorScheme.onPrimary,
+                        containerColor = MaterialTheme.colorScheme.primary,
+                    ),
+                    enabled = !state.textFieldNotesPayload.note.isNullOrEmpty(),
+                )
+            }
         }
     }
 }

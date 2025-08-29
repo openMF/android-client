@@ -12,7 +12,6 @@ package com.mifos.feature.note.notes
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
-import com.mifos.feature.note.navigation.Update
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -25,15 +24,21 @@ fun NavGraphBuilder.noteRoute(
     onNavigateBack: () -> Unit,
     onNavigateAddEditNote: (Int, String?, Long?) -> Unit,
 ) {
-    composable<NoteRoute> { updateNoteList ->
+    composable<NoteRoute> {
         NoteScreenScaffold(
             onNavigateBack = onNavigateBack,
             onNavigateAddEditNote = onNavigateAddEditNote,
-            updateNoteList = updateNoteList.savedStateHandle.get<Boolean>(Update.NOTE_LIST),
         )
     }
 }
 
 fun NavController.navigateToNoteScreen(entityId: Int, entityType: String?) {
     this.navigate(NoteRoute(entityId, entityType))
+}
+
+fun NavController.navigateToNoteScreenWithUpdatedList(entityId: Int, entityType: String?) {
+    this.navigate(NoteRoute(entityId, entityType)) {
+        popUpTo(NoteRoute(entityId, entityType)) { inclusive = true }
+        launchSingleTop = true
+    }
 }
