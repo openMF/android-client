@@ -13,7 +13,6 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.feature.client.navigation.ClientScreens
 import com.mifos.feature.search.navigation.SearchScreens
-import com.mifos.feature.settings.navigation.SettingsScreens
 
 sealed class HomeDestinationsScreen(
     val title: String = "",
@@ -58,7 +57,7 @@ sealed class HomeDestinationsScreen(
 
     data object RunReportsScreen : HomeDestinationsScreen(
         title = "Run Reports",
-        route = "run_report_screen",
+        route = "",
         icon = MifosIcons.Task,
     )
 
@@ -70,7 +69,7 @@ sealed class HomeDestinationsScreen(
 
     data object SettingsScreen : HomeDestinationsScreen(
         title = "Settings",
-        route = SettingsScreens.SettingsScreen.route,
+        route = "",
         icon = MifosIcons.Settings,
     )
 

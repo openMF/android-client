@@ -85,6 +85,7 @@ import com.mifos.feature.individualCollectionSheet.navigation.navigateToIndividu
 import com.mifos.feature.offline.navigation.navigateToOfflineDashBoardScreen
 import com.mifos.feature.path.tracking.navigation.navigateToPathTrackingScreen
 import com.mifos.feature.report.navigation.navigateToReportScreen
+import com.mifos.feature.settings.navigation.navigateToSettingsScreen
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
@@ -229,6 +230,9 @@ fun App(
                                         }
                                         HomeDestinationsScreen.RunReportsScreen -> {
                                             appState.navController.navigateToReportScreen()
+                                        }
+                                        HomeDestinationsScreen.SettingsScreen -> {
+                                            appState.navController.navigateToSettingsScreen()
                                         }
                                         else -> {
                                             appState.navController.navigate(navigationDrawerTabs[index].route) {
