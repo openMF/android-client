@@ -35,8 +35,9 @@ fun NavGraphBuilder.savingsNavGraph(
     loadMoreSavingsAccountInfo: (String, Int) -> Unit,
     loadDocuments: (Int, String) -> Unit,
 ) {
-    navigation<SavingsNavGraph>(
+    navigation(
         startDestination = SavingsScreens.SavingsAccountSummary.route,
+        route="savings_nav_graph"
     ) {
         savingsSummaryScreen(
             onBackPressed = navController::popBackStack,
@@ -91,14 +92,7 @@ fun NavGraphBuilder.savingsNavGraph(
 fun NavGraphBuilder.addSavingsAccountScreen(
     onBackPressed: () -> Unit,
 ) {
-    composable(
-        route = SavingsScreens.SavingsAccount.route,
-        arguments = listOf(
-            navArgument(name = Constants.GROUP_ID, builder = { type = NavType.IntType }),
-            navArgument(name = Constants.CLIENT_ID, builder = { type = NavType.IntType }),
-            navArgument(name = Constants.GROUP_ACCOUNT, builder = { type = NavType.BoolType }),
-        ),
-    ) {
+    composable<SavingsAccountRoute>{
         SavingsAccountScreen(
             navigateBack = onBackPressed,
         )
@@ -135,12 +129,7 @@ fun NavGraphBuilder.savingsSummaryScreen(
 fun NavGraphBuilder.savingsAccountActivateScreen(
     onBackPressed: () -> Unit,
 ) {
-    composable(
-        route = SavingsScreens.SavingsAccountActivate.route,
-        arguments = listOf(
-            navArgument(name = Constants.SAVINGS_ACCOUNT_ID, builder = { type = NavType.IntType }),
-        ),
-    ) {
+    composable<SavingsAccountActivate>{
         SavingsAccountActivateScreen(
             navigateBack = onBackPressed,
         )
@@ -150,12 +139,7 @@ fun NavGraphBuilder.savingsAccountActivateScreen(
 fun NavGraphBuilder.savingsAccountApprovalScreen(
     onBackPressed: () -> Unit,
 ) {
-    composable(
-        route = SavingsScreens.SavingsAccountApproval.route,
-        arguments = listOf(
-            navArgument(name = Constants.SAVINGS_ACCOUNT_ID, builder = { type = NavType.IntType }),
-        ),
-    ) {
+    composable<SavingsAccountApproval>{
         SavingsAccountApprovalScreen(
             navigateBack = onBackPressed,
         )
@@ -177,20 +161,37 @@ fun NavGraphBuilder.savingsAccountTransactionScreen(
     }
 }
 
+@Serializable
+data class SavingsAccountRoute(
+    val groupId: Int,
+    val clientId: Int,
+    val isGroupAccount: Boolean
+)
+
 fun NavController.navigateToAddSavingsAccount(
     groupId: Int,
     clientId: Int,
     isGroupAccount: Boolean,
 ) {
-    navigate(SavingsScreens.SavingsAccount.argument(groupId, clientId, isGroupAccount))
+    navigate(SavingsAccountRoute(groupId, clientId, isGroupAccount))
 }
+
+@Serializable
+data class SavingsAccountApproval(
+    val savingsAccountId: Int
+)
 
 fun NavController.navigateToSavingsAccountApproval(savingsAccountId: Int) {
-    navigate(SavingsScreens.SavingsAccountApproval.argument(savingsAccountId))
+    navigate(SavingsAccountApproval(savingsAccountId))
 }
 
+@Serializable
+data class SavingsAccountActivate(
+    val savingsAccountId: Int
+)
+
 fun NavController.navigateToSavingsAccountActivate(savingsAccountId: Int) {
-    navigate(SavingsScreens.SavingsAccountActivate.argument(savingsAccountId))
+    navigate(SavingsAccountActivate(savingsAccountId))
 }
 
 fun NavController.navigateToSavingsAccountSummaryScreen(id: Int, type: SavingAccountDepositTypeEntity) {
