@@ -223,6 +223,36 @@
     <string name="client_profile_notes_title">Notes</string>
     <string name="client_profile_notes_subtitle">Check or update note accounts</string>
 
+
+    <!-- Client_Profile-General-Headers -->
+    <string name="client_profile_general_header_performance_history">Performance History</string>
+    <string name="client_profile_general_header_actions">Actions</string>
+    <string name="client_profile_general_header_linked_accounts">Linked Accounts</string>
+
+    <!-- Client_Profile-General-Performance History -->
+    <string name="client_performance_history_loan_cycle_count_label">No. Of Loan Cycles : </string>
+    <string name="client_performance_history_active_loans_count_label">No. Of Active Loans : </string>
+    <string name="client_performance_history_active_savings_label">No. of Active Savings : </string>
+    <string name="client_performance_history_last_loan_amount_label">Last Loan Amount : </string>
+    <string name="client_performance_history_total_savings_label">Total Savings : </string>
+
+    <!-- Client_Profile-General-Actions -->
+    <string name="client_profile_general_action_title_upcoming_charges">Upcoming Charges</string>
+    <string name="client_profile_general_action_subtitle_upcoming_charges">Check all linked accounts</string>
+    <string name="client_profile_general_action_title_loan_accounts">Loan Accounts</string>
+    <string name="client_profile_general_action_subtitle_loan_accounts">View or edit the linked address</string>
+    <string name="client_profile_general_action_title_saving_account">Saving Accounts</string>
+    <string name="client_profile_general_action_subtitle_saving_account">Check or edit the linked accounts</string>
+    <string name="client_profile_general_action_title_fixed_deposit_accounts">Fixed Deposit Accounts</string>
+    <string name="client_profile_general_action_subtitle_fixed_deposit_accounts">Check or update the identities</string>
+    <string name="client_profile_general_action_title_recurring_deposit_accounts">Recurring Deposit Accounts</string>
+    <string name="client_profile_general_action_subtitle_recurring_deposit_accounts">Check or upload the documents</string>
+    <string name="client_profile_general_action_title_shares_accounts">Shares Accounts</string>
+    <string name="client_profile_general_action_subtitle_shares_accounts">Check or update the account notes</string>
+    <string name="client_profile_general_action_title_collateral_data">Collateral Data</string>
+    <string name="client_profile_general_action_subtitle_collateral_data">Check or update the account notes</string>
+
+
     <!-- Personal Info -->
     <string name="gender">Gender</string>
     <string name="date_of_birth">Date of Birth</string>

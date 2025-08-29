@@ -91,12 +91,12 @@ fun MifosRowCard(
 
 @Composable
 fun MifosRowCard(
-    modifier: Modifier = Modifier,
     title: String,
-    byteArray: ByteArray? = null,
-    imageVector: DrawableResource? = null,
     leftValues: List<TextUtil>,
     rightValues: List<TextUtil>,
+    modifier: Modifier = Modifier,
+    byteArray: ByteArray? = null,
+    imageVector: DrawableResource? = null,
 ) {
     Row(
         modifier
@@ -114,7 +114,7 @@ fun MifosRowCard(
                 modifier = Modifier
                     .size(DesignToken.sizes.iconExtraLarge)
                     .background(
-                        color = Color.LightGray.copy(alpha = 0.1f),
+                        color = MaterialTheme.colorScheme.surfaceBright,
                         shape = CircleShape,
                     )
                     .padding(DesignToken.padding.small),
@@ -130,10 +130,13 @@ fun MifosRowCard(
                 TextUtil(
                     text = title,
                     style = MifosTypography.titleSmallEmphasized,
+                    color = MaterialTheme.colorScheme.onSurface,
                 ),
             )
             leftValues.forEach {
-                PrintTextUtil(it)
+                PrintTextUtil(
+                    it,
+                )
             }
         }
         Spacer(Modifier.width(DesignToken.padding.medium))
@@ -145,7 +148,9 @@ fun MifosRowCard(
                 horizontalAlignment = Alignment.End,
             ) {
                 rightValues.forEach {
-                    PrintTextUtil(it)
+                    PrintTextUtil(
+                        it,
+                    )
                 }
             }
             Icon(
