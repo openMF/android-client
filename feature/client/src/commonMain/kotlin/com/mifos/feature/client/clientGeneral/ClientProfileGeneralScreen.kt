@@ -194,7 +194,10 @@ internal fun ClientProfileGeneralScaffold(
                         ),
                         rightValues = listOf(
                             TextUtil(
-                                text = "12",
+                                // TODO: The count values for each action has to derived from api.
+                                // Placeholder values.
+//                                text = "12",
+                                text = "",
                                 style = MifosTypography.bodySmall,
                                 color = AppColors.customEnable,
                             ),

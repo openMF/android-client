@@ -223,6 +223,7 @@
     <string name="client_profile_notes_title">Notes</string>
     <string name="client_profile_notes_subtitle">Check or update note accounts</string>
 
+
     <!-- Client_Profile-General-Headers -->
     <string name="client_profile_general_header_performance_history">Performance History</string>
     <string name="client_profile_general_header_actions">Actions</string>

@@ -45,14 +45,6 @@ internal class ClientProfileGeneralViewmodel(
         val loanAccounts = clientAndClientAccounts.clientAccounts?.loanAccounts
         val savingAccounts = clientAndClientAccounts.clientAccounts?.savingsAccounts
 
-        savingAccounts?.forEach {
-            println(it)
-        }
-
-        loanAccounts?.forEach {
-            println(it)
-        }
-
         val loanCyclesCount =
             loanAccounts?.filter { it.status?.active == true }?.sumOf { it.loanCycle ?: 0 } ?: 0
 
