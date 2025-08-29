@@ -15,9 +15,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.compose.rememberNavController
-import cmp.navigation.navigation.NavGraphRoute.AUTH_GRAPH
-import cmp.navigation.navigation.NavGraphRoute.MAIN_GRAPH
+import cmp.navigation.navigation.MainNavGraph
 import cmp.navigation.navigation.RootNavGraph
+import cmp.navigation.utils.toObjectNavigationRoute
 import com.mifos.core.data.util.NetworkMonitor
 import com.mifos.core.datastore.model.AppTheme
 import com.mifos.core.designsystem.theme.MifosTheme
@@ -35,11 +35,11 @@ fun ComposeApp(
     val navController = rememberNavController()
 
     val navDestination = when (uiState) {
-        is MainUiState.Loading -> AUTH_GRAPH
+        is MainUiState.Loading -> LoginRoute.toObjectNavigationRoute()
         is MainUiState.Success -> if ((uiState as MainUiState.Success).isAuthenticated) {
-            MAIN_GRAPH
+            MainNavGraph.toObjectNavigationRoute()
         } else {
-            AUTH_GRAPH
+            LoginRoute.toObjectNavigationRoute()
         }
     }
 

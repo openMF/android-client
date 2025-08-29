@@ -77,17 +77,6 @@ import com.mifos.core.data.util.NetworkMonitor
 import com.mifos.core.designsystem.component.MifosDialogBox
 import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.designsystem.theme.MifosBackground
-import com.mifos.feature.about.navigateToAboutScreen
-import com.mifos.feature.center.navigation.navigateToCenterListScreenRoute
-import com.mifos.feature.checker.inbox.task.navigation.navigateToCheckerInboxTasksScreenRoute
-import com.mifos.feature.client.navigation.navigateToClientListScreen
-import com.mifos.feature.groups.navigation.navigateToGroupListScreen
-import com.mifos.feature.individualCollectionSheet.navigation.navigateToIndividualCollectionSheetScreen
-import com.mifos.feature.offline.navigation.navigateToOfflineDashBoardScreen
-import com.mifos.feature.path.tracking.navigation.navigateToPathTrackingScreen
-import com.mifos.feature.report.navigation.navigateToReportScreen
-import com.mifos.feature.search.navigation.navigateToSearchScreen
-import com.mifos.feature.settings.navigation.navigateToSettingsScreen
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
@@ -214,34 +203,10 @@ fun App(
                                 selected = index == selectedItemIndex,
                                 onClick = {
                                     selectedItemIndex = index
-                                    when (navigationDrawerTabs[index]) {
-                                        HomeDestinationsScreen.AboutScreen -> {
-                                            appState.navController.navigateToAboutScreen()
-                                        }
-                                        HomeDestinationsScreen.CheckerInboxAndTasksScreen -> {
-                                            appState.navController.navigateToCheckerInboxTasksScreenRoute()
-                                        }
-                                        HomeDestinationsScreen.CollectionSheetScreen -> {
-                                            appState.navController.navigateToIndividualCollectionSheetScreen()
-                                        }
-                                        HomeDestinationsScreen.OfflineSyncScreen -> {
-                                            appState.navController.navigateToOfflineDashBoardScreen()
-                                        }
-                                        HomeDestinationsScreen.PathTrackerScreen -> {
-                                            appState.navController.navigateToPathTrackingScreen()
-                                        }
-                                        HomeDestinationsScreen.RunReportsScreen -> {
-                                            appState.navController.navigateToReportScreen()
-                                        }
-                                        HomeDestinationsScreen.SettingsScreen -> {
-                                            appState.navController.navigateToSettingsScreen()
-                                        }
-                                        else -> {
-                                            appState.navController.navigate(navigationDrawerTabs[index].route) {
-                                                launchSingleTop = true
-                                            }
-                                        }
+                                    appState.navController.navigate(navigationDrawerTabs[index].route) {
+                                        launchSingleTop = true
                                     }
+
                                     scope.launch {
                                         drawerState.close()
                                     }
@@ -309,39 +274,19 @@ fun App(
                         Column {
                             route?.let {
                                 MifosNavigationBar(route = it) { target ->
-                                    when (target) {
-                                        HomeDestinationsScreen.CenterListScreen -> {
-                                            appState.navController.navigateToCenterListScreenRoute()
-                                        }
-
-                                        HomeDestinationsScreen.GroupListScreen -> {
-                                            appState.navController.navigateToGroupListScreen()
-                                        }
-
-                                        HomeDestinationsScreen.ClientListScreen -> {
-                                            appState.navController.navigateToClientListScreen()
-                                        }
-
-                                        HomeDestinationsScreen.SearchScreen -> {
-                                            appState.navController.navigateToSearchScreen()
-                                        }
-
-                                        else -> {
-                                            appState.navController.apply {
-                                                navigate(target.route) {
-                                                    restoreState = true
-                                                    launchSingleTop = true
-                                                    popUpTo(route = graph.findStartDestination().route.toString()) {
-                                                        saveState = true
-                                                        inclusive = false
-                                                    }
-                                                }
+                                    appState.navController.apply {
+                                        navigate(target.route) {
+                                            restoreState = true
+                                            launchSingleTop = true
+                                            popUpTo(route = graph.findStartDestination().route.toString()) {
+                                                saveState = true
+                                                inclusive = false
                                             }
                                         }
                                     }
                                 }
                             }
-                        } 
+                        }
                     }
                 },
             ) { paddingValues ->

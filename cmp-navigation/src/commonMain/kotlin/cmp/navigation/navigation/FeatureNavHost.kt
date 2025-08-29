@@ -55,10 +55,6 @@ import com.mifos.feature.savings.navigation.savingsNavGraph
 import com.mifos.feature.search.navigation.SearchScreenRoute
 import com.mifos.feature.search.navigation.searchNavGraph
 import com.mifos.feature.settings.navigation.settingsScreen
-import kotlinx.serialization.Serializable
-
-@Serializable
-data object MainNavGraph
 
 @Composable
 internal fun FeatureNavHost(

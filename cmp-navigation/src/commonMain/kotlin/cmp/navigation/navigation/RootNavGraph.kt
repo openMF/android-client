@@ -15,12 +15,15 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import cmp.navigation.App
-import cmp.navigation.navigation.NavGraphRoute.MAIN_GRAPH
 import com.mifos.core.data.util.NetworkMonitor
 import com.mifos.feature.auth.navigation.authNavGraph
 import com.mifos.feature.auth.navigation.navigateToLogin
 import com.mifos.feature.settings.navigation.navigateToServerConfigGraph
 import com.mifos.feature.settings.navigation.serverConfigGraph
+import kotlinx.serialization.Serializable
+
+@Serializable
+data object MainNavGraph
 
 @Composable
 fun RootNavGraph(
@@ -37,7 +40,7 @@ fun RootNavGraph(
         modifier = modifier,
     ) {
         authNavGraph(
-            navigateHome = { navHostController.navigate(MAIN_GRAPH) },
+            navigateHome = { navHostController.navigate(MainNavGraph) },
             navigatePasscode = { },
             updateServerConfig = navHostController::navigateToServerConfigGraph,
         )
@@ -46,7 +49,7 @@ fun RootNavGraph(
             navigateBack = navHostController::popBackStack,
         )
 
-        composable(MAIN_GRAPH) {
+        composable<MainNavGraph> {
             App(
                 modifier = modifier,
                 networkMonitor = networkMonitor,

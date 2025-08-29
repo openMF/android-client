@@ -10,8 +10,19 @@
 package cmp.navigation.navigation
 
 import androidx.compose.ui.graphics.vector.ImageVector
+import cmp.navigation.utils.toObjectNavigationRoute
 import com.mifos.core.designsystem.icon.MifosIcons
-import com.mifos.feature.search.navigation.SearchScreens
+import com.mifos.feature.about.AboutNavRoute
+import com.mifos.feature.center.navigation.CenterListRoute
+import com.mifos.feature.checker.inbox.task.navigation.CheckerInboxTaskScreenRoute
+import com.mifos.feature.client.navigation.ClientListScreenRoute
+import com.mifos.feature.groups.navigation.GroupListRoute
+import com.mifos.feature.individualCollectionSheet.navigation.IndividualCollectionSheetScreenRoute
+import com.mifos.feature.offline.navigation.OfflineDashboardScreenRoute
+import com.mifos.feature.path.tracking.navigation.PathTrackingScreenRoute
+import com.mifos.feature.report.navigation.RunReportScreenRoute
+import com.mifos.feature.search.navigation.SearchScreenRoute
+import com.mifos.feature.settings.navigation.SettingsRoute
 
 sealed class HomeDestinationsScreen(
     val title: String = "",
@@ -20,67 +31,67 @@ sealed class HomeDestinationsScreen(
 ) {
     data object SearchScreen : HomeDestinationsScreen(
         title = "Search",
-        route = SearchScreens.SearchScreenRoute.route,
+        route = SearchScreenRoute.toObjectNavigationRoute(),
         icon = MifosIcons.Dashboard,
     )
 
     data object ClientListScreen : HomeDestinationsScreen(
         title = "Clients",
-        route = "",
+        route = ClientListScreenRoute.toObjectNavigationRoute(),
         icon = MifosIcons.Person,
     )
 
     data object CenterListScreen : HomeDestinationsScreen(
         title = "Centers",
-        route = "",
+        route = CenterListRoute.toObjectNavigationRoute(),
         icon = MifosIcons.Business,
     )
 
     data object GroupListScreen : HomeDestinationsScreen(
         title = "Groups",
-        route = "",
+        route = GroupListRoute.toObjectNavigationRoute(),
         icon = MifosIcons.Group,
     )
 
     data object CheckerInboxAndTasksScreen : HomeDestinationsScreen(
         title = "Checker Inbox & Tasks",
-        route = "",
+        route = CheckerInboxTaskScreenRoute.toObjectNavigationRoute(),
         icon = MifosIcons.Checkbox,
     )
 
     data object CollectionSheetScreen : HomeDestinationsScreen(
         title = "Collection Sheet",
-        route = "",
+        route = IndividualCollectionSheetScreenRoute.toObjectNavigationRoute(),
         icon = MifosIcons.Assignment,
     )
 
     data object RunReportsScreen : HomeDestinationsScreen(
         title = "Run Reports",
-        route = "",
+        route = RunReportScreenRoute.toObjectNavigationRoute(),
         icon = MifosIcons.Task,
     )
 
     data object PathTrackerScreen : HomeDestinationsScreen(
         title = "Path Tracker",
-        route = "",
+        route = PathTrackingScreenRoute.toObjectNavigationRoute(),
         icon = MifosIcons.PersonPinCircle,
     )
 
     data object SettingsScreen : HomeDestinationsScreen(
         title = "Settings",
-        route = "",
+        route = SettingsRoute.toObjectNavigationRoute(),
         icon = MifosIcons.Settings,
     )
 
     data object AboutScreen : HomeDestinationsScreen(
         title = "About",
-        route = "",
+        route = AboutNavRoute.toObjectNavigationRoute(),
         icon = MifosIcons.Info,
     )
 
     data object OfflineSyncScreen : HomeDestinationsScreen(
         title = "Offline Sync",
-        route = "",
+        route = OfflineDashboardScreenRoute.toObjectNavigationRoute(),
         icon = MifosIcons.OfflineSync,
     )
 }
