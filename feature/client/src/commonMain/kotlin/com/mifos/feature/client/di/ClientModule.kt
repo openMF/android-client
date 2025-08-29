@@ -16,6 +16,7 @@ import com.mifos.feature.client.clientDetails.ClientDetailsViewModel
 import com.mifos.feature.client.clientDetailsProfile.ClientProfileDetailsViewModel
 import com.mifos.feature.client.clientEditDetails.ClientEditDetailsViewModel
 import com.mifos.feature.client.clientEditProfile.ClientProfileEditViewModel
+import com.mifos.feature.client.clientGeneral.ClientProfileGeneralViewmodel
 import com.mifos.feature.client.clientIdentifiers.ClientIdentifiersViewModel
 import com.mifos.feature.client.clientPinpoint.PinPointClientViewModel
 import com.mifos.feature.client.clientProfile.ClientProfileViewModel
@@ -45,6 +46,7 @@ val ClientModule = module {
     viewModelOf(::ClientEditDetailsViewModel)
     viewModelOf(::SyncClientsDialogViewModel)
     viewModelOf(::ClientProfileViewModel)
+    viewModelOf(::ClientProfileGeneralViewmodel)
     viewModelOf(::ClientProfileDetailsViewModel)
     viewModelOf(::ClientProfileEditViewModel)
     viewModelOf(::ClientStaffViewModel)

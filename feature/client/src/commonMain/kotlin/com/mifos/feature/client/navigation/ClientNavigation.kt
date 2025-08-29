@@ -31,6 +31,8 @@ import com.mifos.feature.client.clientEditDetails.clientEditDetailsDestination
 import com.mifos.feature.client.clientEditDetails.navigateToClientEditDetailsRoute
 import com.mifos.feature.client.clientEditProfile.clientEditProfileDestination
 import com.mifos.feature.client.clientEditProfile.navigateToClientProfileEditProfileRoute
+import com.mifos.feature.client.clientGeneral.clientProfileGeneralDestination
+import com.mifos.feature.client.clientGeneral.navigateToClientProfileGeneralRoute
 import com.mifos.feature.client.clientIdentifiers.ClientIdentifiersScreen
 import com.mifos.feature.client.clientPinpoint.PinpointClientScreen
 import com.mifos.feature.client.clientProfile.clientProfileDestination
@@ -129,7 +131,14 @@ fun NavGraphBuilder.clientNavGraph(
             documents = documents,
             identifiers = navController::navigateClientIdentifierScreen,
             navigateToClientDetailsScreen = navController::navigateToClientDetailsProfileRoute,
-            viewAssociatedAccounts = navController::navigateToClientSavingsAccountsRoute,
+            viewAssociatedAccounts = navController::navigateToClientProfileGeneralRoute,
+        )
+
+        clientProfileGeneralDestination(
+            onNavigateBack = navController::popBackStack,
+            savingAccounts = { clientId ->
+                navController.navigateToClientSavingsAccountsRoute(clientId)
+            },
         )
 
         clientProfileDetailsDestination(
