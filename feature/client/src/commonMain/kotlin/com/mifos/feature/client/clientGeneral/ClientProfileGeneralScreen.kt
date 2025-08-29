@@ -1,3 +1,12 @@
+/*
+ * Copyright 2025 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ */
 package com.mifos.feature.client.clientGeneral
 
 import androidclient.feature.client.generated.resources.Res
@@ -44,7 +53,6 @@ import com.mifos.core.ui.components.MifosRowCard
 import com.mifos.core.ui.util.EventsEffect
 import com.mifos.core.ui.util.TextUtil
 import org.jetbrains.compose.resources.stringResource
-import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -60,7 +68,6 @@ internal fun ClientProfileGeneralScreen(
     modifier: Modifier = Modifier,
     viewModel: ClientProfileGeneralViewmodel = koinViewModel(),
 ) {
-
     val state by viewModel.stateFlow.collectAsStateWithLifecycle()
 
     EventsEffect(viewModel.eventFlow) { event ->
@@ -141,7 +148,6 @@ private fun ClientProfileGeneralDialogs(
     }
 }
 
-
 @Composable
 internal fun ClientProfileGeneralScaffold(
     state: ClientProfileGeneralState,
@@ -210,54 +216,51 @@ internal fun ClientProfileGeneralScaffold(
                             },
                     )
                 }
-
             }
         }
-
     }
-
 }
 
 @Composable
 fun PerformanceHistoryCard(state: ClientProfileGeneralState) {
     Box(
         modifier = Modifier.fillMaxWidth().wrapContentHeight().clip(
-                RoundedCornerShape(12),
-            ).background(MaterialTheme.colorScheme.primary)
-            .padding(DesignToken.padding.largeIncreasedExtra), //24
+            RoundedCornerShape(12),
+        ).background(MaterialTheme.colorScheme.primary)
+            .padding(DesignToken.padding.largeIncreasedExtra),
         contentAlignment = Alignment.Center,
     ) {
         Column(
             verticalArrangement = Arrangement.spacedBy(
-                DesignToken.spacing.small,   //8
+                DesignToken.spacing.small,
             ),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             val performanceHistory = state.performanceHistory
             PerformanceHistoryRows(
                 stringResource(Res.string.client_performance_history_loan_cycle_count_label),
-                "${performanceHistory.loanCyclesCount}"
+                "${performanceHistory.loanCyclesCount}",
 
             )
 
             PerformanceHistoryRows(
                 stringResource(Res.string.client_performance_history_active_loans_count_label),
-                "${performanceHistory.activeLoans}"
+                "${performanceHistory.activeLoans}",
             )
 
             PerformanceHistoryRows(
                 stringResource(Res.string.client_performance_history_last_loan_amount_label),
-                "${state.currency} ${performanceHistory.lastLoanAmount}"
+                "${state.currency} ${performanceHistory.lastLoanAmount}",
             )
 
             PerformanceHistoryRows(
                 stringResource(Res.string.client_performance_history_active_savings_label),
-                "${performanceHistory.activeSavingsCount}"
+                "${performanceHistory.activeSavingsCount}",
             )
 
             PerformanceHistoryRows(
                 stringResource(Res.string.client_performance_history_total_savings_label),
-                "${state.currency} ${performanceHistory.lastLoanAmount}"
+                "${state.currency} ${performanceHistory.lastLoanAmount}",
             )
         }
     }
@@ -281,4 +284,3 @@ fun PerformanceHistoryRows(
         Text(value, style = textStyle)
     }
 }
-

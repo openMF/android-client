@@ -130,12 +130,12 @@ fun MifosRowCard(
                 TextUtil(
                     text = title,
                     style = MifosTypography.titleSmallEmphasized,
-                    color = MaterialTheme.colorScheme.onSurface
+                    color = MaterialTheme.colorScheme.onSurface,
                 ),
             )
             leftValues.forEach {
                 PrintTextUtil(
-                    it
+                    it,
                 )
             }
         }
@@ -149,7 +149,7 @@ fun MifosRowCard(
             ) {
                 rightValues.forEach {
                     PrintTextUtil(
-                        it
+                        it,
                     )
                 }
             }

@@ -1,20 +1,26 @@
+/*
+ * Copyright 2025 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ */
 package com.mifos.feature.client.clientGeneral
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
-import co.touchlab.kermit.BaseLogger
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.util.NetworkMonitor
 import com.mifos.core.domain.useCases.GetClientDetailsUseCase
 import com.mifos.core.ui.util.BaseViewModel
-import com.mifos.feature.client.clientGeneral.ClientProfileGeneralEvent.*
-import com.mifos.feature.client.clientProfile.ClientProfileAction
+import com.mifos.feature.client.clientGeneral.ClientProfileGeneralEvent.OnActionClick
 import com.mifos.room.entities.client.ClientEntity
 import com.mifos.room.entities.zipmodels.ClientAndClientAccounts
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-
 
 internal class ClientProfileGeneralViewmodel(
     savedStateHandle: SavedStateHandle,
@@ -41,7 +47,6 @@ internal class ClientProfileGeneralViewmodel(
     private fun loadPerformanceHistory(
         clientAndClientAccounts: ClientAndClientAccounts,
     ): ClientProfileGeneralState.PerformanceHistory {
-
         val loanAccounts = clientAndClientAccounts.clientAccounts?.loanAccounts
         val savingAccounts = clientAndClientAccounts.clientAccounts?.savingsAccounts
 
@@ -66,9 +71,7 @@ internal class ClientProfileGeneralViewmodel(
             activeSavingsCount = activeSavingsCount,
             totalSaving = totalSaving,
         )
-
     }
-
 
     private fun getClientAndObserveNetwork() {
         observeNetwork()
@@ -94,7 +97,6 @@ internal class ClientProfileGeneralViewmodel(
      * @param clientId ID of the client whose details need to be fetched.
      */
     private fun loadClientDetails(clientId: Int) {
-
         viewModelScope.launch {
             getClientDetailsUseCase(clientId).collect { result ->
                 when (result) {
@@ -152,9 +154,7 @@ data class ClientProfileGeneralState(
         var activeSavingsCount: Int = 0,
         var totalSaving: Double = 0.0,
     )
-
 }
-
 
 sealed interface ClientProfileGeneralEvent {
     /** Navigates back to the previous screen */

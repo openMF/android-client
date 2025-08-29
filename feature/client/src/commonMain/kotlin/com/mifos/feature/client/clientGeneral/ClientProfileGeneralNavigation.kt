@@ -1,3 +1,12 @@
+/*
+ * Copyright 2025 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ */
 package com.mifos.feature.client.clientGeneral
 
 import androidx.navigation.NavController
@@ -7,7 +16,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class ClientProfileGeneralRoute(
-    val id: Int = -1
+    val id: Int = -1,
 )
 
 fun NavGraphBuilder.clientProfileGeneralDestination(
@@ -29,13 +38,13 @@ fun NavGraphBuilder.clientProfileGeneralDestination(
             fixedDepositAccounts,
             recurringDepositAccounts,
             sharesAccounts,
-            collateralData
+            collateralData,
         )
     }
 }
 
-fun NavController.navigateToClientProfileGeneralRoute(id: Int){
+fun NavController.navigateToClientProfileGeneralRoute(id: Int) {
     this.navigate(
-        ClientProfileGeneralRoute(id = id,)
+        ClientProfileGeneralRoute(id = id),
     )
 }
