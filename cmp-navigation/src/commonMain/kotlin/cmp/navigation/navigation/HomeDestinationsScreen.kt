@@ -11,7 +11,6 @@ package cmp.navigation.navigation
 
 import androidx.compose.ui.graphics.vector.ImageVector
 import com.mifos.core.designsystem.icon.MifosIcons
-import com.mifos.feature.client.navigation.ClientScreens
 import com.mifos.feature.search.navigation.SearchScreens
 
 sealed class HomeDestinationsScreen(

@@ -48,7 +48,7 @@ fun NavGraphBuilder.runReportScreenRoute(
     onBackPressed: () -> Unit,
     onReportSelected: (ClientReportTypeItem) -> Unit,
 ) {
-    composable<RunReportScreenRoute>{
+    composable<RunReportScreenRoute> {
         RunReportScreen(
             onBackPressed = onBackPressed,
             onReportClick = onReportSelected,
@@ -74,6 +74,6 @@ fun NavController.navigateReportDetailsScreen(clientReportTypeItem: ClientReport
     navigate(ReportScreens.ReportDetailScreen.argument(arg))
 }
 
-fun NavController.navigateToReportScreen(){
+fun NavController.navigateToReportScreen() {
     navigate(RunReportScreenRoute)
 }

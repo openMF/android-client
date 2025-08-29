@@ -11,7 +11,7 @@ package com.mifos.feature.report.navigation
 
 import com.mifos.core.common.utils.Constants
 
-//TODO: Convert to Type Safe while implementing this screen
+// TODO: Convert to Type Safe while implementing this screen
 sealed class ReportScreens(val route: String) {
 
     data object ReportDetailScreen :

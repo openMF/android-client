@@ -67,7 +67,7 @@ fun NavGraphBuilder.offlineDashboardScreen(
     syncClientPayload: () -> Unit,
     syncCenterPayload: () -> Unit,
 ) {
-    composable<OfflineDashboardScreenRoute>{
+    composable<OfflineDashboardScreenRoute> {
         OfflineDashboardRoute(
             onBackPressed = onBackPressed,
             syncSavingsAccountTransactions = syncSavingsAccountTransactions,
@@ -82,7 +82,7 @@ fun NavGraphBuilder.offlineDashboardScreen(
 fun NavGraphBuilder.syncCenterPayloadsScreen(
     onBackPressed: () -> Unit,
 ) {
-    composable<SyncCenterPayloadsScreenRoute>{
+    composable<SyncCenterPayloadsScreenRoute> {
         SyncCenterPayloadsScreenRoute(
             onBackPressed = onBackPressed,
         )
@@ -164,6 +164,6 @@ fun NavController.navigateToSyncLoanRepaymentScreen() {
     navigate(SyncLoanRepaymentsScreenRoute)
 }
 
-fun NavController.navigateToOfflineDashBoardScreen(){
+fun NavController.navigateToOfflineDashBoardScreen() {
     navigate(OfflineDashboardScreenRoute)
 }

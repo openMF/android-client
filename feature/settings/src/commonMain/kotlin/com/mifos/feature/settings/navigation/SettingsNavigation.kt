@@ -29,7 +29,7 @@ fun NavGraphBuilder.settingsScreen(
     changePasscode: (String) -> Unit,
     onClickUpdateConfig: () -> Unit,
 ) {
-    composable<SettingsRoute>{
+    composable<SettingsRoute> {
         SettingsScreen(
             onBackPressed = navigateBack,
             navigateToLoginScreen = navigateToLoginScreen,
@@ -45,7 +45,7 @@ data object UpdateServerConfig
 fun NavGraphBuilder.serverConfigGraph(
     navigateBack: () -> Unit,
 ) {
-    composable<UpdateServerConfig>{
+    composable<UpdateServerConfig> {
         UpdateServerConfigScreenRoute(
             onBackClick = navigateBack,
         )

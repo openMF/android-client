@@ -9,7 +9,6 @@
  */
 package com.mifos.feature.savings.navigation
 
-import com.mifos.core.common.utils.Constants
 import com.mifos.room.entities.accounts.savings.SavingAccountDepositTypeEntity
 import com.mifos.room.entities.accounts.savings.SavingsAccountWithAssociationsEntity
 import com.mifos.room.entities.accounts.savings.SavingsSummaryData
@@ -17,7 +16,7 @@ import com.mifos.room.entities.accounts.savings.SavingsTransactionData
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
-//TODO: Convert while doing these screens
+// TODO: Convert while doing these screens
 sealed class SavingsScreens(val route: String) {
 
     data object SavingsAccountSummary :

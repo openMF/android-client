@@ -272,6 +272,7 @@ fun App(
             Scaffold(
                 snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
                 topBar = {
+                    if (isNavScreen) {
                         TopAppBar(
                             title = {
                                 Text(NavigationConstants.getTitleForRoute(route))
@@ -301,8 +302,10 @@ fun App(
                                 }
                             },
                         )
+                    }
                 },
                 bottomBar = {
+                    if (isNavScreen) {
                         Column {
                             route?.let {
                                 MifosNavigationBar(route = it) { target ->
@@ -310,15 +313,19 @@ fun App(
                                         HomeDestinationsScreen.CenterListScreen -> {
                                             appState.navController.navigateToCenterListScreenRoute()
                                         }
+
                                         HomeDestinationsScreen.GroupListScreen -> {
                                             appState.navController.navigateToGroupListScreen()
                                         }
+
                                         HomeDestinationsScreen.ClientListScreen -> {
                                             appState.navController.navigateToClientListScreen()
                                         }
+
                                         HomeDestinationsScreen.SearchScreen -> {
                                             appState.navController.navigateToSearchScreen()
                                         }
+
                                         else -> {
                                             appState.navController.apply {
                                                 navigate(target.route) {
@@ -334,7 +341,8 @@ fun App(
                                     }
                                 }
                             }
-                        }
+                        } 
+                    }
                 },
             ) { paddingValues ->
                 FeatureNavHost(

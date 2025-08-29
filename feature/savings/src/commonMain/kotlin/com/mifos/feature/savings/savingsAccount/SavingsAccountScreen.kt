@@ -119,14 +119,14 @@ internal fun SavingsAccountScreen(
         },
         onSavingsProductSelected = { productId ->
             if (viewModel.route.isGroupAccount) {
-                viewModel.loadGroupSavingAccountTemplateByProduct( productId)
+                viewModel.loadGroupSavingAccountTemplateByProduct(productId)
             } else {
-                viewModel.loadClientSavingAccountTemplateByProduct( productId)
+                viewModel.loadClientSavingAccountTemplateByProduct(productId)
             }
         },
         fetchTemplate = { productId ->
             if (viewModel.route.isGroupAccount) {
-                viewModel.loadGroupSavingAccountTemplateByProduct( productId)
+                viewModel.loadGroupSavingAccountTemplateByProduct(productId)
             } else {
                 viewModel.loadClientSavingAccountTemplateByProduct(productId)
             }

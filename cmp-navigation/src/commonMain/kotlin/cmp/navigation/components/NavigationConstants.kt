@@ -10,25 +10,30 @@
 package cmp.navigation.components
 
 import cmp.navigation.navigation.HomeDestinationsScreen
-import com.mifos.feature.search.navigation.SearchScreens
+import cmp.navigation.utils.toObjectNavigationRoute
+import com.mifos.feature.center.navigation.CenterListRoute
+import com.mifos.feature.client.navigation.ClientListScreenRoute
+import com.mifos.feature.groups.navigation.GroupListRoute
+import com.mifos.feature.search.navigation.SearchScreenRoute
 
 object NavigationConstants {
 
-    private val NavScreenRoutes = listOf(
-        SearchScreens.SearchScreen.route,
-        HomeDestinationsScreen.ClientListScreen.route,
-        HomeDestinationsScreen.CenterListScreen.route,
-        HomeDestinationsScreen.GroupListScreen.route,
+    private val navScreenRoutes = listOf(
+        SearchScreenRoute.toObjectNavigationRoute(),
+        ClientListScreenRoute.toObjectNavigationRoute(),
+        CenterListRoute.toObjectNavigationRoute(),
+        GroupListRoute.toObjectNavigationRoute(),
     )
 
     fun isNavScreen(route: String?): Boolean {
-        return NavScreenRoutes.contains(route)
+        return navScreenRoutes.contains(route)
     }
+
     fun getTitleForRoute(route: String?): String {
         return when (route) {
-            HomeDestinationsScreen.ClientListScreen.route -> HomeDestinationsScreen.ClientListScreen.title
-            HomeDestinationsScreen.CenterListScreen.route -> HomeDestinationsScreen.CenterListScreen.title
-            HomeDestinationsScreen.GroupListScreen.route -> HomeDestinationsScreen.GroupListScreen.title
+            ClientListScreenRoute.toObjectNavigationRoute() -> HomeDestinationsScreen.ClientListScreen.title
+            CenterListRoute.toObjectNavigationRoute() -> HomeDestinationsScreen.CenterListScreen.title
+            GroupListRoute.toObjectNavigationRoute() -> HomeDestinationsScreen.GroupListScreen.title
             else -> "Dashboard"
         }
     }

@@ -17,7 +17,6 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import com.mifos.core.common.utils.Constants
-import com.mifos.core.model.objects.SearchedEntity
 import com.mifos.core.ui.components.FabType
 import com.mifos.feature.search.SearchScreen
 import kotlinx.serialization.Serializable
@@ -36,7 +35,7 @@ fun NavGraphBuilder.searchNavGraph(
     onSavings: (Int) -> Unit,
     onLoan: (Int) -> Unit,
 ) {
-    composable<SearchScreenRoute>{
+    composable<SearchScreenRoute> {
         SearchScreen(
             modifier = Modifier.padding(paddingValues),
             onFabClick = {
@@ -76,11 +75,11 @@ fun NavGraphBuilder.searchNavGraph(
                         onCenter(searchedEntity.entityId)
                     }
                 }
-            }
+            },
         )
     }
 }
 
-fun NavController.navigateToSearchScreen(){
+fun NavController.navigateToSearchScreen() {
     this.navigate(SearchScreenRoute)
 }

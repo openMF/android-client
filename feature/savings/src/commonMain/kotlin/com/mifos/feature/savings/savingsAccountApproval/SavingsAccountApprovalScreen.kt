@@ -77,7 +77,7 @@ internal fun SavingsAccountApprovalScreen(
     SavingsAccountApprovalScreen(
         uiState = uiState,
         navigateBack = navigateBack,
-        approveLoan = { viewModel.approveSavingsApplication( it) },
+        approveLoan = { viewModel.approveSavingsApplication(it) },
     )
 }
 

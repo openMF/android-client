@@ -77,7 +77,7 @@ internal fun SavingsAccountActivateScreen(
     SavingsAccountActivateScreen(
         uiState = uiState,
         navigateBack = navigateBack,
-        activateSavings = { viewModel.activateSavings( it) },
+        activateSavings = { viewModel.activateSavings(it) },
     )
 }
 

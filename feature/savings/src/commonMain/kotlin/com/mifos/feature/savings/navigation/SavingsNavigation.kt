@@ -37,7 +37,7 @@ fun NavGraphBuilder.savingsNavGraph(
 ) {
     navigation(
         startDestination = SavingsScreens.SavingsAccountSummary.route,
-        route="savings_nav_graph"
+        route = "savings_nav_graph",
     ) {
         savingsSummaryScreen(
             onBackPressed = navController::popBackStack,
@@ -92,7 +92,7 @@ fun NavGraphBuilder.savingsNavGraph(
 fun NavGraphBuilder.addSavingsAccountScreen(
     onBackPressed: () -> Unit,
 ) {
-    composable<SavingsAccountRoute>{
+    composable<SavingsAccountRoute> {
         SavingsAccountScreen(
             navigateBack = onBackPressed,
         )
@@ -129,7 +129,7 @@ fun NavGraphBuilder.savingsSummaryScreen(
 fun NavGraphBuilder.savingsAccountActivateScreen(
     onBackPressed: () -> Unit,
 ) {
-    composable<SavingsAccountActivate>{
+    composable<SavingsAccountActivate> {
         SavingsAccountActivateScreen(
             navigateBack = onBackPressed,
         )
@@ -139,7 +139,7 @@ fun NavGraphBuilder.savingsAccountActivateScreen(
 fun NavGraphBuilder.savingsAccountApprovalScreen(
     onBackPressed: () -> Unit,
 ) {
-    composable<SavingsAccountApproval>{
+    composable<SavingsAccountApproval> {
         SavingsAccountApprovalScreen(
             navigateBack = onBackPressed,
         )
@@ -165,7 +165,7 @@ fun NavGraphBuilder.savingsAccountTransactionScreen(
 data class SavingsAccountRoute(
     val groupId: Int,
     val clientId: Int,
-    val isGroupAccount: Boolean
+    val isGroupAccount: Boolean,
 )
 
 fun NavController.navigateToAddSavingsAccount(
@@ -178,7 +178,7 @@ fun NavController.navigateToAddSavingsAccount(
 
 @Serializable
 data class SavingsAccountApproval(
-    val savingsAccountId: Int
+    val savingsAccountId: Int,
 )
 
 fun NavController.navigateToSavingsAccountApproval(savingsAccountId: Int) {
@@ -187,7 +187,7 @@ fun NavController.navigateToSavingsAccountApproval(savingsAccountId: Int) {
 
 @Serializable
 data class SavingsAccountActivate(
-    val savingsAccountId: Int
+    val savingsAccountId: Int,
 )
 
 fun NavController.navigateToSavingsAccountActivate(savingsAccountId: Int) {
