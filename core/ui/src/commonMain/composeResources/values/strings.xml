@@ -69,4 +69,8 @@
     <string name="core_ui_transfer_external_id">Transfer External ID</string>
     <string name="core_ui_settlement_date">Settlement Date</string>
     <string name="core_ui_purchase_price_ratio">Purchase Price Ratio</string>
+
+    <string name="core_ui_click_here_to_view_filled_state">Click Here To View Filled State.</string>
+    <string name="core_ui_no_item_found">No Item Found</string>
+
 </resources>

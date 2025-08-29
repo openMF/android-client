@@ -40,6 +40,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosScaffold
+import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.designsystem.theme.MifosTypography
 import com.mifos.core.ui.components.Actions
 import com.mifos.core.ui.components.MifosActionsLoanListingComponent
@@ -55,14 +56,16 @@ import kotlin.collections.listOf
 internal fun ClientLoanAccountsScreenRoute(
     navigateBack: () -> Unit,
     viewModel: ClientLoanAccountsViewModel = koinViewModel(),
+    makeRepayment: (Int) -> Unit,
+    viewAccount: (Int) -> Unit,
 ) {
     val state by viewModel.stateFlow.collectAsStateWithLifecycle()
 
     EventsEffect(viewModel.eventFlow) { event ->
         when (event) {
-            is ClientLoanAccountsEvent.MakeRepayment -> TODO()
-            ClientLoanAccountsEvent.NavigateBack -> TODO()
-            is ClientLoanAccountsEvent.ViewAccount -> TODO()
+            is ClientLoanAccountsEvent.MakeRepayment -> makeRepayment(event.id)
+            ClientLoanAccountsEvent.NavigateBack -> navigateBack()
+            is ClientLoanAccountsEvent.ViewAccount -> viewAccount(event.id)
         }
     }
 
@@ -90,7 +93,11 @@ private fun ClientLoanAccountsScreen(
         Column(
             modifier = Modifier.padding(paddingValues)
                 .fillMaxSize()
-                .padding(start = 16.dp, end = 16.dp, top = 16.dp),
+                .padding(
+                    start = DesignToken.padding.large,
+                    end = DesignToken.padding.large,
+                    top = DesignToken.padding.large,
+                ),
         ) {
             ClientsAccountHeader(
                 totalItem = state.loanAccounts.size.toString(),
@@ -106,7 +113,7 @@ private fun ClientLoanAccountsScreen(
                 )
             }
 
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(DesignToken.padding.large))
 
             if (state.loanAccounts.isEmpty()) {
                 MifosEmptyCard()
@@ -118,18 +125,10 @@ private fun ClientLoanAccountsScreen(
                             accountNo = (loan.accountNo ?: "Not Available"),
                             loanProduct = loan.productName ?: "Not Available",
                             originalLoan = symbol + (
-                                (
-                                    loan.originalLoan
-                                        ?: "Not Available"
-                                    ).toString()
-                                ),
+                                    (loan.originalLoan ?: "Not Available").toString()),
                             amountPaid = symbol + ((loan.amountPaid ?: "Not Available").toString()),
                             loanBalance = symbol + (
-                                (
-                                    loan.amountPaid
-                                        ?: "Not Available"
-                                    ).toString()
-                                ),
+                                    (loan.amountPaid ?: "Not Available").toString()),
                             type = loan.loanType?.value ?: "Not Available",
                             // TODO check if we need to add other options as well, such as disburse and all
                             // currently didn't add it cuz its not in the UI design
