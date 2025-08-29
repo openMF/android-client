@@ -27,7 +27,7 @@ sealed class HomeDestinationsScreen(
 
     data object ClientListScreen : HomeDestinationsScreen(
         title = "Clients",
-        route = ClientScreens.ClientListScreen.route,
+        route = "",
         icon = MifosIcons.Person,
     )
 

@@ -52,8 +52,13 @@ import com.mifos.feature.report.navigation.reportNavGraph
 import com.mifos.feature.savings.navigation.navigateToAddSavingsAccount
 import com.mifos.feature.savings.navigation.navigateToSavingsAccountSummaryScreen
 import com.mifos.feature.savings.navigation.savingsNavGraph
+import com.mifos.feature.search.navigation.SearchScreenRoute
 import com.mifos.feature.search.navigation.searchNavGraph
 import com.mifos.feature.settings.navigation.settingsScreen
+import kotlinx.serialization.Serializable
+
+@Serializable
+data object MainNavGraph
 
 @Composable
 internal fun FeatureNavHost(
@@ -64,8 +69,7 @@ internal fun FeatureNavHost(
     modifier: Modifier = Modifier,
 ) {
     NavHost(
-        route = NavGraphRoute.MAIN_GRAPH,
-        startDestination = HomeDestinationsScreen.SearchScreen.route,
+        startDestination = SearchScreenRoute,
         navController = appState.navController,
         modifier = modifier,
     ) {

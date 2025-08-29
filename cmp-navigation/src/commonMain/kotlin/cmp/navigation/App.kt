@@ -80,11 +80,13 @@ import com.mifos.core.designsystem.theme.MifosBackground
 import com.mifos.feature.about.navigateToAboutScreen
 import com.mifos.feature.center.navigation.navigateToCenterListScreenRoute
 import com.mifos.feature.checker.inbox.task.navigation.navigateToCheckerInboxTasksScreenRoute
+import com.mifos.feature.client.navigation.navigateToClientListScreen
 import com.mifos.feature.groups.navigation.navigateToGroupListScreen
 import com.mifos.feature.individualCollectionSheet.navigation.navigateToIndividualCollectionSheetScreen
 import com.mifos.feature.offline.navigation.navigateToOfflineDashBoardScreen
 import com.mifos.feature.path.tracking.navigation.navigateToPathTrackingScreen
 import com.mifos.feature.report.navigation.navigateToReportScreen
+import com.mifos.feature.search.navigation.navigateToSearchScreen
 import com.mifos.feature.settings.navigation.navigateToSettingsScreen
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.painterResource
@@ -310,6 +312,12 @@ fun App(
                                         }
                                         HomeDestinationsScreen.GroupListScreen -> {
                                             appState.navController.navigateToGroupListScreen()
+                                        }
+                                        HomeDestinationsScreen.ClientListScreen -> {
+                                            appState.navController.navigateToClientListScreen()
+                                        }
+                                        HomeDestinationsScreen.SearchScreen -> {
+                                            appState.navController.navigateToSearchScreen()
                                         }
                                         else -> {
                                             appState.navController.apply {

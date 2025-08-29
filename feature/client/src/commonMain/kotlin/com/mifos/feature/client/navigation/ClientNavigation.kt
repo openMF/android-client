@@ -51,8 +51,12 @@ import com.mifos.feature.client.savingsAccounts.savingsAccountsDestination
 import com.mifos.room.entities.accounts.savings.SavingAccountDepositTypeEntity
 import com.mifos.room.entities.noncore.DataTableEntity
 import com.mifos.room.entities.survey.SurveyEntity
+import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 import kotlin.reflect.KFunction4
+
+@Serializable
+data object ClientNavGraph
 
 fun NavGraphBuilder.clientNavGraph(
     navController: NavController,
@@ -69,9 +73,8 @@ fun NavGraphBuilder.clientNavGraph(
     onDocumentClicked: (Int, String) -> Unit,
     navigateToHome: () -> Unit,
 ) {
-    navigation(
-        startDestination = ClientScreens.ClientListScreen.route,
-        route = "client_screen_route",
+    navigation<ClientNavGraph>(
+        startDestination = ClientListScreenRoute,
     ) {
         clientListScreenRoute(
             paddingValues = paddingValues,
@@ -178,9 +181,7 @@ fun NavGraphBuilder.clientListScreenRoute(
     onClientSelect: (Int) -> Unit,
     createNewClient: () -> Unit,
 ) {
-    composable(
-        route = ClientScreens.ClientListScreen.route,
-    ) {
+    composable<ClientListScreenRoute> {
         ClientListScreen(
             createNewClient = createNewClient,
             onClientClick = onClientSelect,
@@ -358,6 +359,9 @@ fun NavController.navigateCreateClientScreen() {
     navigate(ClientScreens.CreateClientScreen.route)
 }
 
+@Serializable
+data object ClientListScreenRoute
+
 fun NavController.navigateToClientListScreen() {
-    navigate(ClientScreens.ClientListScreen.route)
+    navigate(ClientListScreenRoute)
 }

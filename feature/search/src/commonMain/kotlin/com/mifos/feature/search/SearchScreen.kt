@@ -38,7 +38,7 @@ import com.mifos.feature.search.components.SearchScreenResult
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
-fun SearchScreenRoute(
+fun SearchScreen(
     onFabClick: (FabType) -> Unit,
     onSearchOptionClick: (SearchedEntity) -> Unit,
     modifier: Modifier = Modifier,
