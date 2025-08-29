@@ -125,10 +125,12 @@ private fun ClientLoanAccountsScreen(
                             accountNo = (loan.accountNo ?: "Not Available"),
                             loanProduct = loan.productName ?: "Not Available",
                             originalLoan = symbol + (
-                                    (loan.originalLoan ?: "Not Available").toString()),
+                                (loan.originalLoan ?: "Not Available").toString()
+                                ),
                             amountPaid = symbol + ((loan.amountPaid ?: "Not Available").toString()),
                             loanBalance = symbol + (
-                                    (loan.amountPaid ?: "Not Available").toString()),
+                                (loan.amountPaid ?: "Not Available").toString()
+                                ),
                             type = loan.loanType?.value ?: "Not Available",
                             // TODO check if we need to add other options as well, such as disburse and all
                             // currently didn't add it cuz its not in the UI design

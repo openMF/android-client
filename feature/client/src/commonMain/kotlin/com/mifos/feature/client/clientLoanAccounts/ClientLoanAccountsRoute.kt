@@ -22,13 +22,13 @@ data class ClientLoanAccountsRoute(
 fun NavGraphBuilder.clientLoanAccountsDestination(
     navigateBack: () -> Unit,
     navigateToViewAccount: (Int) -> Unit,
-    navigateToMakeRepayment : (Int) -> Unit,
+    navigateToMakeRepayment: (Int) -> Unit,
 ) {
     composable<ClientLoanAccountsRoute> {
         ClientLoanAccountsScreenRoute(
             navigateBack = navigateBack,
             viewAccount = navigateToViewAccount,
-            makeRepayment = navigateToMakeRepayment
+            makeRepayment = navigateToMakeRepayment,
         )
     }
 }

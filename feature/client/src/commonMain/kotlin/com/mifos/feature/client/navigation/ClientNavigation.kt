@@ -176,7 +176,7 @@ fun NavGraphBuilder.clientNavGraph(
         clientLoanAccountsDestination(
             navigateBack = navController::popBackStack,
             navigateToViewAccount = {},
-            navigateToMakeRepayment = {}
+            navigateToMakeRepayment = {},
         )
     }
 }
