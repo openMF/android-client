@@ -26,7 +26,7 @@ import cmp.navigation.navigation.HomeDestinationsScreen
 fun MifosNavigationBar(
     route: String,
     modifier: Modifier = Modifier,
-    onRouteSelected: (targetRoute: HomeDestinationsScreen) -> Unit,
+    onRouteSelected: (targetRoute: String) -> Unit,
 ) {
     val tabs = rememberSaveable {
         listOf(
@@ -63,7 +63,7 @@ fun MifosNavigationBar(
                     )
                 },
                 selected = selected,
-                onClick = { onRouteSelected(item) },
+                onClick = { onRouteSelected(targetRoute) },
             )
         }
     }

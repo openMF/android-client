@@ -275,7 +275,7 @@ fun App(
                             route?.let {
                                 MifosNavigationBar(route = it) { target ->
                                     appState.navController.apply {
-                                        navigate(target.route) {
+                                        navigate(target) {
                                             restoreState = true
                                             launchSingleTop = true
                                             popUpTo(route = graph.findStartDestination().route.toString()) {
