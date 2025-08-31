@@ -58,8 +58,7 @@ import org.koin.compose.viewmodel.koinViewModel
 internal fun ClientProfileScreen(
     notes: (Int) -> Unit,
     documents: (Int) -> Unit,
-    viewAssociatedLoanAccounts: (Int) -> Unit,
-    viewAssociatedSavingsAccounts: (Int) -> Unit,
+    viewAssociatedAccounts: (Int) -> Unit,
     identifiers: (Int) -> Unit,
     onNavigateBack: () -> Unit,
     navigateToClientDetailsScreen: (Int) -> Unit,
@@ -92,21 +91,15 @@ internal fun ClientProfileScreen(
                         notes(state.client?.id ?: -1)
                     }
 
-                    else -> null
+                    ClientProfileActionItem.General -> viewAssociatedAccounts(
+                        state.client?.id ?: -1,
+                    )
                 }
             }
 
             ClientProfileEvent.NavigateToClientDetailsScreen -> {
                 navigateToClientDetailsScreen(state.client?.id ?: -1)
             }
-
-            is ClientProfileEvent.OpenClientLoanAccounts -> viewAssociatedLoanAccounts(
-                state.client?.id ?: -1,
-            )
-
-            is ClientProfileEvent.OpenClientSavingsAccounts -> viewAssociatedSavingsAccounts(
-                state.client?.id ?: -1,
-            )
         }
     }
 
@@ -192,36 +185,6 @@ private fun ClientProfileScaffold(
                 }
             }
         }
-    }
-
-    if (state.showAccountChooserDialog) {
-        AlertDialog(
-            onDismissRequest = { onAction.invoke(ClientProfileAction.ToggleAccountChooserDialog) },
-            confirmButton = {},
-            dismissButton = {
-                TextButton(onClick = { onAction.invoke(ClientProfileAction.ToggleAccountChooserDialog) }) {
-                    Text(stringResource(Res.string.dismiss_text))
-                }
-            },
-            title = { Text(stringResource(Res.string.client_profile_select_account_type)) },
-            text = {
-                Column {
-                    MifosButton(
-                        modifier = Modifier.fillMaxWidth(),
-                        onClick = { onAction.invoke(ClientProfileAction.NavigateToClientSavingsAccounts) },
-                        text = { Text(stringResource(Res.string.client_profile_savings_account)) },
-                    )
-
-                    Spacer(modifier = Modifier.height(8.dp))
-
-                    MifosButton(
-                        modifier = Modifier.fillMaxWidth(),
-                        onClick = { onAction.invoke(ClientProfileAction.NavigateToClientLoanAccounts) },
-                        text = { Text(stringResource(Res.string.client_profile_loan_account)) },
-                    )
-                }
-            },
-        )
     }
 }
 

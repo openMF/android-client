@@ -136,14 +136,6 @@ internal class ClientProfileViewModel(
             ClientProfileAction.NavigateToClientDetailsScreen -> sendEvent(
                 ClientProfileEvent.NavigateToClientDetailsScreen,
             )
-
-            ClientProfileAction.ToggleAccountChooserDialog -> {
-                mutableStateFlow.update { it.copy(showAccountChooserDialog = !it.showAccountChooserDialog) }
-            }
-
-            ClientProfileAction.NavigateToClientLoanAccounts -> sendEvent(ClientProfileEvent.OpenClientLoanAccounts(state.client?.id ?: -1))
-
-            ClientProfileAction.NavigateToClientSavingsAccounts -> sendEvent(ClientProfileEvent.OpenClientSavingsAccounts(state.client?.id ?: -1))
         }
     }
 }
@@ -180,10 +172,6 @@ sealed interface ClientProfileEvent {
     data class OnActionClick(val action: ClientProfileActionItem) : ClientProfileEvent
 
     data object NavigateToClientDetailsScreen : ClientProfileEvent
-
-    data class OpenClientSavingsAccounts(val clientId: Int) : ClientProfileEvent
-
-    data class OpenClientLoanAccounts(val clientId: Int) : ClientProfileEvent
 }
 
 /**
@@ -200,10 +188,4 @@ sealed interface ClientProfileAction {
     data object OnRetry : ClientProfileAction
 
     data object NavigateToClientDetailsScreen : ClientProfileAction
-
-    data object ToggleAccountChooserDialog : ClientProfileAction
-
-    data object NavigateToClientSavingsAccounts : ClientProfileAction
-
-    data object NavigateToClientLoanAccounts : ClientProfileAction
 }
