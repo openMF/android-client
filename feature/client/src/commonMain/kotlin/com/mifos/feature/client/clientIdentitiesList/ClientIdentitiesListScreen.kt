@@ -242,7 +242,7 @@ private fun ClientIdentitiesDialog(
                 dialogText = stringResource(Res.string.feature_client_error_not_connected_internet),
                 onDismissRequest = { onAction.invoke(ClientIdentitiesListAction.CloseDialog) },
                 onConfirmation = { onAction.invoke(ClientIdentitiesListAction.Refresh) },
-                confirmationText = stringResource(Res.string.retry),
+                confirmationText = stringResource(Res.string.client_identifiers_retry),
             )
         }
     }
