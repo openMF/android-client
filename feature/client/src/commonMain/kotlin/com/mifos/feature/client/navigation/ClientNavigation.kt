@@ -182,7 +182,7 @@ fun NavGraphBuilder.clientNavGraph(
             onNavigateNext = navController::navigateToClientDetailsProfileRouteOnStatus,
         )
         clientIdentitiesListDestination(
-            addNewClientIdentity = {}
+            addNewClientIdentity = {},
         )
     }
 }

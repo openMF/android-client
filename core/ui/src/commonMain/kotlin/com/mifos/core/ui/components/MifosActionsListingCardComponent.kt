@@ -16,7 +16,6 @@ import androidclient.core.ui.generated.resources.core_ui_balance
 import androidclient.core.ui.generated.resources.core_ui_description
 import androidclient.core.ui.generated.resources.core_ui_document_id
 import androidclient.core.ui.generated.resources.core_ui_document_key
-import androidclient.core.ui.generated.resources.core_ui_document_type
 import androidclient.core.ui.generated.resources.core_ui_due
 import androidclient.core.ui.generated.resources.core_ui_due_as_of
 import androidclient.core.ui.generated.resources.core_ui_identify_documents
@@ -41,7 +40,6 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.shrinkVertically
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
-import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -60,7 +58,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -106,7 +103,7 @@ fun MifosActionsIdentifierListingComponent(
     isExpanded: Boolean,
     menuList: List<Actions>,
     onActionClicked: (Actions) -> Unit,
-    onClick: () -> Unit
+    onClick: () -> Unit,
 ) {
     val density = LocalDensity.current
 
@@ -150,11 +147,11 @@ fun MifosActionsIdentifierListingComponent(
                 enter = slideInVertically {
                     with(density) { -40.dp.roundToPx() }
                 } + expandVertically(
-                    expandFrom = Alignment.Top
+                    expandFrom = Alignment.Top,
                 ) + fadeIn(
-                    initialAlpha = 0.3f
+                    initialAlpha = 0.3f,
                 ),
-                exit = slideOutVertically() + shrinkVertically() + fadeOut()
+                exit = slideOutVertically() + shrinkVertically() + fadeOut(),
             ) {
                 Surface(
                     modifier = Modifier.fillMaxWidth(),
@@ -593,7 +590,7 @@ private fun PreviewMifosActionsIdentifierListingComponent() {
                 }
             },
             onClick = {},
-            isExpanded = true
+            isExpanded = true,
         )
     }
 }

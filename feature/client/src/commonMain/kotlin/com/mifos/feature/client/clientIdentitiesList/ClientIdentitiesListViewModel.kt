@@ -1,7 +1,14 @@
+/*
+ * Copyright 2025 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ */
 package com.mifos.feature.client.clientIdentitiesList
 
-import androidclient.feature.client.generated.resources.Res
-import androidclient.feature.client.generated.resources.feature_client_error_not_connected_internet
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
@@ -15,7 +22,6 @@ import com.mifos.feature.client.clientIdentitiesList.ClientIdentitiesListEvent.A
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import org.jetbrains.compose.resources.getString
 
 class ClientIdentitiesListViewModel(
     private val repository: ClientIdentifiersRepository,
@@ -43,7 +49,6 @@ class ClientIdentitiesListViewModel(
             }
 
             ClientIdentitiesListAction.UploadAgain -> {
-
             }
 
             ClientIdentitiesListAction.ViewDocument -> sendEvent(ClientIdentitiesListEvent.ViewDocument)
@@ -111,7 +116,6 @@ class ClientIdentitiesListViewModel(
                     it.copy(dialogState = ClientIdentitiesListState.DialogState.Loading)
                 }
 
-
                 is DataState.Success -> {
                     mutableStateFlow.update {
                         it.copy(
@@ -157,7 +161,6 @@ class ClientIdentitiesListViewModel(
         }
     }
 }
-
 
 data class ClientIdentitiesListState(
     val isSearchBarActive: Boolean = false,

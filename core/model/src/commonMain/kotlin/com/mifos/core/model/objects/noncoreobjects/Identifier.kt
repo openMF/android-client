@@ -29,4 +29,3 @@ data class Identifier(
 
     var status: String? = null,
 ) : Parcelable
-

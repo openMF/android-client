@@ -20,7 +20,7 @@ data class ClientIdentitiesListRoute(
 )
 
 fun NavGraphBuilder.clientIdentitiesListDestination(
-    addNewClientIdentity: (Int) -> Unit
+    addNewClientIdentity: (Int) -> Unit,
 ) {
     composable<ClientIdentitiesListRoute> {
         ClientIdentitiesListScreenRoute(

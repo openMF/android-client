@@ -1,3 +1,12 @@
+/*
+ * Copyright 2025 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ */
 package com.mifos.feature.client.clientIdentitiesList
 
 import androidclient.feature.client.generated.resources.Res
@@ -11,7 +20,6 @@ import androidclient.feature.client.generated.resources.client_savings_item
 import androidclient.feature.client.generated.resources.feature_client_error_not_connected_internet
 import androidclient.feature.client.generated.resources.feature_client_identifiers
 import androidclient.feature.client.generated.resources.search
-import androidclient.feature.client.generated.resources.client_identifiers_retry
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -30,7 +38,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mifos.core.designsystem.component.LoadingDialogState
-import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosLoadingDialog
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.theme.DesignToken
@@ -105,9 +112,14 @@ internal fun ClientIdentitiesListScreen(
                                     if (item.status!!.lowercase().endsWith("active")) Status.Active
                                     if (item.status!!.lowercase()
                                             .endsWith("inactive")
-                                    ) Status.InActive
-                                    else Status.Pending
-                                } else null,
+                                    ) {
+                                        Status.InActive
+                                    } else {
+                                        Status.Pending
+                                    }
+                                } else {
+                                    null
+                                },
                                 description = item.description ?: emptyMessage,
                                 // TODO check what is identifyDocuments, couldnot find in the api
                                 identifyDocuments = item.documentType?.name ?: emptyMessage,
@@ -148,7 +160,6 @@ internal fun ClientIdentitiesListScreen(
             }
         }
     }
-
 }
 
 @Composable
@@ -216,8 +227,8 @@ private fun ClientIdentitiesDialog(
         is ClientIdentitiesListState.DialogState.DeletedSuccessfully -> {
             MifosAlertDialog(
                 dialogTitle = stringResource(Res.string.client_identifiers_identities_success_text),
-                dialogText = stringResource(Res.string.client_identifiers_identities_client_identifier_deletion_success)
-                        + " " + state.dialogState.id,
+                dialogText = stringResource(Res.string.client_identifiers_identities_client_identifier_deletion_success) +
+                    " " + state.dialogState.id,
                 onDismissRequest = { onAction.invoke(ClientIdentitiesListAction.CloseDialog) },
                 onConfirmation = { onAction.invoke(ClientIdentitiesListAction.CloseDialog) },
             )
@@ -231,7 +242,7 @@ private fun ClientIdentitiesDialog(
                 dialogText = stringResource(Res.string.feature_client_error_not_connected_internet),
                 onDismissRequest = { onAction.invoke(ClientIdentitiesListAction.CloseDialog) },
                 onConfirmation = { onAction.invoke(ClientIdentitiesListAction.Refresh) },
-                confirmationText = stringResource(Res.string.retry)
+                confirmationText = stringResource(Res.string.retry),
             )
         }
     }
