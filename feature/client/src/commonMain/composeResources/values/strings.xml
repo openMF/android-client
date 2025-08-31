@@ -415,6 +415,7 @@
     <string name="client_identifiers_identities">Identities</string>
     <string name="client_identifiers_identities_success_text">Success</string>
     <string name="client_identifiers_error_text">Error</string>
+    <string name="client_identifiers_retry">Retry</string>
     <string name="client_identifiers_identities_client_identifier_deletion_success">Successfully deleted client identifier with id</string>
 <!--    <string name="client_identifiers_identities">Identities</string>-->
 

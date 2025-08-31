@@ -11,6 +11,7 @@ import androidclient.feature.client.generated.resources.client_savings_item
 import androidclient.feature.client.generated.resources.feature_client_error_not_connected_internet
 import androidclient.feature.client.generated.resources.feature_client_identifiers
 import androidclient.feature.client.generated.resources.search
+import androidclient.feature.client.generated.resources.client_identifiers_retry
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -230,7 +231,7 @@ private fun ClientIdentitiesDialog(
                 dialogText = stringResource(Res.string.feature_client_error_not_connected_internet),
                 onDismissRequest = { onAction.invoke(ClientIdentitiesListAction.CloseDialog) },
                 onConfirmation = { onAction.invoke(ClientIdentitiesListAction.Refresh) },
-                confirmationText = "Retry"
+                confirmationText = stringResource(Res.string.retry)
             )
         }
     }
