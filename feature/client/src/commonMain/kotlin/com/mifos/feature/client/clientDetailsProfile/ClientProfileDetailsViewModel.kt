@@ -204,7 +204,7 @@ internal class ClientProfileDetailsViewModel(
                 }
             }
             ClientProfileDetailsAction.OnRetry -> getClientAndObserveNetwork()
-            ClientProfileDetailsAction.OnUpdateDetailsClick -> {}
+            ClientProfileDetailsAction.OnUpdateDetailsClick -> sendEvent(ClientProfileDetailsEvent.NavigateToUpdateDetails)
             ClientProfileDetailsAction.OnUpdatePhotoClick -> sendEvent(ClientProfileDetailsEvent.NavigateToUpdatePhoto)
             ClientProfileDetailsAction.OnUpdateSignatureClick -> {}
             ClientProfileDetailsAction.ConfirmUnAssignStaff -> {
@@ -220,7 +220,7 @@ internal class ClientProfileDetailsViewModel(
                 }
             }
 
-            ClientProfileDetailsAction.OnNext -> sendEvent(ClientProfileDetailsEvent.NavigateNext)
+            ClientProfileDetailsAction.OnNext -> getClientAndObserveNetwork()
         }
     }
 
@@ -294,7 +294,7 @@ sealed interface ClientProfileDetailsEvent {
 
     data object NavigateToUpdatePhoto : ClientProfileDetailsEvent
 
-    data object NavigateNext : ClientProfileDetailsEvent
+    data object NavigateToUpdateDetails : ClientProfileDetailsEvent
 }
 
 /**

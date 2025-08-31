@@ -9,6 +9,7 @@
  */
 plugins {
     alias(libs.plugins.mifos.cmp.feature)
+    alias(libs.plugins.kotlin.serialization)
 }
 
 android {
@@ -24,6 +25,8 @@ kotlin {
             implementation(compose.ui)
             implementation(projects.core.common)
             implementation(projects.core.model)
+            implementation(projects.core.domain)
+            implementation(libs.kotlinx.serialization.json)
         }
     }
 }

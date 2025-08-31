@@ -21,12 +21,12 @@ data class ClientStaffRoute(
 
 fun NavGraphBuilder.clientStaffDestination(
     onNavigateBack: () -> Unit,
-    navigateToHome: () -> Unit,
+    onNavigateNext: (Int) -> Unit,
 ) {
     composable<ClientStaffRoute> {
         ClientStaffScreen(
             onNavigateBack = onNavigateBack,
-            onNavigateNext = navigateToHome,
+            onNavigateNext = onNavigateNext,
         )
     }
 }

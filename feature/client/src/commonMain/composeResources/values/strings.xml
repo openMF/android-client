@@ -14,11 +14,15 @@
     <string name="feature_client_failed_to_load_db_clients">Failed to load Database Clients</string>
     <string name="feature_client_no_more_clients_available">No more Clients Available!</string>
 
+    <string name="feature_client_personal_details">Personal Details</string>
+    <string name="feature_client_account_information">Account Information</string>
+    <string name="feature_client_office_use">Office Use</string>
+    <string name="feature_client_error">Error</string>
     <string name="feature_client_account_number">Account Number</string>
     <string name="feature_client_external_id">External ID</string>
     <string name="feature_client_activation_date">Activation Date</string>
     <string name="feature_client_office">Office</string>
-    <string name="feature_client_mobile_no">Mobile Number</string>
+    <string name="feature_client_phone_no">Phone Number</string>
     <string name="feature_client_group">Group</string>
     <string name="feature_client_loan_account">Loan Accounts</string>
     <string name="feature_client_savings_account">Savings Accounts</string>
@@ -175,7 +179,7 @@
 
     <string name="feature_client_failed_to_fetch_clients">Failed to Fetch Clients</string>
     <string name="feature_client_failed_to_more_clients">Failed to load more Clients</string>
-    <string name="feature_client_address">Address :</string>
+    <string name="feature_client_address">Address</string>
     <string name="feature_client_add_address">Add Address</string>
     <string name="feature_client_address_type">Address Type*</string>
     <string name="feature_client_address_line_1">Address Line 1</string>
@@ -219,14 +223,45 @@
     <string name="client_profile_notes_title">Notes</string>
     <string name="client_profile_notes_subtitle">Check or update note accounts</string>
 
+
+    <!-- Client_Profile-General-Headers -->
+    <string name="client_profile_general_header_performance_history">Performance History</string>
+    <string name="client_profile_general_header_actions">Actions</string>
+    <string name="client_profile_general_header_linked_accounts">Linked Accounts</string>
+
+    <!-- Client_Profile-General-Performance History -->
+    <string name="client_performance_history_loan_cycle_count_label">No. Of Loan Cycles : </string>
+    <string name="client_performance_history_active_loans_count_label">No. Of Active Loans : </string>
+    <string name="client_performance_history_active_savings_label">No. of Active Savings : </string>
+    <string name="client_performance_history_last_loan_amount_label">Last Loan Amount : </string>
+    <string name="client_performance_history_total_savings_label">Total Savings : </string>
+
+    <!-- Client_Profile-General-Actions -->
+    <string name="client_profile_general_action_title_upcoming_charges">Upcoming Charges</string>
+    <string name="client_profile_general_action_subtitle_upcoming_charges">Check all linked accounts</string>
+    <string name="client_profile_general_action_title_loan_accounts">Loan Accounts</string>
+    <string name="client_profile_general_action_subtitle_loan_accounts">View or edit the linked address</string>
+    <string name="client_profile_general_action_title_saving_account">Saving Accounts</string>
+    <string name="client_profile_general_action_subtitle_saving_account">Check or edit the linked accounts</string>
+    <string name="client_profile_general_action_title_fixed_deposit_accounts">Fixed Deposit Accounts</string>
+    <string name="client_profile_general_action_subtitle_fixed_deposit_accounts">Check or update the identities</string>
+    <string name="client_profile_general_action_title_recurring_deposit_accounts">Recurring Deposit Accounts</string>
+    <string name="client_profile_general_action_subtitle_recurring_deposit_accounts">Check or upload the documents</string>
+    <string name="client_profile_general_action_title_shares_accounts">Shares Accounts</string>
+    <string name="client_profile_general_action_subtitle_shares_accounts">Check or update the account notes</string>
+    <string name="client_profile_general_action_title_collateral_data">Collateral Data</string>
+    <string name="client_profile_general_action_subtitle_collateral_data">Check or update the account notes</string>
+
+
     <!-- Personal Info -->
     <string name="gender">Gender</string>
     <string name="date_of_birth">Date of Birth</string>
 
     <!-- Account Info -->
-    <string name="account_no">Account No.</string>
+    <string name="account_no">Account No</string>
     <string name="office">Office</string>
     <string name="external_id">External Id</string>
+    <string name="email_address">Email Address</string>
 
     <!-- Other Info -->
     <string name="legal_form">Legal Form</string>
@@ -341,6 +376,11 @@
     <string name="update_default_account_success_title">Update Successful</string>
     <string name="update_default_no_accounts_found">No Savings Accounts found for this client</string>
 
+    <!-- Client Edit Details -->
+    <string name="client_details_updated">Client Details Updated</string>
+    <string name="client_details_updated_success_message">The client details has been updated successfully. Please Continue to get back to Home</string>
+    <string name="client_details_update_failure_title">Client Details Update Failed</string>
+
     <!-- Client Closure -->
     <string name="client_closure_success_title">Client Closure Successful</string>
     <string name="client_closure_success_message">The client account has been closed successfully. Please Continue to get back to Home</string>
@@ -349,4 +389,24 @@
     <string name="client_closure_expected_date">Expected Closing Date</string>
     <string name="client_closure_title">Closure Application</string>
     <string name="client_closure_no_reasons_found">No closure reasons found</string>
+
+    <string name="client_savings_savings_accounts">Savings Accounts</string>
+    <string name="client_savings_item">item</string>
+    <string name="client_savings_pending_approval">Pending Approval</string>
+    <string name="client_savings_not_avilable">Not Available</string>
+
+    <string name="client_collateral_title">Client Collateral</string>
+    <string name="client_collateral_choose_type">Choose Collateral Type</string>
+    <string name="client_collateral_name">Collateral Name</string>
+    <string name="client_collateral_quality">Type/Quality</string>
+    <string name="client_collateral_unit_type">Unit Type</string>
+    <string name="client_collateral_base_price">Base Price</string>
+    <string name="client_collateral_pct_to_base">Percentage to Base</string>
+    <string name="client_collateral_quantity">Quantity</string>
+    <string name="client_collateral_total">Total</string>
+    <string name="client_collateral_total_collateral">Total Collateral Value</string>
+    <string name="client_collateral_no_options">No Collateral options found for this client</string>
+    <string name="client_collateral_success_title">Collateral Created Successfully</string>
+    <string name="client_collateral_success_message">Collateral created successfully. Click Continue to navigate to Client detail profile.</string>
+    <string name="client_collateral_failure_title">Collateral Creation Failed</string>
 </resources>

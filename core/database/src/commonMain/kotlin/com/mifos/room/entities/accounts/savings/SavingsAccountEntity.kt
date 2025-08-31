@@ -83,4 +83,6 @@ data class SavingsAccountEntity(
 
     @ColumnInfo(index = true, name = INHERIT_FIELD_NAME, typeAffinity = UNDEFINED, collate = UNSPECIFIED, defaultValue = VALUE_UNSPECIFIED)
     val depositType: SavingAccountDepositTypeEntity? = null,
+
+    val lastActiveTransactionDate: List<Int>? = null,
 ) : Parcelable

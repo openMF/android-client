@@ -234,6 +234,7 @@ object AppColors {
     val primaryBlue = Color(0xFF33618D)
     val borderColor = Color(0xFF42474E)
     val borderColorOne = Color(0xFFD6E4F7)
+    val cardBorders = Color(0xFFD6E4F7)
 
     val customBlack = Color(0xFF3A3A3A)
     val customWhite = Color(0xFFFFFFFF)
@@ -246,4 +247,5 @@ object AppColors {
     val lightRed = Color(0xFFFF6E6E)
     val peach = Color(0xFFFF926E)
     val lightPurple = Color(0xFF706EFF)
+    val stepperColor = Color(0xFF9ECAFC)
 }

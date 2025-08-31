@@ -11,31 +11,34 @@ package com.mifos.feature.note.navigation
 
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
-import androidx.navigation.NavType
-import androidx.navigation.compose.composable
-import androidx.navigation.navArgument
-import com.mifos.core.common.utils.Constants
-import com.mifos.feature.note.NoteScreen
+import androidx.navigation.navigation
+import com.mifos.feature.note.addEditNotes.addEditNoteRoute
+import com.mifos.feature.note.addEditNotes.navigateToAddEditNoteScreen
+import com.mifos.feature.note.notes.NoteRoute
+import com.mifos.feature.note.notes.navigateToNoteScreenWithUpdatedList
+import com.mifos.feature.note.notes.noteRoute
+import kotlinx.serialization.Serializable
 
-/**
- * Created by Pronay Sarker on 17/08/2024 (12:05 AM)
- */
+@Serializable
+object NoteNavigationRoute
+
 fun NavGraphBuilder.noteNavGraph(
+    navController: NavController,
     onBackPressed: () -> Unit,
 ) {
-    composable(
-        route = NoteScreens.NoteScreen.route,
-        arguments = listOf(
-            navArgument(name = Constants.ENTITY_ID, builder = { NavType.IntType }),
-            navArgument(name = Constants.ENTITY_TYPE, builder = { NavType.StringType }),
-        ),
+    navigation<NoteNavigationRoute>(
+        startDestination = NoteRoute::class,
     ) {
-        NoteScreen(
-            onBackPressed = onBackPressed,
+        noteRoute(
+            onNavigateBack = onBackPressed,
+            onNavigateAddEditNote = navController::navigateToAddEditNoteScreen,
+        )
+
+        addEditNoteRoute(
+            onBackPressed = {
+                navController.popBackStack()
+            },
+            onNavigateWithUpdatedList = navController::navigateToNoteScreenWithUpdatedList,
         )
     }
-}
-
-fun NavController.navigateToNoteScreen(entityId: Int, entityType: String?) {
-    navigate(NoteScreens.NoteScreen.argument(entityId, entityType))
 }

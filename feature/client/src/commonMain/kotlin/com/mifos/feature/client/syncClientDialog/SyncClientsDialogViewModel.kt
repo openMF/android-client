@@ -162,7 +162,7 @@ class SyncClientsDialogViewModel(
      * REST API using Ktorfit and saving these accounts to Database with DatabaseHelperClient
      * and then DataManagerClient gives the returns the Clients Accounts to Presenter.
      *
-     * onNext : As Client Accounts Successfully sync then now sync the there Loan and LoanRepayment
+     * OnNext : As Client Accounts Successfully sync then now sync the there Loan and LoanRepayment
      * onError :
      *
      * @param clientId Client Id
@@ -189,7 +189,7 @@ class SyncClientsDialogViewModel(
      * In Which two request is going to server Loans and LoanRepayment and This request will not
      * complete till that both request successfully got response (200 OK). In Which one will fail
      * then response will come in onError. and If both request is 200 response then response will
-     * come in onNext.
+     * come in OnNext.
      *
      * @param loanId Loan Id
      */

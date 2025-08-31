@@ -12,7 +12,9 @@ package com.mifos.core.data.repositoryImp
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.common.utils.asDataStateFlow
 import com.mifos.core.data.repository.NoteRepository
-import com.mifos.core.model.objects.Note
+import com.mifos.core.model.objects.notes.Note
+import com.mifos.core.model.objects.payloads.NotesPayload
+import com.mifos.core.network.GenericResponse
 import com.mifos.core.network.datamanager.DataManagerNote
 import kotlinx.coroutines.flow.Flow
 
@@ -20,8 +22,43 @@ class NoteRepositoryImp(
     private val dataManagerNote: DataManagerNote,
 ) : NoteRepository {
 
-    override fun getNotes(entityType: String, entityId: Int): Flow<DataState<List<Note>>> {
-        return dataManagerNote.getNotes(entityType, entityId)
-            .asDataStateFlow()
+    override suspend fun addNewNote(
+        resourceType: String,
+        resourceId: Long,
+        notesPayload: NotesPayload,
+    ): GenericResponse {
+        return dataManagerNote.addNewNote(resourceType, resourceId, notesPayload)
+    }
+
+    override suspend fun deleteNote(
+        resourceType: String,
+        resourceId: Long,
+        noteId: Long,
+    ): GenericResponse {
+        return dataManagerNote.deleteNote(resourceType, resourceId, noteId)
+    }
+
+    override fun retrieveNote(
+        resourceType: String,
+        resourceId: Long,
+        noteId: Long,
+    ): Flow<DataState<Note>> {
+        return dataManagerNote.retrieveNote(resourceType, resourceId, noteId).asDataStateFlow()
+    }
+
+    override fun retrieveListNotes(
+        resourceType: String,
+        resourceId: Long,
+    ): Flow<DataState<List<Note>>> {
+        return dataManagerNote.retrieveListNotes(resourceType, resourceId).asDataStateFlow()
+    }
+
+    override suspend fun updateNote(
+        resourceType: String,
+        resourceId: Long,
+        noteId: Long,
+        notesPayload: NotesPayload,
+    ): GenericResponse {
+        return dataManagerNote.updateNote(resourceType, resourceId, noteId, notesPayload)
     }
 }

@@ -17,6 +17,7 @@ import com.mifos.core.data.repository.ChargeDialogRepository
 import com.mifos.core.data.repository.CheckerInboxRepository
 import com.mifos.core.data.repository.CheckerInboxTasksRepository
 import com.mifos.core.data.repository.ClientChargeRepository
+import com.mifos.core.data.repository.ClientDetailsEditRepository
 import com.mifos.core.data.repository.ClientDetailsRepository
 import com.mifos.core.data.repository.ClientIdentifierDialogRepository
 import com.mifos.core.data.repository.ClientIdentifiersRepository
@@ -78,6 +79,7 @@ import com.mifos.core.data.repositoryImp.ChargeDialogRepositoryImp
 import com.mifos.core.data.repositoryImp.CheckerInboxRepositoryImp
 import com.mifos.core.data.repositoryImp.CheckerInboxTasksRepositoryImp
 import com.mifos.core.data.repositoryImp.ClientChargeRepositoryImp
+import com.mifos.core.data.repositoryImp.ClientDetailsEditRepositoryImpl
 import com.mifos.core.data.repositoryImp.ClientDetailsRepositoryImp
 import com.mifos.core.data.repositoryImp.ClientIdentifierDialogRepositoryImp
 import com.mifos.core.data.repositoryImp.ClientIdentifiersRepositoryImp
@@ -152,6 +154,7 @@ val RepositoryModule = module {
     singleOf(::ClientIdentifierDialogRepositoryImp) bind ClientIdentifierDialogRepository::class
     singleOf(::ClientIdentifiersRepositoryImp) bind ClientIdentifiersRepository::class
     singleOf(::CreateNewClientRepositoryImp) bind CreateNewClientRepository::class
+    singleOf(::ClientDetailsEditRepositoryImpl) bind ClientDetailsEditRepository::class
     singleOf(::PinPointClientRepositoryImp) bind PinPointClientRepository::class
 
     // Center
