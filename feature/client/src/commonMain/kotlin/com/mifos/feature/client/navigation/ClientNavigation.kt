@@ -34,6 +34,8 @@ import com.mifos.feature.client.clientEditProfile.navigateToClientProfileEditPro
 import com.mifos.feature.client.clientGeneral.clientProfileGeneralDestination
 import com.mifos.feature.client.clientGeneral.navigateToClientProfileGeneralRoute
 import com.mifos.feature.client.clientIdentifiers.ClientIdentifiersScreen
+import com.mifos.feature.client.clientIdentitiesList.clientIdentitiesListDestination
+import com.mifos.feature.client.clientIdentitiesList.navigateToClientIdentifiersScreen
 import com.mifos.feature.client.clientPinpoint.PinpointClientScreen
 import com.mifos.feature.client.clientProfile.clientProfileDestination
 import com.mifos.feature.client.clientProfile.navigateToClientProfileRoute
@@ -126,7 +128,7 @@ fun NavGraphBuilder.clientNavGraph(
             onNavigateBack = navController::popBackStack,
             notes = notes,
             documents = documents,
-            identifiers = navController::navigateClientIdentifierScreen,
+            identifiers = navController::navigateToClientIdentifiersScreen,
             navigateToClientDetailsScreen = navController::navigateToClientDetailsProfileRoute,
             viewAssociatedAccounts = navController::navigateToClientProfileGeneralRoute,
         )
@@ -178,6 +180,9 @@ fun NavGraphBuilder.clientNavGraph(
         clientCollateralDestination(
             onNavigateBack = navController::popBackStack,
             onNavigateNext = navController::navigateToClientDetailsProfileRouteOnStatus,
+        )
+        clientIdentitiesListDestination(
+            addNewClientIdentity = {}
         )
     }
 }

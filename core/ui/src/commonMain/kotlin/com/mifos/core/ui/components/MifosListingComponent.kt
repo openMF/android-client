@@ -55,6 +55,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -62,6 +63,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
+import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.designsystem.theme.AppColors
 import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.designsystem.theme.MifosTheme
@@ -120,6 +122,28 @@ fun MifosListingRowItem(
             }
         },
         valueContent = { Text(text = value, style = valueStyle.copy(color = valueColor)) },
+    )
+}
+
+@Composable
+fun MifosListingRowItemHeader(
+    text: String,
+    keyStyle: TextStyle = MifosTypography.labelMediumEmphasized,
+    valueStyle: TextStyle = MifosTypography.labelMedium,
+    valueColor: Color = MaterialTheme.colorScheme.onSurface,
+) {
+    MifosListingRowItem(
+        keyContent = {
+            if (text.isNotBlank()) {
+                Text(text = text, style = keyStyle)
+            }
+        },
+        valueContent = {
+            Icon(
+                imageVector = MifosIcons.MoreHoriz,
+                contentDescription = "More vert",
+            )
+        },
     )
 }
 
@@ -427,7 +451,7 @@ fun MifosDelinquencyListingComponent(
             ) {
                 MifosListingRowItem(
                     key = stringResource(Res.string.core_ui_action),
-                    value = if (isPause)"Pause" else "Resume",
+                    value = if (isPause) "Pause" else "Resume",
                     valueColor = if (isPause) AppColors.customYellow else AppColors.customEnable,
                 )
                 MifosListingRowItem(
