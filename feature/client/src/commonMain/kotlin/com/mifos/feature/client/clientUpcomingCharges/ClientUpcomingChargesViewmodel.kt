@@ -20,6 +20,7 @@ import com.mifos.room.entities.client.ChargesEntity
 import com.mifos.room.entities.client.ClientEntity
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -59,30 +60,36 @@ class ClientUpcomingChargesViewmodel(
                     it.copy(isSearchBarOpen = !it.isSearchBarOpen)
                 }
             }
+
+            ClientUpcomingChargesAction.OnRefresh -> checkNetworkAndGetCharges()
+
+            ClientUpcomingChargesAction.DismissDialog -> {
+                mutableStateFlow.update { it.copy(dialogState = null) }
+            }
         }
     }
 
     init {
-        viewModelScope.launch {
-            checkNetworkAndGetCharges()
-        }
+        checkNetworkAndGetCharges()
     }
 
-    suspend fun checkNetworkAndGetCharges() {
-        val isOnline = networkMonitor.isOnline.first()
-        when (isOnline) {
-            true -> {
-                mutableStateFlow.update { it.copy(dialogState = null) }
-                getClientCharges()
-            }
+    fun checkNetworkAndGetCharges() {
+        viewModelScope.launch {
+            val isOnline = networkMonitor.isOnline.first()
+            when (isOnline) {
+                true -> {
+                    mutableStateFlow.update { it.copy(dialogState = null) }
+                    getClientCharges()
+                }
 
-            false -> {
-                mutableStateFlow.update {
-                    it.copy(
-                        dialogState = ClientUpcomingChargesState.DialogState.Error(
-                            getString(Res.string.feature_client_error_not_connected_internet),
-                        ),
-                    )
+                false -> {
+                    mutableStateFlow.update {
+                        it.copy(
+                            dialogState = ClientUpcomingChargesState.DialogState.Error(
+                                getString(Res.string.feature_client_error_not_connected_internet)
+                            ),
+                        )
+                    }
                 }
             }
         }
@@ -105,17 +112,18 @@ class ClientUpcomingChargesViewmodel(
                 }
             }.onFailure { e ->
                 mutableStateFlow.update {
-                    it.copy(dialogState = ClientUpcomingChargesState.DialogState.Error(e.message.toString()))
+                    it.copy(dialogState = ClientUpcomingChargesState.DialogState.Error("An error occured while fetch upcoming client charges, would you liek to retry?"))
                 }
             }
         }
     }
 
+
 }
 
 data class ClientUpcomingChargesState(
     val isFilterOpen: Boolean = false,
-    val chargesFlow: Flow<PagingData<ChargesEntity>>?,
+    val chargesFlow: Flow<PagingData<ChargesEntity>>? = null,
     val isExpanded: Boolean = false,
     val expandedItemIndex: Int = -1,
     val isSearchBarOpen: Boolean = false,
@@ -133,7 +141,9 @@ sealed interface ClientUpcomingChargesEvent {
 
 sealed interface ClientUpcomingChargesAction {
     data object PayOutstandingAmound : ClientUpcomingChargesAction
+    data object DismissDialog : ClientUpcomingChargesAction
     data object ToggleFilter : ClientUpcomingChargesAction
     data object ToggleSearch : ClientUpcomingChargesAction
+    data object OnRefresh : ClientUpcomingChargesAction
     data class CardClicked(val index: Int) : ClientUpcomingChargesAction
 }
