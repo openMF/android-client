@@ -58,9 +58,9 @@ import org.koin.compose.viewmodel.koinViewModel
 @Composable
 fun RecurringDepositAccountScreen(
     navigateBack: () -> Unit,
+    onApproveAccount: (String) -> Unit,
+    onViewAccount: (String) -> Unit,
     modifier: Modifier = Modifier,
-    onApproveAccount: (String) -> Unit = {},
-    onViewAccount: (String) -> Unit = {},
     viewModel: RecurringDepositAccountViewModel = koinViewModel(),
 ) {
     val state by viewModel.stateFlow.collectAsStateWithLifecycle()
@@ -225,11 +225,11 @@ internal fun RecurringDepositAccountScaffold(
 }
 
 @Composable
-internal fun RecurringDepositAccountHeader(
+private fun RecurringDepositAccountHeader(
     totalItem: String,
+    onToggleFilter: () -> Unit,
     modifier: Modifier = Modifier,
-    onToggleFilter: () -> Unit = {},
-    onToggleSearch: () -> Unit = {},
+    onToggleSearch: () -> Unit,
 ) {
     Row(
         modifier = modifier.fillMaxWidth()

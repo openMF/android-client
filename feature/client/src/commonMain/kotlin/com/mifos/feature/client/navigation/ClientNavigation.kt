@@ -148,6 +148,8 @@ fun NavGraphBuilder.clientNavGraph(
 
         clientRecurringDepositAccountDestination(
             navigateBack = navController::popBackStack,
+            {},
+            {}
         )
 
         clientProfileDetailsDestination(

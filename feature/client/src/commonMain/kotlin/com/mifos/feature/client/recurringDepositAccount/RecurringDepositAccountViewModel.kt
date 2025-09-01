@@ -23,13 +23,11 @@ import kotlinx.coroutines.launch
 class RecurringDepositAccountViewModel(
     savedStateHandle: SavedStateHandle,
     private val getClientDetailsUseCase: GetClientDetailsUseCase,
-) : BaseViewModel<
-    RecurringDepositAccountState,
-    RecurringDepositAccountEvent,
-    RecurringDepositAccountAction,
-    >(
-    initialState = RecurringDepositAccountState(),
-) {
+) : BaseViewModel<RecurringDepositAccountState,
+        RecurringDepositAccountEvent,
+        RecurringDepositAccountAction>
+    (initialState = RecurringDepositAccountState())
+{
 
     val route = savedStateHandle.toRoute<RecurringDepositAccountRoute>()
 
@@ -44,15 +42,19 @@ class RecurringDepositAccountViewModel(
                     it.copy(dialogState = null)
                 }
             }
+
             is RecurringDepositAccountAction.NavigateBack -> {
                 sendEvent(RecurringDepositAccountEvent.OnNavigateBack)
             }
+
             is RecurringDepositAccountAction.Refresh -> {
                 getRecurringDepositAccounts()
             }
+
             is RecurringDepositAccountAction.Search -> {
                 getRecurringDepositAccounts()
             }
+
             is RecurringDepositAccountAction.ToggleFilter -> {
                 mutableStateFlow.update {
                     it.copy(
@@ -60,6 +62,7 @@ class RecurringDepositAccountViewModel(
                     )
                 }
             }
+
             is RecurringDepositAccountAction.ToggleSearch -> {
                 mutableStateFlow.update {
                     it.copy(
@@ -67,6 +70,7 @@ class RecurringDepositAccountViewModel(
                     )
                 }
             }
+
             is RecurringDepositAccountAction.UpdateSearch -> {
                 mutableStateFlow.update {
                     it.copy(
@@ -74,6 +78,7 @@ class RecurringDepositAccountViewModel(
                     )
                 }
             }
+
             is RecurringDepositAccountAction.ViewAccount -> {
                 sendEvent(
                     RecurringDepositAccountEvent.OnViewAccount(action.accountNumber),
@@ -94,25 +99,30 @@ class RecurringDepositAccountViewModel(
                 when (result) {
                     is DataState.Error -> {
                         mutableStateFlow.update {
-                            it.copy(dialogState = RecurringDepositAccountState.DialogState.Error(result.message))
+                            it.copy(
+                                dialogState = RecurringDepositAccountState.DialogState.Error(
+                                    result.message
+                                )
+                            )
                         }
                     }
+
                     is DataState.Loading -> {
                         mutableStateFlow.update {
                             it.copy(dialogState = RecurringDepositAccountState.DialogState.Loading)
                         }
                     }
+
                     is DataState.Success -> {
-                        val recurringDepositAccount = result.data.clientAccounts?.savingsAccounts?.let {
-                            it.filter { accountEntity ->
-                                accountEntity.depositType?.serverType ==
-                                    SavingAccountDepositTypeEntity.ServerTypes.RECURRING &&
-                                    accountEntity.status?.closed == false
-                            }.apply {
-                                // Todo modify search accordingly
-                                searchRecurringDepositAccounts(state.searchText, this)
-                            }
-                        } ?: emptyList()
+                        val recurringDepositAccount =
+                            result.data.clientAccounts?.savingsAccounts?.let {
+                                it.filter { accountEntity ->
+                                    accountEntity.depositType?.serverType == SavingAccountDepositTypeEntity.ServerTypes.RECURRING && accountEntity.status?.closed == false
+                                }.apply {
+                                    // Todo modify search accordingly
+                                    searchRecurringDepositAccounts(state.searchText, this)
+                                }
+                            } ?: emptyList()
 
                         mutableStateFlow.update {
                             it.copy(
