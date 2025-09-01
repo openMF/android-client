@@ -24,8 +24,8 @@ internal fun NavController.navigateToAuthenticatedNavBar(navOptions: NavOptions?
 
 internal fun NavGraphBuilder.authenticatedNavbarGraph(
     onDrawerItemClick: (String) -> Unit,
-    navigateToDocumentScreen:(Int,String)->Unit,
-    navigateToNoteScreen:(Int,String)->Unit,
+    navigateToDocumentScreen: (Int, String) -> Unit,
+    navigateToNoteScreen: (Int, String) -> Unit,
 ) {
     composable<AuthenticatedNavbarRoute> {
         AuthenticatedNavbarNavigationScreen(

@@ -1,11 +1,17 @@
+/*
+ * Copyright 2025 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ */
 package cmp.navigation.authenticated
 
-
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
@@ -30,7 +36,6 @@ import androidx.compose.material3.NavigationDrawerItemDefaults
 import androidx.compose.material3.SnackbarDuration.Indefinite
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
-import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.rememberDrawerState
@@ -79,7 +84,6 @@ import com.mifos.feature.client.navigation.navigateCreateClientScreen
 import com.mifos.feature.client.navigation.navigateToClientListScreen
 import com.mifos.feature.dataTable.navigation.navigateDataTableList
 import com.mifos.feature.dataTable.navigation.navigateToDataTable
-import com.mifos.feature.document.navigation.navigateToDocumentListScreen
 import com.mifos.feature.groups.navigation.groupNavGraph
 import com.mifos.feature.groups.navigation.navigateToCreateNewGroupScreen
 import com.mifos.feature.groups.navigation.navigateToGroupDetailsScreen
@@ -106,8 +110,8 @@ import org.mifos.navigation.generated.resources.ic_dp_placeholder
 
 @Composable
 internal fun AuthenticatedNavbarNavigationScreen(
-    navigateToDocumentScreen:(Int,String)->Unit,
-    navigateToNoteScreen:(Int,String)->Unit,
+    navigateToDocumentScreen: (Int, String) -> Unit,
+    navigateToNoteScreen: (Int, String) -> Unit,
     onDrawerItemClick: (String) -> Unit,
     modifier: Modifier = Modifier,
     navController: NavHostController = rememberMifosNavController(
@@ -180,9 +184,9 @@ internal fun AuthenticatedNavbarNavigationScreen(
 @Composable
 internal fun AuthenticatedNavbarNavigationScreenContent(
     navController: NavHostController,
-    onDrawerItemClick:(String)->Unit,
-    navigateToDocumentScreen:(Int,String)->Unit,
-    navigateToNoteScreen:(Int,String)->Unit,
+    onDrawerItemClick: (String) -> Unit,
+    navigateToDocumentScreen: (Int, String) -> Unit,
+    navigateToNoteScreen: (Int, String) -> Unit,
     modifier: Modifier = Modifier,
     snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
     onAction: (AuthenticatedNavBarAction) -> Unit,
@@ -201,14 +205,14 @@ internal fun AuthenticatedNavbarNavigationScreenContent(
     )
 
     val navigationDrawerTabs = persistentListOf(
-            HomeDestinationsScreen.CheckerInboxAndTasksScreen,
-            HomeDestinationsScreen.CollectionSheetScreen,
-            HomeDestinationsScreen.RunReportsScreen,
-            HomeDestinationsScreen.PathTrackerScreen,
-            HomeDestinationsScreen.SettingsScreen,
-            HomeDestinationsScreen.AboutScreen,
-            HomeDestinationsScreen.OfflineSyncScreen,
-        )
+        HomeDestinationsScreen.CheckerInboxAndTasksScreen,
+        HomeDestinationsScreen.CollectionSheetScreen,
+        HomeDestinationsScreen.RunReportsScreen,
+        HomeDestinationsScreen.PathTrackerScreen,
+        HomeDestinationsScreen.SettingsScreen,
+        HomeDestinationsScreen.AboutScreen,
+        HomeDestinationsScreen.OfflineSyncScreen,
+    )
 
     ModalNavigationDrawer(
         modifier = modifier,
@@ -284,150 +288,151 @@ internal fun AuthenticatedNavbarNavigationScreenContent(
                 }
             }
         },
-    ){
-    MifosScaffold(
-        topBar = {
-            TopAppBar(
-                title = {
-                    Text(stringResource(Res.string.cmp_navigation_mifos))
-                },
-                navigationIcon = {
-                    IconButton(
-                        onClick = {
-                            scope.launch {
-                                drawerState.apply {
-                                    if (isClosed) open() else close()
-                                }
-                            }
-                        },
-                    ) {
-                        Icon(
-                            imageVector = MifosIcons.Menu,
-                            contentDescription = "Menu",
-                        )
-                    }
-                },
-            )
-        },
-        contentWindowInsets = WindowInsets(0.dp),
-        navigationData = ScaffoldNavigationData(
-            navigationItems = navigationItems,
-            selectedNavigationItem = navigationItems.find {
-                navBackStackEntry.isCurrentRoute(route = it.graphRoute)
-            },
-            onNavigationClick = { navigationItem ->
-                // TODO navigate to respective screens
-                when (navigationItem) {
-                    is AuthenticatedNavBarTabItem.SearchTab -> {
-                        onAction(AuthenticatedNavBarAction.SearchTabClick)
-                    }
-
-                    is AuthenticatedNavBarTabItem.ClientTab -> {
-                        onAction(AuthenticatedNavBarAction.ClientTabClick)
-                    }
-
-                    is AuthenticatedNavBarTabItem.CentersTab -> {
-                        onAction(AuthenticatedNavBarAction.CenterTabClick)
-                    }
-                    is AuthenticatedNavBarTabItem.GroupsTab -> {
-                        onAction(AuthenticatedNavBarAction.GroupTabClick)
-                    }
-                }
-            },
-            shouldShowNavigation = navigationItems.any {
-                navBackStackEntry.isCurrentRoute(route = it.startDestinationRoute)
-            },
-        ),
-        snackbarHost = {
-            SnackbarHost(hostState = snackbarHostState)
-        },
-        modifier = modifier,
     ) {
-        // Because this Scaffold has a bottom navigation bar, the NavHost will:
-        // - consume the vertical navigation bar insets.
-        // - consume the IME insets.
-        NavHost(
-            navController = navController,
-            startDestination = SearchScreenRoute,
-            enterTransition = RootTransitionProviders.Enter.fadeIn,
-            exitTransition = RootTransitionProviders.Exit.fadeOut,
-            popEnterTransition = RootTransitionProviders.Enter.fadeIn,
-            popExitTransition = RootTransitionProviders.Exit.fadeOut,
+        MifosScaffold(
+            topBar = {
+                TopAppBar(
+                    title = {
+                        Text(stringResource(Res.string.cmp_navigation_mifos))
+                    },
+                    navigationIcon = {
+                        IconButton(
+                            onClick = {
+                                scope.launch {
+                                    drawerState.apply {
+                                        if (isClosed) open() else close()
+                                    }
+                                }
+                            },
+                        ) {
+                            Icon(
+                                imageVector = MifosIcons.Menu,
+                                contentDescription = "Menu",
+                            )
+                        }
+                    },
+                )
+            },
+            contentWindowInsets = WindowInsets(0.dp),
+            navigationData = ScaffoldNavigationData(
+                navigationItems = navigationItems,
+                selectedNavigationItem = navigationItems.find {
+                    navBackStackEntry.isCurrentRoute(route = it.graphRoute)
+                },
+                onNavigationClick = { navigationItem ->
+                    // TODO navigate to respective screens
+                    when (navigationItem) {
+                        is AuthenticatedNavBarTabItem.SearchTab -> {
+                            onAction(AuthenticatedNavBarAction.SearchTabClick)
+                        }
+
+                        is AuthenticatedNavBarTabItem.ClientTab -> {
+                            onAction(AuthenticatedNavBarAction.ClientTabClick)
+                        }
+
+                        is AuthenticatedNavBarTabItem.CentersTab -> {
+                            onAction(AuthenticatedNavBarAction.CenterTabClick)
+                        }
+                        is AuthenticatedNavBarTabItem.GroupsTab -> {
+                            onAction(AuthenticatedNavBarAction.GroupTabClick)
+                        }
+                    }
+                },
+                shouldShowNavigation = navigationItems.any {
+                    navBackStackEntry.isCurrentRoute(route = it.startDestinationRoute)
+                },
+            ),
+            snackbarHost = {
+                SnackbarHost(hostState = snackbarHostState)
+            },
+            modifier = modifier,
         ) {
-            // TODO Add top level destination screens
-            searchNavGraph(
-                onCreateClient = navController::navigateCreateClientScreen,
-                onCreateCenter = navController::navigateCreateCenterScreenRoute,
-                onCreateGroup = navController::navigateToCreateNewGroupScreen,
-                onCenter = navController::navigateCenterDetailsScreenRoute,
-                onClient = navController::navigateClientDetailsScreen,
-                onGroup = navController::navigateToGroupDetailsScreen,
-                onLoan = navController::navigateToLoanAccountSummaryScreen,
-                onSavings = navController::navigateClientDetailsScreen,
-            )
-
-            centerNavGraph(
+            // Because this Scaffold has a bottom navigation bar, the NavHost will:
+            // - consume the vertical navigation bar insets.
+            // - consume the IME insets.
+            NavHost(
                 navController = navController,
-                onActivateCenter = navController::navigateToActivateRoute,
-                addSavingsAccount = { centerId ->
-                    navController.navigateToAddSavingsAccount(0, centerId, false)
-                },
-            )
+                startDestination = SearchScreenRoute,
+                enterTransition = RootTransitionProviders.Enter.fadeIn,
+                exitTransition = RootTransitionProviders.Exit.fadeOut,
+                popEnterTransition = RootTransitionProviders.Enter.fadeIn,
+                popExitTransition = RootTransitionProviders.Exit.fadeOut,
+            ) {
+                // TODO Add top level destination screens
+                searchNavGraph(
+                    onCreateClient = navController::navigateCreateClientScreen,
+                    onCreateCenter = navController::navigateCreateCenterScreenRoute,
+                    onCreateGroup = navController::navigateToCreateNewGroupScreen,
+                    onCenter = navController::navigateCenterDetailsScreenRoute,
+                    onClient = navController::navigateClientDetailsScreen,
+                    onGroup = navController::navigateToGroupDetailsScreen,
+                    onLoan = navController::navigateToLoanAccountSummaryScreen,
+                    onSavings = navController::navigateClientDetailsScreen,
+                )
 
-            groupNavGraph(
-                navController = navController,
-                addGroupLoanAccount = navController::navigateToGroupLoanScreen,
-                addSavingsAccount = navController::navigateToAddSavingsAccount,
-                loadDocumentList = navigateToDocumentScreen,
-                loadClientList = navController::navigateToClientListScreen,
-                loadSavingsAccountSummary = navController::navigateToSavingsAccountSummaryScreen,
-                loadGroupDataTables = navController::navigateToDataTable,
-                loadNotes = navController::navigateToNoteScreen,
-                loadLoanAccountSummary = navController::navigateToLoanAccountSummaryScreen,
-                activateGroup = navController::navigateToActivateRoute,
-            )
+                centerNavGraph(
+                    navController = navController,
+                    onActivateCenter = navController::navigateToActivateRoute,
+                    addSavingsAccount = { centerId ->
+                        navController.navigateToAddSavingsAccount(0, centerId, false)
+                    },
+                )
 
-            clientNavGraph(
-                navController = navController,
-                addLoanAccount = navController::navigateToLoanAccountScreen,
-                addSavingsAccount = { clientId ->
-                    navController.navigateToAddSavingsAccount(0, clientId, false)
-                },
-                documents = { clientId ->
-                    navigateToDocumentScreen(
-                        clientId,
-                        Constants.ENTITY_TYPE_CLIENTS,
-                    )
-                },
-                moreClientInfo = { clientId ->
-                    navController.navigateToDataTable(
-                        Constants.DATA_TABLE_NAME_CLIENT,
-                        clientId,
-                    )
-                },
-                notes = { clientId ->
-                    navigateToNoteScreen(
-                        clientId,
-                        Constants.ENTITY_TYPE_CLIENTS,
-                    )
-                },
-                loanAccountSelected = { loanAccountNumber ->
-                    navController.navigateToLoanAccountSummaryScreen(loanAccountNumber)
-                },
-                savingsAccountSelected = { clientId, depositType ->
-                    navController.navigateToSavingsAccountSummaryScreen(clientId, depositType)
-                },
-                activateClient = { clientId ->
-                    navController.navigateToActivateRoute(
-                        clientId,
-                        Constants.ACTIVATE_CLIENT,
-                    )
-                },
-                hasDatatables = navController::navigateDataTableList,
-                onDocumentClicked = navigateToDocumentScreen,
-            )
-        }
-    }}
+                groupNavGraph(
+                    navController = navController,
+                    addGroupLoanAccount = navController::navigateToGroupLoanScreen,
+                    addSavingsAccount = navController::navigateToAddSavingsAccount,
+                    loadDocumentList = navigateToDocumentScreen,
+                    loadClientList = navController::navigateToClientListScreen,
+                    loadSavingsAccountSummary = navController::navigateToSavingsAccountSummaryScreen,
+                    loadGroupDataTables = navController::navigateToDataTable,
+                    loadNotes = navController::navigateToNoteScreen,
+                    loadLoanAccountSummary = navController::navigateToLoanAccountSummaryScreen,
+                    activateGroup = navController::navigateToActivateRoute,
+                )
+
+                clientNavGraph(
+                    navController = navController,
+                    addLoanAccount = navController::navigateToLoanAccountScreen,
+                    addSavingsAccount = { clientId ->
+                        navController.navigateToAddSavingsAccount(0, clientId, false)
+                    },
+                    documents = { clientId ->
+                        navigateToDocumentScreen(
+                            clientId,
+                            Constants.ENTITY_TYPE_CLIENTS,
+                        )
+                    },
+                    moreClientInfo = { clientId ->
+                        navController.navigateToDataTable(
+                            Constants.DATA_TABLE_NAME_CLIENT,
+                            clientId,
+                        )
+                    },
+                    notes = { clientId ->
+                        navigateToNoteScreen(
+                            clientId,
+                            Constants.ENTITY_TYPE_CLIENTS,
+                        )
+                    },
+                    loanAccountSelected = { loanAccountNumber ->
+                        navController.navigateToLoanAccountSummaryScreen(loanAccountNumber)
+                    },
+                    savingsAccountSelected = { clientId, depositType ->
+                        navController.navigateToSavingsAccountSummaryScreen(clientId, depositType)
+                    },
+                    activateClient = { clientId ->
+                        navController.navigateToActivateRoute(
+                            clientId,
+                            Constants.ACTIVATE_CLIENT,
+                        )
+                    },
+                    hasDatatables = navController::navigateDataTableList,
+                    onDocumentClicked = navigateToDocumentScreen,
+                )
+            }
+        } 
+    }
 }
 
 private fun NavController.navigateToTabOrRoot(

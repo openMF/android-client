@@ -58,7 +58,7 @@ internal fun NavGraphBuilder.authenticatedGraph(
                 }
             },
             navigateToDocumentScreen = navController::navigateToDocumentListScreen,
-            navigateToNoteScreen = navController::navigateToNoteScreen
+            navigateToNoteScreen = navController::navigateToNoteScreen,
         )
 
         checkerInboxTaskNavGraph(navController)
