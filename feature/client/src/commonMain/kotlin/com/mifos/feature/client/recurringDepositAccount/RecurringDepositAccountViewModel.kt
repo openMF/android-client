@@ -13,6 +13,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import com.mifos.core.common.utils.DataState
+import com.mifos.core.data.util.NetworkMonitor
 import com.mifos.core.domain.useCases.GetClientDetailsUseCase
 import com.mifos.core.ui.util.BaseViewModel
 import com.mifos.room.entities.accounts.savings.SavingAccountDepositTypeEntity
@@ -22,6 +23,7 @@ import kotlinx.coroutines.launch
 
 class RecurringDepositAccountViewModel(
     savedStateHandle: SavedStateHandle,
+    private val networkMonitor: NetworkMonitor,
     private val getClientDetailsUseCase: GetClientDetailsUseCase,
 ) : BaseViewModel<RecurringDepositAccountState,
         RecurringDepositAccountEvent,
@@ -32,7 +34,7 @@ class RecurringDepositAccountViewModel(
     val route = savedStateHandle.toRoute<RecurringDepositAccountRoute>()
 
     init {
-        getRecurringDepositAccounts()
+        checkNetworkAndGetLoanAccounts()
     }
 
     override fun handleAction(action: RecurringDepositAccountAction) {
@@ -48,11 +50,11 @@ class RecurringDepositAccountViewModel(
             }
 
             is RecurringDepositAccountAction.Refresh -> {
-                getRecurringDepositAccounts()
+                checkNetworkAndGetLoanAccounts()
             }
 
             is RecurringDepositAccountAction.Search -> {
-                getRecurringDepositAccounts()
+                checkNetworkAndGetLoanAccounts()
             }
 
             is RecurringDepositAccountAction.ToggleFilter -> {
@@ -89,6 +91,22 @@ class RecurringDepositAccountViewModel(
                 sendEvent(
                     RecurringDepositAccountEvent.OnApproveAccount(action.accountNumber),
                 )
+            }
+        }
+    }
+
+    private fun checkNetworkAndGetLoanAccounts() {
+        viewModelScope.launch {
+            networkMonitor.isOnline.collect { isConnected ->
+                when (isConnected) {
+                    true -> getRecurringDepositAccounts()
+                    false -> {
+                        mutableStateFlow.update {
+                            it.copy(dialogState = RecurringDepositAccountState
+                                .DialogState.Error("No internet connection, Try Again"))
+                        }
+                    }
+                }
             }
         }
     }
