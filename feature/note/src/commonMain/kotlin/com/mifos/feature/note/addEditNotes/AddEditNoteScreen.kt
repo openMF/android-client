@@ -112,7 +112,12 @@ fun AddEditNoteScreenDialog(
             )
         }
 
+        AddEditNoteState.DialogState.Success -> {
+            onAction(AddEditNoteAction.NavigateBack)
+        }
+
         null -> Unit
+
     }
 }
 
@@ -220,9 +225,6 @@ private fun AddEditNote(
                             onAction(AddEditNoteAction.EditNote(state.textFieldNotesPayload))
                         } else {
                             onAction(AddEditNoteAction.AddNote(state.textFieldNotesPayload))
-                        }
-                        if (state.isError) {
-                            onAction(AddEditNoteAction.NavigateBack)
                         }
                     },
                     colors = ButtonDefaults.outlinedButtonColors(

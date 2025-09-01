@@ -125,20 +125,20 @@ class AddEditNoteViewModel(
                             mutableStateFlow.update {
                                 it.copy(
                                     dialogState = AddEditNoteState.DialogState.Error(Res.string.feature_note_Unexpected_error),
-                                    isError = false,
                                 )
                             }
                         }
 
                         DataState.Loading -> {
-                            // no need to show loading for this
+                            mutableStateFlow.update {
+                                it.copy(dialogState = AddEditNoteState.DialogState.Loading)
+                            }
                         }
 
                         is DataState.Success -> {
                             mutableStateFlow.update {
                                 it.copy(
-                                    isError = true,
-                                    dialogState = null,
+                                    dialogState = AddEditNoteState.DialogState.Success,
                                     successMessage = Res.string.feature_note_add_success,
                                     notesPayloadInitialData = state.textFieldNotesPayload.note,
                                 )
@@ -159,18 +159,18 @@ class AddEditNoteViewModel(
                                 mutableStateFlow.update {
                                     it.copy(
                                         dialogState = AddEditNoteState.DialogState.Error(Res.string.feature_note_Unexpected_error),
-                                        isError = false,
                                     )
                                 }
                             }
                             DataState.Loading -> {
-                                // no need to show loading for this
+                                mutableStateFlow.update {
+                                    it.copy(dialogState = AddEditNoteState.DialogState.Loading)
+                                }
                             }
                             is DataState.Success -> {
                                 mutableStateFlow.update {
                                     it.copy(
-                                        isError = true,
-                                        dialogState = null,
+                                        dialogState = AddEditNoteState.DialogState.Success,
                                         successMessage = Res.string.feature_note_edit_success,
                                         notesPayloadInitialData = state.textFieldNotesPayload.note,
                                     )
@@ -257,7 +257,6 @@ data class AddEditNoteState(
     val textFieldNotesPayload: NotesPayload = NotesPayload(null),
     val notesPayloadInitialData: String? = null,
     val showDialog: Boolean = false,
-    val isError: Boolean = true,
     val dialogState: DialogState? = null,
     val networkConnection: Boolean = false,
 ) {
@@ -265,6 +264,7 @@ data class AddEditNoteState(
         data class Error(val message: StringResource) : DialogState
         data object Loading : DialogState
         data object MisTouchBack : DialogState
+        data object Success : DialogState
     }
 }
 
