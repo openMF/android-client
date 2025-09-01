@@ -84,9 +84,9 @@ internal class SavingsAccountsViewModel(
                 // Todo modify search accordingly
                 val savingsAccounts = repository.getClientAccounts(route.clientId)
                     .savingsAccounts
-                    .filter {accountEntity ->
+                    .filter { accountEntity ->
                         accountEntity.depositType?.serverType == SavingAccountDepositTypeEntity.ServerTypes.SAVINGS &&
-                        accountEntity.status?.closed == false
+                            accountEntity.status?.closed == false
                     }
                     .filter { it.accountNo?.contains(state.searchText.trim()) == true }
 

@@ -27,7 +27,6 @@ import androidclient.core.ui.generated.resources.core_ui_original_loan
 import androidclient.core.ui.generated.resources.core_ui_outstanding
 import androidclient.core.ui.generated.resources.core_ui_paid
 import androidclient.core.ui.generated.resources.core_ui_quantity
-import androidclient.core.ui.generated.resources.core_ui_savings_product
 import androidclient.core.ui.generated.resources.core_ui_status
 import androidclient.core.ui.generated.resources.core_ui_total_collateral_value
 import androidclient.core.ui.generated.resources.core_ui_total_value
@@ -425,7 +424,7 @@ fun MifosActionsSavingsListingComponent(
                         bottomStart = DesignToken.padding.medium,
                         bottomEnd = DesignToken.padding.medium,
                     ),
-                    color = MaterialTheme.colorScheme.surfaceContainer
+                    color = MaterialTheme.colorScheme.surfaceContainer,
                 ) {
                     Column(
                         modifier = Modifier.padding(

@@ -120,19 +120,21 @@ fun MifosListingRowItem(
         keyContent = {
             if (key.isNotBlank()) {
                 Text(
-                    text = "$key:", style = keyStyle,
-                    maxLines =1,
+                    text = "$key:",
+                    style = keyStyle,
+                    maxLines = 1,
                     overflow = TextOverflow.Clip,
                 )
             }
         },
         valueContent = {
             Text(
-                text = value, style = valueStyle.copy(color = valueColor),
+                text = value,
+                style = valueStyle.copy(color = valueColor),
                 overflow = TextOverflow.Clip,
-                maxLines = 1
+                maxLines = 1,
             )
-       },
+        },
     )
 }
 

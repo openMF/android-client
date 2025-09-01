@@ -61,8 +61,8 @@ internal class ClientProfileGeneralViewmodel(
         val totalSaving =
             savingAccounts?.filter {
                 it.status?.active == true &&
-                it.depositType?.serverType!= SavingAccountDepositTypeEntity.ServerTypes.RECURRING &&
-                it.status?.closed == false
+                    it.depositType?.serverType != SavingAccountDepositTypeEntity.ServerTypes.RECURRING &&
+                    it.status?.closed == false
             }?.sumOf {
                 it.accountBalance ?: 0.0
             }

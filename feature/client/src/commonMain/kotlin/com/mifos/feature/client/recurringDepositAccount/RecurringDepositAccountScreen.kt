@@ -1,8 +1,17 @@
+/*
+ * Copyright 2025 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ */
 package com.mifos.feature.client.recurringDepositAccount
 
 import androidclient.feature.client.generated.resources.Res
-import androidclient.feature.client.generated.resources.client_product_recurring_deposit_account
 import androidclient.feature.client.generated.resources.client_empty_card_message
+import androidclient.feature.client.generated.resources.client_product_recurring_deposit_account
 import androidclient.feature.client.generated.resources.client_profile_recurring_deposit_account_title
 import androidclient.feature.client.generated.resources.client_savings_item
 import androidclient.feature.client.generated.resources.client_savings_not_avilable
@@ -46,7 +55,6 @@ import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
-
 @Composable
 fun RecurringDepositAccountScreen(
     navigateBack: () -> Unit,
@@ -59,12 +67,12 @@ fun RecurringDepositAccountScreen(
 
     EventsEffect(viewModel.eventFlow) { event ->
         when (event) {
-            is RecurringDepositAccountEvent.onApproveAccount -> {
+            is RecurringDepositAccountEvent.OnApproveAccount -> {
                 onApproveAccount(event.accountId)
             }
 
-            RecurringDepositAccountEvent.onNavigateBack -> navigateBack
-            is RecurringDepositAccountEvent.onViewAccount -> {
+            RecurringDepositAccountEvent.OnNavigateBack -> navigateBack
+            is RecurringDepositAccountEvent.OnViewAccount -> {
                 onViewAccount(event.accountId)
             }
         }
@@ -120,7 +128,6 @@ fun RecurringDepositAccountScreen(
         }
     }
 
-
     RecurringDepositAccountDialog(
         state,
         onCloseDialog = {
@@ -144,7 +151,6 @@ fun RecurringDepositAccountScreen(
             action(RecurringDepositAccountAction.ApproveAccount(accountId = state.clientId))
         },
     )
-
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -257,17 +263,13 @@ internal fun RecurringDepositAccountScaffold(
                                 Actions.ApproveAccount -> onViewAccount
                                 else -> null
                             }
-
                         }
                     }
                 }
-
             }
         }
-
     }
 }
-
 
 @Composable
 internal fun RecurringDepositAccountHeader(
@@ -311,6 +313,5 @@ internal fun RecurringDepositAccountHeader(
                 onToggleFilter.invoke()
             },
         )
-
     }
 }

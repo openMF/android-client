@@ -240,38 +240,38 @@ fun PerformanceHistoryCard(state: ClientProfileGeneralState) {
             val performanceHistory = state.performanceHistory
             PerformanceHistoryRows(
                 stringResource(Res.string.client_performance_history_loan_cycle_count_label),
-                performanceHistory.loanCyclesCount?.toString()?:
-                stringResource(Res.string.client_savings_not_avilable),
+                performanceHistory.loanCyclesCount?.toString()
+                    ?: stringResource(Res.string.client_savings_not_avilable),
 
             )
 
             PerformanceHistoryRows(
                 stringResource(Res.string.client_performance_history_active_loans_count_label),
-                performanceHistory.activeLoans?.toString() ?:
-                    stringResource(Res.string.client_savings_not_avilable),
+                performanceHistory.activeLoans?.toString()
+                    ?: stringResource(Res.string.client_savings_not_avilable),
             )
 
             PerformanceHistoryRows(
                 stringResource(Res.string.client_performance_history_last_loan_amount_label),
 
-                performanceHistory.lastLoanAmount?.let{
-                    state.currency +" "+ it.toString()
-                } ?:
-                stringResource(Res.string.client_savings_not_avilable),
+                performanceHistory.lastLoanAmount?.let {
+                    state.currency + " " + it.toString()
+                }
+                    ?: stringResource(Res.string.client_savings_not_avilable),
             )
 
             PerformanceHistoryRows(
                 stringResource(Res.string.client_performance_history_active_savings_label),
-                performanceHistory.activeSavingsCount?.toString() ?:
-                stringResource(Res.string.client_savings_not_avilable),
+                performanceHistory.activeSavingsCount?.toString()
+                    ?: stringResource(Res.string.client_savings_not_avilable),
             )
 
             PerformanceHistoryRows(
                 stringResource(Res.string.client_performance_history_total_savings_label),
-                performanceHistory.totalSaving?.let{
-                    state.currency +" "+ it.toString()
-                } ?:
-                stringResource(Res.string.client_savings_not_avilable),
+                performanceHistory.totalSaving?.let {
+                    state.currency + " " + it.toString()
+                }
+                    ?: stringResource(Res.string.client_savings_not_avilable),
             )
         }
     }
