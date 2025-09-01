@@ -18,6 +18,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import androidx.navigation.navigation
 import com.mifos.core.common.utils.Constants
+import com.mifos.feature.client.clientApplyNewApplications.clientApplyNewApplicationRoute
+import com.mifos.feature.client.clientApplyNewApplications.navigateToClientApplyNewApplicationScreen
 import com.mifos.feature.client.clientCharges.ClientChargesScreen
 import com.mifos.feature.client.clientClosure.clientClosureDestination
 import com.mifos.feature.client.clientClosure.navigateToClientClosureRoute
@@ -157,6 +159,7 @@ fun NavGraphBuilder.clientNavGraph(
             navigateToUpdateDefaultAccount = navController::navigateToUpdateDefaultAccountRoute,
             navigateToClientClosure = navController::navigateToClientClosureRoute,
             navigateToCollateral = navController::navigateToClientCollateralRoute,
+            navigateToApplyNewApplication = navController::navigateToClientApplyNewApplicationScreen,
         )
         clientEditProfileDestination(
             onNavigateBack = navController::popBackStack,
@@ -188,6 +191,15 @@ fun NavGraphBuilder.clientNavGraph(
         clientCollateralDestination(
             onNavigateBack = navController::popBackStack,
             onNavigateNext = navController::navigateToClientDetailsProfileRouteOnStatus,
+        )
+
+        clientApplyNewApplicationRoute(
+            onNavigateBack = navController::popBackStack,
+            onNavigateApplyLoanAccount = { },
+            onNavigateApplySavingsAccount = { },
+            onNavigateApplyShareAccount = { },
+            onNavigateApplyRecurringAccount = { },
+            onNavigateApplyFixedAccount = { },
         )
     }
 }
