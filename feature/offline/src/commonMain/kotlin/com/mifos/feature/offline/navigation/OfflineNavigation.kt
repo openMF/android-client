@@ -19,17 +19,16 @@ import com.mifos.feature.offline.syncClientPayloads.SyncClientPayloadsScreenRout
 import com.mifos.feature.offline.syncGroupPayloads.SyncGroupPayloadsScreenRoute
 import com.mifos.feature.offline.syncLoanRepaymentTransaction.SyncLoanRepaymentTransactionScreenRoute
 import com.mifos.feature.offline.syncSavingsAccountTransaction.SyncSavingsAccountTransactionScreenRoute
+import kotlinx.serialization.Serializable
 
-/**
- * Created by Pronay Sarker on 31/08/2024 (3:57 PM)
- */
+@Serializable
+data object OfflineNavGraph
 
 fun NavGraphBuilder.offlineNavGraph(
     navController: NavController,
 ) {
-    navigation(
-        startDestination = OfflineScreens.OfflineDashboardScreens.route,
-        route = "offline_graph",
+    navigation<OfflineNavGraph>(
+        startDestination = OfflineDashboardScreenRoute,
     ) {
         offlineDashboardScreen(
             onBackPressed = navController::popBackStack,
@@ -57,6 +56,9 @@ fun NavGraphBuilder.offlineNavGraph(
     }
 }
 
+@Serializable
+data object OfflineDashboardScreenRoute
+
 fun NavGraphBuilder.offlineDashboardScreen(
     onBackPressed: () -> Unit,
     syncSavingsAccountTransactions: () -> Unit,
@@ -65,9 +67,7 @@ fun NavGraphBuilder.offlineDashboardScreen(
     syncClientPayload: () -> Unit,
     syncCenterPayload: () -> Unit,
 ) {
-    composable(
-        route = OfflineScreens.OfflineDashboardScreens.route,
-    ) {
+    composable<OfflineDashboardScreenRoute> {
         OfflineDashboardRoute(
             onBackPressed = onBackPressed,
             syncSavingsAccountTransactions = syncSavingsAccountTransactions,
@@ -82,9 +82,7 @@ fun NavGraphBuilder.offlineDashboardScreen(
 fun NavGraphBuilder.syncCenterPayloadsScreen(
     onBackPressed: () -> Unit,
 ) {
-    composable(
-        route = OfflineScreens.SyncCenterPayloadsScreens.route,
-    ) {
+    composable<SyncCenterPayloadsScreenRoute> {
         SyncCenterPayloadsScreenRoute(
             onBackPressed = onBackPressed,
         )
@@ -94,7 +92,7 @@ fun NavGraphBuilder.syncCenterPayloadsScreen(
 fun NavGraphBuilder.syncGroupPayloadsScreen(
     onBackPressed: () -> Unit,
 ) {
-    composable(OfflineScreens.SyncGroupPayloadsScreens.route) {
+    composable<SyncGroupPayloadsScreenRoute> {
         SyncGroupPayloadsScreenRoute {
             onBackPressed()
         }
@@ -104,7 +102,7 @@ fun NavGraphBuilder.syncGroupPayloadsScreen(
 fun NavGraphBuilder.syncClientPayloadsScreen(
     onBackPressed: () -> Unit,
 ) {
-    composable(OfflineScreens.SyncClientPayloadsScreens.route) {
+    composable<SyncClientPayloadsScreenRoute> {
         SyncClientPayloadsScreenRoute(
             onBackPressed = onBackPressed,
         )
@@ -114,7 +112,7 @@ fun NavGraphBuilder.syncClientPayloadsScreen(
 fun NavGraphBuilder.syncSavingsAccountTransactionsScreen(
     onBackPressed: () -> Unit,
 ) {
-    composable(OfflineScreens.SyncSavingsAccountTransactionsScreens.route) {
+    composable<SyncSavingsAccountTransactionsScreenRoute> {
         SyncSavingsAccountTransactionScreenRoute(
             onBackPressed = onBackPressed,
         )
@@ -124,29 +122,48 @@ fun NavGraphBuilder.syncSavingsAccountTransactionsScreen(
 fun NavGraphBuilder.syncLoanRepaymentScreen(
     onBackPressed: () -> Unit,
 ) {
-    composable(route = OfflineScreens.SyncLoanRepaymentsScreens.route) {
+    composable<SyncLoanRepaymentsScreenRoute> {
         SyncLoanRepaymentTransactionScreenRoute {
             onBackPressed()
         }
     }
 }
 
+@Serializable
+data object SyncCenterPayloadsScreenRoute
+
 fun NavController.navigateToSyncCenterPayloadsScreen() {
-    navigate(OfflineScreens.SyncCenterPayloadsScreens.route)
+    navigate(SyncCenterPayloadsScreenRoute)
 }
+
+@Serializable
+data object SyncGroupPayloadsScreenRoute
 
 fun NavController.navigateToSyncGroupPayloadsScreen() {
-    navigate(OfflineScreens.SyncGroupPayloadsScreens.route)
+    navigate(SyncGroupPayloadsScreenRoute)
 }
+
+@Serializable
+data object SyncClientPayloadsScreenRoute
 
 fun NavController.navigateToSyncClientPayloadsScreen() {
-    navigate(OfflineScreens.SyncClientPayloadsScreens.route)
+    navigate(SyncClientPayloadsScreenRoute)
 }
+
+@Serializable
+data object SyncSavingsAccountTransactionsScreenRoute
 
 fun NavController.navigateToSyncSavingsAccountTransactionsScreen() {
-    navigate(OfflineScreens.SyncSavingsAccountTransactionsScreens.route)
+    navigate(SyncSavingsAccountTransactionsScreenRoute)
 }
 
+@Serializable
+data object SyncLoanRepaymentsScreenRoute
+
 fun NavController.navigateToSyncLoanRepaymentScreen() {
-    navigate(OfflineScreens.SyncLoanRepaymentsScreens.route)
+    navigate(SyncLoanRepaymentsScreenRoute)
+}
+
+fun NavController.navigateToOfflineDashBoardScreen() {
+    navigate(OfflineDashboardScreenRoute)
 }

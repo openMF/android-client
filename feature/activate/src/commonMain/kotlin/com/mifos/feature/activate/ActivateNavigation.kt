@@ -7,26 +7,37 @@
  *
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
-package com.mifos.feature.about.navigation
+package com.mifos.feature.activate
 
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
-import com.mifos.feature.about.AboutScreen
+import kotlinx.serialization.Serializable
 
-/**
- * Created by Pronay Sarker on 10/08/2024 (7:56 AM)
- */
-fun NavController.navigateToAboutScreen() {
-    navigate(AboutScreens.AboutScreen.route)
-}
+@Serializable
+data class ActivateRoute(
+    val id: Int = -1,
+    val type: String = "",
+)
 
-fun NavGraphBuilder.aboutNavGraph(
+fun NavGraphBuilder.activateDestination(
     onBackPressed: () -> Unit,
 ) {
-    composable(AboutScreens.AboutScreen.route) {
-        AboutScreen(
+    composable<ActivateRoute> {
+        ActivateScreen(
             onBackPressed = onBackPressed,
         )
     }
+}
+
+fun NavController.navigateToActivateRoute(
+    id: Int,
+    type: String,
+) {
+    this.navigate(
+        ActivateRoute(
+            id = id,
+            type = type,
+        ),
+    )
 }

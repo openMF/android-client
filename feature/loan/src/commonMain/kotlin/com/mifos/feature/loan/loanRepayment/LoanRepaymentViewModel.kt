@@ -15,40 +15,29 @@ import androidclient.feature.loan.generated.resources.feature_loan_payment_faile
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.mifos.core.common.utils.Constants
+import androidx.navigation.toRoute
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.repository.LoanRepaymentRepository
 import com.mifos.room.entities.accounts.loans.LoanRepaymentRequestEntity
-import com.mifos.room.entities.accounts.loans.LoanWithAssociationsEntity
 import com.mifos.room.entities.templates.loans.LoanRepaymentTemplateEntity
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import kotlinx.serialization.json.Json
 
 class LoanRepaymentViewModel(
     savedStateHandle: SavedStateHandle,
     private val repository: LoanRepaymentRepository,
 ) : ViewModel() {
 
-    val arg =
-        savedStateHandle.getStateFlow(key = Constants.LOAN_WITH_ASSOCIATIONS, initialValue = "")
-    val loanWithAssociations: LoanWithAssociationsEntity =
-        Json.decodeFromString<LoanWithAssociationsEntity>(arg.value)
+    val arg = savedStateHandle.toRoute<LoanRepaymentScreenRoute>()
 
     private val _loanRepaymentUiState =
         MutableStateFlow<LoanRepaymentUiState>(LoanRepaymentUiState.ShowProgressbar)
     val loanRepaymentUiState: StateFlow<LoanRepaymentUiState> get() = _loanRepaymentUiState
 
-    var clientName = loanWithAssociations.clientName
-    var loanId = loanWithAssociations.id
-    var loanAccountNumber = loanWithAssociations.accountNo
-    var loanProductName = loanWithAssociations.loanProductName
-    var amountInArrears = loanWithAssociations.summary.totalOverdue
-
     fun loanLoanRepaymentTemplate() {
         viewModelScope.launch {
-            repository.getLoanRepayTemplate(loanId).collect { state ->
+            repository.getLoanRepayTemplate(arg.loanId).collect { state ->
                 when (state) {
                     is DataState.Error ->
                         _loanRepaymentUiState.value =
@@ -76,7 +65,7 @@ class LoanRepaymentViewModel(
             _loanRepaymentUiState.value = LoanRepaymentUiState.ShowProgressbar
 
             try {
-                val loanRepaymentResponse = repository.submitPayment(loanId, request)
+                val loanRepaymentResponse = repository.submitPayment(arg.loanId, request)
                 _loanRepaymentUiState.value =
                     LoanRepaymentUiState.ShowPaymentSubmittedSuccessfully(
                         loanRepaymentResponse,
@@ -90,7 +79,7 @@ class LoanRepaymentViewModel(
 
     fun checkDatabaseLoanRepaymentByLoanId() {
         viewModelScope.launch {
-            repository.getDatabaseLoanRepaymentByLoanId(loanId).collect { state ->
+            repository.getDatabaseLoanRepaymentByLoanId(arg.loanId).collect { state ->
                 when (state) {
                     is DataState.Error ->
                         _loanRepaymentUiState.value =

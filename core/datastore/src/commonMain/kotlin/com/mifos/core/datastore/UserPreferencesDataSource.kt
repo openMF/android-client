@@ -12,7 +12,7 @@ package com.mifos.core.datastore
 import com.mifos.core.common.utils.ServerConfig
 import com.mifos.core.common.utils.getInstanceUrl
 import com.mifos.core.datastore.model.AppSettings
-import com.mifos.core.datastore.model.AppTheme
+import com.mifos.core.datastore.model.DarkThemeConfig
 import com.mifos.core.datastore.model.UserData
 import com.mifos.core.model.objects.users.User
 import com.russhwolf.settings.ExperimentalSettingsApi
@@ -137,7 +137,7 @@ class UserPreferencesDataSource(
         }
     }
 
-    suspend fun updateTheme(theme: AppTheme) {
+    suspend fun updateTheme(theme: DarkThemeConfig) {
         withContext(dispatcher) {
             settings.putSettingsPreference(
                 AppSettings.DEFAULT.copy(
