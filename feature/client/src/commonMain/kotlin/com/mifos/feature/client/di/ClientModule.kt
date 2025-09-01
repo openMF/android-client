@@ -19,8 +19,8 @@ import com.mifos.feature.client.clientEditDetails.ClientEditDetailsViewModel
 import com.mifos.feature.client.clientEditProfile.ClientProfileEditViewModel
 import com.mifos.feature.client.clientGeneral.ClientProfileGeneralViewmodel
 import com.mifos.feature.client.clientIdentifiers.ClientIdentifiersViewModel
-import com.mifos.feature.client.clientLoanAccounts.ClientLoanAccountsViewModel
 import com.mifos.feature.client.clientIdentitiesList.ClientIdentitiesListViewModel
+import com.mifos.feature.client.clientLoanAccounts.ClientLoanAccountsViewModel
 import com.mifos.feature.client.clientPinpoint.PinPointClientViewModel
 import com.mifos.feature.client.clientProfile.ClientProfileViewModel
 import com.mifos.feature.client.clientSignature.SignatureViewModel

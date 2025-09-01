@@ -122,14 +122,11 @@ internal class ClientProfileViewModel(
         when (action) {
             ClientProfileAction.NavigateBack -> sendEvent(ClientProfileEvent.NavigateBack)
 
-            is ClientProfileAction.OnActionClick -> {
-                when (action.action) {
-                    ClientProfileActionItem.General -> mutableStateFlow.update {
-                        it.copy(showAccountChooserDialog = true)
-                    }
-                    else -> sendEvent(ClientProfileEvent.OnActionClick(action.action))
-                }
-            }
+            is ClientProfileAction.OnActionClick -> sendEvent(
+                ClientProfileEvent.OnActionClick(
+                    action.action,
+                ),
+            )
 
             ClientProfileAction.OnRetry -> getClientAndObserveNetwork()
 

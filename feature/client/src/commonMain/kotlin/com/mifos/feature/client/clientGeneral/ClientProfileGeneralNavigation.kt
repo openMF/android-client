@@ -22,8 +22,8 @@ data class ClientProfileGeneralRoute(
 fun NavGraphBuilder.clientProfileGeneralDestination(
     onNavigateBack: () -> Unit = {},
     upcomingCharges: (Int) -> Unit = {},
-    loanAccounts: (Int) -> Unit = {},
-    savingAccounts: (Int) -> Unit = {},
+    loanAccounts: (Int) -> Unit,
+    savingAccounts: (Int) -> Unit,
     fixedDepositAccounts: (Int) -> Unit = {},
     recurringDepositAccounts: (Int) -> Unit = {},
     sharesAccounts: (Int) -> Unit = {},
