@@ -85,10 +85,9 @@ internal fun LoanTransactionsScreen(
     viewModel: LoanTransactionsViewModel = koinViewModel(),
 ) {
     val uiState by viewModel.loanTransactionsUiState.collectAsStateWithLifecycle()
-    val loanId by viewModel.loanId.collectAsStateWithLifecycle()
 
     LaunchedEffect(key1 = Unit) {
-        viewModel.loadLoanTransaction(loanId)
+        viewModel.loadLoanTransaction()
     }
 
     LoanTransactionsScreen(
@@ -96,7 +95,7 @@ internal fun LoanTransactionsScreen(
         navigateBack = navigateBack,
         onRetry = {
             viewModel.viewModelScope.launch {
-                viewModel.loadLoanTransaction(loanId)
+                viewModel.loadLoanTransaction()
             }
         },
     )

@@ -12,7 +12,7 @@ package com.mifos.feature.loan.loanDisbursement
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.mifos.core.common.utils.Constants
+import androidx.navigation.toRoute
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.repository.LoanAccountDisbursementRepository
 import com.mifos.core.model.objects.account.loan.LoanDisbursement
@@ -26,14 +26,14 @@ class LoanAccountDisbursementViewModel(
     savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
 
-    val loadId = savedStateHandle.getStateFlow(key = Constants.LOAN_ACCOUNT_NUMBER, initialValue = 0)
+    val loanId = savedStateHandle.toRoute<LoanDisbursementScreenRoute>().loanAccountNumber
 
     private val _loanAccountDisbursementUiState = MutableStateFlow<LoanAccountDisbursementUiState>(LoanAccountDisbursementUiState.ShowProgressbar)
 
     val loanAccountDisbursementUiState: StateFlow<LoanAccountDisbursementUiState>
         get() = _loanAccountDisbursementUiState
 
-    fun loadLoanTemplate(loanId: Int) {
+    fun loadLoanTemplate() {
         viewModelScope.launch {
             repository.getLoanTransactionTemplate(loanId, APIEndPoint.DISBURSE)
                 .collect { state ->
@@ -54,7 +54,7 @@ class LoanAccountDisbursementViewModel(
         }
     }
 
-    fun disburseLoan(loanId: Int, loanDisbursement: LoanDisbursement?) {
+    fun disburseLoan(loanDisbursement: LoanDisbursement?) {
         viewModelScope.launch {
             repository.disburseLoan(loanId, loanDisbursement)
                 .collect { state ->

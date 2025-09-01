@@ -12,30 +12,22 @@ package com.mifos.feature.path.tracking.navigation
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
-import androidx.navigation.navigation
 import com.mifos.feature.path.tracking.PathTrackingScreen
+import kotlinx.serialization.Serializable
 
-fun NavGraphBuilder.pathTrackingNavGraph(
-    navController: NavController,
-) {
-    navigation(
-        startDestination = PathTrackingScreens.PathTrackingScreen.route,
-        route = PathTrackingScreens.PathTrackingScreenRoute.route,
-    ) {
-        pathTrackingRoute(
-            onBackPressed = navController::popBackStack,
-        )
-    }
-}
+@Serializable
+data object PathTrackingScreenRoute
 
 fun NavGraphBuilder.pathTrackingRoute(
     onBackPressed: () -> Unit,
 ) {
-    composable(
-        route = PathTrackingScreens.PathTrackingScreen.route,
-    ) {
+    composable<PathTrackingScreenRoute> {
         PathTrackingScreen(
             onBackPressed = onBackPressed,
         )
     }
+}
+
+fun NavController.navigateToPathTrackingScreen() {
+    navigate(PathTrackingScreenRoute)
 }

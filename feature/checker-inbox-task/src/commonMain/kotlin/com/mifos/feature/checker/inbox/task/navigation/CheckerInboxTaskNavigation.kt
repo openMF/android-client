@@ -15,13 +15,16 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import com.mifos.feature.checker.inbox.task.checkerInbox.CheckerInboxScreen
 import com.mifos.feature.checker.inbox.task.checkerInboxTasks.CheckerInboxTasksScreen
+import kotlinx.serialization.Serializable
+
+@Serializable
+data object CheckerInboxNavGraph
 
 fun NavGraphBuilder.checkerInboxTaskNavGraph(
     navController: NavController,
 ) {
-    navigation(
-        startDestination = CheckerInboxTaskScreens.CheckerInboxTaskScreen.route,
-        route = CheckerInboxTaskScreens.CheckerInboxTaskScreenRoute.route,
+    navigation<CheckerInboxNavGraph>(
+        startDestination = CheckerInboxTaskScreenRoute,
     ) {
         checkerInboxTaskRoute(
             onBackPressed = navController::popBackStack,
@@ -33,13 +36,14 @@ fun NavGraphBuilder.checkerInboxTaskNavGraph(
     }
 }
 
+@Serializable
+data object CheckerInboxTaskScreenRoute
+
 fun NavGraphBuilder.checkerInboxTaskRoute(
     onBackPressed: () -> Unit,
     checkerInbox: () -> Unit,
 ) {
-    composable(
-        route = CheckerInboxTaskScreens.CheckerInboxTaskScreen.route,
-    ) {
+    composable<CheckerInboxTaskScreenRoute> {
         CheckerInboxTasksScreen(
             onBackPressed = onBackPressed,
             checkerInbox = checkerInbox,
@@ -48,12 +52,13 @@ fun NavGraphBuilder.checkerInboxTaskRoute(
     }
 }
 
+@Serializable
+data object CheckerInboxScreenRoute
+
 fun NavGraphBuilder.checkerInboxRoute(
     onBackPressed: () -> Unit,
 ) {
-    composable(
-        route = CheckerInboxTaskScreens.CheckerInboxScreen.route,
-    ) {
+    composable<CheckerInboxScreenRoute> {
         CheckerInboxScreen(
             onBackPressed = onBackPressed,
         )
@@ -61,5 +66,9 @@ fun NavGraphBuilder.checkerInboxRoute(
 }
 
 fun NavController.navigateCheckerInbox() {
-    navigate(CheckerInboxTaskScreens.CheckerInboxScreen.route)
+    navigate(CheckerInboxScreenRoute)
+}
+
+fun NavController.navigateToCheckerInboxTasksScreenRoute() {
+    navigate(CheckerInboxTaskScreenRoute)
 }

@@ -65,10 +65,9 @@ internal fun LoanRepaymentScheduleScreen(
     navigateBack: () -> Unit,
 ) {
     val uiState by viewModel.loanRepaymentScheduleUiState.collectAsStateWithLifecycle()
-    val loanId by viewModel.loanId.collectAsStateWithLifecycle()
 
     LaunchedEffect(key1 = Unit) {
-        viewModel.loadLoanRepaySchedule(loanId)
+        viewModel.loadLoanRepaySchedule()
     }
 
     LoanRepaymentScheduleScreen(
@@ -76,7 +75,7 @@ internal fun LoanRepaymentScheduleScreen(
         navigateBack = navigateBack,
         onRetry = {
             viewModel.viewModelScope.launch {
-                viewModel.loadLoanRepaySchedule(loanId)
+                viewModel.loadLoanRepaySchedule()
             }
         },
     )
