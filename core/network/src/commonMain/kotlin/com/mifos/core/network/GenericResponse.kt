@@ -9,14 +9,14 @@
  */
 package com.mifos.core.network
 
-/**
- * Created by ishankhanna on 24/06/14.
- */
-class GenericResponse {
-    var responseFields = HashMap<String, Any>()
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.JsonElement
+
+@Serializable
+data class GenericResponse(
+    val responseFields: Map<String, JsonElement> = emptyMap(),
+) {
     override fun toString(): String {
-        return "GenericResponse{" +
-            "responseFields=" + responseFields +
-            '}'
+        return "GenericResponse{responseFields=$responseFields}"
     }
 }

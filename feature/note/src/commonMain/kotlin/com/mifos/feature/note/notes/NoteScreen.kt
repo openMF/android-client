@@ -68,13 +68,15 @@ import com.mifos.core.ui.components.MifosErrorComponent
 import com.mifos.core.ui.util.DevicePreview
 import com.mifos.core.ui.util.EventsEffect
 import kotlinx.datetime.Clock
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toLocalDateTime
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
-internal fun NoteScreen(
+internal fun NoteScreenScaffold(
     onNavigateBack: () -> Unit,
-    onNavigateNext: (Int, String?) -> Unit,
+    onNavigateAddEditNote: (Int, String?, Long?) -> Unit,
     viewModel: NoteViewModel = koinViewModel(),
 ) {
     val state by viewModel.stateFlow.collectAsStateWithLifecycle()
@@ -82,12 +84,13 @@ internal fun NoteScreen(
     EventsEffect(viewModel.eventFlow) { event ->
         when (event) {
             NoteEvent.NavigateBack -> onNavigateBack()
-            NoteEvent.NavigateNext -> onNavigateNext(state.entityId, state.entityType)
+            NoteEvent.NavigateAddNote -> onNavigateAddEditNote(state.resourceId, state.resourceType, null)
+            NoteEvent.NavigateEditNote -> onNavigateAddEditNote(state.resourceId, state.resourceType, state.expandedNoteId)
         }
     }
 
-    if (!state.isDeleteError) {
-        NoteScreen(
+    if (!state.isError && state.notes.isNotEmpty()) {
+        NoteScreenScaffold(
             state = state,
             onAction = remember(viewModel) { { viewModel.trySendAction(it) } },
         )
@@ -124,7 +127,7 @@ private fun NoteScreenDialog(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-internal fun NoteScreen(
+internal fun NoteScreenScaffold(
     onAction: (NoteAction) -> Unit,
     state: NoteState,
     modifier: Modifier = Modifier,
@@ -190,7 +193,7 @@ private fun NoteContent(
                 imageVector = MifosIcons.Add,
                 contentDescription = null,
                 modifier.clickable {
-                    onAction(NoteAction.OnNext)
+                    onAction(NoteAction.OnClickAddScreen)
                 }.size(DesignToken.sizes.iconAverage),
             )
         }
@@ -230,7 +233,7 @@ private fun NoteContent(
                     }
                 }
             } else {
-                items(state.notes) { note ->
+                items(state.notes.reversed()) { note ->
                     NoteItem(
                         id = note.id,
                         note = note.note,
@@ -251,7 +254,7 @@ private fun NoteItem(
     note: String?,
     onAction: (NoteAction) -> Unit,
     createdByUsername: String?,
-    createdOn: Long?,
+    createdOn: String?,
     state: NoteState,
 ) {
     var shape by remember { mutableStateOf(RoundedCornerShape(0.dp)) }
@@ -307,7 +310,7 @@ private fun NoteItem(
                     )
 
                     Text(
-                        text = DateHelper.getDateAsStringFromLong(createdOn!!),
+                        text = DateHelper.formatIsoDateToDdMmYyyy(createdOn ?: "Not found"),
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurface,
                     )
@@ -365,7 +368,9 @@ private fun ContextualActions(
             verticalArrangement = Arrangement.spacedBy(DesignToken.spacing.medium),
         ) {
             Row(
-                modifier = Modifier.clickable {},
+                modifier = Modifier.clickable {
+                    onAction(NoteAction.OnClickEditScreen)
+                },
                 horizontalArrangement = Arrangement.spacedBy(
                     DesignToken.spacing.medium,
                 ),
@@ -429,10 +434,10 @@ internal val demoNotes = listOf(
         note = "This is the first demo note.",
         createdById = 1001,
         createdByUsername = "creator_1",
-        createdOn = Clock.System.now().toEpochMilliseconds(),
+        createdOn = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).toString(),
         updatedById = 1002,
         updatedByUsername = "updater_1",
-        updatedOn = Clock.System.now().toEpochMilliseconds(),
+        updatedOn = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).toString(),
     ),
     Note(
         id = 2,
@@ -440,10 +445,10 @@ internal val demoNotes = listOf(
         note = "This is the second demo note.",
         createdById = 1003,
         createdByUsername = "creator_2",
-        createdOn = Clock.System.now().toEpochMilliseconds(),
+        createdOn = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).toString(),
         updatedById = 1004,
         updatedByUsername = "updater_2",
-        updatedOn = Clock.System.now().toEpochMilliseconds(),
+        updatedOn = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).toString(),
     ),
     Note(
         id = 3,
@@ -451,17 +456,17 @@ internal val demoNotes = listOf(
         note = "This is the third demo note.",
         createdById = 1005,
         createdByUsername = "creator_3",
-        createdOn = Clock.System.now().toEpochMilliseconds(),
+        createdOn = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).toString(),
         updatedById = 1006,
         updatedByUsername = "updater_3",
-        updatedOn = Clock.System.now().toEpochMilliseconds(),
+        updatedOn = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).toString(),
     ),
 )
 
 @DevicePreview
 @Composable
 fun PreviewSuccessNoteScreen() {
-    NoteScreen(
+    NoteScreenScaffold(
         onAction = {},
         state = NoteState(notes = demoNotes),
     )

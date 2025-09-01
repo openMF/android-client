@@ -11,7 +11,7 @@ package com.mifos.feature.loan.loanRepaymentSchedule
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
-import com.mifos.core.common.utils.Constants
+import androidx.navigation.toRoute
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.repository.LoanRepaymentScheduleRepository
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -22,14 +22,13 @@ class LoanRepaymentScheduleViewModel(
     savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
 
-    val loanId =
-        savedStateHandle.getStateFlow(key = Constants.LOAN_ACCOUNT_NUMBER, initialValue = 0)
+    val loanId = savedStateHandle.toRoute<LoanRepaymentScheduleScreenRoute>().loanAccountNumber
 
     private val _loanRepaymentScheduleUiState =
         MutableStateFlow<LoanRepaymentScheduleUiState>(LoanRepaymentScheduleUiState.ShowProgressbar)
     val loanRepaymentScheduleUiState: StateFlow<LoanRepaymentScheduleUiState> get() = _loanRepaymentScheduleUiState
 
-    suspend fun loadLoanRepaySchedule(loanId: Int) {
+    suspend fun loadLoanRepaySchedule() {
         repository.getLoanRepaySchedule(loanId).collect { state ->
             when (state) {
                 is DataState.Error ->

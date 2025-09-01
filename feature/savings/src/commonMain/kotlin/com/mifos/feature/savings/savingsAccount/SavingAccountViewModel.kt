@@ -14,13 +14,14 @@ import androidclient.feature.savings.generated.resources.feature_savings_failed_
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.mifos.core.common.utils.Constants
+import androidx.navigation.toRoute
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.domain.useCases.CreateSavingsAccountUseCase
 import com.mifos.core.domain.useCases.GetClientSavingsAccountTemplateByProductUseCase
 import com.mifos.core.domain.useCases.GetGroupSavingsAccountTemplateByProductUseCase
 import com.mifos.core.domain.useCases.LoadSavingsAccountsAndTemplateUseCase
 import com.mifos.core.model.objects.payloads.SavingsPayload
+import com.mifos.feature.savings.navigation.SavingsAccountRoute
 import com.mifos.room.entities.templates.savings.SavingProductsTemplate
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -38,10 +39,7 @@ class SavingAccountViewModel(
     savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
 
-    val groupId = savedStateHandle.getStateFlow(key = Constants.GROUP_ID, initialValue = 0)
-    val clientId = savedStateHandle.getStateFlow(key = Constants.CLIENT_ID, initialValue = 0)
-    val isGroupAccount =
-        savedStateHandle.getStateFlow(key = Constants.GROUP_ACCOUNT, initialValue = false)
+    val route = savedStateHandle.toRoute<SavingsAccountRoute>()
 
     private val _savingAccountUiState =
         MutableStateFlow<SavingAccountUiState>(SavingAccountUiState.ShowProgress)
@@ -73,10 +71,10 @@ class SavingAccountViewModel(
                 }
         }
 
-    fun loadClientSavingAccountTemplateByProduct(clientId: Int, productId: Int) =
+    fun loadClientSavingAccountTemplateByProduct(productId: Int) =
         viewModelScope.launch {
             getClientSavingsAccountTemplateByProductUseCase(
-                clientId,
+                route.clientId,
                 productId,
             ).collect { dataState ->
                 when (dataState) {
@@ -95,10 +93,10 @@ class SavingAccountViewModel(
             }
         }
 
-    fun loadGroupSavingAccountTemplateByProduct(groupId: Int, productId: Int) =
+    fun loadGroupSavingAccountTemplateByProduct(productId: Int) =
         viewModelScope.launch {
             getGroupSavingsAccountTemplateByProductUseCase(
-                groupId,
+                route.groupId,
                 productId,
             ).collect { dataState ->
                 when (dataState) {

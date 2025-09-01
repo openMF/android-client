@@ -414,4 +414,26 @@
     <string name="client_profile_savings_account">Savings Account</string>
     <string name="client_profile_loan_account">Loan Account</string>
 
+    <string name="client_identifiers_click_on_plus_button_to_add_an_item">Click on “+” Button to add an item.</string>
+    <string name="client_identifiers_not_available">Not available</string>
+    <string name="client_identifiers_identities">Identities</string>
+    <string name="client_identifiers_identities_success_text">Success</string>
+    <string name="client_identifiers_error_text">Error</string>
+    <string name="client_identifiers_retry">Retry</string>
+    <string name="client_identifiers_identities_client_identifier_deletion_success">Successfully deleted client identifier with id</string>
+<!--    <string name="client_identifiers_identities">Identities</string>-->
+
+  <!-- Apply New Applications Screen -->
+    <string name="client_apply_new_applications_title">Choose Application Type</string>
+    <string name="client_apply_new_applications_loan_account">New Loan Account</string>
+    <string name="client_apply_new_applications_savings_account">New Savings Account</string>
+    <string name="client_apply_new_applications_share_account">New Share Account</string>
+    <string name="client_apply_new_applications_recurring_account">New Recurring Deposit Account</string>
+    <string name="client_apply_new_applications_fixed_account">New Fixed Deposit Account</string>
+    <string name="client_apply_new_applications_apply_loan_account">Apply for new loan account</string>
+    <string name="client_apply_new_applications_apply_savings_account">Apply for new savings account</string>
+    <string name="client_apply_new_applications_apply_share_account">Apply for new share account</string>
+    <string name="client_apply_new_applications_apply_recurring_account">Apply for new recurring deposit account</string>
+    <string name="client_apply_new_applications_apply_fixed_account">Apply for new fixed deposit account</string>
+
 </resources>

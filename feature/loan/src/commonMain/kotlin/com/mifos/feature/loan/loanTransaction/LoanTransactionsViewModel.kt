@@ -11,7 +11,7 @@ package com.mifos.feature.loan.loanTransaction
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
-import com.mifos.core.common.utils.Constants
+import androidx.navigation.toRoute
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.repository.LoanTransactionsRepository
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -22,14 +22,13 @@ class LoanTransactionsViewModel(
     savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
 
-    val loanId =
-        savedStateHandle.getStateFlow(key = Constants.LOAN_ACCOUNT_NUMBER, initialValue = 0)
+    val loanId = savedStateHandle.toRoute<LoanTransactionScreenRoute>().loanAccountNumber
 
     private val _loanTransactionsUiState =
         MutableStateFlow<LoanTransactionsUiState>(LoanTransactionsUiState.ShowProgressBar)
     val loanTransactionsUiState: StateFlow<LoanTransactionsUiState> get() = _loanTransactionsUiState
 
-    suspend fun loadLoanTransaction(loanId: Int) {
+    suspend fun loadLoanTransaction() {
         repository.getLoanTransactions(loanId).collect { state ->
             when (state) {
                 is DataState.Error ->

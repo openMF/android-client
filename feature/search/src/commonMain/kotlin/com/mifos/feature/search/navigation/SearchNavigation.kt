@@ -9,19 +9,20 @@
  */
 package com.mifos.feature.search.navigation
 
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.padding
 import androidx.compose.ui.Modifier
+import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import com.mifos.core.common.utils.Constants
-import com.mifos.core.model.objects.SearchedEntity
 import com.mifos.core.ui.components.FabType
-import com.mifos.feature.search.SearchScreenRoute
+import com.mifos.feature.search.SearchScreen
+import kotlinx.serialization.Serializable
+
+@Serializable
+data object SearchScreenRoute
 
 fun NavGraphBuilder.searchNavGraph(
-    paddingValues: PaddingValues,
     onCreateClient: () -> Unit,
     onCreateCenter: () -> Unit,
     onCreateGroup: () -> Unit,
@@ -31,12 +32,9 @@ fun NavGraphBuilder.searchNavGraph(
     onSavings: (Int) -> Unit,
     onLoan: (Int) -> Unit,
 ) {
-    navigation(
-        startDestination = SearchScreens.SearchScreen.route,
-        route = SearchScreens.SearchScreenRoute.route,
-    ) {
-        searchRoute(
-            modifier = Modifier.padding(paddingValues),
+    composable<SearchScreenRoute> {
+        SearchScreen(
+            modifier = Modifier,
             onFabClick = {
                 when (it) {
                     FabType.CLIENT -> {
@@ -79,18 +77,6 @@ fun NavGraphBuilder.searchNavGraph(
     }
 }
 
-fun NavGraphBuilder.searchRoute(
-    modifier: Modifier,
-    onFabClick: (FabType) -> Unit,
-    onSearchOptionClick: (SearchedEntity) -> Unit,
-) {
-    composable(
-        route = SearchScreens.SearchScreen.route,
-    ) {
-        SearchScreenRoute(
-            modifier = modifier,
-            onFabClick = onFabClick,
-            onSearchOptionClick = onSearchOptionClick,
-        )
-    }
+fun NavController.navigateToSearchScreen() {
+    this.navigate(SearchScreenRoute)
 }

@@ -14,9 +14,13 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import com.mifos.feature.settings.settings.SettingsScreen
 import com.mifos.feature.settings.updateServer.UpdateServerConfigScreenRoute
+import kotlinx.serialization.Serializable
+
+@Serializable
+data object SettingsRoute
 
 fun NavController.navigateToSettingsScreen() {
-    navigate(SettingsScreens.SettingsScreen.route)
+    navigate(SettingsRoute)
 }
 
 fun NavGraphBuilder.settingsScreen(
@@ -25,9 +29,7 @@ fun NavGraphBuilder.settingsScreen(
     changePasscode: (String) -> Unit,
     onClickUpdateConfig: () -> Unit,
 ) {
-    composable(
-        route = SettingsScreens.SettingsScreen.route,
-    ) {
+    composable<SettingsRoute> {
         SettingsScreen(
             onBackPressed = navigateBack,
             navigateToLoginScreen = navigateToLoginScreen,
@@ -37,14 +39,13 @@ fun NavGraphBuilder.settingsScreen(
     }
 }
 
-private const val SERVER_CONFIG_ROUTE = "update_server_config"
+@Serializable
+data object UpdateServerConfig
 
 fun NavGraphBuilder.serverConfigGraph(
     navigateBack: () -> Unit,
 ) {
-    composable(
-        route = SERVER_CONFIG_ROUTE,
-    ) {
+    composable<UpdateServerConfig> {
         UpdateServerConfigScreenRoute(
             onBackClick = navigateBack,
         )
@@ -52,5 +53,5 @@ fun NavGraphBuilder.serverConfigGraph(
 }
 
 fun NavController.navigateToServerConfigGraph() {
-    navigate(SERVER_CONFIG_ROUTE)
+    navigate(UpdateServerConfig)
 }
