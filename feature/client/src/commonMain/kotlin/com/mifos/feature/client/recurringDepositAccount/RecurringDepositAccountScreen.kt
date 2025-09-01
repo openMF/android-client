@@ -158,7 +158,8 @@ internal fun RecurringDepositAccountScaffold(
                 MifosSearchBar(
                     query = state.searchText,
                     onQueryChange = {
-                        onAction(RecurringDepositAccountAction.Search(it))                    },
+                        onAction(RecurringDepositAccountAction.Search(it))
+                    },
                     onSearchClick = {
                         onAction(RecurringDepositAccountAction.Search(it))
                     },
@@ -201,7 +202,7 @@ internal fun RecurringDepositAccountScaffold(
                             when (actions) {
                                 Actions.ViewAccount -> {
                                     onAction(
-                                        RecurringDepositAccountAction.ViewAccount(state.clientId)
+                                        RecurringDepositAccountAction.ViewAccount(state.clientId),
                                     )
                                 }
                                 Actions.ApproveAccount -> {

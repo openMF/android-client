@@ -391,11 +391,11 @@ fun MifosActionsSavingsListingComponent(
             Column(
                 modifier = Modifier.padding(DesignToken.padding.large),
             ) {
-                MifosListingRowItem(
-                    key = "",
-                    value = accountNo,
-                    valueStyle = MifosTypography.titleSmallEmphasized,
+                MifosListingRowItemHeader(
+                    text = accountNo,
+                    keyStyle = MifosTypography.titleSmallEmphasized,
                 )
+
                 Spacer(Modifier.height(DesignToken.padding.large))
                 MifosListingRowItem(
                     key = savingsProduct,
