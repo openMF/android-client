@@ -26,8 +26,8 @@ import com.mifos.feature.individualCollectionSheet.navigation.individualCollecti
 import com.mifos.feature.loan.groupLoanAccount.groupLoanScreen
 import com.mifos.feature.loan.loanAccount.addLoanAccountScreen
 import com.mifos.feature.loan.navigation.loanNavGraph
-import com.mifos.feature.note.navigation.navigateToNoteScreen
 import com.mifos.feature.note.navigation.noteNavGraph
+import com.mifos.feature.note.notes.navigateToNoteScreen
 import com.mifos.feature.offline.navigation.offlineNavGraph
 import com.mifos.feature.path.tracking.navigation.pathTrackingRoute
 import com.mifos.feature.report.navigation.reportNavGraph

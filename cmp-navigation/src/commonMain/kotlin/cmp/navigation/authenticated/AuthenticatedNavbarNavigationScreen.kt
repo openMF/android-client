@@ -91,7 +91,7 @@ import com.mifos.feature.groups.navigation.navigateToGroupListScreen
 import com.mifos.feature.loan.groupLoanAccount.navigateToGroupLoanScreen
 import com.mifos.feature.loan.loanAccount.navigateToLoanAccountScreen
 import com.mifos.feature.loan.loanAccountSummary.navigateToLoanAccountSummaryScreen
-import com.mifos.feature.note.navigation.navigateToNoteScreen
+import com.mifos.feature.note.notes.navigateToNoteScreen
 import com.mifos.feature.savings.navigation.navigateToAddSavingsAccount
 import com.mifos.feature.savings.navigation.navigateToSavingsAccountSummaryScreen
 import com.mifos.feature.search.navigation.SearchScreenRoute
@@ -255,7 +255,7 @@ internal fun AuthenticatedNavbarNavigationScreenContent(
                         NavigationDrawerItem(
                             label = {
                                 Text(
-                                    text = item.title,
+                                    text = stringResource(item.title),
                                     style = MaterialTheme.typography.bodyMedium,
                                 )
                             },
@@ -275,7 +275,7 @@ internal fun AuthenticatedNavbarNavigationScreenContent(
                                         } else {
                                             it
                                         },
-                                        contentDescription = item.title,
+                                        contentDescription = stringResource(item.title),
                                     )
                                 }
                             },
