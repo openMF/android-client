@@ -62,6 +62,7 @@ import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.designsystem.theme.AppColors
 import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.designsystem.theme.MifosTypography
+import com.mifos.core.designsystem.utils.onClick
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
@@ -447,12 +448,15 @@ fun MifosActionsClientFeeListingComponent(
     waived: String,
     outstanding: String,
     menuList: List<Actions>,
+    isActive: Boolean,
+    onClick: () -> Unit,
     onActionClicked: (Actions) -> Unit,
 ) {
     MifosActionsListingComponentOutline {
         Column {
             Column(
-                modifier = Modifier.padding(DesignToken.padding.large),
+                modifier = Modifier.padding(DesignToken.padding.large)
+                    .onClick { onClick() },
             ) {
                 MifosListingRowItem(
                     key = stringResource(Res.string.core_ui_name),
@@ -491,40 +495,43 @@ fun MifosActionsClientFeeListingComponent(
                     value = outstanding,
                 )
             }
-            Surface(
-                modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(
-                    bottomStart = DesignToken.padding.medium,
-                    bottomEnd = DesignToken.padding.medium,
-                ),
-            ) {
-                Column(
-                    modifier = Modifier.padding(
-                        vertical = DesignToken.padding.small,
+
+            if (isActive) {
+                Surface(
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(
+                        bottomStart = DesignToken.padding.medium,
+                        bottomEnd = DesignToken.padding.medium,
                     ),
                 ) {
-                    menuList.map { menuItem ->
-                        Row(
-                            modifier = Modifier.fillMaxWidth()
-                                .height(DesignToken.sizes.avatarMedium)
-                                .clickable {
-                                    onActionClicked(menuItem)
-                                },
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.Start,
-                        ) {
-                            Icon(
-                                modifier = Modifier.padding(horizontal = DesignToken.padding.large),
-                                imageVector = menuItem.icon,
-                                contentDescription = "",
-                            )
+                    Column(
+                        modifier = Modifier.padding(
+                            vertical = DesignToken.padding.small,
+                        ),
+                    ) {
+                        menuList.map { menuItem ->
+                            Row(
+                                modifier = Modifier.fillMaxWidth()
+                                    .height(DesignToken.sizes.avatarMedium)
+                                    .clickable {
+                                        onActionClicked(menuItem)
+                                    },
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.Start,
+                            ) {
+                                Icon(
+                                    modifier = Modifier.padding(horizontal = DesignToken.padding.large),
+                                    imageVector = menuItem.icon,
+                                    contentDescription = "",
+                                )
 
-                            Text(
-                                modifier = Modifier.fillMaxWidth(),
-                                text = menuItem.name,
-                                color = MaterialTheme.colorScheme.onSurface,
-                                fontSize = MaterialTheme.typography.bodyLarge.fontSize,
-                            )
+                                Text(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    text = menuItem.name,
+                                    color = MaterialTheme.colorScheme.onSurface,
+                                    fontSize = MaterialTheme.typography.bodyLarge.fontSize,
+                                )
+                            }
                         }
                     }
                 }
@@ -591,6 +598,8 @@ fun PreviewMifosActionsClientFeeListingComponent() {
                     else -> println("Action not Handled")
                 }
             },
+            isActive = true,
+            onClick = {},
         )
     }
 }

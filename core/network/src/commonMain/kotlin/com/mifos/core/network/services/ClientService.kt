@@ -33,6 +33,7 @@ import com.mifos.room.basemodel.APIEndPoint
 import com.mifos.room.entities.accounts.ClientAccounts
 import com.mifos.room.entities.client.AddressConfiguration
 import com.mifos.room.entities.client.AddressTemplate
+import com.mifos.room.entities.client.ChargesEntity
 import com.mifos.room.entities.client.ClientEntity
 import com.mifos.room.entities.client.ClientPayloadEntity
 import com.mifos.room.entities.templates.clients.ClientsTemplateEntity
@@ -301,4 +302,10 @@ interface ClientService {
         @Path("clientId") clientId: Int,
         @Body payload: CollateralPayload,
     ): HttpResponse
+
+    @GET("clients/{clientId}/charges")
+    suspend fun getClientCharges(
+        @Path("clientId") clientId: Long,
+        @Query("chargeStatus") chargeStatus: String = "all"
+    ): ChargesEntity
 }
