@@ -252,6 +252,8 @@
     <string name="client_profile_general_action_title_collateral_data">Collateral Data</string>
     <string name="client_profile_general_action_subtitle_collateral_data">Check or update the account notes</string>
 
+    <!-- Client_Profile-Recurring Deposit Account Title -->
+    <string name="client_profile_recurring_deposit_account_title">Recurring Deposit Accounts</string>
 
     <!-- Personal Info -->
     <string name="gender">Gender</string>
