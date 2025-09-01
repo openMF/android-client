@@ -182,7 +182,7 @@ fun MifosActionsIdentifierListingComponent(
 
                                 Text(
                                     modifier = Modifier.fillMaxWidth(),
-                                    text = menuItem.name,
+                                    text = menuItem::class.simpleName?:"",
                                     color = MaterialTheme.colorScheme.onSurface,
                                     fontSize = MaterialTheme.typography.bodyLarge.fontSize,
                                 )
@@ -265,7 +265,7 @@ fun MifosActionsCollateralDataListingComponent(
 
                             Text(
                                 modifier = Modifier.fillMaxWidth(),
-                                text = menuItem.name,
+                                text = menuItem::class.simpleName?:"",
                                 color = MaterialTheme.colorScheme.onSurface,
                                 fontSize = MaterialTheme.typography.bodyLarge.fontSize,
                             )
@@ -356,11 +356,6 @@ fun MifosActionsLoanListingComponent(
                                 verticalAlignment = Alignment.CenterVertically,
                                 horizontalArrangement = Arrangement.Start,
                             ) {
-                                Icon(
-                                    modifier = Modifier.padding(horizontal = DesignToken.padding.large),
-                                    imageVector = menuItem.icon,
-                                    contentDescription = "",
-                                )
                                 menuList.map { menuItem ->
                                     Row(
                                         modifier = Modifier.fillMaxWidth()
@@ -379,7 +374,7 @@ fun MifosActionsLoanListingComponent(
 
                                         Text(
                                             modifier = Modifier.fillMaxWidth(),
-                                            text = menuItem.name,
+                                            text = menuItem::class.simpleName?:"",
                                             color = MaterialTheme.colorScheme.onSurface,
                                             fontSize = MaterialTheme.typography.bodyLarge.fontSize,
                                         )
@@ -471,7 +466,7 @@ fun MifosActionsSavingsListingComponent(
 
                                 Text(
                                     modifier = Modifier.fillMaxWidth(),
-                                    text = menuItem.name,
+                                    text = menuItem::class.simpleName?:"",
                                     color = MaterialTheme.colorScheme.onSurface,
                                     fontSize = MaterialTheme.typography.bodyLarge.fontSize,
                                 )
@@ -567,7 +562,7 @@ fun MifosActionsClientFeeListingComponent(
 
                             Text(
                                 modifier = Modifier.fillMaxWidth(),
-                                text = menuItem.name,
+                                text = menuItem::class.simpleName?:"",
                                 color = MaterialTheme.colorScheme.onSurface,
                                 fontSize = MaterialTheme.typography.bodyLarge.fontSize,
                             )
@@ -579,13 +574,13 @@ fun MifosActionsClientFeeListingComponent(
     }
 }
 
-enum class Actions(val icon: ImageVector) {
-    ViewAccount(MifosIcons.ViewAccount),
-    ApproveAccount(MifosIcons.ApproveAccount),
-    MakeRepayment(MifosIcons.MakeRepayment),
-    ViewDocument(MifosIcons.ViewDocument),
-    UploadAgain(MifosIcons.UploadAgain),
-    DeleteDocument(MifosIcons.DeleteDocument),
+sealed class Actions(open val icon: ImageVector) {
+    data class ViewAccount(override val icon: ImageVector = MifosIcons.ViewAccount): Actions(icon)
+    data class ApproveAccount(override val icon: ImageVector = MifosIcons.ApproveAccount): Actions(icon)
+    data class MakeRepayment(override val icon: ImageVector = MifosIcons.MakeRepayment): Actions(icon)
+    data class ViewDocument(override val icon: ImageVector = MifosIcons.ViewDocument): Actions(icon)
+    data class UploadAgain(override val icon: ImageVector = MifosIcons.UploadAgain): Actions(icon)
+    data class DeleteDocument(override val icon: ImageVector = MifosIcons.DeleteDocument): Actions(icon)
 }
 
 @Preview
@@ -600,15 +595,15 @@ private fun PreviewMifosActionsIdentifierListingComponent() {
             description = "Primary identification document",
             identifyDocuments = "Passport Scan",
             menuList = listOf(
-                Actions.ViewDocument,
-                Actions.UploadAgain,
-                Actions.DeleteDocument,
+                Actions.ViewDocument(),
+                Actions.UploadAgain(),
+                Actions.DeleteDocument(),
             ),
             onActionClicked = { action ->
                 when (action) {
-                    Actions.ViewDocument -> println(Actions.ViewDocument.name)
-                    Actions.UploadAgain -> println(Actions.UploadAgain.name)
-                    Actions.DeleteDocument -> println(Actions.DeleteDocument.name)
+                    is Actions.ViewDocument -> println(Actions.ViewDocument::class.simpleName)
+                    is Actions.UploadAgain -> println(Actions.UploadAgain::class.simpleName)
+                    is Actions.DeleteDocument -> println(Actions.DeleteDocument::class.simpleName)
                     else -> println("Action not Handled")
                 }
             },
@@ -630,13 +625,13 @@ private fun PreviewMifosActionsClientFeeListingComponent() {
             waived = "$50",
             outstanding = "$550",
             menuList = listOf(
-                Actions.ViewAccount,
-                Actions.ApproveAccount,
+                Actions.ViewAccount(),
+                Actions.ApproveAccount(),
             ),
             onActionClicked = { action ->
                 when (action) {
-                    Actions.ViewAccount -> println(Actions.ViewAccount.name)
-                    Actions.ApproveAccount -> println(Actions.ApproveAccount.name)
+                    is Actions.ViewAccount ->  println(Actions.ViewDocument::class.simpleName)
+                    is Actions.ApproveAccount -> println(Actions.ApproveAccount::class.simpleName)
                     else -> println("Action not Handled")
                 }
             },
@@ -655,13 +650,13 @@ fun PreviewMifosActionsSavingsListingComponent() {
             lastActive = "2025-08-15",
             balance = "$1200",
             menuList = listOf(
-                Actions.ViewAccount,
-                Actions.ApproveAccount,
+                Actions.ViewAccount(),
+                Actions.ApproveAccount(),
             ),
             onActionClicked = { action ->
                 when (action) {
-                    Actions.ViewAccount -> println(Actions.ViewAccount.name)
-                    Actions.ApproveAccount -> println(Actions.ApproveAccount.name)
+                    is Actions.ViewAccount ->  println(Actions.ViewDocument::class.simpleName)
+                    is Actions.ApproveAccount -> println(Actions.ApproveAccount::class.simpleName)
                     else -> println("Action not Handled")
                 }
             },
@@ -679,13 +674,13 @@ private fun PreviewMifosActionsCollateralDataListingComponent() {
             totalValue = "$2500",
             totalCollateralValue = "$2500",
             menuList = listOf(
-                Actions.ViewAccount,
-                Actions.ApproveAccount,
+                Actions.ViewAccount(),
+                Actions.ApproveAccount(),
             ),
             onActionClicked = { action ->
                 when (action) {
-                    Actions.ViewAccount -> println(Actions.ViewAccount.name)
-                    Actions.ApproveAccount -> println(Actions.ApproveAccount.name)
+                    is Actions.ViewAccount ->  println(Actions.ViewDocument::class.simpleName)
+                    is Actions.ApproveAccount -> println(Actions.ApproveAccount::class.simpleName)
                     else -> println("Action not Handled")
                 }
             },
@@ -705,13 +700,13 @@ private fun PreviewMifosActionsLoanListingComponent() {
             loanBalance = "$3000",
             type = "Active",
             menuList = listOf(
-                Actions.ViewAccount,
-                Actions.ApproveAccount,
+                Actions.ViewAccount(),
+                Actions.ApproveAccount(),
             ),
             onActionClicked = { action ->
                 when (action) {
-                    Actions.ViewAccount -> println(Actions.ViewAccount.name)
-                    Actions.ApproveAccount -> println(Actions.ApproveAccount.name)
+                    is Actions.ViewAccount ->  println(Actions.ViewDocument::class.simpleName)
+                    is Actions.ApproveAccount -> println(Actions.ApproveAccount::class.simpleName)
                     else -> println("Action not Handled")
                 }
             },

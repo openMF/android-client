@@ -143,23 +143,23 @@ fun SavingsAccountsScreen(
                                 },
                                 menuList = if (savings.status?.submittedAndPendingApproval == true) {
                                     listOf(
-                                        Actions.ViewAccount,
-                                        Actions.ApproveAccount,
+                                        Actions.ViewAccount(),
+                                        Actions.ApproveAccount(),
                                     )
                                 } else {
                                     listOf(
-                                        Actions.ViewAccount,
+                                        Actions.ViewAccount(),
                                     )
                                 },
                                 onActionClicked = { actions ->
                                     when (actions) {
-                                        Actions.ViewAccount -> onAction.invoke(
+                                        is Actions.ViewAccount -> onAction.invoke(
                                             SavingsAccountAction.ViewAccount(
                                                 state.clientId,
                                             ),
                                         )
 
-                                        Actions.ApproveAccount -> onAction.invoke(
+                                        is Actions.ApproveAccount -> onAction.invoke(
                                             SavingsAccountAction.ApproveAccount(
                                                 state.clientId,
                                             ),
