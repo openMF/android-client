@@ -84,17 +84,25 @@ internal fun NoteScreenScaffold(
     EventsEffect(viewModel.eventFlow) { event ->
         when (event) {
             NoteEvent.NavigateBack -> onNavigateBack()
-            NoteEvent.NavigateAddNote -> onNavigateAddEditNote(state.resourceId, state.resourceType, null)
-            NoteEvent.NavigateEditNote -> onNavigateAddEditNote(state.resourceId, state.resourceType, state.expandedNoteId)
+            NoteEvent.NavigateAddNote -> onNavigateAddEditNote(
+                state.resourceId,
+                state.resourceType,
+                null,
+            )
+
+            NoteEvent.NavigateEditNote -> onNavigateAddEditNote(
+                state.resourceId,
+                state.resourceType,
+                state.expandedNoteId,
+            )
         }
     }
 
-    if (!state.isError) {
-        NoteScreenScaffold(
-            state = state,
-            onAction = remember(viewModel) { { viewModel.trySendAction(it) } },
-        )
-    }
+
+    NoteScreenScaffold(
+        state = state,
+        onAction = remember(viewModel) { { viewModel.trySendAction(it) } },
+    )
 
     NoteScreenDialog(
         state = state,
@@ -152,10 +160,12 @@ internal fun NoteScreenScaffold(
                 isRefreshing = state.isRefreshing,
                 onRefresh = { onAction(NoteAction.OnRefresh) },
             ) {
-                NoteContent(
-                    state = state,
-                    onAction = onAction,
-                )
+                if (state.dialogState != NoteState.DialogState.Loading && !state.isError) {
+                    NoteContent(
+                        state = state,
+                        onAction = onAction,
+                    )
+                }
             }
         }
     }
@@ -271,7 +281,9 @@ private fun NoteItem(
                 width = 1.dp,
                 color = MaterialTheme.colorScheme.secondaryContainer,
                 shape = shape,
-            ),
+            ).clickable {
+                id?.let { onAction(NoteAction.OnToggleExpanded(id)) }
+            },
             shape = shape,
             elevation = DesignToken.spacing.none,
         ) {
@@ -292,9 +304,7 @@ private fun NoteItem(
                     Icon(
                         imageVector = MifosIcons.MoreHoriz,
                         contentDescription = null,
-                        modifier = Modifier.clickable {
-                            id?.let { onAction(NoteAction.OnToggleExpanded(id)) }
-                        }.size(DesignToken.sizes.iconAverage),
+                        modifier = Modifier.size(DesignToken.sizes.iconAverage),
                     )
                 }
 
@@ -368,9 +378,10 @@ private fun ContextualActions(
             verticalArrangement = Arrangement.spacedBy(DesignToken.spacing.medium),
         ) {
             Row(
-                modifier = Modifier.clickable {
-                    onAction(NoteAction.OnClickEditScreen)
-                },
+                modifier = Modifier.fillMaxWidth()
+                    .clickable {
+                        onAction(NoteAction.OnClickEditScreen)
+                    },
                 horizontalArrangement = Arrangement.spacedBy(
                     DesignToken.spacing.medium,
                 ),
@@ -389,9 +400,10 @@ private fun ContextualActions(
             }
 
             Row(
-                modifier = Modifier.clickable {
-                    onAction(NoteAction.ShowDialog)
-                },
+                modifier = Modifier.fillMaxWidth()
+                    .clickable {
+                        onAction(NoteAction.ShowDialog)
+                    },
                 horizontalArrangement = Arrangement.spacedBy(
                     DesignToken.spacing.medium,
                 ),

@@ -185,6 +185,10 @@ class AddEditNoteViewModel(
     override fun handleAction(action: AddEditNoteAction) {
         when (action) {
             AddEditNoteAction.NavigateBack -> {
+                sendEvent(AddEditNoteEvent.NavigateBack)
+            }
+
+            AddEditNoteAction.NavigateBackWithUpdateList -> {
                 sendEvent(AddEditNoteEvent.NavigateBackWithUpdateList)
             }
 
@@ -242,6 +246,8 @@ class AddEditNoteViewModel(
                     sendEvent(AddEditNoteEvent.NavigateBack)
                 }
             }
+
+
         }
     }
 }
@@ -275,6 +281,7 @@ sealed interface AddEditNoteEvent {
 
 sealed interface AddEditNoteAction {
     data object NavigateBack : AddEditNoteAction
+    data object NavigateBackWithUpdateList : AddEditNoteAction
     data object OnRetry : AddEditNoteAction
     data class AddNote(val notesPayload: NotesPayload) : AddEditNoteAction
     data class EditNote(val notesPayload: NotesPayload) : AddEditNoteAction
