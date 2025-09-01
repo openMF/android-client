@@ -14,6 +14,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import com.mifos.core.data.repository.ClientDetailsRepository
 import com.mifos.core.ui.util.BaseViewModel
+import com.mifos.room.entities.accounts.savings.SavingAccountDepositTypeEntity
 import com.mifos.room.entities.accounts.savings.SavingsAccountEntity
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -83,6 +84,10 @@ internal class SavingsAccountsViewModel(
                 // Todo modify search accordingly
                 val savingsAccounts = repository.getClientAccounts(route.clientId)
                     .savingsAccounts
+                    .filter { accountEntity ->
+                        accountEntity.depositType?.serverType == SavingAccountDepositTypeEntity.ServerTypes.SAVINGS &&
+                            accountEntity.status?.closed == false
+                    }
                     .filter { it.accountNo?.contains(state.searchText.trim()) == true }
 
                 mutableStateFlow.update {

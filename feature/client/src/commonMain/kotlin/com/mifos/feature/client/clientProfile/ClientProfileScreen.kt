@@ -70,14 +70,12 @@ internal fun ClientProfileScreen(
             is ClientProfileEvent.OnActionClick -> {
                 when (event.action) {
                     ClientProfileActionItem.Address -> {}
+
                     ClientProfileActionItem.Documents -> {
                         documents(state.client?.id ?: -1)
                     }
 
                     ClientProfileActionItem.FamilyMembers -> {}
-                    ClientProfileActionItem.General -> viewAssociatedAccounts(
-                        state.client?.id ?: -1,
-                    )
 
                     ClientProfileActionItem.Identifiers -> {
                         identifiers(state.client?.id ?: -1)
@@ -86,6 +84,10 @@ internal fun ClientProfileScreen(
                     ClientProfileActionItem.Notes -> {
                         notes(state.client?.id ?: -1)
                     }
+
+                    ClientProfileActionItem.General -> viewAssociatedAccounts(
+                        state.client?.id ?: -1,
+                    )
                 }
             }
 

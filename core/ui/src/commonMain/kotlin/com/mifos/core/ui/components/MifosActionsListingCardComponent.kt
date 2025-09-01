@@ -27,7 +27,6 @@ import androidclient.core.ui.generated.resources.core_ui_original_loan
 import androidclient.core.ui.generated.resources.core_ui_outstanding
 import androidclient.core.ui.generated.resources.core_ui_paid
 import androidclient.core.ui.generated.resources.core_ui_quantity
-import androidclient.core.ui.generated.resources.core_ui_savings_product
 import androidclient.core.ui.generated.resources.core_ui_status
 import androidclient.core.ui.generated.resources.core_ui_total_collateral_value
 import androidclient.core.ui.generated.resources.core_ui_total_value
@@ -289,10 +288,13 @@ fun MifosActionsLoanListingComponent(
     menuList: List<Actions>,
     onActionClicked: (Actions) -> Unit,
 ) {
+    var isActive by rememberSaveable { mutableStateOf(false) }
+
     MifosActionsListingComponentOutline {
         Column {
             Column(
-                modifier = Modifier.padding(DesignToken.padding.large),
+                modifier = Modifier.padding(DesignToken.padding.large)
+                    .onClick { isActive = !isActive },
             ) {
                 MifosListingRowItem(
                     key = stringResource(Res.string.core_ui_account_no),
@@ -331,40 +333,59 @@ fun MifosActionsLoanListingComponent(
                     value = type,
                 )
             }
-            Surface(
-                modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(
-                    bottomStart = DesignToken.padding.medium,
-                    bottomEnd = DesignToken.padding.medium,
-                ),
-            ) {
-                Column(
-                    modifier = Modifier.padding(
-                        vertical = DesignToken.padding.small,
+            if (isActive) {
+                Surface(
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(
+                        bottomStart = DesignToken.padding.medium,
+                        bottomEnd = DesignToken.padding.medium,
                     ),
                 ) {
-                    menuList.map { menuItem ->
-                        Row(
-                            modifier = Modifier.fillMaxWidth()
-                                .height(DesignToken.sizes.avatarMedium)
-                                .clickable {
-                                    onActionClicked(menuItem)
-                                },
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.Start,
-                        ) {
-                            Icon(
-                                modifier = Modifier.padding(horizontal = DesignToken.padding.large),
-                                imageVector = menuItem.icon,
-                                contentDescription = "",
-                            )
+                    Column(
+                        modifier = Modifier.padding(
+                            vertical = DesignToken.padding.small,
+                        ),
+                    ) {
+                        menuList.map { menuItem ->
+                            Row(
+                                modifier = Modifier.fillMaxWidth()
+                                    .height(DesignToken.sizes.avatarMedium)
+                                    .clickable {
+                                        onActionClicked(menuItem)
+                                    },
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.Start,
+                            ) {
+                                Icon(
+                                    modifier = Modifier.padding(horizontal = DesignToken.padding.large),
+                                    imageVector = menuItem.icon,
+                                    contentDescription = "",
+                                )
+                                menuList.map { menuItem ->
+                                    Row(
+                                        modifier = Modifier.fillMaxWidth()
+                                            .height(DesignToken.sizes.avatarMedium)
+                                            .clickable {
+                                                onActionClicked(menuItem)
+                                            },
+                                        verticalAlignment = Alignment.CenterVertically,
+                                        horizontalArrangement = Arrangement.Start,
+                                    ) {
+                                        Icon(
+                                            modifier = Modifier.padding(horizontal = DesignToken.padding.large),
+                                            imageVector = menuItem.icon,
+                                            contentDescription = "",
+                                        )
 
-                            Text(
-                                modifier = Modifier.fillMaxWidth(),
-                                text = menuItem.name,
-                                color = MaterialTheme.colorScheme.onSurface,
-                                fontSize = MaterialTheme.typography.bodyLarge.fontSize,
-                            )
+                                        Text(
+                                            modifier = Modifier.fillMaxWidth(),
+                                            text = menuItem.name,
+                                            color = MaterialTheme.colorScheme.onSurface,
+                                            fontSize = MaterialTheme.typography.bodyLarge.fontSize,
+                                        )
+                                    }
+                                }
+                            }
                         }
                     }
                 }
@@ -377,6 +398,7 @@ fun MifosActionsLoanListingComponent(
 fun MifosActionsSavingsListingComponent(
     accountNo: String,
     savingsProduct: String,
+    savingsProductName: String,
     lastActive: String,
     balance: String,
     menuList: List<Actions>,
@@ -391,16 +413,15 @@ fun MifosActionsSavingsListingComponent(
             Column(
                 modifier = Modifier.padding(DesignToken.padding.large),
             ) {
-                MifosListingRowItem(
-                    key = stringResource(Res.string.core_ui_account_no),
-                    value = accountNo,
+                MifosListingRowItemHeader(
+                    text = accountNo,
                     keyStyle = MifosTypography.titleSmallEmphasized,
-                    valueStyle = MifosTypography.titleSmall,
                 )
+
                 Spacer(Modifier.height(DesignToken.padding.large))
                 MifosListingRowItem(
-                    key = stringResource(Res.string.core_ui_savings_product),
-                    value = savingsProduct,
+                    key = savingsProduct,
+                    value = savingsProductName,
                 )
                 Spacer(Modifier.height(DesignToken.padding.medium))
                 Column(
@@ -425,6 +446,7 @@ fun MifosActionsSavingsListingComponent(
                         bottomStart = DesignToken.padding.medium,
                         bottomEnd = DesignToken.padding.medium,
                     ),
+                    color = MaterialTheme.colorScheme.surfaceContainer,
                 ) {
                     Column(
                         modifier = Modifier.padding(
@@ -560,6 +582,7 @@ fun MifosActionsClientFeeListingComponent(
 enum class Actions(val icon: ImageVector) {
     ViewAccount(MifosIcons.ViewAccount),
     ApproveAccount(MifosIcons.ApproveAccount),
+    MakeRepayment(MifosIcons.MakeRepayment),
     ViewDocument(MifosIcons.ViewDocument),
     UploadAgain(MifosIcons.UploadAgain),
     DeleteDocument(MifosIcons.DeleteDocument),
@@ -627,7 +650,8 @@ fun PreviewMifosActionsSavingsListingComponent() {
     MaterialTheme {
         MifosActionsSavingsListingComponent(
             accountNo = "SV9876",
-            savingsProduct = "Regular Savings",
+            savingsProduct = "Savings Product",
+            savingsProductName = "Wallet",
             lastActive = "2025-08-15",
             balance = "$1200",
             menuList = listOf(

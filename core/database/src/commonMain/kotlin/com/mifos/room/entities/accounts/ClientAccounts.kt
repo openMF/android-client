@@ -19,6 +19,7 @@ data class ClientAccounts(
     var loanAccounts: List<LoanAccountEntity> = emptyList(),
 
     var savingsAccounts: List<SavingsAccountEntity> = emptyList(),
+
 ) : Parcelable {
     private fun getSavingsAccounts(wantRecurring: Boolean): List<SavingsAccountEntity> {
         val result: MutableList<SavingsAccountEntity> = ArrayList()
