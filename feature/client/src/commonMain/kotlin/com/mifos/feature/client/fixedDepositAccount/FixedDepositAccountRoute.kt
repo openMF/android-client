@@ -20,12 +20,14 @@ data class FixedDepositAccountRoute(
 )
 
 fun NavGraphBuilder.clientFixedDepositAccountDestination(
+    navController: NavController,
     navigateBack: () -> Unit,
     onApproveAccount: (String) -> Unit,
     onViewAccount: (String) -> Unit,
 ) {
     composable<FixedDepositAccountRoute> {
         FixedDepositAccountScreen(
+            navController,
             navigateBack = navigateBack,
             onApproveAccount = {
                 onApproveAccount(it)

@@ -151,11 +151,13 @@ fun NavGraphBuilder.clientNavGraph(
         )
 
         clientRecurringDepositAccountDestination(
+            navController = navController,
             navigateBack = navController::popBackStack,
             {},
             {},
         )
         clientFixedDepositAccountDestination(
+            navController = navController,
             navigateBack = navController::popBackStack,
             {},
             {},
