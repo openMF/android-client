@@ -179,7 +179,9 @@ fun FixedDepositAccountScaffold(
                             } else {
                                 notAvailableText
                             },
-                            balance = fixedDepositAccount.accountBalance?.toString() ?: notAvailableText,
+                            balance = if(fixedDepositAccount.accountBalance !=null){
+                                "${fixedDepositAccount.currency?.displaySymbol?:""} ${fixedDepositAccount.accountBalance}"
+                            } else notAvailableText,
                             menuList = if (fixedDepositAccount.status?.submittedAndPendingApproval == true) {
                                 listOf(
                                     Actions.ViewAccount,

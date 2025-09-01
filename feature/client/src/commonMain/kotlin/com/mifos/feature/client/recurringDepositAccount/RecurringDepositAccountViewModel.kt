@@ -66,7 +66,7 @@ class RecurringDepositAccountViewModel(
 
             is RecurringDepositAccountAction.ToggleSearch -> {
                 mutableStateFlow.update {
-                    it.copy(isSearchBarActive = !it.isFilterDialogOpen)
+                    it.copy(isSearchBarActive = !it.isSearchBarActive)
                 }
             }
 

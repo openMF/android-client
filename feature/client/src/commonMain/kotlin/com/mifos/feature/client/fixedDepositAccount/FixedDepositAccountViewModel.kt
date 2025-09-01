@@ -60,7 +60,7 @@ class FixedDepositAccountViewModel(
 
             is FixedDepositAccountAction.ToggleSearch -> {
                 mutableStateFlow.update {
-                    it.copy(isSearchBarActive = true,)
+                    it.copy(isSearchBarActive = !it.isSearchBarActive,)
                 }
             }
 
