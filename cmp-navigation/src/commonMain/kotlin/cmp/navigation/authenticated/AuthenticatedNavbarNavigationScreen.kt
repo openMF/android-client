@@ -65,6 +65,7 @@ import cmp.navigation.ui.rememberMifosNavController
 import com.mifos.core.common.utils.Constants
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.icon.MifosIcons
+import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.ui.RootTransitionProviders
 import com.mifos.core.ui.util.EventsEffect
 import com.mifos.feature.activate.navigateToActivateRoute
@@ -148,7 +149,7 @@ internal fun AuthenticatedNavbarNavigationScreen(
         }
     }
 
-    val message = stringResource(org.mifos.navigation.generated.resources.Res.string.cmp_navigation_no_internet)
+    val message = stringResource(Res.string.cmp_navigation_no_internet)
     LaunchedEffect(isOffline) {
         if (isOffline) {
             scope.launch {
@@ -199,7 +200,7 @@ internal fun AuthenticatedNavbarNavigationScreenContent(
         AuthenticatedNavBarTabItem.GroupsTab,
     )
 
-    val navigationDrawerTabs = persistentListOf<HomeDestinationsScreen>(
+    val navigationDrawerTabs = persistentListOf(
             HomeDestinationsScreen.CheckerInboxAndTasksScreen,
             HomeDestinationsScreen.CollectionSheetScreen,
             HomeDestinationsScreen.RunReportsScreen,
@@ -225,7 +226,7 @@ internal fun AuthenticatedNavbarNavigationScreenContent(
                         Image(
                             modifier = Modifier.fillMaxSize(),
                             contentScale = ContentScale.Crop,
-                            painter = painterResource(org.mifos.navigation.generated.resources.Res.drawable.drawer_profile_header),
+                            painter = painterResource(Res.drawable.drawer_profile_header),
                             contentDescription = "Profile header",
                         )
                         Column(modifier = Modifier.padding(32.dp)) {
@@ -234,18 +235,18 @@ internal fun AuthenticatedNavbarNavigationScreenContent(
                                     modifier = Modifier
                                         .size(64.dp)
                                         .clip(CircleShape),
-                                    painter = painterResource(org.mifos.navigation.generated.resources.Res.drawable.ic_dp_placeholder),
+                                    painter = painterResource(Res.drawable.ic_dp_placeholder),
                                     contentDescription = "DP place holder",
                                 )
                                 Text(
-                                    text = "Mifos",
+                                    text = stringResource(Res.string.cmp_navigation_mifos),
                                     color = Color.White,
                                     style = MaterialTheme.typography.titleMedium,
                                 )
                             }
                         }
                     }
-                    Spacer(modifier = Modifier.height(8.dp))
+                    Spacer(modifier = Modifier.height(DesignToken.padding.small))
                     navigationDrawerTabs.forEachIndexed { index, item ->
                         NavigationDrawerItem(
                             label = {
