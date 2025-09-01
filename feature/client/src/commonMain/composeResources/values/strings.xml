@@ -410,7 +410,16 @@
     <string name="client_collateral_success_message">Collateral created successfully. Click Continue to navigate to Client detail profile.</string>
     <string name="client_collateral_failure_title">Collateral Creation Failed</string>
 
-    <!-- Apply New Applications Screen -->
+    <string name="client_identifiers_click_on_plus_button_to_add_an_item">Click on “+” Button to add an item.</string>
+    <string name="client_identifiers_not_available">Not available</string>
+    <string name="client_identifiers_identities">Identities</string>
+    <string name="client_identifiers_identities_success_text">Success</string>
+    <string name="client_identifiers_error_text">Error</string>
+    <string name="client_identifiers_retry">Retry</string>
+    <string name="client_identifiers_identities_client_identifier_deletion_success">Successfully deleted client identifier with id</string>
+<!--    <string name="client_identifiers_identities">Identities</string>-->
+
+  <!-- Apply New Applications Screen -->
     <string name="client_apply_new_applications_title">Choose Application Type</string>
     <string name="client_apply_new_applications_loan_account">New Loan Account</string>
     <string name="client_apply_new_applications_savings_account">New Savings Account</string>
