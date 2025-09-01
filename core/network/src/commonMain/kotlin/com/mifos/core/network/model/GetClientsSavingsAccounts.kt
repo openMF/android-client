@@ -29,6 +29,8 @@ data class GetClientsSavingsAccounts(
 
     val accountNo: String? = null,
 
+    val accountBalance: Double? = null,
+
     val currency: GetClientsSavingsAccountsCurrency? = null,
 
     val depositType: GetClientsSavingsAccountsDepositType? = null,

@@ -28,12 +28,12 @@ import androidclient.core.ui.generated.resources.core_ui_original_loan
 import androidclient.core.ui.generated.resources.core_ui_outstanding
 import androidclient.core.ui.generated.resources.core_ui_paid
 import androidclient.core.ui.generated.resources.core_ui_quantity
-import androidclient.core.ui.generated.resources.core_ui_savings_product
 import androidclient.core.ui.generated.resources.core_ui_status
 import androidclient.core.ui.generated.resources.core_ui_total_collateral_value
 import androidclient.core.ui.generated.resources.core_ui_total_value
 import androidclient.core.ui.generated.resources.core_ui_type
 import androidclient.core.ui.generated.resources.core_ui_waived
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -353,6 +353,7 @@ fun MifosActionsLoanListingComponent(
 fun MifosActionsSavingsListingComponent(
     accountNo: String,
     savingsProduct: String,
+    savingsProductName: String,
     lastActive: String,
     balance: String,
     menuList: List<Actions>,
@@ -368,15 +369,16 @@ fun MifosActionsSavingsListingComponent(
                 modifier = Modifier.padding(DesignToken.padding.large),
             ) {
                 MifosListingRowItem(
-                    key = stringResource(Res.string.core_ui_account_no),
+                    key = "",
                     value = accountNo,
-                    keyStyle = MifosTypography.titleSmallEmphasized,
-                    valueStyle = MifosTypography.titleSmall,
+                    valueStyle = MifosTypography.titleSmallEmphasized,
                 )
                 Spacer(Modifier.height(DesignToken.padding.large))
                 MifosListingRowItem(
-                    key = stringResource(Res.string.core_ui_savings_product),
-                    value = savingsProduct,
+                    key = savingsProduct,
+                    value = savingsProductName,
+                    keyStyle = MifosTypography.titleSmallEmphasized,
+                    valueStyle = MifosTypography.titleSmall,
                 )
                 Spacer(Modifier.height(DesignToken.padding.medium))
                 Column(
@@ -401,11 +403,12 @@ fun MifosActionsSavingsListingComponent(
                         bottomStart = DesignToken.padding.medium,
                         bottomEnd = DesignToken.padding.medium,
                     ),
+                    color = MaterialTheme.colorScheme.surfaceContainer
                 ) {
                     Column(
                         modifier = Modifier.padding(
                             vertical = DesignToken.padding.small,
-                        ),
+                        )
                     ) {
                         menuList.map { menuItem ->
                             Row(
@@ -601,7 +604,8 @@ fun PreviewMifosActionsSavingsListingComponent() {
     MaterialTheme {
         MifosActionsSavingsListingComponent(
             accountNo = "SV9876",
-            savingsProduct = "Regular Savings",
+            savingsProduct = "Savings Product",
+            savingsProductName = "Wallet",
             lastActive = "2025-08-15",
             balance = "$1200",
             menuList = listOf(

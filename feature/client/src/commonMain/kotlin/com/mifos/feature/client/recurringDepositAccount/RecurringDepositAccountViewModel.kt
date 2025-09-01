@@ -7,6 +7,7 @@ import com.mifos.core.common.utils.DataState
 import com.mifos.core.domain.useCases.GetClientDetailsUseCase
 import com.mifos.core.ui.util.BaseViewModel
 import com.mifos.feature.client.recurringDepositAccount.RecurringDepositAccountEvent.*
+import com.mifos.room.entities.accounts.savings.SavingAccountDepositTypeEntity
 import com.mifos.room.entities.accounts.savings.SavingsAccountEntity
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -35,7 +36,7 @@ class RecurringDepositAccountViewModel(
                 }
             }
             is RecurringDepositAccountAction.NavigateBack -> {
-                sendEvent(RecurringDepositAccountEvent.onNavigateBack)
+                sendEvent(onNavigateBack)
             }
             is RecurringDepositAccountAction.Refresh -> {
                 getRecurringDepositAccounts()
@@ -95,7 +96,9 @@ class RecurringDepositAccountViewModel(
                     is DataState.Success -> {
                         val recurringDepositAccount = result.data.clientAccounts?.savingsAccounts?.let {
                             it.filter {accountEntity ->
-                                accountEntity.depositType?.isRecurring==true
+                                accountEntity.depositType?.serverType ==
+                                    SavingAccountDepositTypeEntity.ServerTypes.RECURRING &&
+                                accountEntity.status?.closed == false
                             }.apply {
                                 // Todo modify search accordingly
                                 searchRecurringDepositAccounts(state.searchText, this)
@@ -130,7 +133,7 @@ class RecurringDepositAccountViewModel(
 
 
 data class RecurringDepositAccountState(
-    val clientId: Int =  -1,
+    val clientId: Int = -1,
     val recurringDepositAccounts: List<SavingsAccountEntity> = emptyList(),
     val searchText: String = "",
     val dialogState: DialogState? = null,

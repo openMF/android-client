@@ -124,7 +124,8 @@ fun SavingsAccountsScreen(
                     items(state.savingsAccounts) { savings ->
                         MifosActionsSavingsListingComponent(
                             accountNo = savings.accountNo.toString(),
-                            savingsProduct = savings.productName.toString(),
+                            savingsProduct = "Savings Product: ",
+                            savingsProductName = savings.productName.toString(),
                             // todo modify with currency symbol when not getting null from api, currently getting null
                             balance = if (savings.accountBalance != null) {
                                 savings.accountBalance.toString()

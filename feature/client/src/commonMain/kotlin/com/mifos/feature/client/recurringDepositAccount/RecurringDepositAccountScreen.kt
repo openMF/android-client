@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -148,7 +149,7 @@ fun RecurringDepositAccountScreen(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun RecurringDepositAccountDialog(
+internal fun RecurringDepositAccountDialog(
     state: RecurringDepositAccountState,
     onCloseDialog: () -> Unit,
 ) {
@@ -221,7 +222,7 @@ internal fun RecurringDepositAccountScaffold(
                 )
             }
 
-            Spacer(modifier = Modifier.height(DesignToken.padding.large))
+            Spacer(modifier = Modifier.height(DesignToken.padding.largeIncreasedExtra))
 
             if (state.recurringDepositAccounts.isEmpty()) {
                 MifosEmptyCard(msg = "Click Here To View Filled State. ")
@@ -229,17 +230,18 @@ internal fun RecurringDepositAccountScaffold(
                 LazyColumn {
                     items(state.recurringDepositAccounts) { recurringDeposit ->
                         MifosActionsSavingsListingComponent(
-                            recurringDeposit.accountNo ?: notAvailableText,
-                            recurringDeposit.productName ?: notAvailableText,
-                            if (recurringDeposit.status?.submittedAndPendingApproval == true) {
+                            accountNo = recurringDeposit.accountNo ?: notAvailableText,
+                            savingsProduct = "Recurring Deposit Product",
+                            savingsProductName = recurringDeposit.shortProductName ?: notAvailableText,
+                            lastActive = if (recurringDeposit.status?.submittedAndPendingApproval == true) {
                                 stringResource(Res.string.client_savings_pending_approval)
                             } else if (recurringDeposit.lastActiveTransactionDate != null) {
                                 DateHelper.getDateAsString(recurringDeposit.lastActiveTransactionDate!!)
                             } else {
                                 notAvailableText
                             },
-                            recurringDeposit.accountBalance?.toString() ?: notAvailableText,
-                            if (recurringDeposit.status?.submittedAndPendingApproval == true) {
+                            balance = recurringDeposit.accountBalance?.toString() ?: notAvailableText,
+                            menuList = if (recurringDeposit.status?.submittedAndPendingApproval == true) {
                                 listOf(
                                     Actions.ViewAccount,
                                     Actions.ApproveAccount,
@@ -264,7 +266,6 @@ internal fun RecurringDepositAccountScaffold(
         }
 
     }
-
 }
 
 
@@ -293,26 +294,23 @@ internal fun RecurringDepositAccountHeader(
 
         Spacer(modifier = Modifier.weight(1f))
 
-        Row(
-            Modifier,
-            horizontalArrangement = Arrangement.spacedBy(DesignToken.padding.largeIncreased),
-        ) {
-            Icon(
-                painter = painterResource(Res.drawable.search),
-                contentDescription = null,
-                modifier = Modifier.clickable {
-                    onToggleSearch.invoke()
-                },
-            )
+        Icon(
+            painter = painterResource(Res.drawable.search),
+            contentDescription = null,
+            modifier = Modifier.clickable {
+                onToggleSearch.invoke()
+            },
+        )
 
-            Icon(
-                painter = painterResource(Res.drawable.filter),
-                contentDescription = null,
-                modifier = Modifier.clickable {
-                    onToggleFilter.invoke()
-                },
-            )
-        }
+        Spacer(modifier = Modifier.width(DesignToken.spacing.largeIncreased))
+
+        Icon(
+            painter = painterResource(Res.drawable.filter),
+            contentDescription = null,
+            modifier = Modifier.clickable {
+                onToggleFilter.invoke()
+            },
+        )
 
     }
 }
