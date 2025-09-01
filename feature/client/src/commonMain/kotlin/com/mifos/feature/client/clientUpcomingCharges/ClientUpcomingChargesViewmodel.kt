@@ -33,7 +33,6 @@ class ClientUpcomingChargesViewmodel(
 ) : BaseViewModel<ClientUpcomingChargesState, ClientUpcomingChargesEvent, ClientUpcomingChargesAction>(
     initialState = ClientUpcomingChargesState(),
 ) {
-
     private val route = savedStateHandle.toRoute<ClientUpcomingChargesRoute>()
 
     override fun handleAction(action: ClientUpcomingChargesAction) {
