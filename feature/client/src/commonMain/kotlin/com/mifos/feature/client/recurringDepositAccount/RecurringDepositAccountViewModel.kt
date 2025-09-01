@@ -25,11 +25,12 @@ class RecurringDepositAccountViewModel(
     savedStateHandle: SavedStateHandle,
     private val networkMonitor: NetworkMonitor,
     private val getClientDetailsUseCase: GetClientDetailsUseCase,
-) : BaseViewModel<RecurringDepositAccountState,
-        RecurringDepositAccountEvent,
-        RecurringDepositAccountAction>
-    (initialState = RecurringDepositAccountState())
-{
+) : BaseViewModel<
+    RecurringDepositAccountState,
+    RecurringDepositAccountEvent,
+    RecurringDepositAccountAction,
+    >
+    (initialState = RecurringDepositAccountState()) {
 
     val route = savedStateHandle.toRoute<RecurringDepositAccountRoute>()
 
@@ -102,8 +103,10 @@ class RecurringDepositAccountViewModel(
                     true -> getRecurringDepositAccounts()
                     false -> {
                         mutableStateFlow.update {
-                            it.copy(dialogState = RecurringDepositAccountState
-                                .DialogState.Error("No internet connection, Try Again"))
+                            it.copy(
+                                dialogState = RecurringDepositAccountState
+                                    .DialogState.Error("No internet connection, Try Again"),
+                            )
                         }
                     }
                 }
@@ -119,8 +122,8 @@ class RecurringDepositAccountViewModel(
                         mutableStateFlow.update {
                             it.copy(
                                 dialogState = RecurringDepositAccountState.DialogState.Error(
-                                    result.message
-                                )
+                                    result.message,
+                                ),
                             )
                         }
                     }

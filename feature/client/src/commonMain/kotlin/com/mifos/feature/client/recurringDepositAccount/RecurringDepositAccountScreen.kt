@@ -203,13 +203,13 @@ internal fun RecurringDepositAccountScaffold(
                                 Actions.ViewAccount -> {
                                     onAction(
                                         RecurringDepositAccountAction.ViewAccount(
-                                            recurringDeposit.accountNo?: ""
+                                            recurringDeposit.accountNo ?: "",
                                         ),
                                     )
                                 }
                                 Actions.ApproveAccount -> {
                                     RecurringDepositAccountAction.ApproveAccount(
-                                        recurringDeposit.accountNo?: ""
+                                        recurringDeposit.accountNo ?: "",
                                     )
                                 }
                                 else -> null
