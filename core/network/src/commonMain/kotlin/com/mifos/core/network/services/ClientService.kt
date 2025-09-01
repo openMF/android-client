@@ -284,7 +284,7 @@ interface ClientService {
         @Body payload: ProposeTransferRequest,
     ): HttpResponse
 
-    @POST("clients/{clientId}?command=updateSavingsdaAccount")
+    @POST("clients/{clientId}?command=updateSavingsAccount")
     suspend fun updateSavingsAccount(
         @Path("clientId") clientId: Int,
         @Body payload: UpdateSavingsAccountRequest,
