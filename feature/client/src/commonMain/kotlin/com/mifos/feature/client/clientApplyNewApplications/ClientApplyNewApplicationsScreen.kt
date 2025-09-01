@@ -29,6 +29,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
@@ -36,9 +37,11 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.navigation.NavController
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.designsystem.theme.MifosTypography
+import com.mifos.core.ui.components.MifosBreadcrumbNavBar
 import com.mifos.core.ui.components.MifosRowCard
 import com.mifos.core.ui.util.EventsEffect
 import com.mifos.core.ui.util.TextUtil
@@ -57,6 +60,7 @@ internal fun ClientApplyNewApplicationsScreen(
     onNavigateApplyShareAccount: () -> Unit,
     onNavigateApplyRecurringAccount: () -> Unit,
     onNavigateApplyFixedAccount: () -> Unit,
+    navController: NavController,
     viewModel: ClientApplyNewApplicationsViewModel = koinViewModel(),
 ) {
     EventsEffect(viewModel.eventFlow) { event ->
@@ -75,12 +79,14 @@ internal fun ClientApplyNewApplicationsScreen(
     }
 
     ClientApplyNewApplicationsContent(
+        navController=navController,
         onAction = remember(viewModel) { { viewModel.trySendAction(it) } },
     )
 }
 
 @Composable
 private fun ClientApplyNewApplicationsContent(
+    navController: NavController,
     onAction: (ClientApplyNewApplicationsAction) -> Unit,
 ) {
     MifosScaffold(
@@ -89,12 +95,14 @@ private fun ClientApplyNewApplicationsContent(
             onAction(ClientApplyNewApplicationsAction.NavigateBack)
         },
     ) { paddingValues ->
-        Box(
-            modifier = Modifier.padding(paddingValues),
+        Column(
+            modifier = Modifier.fillMaxSize().padding(paddingValues),
         ) {
+            MifosBreadcrumbNavBar(navController)
             Column(
                 modifier = Modifier.padding(horizontal = DesignToken.padding.large),
             ) {
+
                 Text(
                     text = stringResource(Res.string.client_apply_new_applications_title),
                     style = MifosTypography.labelLargeEmphasized,

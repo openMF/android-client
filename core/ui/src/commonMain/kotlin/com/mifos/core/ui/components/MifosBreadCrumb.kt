@@ -11,11 +11,15 @@ package com.mifos.core.ui.components
 
 import androidclient.core.ui.generated.resources.Res
 import androidclient.core.ui.generated.resources.bread_crumb_back_icon
+import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -56,7 +60,7 @@ fun MifosBreadcrumbNavBar(
 
     Row(
         verticalAlignment = Alignment.CenterVertically,
-        modifier = modifier.padding(horizontal = DesignToken.padding.large),
+        modifier = modifier.fillMaxWidth().padding(horizontal=DesignToken.padding.large),
     ) {
         val routes = if (backStack.size <= 3) {
             backStack
@@ -102,10 +106,15 @@ private fun BreadcrumbItem(
     isActive: Boolean,
     onClick: () -> Unit,
 ) {
+
     Text(
         text = text,
         color = if (isActive) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onBackground,
-        modifier = Modifier.clickable(enabled = !isActive) { onClick() },
+        modifier = Modifier.clickable(
+            enabled = !isActive,
+            interactionSource = MutableInteractionSource(),
+            indication = LocalIndication.current
+        ) { onClick() },
         style = MifosTypography.bodySmallEmphasized,
     )
 }

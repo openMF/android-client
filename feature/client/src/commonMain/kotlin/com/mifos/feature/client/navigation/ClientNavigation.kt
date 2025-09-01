@@ -132,6 +132,7 @@ fun NavGraphBuilder.clientNavGraph(
             identifiers = navController::navigateToClientIdentifiersScreen,
             navigateToClientDetailsScreen = navController::navigateToClientDetailsProfileRoute,
             viewAssociatedAccounts = navController::navigateToClientProfileGeneralRoute,
+            navController=navController
         )
 
         clientProfileGeneralDestination(
@@ -139,6 +140,7 @@ fun NavGraphBuilder.clientNavGraph(
             savingAccounts = { clientId ->
                 navController.navigateToClientSavingsAccountsRoute(clientId)
             },
+            navController=navController
         )
 
         clientProfileDetailsDestination(
@@ -155,37 +157,46 @@ fun NavGraphBuilder.clientNavGraph(
         )
         clientEditProfileDestination(
             onNavigateBack = navController::popBackStack,
+            navController=navController
         )
         clientEditDetailsDestination(
             onNavigateBack = navController::popBackStack,
             onNavigateNext = navController::navigateToClientDetailsProfileRouteOnStatus,
+            navController=navController
         )
         clientStaffDestination(
             onNavigateBack = navController::popBackStack,
             onNavigateNext = navController::navigateToClientDetailsProfileRouteOnStatus,
+            navController=navController
         )
         clientTransferDestination(
             onNavigateBack = navController::popBackStack,
             onNavigateNext = navController::navigateToClientDetailsProfileRouteOnStatus,
+            navController=navController
         )
         updateDefaultAccountDestination(
             onNavigateBack = navController::popBackStack,
             onNavigateNext = navController::navigateToClientDetailsProfileRouteOnStatus,
+            navController=navController
         )
         clientClosureDestination(
             onNavigateBack = navController::popBackStack,
             onNavigateNext = navController::navigateToClientDetailsProfileRouteOnStatus,
+            navController=navController
         )
         savingsAccountsDestination(
             navigateBack = navController::popBackStack,
             navigateToViewAccount = { },
+            navController=navController
         )
         clientCollateralDestination(
             onNavigateBack = navController::popBackStack,
             onNavigateNext = navController::navigateToClientDetailsProfileRouteOnStatus,
+            navController=navController
         )
         clientIdentitiesListDestination(
             addNewClientIdentity = {},
+            navController=navController
         )
         clientApplyNewApplicationRoute(
             onNavigateBack = navController::popBackStack,
@@ -194,6 +205,7 @@ fun NavGraphBuilder.clientNavGraph(
             onNavigateApplyShareAccount = { },
             onNavigateApplyRecurringAccount = { },
             onNavigateApplyFixedAccount = { },
+            navController=navController
         )
     }
 }
