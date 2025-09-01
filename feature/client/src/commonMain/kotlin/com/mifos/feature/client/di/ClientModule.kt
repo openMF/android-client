@@ -30,6 +30,7 @@ import com.mifos.feature.client.clientTransfer.ClientTransferViewModel
 import com.mifos.feature.client.clientUpdateDefaultAccount.UpdateDefaultAccountViewModel
 import com.mifos.feature.client.clientsList.ClientListViewModel
 import com.mifos.feature.client.createNewClient.CreateNewClientViewModel
+import com.mifos.feature.client.recurringDepositAccount.RecurringDepositAccountViewModel
 import com.mifos.feature.client.savingsAccounts.SavingsAccountsViewModel
 import com.mifos.feature.client.syncClientDialog.SyncClientsDialogViewModel
 import org.koin.core.module.dsl.viewModelOf
@@ -56,6 +57,7 @@ val ClientModule = module {
     viewModelOf(::UpdateDefaultAccountViewModel)
     viewModelOf(::ClientClosureViewModel)
     viewModelOf(::SavingsAccountsViewModel)
+    viewModelOf(::RecurringDepositAccountViewModel)
     viewModelOf(::ClientCollateralViewModel)
     viewModelOf(::ClientIdentitiesListViewModel)
     viewModelOf(::ClientApplyNewApplicationsViewModel)

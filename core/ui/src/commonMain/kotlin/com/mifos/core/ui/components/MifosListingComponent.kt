@@ -62,6 +62,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.designsystem.theme.AppColors
@@ -118,10 +119,22 @@ fun MifosListingRowItem(
     MifosListingRowItem(
         keyContent = {
             if (key.isNotBlank()) {
-                Text(text = "$key:", style = keyStyle)
+                Text(
+                    text = "$key:",
+                    style = keyStyle,
+                    maxLines = 1,
+                    overflow = TextOverflow.Clip,
+                )
             }
         },
-        valueContent = { Text(text = value, style = valueStyle.copy(color = valueColor)) },
+        valueContent = {
+            Text(
+                text = value,
+                style = valueStyle.copy(color = valueColor),
+                overflow = TextOverflow.Clip,
+                maxLines = 1,
+            )
+        },
     )
 }
 

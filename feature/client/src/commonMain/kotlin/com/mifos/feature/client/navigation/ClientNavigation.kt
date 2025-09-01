@@ -51,6 +51,8 @@ import com.mifos.feature.client.clientUpdateDefaultAccount.navigateToUpdateDefau
 import com.mifos.feature.client.clientUpdateDefaultAccount.updateDefaultAccountDestination
 import com.mifos.feature.client.clientsList.ClientListScreen
 import com.mifos.feature.client.createNewClient.CreateNewClientScreen
+import com.mifos.feature.client.recurringDepositAccount.clientRecurringDepositAccountDestination
+import com.mifos.feature.client.recurringDepositAccount.navigateToRecurringDepositAccountRoute
 import com.mifos.feature.client.savingsAccounts.navigateToClientSavingsAccountsRoute
 import com.mifos.feature.client.savingsAccounts.savingsAccountsDestination
 import com.mifos.room.entities.accounts.savings.SavingAccountDepositTypeEntity
@@ -139,6 +141,15 @@ fun NavGraphBuilder.clientNavGraph(
             savingAccounts = { clientId ->
                 navController.navigateToClientSavingsAccountsRoute(clientId)
             },
+            recurringDepositAccounts = { clientId ->
+                navController.navigateToRecurringDepositAccountRoute(clientId)
+            },
+        )
+
+        clientRecurringDepositAccountDestination(
+            navigateBack = navController::popBackStack,
+            {},
+            {},
         )
 
         clientProfileDetailsDestination(

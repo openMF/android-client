@@ -223,6 +223,13 @@
     <string name="client_profile_notes_title">Notes</string>
     <string name="client_profile_notes_subtitle">Check or update note accounts</string>
 
+    <string name="client_empty_card_message">Click Here To View Filled State.</string>
+
+    <!-- Client Products -->
+    <string name="client_product_saving_account">Savings Products</string>
+    <string name="client_product_fixed_deposit_account">Fixed Deposit Products</string>
+    <string name="client_product_recurring_deposit_account">Recurring Deposit Products</string>
+    <string name="client_product_shares_account">Shares Products</string>
 
     <!-- Client_Profile-General-Headers -->
     <string name="client_profile_general_header_performance_history">Performance History</string>
@@ -252,6 +259,8 @@
     <string name="client_profile_general_action_title_collateral_data">Collateral Data</string>
     <string name="client_profile_general_action_subtitle_collateral_data">Check or update the account notes</string>
 
+    <!-- Client_Profile-Recurring Deposit Account Title -->
+    <string name="client_profile_recurring_deposit_account_title">Recurring Deposit Accounts</string>
 
     <!-- Personal Info -->
     <string name="gender">Gender</string>
