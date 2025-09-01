@@ -45,6 +45,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavController
 import com.mifos.core.designsystem.component.BasicDialogState
 import com.mifos.core.designsystem.component.MifosBasicDialog
 import com.mifos.core.designsystem.component.MifosOutlinedButton
@@ -53,6 +54,7 @@ import com.mifos.core.designsystem.component.MifosTextButton
 import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.designsystem.theme.MifosTypography
+import com.mifos.core.ui.components.MifosBreadcrumbNavBar
 import com.mifos.core.ui.components.MifosErrorComponent
 import com.mifos.core.ui.components.MifosProgressIndicator
 import com.mifos.core.ui.components.MifosUserImage
@@ -68,6 +70,7 @@ import org.koin.compose.viewmodel.koinViewModel
 @Composable
 internal fun ClientProfileEditScreen(
     onNavigateBack: () -> Unit,
+    navController: NavController,
     modifier: Modifier = Modifier,
     viewModel: ClientProfileEditViewModel = koinViewModel(),
 ) {
@@ -86,6 +89,7 @@ internal fun ClientProfileEditScreen(
         modifier = modifier,
         state = state,
         onAction = remember(viewModel) { { viewModel.trySendAction(it) } },
+        navController = navController,
     )
 
     ClientProfileEditDialogs(
@@ -101,6 +105,7 @@ internal fun ClientProfileEditScreen(
 @Composable
 private fun ClientProfileEditScaffold(
     state: ClientProfileEditState,
+    navController: NavController,
     modifier: Modifier = Modifier,
     onAction: (ClientProfileEditAction) -> Unit,
 ) {
@@ -110,72 +115,73 @@ private fun ClientProfileEditScaffold(
         modifier = modifier,
     ) { paddingValues ->
         if (state.dialogState != ClientProfileEditState.DialogState.Loading) {
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(paddingValues)
-                    .verticalScroll(rememberScrollState())
-                    .padding(
-                        vertical = DesignToken.padding.small,
-                        horizontal = DesignToken.padding.large,
-                    ),
-                horizontalAlignment = Alignment.CenterHorizontally,
-            ) {
-                Text(
-                    text = state.name,
-                    style = MifosTypography.titleMediumEmphasized,
-                )
-                Spacer(Modifier.height(DesignToken.padding.extraExtraSmall))
-                Text(
-                    text = stringResource(Res.string.account_number_prefix, state.accountNo),
-                    style = MifosTypography.bodySmall,
-                    color = MaterialTheme.colorScheme.secondary,
-                )
-                Spacer(Modifier.height(DesignToken.padding.largeIncreased))
-                MifosUserImage(
-                    bitmap = state.profileImage,
-                    modifier = Modifier.size(DesignToken.sizes.avatarLargeLarge),
-                    hasBorder = true,
-                )
-                if (state.profileImage == null) {
-                    Spacer(Modifier.height(DesignToken.padding.large))
+            Column(Modifier.fillMaxSize().padding(paddingValues)) {
+                MifosBreadcrumbNavBar(navController)
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .verticalScroll(rememberScrollState())
+                        .padding(
+                            horizontal = DesignToken.padding.large,
+                        ),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                ) {
                     Text(
-                        text = stringResource(Res.string.update_profile_photo_message),
+                        text = state.name,
+                        style = MifosTypography.titleMediumEmphasized,
+                    )
+                    Spacer(Modifier.height(DesignToken.padding.extraExtraSmall))
+                    Text(
+                        text = stringResource(Res.string.account_number_prefix, state.accountNo),
                         style = MifosTypography.bodySmall,
                         color = MaterialTheme.colorScheme.secondary,
-                        textAlign = TextAlign.Center,
+                    )
+                    Spacer(Modifier.height(DesignToken.padding.largeIncreased))
+                    MifosUserImage(
+                        bitmap = state.profileImage,
+                        modifier = Modifier.size(DesignToken.sizes.avatarLargeLarge),
+                        hasBorder = true,
+                    )
+                    if (state.profileImage == null) {
+                        Spacer(Modifier.height(DesignToken.padding.large))
+                        Text(
+                            text = stringResource(Res.string.update_profile_photo_message),
+                            style = MifosTypography.bodySmall,
+                            color = MaterialTheme.colorScheme.secondary,
+                            textAlign = TextAlign.Center,
+                        )
+                    }
+                    Spacer(Modifier.height(DesignToken.padding.extraExtraLarge))
+                    MifosOutlinedButton(
+                        text = { Text(stringResource(Res.string.delete_photo)) },
+                        onClick = {
+                            onAction(ClientProfileEditAction.OnDeleteImage)
+                        },
+                        enabled = state.profileImage != null,
+                        leadingIcon = {
+                            Icon(
+                                imageVector = MifosIcons.DeleteDocument,
+                                contentDescription = null,
+                            )
+                        },
+                        modifier = Modifier.fillMaxWidth(),
+                    )
+                    Spacer(Modifier.height(DesignToken.padding.large))
+                    MifosTextButton(
+                        text = { Text(stringResource(Res.string.upload_new_photo)) },
+                        onClick = {
+                            onAction(ClientProfileEditAction.OnUploadNewPhotoClick)
+                        },
+                        modifier = Modifier.fillMaxWidth(),
+                        leadingIcon = {
+                            Icon(
+                                painter = painterResource(Res.drawable.arrow_up),
+                                contentDescription = null,
+                                modifier = Modifier.size(DesignToken.sizes.iconAverage),
+                            )
+                        },
                     )
                 }
-                Spacer(Modifier.height(DesignToken.padding.extraExtraLarge))
-                MifosOutlinedButton(
-                    text = { Text(stringResource(Res.string.delete_photo)) },
-                    onClick = {
-                        onAction(ClientProfileEditAction.OnDeleteImage)
-                    },
-                    enabled = state.profileImage != null,
-                    leadingIcon = {
-                        Icon(
-                            imageVector = MifosIcons.DeleteDocument,
-                            contentDescription = null,
-                        )
-                    },
-                    modifier = Modifier.fillMaxWidth(),
-                )
-                Spacer(Modifier.height(DesignToken.padding.large))
-                MifosTextButton(
-                    text = { Text(stringResource(Res.string.upload_new_photo)) },
-                    onClick = {
-                        onAction(ClientProfileEditAction.OnUploadNewPhotoClick)
-                    },
-                    modifier = Modifier.fillMaxWidth(),
-                    leadingIcon = {
-                        Icon(
-                            painter = painterResource(Res.drawable.arrow_up),
-                            contentDescription = null,
-                            modifier = Modifier.size(DesignToken.sizes.iconAverage),
-                        )
-                    },
-                )
             }
         }
     }

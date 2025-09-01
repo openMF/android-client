@@ -44,17 +44,21 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavController
+import co.touchlab.kermit.Logger
 import com.mifos.core.designsystem.component.BasicDialogState
 import com.mifos.core.designsystem.component.MifosBasicDialog
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosTextButton
 import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.designsystem.theme.MifosTypography
+import com.mifos.core.ui.components.MifosBreadcrumbNavBar
 import com.mifos.core.ui.components.MifosDefaultListingComponentFromStringResources
 import com.mifos.core.ui.components.MifosErrorComponent
 import com.mifos.core.ui.components.MifosProgressIndicator
@@ -71,6 +75,7 @@ import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 internal fun ClientProfileDetailsScreen(
+    navController: NavController,
     onNavigateBack: () -> Unit,
     navigateToUpdatePhoto: (Int, String, String) -> Unit,
     navigateToAssignStaff: (Int) -> Unit,
@@ -136,6 +141,7 @@ internal fun ClientProfileDetailsScreen(
     }
 
     ClientProfileDetailsScaffold(
+        navController = navController,
         modifier = modifier,
         state = state,
         onAction = remember(viewModel) { { viewModel.trySendAction(it) } },
@@ -144,10 +150,18 @@ internal fun ClientProfileDetailsScreen(
 
 @Composable
 private fun ClientProfileDetailsScaffold(
+    navController: NavController,
     state: ClientProfileDetailsState,
     modifier: Modifier = Modifier,
     onAction: (ClientProfileDetailsAction) -> Unit,
 ) {
+    LaunchedEffect(true) {
+        val backStack = navController.currentBackStack.value
+            .mapNotNull { it.destination.route }
+        Logger.e("Revanth") {
+            backStack.toString()
+        }
+    }
     MifosScaffold(
         title = stringResource(Res.string.client_profile_details_title),
         onBackPressed = { onAction(ClientProfileDetailsAction.NavigateBack) },
@@ -163,138 +177,145 @@ private fun ClientProfileDetailsScaffold(
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(paddingValues)
-                    .verticalScroll(rememberScrollState())
-                    .padding(
-                        vertical = DesignToken.padding.small,
-                        horizontal = DesignToken.padding.large,
-                    ),
+                    .padding(paddingValues),
             ) {
-                ClientDetailsProfile(
-                    image = state.profileImage,
-                    name = state.client?.displayName,
-                    mobile = state.client?.mobileNo,
-                    email = state.client?.emailAddress,
+                MifosBreadcrumbNavBar(
+                    navController,
                 )
-                Spacer(Modifier.height(DesignToken.padding.medium))
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .verticalScroll(rememberScrollState())
+                        .padding(
+                            horizontal = DesignToken.padding.large,
+                        ),
                 ) {
-                    MifosTextButton(
-                        onClick = {
-                            onAction(ClientProfileDetailsAction.OnUpdatePhotoClick)
-                        },
-                        leadingIcon = {
-                            Icon(
-                                painter = painterResource(Res.drawable.arrow_up),
-                                contentDescription = null,
-                                modifier = Modifier.size(DesignToken.sizes.iconAverage),
-                            )
-                        },
-                        text = {
-                            Text(
-                                text = stringResource(Res.string.update_photo),
-                                style = MifosTypography.labelMediumEmphasized,
-                            )
-                        },
-                        modifier = Modifier.weight(1f),
+                    ClientDetailsProfile(
+                        image = state.profileImage,
+                        name = state.client?.displayName,
+                        mobile = state.client?.mobileNo,
+                        email = state.client?.emailAddress,
                     )
-                    Spacer(Modifier.width(DesignToken.padding.small))
-                    MifosTextButton(
-                        onClick = {
-                            onAction(ClientProfileDetailsAction.OnUpdateSignatureClick)
-                        },
-                        leadingIcon = {
-                            Icon(
-                                painter = painterResource(Res.drawable.update_signature),
-                                contentDescription = null,
-                                modifier = Modifier.size(DesignToken.sizes.iconAverage),
-                            )
-                        },
-                        text = {
-                            Text(
-                                text = stringResource(Res.string.update_signature),
-                                style = MifosTypography.labelMediumEmphasized,
-                            )
-                        },
-                        modifier = Modifier.weight(1f),
-                    )
-                }
-
-                Spacer(Modifier.height(DesignToken.padding.large))
-
-                state.details.forEach { list ->
-                    MifosDefaultListingComponentFromStringResources(data = list)
-                    Spacer(Modifier.height(DesignToken.padding.large))
-                }
-
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically,
-                ) {
+                    Spacer(Modifier.height(DesignToken.padding.medium))
                     Row(
-                        modifier = Modifier.weight(1f),
-                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier.fillMaxWidth(),
                     ) {
-                        Icon(
-                            painterResource(Res.drawable.arrow_downward),
-                            contentDescription = null,
-                            modifier = Modifier.size(DesignToken.sizes.iconAverage),
-                            tint = MaterialTheme.colorScheme.secondary.copy(alpha = 0.5f),
+                        MifosTextButton(
+                            onClick = {
+                                onAction(ClientProfileDetailsAction.OnUpdatePhotoClick)
+                            },
+                            leadingIcon = {
+                                Icon(
+                                    painter = painterResource(Res.drawable.arrow_up),
+                                    contentDescription = null,
+                                    modifier = Modifier.size(DesignToken.sizes.iconAverage),
+                                )
+                            },
+                            text = {
+                                Text(
+                                    text = stringResource(Res.string.update_photo),
+                                    style = MifosTypography.labelMediumEmphasized,
+                                )
+                            },
+                            modifier = Modifier.weight(1f),
                         )
                         Spacer(Modifier.width(DesignToken.padding.small))
-                        Text(
-                            text = stringResource(Res.string.scroll_for_more_options),
-                            style = MifosTypography.tag,
-                            color = MaterialTheme.colorScheme.secondary.copy(alpha = 0.5f),
+                        MifosTextButton(
+                            onClick = {
+                                onAction(ClientProfileDetailsAction.OnUpdateSignatureClick)
+                            },
+                            leadingIcon = {
+                                Icon(
+                                    painter = painterResource(Res.drawable.update_signature),
+                                    contentDescription = null,
+                                    modifier = Modifier.size(DesignToken.sizes.iconAverage),
+                                )
+                            },
+                            text = {
+                                Text(
+                                    text = stringResource(Res.string.update_signature),
+                                    style = MifosTypography.labelMediumEmphasized,
+                                )
+                            },
+                            modifier = Modifier.weight(1f),
                         )
                     }
-                    Spacer(Modifier.width(DesignToken.padding.small))
-                    MifosTextButton(
-                        onClick = {
-                            onAction(ClientProfileDetailsAction.OnUpdateDetailsClick)
-                        },
-                        leadingIcon = {
+
+                    Spacer(Modifier.height(DesignToken.padding.large))
+
+                    state.details.forEach { list ->
+                        MifosDefaultListingComponentFromStringResources(data = list)
+                        Spacer(Modifier.height(DesignToken.padding.large))
+                    }
+
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        Row(
+                            modifier = Modifier.weight(1f),
+                            verticalAlignment = Alignment.CenterVertically,
+                        ) {
                             Icon(
-                                painter = painterResource(Res.drawable.pen_icon),
+                                painterResource(Res.drawable.arrow_downward),
                                 contentDescription = null,
                                 modifier = Modifier.size(DesignToken.sizes.iconAverage),
+                                tint = MaterialTheme.colorScheme.secondary.copy(alpha = 0.5f),
                             )
-                        },
-                        text = {
+                            Spacer(Modifier.width(DesignToken.padding.small))
                             Text(
-                                text = stringResource(Res.string.update_details),
-                                style = MifosTypography.labelMediumEmphasized,
+                                text = stringResource(Res.string.scroll_for_more_options),
+                                style = MifosTypography.tag,
+                                color = MaterialTheme.colorScheme.secondary.copy(alpha = 0.5f),
                             )
-                        },
-                        modifier = Modifier.weight(1f),
+                        }
+                        Spacer(Modifier.width(DesignToken.padding.small))
+                        MifosTextButton(
+                            onClick = {
+                                onAction(ClientProfileDetailsAction.OnUpdateDetailsClick)
+                            },
+                            leadingIcon = {
+                                Icon(
+                                    painter = painterResource(Res.drawable.pen_icon),
+                                    contentDescription = null,
+                                    modifier = Modifier.size(DesignToken.sizes.iconAverage),
+                                )
+                            },
+                            text = {
+                                Text(
+                                    text = stringResource(Res.string.update_details),
+                                    style = MifosTypography.labelMediumEmphasized,
+                                )
+                            },
+                            modifier = Modifier.weight(1f),
+                        )
+                    }
+                    Spacer(Modifier.height(DesignToken.padding.large))
+                    Text(
+                        text = stringResource(Res.string.client_profile_actions),
+                        style = MifosTypography.labelLargeEmphasized,
                     )
-                }
-                Spacer(Modifier.height(DesignToken.padding.large))
-                Text(
-                    text = stringResource(Res.string.client_profile_actions),
-                    style = MifosTypography.labelLargeEmphasized,
-                )
 
-                Spacer(Modifier.height(DesignToken.padding.large))
-                clientsDetailsActionItems.forEach {
-                    MifosRowCard(
-                        title = stringResource(it.title),
-                        imageVector = it.icon,
-                        leftValues = listOf(
-                            TextUtil(
-                                text = stringResource(it.subTitle),
-                                style = MifosTypography.bodySmall,
-                                color = MaterialTheme.colorScheme.secondary,
+                    Spacer(Modifier.height(DesignToken.padding.large))
+                    clientsDetailsActionItems.forEach {
+                        MifosRowCard(
+                            title = stringResource(it.title),
+                            imageVector = it.icon,
+                            leftValues = listOf(
+                                TextUtil(
+                                    text = stringResource(it.subTitle),
+                                    style = MifosTypography.bodySmall,
+                                    color = MaterialTheme.colorScheme.secondary,
+                                ),
                             ),
-                        ),
-                        rightValues = emptyList(),
-                        modifier = Modifier
-                            .clickable {
-                                onAction(ClientProfileDetailsAction.OnActionClick(it))
-                            }
-                            .padding(vertical = DesignToken.padding.medium),
-                    )
+                            rightValues = emptyList(),
+                            modifier = Modifier
+                                .clickable {
+                                    onAction(ClientProfileDetailsAction.OnActionClick(it))
+                                }
+                                .padding(vertical = DesignToken.padding.medium),
+                        )
+                    }
                 }
             }
         }

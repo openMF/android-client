@@ -38,6 +38,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavController
 import com.mifos.core.designsystem.component.LoadingDialogState
 import com.mifos.core.designsystem.component.MifosLoadingDialog
 import com.mifos.core.designsystem.component.MifosScaffold
@@ -47,6 +48,7 @@ import com.mifos.core.designsystem.utils.onClick
 import com.mifos.core.ui.components.Actions
 import com.mifos.core.ui.components.MifosActionsIdentifierListingComponent
 import com.mifos.core.ui.components.MifosAlertDialog
+import com.mifos.core.ui.components.MifosBreadcrumbNavBar
 import com.mifos.core.ui.components.MifosEmptyCard
 import com.mifos.core.ui.components.Status
 import com.mifos.core.ui.util.EventsEffect
@@ -57,6 +59,7 @@ import org.koin.compose.viewmodel.koinViewModel
 @Composable
 internal fun ClientIdentitiesListScreenRoute(
     addNewClientIdentity: (Int) -> Unit,
+    navController: NavController,
     viewModel: ClientIdentitiesListViewModel = koinViewModel(),
 ) {
     val state by viewModel.stateFlow.collectAsStateWithLifecycle()
@@ -71,6 +74,7 @@ internal fun ClientIdentitiesListScreenRoute(
     ClientIdentitiesListScreen(
         state = state,
         onAction = remember(viewModel) { { viewModel.trySendAction(it) } },
+        navController = navController,
     )
 
     ClientIdentitiesDialog(
@@ -82,6 +86,7 @@ internal fun ClientIdentitiesListScreenRoute(
 @Composable
 internal fun ClientIdentitiesListScreen(
     state: ClientIdentitiesListState,
+    navController: NavController,
     onAction: (ClientIdentitiesListAction) -> Unit,
 ) {
     val emptyMessage = stringResource(Res.string.client_identifiers_not_available)
@@ -93,74 +98,80 @@ internal fun ClientIdentitiesListScreen(
         Column(
             modifier = Modifier
                 .padding(paddingValues)
-                .fillMaxSize()
-                .padding(DesignToken.padding.large),
+                .fillMaxSize(),
         ) {
-            ClientIdentifiersHeader(
-                totalItem = state.clientIdentitiesList.size.toString(),
-                onAction = onAction,
-            )
+            MifosBreadcrumbNavBar(navController)
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(horizontal = DesignToken.padding.large),
+            ) {
+                ClientIdentifiersHeader(
+                    totalItem = state.clientIdentitiesList.size.toString(),
+                    onAction = onAction,
+                )
 
-            Spacer(modifier = Modifier.height(DesignToken.padding.largeIncreasedExtra))
+                Spacer(modifier = Modifier.height(DesignToken.padding.largeIncreasedExtra))
 
-            if (state.clientIdentitiesList.isEmpty()) {
-                MifosEmptyCard(stringResource(Res.string.client_identifiers_click_on_plus_button_to_add_an_item))
-            } else {
-                LazyColumn {
-                    item {
-                        state.clientIdentitiesList.forEachIndexed { index, item ->
-                            MifosActionsIdentifierListingComponent(
-                                type = item.documentType?.name ?: emptyMessage,
-                                id = if (item.id != null) item.id.toString() else emptyMessage,
-                                key = item.documentKey ?: emptyMessage,
-                                status = if (item.status != null) {
-                                    if (item.status!!.lowercase().endsWith("active")) Status.Active
-                                    if (item.status!!.lowercase()
-                                            .endsWith("inactive")
-                                    ) {
-                                        Status.InActive
+                if (state.clientIdentitiesList.isEmpty()) {
+                    MifosEmptyCard(stringResource(Res.string.client_identifiers_click_on_plus_button_to_add_an_item))
+                } else {
+                    LazyColumn {
+                        item {
+                            state.clientIdentitiesList.forEachIndexed { index, item ->
+                                MifosActionsIdentifierListingComponent(
+                                    type = item.documentType?.name ?: emptyMessage,
+                                    id = if (item.id != null) item.id.toString() else emptyMessage,
+                                    key = item.documentKey ?: emptyMessage,
+                                    status = if (item.status != null) {
+                                        if (item.status!!.lowercase().endsWith("active")) Status.Active
+                                        if (item.status!!.lowercase()
+                                                .endsWith("inactive")
+                                        ) {
+                                            Status.InActive
+                                        } else {
+                                            Status.Pending
+                                        }
                                     } else {
-                                        Status.Pending
-                                    }
-                                } else {
-                                    null
-                                },
-                                description = item.description ?: emptyMessage,
-                                // TODO check what is identifyDocuments, couldnot find in the api
-                                identifyDocuments = item.documentType?.name ?: emptyMessage,
-                                menuList = listOf(
-                                    Actions.ViewDocument,
-                                    Actions.DeleteDocument,
-                                    Actions.UploadAgain,
-                                ),
-                                onActionClicked = { actions ->
-                                    when (actions) {
-                                        Actions.ViewDocument -> onAction.invoke(
-                                            ClientIdentitiesListAction.ViewDocument,
-                                        )
+                                        null
+                                    },
+                                    description = item.description ?: emptyMessage,
+                                    // TODO check what is identifyDocuments, couldnot find in the api
+                                    identifyDocuments = item.documentType?.name ?: emptyMessage,
+                                    menuList = listOf(
+                                        Actions.ViewDocument,
+                                        Actions.DeleteDocument,
+                                        Actions.UploadAgain,
+                                    ),
+                                    onActionClicked = { actions ->
+                                        when (actions) {
+                                            Actions.ViewDocument -> onAction.invoke(
+                                                ClientIdentitiesListAction.ViewDocument,
+                                            )
 
-                                        Actions.UploadAgain -> onAction.invoke(
-                                            ClientIdentitiesListAction.UploadAgain,
-                                        )
+                                            Actions.UploadAgain -> onAction.invoke(
+                                                ClientIdentitiesListAction.UploadAgain,
+                                            )
 
-                                        Actions.DeleteDocument -> onAction.invoke(
-                                            ClientIdentitiesListAction.DeleteDocument(
-                                                item.id ?: -1,
+                                            Actions.DeleteDocument -> onAction.invoke(
+                                                ClientIdentitiesListAction.DeleteDocument(
+                                                    item.id ?: -1,
+                                                ),
+                                            )
+
+                                            else -> {}
+                                        }
+                                    },
+                                    onClick = {
+                                        onAction.invoke(
+                                            ClientIdentitiesListAction.ToggleShowMenu(
+                                                index,
                                             ),
                                         )
-
-                                        else -> {}
-                                    }
-                                },
-                                onClick = {
-                                    onAction.invoke(
-                                        ClientIdentitiesListAction.ToggleShowMenu(
-                                            index,
-                                        ),
-                                    )
-                                },
-                                isExpanded = (index == state.currentExpandedItem) && state.expandClientIdentity,
-                            )
+                                    },
+                                    isExpanded = (index == state.currentExpandedItem) && state.expandClientIdentity,
+                                )
+                            }
                         }
                     }
                 }

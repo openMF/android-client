@@ -20,6 +20,7 @@ data class ClientEditDetailsRoute(
 )
 
 fun NavGraphBuilder.clientEditDetailsDestination(
+    navController: NavController,
     onNavigateBack: () -> Unit,
     onNavigateNext: (Int) -> Unit,
 ) {
@@ -27,6 +28,7 @@ fun NavGraphBuilder.clientEditDetailsDestination(
         ClientEditDetailsScreen(
             onNavigateBack,
             onNavigateNext = onNavigateNext,
+            navController = navController,
         )
     }
 }

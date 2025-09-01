@@ -288,10 +288,13 @@ fun MifosActionsLoanListingComponent(
     menuList: List<Actions>,
     onActionClicked: (Actions) -> Unit,
 ) {
+    var isActive by rememberSaveable { mutableStateOf(false) }
+
     MifosActionsListingComponentOutline {
         Column {
             Column(
-                modifier = Modifier.padding(DesignToken.padding.large),
+                modifier = Modifier.padding(DesignToken.padding.large)
+                    .onClick { isActive = !isActive },
             ) {
                 MifosListingRowItem(
                     key = stringResource(Res.string.core_ui_account_no),
@@ -330,40 +333,59 @@ fun MifosActionsLoanListingComponent(
                     value = type,
                 )
             }
-            Surface(
-                modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(
-                    bottomStart = DesignToken.padding.medium,
-                    bottomEnd = DesignToken.padding.medium,
-                ),
-            ) {
-                Column(
-                    modifier = Modifier.padding(
-                        vertical = DesignToken.padding.small,
+            if (isActive) {
+                Surface(
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(
+                        bottomStart = DesignToken.padding.medium,
+                        bottomEnd = DesignToken.padding.medium,
                     ),
                 ) {
-                    menuList.map { menuItem ->
-                        Row(
-                            modifier = Modifier.fillMaxWidth()
-                                .height(DesignToken.sizes.avatarMedium)
-                                .clickable {
-                                    onActionClicked(menuItem)
-                                },
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.Start,
-                        ) {
-                            Icon(
-                                modifier = Modifier.padding(horizontal = DesignToken.padding.large),
-                                imageVector = menuItem.icon,
-                                contentDescription = "",
-                            )
+                    Column(
+                        modifier = Modifier.padding(
+                            vertical = DesignToken.padding.small,
+                        ),
+                    ) {
+                        menuList.map { menuItem ->
+                            Row(
+                                modifier = Modifier.fillMaxWidth()
+                                    .height(DesignToken.sizes.avatarMedium)
+                                    .clickable {
+                                        onActionClicked(menuItem)
+                                    },
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.Start,
+                            ) {
+                                Icon(
+                                    modifier = Modifier.padding(horizontal = DesignToken.padding.large),
+                                    imageVector = menuItem.icon,
+                                    contentDescription = "",
+                                )
+                                menuList.map { menuItem ->
+                                    Row(
+                                        modifier = Modifier.fillMaxWidth()
+                                            .height(DesignToken.sizes.avatarMedium)
+                                            .clickable {
+                                                onActionClicked(menuItem)
+                                            },
+                                        verticalAlignment = Alignment.CenterVertically,
+                                        horizontalArrangement = Arrangement.Start,
+                                    ) {
+                                        Icon(
+                                            modifier = Modifier.padding(horizontal = DesignToken.padding.large),
+                                            imageVector = menuItem.icon,
+                                            contentDescription = "",
+                                        )
 
-                            Text(
-                                modifier = Modifier.fillMaxWidth(),
-                                text = menuItem.name,
-                                color = MaterialTheme.colorScheme.onSurface,
-                                fontSize = MaterialTheme.typography.bodyLarge.fontSize,
-                            )
+                                        Text(
+                                            modifier = Modifier.fillMaxWidth(),
+                                            text = menuItem.name,
+                                            color = MaterialTheme.colorScheme.onSurface,
+                                            fontSize = MaterialTheme.typography.bodyLarge.fontSize,
+                                        )
+                                    }
+                                }
+                            }
                         }
                     }
                 }
@@ -560,6 +582,7 @@ fun MifosActionsClientFeeListingComponent(
 enum class Actions(val icon: ImageVector) {
     ViewAccount(MifosIcons.ViewAccount),
     ApproveAccount(MifosIcons.ApproveAccount),
+    MakeRepayment(MifosIcons.MakeRepayment),
     ViewDocument(MifosIcons.ViewDocument),
     UploadAgain(MifosIcons.UploadAgain),
     DeleteDocument(MifosIcons.DeleteDocument),

@@ -76,6 +76,7 @@ import com.mifos.room.entities.templates.clients.SavingProductOptionsEntity
 import com.mifos.room.entities.templates.clients.StaffOptionsEntity
 import com.mifos.room.entities.templates.loans.LoanRepaymentTemplateEntity
 import com.mifos.room.entities.templates.savings.SavingsAccountTransactionTemplateEntity
+import com.mifos.room.typeconverters.ClientTypeConverters
 import com.mifos.room.typeconverters.CustomTypeConverters
 
 @Database(
@@ -151,6 +152,7 @@ import com.mifos.room.typeconverters.CustomTypeConverters
 )
 @TypeConverters(
     CustomTypeConverters::class,
+    ClientTypeConverters::class,
 )
 actual abstract class MifosDatabase : RoomDatabase() {
     actual abstract val centerDao: CenterDao
