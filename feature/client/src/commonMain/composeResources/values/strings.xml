@@ -261,6 +261,8 @@
 
     <!-- Client_Profile-Recurring Deposit Account Title -->
     <string name="client_profile_recurring_deposit_account_title">Recurring Deposit Accounts</string>
+    <!-- Client_Profile-Fixed Deposit Account Title -->
+    <string name="client_profile_fixed_deposit_account_title">Fixed Deposit Accounts</string>
 
     <!-- Personal Info -->
     <string name="gender">Gender</string>
