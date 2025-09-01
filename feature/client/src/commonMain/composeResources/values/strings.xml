@@ -409,4 +409,18 @@
     <string name="client_collateral_success_title">Collateral Created Successfully</string>
     <string name="client_collateral_success_message">Collateral created successfully. Click Continue to navigate to Client detail profile.</string>
     <string name="client_collateral_failure_title">Collateral Creation Failed</string>
+
+    <!-- Apply New Applications Screen -->
+    <string name="client_apply_new_applications_title">Choose Application Type</string>
+    <string name="client_apply_new_applications_loan_account">New Loan Account</string>
+    <string name="client_apply_new_applications_savings_account">New Savings Account</string>
+    <string name="client_apply_new_applications_share_account">New Share Account</string>
+    <string name="client_apply_new_applications_recurring_account">New Recurring Deposit Account</string>
+    <string name="client_apply_new_applications_fixed_account">New Fixed Deposit Account</string>
+    <string name="client_apply_new_applications_apply_loan_account">Apply for new loan account</string>
+    <string name="client_apply_new_applications_apply_savings_account">Apply for new savings account</string>
+    <string name="client_apply_new_applications_apply_share_account">Apply for new share account</string>
+    <string name="client_apply_new_applications_apply_recurring_account">Apply for new recurring deposit account</string>
+    <string name="client_apply_new_applications_apply_fixed_account">Apply for new fixed deposit account</string>
+
 </resources>

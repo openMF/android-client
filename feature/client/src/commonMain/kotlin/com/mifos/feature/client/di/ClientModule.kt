@@ -9,6 +9,7 @@
  */
 package com.mifos.feature.client.di
 
+import com.mifos.feature.client.clientApplyNewApplications.ClientApplyNewApplicationsViewModel
 import com.mifos.feature.client.clientCharges.ClientChargesViewModel
 import com.mifos.feature.client.clientClosure.ClientClosureViewModel
 import com.mifos.feature.client.clientCollateral.ClientCollateralViewModel
@@ -55,4 +56,5 @@ val ClientModule = module {
     viewModelOf(::ClientClosureViewModel)
     viewModelOf(::SavingsAccountsViewModel)
     viewModelOf(::ClientCollateralViewModel)
+    viewModelOf(::ClientApplyNewApplicationsViewModel)
 }
