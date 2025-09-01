@@ -14,6 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.paging.PagingData
+import co.touchlab.kermit.Logger
 import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
@@ -27,6 +28,7 @@ import com.mifos.feature.client.clientUpcomingCharges.ClientUpcomingChargesActio
 import com.mifos.room.entities.client.ChargesEntity
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.count
+import kotlinx.coroutines.flow.first
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -52,7 +54,6 @@ fun ClientUpcomingChargesScreenRoute(
         state = state,
         onAction = remember(viewModel) { { viewModel.trySendAction(it) } },
     )
-
 }
 
 @Composable
@@ -69,12 +70,12 @@ fun ClientUpcomingChargesScreen(
                 .padding(padding)
                 .padding(DesignToken.padding.large),
         ) {
-
             if (state.chargesFlow == null) {
-                MifosEmptyCard("")
+                MifosEmptyCard()
             } else {
                 ChargesListContent(
                     state = state,
+                    charges = state.chargesFlow,
                     onAction = onAction,
                     refresh = {
                         onAction(ClientUpcomingChargesAction.OnRefresh)
@@ -107,7 +108,8 @@ private fun ClientUpcomingChargesDialog(
 
 @Composable
 expect fun ChargesListContent(
+    charges: Flow<PagingData<ChargesEntity>>,
     state: ClientUpcomingChargesState,
-    onAction: (ClientUpcomingChargesAction) -> Unit, ,
-    refresh: () -> Unit
+    onAction: (ClientUpcomingChargesAction) -> Unit,
+    refresh : () -> Unit
 )
