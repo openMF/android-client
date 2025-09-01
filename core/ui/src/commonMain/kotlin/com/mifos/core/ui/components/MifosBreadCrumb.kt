@@ -15,11 +15,9 @@ import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -27,6 +25,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.navigation.NavController
 import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.designsystem.theme.MifosTypography
@@ -60,7 +59,7 @@ fun MifosBreadcrumbNavBar(
 
     Row(
         verticalAlignment = Alignment.CenterVertically,
-        modifier = modifier.fillMaxWidth().padding(horizontal=DesignToken.padding.large),
+        modifier = modifier.fillMaxWidth().padding(horizontal = DesignToken.padding.large),
     ) {
         val routes = if (backStack.size <= 3) {
             backStack
@@ -68,27 +67,27 @@ fun MifosBreadcrumbNavBar(
             backStack.take(2) + listOf("...") + backStack.takeLast(1)
         }
 
-        routes.forEachIndexed { index, route ->
-            when (route) {
-                "..." -> Text(" ... > ", style = MifosTypography.bodySmallEmphasized)
-                else -> {
-                    BreadcrumbItem(
-                        text = formatRoute(route),
-                        isActive = index == routes.lastIndex,
-                        onClick = {
-                            if (index != routes.lastIndex && route != "...") {
-                                navController.popBackStack(route, inclusive = false)
-                            }
-                        },
-                    )
-                    if (index != routes.lastIndex) {
-                        Text(" > ", style = MifosTypography.bodySmallEmphasized)
+        Row(Modifier.weight(1f)) {
+            routes.forEachIndexed { index, route ->
+                when (route) {
+                    "..." -> Text(" ... > ", style = MifosTypography.bodySmallEmphasized)
+                    else -> {
+                        BreadcrumbItem(
+                            text = formatRoute(route),
+                            isActive = index == routes.lastIndex,
+                            onClick = {
+                                if (index != routes.lastIndex && route != "...") {
+                                    navController.popBackStack(route, inclusive = false)
+                                }
+                            },
+                        )
+                        if (index != routes.lastIndex) {
+                            Text(" > ", style = MifosTypography.bodySmallEmphasized)
+                        }
                     }
                 }
             }
         }
-
-        Spacer(Modifier.weight(1f))
 
         IconButton(onClick = { navController.popBackStack() }) {
             Icon(
@@ -106,15 +105,17 @@ private fun BreadcrumbItem(
     isActive: Boolean,
     onClick: () -> Unit,
 ) {
-
     Text(
         text = text,
         color = if (isActive) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onBackground,
         modifier = Modifier.clickable(
             enabled = !isActive,
             interactionSource = MutableInteractionSource(),
-            indication = LocalIndication.current
+            indication = LocalIndication.current,
         ) { onClick() },
         style = MifosTypography.bodySmallEmphasized,
+        maxLines = 1,
+        overflow = TextOverflow.Ellipsis,
+        softWrap = false,
     )
 }

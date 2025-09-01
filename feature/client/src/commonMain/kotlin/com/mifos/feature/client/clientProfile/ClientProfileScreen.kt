@@ -101,7 +101,7 @@ internal fun ClientProfileScreen(
         modifier = modifier,
         state = state,
         onAction = remember(viewModel) { { viewModel.trySendAction(it) } },
-        navController = navController
+        navController = navController,
     )
 
     ClientProfileDialogs(
@@ -130,7 +130,7 @@ private fun ClientProfileScaffold(
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(paddingValues)
+                    .padding(paddingValues),
             ) {
                 MifosBreadcrumbNavBar(navController)
                 Column(

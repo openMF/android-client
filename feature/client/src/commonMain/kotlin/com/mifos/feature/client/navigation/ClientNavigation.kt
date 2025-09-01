@@ -136,12 +136,12 @@ fun NavGraphBuilder.clientNavGraph(
             identifiers = navController::navigateToClientIdentifiersScreen,
             navigateToClientDetailsScreen = navController::navigateToClientDetailsProfileRoute,
             viewAssociatedAccounts = navController::navigateToClientProfileGeneralRoute,
-            navController=navController
+            navController = navController,
         )
 
         clientProfileGeneralDestination(
             onNavigateBack = navController::popBackStack,
-            navController=navController
+            navController = navController,
             savingAccounts = navController::navigateToClientSavingsAccountsRoute,
             loanAccounts = navController::navigateToClientLoanAccountsRoute,
             recurringDepositAccounts = navController::navigateToRecurringDepositAccountRoute,
@@ -167,42 +167,42 @@ fun NavGraphBuilder.clientNavGraph(
         )
         clientEditProfileDestination(
             onNavigateBack = navController::popBackStack,
-            navController=navController
+            navController = navController,
         )
         clientEditDetailsDestination(
             onNavigateBack = navController::popBackStack,
             onNavigateNext = navController::navigateToClientDetailsProfileRouteOnStatus,
-            navController=navController
+            navController = navController,
         )
         clientStaffDestination(
             onNavigateBack = navController::popBackStack,
             onNavigateNext = navController::navigateToClientDetailsProfileRouteOnStatus,
-            navController=navController
+            navController = navController,
         )
         clientTransferDestination(
             onNavigateBack = navController::popBackStack,
             onNavigateNext = navController::navigateToClientDetailsProfileRouteOnStatus,
-            navController=navController
+            navController = navController,
         )
         updateDefaultAccountDestination(
             onNavigateBack = navController::popBackStack,
             onNavigateNext = navController::navigateToClientDetailsProfileRouteOnStatus,
-            navController=navController
+            navController = navController,
         )
         clientClosureDestination(
             onNavigateBack = navController::popBackStack,
             onNavigateNext = navController::navigateToClientDetailsProfileRouteOnStatus,
-            navController=navController
+            navController = navController,
         )
         savingsAccountsDestination(
             navigateBack = navController::popBackStack,
             navigateToViewAccount = { },
-            navController=navController
+            navController = navController,
         )
         clientCollateralDestination(
             onNavigateBack = navController::popBackStack,
             onNavigateNext = navController::navigateToClientDetailsProfileRouteOnStatus,
-            navController=navController
+            navController = navController,
         )
         clientLoanAccountsDestination(
             navigateBack = navController::popBackStack,
@@ -211,7 +211,7 @@ fun NavGraphBuilder.clientNavGraph(
         )
         clientIdentitiesListDestination(
             addNewClientIdentity = {},
-            navController=navController
+            navController = navController,
         )
         clientApplyNewApplicationRoute(
             onNavigateBack = navController::popBackStack,
@@ -220,7 +220,7 @@ fun NavGraphBuilder.clientNavGraph(
             onNavigateApplyShareAccount = { },
             onNavigateApplyRecurringAccount = { },
             onNavigateApplyFixedAccount = { },
-            navController=navController
+            navController = navController,
         )
     }
 }

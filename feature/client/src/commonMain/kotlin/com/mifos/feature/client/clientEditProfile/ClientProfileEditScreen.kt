@@ -89,7 +89,7 @@ internal fun ClientProfileEditScreen(
         modifier = modifier,
         state = state,
         onAction = remember(viewModel) { { viewModel.trySendAction(it) } },
-        navController = navController
+        navController = navController,
     )
 
     ClientProfileEditDialogs(
@@ -115,12 +115,11 @@ private fun ClientProfileEditScaffold(
         modifier = modifier,
     ) { paddingValues ->
         if (state.dialogState != ClientProfileEditState.DialogState.Loading) {
-            Column(Modifier.fillMaxSize()) {
+            Column(Modifier.fillMaxSize().padding(paddingValues)) {
                 MifosBreadcrumbNavBar(navController)
                 Column(
                     modifier = Modifier
                         .fillMaxSize()
-                        .padding(paddingValues)
                         .verticalScroll(rememberScrollState())
                         .padding(
                             horizontal = DesignToken.padding.large,

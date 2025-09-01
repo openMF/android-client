@@ -85,7 +85,7 @@ internal fun ClientCollateralScreen(
         state = state,
         onAction = remember(viewModel) { { viewModel.trySendAction(it) } },
         modifier = modifier,
-        navController = navController
+        navController = navController,
     )
     ClientCollateralDialogs(
         state = state,
@@ -112,7 +112,7 @@ private fun ClientCollateralScaffold(
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(paddingValues)
+                    .padding(paddingValues),
             ) {
                 MifosBreadcrumbNavBar(navController)
                 if (state.collaterals.isNotEmpty()) {

@@ -22,13 +22,13 @@ data class ClientCollateralRoute(
 fun NavGraphBuilder.clientCollateralDestination(
     onNavigateBack: () -> Unit,
     onNavigateNext: (Int) -> Unit,
-    navController: NavController
+    navController: NavController,
 ) {
     composable<ClientCollateralRoute> {
         ClientCollateralScreen(
             onNavigateBack = onNavigateBack,
             onNavigateNext = onNavigateNext,
-            navController=navController
+            navController = navController,
         )
     }
 }

@@ -26,7 +26,6 @@ import androidclient.feature.client.generated.resources.savings
 import androidclient.feature.client.generated.resources.shield
 import androidclient.feature.client.generated.resources.stacked_bar_chart
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -79,7 +78,7 @@ internal fun ClientApplyNewApplicationsScreen(
     }
 
     ClientApplyNewApplicationsContent(
-        navController=navController,
+        navController = navController,
         onAction = remember(viewModel) { { viewModel.trySendAction(it) } },
     )
 }
@@ -102,7 +101,6 @@ private fun ClientApplyNewApplicationsContent(
             Column(
                 modifier = Modifier.padding(horizontal = DesignToken.padding.large),
             ) {
-
                 Text(
                     text = stringResource(Res.string.client_apply_new_applications_title),
                     style = MifosTypography.labelLargeEmphasized,

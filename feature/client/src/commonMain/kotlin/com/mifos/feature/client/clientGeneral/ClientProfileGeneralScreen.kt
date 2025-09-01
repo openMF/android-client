@@ -118,7 +118,7 @@ internal fun ClientProfileGeneralScreen(
         state = state,
         modifier = modifier,
         onAction = remember(viewModel) { { viewModel.trySendAction(it) } },
-        navController = navController
+        navController = navController,
     )
 
     ClientProfileGeneralDialogs(
@@ -166,10 +166,10 @@ internal fun ClientProfileGeneralScaffold(
         modifier = modifier,
     ) { paddingValues ->
         if (state.dialogState == null) {
-            Column(Modifier.fillMaxSize()) {
+            Column(Modifier.fillMaxSize().padding(paddingValues)) {
                 MifosBreadcrumbNavBar(navController)
                 Column(
-                    modifier = Modifier.fillMaxSize().padding(paddingValues)
+                    modifier = Modifier.fillMaxSize()
                         .verticalScroll(rememberScrollState()).padding(
                             horizontal = DesignToken.padding.large,
                         ),

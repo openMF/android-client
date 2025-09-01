@@ -28,7 +28,7 @@ fun NavGraphBuilder.updateDefaultAccountDestination(
         UpdateDefaultAccountScreen(
             onNavigateBack = onNavigateBack,
             onNavigateNext = onNavigateNext,
-            navController = navController
+            navController = navController,
         )
     }
 }

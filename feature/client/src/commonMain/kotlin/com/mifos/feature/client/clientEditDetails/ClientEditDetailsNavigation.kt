@@ -28,7 +28,7 @@ fun NavGraphBuilder.clientEditDetailsDestination(
         ClientEditDetailsScreen(
             onNavigateBack,
             onNavigateNext = onNavigateNext,
-            navController = navController
+            navController = navController,
         )
     }
 }

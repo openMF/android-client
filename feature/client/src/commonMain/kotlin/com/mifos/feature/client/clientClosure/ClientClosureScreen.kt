@@ -118,12 +118,11 @@ private fun ClientClosureScaffold(
         if (state.dialogState != ClientClosureState.DialogState.Loading &&
             state.dialogState !is ClientClosureState.DialogState.ShowStatusDialog
         ) {
-            Column(Modifier.fillMaxSize()) {
+            Column(Modifier.fillMaxSize().padding(paddingValues)) {
                 MifosBreadcrumbNavBar(navController)
                 Column(
                     modifier = Modifier
                         .fillMaxSize()
-                        .padding(paddingValues)
                         .padding(horizontal = DesignToken.padding.large),
                 ) {
                     if (state.reasons.isNotEmpty()) {

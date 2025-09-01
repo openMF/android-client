@@ -28,7 +28,7 @@ fun NavGraphBuilder.savingsAccountsDestination(
         SavingsAccountsScreenRoute(
             navigateBack = navigateBack,
             navigateToViewAccount = navigateToViewAccount,
-            navController = navController
+            navController = navController,
         )
     }
 }

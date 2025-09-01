@@ -73,7 +73,7 @@ internal fun UpdateDefaultAccountScreen(
         state = state,
         onAction = remember(viewModel) { { viewModel.trySendAction(it) } },
         modifier = modifier,
-        navController = navController
+        navController = navController,
     )
     UpdateDefaultAccountDialogs(
         state = state,
@@ -100,7 +100,7 @@ private fun UpdateDefaultAccountScaffold(
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(paddingValues)
+                    .padding(paddingValues),
             ) {
                 MifosBreadcrumbNavBar(navController)
                 Column(
@@ -108,7 +108,6 @@ private fun UpdateDefaultAccountScaffold(
                         .fillMaxSize()
                         .padding(horizontal = DesignToken.padding.large),
                 ) {
-
                     if (state.accounts.isNotEmpty()) {
                         Text(
                             text = stringResource(Res.string.update_default_account_title),

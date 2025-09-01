@@ -73,7 +73,7 @@ internal fun ClientStaffScreen(
         state = state,
         onAction = remember(viewModel) { { viewModel.trySendAction(it) } },
         modifier = modifier,
-        navController = navController
+        navController = navController,
     )
 }
 
@@ -97,7 +97,7 @@ private fun ClientStaffScaffold(
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(paddingValues)
+                    .padding(paddingValues),
             ) {
                 MifosBreadcrumbNavBar(navController)
                 Column(

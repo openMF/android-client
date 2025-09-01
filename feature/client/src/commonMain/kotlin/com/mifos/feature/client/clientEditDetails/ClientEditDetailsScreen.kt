@@ -151,7 +151,7 @@ internal fun ClientEditDetailsScreen(
     }
 
     ClientEditDetailsScaffold(
-        navController=navController,
+        navController = navController,
         navigateBack = navigateBack,
         state = state,
         officeList = state.showOffices,

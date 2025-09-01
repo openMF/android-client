@@ -28,7 +28,7 @@ fun NavGraphBuilder.clientStaffDestination(
         ClientStaffScreen(
             onNavigateBack = onNavigateBack,
             onNavigateNext = onNavigateNext,
-            navController = navController
+            navController = navController,
         )
     }
 }

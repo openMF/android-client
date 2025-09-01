@@ -10,6 +10,7 @@
 package com.mifos.feature.client.savingsAccounts
 
 import androidclient.feature.client.generated.resources.Res
+import androidclient.feature.client.generated.resources.client_product_saving_account
 import androidclient.feature.client.generated.resources.client_savings_item
 import androidclient.feature.client.generated.resources.client_savings_not_avilable
 import androidclient.feature.client.generated.resources.client_savings_pending_approval
@@ -84,7 +85,7 @@ internal fun SavingsAccountsScreenRoute(
     SavingsAccountsScreen(
         state = state,
         onAction = remember(viewModel) { { viewModel.trySendAction(it) } },
-        navController = navController
+        navController = navController,
     )
 }
 
@@ -92,7 +93,7 @@ internal fun SavingsAccountsScreenRoute(
 fun SavingsAccountsScreen(
     onAction: (SavingsAccountAction) -> Unit,
     state: SavingsAccountState,
-    navController: NavController
+    navController: NavController,
 ) {
     MifosScaffold(
         title = stringResource(Res.string.update_default_account_title),
@@ -102,7 +103,7 @@ fun SavingsAccountsScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(paddingValues)
+                .padding(paddingValues),
         ) {
             MifosBreadcrumbNavBar(navController)
             Column(

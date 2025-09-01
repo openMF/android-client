@@ -88,7 +88,7 @@ internal fun ClientTransferScreen(
         state = state,
         onAction = remember(viewModel) { { viewModel.trySendAction(it) } },
         modifier = modifier,
-        navController = navController
+        navController = navController,
     )
     ClientTransferDialogs(
         state = state,
@@ -125,7 +125,7 @@ private fun ClientTransferScaffold(
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(paddingValues)
+                    .padding(paddingValues),
             ) {
                 MifosBreadcrumbNavBar(navController)
                 Column(

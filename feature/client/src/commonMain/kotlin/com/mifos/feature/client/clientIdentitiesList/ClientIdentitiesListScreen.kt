@@ -74,7 +74,7 @@ internal fun ClientIdentitiesListScreenRoute(
     ClientIdentitiesListScreen(
         state = state,
         onAction = remember(viewModel) { { viewModel.trySendAction(it) } },
-        navController = navController
+        navController = navController,
     )
 
     ClientIdentitiesDialog(
@@ -98,15 +98,14 @@ internal fun ClientIdentitiesListScreen(
         Column(
             modifier = Modifier
                 .padding(paddingValues)
-                .fillMaxSize()
+                .fillMaxSize(),
         ) {
             MifosBreadcrumbNavBar(navController)
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(horizontal=DesignToken.padding.large),
+                    .padding(horizontal = DesignToken.padding.large),
             ) {
-
                 ClientIdentifiersHeader(
                     totalItem = state.clientIdentitiesList.size.toString(),
                     onAction = onAction,

@@ -23,12 +23,12 @@ data class ClientEditProfileRoute(
 
 fun NavGraphBuilder.clientEditProfileDestination(
     onNavigateBack: () -> Unit,
-    navController: NavController
+    navController: NavController,
 ) {
     composable<ClientEditProfileRoute> {
         ClientProfileEditScreen(
             onNavigateBack,
-            navController
+            navController,
         )
     }
 }
