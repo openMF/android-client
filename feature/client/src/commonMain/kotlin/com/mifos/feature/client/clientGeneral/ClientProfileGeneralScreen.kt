@@ -18,6 +18,7 @@ import androidclient.feature.client.generated.resources.client_performance_histo
 import androidclient.feature.client.generated.resources.client_profile_general_header_actions
 import androidclient.feature.client.generated.resources.client_profile_general_header_linked_accounts
 import androidclient.feature.client.generated.resources.client_profile_general_header_performance_history
+import androidclient.feature.client.generated.resources.client_savings_not_avilable
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -239,28 +240,38 @@ fun PerformanceHistoryCard(state: ClientProfileGeneralState) {
             val performanceHistory = state.performanceHistory
             PerformanceHistoryRows(
                 stringResource(Res.string.client_performance_history_loan_cycle_count_label),
-                "${performanceHistory.loanCyclesCount}",
+                performanceHistory.loanCyclesCount?.toString()
+                    ?: stringResource(Res.string.client_savings_not_avilable),
 
             )
 
             PerformanceHistoryRows(
                 stringResource(Res.string.client_performance_history_active_loans_count_label),
-                "${performanceHistory.activeLoans}",
+                performanceHistory.activeLoans?.toString()
+                    ?: stringResource(Res.string.client_savings_not_avilable),
             )
 
             PerformanceHistoryRows(
                 stringResource(Res.string.client_performance_history_last_loan_amount_label),
-                "${state.currency} ${performanceHistory.lastLoanAmount}",
+
+                performanceHistory.lastLoanAmount?.let {
+                    state.currency + " " + it.toString()
+                }
+                    ?: stringResource(Res.string.client_savings_not_avilable),
             )
 
             PerformanceHistoryRows(
                 stringResource(Res.string.client_performance_history_active_savings_label),
-                "${performanceHistory.activeSavingsCount}",
+                performanceHistory.activeSavingsCount?.toString()
+                    ?: stringResource(Res.string.client_savings_not_avilable),
             )
 
             PerformanceHistoryRows(
                 stringResource(Res.string.client_performance_history_total_savings_label),
-                "${state.currency} ${performanceHistory.lastLoanAmount}",
+                performanceHistory.totalSaving?.let {
+                    state.currency + " " + it.toString()
+                }
+                    ?: stringResource(Res.string.client_savings_not_avilable),
             )
         }
     }

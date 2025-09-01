@@ -17,6 +17,7 @@ import com.mifos.core.data.util.NetworkMonitor
 import com.mifos.core.domain.useCases.GetClientDetailsUseCase
 import com.mifos.core.ui.util.BaseViewModel
 import com.mifos.feature.client.clientGeneral.ClientProfileGeneralEvent.OnActionClick
+import com.mifos.room.entities.accounts.savings.SavingAccountDepositTypeEntity
 import com.mifos.room.entities.client.ClientEntity
 import com.mifos.room.entities.zipmodels.ClientAndClientAccounts
 import kotlinx.coroutines.flow.update
@@ -58,11 +59,16 @@ internal class ClientProfileGeneralViewmodel(
         val activeSavingsCount = savingAccounts?.count { it.status?.active == true } ?: 0
 
         val totalSaving =
-            savingAccounts?.filter { it.status?.active == true }?.sumOf { it.accountBalance ?: 0.0 }
-                ?: 0.0
+            savingAccounts?.filter {
+                it.status?.active == true &&
+                    it.depositType?.serverType != SavingAccountDepositTypeEntity.ServerTypes.RECURRING &&
+                    it.status?.closed == false
+            }?.sumOf {
+                it.accountBalance ?: 0.0
+            }
 
         // TODO: No function yet created for calculating this value.
-        val lastLoanAmount = 0.0
+        val lastLoanAmount = null
 
         return ClientProfileGeneralState.PerformanceHistory(
             loanCyclesCount = loanCyclesCount,
@@ -148,11 +154,11 @@ data class ClientProfileGeneralState(
     }
 
     data class PerformanceHistory(
-        var loanCyclesCount: Int = 0,
-        var activeLoans: Int = 0,
-        var lastLoanAmount: Double = 0.0,
-        var activeSavingsCount: Int = 0,
-        var totalSaving: Double = 0.0,
+        var loanCyclesCount: Int? = null,
+        var activeLoans: Int? = null,
+        var lastLoanAmount: Double? = null,
+        var activeSavingsCount: Int? = null,
+        var totalSaving: Double? = null,
     )
 }
 
