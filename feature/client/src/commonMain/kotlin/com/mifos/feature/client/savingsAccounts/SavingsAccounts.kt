@@ -136,9 +136,11 @@ fun SavingsAccountsScreen(
                                 savingsProduct = stringResource(Res.string.client_product_saving_account),
                                 savingsProductName = savings.productName.toString(),
                                 // todo modify with currency symbol when not getting null from api, currently getting null
-                                balance = if(savings.accountBalance !=null){
-                                    "${savings.currency?.displaySymbol?:""} ${savings.accountBalance}"
-                                } else stringResource(Res.string.client_savings_not_avilable),
+                                balance = if (savings.accountBalance != null) {
+                                    "${savings.currency?.displaySymbol ?: ""} ${savings.accountBalance}"
+                                } else {
+                                    stringResource(Res.string.client_savings_not_avilable)
+                                },
                                 menuList = if (savings.status?.submittedAndPendingApproval == true) {
                                     listOf(
                                         Actions.ViewAccount,

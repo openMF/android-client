@@ -72,7 +72,7 @@ class RecurringDepositAccountViewModel(
 
             is RecurringDepositAccountAction.UpdateSearch -> {
                 mutableStateFlow.update {
-                    it.copy(searchText = action.query,)
+                    it.copy(searchText = action.query)
                 }
             }
 

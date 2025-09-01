@@ -1,3 +1,12 @@
+/*
+ * Copyright 2025 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ */
 package com.mifos.feature.client.fixedDepositAccount
 
 import androidx.lifecycle.SavedStateHandle
@@ -17,12 +26,11 @@ class FixedDepositAccountViewModel(
     private val networkMonitor: NetworkMonitor,
     private val getClientDetailsUseCase: GetClientDetailsUseCase,
 ) : BaseViewModel<
-        FixedDepositAccountState,
-        FixedDepositAccountEvent,
-        FixedDepositAccountAction,
-        >
-    (initialState = FixedDepositAccountState())
-{
+    FixedDepositAccountState,
+    FixedDepositAccountEvent,
+    FixedDepositAccountAction,
+    >
+    (initialState = FixedDepositAccountState()) {
 
     val route = savedStateHandle.toRoute<FixedDepositAccountRoute>()
 
@@ -53,20 +61,20 @@ class FixedDepositAccountViewModel(
             is FixedDepositAccountAction.ToggleFilter -> {
                 mutableStateFlow.update {
                     it.copy(
-                        isFilterDialogOpen = !it.isFilterDialogOpen
+                        isFilterDialogOpen = !it.isFilterDialogOpen,
                     )
                 }
             }
 
             is FixedDepositAccountAction.ToggleSearch -> {
                 mutableStateFlow.update {
-                    it.copy(isSearchBarActive = !it.isSearchBarActive,)
+                    it.copy(isSearchBarActive = !it.isSearchBarActive)
                 }
             }
 
             is FixedDepositAccountAction.UpdateSearch -> {
                 mutableStateFlow.update {
-                    it.copy(searchText = action.query,)
+                    it.copy(searchText = action.query)
                 }
             }
 
@@ -127,8 +135,8 @@ class FixedDepositAccountViewModel(
                             result.data.clientAccounts?.savingsAccounts?.let {
                                 it.filter { accountEntity ->
                                     accountEntity.depositType?.serverType ==
-                                            SavingAccountDepositTypeEntity.ServerTypes.FIXED &&
-                                            accountEntity.status?.closed == false
+                                        SavingAccountDepositTypeEntity.ServerTypes.FIXED &&
+                                        accountEntity.status?.closed == false
                                 }.filter { accountEntity ->
                                     accountEntity.accountNo.toString().contains(state.searchText.trim())
                                 }

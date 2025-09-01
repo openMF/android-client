@@ -1,3 +1,12 @@
+/*
+ * Copyright 2025 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ */
 package com.mifos.feature.client.fixedDepositAccount
 
 import androidclient.feature.client.generated.resources.Res
@@ -45,7 +54,6 @@ import com.mifos.core.ui.util.EventsEffect
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
-
 
 @Composable
 fun FixedDepositAccountScreen(
@@ -117,7 +125,7 @@ fun FixedDepositAccountScaffold(
     state: FixedDepositAccountState,
     modifier: Modifier = Modifier,
     onAction: (FixedDepositAccountAction) -> Unit,
-){
+) {
     MifosScaffold(
         onBackPressed = {
             onAction(FixedDepositAccountAction.NavigateBack)
@@ -179,9 +187,11 @@ fun FixedDepositAccountScaffold(
                             } else {
                                 notAvailableText
                             },
-                            balance = if(fixedDepositAccount.accountBalance !=null){
-                                "${fixedDepositAccount.currency?.displaySymbol?:""} ${fixedDepositAccount.accountBalance}"
-                            } else notAvailableText,
+                            balance = if (fixedDepositAccount.accountBalance != null) {
+                                "${fixedDepositAccount.currency?.displaySymbol ?: ""} ${fixedDepositAccount.accountBalance}"
+                            } else {
+                                notAvailableText
+                            },
                             menuList = if (fixedDepositAccount.status?.submittedAndPendingApproval == true) {
                                 listOf(
                                     Actions.ViewAccount,
@@ -216,9 +226,7 @@ fun FixedDepositAccountScaffold(
             }
         }
     }
-
 }
-
 
 @Composable
 fun FixedDepositAccountHeader(

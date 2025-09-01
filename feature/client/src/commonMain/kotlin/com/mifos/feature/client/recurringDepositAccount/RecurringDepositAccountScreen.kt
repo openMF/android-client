@@ -188,9 +188,11 @@ internal fun RecurringDepositAccountScaffold(
                                 notAvailableText
                             },
                             balance =
-                                if(recurringDeposit.accountBalance !=null){
-                                    "${recurringDeposit.currency?.displaySymbol?:""} ${recurringDeposit.accountBalance}"
-                                } else notAvailableText ,
+                            if (recurringDeposit.accountBalance != null) {
+                                "${recurringDeposit.currency?.displaySymbol ?: ""} ${recurringDeposit.accountBalance}"
+                            } else {
+                                notAvailableText
+                            },
                             menuList = if (recurringDeposit.status?.submittedAndPendingApproval == true) {
                                 listOf(
                                     Actions.ViewAccount,
