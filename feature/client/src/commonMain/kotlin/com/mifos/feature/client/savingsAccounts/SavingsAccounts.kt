@@ -32,7 +32,6 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -49,6 +48,7 @@ import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.theme.AppColors
 import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.designsystem.theme.MifosTypography
+import com.mifos.core.designsystem.utils.onClick
 import com.mifos.core.ui.components.Actions
 import com.mifos.core.ui.components.MifosActionsSavingsListingComponent
 import com.mifos.core.ui.components.MifosEmptyCard
@@ -197,26 +197,23 @@ fun SavingsAccountsHeader(
 
         Spacer(modifier = Modifier.weight(1f))
 
-        IconButton(
-            onClick = { onAction.invoke(SavingsAccountAction.ToggleSearch) },
-        ) {
-            // add a cross icon when its active, talk with design team
-            Icon(
-                painter = painterResource(Res.drawable.search),
-                contentDescription = null,
-            )
-        }
+        Icon(
+            modifier = Modifier.onClick {
+                onAction.invoke(SavingsAccountAction.ToggleSearch)
+            },
+            painter = painterResource(Res.drawable.search),
+            contentDescription = null,
+        )
 
-        DesignToken.padding
+        Spacer(modifier = Modifier.width(DesignToken.padding.largeIncreased))
 
-        IconButton(
-            onClick = { onAction.invoke(SavingsAccountAction.ToggleFilter) },
-        ) {
-            Icon(
-                painter = painterResource(Res.drawable.filter),
-                contentDescription = null,
-            )
-        }
+        Icon(
+            modifier = Modifier.onClick {
+                onAction.invoke(SavingsAccountAction.ToggleFilter)
+            },
+            painter = painterResource(Res.drawable.filter),
+            contentDescription = null,
+        )
     }
 }
 
