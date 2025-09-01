@@ -7,13 +7,12 @@ import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.util.NetworkMonitor
 import com.mifos.core.domain.useCases.GetClientDetailsUseCase
 import com.mifos.core.ui.util.BaseViewModel
-import com.mifos.feature.client.recurringDepositAccount.RecurringDepositAccountRoute
 import com.mifos.room.entities.accounts.savings.SavingAccountDepositTypeEntity
 import com.mifos.room.entities.accounts.savings.SavingsAccountEntity
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-class RecurringDepositAccountViewModel(
+class FixedDepositAccountViewModel(
     savedStateHandle: SavedStateHandle,
     private val networkMonitor: NetworkMonitor,
     private val getClientDetailsUseCase: GetClientDetailsUseCase,
@@ -25,10 +24,10 @@ class RecurringDepositAccountViewModel(
     (initialState = FixedDepositAccountState())
 {
 
-    val route = savedStateHandle.toRoute<RecurringDepositAccountRoute>()
+    val route = savedStateHandle.toRoute<FixedDepositAccountRoute>()
 
     init {
-        checkNetworkAndGetLoanAccounts()
+        checkNetworkAndGetFixedDepositAccounts()
     }
 
     override fun handleAction(action: FixedDepositAccountAction) {
@@ -44,34 +43,30 @@ class RecurringDepositAccountViewModel(
             }
 
             is FixedDepositAccountAction.Refresh -> {
-                checkNetworkAndGetLoanAccounts()
+                checkNetworkAndGetFixedDepositAccounts()
             }
 
             is FixedDepositAccountAction.Search -> {
-                checkNetworkAndGetLoanAccounts()
+                checkNetworkAndGetFixedDepositAccounts()
             }
 
             is FixedDepositAccountAction.ToggleFilter -> {
                 mutableStateFlow.update {
                     it.copy(
-                        isFilterDialogOpen = true,
+                        isFilterDialogOpen = !it.isFilterDialogOpen
                     )
                 }
             }
 
             is FixedDepositAccountAction.ToggleSearch -> {
                 mutableStateFlow.update {
-                    it.copy(
-                        isSearchBarActive = true,
-                    )
+                    it.copy(isSearchBarActive = true,)
                 }
             }
 
             is FixedDepositAccountAction.UpdateSearch -> {
                 mutableStateFlow.update {
-                    it.copy(
-                        searchText = action.query,
-                    )
+                    it.copy(searchText = action.query,)
                 }
             }
 
@@ -89,11 +84,11 @@ class RecurringDepositAccountViewModel(
         }
     }
 
-    private fun checkNetworkAndGetLoanAccounts() {
+    private fun checkNetworkAndGetFixedDepositAccounts() {
         viewModelScope.launch {
             networkMonitor.isOnline.collect { isConnected ->
                 when (isConnected) {
-                    true -> getRecurringDepositAccounts()
+                    true -> getFixedDepositAccounts()
                     false -> {
                         mutableStateFlow.update {
                             it.copy(
@@ -107,7 +102,7 @@ class RecurringDepositAccountViewModel(
         }
     }
 
-    private fun getRecurringDepositAccounts() {
+    private fun getFixedDepositAccounts() {
         viewModelScope.launch {
             getClientDetailsUseCase.invoke(route.clientId).collect { result ->
                 when (result) {
@@ -128,15 +123,14 @@ class RecurringDepositAccountViewModel(
                     }
 
                     is DataState.Success -> {
-                        val recurringDepositAccount =
+                        val fixedDepositAccount =
                             result.data.clientAccounts?.savingsAccounts?.let {
                                 it.filter { accountEntity ->
                                     accountEntity.depositType?.serverType ==
                                             SavingAccountDepositTypeEntity.ServerTypes.FIXED &&
                                             accountEntity.status?.closed == false
-                                }.apply {
-                                    // Todo modify search accordingly
-                                    searchRecurringDepositAccounts(state.searchText, this)
+                                }.filter { accountEntity ->
+                                    accountEntity.accountNo.toString().contains(state.searchText.trim())
                                 }
                             } ?: emptyList()
 
@@ -144,7 +138,7 @@ class RecurringDepositAccountViewModel(
                             it.copy(
                                 dialogState = null,
                                 clientId = route.clientId,
-                                recurringDepositAccounts = recurringDepositAccount,
+                                fixedDepositAccount = fixedDepositAccount,
                             )
                         }
                     }
@@ -152,23 +146,11 @@ class RecurringDepositAccountViewModel(
             }
         }
     }
-
-    private fun searchRecurringDepositAccounts(
-        query: String,
-        recurringDepositAccounts: List<SavingsAccountEntity>,
-    ): List<SavingsAccountEntity> {
-        if (query.isNotBlank()) {
-            return recurringDepositAccounts.filter { accountEntity ->
-                accountEntity.accountNo.toString().contains(state.searchText.trim())
-            }
-        }
-        return recurringDepositAccounts
-    }
 }
 
 data class FixedDepositAccountState(
     val clientId: Int = -1,
-    val recurringDepositAccounts: List<SavingsAccountEntity> = emptyList(),
+    val fixedDepositAccount: List<SavingsAccountEntity> = emptyList(),
     val searchText: String = "",
     val dialogState: DialogState? = null,
     val isSearchBarActive: Boolean = false,
@@ -187,7 +169,7 @@ sealed class FixedDepositAccountAction {
     data object Refresh : FixedDepositAccountAction()
     data object ToggleFilter : FixedDepositAccountAction()
     data object ToggleSearch : FixedDepositAccountAction()
-    data class Search(val query: String) : FixedDepositAccountAction()
+    data object Search : FixedDepositAccountAction()
     data class UpdateSearch(val query: String) : FixedDepositAccountAction()
     data object CloseDialog : FixedDepositAccountAction()
 }

@@ -161,7 +161,7 @@ internal fun RecurringDepositAccountScaffold(
                         onAction(RecurringDepositAccountAction.UpdateSearch(it))
                     },
                     onSearchClick = {
-                        onAction(RecurringDepositAccountAction.Search(it))
+                        onAction(RecurringDepositAccountAction.Search)
                     },
                     onBackClick = {
                         onAction(RecurringDepositAccountAction.ToggleSearch)
