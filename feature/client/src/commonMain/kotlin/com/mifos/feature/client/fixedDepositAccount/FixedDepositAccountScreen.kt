@@ -143,7 +143,7 @@ fun FixedDepositAccountScaffold(
         Column(
             modifier = Modifier
                 .padding(paddingValues)
-                .fillMaxSize()
+                .fillMaxSize(),
         ) {
             MifosBreadcrumbNavBar(navController)
             Column(

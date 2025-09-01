@@ -144,13 +144,13 @@ internal fun ClientIdentitiesListScreen(
                                     identifyDocuments = item.documentType?.name ?: emptyMessage,
                                     menuList = listOf(
                                         Actions.ViewDocument(
-                                            vectorResource(Res.drawable.document_scanner)
+                                            vectorResource(Res.drawable.document_scanner),
                                         ),
                                         Actions.DeleteDocument(
-                                            vectorResource(Res.drawable.delete_document)
+                                            vectorResource(Res.drawable.delete_document),
                                         ),
                                         Actions.UploadAgain(
-                                            vectorResource(Res.drawable.upload_document)
+                                            vectorResource(Res.drawable.upload_document),
                                         ),
                                     ),
                                     onActionClicked = { actions ->

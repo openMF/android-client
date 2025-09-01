@@ -139,10 +139,10 @@ private fun ClientLoanAccountsScreen(
                                 loan.status?.active == true -> {
                                     listOf(
                                         Actions.ViewAccount(
-                                            vectorResource(Res.drawable.wallet)
+                                            vectorResource(Res.drawable.wallet),
                                         ),
                                         Actions.MakeRepayment(
-                                            vectorResource(Res.drawable.cash_bundel)
+                                            vectorResource(Res.drawable.cash_bundel),
                                         ),
                                     )
                                 }
@@ -150,7 +150,7 @@ private fun ClientLoanAccountsScreen(
                                 else -> {
                                     listOf(
                                         Actions.ViewAccount(
-                                            vectorResource(Res.drawable.wallet)
+                                            vectorResource(Res.drawable.wallet),
                                         ),
                                     )
                                 }

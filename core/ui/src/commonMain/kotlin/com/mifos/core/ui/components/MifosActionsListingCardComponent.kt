@@ -110,15 +110,18 @@ fun MifosActionsIdentifierListingComponent(
         MifosActionsListingComponentOutline(
             modifier = Modifier.border(
                 width = 1.dp,
-                shape = if(!isExpanded) DesignToken.shapes.medium
-                else RoundedCornerShape(
-                    topStart = 12.dp,
-                    topEnd = 12.dp,
-                    bottomStart = 0.dp,
-                    bottomEnd = 0.dp,
-                ),
+                shape = if (!isExpanded) {
+                    DesignToken.shapes.medium
+                } else {
+                    RoundedCornerShape(
+                        topStart = 12.dp,
+                        topEnd = 12.dp,
+                        bottomStart = 0.dp,
+                        bottomEnd = 0.dp,
+                    )
+                },
                 color = MaterialTheme.colorScheme.secondaryContainer,
-            )
+            ),
         ) {
             Column(modifier = Modifier.padding(DesignToken.padding.large).onClick { onClick() }) {
                 MifosListingRowItemHeader(
@@ -153,7 +156,6 @@ fun MifosActionsIdentifierListingComponent(
                     )
                 }
             }
-
         }
         AnimatedVisibility(
             visible = isExpanded,
@@ -172,7 +174,7 @@ fun MifosActionsIdentifierListingComponent(
                     bottomStart = DesignToken.padding.medium,
                     bottomEnd = DesignToken.padding.medium,
                 ),
-                color = MaterialTheme.colorScheme.surfaceContainer
+                color = MaterialTheme.colorScheme.surfaceContainer,
             ) {
                 Column(
                     modifier = Modifier.padding(
@@ -197,7 +199,7 @@ fun MifosActionsIdentifierListingComponent(
 
                             Text(
                                 modifier = Modifier.fillMaxWidth(),
-                                text = menuItem::class.simpleName?:"",
+                                text = menuItem::class.simpleName ?: "",
                                 color = MaterialTheme.colorScheme.onSurface,
                                 fontSize = MaterialTheme.typography.bodyLarge.fontSize,
                             )
@@ -280,7 +282,7 @@ fun MifosActionsCollateralDataListingComponent(
 
                             Text(
                                 modifier = Modifier.fillMaxWidth(),
-                                text = menuItem::class.simpleName?:"",
+                                text = menuItem::class.simpleName ?: "",
                                 color = MaterialTheme.colorScheme.onSurface,
                                 fontSize = MaterialTheme.typography.bodyLarge.fontSize,
                             )
@@ -309,15 +311,18 @@ fun MifosActionsLoanListingComponent(
         MifosActionsListingComponentOutline(
             modifier = Modifier.border(
                 width = 1.dp,
-                shape = if(!isActive) DesignToken.shapes.medium
-                else RoundedCornerShape(
-                    topStart = 12.dp,
-                    topEnd = 12.dp,
-                    bottomStart = 0.dp,
-                    bottomEnd = 0.dp,
-                ),
+                shape = if (!isActive) {
+                    DesignToken.shapes.medium
+                } else {
+                    RoundedCornerShape(
+                        topStart = 12.dp,
+                        topEnd = 12.dp,
+                        bottomStart = 0.dp,
+                        bottomEnd = 0.dp,
+                    )
+                },
                 color = MaterialTheme.colorScheme.secondaryContainer,
-            )
+            ),
         ) {
             Column(
                 modifier = Modifier.padding(DesignToken.padding.large)
@@ -420,15 +425,18 @@ fun MifosActionsSavingsListingComponent(
         MifosActionsListingComponentOutline(
             modifier = Modifier.border(
                 width = 1.dp,
-                shape = if(!isExpanded) DesignToken.shapes.medium
-                else RoundedCornerShape(
-                    topStart = 12.dp,
-                    topEnd = 12.dp,
-                    bottomStart = 0.dp,
-                    bottomEnd = 0.dp,
-                ),
+                shape = if (!isExpanded) {
+                    DesignToken.shapes.medium
+                } else {
+                    RoundedCornerShape(
+                        topStart = 12.dp,
+                        topEnd = 12.dp,
+                        bottomStart = 0.dp,
+                        bottomEnd = 0.dp,
+                    )
+                },
                 color = MaterialTheme.colorScheme.secondaryContainer,
-            )
+            ),
         ) {
             Column(
                 modifier = Modifier.padding(DesignToken.padding.large)
@@ -490,11 +498,11 @@ fun MifosActionsSavingsListingComponent(
                                 imageVector = menuItem.icon,
                                 contentDescription = "",
 
-                                )
+                            )
 
                             Text(
                                 modifier = Modifier.fillMaxWidth(),
-                                text = menuItem::class.simpleName?:"",
+                                text = menuItem::class.simpleName ?: "",
                                 color = MaterialTheme.colorScheme.onSurface,
                                 fontSize = MaterialTheme.typography.bodyLarge.fontSize,
                             )
@@ -589,7 +597,7 @@ fun MifosActionsClientFeeListingComponent(
 
                             Text(
                                 modifier = Modifier.fillMaxWidth(),
-                                text = menuItem::class.simpleName?:"",
+                                text = menuItem::class.simpleName ?: "",
                                 color = MaterialTheme.colorScheme.onSurface,
                                 fontSize = MaterialTheme.typography.bodyLarge.fontSize,
                             )
@@ -602,12 +610,12 @@ fun MifosActionsClientFeeListingComponent(
 }
 
 sealed class Actions(open val icon: ImageVector) {
-    data class ViewAccount(override val icon: ImageVector = MifosIcons.ViewAccount): Actions(icon)
-    data class ApproveAccount(override val icon: ImageVector = MifosIcons.ApproveAccount): Actions(icon)
-    data class MakeRepayment(override val icon: ImageVector = MifosIcons.MakeRepayment): Actions(icon)
-    data class ViewDocument(override val icon: ImageVector = MifosIcons.ViewDocument): Actions(icon)
-    data class UploadAgain(override val icon: ImageVector = MifosIcons.UploadAgain): Actions(icon)
-    data class DeleteDocument(override val icon: ImageVector = MifosIcons.DeleteDocument): Actions(icon)
+    data class ViewAccount(override val icon: ImageVector = MifosIcons.ViewAccount) : Actions(icon)
+    data class ApproveAccount(override val icon: ImageVector = MifosIcons.ApproveAccount) : Actions(icon)
+    data class MakeRepayment(override val icon: ImageVector = MifosIcons.MakeRepayment) : Actions(icon)
+    data class ViewDocument(override val icon: ImageVector = MifosIcons.ViewDocument) : Actions(icon)
+    data class UploadAgain(override val icon: ImageVector = MifosIcons.UploadAgain) : Actions(icon)
+    data class DeleteDocument(override val icon: ImageVector = MifosIcons.DeleteDocument) : Actions(icon)
 }
 
 @Preview
@@ -657,7 +665,7 @@ private fun PreviewMifosActionsClientFeeListingComponent() {
             ),
             onActionClicked = { action ->
                 when (action) {
-                    is Actions.ViewAccount ->  println(Actions.ViewDocument::class.simpleName)
+                    is Actions.ViewAccount -> println(Actions.ViewDocument::class.simpleName)
                     is Actions.ApproveAccount -> println(Actions.ApproveAccount::class.simpleName)
                     else -> println("Action not Handled")
                 }
@@ -682,7 +690,7 @@ fun PreviewMifosActionsSavingsListingComponent() {
             ),
             onActionClicked = { action ->
                 when (action) {
-                    is Actions.ViewAccount ->  println(Actions.ViewDocument::class.simpleName)
+                    is Actions.ViewAccount -> println(Actions.ViewDocument::class.simpleName)
                     is Actions.ApproveAccount -> println(Actions.ApproveAccount::class.simpleName)
                     else -> println("Action not Handled")
                 }
@@ -710,7 +718,7 @@ private fun PreviewMifosActionsCollateralDataListingComponent() {
                     is Actions.ApproveAccount -> println(Actions.ApproveAccount::class.simpleName)
                     else -> println("Action not Handled")
                 }
-            }
+            },
         )
     }
 }
