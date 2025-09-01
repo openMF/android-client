@@ -431,7 +431,7 @@ internal fun AuthenticatedNavbarNavigationScreenContent(
                     onDocumentClicked = navigateToDocumentScreen,
                 )
             }
-        } 
+        }
     }
 }
 
