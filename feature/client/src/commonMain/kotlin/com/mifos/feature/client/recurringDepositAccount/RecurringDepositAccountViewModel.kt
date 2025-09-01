@@ -76,13 +76,13 @@ class RecurringDepositAccountViewModel(
             }
             is RecurringDepositAccountAction.ViewAccount -> {
                 sendEvent(
-                    RecurringDepositAccountEvent.OnViewAccount(action.accountId),
+                    RecurringDepositAccountEvent.OnViewAccount(action.accountNumber),
                 )
             }
 
             is RecurringDepositAccountAction.ApproveAccount -> {
                 sendEvent(
-                    RecurringDepositAccountEvent.OnApproveAccount(action.accountId),
+                    RecurringDepositAccountEvent.OnApproveAccount(action.accountNumber),
                 )
             }
         }
@@ -156,8 +156,8 @@ data class RecurringDepositAccountState(
 
 sealed class RecurringDepositAccountAction {
     data object NavigateBack : RecurringDepositAccountAction()
-    data class ViewAccount(val accountId: Int) : RecurringDepositAccountAction()
-    data class ApproveAccount(val accountId: Int) : RecurringDepositAccountAction()
+    data class ViewAccount(val accountNumber: String) : RecurringDepositAccountAction()
+    data class ApproveAccount(val accountNumber: String) : RecurringDepositAccountAction()
     data object Refresh : RecurringDepositAccountAction()
     data object ToggleFilter : RecurringDepositAccountAction()
     data object ToggleSearch : RecurringDepositAccountAction()
@@ -168,6 +168,6 @@ sealed class RecurringDepositAccountAction {
 
 sealed class RecurringDepositAccountEvent {
     data object OnNavigateBack : RecurringDepositAccountEvent()
-    data class OnViewAccount(val accountId: Int) : RecurringDepositAccountEvent()
-    data class OnApproveAccount(val accountId: Int) : RecurringDepositAccountEvent()
+    data class OnViewAccount(val accountNumber: String) : RecurringDepositAccountEvent()
+    data class OnApproveAccount(val accountNumber: String) : RecurringDepositAccountEvent()
 }

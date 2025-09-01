@@ -59,8 +59,8 @@ import org.koin.compose.viewmodel.koinViewModel
 fun RecurringDepositAccountScreen(
     navigateBack: () -> Unit,
     modifier: Modifier = Modifier,
-    onApproveAccount: (Int) -> Unit = {},
-    onViewAccount: (Int) -> Unit = {},
+    onApproveAccount: (String) -> Unit = {},
+    onViewAccount: (String) -> Unit = {},
     viewModel: RecurringDepositAccountViewModel = koinViewModel(),
 ) {
     val state by viewModel.stateFlow.collectAsStateWithLifecycle()
@@ -68,12 +68,12 @@ fun RecurringDepositAccountScreen(
     EventsEffect(viewModel.eventFlow) { event ->
         when (event) {
             is RecurringDepositAccountEvent.OnApproveAccount -> {
-                onApproveAccount(event.accountId)
+                onApproveAccount(event.accountNumber)
             }
 
             RecurringDepositAccountEvent.OnNavigateBack -> navigateBack()
             is RecurringDepositAccountEvent.OnViewAccount -> {
-                onViewAccount(event.accountId)
+                onViewAccount(event.accountNumber)
             }
         }
     }
@@ -158,7 +158,7 @@ internal fun RecurringDepositAccountScaffold(
                 MifosSearchBar(
                     query = state.searchText,
                     onQueryChange = {
-                        onAction(RecurringDepositAccountAction.Search(it))
+                        onAction(RecurringDepositAccountAction.UpdateSearch(it))
                     },
                     onSearchClick = {
                         onAction(RecurringDepositAccountAction.Search(it))
@@ -202,11 +202,15 @@ internal fun RecurringDepositAccountScaffold(
                             when (actions) {
                                 Actions.ViewAccount -> {
                                     onAction(
-                                        RecurringDepositAccountAction.ViewAccount(state.clientId),
+                                        RecurringDepositAccountAction.ViewAccount(
+                                            recurringDeposit.accountNo?: ""
+                                        ),
                                     )
                                 }
                                 Actions.ApproveAccount -> {
-                                    RecurringDepositAccountAction.ApproveAccount(state.clientId)
+                                    RecurringDepositAccountAction.ApproveAccount(
+                                        recurringDeposit.accountNo?: ""
+                                    )
                                 }
                                 else -> null
                             }
