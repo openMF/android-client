@@ -71,6 +71,7 @@ import androidx.compose.material.icons.outlined.HomeWork
 import androidx.compose.material.icons.outlined.Mail
 import androidx.compose.material.icons.outlined.MobileFriendly
 import androidx.compose.material.icons.outlined.Numbers
+import androidx.compose.material.icons.outlined.Payments
 import androidx.compose.material.icons.outlined.PersonOutline
 import androidx.compose.material.icons.outlined.Savings
 import androidx.compose.material.icons.outlined.Visibility
@@ -221,4 +222,5 @@ object MifosIcons {
     val ApproveAccount = Icons.Outlined.CheckCircle
     val UploadAgain = Icons.Outlined.FileUpload
     val DeleteDocument = Icons.Outlined.DeleteOutline
+    val MakeRepayment = Icons.Outlined.Payments
 }

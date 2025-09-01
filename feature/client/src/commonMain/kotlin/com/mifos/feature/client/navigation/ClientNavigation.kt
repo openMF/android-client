@@ -37,6 +37,8 @@ import com.mifos.feature.client.clientGeneral.navigateToClientProfileGeneralRout
 import com.mifos.feature.client.clientIdentifiers.ClientIdentifiersScreen
 import com.mifos.feature.client.clientIdentitiesList.clientIdentitiesListDestination
 import com.mifos.feature.client.clientIdentitiesList.navigateToClientIdentifiersScreen
+import com.mifos.feature.client.clientLoanAccounts.clientLoanAccountsDestination
+import com.mifos.feature.client.clientLoanAccounts.navigateToClientLoanAccountsRoute
 import com.mifos.feature.client.clientPinpoint.PinpointClientScreen
 import com.mifos.feature.client.clientProfile.clientProfileDestination
 import com.mifos.feature.client.clientProfile.navigateToClientProfileRoute
@@ -138,12 +140,9 @@ fun NavGraphBuilder.clientNavGraph(
 
         clientProfileGeneralDestination(
             onNavigateBack = navController::popBackStack,
-            savingAccounts = { clientId ->
-                navController.navigateToClientSavingsAccountsRoute(clientId)
-            },
-            recurringDepositAccounts = { clientId ->
-                navController.navigateToRecurringDepositAccountRoute(clientId)
-            },
+            savingAccounts = navController::navigateToClientSavingsAccountsRoute,
+            loanAccounts = navController::navigateToClientLoanAccountsRoute,
+            recurringDepositAccounts = navController::navigateToRecurringDepositAccountRoute,
         )
 
         clientRecurringDepositAccountDestination(
@@ -193,6 +192,11 @@ fun NavGraphBuilder.clientNavGraph(
         clientCollateralDestination(
             onNavigateBack = navController::popBackStack,
             onNavigateNext = navController::navigateToClientDetailsProfileRouteOnStatus,
+        )
+        clientLoanAccountsDestination(
+            navigateBack = navController::popBackStack,
+            navigateToViewAccount = {},
+            navigateToMakeRepayment = {},
         )
         clientIdentitiesListDestination(
             addNewClientIdentity = {},
