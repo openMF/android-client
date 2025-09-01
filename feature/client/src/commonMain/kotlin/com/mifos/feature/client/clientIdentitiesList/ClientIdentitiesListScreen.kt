@@ -16,6 +16,7 @@ import androidclient.feature.client.generated.resources.client_identifiers_error
 import androidclient.feature.client.generated.resources.client_identifiers_identities_client_identifier_deletion_success
 import androidclient.feature.client.generated.resources.client_identifiers_identities_success_text
 import androidclient.feature.client.generated.resources.client_identifiers_not_available
+import androidclient.feature.client.generated.resources.client_identifiers_retry
 import androidclient.feature.client.generated.resources.client_savings_item
 import androidclient.feature.client.generated.resources.feature_client_error_not_connected_internet
 import androidclient.feature.client.generated.resources.feature_client_identifiers
@@ -27,10 +28,10 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -42,6 +43,7 @@ import com.mifos.core.designsystem.component.MifosLoadingDialog
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.designsystem.theme.MifosTypography
+import com.mifos.core.designsystem.utils.onClick
 import com.mifos.core.ui.components.Actions
 import com.mifos.core.ui.components.MifosActionsIdentifierListingComponent
 import com.mifos.core.ui.components.MifosAlertDialog
@@ -62,7 +64,7 @@ internal fun ClientIdentitiesListScreenRoute(
     EventsEffect(viewModel.eventFlow) { event ->
         when (event) {
             is ClientIdentitiesListEvent.AddNewClientIdentity -> addNewClientIdentity(event.id)
-            ClientIdentitiesListEvent.ViewDocument -> { }
+            ClientIdentitiesListEvent.ViewDocument -> {}
         }
     }
 
@@ -89,14 +91,17 @@ internal fun ClientIdentitiesListScreen(
         title = "Client Identities",
     ) { paddingValues ->
         Column(
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier
                 .padding(paddingValues)
+                .fillMaxSize()
                 .padding(DesignToken.padding.large),
         ) {
             ClientIdentifiersHeader(
                 totalItem = state.clientIdentitiesList.size.toString(),
                 onAction = onAction,
             )
+
+            Spacer(modifier = Modifier.height(DesignToken.padding.largeIncreasedExtra))
 
             if (state.clientIdentitiesList.isEmpty()) {
                 MifosEmptyCard(stringResource(Res.string.client_identifiers_click_on_plus_button_to_add_an_item))
@@ -139,7 +144,9 @@ internal fun ClientIdentitiesListScreen(
                                         )
 
                                         Actions.DeleteDocument -> onAction.invoke(
-                                            ClientIdentitiesListAction.DeleteDocument(item.id ?: -1),
+                                            ClientIdentitiesListAction.DeleteDocument(
+                                                item.id ?: -1,
+                                            ),
                                         )
 
                                         else -> {}
@@ -184,25 +191,23 @@ private fun ClientIdentifiersHeader(
 
         Spacer(modifier = Modifier.weight(1f))
 
-        IconButton(
-            onClick = { onAction.invoke(ClientIdentitiesListAction.ToggleSearch) },
-        ) {
-            Icon(
-                painter = painterResource(Res.drawable.search),
-                contentDescription = null,
-            )
-        }
+        Icon(
+            modifier = Modifier.onClick {
+                onAction.invoke(ClientIdentitiesListAction.ToggleSearch)
+            },
+            painter = painterResource(Res.drawable.search),
+            contentDescription = null,
+        )
 
-        Spacer(modifier = Modifier.height(DesignToken.padding.largeIncreased))
+        Spacer(modifier = Modifier.width(DesignToken.padding.largeIncreased))
 
-        IconButton(
-            onClick = { onAction.invoke(ClientIdentitiesListAction.AddNewClientIdentity) },
-        ) {
-            Icon(
-                painter = painterResource(Res.drawable.add_icon),
-                contentDescription = null,
-            )
-        }
+        Icon(
+            modifier = Modifier.onClick {
+                onAction.invoke(ClientIdentitiesListAction.AddNewClientIdentity)
+            },
+            painter = painterResource(Res.drawable.add_icon),
+            contentDescription = null,
+        )
     }
 }
 
