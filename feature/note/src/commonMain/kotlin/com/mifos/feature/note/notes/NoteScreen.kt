@@ -89,7 +89,7 @@ internal fun NoteScreenScaffold(
         }
     }
 
-    if (!state.isError && state.notes.isNotEmpty()) {
+    if (!state.isError) {
         NoteScreenScaffold(
             state = state,
             onAction = remember(viewModel) { { viewModel.trySendAction(it) } },
