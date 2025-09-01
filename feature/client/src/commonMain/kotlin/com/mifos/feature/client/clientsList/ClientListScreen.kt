@@ -162,11 +162,7 @@ private fun ClientListContentScreen(
     modifier: Modifier = Modifier,
     onAction: (ClientListAction) -> Unit,
 ) {
-    MifosScaffold(
-        title = stringResource(Res.string.feature_client_client),
-        onBackPressed = { },
-        modifier = modifier,
-    ) { paddingValues ->
+
         if (state.isEmpty) {
             MifosEmptyCard("No clients found")
         }
@@ -176,7 +172,7 @@ private fun ClientListContentScreen(
                 onClientClick = { clientId ->
                     onAction(ClientListAction.OnClientClick(clientId))
                 },
-                modifier = Modifier.padding(DesignToken.padding.large),
+                modifier = modifier.padding(DesignToken.padding.large),
                 fetchImage = {
                     onAction(ClientListAction.FetchImage(it))
                 },
@@ -185,7 +181,7 @@ private fun ClientListContentScreen(
         }
         if (state.clientsFlow != null) {
             Column(
-                Modifier.fillMaxSize().padding(paddingValues),
+                Modifier.fillMaxSize(),
             ) {
                 if (state.dialogState == null) {
                     ClientActions(
@@ -209,7 +205,6 @@ private fun ClientListContentScreen(
                 )
             }
         }
-    }
 }
 
 @Composable

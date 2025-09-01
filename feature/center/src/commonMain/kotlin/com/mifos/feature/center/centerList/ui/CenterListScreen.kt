@@ -72,7 +72,6 @@ import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 internal fun CenterListScreen(
-    paddingValues: PaddingValues,
     createNewCenter: () -> Unit,
     onCenterSelect: (Int) -> Unit,
     viewModel: CenterListViewModel = koinViewModel(),
@@ -85,7 +84,6 @@ internal fun CenterListScreen(
     }
 
     CenterListScreen(
-        paddingValues = paddingValues,
         state = state,
         createNewCenter = createNewCenter,
         onRefresh = {
@@ -100,7 +98,6 @@ internal fun CenterListScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun CenterListScreen(
-    paddingValues: PaddingValues,
     state: CenterListUiState,
     createNewCenter: () -> Unit,
     onRefresh: () -> Unit,
@@ -121,8 +118,7 @@ internal fun CenterListScreen(
     val pullRefreshState = rememberPullToRefreshState()
 
     MifosScaffold(
-        modifier = Modifier
-            .padding(paddingValues),
+        modifier = Modifier,
         topBar = {
             if (isInSelectionMode) {
                 SelectionModeTopAppBar(
@@ -158,10 +154,7 @@ internal fun CenterListScreen(
     ) { paddingValue ->
         Column(
             modifier = Modifier
-                .fillMaxSize()
-                .padding(
-                    top = if (isInSelectionMode) paddingValues.calculateTopPadding() else 0.dp,
-                ),
+                .fillMaxSize(),
             verticalArrangement = Arrangement.Center,
         ) {
             PullToRefreshBox(
@@ -384,7 +377,6 @@ fun CenterListScreenPreview(
     @PreviewParameter(CenterListUiStateProvider::class) state: CenterListUiState,
 ) {
     CenterListScreen(
-        paddingValues = PaddingValues(),
         state = state,
         createNewCenter = {},
         onRefresh = {},

@@ -29,30 +29,6 @@ sealed class HomeDestinationsScreen(
     val route: String,
     val icon: ImageVector? = null,
 ) {
-    data object SearchScreen : HomeDestinationsScreen(
-        title = "Search",
-        route = SearchScreenRoute.toObjectNavigationRoute(),
-        icon = MifosIcons.Dashboard,
-    )
-
-    data object ClientListScreen : HomeDestinationsScreen(
-        title = "Clients",
-        route = ClientListScreenRoute.toObjectNavigationRoute(),
-        icon = MifosIcons.Person,
-    )
-
-    data object CenterListScreen : HomeDestinationsScreen(
-        title = "Centers",
-        route = CenterListRoute.toObjectNavigationRoute(),
-        icon = MifosIcons.Business,
-    )
-
-    data object GroupListScreen : HomeDestinationsScreen(
-        title = "Groups",
-        route = GroupListRoute.toObjectNavigationRoute(),
-        icon = MifosIcons.Group,
-    )
-
     data object CheckerInboxAndTasksScreen : HomeDestinationsScreen(
         title = "Checker Inbox & Tasks",
         route = CheckerInboxTaskScreenRoute.toObjectNavigationRoute(),

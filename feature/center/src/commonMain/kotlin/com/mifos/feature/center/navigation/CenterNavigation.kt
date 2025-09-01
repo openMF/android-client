@@ -10,6 +10,7 @@
 package com.mifos.feature.center.navigation
 
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
@@ -27,7 +28,6 @@ data object CenterNavGraph
 
 fun NavGraphBuilder.centerNavGraph(
     navController: NavController,
-    paddingValues: PaddingValues,
     onActivateCenter: (Int, String) -> Unit,
     addSavingsAccount: (Int) -> Unit,
 ) {
@@ -35,7 +35,6 @@ fun NavGraphBuilder.centerNavGraph(
         startDestination = CenterListRoute,
     ) {
         centerListScreenRoute(
-            paddingValues = paddingValues,
             createNewCenter = navController::navigateCreateCenterScreenRoute,
             onCenterSelect = navController::navigateCenterDetailsScreenRoute,
         )
@@ -60,13 +59,11 @@ fun NavGraphBuilder.centerNavGraph(
 data object CenterListRoute
 
 fun NavGraphBuilder.centerListScreenRoute(
-    paddingValues: PaddingValues,
     createNewCenter: () -> Unit,
     onCenterSelect: (Int) -> Unit,
 ) {
     composable<CenterListRoute> {
         CenterListScreen(
-            paddingValues = paddingValues,
             createNewCenter = createNewCenter,
             onCenterSelect = onCenterSelect,
         )

@@ -10,6 +10,7 @@
 package com.mifos.feature.groups.navigation
 
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
@@ -26,7 +27,6 @@ import kotlinx.serialization.Serializable
 data object GroupNavGraph
 
 fun NavGraphBuilder.groupNavGraph(
-    paddingValues: PaddingValues,
     navController: NavController,
     addGroupLoanAccount: (Int) -> Unit,
     addSavingsAccount: (Int, Int, Boolean) -> Unit,
@@ -42,7 +42,6 @@ fun NavGraphBuilder.groupNavGraph(
         startDestination = GroupListRoute,
     ) {
         groupListScreenRoute(
-            paddingValues = paddingValues,
             onAddGroupClick = navController::navigateToCreateNewGroupScreen,
             onGroupClick = navController::navigateToGroupDetailsScreen,
         )
@@ -76,13 +75,11 @@ fun NavGraphBuilder.groupNavGraph(
 data object GroupListRoute
 
 fun NavGraphBuilder.groupListScreenRoute(
-    paddingValues: PaddingValues,
     onAddGroupClick: () -> Unit,
     onGroupClick: (groupId: Int) -> Unit,
 ) {
     composable<GroupListRoute> {
         GroupsListRoute(
-            paddingValues = paddingValues,
             onAddGroupClick = onAddGroupClick,
             onGroupClick = onGroupClick,
         )

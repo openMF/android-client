@@ -50,6 +50,7 @@ import com.mifos.core.datastore.model.AppTheme
 import com.mifos.core.designsystem.component.MifosRadioButtonDialog
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.UpdateEndpointDialogScreen
+import com.mifos.core.model.objects.LanguageConfig
 import com.mifos.core.ui.util.DevicePreview
 import com.mifos.feature.settings.syncSurvey.SyncSurveysDialog
 import kotlinx.coroutines.delay
@@ -150,7 +151,7 @@ internal fun SettingsScreen(
             items = stringArrayResource(Res.array.feature_settings_languages).toTypedArray(),
             selectItem = { _, index -> updateLanguage(MifosAppLanguage.entries[index]) },
             onDismissRequest = { showLanguageUpdateDialog = false },
-            selectedItem = MifosAppLanguage.fromCode(state.language.code).displayName,
+            selectedItem = state.language.languageName,
         )
     }
 

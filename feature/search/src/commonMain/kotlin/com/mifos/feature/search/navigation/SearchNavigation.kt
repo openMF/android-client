@@ -25,7 +25,6 @@ import kotlinx.serialization.Serializable
 data object SearchScreenRoute
 
 fun NavGraphBuilder.searchNavGraph(
-    paddingValues: PaddingValues,
     onCreateClient: () -> Unit,
     onCreateCenter: () -> Unit,
     onCreateGroup: () -> Unit,
@@ -37,7 +36,7 @@ fun NavGraphBuilder.searchNavGraph(
 ) {
     composable<SearchScreenRoute> {
         SearchScreen(
-            modifier = Modifier.padding(paddingValues),
+            modifier = Modifier,
             onFabClick = {
                 when (it) {
                     FabType.CLIENT -> {

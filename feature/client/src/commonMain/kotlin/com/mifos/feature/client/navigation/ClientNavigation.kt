@@ -11,6 +11,7 @@ package com.mifos.feature.client.navigation
 
 import FormWidgetDTO
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavType
@@ -62,7 +63,6 @@ data object ClientNavGraph
 
 fun NavGraphBuilder.clientNavGraph(
     navController: NavController,
-    paddingValues: PaddingValues,
     addLoanAccount: (Int) -> Unit,
     addSavingsAccount: (Int) -> Unit,
     documents: (Int) -> Unit,
@@ -73,13 +73,11 @@ fun NavGraphBuilder.clientNavGraph(
     activateClient: (Int) -> Unit,
     hasDatatables: KFunction4<List<DataTableEntity>, Any?, Int, MutableList<List<FormWidgetDTO>>, Unit>,
     onDocumentClicked: (Int, String) -> Unit,
-    navigateToHome: () -> Unit,
 ) {
     navigation<ClientNavGraph>(
         startDestination = ClientListScreenRoute,
     ) {
         clientListScreenRoute(
-            paddingValues = paddingValues,
             onClientSelect = navController::navigateToClientProfileRoute,
             createNewClient = navController::navigateCreateClientScreen,
         )
@@ -186,7 +184,6 @@ fun NavGraphBuilder.clientNavGraph(
 }
 
 fun NavGraphBuilder.clientListScreenRoute(
-    paddingValues: PaddingValues,
     onClientSelect: (Int) -> Unit,
     createNewClient: () -> Unit,
 ) {
