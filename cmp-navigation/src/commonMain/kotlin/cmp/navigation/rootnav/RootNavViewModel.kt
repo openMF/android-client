@@ -1,3 +1,12 @@
+/*
+ * Copyright 2025 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ */
 package cmp.navigation.rootnav
 
 import androidx.lifecycle.viewModelScope
@@ -39,7 +48,7 @@ class RootNavViewModel(
         action: RootNavAction.Internal.UserStateUpdateReceive,
     ) {
         val settingsData = action.settingsData
-        val userData=action.userData
+        val userData = action.userData
         val updatedRootNavState = when {
             !userData.isAuthenticated -> RootNavState.Auth
 
@@ -60,7 +69,7 @@ sealed class RootNavState {
 
     data object UserLocked : RootNavState()
 
-    data object UserUnlocked: RootNavState()
+    data object UserUnlocked : RootNavState()
 }
 
 sealed class RootNavAction {

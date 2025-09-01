@@ -13,15 +13,11 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import cmp.navigation.utils.toObjectNavigationRoute
 import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.feature.about.AboutNavRoute
-import com.mifos.feature.center.navigation.CenterListRoute
 import com.mifos.feature.checker.inbox.task.navigation.CheckerInboxTaskScreenRoute
-import com.mifos.feature.client.navigation.ClientListScreenRoute
-import com.mifos.feature.groups.navigation.GroupListRoute
 import com.mifos.feature.individualCollectionSheet.navigation.IndividualCollectionSheetScreenRoute
 import com.mifos.feature.offline.navigation.OfflineDashboardScreenRoute
 import com.mifos.feature.path.tracking.navigation.PathTrackingScreenRoute
 import com.mifos.feature.report.navigation.RunReportScreenRoute
-import com.mifos.feature.search.navigation.SearchScreenRoute
 import com.mifos.feature.settings.navigation.SettingsRoute
 
 sealed class HomeDestinationsScreen(

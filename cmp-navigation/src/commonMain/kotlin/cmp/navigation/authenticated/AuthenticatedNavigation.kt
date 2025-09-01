@@ -1,47 +1,37 @@
+/*
+ * Copyright 2025 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ */
 package cmp.navigation.authenticated
 
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
 import androidx.navigation.navigation
-import com.mifos.core.common.utils.Constants
 import com.mifos.feature.about.aboutDestination
 import com.mifos.feature.activate.activateDestination
-import com.mifos.feature.activate.navigateToActivateRoute
-import com.mifos.feature.center.navigation.centerNavGraph
-import com.mifos.feature.center.navigation.navigateCenterDetailsScreenRoute
-import com.mifos.feature.center.navigation.navigateCreateCenterScreenRoute
 import com.mifos.feature.checker.inbox.task.navigation.checkerInboxTaskNavGraph
-import com.mifos.feature.client.navigation.clientNavGraph
 import com.mifos.feature.client.navigation.navigateClientDetailsScreen
-import com.mifos.feature.client.navigation.navigateCreateClientScreen
-import com.mifos.feature.client.navigation.navigateToClientListScreen
 import com.mifos.feature.dataTable.navigation.dataTableNavGraph
-import com.mifos.feature.dataTable.navigation.navigateDataTableList
 import com.mifos.feature.dataTable.navigation.navigateToDataTable
 import com.mifos.feature.document.navigation.documentListScreen
 import com.mifos.feature.document.navigation.navigateToDocumentListScreen
-import com.mifos.feature.groups.navigation.groupNavGraph
-import com.mifos.feature.groups.navigation.navigateToCreateNewGroupScreen
-import com.mifos.feature.groups.navigation.navigateToGroupDetailsScreen
 import com.mifos.feature.individualCollectionSheet.navigation.generateCollectionSheetScreen
 import com.mifos.feature.individualCollectionSheet.navigation.individualCollectionSheetNavGraph
 import com.mifos.feature.loan.groupLoanAccount.groupLoanScreen
-import com.mifos.feature.loan.groupLoanAccount.navigateToGroupLoanScreen
 import com.mifos.feature.loan.loanAccount.addLoanAccountScreen
-import com.mifos.feature.loan.loanAccount.navigateToLoanAccountScreen
-import com.mifos.feature.loan.loanAccountSummary.navigateToLoanAccountSummaryScreen
 import com.mifos.feature.loan.navigation.loanNavGraph
 import com.mifos.feature.note.navigation.navigateToNoteScreen
 import com.mifos.feature.note.navigation.noteNavGraph
 import com.mifos.feature.offline.navigation.offlineNavGraph
 import com.mifos.feature.path.tracking.navigation.pathTrackingRoute
 import com.mifos.feature.report.navigation.reportNavGraph
-import com.mifos.feature.savings.navigation.navigateToAddSavingsAccount
-import com.mifos.feature.savings.navigation.navigateToSavingsAccountSummaryScreen
 import com.mifos.feature.savings.navigation.savingsNavGraph
-import com.mifos.feature.search.navigation.SearchScreenRoute
-import com.mifos.feature.search.navigation.searchNavGraph
 import com.mifos.feature.settings.navigation.settingsScreen
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.InternalSerializationApi
@@ -61,13 +51,14 @@ internal fun NavGraphBuilder.authenticatedGraph(
     navigation<AuthenticatedGraphRoute>(
         startDestination = AuthenticatedNavbarRoute,
     ) {
-
         authenticatedNavbarGraph(
             onDrawerItemClick = {
                 navController.navigate(it) {
                     launchSingleTop = true
                 }
-            }
+            },
+            navigateToDocumentScreen = navController::navigateToDocumentListScreen,
+            navigateToNoteScreen = navController::navigateToNoteScreen
         )
 
         checkerInboxTaskNavGraph(navController)
@@ -84,8 +75,6 @@ internal fun NavGraphBuilder.authenticatedGraph(
                 }
             },
         )
-
-
 
         savingsNavGraph(
             navController = navController,
@@ -104,7 +93,6 @@ internal fun NavGraphBuilder.authenticatedGraph(
         )
 
         activateDestination(onBackPressed = navController::popBackStack)
-
 
         settingsScreen(
             navigateBack = navController::popBackStack,
@@ -139,8 +127,5 @@ internal fun NavGraphBuilder.authenticatedGraph(
         )
 
         generateCollectionSheetScreen(navController::popBackStack)
-
-
-        
     }
 }

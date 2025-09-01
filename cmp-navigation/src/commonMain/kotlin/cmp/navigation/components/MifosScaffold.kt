@@ -1,3 +1,12 @@
+/*
+ * Copyright 2025 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ */
 package cmp.navigation.components
 
 import androidx.compose.animation.AnimatedVisibility
@@ -33,15 +42,12 @@ import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import com.mifos.core.designsystem.component.MifosNavigationRail
 import com.mifos.core.designsystem.component.MifosPullToRefreshState
 import com.mifos.core.designsystem.component.rememberMifosPullToRefreshState
-import com.mifos.core.designsystem.theme.AppColors
-
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3WindowSizeClassApi::class)
 @Suppress("LongMethod")
@@ -68,9 +74,9 @@ fun MifosScaffold(
     val isNavigationBarVisible = isCompact && hasNavigationItems
     Scaffold(
         modifier = modifier,
-        topBar = if(isNavigationBarVisible){
-           topBar
-        }else{
+        topBar = if (isNavigationBarVisible) {
+            topBar
+        } else {
             {}
         },
         bottomBar = {
@@ -148,16 +154,15 @@ private fun ScaffoldBottomAppBar(
     modifier: Modifier = Modifier,
 ) {
     Box(modifier = modifier.fillMaxWidth()) {
-
-            MifosBottomBar(
-                navigationItems = navigationData.navigationItems,
-                selectedItem = navigationData.selectedNavigationItem,
-                onClick = navigationData.onNavigationClick,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .testTag(tag = "NavigationBarContainer"),
-            )
-        }
+        MifosBottomBar(
+            navigationItems = navigationData.navigationItems,
+            selectedItem = navigationData.selectedNavigationItem,
+            onClick = navigationData.onNavigationClick,
+            modifier = Modifier
+                .fillMaxWidth()
+                .testTag(tag = "NavigationBarContainer"),
+        )
+    }
 }
 
 @Composable

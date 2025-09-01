@@ -258,13 +258,13 @@ fun MifosTheme(
         androidTheme -> if (darkTheme) darkScheme else lightScheme
         else -> colorScheme(
             darkTheme,
-            shouldDisplayDynamicTheming
+            shouldDisplayDynamicTheming,
         )
     }
     MaterialTheme(
         colorScheme = colorScheme,
         typography = mifosTypography(),
-    ){
+    ) {
         DesignTokenTheme(
             spacing = spacing,
             shapes = AppShapes(),

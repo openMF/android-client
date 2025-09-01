@@ -1,9 +1,16 @@
+/*
+ * Copyright 2025 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ */
 package cmp.navigation.authenticated
-
 
 import androidx.lifecycle.viewModelScope
 import com.mifos.core.data.util.NetworkMonitor
-import com.mifos.core.datastore.model.AppSettings
 import com.mifos.core.ui.util.BaseViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.map
@@ -61,7 +68,6 @@ internal sealed class AuthenticatedNavBarAction {
     data object CenterTabClick : AuthenticatedNavBarAction()
 
     data object GroupTabClick : AuthenticatedNavBarAction()
-
 }
 
 internal sealed class AuthenticatedNavBarEvent {

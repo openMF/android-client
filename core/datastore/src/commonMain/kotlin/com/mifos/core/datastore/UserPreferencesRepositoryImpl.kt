@@ -12,7 +12,6 @@ package com.mifos.core.datastore
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.common.utils.ServerConfig
 import com.mifos.core.datastore.model.AppSettings
-import com.mifos.core.datastore.model.AppTheme
 import com.mifos.core.datastore.model.DarkThemeConfig
 import com.mifos.core.datastore.model.UserData
 import com.mifos.core.model.objects.users.User

@@ -1,3 +1,12 @@
+/*
+ * Copyright 2025 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ */
 package cmp.navigation.rootnav
 
 import androidx.compose.animation.AnimatedContentTransitionScope
@@ -17,7 +26,6 @@ import cmp.navigation.authenticated.AuthenticatedGraphRoute
 import cmp.navigation.authenticated.authenticatedGraph
 import cmp.navigation.authenticated.navigateToAuthenticatedGraph
 import cmp.navigation.splash.SplashRoute
-import cmp.navigation.splash.SplashScreen
 import cmp.navigation.splash.navigateToSplash
 import cmp.navigation.splash.splashDestination
 import cmp.navigation.ui.rememberMifosNavController
@@ -60,14 +68,14 @@ fun RootNavScreen(
         authNavGraph(
             navigateHome = navController::navigateToAuthenticatedGraph,
             navigatePasscode = {},
-            updateServerConfig = {}
+            updateServerConfig = {},
         )
     }
 
     val targetRoute = when (state) {
         RootNavState.Splash -> SplashRoute
         is RootNavState.UserUnlocked -> AuthenticatedGraphRoute
-        is RootNavState.Auth-> LoginRoute
+        is RootNavState.Auth -> LoginRoute
         else -> AuthenticatedGraphRoute
     }
 
@@ -106,7 +114,7 @@ fun RootNavScreen(
             is RootNavState.UserUnlocked -> navController.navigateToAuthenticatedGraph(
                 navOptions = rootNavOptions,
             )
-            else ->{}
+            else -> {}
         }
     }
 }

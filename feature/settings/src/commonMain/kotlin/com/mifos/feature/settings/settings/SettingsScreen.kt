@@ -50,7 +50,6 @@ import com.mifos.core.datastore.model.AppTheme
 import com.mifos.core.designsystem.component.MifosRadioButtonDialog
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.UpdateEndpointDialogScreen
-import com.mifos.core.model.objects.LanguageConfig
 import com.mifos.core.ui.util.DevicePreview
 import com.mifos.feature.settings.syncSurvey.SyncSurveysDialog
 import kotlinx.coroutines.delay

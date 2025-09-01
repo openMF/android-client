@@ -1,3 +1,12 @@
+/*
+ * Copyright 2025 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ */
 package cmp.navigation.authenticated
 
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -12,9 +21,7 @@ import org.mifos.navigation.generated.resources.Res
 import org.mifos.navigation.generated.resources.cmp_navigation_center
 import org.mifos.navigation.generated.resources.cmp_navigation_clients
 import org.mifos.navigation.generated.resources.cmp_navigation_groups
-import org.mifos.navigation.generated.resources.cmp_navigation_no_internet
 import org.mifos.navigation.generated.resources.cmp_navigation_search
-
 
 sealed class AuthenticatedNavBarTabItem : NavigationItem {
 
@@ -85,7 +92,6 @@ sealed class AuthenticatedNavBarTabItem : NavigationItem {
         override val testTag: String
             get() = "Group Tab"
     }
-
 }
 
 /**

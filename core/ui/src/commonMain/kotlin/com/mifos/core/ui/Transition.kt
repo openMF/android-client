@@ -1,5 +1,13 @@
+/*
+ * Copyright 2025 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ */
 package com.mifos.core.ui
-
 
 import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.EnterTransition
@@ -17,28 +25,28 @@ import kotlin.jvm.JvmSuppressWildcards
  * Used with [AnimatedContentTransitionScope] to define how a destination enters the screen.
  */
 typealias EnterTransitionProvider =
-        (@JvmSuppressWildcards AnimatedContentTransitionScope<NavBackStackEntry>.() -> EnterTransition?)
+    (@JvmSuppressWildcards AnimatedContentTransitionScope<NavBackStackEntry>.() -> EnterTransition?)
 
 /**
  * Function type for providing nullable exit transitions in navigation.
  * Used with [AnimatedContentTransitionScope] to define how a destination exits the screen.
  */
 typealias ExitTransitionProvider =
-        (@JvmSuppressWildcards AnimatedContentTransitionScope<NavBackStackEntry>.() -> ExitTransition?)
+    (@JvmSuppressWildcards AnimatedContentTransitionScope<NavBackStackEntry>.() -> ExitTransition?)
 
 /**
  * Function type for providing non-null enter transitions in navigation.
  * Used with [AnimatedContentTransitionScope] to define how a destination enters the screen.
  */
 typealias NonNullEnterTransitionProvider =
-        (@JvmSuppressWildcards AnimatedContentTransitionScope<NavBackStackEntry>.() -> EnterTransition)
+    (@JvmSuppressWildcards AnimatedContentTransitionScope<NavBackStackEntry>.() -> EnterTransition)
 
 /**
  * Function type for providing non-null exit transitions in navigation.
  * Used with [AnimatedContentTransitionScope] to define how a destination exits the screen.
  */
 typealias NonNullExitTransitionProvider =
-        (@JvmSuppressWildcards AnimatedContentTransitionScope<NavBackStackEntry>.() -> ExitTransition)
+    (@JvmSuppressWildcards AnimatedContentTransitionScope<NavBackStackEntry>.() -> ExitTransition)
 
 /**
  * The default transition time (in milliseconds) for all fade transitions in the

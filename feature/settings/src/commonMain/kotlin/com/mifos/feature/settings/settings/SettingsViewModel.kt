@@ -50,7 +50,7 @@ class SettingsViewModel(
                 tenant = settings.tenant,
                 baseUrl = settings.baseUrl,
                 passcode = settings.passcode ?: "",
-                theme = when(settings.appTheme){
+                theme = when (settings.appTheme) {
                     DarkThemeConfig.LIGHT -> AppTheme.LIGHT
                     DarkThemeConfig.DARK -> AppTheme.DARK
                     else -> AppTheme.SYSTEM
@@ -63,11 +63,11 @@ class SettingsViewModel(
     fun updateTheme(theme: AppTheme) {
         viewModelScope.launch {
             prefManager.updateTheme(
-                when(theme){
+                when (theme) {
                     AppTheme.LIGHT -> DarkThemeConfig.LIGHT
                     AppTheme.DARK -> DarkThemeConfig.DARK
                     AppTheme.SYSTEM -> DarkThemeConfig.FOLLOW_SYSTEM
-                }
+                },
             )
         }
     }

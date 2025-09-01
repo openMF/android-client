@@ -105,6 +105,8 @@ import org.mifos.navigation.generated.resources.ic_dp_placeholder
 
 @Composable
 internal fun AuthenticatedNavbarNavigationScreen(
+    navigateToDocumentScreen:(Int,String)->Unit,
+    navigateToNoteScreen:(Int,String)->Unit,
     onDrawerItemClick: (String) -> Unit,
     modifier: Modifier = Modifier,
     navController: NavHostController = rememberMifosNavController(
@@ -167,7 +169,9 @@ internal fun AuthenticatedNavbarNavigationScreen(
         onAction = remember(viewModel) {
             { viewModel.trySendAction(it) }
         },
-        onDrawerItemClick = onDrawerItemClick
+        onDrawerItemClick = onDrawerItemClick,
+        navigateToDocumentScreen = navigateToDocumentScreen,
+        navigateToNoteScreen = navigateToNoteScreen,
     )
 }
 
@@ -176,6 +180,8 @@ internal fun AuthenticatedNavbarNavigationScreen(
 internal fun AuthenticatedNavbarNavigationScreenContent(
     navController: NavHostController,
     onDrawerItemClick:(String)->Unit,
+    navigateToDocumentScreen:(Int,String)->Unit,
+    navigateToNoteScreen:(Int,String)->Unit,
     modifier: Modifier = Modifier,
     snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
     onAction: (AuthenticatedNavBarAction) -> Unit,
@@ -235,18 +241,6 @@ internal fun AuthenticatedNavbarNavigationScreenContent(
                                     text = "Mifos",
                                     color = Color.White,
                                     style = MaterialTheme.typography.titleMedium,
-                                )
-                            }
-                            Spacer(modifier = Modifier.height(16.dp))
-                            Row(
-                                modifier = Modifier.fillMaxWidth(),
-                                horizontalArrangement = Arrangement.SpaceBetween,
-                                verticalAlignment = Alignment.CenterVertically,
-                            ) {
-                                Text(
-                                    text = "Offline Mode",
-                                    style = MaterialTheme.typography.bodyMedium,
-                                    color = Color.White,
                                 )
                             }
                         }
@@ -383,7 +377,7 @@ internal fun AuthenticatedNavbarNavigationScreenContent(
                 navController = navController,
                 addGroupLoanAccount = navController::navigateToGroupLoanScreen,
                 addSavingsAccount = navController::navigateToAddSavingsAccount,
-                loadDocumentList = navController::navigateToDocumentListScreen,
+                loadDocumentList = navigateToDocumentScreen,
                 loadClientList = navController::navigateToClientListScreen,
                 loadSavingsAccountSummary = navController::navigateToSavingsAccountSummaryScreen,
                 loadGroupDataTables = navController::navigateToDataTable,
@@ -399,7 +393,7 @@ internal fun AuthenticatedNavbarNavigationScreenContent(
                     navController.navigateToAddSavingsAccount(0, clientId, false)
                 },
                 documents = { clientId ->
-                    navController.navigateToDocumentListScreen(
+                    navigateToDocumentScreen(
                         clientId,
                         Constants.ENTITY_TYPE_CLIENTS,
                     )
@@ -411,7 +405,7 @@ internal fun AuthenticatedNavbarNavigationScreenContent(
                     )
                 },
                 notes = { clientId ->
-                    navController.navigateToNoteScreen(
+                    navigateToNoteScreen(
                         clientId,
                         Constants.ENTITY_TYPE_CLIENTS,
                     )
@@ -429,9 +423,8 @@ internal fun AuthenticatedNavbarNavigationScreenContent(
                     )
                 },
                 hasDatatables = navController::navigateDataTableList,
-                onDocumentClicked = navController::navigateToDocumentListScreen,
+                onDocumentClicked = navigateToDocumentScreen,
             )
-
         }
     }}
 }
