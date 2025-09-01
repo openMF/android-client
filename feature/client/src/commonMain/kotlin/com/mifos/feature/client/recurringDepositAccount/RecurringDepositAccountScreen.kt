@@ -1,6 +1,8 @@
 package com.mifos.feature.client.recurringDepositAccount
 
 import androidclient.feature.client.generated.resources.Res
+import androidclient.feature.client.generated.resources.client_product_recurring_deposit_account
+import androidclient.feature.client.generated.resources.client_empty_card_message
 import androidclient.feature.client.generated.resources.client_profile_recurring_deposit_account_title
 import androidclient.feature.client.generated.resources.client_savings_item
 import androidclient.feature.client.generated.resources.client_savings_not_avilable
@@ -9,7 +11,6 @@ import androidclient.feature.client.generated.resources.feature_client_dialog_ac
 import androidclient.feature.client.generated.resources.filter
 import androidclient.feature.client.generated.resources.search
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -30,7 +31,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mifos.core.common.utils.DateHelper
 import com.mifos.core.designsystem.component.MifosCircularProgress
@@ -225,13 +225,13 @@ internal fun RecurringDepositAccountScaffold(
             Spacer(modifier = Modifier.height(DesignToken.padding.largeIncreasedExtra))
 
             if (state.recurringDepositAccounts.isEmpty()) {
-                MifosEmptyCard(msg = "Click Here To View Filled State. ")
+                MifosEmptyCard(msg = stringResource(Res.string.client_empty_card_message))
             } else {
                 LazyColumn {
                     items(state.recurringDepositAccounts) { recurringDeposit ->
                         MifosActionsSavingsListingComponent(
                             accountNo = recurringDeposit.accountNo ?: notAvailableText,
-                            savingsProduct = "Recurring Deposit Product",
+                            savingsProduct = stringResource(Res.string.client_product_recurring_deposit_account),
                             savingsProductName = recurringDeposit.shortProductName ?: notAvailableText,
                             lastActive = if (recurringDeposit.status?.submittedAndPendingApproval == true) {
                                 stringResource(Res.string.client_savings_pending_approval)

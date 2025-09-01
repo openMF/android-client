@@ -377,6 +377,7 @@ fun MifosActionsLoanListingComponent(
 fun MifosActionsSavingsListingComponent(
     accountNo: String,
     savingsProduct: String,
+    savingsProductName: String,
     lastActive: String,
     balance: String,
     menuList: List<Actions>,
@@ -392,15 +393,14 @@ fun MifosActionsSavingsListingComponent(
                 modifier = Modifier.padding(DesignToken.padding.large),
             ) {
                 MifosListingRowItem(
-                    key = stringResource(Res.string.core_ui_account_no),
+                    key = "",
                     value = accountNo,
-                    keyStyle = MifosTypography.titleSmallEmphasized,
-                    valueStyle = MifosTypography.titleSmall,
+                    valueStyle = MifosTypography.titleSmallEmphasized,
                 )
                 Spacer(Modifier.height(DesignToken.padding.large))
                 MifosListingRowItem(
-                    key = stringResource(Res.string.core_ui_savings_product),
-                    value = savingsProduct,
+                    key = savingsProduct,
+                    value = savingsProductName,
                 )
                 Spacer(Modifier.height(DesignToken.padding.medium))
                 Column(
@@ -425,6 +425,7 @@ fun MifosActionsSavingsListingComponent(
                         bottomStart = DesignToken.padding.medium,
                         bottomEnd = DesignToken.padding.medium,
                     ),
+                    color = MaterialTheme.colorScheme.surfaceContainer
                 ) {
                     Column(
                         modifier = Modifier.padding(
@@ -627,7 +628,8 @@ fun PreviewMifosActionsSavingsListingComponent() {
     MaterialTheme {
         MifosActionsSavingsListingComponent(
             accountNo = "SV9876",
-            savingsProduct = "Regular Savings",
+            savingsProduct = "Savings Product",
+            savingsProductName = "Wallet",
             lastActive = "2025-08-15",
             balance = "$1200",
             menuList = listOf(

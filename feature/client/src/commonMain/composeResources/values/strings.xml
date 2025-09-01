@@ -223,6 +223,13 @@
     <string name="client_profile_notes_title">Notes</string>
     <string name="client_profile_notes_subtitle">Check or update note accounts</string>
 
+    <string name="client_empty_card_message">Click Here To View Filled State.</string>
+
+    <!-- Client Products -->
+    <string name="client_product_saving_account">Savings Products</string>
+    <string name="client_product_fixed_deposit_account">Fixed Deposit Products</string>
+    <string name="client_product_recurring_deposit_account">Recurring Deposit Products</string>
+    <string name="client_product_shares_account">Shares Products</string>
 
     <!-- Client_Profile-General-Headers -->
     <string name="client_profile_general_header_performance_history">Performance History</string>

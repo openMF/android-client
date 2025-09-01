@@ -10,6 +10,7 @@
 package com.mifos.feature.client.savingsAccounts
 
 import androidclient.feature.client.generated.resources.Res
+import androidclient.feature.client.generated.resources.client_product_saving_account
 import androidclient.feature.client.generated.resources.client_savings_item
 import androidclient.feature.client.generated.resources.client_savings_not_avilable
 import androidclient.feature.client.generated.resources.client_savings_pending_approval
@@ -124,7 +125,7 @@ fun SavingsAccountsScreen(
                     items(state.savingsAccounts) { savings ->
                         MifosActionsSavingsListingComponent(
                             accountNo = savings.accountNo.toString(),
-                            savingsProduct = "Savings Product: ",
+                            savingsProduct = stringResource(Res.string.client_product_saving_account),
                             savingsProductName = savings.productName.toString(),
                             // todo modify with currency symbol when not getting null from api, currently getting null
                             balance = if (savings.accountBalance != null) {
