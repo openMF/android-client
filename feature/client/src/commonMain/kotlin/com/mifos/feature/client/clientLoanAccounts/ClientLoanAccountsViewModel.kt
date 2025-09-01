@@ -16,6 +16,7 @@ import com.mifos.core.data.repository.ClientDetailsRepository
 import com.mifos.core.data.util.NetworkMonitor
 import com.mifos.core.ui.util.BaseViewModel
 import com.mifos.room.entities.accounts.loans.LoanAccountEntity
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
@@ -84,13 +85,12 @@ class ClientLoanAccountsViewModel(
 
     private fun checkNetworkAndGetLoanAccounts() {
         viewModelScope.launch {
-            networkMonitor.isOnline.collect { isConnected ->
-                when (isConnected) {
-                    true -> getLoanAccounts()
-                    false -> {
-                        mutableStateFlow.update {
-                            it.copy(dialogState = ClientLoanAccountsState.DialogState.Error("No internet connection, Try Again"))
-                        }
+            val isConnected = networkMonitor.isOnline.first()
+            when (isConnected) {
+                true -> getLoanAccounts()
+                false -> {
+                    mutableStateFlow.update {
+                        it.copy(dialogState = ClientLoanAccountsState.DialogState.Error("No internet connection, Try Again"))
                     }
                 }
             }

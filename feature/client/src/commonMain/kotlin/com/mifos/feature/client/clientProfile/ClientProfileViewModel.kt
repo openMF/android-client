@@ -147,7 +147,6 @@ data class ClientProfileState(
     val dialogState: DialogState? = null,
     val details: Map<StringResource, String> = emptyMap(),
     val networkConnection: Boolean = false,
-    val showAccountChooserDialog: Boolean = false,
 ) {
     /**
      * Sealed class representing possible dialog states.

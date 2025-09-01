@@ -55,9 +55,9 @@ import kotlin.collections.listOf
 @Composable
 internal fun ClientLoanAccountsScreenRoute(
     navigateBack: () -> Unit,
-    viewModel: ClientLoanAccountsViewModel = koinViewModel(),
     makeRepayment: (Int) -> Unit,
     viewAccount: (Int) -> Unit,
+    viewModel: ClientLoanAccountsViewModel = koinViewModel(),
 ) {
     val state by viewModel.stateFlow.collectAsStateWithLifecycle()
 
