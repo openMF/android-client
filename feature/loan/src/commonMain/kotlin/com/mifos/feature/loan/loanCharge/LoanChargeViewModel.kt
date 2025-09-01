@@ -14,7 +14,7 @@ import androidclient.feature.loan.generated.resources.feature_loan_failed_to_loa
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.mifos.core.common.utils.Constants
+import androidx.navigation.toRoute
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.domain.useCases.GetListOfLoanChargesUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -26,7 +26,7 @@ class LoanChargeViewModel(
     savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
 
-    val loanAccountNumber = savedStateHandle.getStateFlow(key = Constants.LOAN_ACCOUNT_NUMBER, initialValue = 0)
+    val loanAccountNumber = savedStateHandle.toRoute<LoanChargesScreenRoute>().loanAccountNumber
 
     private val _loanChargeUiState = MutableStateFlow<LoanChargeUiState>(LoanChargeUiState.Loading)
     val loanChargeUiState = _loanChargeUiState.asStateFlow()
@@ -34,13 +34,13 @@ class LoanChargeViewModel(
     private val _isRefreshing = MutableStateFlow(false)
     val isRefreshing = _isRefreshing.asStateFlow()
 
-    fun refreshLoanChargeList(loanAccountNumber: Int) {
+    fun refreshLoanChargeList() {
         _isRefreshing.value = true
-        loadLoanChargesList(loanAccountNumber = loanAccountNumber)
+        loadLoanChargesList()
         _isRefreshing.value = false
     }
 
-    fun loadLoanChargesList(loanAccountNumber: Int) = viewModelScope.launch {
+    fun loadLoanChargesList() = viewModelScope.launch {
         getListOfLoanChargesUseCase(loanAccountNumber).collect { result ->
             when (result) {
                 is DataState.Error ->

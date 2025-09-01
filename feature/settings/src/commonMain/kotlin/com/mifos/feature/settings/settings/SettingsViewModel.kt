@@ -28,7 +28,9 @@ import androidx.lifecycle.viewModelScope
 import com.mifos.core.common.enums.MifosAppLanguage
 import com.mifos.core.datastore.UserPreferencesRepository
 import com.mifos.core.datastore.model.AppTheme
+import com.mifos.core.datastore.model.DarkThemeConfig
 import com.mifos.core.designsystem.icon.MifosIcons
+import com.mifos.core.model.objects.LanguageConfig
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.first
@@ -48,7 +50,11 @@ class SettingsViewModel(
                 tenant = settings.tenant,
                 baseUrl = settings.baseUrl,
                 passcode = settings.passcode ?: "",
-                theme = settings.appTheme,
+                theme = when (settings.appTheme) {
+                    DarkThemeConfig.LIGHT -> AppTheme.LIGHT
+                    DarkThemeConfig.DARK -> AppTheme.DARK
+                    else -> AppTheme.SYSTEM
+                },
                 language = settings.language,
             )
         }
@@ -56,7 +62,13 @@ class SettingsViewModel(
 
     fun updateTheme(theme: AppTheme) {
         viewModelScope.launch {
-            prefManager.updateTheme(theme)
+            prefManager.updateTheme(
+                when (theme) {
+                    AppTheme.LIGHT -> DarkThemeConfig.LIGHT
+                    AppTheme.DARK -> DarkThemeConfig.DARK
+                    AppTheme.SYSTEM -> DarkThemeConfig.FOLLOW_SYSTEM
+                },
+            )
         }
     }
 
@@ -123,7 +135,7 @@ data class SettingsUiState(
     val baseUrl: String,
     val passcode: String,
     val theme: AppTheme = AppTheme.SYSTEM,
-    val language: MifosAppLanguage = MifosAppLanguage.SYSTEM_LANGUAGE,
+    val language: LanguageConfig = LanguageConfig.DEFAULT,
 ) {
     companion object {
         val DEFAULT = SettingsUiState(

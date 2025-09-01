@@ -18,6 +18,7 @@ import androidclient.feature.client.generated.resources.client_performance_histo
 import androidclient.feature.client.generated.resources.client_profile_general_header_actions
 import androidclient.feature.client.generated.resources.client_profile_general_header_linked_accounts
 import androidclient.feature.client.generated.resources.client_profile_general_header_performance_history
+import androidclient.feature.client.generated.resources.client_savings_not_avilable
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -43,10 +44,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.TextStyle
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavController
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.theme.AppColors
 import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.designsystem.theme.MifosTypography
+import com.mifos.core.ui.components.MifosBreadcrumbNavBar
 import com.mifos.core.ui.components.MifosErrorComponent
 import com.mifos.core.ui.components.MifosProgressIndicator
 import com.mifos.core.ui.components.MifosRowCard
@@ -58,6 +61,7 @@ import org.koin.compose.viewmodel.koinViewModel
 @Composable
 internal fun ClientProfileGeneralScreen(
     onNavigateBack: () -> Unit,
+    navController: NavController,
     upcomingCharges: (Int) -> Unit,
     loanAccounts: (Int) -> Unit,
     savingAccounts: (Int) -> Unit,
@@ -114,6 +118,7 @@ internal fun ClientProfileGeneralScreen(
         state = state,
         modifier = modifier,
         onAction = remember(viewModel) { { viewModel.trySendAction(it) } },
+        navController = navController,
     )
 
     ClientProfileGeneralDialogs(
@@ -151,6 +156,7 @@ private fun ClientProfileGeneralDialogs(
 @Composable
 internal fun ClientProfileGeneralScaffold(
     state: ClientProfileGeneralState,
+    navController: NavController,
     onAction: (ClientProfileGeneralAction) -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -160,61 +166,63 @@ internal fun ClientProfileGeneralScaffold(
         modifier = modifier,
     ) { paddingValues ->
         if (state.dialogState == null) {
-            Column(
-                modifier = Modifier.fillMaxSize().padding(paddingValues)
-                    .verticalScroll(rememberScrollState()).padding(
-                        vertical = DesignToken.padding.extraLarge,
-                        horizontal = DesignToken.padding.large,
-                    ),
-            ) {
-                Text(
-                    stringResource(Res.string.client_profile_general_header_performance_history),
-                    style = MaterialTheme.typography.labelLarge,
-                )
-
-                Spacer(Modifier.height(DesignToken.spacing.medium))
-
-                PerformanceHistoryCard(
-                    state = state,
-                )
-
-                Spacer(Modifier.height(DesignToken.spacing.largeIncreased))
-
-                Text(
-                    stringResource(Res.string.client_profile_general_header_actions),
-                    style = MaterialTheme.typography.labelLarge,
-                )
-
-                Spacer(Modifier.height(DesignToken.spacing.small))
-
-                clientProfileGeneralActions.forEach {
-                    MifosRowCard(
-                        title = stringResource(it.title),
-                        imageVector = it.icon,
-                        leftValues = listOf(
-                            TextUtil(
-                                text = stringResource(it.subTitle),
-                                style = MifosTypography.bodySmall,
-                                color = MaterialTheme.colorScheme.secondary,
-                            ),
+            Column(Modifier.fillMaxSize().padding(paddingValues)) {
+                MifosBreadcrumbNavBar(navController)
+                Column(
+                    modifier = Modifier.fillMaxSize()
+                        .verticalScroll(rememberScrollState()).padding(
+                            horizontal = DesignToken.padding.large,
                         ),
-                        rightValues = listOf(
-                            TextUtil(
-                                // TODO: The count values for each action has to derived from api.
-                                // Placeholder values.
-//                                text = "12",
-                                text = "",
-                                style = MifosTypography.bodySmall,
-                                color = AppColors.customEnable,
-                            ),
-                        ),
-                        modifier = Modifier.padding(vertical = DesignToken.padding.medium)
-                            .clickable {
-                                onAction(
-                                    ClientProfileGeneralAction.OnActionClick(it),
-                                )
-                            },
+                ) {
+                    Text(
+                        stringResource(Res.string.client_profile_general_header_performance_history),
+                        style = MaterialTheme.typography.labelLarge,
                     )
+
+                    Spacer(Modifier.height(DesignToken.spacing.medium))
+
+                    PerformanceHistoryCard(
+                        state = state,
+                    )
+
+                    Spacer(Modifier.height(DesignToken.spacing.largeIncreased))
+
+                    Text(
+                        stringResource(Res.string.client_profile_general_header_actions),
+                        style = MaterialTheme.typography.labelLarge,
+                    )
+
+                    Spacer(Modifier.height(DesignToken.spacing.small))
+
+                    clientProfileGeneralActions.forEach {
+                        MifosRowCard(
+                            title = stringResource(it.title),
+                            imageVector = it.icon,
+                            leftValues = listOf(
+                                TextUtil(
+                                    text = stringResource(it.subTitle),
+                                    style = MifosTypography.bodySmall,
+                                    color = MaterialTheme.colorScheme.secondary,
+                                ),
+                            ),
+                            rightValues = listOf(
+                                TextUtil(
+                                    // TODO: The count values for each action has to derived from api.
+                                    // Placeholder values.
+//                                text = "12",
+                                    text = "",
+                                    style = MifosTypography.bodySmall,
+                                    color = AppColors.customEnable,
+                                ),
+                            ),
+                            modifier = Modifier.padding(vertical = DesignToken.padding.medium)
+                                .clickable {
+                                    onAction(
+                                        ClientProfileGeneralAction.OnActionClick(it),
+                                    )
+                                },
+                        )
+                    }
                 }
             }
         }
@@ -239,28 +247,38 @@ fun PerformanceHistoryCard(state: ClientProfileGeneralState) {
             val performanceHistory = state.performanceHistory
             PerformanceHistoryRows(
                 stringResource(Res.string.client_performance_history_loan_cycle_count_label),
-                "${performanceHistory.loanCyclesCount}",
+                performanceHistory.loanCyclesCount?.toString()
+                    ?: stringResource(Res.string.client_savings_not_avilable),
 
             )
 
             PerformanceHistoryRows(
                 stringResource(Res.string.client_performance_history_active_loans_count_label),
-                "${performanceHistory.activeLoans}",
+                performanceHistory.activeLoans?.toString()
+                    ?: stringResource(Res.string.client_savings_not_avilable),
             )
 
             PerformanceHistoryRows(
                 stringResource(Res.string.client_performance_history_last_loan_amount_label),
-                "${state.currency} ${performanceHistory.lastLoanAmount}",
+
+                performanceHistory.lastLoanAmount?.let {
+                    state.currency + " " + it.toString()
+                }
+                    ?: stringResource(Res.string.client_savings_not_avilable),
             )
 
             PerformanceHistoryRows(
                 stringResource(Res.string.client_performance_history_active_savings_label),
-                "${performanceHistory.activeSavingsCount}",
+                performanceHistory.activeSavingsCount?.toString()
+                    ?: stringResource(Res.string.client_savings_not_avilable),
             )
 
             PerformanceHistoryRows(
                 stringResource(Res.string.client_performance_history_total_savings_label),
-                "${state.currency} ${performanceHistory.lastLoanAmount}",
+                performanceHistory.totalSaving?.let {
+                    state.currency + " " + it.toString()
+                }
+                    ?: stringResource(Res.string.client_savings_not_avilable),
             )
         }
     }

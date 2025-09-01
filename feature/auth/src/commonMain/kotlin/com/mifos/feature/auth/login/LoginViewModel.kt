@@ -117,7 +117,6 @@ class LoginViewModel(
                     officeId = user.officeId!!,
                     officeName = user.officeName,
                     permissions = user.permissions!!,
-
                 ),
             )
         }

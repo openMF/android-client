@@ -21,12 +21,14 @@ data class SavingsAccountsRoute(
 
 fun NavGraphBuilder.savingsAccountsDestination(
     navigateBack: () -> Unit,
+    navController: NavController,
     navigateToViewAccount: (Int) -> Unit,
 ) {
     composable<SavingsAccountsRoute> {
         SavingsAccountsScreenRoute(
             navigateBack = navigateBack,
             navigateToViewAccount = navigateToViewAccount,
+            navController = navController,
         )
     }
 }

@@ -73,12 +73,11 @@ internal fun SavingsAccountApprovalScreen(
     viewModel: SavingsAccountApprovalViewModel = koinViewModel(),
 ) {
     val uiState by viewModel.savingsAccountApprovalUiState.collectAsStateWithLifecycle()
-    val savingsAccountId by viewModel.savingsAccountId.collectAsStateWithLifecycle()
 
     SavingsAccountApprovalScreen(
         uiState = uiState,
         navigateBack = navigateBack,
-        approveLoan = { viewModel.approveSavingsApplication(savingsAccountId, it) },
+        approveLoan = { viewModel.approveSavingsApplication(it) },
     )
 }
 

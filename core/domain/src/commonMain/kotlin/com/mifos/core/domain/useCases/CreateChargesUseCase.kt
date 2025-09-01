@@ -20,7 +20,6 @@ import kotlinx.coroutines.flow.flow
 class CreateChargesUseCase(
     private val repository: ChargeDialogRepository,
 ) {
-
     operator fun invoke(
         clientId: Int,
         payload: ChargesPayload,

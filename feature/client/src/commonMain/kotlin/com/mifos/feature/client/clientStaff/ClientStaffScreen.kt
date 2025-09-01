@@ -36,6 +36,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavController
 import com.mifos.core.designsystem.component.MifosOutlinedButton
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosTextButton
@@ -43,6 +44,7 @@ import com.mifos.core.designsystem.component.MifosTextFieldDropdown
 import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.designsystem.theme.MifosTypography
+import com.mifos.core.ui.components.MifosBreadcrumbNavBar
 import com.mifos.core.ui.components.MifosErrorComponent
 import com.mifos.core.ui.components.MifosProgressIndicator
 import com.mifos.core.ui.components.MifosStatusDialog
@@ -53,6 +55,7 @@ import org.koin.compose.viewmodel.koinViewModel
 @Composable
 internal fun ClientStaffScreen(
     onNavigateBack: () -> Unit,
+    navController: NavController,
     onNavigateNext: (Int) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: ClientStaffViewModel = koinViewModel(),
@@ -70,6 +73,7 @@ internal fun ClientStaffScreen(
         state = state,
         onAction = remember(viewModel) { { viewModel.trySendAction(it) } },
         modifier = modifier,
+        navController = navController,
     )
 }
 
@@ -77,6 +81,7 @@ internal fun ClientStaffScreen(
 private fun ClientStaffScaffold(
     state: ClientStaffState,
     onAction: (ClientStaffAction) -> Unit,
+    navController: NavController,
     modifier: Modifier = Modifier,
 ) {
     MifosScaffold(
@@ -92,75 +97,81 @@ private fun ClientStaffScaffold(
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(paddingValues)
-                    .padding(
-                        DesignToken.padding.large,
-                    ),
+                    .padding(paddingValues),
             ) {
-                if (state.staffOptions.isNotEmpty()) {
-                    Text(
-                        text = stringResource(Res.string.label_assign_staff),
-                        style = MifosTypography.labelLargeEmphasized,
-                    )
-                    Spacer(Modifier.height(DesignToken.padding.largeIncreased))
-                    MifosTextFieldDropdown(
-                        value = state.staffOptions[state.currentSelectedIndex].displayName,
-                        onValueChanged = {},
-                        onOptionSelected = { index, value ->
-                            onAction(ClientStaffAction.OptionChanged(index))
-                        },
-                        options = state.staffOptions.map { it.displayName },
-                        label = stringResource(Res.string.label_choose_staff),
-                        modifier = Modifier.fillMaxWidth(),
-                    )
-                    Spacer(Modifier.height(DesignToken.padding.largeIncreased))
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                    ) {
-                        MifosOutlinedButton(
-                            onClick = {
-                                onAction(ClientStaffAction.NavigateBack)
-                            },
-                            leadingIcon = {
-                                Icon(
-                                    imageVector = MifosIcons.ChevronLeft,
-                                    contentDescription = null,
-                                    modifier = Modifier.size(DesignToken.sizes.iconAverage),
-                                    tint = MaterialTheme.colorScheme.primary,
-                                )
-                            },
-                            text = {
-                                Text(
-                                    text = stringResource(Res.string.btn_back),
-                                    color = MaterialTheme.colorScheme.primary,
-                                    style = MifosTypography.labelLarge,
-                                )
-                            },
-                            modifier = Modifier.weight(1f),
+                MifosBreadcrumbNavBar(navController)
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(
+                            horizontal = DesignToken.padding.large,
+                        ),
+                ) {
+                    if (state.staffOptions.isNotEmpty()) {
+                        Text(
+                            text = stringResource(Res.string.label_assign_staff),
+                            style = MifosTypography.labelLargeEmphasized,
                         )
-                        Spacer(Modifier.padding(DesignToken.padding.small))
-                        MifosTextButton(
-                            onClick = {
-                                onAction(ClientStaffAction.OnSubmit)
+                        Spacer(Modifier.height(DesignToken.padding.largeIncreased))
+                        MifosTextFieldDropdown(
+                            value = state.staffOptions[state.currentSelectedIndex].displayName,
+                            onValueChanged = {},
+                            onOptionSelected = { index, value ->
+                                onAction(ClientStaffAction.OptionChanged(index))
                             },
-                            leadingIcon = {
-                                Icon(
-                                    imageVector = MifosIcons.Check,
-                                    contentDescription = null,
-                                    modifier = Modifier.size(DesignToken.sizes.iconAverage),
-                                )
-                            },
-                            text = {
-                                Text(
-                                    text = stringResource(Res.string.btn_submit),
-                                    style = MifosTypography.labelLarge,
-                                )
-                            },
-                            modifier = Modifier.weight(1f),
+                            options = state.staffOptions.map { it.displayName },
+                            label = stringResource(Res.string.label_choose_staff),
+                            modifier = Modifier.fillMaxWidth(),
                         )
+                        Spacer(Modifier.height(DesignToken.padding.largeIncreased))
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                        ) {
+                            MifosOutlinedButton(
+                                onClick = {
+                                    onAction(ClientStaffAction.NavigateBack)
+                                },
+                                leadingIcon = {
+                                    Icon(
+                                        imageVector = MifosIcons.ChevronLeft,
+                                        contentDescription = null,
+                                        modifier = Modifier.size(DesignToken.sizes.iconAverage),
+                                        tint = MaterialTheme.colorScheme.primary,
+                                    )
+                                },
+                                text = {
+                                    Text(
+                                        text = stringResource(Res.string.btn_back),
+                                        color = MaterialTheme.colorScheme.primary,
+                                        style = MifosTypography.labelLarge,
+                                    )
+                                },
+                                modifier = Modifier.weight(1f),
+                            )
+                            Spacer(Modifier.padding(DesignToken.padding.small))
+                            MifosTextButton(
+                                onClick = {
+                                    onAction(ClientStaffAction.OnSubmit)
+                                },
+                                leadingIcon = {
+                                    Icon(
+                                        imageVector = MifosIcons.Check,
+                                        contentDescription = null,
+                                        modifier = Modifier.size(DesignToken.sizes.iconAverage),
+                                    )
+                                },
+                                text = {
+                                    Text(
+                                        text = stringResource(Res.string.btn_submit),
+                                        style = MifosTypography.labelLarge,
+                                    )
+                                },
+                                modifier = Modifier.weight(1f),
+                            )
+                        }
+                    } else {
+                        Text(stringResource(Res.string.msg_cannot_assign_staff))
                     }
-                } else {
-                    Text(stringResource(Res.string.msg_cannot_assign_staff))
                 }
             }
         }

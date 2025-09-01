@@ -10,6 +10,8 @@
 package cmp.navigation.di
 
 import cmp.navigation.ComposeAppViewModel
+import cmp.navigation.authenticated.AuthenticatedNavbarNavigationViewModel
+import cmp.navigation.rootnav.RootNavViewModel
 import com.mifos.core.common.network.di.DispatchersModule
 import com.mifos.core.data.di.RepositoryModule
 import com.mifos.core.datastore.di.PreferencesModule
@@ -61,6 +63,8 @@ object KoinModules {
     }
     private val sharedModule = module {
         viewModelOf(::ComposeAppViewModel)
+        viewModelOf(::RootNavViewModel)
+        viewModelOf(::AuthenticatedNavbarNavigationViewModel)
     }
 
     private val featureModules = module {

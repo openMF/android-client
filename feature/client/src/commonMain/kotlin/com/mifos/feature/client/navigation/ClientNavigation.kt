@@ -10,7 +10,6 @@
 package com.mifos.feature.client.navigation
 
 import FormWidgetDTO
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavType
@@ -18,6 +17,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import androidx.navigation.navigation
 import com.mifos.core.common.utils.Constants
+import com.mifos.feature.client.clientApplyNewApplications.clientApplyNewApplicationRoute
+import com.mifos.feature.client.clientApplyNewApplications.navigateToClientApplyNewApplicationScreen
 import com.mifos.feature.client.clientCharges.ClientChargesScreen
 import com.mifos.feature.client.clientClosure.clientClosureDestination
 import com.mifos.feature.client.clientClosure.navigateToClientClosureRoute
@@ -34,6 +35,10 @@ import com.mifos.feature.client.clientEditProfile.navigateToClientProfileEditPro
 import com.mifos.feature.client.clientGeneral.clientProfileGeneralDestination
 import com.mifos.feature.client.clientGeneral.navigateToClientProfileGeneralRoute
 import com.mifos.feature.client.clientIdentifiers.ClientIdentifiersScreen
+import com.mifos.feature.client.clientIdentitiesList.clientIdentitiesListDestination
+import com.mifos.feature.client.clientIdentitiesList.navigateToClientIdentifiersScreen
+import com.mifos.feature.client.clientLoanAccounts.clientLoanAccountsDestination
+import com.mifos.feature.client.clientLoanAccounts.navigateToClientLoanAccountsRoute
 import com.mifos.feature.client.clientPinpoint.PinpointClientScreen
 import com.mifos.feature.client.clientProfile.clientProfileDestination
 import com.mifos.feature.client.clientProfile.navigateToClientProfileRoute
@@ -48,17 +53,22 @@ import com.mifos.feature.client.clientUpdateDefaultAccount.navigateToUpdateDefau
 import com.mifos.feature.client.clientUpdateDefaultAccount.updateDefaultAccountDestination
 import com.mifos.feature.client.clientsList.ClientListScreen
 import com.mifos.feature.client.createNewClient.CreateNewClientScreen
+import com.mifos.feature.client.recurringDepositAccount.clientRecurringDepositAccountDestination
+import com.mifos.feature.client.recurringDepositAccount.navigateToRecurringDepositAccountRoute
 import com.mifos.feature.client.savingsAccounts.navigateToClientSavingsAccountsRoute
 import com.mifos.feature.client.savingsAccounts.savingsAccountsDestination
 import com.mifos.room.entities.accounts.savings.SavingAccountDepositTypeEntity
 import com.mifos.room.entities.noncore.DataTableEntity
 import com.mifos.room.entities.survey.SurveyEntity
+import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 import kotlin.reflect.KFunction4
 
+@Serializable
+data object ClientNavGraph
+
 fun NavGraphBuilder.clientNavGraph(
     navController: NavController,
-    paddingValues: PaddingValues,
     addLoanAccount: (Int) -> Unit,
     addSavingsAccount: (Int) -> Unit,
     documents: (Int) -> Unit,
@@ -69,14 +79,11 @@ fun NavGraphBuilder.clientNavGraph(
     activateClient: (Int) -> Unit,
     hasDatatables: KFunction4<List<DataTableEntity>, Any?, Int, MutableList<List<FormWidgetDTO>>, Unit>,
     onDocumentClicked: (Int, String) -> Unit,
-    navigateToHome: () -> Unit,
 ) {
-    navigation(
-        startDestination = ClientScreens.ClientListScreen.route,
-        route = "client_screen_route",
+    navigation<ClientNavGraph>(
+        startDestination = ClientListScreenRoute,
     ) {
         clientListScreenRoute(
-            paddingValues = paddingValues,
             onClientSelect = navController::navigateToClientProfileRoute,
             createNewClient = navController::navigateCreateClientScreen,
         )
@@ -126,19 +133,28 @@ fun NavGraphBuilder.clientNavGraph(
             onNavigateBack = navController::popBackStack,
             notes = notes,
             documents = documents,
-            identifiers = navController::navigateClientIdentifierScreen,
+            identifiers = navController::navigateToClientIdentifiersScreen,
             navigateToClientDetailsScreen = navController::navigateToClientDetailsProfileRoute,
             viewAssociatedAccounts = navController::navigateToClientProfileGeneralRoute,
+            navController = navController,
         )
 
         clientProfileGeneralDestination(
             onNavigateBack = navController::popBackStack,
-            savingAccounts = { clientId ->
-                navController.navigateToClientSavingsAccountsRoute(clientId)
-            },
+            navController = navController,
+            savingAccounts = navController::navigateToClientSavingsAccountsRoute,
+            loanAccounts = navController::navigateToClientLoanAccountsRoute,
+            recurringDepositAccounts = navController::navigateToRecurringDepositAccountRoute,
+        )
+
+        clientRecurringDepositAccountDestination(
+            navigateBack = navController::popBackStack,
+            {},
+            {},
         )
 
         clientProfileDetailsDestination(
+            navController = navController,
             onNavigateBack = navController::popBackStack,
             navigateToUpdatePhoto = navController::navigateToClientProfileEditProfileRoute,
             navigateToAssignStaff = navController::navigateToClientStaffRoute,
@@ -147,49 +163,73 @@ fun NavGraphBuilder.clientNavGraph(
             navigateToUpdateDefaultAccount = navController::navigateToUpdateDefaultAccountRoute,
             navigateToClientClosure = navController::navigateToClientClosureRoute,
             navigateToCollateral = navController::navigateToClientCollateralRoute,
+            navigateToApplyNewApplication = navController::navigateToClientApplyNewApplicationScreen,
         )
         clientEditProfileDestination(
             onNavigateBack = navController::popBackStack,
+            navController = navController,
         )
         clientEditDetailsDestination(
             onNavigateBack = navController::popBackStack,
             onNavigateNext = navController::navigateToClientDetailsProfileRouteOnStatus,
+            navController = navController,
         )
         clientStaffDestination(
             onNavigateBack = navController::popBackStack,
             onNavigateNext = navController::navigateToClientDetailsProfileRouteOnStatus,
+            navController = navController,
         )
         clientTransferDestination(
             onNavigateBack = navController::popBackStack,
             onNavigateNext = navController::navigateToClientDetailsProfileRouteOnStatus,
+            navController = navController,
         )
         updateDefaultAccountDestination(
             onNavigateBack = navController::popBackStack,
             onNavigateNext = navController::navigateToClientDetailsProfileRouteOnStatus,
+            navController = navController,
         )
         clientClosureDestination(
             onNavigateBack = navController::popBackStack,
             onNavigateNext = navController::navigateToClientDetailsProfileRouteOnStatus,
+            navController = navController,
         )
         savingsAccountsDestination(
             navigateBack = navController::popBackStack,
             navigateToViewAccount = { },
+            navController = navController,
         )
         clientCollateralDestination(
             onNavigateBack = navController::popBackStack,
             onNavigateNext = navController::navigateToClientDetailsProfileRouteOnStatus,
+            navController = navController,
+        )
+        clientLoanAccountsDestination(
+            navigateBack = navController::popBackStack,
+            navigateToViewAccount = {},
+            navigateToMakeRepayment = {},
+        )
+        clientIdentitiesListDestination(
+            addNewClientIdentity = {},
+            navController = navController,
+        )
+        clientApplyNewApplicationRoute(
+            onNavigateBack = navController::popBackStack,
+            onNavigateApplyLoanAccount = { },
+            onNavigateApplySavingsAccount = { },
+            onNavigateApplyShareAccount = { },
+            onNavigateApplyRecurringAccount = { },
+            onNavigateApplyFixedAccount = { },
+            navController = navController,
         )
     }
 }
 
 fun NavGraphBuilder.clientListScreenRoute(
-    paddingValues: PaddingValues,
     onClientSelect: (Int) -> Unit,
     createNewClient: () -> Unit,
 ) {
-    composable(
-        route = ClientScreens.ClientListScreen.route,
-    ) {
+    composable<ClientListScreenRoute> {
         ClientListScreen(
             createNewClient = createNewClient,
             onClientClick = onClientSelect,
@@ -367,6 +407,9 @@ fun NavController.navigateCreateClientScreen() {
     navigate(ClientScreens.CreateClientScreen.route)
 }
 
+@Serializable
+data object ClientListScreenRoute
+
 fun NavController.navigateToClientListScreen() {
-    navigate(ClientScreens.ClientListScreen.route)
+    navigate(ClientListScreenRoute)
 }

@@ -101,11 +101,11 @@ internal fun LoanRepaymentScreen(
     }
 
     LoanRepaymentScreen(
-        loanId = viewmodel.loanId,
-        clientName = viewmodel.clientName,
-        loanProductName = viewmodel.loanProductName,
-        amountInArrears = viewmodel.amountInArrears,
-        loanAccountNumber = viewmodel.loanAccountNumber,
+        loanId = viewmodel.arg.loanId,
+        clientName = viewmodel.arg.clientName,
+        loanProductName = viewmodel.arg.loanProductName,
+        amountInArrears = viewmodel.arg.amountInArrears,
+        loanAccountNumber = viewmodel.arg.loanAccountNumber,
         uiState = uiState,
         navigateBack = navigateBack,
         onRetry = { viewmodel.checkDatabaseLoanRepaymentByLoanId() },

@@ -102,16 +102,16 @@ internal fun LoanAccountSummaryScreen(
     viewModel: LoanAccountSummaryViewModel = koinViewModel(),
 ) {
     val uiState by viewModel.loanAccountSummaryUiState.collectAsStateWithLifecycle()
-    val loanAccountNumber by viewModel.loanAccountNumber.collectAsStateWithLifecycle()
+    val loanAccountNumber = viewModel.loanAccountNumber
 
     LaunchedEffect(key1 = Unit) {
-        viewModel.loadLoanById(loanAccountNumber)
+        viewModel.loadLoanById()
     }
 
     LoanAccountSummaryScreen(
         uiState = uiState,
         navigateBack = navigateBack,
-        onRetry = { viewModel.loadLoanById(loanAccountNumber) },
+        onRetry = { viewModel.loadLoanById() },
         onMoreInfoClicked = {
             onMoreInfoClicked.invoke(
                 Constants.DATA_TABLE_NAME_LOANS,
