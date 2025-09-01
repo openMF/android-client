@@ -71,7 +71,7 @@ fun RecurringDepositAccountScreen(
                 onApproveAccount(event.accountId)
             }
 
-            RecurringDepositAccountEvent.OnNavigateBack -> navigateBack
+            RecurringDepositAccountEvent.OnNavigateBack -> navigateBack()
             is RecurringDepositAccountEvent.OnViewAccount -> {
                 onViewAccount(event.accountId)
             }
