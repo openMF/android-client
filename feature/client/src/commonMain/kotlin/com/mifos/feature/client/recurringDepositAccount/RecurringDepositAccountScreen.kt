@@ -78,78 +78,15 @@ fun RecurringDepositAccountScreen(
         }
     }
 
-    val action: (RecurringDepositAccountAction) -> Unit = remember(viewModel) {
-        {
-            when (it) {
-                RecurringDepositAccountAction.CloseDialog -> {
-                    viewModel.trySendAction(RecurringDepositAccountAction.CloseDialog)
-                }
-
-                RecurringDepositAccountAction.NavigateBack -> {
-                    viewModel.trySendAction(RecurringDepositAccountAction.NavigateBack)
-                }
-
-                RecurringDepositAccountAction.Refresh -> {
-                    viewModel.trySendAction(RecurringDepositAccountAction.Refresh)
-                }
-
-                is RecurringDepositAccountAction.Search -> {
-                    viewModel.trySendAction(
-                        RecurringDepositAccountAction.Search(it.query),
-                    )
-                }
-
-                RecurringDepositAccountAction.ToggleFilter -> {
-                    viewModel.trySendAction(RecurringDepositAccountAction.ToggleFilter)
-                }
-
-                RecurringDepositAccountAction.ToggleSearch -> {
-                    viewModel.trySendAction(RecurringDepositAccountAction.ToggleSearch)
-                }
-
-                is RecurringDepositAccountAction.UpdateSearch -> {
-                    viewModel.trySendAction(
-                        RecurringDepositAccountAction.UpdateSearch(it.query),
-                    )
-                }
-
-                is RecurringDepositAccountAction.ViewAccount -> {
-                    viewModel.trySendAction(
-                        RecurringDepositAccountAction.ViewAccount(it.accountId),
-                    )
-                }
-
-                is RecurringDepositAccountAction.ApproveAccount -> {
-                    viewModel.trySendAction(
-                        RecurringDepositAccountAction.ApproveAccount(it.accountId),
-                    )
-                }
-            }
-        }
-    }
-
     RecurringDepositAccountDialog(
         state,
-        onCloseDialog = {
-            action(RecurringDepositAccountAction.CloseDialog)
-        },
+        onAction = remember(viewModel) { { viewModel.trySendAction(it) } },
     )
 
     RecurringDepositAccountScaffold(
         state = state,
-        onNavigateBack = navigateBack,
         modifier = modifier,
-        onSearchClick = {
-            action(RecurringDepositAccountAction.Search(it))
-        },
-        onToggleFilter = { action(RecurringDepositAccountAction.ToggleFilter) },
-        onToggleSearch = { action(RecurringDepositAccountAction.ToggleSearch) },
-        onViewAccount = {
-            action(RecurringDepositAccountAction.ViewAccount(accountId = state.clientId))
-        },
-        onApproveAccount = {
-            action(RecurringDepositAccountAction.ApproveAccount(accountId = state.clientId))
-        },
+        onAction = remember(viewModel) { { viewModel.trySendAction(it) } },
     )
 }
 
@@ -157,7 +94,7 @@ fun RecurringDepositAccountScreen(
 @Composable
 internal fun RecurringDepositAccountDialog(
     state: RecurringDepositAccountState,
-    onCloseDialog: () -> Unit,
+    onAction: (RecurringDepositAccountAction) -> Unit,
 ) {
     when (state.dialogState) {
         is RecurringDepositAccountState.DialogState.Error -> {
@@ -166,7 +103,9 @@ internal fun RecurringDepositAccountDialog(
                 text = { Text(text = state.dialogState.message) },
                 confirmButton = {
                     TextButton(
-                        onClick = onCloseDialog,
+                        onClick = {
+                            onAction(RecurringDepositAccountAction.CloseDialog)
+                        },
                     ) {
                         Text(stringResource(Res.string.feature_client_dialog_action_ok))
                     }
@@ -184,17 +123,13 @@ internal fun RecurringDepositAccountDialog(
 @Composable
 internal fun RecurringDepositAccountScaffold(
     state: RecurringDepositAccountState,
-    onNavigateBack: () -> Unit,
     modifier: Modifier = Modifier,
-    onSearchClick: (String) -> Unit = {},
-    onUpdateSearch: (String) -> Unit = {},
-    onToggleFilter: () -> Unit = {},
-    onToggleSearch: () -> Unit = {},
-    onViewAccount: () -> Unit = {},
-    onApproveAccount: () -> Unit = {},
+    onAction: (RecurringDepositAccountAction) -> Unit,
 ) {
     MifosScaffold(
-        onBackPressed = onNavigateBack,
+        onBackPressed = {
+            onAction(RecurringDepositAccountAction.NavigateBack)
+        },
         modifier = modifier,
         title = "",
     ) { paddingValues ->
@@ -210,8 +145,12 @@ internal fun RecurringDepositAccountScaffold(
             val notAvailableText = stringResource(Res.string.client_savings_not_avilable)
             RecurringDepositAccountHeader(
                 state.recurringDepositAccounts.size.toString(),
-                onToggleSearch = onToggleSearch,
-                onToggleFilter = onToggleFilter,
+                onToggleSearch = {
+                    onAction(RecurringDepositAccountAction.ToggleSearch)
+                },
+                onToggleFilter = {
+                    onAction(RecurringDepositAccountAction.ToggleFilter)
+                },
             )
 
             // todo implement search bar functionality
@@ -219,12 +158,13 @@ internal fun RecurringDepositAccountScaffold(
                 MifosSearchBar(
                     query = state.searchText,
                     onQueryChange = {
-                        onUpdateSearch(it)
-                    },
+                        onAction(RecurringDepositAccountAction.Search(it))                    },
                     onSearchClick = {
-                        onSearchClick(it)
+                        onAction(RecurringDepositAccountAction.Search(it))
                     },
-                    onBackClick = onToggleSearch,
+                    onBackClick = {
+                        onAction(RecurringDepositAccountAction.ToggleSearch)
+                    },
                 )
             }
 
@@ -259,11 +199,19 @@ internal fun RecurringDepositAccountScaffold(
                             },
                         ) { actions ->
                             when (actions) {
-                                Actions.ViewAccount -> onApproveAccount
-                                Actions.ApproveAccount -> onViewAccount
+                                Actions.ViewAccount -> {
+                                    onAction(
+                                        RecurringDepositAccountAction.ViewAccount(state.clientId)
+                                    )
+                                }
+                                Actions.ApproveAccount -> {
+                                    RecurringDepositAccountAction.ApproveAccount(state.clientId)
+                                }
                                 else -> null
                             }
                         }
+
+                        Spacer(modifier = Modifier.height(DesignToken.spacing.small))
                     }
                 }
             }
