@@ -28,13 +28,15 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
+@Serializable
+data object IndividualCollectionSheetNavGraph
+
 fun NavGraphBuilder.individualCollectionSheetNavGraph(
     navController: NavController,
     onBackPressed: () -> Unit,
 ) {
-    navigation(
-        route = "generate_collection_sheet",
-        startDestination = CollectionSheetScreens.IndividualCollectionSheetScreen.route,
+    navigation<IndividualCollectionSheetNavGraph>(
+        startDestination = IndividualCollectionSheetScreenRoute,
     ) {
         individualCollectionSheetScreen(
             onBackPressed = onBackPressed,
@@ -53,13 +55,14 @@ fun NavGraphBuilder.individualCollectionSheetNavGraph(
     }
 }
 
+@Serializable
+data object IndividualCollectionSheetScreenRoute
+
 private fun NavGraphBuilder.individualCollectionSheetScreen(
     onBackPressed: () -> Unit,
     onDetail: (String, IndividualCollectionSheet) -> Unit,
 ) {
-    composable(
-        route = CollectionSheetScreens.IndividualCollectionSheetScreen.route,
-    ) {
+    composable<IndividualCollectionSheetScreenRoute> {
         IndividualCollectionSheetScreen(
             onBackPressed = onBackPressed,
             onDetail = onDetail,
@@ -67,6 +70,7 @@ private fun NavGraphBuilder.individualCollectionSheetScreen(
     }
 }
 
+// TODO : change while implementing screens because this is not primitive
 private fun NavGraphBuilder.individualCollectionSheetDetailScreen(
     onBackPressed: () -> Unit,
     submit: (Int, IndividualCollectionSheetPayload, List<String>, LoanAndClientName, List<PaymentTypeOptions>, Int) -> Unit,
@@ -84,16 +88,20 @@ private fun NavGraphBuilder.individualCollectionSheetDetailScreen(
     }
 }
 
+@Serializable
+data object GenerateCollectionSheetScreenRoute
+
 fun NavGraphBuilder.generateCollectionSheetScreen(
     onBackPressed: () -> Unit,
 ) {
-    composable(CollectionSheetScreens.GenerateCollectionSheetScreen.route) {
+    composable<GenerateCollectionSheetScreenRoute> {
         GenerateCollectionSheetScreen(
             onBackPressed = onBackPressed,
         )
     }
 }
 
+// TODO:change while implementing screens because this is not primitive
 fun NavGraphBuilder.paymentDetailsScreen() {
     composable(
         route = CollectionSheetScreens.PaymentDetailsScreen.route,
@@ -109,6 +117,10 @@ fun NavGraphBuilder.paymentDetailsScreen() {
 
 fun NavController.navigateToIndividualCollectionSheetDetailScreen(sheet: IndividualCollectionSheet) {
     navigate(CollectionSheetScreens.IndividualCollectionSheetDetailScreen.argument(sheet))
+}
+
+fun NavController.navigateToIndividualCollectionSheetScreen() {
+    navigate(IndividualCollectionSheetScreenRoute)
 }
 
 fun NavController.navigateToPaymentDetailsScreen(

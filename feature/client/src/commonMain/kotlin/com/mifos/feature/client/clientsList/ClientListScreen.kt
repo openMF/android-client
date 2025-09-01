@@ -11,7 +11,6 @@ package com.mifos.feature.client.clientsList
 
 import androidclient.feature.client.generated.resources.Res
 import androidclient.feature.client.generated.resources.account_number_prefix
-import androidclient.feature.client.generated.resources.feature_client_client
 import androidclient.feature.client.generated.resources.string_not_available
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -38,7 +37,6 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.PagingData
 import com.mifos.core.designsystem.component.BasicDialogState
 import com.mifos.core.designsystem.component.MifosBasicDialog
-import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.designsystem.theme.AppColors
 import com.mifos.core.designsystem.theme.DesignToken
@@ -162,52 +160,46 @@ private fun ClientListContentScreen(
     modifier: Modifier = Modifier,
     onAction: (ClientListAction) -> Unit,
 ) {
-    MifosScaffold(
-        title = stringResource(Res.string.feature_client_client),
-        onBackPressed = { },
-        modifier = modifier,
-    ) { paddingValues ->
-        if (state.isEmpty) {
-            MifosEmptyCard("No clients found")
-        }
-        if (state.clients.isNotEmpty()) {
-            ClientListContent(
-                clientsList = state.clients,
-                onClientClick = { clientId ->
-                    onAction(ClientListAction.OnClientClick(clientId))
+    if (state.isEmpty) {
+        MifosEmptyCard("No clients found")
+    }
+    if (state.clients.isNotEmpty()) {
+        ClientListContent(
+            clientsList = state.clients,
+            onClientClick = { clientId ->
+                onAction(ClientListAction.OnClientClick(clientId))
+            },
+            modifier = modifier.padding(DesignToken.padding.large),
+            fetchImage = {
+                onAction(ClientListAction.FetchImage(it))
+            },
+            images = state.clientImages,
+        )
+    }
+    if (state.clientsFlow != null) {
+        Column(
+            Modifier.fillMaxSize(),
+        ) {
+            if (state.dialogState == null) {
+                ClientActions(
+                    state = state,
+                    onAction = onAction,
+                )
+            }
+            LazyColumnForClientListApi(
+                pagingFlow = state.clientsFlow,
+                onRefresh = {
+                    onAction(ClientListAction.RefreshClients)
                 },
-                modifier = Modifier.padding(DesignToken.padding.large),
+                onClientSelect = {
+                    onAction(ClientListAction.OnClientClick(it))
+                },
+                modifier = Modifier,
                 fetchImage = {
                     onAction(ClientListAction.FetchImage(it))
                 },
                 images = state.clientImages,
             )
-        }
-        if (state.clientsFlow != null) {
-            Column(
-                Modifier.fillMaxSize().padding(paddingValues),
-            ) {
-                if (state.dialogState == null) {
-                    ClientActions(
-                        state = state,
-                        onAction = onAction,
-                    )
-                }
-                LazyColumnForClientListApi(
-                    pagingFlow = state.clientsFlow,
-                    onRefresh = {
-                        onAction(ClientListAction.RefreshClients)
-                    },
-                    onClientSelect = {
-                        onAction(ClientListAction.OnClientClick(it))
-                    },
-                    modifier = Modifier,
-                    fetchImage = {
-                        onAction(ClientListAction.FetchImage(it))
-                    },
-                    images = state.clientImages,
-                )
-            }
         }
     }
 }

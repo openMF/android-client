@@ -73,12 +73,11 @@ internal fun SavingsAccountActivateScreen(
     viewModel: SavingsAccountActivateViewModel = koinViewModel(),
 ) {
     val uiState by viewModel.savingsAccountActivateUiState.collectAsStateWithLifecycle()
-    val savingsAccountId by viewModel.savingsAccountId.collectAsStateWithLifecycle()
 
     SavingsAccountActivateScreen(
         uiState = uiState,
         navigateBack = navigateBack,
-        activateSavings = { viewModel.activateSavings(savingsAccountId, it) },
+        activateSavings = { viewModel.activateSavings(it) },
     )
 }
 

@@ -12,10 +12,11 @@ package com.mifos.feature.savings.savingsAccountApproval
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.mifos.core.common.utils.Constants
+import androidx.navigation.toRoute
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.domain.useCases.ApproveSavingsApplicationUseCase
 import com.mifos.core.model.objects.account.loan.SavingsApproval
+import com.mifos.feature.savings.navigation.SavingsAccountApproval
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -30,16 +31,16 @@ class SavingsAccountApprovalViewModel(
 ) : ViewModel() {
 
     val savingsAccountId =
-        savedStateHandle.getStateFlow(key = Constants.SAVINGS_ACCOUNT_ID, initialValue = 0)
+        savedStateHandle.toRoute<SavingsAccountApproval>().savingsAccountId
 
     private val _savingsAccountApprovalUiState =
         MutableStateFlow<SavingsAccountApprovalUiState>(SavingsAccountApprovalUiState.Initial)
     val savingsAccountApprovalUiState: StateFlow<SavingsAccountApprovalUiState>
         get() = _savingsAccountApprovalUiState.asStateFlow()
 
-    fun approveSavingsApplication(accountId: Int, savingsApproval: SavingsApproval?) =
+    fun approveSavingsApplication(savingsApproval: SavingsApproval?) =
         viewModelScope.launch {
-            approveSavingsApplicationUseCase(accountId, savingsApproval)
+            approveSavingsApplicationUseCase(savingsAccountId, savingsApproval)
                 .collect { dataState ->
                     when (dataState) {
                         is DataState.Error -> {

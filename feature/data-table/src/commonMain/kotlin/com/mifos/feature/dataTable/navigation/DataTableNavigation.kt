@@ -17,7 +17,6 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import androidx.navigation.navigation
 import com.mifos.core.common.utils.Constants
-import com.mifos.core.model.objects.nav.DataTableNavigationArg
 import com.mifos.feature.dataTable.dataTable.DataTableScreen
 import com.mifos.feature.dataTable.dataTableData.DataTableDataScreen
 import com.mifos.feature.dataTable.dataTableList.DataTableListNavArgs
@@ -25,15 +24,18 @@ import com.mifos.feature.dataTable.dataTableList.DataTableListScreen
 import com.mifos.room.entities.client.ClientPayloadEntity
 import com.mifos.room.entities.navigation.DataTableDataNavigationArg
 import com.mifos.room.entities.noncore.DataTableEntity
+import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
+
+@Serializable
+data object DataTableNavGraph
 
 fun NavGraphBuilder.dataTableNavGraph(
     navController: NavController,
     clientCreated: (ClientPayloadEntity, Boolean) -> Unit,
 ) {
-    navigation(
-        startDestination = DataTableScreens.DataTableScreen.route,
-        route = DataTableScreens.DataTableScreenRoute.route,
+    navigation<DataTableNavGraph>(
+        startDestination = DataTableRoute(),
     ) {
         dataTableRoute(
             onBackPressed = navController::popBackStack,
@@ -55,15 +57,7 @@ fun NavGraphBuilder.dataTableRoute(
     onBackPressed: () -> Unit,
     onClick: (table: String, entityId: Int, dataTable: DataTableEntity) -> Unit,
 ) {
-    composable(
-        route = DataTableScreens.DataTableScreen.route,
-        arguments = listOf(
-            navArgument(
-                name = Constants.DATA_TABLE_NAV_DATA,
-                builder = { type = NavType.StringType },
-            ),
-        ),
-    ) {
+    composable<DataTableRoute> {
         DataTableScreen(
             navigateBack = onBackPressed,
             onClick = onClick,
@@ -71,6 +65,7 @@ fun NavGraphBuilder.dataTableRoute(
     }
 }
 
+// TODO : change during new screens migration
 fun NavGraphBuilder.dataTableDataRoute(
     onBackPressed: () -> Unit,
 ) {
@@ -89,6 +84,7 @@ fun NavGraphBuilder.dataTableDataRoute(
     }
 }
 
+// TODO : change during new screens migration
 fun NavGraphBuilder.dataTableListRoute(
     onBackPressed: () -> Unit,
     clientCreated: (ClientPayloadEntity, Boolean) -> Unit,
@@ -109,12 +105,17 @@ fun NavGraphBuilder.dataTableListRoute(
     }
 }
 
+@Serializable
+data class DataTableRoute(
+    val tableName: String = "",
+    val entityId: Int = -1,
+)
+
 fun NavController.navigateToDataTable(
     tableName: String,
     entityId: Int,
 ) {
-    val arg = Json.encodeToString(DataTableNavigationArg(tableName, entityId))
-    navigate(DataTableScreens.DataTableScreen.argument(arg))
+    navigate(DataTableRoute(tableName, entityId))
 }
 
 fun NavController.navigateDataTableData(

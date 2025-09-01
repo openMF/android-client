@@ -16,11 +16,12 @@ import androidclient.feature.document.generated.resources.feature_document_faile
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.mifos.core.common.utils.Constants
+import androidx.navigation.toRoute
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.domain.useCases.DownloadDocumentUseCase
 import com.mifos.core.domain.useCases.GetDocumentsListUseCase
 import com.mifos.core.domain.useCases.RemoveDocumentUseCase
+import com.mifos.feature.document.navigation.DocumentListRoute
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
@@ -32,8 +33,8 @@ class DocumentListViewModel(
     savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
 
-    val entityId = savedStateHandle.getStateFlow(key = Constants.ENTITY_ID, initialValue = 1)
-    val entityType = savedStateHandle.getStateFlow(key = Constants.ENTITY_TYPE, initialValue = "")
+    val entityId = savedStateHandle.toRoute<DocumentListRoute>().entityId
+    val entityType = savedStateHandle.toRoute<DocumentListRoute>().entityType
 
     private val _documentListUiState = MutableStateFlow<DocumentListUiState>(DocumentListUiState.Loading)
     val documentListUiState = _documentListUiState.asStateFlow()
@@ -47,13 +48,13 @@ class DocumentListViewModel(
     private val _isRefreshing = MutableStateFlow(false)
     val isRefreshing = _isRefreshing.asStateFlow()
 
-    fun refreshDocumentList(type: String, id: Int) {
+    fun refreshDocumentList() {
         _isRefreshing.value = true
-        loadDocumentList(type, id)
+        loadDocumentList()
         _isRefreshing.value = false
     }
 
-    fun loadDocumentList(entityType: String, entityId: Int) =
+    fun loadDocumentList() =
         viewModelScope.launch {
             getDocumentsListUseCase(entityType, entityId).collect { result ->
                 when (result) {
@@ -70,7 +71,7 @@ class DocumentListViewModel(
             }
         }
 
-    fun downloadDocument(entityType: String, entityId: Int, documentId: Int) =
+    fun downloadDocument(documentId: Int) =
         viewModelScope.launch {
             downloadDocumentUseCase(entityType, entityId, documentId).collect { result ->
                 when (result) {
@@ -82,13 +83,13 @@ class DocumentListViewModel(
 
                     is DataState.Success -> {
                         _downloadDocumentState.value = true
-                        loadDocumentList(entityType, entityId)
+                        loadDocumentList()
                     }
                 }
             }
         }
 
-    fun removeDocument(entityType: String, entityId: Int, documentId: Int) =
+    fun removeDocument(documentId: Int) =
         viewModelScope.launch {
             removeDocumentUseCase(entityType, entityId, documentId).collect { result ->
                 when (result) {
@@ -100,7 +101,7 @@ class DocumentListViewModel(
 
                     is DataState.Success -> {
                         _removeDocumentState.value = true
-                        loadDocumentList(entityType, entityId)
+                        loadDocumentList()
                     }
                 }
             }

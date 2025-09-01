@@ -100,11 +100,10 @@ internal fun GroupLoanAccountScreen(
 ) {
     val state by viewModel.groupLoanAccountUiState.collectAsStateWithLifecycle()
     val loanProducts by viewModel.loanProducts.collectAsStateWithLifecycle()
-    val groupId by viewModel.groupId.collectAsStateWithLifecycle()
 
     LaunchedEffect(loanProducts) {
         if (loanProducts.isNotEmpty()) {
-            loanProducts[0].id?.let { viewModel.loadGroupLoansAccountTemplate(groupId, it) }
+            loanProducts[0].id?.let { viewModel.loadGroupLoansAccountTemplate(it) }
         }
     }
 
@@ -113,7 +112,7 @@ internal fun GroupLoanAccountScreen(
     }
 
     GroupLoanAccountScreen(
-        groupId = groupId,
+        groupId = viewModel.groupId,
         state = state,
         onBackPressed = onBackPressed,
         loanProducts = loanProducts,
@@ -121,7 +120,7 @@ internal fun GroupLoanAccountScreen(
             viewModel.loadAllLoans()
         },
         onLoanProductSelected = { productId ->
-            viewModel.loadGroupLoansAccountTemplate(groupId, productId)
+            viewModel.loadGroupLoansAccountTemplate(productId)
         },
         createLoanAccount = { loansPayload ->
             viewModel.createGroupLoanAccount(loansPayload)

@@ -10,90 +10,69 @@
 package cmp.navigation.navigation
 
 import androidx.compose.ui.graphics.vector.ImageVector
+import cmp.navigation.utils.toObjectNavigationRoute
 import com.mifos.core.designsystem.icon.MifosIcons
-import com.mifos.feature.about.navigation.AboutScreens
-import com.mifos.feature.checker.inbox.task.navigation.CheckerInboxTaskScreens
-import com.mifos.feature.client.navigation.ClientScreens
-import com.mifos.feature.groups.navigation.GroupScreen
-import com.mifos.feature.offline.navigation.OfflineScreens
-import com.mifos.feature.path.tracking.navigation.PathTrackingScreens
-import com.mifos.feature.search.navigation.SearchScreens
-import com.mifos.feature.settings.navigation.SettingsScreens
+import com.mifos.feature.about.AboutNavRoute
+import com.mifos.feature.checker.inbox.task.navigation.CheckerInboxTaskScreenRoute
+import com.mifos.feature.individualCollectionSheet.navigation.IndividualCollectionSheetScreenRoute
+import com.mifos.feature.offline.navigation.OfflineDashboardScreenRoute
+import com.mifos.feature.path.tracking.navigation.PathTrackingScreenRoute
+import com.mifos.feature.report.navigation.RunReportScreenRoute
+import com.mifos.feature.settings.navigation.SettingsRoute
+import org.jetbrains.compose.resources.StringResource
+import org.mifos.navigation.generated.resources.Res
+import org.mifos.navigation.generated.resources.about
+import org.mifos.navigation.generated.resources.checker_inbox_tasks
+import org.mifos.navigation.generated.resources.collection_sheet
+import org.mifos.navigation.generated.resources.offline_sync
+import org.mifos.navigation.generated.resources.path_tracker
+import org.mifos.navigation.generated.resources.run_reports
+import org.mifos.navigation.generated.resources.settings
 
 sealed class HomeDestinationsScreen(
-    val title: String = "",
+    val title: StringResource,
     val route: String,
     val icon: ImageVector? = null,
 ) {
-    data object SearchScreen : HomeDestinationsScreen(
-        title = "Search",
-        route = SearchScreens.SearchScreenRoute.route,
-        icon = MifosIcons.Dashboard,
-    )
-
-    data object ClientListScreen : HomeDestinationsScreen(
-        title = "Clients",
-        route = ClientScreens.ClientListScreen.route,
-        icon = MifosIcons.Person,
-    )
-
-    data object CenterListScreen : HomeDestinationsScreen(
-        title = "Centers",
-        route = "center_list_screen",
-        icon = MifosIcons.Business,
-    )
-
-    data object GroupListScreen : HomeDestinationsScreen(
-        title = "Groups",
-        route = GroupScreen.GroupListScreen.route,
-        icon = MifosIcons.Group,
-    )
-
     data object CheckerInboxAndTasksScreen : HomeDestinationsScreen(
-        title = "Checker Inbox & Tasks",
-        route = CheckerInboxTaskScreens.CheckerInboxTaskScreenRoute.route,
+        title = Res.string.checker_inbox_tasks,
+        route = CheckerInboxTaskScreenRoute.toObjectNavigationRoute(),
         icon = MifosIcons.Checkbox,
     )
 
-    data object IndividualCollectionSheetScreen : HomeDestinationsScreen(
-        title = "Individual Collection Sheet",
-        route = "individual_collection_sheet_route",
-        icon = MifosIcons.Assignment,
-    )
-
     data object CollectionSheetScreen : HomeDestinationsScreen(
-        title = "Collection Sheet",
-        route = "generate_collection_sheet",
+        title = Res.string.collection_sheet,
+        route = IndividualCollectionSheetScreenRoute.toObjectNavigationRoute(),
         icon = MifosIcons.Assignment,
     )
 
     data object RunReportsScreen : HomeDestinationsScreen(
-        title = "Run Reports",
-        route = "run_report_screen",
+        title = Res.string.run_reports,
+        route = RunReportScreenRoute.toObjectNavigationRoute(),
         icon = MifosIcons.Task,
     )
 
     data object PathTrackerScreen : HomeDestinationsScreen(
-        title = "Path Tracker",
-        route = PathTrackingScreens.PathTrackingScreen.route,
+        title = Res.string.path_tracker,
+        route = PathTrackingScreenRoute.toObjectNavigationRoute(),
         icon = MifosIcons.PersonPinCircle,
     )
 
     data object SettingsScreen : HomeDestinationsScreen(
-        title = "Settings",
-        route = SettingsScreens.SettingsScreen.route,
+        title = Res.string.settings,
+        route = SettingsRoute.toObjectNavigationRoute(),
         icon = MifosIcons.Settings,
     )
 
     data object AboutScreen : HomeDestinationsScreen(
-        title = "About",
-        route = AboutScreens.AboutScreen.route,
+        title = Res.string.about,
+        route = AboutNavRoute.toObjectNavigationRoute(),
         icon = MifosIcons.Info,
     )
 
     data object OfflineSyncScreen : HomeDestinationsScreen(
-        title = "Offline Sync",
-        route = OfflineScreens.OfflineDashboardScreens.route,
+        title = Res.string.offline_sync,
+        route = OfflineDashboardScreenRoute.toObjectNavigationRoute(),
         icon = MifosIcons.OfflineSync,
     )
 }

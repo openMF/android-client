@@ -73,25 +73,24 @@ internal fun LoanChargeScreen(
 ) {
     val state by viewModel.loanChargeUiState.collectAsStateWithLifecycle()
     val refreshState by viewModel.isRefreshing.collectAsStateWithLifecycle()
-    val loanAccountNumber by viewModel.loanAccountNumber.collectAsStateWithLifecycle()
 
     LaunchedEffect(Unit) {
-        viewModel.loadLoanChargesList(loanAccountNumber)
+        viewModel.loadLoanChargesList()
     }
 
     LoanChargeScreen(
-        loanAccountNumber = loanAccountNumber,
+        loanAccountNumber = viewModel.loanAccountNumber,
         state = state,
         onBackPressed = onBackPressed,
         onChargeCreated = {
-            viewModel.loadLoanChargesList(loanAccountNumber)
+            viewModel.loadLoanChargesList()
         },
         onRetry = {
-            viewModel.loadLoanChargesList(loanAccountNumber)
+            viewModel.loadLoanChargesList()
         },
         refreshState = refreshState,
         onRefresh = {
-            viewModel.refreshLoanChargeList(loanAccountNumber)
+            viewModel.refreshLoanChargeList()
         },
     )
 }

@@ -53,7 +53,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import co.touchlab.kermit.Logger
 import com.mifos.core.designsystem.component.MifosButton
 import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosScaffold
@@ -82,15 +81,13 @@ internal fun DocumentListScreen(
     var isDialogBoxActive by rememberSaveable { mutableStateOf(false) }
     var dialogBoxAction: StringResource? by remember { mutableStateOf(null) }
     var dialogDocument by rememberSaveable { mutableStateOf(Document()) }
-    val entityId by viewModel.entityId.collectAsStateWithLifecycle()
-    val entityType by viewModel.entityType.collectAsStateWithLifecycle()
     val snackbarHostState = remember { SnackbarHostState() }
 
     if (isDialogBoxActive) {
         DocumentDialogScreen(
-            entityType = entityType,
+            entityType = viewModel.entityType,
             snackbarHostState = snackbarHostState,
-            entityId = entityId,
+            entityId = viewModel.entityId,
             documentAction = dialogBoxAction,
             document = dialogDocument,
             closeDialog = { isDialogBoxActive = false },
@@ -102,8 +99,7 @@ internal fun DocumentListScreen(
     }
 
     LaunchedEffect(Unit) {
-        Logger.e("documentListDebugLog") { "id : $entityId, type : $entityType" }
-        viewModel.loadDocumentList(entityType, entityId)
+        viewModel.loadDocumentList()
     }
 
     LaunchedEffect(downloadState) {
@@ -124,17 +120,17 @@ internal fun DocumentListScreen(
         onBackPressed = onBackPressed,
         refreshState = refreshState,
         onRefresh = {
-            viewModel.refreshDocumentList(entityType, entityId)
+            viewModel.refreshDocumentList()
         },
         onRetry = {
-            viewModel.loadDocumentList(entityType, entityId)
+            viewModel.loadDocumentList()
         },
         onAddDocument = {
             dialogBoxAction = Res.string.feature_document_upload_document
             isDialogBoxActive = true
         },
         onDownloadDocument = { documentId ->
-            viewModel.downloadDocument(entityType, entityId, documentId)
+            viewModel.downloadDocument(documentId)
         },
         onUpdateDocument = { document ->
             dialogDocument = document
@@ -142,7 +138,7 @@ internal fun DocumentListScreen(
             isDialogBoxActive = true
         },
         onRemovedDocument = { documentId ->
-            viewModel.removeDocument(entityType, entityId, documentId)
+            viewModel.removeDocument(documentId)
         },
     )
 }

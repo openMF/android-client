@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Mifos Initiative
+ * Copyright 2025 Mifos Initiative
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -7,11 +7,9 @@
  *
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
-package com.mifos.feature.auth.navigation
+package cmp.android.app
 
-sealed class AuthScreens(val route: String) {
+import android.content.res.Configuration
 
-    data object LoginScreenRoute : AuthScreens("login_screen_route")
-
-    data object LoginScreen : AuthScreens("login_screen")
-}
+val Configuration.isSystemInDarkMode
+    get() = (uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
