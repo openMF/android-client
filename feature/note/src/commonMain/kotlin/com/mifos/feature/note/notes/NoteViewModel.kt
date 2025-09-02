@@ -65,7 +65,6 @@ class NoteViewModel(
                         is DataState.Error -> mutableStateFlow.update {
                             it.copy(
                                 dialogState = NoteState.DialogState.Error(dataState.message),
-                                isError = true,
                                 isRefreshing = false,
                             )
                         }
@@ -86,7 +85,6 @@ class NoteViewModel(
                                 it.copy(
                                     dialogState = null,
                                     notes = dataState.data,
-                                    isError = false,
                                     expandedNoteId = null,
                                     isRefreshing = false,
                                 )
@@ -106,7 +104,6 @@ class NoteViewModel(
                             mutableStateFlow.update {
                                 it.copy(
                                     dialogState = NoteState.DialogState.Error(dataState.message),
-                                    isError = true,
                                 )
                             }
                         }
@@ -149,14 +146,8 @@ class NoteViewModel(
             NoteAction.OnClickEditScreen -> sendEvent(NoteEvent.NavigateEditNote)
             NoteAction.OnClickAddScreen -> sendEvent(NoteEvent.NavigateAddNote)
             is NoteAction.DeleteNote -> {
-                mutableStateFlow.update {
-                    it.copy(
-                        showDialog = false,
-                        isError = false,
-                    )
-                }
                 viewModelScope.launch {
-                    deleteNote(action.id)
+                    deleteNote(state.expandedNoteId)
                 }
             }
 
@@ -167,15 +158,11 @@ class NoteViewModel(
                 getNoteOptionsAndObserveNetwork()
             }
 
-            NoteAction.ShowDialog -> {
-                mutableStateFlow.update {
-                    it.copy(showDialog = true)
-                }
-            }
-
             NoteAction.DismissDialog -> {
                 mutableStateFlow.update {
-                    it.copy(showDialog = false)
+                    it.copy(
+                        dialogState = null,
+                    )
                 }
             }
 
@@ -183,6 +170,14 @@ class NoteViewModel(
                 mutableStateFlow.update { state ->
                     state.copy(
                         expandedNoteId = if (state.expandedNoteId == action.id) null else action.id,
+                    )
+                }
+            }
+
+            is NoteAction.ShowDialog -> {
+                mutableStateFlow.update {
+                    it.copy(
+                        dialogState = NoteState.DialogState.ShowDialog,
                     )
                 }
             }
@@ -195,15 +190,14 @@ data class NoteState(
     val resourceType: String? = null,
     val isRefreshing: Boolean = false,
     val notes: List<Note> = emptyList(),
-    val showDialog: Boolean = false,
     val dialogState: DialogState? = null,
     val expandedNoteId: Long? = null,
-    val isError: Boolean = false,
     val networkConnection: Boolean = false,
 ) {
     sealed interface DialogState {
         data class Error(val message: String) : DialogState
         data object Loading : DialogState
+        data object ShowDialog : DialogState
     }
 }
 
@@ -222,5 +216,5 @@ sealed interface NoteAction {
     data object ShowDialog : NoteAction
     data object DismissDialog : NoteAction
     data class OnToggleExpanded(val id: Long?) : NoteAction
-    data class DeleteNote(val id: Long?) : NoteAction
+    data object DeleteNote : NoteAction
 }

@@ -12,17 +12,25 @@ package com.mifos.core.ui.components
 import androidclient.core.ui.generated.resources.Res
 import androidclient.core.ui.generated.resources.core_ui_account_no
 import androidclient.core.ui.generated.resources.core_ui_amount_paid
+import androidclient.core.ui.generated.resources.core_ui_approve_account
 import androidclient.core.ui.generated.resources.core_ui_balance
+import androidclient.core.ui.generated.resources.core_ui_delete_document
+import androidclient.core.ui.generated.resources.core_ui_delete_note
 import androidclient.core.ui.generated.resources.core_ui_description
 import androidclient.core.ui.generated.resources.core_ui_document_id
 import androidclient.core.ui.generated.resources.core_ui_document_key
 import androidclient.core.ui.generated.resources.core_ui_due
 import androidclient.core.ui.generated.resources.core_ui_due_as_of
+import androidclient.core.ui.generated.resources.core_ui_edit_note
 import androidclient.core.ui.generated.resources.core_ui_identify_documents
 import androidclient.core.ui.generated.resources.core_ui_last_active
 import androidclient.core.ui.generated.resources.core_ui_loan_balance
 import androidclient.core.ui.generated.resources.core_ui_loan_product
+import androidclient.core.ui.generated.resources.core_ui_make_repayment
 import androidclient.core.ui.generated.resources.core_ui_name
+import androidclient.core.ui.generated.resources.core_ui_note_createdBy
+import androidclient.core.ui.generated.resources.core_ui_note_date
+import androidclient.core.ui.generated.resources.core_ui_note_note
 import androidclient.core.ui.generated.resources.core_ui_original_loan
 import androidclient.core.ui.generated.resources.core_ui_outstanding
 import androidclient.core.ui.generated.resources.core_ui_paid
@@ -31,6 +39,9 @@ import androidclient.core.ui.generated.resources.core_ui_status
 import androidclient.core.ui.generated.resources.core_ui_total_collateral_value
 import androidclient.core.ui.generated.resources.core_ui_total_value
 import androidclient.core.ui.generated.resources.core_ui_type
+import androidclient.core.ui.generated.resources.core_ui_upload_again
+import androidclient.core.ui.generated.resources.core_ui_view_account
+import androidclient.core.ui.generated.resources.core_ui_view_document
 import androidclient.core.ui.generated.resources.core_ui_waived
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandVertically
@@ -49,6 +60,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -61,6 +73,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalDensity
@@ -70,22 +83,31 @@ import com.mifos.core.designsystem.theme.AppColors
 import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.designsystem.theme.MifosTypography
 import com.mifos.core.designsystem.utils.onClick
+import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
 fun MifosActionsListingComponentOutline(
+    bottomRounded: Boolean = false,
+    topRounded: Boolean = false,
     modifier: Modifier = Modifier,
     content: @Composable () -> Unit,
 ) {
+    val shape = if (bottomRounded) {
+        DesignToken.shapes.bottomMedium
+    } else if (topRounded) {
+        DesignToken.shapes.topMedium
+    } else {
+        DesignToken.shapes.medium
+    }
+
     Box(
-        modifier = modifier
-            .fillMaxWidth()
-            .border(
-                width = 1.dp,
-                shape = DesignToken.shapes.medium,
-                color = MaterialTheme.colorScheme.secondaryContainer,
-            ),
+        modifier = modifier.fillMaxWidth().border(
+            width = 1.dp,
+            shape = shape,
+            color = MaterialTheme.colorScheme.secondaryContainer,
+        ),
     ) {
         content()
     }
@@ -579,13 +601,123 @@ fun MifosActionsClientFeeListingComponent(
     }
 }
 
-enum class Actions(val icon: ImageVector) {
-    ViewAccount(MifosIcons.ViewAccount),
-    ApproveAccount(MifosIcons.ApproveAccount),
-    MakeRepayment(MifosIcons.MakeRepayment),
-    ViewDocument(MifosIcons.ViewDocument),
-    UploadAgain(MifosIcons.UploadAgain),
-    DeleteDocument(MifosIcons.DeleteDocument),
+@Composable
+fun MifosActionsNoteListingComponent(
+    createdBy: String,
+    date: String,
+    notes: String,
+    menuList: List<Actions>,
+    onExpand: () -> Unit,
+    isExpanded: Boolean,
+    onActionClicked: (Actions) -> Unit,
+) {
+    Column {
+        MifosActionsListingComponentOutline(
+            topRounded = isExpanded,
+            modifier = Modifier
+                .clip(if (isExpanded) DesignToken.shapes.topMedium else DesignToken.shapes.medium)
+                .clickable {
+                    onExpand()
+                },
+        ) {
+            Column(
+                modifier = Modifier.padding(DesignToken.padding.large),
+            ) {
+                MifosListingRowItemHeader(
+                    text = stringResource(Res.string.core_ui_note_createdBy) + " " + createdBy,
+                    keyStyle = MifosTypography.titleSmallEmphasized,
+                )
+
+                Spacer(Modifier.height(DesignToken.padding.large))
+
+                MifosListingColumnItem(
+                    key = stringResource(Res.string.core_ui_note_date),
+                    value = date,
+                )
+
+                Spacer(Modifier.height(DesignToken.padding.medium))
+
+                MifosListingColumnItem(
+                    key = stringResource(Res.string.core_ui_note_note),
+                    value = notes,
+                )
+            }
+        }
+
+        AnimatedVisibility(isExpanded) {
+            Surface(
+                modifier = Modifier.fillMaxWidth(),
+                shape = DesignToken.shapes.bottomMedium,
+                color = MaterialTheme.colorScheme.surfaceContainer,
+            ) {
+                Column(
+                    modifier = Modifier.padding(vertical = DesignToken.spacing.large),
+                    verticalArrangement = Arrangement.spacedBy(DesignToken.spacing.medium),
+                ) {
+                    menuList.map { menuItem ->
+                        Row(
+                            modifier = Modifier.fillMaxWidth().padding(
+                                horizontal = DesignToken.padding.large,
+                            ).clickable {
+                                onActionClicked(menuItem)
+                            },
+                            horizontalArrangement = Arrangement.spacedBy(
+                                DesignToken.spacing.medium,
+                            ),
+                            verticalAlignment = Alignment.CenterVertically,
+                        ) {
+                            Icon(
+                                imageVector = menuItem.icon,
+                                contentDescription = null,
+                                modifier = Modifier.size(DesignToken.sizes.iconMedium),
+                            )
+                            Text(
+                                text = stringResource(menuItem.iconName),
+                                style = MaterialTheme.typography.bodyLarge,
+                                color = MaterialTheme.colorScheme.onSurface,
+                            )
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+enum class Actions(val icon: ImageVector, val iconName: StringResource) {
+    ViewAccount(MifosIcons.ViewAccount, Res.string.core_ui_view_account),
+    ApproveAccount(MifosIcons.ApproveAccount, Res.string.core_ui_approve_account),
+    MakeRepayment(MifosIcons.MakeRepayment, Res.string.core_ui_make_repayment),
+    ViewDocument(MifosIcons.ViewDocument, Res.string.core_ui_view_document),
+    UploadAgain(MifosIcons.UploadAgain, Res.string.core_ui_upload_again),
+    DeleteDocument(MifosIcons.DeleteDocument, Res.string.core_ui_delete_document),
+    Edit(MifosIcons.Edit, Res.string.core_ui_edit_note),
+    Delete(MifosIcons.Delete, Res.string.core_ui_delete_note),
+}
+
+@Preview
+@Composable
+private fun PreviewMifosActionsNoteListingComponent() {
+    MaterialTheme {
+        MifosActionsNoteListingComponent(
+            createdBy = "John Doe",
+            date = "02 September 2025",
+            notes = "This is a note",
+            menuList = listOf(
+                Actions.Edit,
+                Actions.Delete,
+            ),
+            onExpand = {},
+            isExpanded = true,
+            onActionClicked = { action ->
+                when (action) {
+                    Actions.Edit -> println(Actions.ViewAccount.name)
+                    Actions.Delete -> println(Actions.ApproveAccount.name)
+                    else -> println("Action not Handled")
+                }
+            },
+        )
+    }
 }
 
 @Preview

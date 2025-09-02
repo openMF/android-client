@@ -25,7 +25,7 @@ fun NavGraphBuilder.noteRoute(
     onNavigateAddEditNote: (Int, String?, Long?) -> Unit,
 ) {
     composable<NoteRoute> {
-        NoteScreenScaffold(
+        NoteScreen(
             onNavigateBack = onNavigateBack,
             onNavigateAddEditNote = onNavigateAddEditNote,
         )

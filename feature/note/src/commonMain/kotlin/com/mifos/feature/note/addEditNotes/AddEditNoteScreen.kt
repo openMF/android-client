@@ -131,7 +131,9 @@ internal fun AddEditNoteScreenScaffold(
                 .fillMaxSize()
                 .padding(paddingValues),
         ) {
-            if (state.dialogState !is AddEditNoteState.DialogState.Loading) {
+            if (state.dialogState !is AddEditNoteState.DialogState.Loading &&
+                state.dialogState !is AddEditNoteState.DialogState.Error
+            ) {
                 AddEditNote(
                     state = state,
                     onAction = onAction,

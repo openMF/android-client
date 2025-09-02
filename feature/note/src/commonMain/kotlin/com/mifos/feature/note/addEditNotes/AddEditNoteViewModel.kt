@@ -12,11 +12,9 @@ package com.mifos.feature.note.addEditNotes
 import androidclient.feature.note.generated.resources.Res
 import androidclient.feature.note.generated.resources.feature_note_Unexpected_error
 import androidclient.feature.note.generated.resources.feature_note_add_note
-import androidclient.feature.note.generated.resources.feature_note_add_success
 import androidclient.feature.note.generated.resources.feature_note_button_add
 import androidclient.feature.note.generated.resources.feature_note_button_update
 import androidclient.feature.note.generated.resources.feature_note_edit_note_label
-import androidclient.feature.note.generated.resources.feature_note_edit_success
 import androidclient.feature.note.generated.resources.feature_note_update_note
 import androidclient.feature.note.generated.resources.feature_note_write_note_label
 import androidx.lifecycle.SavedStateHandle
@@ -139,7 +137,6 @@ class AddEditNoteViewModel(
                             mutableStateFlow.update {
                                 it.copy(
                                     dialogState = null,
-                                    successMessage = Res.string.feature_note_add_success,
                                     notesPayloadInitialData = state.textFieldNotesPayload.note,
                                 )
                             }
@@ -174,7 +171,6 @@ class AddEditNoteViewModel(
                                 mutableStateFlow.update {
                                     it.copy(
                                         dialogState = null,
-                                        successMessage = Res.string.feature_note_edit_success,
                                         notesPayloadInitialData = state.textFieldNotesPayload.note,
                                     )
                                 }
@@ -234,7 +230,6 @@ class AddEditNoteViewModel(
                 mutableStateFlow.update {
                     it.copy(
                         dialogState = null,
-                        showDialog = false,
                     )
                 }
             }
@@ -244,7 +239,6 @@ class AddEditNoteViewModel(
                     mutableStateFlow.update {
                         it.copy(
                             dialogState = AddEditNoteState.DialogState.MisTouchBack,
-                            showDialog = true,
                         )
                     }
                 } else {
@@ -259,13 +253,11 @@ data class AddEditNoteState(
     val resourceId: Int = -1,
     val resourceType: String? = null,
     val editEnabled: Boolean = false,
-    val successMessage: StringResource? = null,
     val addUpdateButton: StringResource = Res.string.feature_note_button_add,
     val label: StringResource = Res.string.feature_note_write_note_label,
     val title: StringResource = Res.string.feature_note_add_note,
     val textFieldNotesPayload: NotesPayload = NotesPayload(null),
     val notesPayloadInitialData: String? = null,
-    val showDialog: Boolean = false,
     val dialogState: DialogState? = null,
     val networkConnection: Boolean = false,
 ) {
