@@ -31,9 +31,11 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavController
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.designsystem.theme.MifosTypography
+import com.mifos.core.ui.components.MifosBreadcrumbNavBar
 import com.mifos.core.ui.components.MifosErrorComponent
 import com.mifos.core.ui.components.MifosProgressIndicator
 import com.mifos.core.ui.components.MifosRowCard
@@ -48,6 +50,7 @@ import org.koin.compose.viewmodel.koinViewModel
 @Composable
 internal fun ClientProfileScreen(
     notes: (Int) -> Unit,
+    navController: NavController,
     documents: (Int) -> Unit,
     viewAssociatedAccounts: (Int) -> Unit,
     identifiers: (Int) -> Unit,
@@ -98,6 +101,7 @@ internal fun ClientProfileScreen(
         modifier = modifier,
         state = state,
         onAction = remember(viewModel) { { viewModel.trySendAction(it) } },
+        navController = navController,
     )
 
     ClientProfileDialogs(
@@ -113,6 +117,7 @@ internal fun ClientProfileScreen(
 @Composable
 private fun ClientProfileScaffold(
     state: ClientProfileState,
+    navController: NavController,
     modifier: Modifier = Modifier,
     onAction: (ClientProfileAction) -> Unit,
 ) {
@@ -125,54 +130,59 @@ private fun ClientProfileScaffold(
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(paddingValues)
-                    .verticalScroll(rememberScrollState())
-                    .padding(
-                        vertical = DesignToken.padding.extraLarge,
-                        horizontal = DesignToken.padding.large,
-                    ),
+                    .padding(paddingValues),
             ) {
-                Text(
-                    text = stringResource(Res.string.client_profile_profile),
-                    style = MifosTypography.labelLargeEmphasized,
-                )
-                Spacer(Modifier.height(DesignToken.padding.medium))
-                ProfileCard(
-                    image = state.profileImage,
-                    name = state.client?.displayName ?: stringResource(Res.string.name_na),
-                    accountNo = state.client?.accountNo
-                        ?: stringResource(Res.string.string_not_available),
-                    office = state.client?.officeName ?: stringResource(Res.string.office_na),
-                    onClick = {
-                        onAction(
-                            ClientProfileAction.NavigateToClientDetailsScreen,
-                        )
-                    },
-                )
-                Spacer(Modifier.height(DesignToken.padding.large))
-                Text(
-                    text = stringResource(Res.string.client_profile_actions),
-                    style = MifosTypography.labelLargeEmphasized,
-                )
-                Spacer(Modifier.height(DesignToken.padding.medium))
-                clientsActionItems.forEach {
-                    MifosRowCard(
-                        title = stringResource(it.title),
-                        imageVector = it.icon,
-                        leftValues = listOf(
-                            TextUtil(
-                                text = stringResource(it.subTitle),
-                                style = MifosTypography.bodySmall,
-                                color = MaterialTheme.colorScheme.secondary,
-                            ),
+                MifosBreadcrumbNavBar(navController)
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .verticalScroll(rememberScrollState())
+                        .padding(
+                            horizontal = DesignToken.padding.large,
                         ),
-                        rightValues = emptyList(),
-                        modifier = Modifier
-                            .clickable {
-                                onAction(ClientProfileAction.OnActionClick(it))
-                            }
-                            .padding(vertical = DesignToken.padding.medium),
+                ) {
+                    Text(
+                        text = stringResource(Res.string.client_profile_profile),
+                        style = MifosTypography.labelLargeEmphasized,
                     )
+                    Spacer(Modifier.height(DesignToken.padding.medium))
+                    ProfileCard(
+                        image = state.profileImage,
+                        name = state.client?.displayName ?: stringResource(Res.string.name_na),
+                        accountNo = state.client?.accountNo
+                            ?: stringResource(Res.string.string_not_available),
+                        office = state.client?.officeName ?: stringResource(Res.string.office_na),
+                        onClick = {
+                            onAction(
+                                ClientProfileAction.NavigateToClientDetailsScreen,
+                            )
+                        },
+                    )
+                    Spacer(Modifier.height(DesignToken.padding.large))
+                    Text(
+                        text = stringResource(Res.string.client_profile_actions),
+                        style = MifosTypography.labelLargeEmphasized,
+                    )
+                    Spacer(Modifier.height(DesignToken.padding.medium))
+                    clientsActionItems.forEach {
+                        MifosRowCard(
+                            title = stringResource(it.title),
+                            imageVector = it.icon,
+                            leftValues = listOf(
+                                TextUtil(
+                                    text = stringResource(it.subTitle),
+                                    style = MifosTypography.bodySmall,
+                                    color = MaterialTheme.colorScheme.secondary,
+                                ),
+                            ),
+                            rightValues = emptyList(),
+                            modifier = Modifier
+                                .clickable {
+                                    onAction(ClientProfileAction.OnActionClick(it))
+                                }
+                                .padding(vertical = DesignToken.padding.medium),
+                        )
+                    }
                 }
             }
         }

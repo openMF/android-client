@@ -20,6 +20,7 @@ data class ClientStaffRoute(
 )
 
 fun NavGraphBuilder.clientStaffDestination(
+    navController: NavController,
     onNavigateBack: () -> Unit,
     onNavigateNext: (Int) -> Unit,
 ) {
@@ -27,6 +28,7 @@ fun NavGraphBuilder.clientStaffDestination(
         ClientStaffScreen(
             onNavigateBack = onNavigateBack,
             onNavigateNext = onNavigateNext,
+            navController = navController,
         )
     }
 }

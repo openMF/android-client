@@ -90,6 +90,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavController
 import com.mifos.core.common.utils.DateHelper
 import com.mifos.core.common.utils.formatDate
 import com.mifos.core.designsystem.component.MifosCircularProgress
@@ -102,6 +103,7 @@ import com.mifos.core.designsystem.component.MifosTextFieldDropdown
 import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.designsystem.theme.MifosTypography
+import com.mifos.core.ui.components.MifosBreadcrumbNavBar
 import com.mifos.core.ui.components.MifosStatusDialog
 import com.mifos.core.ui.util.EventsEffect
 import com.mifos.feature.client.utils.PhoneNumberUtil
@@ -127,6 +129,7 @@ import org.koin.compose.viewmodel.koinViewModel
 @Composable
 internal fun ClientEditDetailsScreen(
     navigateBack: () -> Unit,
+    navController: NavController,
     onNavigateNext: (Int) -> Unit,
     viewModel: ClientEditDetailsViewModel = koinViewModel(),
 ) {
@@ -148,6 +151,7 @@ internal fun ClientEditDetailsScreen(
     }
 
     ClientEditDetailsScaffold(
+        navController = navController,
         navigateBack = navigateBack,
         state = state,
         officeList = state.showOffices,
@@ -162,6 +166,7 @@ internal fun ClientEditDetailsScreen(
 @Composable
 private fun ClientEditDetailsScaffold(
     state: ClientEditDetailsState,
+    navController: NavController,
     navigateBack: () -> Unit,
     officeList: List<OfficeEntity>,
     staffInOffices: List<StaffEntity>,
@@ -182,6 +187,7 @@ private fun ClientEditDetailsScaffold(
                 .fillMaxSize()
                 .padding(paddingValues),
         ) {
+            MifosBreadcrumbNavBar(navController)
             when (state.dialogState) {
                 is ClientEditDetailsState.DialogState.Loading -> {
                     MifosCircularProgress()

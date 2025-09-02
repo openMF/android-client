@@ -20,6 +20,7 @@ data class ClientProfileGeneralRoute(
 )
 
 fun NavGraphBuilder.clientProfileGeneralDestination(
+    navController: NavController,
     onNavigateBack: () -> Unit = {},
     upcomingCharges: (Int) -> Unit = {},
     loanAccounts: (Int) -> Unit,
@@ -32,6 +33,7 @@ fun NavGraphBuilder.clientProfileGeneralDestination(
     composable<ClientProfileGeneralRoute> {
         ClientProfileGeneralScreen(
             onNavigateBack,
+            navController,
             upcomingCharges,
             loanAccounts,
             savingAccounts,
@@ -39,6 +41,7 @@ fun NavGraphBuilder.clientProfileGeneralDestination(
             recurringDepositAccounts,
             sharesAccounts,
             collateralData,
+
         )
     }
 }

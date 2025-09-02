@@ -47,6 +47,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavController
 import com.mifos.core.designsystem.component.MifosOutlinedButton
 import com.mifos.core.designsystem.component.MifosOutlinedTextField
 import com.mifos.core.designsystem.component.MifosScaffold
@@ -55,6 +56,7 @@ import com.mifos.core.designsystem.component.MifosTextFieldDropdown
 import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.designsystem.theme.MifosTypography
+import com.mifos.core.ui.components.MifosBreadcrumbNavBar
 import com.mifos.core.ui.components.MifosErrorComponent
 import com.mifos.core.ui.components.MifosProgressIndicator
 import com.mifos.core.ui.components.MifosStatusDialog
@@ -66,6 +68,7 @@ import org.koin.compose.viewmodel.koinViewModel
 internal fun ClientCollateralScreen(
     onNavigateBack: () -> Unit,
     onNavigateNext: (Int) -> Unit,
+    navController: NavController,
     modifier: Modifier = Modifier,
     viewModel: ClientCollateralViewModel = koinViewModel(),
 ) {
@@ -82,6 +85,7 @@ internal fun ClientCollateralScreen(
         state = state,
         onAction = remember(viewModel) { { viewModel.trySendAction(it) } },
         modifier = modifier,
+        navController = navController,
     )
     ClientCollateralDialogs(
         state = state,
@@ -91,6 +95,7 @@ internal fun ClientCollateralScreen(
 
 @Composable
 private fun ClientCollateralScaffold(
+    navController: NavController,
     state: ClientCollateralState,
     onAction: (ClientCollateralAction) -> Unit,
     modifier: Modifier = Modifier,
@@ -107,16 +112,17 @@ private fun ClientCollateralScaffold(
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(paddingValues)
-                    .padding(DesignToken.padding.large),
-                verticalArrangement = Arrangement.spacedBy(DesignToken.padding.large),
+                    .padding(paddingValues),
             ) {
+                MifosBreadcrumbNavBar(navController)
                 if (state.collaterals.isNotEmpty()) {
                     Column(
                         modifier
                             .fillMaxWidth()
+                            .padding(horizontal = DesignToken.padding.large)
                             .weight(1f)
                             .verticalScroll(rememberScrollState()),
+                        verticalArrangement = Arrangement.spacedBy(DesignToken.padding.large),
                     ) {
                         Text(
                             text = stringResource(Res.string.client_collateral_title),

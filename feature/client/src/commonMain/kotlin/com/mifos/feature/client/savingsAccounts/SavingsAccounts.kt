@@ -33,25 +33,27 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavController
 import com.mifos.core.common.utils.DateHelper
 import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.theme.AppColors
 import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.designsystem.theme.MifosTypography
-import com.mifos.core.designsystem.utils.onClick
 import com.mifos.core.ui.components.Actions
 import com.mifos.core.ui.components.MifosActionsSavingsListingComponent
-import com.mifos.core.ui.components.MifosEmptyCard
+import com.mifos.core.ui.components.MifosBreadcrumbNavBar
 import com.mifos.core.ui.components.MifosSearchBar
 import com.mifos.core.ui.util.EventsEffect
 import org.jetbrains.compose.resources.painterResource
@@ -61,6 +63,7 @@ import org.koin.compose.viewmodel.koinViewModel
 @Composable
 internal fun SavingsAccountsScreenRoute(
     navigateBack: () -> Unit,
+    navController: NavController,
     viewModel: SavingsAccountsViewModel = koinViewModel(),
     navigateToViewAccount: (Int) -> Unit,
 ) {
@@ -69,7 +72,7 @@ internal fun SavingsAccountsScreenRoute(
     EventsEffect(viewModel.eventFlow) { event ->
         when (event) {
             SavingsAccountEvent.NavigateBack -> navigateBack()
-            is SavingsAccountEvent.ViewAccount -> navigateToViewAccount(2) // todo
+            is SavingsAccountEvent.ViewAccount -> navigateToViewAccount(2)
             SavingsAccountEvent.ApproveAccount -> {}
         }
     }
@@ -82,6 +85,7 @@ internal fun SavingsAccountsScreenRoute(
     SavingsAccountsScreen(
         state = state,
         onAction = remember(viewModel) { { viewModel.trySendAction(it) } },
+        navController = navController,
     )
 }
 
@@ -89,6 +93,7 @@ internal fun SavingsAccountsScreenRoute(
 fun SavingsAccountsScreen(
     onAction: (SavingsAccountAction) -> Unit,
     state: SavingsAccountState,
+    navController: NavController,
 ) {
     MifosScaffold(
         title = stringResource(Res.string.update_default_account_title),
@@ -96,79 +101,86 @@ fun SavingsAccountsScreen(
         modifier = Modifier,
     ) { paddingValues ->
         Column(
-            modifier = Modifier.padding(paddingValues)
+            modifier = Modifier
                 .fillMaxSize()
-                .padding(start = 16.dp, end = 16.dp, top = 16.dp),
+                .padding(paddingValues),
         ) {
-            SavingsAccountsHeader(
-                totalItem = state.savingsAccounts.size.toString(),
-                onAction = onAction,
-            )
-
-            // todo implement search bar functionality
-            if (state.isSearchBarActive) {
-                MifosSearchBar(
-                    query = state.searchText,
-                    onQueryChange = { onAction.invoke(SavingsAccountAction.UpdateSearchValue(it)) },
-                    onSearchClick = { onAction.invoke(SavingsAccountAction.OnSearchClick) },
-                    onBackClick = { onAction.invoke(SavingsAccountAction.ToggleSearch) },
+            MifosBreadcrumbNavBar(navController)
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(horizontal = DesignToken.padding.large),
+            ) {
+                SavingsAccountsHeader(
+                    totalItem = state.savingsAccounts.size.toString(),
+                    onAction = onAction,
                 )
-            }
 
-            Spacer(modifier = Modifier.height(16.dp))
+                // todo implement search bar functionality
+                if (state.isSearchBarActive) {
+                    MifosSearchBar(
+                        query = state.searchText,
+                        onQueryChange = { onAction.invoke(SavingsAccountAction.UpdateSearchValue(it)) },
+                        onSearchClick = { onAction.invoke(SavingsAccountAction.OnSearchClick) },
+                        onBackClick = { onAction.invoke(SavingsAccountAction.ToggleSearch) },
+                    )
+                }
 
-            if (state.savingsAccounts.isEmpty()) {
-                MifosEmptyCard()
-            } else {
-                LazyColumn {
-                    items(state.savingsAccounts) { savings ->
-                        MifosActionsSavingsListingComponent(
-                            accountNo = savings.accountNo.toString(),
-                            savingsProduct = stringResource(Res.string.client_product_saving_account),
-                            savingsProductName = savings.productName.toString(),
-                            // todo modify with currency symbol when not getting null from api, currently getting null
-                            balance = if (savings.accountBalance != null) {
-                                savings.accountBalance.toString()
-                            } else {
-                                "Not Available"
-                            },
-                            menuList = if (savings.status?.submittedAndPendingApproval == true) {
-                                listOf(
-                                    Actions.ViewAccount,
-                                    Actions.ApproveAccount,
-                                )
-                            } else {
-                                listOf(
-                                    Actions.ViewAccount,
-                                )
-                            },
-                            onActionClicked = { actions ->
-                                when (actions) {
-                                    Actions.ViewAccount -> onAction.invoke(
-                                        SavingsAccountAction.ViewAccount(
-                                            state.clientId,
-                                        ),
+                Spacer(modifier = Modifier.height(16.dp))
+
+                if (state.savingsAccounts.isEmpty()) {
+                    EmptySavingsCard()
+                } else {
+                    LazyColumn {
+                        items(state.savingsAccounts) { savings ->
+                            MifosActionsSavingsListingComponent(
+                                accountNo = savings.accountNo.toString(),
+                                savingsProduct = stringResource(Res.string.client_product_saving_account),
+                                savingsProductName = savings.productName.toString(),
+                                // todo modify with currency symbol when not getting null from api, currently getting null
+                                balance = if (savings.accountBalance != null) {
+                                    savings.accountBalance.toString()
+                                } else {
+                                    "Not Available"
+                                },
+                                menuList = if (savings.status?.submittedAndPendingApproval == true) {
+                                    listOf(
+                                        Actions.ViewAccount,
+                                        Actions.ApproveAccount,
                                     )
-
-                                    Actions.ApproveAccount -> onAction.invoke(
-                                        SavingsAccountAction.ApproveAccount(
-                                            state.clientId,
-                                        ),
+                                } else {
+                                    listOf(
+                                        Actions.ViewAccount,
                                     )
+                                },
+                                onActionClicked = { actions ->
+                                    when (actions) {
+                                        Actions.ViewAccount -> onAction.invoke(
+                                            SavingsAccountAction.ViewAccount(
+                                                state.clientId,
+                                            ),
+                                        )
 
-                                    else -> null
-                                }
-                            },
-                            lastActive = if (savings.lastActiveTransactionDate != null) {
-                                DateHelper.getDateAsString(savings.lastActiveTransactionDate!!)
-                            } else if (savings.status?.submittedAndPendingApproval == true) {
-                                stringResource(Res.string.client_savings_pending_approval)
-                            } else {
-                                stringResource(Res.string.client_savings_not_avilable)
-                            },
-                        )
+                                        Actions.ApproveAccount -> onAction.invoke(
+                                            SavingsAccountAction.ApproveAccount(
+                                                state.clientId,
+                                            ),
+                                        )
 
-                        Spacer(modifier = Modifier.height(DesignToken.spacing.small))
+                                        else -> null
+                                    }
+                                },
+                                lastActive = if (savings.lastActiveTransactionDate != null) {
+                                    DateHelper.getDateAsString(savings.lastActiveTransactionDate!!)
+                                } else if (savings.status?.submittedAndPendingApproval == true) {
+                                    stringResource(Res.string.client_savings_pending_approval)
+                                } else {
+                                    stringResource(Res.string.client_savings_not_avilable)
+                                },
+                            )
+
+                            Spacer(modifier = Modifier.height(DesignToken.spacing.small))
+                        }
                     }
                 }
             }
@@ -198,23 +210,26 @@ fun SavingsAccountsHeader(
 
         Spacer(modifier = Modifier.weight(1f))
 
-        Icon(
-            modifier = Modifier.onClick {
-                onAction.invoke(SavingsAccountAction.ToggleSearch)
-            },
-            painter = painterResource(Res.drawable.search),
-            contentDescription = null,
-        )
+        IconButton(
+            onClick = { onAction.invoke(SavingsAccountAction.ToggleSearch) },
+        ) {
+            // add a cross icon when its active, talk with design team
+            Icon(
+                painter = painterResource(Res.drawable.search),
+                contentDescription = null,
+            )
+        }
 
-        Spacer(modifier = Modifier.width(DesignToken.padding.largeIncreased))
+        DesignToken.padding
 
-        Icon(
-            modifier = Modifier.onClick {
-                onAction.invoke(SavingsAccountAction.ToggleFilter)
-            },
-            painter = painterResource(Res.drawable.filter),
-            contentDescription = null,
-        )
+        IconButton(
+            onClick = { onAction.invoke(SavingsAccountAction.ToggleFilter) },
+        ) {
+            Icon(
+                painter = painterResource(Res.drawable.filter),
+                contentDescription = null,
+            )
+        }
     }
 }
 
