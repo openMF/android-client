@@ -409,4 +409,24 @@ object DateHelper {
         require(month in 1..12) { "Month should be between 1 and 12" }
         return Month.entries[month - 1].name.lowercase().replaceFirstChar { it.uppercase() }
     }
+
+    /**
+     * This method is used to Convert IOS string date into dd MM yyyy formate
+     * @param isoString take IOS date as a String
+     * Example : ISO string 2025-08-28T16:02:32.242705+05:30 and return 28 08 2025
+     */
+    fun formatIsoDateToDdMmYyyy(isoString: String): String {
+        // Parse the string into an Instant
+        val instant = Instant.parse(isoString)
+
+        // Convert to LocalDateTime in system timezone
+        val localDate = instant.toLocalDateTime(TimeZone.currentSystemDefault()).date
+
+        val day = localDate.dayOfMonth.toString().padStart(2, '0')
+        val monthName = localDate.month.name.lowercase()
+            .replaceFirstChar { it.uppercase() } // "January", "February", etc.
+        val year = localDate.year
+
+        return "$day $monthName $year"
+    }
 }

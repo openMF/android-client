@@ -12,7 +12,7 @@ package com.mifos.core.datastore
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.common.utils.ServerConfig
 import com.mifos.core.datastore.model.AppSettings
-import com.mifos.core.datastore.model.AppTheme
+import com.mifos.core.datastore.model.DarkThemeConfig
 import com.mifos.core.datastore.model.UserData
 import com.mifos.core.model.objects.users.User
 import kotlinx.coroutines.flow.Flow
@@ -24,7 +24,7 @@ interface UserPreferencesRepository {
     val settingsInfo: Flow<AppSettings>
     val token: String?
     val instanceUrl: String
-    val appTheme: StateFlow<AppTheme>
+    val appTheme: StateFlow<DarkThemeConfig>
     val getServerConfig: StateFlow<ServerConfig>
 
     suspend fun updateUser(user: User): DataState<Unit>
@@ -37,5 +37,5 @@ interface UserPreferencesRepository {
 
     suspend fun updateUserInfo(user: UserData): DataState<Unit>
 
-    suspend fun updateTheme(theme: AppTheme): DataState<Unit>
+    suspend fun updateTheme(theme: DarkThemeConfig): DataState<Unit>
 }

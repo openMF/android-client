@@ -104,14 +104,13 @@ fun LoanAccountScreen(
 ) {
     val state by viewModel.loanAccountUiState.collectAsStateWithLifecycle()
     val loanAccountTemplateState by viewModel.loanAccountTemplateUiState.collectAsStateWithLifecycle()
-    val clientId by viewModel.clientId.collectAsStateWithLifecycle()
 
     LaunchedEffect(Unit) {
         viewModel.loadAllLoans()
     }
 
     LoanAccountScreen(
-        clientId = clientId,
+        clientId = viewModel.clientId,
         state = state,
         loanAccountTemplateState = loanAccountTemplateState,
         onBackPressed = onBackPressed,
@@ -119,14 +118,14 @@ fun LoanAccountScreen(
             viewModel.loadAllLoans()
         },
         onLoanProductSelected = { productId ->
-            viewModel.loadLoanAccountTemplate(clientId, productId)
+            viewModel.loadLoanAccountTemplate(productId)
         },
         createLoanAccount = { loansPayload ->
             viewModel.createLoansAccount(loansPayload)
         },
         dataTable = dataTable,
         fetchTemplate = { productId ->
-            viewModel.loadLoanAccountTemplate(clientId, productId)
+            viewModel.loadLoanAccountTemplate(productId)
         },
     )
 }

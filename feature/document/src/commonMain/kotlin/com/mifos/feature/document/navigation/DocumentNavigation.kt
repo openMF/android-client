@@ -11,25 +11,20 @@ package com.mifos.feature.document.navigation
 
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
-import androidx.navigation.NavType
 import androidx.navigation.compose.composable
-import androidx.navigation.navArgument
-import com.mifos.core.common.utils.Constants
 import com.mifos.feature.document.documentList.DocumentListScreen
+import kotlinx.serialization.Serializable
 
-/**
- * Created by Pronay Sarker on 17/08/2024 (4:00 AM)
- */
+@Serializable
+data class DocumentListRoute(
+    val entityId: Int,
+    val entityType: String,
+)
+
 fun NavGraphBuilder.documentListScreen(
     onBackPressed: () -> Unit,
 ) {
-    composable(
-        route = DocumentScreens.DocumentListScreen.route,
-        arguments = listOf(
-            navArgument(name = Constants.ENTITY_ID, builder = { type = NavType.IntType }),
-            navArgument(name = Constants.ENTITY_TYPE, builder = { type = NavType.StringType }),
-        ),
-    ) {
+    composable<DocumentListRoute> {
         DocumentListScreen(
             onBackPressed = onBackPressed,
         )
@@ -37,5 +32,5 @@ fun NavGraphBuilder.documentListScreen(
 }
 
 fun NavController.navigateToDocumentListScreen(entityId: Int, entityType: String) {
-    navigate(DocumentScreens.DocumentListScreen.argument(entityId, entityType))
+    navigate(DocumentListRoute(entityId, entityType))
 }

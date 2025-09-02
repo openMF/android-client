@@ -98,6 +98,7 @@ internal class ClientProfileViewModel(
                     is DataState.Success -> mutableStateFlow.update {
                         it.copy(profileImage = imageToByteArray(result.data))
                     }
+
                     else -> Unit
                 }
             }
@@ -120,10 +121,18 @@ internal class ClientProfileViewModel(
     override fun handleAction(action: ClientProfileAction) {
         when (action) {
             ClientProfileAction.NavigateBack -> sendEvent(ClientProfileEvent.NavigateBack)
-            is ClientProfileAction.OnActionClick ->
-                sendEvent(ClientProfileEvent.OnActionClick(action.action))
+
+            is ClientProfileAction.OnActionClick -> sendEvent(
+                ClientProfileEvent.OnActionClick(
+                    action.action,
+                ),
+            )
+
             ClientProfileAction.OnRetry -> getClientAndObserveNetwork()
-            ClientProfileAction.NavigateToClientDetailsScreen -> sendEvent(ClientProfileEvent.NavigateToClientDetailsScreen)
+
+            ClientProfileAction.NavigateToClientDetailsScreen -> sendEvent(
+                ClientProfileEvent.NavigateToClientDetailsScreen,
+            )
         }
     }
 }

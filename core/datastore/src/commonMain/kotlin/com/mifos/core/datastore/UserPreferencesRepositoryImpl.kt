@@ -12,7 +12,7 @@ package com.mifos.core.datastore
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.common.utils.ServerConfig
 import com.mifos.core.datastore.model.AppSettings
-import com.mifos.core.datastore.model.AppTheme
+import com.mifos.core.datastore.model.DarkThemeConfig
 import com.mifos.core.datastore.model.UserData
 import com.mifos.core.model.objects.users.User
 import kotlinx.coroutines.CoroutineDispatcher
@@ -40,10 +40,10 @@ class UserPreferencesRepositoryImpl(
     override val userData: Flow<User>
         get() = preferenceManager.userData
 
-    override val appTheme: StateFlow<AppTheme>
+    override val appTheme: StateFlow<DarkThemeConfig>
         get() = preferenceManager.appTheme.stateIn(
             scope = unconfinedScope,
-            initialValue = AppTheme.SYSTEM,
+            initialValue = DarkThemeConfig.FOLLOW_SYSTEM,
             started = SharingStarted.Eagerly,
         )
 
@@ -64,7 +64,7 @@ class UserPreferencesRepositoryImpl(
     override val instanceUrl: String
         get() = preferenceManager.instanceUrl
 
-    override suspend fun updateTheme(theme: AppTheme): DataState<Unit> {
+    override suspend fun updateTheme(theme: DarkThemeConfig): DataState<Unit> {
         return try {
             val result = preferenceManager.updateTheme(theme)
             DataState.Success(result)

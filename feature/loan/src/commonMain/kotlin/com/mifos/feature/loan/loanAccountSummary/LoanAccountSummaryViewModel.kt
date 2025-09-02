@@ -14,7 +14,7 @@ import androidclient.feature.loan.generated.resources.feature_loan_unknown_error
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.mifos.core.common.utils.Constants
+import androidx.navigation.toRoute
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.repository.LoanAccountSummaryRepository
 import com.mifos.room.entities.accounts.loans.LoanWithAssociationsEntity
@@ -29,7 +29,7 @@ class LoanAccountSummaryViewModel(
 ) : ViewModel() {
 
     val loanAccountNumber =
-        savedStateHandle.getStateFlow(key = Constants.LOAN_ACCOUNT_NUMBER, initialValue = 0)
+        savedStateHandle.toRoute<LoanAccountSummaryScreenRoute>().loanAccountNumber
 
     private val _loanAccountSummaryUiState =
         MutableStateFlow<LoanAccountSummaryUiState>(LoanAccountSummaryUiState.ShowProgressbar)
@@ -37,7 +37,7 @@ class LoanAccountSummaryViewModel(
     val loanAccountSummaryUiState: StateFlow<LoanAccountSummaryUiState>
         get() = _loanAccountSummaryUiState
 
-    fun loadLoanById(loanAccountNumber: Int) {
+    fun loadLoanById() {
         viewModelScope.launch {
             repository.getLoanById(loanAccountNumber).collect { dataState ->
                 when (dataState) {

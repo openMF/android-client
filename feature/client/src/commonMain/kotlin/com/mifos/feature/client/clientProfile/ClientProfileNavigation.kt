@@ -23,6 +23,7 @@ data class ClientProfileRoute(
 
 fun NavGraphBuilder.clientProfileDestination(
     onNavigateBack: () -> Unit,
+    navController: NavController,
     notes: (Int) -> Unit,
     documents: (Int) -> Unit,
     identifiers: (Int) -> Unit,
@@ -39,6 +40,7 @@ fun NavGraphBuilder.clientProfileDestination(
             navigateToClientDetailsScreen = navigateToClientDetailsScreen,
             viewAddress = viewAddress,
             viewAssociatedAccounts = viewAssociatedAccounts,
+            navController = navController,
         )
     }
 }

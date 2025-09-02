@@ -39,7 +39,9 @@ object GetClientsClientIdAccountMapper :
                 SavingsAccountEntity(
                     id = it.id?.toInt(),
                     accountNo = it.accountNo,
+                    accountBalance = it.accountBalance,
                     productId = it.productId?.toInt(),
+                    shortProductName = it.shortProductName,
                     productName = it.productName,
                     depositType = it.depositType?.let { deposit ->
                         SavingAccountDepositTypeEntity(
@@ -115,6 +117,7 @@ object GetClientsClientIdAccountMapper :
                 GetClientsSavingsAccounts(
                     id = it.id?.toLong(),
                     accountNo = it.accountNo,
+                    accountBalance = it.accountBalance,
                     productId = it.productId?.toLong(),
                     productName = it.productName,
                     depositType = GetClientsSavingsAccountsDepositType(

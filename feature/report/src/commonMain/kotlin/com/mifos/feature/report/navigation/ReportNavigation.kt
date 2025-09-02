@@ -19,14 +19,17 @@ import com.mifos.core.common.utils.Constants
 import com.mifos.core.model.objects.runreport.client.ClientReportTypeItem
 import com.mifos.feature.report.reportDetail.ReportDetailScreen
 import com.mifos.feature.report.runReport.RunReportScreen
+import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
+
+@Serializable
+data object RunReportNavGraph
 
 fun NavGraphBuilder.reportNavGraph(
     navController: NavController,
 ) {
-    navigation(
-        startDestination = ReportScreens.RunReportScreen.route,
-        route = "run_report_route",
+    navigation<RunReportNavGraph>(
+        startDestination = RunReportScreenRoute,
     ) {
         runReportScreenRoute(
             onBackPressed = navController::popBackStack,
@@ -38,13 +41,14 @@ fun NavGraphBuilder.reportNavGraph(
     }
 }
 
+@Serializable
+data object RunReportScreenRoute
+
 fun NavGraphBuilder.runReportScreenRoute(
     onBackPressed: () -> Unit,
     onReportSelected: (ClientReportTypeItem) -> Unit,
 ) {
-    composable(
-        route = ReportScreens.RunReportScreen.route,
-    ) {
+    composable<RunReportScreenRoute> {
         RunReportScreen(
             onBackPressed = onBackPressed,
             onReportClick = onReportSelected,
@@ -68,4 +72,8 @@ fun NavGraphBuilder.reportDetailsScreenRoute(
 fun NavController.navigateReportDetailsScreen(clientReportTypeItem: ClientReportTypeItem) {
     val arg = Json.encodeToString(clientReportTypeItem)
     navigate(ReportScreens.ReportDetailScreen.argument(arg))
+}
+
+fun NavController.navigateToReportScreen() {
+    navigate(RunReportScreenRoute)
 }

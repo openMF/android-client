@@ -9,10 +9,12 @@
  */
 package com.mifos.feature.note.di
 
+import com.mifos.feature.note.addEditNotes.AddEditNoteViewModel
 import com.mifos.feature.note.notes.NoteViewModel
 import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.module
 
 val NoteModule = module {
     viewModelOf(::NoteViewModel)
+    viewModelOf(::AddEditNoteViewModel)
 }

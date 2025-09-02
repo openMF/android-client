@@ -18,10 +18,8 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
@@ -72,7 +70,6 @@ import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 internal fun CenterListScreen(
-    paddingValues: PaddingValues,
     createNewCenter: () -> Unit,
     onCenterSelect: (Int) -> Unit,
     viewModel: CenterListViewModel = koinViewModel(),
@@ -85,7 +82,6 @@ internal fun CenterListScreen(
     }
 
     CenterListScreen(
-        paddingValues = paddingValues,
         state = state,
         createNewCenter = createNewCenter,
         onRefresh = {
@@ -100,7 +96,6 @@ internal fun CenterListScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun CenterListScreen(
-    paddingValues: PaddingValues,
     state: CenterListUiState,
     createNewCenter: () -> Unit,
     onRefresh: () -> Unit,
@@ -121,8 +116,7 @@ internal fun CenterListScreen(
     val pullRefreshState = rememberPullToRefreshState()
 
     MifosScaffold(
-        modifier = Modifier
-            .padding(paddingValues),
+        modifier = Modifier,
         topBar = {
             if (isInSelectionMode) {
                 SelectionModeTopAppBar(
@@ -158,10 +152,7 @@ internal fun CenterListScreen(
     ) { paddingValue ->
         Column(
             modifier = Modifier
-                .fillMaxSize()
-                .padding(
-                    top = if (isInSelectionMode) paddingValues.calculateTopPadding() else 0.dp,
-                ),
+                .fillMaxSize(),
             verticalArrangement = Arrangement.Center,
         ) {
             PullToRefreshBox(
@@ -384,7 +375,6 @@ fun CenterListScreenPreview(
     @PreviewParameter(CenterListUiStateProvider::class) state: CenterListUiState,
 ) {
     CenterListScreen(
-        paddingValues = PaddingValues(),
         state = state,
         createNewCenter = {},
         onRefresh = {},

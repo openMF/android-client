@@ -8,7 +8,7 @@
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
 package com.mifos.core.datastore.model
-import com.mifos.core.common.enums.MifosAppLanguage
+import com.mifos.core.model.objects.LanguageConfig
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -16,15 +16,15 @@ data class AppSettings(
     val tenant: String,
     val baseUrl: String,
     val passcode: String? = null,
-    val appTheme: AppTheme = AppTheme.SYSTEM,
-    val language: MifosAppLanguage,
+    val appTheme: DarkThemeConfig = DarkThemeConfig.FOLLOW_SYSTEM,
+    val language: LanguageConfig,
 ) {
     companion object {
         val DEFAULT = AppSettings(
             tenant = "default",
             baseUrl = "https://tt.mifos.community/",
-            appTheme = AppTheme.SYSTEM,
-            language = MifosAppLanguage.SYSTEM_LANGUAGE,
+            appTheme = DarkThemeConfig.FOLLOW_SYSTEM,
+            language = LanguageConfig.DEFAULT,
         )
     }
 }
