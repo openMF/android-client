@@ -18,6 +18,11 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import androidx.navigation.navigation
 import com.mifos.core.common.utils.Constants
+import com.mifos.feature.client.clientAddress.AddAddress.clientAddAddressRoute
+import com.mifos.feature.client.clientAddress.AddAddress.navigateToClientAddAddressRoute
+import com.mifos.feature.client.clientAddress.clientAddressNavigation
+import com.mifos.feature.client.clientAddress.navigateToClientAddressRoute
+import com.mifos.feature.client.clientAddress.navigateToClientAddressRouteOnStatus
 import com.mifos.feature.client.clientCharges.ClientChargesScreen
 import com.mifos.feature.client.clientClosure.clientClosureDestination
 import com.mifos.feature.client.clientClosure.navigateToClientClosureRoute
@@ -128,7 +133,19 @@ fun NavGraphBuilder.clientNavGraph(
             documents = documents,
             identifiers = navController::navigateClientIdentifierScreen,
             navigateToClientDetailsScreen = navController::navigateToClientDetailsProfileRoute,
+            viewAddress = navController::navigateToClientAddressRoute,
             viewAssociatedAccounts = navController::navigateToClientProfileGeneralRoute,
+        )
+
+        clientAddressNavigation(
+            onNavigateBack = navController::popBackStack,
+            onNavigateNext = navController::navigateToClientAddressRouteOnStatus,
+            navigateToAddAddressForm = navController::navigateToClientAddAddressRoute
+        )
+
+        clientAddAddressRoute(
+            onNavigateBack = navController::popBackStack,
+            onNavigateNext = navController::navigateToClientAddressRouteOnStatus
         )
 
         clientProfileGeneralDestination(

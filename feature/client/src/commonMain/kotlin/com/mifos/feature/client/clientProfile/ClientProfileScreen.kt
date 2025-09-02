@@ -53,6 +53,7 @@ internal fun ClientProfileScreen(
     identifiers: (Int) -> Unit,
     onNavigateBack: () -> Unit,
     navigateToClientDetailsScreen: (Int) -> Unit,
+    viewAddress: (Int) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: ClientProfileViewModel = koinViewModel(),
 ) {
@@ -66,7 +67,9 @@ internal fun ClientProfileScreen(
 
             is ClientProfileEvent.OnActionClick -> {
                 when (event.action) {
-                    ClientProfileActionItem.Address -> {}
+                    ClientProfileActionItem.Address -> {
+                        viewAddress(state.client?.id?:-1)
+                    }
                     ClientProfileActionItem.Documents -> {
                         documents(state.client?.id ?: -1)
                     }
