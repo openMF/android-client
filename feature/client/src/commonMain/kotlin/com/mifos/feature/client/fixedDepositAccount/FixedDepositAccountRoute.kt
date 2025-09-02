@@ -29,12 +29,8 @@ fun NavGraphBuilder.clientFixedDepositAccountDestination(
         FixedDepositAccountScreen(
             navController,
             navigateBack = navigateBack,
-            onApproveAccount = {
-                onApproveAccount(it)
-            },
-            onViewAccount = {
-                onViewAccount(it)
-            },
+            onApproveAccount = onApproveAccount,
+            onViewAccount = onViewAccount,
         )
     }
 }
