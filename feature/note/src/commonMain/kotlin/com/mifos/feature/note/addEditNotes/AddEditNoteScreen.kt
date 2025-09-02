@@ -29,7 +29,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -45,7 +44,6 @@ import com.mifos.core.designsystem.theme.MifosTypography
 import com.mifos.core.ui.components.MifosAlertDialog
 import com.mifos.core.ui.components.MifosErrorComponent
 import com.mifos.core.ui.util.EventsEffect
-import kotlinx.coroutines.delay
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -114,12 +112,7 @@ fun AddEditNoteScreenDialog(
             )
         }
 
-        AddEditNoteState.DialogState.Success -> {
-            onAction(AddEditNoteAction.NavigateBackWithUpdateList)
-        }
-
         null -> Unit
-
     }
 }
 
@@ -138,14 +131,12 @@ internal fun AddEditNoteScreenScaffold(
                 .fillMaxSize()
                 .padding(paddingValues),
         ) {
-
-            if(state.dialogState !is AddEditNoteState.DialogState.Loading){
+            if (state.dialogState !is AddEditNoteState.DialogState.Loading) {
                 AddEditNote(
                     state = state,
                     onAction = onAction,
                 )
             }
-
         }
     }
 }

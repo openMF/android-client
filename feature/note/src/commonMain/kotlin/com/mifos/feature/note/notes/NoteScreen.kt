@@ -98,7 +98,6 @@ internal fun NoteScreenScaffold(
         }
     }
 
-
     NoteScreenScaffold(
         state = state,
         onAction = remember(viewModel) { { viewModel.trySendAction(it) } },

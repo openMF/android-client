@@ -138,11 +138,12 @@ class AddEditNoteViewModel(
                         is DataState.Success -> {
                             mutableStateFlow.update {
                                 it.copy(
-                                    dialogState = AddEditNoteState.DialogState.Success,
+                                    dialogState = null,
                                     successMessage = Res.string.feature_note_add_success,
                                     notesPayloadInitialData = state.textFieldNotesPayload.note,
                                 )
                             }
+                            sendEvent(AddEditNoteEvent.NavigateBackWithUpdateList)
                         }
                     }
                 }
@@ -162,19 +163,23 @@ class AddEditNoteViewModel(
                                     )
                                 }
                             }
+
                             DataState.Loading -> {
                                 mutableStateFlow.update {
                                     it.copy(dialogState = AddEditNoteState.DialogState.Loading)
                                 }
                             }
+
                             is DataState.Success -> {
                                 mutableStateFlow.update {
                                     it.copy(
-                                        dialogState = AddEditNoteState.DialogState.Success,
+                                        dialogState = null,
                                         successMessage = Res.string.feature_note_edit_success,
                                         notesPayloadInitialData = state.textFieldNotesPayload.note,
                                     )
                                 }
+
+                                sendEvent(AddEditNoteEvent.NavigateBackWithUpdateList)
                             }
                         }
                     }
@@ -246,8 +251,6 @@ class AddEditNoteViewModel(
                     sendEvent(AddEditNoteEvent.NavigateBack)
                 }
             }
-
-
         }
     }
 }
@@ -270,7 +273,6 @@ data class AddEditNoteState(
         data class Error(val message: StringResource) : DialogState
         data object Loading : DialogState
         data object MisTouchBack : DialogState
-        data object Success : DialogState
     }
 }
 
