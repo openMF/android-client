@@ -9,6 +9,8 @@
  */
 package com.mifos.feature.client.fixedDepositAccount
 
+import androidclient.feature.client.generated.resources.Res
+import androidclient.feature.client.generated.resources.no_internet_message
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
@@ -20,6 +22,7 @@ import com.mifos.room.entities.accounts.savings.SavingAccountDepositTypeEntity
 import com.mifos.room.entities.accounts.savings.SavingsAccountEntity
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import org.jetbrains.compose.resources.getString
 
 class FixedDepositAccountViewModel(
     savedStateHandle: SavedStateHandle,
@@ -101,7 +104,7 @@ class FixedDepositAccountViewModel(
                         mutableStateFlow.update {
                             it.copy(
                                 dialogState = FixedDepositAccountState
-                                    .DialogState.Error("No internet connection, Try Again"),
+                                    .DialogState.Error(getString(Res.string.no_internet_message)),
                             )
                         }
                     }
