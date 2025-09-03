@@ -7,7 +7,7 @@
  *
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
-package com.mifos.feature.client.recurringDepositAccount
+package com.mifos.feature.client.fixedDepositAccount
 
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
@@ -15,32 +15,28 @@ import androidx.navigation.compose.composable
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class RecurringDepositAccountRoute(
+data class FixedDepositAccountRoute(
     val clientId: Int = -1,
 )
 
-fun NavGraphBuilder.clientRecurringDepositAccountDestination(
+fun NavGraphBuilder.clientFixedDepositAccountDestination(
     navController: NavController,
     navigateBack: () -> Unit,
     onApproveAccount: (String) -> Unit,
     onViewAccount: (String) -> Unit,
 ) {
-    composable<RecurringDepositAccountRoute> {
-        RecurringDepositAccountScreen(
-            navController = navController,
+    composable<FixedDepositAccountRoute> {
+        FixedDepositAccountScreen(
+            navController,
             navigateBack = navigateBack,
-            onApproveAccount = {
-                onApproveAccount(it)
-            },
-            onViewAccount = {
-                onViewAccount(it)
-            },
+            onApproveAccount = onApproveAccount,
+            onViewAccount = onViewAccount,
         )
     }
 }
 
-fun NavController.navigateToRecurringDepositAccountRoute(
+fun NavController.navigateToFixedDepositAccountRoute(
     clientId: Int,
 ) {
-    this.navigate(RecurringDepositAccountRoute(clientId = clientId))
+    this.navigate(FixedDepositAccountRoute(clientId = clientId))
 }

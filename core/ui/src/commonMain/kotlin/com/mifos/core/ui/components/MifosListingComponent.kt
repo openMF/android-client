@@ -59,6 +59,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
@@ -102,10 +103,53 @@ fun MifosListingRowItem(
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically,
     ) {
         keyContent()
         valueContent()
     }
+}
+
+@Composable
+fun MifosListingColumnItem(
+    keyContent: @Composable () -> Unit,
+    valueContent: @Composable () -> Unit,
+) {
+    Column(
+        modifier = Modifier.fillMaxWidth(),
+    ) {
+        keyContent()
+        valueContent()
+    }
+}
+
+@Composable
+fun MifosListingColumnItem(
+    key: String,
+    value: String,
+    keyStyle: TextStyle = MifosTypography.labelSmall,
+    keyColor: Color = MaterialTheme.colorScheme.secondary,
+    valueStyle: TextStyle = MifosTypography.bodySmall,
+    valueColor: Color = MaterialTheme.colorScheme.onSurface,
+) {
+    MifosListingColumnItem(
+        keyContent = {
+            Text(
+                text = key,
+                style = keyStyle.copy(color = keyColor),
+                maxLines = 1,
+                overflow = TextOverflow.Clip,
+            )
+        },
+        valueContent = {
+            Text(
+                text = value,
+                style = valueStyle.copy(color = valueColor),
+                overflow = TextOverflow.Clip,
+                maxLines = 1,
+            )
+        },
+    )
 }
 
 @Composable

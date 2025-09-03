@@ -14,6 +14,8 @@
     <string name="feature_client_failed_to_load_db_clients">Failed to load Database Clients</string>
     <string name="feature_client_no_more_clients_available">No more Clients Available!</string>
 
+    <string name="no_internet_message">No internet connection, Try Again</string>
+
     <string name="feature_client_personal_details">Personal Details</string>
     <string name="feature_client_account_information">Account Information</string>
     <string name="feature_client_office_use">Office Use</string>
@@ -261,6 +263,8 @@
 
     <!-- Client_Profile-Recurring Deposit Account Title -->
     <string name="client_profile_recurring_deposit_account_title">Recurring Deposit Accounts</string>
+    <!-- Client_Profile-Fixed Deposit Account Title -->
+    <string name="client_profile_fixed_deposit_account_title">Fixed Deposit Accounts</string>
 
     <!-- Personal Info -->
     <string name="gender">Gender</string>

@@ -7,8 +7,10 @@
  *
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
-package com.mifos.feature.client.recurringDepositAccount
+package com.mifos.feature.client.fixedDepositAccount
 
+import androidclient.feature.client.generated.resources.Res
+import androidclient.feature.client.generated.resources.no_internet_message
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
@@ -20,86 +22,89 @@ import com.mifos.room.entities.accounts.savings.SavingAccountDepositTypeEntity
 import com.mifos.room.entities.accounts.savings.SavingsAccountEntity
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import org.jetbrains.compose.resources.getString
 
-class RecurringDepositAccountViewModel(
+class FixedDepositAccountViewModel(
     savedStateHandle: SavedStateHandle,
     private val networkMonitor: NetworkMonitor,
     private val getClientDetailsUseCase: GetClientDetailsUseCase,
 ) : BaseViewModel<
-    RecurringDepositAccountState,
-    RecurringDepositAccountEvent,
-    RecurringDepositAccountAction,
+    FixedDepositAccountState,
+    FixedDepositAccountEvent,
+    FixedDepositAccountAction,
     >
-    (initialState = RecurringDepositAccountState()) {
+    (initialState = FixedDepositAccountState()) {
 
-    val route = savedStateHandle.toRoute<RecurringDepositAccountRoute>()
+    val route = savedStateHandle.toRoute<FixedDepositAccountRoute>()
 
     init {
-        checkNetworkAndRecurringDepositAccounts()
+        checkNetworkAndGetFixedDepositAccounts()
     }
 
-    override fun handleAction(action: RecurringDepositAccountAction) {
+    override fun handleAction(action: FixedDepositAccountAction) {
         when (action) {
-            RecurringDepositAccountAction.CloseDialog -> {
+            FixedDepositAccountAction.CloseDialog -> {
                 mutableStateFlow.update {
                     it.copy(dialogState = null)
                 }
             }
 
-            is RecurringDepositAccountAction.NavigateBack -> {
-                sendEvent(RecurringDepositAccountEvent.OnNavigateBack)
+            is FixedDepositAccountAction.NavigateBack -> {
+                sendEvent(FixedDepositAccountEvent.OnNavigateBack)
             }
 
-            is RecurringDepositAccountAction.Refresh -> {
-                checkNetworkAndRecurringDepositAccounts()
+            is FixedDepositAccountAction.Refresh -> {
+                checkNetworkAndGetFixedDepositAccounts()
             }
 
-            RecurringDepositAccountAction.Search -> {
-                checkNetworkAndRecurringDepositAccounts()
+            is FixedDepositAccountAction.Search -> {
+                checkNetworkAndGetFixedDepositAccounts()
             }
 
-            is RecurringDepositAccountAction.ToggleFilter -> {
+            is FixedDepositAccountAction.ToggleFilter -> {
                 mutableStateFlow.update {
-                    it.copy(isFilterDialogOpen = !it.isFilterDialogOpen)
+                    it.copy(
+                        isFilterDialogOpen = !it.isFilterDialogOpen,
+                    )
                 }
             }
 
-            is RecurringDepositAccountAction.ToggleSearch -> {
+            is FixedDepositAccountAction.ToggleSearch -> {
                 mutableStateFlow.update {
                     it.copy(isSearchBarActive = !it.isSearchBarActive)
                 }
             }
 
-            is RecurringDepositAccountAction.UpdateSearch -> {
+            is FixedDepositAccountAction.UpdateSearch -> {
                 mutableStateFlow.update {
                     it.copy(searchText = action.query)
                 }
             }
 
-            is RecurringDepositAccountAction.ViewAccount -> {
+            is FixedDepositAccountAction.ViewAccount -> {
                 sendEvent(
-                    RecurringDepositAccountEvent.OnViewAccount(action.accountNumber),
+                    FixedDepositAccountEvent.OnViewAccount(action.accountNumber),
                 )
             }
 
-            is RecurringDepositAccountAction.ApproveAccount -> {
+            is FixedDepositAccountAction.ApproveAccount -> {
                 sendEvent(
-                    RecurringDepositAccountEvent.OnApproveAccount(action.accountNumber),
+                    FixedDepositAccountEvent.OnApproveAccount(action.accountNumber),
                 )
             }
         }
     }
 
-    private fun checkNetworkAndRecurringDepositAccounts() {
+    private fun checkNetworkAndGetFixedDepositAccounts() {
         viewModelScope.launch {
             networkMonitor.isOnline.collect { isConnected ->
                 when (isConnected) {
-                    true -> getRecurringDepositAccounts()
+                    true -> getFixedDepositAccounts()
                     false -> {
                         mutableStateFlow.update {
                             it.copy(
-                                dialogState = RecurringDepositAccountState
-                                    .DialogState.Error("No internet connection, Try Again"),
+                                dialogState = FixedDepositAccountState
+                                    .DialogState.Error(getString(Res.string.no_internet_message)),
                             )
                         }
                     }
@@ -108,14 +113,14 @@ class RecurringDepositAccountViewModel(
         }
     }
 
-    private fun getRecurringDepositAccounts() {
+    private fun getFixedDepositAccounts() {
         viewModelScope.launch {
             getClientDetailsUseCase.invoke(route.clientId).collect { result ->
                 when (result) {
                     is DataState.Error -> {
                         mutableStateFlow.update {
                             it.copy(
-                                dialogState = RecurringDepositAccountState.DialogState.Error(
+                                dialogState = FixedDepositAccountState.DialogState.Error(
                                     result.message,
                                 ),
                             )
@@ -124,15 +129,17 @@ class RecurringDepositAccountViewModel(
 
                     is DataState.Loading -> {
                         mutableStateFlow.update {
-                            it.copy(dialogState = RecurringDepositAccountState.DialogState.Loading)
+                            it.copy(dialogState = FixedDepositAccountState.DialogState.Loading)
                         }
                     }
 
                     is DataState.Success -> {
-                        val recurringDepositAccount =
+                        val fixedDepositAccount =
                             result.data.clientAccounts?.savingsAccounts?.let {
                                 it.filter { accountEntity ->
-                                    accountEntity.depositType?.serverType == SavingAccountDepositTypeEntity.ServerTypes.RECURRING && accountEntity.status?.closed == false
+                                    accountEntity.depositType?.serverType ==
+                                        SavingAccountDepositTypeEntity.ServerTypes.FIXED &&
+                                        accountEntity.status?.closed == false
                                 }.filter { accountEntity ->
                                     accountEntity.accountNo.toString().contains(state.searchText.trim())
                                 }
@@ -142,7 +149,7 @@ class RecurringDepositAccountViewModel(
                             it.copy(
                                 dialogState = null,
                                 clientId = route.clientId,
-                                recurringDepositAccounts = recurringDepositAccount,
+                                fixedDepositAccount = fixedDepositAccount,
                             )
                         }
                     }
@@ -152,9 +159,9 @@ class RecurringDepositAccountViewModel(
     }
 }
 
-data class RecurringDepositAccountState(
+data class FixedDepositAccountState(
     val clientId: Int = -1,
-    val recurringDepositAccounts: List<SavingsAccountEntity> = emptyList(),
+    val fixedDepositAccount: List<SavingsAccountEntity> = emptyList(),
     val searchText: String = "",
     val dialogState: DialogState? = null,
     val isSearchBarActive: Boolean = false,
@@ -166,20 +173,20 @@ data class RecurringDepositAccountState(
     }
 }
 
-sealed class RecurringDepositAccountAction {
-    data object NavigateBack : RecurringDepositAccountAction()
-    data class ViewAccount(val accountNumber: String) : RecurringDepositAccountAction()
-    data class ApproveAccount(val accountNumber: String) : RecurringDepositAccountAction()
-    data object Refresh : RecurringDepositAccountAction()
-    data object ToggleFilter : RecurringDepositAccountAction()
-    data object ToggleSearch : RecurringDepositAccountAction()
-    data object Search : RecurringDepositAccountAction()
-    data class UpdateSearch(val query: String) : RecurringDepositAccountAction()
-    data object CloseDialog : RecurringDepositAccountAction()
+sealed class FixedDepositAccountAction {
+    data object NavigateBack : FixedDepositAccountAction()
+    data class ViewAccount(val accountNumber: String) : FixedDepositAccountAction()
+    data class ApproveAccount(val accountNumber: String) : FixedDepositAccountAction()
+    data object Refresh : FixedDepositAccountAction()
+    data object ToggleFilter : FixedDepositAccountAction()
+    data object ToggleSearch : FixedDepositAccountAction()
+    data object Search : FixedDepositAccountAction()
+    data class UpdateSearch(val query: String) : FixedDepositAccountAction()
+    data object CloseDialog : FixedDepositAccountAction()
 }
 
-sealed class RecurringDepositAccountEvent {
-    data object OnNavigateBack : RecurringDepositAccountEvent()
-    data class OnViewAccount(val accountNumber: String) : RecurringDepositAccountEvent()
-    data class OnApproveAccount(val accountNumber: String) : RecurringDepositAccountEvent()
+sealed class FixedDepositAccountEvent {
+    data object OnNavigateBack : FixedDepositAccountEvent()
+    data class OnViewAccount(val accountNumber: String) : FixedDepositAccountEvent()
+    data class OnApproveAccount(val accountNumber: String) : FixedDepositAccountEvent()
 }
