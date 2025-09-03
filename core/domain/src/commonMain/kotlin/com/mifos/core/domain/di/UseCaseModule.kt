@@ -20,11 +20,11 @@ import com.mifos.core.domain.useCases.ApproveCheckerUseCase
 import com.mifos.core.domain.useCases.ApproveSavingsApplicationUseCase
 import com.mifos.core.domain.useCases.CreateChargesUseCase
 import com.mifos.core.domain.useCases.CreateClientIdentifierUseCase
-import com.mifos.core.domain.useCases.CreateDocumentUseCase
 import com.mifos.core.domain.useCases.CreateGroupLoansAccountUseCase
 import com.mifos.core.domain.useCases.CreateLoanAccountUseCase
 import com.mifos.core.domain.useCases.CreateLoanChargesUseCase
 import com.mifos.core.domain.useCases.CreateSavingsAccountUseCase
+import com.mifos.core.domain.useCases.CreateSignatureUseCase
 import com.mifos.core.domain.useCases.DeleteCheckerUseCase
 import com.mifos.core.domain.useCases.DeleteClientAddressPinpointUseCase
 import com.mifos.core.domain.useCases.DeleteDataTableEntryUseCase
@@ -78,6 +78,7 @@ import com.mifos.core.domain.useCases.SubmitCollectionSheetUseCase
 import com.mifos.core.domain.useCases.SubmitProductiveSheetUseCase
 import com.mifos.core.domain.useCases.UpdateClientPinpointUseCase
 import com.mifos.core.domain.useCases.UpdateNoteUseCase
+import com.mifos.core.domain.useCases.UpdateSignatureUseCase
 import com.mifos.core.domain.useCases.UploadClientImageUseCase
 import com.mifos.core.domain.useCases.UsernameValidationUseCase
 import com.mifos.core.domain.useCases.ValidateServerApiPathUseCase
@@ -99,7 +100,6 @@ val UseCaseModule = module {
     factoryOf(::ApproveSavingsApplicationUseCase)
     factoryOf(::CreateChargesUseCase)
     factoryOf(::CreateClientIdentifierUseCase)
-    factoryOf(::CreateDocumentUseCase)
     factoryOf(::CreateGroupLoansAccountUseCase)
     factoryOf(::CreateLoanAccountUseCase)
     factoryOf(::CreateLoanChargesUseCase)
@@ -165,4 +165,6 @@ val UseCaseModule = module {
     factoryOf(::AddNoteUseCase)
     factoryOf(::UpdateNoteUseCase)
     factoryOf(::DeleteNoteUseCase)
+    factoryOf(::CreateSignatureUseCase)
+    factoryOf(::UpdateSignatureUseCase)
 }

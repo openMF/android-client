@@ -9,9 +9,9 @@
  */
 package com.mifos.core.network.datamanager
 
-import com.mifos.core.common.utils.DataState
 import com.mifos.core.model.objects.noncoreobjects.Document
 import com.mifos.core.network.BaseApiManager
+import com.mifos.core.network.GenericResponse
 import io.ktor.client.request.forms.MultiPartFormDataContent
 import io.ktor.client.statement.HttpResponse
 import kotlinx.coroutines.flow.Flow
@@ -50,15 +50,8 @@ class DataManagerDocument(val mBaseApiManager: BaseApiManager) {
         entityType: String,
         entityId: Int,
         file: MultiPartFormDataContent,
-    ): DataState<Unit> {
-        return try {
-            mBaseApiManager
-                .documentService
-                .createDocument(entityType, entityId, file)
-            DataState.Success(Unit)
-        } catch (e: Exception) {
-            DataState.Error(e)
-        }
+    ): GenericResponse {
+        return mBaseApiManager.documentService.createDocument(entityType, entityId, file)
     }
 
     /**
@@ -72,11 +65,11 @@ class DataManagerDocument(val mBaseApiManager: BaseApiManager) {
      * @param documentId Document Id
      * @return ResponseBody Binary File of Document
      */
-    suspend fun downloadDocument(
+    fun downloadDocument(
         entityType: String,
         entityId: Int,
         documentId: Int,
-    ): HttpResponse {
+    ): Flow<HttpResponse> {
         return mBaseApiManager.documentService.downloadDocument(entityType, entityId, documentId)
     }
 
@@ -96,7 +89,7 @@ class DataManagerDocument(val mBaseApiManager: BaseApiManager) {
         entityType: String,
         entityId: Int,
         documentId: Int,
-    ) {
+    ): GenericResponse {
         return mBaseApiManager.documentService.removeDocument(entityType, entityId, documentId)
     }
 
@@ -120,13 +113,8 @@ class DataManagerDocument(val mBaseApiManager: BaseApiManager) {
         entityId: Int,
         documentId: Int,
         file: MultiPartFormDataContent,
-    ): DataState<Unit> {
-        return try {
-            mBaseApiManager.documentService
-                .updateDocument(entityType, entityId, documentId, file)
-            DataState.Success(Unit)
-        } catch (e: Exception) {
-            DataState.Error(e)
-        }
+    ): GenericResponse {
+        return mBaseApiManager.documentService
+            .updateDocument(entityType, entityId, documentId, file)
     }
 }

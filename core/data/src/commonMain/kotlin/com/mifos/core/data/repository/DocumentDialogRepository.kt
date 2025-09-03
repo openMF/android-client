@@ -10,7 +10,9 @@
 package com.mifos.core.data.repository
 
 import com.mifos.core.common.utils.DataState
+import com.mifos.core.network.GenericResponse
 import io.ktor.client.request.forms.MultiPartFormDataContent
+import kotlinx.coroutines.flow.Flow
 
 /**
  * Created by Aditya Gupta on 16/08/23.
@@ -21,12 +23,12 @@ interface DocumentDialogRepository {
         entityType: String,
         entityId: Int,
         file: MultiPartFormDataContent,
-    ): DataState<Unit>
+    ): Flow<DataState<GenericResponse>>
 
     suspend fun updateDocument(
         entityType: String,
         entityId: Int,
         documentId: Int,
         file: MultiPartFormDataContent,
-    ): DataState<Unit>
+    ): Flow<DataState<GenericResponse>>
 }

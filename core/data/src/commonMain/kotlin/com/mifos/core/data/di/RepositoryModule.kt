@@ -221,6 +221,7 @@ val RepositoryModule = module {
     singleOf(::SignatureRepositoryImp) bind SignatureRepository::class
     singleOf(::SurveyListRepositoryImp) bind SurveyListRepository::class
     singleOf(::SurveySubmitRepositoryImp) bind SurveySubmitRepository::class
+    singleOf(::SignatureRepositoryImp) bind SignatureRepository::class
 
     includes(platformModule)
     single<PlatformDependentDataModule> { getPlatformDataModule }

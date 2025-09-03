@@ -467,6 +467,16 @@
     <string name="client_apply_new_applications_apply_recurring_account">Apply for new recurring deposit account</string>
     <string name="client_apply_new_applications_apply_fixed_account">Apply for new fixed deposit account</string>
 
+    <!-- Client Signature -->
+    <string name="client_signature_delete">Delete Signature</string>
+    <string name="client_signature_upload">Upload New Signature</string>
+    <string name="client_signature_not_found">No Signature Found!</string>
+    <string name="client_signature_upload_message">Please update your signature\nat earliest!</string>
+    <string name="client_signature_delete_warning_message">Please confirm that you want to remove the signature? You can upload the new signature again through the app or website.</string>
+    <string name="client_signature_gallery">Gallery</string>
+    <string name="client_signature_draw">Draw</string>
+    <string name="client_signature_more">More</string>
+
     <string name="client_share_accounts_share_accounts">Share Accounts</string>
     <string name="client_share_accounts_an_error_occurred">An error occurred</string>
     <string name="client_share_accounts_failed_to_fetch_share_accounts">Failed to fetch share accounts</string>

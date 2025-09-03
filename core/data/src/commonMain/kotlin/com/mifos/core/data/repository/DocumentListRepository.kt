@@ -11,6 +11,7 @@ package com.mifos.core.data.repository
 
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.model.objects.noncoreobjects.Document
+import com.mifos.core.network.GenericResponse
 import io.ktor.client.statement.HttpResponse
 import kotlinx.coroutines.flow.Flow
 
@@ -21,15 +22,15 @@ interface DocumentListRepository {
 
     fun getDocumentsList(entityType: String, entityId: Int): Flow<DataState<List<Document>>>
 
-    suspend fun downloadDocument(
+    fun downloadDocument(
         entityType: String,
         entityId: Int,
         documentId: Int,
-    ): HttpResponse
+    ): Flow<DataState<HttpResponse>>
 
     suspend fun removeDocument(
         entityType: String,
         entityId: Int,
         documentId: Int,
-    ): Unit
+    ): GenericResponse
 }

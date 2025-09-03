@@ -15,6 +15,8 @@ import androidx.compose.material.icons.automirrored.filled.Help
 import androidx.compose.material.icons.automirrored.filled.Label
 import androidx.compose.material.icons.automirrored.filled.Logout
 import androidx.compose.material.icons.automirrored.outlined.ArrowBack
+import androidx.compose.material.icons.automirrored.outlined.Redo
+import androidx.compose.material.icons.automirrored.outlined.Undo
 import androidx.compose.material.icons.automirrored.rounded.Assignment
 import androidx.compose.material.icons.filled.AccountBalance
 import androidx.compose.material.icons.filled.AccountBalanceWallet
@@ -28,6 +30,8 @@ import androidx.compose.material.icons.filled.ChevronLeft
 import androidx.compose.material.icons.filled.ChevronRight
 import androidx.compose.material.icons.filled.CloudDownload
 import androidx.compose.material.icons.filled.DoneAll
+import androidx.compose.material.icons.filled.Draw
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Error
 import androidx.compose.material.icons.filled.FilterList
 import androidx.compose.material.icons.filled.FlashOff
@@ -55,18 +59,23 @@ import androidx.compose.material.icons.outlined.CheckCircle
 import androidx.compose.material.icons.outlined.DateRange
 import androidx.compose.material.icons.outlined.DeleteOutline
 import androidx.compose.material.icons.outlined.DocumentScanner
+import androidx.compose.material.icons.outlined.Draw
 import androidx.compose.material.icons.outlined.EventRepeat
 import androidx.compose.material.icons.outlined.FileUpload
 import androidx.compose.material.icons.outlined.Group
 import androidx.compose.material.icons.outlined.Groups
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.HomeWork
+import androidx.compose.material.icons.outlined.Image
 import androidx.compose.material.icons.outlined.Mail
 import androidx.compose.material.icons.outlined.MobileFriendly
 import androidx.compose.material.icons.outlined.Numbers
 import androidx.compose.material.icons.outlined.Payments
 import androidx.compose.material.icons.outlined.PersonOutline
+import androidx.compose.material.icons.outlined.Redo
+import androidx.compose.material.icons.outlined.Refresh
 import androidx.compose.material.icons.outlined.Savings
+import androidx.compose.material.icons.outlined.Undo
 import androidx.compose.material.icons.outlined.Visibility
 import androidx.compose.material.icons.outlined.VisibilityOff
 import androidx.compose.material.icons.outlined.Wallet
@@ -143,7 +152,7 @@ object MifosIcons {
     val Save = Icons.Rounded.Download
     val WifiOff = Icons.Default.WifiOff
     val Upload = Icons.Rounded.FileUpload
-    val Gallery = Icons.Filled.Image
+    val Gallery = Icons.Outlined.Image
     val ArrowDropDown = Icons.Default.ArrowDropDown
     val AssignmentTurnedIn = Icons.Default.AssignmentTurnedIn
     val Dashboard = Icons.Rounded.Dashboard
@@ -223,4 +232,8 @@ object MifosIcons {
     val FileUpload = Icons.Outlined.FileUpload
     val DeleteDocument = Icons.Outlined.DeleteOutline
     val MakeRepayment = Icons.Outlined.Payments
+    val Draw = Icons.Outlined.Draw
+    val Refresh = Icons.Outlined.Refresh
+    val Undo = Icons.AutoMirrored.Outlined.Undo
+    val Redo = Icons.AutoMirrored.Outlined.Redo
 }

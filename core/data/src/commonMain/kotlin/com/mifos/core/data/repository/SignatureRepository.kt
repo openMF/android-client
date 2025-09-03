@@ -9,17 +9,24 @@
  */
 package com.mifos.core.data.repository
 
-import com.mifos.core.common.utils.DataState
+import com.mifos.core.network.GenericResponse
 import io.ktor.client.request.forms.MultiPartFormDataContent
 
 /**
- * Created by Aditya Gupta on 08/08/23.
+ * Created by Arin Yadav on 03/09/25
  */
 interface SignatureRepository {
 
-    suspend fun createDocument(
+    suspend fun createSignature(
         entityType: String,
         entityId: Int,
         file: MultiPartFormDataContent,
-    ): DataState<Unit>
+    ): GenericResponse
+
+    suspend fun updateSignature(
+        entityType: String,
+        entityId: Int,
+        documentId: Int,
+        file: MultiPartFormDataContent,
+    ): GenericResponse
 }

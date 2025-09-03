@@ -17,11 +17,13 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
+import androidx.compose.material3.contentColorFor
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -31,13 +33,13 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 import com.arkivanov.essenty.backhandler.BackCallback
 import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.designsystem.theme.MifosTypography
 import kotlinx.coroutines.launch
-import org.jetbrains.compose.resources.DrawableResource
-import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -45,6 +47,8 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 fun MifosBottomSheet(
     onDismiss: () -> Unit,
     modifier: Modifier = Modifier,
+    containerColor: Color = MaterialTheme.colorScheme.onPrimary,
+    contentColor: Color = contentColorFor(containerColor),
     content: @Composable () -> Unit,
 ) {
     val coroutineScope = rememberCoroutineScope()
@@ -71,6 +75,8 @@ fun MifosBottomSheet(
                 dismissSheet()
             },
             sheetState = modalSheetState,
+            containerColor = containerColor,
+            contentColor = contentColor,
             modifier = modifier,
         ) {
             content()
@@ -81,7 +87,8 @@ fun MifosBottomSheet(
 @Composable
 fun MifosBottomSheetOptionItem(
     label: String,
-    icon: DrawableResource,
+    icon: ImageVector,
+    iconBackgroundColor: Color = MaterialTheme.colorScheme.onPrimary,
     onClick: () -> Unit,
 ) {
     Column(
@@ -90,13 +97,17 @@ fun MifosBottomSheetOptionItem(
             .clickable { onClick() },
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        MifosCard {
+        MifosCard(
+            colors = CardDefaults.cardColors(
+                containerColor = iconBackgroundColor,
+            ),
+        ) {
             Icon(
-                painter = painterResource(icon),
+                imageVector = icon,
                 contentDescription = null,
                 modifier = Modifier
-                    .padding(DesignToken.padding.small)
-                    .size(DesignToken.sizes.iconLarge),
+                    .padding(DesignToken.padding.medium)
+                    .size(DesignToken.sizes.iconMedium),
                 tint = MaterialTheme.colorScheme.primary,
             )
         }
