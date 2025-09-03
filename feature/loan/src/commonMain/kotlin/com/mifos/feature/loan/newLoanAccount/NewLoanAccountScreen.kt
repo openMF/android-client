@@ -133,6 +133,9 @@ private fun NewLoanAccountScaffold(
                 }
             }
         }
+        if (state.isOverLayLoadingActive) {
+            MifosProgressIndicatorOverlay()
+        }
     }
 }
 
@@ -152,8 +155,6 @@ private fun NewLoanAccountDialogs(
                 },
             )
         }
-
-        NewLoanAccountState.DialogState.LoadingOverLay -> MifosProgressIndicatorOverlay()
 
         null -> Unit
     }

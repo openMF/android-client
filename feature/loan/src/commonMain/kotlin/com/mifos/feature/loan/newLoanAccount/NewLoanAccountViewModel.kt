@@ -232,16 +232,20 @@ internal class NewLoanAccountViewModel(
     private fun handleLoanTemplateResponse(result: DataState<LoanTemplate>) {
         when (result) {
             is DataState.Error -> mutableStateFlow.update {
-                it.copy(dialogState = NewLoanAccountState.DialogState.Error(result.message))
+                it.copy(
+                    dialogState = NewLoanAccountState.DialogState.Error(result.message),
+                    isOverLayLoadingActive = false,
+                )
             }
 
             is DataState.Loading -> mutableStateFlow.update {
-                it.copy(dialogState = NewLoanAccountState.DialogState.LoadingOverLay)
+                it.copy(isOverLayLoadingActive = true)
             }
 
             is DataState.Success -> mutableStateFlow.update {
                 it.copy(
                     dialogState = null,
+                    isOverLayLoadingActive = false,
                     loanTemplate = result.data,
                 )
             }
@@ -259,6 +263,7 @@ data class NewLoanAccountState(
     val totalSteps: Int = 4,
     val dialogState: DialogState? = null,
     val screenState: ScreenState = ScreenState.Loading,
+    val isOverLayLoadingActive: Boolean = false,
     val externalId: String = "",
     val externalIdError: StringResource? = null,
     val loanOfficerIndex: Int = -1,
@@ -273,7 +278,6 @@ data class NewLoanAccountState(
 ) {
     sealed interface DialogState {
         data class Error(val message: String) : DialogState
-        data object LoadingOverLay : DialogState
     }
     sealed interface ScreenState {
         data object Loading : ScreenState
