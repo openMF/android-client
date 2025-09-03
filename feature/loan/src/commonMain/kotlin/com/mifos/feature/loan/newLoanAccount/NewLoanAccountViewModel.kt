@@ -19,10 +19,12 @@ import com.mifos.core.domain.useCases.GetAllLoanUseCase
 import com.mifos.core.domain.useCases.GetLoansAccountTemplateUseCase
 import com.mifos.core.model.objects.organisations.LoanProducts
 import com.mifos.core.ui.util.BaseViewModel
+import com.mifos.core.ui.util.TextFieldsValidator
 import com.mifos.room.entities.templates.loans.LoanTemplate
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
+import org.jetbrains.compose.resources.StringResource
 
 internal class NewLoanAccountViewModel(
     private val getAllLoanUseCase: GetAllLoanUseCase,
@@ -38,116 +40,129 @@ internal class NewLoanAccountViewModel(
 
     init {
         observeNetwork()
-        loadAllLoans()
     }
 
     override fun handleAction(action: NewLoanAccountAction) {
         when (action) {
-            NewLoanAccountAction.Retry -> {
-                mutableStateFlow.update {
-                    it.copy(
-                        dialogState = null,
-                        loanTemplate = null,
-                    )
-                }
-                observeNetwork()
-                loadAllLoans()
-            }
-            NewLoanAccountAction.NavigateBack -> sendEvent(NewLoanAccountEvent.NavigateBack)
-            NewLoanAccountAction.NextStep -> moveToNextStep()
-            NewLoanAccountAction.Finish -> sendEvent(NewLoanAccountEvent.Finish)
-            is NewLoanAccountAction.OnStepChange -> {
-                mutableStateFlow.update {
-                    it.copy(
-                        currentStep = action.newIndex,
-                    )
-                }
-            }
+            is NewLoanAccountAction.Retry -> handleRetry()
 
-            is NewLoanAccountAction.OnProductNameChange -> {
-                mutableStateFlow.update {
-                    it.copy(
-                        loanProductSelected = action.index,
-                    )
-                }
-                loadLoanAccountTemplate(state.productLoans[action.index].id ?: -1)
-            }
+            is NewLoanAccountAction.NavigateBack -> handleNavigateBack()
 
-            is NewLoanAccountAction.OnExternalIdChange -> {
-                mutableStateFlow.update {
-                    it.copy(
-                        externalId = action.value,
-                    )
-                }
-            }
+            is NewLoanAccountAction.NextStep -> moveToNextStep()
 
-            is NewLoanAccountAction.OnFundChange -> {
-                mutableStateFlow.update {
-                    it.copy(
-                        fundIndex = action.index,
-                    )
-                }
-            }
-            is NewLoanAccountAction.OnLoanOfficerChange -> {
-                mutableStateFlow.update {
-                    it.copy(
-                        loanOfficerIndex = action.index,
-                    )
-                }
-            }
-            is NewLoanAccountAction.OnLoanPurposeChange -> {
-                mutableStateFlow.update {
-                    it.copy(
-                        loanPurposeIndex = action.index,
-                    )
-                }
-            }
+            is NewLoanAccountAction.Finish -> handleFinish()
 
-            is NewLoanAccountAction.OnExpectedDisbursementDateChange -> {
-                mutableStateFlow.update {
-                    it.copy(
-                        expectedDisbursementDate = action.date,
-                    )
-                }
-            }
-            is NewLoanAccountAction.OnExpectedDisbursementDatePick -> {
-                mutableStateFlow.update {
-                    it.copy(
-                        showExpectedDisbursementDatePick = action.state,
-                    )
-                }
-            }
-            is NewLoanAccountAction.OnSubmissionDateChange -> {
-                mutableStateFlow.update {
-                    it.copy(
-                        submissionDate = action.date,
-                    )
-                }
-            }
-            is NewLoanAccountAction.OnSubmissionDatePick -> {
-                mutableStateFlow.update {
-                    it.copy(
-                        showSubmissionDatePick = action.state,
-                    )
-                }
-            }
+            is NewLoanAccountAction.OnStepChange -> handleStepChange(action)
 
-            is NewLoanAccountAction.OnLinkSavingsChange -> {
-                mutableStateFlow.update {
-                    it.copy(
-                        linkSavingsIndex = action.index,
-                    )
-                }
-            }
+            is NewLoanAccountAction.OnProductNameChange -> handleProductNameChange(action)
 
-            is NewLoanAccountAction.OnStandingInstructionsChange -> {
-                mutableStateFlow.update {
-                    it.copy(
-                        isCheckedStandingInstructions = action.state,
-                    )
-                }
+            is NewLoanAccountAction.OnExternalIdChange -> handleExternalIdChange(action)
+
+            is NewLoanAccountAction.OnFundChange -> handleFundChange(action)
+
+            is NewLoanAccountAction.OnLoanOfficerChange -> handleLoanOfficerChange(action)
+
+            is NewLoanAccountAction.OnLoanPurposeChange -> handleLoanPurposeChange(action)
+
+            is NewLoanAccountAction.OnExpectedDisbursementDateChange -> handleExpectedDisbursementDateChange(action)
+
+            is NewLoanAccountAction.OnExpectedDisbursementDatePick -> handleExpectedDisbursementDatePick(action)
+
+            is NewLoanAccountAction.OnSubmissionDateChange -> handleSubmissionDateChange(action)
+
+            is NewLoanAccountAction.OnSubmissionDatePick -> handleSubmissionDatePick(action)
+
+            is NewLoanAccountAction.OnLinkSavingsChange -> handleLinkSavingsChange(action)
+
+            is NewLoanAccountAction.OnStandingInstructionsChange -> handleStandingInstructionsChange(action)
+
+            is NewLoanAccountAction.OnDetailsSubmit -> handleOnDetailsSubmit()
+
+            is NewLoanAccountAction.Internal.OnReceivingLoanAccounts -> handleAllLoansResponse(action.loans)
+
+            is NewLoanAccountAction.Internal.OnReceivingLoanTemplate -> handleLoanTemplateResponse(action.template)
+        }
+    }
+
+    private fun handleRetry() {
+        mutableStateFlow.update {
+            it.copy(
+                dialogState = null,
+                loanTemplate = null,
+            )
+        }
+        observeNetwork()
+    }
+
+    private fun handleNavigateBack() {
+        sendEvent(NewLoanAccountEvent.NavigateBack)
+    }
+
+    private fun handleOnDetailsSubmit() {
+        mutableStateFlow.update {
+            it.copy(externalIdError = null)
+        }
+        val externalIdError = TextFieldsValidator.stringValidator(state.externalId)
+        if (externalIdError == null) {
+            moveToNextStep()
+        } else {
+            mutableStateFlow.update {
+                it.copy(externalIdError = externalIdError)
             }
         }
+    }
+
+    private fun handleFinish() {
+        sendEvent(NewLoanAccountEvent.Finish)
+    }
+
+    private fun handleStepChange(action: NewLoanAccountAction.OnStepChange) {
+        mutableStateFlow.update { it.copy(currentStep = action.newIndex) }
+    }
+
+    private fun handleProductNameChange(action: NewLoanAccountAction.OnProductNameChange) {
+        mutableStateFlow.update { it.copy(loanProductSelected = action.index) }
+        loadLoanAccountTemplate(state.productLoans[action.index].id ?: -1)
+    }
+
+    private fun handleExternalIdChange(action: NewLoanAccountAction.OnExternalIdChange) {
+        mutableStateFlow.update { it.copy(externalId = action.value) }
+    }
+
+    private fun handleFundChange(action: NewLoanAccountAction.OnFundChange) {
+        mutableStateFlow.update { it.copy(fundIndex = action.index) }
+    }
+
+    private fun handleLoanOfficerChange(action: NewLoanAccountAction.OnLoanOfficerChange) {
+        mutableStateFlow.update { it.copy(loanOfficerIndex = action.index) }
+    }
+
+    private fun handleLoanPurposeChange(action: NewLoanAccountAction.OnLoanPurposeChange) {
+        mutableStateFlow.update { it.copy(loanPurposeIndex = action.index) }
+    }
+
+    private fun handleExpectedDisbursementDateChange(action: NewLoanAccountAction.OnExpectedDisbursementDateChange) {
+        mutableStateFlow.update { it.copy(expectedDisbursementDate = action.date) }
+    }
+
+    private fun handleExpectedDisbursementDatePick(action: NewLoanAccountAction.OnExpectedDisbursementDatePick) {
+        mutableStateFlow.update { it.copy(showExpectedDisbursementDatePick = action.state) }
+    }
+
+    private fun handleSubmissionDateChange(action: NewLoanAccountAction.OnSubmissionDateChange) {
+        mutableStateFlow.update { it.copy(submissionDate = action.date) }
+    }
+
+    private fun handleSubmissionDatePick(action: NewLoanAccountAction.OnSubmissionDatePick) {
+        mutableStateFlow.update { it.copy(showSubmissionDatePick = action.state) }
+    }
+
+    private fun handleLinkSavingsChange(action: NewLoanAccountAction.OnLinkSavingsChange) {
+        mutableStateFlow.update { it.copy(linkSavingsIndex = action.index) }
+    }
+
+    private fun handleStandingInstructionsChange(action: NewLoanAccountAction.OnStandingInstructionsChange) {
+        mutableStateFlow.update { it.copy(isCheckedStandingInstructions = action.state) }
     }
 
     private fun moveToNextStep() {
@@ -169,51 +184,63 @@ internal class NewLoanAccountViewModel(
                 mutableStateFlow.update {
                     it.copy(networkConnection = isConnected)
                 }
-            }
-        }
-    }
-
-    private fun loadAllLoans() = viewModelScope.launch {
-        getAllLoanUseCase().collect { result ->
-            when (result) {
-                is DataState.Error -> mutableStateFlow.update {
-                    it.copy(dialogState = NewLoanAccountState.DialogState.Error(result.message))
-                }
-
-                is DataState.Loading -> mutableStateFlow.update {
-                    it.copy(dialogState = NewLoanAccountState.DialogState.Loading)
-                }
-
-                is DataState.Success -> {
+                if (isConnected) {
+                    loadAllLoans()
+                } else {
                     mutableStateFlow.update {
-                        it.copy(dialogState = null, productLoans = result.data)
+                        it.copy(
+                            dialogState = NewLoanAccountState.DialogState.Error(""),
+                        )
                     }
                 }
             }
         }
     }
 
-    fun loadLoanAccountTemplate(productId: Int) =
-        viewModelScope.launch {
-            getLoansAccountTemplateUseCase(state.clientId, productId).collect { result ->
-                when (result) {
-                    is DataState.Error ->
-                        mutableStateFlow.update {
-                            it.copy(dialogState = NewLoanAccountState.DialogState.Error(result.message))
-                        }
+    private fun loadAllLoans() = viewModelScope.launch {
+        getAllLoanUseCase().collect { result ->
+            sendAction(NewLoanAccountAction.Internal.OnReceivingLoanAccounts(result))
+        }
+    }
 
-                    is DataState.Loading -> Unit
+    fun loadLoanAccountTemplate(productId: Int) = viewModelScope.launch {
+        getLoansAccountTemplateUseCase(state.clientId, productId).collect { result ->
+            sendAction(NewLoanAccountAction.Internal.OnReceivingLoanTemplate(result))
+        }
+    }
 
-                    is DataState.Success ->
-                        mutableStateFlow.update {
-                            it.copy(
-                                dialogState = null,
-                                loanTemplate = result.data,
-                            )
-                        }
-                }
+    private fun handleAllLoansResponse(result: DataState<List<LoanProducts>>) {
+        when (result) {
+            is DataState.Error -> mutableStateFlow.update {
+                it.copy(dialogState = NewLoanAccountState.DialogState.Error(result.message))
+            }
+
+            is DataState.Loading -> mutableStateFlow.update {
+                it.copy(dialogState = NewLoanAccountState.DialogState.Loading)
+            }
+
+            is DataState.Success -> mutableStateFlow.update {
+                it.copy(dialogState = null, productLoans = result.data)
             }
         }
+    }
+
+    private fun handleLoanTemplateResponse(result: DataState<LoanTemplate>) {
+        when (result) {
+            is DataState.Error -> mutableStateFlow.update {
+                it.copy(dialogState = NewLoanAccountState.DialogState.Error(result.message))
+            }
+
+            is DataState.Loading -> Unit
+
+            is DataState.Success -> mutableStateFlow.update {
+                it.copy(
+                    dialogState = null,
+                    loanTemplate = result.data,
+                )
+            }
+        }
+    }
 }
 
 data class NewLoanAccountState(
@@ -226,6 +253,7 @@ data class NewLoanAccountState(
     val totalSteps: Int = 4,
     val dialogState: DialogState? = null,
     val externalId: String = "",
+    val externalIdError: StringResource? = null,
     val loanOfficerIndex: Int = -1,
     val loanPurposeIndex: Int = -1,
     val fundIndex: Int = -1,
@@ -265,4 +293,10 @@ sealed interface NewLoanAccountAction {
     data class OnExpectedDisbursementDatePick(val state: Boolean) : NewLoanAccountAction
     data class OnLinkSavingsChange(val index: Int) : NewLoanAccountAction
     data class OnStandingInstructionsChange(val state: Boolean) : NewLoanAccountAction
+    data object OnDetailsSubmit : NewLoanAccountAction
+
+    sealed interface Internal : NewLoanAccountAction {
+        data class OnReceivingLoanAccounts(val loans: DataState<List<LoanProducts>>) : Internal
+        data class OnReceivingLoanTemplate(val template: DataState<LoanTemplate>) : Internal
+    }
 }

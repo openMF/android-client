@@ -59,7 +59,7 @@ internal fun NewLoanAccountScreen(
 
     NewLoanAccountDialogs(
         state = state,
-        onRetry = { viewModel.trySendAction(NewLoanAccountAction.NextStep) },
+        onRetry = { viewModel.trySendAction(NewLoanAccountAction.Retry) },
     )
 
     NewLoanAccountScaffold(
