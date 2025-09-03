@@ -12,7 +12,6 @@ package com.mifos.feature.loan.newLoanAccount
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
-import co.touchlab.kermit.Logger
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.common.utils.DateHelper
 import com.mifos.core.data.util.NetworkMonitor
@@ -250,9 +249,6 @@ internal class NewLoanAccountViewModel(
                 }
 
                 is DataState.Success -> {
-                    Logger.e("Revanth") {
-                        result.data.toString()
-                    }
                     mutableStateFlow.update {
                         it.copy(dialogState = null, productLoans = result.data)
                     }
