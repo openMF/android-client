@@ -89,5 +89,12 @@
     <string name="core_ui_note_note">Note</string>
 
 
+        <string name="error_field_empty">This field cannot be empty</string>
+        <string name="error_invalid_characters">This field contains invalid characters</string>
+        <string name="error_invalid_number">Invalid number entered</string>
+        <string name="error_digits_only">This field should contain digits only</string>
+        <string name="error_number_zero">Number should not be zero</string>
+
+
 
 </resources>

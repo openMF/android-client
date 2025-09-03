@@ -34,8 +34,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.theme.DesignToken
@@ -54,7 +56,7 @@ import org.koin.compose.viewmodel.koinViewModel
 @Composable
 internal fun ClientApplyNewApplicationsScreen(
     onNavigateBack: () -> Unit,
-    onNavigateApplyLoanAccount: () -> Unit,
+    onNavigateApplyLoanAccount: (Int) -> Unit,
     onNavigateApplySavingsAccount: () -> Unit,
     onNavigateApplyShareAccount: () -> Unit,
     onNavigateApplyRecurringAccount: () -> Unit,
@@ -62,13 +64,15 @@ internal fun ClientApplyNewApplicationsScreen(
     navController: NavController,
     viewModel: ClientApplyNewApplicationsViewModel = koinViewModel(),
 ) {
+    val state by viewModel.stateFlow.collectAsStateWithLifecycle()
+
     EventsEffect(viewModel.eventFlow) { event ->
         when (event) {
             ClientApplyNewApplicationsEvent.NavigateBack -> onNavigateBack()
             is ClientApplyNewApplicationsEvent.OnActionClick -> {
                 when (event.action) {
                     ClientApplyNewApplicationsItem.NewFixedAccount -> onNavigateApplyFixedAccount()
-                    ClientApplyNewApplicationsItem.NewLoanAccount -> onNavigateApplyLoanAccount()
+                    ClientApplyNewApplicationsItem.NewLoanAccount -> onNavigateApplyLoanAccount(state.clientId)
                     ClientApplyNewApplicationsItem.NewRecurringAccount -> onNavigateApplyRecurringAccount()
                     ClientApplyNewApplicationsItem.NewSavingsAccount -> onNavigateApplySavingsAccount()
                     ClientApplyNewApplicationsItem.NewShareAccount -> onNavigateApplyShareAccount()
