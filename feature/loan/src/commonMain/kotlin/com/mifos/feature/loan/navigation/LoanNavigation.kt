@@ -29,6 +29,7 @@ import com.mifos.feature.loan.loanRepaymentSchedule.loanRepaymentSchedule
 import com.mifos.feature.loan.loanRepaymentSchedule.navigateToLoanRepaymentScheduleScreen
 import com.mifos.feature.loan.loanTransaction.loanTransactionScreen
 import com.mifos.feature.loan.loanTransaction.navigateToLoanTransactionScreen
+import com.mifos.feature.loan.newLoanAccount.newLoanAccountDestination
 import com.mifos.room.entities.accounts.loans.LoanWithAssociationsEntity
 import kotlinx.serialization.Serializable
 
@@ -73,6 +74,11 @@ fun NavGraphBuilder.loanNavGraph(
         loanRepaymentScreen {
             navController.popBackStack()
         }
+        newLoanAccountDestination(
+            onNavigateBack = navController::popBackStack,
+            onFinish = navController::popBackStack,
+            navController = navController,
+        )
     }
 }
 

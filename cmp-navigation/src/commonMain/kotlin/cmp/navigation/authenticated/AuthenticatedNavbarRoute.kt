@@ -16,22 +16,24 @@ import androidx.navigation.compose.composable
 import kotlinx.serialization.Serializable
 
 @Serializable
-data object AuthenticatedNavbarRoute
+data object AuthenticatedNavbar
 
 internal fun NavController.navigateToAuthenticatedNavBar(navOptions: NavOptions? = null) {
-    navigate(route = AuthenticatedNavbarRoute, navOptions = navOptions)
+    navigate(route = AuthenticatedNavbar, navOptions = navOptions)
 }
 
 internal fun NavGraphBuilder.authenticatedNavbarGraph(
     onDrawerItemClick: (String) -> Unit,
     navigateToDocumentScreen: (Int, String) -> Unit,
     navigateToNoteScreen: (Int, String) -> Unit,
+    navigateToNewLoanAccountScreen: (Int) -> Unit,
 ) {
-    composable<AuthenticatedNavbarRoute> {
+    composable<AuthenticatedNavbar> {
         AuthenticatedNavbarNavigationScreen(
             onDrawerItemClick = onDrawerItemClick,
             navigateToDocumentScreen = navigateToDocumentScreen,
             navigateToNoteScreen = navigateToNoteScreen,
+            navigateToNewLoanAccountScreen = navigateToNewLoanAccountScreen,
         )
     }
 }
