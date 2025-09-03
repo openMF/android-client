@@ -12,21 +12,16 @@ package com.mifos.core.ui.components
 import androidclient.core.ui.generated.resources.Res
 import androidclient.core.ui.generated.resources.core_ui_account_no
 import androidclient.core.ui.generated.resources.core_ui_amount_paid
-import androidclient.core.ui.generated.resources.core_ui_approve_account
 import androidclient.core.ui.generated.resources.core_ui_balance
-import androidclient.core.ui.generated.resources.core_ui_delete_document
-import androidclient.core.ui.generated.resources.core_ui_delete_note
 import androidclient.core.ui.generated.resources.core_ui_description
 import androidclient.core.ui.generated.resources.core_ui_document_id
 import androidclient.core.ui.generated.resources.core_ui_document_key
 import androidclient.core.ui.generated.resources.core_ui_due
 import androidclient.core.ui.generated.resources.core_ui_due_as_of
-import androidclient.core.ui.generated.resources.core_ui_edit_note
 import androidclient.core.ui.generated.resources.core_ui_identify_documents
 import androidclient.core.ui.generated.resources.core_ui_last_active
 import androidclient.core.ui.generated.resources.core_ui_loan_balance
 import androidclient.core.ui.generated.resources.core_ui_loan_product
-import androidclient.core.ui.generated.resources.core_ui_make_repayment
 import androidclient.core.ui.generated.resources.core_ui_name
 import androidclient.core.ui.generated.resources.core_ui_note_createdBy
 import androidclient.core.ui.generated.resources.core_ui_note_date
@@ -39,11 +34,10 @@ import androidclient.core.ui.generated.resources.core_ui_status
 import androidclient.core.ui.generated.resources.core_ui_total_collateral_value
 import androidclient.core.ui.generated.resources.core_ui_total_value
 import androidclient.core.ui.generated.resources.core_ui_type
-import androidclient.core.ui.generated.resources.core_ui_upload_again
-import androidclient.core.ui.generated.resources.core_ui_view_account
-import androidclient.core.ui.generated.resources.core_ui_view_document
 import androidclient.core.ui.generated.resources.core_ui_waived
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.animation.core.spring
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -60,7 +54,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -73,7 +66,6 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalDensity
@@ -83,23 +75,32 @@ import com.mifos.core.designsystem.theme.AppColors
 import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.designsystem.theme.MifosTypography
 import com.mifos.core.designsystem.utils.onClick
-import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
 fun MifosActionsListingComponentOutline(
-    modifier: Modifier = Modifier
-        .fillMaxWidth()
-        .border(
-            width = 1.dp,
-            shape = DesignToken.shapes.medium,
-            color = MaterialTheme.colorScheme.secondaryContainer,
-        ),
+    modifier: Modifier = Modifier,
+    isExpanded: Boolean = true,
     content: @Composable () -> Unit,
 ) {
+    val bottomCorner by animateDpAsState(
+        if(isExpanded) 0.dp else 12.dp,
+        animationSpec = spring()
+    )
+
     Box(
-        modifier = modifier,
+        modifier = modifier
+            .border(
+                width = 1.dp,
+                shape = RoundedCornerShape(
+                    topStart = 12.dp,
+                    topEnd = 12.dp,
+                    bottomStart = bottomCorner,
+                    bottomEnd = bottomCorner,
+                ),
+                color = MaterialTheme.colorScheme.secondaryContainer,
+            ),
     ) {
         content()
     }
@@ -122,20 +123,7 @@ fun MifosActionsIdentifierListingComponent(
 
     Column {
         MifosActionsListingComponentOutline(
-            modifier = Modifier.border(
-                width = 1.dp,
-                shape = if (!isExpanded) {
-                    DesignToken.shapes.medium
-                } else {
-                    RoundedCornerShape(
-                        topStart = 12.dp,
-                        topEnd = 12.dp,
-                        bottomStart = 0.dp,
-                        bottomEnd = 0.dp,
-                    )
-                },
-                color = MaterialTheme.colorScheme.secondaryContainer,
-            ),
+            isExpanded = isExpanded
         ) {
             Column(modifier = Modifier.padding(DesignToken.padding.large).onClick { onClick() }) {
                 MifosListingRowItemHeader(
@@ -323,20 +311,7 @@ fun MifosActionsLoanListingComponent(
 
     Column {
         MifosActionsListingComponentOutline(
-            modifier = Modifier.border(
-                width = 1.dp,
-                shape = if (!isActive) {
-                    DesignToken.shapes.medium
-                } else {
-                    RoundedCornerShape(
-                        topStart = 12.dp,
-                        topEnd = 12.dp,
-                        bottomStart = 0.dp,
-                        bottomEnd = 0.dp,
-                    )
-                },
-                color = MaterialTheme.colorScheme.secondaryContainer,
-            ),
+            isExpanded=isActive
         ) {
             Column(
                 modifier = Modifier.padding(DesignToken.padding.large)
@@ -438,20 +413,7 @@ fun MifosActionsSavingsListingComponent(
 
     Column {
         MifosActionsListingComponentOutline(
-            modifier = Modifier.border(
-                width = 1.dp,
-                shape = if (!isExpanded) {
-                    DesignToken.shapes.medium
-                } else {
-                    RoundedCornerShape(
-                        topStart = 12.dp,
-                        topEnd = 12.dp,
-                        bottomStart = 0.dp,
-                        bottomEnd = 0.dp,
-                    )
-                },
-                color = MaterialTheme.colorScheme.secondaryContainer,
-            ),
+            isExpanded=isExpanded
         ) {
             Column(
                 modifier = Modifier.padding(DesignToken.padding.large)
@@ -635,6 +597,7 @@ sealed class Actions(open val icon: ImageVector) {
     data class Edit(override val icon: ImageVector = MifosIcons.Edit) : Actions(icon)
     data class Delete(override val icon: ImageVector = MifosIcons.Delete) : Actions(icon)
 }
+
 @Composable
 fun MifosActionsNoteListingComponent(
     createdBy: String,
@@ -645,12 +608,12 @@ fun MifosActionsNoteListingComponent(
     isExpanded: Boolean,
     onActionClicked: (Actions) -> Unit,
 ) {
+    val density = LocalDensity.current
+
     Column {
         MifosActionsListingComponentOutline(
-            modifier = Modifier
-                .clickable {
-                    onExpand()
-                },
+            modifier = Modifier.clickable { onExpand() },
+            isExpanded = isExpanded
         ) {
             Column(
                 modifier = Modifier.padding(DesignToken.padding.large),
@@ -676,37 +639,51 @@ fun MifosActionsNoteListingComponent(
             }
         }
 
-        AnimatedVisibility(isExpanded) {
+        AnimatedVisibility(
+            visible = isExpanded,
+            enter = slideInVertically {
+                with(density) { -40.dp.roundToPx() }
+            } + expandVertically(
+                expandFrom = Alignment.Top,
+            ) + fadeIn(
+                initialAlpha = 0.3f,
+            ),
+            exit = slideOutVertically() + shrinkVertically() + fadeOut()
+        ) {
             Surface(
                 modifier = Modifier.fillMaxWidth(),
-                shape = DesignToken.shapes.bottomMedium,
+                shape = RoundedCornerShape(
+                    bottomStart = DesignToken.padding.medium,
+                    bottomEnd = DesignToken.padding.medium,
+                ),
                 color = MaterialTheme.colorScheme.surfaceContainer,
             ) {
                 Column(
-                    modifier = Modifier.padding(vertical = DesignToken.spacing.large),
-                    verticalArrangement = Arrangement.spacedBy(DesignToken.spacing.medium),
+                    modifier = Modifier.padding(
+                        vertical = DesignToken.padding.small,
+                    ),
                 ) {
                     menuList.map { menuItem ->
                         Row(
-                            modifier = Modifier.fillMaxWidth().padding(
-                                horizontal = DesignToken.padding.large,
-                            ).clickable {
-                                onActionClicked(menuItem)
-                            },
-                            horizontalArrangement = Arrangement.spacedBy(
-                                DesignToken.spacing.medium,
-                            ),
+                            modifier = Modifier.fillMaxWidth()
+                                .height(DesignToken.sizes.avatarMedium)
+                                .clickable {
+                                    onActionClicked(menuItem)
+                                },
                             verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.Start,
                         ) {
                             Icon(
+                                modifier = Modifier.padding(horizontal = DesignToken.padding.large),
                                 imageVector = menuItem.icon,
-                                contentDescription = null,
-                                modifier = Modifier.size(DesignToken.sizes.iconMedium),
+                                contentDescription = "",
                             )
+
                             Text(
-                                text = stringResource(menuItem.iconName),
-                                style = MaterialTheme.typography.bodyLarge,
+                                modifier = Modifier.fillMaxWidth(),
+                                text = menuItem::class.simpleName ?: "",
                                 color = MaterialTheme.colorScheme.onSurface,
+                                fontSize = MaterialTheme.typography.bodyLarge.fontSize,
                             )
                         }
                     }

@@ -10,6 +10,8 @@
 package com.mifos.feature.note.notes
 
 import androidclient.feature.note.generated.resources.Res
+import androidclient.feature.note.generated.resources.delete_document
+import androidclient.feature.note.generated.resources.edit
 import androidclient.feature.note.generated.resources.feature_note_add_item
 import androidclient.feature.note.generated.resources.feature_note_delete
 import androidclient.feature.note.generated.resources.feature_note_delete_note
@@ -38,7 +40,6 @@ import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -63,7 +64,9 @@ import kotlinx.datetime.Clock
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 import org.jetbrains.compose.resources.stringResource
+import org.jetbrains.compose.resources.vectorResource
 import org.koin.compose.viewmodel.koinViewModel
+
 
 @Composable
 internal fun NoteScreen(
@@ -159,7 +162,9 @@ internal fun NoteScreenScaffold(
         modifier = modifier,
     ) { paddingValues ->
         Column(
-            modifier = Modifier.fillMaxSize().padding(paddingValues),
+            modifier = Modifier
+                .padding(paddingValues)
+                .fillMaxSize(),
         ) {
             MifosBreadcrumbNavBar(navController)
             PullToRefreshBox(
@@ -239,16 +244,20 @@ private fun NoteContent(
                             onAction(NoteAction.OnToggleExpanded(note.id))
                         },
                         menuList = listOf(
-                            Actions.Edit,
-                            Actions.Delete,
+                            Actions.Edit(
+                                vectorResource(Res.drawable.edit)
+                            ),
+                            Actions.Delete(
+                                vectorResource(Res.drawable.delete_document)
+                            ),
                         ),
                         onActionClicked = { actions ->
                             when (actions) {
-                                Actions.Edit -> {
+                                is Actions.Edit -> {
                                     onAction(NoteAction.OnClickEditScreen)
                                 }
 
-                                Actions.Delete -> {
+                                is Actions.Delete -> {
                                     onAction(NoteAction.ShowDialog)
                                 }
 
