@@ -43,6 +43,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.mifos.core.common.utils.DateHelper
 import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosScaffold
@@ -53,6 +55,7 @@ import com.mifos.core.model.objects.notes.Note
 import com.mifos.core.ui.components.Actions
 import com.mifos.core.ui.components.MifosActionsNoteListingComponent
 import com.mifos.core.ui.components.MifosAlertDialog
+import com.mifos.core.ui.components.MifosBreadcrumbNavBar
 import com.mifos.core.ui.components.MifosEmptyCard
 import com.mifos.core.ui.components.MifosErrorComponent
 import com.mifos.core.ui.util.DevicePreview
@@ -67,6 +70,7 @@ import org.koin.compose.viewmodel.koinViewModel
 internal fun NoteScreen(
     onNavigateBack: () -> Unit,
     onNavigateAddEditNote: (Int, String?, Long?) -> Unit,
+    navController: NavController,
     viewModel: NoteViewModel = koinViewModel(),
 ) {
     val state by viewModel.stateFlow.collectAsStateWithLifecycle()
@@ -91,6 +95,7 @@ internal fun NoteScreen(
     NoteScreenScaffold(
         state = state,
         onAction = remember(viewModel) { { viewModel.trySendAction(it) } },
+        navController = navController,
     )
 
     NoteScreenDialog(
@@ -138,9 +143,10 @@ private fun NoteScreenDialog(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun NoteScreenScaffold(
-    onAction: (NoteAction) -> Unit,
     state: NoteState,
+    navController: NavController,
     modifier: Modifier = Modifier,
+    onAction: (NoteAction) -> Unit,
 ) {
     val snackBarHostState = remember { SnackbarHostState() }
     val pullRefreshState = rememberPullToRefreshState()
@@ -153,9 +159,10 @@ internal fun NoteScreenScaffold(
         snackbarHostState = snackBarHostState,
         modifier = modifier,
     ) { paddingValues ->
-        Box(
+        Column(
             modifier = Modifier.fillMaxSize().padding(paddingValues),
         ) {
+            MifosBreadcrumbNavBar(navController)
             PullToRefreshBox(
                 state = pullRefreshState,
                 modifier = Modifier.fillMaxSize(),
@@ -297,5 +304,6 @@ fun PreviewSuccessNoteScreen() {
     NoteScreenScaffold(
         onAction = {},
         state = NoteState(notes = demoNotes),
+        navController = rememberNavController()
     )
 }

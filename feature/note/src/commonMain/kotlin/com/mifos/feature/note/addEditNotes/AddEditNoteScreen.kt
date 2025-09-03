@@ -35,6 +35,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavController
 import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosOutlinedButton
 import com.mifos.core.designsystem.component.MifosOutlinedTextField
@@ -42,6 +43,7 @@ import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.designsystem.theme.MifosTypography
 import com.mifos.core.ui.components.MifosAlertDialog
+import com.mifos.core.ui.components.MifosBreadcrumbNavBar
 import com.mifos.core.ui.components.MifosErrorComponent
 import com.mifos.core.ui.util.EventsEffect
 import org.jetbrains.compose.resources.stringResource
@@ -51,6 +53,7 @@ import org.koin.compose.viewmodel.koinViewModel
 internal fun AddEditNoteScreen(
     onBackPressed: () -> Unit,
     onNavigateWithUpdatedList: (Int, String?) -> Unit,
+    navController: NavController,
     viewModel: AddEditNoteViewModel = koinViewModel(),
 ) {
     val state by viewModel.stateFlow.collectAsStateWithLifecycle()
@@ -68,6 +71,7 @@ internal fun AddEditNoteScreen(
     AddEditNoteScreenScaffold(
         state = state,
         onAction = remember(viewModel) { { viewModel.trySendAction(it) } },
+        navController = navController,
     )
 
     AddEditNoteScreenDialog(
@@ -120,13 +124,14 @@ fun AddEditNoteScreenDialog(
 internal fun AddEditNoteScreenScaffold(
     onAction: (AddEditNoteAction) -> Unit,
     state: AddEditNoteState,
+    navController: NavController,
 ) {
     MifosScaffold(
         title = "",
         onBackPressed = { onAction(AddEditNoteAction.MisTouchBackDialog) },
     ) { paddingValues ->
 
-        Box(
+        Column(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues),
@@ -134,6 +139,8 @@ internal fun AddEditNoteScreenScaffold(
             if (state.dialogState !is AddEditNoteState.DialogState.Loading &&
                 state.dialogState !is AddEditNoteState.DialogState.Error
             ) {
+                MifosBreadcrumbNavBar(navController)
+
                 AddEditNote(
                     state = state,
                     onAction = onAction,
