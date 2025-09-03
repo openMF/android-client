@@ -189,7 +189,7 @@ internal class NewLoanAccountViewModel(
                 } else {
                     mutableStateFlow.update {
                         it.copy(
-                            dialogState = NewLoanAccountState.DialogState.Error(""),
+                            screenState = NewLoanAccountState.ScreenState.NetworkError,
                         )
                     }
                 }
@@ -282,6 +282,7 @@ data class NewLoanAccountState(
     sealed interface ScreenState {
         data object Loading : ScreenState
         data object Success : ScreenState
+        data object NetworkError : ScreenState
     }
     val isDetailsNextEnabled = loanProductSelected != -1 && externalId.isNotEmpty() && loanOfficerIndex != -1 && submissionDate.isNotEmpty() && expectedDisbursementDate.isNotEmpty()
 }
