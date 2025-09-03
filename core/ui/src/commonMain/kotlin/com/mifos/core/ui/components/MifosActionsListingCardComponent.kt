@@ -85,8 +85,8 @@ fun MifosActionsListingComponentOutline(
     content: @Composable () -> Unit,
 ) {
     val bottomCorner by animateDpAsState(
-        if(isExpanded) 0.dp else 12.dp,
-        animationSpec = spring()
+        if (isExpanded) 0.dp else 12.dp,
+        animationSpec = spring(),
     )
 
     Box(
@@ -123,7 +123,7 @@ fun MifosActionsIdentifierListingComponent(
 
     Column {
         MifosActionsListingComponentOutline(
-            isExpanded = isExpanded
+            isExpanded = isExpanded,
         ) {
             Column(modifier = Modifier.padding(DesignToken.padding.large).onClick { onClick() }) {
                 MifosListingRowItemHeader(
@@ -311,7 +311,7 @@ fun MifosActionsLoanListingComponent(
 
     Column {
         MifosActionsListingComponentOutline(
-            isExpanded=isActive
+            isExpanded = isActive,
         ) {
             Column(
                 modifier = Modifier.padding(DesignToken.padding.large)
@@ -413,7 +413,7 @@ fun MifosActionsSavingsListingComponent(
 
     Column {
         MifosActionsListingComponentOutline(
-            isExpanded=isExpanded
+            isExpanded = isExpanded,
         ) {
             Column(
                 modifier = Modifier.padding(DesignToken.padding.large)
@@ -613,7 +613,7 @@ fun MifosActionsNoteListingComponent(
     Column {
         MifosActionsListingComponentOutline(
             modifier = Modifier.clickable { onExpand() },
-            isExpanded = isExpanded
+            isExpanded = isExpanded,
         ) {
             Column(
                 modifier = Modifier.padding(DesignToken.padding.large),
@@ -648,7 +648,7 @@ fun MifosActionsNoteListingComponent(
             ) + fadeIn(
                 initialAlpha = 0.3f,
             ),
-            exit = slideOutVertically() + shrinkVertically() + fadeOut()
+            exit = slideOutVertically() + shrinkVertically() + fadeOut(),
         ) {
             Surface(
                 modifier = Modifier.fillMaxWidth(),
@@ -693,7 +693,6 @@ fun MifosActionsNoteListingComponent(
     }
 }
 
-
 @Preview
 @Composable
 private fun PreviewMifosActionsNoteListingComponent() {
@@ -710,8 +709,8 @@ private fun PreviewMifosActionsNoteListingComponent() {
             isExpanded = true,
             onActionClicked = { action ->
                 when (action) {
-                    is Actions.Edit -> println(Actions.ViewAccount::class.simpleName?:"")
-                    is Actions.Delete -> println(Actions.ApproveAccount::class.simpleName?:"")
+                    is Actions.Edit -> println(Actions.ViewAccount::class.simpleName ?: "")
+                    is Actions.Delete -> println(Actions.ApproveAccount::class.simpleName ?: "")
                     else -> println("Action not Handled")
                 }
             },
