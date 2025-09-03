@@ -81,6 +81,64 @@ internal class NewLoanAccountViewModel(
             is NewLoanAccountAction.Internal.OnReceivingLoanAccounts -> handleAllLoansResponse(action.loans)
 
             is NewLoanAccountAction.Internal.OnReceivingLoanTemplate -> handleLoanTemplateResponse(action.template)
+
+            is NewLoanAccountAction.OnFirstRepaymentDateChange -> handleFirstRepaymentDateChange(action)
+
+            is NewLoanAccountAction.OnFirstRepaymentDatePick -> handleFirstRepaymentDatePick(action)
+
+            is NewLoanAccountAction.OnInterestChargedFromChange -> handleInterestChargedFromChange(action)
+
+            is NewLoanAccountAction.OnInterestChargedFromDatePick -> handleInterestChargedFromDatePick(action)
+
+            is NewLoanAccountAction.OnNoOfRepaymentsChange -> handleNoOfRepaymentsChange(action)
+
+            is NewLoanAccountAction.OnPrincipalAmountChange -> handlePrincipalAmountChange(action)
+
+            is NewLoanAccountAction.OnTermFrequencyIndexChange -> handleTermFrequencyIndexChange(action)
+
+            is NewLoanAccountAction.PreviousStep -> moveToPreviousStep()
+        }
+    }
+
+    private fun handleFirstRepaymentDateChange(action: NewLoanAccountAction.OnFirstRepaymentDateChange) {
+        mutableStateFlow.update {
+            it.copy(firstRepaymentDate = action.date)
+        }
+    }
+
+    private fun handleFirstRepaymentDatePick(action: NewLoanAccountAction.OnFirstRepaymentDatePick) {
+        mutableStateFlow.update {
+            it.copy(showFirstRepaymentDatePick = action.state)
+        }
+    }
+
+    private fun handleInterestChargedFromChange(action: NewLoanAccountAction.OnInterestChargedFromChange) {
+        mutableStateFlow.update {
+            it.copy(interestChargedFromDate = action.date)
+        }
+    }
+
+    private fun handleInterestChargedFromDatePick(action: NewLoanAccountAction.OnInterestChargedFromDatePick) {
+        mutableStateFlow.update {
+            it.copy(showInterestChargedFromDatePick = action.state)
+        }
+    }
+
+    private fun handleNoOfRepaymentsChange(action: NewLoanAccountAction.OnNoOfRepaymentsChange) {
+        mutableStateFlow.update {
+            it.copy(noOfRepayments = action.number)
+        }
+    }
+
+    private fun handlePrincipalAmountChange(action: NewLoanAccountAction.OnPrincipalAmountChange) {
+        mutableStateFlow.update {
+            it.copy(principalAmount = action.amount)
+        }
+    }
+
+    private fun handleTermFrequencyIndexChange(action: NewLoanAccountAction.OnTermFrequencyIndexChange) {
+        mutableStateFlow.update {
+            it.copy(termFrequencyIndex = action.index)
         }
     }
 
@@ -124,36 +182,7 @@ internal class NewLoanAccountViewModel(
         mutableStateFlow.update { it.copy(loanProductSelected = action.index) }
         loadLoanAccountTemplate(state.productLoans[action.index].id ?: -1)
     }
-            NewLoanAccountAction.Retry -> {
-                mutableStateFlow.update {
-                    it.copy(
-                        dialogState = null,
-                        loanTemplate = null,
-                    )
-                }
-                observeNetwork()
-                loadAllLoans()
-            }
-            NewLoanAccountAction.NavigateBack -> sendEvent(NewLoanAccountEvent.NavigateBack)
-            NewLoanAccountAction.NextStep -> moveToNextStep()
-            NewLoanAccountAction.PreviousStep -> moveToPreviousStep()
-            NewLoanAccountAction.Finish -> sendEvent(NewLoanAccountEvent.Finish)
-            is NewLoanAccountAction.OnStepChange -> {
-                mutableStateFlow.update {
-                    it.copy(
-                        currentStep = action.newIndex,
-                    )
-                }
-            }
 
-            is NewLoanAccountAction.OnProductNameChange -> {
-                mutableStateFlow.update {
-                    it.copy(
-                        loanProductSelected = action.index,
-                    )
-                }
-                loadLoanAccountTemplate(state.productLoans[action.index].id ?: -1)
-            }
 
     private fun handleExternalIdChange(action: NewLoanAccountAction.OnExternalIdChange) {
         mutableStateFlow.update { it.copy(externalId = action.value) }
@@ -191,68 +220,6 @@ internal class NewLoanAccountViewModel(
         mutableStateFlow.update { it.copy(linkSavingsIndex = action.index) }
     }
 
-            is NewLoanAccountAction.OnStandingInstructionsChange -> {
-                mutableStateFlow.update {
-                    it.copy(
-                        isCheckedStandingInstructions = action.state,
-                    )
-                }
-            }
-
-            is NewLoanAccountAction.OnPrincipalAmountChange ->{
-                mutableStateFlow.update {
-                    it.copy(
-                        principalAmount = action.amount,
-                    )
-                }
-            }
-
-            is NewLoanAccountAction.OnNoOfRepaymentsChange -> {
-                mutableStateFlow.update {
-                    it.copy(
-                        noOfRepayments = action.number,
-                    )
-                }
-            }
-
-            is NewLoanAccountAction.OnTermFrequencyIndexChange -> {
-                mutableStateFlow.update {
-                    it.copy(
-                        termFrequencyIndex = action.index,
-                    )
-                }
-            }
-
-            is NewLoanAccountAction.OnFirstRepaymentDateChange ->{
-                mutableStateFlow.update {
-                    it.copy(
-                        firstRepaymentDate = action.date,
-                    )
-                }
-            }
-            is NewLoanAccountAction.OnInterestChargedFromChange ->{
-                mutableStateFlow.update {
-                    it.copy(
-                        interestChargedFromDate = action.date,
-                    )
-                }
-            }
-
-            is NewLoanAccountAction.OnFirstRepaymentDatePick -> {
-                mutableStateFlow.update {
-                    it.copy(
-                        showFirstRepaymentDatePick = action.state,
-                    )
-                }
-            }
-            is NewLoanAccountAction.OnInterestChargedFromDatePick -> {
-                mutableStateFlow.update {
-                    it.copy(
-                        showInterestChargedFromDatePick = action.state,
-                    )
-                }
-            }
-        }
     private fun handleStandingInstructionsChange(action: NewLoanAccountAction.OnStandingInstructionsChange) {
         mutableStateFlow.update { it.copy(isCheckedStandingInstructions = action.state) }
     }
