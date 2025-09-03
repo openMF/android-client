@@ -7,19 +7,19 @@
  *
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
-package com.mifos.feature.client.recurringDepositAccount
+package com.mifos.feature.client.fixedDepositAccount
 
 import androidclient.feature.client.generated.resources.Res
-import androidclient.feature.client.generated.resources.calander
 import androidclient.feature.client.generated.resources.client_empty_card_message
-import androidclient.feature.client.generated.resources.client_product_recurring_deposit_account
-import androidclient.feature.client.generated.resources.client_profile_recurring_deposit_account_title
+import androidclient.feature.client.generated.resources.client_product_fixed_deposit_account
+import androidclient.feature.client.generated.resources.client_profile_fixed_deposit_account_title
 import androidclient.feature.client.generated.resources.client_savings_item
 import androidclient.feature.client.generated.resources.client_savings_not_avilable
 import androidclient.feature.client.generated.resources.client_savings_pending_approval
 import androidclient.feature.client.generated.resources.feature_client_dialog_action_ok
 import androidclient.feature.client.generated.resources.filter
 import androidclient.feature.client.generated.resources.search
+import androidclient.feature.client.generated.resources.shield_outlined
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -60,36 +60,36 @@ import org.jetbrains.compose.resources.vectorResource
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
-fun RecurringDepositAccountScreen(
+fun FixedDepositAccountScreen(
     navController: NavController,
     navigateBack: () -> Unit,
     onApproveAccount: (String) -> Unit,
     onViewAccount: (String) -> Unit,
     modifier: Modifier = Modifier,
-    viewModel: RecurringDepositAccountViewModel = koinViewModel(),
+    viewModel: FixedDepositAccountViewModel = koinViewModel(),
 ) {
     val state by viewModel.stateFlow.collectAsStateWithLifecycle()
 
     EventsEffect(viewModel.eventFlow) { event ->
         when (event) {
-            is RecurringDepositAccountEvent.OnApproveAccount -> {
+            is FixedDepositAccountEvent.OnApproveAccount -> {
                 onApproveAccount(event.accountNumber)
             }
 
-            RecurringDepositAccountEvent.OnNavigateBack -> navigateBack()
-            is RecurringDepositAccountEvent.OnViewAccount -> {
+            FixedDepositAccountEvent.OnNavigateBack -> navigateBack()
+            is FixedDepositAccountEvent.OnViewAccount -> {
                 onViewAccount(event.accountNumber)
             }
         }
     }
 
-    RecurringDepositAccountDialog(
+    FixedDepositAccountDialog(
         state,
         onAction = remember(viewModel) { { viewModel.trySendAction(it) } },
     )
 
-    RecurringDepositAccountScaffold(
-        navController = navController,
+    FixedDepositAccountScaffold(
+        navController,
         state = state,
         modifier = modifier,
         onAction = remember(viewModel) { { viewModel.trySendAction(it) } },
@@ -98,19 +98,19 @@ fun RecurringDepositAccountScreen(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-internal fun RecurringDepositAccountDialog(
-    state: RecurringDepositAccountState,
-    onAction: (RecurringDepositAccountAction) -> Unit,
+internal fun FixedDepositAccountDialog(
+    state: FixedDepositAccountState,
+    onAction: (FixedDepositAccountAction) -> Unit,
 ) {
     when (state.dialogState) {
-        is RecurringDepositAccountState.DialogState.Error -> {
+        is FixedDepositAccountState.DialogState.Error -> {
             AlertDialog(
                 title = { Text("Error") },
                 text = { Text(text = state.dialogState.message) },
                 confirmButton = {
                     TextButton(
                         onClick = {
-                            onAction(RecurringDepositAccountAction.CloseDialog)
+                            onAction(FixedDepositAccountAction.CloseDialog)
                         },
                     ) {
                         Text(stringResource(Res.string.feature_client_dialog_action_ok))
@@ -120,27 +120,26 @@ internal fun RecurringDepositAccountDialog(
             )
         }
 
-        RecurringDepositAccountState.DialogState.Loading -> MifosCircularProgress()
+        FixedDepositAccountState.DialogState.Loading -> MifosCircularProgress()
 
         else -> null
     }
 }
 
 @Composable
-internal fun RecurringDepositAccountScaffold(
+fun FixedDepositAccountScaffold(
     navController: NavController,
-    state: RecurringDepositAccountState,
+    state: FixedDepositAccountState,
     modifier: Modifier = Modifier,
-    onAction: (RecurringDepositAccountAction) -> Unit,
+    onAction: (FixedDepositAccountAction) -> Unit,
 ) {
     MifosScaffold(
         onBackPressed = {
-            onAction(RecurringDepositAccountAction.NavigateBack)
+            onAction(FixedDepositAccountAction.NavigateBack)
         },
         modifier = modifier,
         title = "",
     ) { paddingValues ->
-
         Column(
             modifier = Modifier
                 .padding(paddingValues)
@@ -154,13 +153,14 @@ internal fun RecurringDepositAccountScaffold(
                     ),
             ) {
                 val notAvailableText = stringResource(Res.string.client_savings_not_avilable)
-                RecurringDepositAccountHeader(
-                    state.recurringDepositAccounts.size.toString(),
+
+                FixedDepositAccountHeader(
+                    state.fixedDepositAccount.size.toString(),
                     onToggleSearch = {
-                        onAction(RecurringDepositAccountAction.ToggleSearch)
+                        onAction(FixedDepositAccountAction.ToggleSearch)
                     },
                     onToggleFilter = {
-                        onAction(RecurringDepositAccountAction.ToggleFilter)
+                        onAction(FixedDepositAccountAction.ToggleFilter)
                     },
                 )
 
@@ -169,65 +169,67 @@ internal fun RecurringDepositAccountScaffold(
                     MifosSearchBar(
                         query = state.searchText,
                         onQueryChange = {
-                            onAction(RecurringDepositAccountAction.UpdateSearch(it))
+                            onAction(FixedDepositAccountAction.UpdateSearch(it))
                         },
                         onSearchClick = {
-                            onAction(RecurringDepositAccountAction.Search)
+                            onAction(FixedDepositAccountAction.Search)
                         },
                         onBackClick = {
-                            onAction(RecurringDepositAccountAction.ToggleSearch)
+                            onAction(FixedDepositAccountAction.ToggleSearch)
                         },
                     )
                 }
 
                 Spacer(modifier = Modifier.height(DesignToken.padding.largeIncreasedExtra))
 
-                if (state.recurringDepositAccounts.isEmpty()) {
+                if (state.fixedDepositAccount.isEmpty()) {
                     MifosEmptyCard(msg = stringResource(Res.string.client_empty_card_message))
                 } else {
                     LazyColumn {
-                        items(state.recurringDepositAccounts) { recurringDeposit ->
+                        items(state.fixedDepositAccount) { fixedDepositAccount ->
                             MifosActionsSavingsListingComponent(
-                                accountNo = recurringDeposit.accountNo ?: notAvailableText,
-                                savingsProduct = stringResource(Res.string.client_product_recurring_deposit_account),
-                                savingsProductName = recurringDeposit.shortProductName ?: notAvailableText,
-                                lastActive = if (recurringDeposit.status?.submittedAndPendingApproval == true) {
+                                accountNo = fixedDepositAccount.accountNo ?: notAvailableText,
+                                savingsProduct = stringResource(Res.string.client_product_fixed_deposit_account),
+                                savingsProductName = fixedDepositAccount.shortProductName
+                                    ?: notAvailableText,
+                                lastActive = if (fixedDepositAccount.status?.submittedAndPendingApproval == true) {
                                     stringResource(Res.string.client_savings_pending_approval)
-                                } else if (recurringDeposit.lastActiveTransactionDate != null) {
-                                    DateHelper.getDateAsString(recurringDeposit.lastActiveTransactionDate!!)
+                                } else if (fixedDepositAccount.lastActiveTransactionDate != null) {
+                                    DateHelper.getDateAsString(fixedDepositAccount.lastActiveTransactionDate!!)
                                 } else {
                                     notAvailableText
                                 },
-                                balance =
-                                if (recurringDeposit.accountBalance != null) {
-                                    "${recurringDeposit.currency?.displaySymbol ?: ""} ${recurringDeposit.accountBalance}"
+                                balance = if (fixedDepositAccount.accountBalance != null) {
+                                    "${fixedDepositAccount.currency?.displaySymbol ?: ""} ${fixedDepositAccount.accountBalance}"
                                 } else {
                                     notAvailableText
                                 },
-                                menuList = if (recurringDeposit.status?.submittedAndPendingApproval == true) {
+                                menuList = if (fixedDepositAccount.status?.submittedAndPendingApproval == true) {
                                     listOf(
-                                        Actions.ViewAccount(vectorResource(Res.drawable.calander)),
+                                        Actions.ViewAccount(vectorResource(Res.drawable.shield_outlined)),
                                         Actions.ApproveAccount(),
                                     )
                                 } else {
                                     listOf(
-                                        Actions.ViewAccount(vectorResource(Res.drawable.calander)),
+                                        Actions.ViewAccount(vectorResource(Res.drawable.shield_outlined)),
                                     )
                                 },
                             ) { actions ->
                                 when (actions) {
                                     is Actions.ViewAccount -> {
                                         onAction(
-                                            RecurringDepositAccountAction.ViewAccount(
-                                                recurringDeposit.accountNo ?: "",
+                                            FixedDepositAccountAction.ViewAccount(
+                                                fixedDepositAccount.accountNo ?: "",
                                             ),
                                         )
                                     }
+
                                     is Actions.ApproveAccount -> {
-                                        RecurringDepositAccountAction.ApproveAccount(
-                                            recurringDeposit.accountNo ?: "",
+                                        FixedDepositAccountAction.ApproveAccount(
+                                            fixedDepositAccount.accountNo ?: "",
                                         )
                                     }
+
                                     else -> null
                                 }
                             }
@@ -242,7 +244,7 @@ internal fun RecurringDepositAccountScaffold(
 }
 
 @Composable
-private fun RecurringDepositAccountHeader(
+fun FixedDepositAccountHeader(
     totalItem: String,
     onToggleFilter: () -> Unit,
     modifier: Modifier = Modifier,
@@ -254,7 +256,7 @@ private fun RecurringDepositAccountHeader(
     ) {
         Column {
             Text(
-                text = stringResource(Res.string.client_profile_recurring_deposit_account_title),
+                text = stringResource(Res.string.client_profile_fixed_deposit_account_title),
                 style = MifosTypography.titleMedium,
             )
 

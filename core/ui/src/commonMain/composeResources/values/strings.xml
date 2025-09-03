@@ -73,4 +73,21 @@
     <string name="core_ui_click_here_to_view_filled_state">Click Here To View Filled State.</string>
     <string name="core_ui_no_item_found">No Item Found</string>
 
+    <!-- Action Names -->
+    <string name="core_ui_view_account">View Account</string>
+    <string name="core_ui_edit_note">Edit Note</string>
+    <string name="core_ui_delete_note">Delete Note</string>
+    <string name="core_ui_approve_account">Approve Account</string>
+    <string name="core_ui_make_repayment">Make Repayment</string>
+    <string name="core_ui_view_document">View Document</string>
+    <string name="core_ui_upload_again">Upload Again</string>
+    <string name="core_ui_delete_document">Delete Document</string>
+
+    <!-- Mifos Note -->
+    <string name="core_ui_note_createdBy">Created By:</string>
+    <string name="core_ui_note_date">Date</string>
+    <string name="core_ui_note_note">Note</string>
+
+
+
 </resources>

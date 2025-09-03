@@ -74,7 +74,7 @@ class ClientLoanAccountsViewModel(
             )
 
             ClientLoanAccountsAction.NavigateBack -> {
-                // implement if needed later, else remove
+                sendEvent(ClientLoanAccountsEvent.NavigateBack)
             }
         }
     }

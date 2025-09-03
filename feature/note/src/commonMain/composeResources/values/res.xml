@@ -14,9 +14,6 @@
     <string name="feature_note_add_item">Click on "+" Button to add an Item</string>
     <string name="feature_note_failed_to_fetch_notes">Failed to fetch notes</string>
     <string name="feature_note_internet_not_connected">No Internet</string>
-    <string name="feature_note_createdBy">Created By:</string>
-    <string name="feature_note_date">Date</string>
-    <string name="feature_note_note">Note</string>
     <string name="feature_note_edit_note">Edit Note</string>
     <string name="feature_note_delete_note">Delete Note</string>
     <string name="feature_note_delete">Delete</string>
@@ -31,8 +28,6 @@
     <string name="feature_note_button_add">Add</string>
     <string name="feature_note_button_update">Update</string>
     <string name="feature_note_button_back">Back</string>
-    <string name="feature_note_edit_success">Note Updated Successfully</string>
-    <string name="feature_note_add_success">Note Added Successfully</string>
     <string name="feature_note_button_confirm">Confirm</string>
     <string name="feature_note_dialog_warning">Warning</string>
     <string name="feature_note_dialog_warning_message">Discard changes? Unsaved data will be lost.</string>
