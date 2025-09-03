@@ -145,7 +145,7 @@ fun MifosActionsIdentifierListingComponent(
                     )
                     MifosListingRowItem(
                         key = stringResource(Res.string.core_ui_status),
-                        value = status?.name ?: "Not Found",
+                        value = status?.name ?: "Not Available",
                         valueColor = if (status?.name != null) status.color else Color.Red,
                     )
                     MifosListingRowItem(
