@@ -19,7 +19,6 @@ import androidclient.feature.client.generated.resources.client_savings_pending_a
 import androidclient.feature.client.generated.resources.feature_client_dialog_action_ok
 import androidclient.feature.client.generated.resources.filter
 import androidclient.feature.client.generated.resources.search
-import androidclient.feature.client.generated.resources.shield_outlined
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -46,6 +45,7 @@ import androidx.navigation.NavController
 import com.mifos.core.common.utils.DateHelper
 import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosScaffold
+import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.designsystem.theme.MifosTypography
 import com.mifos.core.ui.components.Actions
@@ -56,7 +56,6 @@ import com.mifos.core.ui.components.MifosSearchBar
 import com.mifos.core.ui.util.EventsEffect
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
-import org.jetbrains.compose.resources.vectorResource
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -206,12 +205,12 @@ fun FixedDepositAccountScaffold(
                                 },
                                 menuList = if (fixedDepositAccount.status?.submittedAndPendingApproval == true) {
                                     listOf(
-                                        Actions.ViewAccount(vectorResource(Res.drawable.shield_outlined)),
+                                        Actions.ViewAccount(MifosIcons.ShielOutlined),
                                         Actions.ApproveAccount(),
                                     )
                                 } else {
                                     listOf(
-                                        Actions.ViewAccount(vectorResource(Res.drawable.shield_outlined)),
+                                        Actions.ViewAccount(MifosIcons.ShielOutlined),
                                     )
                                 },
                             ) { actions ->

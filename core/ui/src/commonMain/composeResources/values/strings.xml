@@ -88,6 +88,7 @@
     <string name="core_ui_note_date">Date</string>
     <string name="core_ui_note_note">Note</string>
 
-
+    <!-- MifosActionsIdentifierListingComponent -->
+    <string name="listing_component_identifier_not_available">Not Available</string>
 
 </resources>

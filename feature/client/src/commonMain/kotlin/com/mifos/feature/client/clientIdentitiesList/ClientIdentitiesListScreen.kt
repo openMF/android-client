@@ -50,8 +50,8 @@ import com.mifos.core.ui.components.MifosActionsIdentifierListingComponent
 import com.mifos.core.ui.components.MifosAlertDialog
 import com.mifos.core.ui.components.MifosBreadcrumbNavBar
 import com.mifos.core.ui.components.MifosEmptyCard
-import com.mifos.core.ui.components.Status
 import com.mifos.core.ui.util.EventsEffect
+import com.mifos.feature.client.utils.getClientIdentifierStatus
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
@@ -123,19 +123,7 @@ internal fun ClientIdentitiesListScreen(
                                     type = item.documentType?.name ?: emptyMessage,
                                     id = if (item.id != null) item.id.toString() else emptyMessage,
                                     key = item.documentKey ?: emptyMessage,
-                                    status = if (item.status != null) {
-                                        if (item.status!!.lowercase().endsWith("inactive")) {
-                                            Status.Inactive
-                                        } else if (item.status!!.lowercase()
-                                                .endsWith("active")
-                                        ) {
-                                            Status.Active
-                                        } else {
-                                            Status.Pending
-                                        }
-                                    } else {
-                                        null
-                                    },
+                                    status = getClientIdentifierStatus(item.status),
                                     description = item.description ?: emptyMessage,
                                     // TODO check what is identifyDocuments, couldnot find in the api
                                     identifyDocuments = item.documentType?.name ?: emptyMessage,

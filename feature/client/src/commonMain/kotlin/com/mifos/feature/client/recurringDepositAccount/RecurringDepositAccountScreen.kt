@@ -10,7 +10,6 @@
 package com.mifos.feature.client.recurringDepositAccount
 
 import androidclient.feature.client.generated.resources.Res
-import androidclient.feature.client.generated.resources.calander
 import androidclient.feature.client.generated.resources.client_empty_card_message
 import androidclient.feature.client.generated.resources.client_product_recurring_deposit_account
 import androidclient.feature.client.generated.resources.client_profile_recurring_deposit_account_title
@@ -46,6 +45,7 @@ import androidx.navigation.NavController
 import com.mifos.core.common.utils.DateHelper
 import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosScaffold
+import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.designsystem.theme.MifosTypography
 import com.mifos.core.ui.components.Actions
@@ -56,7 +56,6 @@ import com.mifos.core.ui.components.MifosSearchBar
 import com.mifos.core.ui.util.EventsEffect
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
-import org.jetbrains.compose.resources.vectorResource
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -206,12 +205,12 @@ internal fun RecurringDepositAccountScaffold(
                                 },
                                 menuList = if (recurringDeposit.status?.submittedAndPendingApproval == true) {
                                     listOf(
-                                        Actions.ViewAccount(vectorResource(Res.drawable.calander)),
+                                        Actions.ViewAccount(MifosIcons.Calendar),
                                         Actions.ApproveAccount(),
                                     )
                                 } else {
                                     listOf(
-                                        Actions.ViewAccount(vectorResource(Res.drawable.calander)),
+                                        Actions.ViewAccount(MifosIcons.Calendar),
                                     )
                                 },
                             ) { actions ->
