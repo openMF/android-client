@@ -1,3 +1,12 @@
+/*
+ * Copyright 2025 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ */
 package com.mifos.feature.client.clientAddress
 
 import androidclient.feature.client.generated.resources.Res
@@ -17,11 +26,11 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.getString
 
-internal class ClientAddressViewModel (
+internal class ClientAddressViewModel(
     savedStateHandle: SavedStateHandle,
     private val repository: CreateNewClientRepository,
 ) : BaseViewModel<ClientAddressState, ClientAddressEvent, ClientAddressAction>(
-    initialState = ClientAddressState()
+    initialState = ClientAddressState(),
 ) {
     val route = savedStateHandle.toRoute<ClientAddressRoute>()
 
@@ -30,22 +39,22 @@ internal class ClientAddressViewModel (
             mutableStateFlow.update {
                 it.copy(
                     id = route.id,
-                    dialogState = ClientAddressState.DialogState.Loading
+                    dialogState = ClientAddressState.DialogState.Loading,
                 )
             }
             val addressList = repository.getAddresses(clientId = route.id)
             mutableStateFlow.update {
                 it.copy(
                     address = addressList,
-                    dialogState = null
+                    dialogState = null,
                 )
             }
         } catch (e: Exception) {
             mutableStateFlow.update {
                 it.copy(
                     dialogState = ClientAddressState.DialogState.Error(
-                        getString(Res.string.feature_client_failed_to_load_address)
-                    )
+                        getString(Res.string.feature_client_failed_to_load_address),
+                    ),
                 )
             }
         }
@@ -56,22 +65,22 @@ internal class ClientAddressViewModel (
             try {
                 mutableStateFlow.update {
                     it.copy(
-                        dialogState = ClientAddressState.DialogState.Loading
+                        dialogState = ClientAddressState.DialogState.Loading,
                     )
                 }
                 val template = repository.getAddressTemplate()
                 mutableStateFlow.update {
                     it.copy(
                         addressTemplate = template,
-                        dialogState = null
+                        dialogState = null,
                     )
                 }
             } catch (e: Exception) {
                 mutableStateFlow.update {
                     it.copy(
                         dialogState = ClientAddressState.DialogState.Error(
-                            getString(Res.string.feature_client_failed_to_fetch_address_template)
-                        )
+                            getString(Res.string.feature_client_failed_to_fetch_address_template),
+                        ),
                     )
                 }
             }
@@ -82,7 +91,7 @@ internal class ClientAddressViewModel (
         viewModelScope.launch {
             mutableStateFlow.update {
                 it.copy(
-                    dialogState = ClientAddressState.DialogState.Loading
+                    dialogState = ClientAddressState.DialogState.Loading,
                 )
             }
             try {
@@ -91,14 +100,14 @@ internal class ClientAddressViewModel (
                     addressTypeId = addressTypeId,
                     addressRequest = addressPayload,
                 )
-                if(response.resourceId != null) {
+                if (response.resourceId != null) {
                     trySendAction(ClientAddressAction.ShowStatusDialog)
                 } else {
                     mutableStateFlow.update {
                         it.copy(
                             dialogState = ClientAddressState.DialogState.Error(
-                                getString(Res.string.feature_client_unable_to_create_address_for_client)
-                            )
+                                getString(Res.string.feature_client_unable_to_create_address_for_client),
+                            ),
                         )
                     }
                 }
@@ -106,8 +115,8 @@ internal class ClientAddressViewModel (
                 mutableStateFlow.update {
                     it.copy(
                         dialogState = ClientAddressState.DialogState.Error(
-                            getString(Res.string.feature_client_unable_to_create_address_for_client)
-                        )
+                            getString(Res.string.feature_client_unable_to_create_address_for_client),
+                        ),
                     )
                 }
             }
@@ -115,14 +124,14 @@ internal class ClientAddressViewModel (
     }
 
     override fun handleAction(action: ClientAddressAction) {
-        when(action) {
+        when (action) {
             is ClientAddressAction.NavigateBack -> sendEvent(ClientAddressEvent.NavigateBack)
             is ClientAddressAction.ShowAddressForm -> sendEvent(ClientAddressEvent.ShowAddressForm)
             is ClientAddressAction.OnNext -> sendEvent(ClientAddressEvent.NavigateNext)
             is ClientAddressAction.ShowAddress -> {
                 mutableStateFlow.update {
                     it.copy(
-                        dialogState = null
+                        dialogState = null,
                     )
                 }
             }
@@ -131,13 +140,13 @@ internal class ClientAddressViewModel (
                 mutableStateFlow.update {
                     it.copy(
                         dialogState = ClientAddressState.DialogState.ShowStatusDialog(
-                            status = ResultStatus.SUCCESS
-                        )
+                            status = ResultStatus.SUCCESS,
+                        ),
                     )
                 }
             }
 
-            ClientAddressAction.onRetry -> {
+            ClientAddressAction.OnRetry -> {
                 loadAddressTemplate()
             }
         }
@@ -158,16 +167,16 @@ data class ClientAddressState(
 }
 
 sealed interface ClientAddressEvent {
-    data object NavigateBack: ClientAddressEvent
-    data object ShowAddressForm: ClientAddressEvent
-    data object NavigateNext: ClientAddressEvent
+    data object NavigateBack : ClientAddressEvent
+    data object ShowAddressForm : ClientAddressEvent
+    data object NavigateNext : ClientAddressEvent
 }
 
 sealed interface ClientAddressAction {
-    data object NavigateBack: ClientAddressAction
-    data object OnNext: ClientAddressAction
-    data object ShowStatusDialog: ClientAddressAction
-    data object ShowAddressForm: ClientAddressAction
-    data object ShowAddress: ClientAddressAction
-    data object onRetry: ClientAddressAction
+    data object NavigateBack : ClientAddressAction
+    data object OnNext : ClientAddressAction
+    data object ShowStatusDialog : ClientAddressAction
+    data object ShowAddressForm : ClientAddressAction
+    data object ShowAddress : ClientAddressAction
+    data object OnRetry : ClientAddressAction
 }

@@ -79,7 +79,7 @@ class CreateNewClientRepositoryImp(
         return dataManagerClient.createClientAddress(
             clientId = clientId,
             addressTypeId = addressTypeId,
-            addressRequest = addressRequest
+            addressRequest = addressRequest,
         )
     }
 }

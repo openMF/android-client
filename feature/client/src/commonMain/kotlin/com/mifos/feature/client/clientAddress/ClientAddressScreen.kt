@@ -1,3 +1,12 @@
+/*
+ * Copyright 2025 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ */
 package com.mifos.feature.client.clientAddress
 
 import androidclient.feature.client.generated.resources.Res
@@ -54,7 +63,7 @@ internal fun ClientAddressScreen(
     onNavigateNext: (Int) -> Unit,
     navigateToAddAddressForm: (Int) -> Unit,
     navController: NavController,
-    viewModel: ClientAddressViewModel = koinViewModel()
+    viewModel: ClientAddressViewModel = koinViewModel(),
 ) {
     val state by viewModel.stateFlow.collectAsStateWithLifecycle()
 
@@ -73,7 +82,7 @@ internal fun ClientAddressScreen(
     ClientAddressScaffold(
         state = state,
         navController = navController,
-        onAction = { viewModel.trySendAction(it) }
+        onAction = { viewModel.trySendAction(it) },
     )
 }
 
@@ -81,13 +90,13 @@ internal fun ClientAddressScreen(
 fun ClientAddressDialogs(
     state: ClientAddressState,
 ) {
-    when(state.dialogState) {
+    when (state.dialogState) {
         is ClientAddressState.DialogState.Loading -> {
             MifosCircularProgress()
         }
         is ClientAddressState.DialogState.Error -> {
             MifosSweetError(
-                message = state.dialogState.message
+                message = state.dialogState.message,
             )
         }
 
@@ -99,7 +108,7 @@ fun ClientAddressDialogs(
 private fun ClientAddressScaffold(
     state: ClientAddressState,
     navController: NavController,
-    onAction: (ClientAddressAction) -> Unit
+    onAction: (ClientAddressAction) -> Unit,
 ) {
     MifosScaffold(
         title = "Client Address",
@@ -113,16 +122,16 @@ private fun ClientAddressScaffold(
                     end = DesignToken.padding.large,
                     top = paddingValues.calculateTopPadding(),
                     bottom = paddingValues.calculateBottomPadding(),
-                )
+                ),
         ) {
             MifosBreadcrumbNavBar(navController)
-            if(state.dialogState == null) {
+            if (state.dialogState == null) {
                 ClientAddressHeader(
                     totalItem = state.address.size.toString(),
-                    onAction = onAction
+                    onAction = onAction,
                 )
                 Spacer(modifier = Modifier.height(DesignToken.padding.large))
-                if(state.address.isEmpty()) {
+                if (state.address.isEmpty()) {
                     EmptyAddressCard()
                 } else {
                     LazyColumn(
@@ -134,9 +143,9 @@ private fun ClientAddressScaffold(
                                 title = address.addressType,
                                 addressList = mapOf(
                                     stringResource(Res.string.feature_client_address_line_1) to address.addressLine1,
-                                    stringResource(Res.string.feature_client_address_line_2)  to address.addressLine2,
-                                    stringResource(Res.string.feature_client_address_line_3)  to address.addressLine3,
-                                    stringResource(Res.string.feature_client_city)  to address.city,
+                                    stringResource(Res.string.feature_client_address_line_2) to address.addressLine2,
+                                    stringResource(Res.string.feature_client_address_line_3) to address.addressLine3,
+                                    stringResource(Res.string.feature_client_city) to address.city,
                                     stringResource(Res.string.feature_client_province) to address.stateName,
                                     stringResource(Res.string.feature_client_country) to address.countryName,
                                     stringResource(Res.string.feature_client_postal_code) to address.postalCode,
@@ -153,7 +162,6 @@ private fun ClientAddressScaffold(
         }
     }
 }
-
 
 @Composable
 fun ClientAddressHeader(
@@ -225,4 +233,3 @@ private fun EmptyAddressCard() {
         }
     }
 }
-

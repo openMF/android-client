@@ -10,7 +10,6 @@
 package com.mifos.core.data.repository
 
 import com.mifos.core.common.utils.DataState
-import com.mifos.core.model.objects.clients.Address
 import com.mifos.core.model.objects.clients.ClientAddressEntity
 import com.mifos.core.network.model.PostClientAddressRequest
 import com.mifos.core.network.model.PostClientAddressResponse
@@ -48,6 +47,5 @@ interface CreateNewClientRepository {
         clientId: Int,
         addressTypeId: Int,
         addressRequest: PostClientAddressRequest,
-    ) : PostClientAddressResponse
-
+    ): PostClientAddressResponse
 }

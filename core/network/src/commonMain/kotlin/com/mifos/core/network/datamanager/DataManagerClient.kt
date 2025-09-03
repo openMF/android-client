@@ -510,7 +510,7 @@ class DataManagerClient(
         return mBaseApiManager.clientService.getAddressTemplate()
     }
 
-    suspend fun getClientAddresses(clientId: Int) : List<ClientAddressEntity> {
+    suspend fun getClientAddresses(clientId: Int): List<ClientAddressEntity> {
         return mBaseApiManager.clientService.getClientAddresses(clientId = clientId)
     }
 
@@ -522,7 +522,7 @@ class DataManagerClient(
         return mBaseApiManager.clientService.createClientAddress(
             clientId = clientId,
             addressTypeId = addressTypeId,
-            addressPayload = addressRequest
+            addressPayload = addressRequest,
         )
     }
 

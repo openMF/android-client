@@ -261,14 +261,14 @@ interface ClientService {
     suspend fun getAddressTemplate(): AddressTemplate
 
     @GET("client/{clientId}/addresses")
-    suspend fun getClientAddresses(@Path("clientId") clientId: Int) : List<ClientAddressEntity>
+    suspend fun getClientAddresses(@Path("clientId") clientId: Int): List<ClientAddressEntity>
 
     @POST("client/{clientId}/addresses?type={addressTypeId}")
     suspend fun createClientAddress(
         @Path("clientId") clientId: Int,
         @Path("addressTypeId") addressTypeId: Int,
-        @Body addressPayload: PostClientAddressRequest
-    ) : PostClientAddressResponse
+        @Body addressPayload: PostClientAddressRequest,
+    ): PostClientAddressResponse
 
     @GET("clients/{clientId}?template=true&staffInSelectedOfficeOnly=true")
     suspend fun getClientTemplate(@Path("clientId") clientId: Int): GetClientsPageItemsResponse

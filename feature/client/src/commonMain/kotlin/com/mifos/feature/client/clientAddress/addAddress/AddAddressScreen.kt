@@ -1,4 +1,13 @@
-package com.mifos.feature.client.clientAddress.AddAddress
+/*
+ * Copyright 2025 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ */
+package com.mifos.feature.client.clientAddress.addAddress
 
 import androidclient.feature.client.generated.resources.Res
 import androidclient.feature.client.generated.resources.dialog_continue
@@ -82,7 +91,6 @@ import org.jetbrains.compose.resources.getString
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
-
 @Composable
 internal fun AddAddressScreen(
     onNavigateBack: () -> Unit,
@@ -110,14 +118,13 @@ internal fun AddAddressScreen(
         createAddress = { addressTypeId, addressRequest ->
             viewModel.createClientAddress(
                 addressPayload = addressRequest,
-                addressTypeId = addressTypeId
-            ) },
+                addressTypeId = addressTypeId,
+            )
+        },
         onAction = { viewModel.trySendAction(it) },
-        navController = navController
+        navController = navController,
     )
-
 }
-
 
 @Composable
 fun ClientAddressDialogs(
@@ -145,7 +152,7 @@ fun ClientAddressDialogs(
         is ClientAddressState.DialogState.Error -> {
             MifosSweetError(
                 message = state.dialogState.message,
-                onclick = { onAction(ClientAddressAction.onRetry) }
+                onclick = { onAction(ClientAddressAction.OnRetry) },
             )
         }
         else -> Unit
@@ -160,7 +167,6 @@ private fun AddAddressScaffold(
     navController: NavController,
     onAction: (ClientAddressAction) -> Unit,
 ) {
-
     val isAddressEnabled = true
     var selectedAddressType by rememberSaveable { mutableStateOf("") }
     var selectedAddressTypeId by rememberSaveable { mutableIntStateOf(0) }
@@ -174,12 +180,12 @@ private fun AddAddressScaffold(
     var selectedCountryId by rememberSaveable { mutableIntStateOf(0) }
     var postalCode by rememberSaveable { mutableStateOf("") }
 
-    var addressTypeError: String? by rememberSaveable {mutableStateOf(null)}
-    var addressLine1Error: String? by rememberSaveable {mutableStateOf(null)}
-    var cityError: String? by rememberSaveable {mutableStateOf(null)}
-    var stateProvinceError: String? by rememberSaveable {mutableStateOf(null)}
-    var countryError: String? by rememberSaveable {mutableStateOf(null)}
-    var postalCodeError: String? by rememberSaveable {mutableStateOf(null)}
+    var addressTypeError: String? by rememberSaveable { mutableStateOf(null) }
+    var addressLine1Error: String? by rememberSaveable { mutableStateOf(null) }
+    var cityError: String? by rememberSaveable { mutableStateOf(null) }
+    var stateProvinceError: String? by rememberSaveable { mutableStateOf(null) }
+    var countryError: String? by rememberSaveable { mutableStateOf(null) }
+    var postalCodeError: String? by rememberSaveable { mutableStateOf(null) }
 
     var isSubmitEnabled by rememberSaveable { mutableStateOf(false) }
 
@@ -190,7 +196,7 @@ private fun AddAddressScaffold(
             city = city,
             stateProvinceId = selectedStateProvinceId,
             countryId = selectedCountryId,
-            postalCode = postalCode
+            postalCode = postalCode,
         )
     }
     val scope = rememberCoroutineScope()
@@ -199,7 +205,7 @@ private fun AddAddressScaffold(
         title = "Add Address",
         onBackPressed = { onNavigateBack.invoke() },
         bottomBar = {
-            if(state.dialogState == null) {
+            if (state.dialogState == null) {
                 AddAddressFormBottomBar(
                     onCancelClick = { onNavigateBack.invoke() },
                     onSubmitClick = {
@@ -210,7 +216,7 @@ private fun AddAddressScaffold(
                             stateProvinceId = selectedStateProvinceId,
                             countryId = selectedCountryId,
                             postalCode = postalCode,
-                            scope = scope
+                            scope = scope,
                         )
 
                         addressTypeError = addressErrors.addressTypeError
@@ -231,7 +237,7 @@ private fun AddAddressScaffold(
                                     stateProvinceId = selectedStateProvinceId,
                                     countryId = selectedCountryId,
                                     postalCode = postalCode,
-                                )
+                                ),
                             )
                         }
                     },
@@ -259,7 +265,7 @@ private fun AddAddressScaffold(
             verticalArrangement = Arrangement.Center,
         ) {
             MifosBreadcrumbNavBar(navController)
-            if(state.dialogState == null) {
+            if (state.dialogState == null) {
                 LazyColumn {
                     item {
                         Text(
@@ -397,7 +403,6 @@ private fun AddAddressFormBottomBar(
     }
 }
 
-
 @Composable
 private fun AddressInputTextFields(
     addressLine1: String,
@@ -437,7 +442,7 @@ private fun AddressInputTextFields(
             label = stringResource(Res.string.feature_client_address_type),
             options = addressTypeOptions,
             readOnly = true,
-            errorMessage = addressTypeError
+            errorMessage = addressTypeError,
         )
 
         MifosOutlinedTextField(
@@ -483,7 +488,7 @@ private fun AddressInputTextFields(
             options = stateOptions,
             label = stringResource(Res.string.feature_client_state_province),
             readOnly = true,
-            errorMessage = stateProvinceError
+            errorMessage = stateProvinceError,
         )
 
         MifosTextFieldDropdown(
@@ -493,7 +498,7 @@ private fun AddressInputTextFields(
             options = countryOptions,
             label = stringResource(Res.string.feature_client_country),
             readOnly = true,
-            errorMessage = countryError
+            errorMessage = countryError,
         )
 
         MifosOutlinedTextField(
@@ -505,7 +510,6 @@ private fun AddressInputTextFields(
         )
     }
 }
-
 
 private data class AddressValidationResult(
     val addressTypeError: String? = null,
@@ -533,7 +537,7 @@ private fun validateAddressFields(
     stateProvinceId: Int,
     countryId: Int,
     postalCode: String,
-    scope: CoroutineScope
+    scope: CoroutineScope,
 ): AddressValidationResult {
     var result = AddressValidationResult()
     scope.launch {
@@ -565,7 +569,6 @@ private fun validateAddressFields(
         )
     }
     return result
-
 }
 
 private fun areRequiredAddressFieldsFilled(
@@ -577,11 +580,11 @@ private fun areRequiredAddressFieldsFilled(
     postalCode: String,
 ): Boolean {
     return addressTypeId > 0 &&
-            addressLine1.isNotBlank() &&
-            city.isNotBlank() &&
-            stateProvinceId > 0 &&
-            countryId > 0 &&
-            postalCode.isNotBlank()
+        addressLine1.isNotBlank() &&
+        city.isNotBlank() &&
+        stateProvinceId > 0 &&
+        countryId > 0 &&
+        postalCode.isNotBlank()
 }
 
 private fun validateFields(
@@ -591,7 +594,7 @@ private fun validateFields(
     stateProvinceId: Int,
     countryId: Int,
     postalCode: String,
-    scope: CoroutineScope
+    scope: CoroutineScope,
 ): AddressValidationResult {
     return validateAddressFields(
         addressTypeId = addressTypeId,
@@ -600,6 +603,6 @@ private fun validateFields(
         stateProvinceId = stateProvinceId,
         countryId = countryId,
         postalCode = postalCode,
-        scope = scope
+        scope = scope,
     )
 }
