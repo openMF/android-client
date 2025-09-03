@@ -67,7 +67,6 @@ import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.resources.vectorResource
 import org.koin.compose.viewmodel.koinViewModel
 
-
 @Composable
 internal fun NoteScreen(
     onNavigateBack: () -> Unit,
@@ -245,10 +244,10 @@ private fun NoteContent(
                         },
                         menuList = listOf(
                             Actions.Edit(
-                                vectorResource(Res.drawable.edit)
+                                vectorResource(Res.drawable.edit),
                             ),
                             Actions.Delete(
-                                vectorResource(Res.drawable.delete_document)
+                                vectorResource(Res.drawable.delete_document),
                             ),
                         ),
                         onActionClicked = { actions ->

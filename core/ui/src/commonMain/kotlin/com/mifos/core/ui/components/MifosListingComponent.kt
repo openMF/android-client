@@ -482,7 +482,7 @@ fun MifosIdentifierListingComponent(
 }
 
 enum class Status(val color: Color) {
-    InActive(AppColors.lightRed),
+    Inactive(AppColors.lightRed),
     Pending(AppColors.customYellow),
     Active(AppColors.customEnable),
 }
@@ -601,7 +601,7 @@ fun MifosSellLoanListingComponent(
         Column {
             MifosListingRowItem(
                 value = when (status) {
-                    Status.InActive -> stringResource(Res.string.core_ui_cancelled)
+                    Status.Inactive -> stringResource(Res.string.core_ui_cancelled)
                     Status.Pending -> stringResource(Res.string.core_ui_pending)
                     Status.Active -> stringResource(Res.string.core_ui_completed)
                 },

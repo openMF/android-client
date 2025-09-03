@@ -128,11 +128,12 @@ internal fun ClientIdentitiesListScreen(
                                     id = if (item.id != null) item.id.toString() else emptyMessage,
                                     key = item.documentKey ?: emptyMessage,
                                     status = if (item.status != null) {
-                                        if (item.status!!.lowercase().endsWith("active")) Status.Active
-                                        if (item.status!!.lowercase()
-                                                .endsWith("inactive")
+                                        if (item.status!!.lowercase().endsWith("inactive")) {
+                                            Status.Inactive
+                                        } else if (item.status!!.lowercase()
+                                                .endsWith("active")
                                         ) {
-                                            Status.InActive
+                                            Status.Active
                                         } else {
                                             Status.Pending
                                         }
