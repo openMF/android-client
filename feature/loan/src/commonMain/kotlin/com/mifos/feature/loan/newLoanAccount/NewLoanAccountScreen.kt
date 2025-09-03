@@ -111,22 +111,25 @@ private fun NewLoanAccountScaffold(
         onBackPressed = { onAction(NewLoanAccountAction.NavigateBack) },
         modifier = modifier,
     ) { paddingValues ->
-        if (state.dialogState == null) {
-            Column(
-                Modifier.fillMaxSize().padding(paddingValues),
-            ) {
-                MifosBreadcrumbNavBar(
-                    navController,
-                )
-                MifosStepper(
-                    steps = steps,
-                    currentIndex = state.currentStep,
-                    onStepChange = { newIndex ->
-                        onAction(NewLoanAccountAction.OnStepChange(newIndex))
-                    },
-                    modifier = Modifier
-                        .fillMaxWidth(),
-                )
+        when (state.screenState) {
+            NewLoanAccountState.ScreenState.Loading -> MifosProgressIndicator()
+            NewLoanAccountState.ScreenState.Success -> {
+                Column(
+                    Modifier.fillMaxSize().padding(paddingValues),
+                ) {
+                    MifosBreadcrumbNavBar(
+                        navController,
+                    )
+                    MifosStepper(
+                        steps = steps,
+                        currentIndex = state.currentStep,
+                        onStepChange = { newIndex ->
+                            onAction(NewLoanAccountAction.OnStepChange(newIndex))
+                        },
+                        modifier = Modifier
+                            .fillMaxWidth(),
+                    )
+                }
             }
         }
     }
@@ -138,8 +141,6 @@ private fun NewLoanAccountDialogs(
     onRetry: () -> Unit,
 ) {
     when (state.dialogState) {
-        is NewLoanAccountState.DialogState.Loading -> MifosProgressIndicator()
-
         is NewLoanAccountState.DialogState.Error -> {
             MifosErrorComponent(
                 isNetworkConnected = state.networkConnection,

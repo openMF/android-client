@@ -216,11 +216,15 @@ internal class NewLoanAccountViewModel(
             }
 
             is DataState.Loading -> mutableStateFlow.update {
-                it.copy(dialogState = NewLoanAccountState.DialogState.Loading)
+                it.copy(screenState = NewLoanAccountState.ScreenState.Loading)
             }
 
             is DataState.Success -> mutableStateFlow.update {
-                it.copy(dialogState = null, productLoans = result.data)
+                it.copy(
+                    dialogState = null,
+                    screenState = NewLoanAccountState.ScreenState.Success,
+                    productLoans = result.data,
+                )
             }
         }
     }
@@ -231,7 +235,9 @@ internal class NewLoanAccountViewModel(
                 it.copy(dialogState = NewLoanAccountState.DialogState.Error(result.message))
             }
 
-            is DataState.Loading -> Unit
+            is DataState.Loading -> mutableStateFlow.update {
+                it.copy(dialogState = NewLoanAccountState.DialogState.LoadingOverLay)
+            }
 
             is DataState.Success -> mutableStateFlow.update {
                 it.copy(
@@ -252,6 +258,7 @@ data class NewLoanAccountState(
     val currentStep: Int = 0,
     val totalSteps: Int = 4,
     val dialogState: DialogState? = null,
+    val screenState: ScreenState = ScreenState.Loading,
     val externalId: String = "",
     val externalIdError: StringResource? = null,
     val loanOfficerIndex: Int = -1,
@@ -266,7 +273,11 @@ data class NewLoanAccountState(
 ) {
     sealed interface DialogState {
         data class Error(val message: String) : DialogState
-        data object Loading : DialogState
+        data object LoadingOverLay : DialogState
+    }
+    sealed interface ScreenState {
+        data object Loading : ScreenState
+        data object Success : ScreenState
     }
     val isDetailsNextEnabled = loanProductSelected != -1 && externalId.isNotEmpty() && loanOfficerIndex != -1 && submissionDate.isNotEmpty() && expectedDisbursementDate.isNotEmpty()
 }
