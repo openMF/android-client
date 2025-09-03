@@ -56,6 +56,7 @@ internal class NewLoanAccountViewModel(
             }
             NewLoanAccountAction.NavigateBack -> sendEvent(NewLoanAccountEvent.NavigateBack)
             NewLoanAccountAction.NextStep -> moveToNextStep()
+            NewLoanAccountAction.PreviousStep -> moveToPreviousStep()
             NewLoanAccountAction.Finish -> sendEvent(NewLoanAccountEvent.Finish)
             is NewLoanAccountAction.OnStepChange -> {
                 mutableStateFlow.update {
@@ -148,6 +149,60 @@ internal class NewLoanAccountViewModel(
                     )
                 }
             }
+
+            is NewLoanAccountAction.OnPrincipalAmountChange ->{
+                mutableStateFlow.update {
+                    it.copy(
+                        principalAmount = action.amount,
+                    )
+                }
+            }
+
+            is NewLoanAccountAction.OnNoOfRepaymentsChange -> {
+                mutableStateFlow.update {
+                    it.copy(
+                        noOfRepayments = action.number,
+                    )
+                }
+            }
+
+            is NewLoanAccountAction.OnTermFrequencyIndexChange -> {
+                mutableStateFlow.update {
+                    it.copy(
+                        termFrequencyIndex = action.index,
+                    )
+                }
+            }
+
+            is NewLoanAccountAction.OnFirstRepaymentDateChange ->{
+                mutableStateFlow.update {
+                    it.copy(
+                        firstRepaymentDate = action.date,
+                    )
+                }
+            }
+            is NewLoanAccountAction.OnInterestChargedFromChange ->{
+                mutableStateFlow.update {
+                    it.copy(
+                        interestChargedFromDate = action.date,
+                    )
+                }
+            }
+
+            is NewLoanAccountAction.OnFirstRepaymentDatePick -> {
+                mutableStateFlow.update {
+                    it.copy(
+                        showFirstRepaymentDatePick = action.state,
+                    )
+                }
+            }
+            is NewLoanAccountAction.OnInterestChargedFromDatePick -> {
+                mutableStateFlow.update {
+                    it.copy(
+                        showInterestChargedFromDatePick = action.state,
+                    )
+                }
+            }
         }
     }
 
@@ -162,6 +217,15 @@ internal class NewLoanAccountViewModel(
         } else {
             sendEvent(NewLoanAccountEvent.Finish)
         }
+    }
+
+    private fun moveToPreviousStep() {
+        val current = state.currentStep
+            mutableStateFlow.update {
+                it.copy(
+                    currentStep = current - 1,
+                )
+            }
     }
 
     private fun observeNetwork() {
@@ -239,6 +303,15 @@ data class NewLoanAccountState(
     val showExpectedDisbursementDatePick: Boolean = false,
     val linkSavingsIndex: Int = -1,
     val isCheckedStandingInstructions: Boolean = false,
+
+    val principalAmount:Int=0,
+    val noOfRepayments:Int=0,
+    val termFrequencyIndex: Int = -1,
+    val firstRepaymentDate: String = DateHelper.getDateAsStringFromLong(Clock.System.now().toEpochMilliseconds()),
+    val interestChargedFromDate: String = DateHelper.getDateAsStringFromLong(Clock.System.now().toEpochMilliseconds()),
+    val showFirstRepaymentDatePick: Boolean = false,
+    val showInterestChargedFromDatePick: Boolean = false,
+
 ) {
     sealed interface DialogState {
         data class Error(val message: String) : DialogState
@@ -255,6 +328,7 @@ sealed interface NewLoanAccountEvent {
 sealed interface NewLoanAccountAction {
     data object Retry : NewLoanAccountAction
     data object NavigateBack : NewLoanAccountAction
+    data object PreviousStep: NewLoanAccountAction
     data object NextStep : NewLoanAccountAction
     data object Finish : NewLoanAccountAction
     data class OnStepChange(val newIndex: Int) : NewLoanAccountAction
@@ -269,4 +343,12 @@ sealed interface NewLoanAccountAction {
     data class OnExpectedDisbursementDatePick(val state: Boolean) : NewLoanAccountAction
     data class OnLinkSavingsChange(val index: Int) : NewLoanAccountAction
     data class OnStandingInstructionsChange(val state: Boolean) : NewLoanAccountAction
+
+    data class OnPrincipalAmountChange(val amount: Int) : NewLoanAccountAction
+    data class OnNoOfRepaymentsChange(val number: Int) : NewLoanAccountAction
+    data class OnTermFrequencyIndexChange(val index: Int) : NewLoanAccountAction
+    data class OnFirstRepaymentDateChange(val date: String) : NewLoanAccountAction
+    data class OnInterestChargedFromChange(val date: String) : NewLoanAccountAction
+    data class OnFirstRepaymentDatePick(val state: Boolean) : NewLoanAccountAction
+    data class OnInterestChargedFromDatePick(val state: Boolean) : NewLoanAccountAction
 }
