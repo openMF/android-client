@@ -18,12 +18,9 @@ import androidclient.feature.client.generated.resources.client_identifiers_ident
 import androidclient.feature.client.generated.resources.client_identifiers_not_available
 import androidclient.feature.client.generated.resources.client_identifiers_retry
 import androidclient.feature.client.generated.resources.client_savings_item
-import androidclient.feature.client.generated.resources.delete_document
-import androidclient.feature.client.generated.resources.document_scanner
 import androidclient.feature.client.generated.resources.feature_client_error_not_connected_internet
 import androidclient.feature.client.generated.resources.feature_client_identifiers
 import androidclient.feature.client.generated.resources.search
-import androidclient.feature.client.generated.resources.upload_document
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -53,11 +50,10 @@ import com.mifos.core.ui.components.MifosActionsIdentifierListingComponent
 import com.mifos.core.ui.components.MifosAlertDialog
 import com.mifos.core.ui.components.MifosBreadcrumbNavBar
 import com.mifos.core.ui.components.MifosEmptyCard
-import com.mifos.core.ui.components.Status
 import com.mifos.core.ui.util.EventsEffect
+import com.mifos.feature.client.utils.getClientIdentifierStatus
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
-import org.jetbrains.compose.resources.vectorResource
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -127,31 +123,14 @@ internal fun ClientIdentitiesListScreen(
                                     type = item.documentType?.name ?: emptyMessage,
                                     id = if (item.id != null) item.id.toString() else emptyMessage,
                                     key = item.documentKey ?: emptyMessage,
-                                    status = if (item.status != null) {
-                                        if (item.status!!.lowercase().endsWith("active")) Status.Active
-                                        if (item.status!!.lowercase()
-                                                .endsWith("inactive")
-                                        ) {
-                                            Status.InActive
-                                        } else {
-                                            Status.Pending
-                                        }
-                                    } else {
-                                        null
-                                    },
+                                    status = getClientIdentifierStatus(item.status),
                                     description = item.description ?: emptyMessage,
                                     // TODO check what is identifyDocuments, couldnot find in the api
                                     identifyDocuments = item.documentType?.name ?: emptyMessage,
                                     menuList = listOf(
-                                        Actions.ViewDocument(
-                                            vectorResource(Res.drawable.document_scanner),
-                                        ),
-                                        Actions.DeleteDocument(
-                                            vectorResource(Res.drawable.delete_document),
-                                        ),
-                                        Actions.UploadAgain(
-                                            vectorResource(Res.drawable.upload_document),
-                                        ),
+                                        Actions.ViewDocument(),
+                                        Actions.DeleteDocument(),
+                                        Actions.UploadAgain(),
                                     ),
                                     onActionClicked = { actions ->
                                         when (actions) {
@@ -181,6 +160,8 @@ internal fun ClientIdentitiesListScreen(
                                     },
                                     isExpanded = (index == state.currentExpandedItem) && state.expandClientIdentity,
                                 )
+
+                                Spacer(Modifier.height(DesignToken.spacing.small))
                             }
                         }
                     }

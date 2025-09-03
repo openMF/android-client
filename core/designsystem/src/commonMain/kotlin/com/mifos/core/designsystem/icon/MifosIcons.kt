@@ -28,7 +28,6 @@ import androidx.compose.material.icons.filled.ChevronLeft
 import androidx.compose.material.icons.filled.ChevronRight
 import androidx.compose.material.icons.filled.CloudDownload
 import androidx.compose.material.icons.filled.DoneAll
-import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Error
 import androidx.compose.material.icons.filled.FilterList
 import androidx.compose.material.icons.filled.FlashOff
@@ -188,7 +187,6 @@ object MifosIcons {
     val OutlinedVisibilityOff: ImageVector = Icons.Outlined.VisibilityOff
     val OutlinedVisibility: ImageVector = Icons.Outlined.Visibility
     val ArrowBack = Icons.Filled.ChevronLeft
-    val Edit = Icons.Default.Edit
     val FilterList = Icons.Filled.FilterList
     val FlashOn = Icons.Default.FlashOn
     val FlashOff = Icons.Default.FlashOff
@@ -211,10 +209,18 @@ object MifosIcons {
     val ChevronLeft = FluentIcons.Regular.ChevronLeft
     val ChevronRight = FluentIcons.Filled.ChevronRight
 
-    val ViewAccount = Icons.Outlined.Savings
-    val ViewDocument = Icons.Outlined.DocumentScanner
+    val PiggyBank = Icons.Outlined.Savings
+
+    val Wallet = com.mifos.core.designsystem.icon.Wallet
+    val Calendar = com.mifos.core.designsystem.icon.Calender
+    val Folder = com.mifos.core.designsystem.icon.Folder
+    val GrowthChart = GrownChart
+    val ShielOutlined = ShieldOutlined
+    val Edit = com.mifos.core.designsystem.icon.Edit
+
+    val DocumentScanner = Icons.Outlined.DocumentScanner
     val ApproveAccount = Icons.Outlined.CheckCircle
-    val UploadAgain = Icons.Outlined.FileUpload
+    val FileUpload = Icons.Outlined.FileUpload
     val DeleteDocument = Icons.Outlined.DeleteOutline
     val MakeRepayment = Icons.Outlined.Payments
 }

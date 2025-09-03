@@ -34,4 +34,5 @@ data class GetClientsClientIdIdentifiersResponse(
 
     val id: Long? = null,
 
+    val status: String? = null,
 )
