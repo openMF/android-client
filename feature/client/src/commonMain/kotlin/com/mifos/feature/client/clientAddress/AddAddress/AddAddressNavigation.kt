@@ -12,12 +12,14 @@ data class AddAddressRoute(
 
 fun NavGraphBuilder.clientAddAddressRoute(
     onNavigateBack: () -> Unit,
+    navController: NavController,
     onNavigateNext: (Int) -> Unit
 ) {
     composable<AddAddressRoute> {
         AddAddressScreen(
             onNavigateBack = onNavigateBack,
-            onNavigateNext = onNavigateNext
+            onNavigateNext = onNavigateNext,
+            navController = navController
         )
     }
 }
@@ -28,9 +30,7 @@ fun NavController.navigateToClientAddAddressRoute(
     this.navigate(
         AddAddressRoute(id = id),
     ) {
-        popUpTo(AddAddressRoute(id = id)) {
-            inclusive = true
-        }
+        popUpTo<AddAddressRoute> { inclusive = true }
         launchSingleTop = true
     }
 }

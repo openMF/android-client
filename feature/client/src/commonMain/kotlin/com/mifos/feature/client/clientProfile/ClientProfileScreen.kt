@@ -71,7 +71,7 @@ internal fun ClientProfileScreen(
             is ClientProfileEvent.OnActionClick -> {
                 when (event.action) {
                     ClientProfileActionItem.Address -> {
-                        viewAddress(state.client?.id?:-1)
+                        viewAddress(state.client?.id ?: -1)
                     }
                     ClientProfileActionItem.Documents -> {
                         documents(state.client?.id ?: -1)

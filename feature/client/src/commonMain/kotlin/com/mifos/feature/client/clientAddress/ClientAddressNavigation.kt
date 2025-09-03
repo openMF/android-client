@@ -3,9 +3,8 @@ package com.mifos.feature.client.clientAddress
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
-import com.mifos.feature.client.clientDetailsProfile.ClientProfileDetailsRoute
+import com.mifos.feature.client.clientAddress.AddAddress.AddAddressRoute
 import kotlinx.serialization.Serializable
-import org.koin.compose.viewmodel.koinViewModel
 
 @Serializable
 data class ClientAddressRoute(
@@ -15,13 +14,15 @@ data class ClientAddressRoute(
 fun NavGraphBuilder.clientAddressNavigation(
     onNavigateBack: () -> Unit,
     onNavigateNext: (Int) -> Unit,
+    navController: NavController,
     navigateToAddAddressForm: (Int) -> Unit,
 ) {
     composable<ClientAddressRoute> {
         ClientAddressScreen(
             onNavigateBack = onNavigateBack,
             onNavigateNext = onNavigateNext,
-            navigateToAddAddressForm = navigateToAddAddressForm
+            navigateToAddAddressForm = navigateToAddAddressForm,
+            navController = navController,
         )
     }
 }
@@ -38,7 +39,7 @@ fun NavController.navigateToClientAddressRouteOnStatus(id: Int) {
     this.navigate(
         ClientAddressRoute(id = id),
     ) {
-        popUpTo(ClientAddressRoute(id = id)) { inclusive = true }
+        popUpTo<AddAddressRoute>{ inclusive = true }
         launchSingleTop = true
     }
 }

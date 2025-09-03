@@ -10,6 +10,10 @@
 package com.mifos.core.data.repository
 
 import com.mifos.core.common.utils.DataState
+import com.mifos.core.model.objects.clients.Address
+import com.mifos.core.model.objects.clients.ClientAddressEntity
+import com.mifos.core.network.model.PostClientAddressRequest
+import com.mifos.core.network.model.PostClientAddressResponse
 import com.mifos.room.entities.client.AddressConfiguration
 import com.mifos.room.entities.client.AddressTemplate
 import com.mifos.room.entities.client.ClientPayloadEntity
@@ -37,4 +41,13 @@ interface CreateNewClientRepository {
     suspend fun getAddressConfiguration(): AddressConfiguration
 
     suspend fun getAddressTemplate(): AddressTemplate
+
+    suspend fun getAddresses(clientId: Int): List<ClientAddressEntity>
+
+    suspend fun createClientAddress(
+        clientId: Int,
+        addressTypeId: Int,
+        addressRequest: PostClientAddressRequest,
+    ) : PostClientAddressResponse
+
 }
