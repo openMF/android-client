@@ -15,7 +15,6 @@ import androidclient.feature.note.generated.resources.feature_note_button_confir
 import androidclient.feature.note.generated.resources.feature_note_dialog_warning
 import androidclient.feature.note.generated.resources.feature_note_dialog_warning_message
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize

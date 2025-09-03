@@ -30,7 +30,7 @@ fun NavGraphBuilder.addEditNoteRoute(
         AddEditNoteScreen(
             onBackPressed = onBackPressed,
             onNavigateWithUpdatedList = onNavigateWithUpdatedList,
-            navController = navController
+            navController = navController,
         )
     }
 }

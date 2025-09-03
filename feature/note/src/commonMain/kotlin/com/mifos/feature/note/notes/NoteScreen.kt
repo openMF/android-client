@@ -18,7 +18,6 @@ import androidclient.feature.note.generated.resources.feature_note_item
 import androidclient.feature.note.generated.resources.feature_note_notes
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -304,6 +303,6 @@ fun PreviewSuccessNoteScreen() {
     NoteScreenScaffold(
         onAction = {},
         state = NoteState(notes = demoNotes),
-        navController = rememberNavController()
+        navController = rememberNavController(),
     )
 }

@@ -32,7 +32,7 @@ fun NavGraphBuilder.noteNavGraph(
         noteRoute(
             onNavigateBack = onBackPressed,
             onNavigateAddEditNote = navController::navigateToAddEditNoteScreen,
-            navController = navController
+            navController = navController,
         )
 
         addEditNoteRoute(
@@ -40,7 +40,7 @@ fun NavGraphBuilder.noteNavGraph(
                 navController.popBackStack()
             },
             onNavigateWithUpdatedList = navController::navigateToNoteScreenWithUpdatedList,
-            navController = navController
+            navController = navController,
         )
     }
 }

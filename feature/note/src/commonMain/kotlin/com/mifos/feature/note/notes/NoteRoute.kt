@@ -29,7 +29,7 @@ fun NavGraphBuilder.noteRoute(
         NoteScreen(
             onNavigateBack = onNavigateBack,
             onNavigateAddEditNote = onNavigateAddEditNote,
-            navController = navController
+            navController = navController,
         )
     }
 }
