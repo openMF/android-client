@@ -182,6 +182,8 @@ internal fun ClientIdentitiesListScreen(
                                     },
                                     isExpanded = (index == state.currentExpandedItem) && state.expandClientIdentity,
                                 )
+
+                                Spacer(Modifier.height(DesignToken.spacing.small))
                             }
                         }
                     }
