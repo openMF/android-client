@@ -48,6 +48,7 @@ import androidx.compose.ui.Modifier
 import com.mifos.core.common.utils.DateHelper
 import com.mifos.core.designsystem.component.MifosDatePickerTextField
 import com.mifos.core.designsystem.component.MifosOutlinedTextField
+import com.mifos.core.designsystem.component.MifosTextFieldConfig
 import com.mifos.core.designsystem.component.MifosTextFieldDropdown
 import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.designsystem.theme.MifosTypography
@@ -164,6 +165,10 @@ fun DetailsPage(
                         onAction(NewLoanAccountAction.OnExternalIdChange(it))
                     },
                     label = stringResource(Res.string.external_id),
+                    config = MifosTextFieldConfig(
+                        isError = state.externalIdError != null,
+                        errorText = if (state.externalIdError != null)stringResource(state.externalIdError) else null,
+                    ),
                 )
                 Spacer(Modifier.height(DesignToken.padding.large))
                 MifosTextFieldDropdown(
@@ -272,7 +277,7 @@ fun DetailsPage(
                 onAction(NewLoanAccountAction.NavigateBack)
             },
             onSecondBtnClick = {
-                onAction(NewLoanAccountAction.NextStep)
+                onAction(NewLoanAccountAction.OnDetailsSubmit)
             },
             isSecondButtonEnabled = state.isDetailsNextEnabled,
             modifier = Modifier.padding(top = DesignToken.padding.small),
