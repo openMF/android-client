@@ -9,10 +9,16 @@
  */
 package com.mifos.feature.client.clientApplyNewApplications
 
+import androidx.lifecycle.SavedStateHandle
+import androidx.navigation.toRoute
 import com.mifos.core.ui.util.BaseViewModel
 
-class ClientApplyNewApplicationsViewModel() : BaseViewModel<ClientApplyNewApplicationsState, ClientApplyNewApplicationsEvent, ClientApplyNewApplicationsAction>(
-    initialState = ClientApplyNewApplicationsState(),
+class ClientApplyNewApplicationsViewModel(
+    val savedStateHandle: SavedStateHandle,
+) : BaseViewModel<ClientApplyNewApplicationsState, ClientApplyNewApplicationsEvent, ClientApplyNewApplicationsAction>(
+    initialState = run {
+        ClientApplyNewApplicationsState(savedStateHandle.toRoute<ClientApplyNewApplicationRoute>().clientId)
+    },
 ) {
     override fun handleAction(action: ClientApplyNewApplicationsAction) {
         when (action) {
@@ -23,7 +29,7 @@ class ClientApplyNewApplicationsViewModel() : BaseViewModel<ClientApplyNewApplic
 }
 
 data class ClientApplyNewApplicationsState(
-    val clientId: Int = -1,
+    val clientId: Int,
 )
 
 sealed interface ClientApplyNewApplicationsEvent {

@@ -81,6 +81,7 @@ fun NavGraphBuilder.clientNavGraph(
     activateClient: (Int) -> Unit,
     hasDatatables: KFunction4<List<DataTableEntity>, Any?, Int, MutableList<List<FormWidgetDTO>>, Unit>,
     onDocumentClicked: (Int, String) -> Unit,
+    navigateToNewLoanAccount: (Int) -> Unit,
 ) {
     navigation<ClientNavGraph>(
         startDestination = ClientListScreenRoute,
@@ -225,7 +226,7 @@ fun NavGraphBuilder.clientNavGraph(
         )
         clientApplyNewApplicationRoute(
             onNavigateBack = navController::popBackStack,
-            onNavigateApplyLoanAccount = { },
+            onNavigateApplyLoanAccount = navigateToNewLoanAccount,
             onNavigateApplySavingsAccount = { },
             onNavigateApplyShareAccount = { },
             onNavigateApplyRecurringAccount = { },

@@ -13,7 +13,6 @@ import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsFocusedAsState
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardActions
@@ -366,7 +365,7 @@ fun MifosDatePickerTextField(
     enabled: Boolean = true,
     value: String,
     modifier: Modifier = Modifier
-        .fillMaxSize()
+        .fillMaxWidth()
         .clip(DesignToken.shapes.medium),
     label: String? = null,
     openDatePicker: () -> Unit,
@@ -408,13 +407,13 @@ fun MifosOutlinedTextField(
     onValueChange: (String) -> Unit,
     label: String,
     modifier: Modifier = Modifier,
-    shape: Shape = OutlinedTextFieldDefaults.shape,
+    shape: Shape = DesignToken.shapes.medium,
     colors: TextFieldColors = OutlinedTextFieldDefaults.colors(
         focusedBorderColor = MaterialTheme.colorScheme.secondaryContainer,
         unfocusedBorderColor = MaterialTheme.colorScheme.secondaryContainer,
         errorBorderColor = MaterialTheme.colorScheme.error,
     ),
-    textStyle: TextStyle = LocalTextStyle.current,
+    textStyle: TextStyle = MifosTypography.bodyLarge,
     interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
     config: MifosTextFieldConfig = MifosTextFieldConfig(),
     onClickClearIcon: () -> Unit = { onValueChange("") },

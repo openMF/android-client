@@ -133,4 +133,28 @@
 
     <string name="feature_loan_unknown_error_occured">An Unknown Error Occured</string>
     <string name="feature_loan_payment_success_message">Payment Successful, Transaction ID = </string>
+
+    <!-- New Loan Account -->
+    <string name="new_loan_account_title">New Loan Account</string>
+
+    <!-- Details Page -->
+    <string name="product_name">Product Name</string>
+    <string name="external_id">External ID</string>
+    <string name="loan_officer">Loan Officer</string>
+    <string name="loan_purpose">Loan Purpose</string>
+    <string name="fund">Fund</string>
+    <string name="submission_date">Submission Date</string>
+    <string name="expected_disbursement">Expected Disbursement</string>
+    <string name="savings_linkage">Savings Linkage</string>
+    <string name="link_savings">Link Savings</string>
+    <string name="create_standing_instructions">Create Standing Instructions at disbursement</string>
+    <string name="back">Back</string>
+    <string name="next">Next</string>
+
+    <!-- Stepper -->
+    <string name="step_details">Details</string>
+    <string name="step_terms">Terms</string>
+    <string name="step_charges">Charges</string>
+    <string name="step_schedule">Schedule</string>
+    <string name="step_preview">Preview</string>
 </resources>
