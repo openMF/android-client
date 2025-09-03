@@ -113,7 +113,7 @@ fun DetailsPage(
                 TextButton(
                     onClick = {
                         onAction(NewLoanAccountAction.OnExpectedDisbursementDatePick(false))
-                        submissionDatePickerState.selectedDateMillis?.let {
+                        expectedDisbursementDatePickerState.selectedDateMillis?.let {
                             onAction(NewLoanAccountAction.OnExpectedDisbursementDateChange(DateHelper.getDateAsStringFromLong(it)))
                         }
                     },

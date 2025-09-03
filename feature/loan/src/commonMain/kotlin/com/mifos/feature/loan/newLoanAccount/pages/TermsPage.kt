@@ -11,11 +11,15 @@ package com.mifos.feature.loan.newLoanAccount.pages
 
 import androidclient.feature.loan.generated.resources.Res
 import androidclient.feature.loan.generated.resources.back
+import androidclient.feature.loan.generated.resources.expected_disbursement
 import androidclient.feature.loan.generated.resources.external_id
+import androidclient.feature.loan.generated.resources.feature_loan_cancel
+import androidclient.feature.loan.generated.resources.feature_loan_select
 import androidclient.feature.loan.generated.resources.loan_officer
 import androidclient.feature.loan.generated.resources.next
 import androidclient.feature.loan.generated.resources.step_details
 import androidclient.feature.loan.generated.resources.step_terms
+import androidclient.feature.loan.generated.resources.submission_date
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -24,14 +28,19 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
+import androidx.compose.material3.DatePicker
+import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.SelectableDates
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.mifos.core.common.utils.DateHelper
+import com.mifos.core.designsystem.component.MifosDatePickerTextField
 import com.mifos.core.designsystem.component.MifosOutlinedTextField
 import com.mifos.core.designsystem.component.MifosTextFieldConfig
 import com.mifos.core.designsystem.component.MifosTextFieldDropdown
@@ -58,6 +67,60 @@ fun TermsPage(
     val interestChargedFromDatePickerState = rememberDatePickerState(
         initialSelectedDateMillis = Clock.System.now().toEpochMilliseconds(),
     )
+
+    if (state.showFirstRepaymentDatePick) {
+        DatePickerDialog(
+            onDismissRequest = {
+                onAction(NewLoanAccountAction.OnFirstRepaymentDatePick(false))
+            },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        onAction(NewLoanAccountAction.OnFirstRepaymentDatePick(false))
+                        firstRepaymentOnDatePickerState.selectedDateMillis?.let {
+                            onAction(NewLoanAccountAction.OnFirstRepaymentDateChange(DateHelper.getDateAsStringFromLong(it)))
+                        }
+                    },
+                ) { Text(stringResource(Res.string.feature_loan_select)) }
+            },
+            dismissButton = {
+                TextButton(
+                    onClick = {
+                        onAction(NewLoanAccountAction.OnFirstRepaymentDatePick(false))
+                    },
+                ) { Text(stringResource(Res.string.feature_loan_cancel)) }
+            },
+        ) {
+            DatePicker(state = firstRepaymentOnDatePickerState)
+        }
+    }
+
+    if (state.showInterestChargedFromDatePick) {
+        DatePickerDialog(
+            onDismissRequest = {
+                onAction(NewLoanAccountAction.OnInterestChargedFromDatePick(false))
+            },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        onAction(NewLoanAccountAction.OnInterestChargedFromDatePick(false))
+                        interestChargedFromDatePickerState.selectedDateMillis?.let {
+                            onAction(NewLoanAccountAction.OnInterestChargedFromChange(DateHelper.getDateAsStringFromLong(it)))
+                        }
+                    },
+                ) { Text(stringResource(Res.string.feature_loan_select)) }
+            },
+            dismissButton = {
+                TextButton(
+                    onClick = {
+                        onAction(NewLoanAccountAction.OnInterestChargedFromDatePick(false))
+                    },
+                ) { Text(stringResource(Res.string.feature_loan_cancel)) }
+            },
+        ) {
+            DatePicker(state = interestChargedFromDatePickerState)
+        }
+    }
 
     Column(Modifier.fillMaxSize()) {
         Column(
@@ -125,6 +188,22 @@ fun TermsPage(
                     onAction(NewLoanAccountAction.OnNoOfRepaymentsChange(it.toIntOrNull()?:0))
                 },
                 label = "Number of Repayments",
+            )
+            Spacer(Modifier.height(DesignToken.padding.large))
+            MifosDatePickerTextField(
+                value = state.firstRepaymentDate,
+                label = "First Repayment Date",
+                openDatePicker = {
+                    onAction(NewLoanAccountAction.OnFirstRepaymentDatePick(true))
+                },
+            )
+            Spacer(Modifier.height(DesignToken.padding.large))
+            MifosDatePickerTextField(
+                value = state.interestChargedFromDate,
+                label = "Interest Charged From",
+                openDatePicker = {
+                    onAction(NewLoanAccountAction.OnInterestChargedFromDatePick(true))
+                },
             )
 
         }
