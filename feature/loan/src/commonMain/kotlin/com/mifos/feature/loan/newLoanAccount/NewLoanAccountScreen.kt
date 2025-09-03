@@ -29,6 +29,7 @@ import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.ui.components.MifosBreadcrumbNavBar
 import com.mifos.core.ui.components.MifosErrorComponent
 import com.mifos.core.ui.components.MifosProgressIndicator
+import com.mifos.core.ui.components.MifosProgressIndicatorOverlay
 import com.mifos.core.ui.components.MifosStepper
 import com.mifos.core.ui.components.Step
 import com.mifos.core.ui.util.EventsEffect
@@ -151,6 +152,8 @@ private fun NewLoanAccountDialogs(
                 },
             )
         }
+
+        NewLoanAccountState.DialogState.LoadingOverLay -> MifosProgressIndicatorOverlay()
 
         null -> Unit
     }
