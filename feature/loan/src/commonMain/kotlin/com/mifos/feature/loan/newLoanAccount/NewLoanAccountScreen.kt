@@ -133,6 +133,19 @@ private fun NewLoanAccountScaffold(
                     )
                 }
             }
+
+            NewLoanAccountState.ScreenState.NetworkError -> {
+                MifosErrorComponent(
+                    isNetworkConnected = state.networkConnection,
+                    isRetryEnabled = true,
+                    onRetry = {
+                        onAction(NewLoanAccountAction.Retry)
+                    },
+                )
+            }
+        }
+        if (state.isOverLayLoadingActive) {
+            MifosProgressIndicatorOverlay()
         }
     }
 }
@@ -145,7 +158,6 @@ private fun NewLoanAccountDialogs(
     when (state.dialogState) {
         is NewLoanAccountState.DialogState.Error -> {
             MifosErrorComponent(
-                isNetworkConnected = state.networkConnection,
                 message = state.dialogState.message,
                 isRetryEnabled = true,
                 onRetry = {
@@ -153,8 +165,6 @@ private fun NewLoanAccountDialogs(
                 },
             )
         }
-
-        NewLoanAccountState.DialogState.LoadingOverLay -> MifosProgressIndicatorOverlay()
 
         null -> Unit
     }
