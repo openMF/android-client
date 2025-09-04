@@ -18,6 +18,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import com.mifos.core.designsystem.theme.MifosTheme
+import com.mifos.core.designsystem.theme.MifosTypography
 import com.mifos.core.ui.util.DevicePreview
 
 @Composable
@@ -37,13 +38,16 @@ fun MifosCheckBox(
             onCheckedChange = { onCheckChanged.invoke(it) },
             colors = checkboxColors,
         )
-        Text(text = text)
+        Text(
+            text = text,
+            style = MifosTypography.labelLarge,
+        )
     }
 }
 
 @DevicePreview
 @Composable
-fun MifosCheckBoxPreview() {
+private fun MifosCheckBoxPreview() {
     MifosTheme {
         MifosCheckBox(
             checked = false,

@@ -147,7 +147,7 @@ fun MifosTitleDescSingleLineEqual(
 
 @DevicePreview
 @Composable
-fun MifosTextTitleDescSingleLinePreview(
+private fun MifosTextTitleDescSingleLinePreview(
     modifier: Modifier = Modifier,
 ) {
     MifosTheme {
@@ -161,7 +161,7 @@ fun MifosTextTitleDescSingleLinePreview(
 
 @DevicePreview
 @Composable
-fun MifosTextTitleDescDoubleLinePreview(
+private fun MifosTextTitleDescDoubleLinePreview(
     modifier: Modifier = Modifier,
 ) {
     MifosTheme {
@@ -176,7 +176,7 @@ fun MifosTextTitleDescDoubleLinePreview(
 
 @DevicePreview
 @Composable
-fun MifosTextTitleDescDrawableSingleLinePreview(
+private fun MifosTextTitleDescDrawableSingleLinePreview(
     modifier: Modifier = Modifier,
 ) {
     MifosTheme {
@@ -191,7 +191,7 @@ fun MifosTextTitleDescDrawableSingleLinePreview(
 
 @DevicePreview
 @Composable
-fun MifosTitleDescSingleLineEqualPreview(
+private fun MifosTitleDescSingleLineEqualPreview(
     modifier: Modifier = Modifier,
 ) {
     MifosTheme {

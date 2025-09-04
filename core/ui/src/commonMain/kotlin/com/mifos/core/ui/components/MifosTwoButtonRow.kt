@@ -23,7 +23,9 @@ import com.mifos.core.designsystem.component.MifosOutlinedButton
 import com.mifos.core.designsystem.component.MifosTextButton
 import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.designsystem.theme.DesignToken
+import com.mifos.core.designsystem.theme.MifosTheme
 import com.mifos.core.designsystem.theme.MifosTypography
+import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
 fun MifosTwoButtonRow(
@@ -78,6 +80,19 @@ fun MifosTwoButtonRow(
             },
             modifier = Modifier.weight(1f),
             enabled = isSecondButtonEnabled,
+        )
+    }
+}
+
+@Composable
+@Preview
+private fun MifosTwoButtonRowPreview() {
+    MifosTheme {
+        MifosTwoButtonRow(
+            firstBtnText = "First Button",
+            secondBtnText = "Second Button",
+            onFirstBtnClick = {},
+            onSecondBtnClick = {},
         )
     }
 }

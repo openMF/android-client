@@ -339,7 +339,7 @@ fun MifosDropDownRow(
 
 @Preview
 @Composable
-fun MifosRowTextWithButton() {
+private fun MifosRowTextWithButton() {
     MifosTheme {
         MifosRowTextWithButton(
             title = "Title",
@@ -353,7 +353,7 @@ fun MifosRowTextWithButton() {
 
 @Preview
 @Composable
-fun PreviewMifosRowCard() {
+private fun PreviewMifosRowCard() {
     MifosTheme {
         MifosRowCard(
             title = "Customer Info",
@@ -373,7 +373,7 @@ fun PreviewMifosRowCard() {
 
 @Preview
 @Composable
-fun PreviewMifosRowCardWithImage() {
+private fun PreviewMifosRowCardWithImage() {
     MifosTheme {
         MifosRowCard(
             title = "Customer Info",
@@ -393,7 +393,7 @@ fun PreviewMifosRowCardWithImage() {
 
 @Preview
 @Composable
-fun MifosRowWithLabelsPreview() {
+private fun MifosRowWithLabelsPreview() {
     MifosTheme {
         MifosRowWithLabels(
             title = "Title",
@@ -408,7 +408,7 @@ fun MifosRowWithLabelsPreview() {
 
 @Preview
 @Composable
-fun MifosRowDropDownPreview() {
+private fun MifosRowDropDownPreview() {
     MifosTheme {
         MifosDropDownRow(
             isActive = true,

@@ -63,7 +63,7 @@ fun MifosRowWithTextAndButton(
 
 @Composable
 @Preview
-fun MifosRowWithTextAndButtonPreview() {
+private fun MifosRowWithTextAndButtonPreview() {
     MifosTheme {
         MifosRowWithTextAndButton(
             onBtnClick = {},

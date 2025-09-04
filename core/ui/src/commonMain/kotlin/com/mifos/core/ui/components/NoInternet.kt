@@ -72,7 +72,7 @@ fun NoInternet(
 
 @DevicePreview
 @Composable
-fun NoInternetPreview(
+private fun NoInternetPreview(
     modifier: Modifier = Modifier,
 ) {
     MifosTheme {

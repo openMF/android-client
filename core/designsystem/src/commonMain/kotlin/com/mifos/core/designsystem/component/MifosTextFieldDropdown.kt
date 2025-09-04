@@ -112,7 +112,7 @@ fun MifosTextFieldDropdown(
 
 @Preview
 @Composable
-fun MifosTextFieldDropdownPreview() {
+private fun MifosTextFieldDropdownPreview() {
     val options = listOf("Option 1", "Option 2", "Option 3")
     var selectedValue by remember { mutableStateOf("") }
 

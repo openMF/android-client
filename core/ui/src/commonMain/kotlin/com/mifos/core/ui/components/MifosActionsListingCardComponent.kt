@@ -778,7 +778,7 @@ private fun PreviewMifosActionsClientFeeListingComponent() {
 
 @Preview
 @Composable
-fun PreviewMifosActionsSavingsListingComponent() {
+private fun PreviewMifosActionsSavingsListingComponent() {
     MaterialTheme {
         MifosActionsSavingsListingComponent(
             accountNo = "SV9876",

@@ -73,7 +73,7 @@ fun MifosTabRow(
 
 @Preview
 @Composable
-fun MifosTabRowPreview() {
+private fun MifosTabRowPreview() {
     val pagerState = rememberPagerState { 2 }
     val tabContents = listOf(
         TabContent("Home") { Text("Home Content") },

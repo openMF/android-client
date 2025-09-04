@@ -57,7 +57,7 @@ fun MifosTopBar(
 
 @Preview
 @Composable
-fun MifosTopBarPreview() {
+private fun MifosTopBarPreview() {
     MaterialTheme {
         MifosTopBar(
             topBarTitle = "Sample Title",

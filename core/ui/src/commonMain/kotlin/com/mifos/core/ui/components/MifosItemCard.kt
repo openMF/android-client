@@ -46,7 +46,7 @@ fun MifosItemCard(
 
 @DevicePreview
 @Composable
-fun MifosItemCardPreview(
+private fun MifosItemCardPreview(
     modifier: Modifier = Modifier,
 ) {
     MifosTheme {

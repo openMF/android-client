@@ -51,7 +51,7 @@ fun MifosTab(
 
 @Preview
 @Composable
-fun MifosTabPreview() {
+private fun MifosTabPreview() {
     Column(
         verticalArrangement = Arrangement.spacedBy(8.dp),
         modifier = Modifier.padding(16.dp),

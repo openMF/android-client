@@ -43,7 +43,7 @@ fun MifosRoundIcon(
 
 @DevicePreview
 @Composable
-fun MifosRoundIconPreview(
+private fun MifosRoundIconPreview(
     modifier: Modifier = Modifier,
 ) {
     MifosTheme {
