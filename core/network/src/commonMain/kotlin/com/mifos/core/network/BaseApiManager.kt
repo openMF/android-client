@@ -42,6 +42,8 @@ import com.mifos.core.network.services.SavingsAccountService
 import com.mifos.core.network.services.SearchService
 import com.mifos.core.network.services.StaffService
 import com.mifos.core.network.services.SurveyService
+import com.mifos.core.network.services.ShareService
+import com.mifos.core.network.services.createShareService
 import com.mifos.core.network.services.createCenterService
 import com.mifos.core.network.services.createChargeService
 import com.mifos.core.network.services.createCheckerInboxService
@@ -83,6 +85,7 @@ class BaseApiManager(
     val collectionSheetService: CollectionSheetService = ktorfit.createCollectionSheetService()
     val noteService: NoteService = ktorfit.createNoteService()
     val runReportsService: RunReportsService = ktorfit.createRunReportsService()
+    val shareService : ShareService = ktorfit.createShareService()
 
     // sdk apis
     val clientIdentifiersApi: ClientIdentifierApi = ktorfit.createClientIdentifierApi()

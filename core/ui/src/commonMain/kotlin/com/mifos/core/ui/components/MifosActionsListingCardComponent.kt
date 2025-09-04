@@ -395,6 +395,95 @@ fun MifosActionsLoanListingComponent(
 }
 
 @Composable
+fun MifosActionsShareListingComponent(
+    accountNo: String,
+    savingsProduct: String,
+    savingsProductName: String,
+    lastActive: String,
+    balance: String,
+    isExpanded : Boolean,
+    onClick: () -> Unit,
+    menuList: List<Actions>,
+    onActionClicked: (Actions) -> Unit,
+) {
+    MifosActionsListingComponentOutline {
+        Column {
+            Column(
+                modifier = Modifier.padding(DesignToken.padding.large)
+                    .c,
+            ) {
+                MifosListingRowItemHeader(
+                    text = accountNo,
+                    keyStyle = MifosTypography.titleSmallEmphasized,
+                )
+
+                Spacer(Modifier.height(DesignToken.padding.large))
+                MifosListingRowItem(
+                    key = savingsProduct,
+                    value = savingsProductName,
+                )
+                Spacer(Modifier.height(DesignToken.padding.medium))
+                Column(
+                    verticalArrangement = Arrangement.spacedBy(DesignToken.padding.extraExtraSmall),
+                ) {
+                    MifosListingRowItem(
+                        key = stringResource(Res.string.core_ui_last_active),
+                        value = lastActive,
+                    )
+                    MifosListingRowItem(
+                        key = stringResource(Res.string.core_ui_balance),
+                        value = balance,
+                        valueColor = MaterialTheme.colorScheme.primary,
+                    )
+                }
+            }
+
+            if (isExpanded) {
+                Surface(
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(
+                        bottomStart = DesignToken.padding.medium,
+                        bottomEnd = DesignToken.padding.medium,
+                    ),
+                    color = MaterialTheme.colorScheme.surfaceContainer,
+                ) {
+                    Column(
+                        modifier = Modifier.padding(
+                            vertical = DesignToken.padding.small,
+                        ),
+                    ) {
+                        menuList.map { menuItem ->
+                            Row(
+                                modifier = Modifier.fillMaxWidth()
+                                    .height(DesignToken.sizes.avatarMedium)
+                                    .clickable {
+                                        onActionClicked(menuItem)
+                                    },
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.Start,
+                            ) {
+                                Icon(
+                                    modifier = Modifier.padding(horizontal = DesignToken.padding.large),
+                                    imageVector = menuItem.icon,
+                                    contentDescription = "",
+                                )
+
+                                Text(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    text = menuItem.name,
+                                    color = MaterialTheme.colorScheme.onSurface,
+                                    fontSize = MaterialTheme.typography.bodyLarge.fontSize,
+                                )
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
 fun MifosActionsSavingsListingComponent(
     accountNo: String,
     savingsProduct: String,

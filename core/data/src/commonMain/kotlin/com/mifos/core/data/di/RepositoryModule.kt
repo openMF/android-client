@@ -61,6 +61,7 @@ import com.mifos.core.data.repository.SavingsAccountSummaryRepository
 import com.mifos.core.data.repository.SavingsAccountTransactionReceiptRepository
 import com.mifos.core.data.repository.SavingsAccountTransactionRepository
 import com.mifos.core.data.repository.SearchRepository
+import com.mifos.core.data.repository.ShareAccountsRepository
 import com.mifos.core.data.repository.SignatureRepository
 import com.mifos.core.data.repository.SurveyListRepository
 import com.mifos.core.data.repository.SurveySubmitRepository
@@ -123,6 +124,7 @@ import com.mifos.core.data.repositoryImp.SavingsAccountSummaryRepositoryImp
 import com.mifos.core.data.repositoryImp.SavingsAccountTransactionReceiptRepositoryImpl
 import com.mifos.core.data.repositoryImp.SavingsAccountTransactionRepositoryImp
 import com.mifos.core.data.repositoryImp.SearchRepositoryImp
+import com.mifos.core.data.repositoryImp.ShareAccountsRepositoryImpl
 import com.mifos.core.data.repositoryImp.SignatureRepositoryImp
 import com.mifos.core.data.repositoryImp.SurveyListRepositoryImp
 import com.mifos.core.data.repositoryImp.SurveySubmitRepositoryImp
@@ -221,6 +223,8 @@ val RepositoryModule = module {
     singleOf(::SignatureRepositoryImp) bind SignatureRepository::class
     singleOf(::SurveyListRepositoryImp) bind SurveyListRepository::class
     singleOf(::SurveySubmitRepositoryImp) bind SurveySubmitRepository::class
+
+    singleOf(::ShareAccountsRepositoryImpl) bind  ShareAccountsRepository::class
 
     includes(platformModule)
     single<PlatformDependentDataModule> { getPlatformDataModule }

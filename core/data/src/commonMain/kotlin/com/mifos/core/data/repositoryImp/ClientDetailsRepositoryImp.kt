@@ -12,6 +12,7 @@ package com.mifos.core.data.repositoryImp
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.repository.ClientDetailsRepository
 import com.mifos.core.data.util.extractErrorMessage
+import com.mifos.core.model.objects.account.share.ShareAccounts
 import com.mifos.core.network.datamanager.DataManagerClient
 import com.mifos.core.network.model.ClientCloseTemplateResponse
 import com.mifos.core.network.model.CollateralItem
@@ -47,6 +48,10 @@ class ClientDetailsRepositoryImp(
 
     override suspend fun getSavingsAccounts(clientId: Int): List<SavingAccountOption> {
         return dataManagerClient.getSavingsAccounts(clientId)
+    }
+
+    override suspend fun getShareAccounts(clientId: Int): List<ShareAccounts> {
+        return dataManagerClient.getClientAccounts(clientId).shareAccounts
     }
 
     override suspend fun getClientCloseTemplate(): DataState<ClientCloseTemplateResponse> {

@@ -57,6 +57,8 @@ import com.mifos.feature.client.recurringDepositAccount.clientRecurringDepositAc
 import com.mifos.feature.client.recurringDepositAccount.navigateToRecurringDepositAccountRoute
 import com.mifos.feature.client.savingsAccounts.navigateToClientSavingsAccountsRoute
 import com.mifos.feature.client.savingsAccounts.savingsAccountsDestination
+import com.mifos.feature.client.shareAccounts.navigateToShareAccountsScreen
+import com.mifos.feature.client.shareAccounts.shareAccountsDestination
 import com.mifos.room.entities.accounts.savings.SavingAccountDepositTypeEntity
 import com.mifos.room.entities.noncore.DataTableEntity
 import com.mifos.room.entities.survey.SurveyEntity
@@ -145,6 +147,10 @@ fun NavGraphBuilder.clientNavGraph(
             savingAccounts = navController::navigateToClientSavingsAccountsRoute,
             loanAccounts = navController::navigateToClientLoanAccountsRoute,
             recurringDepositAccounts = navController::navigateToRecurringDepositAccountRoute,
+            sharesAccounts = navController::navigateToShareAccountsScreen,
+            fixedDepositAccounts = {},
+            collateralData = {},
+            upcomingCharges = {}
         )
 
         clientRecurringDepositAccountDestination(
@@ -221,6 +227,9 @@ fun NavGraphBuilder.clientNavGraph(
             onNavigateApplyRecurringAccount = { },
             onNavigateApplyFixedAccount = { },
             navController = navController,
+        )
+        shareAccountsDestination(
+            navigateToViewAccount = {}
         )
     }
 }
