@@ -10,8 +10,12 @@
 package com.mifos.core.designsystem.component
 
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -21,6 +25,7 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.testTag
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
 import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.designsystem.theme.MifosTheme
 import com.mifos.core.designsystem.theme.MifosTypography
@@ -131,6 +136,65 @@ fun MifosBasicDialog(
             )
         }
     }
+}
+
+@Composable
+fun MifosBasicDialog(
+    onConfirm: () -> Unit,
+    onDismissRequest: () -> Unit,
+    confirmText: String = "Ok",
+    dismissText: String = "Cancel",
+    isConfirmEnabled: Boolean = true,
+    title: String,
+    content: @Composable () -> Unit,
+) {
+    AlertDialog(
+        onDismissRequest = onDismissRequest,
+        confirmButton = {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceEvenly,
+            ) {
+                MifosOutlinedButton(
+                    onClick = { onDismissRequest() },
+                    text = {
+                        Text(
+                            text = dismissText,
+                            color = MaterialTheme.colorScheme.primary,
+                            style = MifosTypography.labelLarge,
+                        )
+                    },
+                    modifier = Modifier.weight(1f),
+                )
+
+                Spacer(modifier = Modifier.width(8.dp))
+
+                MifosTextButton(
+                    onClick = { onConfirm() },
+                    text = {
+                        Text(
+                            text = confirmText,
+                            style = MifosTypography.labelLarge,
+                        )
+                    },
+                    modifier = Modifier.weight(1f),
+                    enabled = isConfirmEnabled,
+                )
+            }
+        },
+        title = {
+            Text(
+                text = title,
+                style = MifosTypography.titleMediumEmphasized,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .testTag("AlertTitleText"),
+            )
+        },
+        text = { content() },
+        containerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
+        modifier = Modifier.semantics { testTag = "AlertPopup" },
+    )
 }
 
 @Preview

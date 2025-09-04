@@ -44,14 +44,12 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
-import co.touchlab.kermit.Logger
 import com.mifos.core.designsystem.component.BasicDialogState
 import com.mifos.core.designsystem.component.MifosBasicDialog
 import com.mifos.core.designsystem.component.MifosScaffold
@@ -155,13 +153,6 @@ private fun ClientProfileDetailsScaffold(
     modifier: Modifier = Modifier,
     onAction: (ClientProfileDetailsAction) -> Unit,
 ) {
-    LaunchedEffect(true) {
-        val backStack = navController.currentBackStack.value
-            .mapNotNull { it.destination.route }
-        Logger.e("Revanth") {
-            backStack.toString()
-        }
-    }
     MifosScaffold(
         title = stringResource(Res.string.client_profile_details_title),
         onBackPressed = { onAction(ClientProfileDetailsAction.NavigateBack) },

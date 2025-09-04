@@ -14,10 +14,12 @@ import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.common.utils.DateHelper
+import com.mifos.core.data.repository.ClientDetailsRepository
 import com.mifos.core.data.util.NetworkMonitor
 import com.mifos.core.domain.useCases.GetAllLoanUseCase
 import com.mifos.core.domain.useCases.GetLoansAccountTemplateUseCase
 import com.mifos.core.model.objects.organisations.LoanProducts
+import com.mifos.core.network.model.CollateralItem
 import com.mifos.core.ui.util.BaseViewModel
 import com.mifos.core.ui.util.TextFieldsValidator
 import com.mifos.room.entities.templates.loans.LoanTemplate
@@ -28,6 +30,7 @@ import org.jetbrains.compose.resources.StringResource
 
 internal class NewLoanAccountViewModel(
     private val getAllLoanUseCase: GetAllLoanUseCase,
+    private val repo: ClientDetailsRepository,
     private val getLoansAccountTemplateUseCase: GetLoansAccountTemplateUseCase,
     private val networkMonitor: NetworkMonitor,
     val savedStateHandle: SavedStateHandle,
@@ -118,7 +121,10 @@ internal class NewLoanAccountViewModel(
 
             is NewLoanAccountAction.OnNominalInterestRateChange -> {
                 mutableStateFlow.update {
-                    it.copy(nominalInterestRate = action.rate)
+                    it.copy(
+                        nominalInterestRate = action.rate,
+                        nominalInterestRateText = action.text,
+                    )
                 }
             }
 
@@ -181,6 +187,101 @@ internal class NewLoanAccountViewModel(
                     it.copy(interestFreePeriod = action.number)
                 }
             }
+
+            is NewLoanAccountAction.OnMoratoriumGraceOnInterestPaymentChange -> {
+                mutableStateFlow.update {
+                    it.copy(moratoriumGraceOnInterestPayment = action.number)
+                }
+            }
+
+            is NewLoanAccountAction.OnMoratoriumGraceOnPrincipalPaymentChange -> {
+                mutableStateFlow.update {
+                    it.copy(moratoriumGraceOnPrincipalPayment = action.number)
+                }
+            }
+
+            is NewLoanAccountAction.OnMoratoriumOnArrearsAgeingChange -> {
+                mutableStateFlow.update {
+                    it.copy(moratoriumOnArrearsAgeing = action.number)
+                }
+            }
+
+            NewLoanAccountAction.DismissAddCollateralDialog -> {
+                mutableStateFlow.update {
+                    it.copy(dialogState = null)
+                }
+            }
+
+            NewLoanAccountAction.ShowAddCollateralDialog -> {
+                mutableStateFlow.update {
+                    it.copy(dialogState = NewLoanAccountState.DialogState.AddNewCollateral)
+                }
+            }
+
+            NewLoanAccountAction.AddCollateralToList -> {
+                val selectedIndex = state.collateralSelectedIndex
+                val selectedCollateral = state.collaterals.getOrNull(selectedIndex)
+
+                if (selectedCollateral != null) {
+                    val newCollateral = CreatedCollateral(
+                        id = selectedCollateral.id,
+                        quantity = state.collateralQuantity,
+                        totalValue = state.collateralTotal,
+                        totalCollateral = state.totalCollateral,
+                        name = selectedCollateral.name,
+                    )
+
+                    state.copy(
+                        addedCollaterals = state.addedCollaterals + newCollateral,
+                        collateralQuantity = 0,
+                        collateralSelectedIndex = -1,
+                        totalCollateral = 0.0,
+                        collateralTotal = 0.0,
+                        dialogState = null,
+                    )
+                } else {
+                    state.copy(
+                        collateralQuantity = 0,
+                        collateralSelectedIndex = -1,
+                        totalCollateral = 0.0,
+                        collateralTotal = 0.0,
+                        dialogState = null,
+                    )
+                }
+            }
+
+            is NewLoanAccountAction.OnCollateralQuantityChanged -> {
+                val currentCollateral = state.collaterals[state.collateralSelectedIndex]
+
+                val total = currentCollateral.basePrice * action.number
+                val totalCollateral = (total * currentCollateral.pctToBase) / 100
+
+                mutableStateFlow.update {
+                    it.copy(
+                        collateralQuantity = action.number,
+                        collateralTotal = total,
+                        totalCollateral = totalCollateral,
+                    )
+                }
+            }
+
+            is NewLoanAccountAction.SelectedCollateralIndexChange -> {
+                mutableStateFlow.update {
+                    it.copy(collateralSelectedIndex = action.index)
+                }
+            }
+
+            NewLoanAccountAction.HideCollaterals -> {
+                mutableStateFlow.update {
+                    it.copy(dialogState = null)
+                }
+            }
+
+            NewLoanAccountAction.ShowCollaterals -> {
+                mutableStateFlow.update {
+                    it.copy(dialogState = NewLoanAccountState.DialogState.ShowCollaterals)
+                }
+            }
         }
     }
 
@@ -216,7 +317,10 @@ internal class NewLoanAccountViewModel(
 
     private fun handlePrincipalAmountChange(action: NewLoanAccountAction.OnPrincipalAmountChange) {
         mutableStateFlow.update {
-            it.copy(principalAmount = action.amount)
+            it.copy(
+                principalAmount = action.amount,
+                principalAmountText = action.text,
+            )
         }
     }
 
@@ -266,7 +370,6 @@ internal class NewLoanAccountViewModel(
         mutableStateFlow.update { it.copy(loanProductSelected = action.index) }
         loadLoanAccountTemplate(state.productLoans[action.index].id ?: -1)
     }
-
 
     private fun handleExternalIdChange(action: NewLoanAccountAction.OnExternalIdChange) {
         mutableStateFlow.update { it.copy(externalId = action.value) }
@@ -326,8 +429,8 @@ internal class NewLoanAccountViewModel(
         mutableStateFlow.update {
             it.copy(
                 currentStep = current - 1,
-                )
-            }
+            )
+        }
     }
 
     private fun observeNetwork() {
@@ -338,6 +441,7 @@ internal class NewLoanAccountViewModel(
                 }
                 if (isConnected) {
                     loadAllLoans()
+                    loadCollaterals()
                 } else {
                     mutableStateFlow.update {
                         it.copy(
@@ -346,6 +450,21 @@ internal class NewLoanAccountViewModel(
                     }
                 }
             }
+        }
+    }
+
+    private suspend fun loadCollaterals() {
+        val result = repo.getCollateralItems()
+        when (result) {
+            is DataState.Error -> {}
+            is DataState.Success -> {
+                mutableStateFlow.update {
+                    it.copy(
+                        collaterals = result.data,
+                    )
+                }
+            }
+            else -> Unit
         }
     }
 
@@ -399,6 +518,18 @@ internal class NewLoanAccountViewModel(
                     dialogState = null,
                     isOverLayLoadingActive = false,
                     loanTemplate = result.data,
+                    principalAmount = result.data.principal ?: 0.0,
+                    principalAmountText = result.data.principal.toString(),
+                    noOfRepayments = result.data.numberOfRepayments ?: 0,
+                    repaidEvery = result.data.repaymentEvery ?: 0,
+                    nominalInterestRate = result.data.interestRatePerPeriod ?: 0.0,
+                    nominalInterestRateText = result.data.interestRatePerPeriod.toString(),
+                    termFrequencyIndex = result.data.termFrequencyTypeOptions.indexOfFirst { item -> item.value == result.data.termPeriodFrequencyType?.value },
+                    nominalFrequencyIndex = result.data.interestRateFrequencyTypeOptions.indexOfFirst { item -> item.value == result.data.interestRateFrequencyType?.value },
+                    nominalInterestMethodIndex = result.data.interestTypeOptions.indexOfFirst { item -> item.value == result.data.interestType?.value },
+                    nominalAmortizationIndex = result.data.amortizationTypeOptions.indexOfFirst { item -> item.value == result.data.amortizationType?.value },
+                    repaymentStrategyIndex = result.data.transactionProcessingStrategyOptions.indexOfFirst { item -> item.code == result.data.transactionProcessingStrategyCode },
+                    interestCalculationPeriodIndex = result.data.interestCalculationPeriodTypeOptions.indexOfFirst { item -> item.code == result.data.interestCalculationPeriodType?.code },
                 )
             }
         }
@@ -428,38 +559,53 @@ data class NewLoanAccountState(
     val linkSavingsIndex: Int = -1,
     val isCheckedStandingInstructions: Boolean = false,
 
-    val principalAmount:Int=0,
-    val noOfRepayments:Int=0,
+    val principalAmount: Double = 0.0,
+    val principalAmountText: String = "",
+    val noOfRepayments: Int = 0,
     val termFrequencyIndex: Int = -1,
     val firstRepaymentDate: String = DateHelper.getDateAsStringFromLong(Clock.System.now().toEpochMilliseconds()),
     val interestChargedFromDate: String = DateHelper.getDateAsStringFromLong(Clock.System.now().toEpochMilliseconds()),
     val showFirstRepaymentDatePick: Boolean = false,
     val showInterestChargedFromDatePick: Boolean = false,
-    val repaidEvery:Int=1,
-    val selectedOnIndex:Int=-1,
-    val selectedDayIndex:Int=-1,
-    val nominalInterestRate:Int=0,
-    val nominalFrequencyIndex:Int=-1,
-    val nominalInterestMethodIndex:Int=-1,
-    val nominalAmortizationIndex:Int=-1,
-    val isCheckedEqualAmortization:Boolean=false,
-    val repaymentStrategyIndex:Int=-1,
-    val balloonRepaymentAmount:Int=0,
-    val interestCalculationPeriodIndex:Int=-1,
-    val isCheckedInterestPartialPeriod:Boolean=false,
-    val arrearsTolerance:Int=0,
-    val interestFreePeriod:Int=0
+    val repaidEvery: Int = 1,
+    val selectedOnIndex: Int = -1,
+    val selectedDayIndex: Int = -1,
+    val nominalInterestRate: Double = 0.0,
+    val nominalInterestRateText: String = "",
+    val nominalFrequencyIndex: Int = -1,
+    val nominalInterestMethodIndex: Int = -1,
+    val nominalAmortizationIndex: Int = -1,
+    val isCheckedEqualAmortization: Boolean = false,
+    val repaymentStrategyIndex: Int = -1,
+    val balloonRepaymentAmount: Int = 0,
+    val interestCalculationPeriodIndex: Int = -1,
+    val isCheckedInterestPartialPeriod: Boolean = false,
+    val arrearsTolerance: Int = 0,
+    val interestFreePeriod: Int = 0,
+    val moratoriumGraceOnPrincipalPayment: Int = 0,
+    val moratoriumGraceOnInterestPayment: Int = 0,
+    val moratoriumOnArrearsAgeing: Int = 0,
+
+    val collaterals: List<CollateralItem> = emptyList(),
+    val addedCollaterals: List<CreatedCollateral> = emptyList(),
+    val collateralSelectedIndex: Int = -1,
+    val collateralQuantity: Int = 0,
+    val collateralTotal: Double = 0.0,
+    val totalCollateral: Double = 0.0,
 
 ) {
     sealed interface DialogState {
         data class Error(val message: String) : DialogState
+        data object AddNewCollateral : DialogState
+        data object ShowCollaterals : DialogState
     }
     sealed interface ScreenState {
         data object Loading : ScreenState
         data object Success : ScreenState
         data object NetworkError : ScreenState
     }
-    val isDetailsNextEnabled = loanProductSelected != -1 && externalId.isNotEmpty() && loanOfficerIndex != -1 && submissionDate.isNotEmpty() && expectedDisbursementDate.isNotEmpty()
+    val isDetailsNextEnabled = loanProductSelected != -1 && externalId.isNotEmpty() && submissionDate.isNotEmpty() && expectedDisbursementDate.isNotEmpty()
+    val isCollateralBtnEnabled = collateralQuantity != 0 && collateralSelectedIndex != -1
 }
 
 sealed interface NewLoanAccountEvent {
@@ -470,7 +616,7 @@ sealed interface NewLoanAccountEvent {
 sealed interface NewLoanAccountAction {
     data object Retry : NewLoanAccountAction
     data object NavigateBack : NewLoanAccountAction
-    data object PreviousStep: NewLoanAccountAction
+    data object PreviousStep : NewLoanAccountAction
     data object NextStep : NewLoanAccountAction
     data object Finish : NewLoanAccountAction
     data class OnStepChange(val newIndex: Int) : NewLoanAccountAction
@@ -492,7 +638,7 @@ sealed interface NewLoanAccountAction {
         data class OnReceivingLoanTemplate(val template: DataState<LoanTemplate>) : Internal
     }
 
-    data class OnPrincipalAmountChange(val amount: Int) : NewLoanAccountAction
+    data class OnPrincipalAmountChange(val amount: Double, val text: String) : NewLoanAccountAction
     data class OnNoOfRepaymentsChange(val number: Int) : NewLoanAccountAction
     data class OnTermFrequencyIndexChange(val index: Int) : NewLoanAccountAction
     data class OnFirstRepaymentDateChange(val date: String) : NewLoanAccountAction
@@ -502,15 +648,33 @@ sealed interface NewLoanAccountAction {
     data class OnRepaidEveryChange(val number: Int) : NewLoanAccountAction
     data class OnSelectedOnIndexChange(val index: Int) : NewLoanAccountAction
     data class OnSelectedDayIndexChange(val index: Int) : NewLoanAccountAction
-    data class OnNominalInterestRateChange(val rate: Int) : NewLoanAccountAction
+    data class OnNominalInterestRateChange(val rate: Double, val text: String) : NewLoanAccountAction
     data class OnNominalFrequencyIndexChange(val index: Int) : NewLoanAccountAction
     data class OnNominalMethodIndexChange(val index: Int) : NewLoanAccountAction
     data class OnNominalAmortizationIndexChange(val index: Int) : NewLoanAccountAction
     data class OnEqualAmortizationCheckChange(val boolean: Boolean) : NewLoanAccountAction
     data class OnRepaymentStrategyIndexChange(val index: Int) : NewLoanAccountAction
-    data class OnBalloonRepaymentAmountChange(val amount:Int) : NewLoanAccountAction
-    data class OnInterestCalculationPeriodIndexChange(val index:Int) : NewLoanAccountAction
+    data class OnBalloonRepaymentAmountChange(val amount: Int) : NewLoanAccountAction
+    data class OnInterestCalculationPeriodIndexChange(val index: Int) : NewLoanAccountAction
     data class OnInterestPartialPeriodCheckChange(val boolean: Boolean) : NewLoanAccountAction
     data class OnArrearsToleranceChange(val number: Int) : NewLoanAccountAction
     data class OnInterestFreePeriodChange(val number: Int) : NewLoanAccountAction
+    data class OnMoratoriumGraceOnPrincipalPaymentChange(val number: Int) : NewLoanAccountAction
+    data class OnMoratoriumGraceOnInterestPaymentChange(val number: Int) : NewLoanAccountAction
+    data class OnMoratoriumOnArrearsAgeingChange(val number: Int) : NewLoanAccountAction
+    data object ShowAddCollateralDialog : NewLoanAccountAction
+    data object DismissAddCollateralDialog : NewLoanAccountAction
+    data object AddCollateralToList : NewLoanAccountAction
+    data class SelectedCollateralIndexChange(val index: Int) : NewLoanAccountAction
+    data class OnCollateralQuantityChanged(val number: Int) : NewLoanAccountAction
+    data object ShowCollaterals : NewLoanAccountAction
+    data object HideCollaterals : NewLoanAccountAction
 }
+
+data class CreatedCollateral(
+    val id: Int = -1,
+    val quantity: Int = 0,
+    val name: String = "",
+    val totalValue: Double = 0.0,
+    val totalCollateral: Double = 0.0,
+)
