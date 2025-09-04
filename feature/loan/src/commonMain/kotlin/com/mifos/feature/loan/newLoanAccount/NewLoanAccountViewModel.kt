@@ -48,240 +48,58 @@ internal class NewLoanAccountViewModel(
     override fun handleAction(action: NewLoanAccountAction) {
         when (action) {
             is NewLoanAccountAction.Retry -> handleRetry()
-
             is NewLoanAccountAction.NavigateBack -> handleNavigateBack()
-
             is NewLoanAccountAction.NextStep -> moveToNextStep()
-
+            is NewLoanAccountAction.PreviousStep -> moveToPreviousStep()
             is NewLoanAccountAction.Finish -> handleFinish()
-
             is NewLoanAccountAction.OnStepChange -> handleStepChange(action)
-
             is NewLoanAccountAction.OnProductNameChange -> handleProductNameChange(action)
-
             is NewLoanAccountAction.OnExternalIdChange -> handleExternalIdChange(action)
-
             is NewLoanAccountAction.OnFundChange -> handleFundChange(action)
-
             is NewLoanAccountAction.OnLoanOfficerChange -> handleLoanOfficerChange(action)
-
             is NewLoanAccountAction.OnLoanPurposeChange -> handleLoanPurposeChange(action)
-
             is NewLoanAccountAction.OnExpectedDisbursementDateChange -> handleExpectedDisbursementDateChange(action)
-
             is NewLoanAccountAction.OnExpectedDisbursementDatePick -> handleExpectedDisbursementDatePick(action)
-
             is NewLoanAccountAction.OnSubmissionDateChange -> handleSubmissionDateChange(action)
-
             is NewLoanAccountAction.OnSubmissionDatePick -> handleSubmissionDatePick(action)
-
             is NewLoanAccountAction.OnLinkSavingsChange -> handleLinkSavingsChange(action)
-
             is NewLoanAccountAction.OnStandingInstructionsChange -> handleStandingInstructionsChange(action)
-
             is NewLoanAccountAction.OnDetailsSubmit -> handleOnDetailsSubmit()
-
             is NewLoanAccountAction.Internal.OnReceivingLoanAccounts -> handleAllLoansResponse(action.loans)
-
             is NewLoanAccountAction.Internal.OnReceivingLoanTemplate -> handleLoanTemplateResponse(action.template)
-
             is NewLoanAccountAction.OnFirstRepaymentDateChange -> handleFirstRepaymentDateChange(action)
-
             is NewLoanAccountAction.OnFirstRepaymentDatePick -> handleFirstRepaymentDatePick(action)
-
             is NewLoanAccountAction.OnInterestChargedFromChange -> handleInterestChargedFromChange(action)
-
             is NewLoanAccountAction.OnInterestChargedFromDatePick -> handleInterestChargedFromDatePick(action)
-
             is NewLoanAccountAction.OnNoOfRepaymentsChange -> handleNoOfRepaymentsChange(action)
-
             is NewLoanAccountAction.OnPrincipalAmountChange -> handlePrincipalAmountChange(action)
-
             is NewLoanAccountAction.OnTermFrequencyIndexChange -> handleTermFrequencyIndexChange(action)
 
-            is NewLoanAccountAction.PreviousStep -> moveToPreviousStep()
+            is NewLoanAccountAction.OnRepaidEveryChange -> handleRepaidEveryChange(action)
+            is NewLoanAccountAction.OnSelectedDayIndexChange -> handleSelectedDayIndexChange(action)
+            is NewLoanAccountAction.OnSelectedOnIndexChange -> handleSelectedOnIndexChange(action)
+            is NewLoanAccountAction.OnNominalInterestRateChange -> handleNominalInterestRateChange(action)
+            is NewLoanAccountAction.OnNominalFrequencyIndexChange -> handleNominalFrequencyIndexChange(action)
+            is NewLoanAccountAction.OnNominalMethodIndexChange -> handleNominalMethodIndexChange(action)
+            is NewLoanAccountAction.OnNominalAmortizationIndexChange -> handleNominalAmortizationIndexChange(action)
+            is NewLoanAccountAction.OnEqualAmortizationCheckChange -> handleEqualAmortizationCheckChange(action)
+            is NewLoanAccountAction.OnRepaymentStrategyIndexChange -> handleRepaymentStrategyIndexChange(action)
+            is NewLoanAccountAction.OnBalloonRepaymentAmountChange -> handleBalloonRepaymentAmountChange(action)
+            is NewLoanAccountAction.OnInterestCalculationPeriodIndexChange -> handleInterestCalculationPeriodIndexChange(action)
+            is NewLoanAccountAction.OnInterestPartialPeriodCheckChange -> handleInterestPartialPeriodCheckChange(action)
+            is NewLoanAccountAction.OnArrearsToleranceChange -> handleArrearsToleranceChange(action)
+            is NewLoanAccountAction.OnInterestFreePeriodChange -> handleInterestFreePeriodChange(action)
+            is NewLoanAccountAction.OnMoratoriumGraceOnInterestPaymentChange -> handleMoratoriumGraceOnInterestPaymentChange(action)
+            is NewLoanAccountAction.OnMoratoriumGraceOnPrincipalPaymentChange -> handleMoratoriumGraceOnPrincipalPaymentChange(action)
+            is NewLoanAccountAction.OnMoratoriumOnArrearsAgeingChange -> handleMoratoriumOnArrearsAgeingChange(action)
 
-            is NewLoanAccountAction.OnRepaidEveryChange -> {
-                mutableStateFlow.update {
-                    it.copy(repaidEvery = action.number)
-                }
-            }
-
-            is NewLoanAccountAction.OnSelectedDayIndexChange -> {
-                mutableStateFlow.update {
-                    it.copy(selectedDayIndex = action.index)
-                }
-            }
-
-            is NewLoanAccountAction.OnSelectedOnIndexChange -> {
-                mutableStateFlow.update {
-                    it.copy(selectedOnIndex = action.index)
-                }
-            }
-
-            is NewLoanAccountAction.OnNominalInterestRateChange -> {
-                mutableStateFlow.update {
-                    it.copy(
-                        nominalInterestRate = action.rate,
-                        nominalInterestRateText = action.text,
-                    )
-                }
-            }
-
-            is NewLoanAccountAction.OnNominalFrequencyIndexChange -> {
-                mutableStateFlow.update {
-                    it.copy(nominalFrequencyIndex = action.index)
-                }
-            }
-
-            is NewLoanAccountAction.OnNominalMethodIndexChange -> {
-                mutableStateFlow.update {
-                    it.copy(nominalInterestMethodIndex = action.index)
-                }
-            }
-
-            is NewLoanAccountAction.OnNominalAmortizationIndexChange -> {
-                mutableStateFlow.update {
-                    it.copy(nominalAmortizationIndex = action.index)
-                }
-            }
-
-            is NewLoanAccountAction.OnEqualAmortizationCheckChange -> {
-                mutableStateFlow.update {
-                    it.copy(isCheckedEqualAmortization = action.boolean)
-                }
-            }
-
-            is NewLoanAccountAction.OnRepaymentStrategyIndexChange -> {
-                mutableStateFlow.update {
-                    it.copy(repaymentStrategyIndex = action.index)
-                }
-            }
-
-            is NewLoanAccountAction.OnBalloonRepaymentAmountChange -> {
-                mutableStateFlow.update {
-                    it.copy(balloonRepaymentAmount = action.amount)
-                }
-            }
-
-            is NewLoanAccountAction.OnInterestCalculationPeriodIndexChange -> {
-                mutableStateFlow.update {
-                    it.copy(interestCalculationPeriodIndex = action.index)
-                }
-            }
-
-            is NewLoanAccountAction.OnInterestPartialPeriodCheckChange -> {
-                mutableStateFlow.update {
-                    it.copy(isCheckedInterestPartialPeriod = action.boolean)
-                }
-            }
-
-            is NewLoanAccountAction.OnArrearsToleranceChange -> {
-                mutableStateFlow.update {
-                    it.copy(arrearsTolerance = action.number)
-                }
-            }
-
-            is NewLoanAccountAction.OnInterestFreePeriodChange -> {
-                mutableStateFlow.update {
-                    it.copy(interestFreePeriod = action.number)
-                }
-            }
-
-            is NewLoanAccountAction.OnMoratoriumGraceOnInterestPaymentChange -> {
-                mutableStateFlow.update {
-                    it.copy(moratoriumGraceOnInterestPayment = action.number)
-                }
-            }
-
-            is NewLoanAccountAction.OnMoratoriumGraceOnPrincipalPaymentChange -> {
-                mutableStateFlow.update {
-                    it.copy(moratoriumGraceOnPrincipalPayment = action.number)
-                }
-            }
-
-            is NewLoanAccountAction.OnMoratoriumOnArrearsAgeingChange -> {
-                mutableStateFlow.update {
-                    it.copy(moratoriumOnArrearsAgeing = action.number)
-                }
-            }
-
-            NewLoanAccountAction.DismissAddCollateralDialog -> {
-                mutableStateFlow.update {
-                    it.copy(dialogState = null)
-                }
-            }
-
-            NewLoanAccountAction.ShowAddCollateralDialog -> {
-                mutableStateFlow.update {
-                    it.copy(dialogState = NewLoanAccountState.DialogState.AddNewCollateral)
-                }
-            }
-
-            NewLoanAccountAction.AddCollateralToList -> {
-                val selectedIndex = state.collateralSelectedIndex
-                val selectedCollateral = state.collaterals.getOrNull(selectedIndex)
-
-                if (selectedCollateral != null) {
-                    val newCollateral = CreatedCollateral(
-                        id = selectedCollateral.id,
-                        quantity = state.collateralQuantity,
-                        totalValue = state.collateralTotal,
-                        totalCollateral = state.totalCollateral,
-                        name = selectedCollateral.name,
-                    )
-
-                    state.copy(
-                        addedCollaterals = state.addedCollaterals + newCollateral,
-                        collateralQuantity = 0,
-                        collateralSelectedIndex = -1,
-                        totalCollateral = 0.0,
-                        collateralTotal = 0.0,
-                        dialogState = null,
-                    )
-                } else {
-                    state.copy(
-                        collateralQuantity = 0,
-                        collateralSelectedIndex = -1,
-                        totalCollateral = 0.0,
-                        collateralTotal = 0.0,
-                        dialogState = null,
-                    )
-                }
-            }
-
-            is NewLoanAccountAction.OnCollateralQuantityChanged -> {
-                val currentCollateral = state.collaterals[state.collateralSelectedIndex]
-
-                val total = currentCollateral.basePrice * action.number
-                val totalCollateral = (total * currentCollateral.pctToBase) / 100
-
-                mutableStateFlow.update {
-                    it.copy(
-                        collateralQuantity = action.number,
-                        collateralTotal = total,
-                        totalCollateral = totalCollateral,
-                    )
-                }
-            }
-
-            is NewLoanAccountAction.SelectedCollateralIndexChange -> {
-                mutableStateFlow.update {
-                    it.copy(collateralSelectedIndex = action.index)
-                }
-            }
-
-            NewLoanAccountAction.HideCollaterals -> {
-                mutableStateFlow.update {
-                    it.copy(dialogState = null)
-                }
-            }
-
-            NewLoanAccountAction.ShowCollaterals -> {
-                mutableStateFlow.update {
-                    it.copy(dialogState = NewLoanAccountState.DialogState.ShowCollaterals)
-                }
-            }
+            is NewLoanAccountAction.DismissAddCollateralDialog -> handleDismissAddCollateralDialog()
+            is NewLoanAccountAction.ShowAddCollateralDialog -> handleShowAddCollateralDialog()
+            is NewLoanAccountAction.AddCollateralToList -> handleAddCollateralToList()
+            is NewLoanAccountAction.OnCollateralQuantityChanged -> handleCollateralQuantityChanged(action)
+            is NewLoanAccountAction.SelectedCollateralIndexChange -> handleSelectedCollateralIndexChange(action)
+            is NewLoanAccountAction.HideCollaterals -> handleHideCollaterals()
+            is NewLoanAccountAction.ShowCollaterals -> handleShowCollaterals()
         }
     }
 
@@ -295,6 +113,149 @@ internal class NewLoanAccountViewModel(
         mutableStateFlow.update {
             it.copy(showFirstRepaymentDatePick = action.state)
         }
+    }
+
+    private fun handleRepaidEveryChange(action: NewLoanAccountAction.OnRepaidEveryChange) {
+        mutableStateFlow.update { it.copy(repaidEvery = action.number) }
+    }
+
+    private fun handleSelectedDayIndexChange(action: NewLoanAccountAction.OnSelectedDayIndexChange) {
+        mutableStateFlow.update { it.copy(selectedDayIndex = action.index) }
+    }
+
+    private fun handleSelectedOnIndexChange(action: NewLoanAccountAction.OnSelectedOnIndexChange) {
+        mutableStateFlow.update { it.copy(selectedOnIndex = action.index) }
+    }
+
+    private fun handleNominalInterestRateChange(action: NewLoanAccountAction.OnNominalInterestRateChange) {
+        mutableStateFlow.update {
+            it.copy(
+                nominalInterestRate = action.rate,
+                nominalInterestRateText = action.text,
+            )
+        }
+    }
+
+    private fun handleNominalFrequencyIndexChange(action: NewLoanAccountAction.OnNominalFrequencyIndexChange) {
+        mutableStateFlow.update { it.copy(nominalFrequencyIndex = action.index) }
+    }
+
+    private fun handleNominalMethodIndexChange(action: NewLoanAccountAction.OnNominalMethodIndexChange) {
+        mutableStateFlow.update { it.copy(nominalInterestMethodIndex = action.index) }
+    }
+
+    private fun handleNominalAmortizationIndexChange(action: NewLoanAccountAction.OnNominalAmortizationIndexChange) {
+        mutableStateFlow.update { it.copy(nominalAmortizationIndex = action.index) }
+    }
+
+    private fun handleEqualAmortizationCheckChange(action: NewLoanAccountAction.OnEqualAmortizationCheckChange) {
+        mutableStateFlow.update { it.copy(isCheckedEqualAmortization = action.boolean) }
+    }
+
+    private fun handleRepaymentStrategyIndexChange(action: NewLoanAccountAction.OnRepaymentStrategyIndexChange) {
+        mutableStateFlow.update { it.copy(repaymentStrategyIndex = action.index) }
+    }
+
+    private fun handleBalloonRepaymentAmountChange(action: NewLoanAccountAction.OnBalloonRepaymentAmountChange) {
+        mutableStateFlow.update { it.copy(balloonRepaymentAmount = action.amount) }
+    }
+
+    private fun handleInterestCalculationPeriodIndexChange(action: NewLoanAccountAction.OnInterestCalculationPeriodIndexChange) {
+        mutableStateFlow.update { it.copy(interestCalculationPeriodIndex = action.index) }
+    }
+
+    private fun handleInterestPartialPeriodCheckChange(action: NewLoanAccountAction.OnInterestPartialPeriodCheckChange) {
+        mutableStateFlow.update { it.copy(isCheckedInterestPartialPeriod = action.boolean) }
+    }
+
+    private fun handleArrearsToleranceChange(action: NewLoanAccountAction.OnArrearsToleranceChange) {
+        mutableStateFlow.update { it.copy(arrearsTolerance = action.number) }
+    }
+
+    private fun handleInterestFreePeriodChange(action: NewLoanAccountAction.OnInterestFreePeriodChange) {
+        mutableStateFlow.update { it.copy(interestFreePeriod = action.number) }
+    }
+
+    private fun handleMoratoriumGraceOnInterestPaymentChange(action: NewLoanAccountAction.OnMoratoriumGraceOnInterestPaymentChange) {
+        mutableStateFlow.update { it.copy(moratoriumGraceOnInterestPayment = action.number) }
+    }
+
+    private fun handleMoratoriumGraceOnPrincipalPaymentChange(action: NewLoanAccountAction.OnMoratoriumGraceOnPrincipalPaymentChange) {
+        mutableStateFlow.update { it.copy(moratoriumGraceOnPrincipalPayment = action.number) }
+    }
+
+    private fun handleMoratoriumOnArrearsAgeingChange(action: NewLoanAccountAction.OnMoratoriumOnArrearsAgeingChange) {
+        mutableStateFlow.update { it.copy(moratoriumOnArrearsAgeing = action.number) }
+    }
+
+    private fun handleDismissAddCollateralDialog() {
+        mutableStateFlow.update { it.copy(dialogState = null) }
+    }
+
+    private fun handleShowAddCollateralDialog() {
+        mutableStateFlow.update { it.copy(dialogState = NewLoanAccountState.DialogState.AddNewCollateral) }
+    }
+
+    private fun handleAddCollateralToList() {
+        val selectedIndex = state.collateralSelectedIndex
+        val selectedCollateral = state.collaterals.getOrNull(selectedIndex)
+
+        if (selectedCollateral != null) {
+            val newCollateral = CreatedCollateral(
+                id = selectedCollateral.id,
+                quantity = state.collateralQuantity,
+                totalValue = state.collateralTotal,
+                totalCollateral = state.totalCollateral,
+                name = selectedCollateral.name,
+            )
+
+            mutableStateFlow.update {
+                it.copy(
+                    addedCollaterals = it.addedCollaterals + newCollateral,
+                    collateralQuantity = 0,
+                    collateralSelectedIndex = -1,
+                    totalCollateral = 0.0,
+                    collateralTotal = 0.0,
+                    dialogState = null,
+                )
+            }
+        } else {
+            mutableStateFlow.update {
+                it.copy(
+                    collateralQuantity = 0,
+                    collateralSelectedIndex = -1,
+                    totalCollateral = 0.0,
+                    collateralTotal = 0.0,
+                    dialogState = null,
+                )
+            }
+        }
+    }
+
+    private fun handleCollateralQuantityChanged(action: NewLoanAccountAction.OnCollateralQuantityChanged) {
+        val currentCollateral = state.collaterals[state.collateralSelectedIndex]
+        val total = currentCollateral.basePrice * action.number
+        val totalCollateral = (total * currentCollateral.pctToBase) / 100
+
+        mutableStateFlow.update {
+            it.copy(
+                collateralQuantity = action.number,
+                collateralTotal = total,
+                totalCollateral = totalCollateral,
+            )
+        }
+    }
+
+    private fun handleSelectedCollateralIndexChange(action: NewLoanAccountAction.SelectedCollateralIndexChange) {
+        mutableStateFlow.update { it.copy(collateralSelectedIndex = action.index) }
+    }
+
+    private fun handleHideCollaterals() {
+        mutableStateFlow.update { it.copy(dialogState = null) }
+    }
+
+    private fun handleShowCollaterals() {
+        mutableStateFlow.update { it.copy(dialogState = NewLoanAccountState.DialogState.ShowCollaterals) }
     }
 
     private fun handleInterestChargedFromChange(action: NewLoanAccountAction.OnInterestChargedFromChange) {
