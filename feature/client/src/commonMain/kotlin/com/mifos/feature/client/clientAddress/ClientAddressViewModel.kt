@@ -120,7 +120,7 @@ internal class ClientAddressViewModel(
                         it.copy(
                             addressFormScreenState = ClientAddressState.AddressFormScreenState.ShowStatusDialog(
                                 status = ResultStatus.FAILURE,
-                                msg = getString(Res.string.feature_client_unable_to_create_address_for_client)
+                                msg = getString(Res.string.feature_client_unable_to_create_address_for_client),
                             ),
                         )
                     }
@@ -153,8 +153,8 @@ data class ClientAddressState(
     val id: Int = -1,
     val address: List<ClientAddressEntity> = emptyList(),
     val dialogState: DialogState? = null,
-    val addressListScreenState: AddressListScreenState =  AddressListScreenState.Loading,
-    val addressFormScreenState: AddressFormScreenState =  AddressFormScreenState.Loading,
+    val addressListScreenState: AddressListScreenState = AddressListScreenState.Loading,
+    val addressFormScreenState: AddressFormScreenState = AddressFormScreenState.Loading,
     val addressTemplate: AddressTemplate? = null,
 ) {
     sealed interface DialogState {

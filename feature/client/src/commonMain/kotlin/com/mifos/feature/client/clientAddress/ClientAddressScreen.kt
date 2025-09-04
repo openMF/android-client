@@ -117,7 +117,7 @@ private fun ClientAddressScaffold(
         title = "Client Address",
         onBackPressed = { onAction(ClientAddressAction.NavigateBack) },
     ) { paddingValues ->
-        when(state.addressListScreenState) {
+        when (state.addressListScreenState) {
             is ClientAddressState.AddressListScreenState.Loading -> MifosCircularProgress()
             is ClientAddressState.AddressListScreenState.ShowAddressList -> {
                 Column(
@@ -133,7 +133,7 @@ private fun ClientAddressScaffold(
                         modifier = Modifier.padding(
                             start = DesignToken.padding.large,
                             end = DesignToken.padding.large,
-                        )
+                        ),
                     ) {
                         ClientAddressHeader(
                             totalItem = state.address.size.toString(),

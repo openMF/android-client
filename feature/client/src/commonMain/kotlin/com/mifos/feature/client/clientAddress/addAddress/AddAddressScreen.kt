@@ -190,7 +190,7 @@ private fun AddAddressScaffold(
         title = "Add Address",
         onBackPressed = { onNavigateBack.invoke() },
         bottomBar = {
-            when(state.addressFormScreenState) {
+            when (state.addressFormScreenState) {
                 is ClientAddressState.AddressFormScreenState.ShowAddressForm -> {
                     AddAddressFormBottomBar(
                         onCancelClick = { onNavigateBack.invoke() },
@@ -232,10 +232,9 @@ private fun AddAddressScaffold(
                 }
                 else -> Unit
             }
-
         },
     ) { paddingValues ->
-        when(state.addressFormScreenState) {
+        when (state.addressFormScreenState) {
             is ClientAddressState.AddressFormScreenState.Loading -> MifosCircularProgress()
             is ClientAddressState.AddressFormScreenState.ShowAddressForm -> {
                 Column(
@@ -259,7 +258,7 @@ private fun AddAddressScaffold(
                         modifier = Modifier.padding(
                             start = DesignToken.padding.large,
                             end = DesignToken.padding.large,
-                        )
+                        ),
                     ) {
                         item {
                             Text(
@@ -333,7 +332,6 @@ private fun AddAddressScaffold(
                 )
             }
         }
-
     }
 }
 
