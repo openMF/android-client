@@ -17,6 +17,11 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import androidx.navigation.navigation
 import com.mifos.core.common.utils.Constants
+import com.mifos.feature.client.clientAddress.addAddress.clientAddAddressRoute
+import com.mifos.feature.client.clientAddress.addAddress.navigateToClientAddAddressRoute
+import com.mifos.feature.client.clientAddress.clientAddressNavigation
+import com.mifos.feature.client.clientAddress.navigateToClientAddressRoute
+import com.mifos.feature.client.clientAddress.navigateToClientAddressRouteOnStatus
 import com.mifos.feature.client.clientApplyNewApplications.clientApplyNewApplicationRoute
 import com.mifos.feature.client.clientApplyNewApplications.navigateToClientApplyNewApplicationScreen
 import com.mifos.feature.client.clientCharges.ClientChargesScreen
@@ -53,6 +58,8 @@ import com.mifos.feature.client.clientUpdateDefaultAccount.navigateToUpdateDefau
 import com.mifos.feature.client.clientUpdateDefaultAccount.updateDefaultAccountDestination
 import com.mifos.feature.client.clientsList.ClientListScreen
 import com.mifos.feature.client.createNewClient.CreateNewClientScreen
+import com.mifos.feature.client.fixedDepositAccount.clientFixedDepositAccountDestination
+import com.mifos.feature.client.fixedDepositAccount.navigateToFixedDepositAccountRoute
 import com.mifos.feature.client.recurringDepositAccount.clientRecurringDepositAccountDestination
 import com.mifos.feature.client.recurringDepositAccount.navigateToRecurringDepositAccountRoute
 import com.mifos.feature.client.savingsAccounts.navigateToClientSavingsAccountsRoute
@@ -81,6 +88,7 @@ fun NavGraphBuilder.clientNavGraph(
     activateClient: (Int) -> Unit,
     hasDatatables: KFunction4<List<DataTableEntity>, Any?, Int, MutableList<List<FormWidgetDTO>>, Unit>,
     onDocumentClicked: (Int, String) -> Unit,
+    navigateToNewLoanAccount: (Int) -> Unit,
 ) {
     navigation<ClientNavGraph>(
         startDestination = ClientListScreenRoute,
@@ -137,8 +145,21 @@ fun NavGraphBuilder.clientNavGraph(
             documents = documents,
             identifiers = navController::navigateToClientIdentifiersScreen,
             navigateToClientDetailsScreen = navController::navigateToClientDetailsProfileRoute,
+            viewAddress = navController::navigateToClientAddressRoute,
             viewAssociatedAccounts = navController::navigateToClientProfileGeneralRoute,
             navController = navController,
+        )
+
+        clientAddressNavigation(
+            onNavigateBack = navController::popBackStack,
+            navigateToAddAddressForm = navController::navigateToClientAddAddressRoute,
+            navController = navController,
+        )
+
+        clientAddAddressRoute(
+            onNavigateBack = navController::popBackStack,
+            navController = navController,
+            onNavigateNext = navController::navigateToClientAddressRouteOnStatus,
         )
 
         clientProfileGeneralDestination(
@@ -151,9 +172,17 @@ fun NavGraphBuilder.clientNavGraph(
             fixedDepositAccounts = {},
             collateralData = {},
             upcomingCharges = {}
+            fixedDepositAccounts = navController::navigateToFixedDepositAccountRoute,
         )
 
         clientRecurringDepositAccountDestination(
+            navController = navController,
+            navigateBack = navController::popBackStack,
+            {},
+            {},
+        )
+        clientFixedDepositAccountDestination(
+            navController = navController,
             navigateBack = navController::popBackStack,
             {},
             {},
@@ -221,7 +250,7 @@ fun NavGraphBuilder.clientNavGraph(
         )
         clientApplyNewApplicationRoute(
             onNavigateBack = navController::popBackStack,
-            onNavigateApplyLoanAccount = { },
+            onNavigateApplyLoanAccount = navigateToNewLoanAccount,
             onNavigateApplySavingsAccount = { },
             onNavigateApplyShareAccount = { },
             onNavigateApplyRecurringAccount = { },

@@ -12,9 +12,12 @@ package com.mifos.core.data.repositoryImp
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.common.utils.asDataStateFlow
 import com.mifos.core.data.repository.CreateNewClientRepository
+import com.mifos.core.model.objects.clients.ClientAddressEntity
 import com.mifos.core.network.datamanager.DataManagerClient
 import com.mifos.core.network.datamanager.DataManagerOffices
 import com.mifos.core.network.datamanager.DataManagerStaff
+import com.mifos.core.network.model.PostClientAddressRequest
+import com.mifos.core.network.model.PostClientAddressResponse
 import com.mifos.room.entities.client.AddressConfiguration
 import com.mifos.room.entities.client.AddressTemplate
 import com.mifos.room.entities.client.ClientPayloadEntity
@@ -62,5 +65,21 @@ class CreateNewClientRepositoryImp(
 
     override suspend fun getAddressTemplate(): AddressTemplate {
         return dataManagerClient.getAddressTemplate()
+    }
+
+    override suspend fun getAddresses(clientId: Int): List<ClientAddressEntity> {
+        return dataManagerClient.getClientAddresses(clientId = clientId)
+    }
+
+    override suspend fun createClientAddress(
+        clientId: Int,
+        addressTypeId: Int,
+        addressRequest: PostClientAddressRequest,
+    ): PostClientAddressResponse {
+        return dataManagerClient.createClientAddress(
+            clientId = clientId,
+            addressTypeId = addressTypeId,
+            addressRequest = addressRequest,
+        )
     }
 }

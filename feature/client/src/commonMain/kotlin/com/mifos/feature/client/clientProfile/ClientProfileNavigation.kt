@@ -28,6 +28,7 @@ fun NavGraphBuilder.clientProfileDestination(
     documents: (Int) -> Unit,
     identifiers: (Int) -> Unit,
     navigateToClientDetailsScreen: (Int) -> Unit,
+    viewAddress: (Int) -> Unit,
     viewAssociatedAccounts: (Int) -> Unit,
 ) {
     composable<ClientProfileRoute> {
@@ -37,6 +38,7 @@ fun NavGraphBuilder.clientProfileDestination(
             identifiers = identifiers,
             onNavigateBack = onNavigateBack,
             navigateToClientDetailsScreen = navigateToClientDetailsScreen,
+            viewAddress = viewAddress,
             viewAssociatedAccounts = viewAssociatedAccounts,
             navController = navController,
         )

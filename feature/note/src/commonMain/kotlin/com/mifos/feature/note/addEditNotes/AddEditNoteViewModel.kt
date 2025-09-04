@@ -12,11 +12,9 @@ package com.mifos.feature.note.addEditNotes
 import androidclient.feature.note.generated.resources.Res
 import androidclient.feature.note.generated.resources.feature_note_Unexpected_error
 import androidclient.feature.note.generated.resources.feature_note_add_note
-import androidclient.feature.note.generated.resources.feature_note_add_success
 import androidclient.feature.note.generated.resources.feature_note_button_add
 import androidclient.feature.note.generated.resources.feature_note_button_update
 import androidclient.feature.note.generated.resources.feature_note_edit_note_label
-import androidclient.feature.note.generated.resources.feature_note_edit_success
 import androidclient.feature.note.generated.resources.feature_note_update_note
 import androidclient.feature.note.generated.resources.feature_note_write_note_label
 import androidx.lifecycle.SavedStateHandle
@@ -125,24 +123,24 @@ class AddEditNoteViewModel(
                             mutableStateFlow.update {
                                 it.copy(
                                     dialogState = AddEditNoteState.DialogState.Error(Res.string.feature_note_Unexpected_error),
-                                    isError = false,
                                 )
                             }
                         }
 
                         DataState.Loading -> {
-                            // no need to show loading for this
+                            mutableStateFlow.update {
+                                it.copy(dialogState = AddEditNoteState.DialogState.Loading)
+                            }
                         }
 
                         is DataState.Success -> {
                             mutableStateFlow.update {
                                 it.copy(
-                                    isError = true,
                                     dialogState = null,
-                                    successMessage = Res.string.feature_note_add_success,
                                     notesPayloadInitialData = state.textFieldNotesPayload.note,
                                 )
                             }
+                            sendEvent(AddEditNoteEvent.NavigateBackWithUpdateList)
                         }
                     }
                 }
@@ -159,22 +157,25 @@ class AddEditNoteViewModel(
                                 mutableStateFlow.update {
                                     it.copy(
                                         dialogState = AddEditNoteState.DialogState.Error(Res.string.feature_note_Unexpected_error),
-                                        isError = false,
                                     )
                                 }
                             }
+
                             DataState.Loading -> {
-                                // no need to show loading for this
+                                mutableStateFlow.update {
+                                    it.copy(dialogState = AddEditNoteState.DialogState.Loading)
+                                }
                             }
+
                             is DataState.Success -> {
                                 mutableStateFlow.update {
                                     it.copy(
-                                        isError = true,
                                         dialogState = null,
-                                        successMessage = Res.string.feature_note_edit_success,
                                         notesPayloadInitialData = state.textFieldNotesPayload.note,
                                     )
                                 }
+
+                                sendEvent(AddEditNoteEvent.NavigateBackWithUpdateList)
                             }
                         }
                     }
@@ -185,6 +186,10 @@ class AddEditNoteViewModel(
     override fun handleAction(action: AddEditNoteAction) {
         when (action) {
             AddEditNoteAction.NavigateBack -> {
+                sendEvent(AddEditNoteEvent.NavigateBack)
+            }
+
+            AddEditNoteAction.NavigateBackWithUpdateList -> {
                 sendEvent(AddEditNoteEvent.NavigateBackWithUpdateList)
             }
 
@@ -225,7 +230,6 @@ class AddEditNoteViewModel(
                 mutableStateFlow.update {
                     it.copy(
                         dialogState = null,
-                        showDialog = false,
                     )
                 }
             }
@@ -235,7 +239,6 @@ class AddEditNoteViewModel(
                     mutableStateFlow.update {
                         it.copy(
                             dialogState = AddEditNoteState.DialogState.MisTouchBack,
-                            showDialog = true,
                         )
                     }
                 } else {
@@ -250,14 +253,11 @@ data class AddEditNoteState(
     val resourceId: Int = -1,
     val resourceType: String? = null,
     val editEnabled: Boolean = false,
-    val successMessage: StringResource? = null,
     val addUpdateButton: StringResource = Res.string.feature_note_button_add,
     val label: StringResource = Res.string.feature_note_write_note_label,
     val title: StringResource = Res.string.feature_note_add_note,
     val textFieldNotesPayload: NotesPayload = NotesPayload(null),
     val notesPayloadInitialData: String? = null,
-    val showDialog: Boolean = false,
-    val isError: Boolean = true,
     val dialogState: DialogState? = null,
     val networkConnection: Boolean = false,
 ) {
@@ -275,6 +275,7 @@ sealed interface AddEditNoteEvent {
 
 sealed interface AddEditNoteAction {
     data object NavigateBack : AddEditNoteAction
+    data object NavigateBackWithUpdateList : AddEditNoteAction
     data object OnRetry : AddEditNoteAction
     data class AddNote(val notesPayload: NotesPayload) : AddEditNoteAction
     data class EditNote(val notesPayload: NotesPayload) : AddEditNoteAction

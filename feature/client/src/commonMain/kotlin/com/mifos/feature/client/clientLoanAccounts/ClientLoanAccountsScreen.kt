@@ -10,12 +10,14 @@
 package com.mifos.feature.client.clientLoanAccounts
 
 import androidclient.feature.client.generated.resources.Res
+import androidclient.feature.client.generated.resources.cash_bundel
 import androidclient.feature.client.generated.resources.client_savings_item
 import androidclient.feature.client.generated.resources.feature_client_dialog_action_ok
 import androidclient.feature.client.generated.resources.feature_client_loan_account
 import androidclient.feature.client.generated.resources.filter
 import androidclient.feature.client.generated.resources.search
 import androidclient.feature.client.generated.resources.update_default_account_title
+import androidclient.feature.client.generated.resources.wallet
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -34,7 +36,6 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -49,8 +50,8 @@ import com.mifos.core.ui.components.MifosSearchBar
 import com.mifos.core.ui.util.EventsEffect
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
+import org.jetbrains.compose.resources.vectorResource
 import org.koin.compose.viewmodel.koinViewModel
-import kotlin.collections.listOf
 
 @Composable
 internal fun ClientLoanAccountsScreenRoute(
@@ -137,21 +138,27 @@ private fun ClientLoanAccountsScreen(
                             menuList = when {
                                 loan.status?.active == true -> {
                                     listOf(
-                                        Actions.MakeRepayment,
-                                        Actions.ViewAccount,
+                                        Actions.ViewAccount(
+                                            vectorResource(Res.drawable.wallet),
+                                        ),
+                                        Actions.MakeRepayment(
+                                            vectorResource(Res.drawable.cash_bundel),
+                                        ),
                                     )
                                 }
 
                                 else -> {
                                     listOf(
-                                        Actions.ViewAccount,
+                                        Actions.ViewAccount(
+                                            vectorResource(Res.drawable.wallet),
+                                        ),
                                     )
                                 }
                             },
                             onActionClicked = { actions ->
                                 when (actions) {
-                                    Actions.ViewAccount -> onAction(ClientLoanAccountsAction.ViewAccount)
-                                    Actions.MakeRepayment -> onAction(ClientLoanAccountsAction.MakeRepayment)
+                                    is Actions.ViewAccount -> onAction(ClientLoanAccountsAction.ViewAccount)
+                                    is Actions.MakeRepayment -> onAction(ClientLoanAccountsAction.MakeRepayment)
                                     else -> null
                                 }
                             },

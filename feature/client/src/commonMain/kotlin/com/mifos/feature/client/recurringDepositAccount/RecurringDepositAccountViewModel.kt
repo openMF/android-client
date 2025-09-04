@@ -35,7 +35,7 @@ class RecurringDepositAccountViewModel(
     val route = savedStateHandle.toRoute<RecurringDepositAccountRoute>()
 
     init {
-        checkNetworkAndGetLoanAccounts()
+        checkNetworkAndRecurringDepositAccounts()
     }
 
     override fun handleAction(action: RecurringDepositAccountAction) {
@@ -51,34 +51,28 @@ class RecurringDepositAccountViewModel(
             }
 
             is RecurringDepositAccountAction.Refresh -> {
-                checkNetworkAndGetLoanAccounts()
+                checkNetworkAndRecurringDepositAccounts()
             }
 
-            is RecurringDepositAccountAction.Search -> {
-                checkNetworkAndGetLoanAccounts()
+            RecurringDepositAccountAction.Search -> {
+                checkNetworkAndRecurringDepositAccounts()
             }
 
             is RecurringDepositAccountAction.ToggleFilter -> {
                 mutableStateFlow.update {
-                    it.copy(
-                        isFilterDialogOpen = true,
-                    )
+                    it.copy(isFilterDialogOpen = !it.isFilterDialogOpen)
                 }
             }
 
             is RecurringDepositAccountAction.ToggleSearch -> {
                 mutableStateFlow.update {
-                    it.copy(
-                        isSearchBarActive = true,
-                    )
+                    it.copy(isSearchBarActive = !it.isSearchBarActive)
                 }
             }
 
             is RecurringDepositAccountAction.UpdateSearch -> {
                 mutableStateFlow.update {
-                    it.copy(
-                        searchText = action.query,
-                    )
+                    it.copy(searchText = action.query)
                 }
             }
 
@@ -96,7 +90,7 @@ class RecurringDepositAccountViewModel(
         }
     }
 
-    private fun checkNetworkAndGetLoanAccounts() {
+    private fun checkNetworkAndRecurringDepositAccounts() {
         viewModelScope.launch {
             networkMonitor.isOnline.collect { isConnected ->
                 when (isConnected) {
@@ -139,9 +133,8 @@ class RecurringDepositAccountViewModel(
                             result.data.clientAccounts?.savingsAccounts?.let {
                                 it.filter { accountEntity ->
                                     accountEntity.depositType?.serverType == SavingAccountDepositTypeEntity.ServerTypes.RECURRING && accountEntity.status?.closed == false
-                                }.apply {
-                                    // Todo modify search accordingly
-                                    searchRecurringDepositAccounts(state.searchText, this)
+                                }.filter { accountEntity ->
+                                    accountEntity.accountNo.toString().contains(state.searchText.trim())
                                 }
                             } ?: emptyList()
 
@@ -156,18 +149,6 @@ class RecurringDepositAccountViewModel(
                 }
             }
         }
-    }
-
-    private fun searchRecurringDepositAccounts(
-        query: String,
-        recurringDepositAccounts: List<SavingsAccountEntity>,
-    ): List<SavingsAccountEntity> {
-        if (query.isNotBlank()) {
-            return recurringDepositAccounts.filter { accountEntity ->
-                accountEntity.accountNo.toString().contains(state.searchText.trim())
-            }
-        }
-        return recurringDepositAccounts
     }
 }
 
@@ -192,7 +173,7 @@ sealed class RecurringDepositAccountAction {
     data object Refresh : RecurringDepositAccountAction()
     data object ToggleFilter : RecurringDepositAccountAction()
     data object ToggleSearch : RecurringDepositAccountAction()
-    data class Search(val query: String) : RecurringDepositAccountAction()
+    data object Search : RecurringDepositAccountAction()
     data class UpdateSearch(val query: String) : RecurringDepositAccountAction()
     data object CloseDialog : RecurringDepositAccountAction()
 }

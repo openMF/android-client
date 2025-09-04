@@ -23,6 +23,9 @@ import androidclient.core.ui.generated.resources.core_ui_last_active
 import androidclient.core.ui.generated.resources.core_ui_loan_balance
 import androidclient.core.ui.generated.resources.core_ui_loan_product
 import androidclient.core.ui.generated.resources.core_ui_name
+import androidclient.core.ui.generated.resources.core_ui_note_createdBy
+import androidclient.core.ui.generated.resources.core_ui_note_date
+import androidclient.core.ui.generated.resources.core_ui_note_note
 import androidclient.core.ui.generated.resources.core_ui_original_loan
 import androidclient.core.ui.generated.resources.core_ui_outstanding
 import androidclient.core.ui.generated.resources.core_ui_paid
@@ -32,7 +35,10 @@ import androidclient.core.ui.generated.resources.core_ui_total_collateral_value
 import androidclient.core.ui.generated.resources.core_ui_total_value
 import androidclient.core.ui.generated.resources.core_ui_type
 import androidclient.core.ui.generated.resources.core_ui_waived
+import androidclient.core.ui.generated.resources.listing_component_identifier_not_available
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.animation.core.spring
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -76,14 +82,24 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 @Composable
 fun MifosActionsListingComponentOutline(
     modifier: Modifier = Modifier,
+    isExpanded: Boolean = true,
     content: @Composable () -> Unit,
 ) {
+    val bottomCorner by animateDpAsState(
+        if (isExpanded) 0.dp else 12.dp,
+        animationSpec = spring(),
+    )
+
     Box(
         modifier = modifier
-            .fillMaxWidth()
             .border(
                 width = 1.dp,
-                shape = DesignToken.shapes.medium,
+                shape = RoundedCornerShape(
+                    topStart = 12.dp,
+                    topEnd = 12.dp,
+                    bottomStart = bottomCorner,
+                    bottomEnd = bottomCorner,
+                ),
                 color = MaterialTheme.colorScheme.secondaryContainer,
             ),
     ) {
@@ -106,8 +122,10 @@ fun MifosActionsIdentifierListingComponent(
 ) {
     val density = LocalDensity.current
 
-    MifosActionsListingComponentOutline {
-        Column {
+    Column {
+        MifosActionsListingComponentOutline(
+            isExpanded = isExpanded,
+        ) {
             Column(modifier = Modifier.padding(DesignToken.padding.large).onClick { onClick() }) {
                 MifosListingRowItemHeader(
                     text = type,
@@ -128,7 +146,8 @@ fun MifosActionsIdentifierListingComponent(
                     )
                     MifosListingRowItem(
                         key = stringResource(Res.string.core_ui_status),
-                        value = status?.name ?: "Not Found",
+                        value = status?.name
+                            ?: stringResource(Res.string.listing_component_identifier_not_available),
                         valueColor = if (status?.name != null) status.color else Color.Red,
                     )
                     MifosListingRowItem(
@@ -141,52 +160,53 @@ fun MifosActionsIdentifierListingComponent(
                     )
                 }
             }
-            AnimatedVisibility(
-                visible = isExpanded,
-                enter = slideInVertically {
-                    with(density) { -40.dp.roundToPx() }
-                } + expandVertically(
-                    expandFrom = Alignment.Top,
-                ) + fadeIn(
-                    initialAlpha = 0.3f,
+        }
+        AnimatedVisibility(
+            visible = isExpanded,
+            enter = slideInVertically {
+                with(density) { -40.dp.roundToPx() }
+            } + expandVertically(
+                expandFrom = Alignment.Top,
+            ) + fadeIn(
+                initialAlpha = 0.3f,
+            ),
+            exit = slideOutVertically() + shrinkVertically() + fadeOut(),
+        ) {
+            Surface(
+                modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(
+                    bottomStart = DesignToken.padding.medium,
+                    bottomEnd = DesignToken.padding.medium,
                 ),
-                exit = slideOutVertically() + shrinkVertically() + fadeOut(),
+                color = MaterialTheme.colorScheme.surfaceContainer,
             ) {
-                Surface(
-                    modifier = Modifier.fillMaxWidth(),
-                    shape = RoundedCornerShape(
-                        bottomStart = DesignToken.padding.medium,
-                        bottomEnd = DesignToken.padding.medium,
+                Column(
+                    modifier = Modifier.padding(
+                        vertical = DesignToken.padding.small,
                     ),
                 ) {
-                    Column(
-                        modifier = Modifier.padding(
-                            vertical = DesignToken.padding.small,
-                        ),
-                    ) {
-                        menuList.map { menuItem ->
-                            Row(
-                                modifier = Modifier.fillMaxWidth()
-                                    .height(DesignToken.sizes.avatarMedium)
-                                    .clickable {
-                                        onActionClicked(menuItem)
-                                    },
-                                verticalAlignment = Alignment.CenterVertically,
-                                horizontalArrangement = Arrangement.Start,
-                            ) {
-                                Icon(
-                                    modifier = Modifier.padding(horizontal = DesignToken.padding.large),
-                                    imageVector = menuItem.icon,
-                                    contentDescription = "",
-                                )
+                    menuList.map { menuItem ->
+                        Row(
+                            modifier = Modifier.fillMaxWidth()
+                                .height(DesignToken.sizes.avatarMedium)
+                                .clickable {
+                                    onActionClicked(menuItem)
+                                },
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.Start,
+                        ) {
+                            Icon(
+                                modifier = Modifier.padding(horizontal = DesignToken.padding.large),
+                                imageVector = menuItem.icon,
+                                contentDescription = "",
+                            )
 
-                                Text(
-                                    modifier = Modifier.fillMaxWidth(),
-                                    text = menuItem.name,
-                                    color = MaterialTheme.colorScheme.onSurface,
-                                    fontSize = MaterialTheme.typography.bodyLarge.fontSize,
-                                )
-                            }
+                            Text(
+                                modifier = Modifier.fillMaxWidth(),
+                                text = menuItem::class.simpleName ?: "",
+                                color = MaterialTheme.colorScheme.onSurface,
+                                fontSize = MaterialTheme.typography.bodyLarge.fontSize,
+                            )
                         }
                     }
                 }
@@ -235,6 +255,7 @@ fun MifosActionsCollateralDataListingComponent(
                     valueColor = MaterialTheme.colorScheme.primary,
                 )
             }
+
             Surface(
                 modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(
@@ -265,7 +286,7 @@ fun MifosActionsCollateralDataListingComponent(
 
                             Text(
                                 modifier = Modifier.fillMaxWidth(),
-                                text = menuItem.name,
+                                text = menuItem::class.simpleName ?: "",
                                 color = MaterialTheme.colorScheme.onSurface,
                                 fontSize = MaterialTheme.typography.bodyLarge.fontSize,
                             )
@@ -290,8 +311,10 @@ fun MifosActionsLoanListingComponent(
 ) {
     var isActive by rememberSaveable { mutableStateOf(false) }
 
-    MifosActionsListingComponentOutline {
-        Column {
+    Column {
+        MifosActionsListingComponentOutline(
+            isExpanded = isActive,
+        ) {
             Column(
                 modifier = Modifier.padding(DesignToken.padding.large)
                     .onClick { isActive = !isActive },
@@ -333,59 +356,43 @@ fun MifosActionsLoanListingComponent(
                     value = type,
                 )
             }
-            if (isActive) {
-                Surface(
-                    modifier = Modifier.fillMaxWidth(),
-                    shape = RoundedCornerShape(
-                        bottomStart = DesignToken.padding.medium,
-                        bottomEnd = DesignToken.padding.medium,
+        }
+        if (isActive) {
+            Surface(
+                modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(
+                    bottomStart = DesignToken.padding.medium,
+                    bottomEnd = DesignToken.padding.medium,
+                ),
+                color = MaterialTheme.colorScheme.surfaceContainer,
+            ) {
+                Column(
+                    modifier = Modifier.padding(
+                        vertical = DesignToken.padding.small,
                     ),
                 ) {
-                    Column(
-                        modifier = Modifier.padding(
-                            vertical = DesignToken.padding.small,
-                        ),
-                    ) {
-                        menuList.map { menuItem ->
-                            Row(
-                                modifier = Modifier.fillMaxWidth()
-                                    .height(DesignToken.sizes.avatarMedium)
-                                    .clickable {
-                                        onActionClicked(menuItem)
-                                    },
-                                verticalAlignment = Alignment.CenterVertically,
-                                horizontalArrangement = Arrangement.Start,
-                            ) {
-                                Icon(
-                                    modifier = Modifier.padding(horizontal = DesignToken.padding.large),
-                                    imageVector = menuItem.icon,
-                                    contentDescription = "",
-                                )
-                                menuList.map { menuItem ->
-                                    Row(
-                                        modifier = Modifier.fillMaxWidth()
-                                            .height(DesignToken.sizes.avatarMedium)
-                                            .clickable {
-                                                onActionClicked(menuItem)
-                                            },
-                                        verticalAlignment = Alignment.CenterVertically,
-                                        horizontalArrangement = Arrangement.Start,
-                                    ) {
-                                        Icon(
-                                            modifier = Modifier.padding(horizontal = DesignToken.padding.large),
-                                            imageVector = menuItem.icon,
-                                            contentDescription = "",
-                                        )
+                    menuList.map { menuItem ->
+                        Row(
+                            modifier = Modifier.fillMaxWidth()
+                                .height(DesignToken.sizes.avatarMedium)
+                                .clickable {
+                                    onActionClicked(menuItem)
+                                },
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.Start,
+                        ) {
+                            Icon(
+                                modifier = Modifier.padding(horizontal = DesignToken.padding.large),
+                                imageVector = menuItem.icon,
+                                contentDescription = "",
+                            )
 
-                                        Text(
-                                            modifier = Modifier.fillMaxWidth(),
-                                            text = menuItem.name,
-                                            color = MaterialTheme.colorScheme.onSurface,
-                                            fontSize = MaterialTheme.typography.bodyLarge.fontSize,
-                                        )
-                                    }
-                                }
-                            }
+                            Text(
+                                modifier = Modifier.fillMaxWidth(),
+                                text = menuItem::class.simpleName ?: "",
+                                color = MaterialTheme.colorScheme.onSurface,
+                                fontSize = MaterialTheme.typography.bodyLarge.fontSize,
+                            )
                         }
                     }
                 }
@@ -495,12 +502,13 @@ fun MifosActionsSavingsListingComponent(
 ) {
     var isExpanded by rememberSaveable { mutableStateOf(false) }
 
-    MifosActionsListingComponentOutline {
-        Column(
-            modifier = Modifier.clickable { isExpanded = !isExpanded },
+    Column {
+        MifosActionsListingComponentOutline(
+            isExpanded = isExpanded,
         ) {
             Column(
-                modifier = Modifier.padding(DesignToken.padding.large),
+                modifier = Modifier.padding(DesignToken.padding.large)
+                    .clickable { isExpanded = !isExpanded },
             ) {
                 MifosListingRowItemHeader(
                     text = accountNo,
@@ -527,44 +535,45 @@ fun MifosActionsSavingsListingComponent(
                     )
                 }
             }
+        }
 
-            if (isExpanded) {
-                Surface(
-                    modifier = Modifier.fillMaxWidth(),
-                    shape = RoundedCornerShape(
-                        bottomStart = DesignToken.padding.medium,
-                        bottomEnd = DesignToken.padding.medium,
+        if (isExpanded) {
+            Surface(
+                modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(
+                    bottomStart = DesignToken.padding.medium,
+                    bottomEnd = DesignToken.padding.medium,
+                ),
+                color = MaterialTheme.colorScheme.surfaceContainer,
+            ) {
+                Column(
+                    modifier = Modifier.padding(
+                        vertical = DesignToken.padding.small,
                     ),
-                    color = MaterialTheme.colorScheme.surfaceContainer,
                 ) {
-                    Column(
-                        modifier = Modifier.padding(
-                            vertical = DesignToken.padding.small,
-                        ),
-                    ) {
-                        menuList.map { menuItem ->
-                            Row(
-                                modifier = Modifier.fillMaxWidth()
-                                    .height(DesignToken.sizes.avatarMedium)
-                                    .clickable {
-                                        onActionClicked(menuItem)
-                                    },
-                                verticalAlignment = Alignment.CenterVertically,
-                                horizontalArrangement = Arrangement.Start,
-                            ) {
-                                Icon(
-                                    modifier = Modifier.padding(horizontal = DesignToken.padding.large),
-                                    imageVector = menuItem.icon,
-                                    contentDescription = "",
-                                )
+                    menuList.map { menuItem ->
+                        Row(
+                            modifier = Modifier.fillMaxWidth()
+                                .height(DesignToken.sizes.avatarMedium)
+                                .clickable {
+                                    onActionClicked(menuItem)
+                                },
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.Start,
+                        ) {
+                            Icon(
+                                modifier = Modifier.padding(horizontal = DesignToken.padding.large),
+                                imageVector = menuItem.icon,
+                                contentDescription = "",
 
-                                Text(
-                                    modifier = Modifier.fillMaxWidth(),
-                                    text = menuItem.name,
-                                    color = MaterialTheme.colorScheme.onSurface,
-                                    fontSize = MaterialTheme.typography.bodyLarge.fontSize,
-                                )
-                            }
+                            )
+
+                            Text(
+                                modifier = Modifier.fillMaxWidth(),
+                                text = menuItem::class.simpleName ?: "",
+                                color = MaterialTheme.colorScheme.onSurface,
+                                fontSize = MaterialTheme.typography.bodyLarge.fontSize,
+                            )
                         }
                     }
                 }
@@ -632,6 +641,7 @@ fun MifosActionsClientFeeListingComponent(
                     bottomStart = DesignToken.padding.medium,
                     bottomEnd = DesignToken.padding.medium,
                 ),
+                color = MaterialTheme.colorScheme.surfaceContainer,
             ) {
                 Column(
                     modifier = Modifier.padding(
@@ -656,7 +666,7 @@ fun MifosActionsClientFeeListingComponent(
 
                             Text(
                                 modifier = Modifier.fillMaxWidth(),
-                                text = menuItem.name,
+                                text = menuItem::class.simpleName ?: "",
                                 color = MaterialTheme.colorScheme.onSurface,
                                 fontSize = MaterialTheme.typography.bodyLarge.fontSize,
                             )
@@ -668,13 +678,135 @@ fun MifosActionsClientFeeListingComponent(
     }
 }
 
-enum class Actions(val icon: ImageVector) {
-    ViewAccount(MifosIcons.ViewAccount),
-    ApproveAccount(MifosIcons.ApproveAccount),
-    MakeRepayment(MifosIcons.MakeRepayment),
-    ViewDocument(MifosIcons.ViewDocument),
-    UploadAgain(MifosIcons.UploadAgain),
-    DeleteDocument(MifosIcons.DeleteDocument),
+sealed class Actions(open val icon: ImageVector) {
+    data class ViewAccount(override val icon: ImageVector = MifosIcons.PiggyBank) : Actions(icon)
+    data class ApproveAccount(override val icon: ImageVector = MifosIcons.ApproveAccount) : Actions(icon)
+    data class MakeRepayment(override val icon: ImageVector = MifosIcons.MakeRepayment) : Actions(icon)
+    data class ViewDocument(override val icon: ImageVector = MifosIcons.DocumentScanner) : Actions(icon)
+    data class UploadAgain(override val icon: ImageVector = MifosIcons.FileUpload) : Actions(icon)
+    data class DeleteDocument(override val icon: ImageVector = MifosIcons.DeleteDocument) : Actions(icon)
+    data class Edit(override val icon: ImageVector = MifosIcons.Edit) : Actions(icon)
+    data class Delete(override val icon: ImageVector = MifosIcons.Delete) : Actions(icon)
+}
+
+@Composable
+fun MifosActionsNoteListingComponent(
+    createdBy: String,
+    date: String,
+    notes: String,
+    menuList: List<Actions>,
+    onExpand: () -> Unit,
+    isExpanded: Boolean,
+    onActionClicked: (Actions) -> Unit,
+) {
+    val density = LocalDensity.current
+
+    Column {
+        MifosActionsListingComponentOutline(
+            modifier = Modifier.clickable { onExpand() },
+            isExpanded = isExpanded,
+        ) {
+            Column(
+                modifier = Modifier.padding(DesignToken.padding.large),
+            ) {
+                MifosListingRowItemHeader(
+                    text = stringResource(Res.string.core_ui_note_createdBy) + " " + createdBy,
+                    keyStyle = MifosTypography.titleSmallEmphasized,
+                )
+
+                Spacer(Modifier.height(DesignToken.padding.large))
+
+                MifosListingColumnItem(
+                    key = stringResource(Res.string.core_ui_note_date),
+                    value = date,
+                )
+
+                Spacer(Modifier.height(DesignToken.padding.medium))
+
+                MifosListingColumnItem(
+                    key = stringResource(Res.string.core_ui_note_note),
+                    value = notes,
+                )
+            }
+        }
+
+        AnimatedVisibility(
+            visible = isExpanded,
+            enter = slideInVertically {
+                with(density) { -40.dp.roundToPx() }
+            } + expandVertically(
+                expandFrom = Alignment.Top,
+            ) + fadeIn(
+                initialAlpha = 0.3f,
+            ),
+            exit = slideOutVertically() + shrinkVertically() + fadeOut(),
+        ) {
+            Surface(
+                modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(
+                    bottomStart = DesignToken.padding.medium,
+                    bottomEnd = DesignToken.padding.medium,
+                ),
+                color = MaterialTheme.colorScheme.surfaceContainer,
+            ) {
+                Column(
+                    modifier = Modifier.padding(
+                        vertical = DesignToken.padding.small,
+                    ),
+                ) {
+                    menuList.map { menuItem ->
+                        Row(
+                            modifier = Modifier.fillMaxWidth()
+                                .height(DesignToken.sizes.avatarMedium)
+                                .clickable {
+                                    onActionClicked(menuItem)
+                                },
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.Start,
+                        ) {
+                            Icon(
+                                modifier = Modifier.padding(horizontal = DesignToken.padding.large),
+                                imageVector = menuItem.icon,
+                                contentDescription = "",
+                            )
+
+                            Text(
+                                modifier = Modifier.fillMaxWidth(),
+                                text = menuItem::class.simpleName ?: "",
+                                color = MaterialTheme.colorScheme.onSurface,
+                                fontSize = MaterialTheme.typography.bodyLarge.fontSize,
+                            )
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Preview
+@Composable
+private fun PreviewMifosActionsNoteListingComponent() {
+    MaterialTheme {
+        MifosActionsNoteListingComponent(
+            createdBy = "John Doe",
+            date = "02 September 2025",
+            notes = "This is a note",
+            menuList = listOf(
+                Actions.Edit(),
+                Actions.Delete(),
+            ),
+            onExpand = {},
+            isExpanded = true,
+            onActionClicked = { action ->
+                when (action) {
+                    is Actions.Edit -> println(Actions.ViewAccount::class.simpleName ?: "")
+                    is Actions.Delete -> println(Actions.ApproveAccount::class.simpleName ?: "")
+                    else -> println("Action not Handled")
+                }
+            },
+        )
+    }
 }
 
 @Preview
@@ -689,15 +821,15 @@ private fun PreviewMifosActionsIdentifierListingComponent() {
             description = "Primary identification document",
             identifyDocuments = "Passport Scan",
             menuList = listOf(
-                Actions.ViewDocument,
-                Actions.UploadAgain,
-                Actions.DeleteDocument,
+                Actions.ViewDocument(),
+                Actions.UploadAgain(),
+                Actions.DeleteDocument(),
             ),
             onActionClicked = { action ->
                 when (action) {
-                    Actions.ViewDocument -> println(Actions.ViewDocument.name)
-                    Actions.UploadAgain -> println(Actions.UploadAgain.name)
-                    Actions.DeleteDocument -> println(Actions.DeleteDocument.name)
+                    is Actions.ViewDocument -> println(Actions.ViewDocument::class.simpleName)
+                    is Actions.UploadAgain -> println(Actions.UploadAgain::class.simpleName)
+                    is Actions.DeleteDocument -> println(Actions.DeleteDocument::class.simpleName)
                     else -> println("Action not Handled")
                 }
             },
@@ -719,13 +851,13 @@ private fun PreviewMifosActionsClientFeeListingComponent() {
             waived = "$50",
             outstanding = "$550",
             menuList = listOf(
-                Actions.ViewAccount,
-                Actions.ApproveAccount,
+                Actions.ViewAccount(),
+                Actions.ApproveAccount(),
             ),
             onActionClicked = { action ->
                 when (action) {
-                    Actions.ViewAccount -> println(Actions.ViewAccount.name)
-                    Actions.ApproveAccount -> println(Actions.ApproveAccount.name)
+                    is Actions.ViewAccount -> println(Actions.ViewDocument::class.simpleName)
+                    is Actions.ApproveAccount -> println(Actions.ApproveAccount::class.simpleName)
                     else -> println("Action not Handled")
                 }
             },
@@ -744,13 +876,13 @@ fun PreviewMifosActionsSavingsListingComponent() {
             lastActive = "2025-08-15",
             balance = "$1200",
             menuList = listOf(
-                Actions.ViewAccount,
-                Actions.ApproveAccount,
+                Actions.ViewAccount(),
+                Actions.ApproveAccount(),
             ),
             onActionClicked = { action ->
                 when (action) {
-                    Actions.ViewAccount -> println(Actions.ViewAccount.name)
-                    Actions.ApproveAccount -> println(Actions.ApproveAccount.name)
+                    is Actions.ViewAccount -> println(Actions.ViewDocument::class.simpleName)
+                    is Actions.ApproveAccount -> println(Actions.ApproveAccount::class.simpleName)
                     else -> println("Action not Handled")
                 }
             },
@@ -768,13 +900,13 @@ private fun PreviewMifosActionsCollateralDataListingComponent() {
             totalValue = "$2500",
             totalCollateralValue = "$2500",
             menuList = listOf(
-                Actions.ViewAccount,
-                Actions.ApproveAccount,
+                Actions.ViewAccount(),
+                Actions.ApproveAccount(),
             ),
             onActionClicked = { action ->
                 when (action) {
-                    Actions.ViewAccount -> println(Actions.ViewAccount.name)
-                    Actions.ApproveAccount -> println(Actions.ApproveAccount.name)
+                    is Actions.ViewAccount -> println(Actions.ViewDocument::class.simpleName)
+                    is Actions.ApproveAccount -> println(Actions.ApproveAccount::class.simpleName)
                     else -> println("Action not Handled")
                 }
             },
@@ -794,13 +926,13 @@ private fun PreviewMifosActionsLoanListingComponent() {
             loanBalance = "$3000",
             type = "Active",
             menuList = listOf(
-                Actions.ViewAccount,
-                Actions.ApproveAccount,
+                Actions.ViewAccount(),
+                Actions.ApproveAccount(),
             ),
             onActionClicked = { action ->
                 when (action) {
-                    Actions.ViewAccount -> println(Actions.ViewAccount.name)
-                    Actions.ApproveAccount -> println(Actions.ApproveAccount.name)
+                    is Actions.ViewAccount -> println(Actions.ViewAccount::class.simpleName)
+                    is Actions.ApproveAccount -> println(Actions.ApproveAccount::class.simpleName)
                     else -> println("Action not Handled")
                 }
             },

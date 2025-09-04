@@ -22,7 +22,7 @@ import androidx.navigation.NavDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.navOptions
-import cmp.navigation.authenticated.AuthenticatedGraphRoute
+import cmp.navigation.authenticated.AuthenticatedGraph
 import cmp.navigation.authenticated.authenticatedGraph
 import cmp.navigation.authenticated.navigateToAuthenticatedGraph
 import cmp.navigation.splash.SplashRoute
@@ -74,9 +74,9 @@ fun RootNavScreen(
 
     val targetRoute = when (state) {
         RootNavState.Splash -> SplashRoute
-        is RootNavState.UserUnlocked -> AuthenticatedGraphRoute
+        is RootNavState.UserUnlocked -> AuthenticatedGraph
         is RootNavState.Auth -> LoginRoute
-        else -> AuthenticatedGraphRoute
+        else -> LoginRoute
     }
 
     val currentRoute = navController.currentDestination?.rootLevelRoute()

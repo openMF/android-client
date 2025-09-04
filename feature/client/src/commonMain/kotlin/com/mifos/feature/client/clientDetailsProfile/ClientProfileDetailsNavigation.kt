@@ -29,7 +29,7 @@ fun NavGraphBuilder.clientProfileDetailsDestination(
     navigateToClientTransfer: (Int) -> Unit,
     navigateToUpdateDefaultAccount: (Int) -> Unit,
     navigateToCollateral: (Int) -> Unit,
-    navigateToApplyNewApplication: () -> Unit,
+    navigateToApplyNewApplication: (Int) -> Unit,
 ) {
     composable<ClientProfileDetailsRoute> {
         ClientProfileDetailsScreen(

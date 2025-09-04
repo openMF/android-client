@@ -82,7 +82,7 @@ internal fun ClientProfileDetailsScreen(
     navigateToUpdateDetails: (Int) -> Unit,
     navigateToClientTransfer: (Int) -> Unit,
     navigateToClientClosure: (Int) -> Unit,
-    navigateToApplyNewApplication: () -> Unit,
+    navigateToApplyNewApplication: (Int) -> Unit,
     navigateToUpdateDefaultAccount: (Int) -> Unit,
     navigateToCollateral: (Int) -> Unit,
     modifier: Modifier = Modifier,
@@ -100,7 +100,7 @@ internal fun ClientProfileDetailsScreen(
                 when (event.action) {
                     ClientProfileDetailsActionItem.AddCharge -> {}
                     ClientProfileDetailsActionItem.ApplyNewApplication -> {
-                        navigateToApplyNewApplication()
+                        navigateToApplyNewApplication(state.client?.id ?: -1)
                     }
                     ClientProfileDetailsActionItem.AssignStaff -> {
                         navigateToAssignStaff(state.client?.id ?: -1)

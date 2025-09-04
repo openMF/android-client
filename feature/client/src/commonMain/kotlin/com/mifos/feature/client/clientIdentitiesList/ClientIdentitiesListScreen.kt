@@ -50,8 +50,8 @@ import com.mifos.core.ui.components.MifosActionsIdentifierListingComponent
 import com.mifos.core.ui.components.MifosAlertDialog
 import com.mifos.core.ui.components.MifosBreadcrumbNavBar
 import com.mifos.core.ui.components.MifosEmptyCard
-import com.mifos.core.ui.components.Status
 import com.mifos.core.ui.util.EventsEffect
+import com.mifos.feature.client.utils.getClientIdentifierStatus
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
@@ -123,37 +123,26 @@ internal fun ClientIdentitiesListScreen(
                                     type = item.documentType?.name ?: emptyMessage,
                                     id = if (item.id != null) item.id.toString() else emptyMessage,
                                     key = item.documentKey ?: emptyMessage,
-                                    status = if (item.status != null) {
-                                        if (item.status!!.lowercase().endsWith("active")) Status.Active
-                                        if (item.status!!.lowercase()
-                                                .endsWith("inactive")
-                                        ) {
-                                            Status.InActive
-                                        } else {
-                                            Status.Pending
-                                        }
-                                    } else {
-                                        null
-                                    },
+                                    status = getClientIdentifierStatus(item.status),
                                     description = item.description ?: emptyMessage,
                                     // TODO check what is identifyDocuments, couldnot find in the api
                                     identifyDocuments = item.documentType?.name ?: emptyMessage,
                                     menuList = listOf(
-                                        Actions.ViewDocument,
-                                        Actions.DeleteDocument,
-                                        Actions.UploadAgain,
+                                        Actions.ViewDocument(),
+                                        Actions.DeleteDocument(),
+                                        Actions.UploadAgain(),
                                     ),
                                     onActionClicked = { actions ->
                                         when (actions) {
-                                            Actions.ViewDocument -> onAction.invoke(
+                                            is Actions.ViewDocument -> onAction.invoke(
                                                 ClientIdentitiesListAction.ViewDocument,
                                             )
 
-                                            Actions.UploadAgain -> onAction.invoke(
+                                            is Actions.UploadAgain -> onAction.invoke(
                                                 ClientIdentitiesListAction.UploadAgain,
                                             )
 
-                                            Actions.DeleteDocument -> onAction.invoke(
+                                            is Actions.DeleteDocument -> onAction.invoke(
                                                 ClientIdentitiesListAction.DeleteDocument(
                                                     item.id ?: -1,
                                                 ),
@@ -171,6 +160,8 @@ internal fun ClientIdentitiesListScreen(
                                     },
                                     isExpanded = (index == state.currentExpandedItem) && state.expandClientIdentity,
                                 )
+
+                                Spacer(Modifier.height(DesignToken.spacing.small))
                             }
                         }
                     }
