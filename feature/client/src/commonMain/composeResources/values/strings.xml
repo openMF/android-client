@@ -193,11 +193,30 @@
     <string name="feature_client_county_district">County/District</string>
     <string name="feature_client_country">Country</string>
     <string name="feature_client_state_province">State/Province</string>
+    <string name="feature_client_province">Province</string>
     <string name="feature_client_postal_code">Postal Code</string>
     <string name="feature_client_address_active">Address Active</string>
     <string name="feature_client_error_address_type_is_required">Address Type is required</string>
     <string name="feature_client_failed_to_fetch_address_configuration">Failed to fetch address configuration</string>
     <string name="feature_client_failed_to_fetch_address_template">Failed to fetch address template</string>
+    <string name="feature_client_unable_to_create_address_for_client">Unable to create address for client</string>
+    <string name="feature_client_success_title">Address Created Successfully</string>
+    <string name="feature_client_create_address_success_message">Client Address created successfully. Click Continue to view the Client Addresses.</string>
+    <string name="feature_client_address_creation_failure_title">Address Creation Failed</string>
+
+
+    <string name="feature_client_empty_address_card_title">No Item Found</string>
+    <string name="feature_client_empty_address_card_message">Click on '+' Button to add an item. </string>
+    <string name="feature_client_failed_to_load_address">Failed to load addresses</string>
+
+    <string name="feature_client_address_type_error">Address Type cannot be empty.</string>
+    <string name="feature_client_address_line_error">Address Line 1 cannot be empty.</string>
+    <string name="feature_client_address_city_error">City cannot be empty.</string>
+    <string name="feature_client_address_state_province_error">State/Province cannot be empty.</string>
+    <string name="feature_client_address_country_error">Country cannot be empty.</string>
+    <string name="feature_client_address_postal_code_error">Postal Code cannot be empty.</string>
+
+
 
     <string name="feature_client_pinpoint_location_marker_title">Pinpoint Location</string>
     <string name="feature_client_select_location_dialog_title">Select Location</string>
@@ -362,7 +381,7 @@
     <string name="btn_submit">Submit</string>
     <string name="msg_cannot_assign_staff">Can't Assign a Staff to this client</string>
 
-    <!-- Success & Failure Messages -->
+    <!-- ShowAddressList & Failure Messages -->
     <string name="staff_unassign_success_title">Staff Unassigned Successfully!!</string>
     <string name="staff_unassign_success_message">Your request was completed successfully.</string>
     <string name="staff_unassign_failure_title">Staff Unassigning Failed!</string>
