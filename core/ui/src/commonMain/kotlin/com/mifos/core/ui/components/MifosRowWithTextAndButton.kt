@@ -34,7 +34,6 @@ fun MifosRowWithTextAndButton(
 ) {
     MifosListingComponentOutline(
         modifier = modifier,
-        color = MaterialTheme.colorScheme.primary,
         content = {
             Row(
                 Modifier.fillMaxWidth(),

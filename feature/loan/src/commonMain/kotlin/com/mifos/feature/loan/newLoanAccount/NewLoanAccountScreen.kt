@@ -10,12 +10,22 @@
 package com.mifos.feature.loan.newLoanAccount
 
 import androidclient.feature.loan.generated.resources.Res
+import androidclient.feature.loan.generated.resources.add
+import androidclient.feature.loan.generated.resources.add_new
+import androidclient.feature.loan.generated.resources.add_new_collateral
+import androidclient.feature.loan.generated.resources.back
+import androidclient.feature.loan.generated.resources.collateral
+import androidclient.feature.loan.generated.resources.feature_loan_cancel
 import androidclient.feature.loan.generated.resources.new_loan_account_title
+import androidclient.feature.loan.generated.resources.quantity
 import androidclient.feature.loan.generated.resources.step_charges
 import androidclient.feature.loan.generated.resources.step_details
 import androidclient.feature.loan.generated.resources.step_preview
 import androidclient.feature.loan.generated.resources.step_schedule
 import androidclient.feature.loan.generated.resources.step_terms
+import androidclient.feature.loan.generated.resources.total_collateral_value
+import androidclient.feature.loan.generated.resources.total_value
+import androidclient.feature.loan.generated.resources.view_collaterals
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -199,9 +209,9 @@ private fun AddNewCollateralDialog(
     onAction: (NewLoanAccountAction) -> Unit,
 ) {
     MifosBasicDialog(
-        title = "Add New Collateral",
-        confirmText = "Add",
-        dismissText = "Cancel",
+        title = stringResource(Res.string.add_new_collateral),
+        confirmText = stringResource(Res.string.add),
+        dismissText = stringResource(Res.string.feature_loan_cancel),
         isConfirmEnabled = state.isCollateralBtnEnabled,
         onConfirm = {
             onAction(NewLoanAccountAction.AddCollateralToList)
@@ -222,7 +232,7 @@ private fun AddNewCollateralDialog(
                         onAction(NewLoanAccountAction.SelectedCollateralIndexChange(index))
                     },
                     options = state.collaterals.map { it.name },
-                    label = "Collateral",
+                    label = stringResource(Res.string.collateral),
                 )
                 Spacer(modifier = Modifier.height(DesignToken.padding.medium))
                 MifosOutlinedTextField(
@@ -230,7 +240,7 @@ private fun AddNewCollateralDialog(
                     onValueChange = {
                         onAction(NewLoanAccountAction.OnCollateralQuantityChanged(it.toIntOrNull() ?: 0))
                     },
-                    label = "Quantity",
+                    label = stringResource(Res.string.quantity),
                     config = MifosTextFieldConfig(
                         keyboardOptions = KeyboardOptions(
                             keyboardType = KeyboardType.Number,
@@ -241,7 +251,7 @@ private fun AddNewCollateralDialog(
                 MifosOutlinedTextField(
                     value = state.collateralTotal.toString(),
                     onValueChange = {},
-                    label = "Total value",
+                    label = stringResource(Res.string.total_value),
                     config = MifosTextFieldConfig(
                         readOnly = true,
                         enabled = false,
@@ -251,7 +261,7 @@ private fun AddNewCollateralDialog(
                 MifosOutlinedTextField(
                     value = state.totalCollateral.toString(),
                     onValueChange = {},
-                    label = "Total Collateral Value",
+                    label = stringResource(Res.string.total_collateral_value),
                     config = MifosTextFieldConfig(
                         readOnly = true,
                         enabled = false,
@@ -268,10 +278,9 @@ private fun ShowCollateralsDialog(
     onAction: (NewLoanAccountAction) -> Unit,
 ) {
     MifosBasicDialog(
-        title = "Add New Collateral",
-        confirmText = "Add New",
-        dismissText = "Back",
-        isConfirmEnabled = state.isCollateralBtnEnabled,
+        title = stringResource(Res.string.view_collaterals),
+        confirmText = stringResource(Res.string.add_new),
+        dismissText = stringResource(Res.string.back),
         onConfirm = {
             onAction(NewLoanAccountAction.ShowAddCollateralDialog)
         },
@@ -294,15 +303,15 @@ private fun ShowCollateralsDialog(
                                 keyStyle = MifosTypography.titleSmallEmphasized,
                             )
                             MifosListingRowItem(
-                                key = "Quantity",
+                                key = stringResource(Res.string.quantity),
                                 value = it.quantity.toString(),
                             )
                             MifosListingRowItem(
-                                key = "Total Value",
+                                key = stringResource(Res.string.total_value),
                                 value = it.totalValue.toString(),
                             )
                             MifosListingRowItem(
-                                key = "Total Collateral Value",
+                                key = stringResource(Res.string.total_collateral_value),
                                 value = it.totalCollateral.toString(),
                             )
                         }

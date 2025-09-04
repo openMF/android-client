@@ -10,10 +10,46 @@
 package com.mifos.feature.loan.newLoanAccount.pages
 
 import androidclient.feature.loan.generated.resources.Res
+import androidclient.feature.loan.generated.resources.add_new
+import androidclient.feature.loan.generated.resources.amortization
+import androidclient.feature.loan.generated.resources.arrears_tolerance
 import androidclient.feature.loan.generated.resources.back
+import androidclient.feature.loan.generated.resources.balloon_repayment_amount
+import androidclient.feature.loan.generated.resources.calculate_interest_partial
+import androidclient.feature.loan.generated.resources.collateral_count
+import androidclient.feature.loan.generated.resources.collateral_data
 import androidclient.feature.loan.generated.resources.feature_loan_cancel
 import androidclient.feature.loan.generated.resources.feature_loan_select
+import androidclient.feature.loan.generated.resources.first_repayment_date
+import androidclient.feature.loan.generated.resources.frequency
+import androidclient.feature.loan.generated.resources.grace_on_interest_payment
+import androidclient.feature.loan.generated.resources.grace_on_principal_payment
+import androidclient.feature.loan.generated.resources.interest_calculation_period
+import androidclient.feature.loan.generated.resources.interest_calculations
+import androidclient.feature.loan.generated.resources.interest_charged_from
+import androidclient.feature.loan.generated.resources.interest_free_period
+import androidclient.feature.loan.generated.resources.interest_method
+import androidclient.feature.loan.generated.resources.is_equal_amortization
+import androidclient.feature.loan.generated.resources.loan_schedule
+import androidclient.feature.loan.generated.resources.loan_schedule_type
+import androidclient.feature.loan.generated.resources.loan_term
+import androidclient.feature.loan.generated.resources.moratorium
 import androidclient.feature.loan.generated.resources.next
+import androidclient.feature.loan.generated.resources.nominal_interest_rate
+import androidclient.feature.loan.generated.resources.nominal_interest_rate_percent
+import androidclient.feature.loan.generated.resources.number_of_repayments
+import androidclient.feature.loan.generated.resources.on_arrears_ageing
+import androidclient.feature.loan.generated.resources.principal
+import androidclient.feature.loan.generated.resources.repaid_every
+import androidclient.feature.loan.generated.resources.repaid_every_label
+import androidclient.feature.loan.generated.resources.repayment_strategy
+import androidclient.feature.loan.generated.resources.repayments
+import androidclient.feature.loan.generated.resources.select_day
+import androidclient.feature.loan.generated.resources.select_on
+import androidclient.feature.loan.generated.resources.term_frequency
+import androidclient.feature.loan.generated.resources.term_options
+import androidclient.feature.loan.generated.resources.terms
+import androidclient.feature.loan.generated.resources.view
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -48,6 +84,8 @@ import com.mifos.core.designsystem.component.MifosTextFieldDropdown
 import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.designsystem.theme.MifosTypography
+import com.mifos.core.ui.components.MifosListingComponentOutline
+import com.mifos.core.ui.components.MifosListingRowItem
 import com.mifos.core.ui.components.MifosRowWithTextAndButton
 import com.mifos.core.ui.components.MifosTwoButtonRow
 import com.mifos.feature.loan.newLoanAccount.NewLoanAccountAction
@@ -129,7 +167,7 @@ fun TermsPage(
             modifier = modifier.weight(1f).verticalScroll(rememberScrollState()),
         ) {
             Text(
-                text = "Terms",
+                text = stringResource(Res.string.terms),
                 style = MifosTypography.labelLargeEmphasized,
             )
 
@@ -140,7 +178,7 @@ fun TermsPage(
                 onValueChange = {
                     onAction(NewLoanAccountAction.OnPrincipalAmountChange(it.toDoubleOrNull() ?: 0.0, it))
                 },
-                label = "Principal",
+                label = stringResource(Res.string.principal),
                 config = MifosTextFieldConfig(
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.Decimal,
@@ -150,7 +188,7 @@ fun TermsPage(
             Spacer(Modifier.height(DesignToken.padding.large))
 
             Text(
-                text = "Term Options?",
+                text = stringResource(Res.string.term_options),
                 style = MifosTypography.labelLargeEmphasized,
             )
 
@@ -159,7 +197,7 @@ fun TermsPage(
             MifosOutlinedTextField(
                 value = (state.noOfRepayments * state.repaidEvery).toString(),
                 onValueChange = {},
-                label = "Loan Term",
+                label = stringResource(Res.string.loan_term),
                 config = MifosTextFieldConfig(
                     readOnly = true,
                     enabled = false,
@@ -178,11 +216,11 @@ fun TermsPage(
                     onAction(NewLoanAccountAction.OnTermFrequencyIndexChange(index))
                 },
                 options = state.loanTemplate?.termFrequencyTypeOptions?.map { it.value ?: "" } ?: emptyList(),
-                label = "Term Frequency",
+                label = stringResource(Res.string.term_frequency),
             )
 
             Text(
-                text = "Repayments",
+                text = stringResource(Res.string.repayments),
                 style = MifosTypography.labelLargeEmphasized,
             )
 
@@ -193,12 +231,12 @@ fun TermsPage(
                 onValueChange = {
                     onAction(NewLoanAccountAction.OnNoOfRepaymentsChange(it.toIntOrNull() ?: 0))
                 },
-                label = "Number of Repayments",
+                label = stringResource(Res.string.number_of_repayments),
             )
             Spacer(Modifier.height(DesignToken.padding.large))
             MifosDatePickerTextField(
                 value = state.firstRepaymentDate,
-                label = "First Repayment Date",
+                label = stringResource(Res.string.first_repayment_date),
                 openDatePicker = {
                     onAction(NewLoanAccountAction.OnFirstRepaymentDatePick(true))
                 },
@@ -206,7 +244,7 @@ fun TermsPage(
             Spacer(Modifier.height(DesignToken.padding.large))
             MifosDatePickerTextField(
                 value = state.interestChargedFromDate,
-                label = "Interest Charged From",
+                label = stringResource(Res.string.interest_charged_from),
                 openDatePicker = {
                     onAction(NewLoanAccountAction.OnInterestChargedFromDatePick(true))
                 },
@@ -215,7 +253,7 @@ fun TermsPage(
             Spacer(Modifier.height(DesignToken.padding.large))
 
             Text(
-                text = "Repaid Every?",
+                text = stringResource(Res.string.repaid_every),
                 style = MifosTypography.labelLargeEmphasized,
             )
 
@@ -226,7 +264,7 @@ fun TermsPage(
                 onValueChange = {
                     onAction(NewLoanAccountAction.OnRepaidEveryChange(it.toIntOrNull() ?: 0))
                 },
-                label = "Repaid Every",
+                label = stringResource(Res.string.repaid_every_label),
             )
 
             Spacer(Modifier.height(DesignToken.padding.medium))
@@ -240,7 +278,7 @@ fun TermsPage(
                 onValueChanged = {},
                 onOptionSelected = { index, value -> },
                 options = state.loanTemplate?.termFrequencyTypeOptions?.map { it.value ?: "" } ?: emptyList(),
-                label = "Frequency",
+                label = stringResource(Res.string.frequency),
                 readOnly = true,
             )
 
@@ -260,7 +298,7 @@ fun TermsPage(
                         onAction(NewLoanAccountAction.OnSelectedOnIndexChange(index))
                     },
                     options = state.loanTemplate?.repaymentFrequencyNthDayTypeOptions?.map { it.value ?: "" } ?: emptyList(),
-                    label = "Select On",
+                    label = stringResource(Res.string.select_on),
                 )
 
                 MifosTextFieldDropdown(
@@ -274,13 +312,13 @@ fun TermsPage(
                         onAction(NewLoanAccountAction.OnSelectedDayIndexChange(index))
                     },
                     options = state.loanTemplate?.repaymentFrequencyDaysOfWeekTypeOptions?.map { it.value ?: "" } ?: emptyList(),
-                    label = "Select Day",
+                    label = stringResource(Res.string.select_day),
                 )
 
                 Spacer(Modifier.height(DesignToken.padding.large))
             }
             Text(
-                text = "Nominal interest rate",
+                text = stringResource(Res.string.nominal_interest_rate),
                 style = MifosTypography.labelLargeEmphasized,
             )
 
@@ -291,7 +329,7 @@ fun TermsPage(
                 onValueChange = {
                     onAction(NewLoanAccountAction.OnNominalInterestRateChange(it.toDoubleOrNull() ?: 0.0, it))
                 },
-                label = "Nominal interest rate (in %)",
+                label = stringResource(Res.string.nominal_interest_rate_percent),
                 config = MifosTextFieldConfig(
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.Decimal,
@@ -312,7 +350,7 @@ fun TermsPage(
                     onAction(NewLoanAccountAction.OnNominalFrequencyIndexChange(index))
                 },
                 options = state.loanTemplate?.interestRateFrequencyTypeOptions?.map { it.value ?: "" } ?: emptyList(),
-                label = "Frequency",
+                label = stringResource(Res.string.frequency),
             )
 
             MifosTextFieldDropdown(
@@ -326,7 +364,7 @@ fun TermsPage(
                     onAction(NewLoanAccountAction.OnNominalMethodIndexChange(index))
                 },
                 options = state.loanTemplate?.interestTypeOptions?.map { it.value ?: "" } ?: emptyList(),
-                label = "Interest Method",
+                label = stringResource(Res.string.interest_method),
             )
 
             MifosTextFieldDropdown(
@@ -340,7 +378,7 @@ fun TermsPage(
                     onAction(NewLoanAccountAction.OnNominalAmortizationIndexChange(index))
                 },
                 options = state.loanTemplate?.amortizationTypeOptions?.map { it.value ?: "" } ?: emptyList(),
-                label = "Amortization",
+                label = stringResource(Res.string.amortization),
             )
 
             Row(
@@ -357,7 +395,7 @@ fun TermsPage(
                     },
                 )
                 Text(
-                    text = "Is Equal Amortization",
+                    text = stringResource(Res.string.is_equal_amortization),
                     style = MifosTypography.labelLarge,
                 )
             }
@@ -365,16 +403,19 @@ fun TermsPage(
             Spacer(Modifier.height(DesignToken.padding.large))
 
             Text(
-                text = "Loan Schedule",
+                text = stringResource(Res.string.loan_schedule),
                 style = MifosTypography.labelLargeEmphasized,
             )
 
             Spacer(Modifier.height(DesignToken.padding.large))
 
-            Text(
-                text = "Loan Schedule Type : ${state.loanTemplate?.loanScheduleType?.value ?: ""}",
-                style = MifosTypography.labelLargeEmphasized,
-            )
+            MifosListingComponentOutline {
+                MifosListingRowItem(
+                    key = stringResource(Res.string.loan_schedule_type),
+                    keyStyle = MifosTypography.labelMediumEmphasized,
+                    value = state.loanTemplate?.loanScheduleType?.value ?: "",
+                )
+            }
 
             Spacer(Modifier.height(DesignToken.padding.large))
 
@@ -389,7 +430,7 @@ fun TermsPage(
                     onAction(NewLoanAccountAction.OnRepaymentStrategyIndexChange(index))
                 },
                 options = state.loanTemplate?.transactionProcessingStrategyOptions?.map { it.name ?: "" } ?: emptyList(),
-                label = "Repayment Strategy",
+                label = stringResource(Res.string.repayment_strategy),
             )
 
             MifosOutlinedTextField(
@@ -397,7 +438,7 @@ fun TermsPage(
                 onValueChange = {
                     onAction(NewLoanAccountAction.OnBalloonRepaymentAmountChange(it.toIntOrNull() ?: 0))
                 },
-                label = "Balloon Repayment Amount",
+                label = stringResource(Res.string.balloon_repayment_amount),
                 config = MifosTextFieldConfig(
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.Number,
@@ -408,7 +449,7 @@ fun TermsPage(
             Spacer(Modifier.height(DesignToken.padding.large))
 
             Text(
-                text = "Interest Calculations",
+                text = stringResource(Res.string.interest_calculations),
                 style = MifosTypography.labelLargeEmphasized,
             )
 
@@ -425,7 +466,7 @@ fun TermsPage(
                     onAction(NewLoanAccountAction.OnInterestCalculationPeriodIndexChange(index))
                 },
                 options = state.loanTemplate?.interestCalculationPeriodTypeOptions?.map { it.value ?: "" } ?: emptyList(),
-                label = "Interest Calculation Period",
+                label = stringResource(Res.string.interest_calculation_period),
             )
 
             Row(
@@ -442,7 +483,7 @@ fun TermsPage(
                     },
                 )
                 Text(
-                    text = "Calculate interest for exact days in partial period",
+                    text = stringResource(Res.string.calculate_interest_partial),
                     style = MifosTypography.labelLarge,
                 )
             }
@@ -452,7 +493,7 @@ fun TermsPage(
                 onValueChange = {
                     onAction(NewLoanAccountAction.OnArrearsToleranceChange(it.toIntOrNull() ?: 0))
                 },
-                label = "Arrears Tolerance",
+                label = stringResource(Res.string.arrears_tolerance),
                 config = MifosTextFieldConfig(
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.Number,
@@ -467,7 +508,7 @@ fun TermsPage(
                 onValueChange = {
                     onAction(NewLoanAccountAction.OnInterestFreePeriodChange(it.toIntOrNull() ?: 0))
                 },
-                label = "Interest Free Period",
+                label = stringResource(Res.string.interest_free_period),
                 config = MifosTextFieldConfig(
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.Number,
@@ -478,7 +519,7 @@ fun TermsPage(
             Spacer(Modifier.height(DesignToken.padding.large))
 
             Text(
-                text = "Moratorium?",
+                text = stringResource(Res.string.moratorium),
                 style = MifosTypography.labelLargeEmphasized,
             )
 
@@ -489,7 +530,7 @@ fun TermsPage(
                 onValueChange = {
                     onAction(NewLoanAccountAction.OnMoratoriumGraceOnPrincipalPaymentChange(it.toIntOrNull() ?: 0))
                 },
-                label = "Grace On Principal Payment",
+                label = stringResource(Res.string.grace_on_principal_payment),
                 config = MifosTextFieldConfig(
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.Number,
@@ -504,7 +545,7 @@ fun TermsPage(
                 onValueChange = {
                     onAction(NewLoanAccountAction.OnMoratoriumGraceOnInterestPaymentChange(it.toIntOrNull() ?: 0))
                 },
-                label = "Grace On Interest Payment",
+                label = stringResource(Res.string.grace_on_interest_payment),
                 config = MifosTextFieldConfig(
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.Number,
@@ -519,7 +560,7 @@ fun TermsPage(
                 onValueChange = {
                     onAction(NewLoanAccountAction.OnMoratoriumOnArrearsAgeingChange(it.toIntOrNull() ?: 0))
                 },
-                label = "On Arrears Ageing",
+                label = stringResource(Res.string.on_arrears_ageing),
                 config = MifosTextFieldConfig(
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.Number,
@@ -534,7 +575,7 @@ fun TermsPage(
                 horizontalArrangement = Arrangement.SpaceBetween,
             ) {
                 Text(
-                    text = "Collateral Data",
+                    text = stringResource(Res.string.collateral_data),
                     style = MifosTypography.labelLargeEmphasized,
                 )
                 Row(
@@ -551,7 +592,7 @@ fun TermsPage(
                     )
 
                     Text(
-                        text = "Add New",
+                        text = stringResource(Res.string.add_new),
                         color = MaterialTheme.colorScheme.primary,
                         style = MifosTypography.labelLargeEmphasized,
                     )
@@ -564,8 +605,8 @@ fun TermsPage(
                 onBtnClick = {
                     onAction(NewLoanAccountAction.ShowCollaterals)
                 },
-                btnText = "View",
-                text = "${state.addedCollaterals.size} Collaterals",
+                btnText = stringResource(Res.string.view),
+                text = stringResource(Res.string.collateral_count, state.addedCollaterals.size),
                 btnEnabled = state.addedCollaterals.isNotEmpty(),
             )
         }
@@ -573,7 +614,7 @@ fun TermsPage(
             firstBtnText = stringResource(Res.string.back),
             secondBtnText = stringResource(Res.string.next),
             onFirstBtnClick = {
-                onAction(NewLoanAccountAction.NavigateBack)
+                onAction(NewLoanAccountAction.PreviousStep)
             },
             onSecondBtnClick = {
                 onAction(NewLoanAccountAction.NextStep)
