@@ -170,14 +170,16 @@ private fun MifosBasicDialog() {
 @Preview
 @Composable
 private fun MifosBottomSheet() {
-    MifosBottomSheet(
-        content = {
-            Box {
-                Modifier.height(100.dp)
-            }
-        },
-        onDismiss = {},
-    )
+    MifosTheme {
+        MifosBottomSheet(
+            content = {
+                Box {
+                    Modifier.height(100.dp)
+                }
+            },
+            onDismiss = {},
+        )
+    }
 }
 
 @Preview
@@ -319,11 +321,13 @@ private fun MifosMenuDropDownItem() {
 @Preview
 @Composable
 private fun PreviewOtpTextField() {
-    MifosOtpTextField(
-        onOtpTextCorrectlyEntered = {},
-        realOtp = "1234",
-        otpCount = 4,
-    )
+    MifosTheme {
+        MifosOtpTextField(
+            onOtpTextCorrectlyEntered = {},
+            realOtp = "1234",
+            otpCount = 4,
+        )
+    }
 }
 
 @Preview
@@ -390,49 +394,57 @@ private fun MifosDatePickerTextFieldPreview() {
 @Preview
 @Composable
 private fun MifosPasswordField_preview_withInput_hidePassword() {
-    MifosPasswordField(
-        label = "Label",
-        value = "Password",
-        onValueChange = {},
-        initialShowPassword = false,
-        hint = "Hint",
-    )
+    MifosTheme {
+        MifosPasswordField(
+            label = "Label",
+            value = "Password",
+            onValueChange = {},
+            initialShowPassword = false,
+            hint = "Hint",
+        )
+    }
 }
 
 @Preview
 @Composable
 private fun MifosPasswordField_preview_withInput_showPassword() {
-    MifosPasswordField(
-        label = "Label",
-        value = "Password",
-        onValueChange = {},
-        initialShowPassword = true,
-        hint = "Hint",
-    )
+    MifosTheme {
+        MifosPasswordField(
+            label = "Label",
+            value = "Password",
+            onValueChange = {},
+            initialShowPassword = true,
+            hint = "Hint",
+        )
+    }
 }
 
 @Preview
 @Composable
 private fun MifosPasswordField_preview_withoutInput_hidePassword() {
-    MifosPasswordField(
-        label = "Label",
-        value = "",
-        onValueChange = {},
-        initialShowPassword = false,
-        hint = "Hint",
-    )
+    MifosTheme {
+        MifosPasswordField(
+            label = "Label",
+            value = "",
+            onValueChange = {},
+            initialShowPassword = false,
+            hint = "Hint",
+        )
+    }
 }
 
 @Preview
 @Composable
 private fun MifosPasswordField_preview_withoutInput_showPassword() {
-    MifosPasswordField(
-        label = "Label",
-        value = "",
-        onValueChange = {},
-        initialShowPassword = true,
-        hint = "Hint",
-    )
+    MifosTheme {
+        MifosPasswordField(
+            label = "Label",
+            value = "",
+            onValueChange = {},
+            initialShowPassword = true,
+            hint = "Hint",
+        )
+    }
 }
 
 @Preview
@@ -445,22 +457,24 @@ private fun MifosCircularProgressPreview(
 ) {
     val resolvedModifier = modifier.semantics { contentDescription = contentDesc }
 
-    Column(
-        modifier = resolvedModifier,
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center,
-    ) {
-        CircularProgressIndicator(
-            modifier = Modifier
-                .testTag("loadingWheel")
-                .width(60.dp)
-                .height(60.dp)
-                .padding(8.dp),
-            strokeWidth = 4.dp,
-            color = MaterialTheme.colorScheme.secondary,
-        )
-        text?.let {
-            Text(text = text)
+    MifosTheme {
+        Column(
+            modifier = resolvedModifier,
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center,
+        ) {
+            CircularProgressIndicator(
+                modifier = Modifier
+                    .testTag("loadingWheel")
+                    .width(60.dp)
+                    .height(60.dp)
+                    .padding(8.dp),
+                strokeWidth = 4.dp,
+                color = MaterialTheme.colorScheme.secondary,
+            )
+            text?.let {
+                Text(text = text)
+            }
         }
     }
 }
@@ -501,20 +515,22 @@ private fun MifosPaginationSweetErrorPreview() {
 @Preview
 @Composable
 private fun MifosTabPreview() {
-    Column(
-        verticalArrangement = Arrangement.spacedBy(8.dp),
-        modifier = Modifier.padding(16.dp),
-    ) {
-        MifosTab(
-            text = "Selected Tab",
-            selected = true,
-            onClick = {},
-        )
-        MifosTab(
-            text = "Unselected Tab",
-            selected = false,
-            onClick = {},
-        )
+    MifosTheme {
+        Column(
+            verticalArrangement = Arrangement.spacedBy(8.dp),
+            modifier = Modifier.padding(16.dp),
+        ) {
+            MifosTab(
+                text = "Selected Tab",
+                selected = true,
+                onClick = {},
+            )
+            MifosTab(
+                text = "Unselected Tab",
+                selected = false,
+                onClick = {},
+            )
+        }
     }
 }
 
@@ -527,10 +543,12 @@ private fun MifosTabRowPreview() {
         TabContent("Profile") { Text("Profile Content") },
     )
 
-    MifosTabRow(
-        tabContents = tabContents,
-        pagerState = pagerState,
-    )
+    MifosTheme {
+        MifosTabRow(
+            tabContents = tabContents,
+            pagerState = pagerState,
+        )
+    }
 }
 
 @Preview
@@ -539,19 +557,21 @@ private fun MifosTextFieldDropdownPreview() {
     val options = listOf("Option 1", "Option 2", "Option 3")
     var selectedValue by remember { mutableStateOf("") }
 
-    MifosTextFieldDropdown(
-        value = selectedValue,
-        onValueChanged = { selectedValue = it },
-        onOptionSelected = { _, option -> selectedValue = option },
-        options = options,
-        label = "Select Option",
-    )
+    MifosTheme {
+        MifosTextFieldDropdown(
+            value = selectedValue,
+            onValueChanged = { selectedValue = it },
+            onOptionSelected = { _, option -> selectedValue = option },
+            options = options,
+            label = "Select Option",
+        )
+    }
 }
 
 @Preview
 @Composable
 private fun MifosTopBarPreview() {
-    MaterialTheme {
+    MifosTheme {
         MifosTopBar(
             topBarTitle = "Sample Title",
             backPress = {},

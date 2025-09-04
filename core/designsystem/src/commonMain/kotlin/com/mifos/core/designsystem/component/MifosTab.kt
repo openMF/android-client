@@ -23,6 +23,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import com.mifos.core.designsystem.theme.MifosTheme
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
@@ -52,19 +53,21 @@ fun MifosTab(
 @Preview
 @Composable
 private fun MifosTabPreview() {
-    Column(
-        verticalArrangement = Arrangement.spacedBy(8.dp),
-        modifier = Modifier.padding(16.dp),
-    ) {
-        MifosTab(
-            text = "Selected Tab",
-            selected = true,
-            onClick = {},
-        )
-        MifosTab(
-            text = "Unselected Tab",
-            selected = false,
-            onClick = {},
-        )
+    MifosTheme {
+        Column(
+            verticalArrangement = Arrangement.spacedBy(8.dp),
+            modifier = Modifier.padding(16.dp),
+        ) {
+            MifosTab(
+                text = "Selected Tab",
+                selected = true,
+                onClick = {},
+            )
+            MifosTab(
+                text = "Unselected Tab",
+                selected = false,
+                onClick = {},
+            )
+        }
     }
 }

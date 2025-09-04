@@ -32,6 +32,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.input.ImeAction
 import com.mifos.core.designsystem.theme.DesignToken
+import com.mifos.core.designsystem.theme.MifosTheme
 import com.mifos.core.designsystem.theme.MifosTypography
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
@@ -116,11 +117,13 @@ private fun MifosTextFieldDropdownPreview() {
     val options = listOf("Option 1", "Option 2", "Option 3")
     var selectedValue by remember { mutableStateOf("") }
 
-    MifosTextFieldDropdown(
-        value = selectedValue,
-        onValueChanged = { selectedValue = it },
-        onOptionSelected = { _, option -> selectedValue = option },
-        options = options,
-        label = "Select Option",
-    )
+    MifosTheme {
+        MifosTextFieldDropdown(
+            value = selectedValue,
+            onValueChanged = { selectedValue = it },
+            onOptionSelected = { _, option -> selectedValue = option },
+            options = options,
+            label = "Select Option",
+        )
+    }
 }

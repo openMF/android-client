@@ -130,7 +130,6 @@ fun MifosActionsIdentifierListingComponent(
                 MifosListingRowItemHeader(
                     text = type,
                     keyStyle = MifosTypography.titleSmallEmphasized,
-                    valueStyle = MifosTypography.titleSmall,
                 )
                 Spacer(Modifier.height(DesignToken.padding.large))
                 Column(

@@ -25,6 +25,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import com.mifos.core.designsystem.theme.MifosTheme
 import com.mifos.core.designsystem.utility.TabContent
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.ui.tooling.preview.Preview
@@ -80,8 +81,10 @@ private fun MifosTabRowPreview() {
         TabContent("Profile") { Text("Profile Content") },
     )
 
-    MifosTabRow(
-        tabContents = tabContents,
-        pagerState = pagerState,
-    )
+    MifosTheme {
+        MifosTabRow(
+            tabContents = tabContents,
+            pagerState = pagerState,
+        )
+    }
 }
