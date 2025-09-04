@@ -97,6 +97,90 @@ internal class NewLoanAccountViewModel(
             is NewLoanAccountAction.OnTermFrequencyIndexChange -> handleTermFrequencyIndexChange(action)
 
             is NewLoanAccountAction.PreviousStep -> moveToPreviousStep()
+
+            is NewLoanAccountAction.OnRepaidEveryChange -> {
+                mutableStateFlow.update {
+                    it.copy(repaidEvery = action.number)
+                }
+            }
+
+            is NewLoanAccountAction.OnSelectedDayIndexChange -> {
+                mutableStateFlow.update {
+                    it.copy(selectedDayIndex = action.index)
+                }
+            }
+
+            is NewLoanAccountAction.OnSelectedOnIndexChange -> {
+                mutableStateFlow.update {
+                    it.copy(selectedOnIndex = action.index)
+                }
+            }
+
+            is NewLoanAccountAction.OnNominalInterestRateChange -> {
+                mutableStateFlow.update {
+                    it.copy(nominalInterestRate = action.rate)
+                }
+            }
+
+            is NewLoanAccountAction.OnNominalFrequencyIndexChange -> {
+                mutableStateFlow.update {
+                    it.copy(nominalFrequencyIndex = action.index)
+                }
+            }
+
+            is NewLoanAccountAction.OnNominalMethodIndexChange -> {
+                mutableStateFlow.update {
+                    it.copy(nominalInterestMethodIndex = action.index)
+                }
+            }
+
+            is NewLoanAccountAction.OnNominalAmortizationIndexChange -> {
+                mutableStateFlow.update {
+                    it.copy(nominalAmortizationIndex = action.index)
+                }
+            }
+
+            is NewLoanAccountAction.OnEqualAmortizationCheckChange -> {
+                mutableStateFlow.update {
+                    it.copy(isCheckedEqualAmortization = action.boolean)
+                }
+            }
+
+            is NewLoanAccountAction.OnRepaymentStrategyIndexChange -> {
+                mutableStateFlow.update {
+                    it.copy(repaymentStrategyIndex = action.index)
+                }
+            }
+
+            is NewLoanAccountAction.OnBalloonRepaymentAmountChange -> {
+                mutableStateFlow.update {
+                    it.copy(balloonRepaymentAmount = action.amount)
+                }
+            }
+
+            is NewLoanAccountAction.OnInterestCalculationPeriodIndexChange -> {
+                mutableStateFlow.update {
+                    it.copy(interestCalculationPeriodIndex = action.index)
+                }
+            }
+
+            is NewLoanAccountAction.OnInterestPartialPeriodCheckChange -> {
+                mutableStateFlow.update {
+                    it.copy(isCheckedInterestPartialPeriod = action.boolean)
+                }
+            }
+
+            is NewLoanAccountAction.OnArrearsToleranceChange -> {
+                mutableStateFlow.update {
+                    it.copy(arrearsTolerance = action.number)
+                }
+            }
+
+            is NewLoanAccountAction.OnInterestFreePeriodChange -> {
+                mutableStateFlow.update {
+                    it.copy(interestFreePeriod = action.number)
+                }
+            }
         }
     }
 
@@ -239,9 +323,9 @@ internal class NewLoanAccountViewModel(
 
     private fun moveToPreviousStep() {
         val current = state.currentStep
-            mutableStateFlow.update {
-                it.copy(
-                    currentStep = current - 1,
+        mutableStateFlow.update {
+            it.copy(
+                currentStep = current - 1,
                 )
             }
     }
@@ -351,6 +435,20 @@ data class NewLoanAccountState(
     val interestChargedFromDate: String = DateHelper.getDateAsStringFromLong(Clock.System.now().toEpochMilliseconds()),
     val showFirstRepaymentDatePick: Boolean = false,
     val showInterestChargedFromDatePick: Boolean = false,
+    val repaidEvery:Int=1,
+    val selectedOnIndex:Int=-1,
+    val selectedDayIndex:Int=-1,
+    val nominalInterestRate:Int=0,
+    val nominalFrequencyIndex:Int=-1,
+    val nominalInterestMethodIndex:Int=-1,
+    val nominalAmortizationIndex:Int=-1,
+    val isCheckedEqualAmortization:Boolean=false,
+    val repaymentStrategyIndex:Int=-1,
+    val balloonRepaymentAmount:Int=0,
+    val interestCalculationPeriodIndex:Int=-1,
+    val isCheckedInterestPartialPeriod:Boolean=false,
+    val arrearsTolerance:Int=0,
+    val interestFreePeriod:Int=0
 
 ) {
     sealed interface DialogState {
@@ -401,4 +499,18 @@ sealed interface NewLoanAccountAction {
     data class OnInterestChargedFromChange(val date: String) : NewLoanAccountAction
     data class OnFirstRepaymentDatePick(val state: Boolean) : NewLoanAccountAction
     data class OnInterestChargedFromDatePick(val state: Boolean) : NewLoanAccountAction
+    data class OnRepaidEveryChange(val number: Int) : NewLoanAccountAction
+    data class OnSelectedOnIndexChange(val index: Int) : NewLoanAccountAction
+    data class OnSelectedDayIndexChange(val index: Int) : NewLoanAccountAction
+    data class OnNominalInterestRateChange(val rate: Int) : NewLoanAccountAction
+    data class OnNominalFrequencyIndexChange(val index: Int) : NewLoanAccountAction
+    data class OnNominalMethodIndexChange(val index: Int) : NewLoanAccountAction
+    data class OnNominalAmortizationIndexChange(val index: Int) : NewLoanAccountAction
+    data class OnEqualAmortizationCheckChange(val boolean: Boolean) : NewLoanAccountAction
+    data class OnRepaymentStrategyIndexChange(val index: Int) : NewLoanAccountAction
+    data class OnBalloonRepaymentAmountChange(val amount:Int) : NewLoanAccountAction
+    data class OnInterestCalculationPeriodIndexChange(val index:Int) : NewLoanAccountAction
+    data class OnInterestPartialPeriodCheckChange(val boolean: Boolean) : NewLoanAccountAction
+    data class OnArrearsToleranceChange(val number: Int) : NewLoanAccountAction
+    data class OnInterestFreePeriodChange(val number: Int) : NewLoanAccountAction
 }
