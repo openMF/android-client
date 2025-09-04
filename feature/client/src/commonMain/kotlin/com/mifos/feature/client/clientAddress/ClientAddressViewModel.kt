@@ -17,6 +17,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import com.mifos.core.data.repository.CreateNewClientRepository
+import com.mifos.core.data.util.NetworkMonitor
 import com.mifos.core.model.objects.clients.ClientAddressEntity
 import com.mifos.core.network.model.PostClientAddressRequest
 import com.mifos.core.ui.components.ResultStatus
@@ -29,14 +30,32 @@ import org.jetbrains.compose.resources.getString
 internal class ClientAddressViewModel(
     savedStateHandle: SavedStateHandle,
     private val repository: CreateNewClientRepository,
+    private val networkMonitor: NetworkMonitor,
 ) : BaseViewModel<ClientAddressState, ClientAddressEvent, ClientAddressAction>(
     initialState = ClientAddressState(),
 ) {
     val route = savedStateHandle.toRoute<ClientAddressRoute>()
 
     init {
-        loadClientAddress()
-        loadAddressTemplate()
+        observeNetwork()
+    }
+
+    private fun observeNetwork() {
+        viewModelScope.launch {
+            networkMonitor.isOnline.collect { isConnected ->
+                mutableStateFlow.update { it.copy(networkConnection = isConnected) }
+                if (isConnected) {
+                    loadClientAddress()
+                    loadAddressTemplate()
+                } else {
+                    mutableStateFlow.update {
+                        it.copy(
+                            addressListScreenState = ClientAddressState.AddressListScreenState.NetworkError,
+                        )
+                    }
+                }
+            }
+        }
     }
 
     fun loadClientAddress() {
@@ -137,20 +156,29 @@ internal class ClientAddressViewModel(
         }
     }
 
+    private fun handleRetry() {
+        mutableStateFlow.update {
+            it.copy(
+                dialogState = null,
+                addressTemplate = null,
+            )
+        }
+        observeNetwork()
+    }
+
     override fun handleAction(action: ClientAddressAction) {
         when (action) {
             is ClientAddressAction.NavigateBack -> sendEvent(ClientAddressEvent.NavigateBack)
             is ClientAddressAction.ShowAddressForm -> sendEvent(ClientAddressEvent.ShowAddressForm)
             is ClientAddressAction.OnNext -> sendEvent(ClientAddressEvent.NavigateNext)
-            is ClientAddressAction.OnRetry -> {
-                loadAddressTemplate()
-            }
+            is ClientAddressAction.OnRetry -> handleRetry()
         }
     }
 }
 
 data class ClientAddressState(
     val id: Int = -1,
+    val networkConnection: Boolean = false,
     val address: List<ClientAddressEntity> = emptyList(),
     val dialogState: DialogState? = null,
     val addressListScreenState: AddressListScreenState = AddressListScreenState.Loading,
@@ -164,6 +192,8 @@ data class ClientAddressState(
     sealed interface AddressListScreenState {
         data object Loading : AddressListScreenState
         data object ShowAddressList : AddressListScreenState
+
+        data object NetworkError : AddressListScreenState
     }
     sealed interface AddressFormScreenState {
         data object Loading : AddressFormScreenState

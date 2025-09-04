@@ -52,6 +52,7 @@ import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.designsystem.theme.MifosTypography
 import com.mifos.core.ui.components.MifosAddressCard
 import com.mifos.core.ui.components.MifosBreadcrumbNavBar
+import com.mifos.core.ui.components.MifosErrorComponent
 import com.mifos.core.ui.util.EventsEffect
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
@@ -165,6 +166,16 @@ private fun ClientAddressScaffold(
                         }
                     }
                 }
+            }
+
+            ClientAddressState.AddressListScreenState.NetworkError -> {
+                MifosErrorComponent(
+                    isNetworkConnected = state.networkConnection,
+                    isRetryEnabled = true,
+                    onRetry = {
+                        onAction(ClientAddressAction.OnRetry)
+                    },
+                )
             }
         }
     }
