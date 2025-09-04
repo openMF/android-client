@@ -35,11 +35,13 @@ import androidclient.feature.loan.generated.resources.loan_schedule_type
 import androidclient.feature.loan.generated.resources.loan_term
 import androidclient.feature.loan.generated.resources.moratorium
 import androidclient.feature.loan.generated.resources.next
+import androidclient.feature.loan.generated.resources.no
 import androidclient.feature.loan.generated.resources.nominal_interest_rate
 import androidclient.feature.loan.generated.resources.nominal_interest_rate_percent
 import androidclient.feature.loan.generated.resources.number_of_repayments
 import androidclient.feature.loan.generated.resources.on_arrears_ageing
 import androidclient.feature.loan.generated.resources.principal
+import androidclient.feature.loan.generated.resources.recalculate_interest
 import androidclient.feature.loan.generated.resources.repaid_every
 import androidclient.feature.loan.generated.resources.repaid_every_label
 import androidclient.feature.loan.generated.resources.repayment_strategy
@@ -50,6 +52,7 @@ import androidclient.feature.loan.generated.resources.term_frequency
 import androidclient.feature.loan.generated.resources.term_options
 import androidclient.feature.loan.generated.resources.terms
 import androidclient.feature.loan.generated.resources.view
+import androidclient.feature.loan.generated.resources.yes
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -570,6 +573,19 @@ fun TermsPage(
 
             Spacer(Modifier.height(DesignToken.padding.large))
 
+            MifosListingComponentOutline {
+                MifosListingRowItem(
+                    key = stringResource(Res.string.recalculate_interest),
+                    keyStyle = MifosTypography.labelMediumEmphasized,
+                    value = if (state.loanTemplate?.isInterestRecalculationEnabled ?: false) {
+                        stringResource(Res.string.yes)
+                    } else {
+                        stringResource(Res.string.no)
+                    },
+                )
+            }
+
+            Spacer(Modifier.height(DesignToken.padding.large))
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,

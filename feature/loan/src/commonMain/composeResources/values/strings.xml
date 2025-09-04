@@ -169,8 +169,6 @@
     <string name="quantity">Quantity</string>
     <string name="total_value">Total Value</string>
     <string name="total_collateral_value">Total Collateral Value</string>
-
-    <!-- Section Titles -->
     <string name="terms">Terms</string>
     <string name="term_options">Term Options?</string>
     <string name="repayments">Repayments</string>
@@ -180,8 +178,6 @@
     <string name="interest_calculations">Interest Calculations</string>
     <string name="moratorium">Moratorium?</string>
     <string name="collateral_data">Collateral Data</string>
-
-    <!-- Labels -->
     <string name="principal">Principal</string>
     <string name="loan_term">Loan Term</string>
     <string name="term_frequency">Term Frequency</string>
@@ -206,13 +202,12 @@
     <string name="grace_on_principal_payment">Grace On Principal Payment</string>
     <string name="grace_on_interest_payment">Grace On Interest Payment</string>
     <string name="on_arrears_ageing">On Arrears Ageing</string>
-
-    <!-- Buttons -->
     <string name="view">View</string>
     <string name="select">Select</string>
     <string name="cancel">Cancel</string>
-
-    <!-- Collateral -->
     <string name="collateral_count">%1$d Collaterals</string>
+    <string name="recalculate_interest">Recalculate Interest</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
 
 </resources>

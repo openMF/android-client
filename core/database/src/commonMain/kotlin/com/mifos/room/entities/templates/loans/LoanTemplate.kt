@@ -189,4 +189,5 @@ data class LoanTemplate(
     val accountLinkingOptions: List<AccountLinkingOptions> = emptyList(),
 
     val loanScheduleType: TermFrequencyTypeOptions? = null,
+
 ) : Parcelable

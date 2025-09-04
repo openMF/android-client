@@ -48,57 +48,105 @@ internal class NewLoanAccountViewModel(
     override fun handleAction(action: NewLoanAccountAction) {
         when (action) {
             is NewLoanAccountAction.Retry -> handleRetry()
+
             is NewLoanAccountAction.NavigateBack -> handleNavigateBack()
+
             is NewLoanAccountAction.NextStep -> moveToNextStep()
+
             is NewLoanAccountAction.PreviousStep -> moveToPreviousStep()
+
             is NewLoanAccountAction.Finish -> handleFinish()
+
             is NewLoanAccountAction.OnStepChange -> handleStepChange(action)
+
             is NewLoanAccountAction.OnProductNameChange -> handleProductNameChange(action)
+
             is NewLoanAccountAction.OnExternalIdChange -> handleExternalIdChange(action)
+
             is NewLoanAccountAction.OnFundChange -> handleFundChange(action)
+
             is NewLoanAccountAction.OnLoanOfficerChange -> handleLoanOfficerChange(action)
+
             is NewLoanAccountAction.OnLoanPurposeChange -> handleLoanPurposeChange(action)
+
             is NewLoanAccountAction.OnExpectedDisbursementDateChange -> handleExpectedDisbursementDateChange(action)
+
             is NewLoanAccountAction.OnExpectedDisbursementDatePick -> handleExpectedDisbursementDatePick(action)
+
             is NewLoanAccountAction.OnSubmissionDateChange -> handleSubmissionDateChange(action)
+
             is NewLoanAccountAction.OnSubmissionDatePick -> handleSubmissionDatePick(action)
+
             is NewLoanAccountAction.OnLinkSavingsChange -> handleLinkSavingsChange(action)
+
             is NewLoanAccountAction.OnStandingInstructionsChange -> handleStandingInstructionsChange(action)
+
             is NewLoanAccountAction.OnDetailsSubmit -> handleOnDetailsSubmit()
+
             is NewLoanAccountAction.Internal.OnReceivingLoanAccounts -> handleAllLoansResponse(action.loans)
+
             is NewLoanAccountAction.Internal.OnReceivingLoanTemplate -> handleLoanTemplateResponse(action.template)
+
             is NewLoanAccountAction.OnFirstRepaymentDateChange -> handleFirstRepaymentDateChange(action)
+
             is NewLoanAccountAction.OnFirstRepaymentDatePick -> handleFirstRepaymentDatePick(action)
+
             is NewLoanAccountAction.OnInterestChargedFromChange -> handleInterestChargedFromChange(action)
+
             is NewLoanAccountAction.OnInterestChargedFromDatePick -> handleInterestChargedFromDatePick(action)
+
             is NewLoanAccountAction.OnNoOfRepaymentsChange -> handleNoOfRepaymentsChange(action)
+
             is NewLoanAccountAction.OnPrincipalAmountChange -> handlePrincipalAmountChange(action)
+
             is NewLoanAccountAction.OnTermFrequencyIndexChange -> handleTermFrequencyIndexChange(action)
 
             is NewLoanAccountAction.OnRepaidEveryChange -> handleRepaidEveryChange(action)
+
             is NewLoanAccountAction.OnSelectedDayIndexChange -> handleSelectedDayIndexChange(action)
+
             is NewLoanAccountAction.OnSelectedOnIndexChange -> handleSelectedOnIndexChange(action)
+
             is NewLoanAccountAction.OnNominalInterestRateChange -> handleNominalInterestRateChange(action)
+
             is NewLoanAccountAction.OnNominalFrequencyIndexChange -> handleNominalFrequencyIndexChange(action)
+
             is NewLoanAccountAction.OnNominalMethodIndexChange -> handleNominalMethodIndexChange(action)
+
             is NewLoanAccountAction.OnNominalAmortizationIndexChange -> handleNominalAmortizationIndexChange(action)
+
             is NewLoanAccountAction.OnEqualAmortizationCheckChange -> handleEqualAmortizationCheckChange(action)
+
             is NewLoanAccountAction.OnRepaymentStrategyIndexChange -> handleRepaymentStrategyIndexChange(action)
+
             is NewLoanAccountAction.OnBalloonRepaymentAmountChange -> handleBalloonRepaymentAmountChange(action)
+
             is NewLoanAccountAction.OnInterestCalculationPeriodIndexChange -> handleInterestCalculationPeriodIndexChange(action)
+
             is NewLoanAccountAction.OnInterestPartialPeriodCheckChange -> handleInterestPartialPeriodCheckChange(action)
+
             is NewLoanAccountAction.OnArrearsToleranceChange -> handleArrearsToleranceChange(action)
+
             is NewLoanAccountAction.OnInterestFreePeriodChange -> handleInterestFreePeriodChange(action)
+
             is NewLoanAccountAction.OnMoratoriumGraceOnInterestPaymentChange -> handleMoratoriumGraceOnInterestPaymentChange(action)
+
             is NewLoanAccountAction.OnMoratoriumGraceOnPrincipalPaymentChange -> handleMoratoriumGraceOnPrincipalPaymentChange(action)
+
             is NewLoanAccountAction.OnMoratoriumOnArrearsAgeingChange -> handleMoratoriumOnArrearsAgeingChange(action)
 
             is NewLoanAccountAction.DismissAddCollateralDialog -> handleDismissAddCollateralDialog()
+
             is NewLoanAccountAction.ShowAddCollateralDialog -> handleShowAddCollateralDialog()
+
             is NewLoanAccountAction.AddCollateralToList -> handleAddCollateralToList()
+
             is NewLoanAccountAction.OnCollateralQuantityChanged -> handleCollateralQuantityChanged(action)
+
             is NewLoanAccountAction.SelectedCollateralIndexChange -> handleSelectedCollateralIndexChange(action)
+
             is NewLoanAccountAction.HideCollaterals -> handleHideCollaterals()
+
             is NewLoanAccountAction.ShowCollaterals -> handleShowCollaterals()
         }
     }
