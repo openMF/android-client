@@ -404,20 +404,20 @@ fun MifosActionsLoanListingComponent(
 @Composable
 fun MifosActionsShareListingComponent(
     accountNo: String,
-    savingsProduct: String,
-    savingsProductName: String,
-    lastActive: String,
-    balance: String,
-    isExpanded : Boolean,
+    shareProductName: String,
+    pendingForApprovalShares: Int?,
+    approvedShares: Int?,
+    isExpanded: Boolean,
     onClick: () -> Unit,
     menuList: List<Actions>,
     onActionClicked: (Actions) -> Unit,
 ) {
     MifosActionsListingComponentOutline {
-        Column {
+        Column(
+            modifier = Modifier.clickable { onClick() },
+        ) {
             Column(
-                modifier = Modifier.padding(DesignToken.padding.large)
-                    .c,
+                modifier = Modifier.padding(DesignToken.padding.large),
             ) {
                 MifosListingRowItemHeader(
                     text = accountNo,
@@ -426,21 +426,20 @@ fun MifosActionsShareListingComponent(
 
                 Spacer(Modifier.height(DesignToken.padding.large))
                 MifosListingRowItem(
-                    key = savingsProduct,
-                    value = savingsProductName,
+                    key = "Share Product",
+                    value = shareProductName,
                 )
                 Spacer(Modifier.height(DesignToken.padding.medium))
                 Column(
                     verticalArrangement = Arrangement.spacedBy(DesignToken.padding.extraExtraSmall),
                 ) {
                     MifosListingRowItem(
-                        key = stringResource(Res.string.core_ui_last_active),
-                        value = lastActive,
+                        key = "Pending For Approval Shares:",
+                        value = (pendingForApprovalShares ?: "Not Available").toString(),
                     )
                     MifosListingRowItem(
-                        key = stringResource(Res.string.core_ui_balance),
-                        value = balance,
-                        valueColor = MaterialTheme.colorScheme.primary,
+                        key = "Approved Shares",
+                        value = (approvedShares ?: "Not available").toString(),
                     )
                 }
             }
@@ -477,7 +476,7 @@ fun MifosActionsShareListingComponent(
 
                                 Text(
                                     modifier = Modifier.fillMaxWidth(),
-                                    text = menuItem.name,
+                                    text = menuItem::class.simpleName ?: "",
                                     color = MaterialTheme.colorScheme.onSurface,
                                     fontSize = MaterialTheme.typography.bodyLarge.fontSize,
                                 )
@@ -566,7 +565,7 @@ fun MifosActionsSavingsListingComponent(
                                 imageVector = menuItem.icon,
                                 contentDescription = "",
 
-                            )
+                                )
 
                             Text(
                                 modifier = Modifier.fillMaxWidth(),
@@ -680,11 +679,19 @@ fun MifosActionsClientFeeListingComponent(
 
 sealed class Actions(open val icon: ImageVector) {
     data class ViewAccount(override val icon: ImageVector = MifosIcons.PiggyBank) : Actions(icon)
-    data class ApproveAccount(override val icon: ImageVector = MifosIcons.ApproveAccount) : Actions(icon)
-    data class MakeRepayment(override val icon: ImageVector = MifosIcons.MakeRepayment) : Actions(icon)
-    data class ViewDocument(override val icon: ImageVector = MifosIcons.DocumentScanner) : Actions(icon)
+    data class ApproveAccount(override val icon: ImageVector = MifosIcons.ApproveAccount) :
+        Actions(icon)
+
+    data class MakeRepayment(override val icon: ImageVector = MifosIcons.MakeRepayment) :
+        Actions(icon)
+
+    data class ViewDocument(override val icon: ImageVector = MifosIcons.DocumentScanner) :
+        Actions(icon)
+
     data class UploadAgain(override val icon: ImageVector = MifosIcons.FileUpload) : Actions(icon)
-    data class DeleteDocument(override val icon: ImageVector = MifosIcons.DeleteDocument) : Actions(icon)
+    data class DeleteDocument(override val icon: ImageVector = MifosIcons.DeleteDocument) :
+        Actions(icon)
+
     data class Edit(override val icon: ImageVector = MifosIcons.Edit) : Actions(icon)
     data class Delete(override val icon: ImageVector = MifosIcons.Delete) : Actions(icon)
 }

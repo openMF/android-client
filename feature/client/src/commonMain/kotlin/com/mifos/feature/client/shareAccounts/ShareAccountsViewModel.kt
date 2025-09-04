@@ -3,23 +3,18 @@ package com.mifos.feature.client.shareAccounts
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
-import androidx.paging.PagingData
 import co.touchlab.kermit.Logger
 import com.mifos.core.data.repository.ClientDetailsRepository
-import com.mifos.core.data.repository.ShareAccountsRepository
 import com.mifos.core.model.objects.account.share.ShareAccounts
 import com.mifos.core.network.datamanager.DataManagerShare
 import com.mifos.core.ui.util.BaseViewModel
-import com.mifos.feature.client.savingsAccounts.SavingsAccountsRoute
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class ShareAccountsViewModel(
-    private val repository: ShareAccountsRepository,
     private val dataManager: DataManagerShare,
     savedStateHandle: SavedStateHandle,
-    private val repo: ClientDetailsRepository,
+    private val repository: ClientDetailsRepository,
 ) : BaseViewModel<ShareAccountsUiState, ShareAccountsEvent, ShareAccountsAction>(
     initialState = ShareAccountsUiState(),
 ) {
@@ -82,7 +77,7 @@ class ShareAccountsViewModel(
                 it.copy(dialogState = ShareAccountsUiState.DialogState.Loading)
             }
             try {
-                val result = repo.getShareAccounts(route.clientId)
+                val result = repository.getShareAccounts(route.clientId)
                 Logger.d { "   pronay     $result" }
                 mutableStateFlow.update {
                     it.copy(
