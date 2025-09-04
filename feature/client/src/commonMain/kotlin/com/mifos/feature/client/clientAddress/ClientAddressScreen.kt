@@ -60,7 +60,6 @@ import org.koin.compose.viewmodel.koinViewModel
 @Composable
 internal fun ClientAddressScreen(
     onNavigateBack: () -> Unit,
-    onNavigateNext: (Int) -> Unit,
     navigateToAddAddressForm: (Int) -> Unit,
     navController: NavController,
     viewModel: ClientAddressViewModel = koinViewModel(),
@@ -74,10 +73,15 @@ internal fun ClientAddressScreen(
     EventsEffect(viewModel.eventFlow) { event ->
         when (event) {
             ClientAddressEvent.NavigateBack -> onNavigateBack.invoke()
-            ClientAddressEvent.NavigateNext -> onNavigateNext(state.id)
             ClientAddressEvent.ShowAddressForm -> navigateToAddAddressForm(state.id)
+            else -> Unit
         }
     }
+
+    ClientAddressDialogs(
+        state = state,
+        onAction = { viewModel.trySendAction(it) },
+    )
 
     ClientAddressScaffold(
         state = state,
@@ -89,14 +93,13 @@ internal fun ClientAddressScreen(
 @Composable
 fun ClientAddressDialogs(
     state: ClientAddressState,
+    onAction: (ClientAddressAction) -> Unit,
 ) {
     when (state.dialogState) {
-        is ClientAddressState.DialogState.Loading -> {
-            MifosCircularProgress()
-        }
         is ClientAddressState.DialogState.Error -> {
             MifosSweetError(
                 message = state.dialogState.message,
+                onclick = { onAction(ClientAddressAction.OnRetry) },
             )
         }
 
@@ -114,50 +117,54 @@ private fun ClientAddressScaffold(
         title = "Client Address",
         onBackPressed = { onAction(ClientAddressAction.NavigateBack) },
     ) { paddingValues ->
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(
-                    start = DesignToken.padding.large,
-                    end = DesignToken.padding.large,
-                    top = paddingValues.calculateTopPadding(),
-                    bottom = paddingValues.calculateBottomPadding(),
-                ),
-        ) {
-            MifosBreadcrumbNavBar(navController)
-            if (state.dialogState == null) {
-                ClientAddressHeader(
-                    totalItem = state.address.size.toString(),
-                    onAction = onAction,
-                )
-                Spacer(modifier = Modifier.height(DesignToken.padding.large))
-                if (state.address.isEmpty()) {
-                    EmptyAddressCard()
-                } else {
-                    LazyColumn(
-                        modifier = Modifier
-                            .fillMaxSize(),
+        when(state.addressListScreenState) {
+            is ClientAddressState.AddressListScreenState.Loading -> MifosCircularProgress()
+            is ClientAddressState.AddressListScreenState.ShowAddressList -> {
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(
+                            top = paddingValues.calculateTopPadding(),
+                            bottom = paddingValues.calculateBottomPadding(),
+                        ),
+                ) {
+                    MifosBreadcrumbNavBar(navController)
+                    Column(
+                        modifier = Modifier.padding(
+                            start = DesignToken.padding.large,
+                            end = DesignToken.padding.large,
+                        )
                     ) {
-                        items(state.address, key = ({ state.address.indexOf(it) })) { address ->
-                            MifosAddressCard(
-                                title = address.addressType,
-                                addressList = mapOf(
-                                    stringResource(Res.string.feature_client_address_line_1) to address.addressLine1,
-                                    stringResource(Res.string.feature_client_address_line_2) to address.addressLine2,
-                                    stringResource(Res.string.feature_client_address_line_3) to address.addressLine3,
-                                    stringResource(Res.string.feature_client_city) to address.city,
-                                    stringResource(Res.string.feature_client_province) to address.stateName,
-                                    stringResource(Res.string.feature_client_country) to address.countryName,
-                                    stringResource(Res.string.feature_client_postal_code) to address.postalCode,
-                                ),
-                            )
+                        ClientAddressHeader(
+                            totalItem = state.address.size.toString(),
+                            onAction = onAction,
+                        )
+                        Spacer(modifier = Modifier.height(DesignToken.padding.large))
+                        if (state.address.isEmpty()) {
+                            EmptyAddressCard()
+                        } else {
+                            LazyColumn(
+                                modifier = Modifier
+                                    .fillMaxSize(),
+                            ) {
+                                items(state.address, key = ({ state.address.indexOf(it) })) { address ->
+                                    MifosAddressCard(
+                                        title = address.addressType,
+                                        addressList = mapOf(
+                                            stringResource(Res.string.feature_client_address_line_1) to address.addressLine1,
+                                            stringResource(Res.string.feature_client_address_line_2) to address.addressLine2,
+                                            stringResource(Res.string.feature_client_address_line_3) to address.addressLine3,
+                                            stringResource(Res.string.feature_client_city) to address.city,
+                                            stringResource(Res.string.feature_client_province) to address.stateName,
+                                            stringResource(Res.string.feature_client_country) to address.countryName,
+                                            stringResource(Res.string.feature_client_postal_code) to address.postalCode,
+                                        ),
+                                    )
+                                }
+                            }
                         }
                     }
                 }
-            } else {
-                ClientAddressDialogs(
-                    state = state,
-                )
             }
         }
     }
@@ -217,14 +224,14 @@ private fun EmptyAddressCard() {
         ),
     ) {
         Column(
-            modifier = Modifier.padding(16.dp),
+            modifier = Modifier.padding(DesignToken.padding.large),
         ) {
             Text(
                 text = stringResource(Res.string.feature_client_empty_address_card_title),
                 style = MifosTypography.titleSmallEmphasized,
             )
 
-            Spacer(modifier = Modifier.height(12.dp))
+            Spacer(modifier = Modifier.height(DesignToken.padding.medium))
 
             Text(
                 text = stringResource(Res.string.feature_client_empty_address_card_message),

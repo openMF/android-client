@@ -22,14 +22,12 @@ data class ClientAddressRoute(
 
 fun NavGraphBuilder.clientAddressNavigation(
     onNavigateBack: () -> Unit,
-    onNavigateNext: (Int) -> Unit,
     navController: NavController,
     navigateToAddAddressForm: (Int) -> Unit,
 ) {
     composable<ClientAddressRoute> {
         ClientAddressScreen(
             onNavigateBack = onNavigateBack,
-            onNavigateNext = onNavigateNext,
             navigateToAddAddressForm = navigateToAddAddressForm,
             navController = navController,
         )

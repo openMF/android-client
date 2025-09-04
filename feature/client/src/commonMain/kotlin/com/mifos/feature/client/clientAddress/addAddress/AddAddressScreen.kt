@@ -80,6 +80,7 @@ import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.network.model.PostClientAddressRequest
 import com.mifos.core.ui.components.MifosBreadcrumbNavBar
 import com.mifos.core.ui.components.MifosStatusDialog
+import com.mifos.core.ui.components.ResultStatus
 import com.mifos.core.ui.util.EventsEffect
 import com.mifos.feature.client.clientAddress.ClientAddressAction
 import com.mifos.feature.client.clientAddress.ClientAddressEvent
@@ -100,17 +101,18 @@ internal fun AddAddressScreen(
 ) {
     val state by viewModel.stateFlow.collectAsStateWithLifecycle()
 
-    LaunchedEffect(Unit) {
-        viewModel.loadAddressTemplate()
-    }
-
     EventsEffect(viewModel.eventFlow) { event ->
         when (event) {
             ClientAddressEvent.NavigateBack -> onNavigateBack.invoke()
             ClientAddressEvent.NavigateNext -> onNavigateNext(state.id)
-            else -> {}
+            else -> Unit
         }
     }
+
+    ClientAddressDialogs(
+        state = state,
+        onAction = { viewModel.trySendAction(it) },
+    )
 
     AddAddressScaffold(
         state = state,
@@ -132,23 +134,6 @@ fun ClientAddressDialogs(
     onAction: (ClientAddressAction) -> Unit,
 ) {
     when (state.dialogState) {
-        is ClientAddressState.DialogState.Loading -> {
-            MifosCircularProgress()
-        }
-
-        is ClientAddressState.DialogState.ShowStatusDialog -> {
-            MifosStatusDialog(
-                status = state.dialogState.status,
-                btnText = stringResource(Res.string.dialog_continue),
-                onConfirm = { onAction(ClientAddressAction.OnNext) },
-                successTitle = stringResource(Res.string.feature_client_success_title),
-                successMessage = stringResource(Res.string.feature_client_create_address_success_message),
-                failureTitle = stringResource(Res.string.feature_client_address_creation_failure_title),
-                failureMessage = state.dialogState.msg,
-                modifier = Modifier.fillMaxSize(),
-            )
-        }
-
         is ClientAddressState.DialogState.Error -> {
             MifosSweetError(
                 message = state.dialogState.message,
@@ -205,131 +190,150 @@ private fun AddAddressScaffold(
         title = "Add Address",
         onBackPressed = { onNavigateBack.invoke() },
         bottomBar = {
-            if (state.dialogState == null) {
-                AddAddressFormBottomBar(
-                    onCancelClick = { onNavigateBack.invoke() },
-                    onSubmitClick = {
-                        val addressErrors = validateFields(
-                            addressTypeId = selectedAddressTypeId,
-                            addressLine1 = addressLine1,
-                            city = city,
-                            stateProvinceId = selectedStateProvinceId,
-                            countryId = selectedCountryId,
-                            postalCode = postalCode,
-                            scope = scope,
-                        )
-
-                        addressTypeError = addressErrors.addressTypeError
-                        addressLine1Error = addressErrors.addressLine1Error
-                        cityError = addressErrors.cityError
-                        stateProvinceError = addressErrors.stateProvinceError
-                        countryError = addressErrors.countryError
-                        postalCodeError = addressErrors.postalCodeError
-
-                        if (isSubmitEnabled && addressErrors.isValid) {
-                            createAddress.invoke(
-                                selectedAddressTypeId,
-                                PostClientAddressRequest(
-                                    addressLine1 = addressLine1,
-                                    addressLine2 = addressLine2,
-                                    addressLine3 = addressLine3,
-                                    city = city,
-                                    stateProvinceId = selectedStateProvinceId,
-                                    countryId = selectedCountryId,
-                                    postalCode = postalCode,
-                                ),
+            when(state.addressFormScreenState) {
+                is ClientAddressState.AddressFormScreenState.ShowAddressForm -> {
+                    AddAddressFormBottomBar(
+                        onCancelClick = { onNavigateBack.invoke() },
+                        onSubmitClick = {
+                            val addressErrors = validateFields(
+                                addressTypeId = selectedAddressTypeId,
+                                addressLine1 = addressLine1,
+                                city = city,
+                                stateProvinceId = selectedStateProvinceId,
+                                countryId = selectedCountryId,
+                                postalCode = postalCode,
+                                scope = scope,
                             )
-                        }
-                    },
-                    isSubmitEnabled = isSubmitEnabled,
-                )
+
+                            addressTypeError = addressErrors.addressTypeError
+                            addressLine1Error = addressErrors.addressLine1Error
+                            cityError = addressErrors.cityError
+                            stateProvinceError = addressErrors.stateProvinceError
+                            countryError = addressErrors.countryError
+                            postalCodeError = addressErrors.postalCodeError
+
+                            if (isSubmitEnabled && addressErrors.isValid) {
+                                createAddress.invoke(
+                                    selectedAddressTypeId,
+                                    PostClientAddressRequest(
+                                        addressLine1 = addressLine1,
+                                        addressLine2 = addressLine2,
+                                        addressLine3 = addressLine3,
+                                        city = city,
+                                        stateProvinceId = selectedStateProvinceId,
+                                        countryId = selectedCountryId,
+                                        postalCode = postalCode,
+                                    ),
+                                )
+                            }
+                        },
+                        isSubmitEnabled = isSubmitEnabled,
+                    )
+                }
+                else -> Unit
             }
+
         },
     ) { paddingValues ->
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(
-                    top = paddingValues.calculateTopPadding(),
-                    bottom = paddingValues.calculateBottomPadding(),
-                    start = DesignToken.padding.largeIncreased,
-                    end = DesignToken.padding.largeIncreased,
-                )
-                .pointerInput(Unit) {
-                    detectTapGestures(
-                        onTap = {
-                            keyboardController?.hide()
-                        },
-                    )
-                },
-            verticalArrangement = Arrangement.Center,
-        ) {
-            MifosBreadcrumbNavBar(navController)
-            if (state.dialogState == null) {
-                LazyColumn {
-                    item {
-                        Text(
-                            text = stringResource(Res.string.feature_client_add_address),
-                            fontWeight = FontWeight.SemiBold,
-                            fontSize = MaterialTheme.typography.labelLarge.fontSize,
-                            letterSpacing = MaterialTheme.typography.labelLarge.letterSpacing,
-                            color = MaterialTheme.colorScheme.onSurface,
+        when(state.addressFormScreenState) {
+            is ClientAddressState.AddressFormScreenState.Loading -> MifosCircularProgress()
+            is ClientAddressState.AddressFormScreenState.ShowAddressForm -> {
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(
+                            top = paddingValues.calculateTopPadding(),
+                            bottom = paddingValues.calculateBottomPadding(),
                         )
-                        if (isAddressEnabled && state.addressTemplate != null) {
-                            val sortedAddressTypeOptions = state.addressTemplate.addressTypeIdOptions.sortedBy { it.name }
-                            val sortedCountryOptions = state.addressTemplate.countryIdOptions.sortedBy { it.name }
-                            val sortedStateOptions = state.addressTemplate.stateProvinceIdOptions.sortedBy { it.name }
-
-                            AddressInputTextFields(
-                                addressLine1 = addressLine1,
-                                onAddressLine1Change = { addressLine1 = it },
-                                addressLine2 = addressLine2,
-                                onAddressLine2Change = { addressLine2 = it },
-                                addressLine3 = addressLine3,
-                                onAddressLine3Change = { addressLine3 = it },
-                                city = city,
-                                onCityChange = { city = it },
-                                postalCode = postalCode,
-                                onPostalCodeChange = { postalCode = it },
-                                selectedAddressType = selectedAddressType,
-                                onAddressTypeChanged = { selectedAddressType = it },
-                                onAddressTypeSelected = { index, value ->
-                                    selectedAddressType = value
-                                    selectedAddressTypeId = sortedAddressTypeOptions[index].id
+                        .pointerInput(Unit) {
+                            detectTapGestures(
+                                onTap = {
+                                    keyboardController?.hide()
                                 },
-                                addressTypeOptions = sortedAddressTypeOptions.map { it.name },
-                                selectedStateName = selectedStateName,
-                                onStateNameChanged = { selectedStateName = it },
-                                onStateSelected = { index, value ->
-                                    selectedStateName = value
-                                    selectedStateProvinceId = sortedStateOptions[index].id
-                                },
-                                stateOptions = sortedStateOptions.map { it.name },
-
-                                selectedCountryName = selectedCountryName,
-                                onCountryNameChanged = { selectedCountryName = it },
-                                onCountrySelected = { index, value ->
-                                    selectedCountryName = value
-                                    selectedCountryId = sortedCountryOptions[index].id
-                                },
-                                countryOptions = sortedCountryOptions.map { it.name },
-                                addressTypeError = addressTypeError,
-                                addressLineError = addressLine1Error,
-                                cityError = cityError,
-                                stateProvinceError = stateProvinceError,
-                                countryError = countryError,
-                                postalCodeError = postalCodeError,
                             )
+                        },
+                    verticalArrangement = Arrangement.Center,
+                ) {
+                    MifosBreadcrumbNavBar(navController)
+                    LazyColumn(
+                        modifier = Modifier.padding(
+                            start = DesignToken.padding.large,
+                            end = DesignToken.padding.large,
+                        )
+                    ) {
+                        item {
+                            Text(
+                                text = stringResource(Res.string.feature_client_add_address),
+                                fontWeight = FontWeight.SemiBold,
+                                fontSize = MaterialTheme.typography.labelLarge.fontSize,
+                                letterSpacing = MaterialTheme.typography.labelLarge.letterSpacing,
+                                color = MaterialTheme.colorScheme.onSurface,
+                            )
+                            if (isAddressEnabled && state.addressTemplate != null) {
+                                val sortedAddressTypeOptions = state.addressTemplate.addressTypeIdOptions.sortedBy { it.name }
+                                val sortedCountryOptions = state.addressTemplate.countryIdOptions.sortedBy { it.name }
+                                val sortedStateOptions = state.addressTemplate.stateProvinceIdOptions.sortedBy { it.name }
+
+                                AddressInputTextFields(
+                                    addressLine1 = addressLine1,
+                                    onAddressLine1Change = { addressLine1 = it },
+                                    addressLine2 = addressLine2,
+                                    onAddressLine2Change = { addressLine2 = it },
+                                    addressLine3 = addressLine3,
+                                    onAddressLine3Change = { addressLine3 = it },
+                                    city = city,
+                                    onCityChange = { city = it },
+                                    postalCode = postalCode,
+                                    onPostalCodeChange = { postalCode = it },
+                                    selectedAddressType = selectedAddressType,
+                                    onAddressTypeChanged = { selectedAddressType = it },
+                                    onAddressTypeSelected = { index, value ->
+                                        selectedAddressType = value
+                                        selectedAddressTypeId = sortedAddressTypeOptions[index].id
+                                    },
+                                    addressTypeOptions = sortedAddressTypeOptions.map { it.name },
+                                    selectedStateName = selectedStateName,
+                                    onStateNameChanged = { selectedStateName = it },
+                                    onStateSelected = { index, value ->
+                                        selectedStateName = value
+                                        selectedStateProvinceId = sortedStateOptions[index].id
+                                    },
+                                    stateOptions = sortedStateOptions.map { it.name },
+
+                                    selectedCountryName = selectedCountryName,
+                                    onCountryNameChanged = { selectedCountryName = it },
+                                    onCountrySelected = { index, value ->
+                                        selectedCountryName = value
+                                        selectedCountryId = sortedCountryOptions[index].id
+                                    },
+                                    countryOptions = sortedCountryOptions.map { it.name },
+                                    addressTypeError = addressTypeError,
+                                    addressLineError = addressLine1Error,
+                                    cityError = cityError,
+                                    stateProvinceError = stateProvinceError,
+                                    countryError = countryError,
+                                    postalCodeError = postalCodeError,
+                                )
+                            }
                         }
                     }
                 }
-            } else {
-                ClientAddressDialogs(
-                    state = state,
-                    onAction = onAction,
+            }
+
+            is ClientAddressState.AddressFormScreenState.ShowStatusDialog -> {
+                MifosStatusDialog(
+                    status = state.addressFormScreenState.status,
+                    btnText = stringResource(Res.string.dialog_continue),
+                    onConfirm = { if (state.addressFormScreenState.status == ResultStatus.SUCCESS) onAction(ClientAddressAction.OnNext) else onAction(ClientAddressAction.OnRetry) },
+                    successTitle = stringResource(Res.string.feature_client_success_title),
+                    successMessage = stringResource(Res.string.feature_client_create_address_success_message),
+                    failureTitle = stringResource(Res.string.feature_client_address_creation_failure_title),
+                    failureMessage = state.addressFormScreenState.msg,
+                    modifier = Modifier.fillMaxSize(),
                 )
             }
         }
+
     }
 }
 

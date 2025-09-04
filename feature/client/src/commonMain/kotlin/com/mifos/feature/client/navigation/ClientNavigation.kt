@@ -150,7 +150,6 @@ fun NavGraphBuilder.clientNavGraph(
 
         clientAddressNavigation(
             onNavigateBack = navController::popBackStack,
-            onNavigateNext = navController::navigateToClientAddressRouteOnStatus,
             navigateToAddAddressForm = navController::navigateToClientAddAddressRoute,
             navController = navController,
         )

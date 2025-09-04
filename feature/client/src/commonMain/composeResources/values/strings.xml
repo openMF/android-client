@@ -381,7 +381,7 @@
     <string name="btn_submit">Submit</string>
     <string name="msg_cannot_assign_staff">Can't Assign a Staff to this client</string>
 
-    <!-- Success & Failure Messages -->
+    <!-- ShowAddressList & Failure Messages -->
     <string name="staff_unassign_success_title">Staff Unassigned Successfully!!</string>
     <string name="staff_unassign_success_message">Your request was completed successfully.</string>
     <string name="staff_unassign_failure_title">Staff Unassigning Failed!</string>
