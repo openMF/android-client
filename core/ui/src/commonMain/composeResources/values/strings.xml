@@ -96,6 +96,10 @@
     <string name="client_documents_component_header_subtitle_description">Description</string>
     <string name="client_documents_component_header_subtitle_file_name">File Name</string>
 
+    <!-- MifosFilePickerBottomSheet -->
+    <string name="file_picker_bottom_sheet_gallery">Gallery</string>
+    <string name="file_picker_bottom_sheet_files">Files</string>
+    <string name="file_picker_bottom_sheet_more">More</string>
 
     <string name="error_field_empty">This field cannot be empty</string>
     <string name="error_invalid_characters">This field contains invalid characters</string>

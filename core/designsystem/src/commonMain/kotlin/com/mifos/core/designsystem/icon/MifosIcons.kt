@@ -32,7 +32,6 @@ import androidx.compose.material.icons.filled.Error
 import androidx.compose.material.icons.filled.FilterList
 import androidx.compose.material.icons.filled.FlashOff
 import androidx.compose.material.icons.filled.FlashOn
-import androidx.compose.material.icons.filled.Image
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Link
 import androidx.compose.material.icons.filled.LocationOn
@@ -143,7 +142,7 @@ object MifosIcons {
     val Save = Icons.Rounded.Download
     val WifiOff = Icons.Default.WifiOff
     val Upload = Icons.Rounded.FileUpload
-    val Gallery = Icons.Filled.Image
+    val Gallery = GalleryIcon
     val ArrowDropDown = Icons.Default.ArrowDropDown
     val AssignmentTurnedIn = Icons.Default.AssignmentTurnedIn
     val Dashboard = Icons.Rounded.Dashboard
@@ -165,7 +164,6 @@ object MifosIcons {
     val ProfileBoarder = Icons.Rounded.AccountCircle
     val buildingIcon = Icons.Filled.Apartment
     val Lock: ImageVector = Icons.Filled.Lock
-
     val Paid: ImageVector = Icons.Default.Paid
     val Logout: ImageVector = Icons.AutoMirrored.Filled.Logout
     val Help: ImageVector = Icons.AutoMirrored.Filled.Help
@@ -215,9 +213,10 @@ object MifosIcons {
     val Calendar = com.mifos.core.designsystem.icon.Calender
     val Folder = com.mifos.core.designsystem.icon.Folder
     val GrowthChart = GrownChart
+
+    val PickDocument = ClipDocument
     val ShielOutlined = ShieldOutlined
     val Edit = com.mifos.core.designsystem.icon.Edit
-
     val DocumentScanner = Icons.Outlined.DocumentScanner
     val ApproveAccount = Icons.Outlined.CheckCircle
     val FileUpload = Icons.Outlined.FileUpload
