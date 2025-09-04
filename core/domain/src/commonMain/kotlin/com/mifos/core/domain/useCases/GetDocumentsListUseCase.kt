@@ -17,7 +17,6 @@ import kotlinx.coroutines.flow.Flow
 class GetDocumentsListUseCase(
     private val repository: DocumentListRepository,
 ) {
-
     operator fun invoke(
         entityType: String,
         entityId: Int,

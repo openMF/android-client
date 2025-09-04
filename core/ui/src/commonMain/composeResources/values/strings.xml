@@ -91,6 +91,11 @@
     <!-- MifosActionsIdentifierListingComponent -->
     <string name="listing_component_identifier_not_available">Not Available</string>
 
+    <!-- Mifos Client Documents-->
+    <string name="client_documents_component_header_title">Document Name</string>
+    <string name="client_documents_component_header_subtitle_description">Description</string>
+    <string name="client_documents_component_header_subtitle_file_name">File Name</string>
+
 
     <string name="error_field_empty">This field cannot be empty</string>
     <string name="error_invalid_characters">This field contains invalid characters</string>

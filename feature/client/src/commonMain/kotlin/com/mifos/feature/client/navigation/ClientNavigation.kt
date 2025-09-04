@@ -28,6 +28,8 @@ import com.mifos.feature.client.clientDetails.ClientDetailsScreen
 import com.mifos.feature.client.clientDetailsProfile.clientProfileDetailsDestination
 import com.mifos.feature.client.clientDetailsProfile.navigateToClientDetailsProfileRoute
 import com.mifos.feature.client.clientDetailsProfile.navigateToClientDetailsProfileRouteOnStatus
+import com.mifos.feature.client.clientDocuments.clientDocumentsDestination
+import com.mifos.feature.client.clientDocuments.navigateToClientDocumentsRoute
 import com.mifos.feature.client.clientEditDetails.clientEditDetailsDestination
 import com.mifos.feature.client.clientEditDetails.navigateToClientEditDetailsRoute
 import com.mifos.feature.client.clientEditProfile.clientEditProfileDestination
@@ -135,11 +137,19 @@ fun NavGraphBuilder.clientNavGraph(
         clientProfileDestination(
             onNavigateBack = navController::popBackStack,
             notes = notes,
-            documents = documents,
+            documents = navController::navigateToClientDocumentsRoute,
             identifiers = navController::navigateToClientIdentifiersScreen,
             navigateToClientDetailsScreen = navController::navigateToClientDetailsProfileRoute,
             viewAssociatedAccounts = navController::navigateToClientProfileGeneralRoute,
             navController = navController,
+        )
+
+        clientDocumentsDestination(
+            navController = navController,
+            navigateBack = navController::popBackStack,
+            navigateToAddDocuments = {},
+            onViewDocument = { clientId, documentId, entityType ->
+            },
         )
 
         clientProfileGeneralDestination(

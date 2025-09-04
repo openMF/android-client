@@ -167,7 +167,7 @@ fun MifosListingRowItem(
                     text = "$key:",
                     style = keyStyle,
                     maxLines = 1,
-                    overflow = TextOverflow.Clip,
+                    overflow = TextOverflow.Ellipsis,
                 )
             }
         },
@@ -175,7 +175,7 @@ fun MifosListingRowItem(
             Text(
                 text = value,
                 style = valueStyle.copy(color = valueColor),
-                overflow = TextOverflow.Clip,
+                overflow = TextOverflow.Ellipsis,
                 maxLines = 1,
             )
         },

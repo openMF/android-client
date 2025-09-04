@@ -10,6 +10,9 @@
 package com.mifos.core.ui.components
 
 import androidclient.core.ui.generated.resources.Res
+import androidclient.core.ui.generated.resources.client_documents_component_header_subtitle_description
+import androidclient.core.ui.generated.resources.client_documents_component_header_subtitle_file_name
+import androidclient.core.ui.generated.resources.client_documents_component_header_title
 import androidclient.core.ui.generated.resources.core_ui_account_no
 import androidclient.core.ui.generated.resources.core_ui_amount_paid
 import androidclient.core.ui.generated.resources.core_ui_balance
@@ -262,6 +265,100 @@ fun MifosActionsCollateralDataListingComponent(
                     bottomStart = DesignToken.padding.medium,
                     bottomEnd = DesignToken.padding.medium,
                 ),
+            ) {
+                Column(
+                    modifier = Modifier.padding(
+                        vertical = DesignToken.padding.small,
+                    ),
+                ) {
+                    menuList.map { menuItem ->
+                        Row(
+                            modifier = Modifier.fillMaxWidth()
+                                .height(DesignToken.sizes.avatarMedium)
+                                .clickable {
+                                    onActionClicked(menuItem)
+                                },
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.Start,
+                        ) {
+                            Icon(
+                                modifier = Modifier.padding(horizontal = DesignToken.padding.large),
+                                imageVector = menuItem.icon,
+                                contentDescription = "",
+                            )
+
+                            Text(
+                                modifier = Modifier.fillMaxWidth(),
+                                text = menuItem::class.simpleName ?: "",
+                                color = MaterialTheme.colorScheme.onSurface,
+                                fontSize = MaterialTheme.typography.bodyLarge.fontSize,
+                            )
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun MifosActionsClientDocumentListingComponent(
+    documentDescription: String,
+    documentName: String,
+    menuList: List<Actions>,
+    onActionClicked: (Actions) -> Unit,
+) {
+    var isExpanded by rememberSaveable {
+        mutableStateOf(false)
+    }
+    val density = LocalDensity.current
+    Column {
+        MifosActionsListingComponentOutline(
+            isExpanded = isExpanded,
+        ) {
+            Column(
+                modifier = Modifier
+                    .onClick { isExpanded = !isExpanded }
+                    .padding(DesignToken.padding.large),
+            ) {
+                MifosListingRowItemHeader(
+                    text = stringResource(Res.string.client_documents_component_header_title),
+                    keyStyle = MifosTypography.titleSmallEmphasized,
+                    valueStyle = MifosTypography.titleSmall,
+                )
+                Spacer(Modifier.height(DesignToken.padding.large))
+                Column(
+                    verticalArrangement = Arrangement.spacedBy(DesignToken.padding.medium),
+                ) {
+                    MifosListingRowItem(
+                        key = stringResource(Res.string.client_documents_component_header_subtitle_description),
+                        value = documentDescription,
+                    )
+                    MifosListingRowItem(
+                        key = stringResource(Res.string.client_documents_component_header_subtitle_file_name),
+                        value = documentName,
+                    )
+                }
+            }
+        }
+        AnimatedVisibility(
+            visible = isExpanded,
+            enter = slideInVertically {
+                with(density) { -40.dp.roundToPx() }
+            } + expandVertically(
+                expandFrom = Alignment.Top,
+            ) + fadeIn(
+                initialAlpha = 0.3f,
+            ),
+            exit = slideOutVertically() + shrinkVertically() + fadeOut(),
+        ) {
+            Surface(
+                modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(
+                    bottomStart = DesignToken.padding.medium,
+                    bottomEnd = DesignToken.padding.medium,
+                ),
+                color = MaterialTheme.colorScheme.surfaceContainer,
             ) {
                 Column(
                     modifier = Modifier.padding(
