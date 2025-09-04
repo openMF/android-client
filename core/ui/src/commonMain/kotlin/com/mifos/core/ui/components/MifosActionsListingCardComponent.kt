@@ -35,6 +35,7 @@ import androidclient.core.ui.generated.resources.core_ui_total_collateral_value
 import androidclient.core.ui.generated.resources.core_ui_total_value
 import androidclient.core.ui.generated.resources.core_ui_type
 import androidclient.core.ui.generated.resources.core_ui_waived
+import androidclient.core.ui.generated.resources.listing_component_identifier_not_available
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.spring
@@ -145,7 +146,8 @@ fun MifosActionsIdentifierListingComponent(
                     )
                     MifosListingRowItem(
                         key = stringResource(Res.string.core_ui_status),
-                        value = status?.name ?: "Not Found",
+                        value = status?.name
+                            ?: stringResource(Res.string.listing_component_identifier_not_available),
                         valueColor = if (status?.name != null) status.color else Color.Red,
                     )
                     MifosListingRowItem(
@@ -588,11 +590,11 @@ fun MifosActionsClientFeeListingComponent(
 }
 
 sealed class Actions(open val icon: ImageVector) {
-    data class ViewAccount(override val icon: ImageVector = MifosIcons.ViewAccount) : Actions(icon)
+    data class ViewAccount(override val icon: ImageVector = MifosIcons.PiggyBank) : Actions(icon)
     data class ApproveAccount(override val icon: ImageVector = MifosIcons.ApproveAccount) : Actions(icon)
     data class MakeRepayment(override val icon: ImageVector = MifosIcons.MakeRepayment) : Actions(icon)
-    data class ViewDocument(override val icon: ImageVector = MifosIcons.ViewDocument) : Actions(icon)
-    data class UploadAgain(override val icon: ImageVector = MifosIcons.UploadAgain) : Actions(icon)
+    data class ViewDocument(override val icon: ImageVector = MifosIcons.DocumentScanner) : Actions(icon)
+    data class UploadAgain(override val icon: ImageVector = MifosIcons.FileUpload) : Actions(icon)
     data class DeleteDocument(override val icon: ImageVector = MifosIcons.DeleteDocument) : Actions(icon)
     data class Edit(override val icon: ImageVector = MifosIcons.Edit) : Actions(icon)
     data class Delete(override val icon: ImageVector = MifosIcons.Delete) : Actions(icon)
