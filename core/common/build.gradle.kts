@@ -54,7 +54,10 @@ kotlin {
             api(libs.squareup.okio)
             api(libs.jb.kotlin.stdlib)
             api(libs.kotlinx.datetime)
-
+            implementation(libs.filekit.core)
+            implementation(libs.filekit.coil)
+            implementation(libs.filekit.compose)
+            implementation(libs.filekit.dialog.compose)
             implementation(libs.ktor.client.core)
         }
 

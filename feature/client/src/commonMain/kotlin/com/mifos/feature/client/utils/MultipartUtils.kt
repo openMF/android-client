@@ -36,6 +36,26 @@ internal suspend fun createImageRequestBody(
     )
 }
 
+internal suspend fun createDocumentRequestBody(
+    documentFile: PlatformFile
+): MultiPartFormDataContent {
+
+    val byteArray = documentFile.readBytes()
+    return MultiPartFormDataContent(
+        formData {
+            append(
+                "file",
+                byteArray,
+                Headers.build {
+                    append(HttpHeaders.ContentType, getMimeType(documentFile.extension))
+                    append(HttpHeaders.ContentDisposition, "filename=\"${documentFile.name}\"")
+                },
+            )
+        },
+    )
+
+}
+
 internal suspend fun createImageRequestBody(
     imageFile: PlatformFile,
     name: String,
@@ -61,5 +81,6 @@ internal suspend fun createImageRequestBody(
 private fun getMimeType(extension: String): String = when (extension.lowercase()) {
     "jpg", "jpeg" -> "image/jpeg"
     "png" -> "image/png"
+    "pdf" -> "application/pdf"
     else -> "application/octet-stream"
 }
