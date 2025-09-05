@@ -257,6 +257,7 @@ fun NavGraphBuilder.clientNavGraph(
             navController = navController,
         )
         shareAccountsDestination(
+            navController = navController,
             navigateToViewAccount = {},
         )
     }

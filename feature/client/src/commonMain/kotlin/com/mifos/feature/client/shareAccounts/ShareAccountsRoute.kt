@@ -20,10 +20,12 @@ data class ShareAccountsRoute(
 )
 
 fun NavGraphBuilder.shareAccountsDestination(
+    navController: NavController,
     navigateToViewAccount: (Int) -> Unit,
 ) {
     composable<ShareAccountsRoute> {
         ShareAccountsScreenRoute(
+            navController = navController,
             viewAccount = navigateToViewAccount,
         )
     }
