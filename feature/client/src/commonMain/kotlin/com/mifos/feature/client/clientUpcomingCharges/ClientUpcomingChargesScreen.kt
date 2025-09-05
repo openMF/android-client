@@ -97,7 +97,7 @@ fun ClientUpcomingChargesScreen(
                 false -> {
                     Column(
                         modifier = Modifier.fillMaxSize()
-                            .padding(DesignToken.padding.large),
+                            .padding(horizontal = DesignToken.padding.large),
                     ) {
                         UpcomingChargesHeader(
                             totalItem = itemCount.toString(),

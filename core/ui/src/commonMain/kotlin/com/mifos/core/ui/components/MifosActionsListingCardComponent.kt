@@ -25,7 +25,6 @@ import androidclient.core.ui.generated.resources.core_ui_identify_documents
 import androidclient.core.ui.generated.resources.core_ui_last_active
 import androidclient.core.ui.generated.resources.core_ui_loan_balance
 import androidclient.core.ui.generated.resources.core_ui_loan_product
-import androidclient.core.ui.generated.resources.core_ui_name
 import androidclient.core.ui.generated.resources.core_ui_note_createdBy
 import androidclient.core.ui.generated.resources.core_ui_note_date
 import androidclient.core.ui.generated.resources.core_ui_note_note
@@ -437,11 +436,17 @@ fun MifosActionsShareListingComponent(
                 ) {
                     MifosListingRowItem(
                         key = stringResource(Res.string.client_share_accounts_pending_for_approval_shares),
-                        value = (pendingForApprovalShares ?: stringResource(Res.string.listing_component_identifier_not_available)).toString(),
+                        value = (
+                            pendingForApprovalShares
+                                ?: stringResource(Res.string.listing_component_identifier_not_available)
+                            ).toString(),
                     )
                     MifosListingRowItem(
                         key = stringResource(Res.string.client_share_accounts_approved_shares),
-                        value = (approvedShares ?: stringResource(Res.string.listing_component_identifier_not_available)).toString(),
+                        value = (
+                            approvedShares
+                                ?: stringResource(Res.string.listing_component_identifier_not_available)
+                            ).toString(),
                     )
                 }
             }
@@ -601,12 +606,11 @@ fun MifosActionsClientFeeListingComponent(
                 modifier = Modifier.padding(DesignToken.padding.large)
                     .clickable { onClick() },
             ) {
-                MifosListingRowItem(
-                    key = stringResource(Res.string.core_ui_name),
-                    value = name,
+                MifosListingRowItemHeader(
+                    text = name,
                     keyStyle = MifosTypography.titleSmallEmphasized,
-                    valueStyle = MifosTypography.titleSmall,
                 )
+
                 Spacer(Modifier.height(DesignToken.padding.large))
                 MifosListingRowItem(
                     key = stringResource(Res.string.core_ui_due_as_of),
@@ -687,6 +691,7 @@ sealed class Actions(open val icon: ImageVector) {
     data class ViewAccount(override val icon: ImageVector = MifosIcons.PiggyBank) : Actions(icon)
     data class ApproveAccount(override val icon: ImageVector = MifosIcons.ApproveAccount) :
         Actions(icon)
+
     data class PayOutstandingAmount(override val icon: ImageVector = MifosIcons.MakeRepayment) :
         Actions(icon)
 
