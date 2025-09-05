@@ -167,8 +167,8 @@ private fun MifosBottomSheet() {
         MifosBottomSheet(
             content = {
                 Box(
-                    Modifier.height(100.dp)
-                ){
+                    Modifier.height(100.dp),
+                ) {
                 }
             },
             onDismiss = {},

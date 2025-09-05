@@ -42,7 +42,7 @@ class ClientAddDocumentViewModel(
     private val entityType = stateHandler.toRoute<ClientAddDocumentRoute>().entityType
 
     override fun handleAction(action: ClientAddDocumentAction) {
-        when(action){
+        when (action) {
             ClientAddDocumentAction.AddNewDocument -> TODO()
             ClientAddDocumentAction.NavigateBack -> {
                 sendEvent(ClientAddDocumentEvents.OnNavigateBack)
@@ -54,26 +54,22 @@ class ClientAddDocumentViewModel(
                 pickDocumentFromGallery()
             }
             ClientAddDocumentAction.SubmitFromDocumentPreviewScreen -> {
-
             }
             is ClientAddDocumentAction.UpdateDescription -> {
                 mutableStateFlow.update {
-                    it.copy(description = action.text,)
+                    it.copy(description = action.text)
                 }
             }
             is ClientAddDocumentAction.UpdateName -> {
                 mutableStateFlow.update {
-                    it.copy(description = action.text,)
+                    it.copy(description = action.text)
                 }
             }
             ClientAddDocumentAction.UploadDocument -> {
-
             }
             ClientAddDocumentAction.UploadNewDocument -> {
-
             }
             ClientAddDocumentAction.UseMoreOptions -> {
-
             }
         }
     }
@@ -89,28 +85,26 @@ class ClientAddDocumentViewModel(
                     entityId = clientId,
                     file = multiPartFormDataContent,
                 )
-
-            } catch (e: Exception){
+            } catch (e: Exception) {
                 DataState.Error(e)
             }
         }
         emit(dataState)
     }
 
-    private fun updateDocument()  = flow {
+    private fun updateDocument() = flow {
         emit(DataState.Loading)
 
         val dataState = state.document?.let {
             val multiPartFormDataContent = getMultiPartFormDataContent(it)
             try {
-                 documentDialogRepository.updateDocument(
+                documentDialogRepository.updateDocument(
                     entityType = entityType,
                     entityId = clientId,
                     documentId = documentId,
                     file = multiPartFormDataContent,
                 )
-
-            } catch (e: Exception){
+            } catch (e: Exception) {
                 DataState.Error(e)
             }
         }
@@ -120,19 +114,19 @@ class ClientAddDocumentViewModel(
     private suspend fun getMultiPartFormDataContent(file: PlatformFile) = createDocumentRequestBody(
         file,
         file.nameWithoutExtension,
-        file.extension
+        file.extension,
     )
 
     private fun pickDocumentFromGallery() {
         viewModelScope.launch {
-            FileKitUtil.pickImageFile("").collect {imageData->
-                when(imageData){
+            FileKitUtil.pickImageFile("").collect { imageData ->
+                when (imageData) {
                     is DataState.Error<*> -> {
                         mutableStateFlow.update {
                             it.copy(
                                 dialogState = ClientAddDocumentState.DialogState.Error(
-                                    imageData.message
-                                )
+                                    imageData.message,
+                                ),
                             )
                         }
                     }
@@ -146,27 +140,27 @@ class ClientAddDocumentViewModel(
                             mutableStateFlow.update {
                                 it.copy(
                                     dialogState = null,
-                                    document = imageData.data
+                                    document = imageData.data,
                                 )
                             }
                             sendEvent(ClientAddDocumentEvents.ShowDocumentPreviewScreen)
-                        } ?: mutableStateFlow.update { it.copy(dialogState = null,) }
+                        } ?: mutableStateFlow.update { it.copy(dialogState = null) }
                     }
                 }
             }
         }
     }
 
-    private fun pickDocumentFromFiles(){
+    private fun pickDocumentFromFiles() {
         viewModelScope.launch {
-            FileKitUtil.pickPdfFile("").collect {documentFile->
-                when(documentFile){
+            FileKitUtil.pickPdfFile("").collect { documentFile ->
+                when (documentFile) {
                     is DataState.Error<*> -> {
                         mutableStateFlow.update {
                             it.copy(
                                 dialogState = ClientAddDocumentState.DialogState.Error(
-                                    documentFile.message
-                                )
+                                    documentFile.message,
+                                ),
                             )
                         }
                     }
@@ -180,11 +174,11 @@ class ClientAddDocumentViewModel(
                             mutableStateFlow.update {
                                 it.copy(
                                     dialogState = null,
-                                    document = documentFile.data
+                                    document = documentFile.data,
                                 )
                             }
                             sendEvent(ClientAddDocumentEvents.ShowDocumentPreviewScreen)
-                        } ?: mutableStateFlow.update { it.copy(dialogState = null,) }
+                        } ?: mutableStateFlow.update { it.copy(dialogState = null) }
                     }
                 }
             }
@@ -198,7 +192,6 @@ class ClientAddDocumentViewModel(
             }
         }
     }
-
 }
 
 data class ClientAddDocumentState(
@@ -231,11 +224,11 @@ sealed interface ClientAddDocumentAction {
 
 sealed interface ClientAddDocumentEvents {
     data object OnNavigateBack : ClientAddDocumentEvents
-    data object SubmitDocument: ClientAddDocumentEvents
+    data object SubmitDocument : ClientAddDocumentEvents
     data object ShowDocumentPreviewScreen : ClientAddDocumentEvents
 }
 
 enum class DocumentPreviewScreenAction {
     SUBMIT,
-    UPDATE
+    UPDATE,
 }

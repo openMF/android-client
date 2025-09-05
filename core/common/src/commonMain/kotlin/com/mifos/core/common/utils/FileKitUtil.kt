@@ -39,7 +39,7 @@ object FileKitUtil {
             type = FileKitType.File(".pdf"),
             mode = FileKitMode.Single,
             title = dialogTitle,
-            dialogSettings = FileKitDialogSettings.createDefault()
+            dialogSettings = FileKitDialogSettings.createDefault(),
         )
         emit(file)
     }.asDataStateFlow()
