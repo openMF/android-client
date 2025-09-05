@@ -104,7 +104,7 @@ fun ClientUpcomingChargesScreen(
                             onAction = onAction,
                         )
 
-                        Spacer(modifier = Modifier.height(DesignToken.padding.largeIncreasedExtra))
+                        Spacer(modifier = Modifier.height(DesignToken.padding.large))
 
                         if (state.chargesFlow == null) {
                             MifosEmptyCard()
@@ -135,7 +135,7 @@ private fun ClientUpcomingChargesDialog(
         is ClientUpcomingChargesState.DialogState.Error -> {
             MifosSweetError(
                 message = state.dialogState.message,
-                onclick = { ClientUpcomingChargesAction.OnRefresh },
+                onclick = { onAction.invoke(ClientUpcomingChargesAction.OnRefresh) },
             )
         }
 

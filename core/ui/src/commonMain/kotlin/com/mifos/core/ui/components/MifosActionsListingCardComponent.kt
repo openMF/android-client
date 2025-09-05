@@ -508,8 +508,7 @@ fun MifosActionsSavingsListingComponent(
             isExpanded = isExpanded,
         ) {
             Column(
-                modifier = Modifier.padding(DesignToken.padding.large)
-                    .clickable { isExpanded = !isExpanded },
+                modifier = Modifier.padding(DesignToken.padding.large),
             ) {
                 MifosListingRowItemHeader(
                     text = accountNo,
@@ -596,7 +595,7 @@ fun MifosActionsClientFeeListingComponent(
     menuList: List<Actions>,
     onActionClicked: (Actions) -> Unit,
 ) {
-    MifosActionsListingComponentOutline {
+    MifosActionsListingComponentOutline(isExpanded = isActive) {
         Column {
             Column(
                 modifier = Modifier.padding(DesignToken.padding.large)

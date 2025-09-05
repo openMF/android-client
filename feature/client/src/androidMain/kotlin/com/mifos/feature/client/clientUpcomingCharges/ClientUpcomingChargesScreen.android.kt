@@ -71,7 +71,7 @@ actual fun ChargesListContent(
         ) { index ->
             chargesPagingList[index]?.let { charge ->
                 MifosActionsClientFeeListingComponent(
-                    name = charge.name ?: "N/A",
+                    name = charge.name ?: stringResource(Res.string.string_not_available),
                     dueAsOf = if (charge.dueDate != null) {
                         DateHelper.getDateAsString(charge.dueDate!!)
                     } else {
@@ -129,7 +129,7 @@ actual fun ChargesListContent(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(6.dp),
-                            text = org.jetbrains.compose.resources.stringResource(Res.string.client_upcoming_charges_no_more_charges_available),
+                            text = stringResource(Res.string.client_upcoming_charges_no_more_charges_available),
                             style = MaterialTheme.typography.bodyMedium,
                             textAlign = TextAlign.Center,
                         )
