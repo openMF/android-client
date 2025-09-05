@@ -12,7 +12,6 @@ package com.mifos.feature.client.shareAccounts
 import androidclient.feature.client.generated.resources.Res
 import androidclient.feature.client.generated.resources.client_product_shares_account
 import androidclient.feature.client.generated.resources.client_savings_item
-import androidclient.feature.client.generated.resources.feature_client_error
 import androidclient.feature.client.generated.resources.filter
 import androidclient.feature.client.generated.resources.search
 import androidclient.feature.client.generated.resources.string_not_available
@@ -34,12 +33,12 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosScaffold
+import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.designsystem.theme.MifosTypography
 import com.mifos.core.designsystem.utils.onClick
 import com.mifos.core.ui.components.Actions
 import com.mifos.core.ui.components.MifosActionsShareListingComponent
-import com.mifos.core.ui.components.MifosAlertDialog
 import com.mifos.core.ui.components.MifosBreadcrumbNavBar
 import com.mifos.core.ui.components.MifosEmptyCard
 import com.mifos.core.ui.util.EventsEffect
@@ -90,50 +89,65 @@ internal fun ShareAccountsScreen(
             MifosBreadcrumbNavBar(
                 navController = navController,
             )
-            Column(
-                modifier = Modifier.fillMaxSize().padding(horizontal = DesignToken.padding.large),
-            ) {
-                ShareAccountHeader(
-                    totalItem = state.accounts.size.toString(),
-                    onAction = onAction,
-                )
 
-                Spacer(modifier = Modifier.height(DesignToken.padding.large))
+            when (state.isLoading) {
+                true -> MifosCircularProgress()
 
-                if (state.accounts.isNotEmpty()) {
-                    val emptyText = stringResource(Res.string.string_not_available)
-                    LazyColumn {
-                        item {
-                            state.accounts.forEachIndexed { index, account ->
-                                MifosActionsShareListingComponent(
-                                    accountNo = account.accountNo ?: emptyText,
-                                    shareProductName = account.shortProductName ?: emptyText,
-                                    pendingForApprovalShares = account.totalPendingForApprovalShares,
-                                    approvedShares = account.totalApprovedShares,
-                                    isExpanded = state.currentlyActiveIndex == index && state.isCardActive,
-                                    menuList = (listOf(Actions.ViewAccount())),
-                                    onActionClicked = { actions ->
-                                        when (actions) {
-                                            is Actions.ViewAccount -> {
+                false -> {
+                    Column(
+                        modifier = Modifier.fillMaxSize()
+                            .padding(horizontal = DesignToken.padding.large),
+                    ) {
+                        ShareAccountHeader(
+                            totalItem = state.accounts.size.toString(),
+                            onAction = onAction,
+                        )
+
+                        Spacer(modifier = Modifier.height(DesignToken.padding.large))
+
+                        if (state.accounts.isNotEmpty()) {
+                            val emptyText = stringResource(Res.string.string_not_available)
+                            LazyColumn {
+                                item {
+                                    state.accounts.forEachIndexed { index, account ->
+                                        MifosActionsShareListingComponent(
+                                            accountNo = account.accountNo ?: emptyText,
+                                            shareProductName = account.shortProductName
+                                                ?: emptyText,
+                                            pendingForApprovalShares = account.totalPendingForApprovalShares,
+                                            approvedShares = account.totalApprovedShares,
+                                            isExpanded = state.currentlyActiveIndex == index && state.isCardActive,
+                                            menuList = (listOf(Actions.ViewAccount())),
+                                            onActionClicked = { actions ->
+                                                when (actions) {
+                                                    is Actions.ViewAccount -> {
+                                                        onAction(
+                                                            ShareAccountsAction.ViewAccount(
+                                                                account.id ?: -1,
+                                                            ),
+                                                        )
+                                                    }
+
+                                                    else -> {}
+                                                }
+                                            },
+                                            onClick = {
                                                 onAction(
-                                                    ShareAccountsAction.ViewAccount(
-                                                        account.id ?: -1,
+                                                    ShareAccountsAction.CardClicked(
+                                                        index,
                                                     ),
                                                 )
-                                            }
+                                            },
+                                        )
 
-                                            else -> {}
-                                        }
-                                    },
-                                    onClick = { onAction(ShareAccountsAction.CardClicked(index)) },
-                                )
-
-                                Spacer(Modifier.height(DesignToken.padding.small))
+                                        Spacer(Modifier.height(DesignToken.padding.small))
+                                    }
+                                }
                             }
+                        } else {
+                            MifosEmptyCard()
                         }
                     }
-                } else {
-                    MifosEmptyCard()
                 }
             }
         }
@@ -184,17 +198,12 @@ private fun ShareAccountsDialog(
 ) {
     when (state.dialogState) {
         is ShareAccountsUiState.DialogState.Error -> {
-            MifosAlertDialog(
-                dialogText = state.dialogState.message,
-                dialogTitle = stringResource(Res.string.feature_client_error),
-                onConfirmation = {},
-                onDismissRequest = {
-                    onAction.invoke(ShareAccountsAction.CloseDialog)
-                },
+            MifosSweetError(
+                message = state.dialogState.message,
+                onclick = { onAction.invoke(ShareAccountsAction.CloseDialog) },
             )
         }
 
-        ShareAccountsUiState.DialogState.Loading -> MifosCircularProgress()
         null -> {}
     }
 }

@@ -28,46 +28,12 @@ class ShareAccountsViewModel(
 
     override fun handleAction(action: ShareAccountsAction) {
         when (action) {
-            is ShareAccountsAction.CardClicked -> {
-                mutableStateFlow.update {
-                    it.copy(
-                        isCardActive = !state.isCardActive,
-                        currentlyActiveIndex = action.activeIndex,
-                    )
-                }
-            }
-
-            ShareAccountsAction.ToggleFiler -> {
-                mutableStateFlow.update {
-                    it.copy(
-                        isFilterActive = !state.isFilterActive,
-                    )
-                }
-            }
-
-            ShareAccountsAction.ToggleSearchBar -> {
-                mutableStateFlow.update {
-                    it.copy(
-                        isSearchBarActive = !state.isSearchBarActive,
-                    )
-                }
-            }
-
-            is ShareAccountsAction.ViewAccount -> {
-                sendEvent(ShareAccountsEvent.ViewAccount(action.accountId))
-            }
-
-            ShareAccountsAction.CloseDialog -> {
-                mutableStateFlow.update {
-                    it.copy(
-                        dialogState = null,
-                    )
-                }
-            }
-
-            ShareAccountsAction.Refresh -> {
-                fetchAllShareAccounts()
-            }
+            is ShareAccountsAction.CardClicked -> handleCardClick(action.activeIndex)
+            ShareAccountsAction.ToggleFiler -> toggleFilter()
+            ShareAccountsAction.ToggleSearchBar -> toggleSearchBar()
+            is ShareAccountsAction.ViewAccount -> sendEvent(ShareAccountsEvent.ViewAccount(action.accountId))
+            ShareAccountsAction.CloseDialog -> closeDialog()
+            ShareAccountsAction.Refresh -> fetchAllShareAccounts()
         }
     }
 
@@ -78,12 +44,15 @@ class ShareAccountsViewModel(
     fun fetchAllShareAccounts() {
         viewModelScope.launch {
             mutableStateFlow.update {
-                it.copy(dialogState = ShareAccountsUiState.DialogState.Loading)
+                it.copy(
+                    isLoading = true,
+                )
             }
             try {
                 val result = repository.getShareAccounts(route.clientId)
                 mutableStateFlow.update {
                     it.copy(
+                        isLoading = false,
                         accounts = result,
                         dialogState = null,
                     )
@@ -91,6 +60,7 @@ class ShareAccountsViewModel(
             } catch (e: Exception) {
                 mutableStateFlow.update {
                     it.copy(
+                        isLoading = false,
                         dialogState = ShareAccountsUiState.DialogState.Error(
                             e.message ?: "Unknown error",
                         ),
@@ -99,9 +69,43 @@ class ShareAccountsViewModel(
             }
         }
     }
+
+    private fun closeDialog() {
+        mutableStateFlow.update {
+            it.copy(
+                dialogState = null,
+            )
+        }
+    }
+
+    private fun toggleFilter() {
+        mutableStateFlow.update {
+            it.copy(
+                isFilterActive = !state.isFilterActive,
+            )
+        }
+    }
+
+    private fun toggleSearchBar() {
+        mutableStateFlow.update {
+            it.copy(
+                isSearchBarActive = !state.isSearchBarActive,
+            )
+        }
+    }
+
+    private fun handleCardClick(index: Int) {
+        mutableStateFlow.update {
+            it.copy(
+                isCardActive = !state.isCardActive,
+                currentlyActiveIndex = index,
+            )
+        }
+    }
 }
 
 data class ShareAccountsUiState(
+    val isLoading: Boolean = true,
     val accounts: List<ShareAccounts> = emptyList(),
     val isSearchBarActive: Boolean = false,
     val isFilterActive: Boolean = false,
@@ -111,7 +115,6 @@ data class ShareAccountsUiState(
 ) {
     sealed interface DialogState {
         data class Error(val message: String) : DialogState
-        data object Loading : DialogState
     }
 }
 
