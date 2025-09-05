@@ -31,7 +31,6 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
 fun MifosFilePickerBottomSheet(
-    showBottomSheet: Boolean,
     onDismiss: () -> Unit,
     onGalleryClick: () -> Unit,
     onFilesClick: () -> Unit,
@@ -39,7 +38,6 @@ fun MifosFilePickerBottomSheet(
     onMoreClick: () -> Unit,
 ) {
     MifosBottomSheet(
-        showBottomSheet,
         onDismiss = onDismiss,
         modifier = modifier.background(
             MaterialTheme.colorScheme.onPrimary,
@@ -78,7 +76,6 @@ fun MifosFilePickerBottomSheet(
 fun PreviewMifosFilePickerBottomSheet() {
     MaterialTheme {
         MifosFilePickerBottomSheet(
-            true,
             {},
             {},
             {},

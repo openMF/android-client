@@ -326,7 +326,6 @@ fun MifosActionsClientDocumentListingComponent(
                 MifosListingRowItemHeader(
                     text = stringResource(Res.string.client_documents_component_header_title),
                     keyStyle = MifosTypography.titleSmallEmphasized,
-                    valueStyle = MifosTypography.titleSmall,
                 )
                 Spacer(Modifier.height(DesignToken.padding.large))
                 Column(

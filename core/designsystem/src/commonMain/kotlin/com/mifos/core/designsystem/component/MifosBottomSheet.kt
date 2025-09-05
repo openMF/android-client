@@ -25,6 +25,11 @@ import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -33,21 +38,29 @@ import androidx.compose.ui.unit.dp
 import com.arkivanov.essenty.backhandler.BackCallback
 import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.designsystem.theme.MifosTypography
+import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MifosBottomSheet(
-    showBottomSheet: Boolean,
     onDismiss: () -> Unit,
     modifier: Modifier = Modifier,
     content: @Composable () -> Unit,
 ) {
+    val coroutineScope = rememberCoroutineScope()
     val modalSheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
+    var showBottomSheet by remember { mutableStateOf(true) }
 
     fun dismissSheet() {
+        coroutineScope.launch { modalSheetState.hide() }.invokeOnCompletion {
+            if (!modalSheetState.isVisible) {
+                showBottomSheet = false
+            }
+        }
         onDismiss.invoke()
     }
 
@@ -58,6 +71,7 @@ fun MifosBottomSheet(
     AnimatedVisibility(visible = showBottomSheet) {
         ModalBottomSheet(
             onDismissRequest = {
+                showBottomSheet = false
                 dismissSheet()
             },
             sheetState = modalSheetState,
@@ -136,7 +150,6 @@ fun MifosBottomSheetOptionItem(
 @Composable
 private fun MifosBottomSheetPreview() {
     MifosBottomSheet(
-        true,
         content = {
             Box {
                 Modifier.height(100.dp)
