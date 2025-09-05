@@ -32,7 +32,6 @@ class ShareAccountsViewModel(
             ShareAccountsAction.ToggleFiler -> toggleFilter()
             ShareAccountsAction.ToggleSearchBar -> toggleSearchBar()
             is ShareAccountsAction.ViewAccount -> sendEvent(ShareAccountsEvent.ViewAccount(action.accountId))
-            ShareAccountsAction.CloseDialog -> closeDialog()
             ShareAccountsAction.Refresh -> fetchAllShareAccounts()
         }
     }
@@ -67,14 +66,6 @@ class ShareAccountsViewModel(
                     )
                 }
             }
-        }
-    }
-
-    private fun closeDialog() {
-        mutableStateFlow.update {
-            it.copy(
-                dialogState = null,
-            )
         }
     }
 
@@ -127,6 +118,5 @@ sealed interface ShareAccountsAction {
     data object ToggleSearchBar : ShareAccountsAction
     data class CardClicked(val activeIndex: Int) : ShareAccountsAction
     data class ViewAccount(val accountId: Int) : ShareAccountsAction
-    data object CloseDialog : ShareAccountsAction
     data object Refresh : ShareAccountsAction
 }

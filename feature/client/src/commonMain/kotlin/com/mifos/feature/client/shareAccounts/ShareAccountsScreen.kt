@@ -200,7 +200,7 @@ private fun ShareAccountsDialog(
         is ShareAccountsUiState.DialogState.Error -> {
             MifosSweetError(
                 message = state.dialogState.message,
-                onclick = { onAction.invoke(ShareAccountsAction.CloseDialog) },
+                onclick = { onAction.invoke(ShareAccountsAction.Refresh) },
             )
         }
 
