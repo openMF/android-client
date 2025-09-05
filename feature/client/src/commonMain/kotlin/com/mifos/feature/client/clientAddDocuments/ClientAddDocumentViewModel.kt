@@ -12,10 +12,16 @@ package com.mifos.feature.client.clientAddDocuments
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
+import com.mifos.core.common.utils.DataState
+import com.mifos.core.common.utils.FileKitUtil
 import com.mifos.core.data.repository.DocumentDialogRepository
 import com.mifos.core.data.util.NetworkMonitor
 import com.mifos.core.ui.util.BaseViewModel
-import io.ktor.client.request.forms.MultiPartFormDataContent
+import com.mifos.feature.client.utils.createDocumentRequestBody
+import io.github.vinceglb.filekit.PlatformFile
+import io.github.vinceglb.filekit.extension
+import io.github.vinceglb.filekit.nameWithoutExtension
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
@@ -36,25 +42,153 @@ class ClientAddDocumentViewModel(
     private val entityType = stateHandler.toRoute<ClientAddDocumentRoute>().entityType
 
     override fun handleAction(action: ClientAddDocumentAction) {
-        TODO("Not yet implemented")
+        when(action){
+            ClientAddDocumentAction.AddNewDocument -> TODO()
+            ClientAddDocumentAction.NavigateBack -> {
+                sendEvent(ClientAddDocumentEvents.OnNavigateBack)
+            }
+            ClientAddDocumentAction.PickFromFiles -> {
+                pickDocumentFromFiles()
+            }
+            ClientAddDocumentAction.PickFromGallery -> {
+                pickDocumentFromGallery()
+            }
+            ClientAddDocumentAction.SubmitFromDocumentPreviewScreen -> {
+
+            }
+            is ClientAddDocumentAction.UpdateDescription -> {
+                mutableStateFlow.update {
+                    it.copy(description = action.text,)
+                }
+            }
+            is ClientAddDocumentAction.UpdateName -> {
+                mutableStateFlow.update {
+                    it.copy(description = action.text,)
+                }
+            }
+            ClientAddDocumentAction.UploadDocument -> {
+
+            }
+            ClientAddDocumentAction.UploadNewDocument -> {
+
+            }
+            ClientAddDocumentAction.UseMoreOptions -> {
+
+            }
+        }
     }
 
-    private suspend fun uploadDocument() {
-        documentDialogRepository.createDocument(
-            entityType = entityType,
-            entityId = clientId,
-            file = Any() as MultiPartFormDataContent,
-            // TODO("Use correct document Type")
-        )
+    private fun uploadDocument() = flow {
+        emit(DataState.Loading)
+
+        val dataState = state.document?.let {
+            val multiPartFormDataContent = getMultiPartFormDataContent(it)
+            try {
+                documentDialogRepository.createDocument(
+                    entityType = entityType,
+                    entityId = clientId,
+                    file = multiPartFormDataContent,
+                )
+
+            } catch (e: Exception){
+                DataState.Error(e)
+            }
+        }
+        emit(dataState)
     }
-    private suspend fun updateDocument() {
-        documentDialogRepository.updateDocument(
-            entityType = entityType,
-            entityId = clientId,
-            documentId = documentId,
-            file = Any() as MultiPartFormDataContent,
-            // TODO("Use correct document Type")
-        )
+
+    private fun updateDocument()  = flow {
+        emit(DataState.Loading)
+
+        val dataState = state.document?.let {
+            val multiPartFormDataContent = getMultiPartFormDataContent(it)
+            try {
+                 documentDialogRepository.updateDocument(
+                    entityType = entityType,
+                    entityId = clientId,
+                    documentId = documentId,
+                    file = multiPartFormDataContent,
+                )
+
+            } catch (e: Exception){
+                DataState.Error(e)
+            }
+        }
+        emit(dataState)
+    }
+
+    private suspend fun getMultiPartFormDataContent(file: PlatformFile) = createDocumentRequestBody(
+        file,
+        file.nameWithoutExtension,
+        file.extension
+    )
+
+    private fun pickDocumentFromGallery() {
+        viewModelScope.launch {
+            FileKitUtil.pickImageFile("").collect {imageData->
+                when(imageData){
+                    is DataState.Error<*> -> {
+                        mutableStateFlow.update {
+                            it.copy(
+                                dialogState = ClientAddDocumentState.DialogState.Error(
+                                    imageData.message
+                                )
+                            )
+                        }
+                    }
+                    DataState.Loading -> {
+                        mutableStateFlow.update {
+                            it.copy(dialogState = ClientAddDocumentState.DialogState.Loading)
+                        }
+                    }
+                    is DataState.Success<*> -> {
+                        imageData.data?.let {
+                            mutableStateFlow.update {
+                                it.copy(
+                                    dialogState = null,
+                                    document = imageData.data
+                                )
+                            }
+                            sendEvent(ClientAddDocumentEvents.ShowDocumentPreviewScreen)
+                        } ?: mutableStateFlow.update { it.copy(dialogState = null,) }
+                    }
+                }
+            }
+        }
+    }
+
+    private fun pickDocumentFromFiles(){
+        viewModelScope.launch {
+            FileKitUtil.pickPdfFile("").collect {documentFile->
+                when(documentFile){
+                    is DataState.Error<*> -> {
+                        mutableStateFlow.update {
+                            it.copy(
+                                dialogState = ClientAddDocumentState.DialogState.Error(
+                                    documentFile.message
+                                )
+                            )
+                        }
+                    }
+                    DataState.Loading -> {
+                        mutableStateFlow.update {
+                            it.copy(dialogState = ClientAddDocumentState.DialogState.Loading)
+                        }
+                    }
+                    is DataState.Success<*> -> {
+                        documentFile.data?.let {
+                            mutableStateFlow.update {
+                                it.copy(
+                                    dialogState = null,
+                                    document = documentFile.data
+                                )
+                            }
+                            sendEvent(ClientAddDocumentEvents.ShowDocumentPreviewScreen)
+                        } ?: mutableStateFlow.update { it.copy(dialogState = null,) }
+                    }
+                }
+            }
+        }
     }
 
     private fun observeNetwork() {
@@ -64,6 +198,7 @@ class ClientAddDocumentViewModel(
             }
         }
     }
+
 }
 
 data class ClientAddDocumentState(
@@ -73,7 +208,7 @@ data class ClientAddDocumentState(
     val documentName: String = "",
     val description: String = "",
     val fileName: String = "",
-    val document: ByteArray? = null,
+    val document: PlatformFile? = null,
 ) {
     sealed interface DialogState {
         data object Loading : DialogState
@@ -83,8 +218,8 @@ data class ClientAddDocumentState(
 
 sealed interface ClientAddDocumentAction {
     data object NavigateBack : ClientAddDocumentAction
-    data object AddDocument : ClientAddDocumentAction
-    data object SubmitDocument : ClientAddDocumentAction
+    data object AddNewDocument : ClientAddDocumentAction
+    data object SubmitFromDocumentPreviewScreen : ClientAddDocumentAction
     data object UploadDocument : ClientAddDocumentAction
     data object UploadNewDocument : ClientAddDocumentAction
     data class UpdateName(val text: String) : ClientAddDocumentAction
@@ -96,7 +231,11 @@ sealed interface ClientAddDocumentAction {
 
 sealed interface ClientAddDocumentEvents {
     data object OnNavigateBack : ClientAddDocumentEvents
-    data object SubmitDocument : ClientAddDocumentEvents
+    data object SubmitDocument: ClientAddDocumentEvents
     data object ShowDocumentPreviewScreen : ClientAddDocumentEvents
-    data object ShowAddDocumentScreen : ClientAddDocumentEvents
+}
+
+enum class DocumentPreviewScreenAction {
+    SUBMIT,
+    UPDATE
 }

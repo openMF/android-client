@@ -54,6 +54,28 @@ internal suspend fun createDocumentRequestBody(
     )
 }
 
+internal suspend fun createDocumentRequestBody(
+    documentFile: PlatformFile,
+    name: String,
+    description: String,
+): MultiPartFormDataContent {
+    val byteArray = documentFile.readBytes()
+    return MultiPartFormDataContent(
+        formData {
+            append(
+                "file",
+                byteArray,
+                Headers.build {
+                    append(HttpHeaders.ContentType, getMimeType(documentFile.extension))
+                    append(HttpHeaders.ContentDisposition, "filename=\"${documentFile.name}\"")
+                },
+            )
+            append("name", name)
+            append("description", description)
+        },
+    )
+}
+
 internal suspend fun createImageRequestBody(
     imageFile: PlatformFile,
     name: String,

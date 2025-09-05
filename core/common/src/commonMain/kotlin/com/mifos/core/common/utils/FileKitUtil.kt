@@ -9,14 +9,12 @@
  */
 package com.mifos.core.common.utils
 
-import androidx.annotation.IntRange
 import io.github.vinceglb.filekit.FileKit
-import io.github.vinceglb.filekit.ImageFormat
 import io.github.vinceglb.filekit.PlatformFile
 import io.github.vinceglb.filekit.cacheDir
-import io.github.vinceglb.filekit.compressImage
 import io.github.vinceglb.filekit.databasesDir
 import io.github.vinceglb.filekit.delete
+import io.github.vinceglb.filekit.dialogs.FileKitDialogSettings
 import io.github.vinceglb.filekit.dialogs.FileKitMode
 import io.github.vinceglb.filekit.dialogs.FileKitType
 import io.github.vinceglb.filekit.dialogs.openDirectoryPicker
@@ -24,7 +22,6 @@ import io.github.vinceglb.filekit.dialogs.openFilePicker
 import io.github.vinceglb.filekit.div
 import io.github.vinceglb.filekit.exceptions.FileKitException
 import io.github.vinceglb.filekit.filesDir
-import io.github.vinceglb.filekit.readBytes
 import io.github.vinceglb.filekit.write
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -36,46 +33,27 @@ object FileKitUtil {
     val appInternalStorage = FileKit.databasesDir
 
     fun pickPdfFile(
-        title: String = "",
-    ): Flow<DataState<ByteArray?>> {
-        val fileBytes = flow {
-            val file = FileKit.openFilePicker(
-                type = FileKitType.File(".pdf"),
-                mode = FileKitMode.Single,
-                title = title,
-            )
-
-            val fileBytes = file?.readBytes()
-            emit(fileBytes)
-        }.asDataStateFlow()
-        return fileBytes
-    }
+        dialogTitle: String = "",
+    ) = flow {
+        val file = FileKit.openFilePicker(
+            type = FileKitType.File(".pdf"),
+            mode = FileKitMode.Single,
+            title = dialogTitle,
+            dialogSettings = FileKitDialogSettings.createDefault()
+        )
+        emit(file)
+    }.asDataStateFlow()
 
     fun pickImageFile(
-        title: String = "",
-        @IntRange(from = 1, to = 100) imageQuality: Int = 100,
-        maxImageWidth: Int = 1024,
-        maxImageHeight: Int = 1024,
-    ): Flow<DataState<ByteArray?>> {
-        val imageAsDataStateFlow = flow {
-            val file = FileKit.openFilePicker(
-                type = FileKitType.Image,
-                mode = FileKitMode.Single,
-                title = title,
-            )
-            val imageBytes = file?.readBytes()?.let {
-                FileKit.compressImage(
-                    it,
-                    ImageFormat.JPEG,
-                    imageQuality,
-                    maxImageWidth,
-                    maxImageHeight,
-                )
-            }
-            emit(imageBytes)
-        }.asDataStateFlow()
-        return imageAsDataStateFlow
-    }
+        dialogTitle: String = "",
+    ) = flow {
+        val file = FileKit.openFilePicker(
+            type = FileKitType.Image,
+            mode = FileKitMode.Single,
+            title = dialogTitle,
+        )
+        emit(file)
+    }.asDataStateFlow()
 
     suspend fun pickDirectory(): PlatformFile? {
         return FileKit.openDirectoryPicker()
@@ -212,9 +190,7 @@ object FileKitUtil {
 
     fun takePhoto() = flow {
         val imageFile = takePhotoIfSupported()
-        val imageBytes = imageFile?.readBytes()
-
-        emit(imageBytes)
+        emit(imageFile)
     }.asDataStateFlow()
 }
 
