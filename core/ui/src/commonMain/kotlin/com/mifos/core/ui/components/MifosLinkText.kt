@@ -42,7 +42,7 @@ fun MifosLinkText(
 
 @DevicePreview
 @Composable
-fun MifosLinkTextPreview(
+private fun MifosLinkTextPreview(
     modifier: Modifier = Modifier,
 ) {
     MifosTheme {

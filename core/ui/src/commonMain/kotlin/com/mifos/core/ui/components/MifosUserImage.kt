@@ -69,7 +69,7 @@ fun MifosUserImage(
 
 @DevicePreview
 @Composable
-fun MifosUserImagePreview(
+private fun MifosUserImagePreview(
     modifier: Modifier = Modifier,
 ) {
     MifosTheme {

@@ -30,6 +30,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import com.mifos.core.designsystem.icon.MifosIcons
+import com.mifos.core.designsystem.theme.MifosTheme
 import com.mifos.core.designsystem.utils.nonLetterColorVisualTransformation
 import com.mifos.core.designsystem.utils.tabNavigation
 import org.jetbrains.compose.ui.tooling.preview.Preview
@@ -133,47 +134,55 @@ fun MifosPasswordField(
 @Preview
 @Composable
 private fun MifosPasswordField_preview_withInput_hidePassword() {
-    MifosPasswordField(
-        label = "Label",
-        value = "Password",
-        onValueChange = {},
-        initialShowPassword = false,
-        hint = "Hint",
-    )
+    MifosTheme {
+        MifosPasswordField(
+            label = "Label",
+            value = "Password",
+            onValueChange = {},
+            initialShowPassword = false,
+            hint = "Hint",
+        )
+    }
 }
 
 @Preview
 @Composable
 private fun MifosPasswordField_preview_withInput_showPassword() {
-    MifosPasswordField(
-        label = "Label",
-        value = "Password",
-        onValueChange = {},
-        initialShowPassword = true,
-        hint = "Hint",
-    )
+    MifosTheme {
+        MifosPasswordField(
+            label = "Label",
+            value = "Password",
+            onValueChange = {},
+            initialShowPassword = true,
+            hint = "Hint",
+        )
+    }
 }
 
 @Preview
 @Composable
 private fun MifosPasswordField_preview_withoutInput_hidePassword() {
-    MifosPasswordField(
-        label = "Label",
-        value = "",
-        onValueChange = {},
-        initialShowPassword = false,
-        hint = "Hint",
-    )
+    MifosTheme {
+        MifosPasswordField(
+            label = "Label",
+            value = "",
+            onValueChange = {},
+            initialShowPassword = false,
+            hint = "Hint",
+        )
+    }
 }
 
 @Preview
 @Composable
 private fun MifosPasswordField_preview_withoutInput_showPassword() {
-    MifosPasswordField(
-        label = "Label",
-        value = "",
-        onValueChange = {},
-        initialShowPassword = true,
-        hint = "Hint",
-    )
+    MifosTheme {
+        MifosPasswordField(
+            label = "Label",
+            value = "",
+            onValueChange = {},
+            initialShowPassword = true,
+            hint = "Hint",
+        )
+    }
 }

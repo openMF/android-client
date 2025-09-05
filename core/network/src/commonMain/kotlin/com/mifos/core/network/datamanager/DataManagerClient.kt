@@ -15,6 +15,7 @@ import com.mifos.core.common.utils.asDataStateFlow
 import com.mifos.core.datastore.UserPreferencesRepository
 import com.mifos.core.model.objects.clients.ActivatePayload
 import com.mifos.core.model.objects.clients.AssignStaffRequest
+import com.mifos.core.model.objects.clients.ClientAddressEntity
 import com.mifos.core.model.objects.clients.ClientAddressRequest
 import com.mifos.core.model.objects.clients.ClientAddressResponse
 import com.mifos.core.model.objects.clients.ClientCloseRequest
@@ -34,6 +35,8 @@ import com.mifos.core.network.model.ClientCloseTemplateResponse
 import com.mifos.core.network.model.CollateralItem
 import com.mifos.core.network.model.DeleteClientsClientIdIdentifiersIdentifierIdResponse
 import com.mifos.core.network.model.PinpointLocationActionResponse
+import com.mifos.core.network.model.PostClientAddressRequest
+import com.mifos.core.network.model.PostClientAddressResponse
 import com.mifos.core.network.model.PostClientsClientIdRequest
 import com.mifos.core.network.model.PostClientsClientIdResponse
 import com.mifos.core.network.model.SavingAccountOption
@@ -505,6 +508,22 @@ class DataManagerClient(
      */
     suspend fun getAddressTemplate(): AddressTemplate {
         return mBaseApiManager.clientService.getAddressTemplate()
+    }
+
+    suspend fun getClientAddresses(clientId: Int): List<ClientAddressEntity> {
+        return mBaseApiManager.clientService.getClientAddresses(clientId = clientId)
+    }
+
+    suspend fun createClientAddress(
+        clientId: Int,
+        addressTypeId: Int,
+        addressRequest: PostClientAddressRequest,
+    ): PostClientAddressResponse {
+        return mBaseApiManager.clientService.createClientAddress(
+            clientId = clientId,
+            addressTypeId = addressTypeId,
+            addressPayload = addressRequest,
+        )
     }
 
     suspend fun assignClientStaff(

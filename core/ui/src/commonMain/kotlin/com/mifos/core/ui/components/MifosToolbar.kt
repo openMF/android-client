@@ -50,7 +50,7 @@ fun SelectionModeTopAppBar(
 
 @Preview
 @Composable
-fun SelectionModeTopAppBarPreview() {
+private fun SelectionModeTopAppBarPreview() {
     MifosTheme {
         SelectionModeTopAppBar(
             itemCount = 3,

@@ -35,6 +35,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.mifos.core.designsystem.theme.MifosTheme
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
@@ -135,9 +136,11 @@ private fun CharView(
 @Preview
 @Composable
 private fun PreviewOtpTextField() {
-    MifosOtpTextField(
-        onOtpTextCorrectlyEntered = {},
-        realOtp = "1234",
-        otpCount = 4,
-    )
+    MifosTheme {
+        MifosOtpTextField(
+            onOtpTextCorrectlyEntered = {},
+            realOtp = "1234",
+            otpCount = 4,
+        )
+    }
 }

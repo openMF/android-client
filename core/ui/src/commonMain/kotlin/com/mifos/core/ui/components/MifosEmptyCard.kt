@@ -47,7 +47,7 @@ fun MifosEmptyCard(
 
 @Preview
 @Composable
-fun MifosEmptyCardPreview() {
+private fun MifosEmptyCardPreview() {
     MifosTheme {
         MifosEmptyCard("Add any to show")
     }

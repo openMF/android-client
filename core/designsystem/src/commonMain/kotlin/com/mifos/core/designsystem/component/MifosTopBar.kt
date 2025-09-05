@@ -20,6 +20,7 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.mifos.core.designsystem.icon.MifosIcons
+import com.mifos.core.designsystem.theme.MifosTheme
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -57,8 +58,8 @@ fun MifosTopBar(
 
 @Preview
 @Composable
-fun MifosTopBarPreview() {
-    MaterialTheme {
+private fun MifosTopBarPreview() {
+    MifosTheme {
         MifosTopBar(
             topBarTitle = "Sample Title",
             backPress = {},

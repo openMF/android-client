@@ -17,6 +17,11 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import androidx.navigation.navigation
 import com.mifos.core.common.utils.Constants
+import com.mifos.feature.client.clientAddress.addAddress.clientAddAddressRoute
+import com.mifos.feature.client.clientAddress.addAddress.navigateToClientAddAddressRoute
+import com.mifos.feature.client.clientAddress.clientAddressNavigation
+import com.mifos.feature.client.clientAddress.navigateToClientAddressRoute
+import com.mifos.feature.client.clientAddress.navigateToClientAddressRouteOnStatus
 import com.mifos.feature.client.clientApplyNewApplications.clientApplyNewApplicationRoute
 import com.mifos.feature.client.clientApplyNewApplications.navigateToClientApplyNewApplicationScreen
 import com.mifos.feature.client.clientCharges.ClientChargesScreen
@@ -61,6 +66,8 @@ import com.mifos.feature.client.recurringDepositAccount.clientRecurringDepositAc
 import com.mifos.feature.client.recurringDepositAccount.navigateToRecurringDepositAccountRoute
 import com.mifos.feature.client.savingsAccounts.navigateToClientSavingsAccountsRoute
 import com.mifos.feature.client.savingsAccounts.savingsAccountsDestination
+import com.mifos.feature.client.shareAccounts.navigateToShareAccountsScreen
+import com.mifos.feature.client.shareAccounts.shareAccountsDestination
 import com.mifos.room.entities.accounts.savings.SavingAccountDepositTypeEntity
 import com.mifos.room.entities.noncore.DataTableEntity
 import com.mifos.room.entities.survey.SurveyEntity
@@ -140,8 +147,21 @@ fun NavGraphBuilder.clientNavGraph(
             documents = navController::navigateToClientDocumentsRoute,
             identifiers = navController::navigateToClientIdentifiersScreen,
             navigateToClientDetailsScreen = navController::navigateToClientDetailsProfileRoute,
+            viewAddress = navController::navigateToClientAddressRoute,
             viewAssociatedAccounts = navController::navigateToClientProfileGeneralRoute,
             navController = navController,
+        )
+
+        clientAddressNavigation(
+            onNavigateBack = navController::popBackStack,
+            navigateToAddAddressForm = navController::navigateToClientAddAddressRoute,
+            navController = navController,
+        )
+
+        clientAddAddressRoute(
+            onNavigateBack = navController::popBackStack,
+            navController = navController,
+            onNavigateNext = navController::navigateToClientAddressRouteOnStatus,
         )
 
         clientDocumentsDestination(
@@ -158,7 +178,10 @@ fun NavGraphBuilder.clientNavGraph(
             savingAccounts = navController::navigateToClientSavingsAccountsRoute,
             loanAccounts = navController::navigateToClientLoanAccountsRoute,
             recurringDepositAccounts = navController::navigateToRecurringDepositAccountRoute,
+            sharesAccounts = navController::navigateToShareAccountsScreen,
             fixedDepositAccounts = navController::navigateToFixedDepositAccountRoute,
+            collateralData = {},
+            upcomingCharges = {},
         )
 
         clientRecurringDepositAccountDestination(
@@ -242,6 +265,10 @@ fun NavGraphBuilder.clientNavGraph(
             onNavigateApplyRecurringAccount = { },
             onNavigateApplyFixedAccount = { },
             navController = navController,
+        )
+        shareAccountsDestination(
+            navController = navController,
+            navigateToViewAccount = {},
         )
     }
 }

@@ -43,7 +43,7 @@ fun MifosIcon(
 
 @DevicePreview
 @Composable
-fun MifosMobileIconPreview(
+private fun MifosMobileIconPreview(
     modifier: Modifier = Modifier,
 ) {
     MifosTheme {

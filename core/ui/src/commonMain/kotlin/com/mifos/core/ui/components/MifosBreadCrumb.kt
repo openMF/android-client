@@ -28,8 +28,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.navigation.NavController
 import com.mifos.core.designsystem.theme.DesignToken
+import com.mifos.core.designsystem.theme.MifosTheme
 import com.mifos.core.designsystem.theme.MifosTypography
 import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
 fun MifosBreadcrumbNavBar(
@@ -102,7 +104,7 @@ fun MifosBreadcrumbNavBar(
 }
 
 @Composable
-private fun BreadcrumbItem(
+fun BreadcrumbItem(
     text: String,
     isActive: Boolean,
     onClick: () -> Unit,
@@ -120,4 +122,26 @@ private fun BreadcrumbItem(
         overflow = TextOverflow.Ellipsis,
         softWrap = false,
     )
+}
+
+@Preview
+@Composable
+private fun BreadcrumbItemPreview() {
+    MifosTheme {
+        Row(
+            modifier = Modifier.padding(DesignToken.padding.medium),
+        ) {
+            BreadcrumbItem(
+                text = "Home",
+                isActive = false,
+                onClick = {},
+            )
+            Text(" > ")
+            BreadcrumbItem(
+                text = "Loan Account",
+                isActive = true,
+                onClick = {},
+            )
+        }
+    }
 }
