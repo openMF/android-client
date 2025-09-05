@@ -1,9 +1,18 @@
+/*
+ * Copyright 2025 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ */
 package com.mifos.feature.client.shareAccounts
 
 import androidclient.feature.client.generated.resources.Res
+import androidclient.feature.client.generated.resources.client_product_shares_account
 import androidclient.feature.client.generated.resources.client_savings_item
 import androidclient.feature.client.generated.resources.feature_client_error
-import androidclient.feature.client.generated.resources.feature_client_loan_account
 import androidclient.feature.client.generated.resources.filter
 import androidclient.feature.client.generated.resources.search
 import androidclient.feature.client.generated.resources.string_not_available
@@ -15,7 +24,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
@@ -24,21 +32,15 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.paging.PagingData
 import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.designsystem.theme.MifosTypography
-import com.mifos.core.model.objects.account.share.ShareAccounts
-import com.mifos.core.model.objects.account.share.ShareAccountsStatus
 import com.mifos.core.ui.components.Actions
-import com.mifos.core.ui.components.MifosActionsSavingsListingComponent
 import com.mifos.core.ui.components.MifosActionsShareListingComponent
 import com.mifos.core.ui.components.MifosAlertDialog
 import com.mifos.core.ui.components.MifosEmptyCard
-import com.mifos.core.ui.components.MifosSearchBar
 import com.mifos.core.ui.util.EventsEffect
-import kotlinx.coroutines.flow.Flow
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
@@ -73,8 +75,8 @@ internal fun ShareAccountsScreen(
     onAction: (ShareAccountsAction) -> Unit,
 ) {
     MifosScaffold(
-        title = "Share Accounts" ,
-        onBackPressed = {}
+        title = "Share Accounts",
+        onBackPressed = {},
     ) { paddingValues ->
         Column(
             modifier = Modifier.padding(paddingValues)
@@ -118,7 +120,6 @@ internal fun ShareAccountsScreen(
 
                             Spacer(Modifier.height(DesignToken.padding.small))
                         }
-
                     }
                 }
             } else {
@@ -138,7 +139,7 @@ private fun ShareAccountHeader(
     ) {
         Column {
             Text(
-                text = stringResource(Res.string.feature_client_loan_account),
+                text = stringResource(Res.string.client_product_shares_account),
                 style = MifosTypography.titleMedium,
             )
 
@@ -192,5 +193,3 @@ private fun ShareAccountsDialog(
         null -> {}
     }
 }
-
-

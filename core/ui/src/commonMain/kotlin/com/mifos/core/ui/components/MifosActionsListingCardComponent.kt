@@ -10,6 +10,9 @@
 package com.mifos.core.ui.components
 
 import androidclient.core.ui.generated.resources.Res
+import androidclient.core.ui.generated.resources.client_share_accounts_approved_shares
+import androidclient.core.ui.generated.resources.client_share_accounts_pending_for_approval_shares
+import androidclient.core.ui.generated.resources.client_share_accounts_share_product
 import androidclient.core.ui.generated.resources.core_ui_account_no
 import androidclient.core.ui.generated.resources.core_ui_amount_paid
 import androidclient.core.ui.generated.resources.core_ui_balance
@@ -426,7 +429,7 @@ fun MifosActionsShareListingComponent(
 
                 Spacer(Modifier.height(DesignToken.padding.large))
                 MifosListingRowItem(
-                    key = "Share Product",
+                    key = stringResource(Res.string.client_share_accounts_share_product),
                     value = shareProductName,
                 )
                 Spacer(Modifier.height(DesignToken.padding.medium))
@@ -434,12 +437,12 @@ fun MifosActionsShareListingComponent(
                     verticalArrangement = Arrangement.spacedBy(DesignToken.padding.extraExtraSmall),
                 ) {
                     MifosListingRowItem(
-                        key = "Pending For Approval Shares:",
-                        value = (pendingForApprovalShares ?: "Not Available").toString(),
+                        key = stringResource(Res.string.client_share_accounts_pending_for_approval_shares),
+                        value = (pendingForApprovalShares ?: stringResource(Res.string.listing_component_identifier_not_available)).toString(),
                     )
                     MifosListingRowItem(
-                        key = "Approved Shares",
-                        value = (approvedShares ?: "Not available").toString(),
+                        key = stringResource(Res.string.client_share_accounts_approved_shares),
+                        value = (approvedShares ?: stringResource(Res.string.listing_component_identifier_not_available)).toString(),
                     )
                 }
             }
@@ -565,7 +568,7 @@ fun MifosActionsSavingsListingComponent(
                                 imageVector = menuItem.icon,
                                 contentDescription = "",
 
-                                )
+                            )
 
                             Text(
                                 modifier = Modifier.fillMaxWidth(),

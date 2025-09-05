@@ -222,8 +222,6 @@ val RepositoryModule = module {
     singleOf(::SurveyListRepositoryImp) bind SurveyListRepository::class
     singleOf(::SurveySubmitRepositoryImp) bind SurveySubmitRepository::class
 
-    singleOf(::ShareAccountsRepositoryImpl) bind  ShareAccountsRepository::class
-
     includes(platformModule)
     single<PlatformDependentDataModule> { getPlatformDataModule }
     single<NetworkMonitor> { getPlatformDataModule.networkMonitor }

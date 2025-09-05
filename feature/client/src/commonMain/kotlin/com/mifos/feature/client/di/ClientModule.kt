@@ -35,8 +35,8 @@ import com.mifos.feature.client.createNewClient.CreateNewClientViewModel
 import com.mifos.feature.client.fixedDepositAccount.FixedDepositAccountViewModel
 import com.mifos.feature.client.recurringDepositAccount.RecurringDepositAccountViewModel
 import com.mifos.feature.client.savingsAccounts.SavingsAccountsViewModel
-import com.mifos.feature.client.syncClientDialog.SyncClientsDialogViewModel
 import com.mifos.feature.client.shareAccounts.ShareAccountsViewModel
+import com.mifos.feature.client.syncClientDialog.SyncClientsDialogViewModel
 import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.module
 

@@ -1,9 +1,20 @@
+/*
+ * Copyright 2025 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ */
 package com.mifos.core.model.objects.account.share
 
 import com.mifos.core.model.utils.Parcelable
 import com.mifos.core.model.utils.Parcelize
 import kotlinx.serialization.Serializable
 
+@Serializable
+@Parcelize
 data class ShareAccountsStatus(
     val id: Int? = null,
 
@@ -16,8 +27,8 @@ data class ShareAccountsStatus(
     val approved: Boolean? = null,
 
     val rejected: Boolean? = null,
-    
+
     val active: Boolean? = null,
 
     val closed: Boolean? = null,
-)
+) : Parcelable

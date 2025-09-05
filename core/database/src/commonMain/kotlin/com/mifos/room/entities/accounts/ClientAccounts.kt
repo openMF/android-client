@@ -21,7 +21,7 @@ data class ClientAccounts(
 
     var savingsAccounts: List<SavingsAccountEntity> = emptyList(),
 
-    var shareAccounts: List<ShareAccounts> = emptyList()
+    var shareAccounts: List<ShareAccounts> = emptyList(),
 
 ) : Parcelable {
     private fun getSavingsAccounts(wantRecurring: Boolean): List<SavingsAccountEntity> {

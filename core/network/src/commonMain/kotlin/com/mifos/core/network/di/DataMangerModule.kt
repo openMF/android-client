@@ -29,7 +29,6 @@ import com.mifos.core.network.datamanager.DataManagerSearch
 import com.mifos.core.network.datamanager.DataManagerStaff
 import com.mifos.core.network.datamanager.DataManagerSurveys
 import org.koin.dsl.module
-import kotlin.math.sin
 
 val DataManagerModule = module {
     single { DataManager() }

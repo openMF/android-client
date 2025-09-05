@@ -33,7 +33,7 @@ interface ClientDetailsRepository {
 
     suspend fun getSavingsAccounts(clientId: Int): List<SavingAccountOption>
 
-    suspend fun getShareAccounts(clientId : Int) : List<ShareAccounts>
+    suspend fun getShareAccounts(clientId: Int): List<ShareAccounts>
 
     suspend fun getClientStaffOptions(clientId: Int): List<StaffOption>
 

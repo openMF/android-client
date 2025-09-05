@@ -217,7 +217,6 @@
     <string name="feature_client_address_postal_code_error">Postal Code cannot be empty.</string>
 
 
-
     <string name="feature_client_pinpoint_location_marker_title">Pinpoint Location</string>
     <string name="feature_client_select_location_dialog_title">Select Location</string>
     <string name="feature_client_latitude_label">Latitude</string>
@@ -453,9 +452,9 @@
     <string name="client_identifiers_error_text">Error</string>
     <string name="client_identifiers_retry">Retry</string>
     <string name="client_identifiers_identities_client_identifier_deletion_success">Successfully deleted client identifier with id</string>
-<!--    <string name="client_identifiers_identities">Identities</string>-->
+    <!--    <string name="client_identifiers_identities">Identities</string>-->
 
-  <!-- Apply New Applications Screen -->
+    <!-- Apply New Applications Screen -->
     <string name="client_apply_new_applications_title">Choose Application Type</string>
     <string name="client_apply_new_applications_loan_account">New Loan Account</string>
     <string name="client_apply_new_applications_savings_account">New Savings Account</string>
@@ -468,4 +467,8 @@
     <string name="client_apply_new_applications_apply_recurring_account">Apply for new recurring deposit account</string>
     <string name="client_apply_new_applications_apply_fixed_account">Apply for new fixed deposit account</string>
 
+    <string name="client_share_accounts_share_accounts">Share Accounts</string>
+    <string name="client_share_accounts_an_error_occurred">An error occurred</string>
+    <string name="client_share_accounts_failed_to_fetch_share_accounts">Failed to fetch share accounts</string>
+    <string name="client_share_accounts_try_again">Try again</string>
 </resources>

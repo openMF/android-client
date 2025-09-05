@@ -9,7 +9,6 @@
  */
 package com.mifos.core.network.model
 
-import com.mifos.core.model.objects.account.share.ShareAccounts
 import com.mifos.core.network.model.share.ShareAccountResponse
 import kotlinx.serialization.Serializable
 

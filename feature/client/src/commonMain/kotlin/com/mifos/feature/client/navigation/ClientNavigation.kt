@@ -171,7 +171,7 @@ fun NavGraphBuilder.clientNavGraph(
             sharesAccounts = navController::navigateToShareAccountsScreen,
             fixedDepositAccounts = navController::navigateToFixedDepositAccountRoute,
             collateralData = {},
-            upcomingCharges = {}
+            upcomingCharges = {},
         )
 
         clientRecurringDepositAccountDestination(
@@ -257,7 +257,7 @@ fun NavGraphBuilder.clientNavGraph(
             navController = navController,
         )
         shareAccountsDestination(
-            navigateToViewAccount = {}
+            navigateToViewAccount = {},
         )
     }
 }

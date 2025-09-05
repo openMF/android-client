@@ -13,7 +13,6 @@ import com.mifos.core.common.utils.DataState
 import com.mifos.core.common.utils.Page
 import com.mifos.core.common.utils.asDataStateFlow
 import com.mifos.core.datastore.UserPreferencesRepository
-import com.mifos.core.model.objects.account.share.ShareAccounts
 import com.mifos.core.model.objects.clients.ActivatePayload
 import com.mifos.core.model.objects.clients.AssignStaffRequest
 import com.mifos.core.model.objects.clients.ClientAddressEntity

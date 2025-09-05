@@ -1,9 +1,17 @@
+/*
+ * Copyright 2025 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ */
 package com.mifos.feature.client.shareAccounts
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
-import co.touchlab.kermit.Logger
 import com.mifos.core.data.repository.ClientDetailsRepository
 import com.mifos.core.model.objects.account.share.ShareAccounts
 import com.mifos.core.ui.util.BaseViewModel
@@ -80,7 +88,6 @@ class ShareAccountsViewModel(
                         dialogState = null,
                     )
                 }
-
             } catch (e: Exception) {
                 mutableStateFlow.update {
                     it.copy(
