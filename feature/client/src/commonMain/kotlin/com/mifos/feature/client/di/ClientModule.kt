@@ -9,6 +9,7 @@
  */
 package com.mifos.feature.client.di
 
+import com.mifos.feature.client.clientAddress.ClientAddressViewModel
 import com.mifos.feature.client.clientApplyNewApplications.ClientApplyNewApplicationsViewModel
 import com.mifos.feature.client.clientCharges.ClientChargesViewModel
 import com.mifos.feature.client.clientClosure.ClientClosureViewModel
@@ -31,8 +32,10 @@ import com.mifos.feature.client.clientTransfer.ClientTransferViewModel
 import com.mifos.feature.client.clientUpdateDefaultAccount.UpdateDefaultAccountViewModel
 import com.mifos.feature.client.clientsList.ClientListViewModel
 import com.mifos.feature.client.createNewClient.CreateNewClientViewModel
+import com.mifos.feature.client.fixedDepositAccount.FixedDepositAccountViewModel
 import com.mifos.feature.client.recurringDepositAccount.RecurringDepositAccountViewModel
 import com.mifos.feature.client.savingsAccounts.SavingsAccountsViewModel
+import com.mifos.feature.client.shareAccounts.ShareAccountsViewModel
 import com.mifos.feature.client.syncClientDialog.SyncClientsDialogViewModel
 import com.mifos.feature.client.clientUpcomingCharges.ClientUpcomingChargesViewmodel
 import org.koin.core.module.dsl.viewModelOf
@@ -42,6 +45,7 @@ val ClientModule = module {
     viewModelOf(::ClientChargesViewModel)
     viewModelOf(::ClientDetailsViewModel)
     viewModelOf(::ClientIdentifiersViewModel)
+    viewModelOf(::ClientAddressViewModel)
     viewModelOf(::ClientListViewModel)
     viewModelOf(::PinPointClientViewModel)
     viewModelOf(::SignatureViewModel)
@@ -60,9 +64,11 @@ val ClientModule = module {
     viewModelOf(::ClientClosureViewModel)
     viewModelOf(::SavingsAccountsViewModel)
     viewModelOf(::RecurringDepositAccountViewModel)
+    viewModelOf(::FixedDepositAccountViewModel)
     viewModelOf(::ClientCollateralViewModel)
     viewModelOf(::ClientLoanAccountsViewModel)
     viewModelOf(::ClientIdentitiesListViewModel)
     viewModelOf(::ClientApplyNewApplicationsViewModel)
     viewModelOf(::ClientUpcomingChargesViewmodel)
+    viewModelOf(::ShareAccountsViewModel)
 }

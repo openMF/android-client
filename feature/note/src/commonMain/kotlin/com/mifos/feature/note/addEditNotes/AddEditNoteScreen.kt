@@ -15,7 +15,6 @@ import androidclient.feature.note.generated.resources.feature_note_button_confir
 import androidclient.feature.note.generated.resources.feature_note_dialog_warning
 import androidclient.feature.note.generated.resources.feature_note_dialog_warning_message
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -35,6 +34,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavController
 import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosOutlinedButton
 import com.mifos.core.designsystem.component.MifosOutlinedTextField
@@ -42,6 +42,7 @@ import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.designsystem.theme.MifosTypography
 import com.mifos.core.ui.components.MifosAlertDialog
+import com.mifos.core.ui.components.MifosBreadcrumbNavBar
 import com.mifos.core.ui.components.MifosErrorComponent
 import com.mifos.core.ui.util.EventsEffect
 import org.jetbrains.compose.resources.stringResource
@@ -51,6 +52,7 @@ import org.koin.compose.viewmodel.koinViewModel
 internal fun AddEditNoteScreen(
     onBackPressed: () -> Unit,
     onNavigateWithUpdatedList: (Int, String?) -> Unit,
+    navController: NavController,
     viewModel: AddEditNoteViewModel = koinViewModel(),
 ) {
     val state by viewModel.stateFlow.collectAsStateWithLifecycle()
@@ -68,6 +70,7 @@ internal fun AddEditNoteScreen(
     AddEditNoteScreenScaffold(
         state = state,
         onAction = remember(viewModel) { { viewModel.trySendAction(it) } },
+        navController = navController,
     )
 
     AddEditNoteScreenDialog(
@@ -120,21 +123,28 @@ fun AddEditNoteScreenDialog(
 internal fun AddEditNoteScreenScaffold(
     onAction: (AddEditNoteAction) -> Unit,
     state: AddEditNoteState,
+    navController: NavController,
 ) {
     MifosScaffold(
         title = "",
         onBackPressed = { onAction(AddEditNoteAction.MisTouchBackDialog) },
     ) { paddingValues ->
 
-        Box(
+        Column(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues),
         ) {
-            AddEditNote(
-                state = state,
-                onAction = onAction,
-            )
+            if (state.dialogState !is AddEditNoteState.DialogState.Loading &&
+                state.dialogState !is AddEditNoteState.DialogState.Error
+            ) {
+                MifosBreadcrumbNavBar(navController)
+
+                AddEditNote(
+                    state = state,
+                    onAction = onAction,
+                )
+            }
         }
     }
 }
@@ -220,9 +230,6 @@ private fun AddEditNote(
                             onAction(AddEditNoteAction.EditNote(state.textFieldNotesPayload))
                         } else {
                             onAction(AddEditNoteAction.AddNote(state.textFieldNotesPayload))
-                        }
-                        if (state.isError) {
-                            onAction(AddEditNoteAction.NavigateBack)
                         }
                     },
                     colors = ButtonDefaults.outlinedButtonColors(

@@ -23,11 +23,13 @@ data class NoteRoute(
 fun NavGraphBuilder.noteRoute(
     onNavigateBack: () -> Unit,
     onNavigateAddEditNote: (Int, String?, Long?) -> Unit,
+    navController: NavController,
 ) {
     composable<NoteRoute> {
-        NoteScreenScaffold(
+        NoteScreen(
             onNavigateBack = onNavigateBack,
             onNavigateAddEditNote = onNavigateAddEditNote,
+            navController = navController,
         )
     }
 }

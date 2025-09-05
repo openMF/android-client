@@ -9,6 +9,7 @@
  */
 package com.mifos.core.network.model
 
+import com.mifos.core.model.objects.account.share.ShareAccounts
 import kotlinx.serialization.Serializable
 
 /**
@@ -55,4 +56,6 @@ data class GetClientsPageItemsResponse(
     val staffOptions: List<StaffOption> = emptyList(),
 
     val savingAccountOptions: List<SavingAccountOption> = emptyList(),
+
+    val shareAccounts: List<ShareAccounts> = emptyList(),
 )

@@ -19,6 +19,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.mifos.core.designsystem.theme.DesignToken
+import com.mifos.core.designsystem.theme.MifosTheme
 import com.mifos.core.designsystem.theme.MifosTypography
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
@@ -70,7 +71,7 @@ fun MifosAddressItem(
 
 @Preview
 @Composable
-fun MifosAddressCardPreview() {
+private fun MifosAddressCardPreview() {
     val sampleAddresses = mapOf(
         "Address 1" to "123, MG Road",
         "Address 2" to "2nd Floor, Lotus Building",
@@ -80,8 +81,10 @@ fun MifosAddressCardPreview() {
         "Country" to "India",
     )
 
-    MifosAddressCard(
-        title = "Client Address",
-        addressList = sampleAddresses,
-    )
+    MifosTheme {
+        MifosAddressCard(
+            title = "Client Address",
+            addressList = sampleAddresses,
+        )
+    }
 }

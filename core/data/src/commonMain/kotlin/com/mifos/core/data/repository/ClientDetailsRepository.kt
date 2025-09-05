@@ -10,6 +10,7 @@
 package com.mifos.core.data.repository
 
 import com.mifos.core.common.utils.DataState
+import com.mifos.core.model.objects.account.share.ShareAccounts
 import com.mifos.core.network.model.ClientCloseTemplateResponse
 import com.mifos.core.network.model.CollateralItem
 import com.mifos.core.network.model.SavingAccountOption
@@ -31,6 +32,8 @@ interface ClientDetailsRepository {
     suspend fun getClientAccounts(clientId: Int): ClientAccounts
 
     suspend fun getSavingsAccounts(clientId: Int): List<SavingAccountOption>
+
+    suspend fun getShareAccounts(clientId: Int): List<ShareAccounts>
 
     suspend fun getClientStaffOptions(clientId: Int): List<StaffOption>
 

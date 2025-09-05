@@ -26,6 +26,7 @@ import com.mifos.feature.individualCollectionSheet.navigation.individualCollecti
 import com.mifos.feature.loan.groupLoanAccount.groupLoanScreen
 import com.mifos.feature.loan.loanAccount.addLoanAccountScreen
 import com.mifos.feature.loan.navigation.loanNavGraph
+import com.mifos.feature.loan.newLoanAccount.navigateToNewLoanAccountRoute
 import com.mifos.feature.note.navigation.noteNavGraph
 import com.mifos.feature.note.notes.navigateToNoteScreen
 import com.mifos.feature.offline.navigation.offlineNavGraph
@@ -38,18 +39,18 @@ import kotlinx.serialization.InternalSerializationApi
 import kotlinx.serialization.Serializable
 
 @Serializable
-internal data object AuthenticatedGraphRoute
+internal data object AuthenticatedGraph
 
 internal fun NavController.navigateToAuthenticatedGraph(navOptions: NavOptions? = null) {
-    navigate(route = AuthenticatedGraphRoute, navOptions = navOptions)
+    navigate(route = AuthenticatedGraph, navOptions = navOptions)
 }
 
 @OptIn(InternalSerializationApi::class, ExperimentalSerializationApi::class)
 internal fun NavGraphBuilder.authenticatedGraph(
     navController: NavController,
 ) {
-    navigation<AuthenticatedGraphRoute>(
-        startDestination = AuthenticatedNavbarRoute,
+    navigation<AuthenticatedGraph>(
+        startDestination = AuthenticatedNavbar,
     ) {
         authenticatedNavbarGraph(
             onDrawerItemClick = {
@@ -59,6 +60,7 @@ internal fun NavGraphBuilder.authenticatedGraph(
             },
             navigateToDocumentScreen = navController::navigateToDocumentListScreen,
             navigateToNoteScreen = navController::navigateToNoteScreen,
+            navigateToNewLoanAccountScreen = navController::navigateToNewLoanAccountRoute,
         )
 
         checkerInboxTaskNavGraph(navController)

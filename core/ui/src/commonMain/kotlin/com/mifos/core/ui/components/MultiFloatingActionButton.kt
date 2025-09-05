@@ -135,7 +135,7 @@ fun MultiFloatingActionButton(
 
 @Preview
 @Composable
-fun SelectionModeTopAppBarPrevieww() {
+private fun SelectionModeTopAppBarPreview() {
     MifosTheme {
         SelectionModeTopAppBar(
             itemCount = 3,
@@ -146,7 +146,7 @@ fun SelectionModeTopAppBarPrevieww() {
 
 @Preview
 @Composable
-fun SelectionModeTopAppBarWithActionsPreview() {
+private fun SelectionModeTopAppBarWithActionsPreview() {
     MifosTheme {
         SelectionModeTopAppBar(
             itemCount = 5,
