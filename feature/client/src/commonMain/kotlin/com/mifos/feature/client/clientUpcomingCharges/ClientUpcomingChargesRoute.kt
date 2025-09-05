@@ -20,10 +20,12 @@ data class ClientUpcomingChargesRoute(
 )
 
 fun NavGraphBuilder.clientUpcomingChargesDestination(
+    navController: NavController,
     payOutstandingAmount: () -> Unit,
 ) {
     composable<ClientUpcomingChargesRoute> {
         ClientUpcomingChargesScreenRoute(
+            navController = navController,
             payOutstandingAmount = payOutstandingAmount,
         )
     }

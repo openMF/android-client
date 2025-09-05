@@ -229,6 +229,7 @@ fun NavGraphBuilder.clientNavGraph(
             navController = navController,
         )
         clientUpcomingChargesDestination(
+            navController = navController,
             payOutstandingAmount = {}
         )
     }

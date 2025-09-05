@@ -13,6 +13,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import androidx.paging.PagingData
 import co.touchlab.kermit.Logger
 import com.mifos.core.designsystem.component.MifosCircularProgress
@@ -21,6 +22,7 @@ import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.ui.components.MifosAlertDialog
+import com.mifos.core.ui.components.MifosBreadcrumbNavBar
 import com.mifos.core.ui.components.MifosEmptyCard
 import com.mifos.core.ui.components.MifosIcon
 import com.mifos.core.ui.util.EventsEffect
@@ -35,6 +37,7 @@ import org.koin.compose.viewmodel.koinViewModel
 @Composable
 fun ClientUpcomingChargesScreenRoute(
     payOutstandingAmount: () -> Unit,
+    navController: NavController,
     viewModel: ClientUpcomingChargesViewmodel = koinViewModel(),
 ) {
     val state by viewModel.stateFlow.collectAsStateWithLifecycle()
@@ -47,6 +50,7 @@ fun ClientUpcomingChargesScreenRoute(
 
     ClientUpcomingChargesScreen(
         state = state,
+        navController = navController,
         onAction = remember(viewModel) { { viewModel.trySendAction(it) } },
     )
 
@@ -59,6 +63,7 @@ fun ClientUpcomingChargesScreenRoute(
 @Composable
 fun ClientUpcomingChargesScreen(
     state: ClientUpcomingChargesState,
+    navController: NavController,
     onAction: (ClientUpcomingChargesAction) -> Unit,
 ) {
     MifosScaffold(
@@ -66,21 +71,31 @@ fun ClientUpcomingChargesScreen(
         onBackPressed = {},
     ) { padding ->
         Column(
-            modifier = Modifier.fillMaxSize()
-                .padding(padding)
-                .padding(DesignToken.padding.large),
+            modifier = Modifier.padding(padding),
         ) {
-            if (state.chargesFlow == null) {
-                MifosEmptyCard()
-            } else {
-                ChargesListContent(
-                    state = state,
-                    charges = state.chargesFlow,
-                    onAction = onAction,
-                    refresh = {
-                        onAction(ClientUpcomingChargesAction.OnRefresh)
+            MifosBreadcrumbNavBar(navController)
+
+            when (state.isLoading) {
+                true -> MifosCircularProgress()
+                false -> {
+                    Column(
+                        modifier = Modifier.fillMaxSize()
+                            .padding(DesignToken.padding.large),
+                    ) {
+                        if (state.chargesFlow == null) {
+                            MifosEmptyCard()
+                        } else {
+                            ChargesListContent(
+                                state = state,
+                                charges = state.chargesFlow,
+                                onAction = onAction,
+                                refresh = {
+                                    onAction(ClientUpcomingChargesAction.OnRefresh)
+                                },
+                            )
+                        }
                     }
-                )
+                }
             }
         }
     }
@@ -89,17 +104,15 @@ fun ClientUpcomingChargesScreen(
 @Composable
 private fun ClientUpcomingChargesDialog(
     state: ClientUpcomingChargesState,
-    onAction: (ClientUpcomingChargesAction) -> Unit
+    onAction: (ClientUpcomingChargesAction) -> Unit,
 ) {
     when (state.dialogState) {
         is ClientUpcomingChargesState.DialogState.Error -> {
             MifosSweetError(
                 message = state.dialogState.message,
-                onclick = { ClientUpcomingChargesAction.OnRefresh }
+                onclick = { ClientUpcomingChargesAction.OnRefresh },
             )
         }
-
-        ClientUpcomingChargesState.DialogState.Loading -> MifosCircularProgress()
 
         null -> {}
 
@@ -111,5 +124,5 @@ expect fun ChargesListContent(
     charges: Flow<PagingData<ChargesEntity>>,
     state: ClientUpcomingChargesState,
     onAction: (ClientUpcomingChargesAction) -> Unit,
-    refresh : () -> Unit
+    refresh: () -> Unit,
 )

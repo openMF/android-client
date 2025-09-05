@@ -24,6 +24,8 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.coroutines.flow.onEmpty
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.getString
@@ -39,16 +41,8 @@ class ClientUpcomingChargesViewmodel(
 
     override fun handleAction(action: ClientUpcomingChargesAction) {
         when (action) {
-            is ClientUpcomingChargesAction.CardClicked -> mutableStateFlow.update {
-                it.copy(
-                    expandedItemIndex = action.index,
-                    isExpanded = !it.isExpanded,
-                )
-            }
-
-            ClientUpcomingChargesAction.PayOutstandingAmound -> {
-                sendEvent(ClientUpcomingChargesEvent.PayOutstandingAmound)
-            }
+            is ClientUpcomingChargesAction.CardClicked -> handleCardClick(action.index)
+            ClientUpcomingChargesAction.PayOutstandingAmound -> sendEvent(ClientUpcomingChargesEvent.PayOutstandingAmound)
 
             ClientUpcomingChargesAction.ToggleFilter -> {
                 mutableStateFlow.update {
@@ -64,9 +58,12 @@ class ClientUpcomingChargesViewmodel(
 
             ClientUpcomingChargesAction.OnRefresh -> checkNetworkAndGetCharges()
 
-            ClientUpcomingChargesAction.DismissDialog -> {
-                mutableStateFlow.update { it.copy(dialogState = null) }
+            ClientUpcomingChargesAction.DismissDialog -> mutableStateFlow.update {
+                it.copy(
+                    dialogState = null,
+                )
             }
+
         }
     }
 
@@ -87,7 +84,7 @@ class ClientUpcomingChargesViewmodel(
                     mutableStateFlow.update {
                         it.copy(
                             dialogState = ClientUpcomingChargesState.DialogState.Error(
-                                getString(Res.string.feature_client_error_not_connected_internet)
+                                getString(Res.string.feature_client_error_not_connected_internet),
                             ),
                         )
                     }
@@ -97,32 +94,44 @@ class ClientUpcomingChargesViewmodel(
     }
 
     private fun getClientCharges() {
-        viewModelScope.launch {
-            mutableStateFlow.update {
-                it.copy(dialogState = ClientUpcomingChargesState.DialogState.Loading)
-            }
+        mutableStateFlow.update {
+            it.copy(isLoading = true)
+        }
 
-            runCatching {
-                repository.getClientCharges(route.clientId)
-            }.onSuccess { result ->
-                mutableStateFlow.update {
-                    it.copy(
-                        chargesFlow = result,
-                        dialogState = null,
-                    )
-                }
-            }.onFailure { e ->
-                mutableStateFlow.update {
-                    it.copy(dialogState = ClientUpcomingChargesState.DialogState.Error("An error occured while fetch upcoming client charges, would you liek to retry?"))
-                }
+        runCatching {
+            repository.getClientCharges(route.clientId)
+        }.onSuccess { result ->
+            mutableStateFlow.update {
+                it.copy(
+                    chargesFlow = result,
+                    dialogState = null,
+                    isLoading = false,
+                )
+            }
+        }.onFailure { e ->
+            mutableStateFlow.update {
+                it.copy(
+                    isLoading = false,
+                    dialogState = ClientUpcomingChargesState.DialogState.Error(
+                        e.message ?: "Unknown Error",
+                    ),
+                )
             }
         }
     }
 
-
+    private fun handleCardClick(index: Int) {
+        mutableStateFlow.update {
+            it.copy(
+                expandedItemIndex = index,
+                isExpanded = !it.isExpanded,
+            )
+        }
+    }
 }
 
 data class ClientUpcomingChargesState(
+    val isLoading: Boolean = true,
     val isFilterOpen: Boolean = false,
     val chargesFlow: Flow<PagingData<ChargesEntity>>? = null,
     val isExpanded: Boolean = false,
@@ -132,7 +141,6 @@ data class ClientUpcomingChargesState(
 ) {
     sealed interface DialogState {
         data class Error(val message: String) : DialogState
-        data object Loading : DialogState
     }
 }
 
