@@ -76,7 +76,9 @@ actual fun ChargesListContent(
                     } else {
                         "N/A"
                     },
-                    due = charge.amount - charge.amountPaid, //todo check if its the right way to get due
+                    due = if (charge.amount != null && charge.amountPaid != null) {
+                        (charge.amount!! - charge.amountPaid!!).toString()
+                    } else "N/A", //todo check if its the right way to get due
                     paid = charge.amountPaid.toString(),
                     waived = charge.amountWaived.toString(),
                     outstanding = charge.amountOutstanding.toString(),
