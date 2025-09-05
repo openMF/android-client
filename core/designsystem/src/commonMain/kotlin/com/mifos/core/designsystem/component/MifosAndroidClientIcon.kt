@@ -33,7 +33,7 @@ fun MifosAndroidClientIcon(imageVector: Painter, modifier: Modifier = Modifier) 
 
 @Preview
 @Composable
-fun MifosAndroidClientIconPreview() {
+private fun MifosAndroidClientIconPreview() {
     MifosTheme {
         MifosAndroidClientIcon(
             imageVector = rememberVectorPainter(Icons.Default.Android),

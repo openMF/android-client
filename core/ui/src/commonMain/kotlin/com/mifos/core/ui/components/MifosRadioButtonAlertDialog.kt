@@ -86,7 +86,7 @@ fun MifosRadioButtonDialog(
 
 @DevicePreview
 @Composable
-fun PreviewRadioButtonDialog() {
+private fun PreviewRadioButtonDialog() {
     MifosTheme {
         MifosRadioButtonDialog(
             titleResId = Res.string.core_ui_core_common_working,

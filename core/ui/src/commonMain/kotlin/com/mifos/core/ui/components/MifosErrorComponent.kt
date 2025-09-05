@@ -170,7 +170,7 @@ fun EmptyDataComponentWithModifiedMessageAndIcon(
 
 @DevicePreview
 @Composable
-fun NoInternetPreview() {
+private fun NoInternetPreview() {
     MifosTheme {
         NoInternetComponent()
     }
@@ -178,7 +178,7 @@ fun NoInternetPreview() {
 
 @DevicePreview
 @Composable
-fun EmptyDataPreview() {
+private fun EmptyDataPreview() {
     MifosTheme {
         EmptyDataComponent()
     }
@@ -186,7 +186,7 @@ fun EmptyDataPreview() {
 
 @DevicePreview
 @Composable
-fun EmptyDataComponentWithModifiedMessageAndIconPreview(
+private fun EmptyDataComponentWithModifiedMessageAndIconPreview(
     modifier: Modifier = Modifier,
 ) {
     MifosTheme {

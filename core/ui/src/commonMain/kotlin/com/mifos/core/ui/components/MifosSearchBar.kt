@@ -105,7 +105,7 @@ fun MifosSearchBar(
 
 @Preview
 @Composable
-fun MifosSearchBarPreview() {
+private fun MifosSearchBarPreview() {
     var text by remember { mutableStateOf("") }
 
     MifosSearchBar(

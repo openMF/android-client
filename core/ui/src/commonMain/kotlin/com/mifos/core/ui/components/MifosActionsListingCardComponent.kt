@@ -133,7 +133,6 @@ fun MifosActionsIdentifierListingComponent(
                 MifosListingRowItemHeader(
                     text = type,
                     keyStyle = MifosTypography.titleSmallEmphasized,
-                    valueStyle = MifosTypography.titleSmall,
                 )
                 Spacer(Modifier.height(DesignToken.padding.large))
                 Column(
@@ -877,7 +876,7 @@ private fun PreviewMifosActionsClientFeeListingComponent() {
 
 @Preview
 @Composable
-fun PreviewMifosActionsSavingsListingComponent() {
+private fun PreviewMifosActionsSavingsListingComponent() {
     MaterialTheme {
         MifosActionsSavingsListingComponent(
             accountNo = "SV9876",

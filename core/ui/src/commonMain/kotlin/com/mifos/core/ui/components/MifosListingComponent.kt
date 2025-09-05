@@ -186,8 +186,6 @@ fun MifosListingRowItem(
 fun MifosListingRowItemHeader(
     text: String,
     keyStyle: TextStyle = MifosTypography.labelMediumEmphasized,
-    valueStyle: TextStyle = MifosTypography.labelMedium,
-    valueColor: Color = MaterialTheme.colorScheme.onSurface,
 ) {
     MifosListingRowItem(
         keyContent = {
@@ -640,7 +638,7 @@ fun MifosSellLoanListingComponent(
 
 @Preview
 @Composable
-fun MifosDefaultListingComponentPreview() {
+private fun MifosDefaultListingComponentPreview() {
     val sampleData = mapOf(
         "Name" to "John Doe",
         "Email" to "john.doe@example.com",
@@ -655,7 +653,7 @@ fun MifosDefaultListingComponentPreview() {
 
 @Preview
 @Composable
-fun PreviewMifosClientFeeListingComponent() {
+private fun PreviewMifosClientFeeListingComponent() {
     MaterialTheme {
         MifosClientFeeListingComponent(
             name = "John Doe",
@@ -670,7 +668,7 @@ fun PreviewMifosClientFeeListingComponent() {
 
 @Preview
 @Composable
-fun PreviewMifosLoanListingComponent() {
+private fun PreviewMifosLoanListingComponent() {
     MaterialTheme {
         MifosLoanListingComponent(
             accountNo = "LN12345",
@@ -685,7 +683,7 @@ fun PreviewMifosLoanListingComponent() {
 
 @Preview
 @Composable
-fun PreviewMifosSavingsListingComponent() {
+private fun PreviewMifosSavingsListingComponent() {
     MaterialTheme {
         MifosSavingsListingComponent(
             accountNo = "SV9876",
@@ -698,7 +696,7 @@ fun PreviewMifosSavingsListingComponent() {
 
 @Preview
 @Composable
-fun PreviewMifosCollateralDataListingComponent() {
+private fun PreviewMifosCollateralDataListingComponent() {
     MaterialTheme {
         MifosCollateralDataListingComponent(
             name = "Gold Jewelry",
@@ -711,7 +709,7 @@ fun PreviewMifosCollateralDataListingComponent() {
 
 @Preview
 @Composable
-fun PreviewMifosIdentifierListingComponent() {
+private fun PreviewMifosIdentifierListingComponent() {
     MaterialTheme {
         MifosIdentifierListingComponent(
             type = "Passport",
@@ -726,7 +724,7 @@ fun PreviewMifosIdentifierListingComponent() {
 
 @Preview
 @Composable
-fun PreviewMifosDelinquencyListingComponent() {
+private fun PreviewMifosDelinquencyListingComponent() {
     MaterialTheme {
         MifosDelinquencyListingComponent(
             date = "2025-08-01",
@@ -740,7 +738,7 @@ fun PreviewMifosDelinquencyListingComponent() {
 
 @Preview
 @Composable
-fun PreviewMifosChargesListingComponent() {
+private fun PreviewMifosChargesListingComponent() {
     MaterialTheme {
         MifosChargesListingComponent(
             title = "Processing Fee",
@@ -757,7 +755,7 @@ fun PreviewMifosChargesListingComponent() {
 
 @Preview
 @Composable
-fun PreviewMifosSellLoanListingComponent() {
+private fun PreviewMifosSellLoanListingComponent() {
     MaterialTheme {
         MifosSellLoanListingComponent(
             status = Status.Pending,
@@ -766,6 +764,16 @@ fun PreviewMifosSellLoanListingComponent() {
             transferExternalId = "TRF456",
             settlementDate = "2025-08-25",
             purchasePriceRatio = "0.85",
+        )
+    }
+}
+
+@Preview
+@Composable
+private fun PreviewMifosHeader() {
+    MaterialTheme {
+        MifosListingRowItemHeader(
+            text = "Hello",
         )
     }
 }

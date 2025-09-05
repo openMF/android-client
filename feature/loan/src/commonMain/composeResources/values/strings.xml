@@ -157,4 +157,57 @@
     <string name="step_charges">Charges</string>
     <string name="step_schedule">Schedule</string>
     <string name="step_preview">Preview</string>
+
+    <!-- Collateral Dialog -->
+    <string name="add_new_collateral">Add New Collateral</string>
+    <string name="view_collaterals">View Collaterals</string>
+    <string name="add">Add</string>
+    <string name="add_new">Add New</string>
+
+    <!-- Collateral Fields -->
+    <string name="collateral">Collateral</string>
+    <string name="quantity">Quantity</string>
+    <string name="total_value">Total Value</string>
+    <string name="total_collateral_value">Total Collateral Value</string>
+    <string name="terms">Terms</string>
+    <string name="term_options">Term Options?</string>
+    <string name="repayments">Repayments</string>
+    <string name="repaid_every">Repaid Every?</string>
+    <string name="nominal_interest_rate">Nominal interest rate</string>
+    <string name="loan_schedule">Loan Schedule</string>
+    <string name="interest_calculations">Interest Calculations</string>
+    <string name="moratorium">Moratorium?</string>
+    <string name="collateral_data">Collateral Data</string>
+    <string name="principal">Principal</string>
+    <string name="loan_term">Loan Term</string>
+    <string name="term_frequency">Term Frequency</string>
+    <string name="number_of_repayments">Number of Repayments</string>
+    <string name="first_repayment_date">First Repayment Date</string>
+    <string name="interest_charged_from">Interest Charged From</string>
+    <string name="repaid_every_label">Repaid Every</string>
+    <string name="frequency">Frequency</string>
+    <string name="select_on">Select On</string>
+    <string name="select_day">Select Day</string>
+    <string name="nominal_interest_rate_percent">Nominal interest rate (in %)</string>
+    <string name="interest_method">Interest Method</string>
+    <string name="amortization">Amortization</string>
+    <string name="is_equal_amortization">Is Equal Amortization</string>
+    <string name="loan_schedule_type">Loan Schedule Type</string>
+    <string name="repayment_strategy">Repayment Strategy</string>
+    <string name="balloon_repayment_amount">Balloon Repayment Amount</string>
+    <string name="interest_calculation_period">Interest Calculation Period</string>
+    <string name="calculate_interest_partial">Calculate interest for exact days in partial period</string>
+    <string name="arrears_tolerance">Arrears Tolerance</string>
+    <string name="interest_free_period">Interest Free Period</string>
+    <string name="grace_on_principal_payment">Grace On Principal Payment</string>
+    <string name="grace_on_interest_payment">Grace On Interest Payment</string>
+    <string name="on_arrears_ageing">On Arrears Ageing</string>
+    <string name="view">View</string>
+    <string name="select">Select</string>
+    <string name="cancel">Cancel</string>
+    <string name="collateral_count">%1$d Collaterals</string>
+    <string name="recalculate_interest">Recalculate Interest</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+
 </resources>

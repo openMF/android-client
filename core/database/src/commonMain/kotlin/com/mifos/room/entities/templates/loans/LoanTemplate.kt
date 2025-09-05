@@ -162,6 +162,8 @@ data class LoanTemplate(
 
     val multiDisburseLoan: Boolean? = null,
 
+    val transactionProcessingStrategyCode: String? = null,
+
     val canDefineInstallmentAmount: Boolean? = null,
 
     val canDisburse: Boolean? = null,
@@ -185,4 +187,7 @@ data class LoanTemplate(
 
     @IgnoredOnParcel
     val accountLinkingOptions: List<AccountLinkingOptions> = emptyList(),
+
+    val loanScheduleType: TermFrequencyTypeOptions? = null,
+
 ) : Parcelable

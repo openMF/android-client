@@ -110,7 +110,7 @@ fun MifosBottomSheetOptionItem(
 
 @Preview
 @Composable
-fun MifosBottomSheetPreview() {
+private fun MifosBottomSheetPreview() {
     MifosBottomSheet(
         content = {
             Box {

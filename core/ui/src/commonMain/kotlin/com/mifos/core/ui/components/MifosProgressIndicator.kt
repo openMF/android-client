@@ -50,7 +50,7 @@ fun MifosProgressIndicatorOverlay(
 
 @Preview
 @Composable
-fun MifosProgressIndicatorPreview() {
+private fun MifosProgressIndicatorPreview() {
     MifosTheme {
         MifosProgressIndicator()
     }
@@ -58,7 +58,7 @@ fun MifosProgressIndicatorPreview() {
 
 @Preview
 @Composable
-fun MifosProgressIndicatorOverlayPreview() {
+private fun MifosProgressIndicatorOverlayPreview() {
     MifosTheme {
         MifosProgressIndicatorOverlay()
     }
