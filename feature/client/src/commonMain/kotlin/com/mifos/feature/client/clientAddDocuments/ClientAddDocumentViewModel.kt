@@ -1,3 +1,12 @@
+/*
+ * Copyright 2025 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ */
 package com.mifos.feature.client.clientAddDocuments
 
 import androidx.lifecycle.SavedStateHandle
@@ -10,17 +19,15 @@ import io.ktor.client.request.forms.MultiPartFormDataContent
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-
 class ClientAddDocumentViewModel(
     stateHandler: SavedStateHandle,
     private val networkMonitor: NetworkMonitor,
     private val documentDialogRepository: DocumentDialogRepository,
-) : BaseViewModel
-<
-        ClientAddDocumentState,
-        ClientAddDocumentEvents,
-        ClientAddDocumentAction,
-        >(
+) : BaseViewModel<
+    ClientAddDocumentState,
+    ClientAddDocumentEvents,
+    ClientAddDocumentAction,
+    >(
     initialState = ClientAddDocumentState(),
 ) {
 
@@ -32,20 +39,20 @@ class ClientAddDocumentViewModel(
         TODO("Not yet implemented")
     }
 
-    private suspend fun uploadDocument(){
+    private suspend fun uploadDocument() {
         documentDialogRepository.createDocument(
             entityType = entityType,
             entityId = clientId,
-            file = Any() as MultiPartFormDataContent
+            file = Any() as MultiPartFormDataContent,
             // TODO("Use correct document Type")
         )
     }
-    private suspend fun updateDocument(){
+    private suspend fun updateDocument() {
         documentDialogRepository.updateDocument(
             entityType = entityType,
             entityId = clientId,
             documentId = documentId,
-            file = Any() as MultiPartFormDataContent
+            file = Any() as MultiPartFormDataContent,
             // TODO("Use correct document Type")
         )
     }
@@ -57,9 +64,7 @@ class ClientAddDocumentViewModel(
             }
         }
     }
-
 }
-
 
 data class ClientAddDocumentState(
     val documentId: Int = -1,
@@ -81,7 +86,7 @@ sealed interface ClientAddDocumentAction {
     data object AddDocument : ClientAddDocumentAction
     data object SubmitDocument : ClientAddDocumentAction
     data object UploadDocument : ClientAddDocumentAction
-    data object UploadNewDocument: ClientAddDocumentAction
+    data object UploadNewDocument : ClientAddDocumentAction
     data class UpdateName(val text: String) : ClientAddDocumentAction
     data class UpdateDescription(val text: String) : ClientAddDocumentAction
     data object PickFromGallery : ClientAddDocumentAction
@@ -93,5 +98,5 @@ sealed interface ClientAddDocumentEvents {
     data object OnNavigateBack : ClientAddDocumentEvents
     data object SubmitDocument : ClientAddDocumentEvents
     data object ShowDocumentPreviewScreen : ClientAddDocumentEvents
-    data object ShowAddDocumentScreen: ClientAddDocumentEvents
+    data object ShowAddDocumentScreen : ClientAddDocumentEvents
 }

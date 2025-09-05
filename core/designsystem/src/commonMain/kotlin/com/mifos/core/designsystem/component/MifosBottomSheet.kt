@@ -102,7 +102,7 @@ fun MifosBottomSheetOptionItem(
 fun MifosBottomSheetOptionItem(
     label: String,
     icon: ImageVector,
-    elevation: Dp =DesignToken.elevation.elevation,
+    elevation: Dp = DesignToken.elevation.elevation,
     onClick: () -> Unit,
 ) {
     Column(
@@ -110,10 +110,10 @@ fun MifosBottomSheetOptionItem(
             .padding(DesignToken.padding.large)
             .clickable { onClick() },
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
+        verticalArrangement = Arrangement.Center,
     ) {
         MifosCard(
-            elevation = elevation
+            elevation = elevation,
         ) {
             Icon(
                 imageVector = icon,

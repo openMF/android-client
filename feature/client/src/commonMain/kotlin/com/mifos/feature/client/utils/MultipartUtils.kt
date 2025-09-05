@@ -37,9 +37,8 @@ internal suspend fun createImageRequestBody(
 }
 
 internal suspend fun createDocumentRequestBody(
-    documentFile: PlatformFile
+    documentFile: PlatformFile,
 ): MultiPartFormDataContent {
-
     val byteArray = documentFile.readBytes()
     return MultiPartFormDataContent(
         formData {
@@ -53,7 +52,6 @@ internal suspend fun createDocumentRequestBody(
             )
         },
     )
-
 }
 
 internal suspend fun createImageRequestBody(

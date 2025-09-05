@@ -1,3 +1,12 @@
+/*
+ * Copyright 2025 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ */
 package com.mifos.core.common.utils
 
 import androidx.annotation.IntRange
@@ -20,7 +29,6 @@ import io.github.vinceglb.filekit.write
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
-
 object FileKitUtil {
 
     val appCache = FileKit.cacheDir
@@ -28,14 +36,13 @@ object FileKitUtil {
     val appInternalStorage = FileKit.databasesDir
 
     fun pickPdfFile(
-        title: String = ""
+        title: String = "",
     ): Flow<DataState<ByteArray?>> {
-
         val fileBytes = flow {
             val file = FileKit.openFilePicker(
                 type = FileKitType.File(".pdf"),
                 mode = FileKitMode.Single,
-                title = title
+                title = title,
             )
 
             val fileBytes = file?.readBytes()
@@ -46,15 +53,15 @@ object FileKitUtil {
 
     fun pickImageFile(
         title: String = "",
-        @IntRange(from = 1, to=100) imageQuality: Int = 100,
+        @IntRange(from = 1, to = 100) imageQuality: Int = 100,
         maxImageWidth: Int = 1024,
-        maxImageHeight: Int = 1024
+        maxImageHeight: Int = 1024,
     ): Flow<DataState<ByteArray?>> {
         val imageAsDataStateFlow = flow {
             val file = FileKit.openFilePicker(
                 type = FileKitType.Image,
                 mode = FileKitMode.Single,
-                title = title
+                title = title,
             )
             val imageBytes = file?.readBytes()?.let {
                 FileKit.compressImage(
@@ -62,7 +69,7 @@ object FileKitUtil {
                     ImageFormat.JPEG,
                     imageQuality,
                     maxImageWidth,
-                    maxImageHeight
+                    maxImageHeight,
                 )
             }
             emit(imageBytes)
@@ -107,13 +114,13 @@ object FileKitUtil {
     fun writeFileToCache(
         fileName: String,
         fileExtension: String,
-        filesByteArray: ByteArray
+        filesByteArray: ByteArray,
     ): Flow<DataState<*>> = flow {
         emit(DataState.Loading)
 
         val cacheDir = PlatformFile(
             appCache,
-            "${fileName}.${fileExtension}"
+            "$fileName.$fileExtension",
         )
         val result = try {
             cacheDir.write(filesByteArray)
@@ -130,12 +137,12 @@ object FileKitUtil {
     fun writeFileToApplicationPrivateInternalStorage(
         fileName: String,
         fileExtension: String,
-        filesByteArray: ByteArray
+        filesByteArray: ByteArray,
     ): Flow<DataState<*>> = flow {
         emit(DataState.Loading)
         val privateInternalStorage = PlatformFile(
             appPrivateInternalStorage,
-            "${fileName}.${fileExtension}"
+            "$fileName.$fileExtension",
         )
 
         val result = try {
@@ -150,18 +157,17 @@ object FileKitUtil {
         emit(result)
     }
 
-
     // Use only if you are using a database service such as room or sqldelight
     suspend fun writeFileToApplicationInternalStorage(
         fileName: String,
         fileExtension: String,
-        filesByteArray: ByteArray
+        filesByteArray: ByteArray,
     ): Flow<DataState<*>> = flow {
         emit(DataState.Loading)
 
         val internalStorage = PlatformFile(
             appInternalStorage,
-            "${fileName}.${fileExtension}"
+            "$fileName.$fileExtension",
         )
         val result = try {
             internalStorage.write(filesByteArray)
@@ -178,7 +184,7 @@ object FileKitUtil {
     fun writeToSelectedDirectory(
         fileName: String,
         fileExtension: String,
-        filesByteArray: ByteArray
+        filesByteArray: ByteArray,
     ): Flow<DataState<*>> = flow {
         emit(DataState.Loading)
 
@@ -198,20 +204,18 @@ object FileKitUtil {
         emit(result)
     }
 
-
     suspend fun deleteFile(
-        file: PlatformFile
-    ){
+        file: PlatformFile,
+    ) {
         file.delete(false)
     }
 
     fun takePhoto() = flow {
-        val imageFile= takePhotoIfSupported()
+        val imageFile = takePhotoIfSupported()
         val imageBytes = imageFile?.readBytes()
 
         emit(imageBytes)
     }.asDataStateFlow()
-
 }
 
 expect suspend fun takePhotoIfSupported(): PlatformFile?

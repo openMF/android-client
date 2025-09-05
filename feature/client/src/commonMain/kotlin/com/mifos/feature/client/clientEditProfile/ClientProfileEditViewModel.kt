@@ -24,7 +24,6 @@ import com.mifos.feature.client.utils.createImageRequestBody
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-
 internal class ClientProfileEditViewModel(
     savedStateHandle: SavedStateHandle,
     private val uploadClientImageUseCase: UploadClientImageUseCase,

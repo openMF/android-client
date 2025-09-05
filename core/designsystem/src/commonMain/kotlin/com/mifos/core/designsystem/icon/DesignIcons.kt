@@ -370,7 +370,6 @@ val Wallet: ImageVector
 
 private var wallet: ImageVector? = null
 
-
 val GalleryIcon: ImageVector
     get() {
         if (galleryIcon != null) {
@@ -381,7 +380,7 @@ val GalleryIcon: ImageVector
             defaultWidth = 18.dp,
             defaultHeight = 18.dp,
             viewportWidth = 18f,
-            viewportHeight = 18f
+            viewportHeight = 18f,
         ).apply {
             path(fill = SolidColor(Color(0xFF33618D))) {
                 moveTo(16f, 2f)
@@ -415,7 +414,6 @@ val GalleryIcon: ImageVector
 
 private var galleryIcon: ImageVector? = null
 
-
 val ClipDocument: ImageVector
     get() {
         if (clipDocument != null) {
@@ -426,7 +424,7 @@ val ClipDocument: ImageVector
             defaultWidth = 16.dp,
             defaultHeight = 20.dp,
             viewportWidth = 16f,
-            viewportHeight = 20f
+            viewportHeight = 20f,
         ).apply {
             path(fill = SolidColor(Color(0xFF33618D))) {
                 moveTo(10f, 0f)
@@ -472,4 +470,3 @@ val ClipDocument: ImageVector
     }
 
 private var clipDocument: ImageVector? = null
-
