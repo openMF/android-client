@@ -13,10 +13,8 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Android
@@ -24,7 +22,6 @@ import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.Card
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -37,12 +34,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
-import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.semantics.contentDescription
-import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
@@ -449,33 +443,19 @@ private fun MifosPasswordField_preview_withoutInput_showPassword() {
 
 @Preview
 @Composable
-private fun MifosCircularProgressPreview(
-    modifier: Modifier = Modifier
-        .fillMaxSize(),
-    contentDesc: String = "loadingIndicator",
-    text: String? = null,
-) {
-    val resolvedModifier = modifier.semantics { contentDescription = contentDesc }
+private fun MifosPagingAppendProgressPreview() {
+    MaterialTheme {
+        MifosPagingAppendProgress()
+    }
+}
 
-    MifosTheme {
-        Column(
-            modifier = resolvedModifier,
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center,
-        ) {
-            CircularProgressIndicator(
-                modifier = Modifier
-                    .testTag("loadingWheel")
-                    .width(60.dp)
-                    .height(60.dp)
-                    .padding(8.dp),
-                strokeWidth = 4.dp,
-                color = MaterialTheme.colorScheme.secondary,
-            )
-            text?.let {
-                Text(text = text)
-            }
-        }
+@Preview
+@Composable
+private fun MifosCircularProgressPreview() {
+    MaterialTheme {
+        MifosCircularProgress(
+            text = "Loading...",
+        )
     }
 }
 

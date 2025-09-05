@@ -28,7 +28,6 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
-import com.mifos.core.designsystem.theme.MifosTheme
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
@@ -49,9 +48,8 @@ fun MifosPagingAppendProgress(modifier: Modifier = Modifier) {
     }
 }
 
-@Preview
 @Composable
-private fun MifosCircularProgress(
+fun MifosCircularProgress(
     modifier: Modifier = Modifier
         .fillMaxSize(),
     contentDesc: String = "loadingIndicator",
@@ -59,24 +57,40 @@ private fun MifosCircularProgress(
 ) {
     val resolvedModifier = modifier.semantics { contentDescription = contentDesc }
 
-    MifosTheme {
-        Column(
-            modifier = resolvedModifier,
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center,
-        ) {
-            CircularProgressIndicator(
-                modifier = Modifier
-                    .testTag("loadingWheel")
-                    .width(60.dp)
-                    .height(60.dp)
-                    .padding(8.dp),
-                strokeWidth = 4.dp,
-                color = MaterialTheme.colorScheme.secondary,
-            )
-            text?.let {
-                Text(text = text)
-            }
+    Column(
+        modifier = resolvedModifier,
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center,
+    ) {
+        CircularProgressIndicator(
+            modifier = Modifier
+                .testTag("loadingWheel")
+                .width(60.dp)
+                .height(60.dp)
+                .padding(8.dp),
+            strokeWidth = 4.dp,
+            color = MaterialTheme.colorScheme.secondary,
+        )
+        text?.let {
+            Text(text = text)
         }
+    }
+}
+
+@Preview
+@Composable
+private fun MifosPagingAppendProgressPreview() {
+    MaterialTheme {
+        MifosPagingAppendProgress()
+    }
+}
+
+@Preview
+@Composable
+private fun MifosCircularProgressPreview() {
+    MaterialTheme {
+        MifosCircularProgress(
+            text = "Loading...",
+        )
     }
 }
