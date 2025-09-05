@@ -113,14 +113,14 @@ object GetClientsClientIdAccountMapper :
 
             shareAccounts = entity.shareAccounts?.map {
                 ShareAccounts(
-                    id = it.id?.toInt(),
+                    id = it.id,
                     accountNo = it.accountNo,
-                    productId = it.productId?.toInt(),
+                    productId = it.productId,
                     productName = it.productName,
                     clientName = it.clientName,
                     clientId = it.clientId,
                     status = ShareAccountsStatus(
-                        id = it.status?.id?.toInt(),
+                        id = it.status?.id,
                         code = it.status?.code,
                         value = it.status?.value,
                         submittedAndPendingApproval = it.status?.submittedAndPendingApproval,
@@ -129,8 +129,6 @@ object GetClientsClientIdAccountMapper :
                         active = it.status?.active,
                         closed = it.status?.closed,
                     ),
-                    timeline = it.timeline,
-                    currency = it.currency,
                 )
             } ?: emptyList(),
         )

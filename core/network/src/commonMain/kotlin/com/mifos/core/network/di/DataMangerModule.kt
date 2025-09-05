@@ -26,7 +26,6 @@ import com.mifos.core.network.datamanager.DataManagerOffices
 import com.mifos.core.network.datamanager.DataManagerRunReport
 import com.mifos.core.network.datamanager.DataManagerSavings
 import com.mifos.core.network.datamanager.DataManagerSearch
-import com.mifos.core.network.datamanager.DataManagerShare
 import com.mifos.core.network.datamanager.DataManagerStaff
 import com.mifos.core.network.datamanager.DataManagerSurveys
 import org.koin.dsl.module
@@ -51,5 +50,4 @@ val DataManagerModule = module {
     single { DataManagerSearch(get()) }
     single { DataManagerStaff(get(), get(), get()) }
     single { DataManagerSurveys(get(), get(), get()) }
-    single { DataManagerShare(get()) }
 }

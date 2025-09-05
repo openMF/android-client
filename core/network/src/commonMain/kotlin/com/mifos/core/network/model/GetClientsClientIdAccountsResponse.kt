@@ -10,6 +10,7 @@
 package com.mifos.core.network.model
 
 import com.mifos.core.model.objects.account.share.ShareAccounts
+import com.mifos.core.network.model.share.ShareAccountResponse
 import kotlinx.serialization.Serializable
 
 /**
@@ -26,5 +27,5 @@ data class GetClientsClientIdAccountsResponse(
 
     val savingsAccounts: Set<GetClientsSavingsAccounts>? = null,
 
-    val shareAccounts: Set<ShareAccounts>? = null,
+    val shareAccounts: Set<ShareAccountResponse>? = null,
 )

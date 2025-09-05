@@ -6,13 +6,11 @@ import androidx.navigation.toRoute
 import co.touchlab.kermit.Logger
 import com.mifos.core.data.repository.ClientDetailsRepository
 import com.mifos.core.model.objects.account.share.ShareAccounts
-import com.mifos.core.network.datamanager.DataManagerShare
 import com.mifos.core.ui.util.BaseViewModel
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class ShareAccountsViewModel(
-    private val dataManager: DataManagerShare,
     savedStateHandle: SavedStateHandle,
     private val repository: ClientDetailsRepository,
 ) : BaseViewModel<ShareAccountsUiState, ShareAccountsEvent, ShareAccountsAction>(
@@ -70,15 +68,12 @@ class ShareAccountsViewModel(
     }
 
     fun fetchAllShareAccounts() {
-        Logger.d("Pronay called fetchAllShareAccounts ")
         viewModelScope.launch {
-            Logger.d { "   pronay     ${dataManager.getAllShareAccounts()}" }
             mutableStateFlow.update {
                 it.copy(dialogState = ShareAccountsUiState.DialogState.Loading)
             }
             try {
                 val result = repository.getShareAccounts(route.clientId)
-                Logger.d { "   pronay     $result" }
                 mutableStateFlow.update {
                     it.copy(
                         accounts = result,

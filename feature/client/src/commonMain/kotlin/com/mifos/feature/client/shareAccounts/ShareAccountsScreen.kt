@@ -6,6 +6,7 @@ import androidclient.feature.client.generated.resources.feature_client_error
 import androidclient.feature.client.generated.resources.feature_client_loan_account
 import androidclient.feature.client.generated.resources.filter
 import androidclient.feature.client.generated.resources.search
+import androidclient.feature.client.generated.resources.string_not_available
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -43,7 +44,7 @@ import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
-fun ShareAccountsScreenRoute(
+internal fun ShareAccountsScreenRoute(
     viewAccount: (Int) -> Unit,
     viewModel: ShareAccountsViewModel = koinViewModel(),
 ) {
@@ -59,15 +60,21 @@ fun ShareAccountsScreenRoute(
         state = state,
         onAction = remember(viewModel) { { viewModel.trySendAction(it) } },
     )
+
+    ShareAccountsDialog(
+        state = state,
+        onAction = remember(viewModel) { { viewModel.trySendAction(it) } },
+    )
 }
 
 @Composable
-fun ShareAccountsScreen(
+internal fun ShareAccountsScreen(
     state: ShareAccountsUiState,
     onAction: (ShareAccountsAction) -> Unit,
 ) {
     MifosScaffold(
-        topBar = { Text("Share Accounts") },
+        title = "Share Accounts" ,
+        onBackPressed = {}
     ) { paddingValues ->
         Column(
             modifier = Modifier.padding(paddingValues)
@@ -82,15 +89,16 @@ fun ShareAccountsScreen(
             Spacer(modifier = Modifier.height(DesignToken.padding.large))
 
             if (state.accounts.isNotEmpty()) {
+                val emptyText = stringResource(Res.string.string_not_available)
                 LazyColumn {
                     item {
                         state.accounts.forEachIndexed { index, account ->
                             MifosActionsShareListingComponent(
-                                accountNo = account.accountNo ?: "Not Available",
-                                shareProductName = account.shortProductName ?: "Not Available",
+                                accountNo = account.accountNo ?: emptyText,
+                                shareProductName = account.shortProductName ?: emptyText,
                                 pendingForApprovalShares = account.totalPendingForApprovalShares,
                                 approvedShares = account.totalApprovedShares,
-                                isExpanded = state.currentlyActiveIndex == index,
+                                isExpanded = state.currentlyActiveIndex == index && state.isCardActive,
                                 menuList = (listOf(Actions.ViewAccount())),
                                 onActionClicked = { actions ->
                                     when (actions) {
@@ -164,7 +172,7 @@ private fun ShareAccountHeader(
 }
 
 @Composable
-fun ShareAccountsDialog(
+private fun ShareAccountsDialog(
     state: ShareAccountsUiState,
     onAction: (ShareAccountsAction) -> Unit,
 ) {
@@ -175,13 +183,13 @@ fun ShareAccountsDialog(
                 dialogTitle = stringResource(Res.string.feature_client_error),
                 onConfirmation = {},
                 onDismissRequest = {
-                    onAction.invoke(ShareAccountsAction.)
+                    onAction.invoke(ShareAccountsAction.CloseDialog)
                 },
             )
         }
 
         ShareAccountsUiState.DialogState.Loading -> MifosCircularProgress()
-        null -> TODO()
+        null -> {}
     }
 }
 
