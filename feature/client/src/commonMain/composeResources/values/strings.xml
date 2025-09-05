@@ -471,4 +471,9 @@
     <string name="client_share_accounts_an_error_occurred">An error occurred</string>
     <string name="client_share_accounts_failed_to_fetch_share_accounts">Failed to fetch share accounts</string>
     <string name="client_share_accounts_try_again">Try again</string>
+
+    <string name="client_upcoming_charges_failed_message">Failed to get upcoming charges</string>
+    <string name="client_upcoming_charges_no_more_charges_available">No more charges available!</string>
+    <string name="client_upcoming_charges_charges_overview">Charges Overview</string>
+
 </resources>

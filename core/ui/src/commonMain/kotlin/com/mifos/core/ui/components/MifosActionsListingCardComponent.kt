@@ -590,17 +590,17 @@ fun MifosActionsClientFeeListingComponent(
     due: String,
     paid: String,
     waived: String,
-    outstanding: String,
-    menuList: List<Actions>,
     isActive: Boolean,
     onClick: () -> Unit,
+    outstanding: String,
+    menuList: List<Actions>,
     onActionClicked: (Actions) -> Unit,
 ) {
     MifosActionsListingComponentOutline {
         Column {
             Column(
                 modifier = Modifier.padding(DesignToken.padding.large)
-                    .onClick { onClick() },
+                    .clickable { onClick() },
             ) {
                 MifosListingRowItem(
                     key = stringResource(Res.string.core_ui_name),
@@ -639,7 +639,6 @@ fun MifosActionsClientFeeListingComponent(
                     value = outstanding,
                 )
             }
-
             if (isActive) {
                 Surface(
                     modifier = Modifier.fillMaxWidth(),
@@ -647,6 +646,7 @@ fun MifosActionsClientFeeListingComponent(
                         bottomStart = DesignToken.padding.medium,
                         bottomEnd = DesignToken.padding.medium,
                     ),
+                    color = MaterialTheme.colorScheme.surfaceContainer,
                 ) {
                     Column(
                         modifier = Modifier.padding(
@@ -669,12 +669,13 @@ fun MifosActionsClientFeeListingComponent(
                                     contentDescription = "",
                                 )
 
-                            Text(
-                                modifier = Modifier.fillMaxWidth(),
-                                text = menuItem::class.simpleName ?: "",
-                                color = MaterialTheme.colorScheme.onSurface,
-                                fontSize = MaterialTheme.typography.bodyLarge.fontSize,
-                            )
+                                Text(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    text = menuItem::class.simpleName ?: "",
+                                    color = MaterialTheme.colorScheme.onSurface,
+                                    fontSize = MaterialTheme.typography.bodyLarge.fontSize,
+                                )
+                            }
                         }
                     }
                 }
@@ -686,6 +687,8 @@ fun MifosActionsClientFeeListingComponent(
 sealed class Actions(open val icon: ImageVector) {
     data class ViewAccount(override val icon: ImageVector = MifosIcons.PiggyBank) : Actions(icon)
     data class ApproveAccount(override val icon: ImageVector = MifosIcons.ApproveAccount) :
+        Actions(icon)
+    data class PayOutstandingAmount(override val icon: ImageVector = MifosIcons.MakeRepayment) :
         Actions(icon)
 
     data class MakeRepayment(override val icon: ImageVector = MifosIcons.MakeRepayment) :
@@ -867,6 +870,8 @@ private fun PreviewMifosActionsClientFeeListingComponent() {
                 Actions.ViewAccount(),
                 Actions.ApproveAccount(),
             ),
+            isActive = true,
+            onClick = {},
             onActionClicked = { action ->
                 when (action) {
                     is Actions.ViewAccount -> println(Actions.ViewDocument::class.simpleName)
@@ -874,8 +879,6 @@ private fun PreviewMifosActionsClientFeeListingComponent() {
                     else -> println("Action not Handled")
                 }
             },
-            isActive = true,
-            onClick = {},
         )
     }
 }

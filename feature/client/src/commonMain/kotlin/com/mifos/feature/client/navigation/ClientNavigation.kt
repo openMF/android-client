@@ -170,12 +170,10 @@ fun NavGraphBuilder.clientNavGraph(
             savingAccounts = navController::navigateToClientSavingsAccountsRoute,
             loanAccounts = navController::navigateToClientLoanAccountsRoute,
             recurringDepositAccounts = navController::navigateToRecurringDepositAccountRoute,
-            upcomingCharges = navController::navigateToClientUpcomingChargesRoute,
-            fixedDepositAccounts = {},
             collateralData = {},
             sharesAccounts = navController::navigateToShareAccountsScreen,
             fixedDepositAccounts = navController::navigateToFixedDepositAccountRoute,
-            upcomingCharges = {},
+            upcomingCharges = navController::navigateToClientUpcomingChargesRoute,
         )
 
         clientRecurringDepositAccountDestination(
@@ -262,7 +260,7 @@ fun NavGraphBuilder.clientNavGraph(
         )
         clientUpcomingChargesDestination(
             navController = navController,
-            payOutstandingAmount = {}
+            payOutstandingAmount = {},
 
         )
         shareAccountsDestination(

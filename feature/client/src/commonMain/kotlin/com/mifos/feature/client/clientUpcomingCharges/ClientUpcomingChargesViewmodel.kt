@@ -1,3 +1,12 @@
+/*
+ * Copyright 2025 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ */
 package com.mifos.feature.client.clientUpcomingCharges
 
 import androidclient.feature.client.generated.resources.Res
@@ -6,26 +15,12 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import androidx.paging.PagingData
-import androidx.paging.map
-import co.touchlab.kermit.Logger
-import com.mifos.core.common.utils.DataState
-import com.mifos.core.common.utils.Page
 import com.mifos.core.data.repository.ClientChargeRepository
 import com.mifos.core.data.util.NetworkMonitor
-import com.mifos.core.model.objects.template.loan.Charges
 import com.mifos.core.ui.util.BaseViewModel
-import com.mifos.feature.client.clientCharges.ClientChargeUiState
-import com.mifos.feature.client.clientUpdateDefaultAccount.UpdateDefaultAccountRoute
-import com.mifos.feature.client.clientsList.ClientListAction
-import com.mifos.feature.client.clientsList.ClientListState
 import com.mifos.room.entities.client.ChargesEntity
-import com.mifos.room.entities.client.ClientEntity
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.firstOrNull
-import kotlinx.coroutines.flow.onEmpty
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.getString
@@ -42,7 +37,7 @@ class ClientUpcomingChargesViewmodel(
     override fun handleAction(action: ClientUpcomingChargesAction) {
         when (action) {
             is ClientUpcomingChargesAction.CardClicked -> handleCardClick(action.index)
-            ClientUpcomingChargesAction.PayOutstandingAmound -> sendEvent(ClientUpcomingChargesEvent.PayOutstandingAmound)
+            ClientUpcomingChargesAction.PayOutstandingAmount -> sendEvent(ClientUpcomingChargesEvent.PayOutstandingAmount)
 
             ClientUpcomingChargesAction.ToggleFilter -> {
                 mutableStateFlow.update {
@@ -63,7 +58,6 @@ class ClientUpcomingChargesViewmodel(
                     dialogState = null,
                 )
             }
-
         }
     }
 
@@ -145,11 +139,11 @@ data class ClientUpcomingChargesState(
 }
 
 sealed interface ClientUpcomingChargesEvent {
-    data object PayOutstandingAmound : ClientUpcomingChargesEvent
+    data object PayOutstandingAmount : ClientUpcomingChargesEvent
 }
 
 sealed interface ClientUpcomingChargesAction {
-    data object PayOutstandingAmound : ClientUpcomingChargesAction
+    data object PayOutstandingAmount : ClientUpcomingChargesAction
     data object DismissDialog : ClientUpcomingChargesAction
     data object ToggleFilter : ClientUpcomingChargesAction
     data object ToggleSearch : ClientUpcomingChargesAction

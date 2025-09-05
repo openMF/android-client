@@ -1,17 +1,25 @@
+/*
+ * Copyright 2025 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ */
 package com.mifos.feature.client.clientUpcomingCharges
 
-import android.util.Log
 import androidclient.feature.client.generated.resources.Res
-import androidclient.feature.client.generated.resources.feature_client_failed_to_more_clients
-import androidclient.feature.client.generated.resources.feature_client_no_more_clients_available
+import androidclient.feature.client.generated.resources.client_upcoming_charges_failed_message
+import androidclient.feature.client.generated.resources.client_upcoming_charges_no_more_charges_available
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -19,34 +27,40 @@ import androidx.compose.ui.unit.dp
 import androidx.paging.LoadState
 import androidx.paging.PagingData
 import androidx.paging.compose.collectAsLazyPagingItems
-import com.mifos.core.designsystem.component.MifosSweetError
+import com.mifos.core.common.utils.DateHelper
 import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosPagingAppendProgress
+import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.ui.components.Actions
 import com.mifos.core.ui.components.MifosActionsClientFeeListingComponent
 import com.mifos.room.entities.client.ChargesEntity
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.emptyFlow
+import org.jetbrains.compose.resources.stringResource
 
 @Composable
 actual fun ChargesListContent(
     charges: Flow<PagingData<ChargesEntity>>,
     state: ClientUpcomingChargesState,
     onAction: (ClientUpcomingChargesAction) -> Unit,
+    setCount: (Int) -> Unit,
     refresh: () -> Unit,
 ) {
     val chargesPagingList = charges.collectAsLazyPagingItems()
 
     when (chargesPagingList.loadState.refresh) {
         is LoadState.Error -> MifosSweetError(
-            message = "",
+            message = stringResource(Res.string.client_upcoming_charges_failed_message),
             onclick = refresh,
         )
 
         LoadState.Loading -> MifosCircularProgress()
 
         is LoadState.NotLoading -> Unit
+    }
+
+    LaunchedEffect(chargesPagingList) {
+        setCount.invoke(chargesPagingList.itemCount)
     }
 
     LazyColumn {
@@ -56,23 +70,28 @@ actual fun ChargesListContent(
         ) { index ->
             chargesPagingList[index]?.let { charge ->
                 MifosActionsClientFeeListingComponent(
-                    name = charge.name ?: "Not available",
-                    dueAsOf = "",
-                    due = charge.dueDate.toString(),
+                    name = charge.name ?: "N/A",
+                    dueAsOf = if (charge.dueDate != null) {
+                        DateHelper.getDateAsString(charge.dueDate!!)
+                    } else {
+                        "N/A"
+                    },
+                    due = charge.amountOutstanding.toString(),
                     paid = charge.amountPaid.toString(),
                     waived = charge.amountWaived.toString(),
                     outstanding = charge.amountOutstanding.toString(),
-                    menuList = listOf(),
+                    menuList = listOf(
+                        Actions.PayOutstandingAmount(),
+                    ),
                     isActive = index == state.expandedItemIndex,
                     onClick = { ClientUpcomingChargesAction.CardClicked(index) },
                     onActionClicked = { actions ->
-                        when(actions){
-                            Actions.ViewAccount -> TODO()
-                            Actions.ApproveAccount -> TODO()
-                            Actions.MakeRepayment -> TODO()
-                            Actions.ViewDocument -> TODO()
-                            Actions.UploadAgain -> TODO()
-                            Actions.DeleteDocument -> TODO()
+                        when (actions) {
+                            is Actions.PayOutstandingAmount -> {
+                                ClientUpcomingChargesAction.PayOutstandingAmount
+                            }
+
+                            else -> {}
                         }
                     },
                 )
@@ -83,7 +102,7 @@ actual fun ChargesListContent(
         when (chargesPagingList.loadState.append) {
             is LoadState.Error -> {
                 item {
-                    MifosSweetError(message = org.jetbrains.compose.resources.stringResource(Res.string.feature_client_failed_to_more_clients)) {
+                    MifosSweetError(message = org.jetbrains.compose.resources.stringResource(Res.string.client_upcoming_charges_failed_message)) {
                         refresh()
                     }
                 }
@@ -104,7 +123,7 @@ actual fun ChargesListContent(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(6.dp),
-                            text = org.jetbrains.compose.resources.stringResource(Res.string.feature_client_no_more_clients_available),
+                            text = org.jetbrains.compose.resources.stringResource(Res.string.client_upcoming_charges_no_more_charges_available),
                             style = MaterialTheme.typography.bodyMedium,
                             textAlign = TextAlign.Center,
                         )

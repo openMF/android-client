@@ -17,7 +17,6 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
-import com.mifos.core.designsystem.component.MifosTextButton
 import com.mifos.core.designsystem.theme.MifosTheme
 import com.mifos.core.ui.util.DevicePreview
 
