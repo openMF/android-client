@@ -222,4 +222,6 @@ object MifosIcons {
     val FileUpload = Icons.Outlined.FileUpload
     val DeleteDocument = Icons.Outlined.DeleteOutline
     val MakeRepayment = Icons.Outlined.Payments
+
+    val RightTick = com.mifos.core.designsystem.icon.RightTick
 }

@@ -470,3 +470,34 @@ val ClipDocument: ImageVector
     }
 
 private var clipDocument: ImageVector? = null
+
+
+val RightTick: ImageVector
+    get() {
+        if (rightTick != null) {
+            return rightTick!!
+        }
+        rightTick = ImageVector.Builder(
+            name = "RightTick",
+            defaultWidth = 16.dp,
+            defaultHeight = 12.dp,
+            viewportWidth = 16f,
+            viewportHeight = 12f
+        ).apply {
+            path(fill = SolidColor(Color(0xFF191C20))) {
+                moveTo(5.329f, 9.229f)
+                lineTo(1.854f, 5.754f)
+                lineTo(0.671f, 6.929f)
+                lineTo(5.329f, 11.587f)
+                lineTo(15.329f, 1.587f)
+                lineTo(14.154f, 0.412f)
+                lineTo(5.329f, 9.229f)
+                close()
+            }
+        }.build()
+
+        return rightTick!!
+    }
+
+private var rightTick: ImageVector? = null
+
