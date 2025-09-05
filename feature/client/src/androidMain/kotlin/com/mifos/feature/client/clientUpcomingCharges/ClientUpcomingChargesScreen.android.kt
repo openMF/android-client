@@ -12,6 +12,7 @@ package com.mifos.feature.client.clientUpcomingCharges
 import androidclient.feature.client.generated.resources.Res
 import androidclient.feature.client.generated.resources.client_upcoming_charges_failed_message
 import androidclient.feature.client.generated.resources.client_upcoming_charges_no_more_charges_available
+import androidclient.feature.client.generated.resources.string_not_available
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -74,13 +75,13 @@ actual fun ChargesListContent(
                     dueAsOf = if (charge.dueDate != null) {
                         DateHelper.getDateAsString(charge.dueDate!!)
                     } else {
-                        "N/A"
+                        stringResource(Res.string.string_not_available)
                     },
                     // todo check if its the right way to get due
                     due = if (charge.amount != null && charge.amountPaid != null) {
                         (charge.amount!! - charge.amountPaid!!).toString()
                     } else {
-                        "N/A"
+                        stringResource(Res.string.string_not_available)
                     },
                     paid = charge.amountPaid.toString(),
                     waived = charge.amountWaived.toString(),
