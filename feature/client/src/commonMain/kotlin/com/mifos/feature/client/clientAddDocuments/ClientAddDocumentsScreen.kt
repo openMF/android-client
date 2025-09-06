@@ -64,6 +64,12 @@ fun ClientAddDocumentsScreen(
         }
     }
 
+
+    ClientAddDocumentsScreenDialog(
+        state,
+        onAction = remember(viewModel){{viewModel.trySendAction(it)}}
+    )
+
     if(state.showDocumentPreviewScreen){
         DocumentPreviewScreen(
             canUpdateDocument = state.isDocumentUpdatingEnabled,
@@ -72,7 +78,7 @@ fun ClientAddDocumentsScreen(
             },
             onSubmit = {
                 viewModel.trySendAction(
-                    ClientAddDocumentAction.SubmitFromDocumentPreviewScreen
+                    ClientAddDocumentAction.SubmitFromDocumentPreviewScreen(it)
                 )
             },
             onUploadFromGallery = {
@@ -85,19 +91,13 @@ fun ClientAddDocumentsScreen(
                 viewModel.trySendAction(ClientAddDocumentAction.UseMoreOptions)
             },
         )
+    } else {
+        ClientAddDocumentScaffold(
+            navController,
+            state,
+            onAction = remember(viewModel){{viewModel.trySendAction(it)}}
+        )
     }
-
-    ClientAddDocumentsScreenDialog(
-        state,
-        onAction = remember(viewModel){{viewModel.trySendAction(it)}}
-    )
-
-    ClientAddDocumentScaffold(
-        navController,
-        state,
-        onAction = remember(viewModel){{viewModel.trySendAction(it)}}
-    )
-
 }
 
 @Composable
@@ -160,22 +160,21 @@ private fun ClientAddDocumentScaffold(
             onAction(ClientAddDocumentAction.NavigateBack)
         },
         bottomBar = {
-            if(state.showFilePickerBottomSheet){
-                MifosFilePickerBottomSheet(
-                    onDismiss = {
-                        onAction(ClientAddDocumentAction.DismissBottomSheet)
-                    },
-                    onGalleryClick = {
-                        onAction(ClientAddDocumentAction.PickFromFiles)
-                    },
-                    onFilesClick = {
-                        onAction(ClientAddDocumentAction.PickFromFiles)
-                    },
-                    onMoreClick ={
-                        onAction(ClientAddDocumentAction.UseMoreOptions)
-                    },
-                )
-            }
+            MifosFilePickerBottomSheet(
+                state.showFilePickerBottomSheet,
+                onDismiss = {
+                    onAction(ClientAddDocumentAction.DismissBottomSheet)
+                },
+                onGalleryClick = {
+                    onAction(ClientAddDocumentAction.PickFromFiles)
+                },
+                onFilesClick = {
+                    onAction(ClientAddDocumentAction.PickFromFiles)
+                },
+                onMoreClick ={
+                    onAction(ClientAddDocumentAction.UseMoreOptions)
+                },
+            )
         },
         title = "",
     ) { paddingValues ->
@@ -207,10 +206,9 @@ private fun ClientAddDocumentScaffold(
                         onAction(ClientAddDocumentAction.UpdateName(it))
                     },
                     label = "Document Name",
-                    maxLines = 1
+                    maxLines = 1,
+                    shape = DesignToken.shapes.medium,
                 )
-
-                Spacer(Modifier.height(DesignToken.spacing.largeIncreased))
 
                 MifosOutlinedTextField(
                     value = state.enteredDocumentDescription,
@@ -219,10 +217,11 @@ private fun ClientAddDocumentScaffold(
                         onAction(ClientAddDocumentAction.UpdateDescription(it))
                     },
                     label = "Description",
-                    maxLines = 1
+                    maxLines = 1,
+                    shape = DesignToken.shapes.medium,
+                    modifier = Modifier
+                        .padding(bottom = 8.dp)
                 )
-
-                Spacer(Modifier.height(DesignToken.spacing.largeIncreased))
 
                 AddViewFileAndFileNameRow(
                     state = state,
@@ -248,6 +247,7 @@ private fun ClientAddDocumentScaffold(
                             1.dp,
                             color = MaterialTheme.colorScheme.secondaryContainer,
                         ),
+                        shape = DesignToken.shapes.medium,
                         modifier = Modifier
                             .height(40.dp)
                             .weight(1f)
@@ -255,16 +255,17 @@ private fun ClientAddDocumentScaffold(
                         Icon(
                             imageVector = MifosIcons.ArrowBack,
                             "back button",
-                            modifier = Modifier.size(DesignToken.sizes.iconMinyMiny)
+                            modifier = Modifier.size(DesignToken.sizes.iconSmall),
+                            tint = MaterialTheme.colorScheme.primary,
                         )
-                        Spacer(Modifier.height(DesignToken.spacing.medium))
+                        Spacer(Modifier.width(DesignToken.spacing.small))
                         Text(
                             "Back",
                             style = MaterialTheme.typography.labelMedium,
                         )
                     }
 
-                    Spacer(Modifier.height(DesignToken.spacing.small))
+                    Spacer(Modifier.width(DesignToken.spacing.small))
 
                     MifosOutlinedButton(
                         onClick = {
@@ -278,6 +279,7 @@ private fun ClientAddDocumentScaffold(
                             1.dp,
                             color = MaterialTheme.colorScheme.secondaryContainer,
                         ),
+                        shape = DesignToken.shapes.medium,
                         modifier = Modifier
                             .height(40.dp)
                             .weight(1f)
@@ -285,10 +287,10 @@ private fun ClientAddDocumentScaffold(
                         Icon(
                             imageVector = MifosIcons.RightTick,
                             "back button",
-                            modifier = Modifier.size(DesignToken.sizes.iconMinyMiny),
-                            tint = MaterialTheme.colorScheme.onPrimary
+                            modifier = Modifier.size(DesignToken.sizes.iconMiny),
+                            tint = MaterialTheme.colorScheme.onPrimary,
                         )
-                        Spacer(Modifier.height(DesignToken.spacing.medium))
+                        Spacer(Modifier.width(DesignToken.spacing.small))
                         Text(
                             "Submit",
                             style = MaterialTheme.typography.labelMedium,
@@ -329,7 +331,7 @@ private fun AddViewFileAndFileNameRow(
             style = MaterialTheme . typography . labelLarge,
             fontFamily = FontFamily.SansSerif,
             modifier = Modifier.padding(
-                start = DesignToken.padding.large,
+                start = 16.dp,
                 top = 18.dp,
                 bottom = 18.dp
             )
@@ -349,18 +351,17 @@ private fun AddViewFileAndFileNameRow(
                 containerColor = MaterialTheme.colorScheme.onPrimary,
                 contentColor = MaterialTheme.colorScheme.primary
             ),
+            shape = DesignToken.shapes.small,
             border = BorderStroke(
                 1.dp,
                 color = MaterialTheme.colorScheme.secondaryContainer,
             ),
             modifier = Modifier
+                .padding(
+                    end = 16.dp
+                )
                 .height(36.dp)
                 .width(72.dp)
-                .padding(
-                    start = DesignToken.padding.large,
-                    top = DesignToken.padding.medium,
-                    bottom = DesignToken.padding.medium,
-                )
         ){
             Text(
                 text = if (!state.isDocumentAdded) {

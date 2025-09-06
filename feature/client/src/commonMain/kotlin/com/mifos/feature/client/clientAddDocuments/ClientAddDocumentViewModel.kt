@@ -23,8 +23,9 @@ import com.mifos.feature.client.clientAddDocuments.ClientAddDocumentState.Dialog
 import com.mifos.feature.client.utils.createDocumentRequestBody
 import io.github.vinceglb.filekit.PlatformFile
 import io.github.vinceglb.filekit.extension
-import io.github.vinceglb.filekit.name
 import io.github.vinceglb.filekit.nameWithoutExtension
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.IO
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.update
@@ -67,10 +68,10 @@ class ClientAddDocumentViewModel(
             ClientAddDocumentAction.PickFromGallery -> {
                 pickDocumentFromGallery()
             }
-            ClientAddDocumentAction.SubmitFromDocumentPreviewScreen -> {
+            is ClientAddDocumentAction.SubmitFromDocumentPreviewScreen -> {
                 mutableStateFlow.update {
                     it.copy(
-                        pickedDocumentName = state.document?.name?:"",
+                        pickedDocumentName = action.fileName,
                         isDocumentAdded = true,
                         showDocumentPreviewScreen = false,
                     )
@@ -83,7 +84,7 @@ class ClientAddDocumentViewModel(
             }
             is ClientAddDocumentAction.UpdateName -> {
                 mutableStateFlow.update {
-                    it.copy(enteredDocumentDescription = action.text)
+                    it.copy(enteredFileName = action.text)
                 }
             }
             ClientAddDocumentAction.UploadDocument -> {
@@ -198,36 +199,27 @@ class ClientAddDocumentViewModel(
 
     private fun uploadDocument() = flow {
         emit(DataState.Loading)
-        val document = state.document
+        val result = try {
+            val document = PlatformFile(state.document)
 
-        if(document==null){
-            emit(DataState.Error(IllegalStateException("No document found")))
-            return@flow
-        }
+            val multiPartFormDataContent = getMultiPartFormDataContent(document)
 
-        val multiPartFormDataContent = getMultiPartFormDataContent(document)
-        try {
-            val result = documentDialogRepository.createDocument(
+            documentDialogRepository.createDocument(
                 entityType = entityType,
                 entityId = clientId,
                 file = multiPartFormDataContent,
             )
-            emit(result)
         } catch (e: Exception) {
-            emit(DataState.Error(e))
+            DataState.Error(e)
         }
+        emit(result)
     }
 
     private fun updateDocument() = flow {
         emit(DataState.Loading)
 
-        val document = state.document
-        if (document == null) {
-            emit(DataState.Error(IllegalStateException("No document found")))
-            return@flow
-        }
-
-        try {
+        val result = try {
+            val document = PlatformFile(state.document)
             val multiPartFormDataContent = getMultiPartFormDataContent(document)
             val result = documentDialogRepository.updateDocument(
                 entityType = entityType,
@@ -235,10 +227,11 @@ class ClientAddDocumentViewModel(
                 documentId = documentId,
                 file = multiPartFormDataContent,
             )
-            emit(result)
+            result
         } catch (e: Exception) {
-            emit(DataState.Error(e))
+            DataState.Error(e)
         }
+        emit(result)
     }
     private suspend fun getMultiPartFormDataContent(file: PlatformFile) = createDocumentRequestBody(
         file,
@@ -247,14 +240,13 @@ class ClientAddDocumentViewModel(
     )
 
     private fun pickDocumentFromGallery() {
-        viewModelScope.launch {
-
-            FileKitUtil.pickImageFile("").collect { imageData ->
+        viewModelScope.launch(Dispatchers.IO) {
+            FileKitUtil.pickImageAndSaveToCache("").collect { imageData ->
                 when (imageData) {
                     is DataState.Error<*> -> {
                         mutableStateFlow.update {
                             it.copy(
-                                dialogState = ClientAddDocumentState.DialogState.Error(
+                                dialogState = Error(
                                     imageData.message,
                                 ),
                             )
@@ -265,16 +257,14 @@ class ClientAddDocumentViewModel(
                             it.copy(dialogState = ClientAddDocumentState.DialogState.Loading)
                         }
                     }
-                    is DataState.Success<*> -> {
-                        imageData.data?.let {
-                            mutableStateFlow.update {
-                                it.copy(
-                                    dialogState = null,
-                                    document = imageData.data,
-                                    showDocumentPreviewScreen = true,
-                                )
-                            }
-                        } ?: mutableStateFlow.update { it.copy(dialogState = null) }
+                    is DataState.Success -> {
+                        mutableStateFlow.update {
+                            it.copy(
+                                dialogState = null,
+                                document = imageData.data,
+                                showDocumentPreviewScreen = true,
+                            )
+                        }
                     }
                 }
             }
@@ -282,7 +272,7 @@ class ClientAddDocumentViewModel(
     }
 
     private fun pickDocumentFromFiles() {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             FileKitUtil.pickPdfFile("").collect { documentFile ->
                 when (documentFile) {
                     is DataState.Error<*> -> {
@@ -299,16 +289,14 @@ class ClientAddDocumentViewModel(
                             it.copy(dialogState = ClientAddDocumentState.DialogState.Loading)
                         }
                     }
-                    is DataState.Success<*> -> {
-                        documentFile.data?.let {
-                            mutableStateFlow.update {
-                                it.copy(
-                                    showDocumentPreviewScreen = true,
-                                    dialogState = null,
-                                    document = documentFile.data,
-                                )
-                            }
-                        } ?: mutableStateFlow.update { it.copy(dialogState = null) }
+                    is DataState.Success -> {
+                        mutableStateFlow.update {
+                            it.copy(
+                                showDocumentPreviewScreen = true,
+                                dialogState = null,
+                                document = documentFile.data,
+                            )
+                        }
                     }
                 }
             }
@@ -317,13 +305,12 @@ class ClientAddDocumentViewModel(
 }
 
 data class ClientAddDocumentState(
-    val documentId: Int = -1,
     val isNetworkAvailable: Boolean = false,
     val dialogState: DialogState? = null,
     val showFilePickerBottomSheet: Boolean = false,
     val enteredDocumentDescription: String = "",
     val enteredFileName: String = "",
-    val document: PlatformFile? = null,
+    val document: String ="",
     val pickedDocumentName: String = "",
     val isDocumentAdded: Boolean = false,
     val isDocumentUpdatingEnabled: Boolean  = false,
@@ -342,7 +329,7 @@ sealed interface ClientAddDocumentAction {
     data object NavigateBack : ClientAddDocumentAction
     data object AddNewDocument : ClientAddDocumentAction
     data object DismissBottomSheet: ClientAddDocumentAction
-    data object SubmitFromDocumentPreviewScreen : ClientAddDocumentAction
+    data class SubmitFromDocumentPreviewScreen(val fileName: String) : ClientAddDocumentAction
     data object UploadDocument : ClientAddDocumentAction
     data object UploadNewDocument : ClientAddDocumentAction
     data class UpdateName(val text: String) : ClientAddDocumentAction

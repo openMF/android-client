@@ -24,21 +24,21 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
-import com.mifos.core.common.utils.DataState
 import com.mifos.core.designsystem.component.MifosOutlinedButton
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.ui.components.MifosFilePickerBottomSheet
-import kotlinx.coroutines.flow.Flow
+import io.github.vinceglb.filekit.PlatformFile
+import io.github.vinceglb.filekit.nameWithoutExtension
 
 
 @Composable
 fun DocumentPreviewScreen(
-    file: Flow<DataState<ByteArray>>? =null,
+    absoluteFilePath: String = "",
     canUpdateDocument: Boolean = false,
     onBack: ()-> Unit,
-    onSubmit: () -> Unit,
+    onSubmit: (String) -> Unit,
     onUploadFromGallery: () -> Unit,
     onUploadFromFiles: () -> Unit,
     onClickMoreOptions: () -> Unit,
@@ -46,20 +46,21 @@ fun DocumentPreviewScreen(
     var openBottomSheet by remember {
         mutableStateOf(true)
     }
+    val file = PlatformFile(absoluteFilePath)
 
     MifosScaffold(
         onBackPressed = {},
         bottomBar = {
-            if(openBottomSheet){
-                MifosFilePickerBottomSheet(
-                    onDismiss = {
-                        openBottomSheet=false
-                    },
-                    onGalleryClick = onUploadFromGallery,
-                    onFilesClick = onUploadFromFiles,
-                    onMoreClick = onClickMoreOptions,
-                )
-            }
+
+            MifosFilePickerBottomSheet(
+                showBottomSheet = openBottomSheet,
+                onDismiss = {
+                    openBottomSheet = false
+                },
+                onGalleryClick = onUploadFromGallery,
+                onFilesClick = onUploadFromFiles,
+                onMoreClick = onClickMoreOptions,
+            )
         },
         modifier = Modifier.fillMaxSize()
     ){paddingValues ->
@@ -122,7 +123,7 @@ fun DocumentPreviewScreen(
                         if (canUpdateDocument) {
                             openBottomSheet = true
                         } else {
-                            onSubmit()
+                            onSubmit(file.nameWithoutExtension)
                         }
                     },
                     colors = ButtonDefaults.outlinedButtonColors(

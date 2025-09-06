@@ -29,11 +29,15 @@ class ClientDocumentsViewModel(
     private val documentsRepository: DocumentListRepository,
     private val networkMonitor: NetworkMonitor,
 ) : BaseViewModel<
-    ClientDocumentsScreenState,
-    ClientDocumentsEvents,
-    ClientDocumentsActions,
-    >
-    (initialState = ClientDocumentsScreenState()) {
+        ClientDocumentsScreenState,
+        ClientDocumentsEvents,
+        ClientDocumentsActions,
+        >
+    (
+    initialState = ClientDocumentsScreenState(
+        clientId = savedStateHandle.toRoute<ClientDocumentsRoute>().clientId,
+    ),
+) {
 
     private val route = savedStateHandle.toRoute<ClientDocumentsRoute>()
     private val entityType = "clients"
@@ -126,6 +130,7 @@ class ClientDocumentsViewModel(
                     true -> {
                         loadClientDocuments()
                     }
+
                     false -> {
                         mutableStateFlow.update {
                             it.copy(
@@ -156,6 +161,7 @@ class ClientDocumentsViewModel(
                         )
                     }
                 }
+
                 DataState.Loading -> {
                     mutableStateFlow.update {
                         it.copy(
@@ -163,6 +169,7 @@ class ClientDocumentsViewModel(
                         )
                     }
                 }
+
                 is DataState.Success<*> -> {
                     println("Network Documents List: " + dataState.data)
                     mutableStateFlow.update {
@@ -188,6 +195,7 @@ class ClientDocumentsViewModel(
 }
 
 data class ClientDocumentsScreenState(
+    val clientId: Int = -1,
     val clientDocuments: List<Document> = emptyList(),
     val searchText: String = "",
     val isNetworkConnected: Boolean = false,
@@ -197,7 +205,8 @@ data class ClientDocumentsScreenState(
     sealed interface DialogState {
         data object Loading : DialogState
         data class Error(val message: String) : DialogState
-        data class ConfirmDocumentDeletion(val documentName: String, val documentId: Int) : DialogState
+        data class ConfirmDocumentDeletion(val documentName: String, val documentId: Int) :
+            DialogState
     }
 }
 
@@ -208,13 +217,16 @@ sealed interface ClientDocumentsEvents {
         val documentNumber: Int,
         val documentType: String,
     ) : ClientDocumentsEvents
+
     data object OnAddDocument : ClientDocumentsEvents
 }
 
 sealed interface ClientDocumentsActions {
     data object NavigateBack : ClientDocumentsActions
     data class ViewDocument(val documentId: Int) : ClientDocumentsActions
-    data class DeleteDocument(val documentName: String, val documentId: Int) : ClientDocumentsActions
+    data class DeleteDocument(val documentName: String, val documentId: Int) :
+        ClientDocumentsActions
+
     data class ConfirmDeleteDocument(val documentId: Int) : ClientDocumentsActions
     data object Refresh : ClientDocumentsActions
     data object AddDocument : ClientDocumentsActions

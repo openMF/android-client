@@ -17,8 +17,6 @@ import androidclient.feature.client.generated.resources.confirm_text
 import androidclient.feature.client.generated.resources.delete_dialog_title
 import androidclient.feature.client.generated.resources.dismiss_text
 import androidclient.feature.client.generated.resources.document_delete_dialog_message
-import androidclient.feature.client.generated.resources.filter
-import androidclient.feature.client.generated.resources.search
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -43,6 +41,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosScaffold
+import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.designsystem.theme.MifosTypography
 import com.mifos.core.ui.components.Actions
@@ -52,7 +51,6 @@ import com.mifos.core.ui.components.MifosEmptyCard
 import com.mifos.core.ui.components.MifosErrorComponent
 import com.mifos.core.ui.components.MifosSearchBar
 import com.mifos.core.ui.util.EventsEffect
-import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -70,7 +68,13 @@ fun ClientDocumentScreen(
         when (events) {
             ClientDocumentsEvents.OnNavigateBack -> onNavigateBack
             is ClientDocumentsEvents.OnViewDocument -> onViewDocument
-            ClientDocumentsEvents.OnAddDocument -> onNavigateToAddDocument
+            ClientDocumentsEvents.OnAddDocument -> {
+                onNavigateToAddDocument(
+                    state.clientId,
+                    -1,
+                    "clients"
+                )
+            }
         }
     }
 
@@ -263,7 +267,7 @@ private fun ClientDocumentsHeader(
         Spacer(modifier = Modifier.weight(1f))
 
         Icon(
-            painter = painterResource(Res.drawable.search),
+            imageVector = MifosIcons.Search,
             contentDescription = null,
             modifier = Modifier.clickable {
                 onToggleSearch.invoke()
@@ -273,7 +277,7 @@ private fun ClientDocumentsHeader(
         Spacer(modifier = Modifier.width(DesignToken.spacing.largeIncreased))
 
         Icon(
-            painter = painterResource(Res.drawable.filter),
+            imageVector = MifosIcons.Add,
             contentDescription = null,
             modifier = Modifier.clickable {
                 onAddDocument.invoke()
