@@ -25,8 +25,6 @@ import com.mifos.feature.client.utils.createDocumentRequestBody
 import io.github.vinceglb.filekit.PlatformFile
 import io.github.vinceglb.filekit.extension
 import io.github.vinceglb.filekit.nameWithoutExtension
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.IO
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.update
@@ -98,7 +96,9 @@ class ClientAddDocumentViewModel(
                 observeNetworkAndUpload()
             }
 
-            ClientAddDocumentAction.UseMoreOptions -> {}
+            ClientAddDocumentAction.UseMoreOptions -> {
+
+            }
             ClientAddDocumentAction.CloseDocumentPreviewScreen -> {
                 mutableStateFlow.update {
                     it.copy(showDocumentPreviewScreen = false)
@@ -260,8 +260,8 @@ class ClientAddDocumentViewModel(
     )
 
     private fun pickDocumentFromGallery() {
-        viewModelScope.launch(Dispatchers.IO) {
-            FileKitUtil.pickImageAndSaveToCache("").collect { imageData ->
+        viewModelScope.launch {
+            FileKitUtil.pickImage("").collect { imageData ->
                 when (imageData) {
                     is DataState.Error -> {
                         mutableStateFlow.update {
@@ -278,16 +278,22 @@ class ClientAddDocumentViewModel(
                         }
                     }
                     is DataState.Success -> {
-                        launch(Dispatchers.Main) {
+                        if(imageData.data!=null){
                             mutableStateFlow.update {
                                 it.copy(
-                                    dialogState = null,
-                                    documentPath = imageData.data,
-                                    showFilePickerBottomSheet = false,
                                     showDocumentPreviewScreen = true,
+                                    showFilePickerBottomSheet = false,
+                                    dialogState = null,
+                                    documentPath = imageData.data!!,
                                 )
                             }
-                            Logger.e { "Image absolute path" + imageData.data }
+                            Logger.e { "Document absolute path" + imageData.data }
+                        } else {
+                            mutableStateFlow.update {
+                                it.copy(
+                                    dialogState = null
+                                )
+                            }
                         }
                     }
                 }
@@ -314,17 +320,23 @@ class ClientAddDocumentViewModel(
                         }
                     }
                     is DataState.Success -> {
-                        launch {
+                        if(documentFile.data!=null){
+                            mutableStateFlow.update {
+                                it.copy(
+                                    showDocumentPreviewScreen = true,
+                                    showFilePickerBottomSheet = false,
+                                    dialogState = null,
+                                    documentPath = documentFile.data!!,
+                                )
+                            }
+                            Logger.e { "Document absolute path" + documentFile.data }
+                        } else {
+                            mutableStateFlow.update {
+                                it.copy(
+                                    dialogState = null,
+                                )
+                            }
                         }
-                        mutableStateFlow.update {
-                            it.copy(
-                                showDocumentPreviewScreen = true,
-                                showFilePickerBottomSheet = false,
-                                dialogState = null,
-                                documentPath = documentFile.data,
-                            )
-                        }
-                        Logger.e { "Document absolute path" + documentFile.data }
                     }
                 }
             }

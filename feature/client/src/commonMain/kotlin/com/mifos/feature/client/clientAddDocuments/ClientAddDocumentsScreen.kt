@@ -54,17 +54,17 @@ import org.koin.compose.viewmodel.koinViewModel
 fun ClientAddDocumentsScreen(
     navController: NavController,
     navigateBack: () -> Unit,
-    viewModel: ClientAddDocumentViewModel = koinViewModel(),
+    viewModel: ClientAddDocumentViewModel = koinViewModel()
 ) {
     val state by viewModel.stateFlow.collectAsStateWithLifecycle()
 
-    EventsEffect(viewModel.eventFlow) { events ->
-        when (events) {
+    EventsEffect(viewModel.eventFlow){ events ->
+        when(events){
             ClientAddDocumentEvents.OnNavigateBack -> navigateBack()
         }
     }
 
-    if (state.showDocumentPreviewScreen && (state.documentPath != null)) {
+    if(state.showDocumentPreviewScreen && (state.documentPath!=null)){
         DocumentPreviewScreen(
             platformFile = state.documentPath!!,
             canUpdateDocument = state.isDocumentUpdatingEnabled,
@@ -73,11 +73,11 @@ fun ClientAddDocumentsScreen(
             },
             onSubmit = {
                 viewModel.trySendAction(
-                    if (state.isDocumentUpdatingEnabled) {
+                    if(state.isDocumentUpdatingEnabled){
                         ClientAddDocumentAction.CloseDocumentPreviewScreen
                     } else {
                         ClientAddDocumentAction.SubmitFromDocumentPreviewScreen(it)
-                    },
+                    }
                 )
             },
             onUploadFromGallery = {
@@ -94,7 +94,7 @@ fun ClientAddDocumentsScreen(
         ClientAddDocumentScaffold(
             navController,
             state,
-            onAction = remember(viewModel) { { viewModel.trySendAction(it) } },
+            onAction = remember(viewModel){{viewModel.trySendAction(it)}}
         )
     }
 }
@@ -104,6 +104,7 @@ private fun ClientAddDocumentsScreenDialog(
     state: ClientAddDocumentState,
     onAction: (ClientAddDocumentAction) -> Unit,
 ) {
+
     when (state.dialogState) {
         is ClientAddDocumentState.DialogState.Error -> {
             MifosSweetError(
@@ -118,7 +119,7 @@ private fun ClientAddDocumentsScreenDialog(
             MifosSweetError(
                 message = state.dialogState.message,
                 isRetryEnabled = true,
-            ) {
+            ){
                 onAction(ClientAddDocumentAction.RetryUpdate)
             }
         }
@@ -126,12 +127,13 @@ private fun ClientAddDocumentsScreenDialog(
             MifosSweetError(
                 message = state.dialogState.message,
                 isRetryEnabled = true,
-            ) {
+            ){
                 onAction(ClientAddDocumentAction.RetryUpload)
             }
         }
         null -> {}
     }
+
 }
 
 @Composable
@@ -158,21 +160,21 @@ private fun ClientAddDocumentScaffold(
                 onFilesClick = {
                     onAction(ClientAddDocumentAction.PickFromFiles)
                 },
-                onMoreClick = {
+                onMoreClick ={
                     onAction(ClientAddDocumentAction.UseMoreOptions)
                 },
             )
         },
         title = "",
     ) { paddingValues ->
-        if (state.dialogState != null) {
+        if(state.dialogState!=null){
             ClientAddDocumentsScreenDialog(
                 state,
-                onAction = onAction,
+                onAction = onAction
             )
-        } else if (state.showProgressBar) {
+        } else if(state.showProgressBar){
             MifosProgressIndicator()
-        } else {
+        }else{
             Column(
                 modifier = Modifier
                     .padding(paddingValues)
@@ -185,6 +187,7 @@ private fun ClientAddDocumentScaffold(
                             horizontal = DesignToken.padding.large,
                         ),
                 ) {
+
                     Text(
                         "Add Document",
                         style = MifosTypography.titleMedium,
@@ -213,27 +216,28 @@ private fun ClientAddDocumentScaffold(
                         maxLines = 1,
                         shape = DesignToken.shapes.medium,
                         modifier = Modifier
-                            .padding(bottom = 8.dp),
+                            .padding(bottom = 8.dp)
                     )
 
                     AddViewFileAndFileNameRow(
                         state = state,
-                        onAction = onAction,
+                        onAction = onAction
                     )
 
                     Spacer(Modifier.height(DesignToken.spacing.largeIncreased))
 
                     Row(
                         horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically,
+                        verticalAlignment = Alignment.CenterVertically
                     ) {
+
                         MifosOutlinedButton(
                             onClick = {
                                 onAction(ClientAddDocumentAction.NavigateBack)
                             },
                             colors = ButtonDefaults.outlinedButtonColors(
                                 containerColor = MaterialTheme.colorScheme.onPrimary,
-                                contentColor = MaterialTheme.colorScheme.primary,
+                                contentColor = MaterialTheme.colorScheme.primary
                             ),
                             border = BorderStroke(
                                 1.dp,
@@ -242,8 +246,8 @@ private fun ClientAddDocumentScaffold(
                             shape = DesignToken.shapes.medium,
                             modifier = Modifier
                                 .height(40.dp)
-                                .weight(1f),
-                        ) {
+                                .weight(1f)
+                        ){
                             Icon(
                                 imageVector = MifosIcons.ArrowBack,
                                 "back button",
@@ -261,13 +265,13 @@ private fun ClientAddDocumentScaffold(
 
                         MifosOutlinedButton(
                             onClick = {
-                                if (state.isDocumentAdded) {
+                                if(state.isDocumentAdded){
                                     onAction(ClientAddDocumentAction.UploadDocument)
                                 }
                             },
                             colors = ButtonDefaults.outlinedButtonColors(
                                 containerColor = MaterialTheme.colorScheme.primary,
-                                contentColor = MaterialTheme.colorScheme.onPrimary,
+                                contentColor = MaterialTheme.colorScheme.onPrimary
                             ),
                             border = BorderStroke(
                                 1.dp,
@@ -276,8 +280,8 @@ private fun ClientAddDocumentScaffold(
                             shape = DesignToken.shapes.medium,
                             modifier = Modifier
                                 .height(40.dp)
-                                .weight(1f),
-                        ) {
+                                .weight(1f)
+                        ){
                             Icon(
                                 imageVector = MifosIcons.RightTick,
                                 "back button",
@@ -288,21 +292,24 @@ private fun ClientAddDocumentScaffold(
                             Text(
                                 "Submit",
                                 style = MaterialTheme.typography.labelMedium,
-                                color = MaterialTheme.colorScheme.onPrimary,
+                                color = MaterialTheme.colorScheme.onPrimary
                             )
                         }
+
                     }
                 }
             }
         }
-    }
+        }
+
 }
+
 
 @Composable
 private fun AddViewFileAndFileNameRow(
     state: ClientAddDocumentState,
-    onAction: (ClientAddDocumentAction) -> Unit,
-) {
+    onAction: (ClientAddDocumentAction) -> Unit
+){
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -310,39 +317,39 @@ private fun AddViewFileAndFileNameRow(
             .border(
                 1.dp,
                 color = MaterialTheme.colorScheme.secondaryContainer,
-                shape = DesignToken.shapes.medium,
+                shape = DesignToken.shapes.medium
             ),
         horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically,
-    ) {
+        verticalAlignment = Alignment.CenterVertically
+    ){
         Text(
             text = if (!state.isDocumentAdded) {
                 "No File Selected"
             } else {
                 state.pickedDocumentName
             },
-            style = MaterialTheme.typography.labelLarge,
+            style = MaterialTheme . typography . labelLarge,
             fontFamily = FontFamily.SansSerif,
             modifier = Modifier.padding(
                 start = 16.dp,
                 top = 18.dp,
-                bottom = 18.dp,
+                bottom = 18.dp
             )
-                .weight(.6f),
+            .weight(.6f),
             overflow = TextOverflow.Ellipsis,
-            maxLines = 1,
+            maxLines = 1
         )
         MifosOutlinedButton(
             onClick = {
-                if (!state.isDocumentAdded) {
+                if(!state.isDocumentAdded){
                     onAction(ClientAddDocumentAction.AddNewDocument)
-                } else {
+                } else{
                     onAction(ClientAddDocumentAction.PreviewUploadedDocument)
                 }
             },
             colors = ButtonDefaults.outlinedButtonColors(
                 containerColor = MaterialTheme.colorScheme.onPrimary,
-                contentColor = MaterialTheme.colorScheme.primary,
+                contentColor = MaterialTheme.colorScheme.primary
             ),
             shape = DesignToken.shapes.small,
             border = BorderStroke(
@@ -352,15 +359,15 @@ private fun AddViewFileAndFileNameRow(
             modifier = Modifier
                 .padding(end = 16.dp)
                 .height(36.dp)
-                .width(72.dp),
-        ) {
+                .width(72.dp)
+        ){
             Text(
                 text = if (!state.isDocumentAdded) {
                     "Add"
                 } else {
                     "View"
                 },
-                style = MaterialTheme.typography.labelMedium,
+                style = MaterialTheme.typography.labelMedium
             )
         }
     }

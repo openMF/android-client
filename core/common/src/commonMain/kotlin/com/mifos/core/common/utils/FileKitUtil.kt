@@ -14,7 +14,6 @@ import io.github.vinceglb.filekit.PlatformFile
 import io.github.vinceglb.filekit.cacheDir
 import io.github.vinceglb.filekit.databasesDir
 import io.github.vinceglb.filekit.delete
-import io.github.vinceglb.filekit.dialogs.FileKitDialogSettings
 import io.github.vinceglb.filekit.dialogs.FileKitMode
 import io.github.vinceglb.filekit.dialogs.FileKitType
 import io.github.vinceglb.filekit.dialogs.openDirectoryPicker
@@ -40,16 +39,11 @@ object FileKitUtil {
         emit(DataState.Loading)
         try {
             val file = FileKit.openFilePicker(
-                type = FileKitType.File(".pdf"),
+                type = FileKitType.File(setOf("pdf", "jpeg", "jpg", "png")),
                 mode = FileKitMode.Single,
-                title = dialogTitle,
-                dialogSettings = FileKitDialogSettings.createDefault(),
+                title = dialogTitle
             )
-            if (file == null) {
-                emit(DataState.Error(IllegalStateException("Failed to load file")))
-            } else {
-                emit(DataState.Success(file))
-            }
+            emit(DataState.Success(file))
         } catch (fileException: FileKitException) {
             emit(DataState.Error(fileException))
         } catch (e: Exception) {
@@ -57,7 +51,7 @@ object FileKitUtil {
         }
     }
 
-    fun pickImageAndSaveToCache(
+    fun pickImage(
         dialogTitle: String = "",
     ) = flow {
         emit(DataState.Loading)
@@ -67,11 +61,7 @@ object FileKitUtil {
                 mode = FileKitMode.Single,
                 title = dialogTitle,
             )
-            if (image == null) {
-                emit(DataState.Error(IllegalStateException("Failed to load file")))
-            } else {
-                emit(DataState.Success(image))
-            }
+            emit(DataState.Success(image))
         } catch (fileException: FileKitException) {
             emit(DataState.Error(fileException))
         } catch (e: Exception) {

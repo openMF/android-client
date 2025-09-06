@@ -7,7 +7,7 @@
  *
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
-package com.mifos.feature.client.clientAddDocuments
+package com.mifos.feature.client.documentPreviewScreen
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.border

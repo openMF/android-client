@@ -42,7 +42,6 @@ class ClientDocumentsViewModel(
     private val entityType = "clients"
 
     init {
-        println("Client ID: ${route.clientId}")
         observeNetworkAndLoadDocuments()
     }
 
@@ -52,6 +51,7 @@ class ClientDocumentsViewModel(
                 mutableStateFlow.update {
                     it.copy(dialogState = null)
                 }
+                observeNetworkAndLoadDocuments()
             }
 
             is ClientDocumentsActions.ConfirmDeleteDocument -> {
@@ -74,6 +74,9 @@ class ClientDocumentsViewModel(
             }
 
             ClientDocumentsActions.Refresh -> {
+                mutableStateFlow.update {
+                    it.copy(isRefreshing = true)
+                }
                 observeNetworkAndLoadDocuments()
             }
 
@@ -128,6 +131,9 @@ class ClientDocumentsViewModel(
                 when (isConnected) {
                     true -> {
                         loadClientDocuments()
+                        mutableStateFlow.update {
+                            it.copy(isRefreshing = false)
+                        }
                     }
 
                     false -> {
@@ -136,6 +142,7 @@ class ClientDocumentsViewModel(
                                 dialogState = ClientDocumentsScreenState.DialogState.Error(
                                     getString(Res.string.no_internet_message),
                                 ),
+                                isRefreshing = false
                             )
                         }
                     }
@@ -182,13 +189,22 @@ class ClientDocumentsViewModel(
         }
     }
 
-    private fun deleteDocument(documentId: Int) {
+    private fun deleteDocument(documentId: Int)  {
         viewModelScope.launch {
+
+            mutableStateFlow.update {
+                it.copy(dialogState = ClientDocumentsScreenState.DialogState.Loading)
+            }
+
             documentsRepository.removeDocument(
                 entityType = entityType,
                 entityId = route.clientId,
                 documentId = documentId,
             )
+
+            mutableStateFlow.update {
+                it.copy(dialogState = null)
+            }
         }
     }
 }
@@ -198,6 +214,7 @@ data class ClientDocumentsScreenState(
     val clientDocuments: List<Document> = emptyList(),
     val searchText: String = "",
     val isNetworkConnected: Boolean = false,
+    val isRefreshing: Boolean = false,
     val dialogState: DialogState? = null,
     val isSearchBarActive: Boolean = false,
 ) {
