@@ -72,7 +72,7 @@ fun ClientDocumentScreen(
                 onNavigateToAddDocument(
                     state.clientId,
                     -1,
-                    "clients"
+                    "clients",
                 )
             }
         }

@@ -29,11 +29,10 @@ class ClientDocumentsViewModel(
     private val documentsRepository: DocumentListRepository,
     private val networkMonitor: NetworkMonitor,
 ) : BaseViewModel<
-        ClientDocumentsScreenState,
-        ClientDocumentsEvents,
-        ClientDocumentsActions,
-        >
-    (
+    ClientDocumentsScreenState,
+    ClientDocumentsEvents,
+    ClientDocumentsActions,
+    >(
     initialState = ClientDocumentsScreenState(
         clientId = savedStateHandle.toRoute<ClientDocumentsRoute>().clientId,
     ),

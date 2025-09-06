@@ -14,6 +14,7 @@ import androidclient.feature.client.generated.resources.no_internet_message
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
+import co.touchlab.kermit.Logger
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.common.utils.FileKitUtil
 import com.mifos.core.data.repository.DocumentDialogRepository
@@ -51,7 +52,9 @@ class ClientAddDocumentViewModel(
         when (action) {
             ClientAddDocumentAction.AddNewDocument -> {
                 mutableStateFlow.update {
-                    it.copy(showFilePickerBottomSheet = true)
+                    it.copy(
+                        showFilePickerBottomSheet = true,
+                    )
                 }
             }
             ClientAddDocumentAction.DismissBottomSheet -> {
@@ -87,14 +90,16 @@ class ClientAddDocumentViewModel(
                     it.copy(enteredFileName = action.text)
                 }
             }
+            ClientAddDocumentAction.UpdateDocument -> {
+                observeNetworkAndUpdate()
+            }
+
             ClientAddDocumentAction.UploadDocument -> {
                 observeNetworkAndUpload()
             }
-            ClientAddDocumentAction.UploadNewDocument -> {
-                observeNetworkAndUpdate()
-            }
+
             ClientAddDocumentAction.UseMoreOptions -> {}
-            ClientAddDocumentAction.CloseDocumentPreviewScreen ->{
+            ClientAddDocumentAction.CloseDocumentPreviewScreen -> {
                 mutableStateFlow.update {
                     it.copy(showDocumentPreviewScreen = false)
                 }
@@ -103,7 +108,7 @@ class ClientAddDocumentViewModel(
                 mutableStateFlow.update {
                     it.copy(
                         showDocumentPreviewScreen = true,
-                        isDocumentUpdatingEnabled = true
+                        isDocumentUpdatingEnabled = true,
                     )
                 }
             }
@@ -121,14 +126,14 @@ class ClientAddDocumentViewModel(
         viewModelScope.launch {
             val isConnected = networkMonitor.isOnline.first()
             mutableStateFlow.update { it.copy(isNetworkAvailable = isConnected) }
-            when(isConnected){
+            when (isConnected) {
                 true -> {
                     uploadDocument().collect { dataState ->
-                        when(dataState){
+                        when (dataState) {
                             is DataState.Error<*> -> {
                                 mutableStateFlow.update {
                                     it.copy(
-                                        dialogState = Error(dataState.message)
+                                        dialogState = Error(dataState.message),
                                     )
                                 }
                             }
@@ -136,15 +141,15 @@ class ClientAddDocumentViewModel(
                                 mutableStateFlow.update {
                                     it.copy(
                                         showProgressBar = true,
+                                        dialogState = null,
                                     )
                                 }
                             }
-                            is DataState.Success<*> ->{
+                            is DataState.Success<*> -> {
                                 mutableStateFlow.update {
                                     it.copy(
-                                        showDocumentPreviewScreen = false,
-                                        isDocumentAdded = false,
-                                        isDocumentUpdatingEnabled = false,
+                                        showProgressBar = false,
+                                        dialogState = null,
                                     )
                                 }
                                 sendEvent(ClientAddDocumentEvents.OnNavigateBack)
@@ -154,11 +159,10 @@ class ClientAddDocumentViewModel(
                 }
                 false -> {
                     ClientAddDocumentState.DialogState.UploadError(
-                        getString(Res.string.no_internet_message)
+                        getString(Res.string.no_internet_message),
                     )
                 }
             }
-
         }
     }
 
@@ -166,14 +170,14 @@ class ClientAddDocumentViewModel(
         viewModelScope.launch {
             val isConnected = networkMonitor.isOnline.first()
             mutableStateFlow.update { it.copy(isNetworkAvailable = isConnected) }
-            when(isConnected){
+            when (isConnected) {
                 true -> {
                     updateDocument().collect { dataState ->
-                        when(dataState){
+                        when (dataState) {
                             is DataState.Error<*> -> {
                                 mutableStateFlow.update {
                                     it.copy(
-                                        dialogState = Error(dataState.message)
+                                        dialogState = Error(dataState.message),
                                     )
                                 }
                             }
@@ -182,15 +186,23 @@ class ClientAddDocumentViewModel(
                                     it.copy(showProgressBar = true)
                                 }
                             }
-                            is DataState.Success<*> ->{
-                                sendEvent(ClientAddDocumentEvents.OnNavigateBack)
+                            is DataState.Success<*> -> {
+                                mutableStateFlow.update {
+                                    it.copy(
+                                        showDocumentPreviewScreen = false,
+                                        isDocumentAdded = false,
+                                        isDocumentUpdatingEnabled = false,
+                                        showProgressBar = false,
+                                        dialogState = null,
+                                    )
+                                }
                             }
                         }
                     }
                 }
                 false -> {
                     ClientAddDocumentState.DialogState.UpdateError(
-                        getString(Res.string.no_internet_message)
+                        getString(Res.string.no_internet_message),
                     )
                 }
             }
@@ -199,16 +211,20 @@ class ClientAddDocumentViewModel(
 
     private fun uploadDocument() = flow {
         emit(DataState.Loading)
+
         val result = try {
-            val document = PlatformFile(state.document)
-
-            val multiPartFormDataContent = getMultiPartFormDataContent(document)
-
-            documentDialogRepository.createDocument(
-                entityType = entityType,
-                entityId = clientId,
-                file = multiPartFormDataContent,
-            )
+            val document = state.documentPath
+            if (document == null) {
+                DataState.Error(IllegalStateException("Document not loaded."))
+            } else {
+                val multiPartFormDataContent = getMultiPartFormDataContent(document)
+                val result = documentDialogRepository.createDocument(
+                    entityType = entityType,
+                    entityId = clientId,
+                    file = multiPartFormDataContent,
+                )
+                result
+            }
         } catch (e: Exception) {
             DataState.Error(e)
         }
@@ -219,15 +235,19 @@ class ClientAddDocumentViewModel(
         emit(DataState.Loading)
 
         val result = try {
-            val document = PlatformFile(state.document)
-            val multiPartFormDataContent = getMultiPartFormDataContent(document)
-            val result = documentDialogRepository.updateDocument(
-                entityType = entityType,
-                entityId = clientId,
-                documentId = documentId,
-                file = multiPartFormDataContent,
-            )
-            result
+            val document = state.documentPath
+            if (document == null) {
+                DataState.Error(IllegalStateException("Document not loaded."))
+            } else {
+                val multiPartFormDataContent = getMultiPartFormDataContent(document)
+                val result = documentDialogRepository.updateDocument(
+                    entityType = entityType,
+                    entityId = clientId,
+                    documentId = documentId,
+                    file = multiPartFormDataContent,
+                )
+                result
+            }
         } catch (e: Exception) {
             DataState.Error(e)
         }
@@ -243,7 +263,7 @@ class ClientAddDocumentViewModel(
         viewModelScope.launch(Dispatchers.IO) {
             FileKitUtil.pickImageAndSaveToCache("").collect { imageData ->
                 when (imageData) {
-                    is DataState.Error<*> -> {
+                    is DataState.Error -> {
                         mutableStateFlow.update {
                             it.copy(
                                 dialogState = Error(
@@ -258,12 +278,16 @@ class ClientAddDocumentViewModel(
                         }
                     }
                     is DataState.Success -> {
-                        mutableStateFlow.update {
-                            it.copy(
-                                dialogState = null,
-                                document = imageData.data,
-                                showDocumentPreviewScreen = true,
-                            )
+                        launch(Dispatchers.Main) {
+                            mutableStateFlow.update {
+                                it.copy(
+                                    dialogState = null,
+                                    documentPath = imageData.data,
+                                    showFilePickerBottomSheet = false,
+                                    showDocumentPreviewScreen = true,
+                                )
+                            }
+                            Logger.e { "Image absolute path" + imageData.data }
                         }
                     }
                 }
@@ -272,10 +296,10 @@ class ClientAddDocumentViewModel(
     }
 
     private fun pickDocumentFromFiles() {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch {
             FileKitUtil.pickPdfFile("").collect { documentFile ->
                 when (documentFile) {
-                    is DataState.Error<*> -> {
+                    is DataState.Error -> {
                         mutableStateFlow.update {
                             it.copy(
                                 dialogState = Error(
@@ -290,13 +314,17 @@ class ClientAddDocumentViewModel(
                         }
                     }
                     is DataState.Success -> {
+                        launch {
+                        }
                         mutableStateFlow.update {
                             it.copy(
                                 showDocumentPreviewScreen = true,
+                                showFilePickerBottomSheet = false,
                                 dialogState = null,
-                                document = documentFile.data,
+                                documentPath = documentFile.data,
                             )
                         }
+                        Logger.e { "Document absolute path" + documentFile.data }
                     }
                 }
             }
@@ -310,11 +338,11 @@ data class ClientAddDocumentState(
     val showFilePickerBottomSheet: Boolean = false,
     val enteredDocumentDescription: String = "",
     val enteredFileName: String = "",
-    val document: String ="",
+    val documentPath: PlatformFile? = null,
     val pickedDocumentName: String = "",
     val isDocumentAdded: Boolean = false,
-    val isDocumentUpdatingEnabled: Boolean  = false,
-    val showDocumentPreviewScreen : Boolean = false,
+    val isDocumentUpdatingEnabled: Boolean = false,
+    val showDocumentPreviewScreen: Boolean = false,
     val showProgressBar: Boolean = false,
 ) {
     sealed interface DialogState {
@@ -328,31 +356,24 @@ data class ClientAddDocumentState(
 sealed interface ClientAddDocumentAction {
     data object NavigateBack : ClientAddDocumentAction
     data object AddNewDocument : ClientAddDocumentAction
-    data object DismissBottomSheet: ClientAddDocumentAction
+    data object DismissBottomSheet : ClientAddDocumentAction
     data class SubmitFromDocumentPreviewScreen(val fileName: String) : ClientAddDocumentAction
     data object UploadDocument : ClientAddDocumentAction
-    data object UploadNewDocument : ClientAddDocumentAction
+    data object UpdateDocument : ClientAddDocumentAction
     data class UpdateName(val text: String) : ClientAddDocumentAction
     data class UpdateDescription(val text: String) : ClientAddDocumentAction
     data object PickFromGallery : ClientAddDocumentAction
     data object PickFromFiles : ClientAddDocumentAction
     data object UseMoreOptions : ClientAddDocumentAction
 
-    data object PreviewUploadedDocument: ClientAddDocumentAction
+    data object PreviewUploadedDocument : ClientAddDocumentAction
 
-    data object CloseDocumentPreviewScreen: ClientAddDocumentAction
+    data object CloseDocumentPreviewScreen : ClientAddDocumentAction
 
-    data object RetryUpdate: ClientAddDocumentAction
-    data object RetryUpload: ClientAddDocumentAction
+    data object RetryUpdate : ClientAddDocumentAction
+    data object RetryUpload : ClientAddDocumentAction
 }
 
 sealed interface ClientAddDocumentEvents {
     data object OnNavigateBack : ClientAddDocumentEvents
-
-
-}
-
-enum class DocumentPreviewScreenAction {
-    SUBMIT,
-    UPDATE,
 }

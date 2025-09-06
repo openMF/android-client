@@ -173,13 +173,12 @@ fun NavGraphBuilder.clientNavGraph(
             navigateBack = navController::popBackStack,
             navigateToAddDocuments = navController::navigateToClientAddDocumentRoute,
             onViewDocument = { clientId, documentId, entityType ->
-
             },
         )
 
         clientAddDocumentDestination(
             navController = navController,
-            navigateBack = navController::popBackStack
+            navigateBack = navController::popBackStack,
         )
 
         clientProfileGeneralDestination(

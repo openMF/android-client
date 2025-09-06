@@ -471,7 +471,6 @@ val ClipDocument: ImageVector
 
 private var clipDocument: ImageVector? = null
 
-
 val RightTick: ImageVector
     get() {
         if (rightTick != null) {
@@ -482,7 +481,7 @@ val RightTick: ImageVector
             defaultWidth = 16.dp,
             defaultHeight = 12.dp,
             viewportWidth = 16f,
-            viewportHeight = 12f
+            viewportHeight = 12f,
         ).apply {
             path(fill = SolidColor(Color(0xFF191C20))) {
                 moveTo(5.329f, 9.229f)
@@ -500,4 +499,3 @@ val RightTick: ImageVector
     }
 
 private var rightTick: ImageVector? = null
-

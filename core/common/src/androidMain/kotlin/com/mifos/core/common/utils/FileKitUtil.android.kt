@@ -9,14 +9,11 @@
  */
 package com.mifos.core.common.utils
 
-import com.mifos.core.common.utils.FileKitUtil.writeFileToCache
 import io.github.vinceglb.filekit.FileKit
 import io.github.vinceglb.filekit.dialogs.FileKitCameraType
 import io.github.vinceglb.filekit.dialogs.openCameraPicker
 import io.github.vinceglb.filekit.exceptions.FileKitException
-import io.github.vinceglb.filekit.extension
-import io.github.vinceglb.filekit.nameWithoutExtension
-import io.github.vinceglb.filekit.readBytes
+import io.github.vinceglb.filekit.path
 import kotlinx.coroutines.flow.flow
 
 actual suspend fun takePhotoIfSupported() = flow {
@@ -25,15 +22,10 @@ actual suspend fun takePhotoIfSupported() = flow {
         val image = FileKit.openCameraPicker(
             FileKitCameraType.Photo,
         )
-        if(image==null) {
+        if (image == null) {
             DataState.Error(IllegalStateException("Failed to load image"))
         } else {
-            val imageBytes=image.readBytes()
-            writeFileToCache(
-                image.nameWithoutExtension,
-                image.extension,
-                imageBytes,
-            )
+            DataState.Success(image.path)
         }
     } catch (fileException: FileKitException) {
         DataState.Error(fileException)

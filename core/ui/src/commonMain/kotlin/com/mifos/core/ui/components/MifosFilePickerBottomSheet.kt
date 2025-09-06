@@ -14,14 +14,11 @@ import androidclient.core.ui.generated.resources.file_picker_bottom_sheet_files
 import androidclient.core.ui.generated.resources.file_picker_bottom_sheet_gallery
 import androidclient.core.ui.generated.resources.file_picker_bottom_sheet_more
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.unit.dp
 import com.mifos.core.designsystem.component.MifosBottomSheet
 import com.mifos.core.designsystem.component.MifosBottomSheetOptionItem
 import com.mifos.core.designsystem.icon.MifosIcons
@@ -38,8 +35,7 @@ fun MifosFilePickerBottomSheet(
     modifier: Modifier = Modifier,
     onMoreClick: () -> Unit,
 ) {
-    if(showBottomSheet) {
-
+    if (showBottomSheet) {
         MifosBottomSheet(
             onDismiss = onDismiss,
             modifier = modifier.background(
@@ -52,8 +48,7 @@ fun MifosFilePickerBottomSheet(
                         start = DesignToken.padding.large,
                         end = DesignToken.padding.large,
                         bottom = DesignToken.padding.large,
-                    )
-                    .border(1.dp, Color.Black),
+                    ),
             ) {
                 MifosBottomSheetOptionItem(
                     label = stringResource(Res.string.file_picker_bottom_sheet_gallery),

@@ -11,7 +11,6 @@ package com.mifos.core.common.utils
 
 import io.github.vinceglb.filekit.FileKit
 import io.github.vinceglb.filekit.PlatformFile
-import io.github.vinceglb.filekit.absolutePath
 import io.github.vinceglb.filekit.cacheDir
 import io.github.vinceglb.filekit.databasesDir
 import io.github.vinceglb.filekit.delete
@@ -22,9 +21,8 @@ import io.github.vinceglb.filekit.dialogs.openDirectoryPicker
 import io.github.vinceglb.filekit.dialogs.openFilePicker
 import io.github.vinceglb.filekit.div
 import io.github.vinceglb.filekit.exceptions.FileKitException
-import io.github.vinceglb.filekit.extension
 import io.github.vinceglb.filekit.filesDir
-import io.github.vinceglb.filekit.nameWithoutExtension
+import io.github.vinceglb.filekit.path
 import io.github.vinceglb.filekit.readBytes
 import io.github.vinceglb.filekit.write
 import kotlinx.coroutines.flow.Flow
@@ -41,25 +39,20 @@ object FileKitUtil {
     ) = flow {
         emit(DataState.Loading)
         try {
-            val file= FileKit.openFilePicker(
+            val file = FileKit.openFilePicker(
                 type = FileKitType.File(".pdf"),
                 mode = FileKitMode.Single,
                 title = dialogTitle,
                 dialogSettings = FileKitDialogSettings.createDefault(),
             )
-            if(file==null){
+            if (file == null) {
                 emit(DataState.Error(IllegalStateException("Failed to load file")))
-            } else{
-                val result = writeFileToCache(
-                    file.nameWithoutExtension,
-                    file.extension,
-                    file.readBytes()
-                )
-                emit(result)
+            } else {
+                emit(DataState.Success(file))
             }
-        } catch (fileException: FileKitException){
+        } catch (fileException: FileKitException) {
             emit(DataState.Error(fileException))
-        }catch (e: Exception){
+        } catch (e: Exception) {
             emit(DataState.Error(e))
         }
     }
@@ -69,40 +62,34 @@ object FileKitUtil {
     ) = flow {
         emit(DataState.Loading)
         try {
-            val image= FileKit.openFilePicker(
+            val image = FileKit.openFilePicker(
                 type = FileKitType.Image,
                 mode = FileKitMode.Single,
                 title = dialogTitle,
             )
-            if(image==null){
+            if (image == null) {
                 emit(DataState.Error(IllegalStateException("Failed to load file")))
-            } else{
-                val imagBytes = image.readBytes()
-                val result= writeFileToCache(
-                    image.nameWithoutExtension,
-                    image.extension,
-                    imagBytes
-                )
-                emit(result)
+            } else {
+                emit(DataState.Success(image))
             }
-        } catch (fileException: FileKitException){
+        } catch (fileException: FileKitException) {
             emit(DataState.Error(fileException))
-        }catch (e: Exception){
+        } catch (e: Exception) {
             emit(DataState.Error(e))
         }
     }
 
     fun loadFile(
-        absolutePath: String,
+        filePath: String,
     ) = flow {
         emit(DataState.Loading)
         try {
-            val file = PlatformFile(absolutePath)
+            val file = PlatformFile(filePath)
             val fileBytes = file.readBytes()
             emit(DataState.Success(fileBytes))
-        } catch (fileException: FileKitException){
+        } catch (fileException: FileKitException) {
             emit(DataState.Error(fileException))
-        }catch (e: Exception){
+        } catch (e: Exception) {
             emit(DataState.Error(e))
         }
     }
@@ -145,31 +132,29 @@ object FileKitUtil {
         fileName: String,
         fileExtension: String,
         filesByteArray: ByteArray,
-    )= try {
-        val cacheDir = appCache/"${fileName}.${fileExtension}"
+    ) = try {
+        val cacheDir = appCache / "$fileName.$fileExtension"
         cacheDir.write(filesByteArray)
-        DataState.Success(cacheDir.absolutePath())
+        DataState.Success(cacheDir.path)
     } catch (fileException: FileKitException) {
         DataState.Error(fileException)
     } catch (e: Exception) {
         DataState.Error(e)
     }
-
 
     suspend fun writeFileToApplicationPrivateInternalStorage(
         fileName: String,
         fileExtension: String,
         filesByteArray: ByteArray,
-    ) =  try {
-        val privateInternalStorage = appPrivateInternalStorage/"${fileName}.${fileExtension}"
+    ) = try {
+        val privateInternalStorage = appPrivateInternalStorage / "$fileName.$fileExtension"
         privateInternalStorage.write(filesByteArray)
-        DataState.Success(privateInternalStorage.absolutePath())
+        DataState.Success(privateInternalStorage.path)
     } catch (fileException: FileKitException) {
         DataState.Error(fileException)
     } catch (e: Exception) {
         DataState.Error(e)
     }
-
 
     // Use only if you are using a database service such as room or sqldelight
     suspend fun writeFileToApplicationInternalStorage(
@@ -177,15 +162,14 @@ object FileKitUtil {
         fileExtension: String,
         filesByteArray: ByteArray,
     ) = try {
-        val internalStorage =  appInternalStorage/"${fileName}.${fileExtension}"
+        val internalStorage = appInternalStorage / "$fileName.$fileExtension"
         internalStorage.write(filesByteArray)
-        DataState.Success(internalStorage.absolutePath())
+        DataState.Success(internalStorage.path)
     } catch (fileException: FileKitException) {
         DataState.Error(fileException)
     } catch (e: Exception) {
         DataState.Error(e)
     }
-
 
     suspend fun writeToSelectedDirectory(
         fileName: String,
@@ -201,7 +185,7 @@ object FileKitUtil {
 
             try {
                 filePath.write(filesByteArray)
-                DataState.Success(filePath.absolutePath())
+                DataState.Success(filePath.path)
             } catch (fileException: FileKitException) {
                 DataState.Error(fileException)
             } catch (e: Exception) {
@@ -210,7 +194,6 @@ object FileKitUtil {
         }
     }
 
-
     suspend fun deleteFile(
         file: PlatformFile,
     ) {
@@ -218,7 +201,6 @@ object FileKitUtil {
     }
 
     suspend fun takePhoto() = takePhotoIfSupported()
-
 }
 
 expect suspend fun takePhotoIfSupported(): Flow<DataState<String>>

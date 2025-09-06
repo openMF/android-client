@@ -1,3 +1,12 @@
+/*
+ * Copyright 2025 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ */
 package com.mifos.feature.client.clientAddDocuments
 
 import androidx.compose.foundation.BorderStroke
@@ -32,26 +41,23 @@ import com.mifos.core.ui.components.MifosFilePickerBottomSheet
 import io.github.vinceglb.filekit.PlatformFile
 import io.github.vinceglb.filekit.nameWithoutExtension
 
-
 @Composable
 fun DocumentPreviewScreen(
-    absoluteFilePath: String = "",
-    canUpdateDocument: Boolean = false,
-    onBack: ()-> Unit,
+    platformFile: PlatformFile,
+    canUpdateDocument: Boolean,
+    onBack: () -> Unit,
     onSubmit: (String) -> Unit,
     onUploadFromGallery: () -> Unit,
     onUploadFromFiles: () -> Unit,
     onClickMoreOptions: () -> Unit,
-){
+) {
     var openBottomSheet by remember {
-        mutableStateOf(true)
+        mutableStateOf(false)
     }
-    val file = PlatformFile(absoluteFilePath)
 
     MifosScaffold(
         onBackPressed = {},
         bottomBar = {
-
             MifosFilePickerBottomSheet(
                 showBottomSheet = openBottomSheet,
                 onDismiss = {
@@ -62,14 +68,14 @@ fun DocumentPreviewScreen(
                 onMoreClick = onClickMoreOptions,
             )
         },
-        modifier = Modifier.fillMaxSize()
-    ){paddingValues ->
+        modifier = Modifier.fillMaxSize(),
+    ) { paddingValues ->
 
         Column(
             modifier = Modifier
                 .padding(paddingValues)
                 .fillMaxSize()
-                .padding(horizontal = DesignToken.padding.large,),
+                .padding(horizontal = DesignToken.padding.large),
         ) {
             Box(
                 modifier = Modifier.weight(1f)
@@ -77,24 +83,22 @@ fun DocumentPreviewScreen(
                     .border(
                         1.dp,
                         color = MaterialTheme.colorScheme.secondaryContainer,
-                        shape = DesignToken.shapes.medium
+                        shape = DesignToken.shapes.medium,
                     ),
             ) {
-
             }
 
             Spacer(modifier = Modifier.height(20.dp))
 
             Row(
                 horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
             ) {
-
                 MifosOutlinedButton(
                     onClick = onBack,
                     colors = ButtonDefaults.outlinedButtonColors(
                         containerColor = MaterialTheme.colorScheme.onPrimary,
-                        contentColor = MaterialTheme.colorScheme.primary
+                        contentColor = MaterialTheme.colorScheme.primary,
                     ),
                     border = BorderStroke(
                         1.dp,
@@ -102,12 +106,12 @@ fun DocumentPreviewScreen(
                     ),
                     modifier = Modifier
                         .height(40.dp)
-                        .weight(1f)
+                        .weight(1f),
                 ) {
                     Icon(
                         imageVector = MifosIcons.ArrowBack,
                         "back button",
-                        modifier = Modifier.size(DesignToken.sizes.iconMinyMiny)
+                        modifier = Modifier.size(DesignToken.sizes.iconMinyMiny),
                     )
                     Spacer(Modifier.height(DesignToken.spacing.medium))
                     Text(
@@ -123,12 +127,12 @@ fun DocumentPreviewScreen(
                         if (canUpdateDocument) {
                             openBottomSheet = true
                         } else {
-                            onSubmit(file.nameWithoutExtension)
+                            onSubmit(platformFile.nameWithoutExtension)
                         }
                     },
                     colors = ButtonDefaults.outlinedButtonColors(
                         containerColor = MaterialTheme.colorScheme.primary,
-                        contentColor = MaterialTheme.colorScheme.onPrimary
+                        contentColor = MaterialTheme.colorScheme.onPrimary,
                     ),
                     border = BorderStroke(
                         1.dp,
@@ -136,25 +140,22 @@ fun DocumentPreviewScreen(
                     ),
                     modifier = Modifier
                         .height(40.dp)
-                        .weight(1f)
+                        .weight(1f),
                 ) {
                     Icon(
                         imageVector = MifosIcons.RightTick,
                         "back button",
                         modifier = Modifier.size(DesignToken.sizes.iconMinyMiny),
-                        tint = MaterialTheme.colorScheme.onPrimary
+                        tint = MaterialTheme.colorScheme.onPrimary,
                     )
                     Spacer(Modifier.height(DesignToken.spacing.medium))
                     Text(
-                        "Submit",
+                        if (!canUpdateDocument) "Submit" else "Upload New",
                         style = MaterialTheme.typography.labelMedium,
-                        color = MaterialTheme.colorScheme.onPrimary
+                        color = MaterialTheme.colorScheme.onPrimary,
                     )
                 }
-
             }
         }
-
     }
-
 }

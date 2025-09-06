@@ -12,6 +12,6 @@ package com.mifos.core.common.utils
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
-actual suspend fun takePhotoIfSupported(): Flow<DataState<String>> = flow{
+actual suspend fun takePhotoIfSupported(): Flow<DataState<String>> = flow {
     emit(DataState.Error(IllegalStateException("Platform not supported")))
 }

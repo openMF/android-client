@@ -40,12 +40,13 @@ import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosOutlinedButton
 import com.mifos.core.designsystem.component.MifosOutlinedTextField
 import com.mifos.core.designsystem.component.MifosScaffold
+import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.designsystem.theme.MifosTypography
 import com.mifos.core.ui.components.MifosBreadcrumbNavBar
-import com.mifos.core.ui.components.MifosErrorComponent
 import com.mifos.core.ui.components.MifosFilePickerBottomSheet
+import com.mifos.core.ui.components.MifosProgressIndicator
 import com.mifos.core.ui.util.EventsEffect
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -53,32 +54,30 @@ import org.koin.compose.viewmodel.koinViewModel
 fun ClientAddDocumentsScreen(
     navController: NavController,
     navigateBack: () -> Unit,
-    viewModel: ClientAddDocumentViewModel = koinViewModel()
+    viewModel: ClientAddDocumentViewModel = koinViewModel(),
 ) {
-
     val state by viewModel.stateFlow.collectAsStateWithLifecycle()
 
-    EventsEffect(viewModel.eventFlow){ events ->
-        when(events){
-            ClientAddDocumentEvents.OnNavigateBack -> navigateBack
+    EventsEffect(viewModel.eventFlow) { events ->
+        when (events) {
+            ClientAddDocumentEvents.OnNavigateBack -> navigateBack()
         }
     }
 
-
-    ClientAddDocumentsScreenDialog(
-        state,
-        onAction = remember(viewModel){{viewModel.trySendAction(it)}}
-    )
-
-    if(state.showDocumentPreviewScreen){
+    if (state.showDocumentPreviewScreen && (state.documentPath != null)) {
         DocumentPreviewScreen(
+            platformFile = state.documentPath!!,
             canUpdateDocument = state.isDocumentUpdatingEnabled,
             onBack = {
                 viewModel.trySendAction(ClientAddDocumentAction.CloseDocumentPreviewScreen)
             },
             onSubmit = {
                 viewModel.trySendAction(
-                    ClientAddDocumentAction.SubmitFromDocumentPreviewScreen(it)
+                    if (state.isDocumentUpdatingEnabled) {
+                        ClientAddDocumentAction.CloseDocumentPreviewScreen
+                    } else {
+                        ClientAddDocumentAction.SubmitFromDocumentPreviewScreen(it)
+                    },
                 )
             },
             onUploadFromGallery = {
@@ -95,7 +94,7 @@ fun ClientAddDocumentsScreen(
         ClientAddDocumentScaffold(
             navController,
             state,
-            onAction = remember(viewModel){{viewModel.trySendAction(it)}}
+            onAction = remember(viewModel) { { viewModel.trySendAction(it) } },
         )
     }
 }
@@ -103,48 +102,36 @@ fun ClientAddDocumentsScreen(
 @Composable
 private fun ClientAddDocumentsScreenDialog(
     state: ClientAddDocumentState,
-    modifier: Modifier = Modifier,
     onAction: (ClientAddDocumentAction) -> Unit,
 ) {
-
     when (state.dialogState) {
         is ClientAddDocumentState.DialogState.Error -> {
-            MifosErrorComponent(
-                modifier = modifier,
-                isNetworkConnected = state.isNetworkAvailable,
+            MifosSweetError(
                 message = state.dialogState.message,
-                isRetryEnabled = false,
-                onRetry = {},
+                isRetryEnabled = true,
             )
         }
         ClientAddDocumentState.DialogState.Loading -> {
             MifosCircularProgress()
         }
-        null -> {}
         is ClientAddDocumentState.DialogState.UpdateError -> {
-            MifosErrorComponent(
-                modifier = modifier,
-                isNetworkConnected = state.isNetworkAvailable,
+            MifosSweetError(
                 message = state.dialogState.message,
                 isRetryEnabled = true,
-                onRetry = {
-                    onAction(ClientAddDocumentAction.RetryUpdate)
-                },
-            )
+            ) {
+                onAction(ClientAddDocumentAction.RetryUpdate)
+            }
         }
         is ClientAddDocumentState.DialogState.UploadError -> {
-            MifosErrorComponent(
-                modifier = modifier,
-                isNetworkConnected = state.isNetworkAvailable,
+            MifosSweetError(
                 message = state.dialogState.message,
                 isRetryEnabled = true,
-                onRetry = {
-                    onAction(ClientAddDocumentAction.RetryUpload)
-                },
-            )
+            ) {
+                onAction(ClientAddDocumentAction.RetryUpload)
+            }
         }
+        null -> {}
     }
-
 }
 
 @Composable
@@ -166,150 +153,156 @@ private fun ClientAddDocumentScaffold(
                     onAction(ClientAddDocumentAction.DismissBottomSheet)
                 },
                 onGalleryClick = {
-                    onAction(ClientAddDocumentAction.PickFromFiles)
+                    onAction(ClientAddDocumentAction.PickFromGallery)
                 },
                 onFilesClick = {
                     onAction(ClientAddDocumentAction.PickFromFiles)
                 },
-                onMoreClick ={
+                onMoreClick = {
                     onAction(ClientAddDocumentAction.UseMoreOptions)
                 },
             )
         },
         title = "",
     ) { paddingValues ->
-
-        Column(
-            modifier = Modifier
-                .padding(paddingValues)
-                .fillMaxSize(),
-        ) {
-            MifosBreadcrumbNavBar(navController)
+        if (state.dialogState != null) {
+            ClientAddDocumentsScreenDialog(
+                state,
+                onAction = onAction,
+            )
+        } else if (state.showProgressBar) {
+            MifosProgressIndicator()
+        } else {
             Column(
-                Modifier.fillMaxSize()
-                    .padding(
-                        horizontal = DesignToken.padding.large,
-                    ),
+                modifier = Modifier
+                    .padding(paddingValues)
+                    .fillMaxSize(),
             ) {
-
-                Text(
-                    "Add Document",
-                    style = MifosTypography.titleMedium,
-                )
-
-                Spacer(Modifier.height(DesignToken.spacing.largeIncreased))
-
-                MifosOutlinedTextField(
-                    value = state.enteredFileName,
-                    placeholder = "Enter document name",
-                    onValueChange = {
-                        onAction(ClientAddDocumentAction.UpdateName(it))
-                    },
-                    label = "Document Name",
-                    maxLines = 1,
-                    shape = DesignToken.shapes.medium,
-                )
-
-                MifosOutlinedTextField(
-                    value = state.enteredDocumentDescription,
-                    placeholder = "Enter description",
-                    onValueChange = {
-                        onAction(ClientAddDocumentAction.UpdateDescription(it))
-                    },
-                    label = "Description",
-                    maxLines = 1,
-                    shape = DesignToken.shapes.medium,
-                    modifier = Modifier
-                        .padding(bottom = 8.dp)
-                )
-
-                AddViewFileAndFileNameRow(
-                    state = state,
-                    onAction = onAction
-                )
-
-                Spacer(Modifier.height(DesignToken.spacing.largeIncreased))
-
-                Row(
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
+                MifosBreadcrumbNavBar(navController)
+                Column(
+                    Modifier.fillMaxSize()
+                        .padding(
+                            horizontal = DesignToken.padding.large,
+                        ),
                 ) {
+                    Text(
+                        "Add Document",
+                        style = MifosTypography.titleMedium,
+                    )
 
-                    MifosOutlinedButton(
-                        onClick = {
-                            onAction(ClientAddDocumentAction.NavigateBack)
+                    Spacer(Modifier.height(DesignToken.spacing.largeIncreased))
+
+                    MifosOutlinedTextField(
+                        value = state.enteredFileName,
+                        placeholder = "Enter document name",
+                        onValueChange = {
+                            onAction(ClientAddDocumentAction.UpdateName(it))
                         },
-                        colors = ButtonDefaults.outlinedButtonColors(
-                            containerColor = MaterialTheme.colorScheme.onPrimary,
-                            contentColor = MaterialTheme.colorScheme.primary
-                        ),
-                        border = BorderStroke(
-                            1.dp,
-                            color = MaterialTheme.colorScheme.secondaryContainer,
-                        ),
+                        label = "Document Name",
+                        maxLines = 1,
+                        shape = DesignToken.shapes.medium,
+                    )
+
+                    MifosOutlinedTextField(
+                        value = state.enteredDocumentDescription,
+                        placeholder = "Enter description",
+                        onValueChange = {
+                            onAction(ClientAddDocumentAction.UpdateDescription(it))
+                        },
+                        label = "Description",
+                        maxLines = 1,
                         shape = DesignToken.shapes.medium,
                         modifier = Modifier
-                            .height(40.dp)
-                            .weight(1f)
-                    ){
-                        Icon(
-                            imageVector = MifosIcons.ArrowBack,
-                            "back button",
-                            modifier = Modifier.size(DesignToken.sizes.iconSmall),
-                            tint = MaterialTheme.colorScheme.primary,
-                        )
+                            .padding(bottom = 8.dp),
+                    )
+
+                    AddViewFileAndFileNameRow(
+                        state = state,
+                        onAction = onAction,
+                    )
+
+                    Spacer(Modifier.height(DesignToken.spacing.largeIncreased))
+
+                    Row(
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        MifosOutlinedButton(
+                            onClick = {
+                                onAction(ClientAddDocumentAction.NavigateBack)
+                            },
+                            colors = ButtonDefaults.outlinedButtonColors(
+                                containerColor = MaterialTheme.colorScheme.onPrimary,
+                                contentColor = MaterialTheme.colorScheme.primary,
+                            ),
+                            border = BorderStroke(
+                                1.dp,
+                                color = MaterialTheme.colorScheme.secondaryContainer,
+                            ),
+                            shape = DesignToken.shapes.medium,
+                            modifier = Modifier
+                                .height(40.dp)
+                                .weight(1f),
+                        ) {
+                            Icon(
+                                imageVector = MifosIcons.ArrowBack,
+                                "back button",
+                                modifier = Modifier.size(DesignToken.sizes.iconSmall),
+                                tint = MaterialTheme.colorScheme.primary,
+                            )
+                            Spacer(Modifier.width(DesignToken.spacing.small))
+                            Text(
+                                "Back",
+                                style = MaterialTheme.typography.labelMedium,
+                            )
+                        }
+
                         Spacer(Modifier.width(DesignToken.spacing.small))
-                        Text(
-                            "Back",
-                            style = MaterialTheme.typography.labelMedium,
-                        )
+
+                        MifosOutlinedButton(
+                            onClick = {
+                                if (state.isDocumentAdded) {
+                                    onAction(ClientAddDocumentAction.UploadDocument)
+                                }
+                            },
+                            colors = ButtonDefaults.outlinedButtonColors(
+                                containerColor = MaterialTheme.colorScheme.primary,
+                                contentColor = MaterialTheme.colorScheme.onPrimary,
+                            ),
+                            border = BorderStroke(
+                                1.dp,
+                                color = MaterialTheme.colorScheme.secondaryContainer,
+                            ),
+                            shape = DesignToken.shapes.medium,
+                            modifier = Modifier
+                                .height(40.dp)
+                                .weight(1f),
+                        ) {
+                            Icon(
+                                imageVector = MifosIcons.RightTick,
+                                "back button",
+                                modifier = Modifier.size(DesignToken.sizes.iconMiny),
+                                tint = MaterialTheme.colorScheme.onPrimary,
+                            )
+                            Spacer(Modifier.width(DesignToken.spacing.small))
+                            Text(
+                                "Submit",
+                                style = MaterialTheme.typography.labelMedium,
+                                color = MaterialTheme.colorScheme.onPrimary,
+                            )
+                        }
                     }
-
-                    Spacer(Modifier.width(DesignToken.spacing.small))
-
-                    MifosOutlinedButton(
-                        onClick = {
-                            onAction(ClientAddDocumentAction.AddNewDocument)
-                        },
-                        colors = ButtonDefaults.outlinedButtonColors(
-                            containerColor = MaterialTheme.colorScheme.primary,
-                            contentColor = MaterialTheme.colorScheme.onPrimary
-                        ),
-                        border = BorderStroke(
-                            1.dp,
-                            color = MaterialTheme.colorScheme.secondaryContainer,
-                        ),
-                        shape = DesignToken.shapes.medium,
-                        modifier = Modifier
-                            .height(40.dp)
-                            .weight(1f)
-                    ){
-                        Icon(
-                            imageVector = MifosIcons.RightTick,
-                            "back button",
-                            modifier = Modifier.size(DesignToken.sizes.iconMiny),
-                            tint = MaterialTheme.colorScheme.onPrimary,
-                        )
-                        Spacer(Modifier.width(DesignToken.spacing.small))
-                        Text(
-                            "Submit",
-                            style = MaterialTheme.typography.labelMedium,
-                            color = MaterialTheme.colorScheme.onPrimary
-                        )
-                    }
-
                 }
             }
         }
     }
 }
 
-
 @Composable
 private fun AddViewFileAndFileNameRow(
     state: ClientAddDocumentState,
-    onAction: (ClientAddDocumentAction) -> Unit
-){
+    onAction: (ClientAddDocumentAction) -> Unit,
+) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -317,39 +310,39 @@ private fun AddViewFileAndFileNameRow(
             .border(
                 1.dp,
                 color = MaterialTheme.colorScheme.secondaryContainer,
-                shape = DesignToken.shapes.medium
+                shape = DesignToken.shapes.medium,
             ),
         horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically
-    ){
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
         Text(
             text = if (!state.isDocumentAdded) {
                 "No File Selected"
             } else {
                 state.pickedDocumentName
             },
-            style = MaterialTheme . typography . labelLarge,
+            style = MaterialTheme.typography.labelLarge,
             fontFamily = FontFamily.SansSerif,
             modifier = Modifier.padding(
                 start = 16.dp,
                 top = 18.dp,
-                bottom = 18.dp
+                bottom = 18.dp,
             )
                 .weight(.6f),
             overflow = TextOverflow.Ellipsis,
-            maxLines = 1
+            maxLines = 1,
         )
         MifosOutlinedButton(
             onClick = {
-                if(state.isDocumentAdded){
+                if (!state.isDocumentAdded) {
                     onAction(ClientAddDocumentAction.AddNewDocument)
-                } else{
+                } else {
                     onAction(ClientAddDocumentAction.PreviewUploadedDocument)
                 }
             },
             colors = ButtonDefaults.outlinedButtonColors(
                 containerColor = MaterialTheme.colorScheme.onPrimary,
-                contentColor = MaterialTheme.colorScheme.primary
+                contentColor = MaterialTheme.colorScheme.primary,
             ),
             shape = DesignToken.shapes.small,
             border = BorderStroke(
@@ -357,19 +350,17 @@ private fun AddViewFileAndFileNameRow(
                 color = MaterialTheme.colorScheme.secondaryContainer,
             ),
             modifier = Modifier
-                .padding(
-                    end = 16.dp
-                )
+                .padding(end = 16.dp)
                 .height(36.dp)
-                .width(72.dp)
-        ){
+                .width(72.dp),
+        ) {
             Text(
                 text = if (!state.isDocumentAdded) {
                     "Add"
                 } else {
                     "View"
                 },
-                style = MaterialTheme.typography.labelMedium
+                style = MaterialTheme.typography.labelMedium,
             )
         }
     }
