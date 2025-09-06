@@ -55,6 +55,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -76,6 +77,7 @@ import com.mifos.core.designsystem.theme.AppColors
 import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.designsystem.theme.MifosTypography
 import com.mifos.core.designsystem.utils.onClick
+import com.mifos.core.ui.util.TextUtil
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
@@ -354,6 +356,137 @@ fun MifosActionsLoanListingComponent(
                     key = stringResource(Res.string.core_ui_type),
                     value = type,
                 )
+            }
+        }
+        if (isActive) {
+            Surface(
+                modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(
+                    bottomStart = DesignToken.padding.medium,
+                    bottomEnd = DesignToken.padding.medium,
+                ),
+                color = MaterialTheme.colorScheme.surfaceContainer,
+            ) {
+                Column(
+                    modifier = Modifier.padding(
+                        vertical = DesignToken.padding.small,
+                    ),
+                ) {
+                    menuList.map { menuItem ->
+                        Row(
+                            modifier = Modifier.fillMaxWidth()
+                                .height(DesignToken.sizes.avatarMedium)
+                                .clickable {
+                                    onActionClicked(menuItem)
+                                },
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.Start,
+                        ) {
+                            Icon(
+                                modifier = Modifier.padding(horizontal = DesignToken.padding.large),
+                                imageVector = menuItem.icon,
+                                contentDescription = "",
+                            )
+
+                            Text(
+                                modifier = Modifier.fillMaxWidth(),
+                                text = menuItem::class.simpleName ?: "",
+                                color = MaterialTheme.colorScheme.onSurface,
+                                fontSize = MaterialTheme.typography.bodyLarge.fontSize,
+                            )
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun MifosActionsChargeListingComponent(
+    chargeTitle: String,
+    type: String,
+    date: String,
+    collectedOn: String,
+    amount: String,
+    menuList: List<Actions> = listOf<Actions>(
+        Actions.Edit(),
+        Actions.Delete(),
+    ),
+    onActionClicked: (Actions) -> Unit,
+    isExpandable: Boolean = true,
+) {
+    var isActive by rememberSaveable { mutableStateOf(false) }
+
+    Column(
+        Modifier.fillMaxWidth(),
+    ) {
+        MifosActionsListingComponentOutline(
+            isExpanded = isActive,
+        ) {
+            Row(
+                modifier = Modifier.fillMaxWidth().clickable(
+                    enabled = isExpandable,
+                    onClick = { isActive = !isActive },
+                ).padding(
+                    horizontal = DesignToken.padding.large,
+                    vertical = DesignToken.padding.medium,
+                ),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween,
+
+            ) {
+                Column(
+                    verticalArrangement = Arrangement.spacedBy(DesignToken.padding.extraExtraSmall),
+                ) {
+                    PrintTextUtil(
+                        TextUtil(
+                            text = chargeTitle,
+                            style = MifosTypography.titleSmallEmphasized,
+                        ),
+                    )
+                    PrintTextUtil(
+                        TextUtil(
+                            text = type,
+                        ),
+                    )
+                    PrintTextUtil(
+                        TextUtil(
+                            text = date,
+                        ),
+                    )
+                }
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Column(
+                        verticalArrangement = Arrangement.spacedBy(DesignToken.padding.extraExtraSmall),
+                    ) {
+                        PrintTextUtil(
+                            TextUtil(
+                                text = collectedOn,
+                                color = AppColors.customEnable,
+                            ),
+                        )
+                        PrintTextUtil(
+                            TextUtil(
+                                text = amount,
+                                style = MifosTypography.labelMedium,
+                            ),
+                        )
+                    }
+                    Icon(
+                        modifier = Modifier
+                            .size(DesignToken.sizes.iconSmall)
+                            .padding(horizontal = DesignToken.padding.extraSmall),
+                        imageVector = if (isActive) {
+                            MifosIcons.ChevronUp
+                        } else {
+                            MifosIcons.ChevronDown
+                        },
+                        contentDescription = "",
+                    )
+                }
             }
         }
         if (isActive) {

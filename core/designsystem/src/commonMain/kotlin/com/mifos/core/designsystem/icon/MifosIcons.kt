@@ -104,7 +104,9 @@ import androidx.compose.material.icons.rounded.Task
 import androidx.compose.material.icons.rounded.Translate
 import androidx.compose.ui.graphics.vector.ImageVector
 import fluent.ui.system.icons.FluentIcons
+import fluent.ui.system.icons.filled.ChevronDown
 import fluent.ui.system.icons.filled.ChevronRight
+import fluent.ui.system.icons.filled.ChevronUp
 import fluent.ui.system.icons.regular.ChevronLeft
 
 object MifosIcons {
@@ -208,6 +210,8 @@ object MifosIcons {
 
     val ChevronLeft = FluentIcons.Regular.ChevronLeft
     val ChevronRight = FluentIcons.Filled.ChevronRight
+    val ChevronUp = FluentIcons.Filled.ChevronUp
+    val ChevronDown = FluentIcons.Filled.ChevronDown
 
     val PiggyBank = Icons.Outlined.Savings
 
