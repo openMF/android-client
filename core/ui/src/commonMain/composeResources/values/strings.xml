@@ -98,4 +98,12 @@
     <string name="error_digits_only">This field should contain digits only</string>
     <string name="error_number_zero">Number should not be zero</string>
 
+    <string name="ok">Ok</string>
+    <string name="cancel">Cancel</string>
+    <string name="name">Name</string>
+    <string name="date">Date</string>
+    <string name="amount">Amount</string>
+    <string name="type">Type</string>
+    <string name="collected_on">Collected On</string>
+
 </resources>

@@ -75,6 +75,7 @@ import androidx.compose.ui.unit.dp
 import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.designsystem.theme.AppColors
 import com.mifos.core.designsystem.theme.DesignToken
+import com.mifos.core.designsystem.theme.MifosTheme
 import com.mifos.core.designsystem.theme.MifosTypography
 import com.mifos.core.designsystem.utils.onClick
 import com.mifos.core.ui.util.TextUtil
@@ -461,6 +462,7 @@ fun MifosActionsChargeListingComponent(
                 ) {
                     Column(
                         verticalArrangement = Arrangement.spacedBy(DesignToken.padding.extraExtraSmall),
+                        horizontalAlignment = Alignment.End
                     ) {
                         PrintTextUtil(
                             TextUtil(
@@ -830,7 +832,7 @@ fun MifosActionsNoteListingComponent(
 @Preview
 @Composable
 private fun PreviewMifosActionsNoteListingComponent() {
-    MaterialTheme {
+    MifosTheme {
         MifosActionsNoteListingComponent(
             createdBy = "John Doe",
             date = "02 September 2025",
@@ -855,7 +857,7 @@ private fun PreviewMifosActionsNoteListingComponent() {
 @Preview
 @Composable
 private fun PreviewMifosActionsIdentifierListingComponent() {
-    MaterialTheme {
+    MifosTheme {
         MifosActionsIdentifierListingComponent(
             type = "Passport",
             id = "P1234567",
@@ -885,7 +887,7 @@ private fun PreviewMifosActionsIdentifierListingComponent() {
 @Preview
 @Composable
 private fun PreviewMifosActionsClientFeeListingComponent() {
-    MaterialTheme {
+    MifosTheme {
         MifosActionsClientFeeListingComponent(
             name = "John Doe",
             dueAsOf = "2025-08-19",
@@ -911,7 +913,7 @@ private fun PreviewMifosActionsClientFeeListingComponent() {
 @Preview
 @Composable
 private fun PreviewMifosActionsSavingsListingComponent() {
-    MaterialTheme {
+    MifosTheme {
         MifosActionsSavingsListingComponent(
             accountNo = "SV9876",
             savingsProduct = "Savings Product",
@@ -936,7 +938,7 @@ private fun PreviewMifosActionsSavingsListingComponent() {
 @Preview
 @Composable
 private fun PreviewMifosActionsCollateralDataListingComponent() {
-    MaterialTheme {
+    MifosTheme {
         MifosActionsCollateralDataListingComponent(
             name = "Gold Jewelry",
             quantity = "5",
@@ -960,7 +962,7 @@ private fun PreviewMifosActionsCollateralDataListingComponent() {
 @Preview
 @Composable
 private fun PreviewMifosActionsLoanListingComponent() {
-    MaterialTheme {
+    MifosTheme {
         MifosActionsLoanListingComponent(
             accountNo = "LN12345",
             loanProduct = "Personal Loan",
@@ -979,6 +981,22 @@ private fun PreviewMifosActionsLoanListingComponent() {
                     else -> println("Action not Handled")
                 }
             },
+        )
+    }
+}
+
+@Preview
+@Composable
+private fun MifosActionsChargeListingComponentPreview() {
+    MifosTheme {
+        MifosActionsChargeListingComponent(
+            chargeTitle = "Bank Fee",
+            type = "Flat",
+            date = "06-09-2025",
+            collectedOn = "06-09-2025",
+            amount = "1500 UGX",
+            onActionClicked = { },
+            isExpandable = true
         )
     }
 }

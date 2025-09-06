@@ -1,7 +1,13 @@
-package com.mifos.feature.loan.newLoanAccount
+package com.mifos.core.ui.components
 
-import androidclient.feature.loan.generated.resources.feature_loan_cancel
-import androidclient.feature.loan.generated.resources.feature_loan_select
+import androidclient.core.ui.generated.resources.Res
+import androidclient.core.ui.generated.resources.amount
+import androidclient.core.ui.generated.resources.cancel
+import androidclient.core.ui.generated.resources.collected_on
+import androidclient.core.ui.generated.resources.date
+import androidclient.core.ui.generated.resources.name
+import androidclient.core.ui.generated.resources.ok
+import androidclient.core.ui.generated.resources.type
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
@@ -15,16 +21,16 @@ import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
-import com.mifos.core.common.utils.DateHelper
 import com.mifos.core.designsystem.component.MifosBasicDialog
 import com.mifos.core.designsystem.component.MifosDatePickerTextField
 import com.mifos.core.designsystem.component.MifosOutlinedTextField
 import com.mifos.core.designsystem.component.MifosTextFieldConfig
 import com.mifos.core.designsystem.component.MifosTextFieldDropdown
 import com.mifos.core.designsystem.theme.DesignToken
-import core.designsystem.generated.resources.Res
+import com.mifos.core.designsystem.theme.MifosTheme
 import kotlinx.datetime.Clock
 import org.jetbrains.compose.resources.stringResource
+import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -43,7 +49,7 @@ fun ChargeDialog(
     onDismiss: () -> Unit,
     onChargeSelected: (Int, String) -> Unit,
     onDatePick: (Boolean) -> Unit,
-    onDateChange: (String) -> Unit,
+    onDateChange: (Long) -> Unit,
     onAmountChange: (String) -> Unit,
 ) {
     MifosBasicDialog(
@@ -67,15 +73,15 @@ fun ChargeDialog(
                                 onClick = {
                                     onDatePick(false)
                                     datePickerState.selectedDateMillis?.let {
-                                        onDateChange(DateHelper.getDateAsStringFromLong(it))
+                                        onDateChange(it)
                                     }
                                 },
-                            ) { Text("Ok") }
+                            ) { Text(stringResource(Res.string.ok)) }
                         },
                         dismissButton = {
                             TextButton(
                                 onClick = { onDatePick(false) },
-                            ) { Text("Cancel") }
+                            ) { Text(stringResource(Res.string.cancel)) }
                         },
                     ) {
                         DatePicker(state = datePickerState)
@@ -87,12 +93,12 @@ fun ChargeDialog(
                     onValueChanged = {},
                     onOptionSelected = onChargeSelected,
                     options = chargeOptions,
-                    label = "Name",
+                    label = stringResource(Res.string.name),
                 )
 
                 MifosDatePickerTextField(
                     value = selectedDate,
-                    label = "Date",
+                    label = stringResource(Res.string.date),
                     openDatePicker = { onDatePick(true) },
                 )
 
@@ -101,7 +107,7 @@ fun ChargeDialog(
                 MifosOutlinedTextField(
                     value = chargeAmount,
                     onValueChange = onAmountChange,
-                    label = "Amount",
+                    label = stringResource(Res.string.amount),
                     config = MifosTextFieldConfig(
                         keyboardOptions = KeyboardOptions(
                             keyboardType = KeyboardType.Decimal,
@@ -114,7 +120,7 @@ fun ChargeDialog(
                 MifosOutlinedTextField(
                     value = chargeType,
                     onValueChange = {},
-                    label = "Type",
+                    label =stringResource(Res.string.type),
                     config = MifosTextFieldConfig(
                         readOnly = true,
                         enabled = false
@@ -126,7 +132,7 @@ fun ChargeDialog(
                 MifosOutlinedTextField(
                     value = chargeCollectedOn,
                     onValueChange = {},
-                    label = "Collected On",
+                    label = stringResource(Res.string.collected_on),
                     config = MifosTextFieldConfig(
                         readOnly = true,
                         enabled = false
@@ -135,4 +141,32 @@ fun ChargeDialog(
             }
         },
     )
+}
+
+@Preview
+@Composable
+private fun ChargeDialogPreview() {
+
+    val sampleChargeOptions = listOf("Bank Fee", "Overdue Fee", "Processing Fee")
+
+    MifosTheme {
+        ChargeDialog(
+            title = "Add Charge",
+            confirmText = "Confirm",
+            dismissText = "Cancel",
+            showDatePicker = false,
+            selectedChargeName = sampleChargeOptions[0],
+            selectedDate = "2025-09-06",
+            chargeAmount = "1500",
+            chargeType = "Flat",
+            chargeCollectedOn = "2025-09-06",
+            chargeOptions = sampleChargeOptions,
+            onConfirm = { },
+            onDismiss = { },
+            onChargeSelected = { _, _ -> },
+            onDatePick = {  },
+            onDateChange = {  },
+            onAmountChange = {}
+        )
+    }
 }

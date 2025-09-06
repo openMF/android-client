@@ -892,3 +892,48 @@ private fun NoInternetPreview(
         )
     }
 }
+
+@Preview
+@Composable
+private fun ChargeDialogPreview() {
+
+    val sampleChargeOptions = listOf("Bank Fee", "Overdue Fee", "Processing Fee")
+
+    MifosTheme {
+        ChargeDialog(
+            title = "Add Charge",
+            confirmText = "Confirm",
+            dismissText = "Cancel",
+            showDatePicker = false,
+            selectedChargeName = sampleChargeOptions[0],
+            selectedDate = "2025-09-06",
+            chargeAmount = "1500",
+            chargeType = "Flat",
+            chargeCollectedOn = "2025-09-06",
+            chargeOptions = sampleChargeOptions,
+            onConfirm = { },
+            onDismiss = { },
+            onChargeSelected = { _, _ -> },
+            onDatePick = {  },
+            onDateChange = {  },
+            onAmountChange = {}
+        )
+    }
+}
+
+
+@Preview
+@Composable
+private fun MifosActionsChargeListingComponentPreview() {
+    MifosTheme {
+        MifosActionsChargeListingComponent(
+            chargeTitle = "Bank Fee",
+            type = "Flat",
+            date = "06-09-2025",
+            collectedOn = "06-09-2025",
+            amount = "1500 UGX",
+            onActionClicked = { },
+            isExpandable = true
+        )
+    }
+}

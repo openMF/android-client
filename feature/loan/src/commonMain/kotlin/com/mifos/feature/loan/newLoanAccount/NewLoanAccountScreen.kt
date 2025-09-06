@@ -12,13 +12,13 @@ package com.mifos.feature.loan.newLoanAccount
 import androidclient.feature.loan.generated.resources.Res
 import androidclient.feature.loan.generated.resources.add
 import androidclient.feature.loan.generated.resources.add_new
+import androidclient.feature.loan.generated.resources.add_new_charge
 import androidclient.feature.loan.generated.resources.add_new_collateral
 import androidclient.feature.loan.generated.resources.back
+import androidclient.feature.loan.generated.resources.charges
 import androidclient.feature.loan.generated.resources.collateral
-import androidclient.feature.loan.generated.resources.external_id
+import androidclient.feature.loan.generated.resources.edit_charge
 import androidclient.feature.loan.generated.resources.feature_loan_cancel
-import androidclient.feature.loan.generated.resources.feature_loan_select
-import androidclient.feature.loan.generated.resources.first_repayment_date
 import androidclient.feature.loan.generated.resources.new_loan_account_title
 import androidclient.feature.loan.generated.resources.quantity
 import androidclient.feature.loan.generated.resources.step_charges
@@ -28,6 +28,7 @@ import androidclient.feature.loan.generated.resources.step_schedule
 import androidclient.feature.loan.generated.resources.step_terms
 import androidclient.feature.loan.generated.resources.total_collateral_value
 import androidclient.feature.loan.generated.resources.total_value
+import androidclient.feature.loan.generated.resources.view_charges
 import androidclient.feature.loan.generated.resources.view_collaterals
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -37,12 +38,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.DatePicker
-import androidx.compose.material3.DatePickerDialog
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
-import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -51,7 +46,6 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.mifos.core.common.utils.DateHelper
 import com.mifos.core.designsystem.component.MifosBasicDialog
-import com.mifos.core.designsystem.component.MifosDatePickerTextField
 import com.mifos.core.designsystem.component.MifosOutlinedTextField
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosTextFieldConfig
@@ -59,6 +53,7 @@ import com.mifos.core.designsystem.component.MifosTextFieldDropdown
 import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.designsystem.theme.MifosTypography
 import com.mifos.core.ui.components.Actions
+import com.mifos.core.ui.components.ChargeDialog
 import com.mifos.core.ui.components.MifosActionsChargeListingComponent
 import com.mifos.core.ui.components.MifosBreadcrumbNavBar
 import com.mifos.core.ui.components.MifosErrorComponent
@@ -74,10 +69,8 @@ import com.mifos.feature.loan.newLoanAccount.pages.DetailsPage
 import com.mifos.feature.loan.newLoanAccount.pages.PreviewPage
 import com.mifos.feature.loan.newLoanAccount.pages.SchedulePage
 import com.mifos.feature.loan.newLoanAccount.pages.TermsPage
-import kotlinx.datetime.Clock
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
-import kotlin.text.get
 
 @Composable
 internal fun NewLoanAccountScreen(
@@ -358,8 +351,16 @@ private fun AddNewChargeDialog(
     onAction: (NewLoanAccountAction) -> Unit,
 ) {
     ChargeDialog(
-        title = if(isEdit){"Edit Charge"}else{"Add New Charge"},
-        confirmText = if(isEdit){"Edit Charge"}else{stringResource(Res.string.add)},
+        title = if (isEdit) {
+            stringResource(Res.string.edit_charge)
+        } else {
+            stringResource(Res.string.add_new_charge)
+        },
+        confirmText = if (isEdit) {
+            stringResource(Res.string.edit_charge)
+        } else {
+            stringResource(Res.string.add)
+        },
         dismissText = stringResource(Res.string.feature_loan_cancel),
         showDatePicker = state.showChargesDatePick,
         selectedChargeName = if (state.chooseChargeIndex == -1) ""
@@ -367,19 +368,20 @@ private fun AddNewChargeDialog(
         selectedDate = state.chargeDate,
         chargeAmount = state.chargeAmount,
         chargeType = if (state.chooseChargeIndex == -1) ""
-        else state.loanTemplate?.chargeOptions[state.chooseChargeIndex]?.chargeCalculationType?.value ?: "",
+        else state.loanTemplate?.chargeOptions[state.chooseChargeIndex]?.chargeCalculationType?.value
+            ?: "",
         chargeCollectedOn = if (state.chooseChargeIndex == -1) ""
-        else state.loanTemplate?.chargeOptions[state.chooseChargeIndex]?.chargeTimeType?.value ?: "",
+        else state.loanTemplate?.chargeOptions[state.chooseChargeIndex]?.chargeTimeType?.value
+            ?: "",
         chargeOptions = state.loanTemplate?.chargeOptions?.map { it.name ?: "" } ?: emptyList(),
         onConfirm = {
-            if(isEdit){
+            if (isEdit) {
                 onAction(NewLoanAccountAction.EditCharge(index))
-            }
-            else{
+            } else {
                 onAction(NewLoanAccountAction.AddChargeToList)
 
             }
-                    },
+        },
         onDismiss = { onAction(NewLoanAccountAction.DismissDialog) },
         onChargeSelected = { index, _ ->
             onAction(NewLoanAccountAction.OnChooseChargeIndexChange(index))
@@ -388,7 +390,7 @@ private fun AddNewChargeDialog(
             onAction(NewLoanAccountAction.OnChargesDatePick(show))
         },
         onDateChange = { newDate ->
-            onAction(NewLoanAccountAction.OnChargesDateChange(newDate))
+            onAction(NewLoanAccountAction.OnChargesDateChange(DateHelper.getDateAsStringFromLong(newDate)))
         },
         onAmountChange = { amount ->
             onAction(NewLoanAccountAction.OnChargesAmountChange(amount))
@@ -402,7 +404,7 @@ private fun ShowChargesDialog(
     onAction: (NewLoanAccountAction) -> Unit,
 ) {
     MifosBasicDialog(
-        title = "View Charges",
+        title = stringResource(Res.string.view_charges),
         confirmText = stringResource(Res.string.add_new),
         dismissText = stringResource(Res.string.back),
         onConfirm = {

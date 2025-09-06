@@ -12,6 +12,7 @@ package com.mifos.feature.loan.newLoanAccount.pages
 import androidclient.feature.loan.generated.resources.Res
 import androidclient.feature.loan.generated.resources.add_new
 import androidclient.feature.loan.generated.resources.back
+import androidclient.feature.loan.generated.resources.charges
 import androidclient.feature.loan.generated.resources.collateral_count
 import androidclient.feature.loan.generated.resources.next
 import androidclient.feature.loan.generated.resources.product_name
@@ -59,7 +60,7 @@ fun ChargesPage(
             modifier = modifier.weight(1f).verticalScroll(rememberScrollState()),
         ) {
             Text(
-                text = "Charges",
+                text = stringResource(Res.string.charges),
                 style = MifosTypography.labelLargeEmphasized,
             )
 
@@ -98,7 +99,7 @@ fun ChargesPage(
                     onAction(NewLoanAccountAction.ShowCharges)
                 },
                 btnText = stringResource(Res.string.view),
-                text =state.addedCharges.size .toString() +" Charges",
+                text =state.addedCharges.size .toString() +" "+stringResource(Res.string.charges),
                 btnEnabled = state.addedCharges.isNotEmpty(),
             )
         }
