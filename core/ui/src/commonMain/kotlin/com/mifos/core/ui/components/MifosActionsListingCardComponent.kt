@@ -10,6 +10,9 @@
 package com.mifos.core.ui.components
 
 import androidclient.core.ui.generated.resources.Res
+import androidclient.core.ui.generated.resources.client_share_accounts_approved_shares
+import androidclient.core.ui.generated.resources.client_share_accounts_pending_for_approval_shares
+import androidclient.core.ui.generated.resources.client_share_accounts_share_product
 import androidclient.core.ui.generated.resources.core_ui_account_no
 import androidclient.core.ui.generated.resources.core_ui_amount_paid
 import androidclient.core.ui.generated.resources.core_ui_balance
@@ -22,7 +25,6 @@ import androidclient.core.ui.generated.resources.core_ui_identify_documents
 import androidclient.core.ui.generated.resources.core_ui_last_active
 import androidclient.core.ui.generated.resources.core_ui_loan_balance
 import androidclient.core.ui.generated.resources.core_ui_loan_product
-import androidclient.core.ui.generated.resources.core_ui_name
 import androidclient.core.ui.generated.resources.core_ui_note_createdBy
 import androidclient.core.ui.generated.resources.core_ui_note_date
 import androidclient.core.ui.generated.resources.core_ui_note_note
@@ -404,6 +406,100 @@ fun MifosActionsLoanListingComponent(
 }
 
 @Composable
+fun MifosActionsShareListingComponent(
+    accountNo: String,
+    shareProductName: String,
+    pendingForApprovalShares: Int?,
+    approvedShares: Int?,
+    isExpanded: Boolean,
+    onClick: () -> Unit,
+    menuList: List<Actions>,
+    onActionClicked: (Actions) -> Unit,
+) {
+    MifosActionsListingComponentOutline {
+        Column(
+            modifier = Modifier.clickable { onClick() },
+        ) {
+            Column(
+                modifier = Modifier.padding(DesignToken.padding.large),
+            ) {
+                MifosListingRowItemHeader(
+                    text = accountNo,
+                    keyStyle = MifosTypography.titleSmallEmphasized,
+                )
+
+                Spacer(Modifier.height(DesignToken.padding.large))
+                MifosListingRowItem(
+                    key = stringResource(Res.string.client_share_accounts_share_product),
+                    value = shareProductName,
+                )
+                Spacer(Modifier.height(DesignToken.padding.medium))
+                Column(
+                    verticalArrangement = Arrangement.spacedBy(DesignToken.padding.extraExtraSmall),
+                ) {
+                    MifosListingRowItem(
+                        key = stringResource(Res.string.client_share_accounts_pending_for_approval_shares),
+                        value = (
+                            pendingForApprovalShares
+                                ?: stringResource(Res.string.listing_component_identifier_not_available)
+                            ).toString(),
+                    )
+                    MifosListingRowItem(
+                        key = stringResource(Res.string.client_share_accounts_approved_shares),
+                        value = (
+                            approvedShares
+                                ?: stringResource(Res.string.listing_component_identifier_not_available)
+                            ).toString(),
+                    )
+                }
+            }
+
+            if (isExpanded) {
+                Surface(
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(
+                        bottomStart = DesignToken.padding.medium,
+                        bottomEnd = DesignToken.padding.medium,
+                    ),
+                    color = MaterialTheme.colorScheme.surfaceContainer,
+                ) {
+                    Column(
+                        modifier = Modifier.padding(
+                            vertical = DesignToken.padding.small,
+                        ),
+                    ) {
+                        menuList.map { menuItem ->
+                            Row(
+                                modifier = Modifier.fillMaxWidth()
+                                    .height(DesignToken.sizes.avatarMedium)
+                                    .clickable {
+                                        onActionClicked(menuItem)
+                                    },
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.Start,
+                            ) {
+                                Icon(
+                                    modifier = Modifier.padding(horizontal = DesignToken.padding.large),
+                                    imageVector = menuItem.icon,
+                                    contentDescription = "",
+                                )
+
+                                Text(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    text = menuItem::class.simpleName ?: "",
+                                    color = MaterialTheme.colorScheme.onSurface,
+                                    fontSize = MaterialTheme.typography.bodyLarge.fontSize,
+                                )
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
 fun MifosActionsChargeListingComponent(
     chargeTitle: String,
     type: String,
@@ -535,6 +631,7 @@ fun MifosActionsChargeListingComponent(
     }
 }
 
+
 @Composable
 fun MifosActionsSavingsListingComponent(
     accountNo: String,
@@ -552,8 +649,7 @@ fun MifosActionsSavingsListingComponent(
             isExpanded = isExpanded,
         ) {
             Column(
-                modifier = Modifier.padding(DesignToken.padding.large)
-                    .clickable { isExpanded = !isExpanded },
+                modifier = Modifier.padding(DesignToken.padding.large),
             ) {
                 MifosListingRowItemHeader(
                     text = accountNo,
@@ -634,21 +730,23 @@ fun MifosActionsClientFeeListingComponent(
     due: String,
     paid: String,
     waived: String,
+    isActive: Boolean,
+    onClick: () -> Unit,
     outstanding: String,
     menuList: List<Actions>,
     onActionClicked: (Actions) -> Unit,
 ) {
-    MifosActionsListingComponentOutline {
+    MifosActionsListingComponentOutline(isExpanded = isActive) {
         Column {
             Column(
-                modifier = Modifier.padding(DesignToken.padding.large),
+                modifier = Modifier.padding(DesignToken.padding.large)
+                    .clickable { onClick() },
             ) {
-                MifosListingRowItem(
-                    key = stringResource(Res.string.core_ui_name),
-                    value = name,
+                MifosListingRowItemHeader(
+                    text = name,
                     keyStyle = MifosTypography.titleSmallEmphasized,
-                    valueStyle = MifosTypography.titleSmall,
                 )
+
                 Spacer(Modifier.height(DesignToken.padding.large))
                 MifosListingRowItem(
                     key = stringResource(Res.string.core_ui_due_as_of),
@@ -680,41 +778,43 @@ fun MifosActionsClientFeeListingComponent(
                     value = outstanding,
                 )
             }
-            Surface(
-                modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(
-                    bottomStart = DesignToken.padding.medium,
-                    bottomEnd = DesignToken.padding.medium,
-                ),
-                color = MaterialTheme.colorScheme.surfaceContainer,
-            ) {
-                Column(
-                    modifier = Modifier.padding(
-                        vertical = DesignToken.padding.small,
+            if (isActive) {
+                Surface(
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(
+                        bottomStart = DesignToken.padding.medium,
+                        bottomEnd = DesignToken.padding.medium,
                     ),
+                    color = MaterialTheme.colorScheme.surfaceContainer,
                 ) {
-                    menuList.map { menuItem ->
-                        Row(
-                            modifier = Modifier.fillMaxWidth()
-                                .height(DesignToken.sizes.avatarMedium)
-                                .clickable {
-                                    onActionClicked(menuItem)
-                                },
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.Start,
-                        ) {
-                            Icon(
-                                modifier = Modifier.padding(horizontal = DesignToken.padding.large),
-                                imageVector = menuItem.icon,
-                                contentDescription = "",
-                            )
+                    Column(
+                        modifier = Modifier.padding(
+                            vertical = DesignToken.padding.small,
+                        ),
+                    ) {
+                        menuList.map { menuItem ->
+                            Row(
+                                modifier = Modifier.fillMaxWidth()
+                                    .height(DesignToken.sizes.avatarMedium)
+                                    .clickable {
+                                        onActionClicked(menuItem)
+                                    },
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.Start,
+                            ) {
+                                Icon(
+                                    modifier = Modifier.padding(horizontal = DesignToken.padding.large),
+                                    imageVector = menuItem.icon,
+                                    contentDescription = "",
+                                )
 
-                            Text(
-                                modifier = Modifier.fillMaxWidth(),
-                                text = menuItem::class.simpleName ?: "",
-                                color = MaterialTheme.colorScheme.onSurface,
-                                fontSize = MaterialTheme.typography.bodyLarge.fontSize,
-                            )
+                                Text(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    text = menuItem::class.simpleName ?: "",
+                                    color = MaterialTheme.colorScheme.onSurface,
+                                    fontSize = MaterialTheme.typography.bodyLarge.fontSize,
+                                )
+                            }
                         }
                     }
                 }
@@ -725,11 +825,22 @@ fun MifosActionsClientFeeListingComponent(
 
 sealed class Actions(open val icon: ImageVector) {
     data class ViewAccount(override val icon: ImageVector = MifosIcons.PiggyBank) : Actions(icon)
-    data class ApproveAccount(override val icon: ImageVector = MifosIcons.ApproveAccount) : Actions(icon)
-    data class MakeRepayment(override val icon: ImageVector = MifosIcons.MakeRepayment) : Actions(icon)
-    data class ViewDocument(override val icon: ImageVector = MifosIcons.DocumentScanner) : Actions(icon)
+    data class ApproveAccount(override val icon: ImageVector = MifosIcons.ApproveAccount) :
+        Actions(icon)
+
+    data class PayOutstandingAmount(override val icon: ImageVector = MifosIcons.MakeRepayment) :
+        Actions(icon)
+
+    data class MakeRepayment(override val icon: ImageVector = MifosIcons.MakeRepayment) :
+        Actions(icon)
+
+    data class ViewDocument(override val icon: ImageVector = MifosIcons.DocumentScanner) :
+        Actions(icon)
+
     data class UploadAgain(override val icon: ImageVector = MifosIcons.FileUpload) : Actions(icon)
-    data class DeleteDocument(override val icon: ImageVector = MifosIcons.DeleteDocument) : Actions(icon)
+    data class DeleteDocument(override val icon: ImageVector = MifosIcons.DeleteDocument) :
+        Actions(icon)
+
     data class Edit(override val icon: ImageVector = MifosIcons.Edit) : Actions(icon)
     data class Delete(override val icon: ImageVector = MifosIcons.Delete) : Actions(icon)
 }
@@ -899,6 +1010,8 @@ private fun PreviewMifosActionsClientFeeListingComponent() {
                 Actions.ViewAccount(),
                 Actions.ApproveAccount(),
             ),
+            isActive = true,
+            onClick = {},
             onActionClicked = { action ->
                 when (action) {
                     is Actions.ViewAccount -> println(Actions.ViewDocument::class.simpleName)

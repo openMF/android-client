@@ -9,6 +9,8 @@
  */
 package com.mifos.core.network.mappers.clients
 
+import com.mifos.core.model.objects.account.share.ShareAccounts
+import com.mifos.core.model.objects.account.share.ShareAccountsStatus
 import com.mifos.core.network.data.AbstractMapper
 import com.mifos.core.network.model.GetClientsClientIdAccountsResponse
 import com.mifos.core.network.model.GetClientsLoanAccounts
@@ -106,6 +108,27 @@ object GetClientsClientIdAccountMapper :
                         )
                     },
                     loanCycle = it.loanCycle,
+                )
+            } ?: emptyList(),
+
+            shareAccounts = entity.shareAccounts?.map {
+                ShareAccounts(
+                    id = it.id,
+                    accountNo = it.accountNo,
+                    productId = it.productId,
+                    productName = it.productName,
+                    clientName = it.clientName,
+                    clientId = it.clientId,
+                    status = ShareAccountsStatus(
+                        id = it.status?.id,
+                        code = it.status?.code,
+                        value = it.status?.value,
+                        submittedAndPendingApproval = it.status?.submittedAndPendingApproval,
+                        approved = it.status?.approved,
+                        rejected = it.status?.rejected,
+                        active = it.status?.active,
+                        closed = it.status?.closed,
+                    ),
                 )
             } ?: emptyList(),
         )

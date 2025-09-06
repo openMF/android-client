@@ -133,6 +133,8 @@ private fun PreviewMifosActionsClientFeeListingComponent() {
                 Actions.ViewAccount(),
                 Actions.ApproveAccount(),
             ),
+            isActive = true,
+            onClick = {},
             onActionClicked = { action ->
                 when (action) {
                     is Actions.ViewAccount -> println(Actions.ViewDocument::class.simpleName)
