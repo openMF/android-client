@@ -20,14 +20,14 @@ data class ClientDocumentsRoute(val clientId: Int = -1)
 fun NavGraphBuilder.clientDocumentsDestination(
     navController: NavController,
     navigateBack: () -> Unit,
-    navigateToAddDocuments: () -> Unit,
+    navigateToAddDocuments: (Int, Int, String) -> Unit,
     onViewDocument: (Int, Int, String) -> Unit,
 ) {
     composable<ClientDocumentsRoute> {
         ClientDocumentScreen(
             navController = navController,
-            onViewDocument = onViewDocument,
             onNavigateBack = navigateBack,
+            onViewDocument = onViewDocument,
             onNavigateToAddDocument = navigateToAddDocuments,
         )
     }

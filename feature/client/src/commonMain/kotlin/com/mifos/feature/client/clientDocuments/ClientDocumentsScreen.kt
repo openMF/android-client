@@ -61,13 +61,12 @@ fun ClientDocumentScreen(
     navController: NavController,
     viewModel: ClientDocumentsViewModel = koinViewModel(),
     onViewDocument: (Int, Int, String) -> Unit,
-    onNavigateToAddDocument: () -> Unit,
+    onNavigateToAddDocument: (Int, Int, String) -> Unit,
     onNavigateBack: () -> Unit,
 ) {
     val state by viewModel.stateFlow.collectAsStateWithLifecycle()
 
     EventsEffect(viewModel.eventFlow) { events ->
-
         when (events) {
             ClientDocumentsEvents.OnNavigateBack -> onNavigateBack
             is ClientDocumentsEvents.OnViewDocument -> onViewDocument

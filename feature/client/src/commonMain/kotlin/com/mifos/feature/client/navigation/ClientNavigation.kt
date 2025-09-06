@@ -17,6 +17,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import androidx.navigation.navigation
 import com.mifos.core.common.utils.Constants
+import com.mifos.feature.client.clientAddDocuments.clientAddDocumentDestination
+import com.mifos.feature.client.clientAddDocuments.navigateToClientAddDocumentRoute
 import com.mifos.feature.client.clientAddress.addAddress.clientAddAddressRoute
 import com.mifos.feature.client.clientAddress.addAddress.navigateToClientAddAddressRoute
 import com.mifos.feature.client.clientAddress.clientAddressNavigation
@@ -169,9 +171,15 @@ fun NavGraphBuilder.clientNavGraph(
         clientDocumentsDestination(
             navController = navController,
             navigateBack = navController::popBackStack,
-            navigateToAddDocuments = {},
+            navigateToAddDocuments = navController::navigateToClientAddDocumentRoute,
             onViewDocument = { clientId, documentId, entityType ->
+
             },
+        )
+
+        clientAddDocumentDestination(
+            navController = navController,
+            navigateBack = navController::popBackStack
         )
 
         clientProfileGeneralDestination(

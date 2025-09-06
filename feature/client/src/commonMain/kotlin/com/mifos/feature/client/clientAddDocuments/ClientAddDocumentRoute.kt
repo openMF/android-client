@@ -21,11 +21,15 @@ data class ClientAddDocumentRoute(
     val entityType: String = "clients",
 )
 
-fun NavGraphBuilder.createClientAddDocumentDestination(
+fun NavGraphBuilder.clientAddDocumentDestination(
     navController: NavController,
+    navigateBack: () -> Unit,
 ) {
     composable<ClientAddDocumentRoute> {
-        ClientAddDocumentsScreen()
+        ClientAddDocumentsScreen(
+            navController = navController,
+            navigateBack = navigateBack,
+        )
     }
 }
 
