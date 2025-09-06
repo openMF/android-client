@@ -1,3 +1,12 @@
+/*
+ * Copyright 2025 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ */
 package com.mifos.core.ui.components
 
 import androidclient.core.ui.generated.resources.Res
@@ -58,7 +67,7 @@ fun ChargeDialog(
         dismissText = dismissText,
         onConfirm = onConfirm,
         onDismissRequest = onDismiss,
-        isConfirmEnabled= chargeAmount.isNotEmpty() && chargeType.isNotEmpty(),
+        isConfirmEnabled = chargeAmount.isNotEmpty() && chargeType.isNotEmpty(),
         content = {
             val datePickerState = rememberDatePickerState(
                 initialSelectedDateMillis = Clock.System.now().toEpochMilliseconds(),
@@ -111,7 +120,7 @@ fun ChargeDialog(
                     config = MifosTextFieldConfig(
                         keyboardOptions = KeyboardOptions(
                             keyboardType = KeyboardType.Decimal,
-                        )
+                        ),
                     ),
                 )
 
@@ -120,10 +129,10 @@ fun ChargeDialog(
                 MifosOutlinedTextField(
                     value = chargeType,
                     onValueChange = {},
-                    label =stringResource(Res.string.type),
+                    label = stringResource(Res.string.type),
                     config = MifosTextFieldConfig(
                         readOnly = true,
-                        enabled = false
+                        enabled = false,
                     ),
                 )
 
@@ -135,7 +144,7 @@ fun ChargeDialog(
                     label = stringResource(Res.string.collected_on),
                     config = MifosTextFieldConfig(
                         readOnly = true,
-                        enabled = false
+                        enabled = false,
                     ),
                 )
             }
@@ -146,7 +155,6 @@ fun ChargeDialog(
 @Preview
 @Composable
 private fun ChargeDialogPreview() {
-
     val sampleChargeOptions = listOf("Bank Fee", "Overdue Fee", "Processing Fee")
 
     MifosTheme {
@@ -164,9 +172,9 @@ private fun ChargeDialogPreview() {
             onConfirm = { },
             onDismiss = { },
             onChargeSelected = { _, _ -> },
-            onDatePick = {  },
-            onDateChange = {  },
-            onAmountChange = {}
+            onDatePick = { },
+            onDateChange = { },
+            onAmountChange = {},
         )
     }
 }

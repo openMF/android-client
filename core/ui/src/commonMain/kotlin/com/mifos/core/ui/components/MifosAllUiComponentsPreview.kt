@@ -896,7 +896,6 @@ private fun NoInternetPreview(
 @Preview
 @Composable
 private fun ChargeDialogPreview() {
-
     val sampleChargeOptions = listOf("Bank Fee", "Overdue Fee", "Processing Fee")
 
     MifosTheme {
@@ -914,13 +913,12 @@ private fun ChargeDialogPreview() {
             onConfirm = { },
             onDismiss = { },
             onChargeSelected = { _, _ -> },
-            onDatePick = {  },
-            onDateChange = {  },
-            onAmountChange = {}
+            onDatePick = { },
+            onDateChange = { },
+            onAmountChange = {},
         )
     }
 }
-
 
 @Preview
 @Composable
@@ -933,7 +931,7 @@ private fun MifosActionsChargeListingComponentPreview() {
             collectedOn = "06-09-2025",
             amount = "1500 UGX",
             onActionClicked = { },
-            isExpandable = true
+            isExpandable = true,
         )
     }
 }

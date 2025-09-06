@@ -13,11 +13,7 @@ import androidclient.feature.loan.generated.resources.Res
 import androidclient.feature.loan.generated.resources.add_new
 import androidclient.feature.loan.generated.resources.back
 import androidclient.feature.loan.generated.resources.charges
-import androidclient.feature.loan.generated.resources.collateral_count
 import androidclient.feature.loan.generated.resources.next
-import androidclient.feature.loan.generated.resources.product_name
-import androidclient.feature.loan.generated.resources.step_charges
-import androidclient.feature.loan.generated.resources.terms
 import androidclient.feature.loan.generated.resources.view
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -31,15 +27,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
-import com.mifos.core.designsystem.component.MifosTextFieldDropdown
 import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.designsystem.theme.MifosTypography
@@ -53,7 +46,7 @@ import org.jetbrains.compose.resources.stringResource
 fun ChargesPage(
     state: NewLoanAccountState,
     onAction: (NewLoanAccountAction) -> Unit,
-    modifier: Modifier=Modifier
+    modifier: Modifier = Modifier,
 ) {
     Column(Modifier.fillMaxSize()) {
         Column(
@@ -99,7 +92,7 @@ fun ChargesPage(
                     onAction(NewLoanAccountAction.ShowCharges)
                 },
                 btnText = stringResource(Res.string.view),
-                text =state.addedCharges.size .toString() +" "+stringResource(Res.string.charges),
+                text = state.addedCharges.size.toString() + " " + stringResource(Res.string.charges),
                 btnEnabled = state.addedCharges.isNotEmpty(),
             )
         }

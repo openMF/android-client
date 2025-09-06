@@ -23,7 +23,6 @@ import com.mifos.core.network.model.CollateralItem
 import com.mifos.core.ui.util.BaseViewModel
 import com.mifos.core.ui.util.TextFieldsValidator
 import com.mifos.feature.loan.newLoanAccount.NewLoanAccountState.DialogState
-import com.mifos.feature.loan.newLoanAccount.NewLoanAccountState.DialogState.*
 import com.mifos.room.entities.templates.loans.LoanTemplate
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -151,80 +150,111 @@ internal class NewLoanAccountViewModel(
 
             is NewLoanAccountAction.ShowCollaterals -> handleShowCollaterals()
 
-            is NewLoanAccountAction.OnChooseChargeIndexChange -> {
-                mutableStateFlow.update { it.copy(chooseChargeIndex = action.index) }
-            }
+            is NewLoanAccountAction.AddChargeToList -> handleAddChargeToList()
 
-            NewLoanAccountAction.ShowAddChargeDialog -> {
-                mutableStateFlow.update { it.copy(dialogState = AddNewCharge(false)) }
-            }
+            is NewLoanAccountAction.OnChooseChargeIndexChange -> handleChooseChargeIndexChange(action)
 
-            NewLoanAccountAction.ShowCharges -> {
-                mutableStateFlow.update { it.copy(dialogState = ShowCharges) }
-            }
+            is NewLoanAccountAction.ShowAddChargeDialog -> handleShowAddChargeDialog()
 
-            is NewLoanAccountAction.OnChargesDatePick -> {
-                mutableStateFlow.update { it.copy(showChargesDatePick = action.state) }
-            }
+            is NewLoanAccountAction.ShowCharges -> handleShowChargesDialog()
 
-            is NewLoanAccountAction.OnChargesDateChange -> {
-                mutableStateFlow.update { it.copy(chargeDate = action.date) }
-            }
+            is NewLoanAccountAction.OnChargesDatePick -> handleChargesDatePick(action)
 
-            NewLoanAccountAction.AddChargeToList -> handleAddChargeToList()
+            is NewLoanAccountAction.OnChargesDateChange -> handleChargesDateChange(action)
 
-            is NewLoanAccountAction.OnChargesAmountChange -> {
-                mutableStateFlow.update { it.copy(chargeAmount = action.amount) }
-            }
+            is NewLoanAccountAction.OnChargesAmountChange -> handleChargesAmountChange(action)
 
-            is NewLoanAccountAction.DeleteChargeFromSelectedCharges -> {
-                val newCharges = state.addedCharges.toMutableList()
-                newCharges.removeAt(action.index)
-                mutableStateFlow.update {
-                    it.copy(addedCharges = newCharges)
-                }
-            }
+            is NewLoanAccountAction.DeleteChargeFromSelectedCharges -> handleDeleteCharge(action.index)
 
-            is NewLoanAccountAction.EditChargeDialog -> {
-                val selectedEditCharge=state.addedCharges[action.index]
-                val chooseChargeIndex = state.loanTemplate
-                    ?.chargeOptions
-                    ?.indexOfFirst { option -> option.id == selectedEditCharge.id }
-                mutableStateFlow.update {
-                    it.copy(
-                        chargeAmount = selectedEditCharge.amount.toString(),
-                        chargeDate = selectedEditCharge.date,
-                        chooseChargeIndex = chooseChargeIndex?:-1)
-                }
+            is NewLoanAccountAction.EditChargeDialog -> handleEditChargeDialog(action.index)
 
-                mutableStateFlow.update { it.copy(dialogState = AddNewCharge(true,action.index)) }
-            }
+            is NewLoanAccountAction.EditCharge -> handleEditCharge(action.index)
+        }
+    }
 
-            is NewLoanAccountAction.EditCharge -> {
-                val index=action.index
-                val selectedIndex = state.chooseChargeIndex
-                val selectedCharge = state.loanTemplate?.chargeOptions?.getOrNull(selectedIndex)
-                val amount=state.chargeAmount.toDoubleOrNull()?:selectedCharge?.amount?:0.0
-                if (selectedCharge != null) {
-                    val newCharge = CreatedCharges(
-                        id = selectedCharge.id,
-                        name = selectedCharge.name,
-                        amount = amount,
-                        date = state.chargeDate,
-                        type = selectedCharge.chargeCalculationType?.value ?: "",
-                        collectedOn = selectedCharge.chargeTimeType?.value ?: "",
-                    )
-                    val currentAddedCharges=state.addedCharges.toMutableList()
-                    currentAddedCharges[index]=newCharge
-                    mutableStateFlow.update {
-                        it.copy(
-                            addedCharges = currentAddedCharges,
-                            chooseChargeIndex = -1,
-                            dialogState = DialogState.ShowCharges,
-                            chargeAmount = ""
-                        )
-                    }
-                }
+    private fun handleChooseChargeIndexChange(action: NewLoanAccountAction.OnChooseChargeIndexChange) {
+        mutableStateFlow.update {
+            it.copy(chooseChargeIndex = action.index)
+        }
+    }
+
+    private fun handleShowAddChargeDialog() {
+        mutableStateFlow.update {
+            it.copy(dialogState = DialogState.AddNewCharge(false))
+        }
+    }
+
+    private fun handleShowChargesDialog() {
+        mutableStateFlow.update {
+            it.copy(dialogState = DialogState.ShowCharges)
+        }
+    }
+
+    private fun handleChargesDatePick(action: NewLoanAccountAction.OnChargesDatePick) {
+        mutableStateFlow.update {
+            it.copy(showChargesDatePick = action.state)
+        }
+    }
+
+    private fun handleChargesDateChange(action: NewLoanAccountAction.OnChargesDateChange) {
+        mutableStateFlow.update {
+            it.copy(chargeDate = action.date)
+        }
+    }
+
+    private fun handleChargesAmountChange(action: NewLoanAccountAction.OnChargesAmountChange) {
+        mutableStateFlow.update {
+            it.copy(chargeAmount = action.amount)
+        }
+    }
+
+    private fun handleDeleteCharge(index: Int) {
+        val newCharges = state.addedCharges.toMutableList().apply {
+            removeAt(index)
+        }
+        mutableStateFlow.update {
+            it.copy(addedCharges = newCharges)
+        }
+    }
+
+    private fun handleEditChargeDialog(index: Int) {
+        val selectedEditCharge = state.addedCharges[index]
+        val chooseChargeIndex = state.loanTemplate
+            ?.chargeOptions
+            ?.indexOfFirst { it.id == selectedEditCharge.id } ?: -1
+
+        mutableStateFlow.update {
+            it.copy(
+                chargeAmount = selectedEditCharge.amount.toString(),
+                chargeDate = selectedEditCharge.date,
+                chooseChargeIndex = chooseChargeIndex,
+                dialogState = DialogState.AddNewCharge(true, index),
+            )
+        }
+    }
+
+    private fun handleEditCharge(index: Int) {
+        val selectedIndex = state.chooseChargeIndex
+        val selectedCharge = state.loanTemplate?.chargeOptions?.getOrNull(selectedIndex)
+        val amount = state.chargeAmount.toDoubleOrNull() ?: selectedCharge?.amount ?: 0.0
+        if (selectedCharge != null) {
+            val newCharge = CreatedCharges(
+                id = selectedCharge.id,
+                name = selectedCharge.name,
+                amount = amount,
+                date = state.chargeDate,
+                type = selectedCharge.chargeCalculationType?.value ?: "",
+                collectedOn = selectedCharge.chargeTimeType?.value ?: "",
+            )
+            val currentAddedCharges = state.addedCharges.toMutableList()
+            currentAddedCharges[index] = newCharge
+            mutableStateFlow.update {
+                it.copy(
+                    addedCharges = currentAddedCharges,
+                    chooseChargeIndex = -1,
+                    dialogState = DialogState.ShowCharges,
+                    chargeAmount = "",
+                )
             }
         }
     }
@@ -361,15 +391,15 @@ internal class NewLoanAccountViewModel(
     private fun handleAddChargeToList() {
         val selectedIndex = state.chooseChargeIndex
         val selectedCharge = state.loanTemplate?.chargeOptions?.getOrNull(selectedIndex)
-        val amount=state.chargeAmount.toDoubleOrNull()?:selectedCharge?.amount?:0.0
+        val amount = state.chargeAmount.toDoubleOrNull() ?: selectedCharge?.amount ?: 0.0
         if (selectedCharge != null) {
             val newCharge = CreatedCharges(
                 id = selectedCharge.id,
                 name = selectedCharge.name,
                 amount = amount,
                 date = state.chargeDate,
-                type=selectedCharge.chargeCalculationType?.value?:"",
-                collectedOn = selectedCharge.chargeTimeType?.value?:"",
+                type = selectedCharge.chargeCalculationType?.value ?: "",
+                collectedOn = selectedCharge.chargeTimeType?.value ?: "",
             )
 
             mutableStateFlow.update {
@@ -377,7 +407,7 @@ internal class NewLoanAccountViewModel(
                     addedCharges = it.addedCharges + newCharge,
                     chooseChargeIndex = -1,
                     dialogState = null,
-                    chargeAmount = ""
+                    chargeAmount = "",
                 )
             }
         } else {
@@ -385,7 +415,7 @@ internal class NewLoanAccountViewModel(
                 it.copy(
                     chooseChargeIndex = -1,
                     dialogState = null,
-                    chargeAmount = ""
+                    chargeAmount = "",
                 )
             }
         }
@@ -713,19 +743,19 @@ data class NewLoanAccountState(
     val collateralTotal: Double = 0.0,
     val totalCollateral: Double = 0.0,
 
-    val chooseChargeIndex:Int=-1,
-    val addedCharges:List<CreatedCharges> = emptyList(),
-    val chargeDate:String = DateHelper.getDateAsStringFromLong(Clock.System.now().toEpochMilliseconds()),
+    val chooseChargeIndex: Int = -1,
+    val addedCharges: List<CreatedCharges> = emptyList(),
+    val chargeDate: String = DateHelper.getDateAsStringFromLong(Clock.System.now().toEpochMilliseconds()),
     val showChargesDatePick: Boolean = false,
-    val chargeAmount:String=""
+    val chargeAmount: String = "",
 
 ) {
     sealed interface DialogState {
         data class Error(val message: String) : DialogState
         data object AddNewCollateral : DialogState
-        data class AddNewCharge(val edit:Boolean,val index:Int=-1) : DialogState
+        data class AddNewCharge(val edit: Boolean, val index: Int = -1) : DialogState
         data object ShowCollaterals : DialogState
-        data object ShowCharges: DialogState
+        data object ShowCharges : DialogState
     }
     sealed interface ScreenState {
         data object Loading : ScreenState
@@ -806,8 +836,8 @@ sealed interface NewLoanAccountAction {
     data class OnChargesAmountChange(val amount: String) : NewLoanAccountAction
     data object AddChargeToList : NewLoanAccountAction
     data class DeleteChargeFromSelectedCharges(val index: Int) : NewLoanAccountAction
-    data class EditChargeDialog(val index:Int) : NewLoanAccountAction
-    data class EditCharge(val index:Int) : NewLoanAccountAction
+    data class EditChargeDialog(val index: Int) : NewLoanAccountAction
+    data class EditCharge(val index: Int) : NewLoanAccountAction
 }
 
 data class CreatedCollateral(
@@ -819,10 +849,10 @@ data class CreatedCollateral(
 )
 
 data class CreatedCharges(
-    val id:Int?=-1,
-    val name:String?,
-    val date:String,
-    val type:String?,
-    val amount:Double?=0.0,
-    val collectedOn:String=""
+    val id: Int? = -1,
+    val name: String?,
+    val date: String,
+    val type: String?,
+    val amount: Double? = 0.0,
+    val collectedOn: String = "",
 )

@@ -15,7 +15,6 @@ import androidclient.feature.loan.generated.resources.add_new
 import androidclient.feature.loan.generated.resources.add_new_charge
 import androidclient.feature.loan.generated.resources.add_new_collateral
 import androidclient.feature.loan.generated.resources.back
-import androidclient.feature.loan.generated.resources.charges
 import androidclient.feature.loan.generated.resources.collateral
 import androidclient.feature.loan.generated.resources.edit_charge
 import androidclient.feature.loan.generated.resources.feature_loan_cancel
@@ -214,7 +213,7 @@ private fun NewLoanAccountDialogs(
             isEdit = state.dialogState.edit,
             state = state,
             onAction = onAction,
-            index = state.dialogState.index
+            index = state.dialogState.index,
         )
 
         NewLoanAccountState.DialogState.ShowCharges -> ShowChargesDialog(
@@ -346,7 +345,7 @@ private fun ShowCollateralsDialog(
 @Composable
 private fun AddNewChargeDialog(
     isEdit: Boolean,
-    index:Int=-1,
+    index: Int = -1,
     state: NewLoanAccountState,
     onAction: (NewLoanAccountAction) -> Unit,
 ) {
@@ -363,23 +362,31 @@ private fun AddNewChargeDialog(
         },
         dismissText = stringResource(Res.string.feature_loan_cancel),
         showDatePicker = state.showChargesDatePick,
-        selectedChargeName = if (state.chooseChargeIndex == -1) ""
-        else state.loanTemplate?.chargeOptions[state.chooseChargeIndex]?.name ?: "",
+        selectedChargeName = if (state.chooseChargeIndex == -1) {
+            ""
+        } else {
+            state.loanTemplate?.chargeOptions[state.chooseChargeIndex]?.name ?: ""
+        },
         selectedDate = state.chargeDate,
         chargeAmount = state.chargeAmount,
-        chargeType = if (state.chooseChargeIndex == -1) ""
-        else state.loanTemplate?.chargeOptions[state.chooseChargeIndex]?.chargeCalculationType?.value
-            ?: "",
-        chargeCollectedOn = if (state.chooseChargeIndex == -1) ""
-        else state.loanTemplate?.chargeOptions[state.chooseChargeIndex]?.chargeTimeType?.value
-            ?: "",
+        chargeType = if (state.chooseChargeIndex == -1) {
+            ""
+        } else {
+            state.loanTemplate?.chargeOptions[state.chooseChargeIndex]?.chargeCalculationType?.value
+                ?: ""
+        },
+        chargeCollectedOn = if (state.chooseChargeIndex == -1) {
+            ""
+        } else {
+            state.loanTemplate?.chargeOptions[state.chooseChargeIndex]?.chargeTimeType?.value
+                ?: ""
+        },
         chargeOptions = state.loanTemplate?.chargeOptions?.map { it.name ?: "" } ?: emptyList(),
         onConfirm = {
             if (isEdit) {
                 onAction(NewLoanAccountAction.EditCharge(index))
             } else {
                 onAction(NewLoanAccountAction.AddChargeToList)
-
             }
         },
         onDismiss = { onAction(NewLoanAccountAction.DismissDialog) },
@@ -418,25 +425,25 @@ private fun ShowChargesDialog(
                 modifier = Modifier.fillMaxWidth(),
                 verticalArrangement = Arrangement.spacedBy(DesignToken.padding.largeIncreased),
             ) {
-                state.addedCharges.forEachIndexed  { index,it ->
+                state.addedCharges.forEachIndexed { index, it ->
                     MifosActionsChargeListingComponent(
                         chargeTitle = it.name.toString(),
                         type = it.type.toString(),
                         date = it.date,
                         collectedOn = it.collectedOn,
                         amount = it.amount.toString(),
-                        onActionClicked = { action->
-                            when(action){
+                        onActionClicked = { action ->
+                            when (action) {
                                 is Actions.Delete -> {
                                     onAction(NewLoanAccountAction.DeleteChargeFromSelectedCharges(index))
                                 }
                                 is Actions.Edit -> {
                                     onAction(NewLoanAccountAction.EditChargeDialog(index))
                                 }
-                                else ->{}
+                                else -> {}
                             }
                         },
-                        isExpandable = true
+                        isExpandable = true,
                     )
                 }
             }

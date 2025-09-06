@@ -462,7 +462,7 @@ fun MifosActionsChargeListingComponent(
                 ) {
                     Column(
                         verticalArrangement = Arrangement.spacedBy(DesignToken.padding.extraExtraSmall),
-                        horizontalAlignment = Alignment.End
+                        horizontalAlignment = Alignment.End,
                     ) {
                         PrintTextUtil(
                             TextUtil(
@@ -996,7 +996,7 @@ private fun MifosActionsChargeListingComponentPreview() {
             collectedOn = "06-09-2025",
             amount = "1500 UGX",
             onActionClicked = { },
-            isExpandable = true
+            isExpandable = true,
         )
     }
 }
