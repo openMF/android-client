@@ -631,7 +631,6 @@ fun MifosActionsChargeListingComponent(
     }
 }
 
-
 @Composable
 fun MifosActionsSavingsListingComponent(
     accountNo: String,
@@ -842,7 +841,7 @@ sealed class Actions(open val icon: ImageVector) {
         Actions(icon)
 
     data class Edit(override val icon: ImageVector = MifosIcons.Edit) : Actions(icon)
-    data class Delete(override val icon: ImageVector = MifosIcons.Delete) : Actions(icon)
+    data class Delete(override val icon: ImageVector = MifosIcons.DeleteDocument) : Actions(icon)
 }
 
 @Composable
@@ -1110,6 +1109,28 @@ private fun MifosActionsChargeListingComponentPreview() {
             amount = "1500 UGX",
             onActionClicked = { },
             isExpandable = true,
+        )
+    }
+}
+
+@Preview
+@Composable
+private fun PreviewMifosActionsShareListingComponent() {
+    val sampleMenu = listOf(
+        Actions.Edit(),
+        Actions.Delete(),
+    )
+
+    MifosTheme {
+        MifosActionsShareListingComponent(
+            accountNo = "AC123456",
+            shareProductName = "Gold Savings Plan",
+            pendingForApprovalShares = 5,
+            approvedShares = 10,
+            isExpanded = true,
+            onClick = {},
+            menuList = sampleMenu,
+            onActionClicked = { },
         )
     }
 }

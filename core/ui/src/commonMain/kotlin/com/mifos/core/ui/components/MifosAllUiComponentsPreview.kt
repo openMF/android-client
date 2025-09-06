@@ -937,3 +937,25 @@ private fun MifosActionsChargeListingComponentPreview() {
         )
     }
 }
+
+@Preview
+@Composable
+private fun PreviewMifosActionsShareListingComponent() {
+    val sampleMenu = listOf(
+        Actions.Edit(),
+        Actions.Delete(),
+    )
+
+    MifosTheme {
+        MifosActionsShareListingComponent(
+            accountNo = "AC123456",
+            shareProductName = "Gold Savings Plan",
+            pendingForApprovalShares = 5,
+            approvedShares = 10,
+            isExpanded = true,
+            onClick = {},
+            menuList = sampleMenu,
+            onActionClicked = { },
+        )
+    }
+}
