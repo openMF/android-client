@@ -20,6 +20,7 @@ import androidclient.core.ui.generated.resources.type
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
@@ -30,20 +31,21 @@ import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
-import com.mifos.core.designsystem.component.MifosBasicDialog
+import com.mifos.core.designsystem.component.MifosBottomSheet
 import com.mifos.core.designsystem.component.MifosDatePickerTextField
 import com.mifos.core.designsystem.component.MifosOutlinedTextField
 import com.mifos.core.designsystem.component.MifosTextFieldConfig
 import com.mifos.core.designsystem.component.MifosTextFieldDropdown
 import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.designsystem.theme.MifosTheme
+import com.mifos.core.designsystem.theme.MifosTypography
 import kotlinx.datetime.Clock
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ChargeDialog(
+fun AddChargeBottomSheet(
     title: String,
     confirmText: String,
     dismissText: String,
@@ -61,19 +63,18 @@ fun ChargeDialog(
     onDateChange: (Long) -> Unit,
     onAmountChange: (String) -> Unit,
 ) {
-    MifosBasicDialog(
-        title = title,
-        confirmText = confirmText,
-        dismissText = dismissText,
-        onConfirm = onConfirm,
-        onDismissRequest = onDismiss,
-        isConfirmEnabled = chargeAmount.isNotEmpty() && chargeType.isNotEmpty(),
+    MifosBottomSheet(
+        onDismiss = onDismiss,
         content = {
             val datePickerState = rememberDatePickerState(
                 initialSelectedDateMillis = Clock.System.now().toEpochMilliseconds(),
             )
 
-            Column {
+            Column(
+                Modifier.padding(DesignToken.padding.large),
+            ) {
+                Text(text = title, style = MifosTypography.titleMediumEmphasized)
+
                 if (showDatePicker) {
                     DatePickerDialog(
                         onDismissRequest = { onDatePick(false) },
@@ -147,6 +148,16 @@ fun ChargeDialog(
                         enabled = false,
                     ),
                 )
+
+                Spacer(Modifier.height(DesignToken.padding.large))
+
+                MifosTwoButtonRow(
+                    firstBtnText = dismissText,
+                    secondBtnText = confirmText,
+                    onFirstBtnClick = onDismiss,
+                    onSecondBtnClick = onConfirm,
+                    isSecondButtonEnabled = chargeAmount.isNotEmpty() && chargeType.isNotEmpty(),
+                )
             }
         },
     )
@@ -154,11 +165,11 @@ fun ChargeDialog(
 
 @Preview
 @Composable
-private fun ChargeDialogPreview() {
+private fun AddChargeBottomSheetPreview() {
     val sampleChargeOptions = listOf("Bank Fee", "Overdue Fee", "Processing Fee")
 
     MifosTheme {
-        ChargeDialog(
+        AddChargeBottomSheet(
             title = "Add Charge",
             confirmText = "Confirm",
             dismissText = "Cancel",

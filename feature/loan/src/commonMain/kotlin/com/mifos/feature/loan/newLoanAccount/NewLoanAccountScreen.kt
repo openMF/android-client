@@ -37,6 +37,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -45,6 +46,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.mifos.core.common.utils.DateHelper
 import com.mifos.core.designsystem.component.MifosBasicDialog
+import com.mifos.core.designsystem.component.MifosBottomSheet
 import com.mifos.core.designsystem.component.MifosOutlinedTextField
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosTextFieldConfig
@@ -52,7 +54,7 @@ import com.mifos.core.designsystem.component.MifosTextFieldDropdown
 import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.designsystem.theme.MifosTypography
 import com.mifos.core.ui.components.Actions
-import com.mifos.core.ui.components.ChargeDialog
+import com.mifos.core.ui.components.AddChargeBottomSheet
 import com.mifos.core.ui.components.MifosActionsChargeListingComponent
 import com.mifos.core.ui.components.MifosBreadcrumbNavBar
 import com.mifos.core.ui.components.MifosErrorComponent
@@ -61,6 +63,7 @@ import com.mifos.core.ui.components.MifosListingRowItem
 import com.mifos.core.ui.components.MifosProgressIndicator
 import com.mifos.core.ui.components.MifosProgressIndicatorOverlay
 import com.mifos.core.ui.components.MifosStepper
+import com.mifos.core.ui.components.MifosTwoButtonRow
 import com.mifos.core.ui.components.Step
 import com.mifos.core.ui.util.EventsEffect
 import com.mifos.feature.loan.newLoanAccount.pages.ChargesPage
@@ -355,7 +358,7 @@ private fun AddNewChargeDialog(
     state: NewLoanAccountState,
     onAction: (NewLoanAccountAction) -> Unit,
 ) {
-    ChargeDialog(
+    AddChargeBottomSheet(
         title = if (isEdit) {
             stringResource(Res.string.edit_charge)
         } else {
@@ -417,21 +420,19 @@ private fun ShowChargesDialog(
     state: NewLoanAccountState,
     onAction: (NewLoanAccountAction) -> Unit,
 ) {
-    MifosBasicDialog(
-        title = stringResource(Res.string.view_charges),
-        confirmText = stringResource(Res.string.add_new),
-        dismissText = stringResource(Res.string.back),
-        onConfirm = {
-            onAction(NewLoanAccountAction.ShowAddChargeDialog)
-        },
-        onDismissRequest = {
+    MifosBottomSheet(
+        onDismiss = {
             onAction(NewLoanAccountAction.DismissDialog)
         },
         content = {
             Column(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier.fillMaxWidth().padding(DesignToken.padding.large),
                 verticalArrangement = Arrangement.spacedBy(DesignToken.padding.largeIncreased),
             ) {
+                Text(
+                    text = stringResource(Res.string.view_charges),
+                    style = MifosTypography.titleMediumEmphasized,
+                )
                 if (isOverDue) {
                     state.loanTemplate?.overdueCharges?.forEachIndexed { index, it ->
                         MifosActionsChargeListingComponent(
@@ -467,6 +468,17 @@ private fun ShowChargesDialog(
                         )
                     }
                 }
+
+                MifosTwoButtonRow(
+                    firstBtnText = stringResource(Res.string.back),
+                    secondBtnText = stringResource(Res.string.add_new),
+                    onFirstBtnClick = {
+                        onAction(NewLoanAccountAction.DismissDialog)
+                    },
+                    onSecondBtnClick = {
+                        onAction(NewLoanAccountAction.ShowAddChargeDialog)
+                    },
+                )
             }
         },
     )

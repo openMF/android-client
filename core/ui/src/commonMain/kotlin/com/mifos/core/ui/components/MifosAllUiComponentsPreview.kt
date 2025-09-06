@@ -901,7 +901,7 @@ private fun ChargeDialogPreview() {
     val sampleChargeOptions = listOf("Bank Fee", "Overdue Fee", "Processing Fee")
 
     MifosTheme {
-        ChargeDialog(
+        AddChargeBottomSheet(
             title = "Add Charge",
             confirmText = "Confirm",
             dismissText = "Cancel",
