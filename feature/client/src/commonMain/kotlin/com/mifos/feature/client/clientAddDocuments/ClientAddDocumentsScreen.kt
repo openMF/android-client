@@ -64,6 +64,29 @@ fun ClientAddDocumentsScreen(
         }
     }
 
+    if(state.showDocumentPreviewScreen){
+        DocumentPreviewScreen(
+            canUpdateDocument = state.isDocumentUpdatingEnabled,
+            onBack = {
+                viewModel.trySendAction(ClientAddDocumentAction.CloseDocumentPreviewScreen)
+            },
+            onSubmit = {
+                viewModel.trySendAction(
+                    ClientAddDocumentAction.SubmitFromDocumentPreviewScreen
+                )
+            },
+            onUploadFromGallery = {
+                viewModel.trySendAction(ClientAddDocumentAction.PickFromGallery)
+            },
+            onUploadFromFiles = {
+                viewModel.trySendAction(ClientAddDocumentAction.PickFromFiles)
+            },
+            onClickMoreOptions = {
+                viewModel.trySendAction(ClientAddDocumentAction.UseMoreOptions)
+            },
+        )
+    }
+
     ClientAddDocumentsScreenDialog(
         state,
         onAction = remember(viewModel){{viewModel.trySendAction(it)}}

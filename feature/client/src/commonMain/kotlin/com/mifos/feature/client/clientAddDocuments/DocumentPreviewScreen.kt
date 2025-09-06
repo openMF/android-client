@@ -35,7 +35,7 @@ import kotlinx.coroutines.flow.Flow
 
 @Composable
 fun DocumentPreviewScreen(
-    file: Flow<DataState<ByteArray>>,
+    file: Flow<DataState<ByteArray>>? =null,
     canUpdateDocument: Boolean = false,
     onBack: ()-> Unit,
     onSubmit: () -> Unit,
