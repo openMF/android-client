@@ -158,6 +158,8 @@ internal class NewLoanAccountViewModel(
 
             is NewLoanAccountAction.ShowCharges -> handleShowChargesDialog()
 
+            is NewLoanAccountAction.ShowOverDueCharges -> handleShowOverDueChargesDialog()
+
             is NewLoanAccountAction.OnChargesDatePick -> handleChargesDatePick(action)
 
             is NewLoanAccountAction.OnChargesDateChange -> handleChargesDateChange(action)
@@ -187,6 +189,12 @@ internal class NewLoanAccountViewModel(
     private fun handleShowChargesDialog() {
         mutableStateFlow.update {
             it.copy(dialogState = DialogState.ShowCharges)
+        }
+    }
+
+    private fun handleShowOverDueChargesDialog() {
+        mutableStateFlow.update {
+            it.copy(dialogState = DialogState.ShowOverDueCharges)
         }
     }
 
@@ -756,6 +764,7 @@ data class NewLoanAccountState(
         data class AddNewCharge(val edit: Boolean, val index: Int = -1) : DialogState
         data object ShowCollaterals : DialogState
         data object ShowCharges : DialogState
+        data object ShowOverDueCharges : DialogState
     }
     sealed interface ScreenState {
         data object Loading : ScreenState
@@ -831,6 +840,7 @@ sealed interface NewLoanAccountAction {
     data object ShowAddChargeDialog : NewLoanAccountAction
     data object DismissDialog : NewLoanAccountAction
     data object ShowCharges : NewLoanAccountAction
+    data object ShowOverDueCharges : NewLoanAccountAction
     data class OnChargesDatePick(val state: Boolean) : NewLoanAccountAction
     data class OnChargesDateChange(val date: String) : NewLoanAccountAction
     data class OnChargesAmountChange(val amount: String) : NewLoanAccountAction

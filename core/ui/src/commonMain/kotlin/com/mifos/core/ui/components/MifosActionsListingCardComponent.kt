@@ -58,6 +58,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -73,6 +74,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.designsystem.theme.AppColors
@@ -534,6 +536,7 @@ fun MifosActionsChargeListingComponent(
 
             ) {
                 Column(
+                    modifier = Modifier.weight(1f),
                     verticalArrangement = Arrangement.spacedBy(DesignToken.padding.extraExtraSmall),
                 ) {
                     PrintTextUtil(
@@ -560,17 +563,16 @@ fun MifosActionsChargeListingComponent(
                         verticalArrangement = Arrangement.spacedBy(DesignToken.padding.extraExtraSmall),
                         horizontalAlignment = Alignment.End,
                     ) {
-                        PrintTextUtil(
-                            TextUtil(
-                                text = collectedOn,
-                                color = AppColors.customEnable,
-                            ),
+                        Text(
+                            text = collectedOn,
+                            color = AppColors.customEnable,
+                            style = MifosTypography.bodySmall,
+                            textAlign = TextAlign.End,
                         )
-                        PrintTextUtil(
-                            TextUtil(
-                                text = amount,
-                                style = MifosTypography.labelMedium,
-                            ),
+                        Text(
+                            text = amount,
+                            style = MifosTypography.labelMedium,
+                            textAlign = TextAlign.End,
                         )
                     }
                     Icon(

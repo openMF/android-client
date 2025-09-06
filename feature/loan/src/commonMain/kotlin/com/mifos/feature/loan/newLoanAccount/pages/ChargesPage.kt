@@ -95,6 +95,19 @@ fun ChargesPage(
                 text = state.addedCharges.size.toString() + " " + stringResource(Res.string.charges),
                 btnEnabled = state.addedCharges.isNotEmpty(),
             )
+
+            if (state.loanTemplate?.overdueCharges?.isNotEmpty() ?: false) {
+                Spacer(Modifier.height(DesignToken.padding.large))
+
+                MifosRowWithTextAndButton(
+                    onBtnClick = {
+                        onAction(NewLoanAccountAction.ShowOverDueCharges)
+                    },
+                    btnText = stringResource(Res.string.view),
+                    text = state.loanTemplate.overdueCharges.size.toString() + " " + stringResource(Res.string.charges),
+                    btnEnabled = state.addedCharges.isNotEmpty(),
+                )
+            }
         }
 
         MifosTwoButtonRow(

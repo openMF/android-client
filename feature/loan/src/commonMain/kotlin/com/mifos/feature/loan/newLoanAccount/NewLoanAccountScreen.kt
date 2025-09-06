@@ -220,6 +220,12 @@ private fun NewLoanAccountDialogs(
             state = state,
             onAction = onAction,
         )
+
+        NewLoanAccountState.DialogState.ShowOverDueCharges -> ShowChargesDialog(
+            state = state,
+            onAction = onAction,
+            isOverDue = true,
+        )
     }
 }
 
@@ -407,6 +413,7 @@ private fun AddNewChargeDialog(
 
 @Composable
 private fun ShowChargesDialog(
+    isOverDue: Boolean = false,
     state: NewLoanAccountState,
     onAction: (NewLoanAccountAction) -> Unit,
 ) {
@@ -425,26 +432,40 @@ private fun ShowChargesDialog(
                 modifier = Modifier.fillMaxWidth(),
                 verticalArrangement = Arrangement.spacedBy(DesignToken.padding.largeIncreased),
             ) {
-                state.addedCharges.forEachIndexed { index, it ->
-                    MifosActionsChargeListingComponent(
-                        chargeTitle = it.name.toString(),
-                        type = it.type.toString(),
-                        date = it.date,
-                        collectedOn = it.collectedOn,
-                        amount = it.amount.toString(),
-                        onActionClicked = { action ->
-                            when (action) {
-                                is Actions.Delete -> {
-                                    onAction(NewLoanAccountAction.DeleteChargeFromSelectedCharges(index))
+                if (isOverDue) {
+                    state.loanTemplate?.overdueCharges?.forEachIndexed { index, it ->
+                        MifosActionsChargeListingComponent(
+                            chargeTitle = it.name.toString(),
+                            type = it.chargeCalculationType?.value.toString(),
+                            date = it.formattedDueDate,
+                            collectedOn = it.chargeTimeType?.value.toString(),
+                            amount = it.amount.toString(),
+                            onActionClicked = {},
+                            isExpandable = false,
+                        )
+                    }
+                } else {
+                    state.addedCharges.forEachIndexed { index, it ->
+                        MifosActionsChargeListingComponent(
+                            chargeTitle = it.name.toString(),
+                            type = it.type.toString(),
+                            date = it.date,
+                            collectedOn = it.collectedOn,
+                            amount = it.amount.toString(),
+                            onActionClicked = { action ->
+                                when (action) {
+                                    is Actions.Delete -> {
+                                        onAction(NewLoanAccountAction.DeleteChargeFromSelectedCharges(index))
+                                    }
+                                    is Actions.Edit -> {
+                                        onAction(NewLoanAccountAction.EditChargeDialog(index))
+                                    }
+                                    else -> {}
                                 }
-                                is Actions.Edit -> {
-                                    onAction(NewLoanAccountAction.EditChargeDialog(index))
-                                }
-                                else -> {}
-                            }
-                        },
-                        isExpandable = true,
-                    )
+                            },
+                            isExpandable = true,
+                        )
+                    }
                 }
             }
         },
