@@ -56,6 +56,8 @@ import com.mifos.feature.client.clientSurveyList.SurveyListScreen
 import com.mifos.feature.client.clientSurveyQuestion.SurveyQuestionScreen
 import com.mifos.feature.client.clientTransfer.clientTransferDestination
 import com.mifos.feature.client.clientTransfer.navigateToClientTransferRoute
+import com.mifos.feature.client.clientUpcomingCharges.clientUpcomingChargesDestination
+import com.mifos.feature.client.clientUpcomingCharges.navigateToClientUpcomingChargesRoute
 import com.mifos.feature.client.clientUpdateDefaultAccount.navigateToUpdateDefaultAccountRoute
 import com.mifos.feature.client.clientUpdateDefaultAccount.updateDefaultAccountDestination
 import com.mifos.feature.client.clientsList.ClientListScreen
@@ -178,10 +180,10 @@ fun NavGraphBuilder.clientNavGraph(
             savingAccounts = navController::navigateToClientSavingsAccountsRoute,
             loanAccounts = navController::navigateToClientLoanAccountsRoute,
             recurringDepositAccounts = navController::navigateToRecurringDepositAccountRoute,
+            collateralData = {},
             sharesAccounts = navController::navigateToShareAccountsScreen,
             fixedDepositAccounts = navController::navigateToFixedDepositAccountRoute,
-            collateralData = {},
-            upcomingCharges = {},
+            upcomingCharges = navController::navigateToClientUpcomingChargesRoute,
         )
 
         clientRecurringDepositAccountDestination(
@@ -193,8 +195,8 @@ fun NavGraphBuilder.clientNavGraph(
         clientFixedDepositAccountDestination(
             navController = navController,
             navigateBack = navController::popBackStack,
-            {},
-            {},
+            onApproveAccount = {},
+            onViewAccount = {},
         )
 
         clientProfileDetailsDestination(
@@ -265,6 +267,11 @@ fun NavGraphBuilder.clientNavGraph(
             onNavigateApplyRecurringAccount = { },
             onNavigateApplyFixedAccount = { },
             navController = navController,
+        )
+        clientUpcomingChargesDestination(
+            navController = navController,
+            payOutstandingAmount = {},
+
         )
         shareAccountsDestination(
             navController = navController,
