@@ -75,6 +75,7 @@ fun AddChargeBottomSheet(
             ) {
                 Text(text = title, style = MifosTypography.titleMediumEmphasized)
 
+                Spacer(Modifier.height(DesignToken.padding.large))
                 if (showDatePicker) {
                     DatePickerDialog(
                         onDismissRequest = { onDatePick(false) },
