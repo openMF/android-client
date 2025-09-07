@@ -13,6 +13,7 @@ import com.mifos.core.ui.util.BaseViewModel
 import com.mifos.feature.client.utils.createDocumentRequestBody
 import io.github.vinceglb.filekit.PlatformFile
 import io.github.vinceglb.filekit.div
+import io.github.vinceglb.filekit.name
 import io.github.vinceglb.filekit.nameWithoutExtension
 import io.github.vinceglb.filekit.path
 import kotlinx.coroutines.flow.first
@@ -26,8 +27,7 @@ class ClientAddDocumentScreenViewmodel(
     stateHandler: SavedStateHandle,
     private val networkMonitor: NetworkMonitor,
     private val documentDialogRepository: DocumentDialogRepository,
-) : BaseViewModel
-<
+) : BaseViewModel<
         ClientAddDocumentCombinedScreenState,
         ClientAddDocumentScreenEvents,
         ClientAddDocumentScreenAction,
@@ -44,8 +44,9 @@ class ClientAddDocumentScreenViewmodel(
         getWorkMode()
     }
 
-    private fun getWorkMode(){
-        if(inViewMode){
+    private fun getWorkMode() {
+        if (inViewMode) {
+            println("In view document work mode")
             loadDocumentFromCache(fileNameWithExtension)
             sendEvent(ClientAddDocumentScreenEvents.AddDocumentEvent.NavigateToPreviewScreen)
         }
@@ -80,8 +81,7 @@ class ClientAddDocumentScreenViewmodel(
 
             ClientAddDocumentScreenAction.AddDocumentScreen.NavigateBack -> {
                 sendEvent(
-                    ClientAddDocumentScreenEvents
-                        .AddDocumentEvent.OnNavigateBack,
+                    ClientAddDocumentScreenEvents.AddDocumentEvent.OnNavigateBack,
                 )
             }
 
@@ -95,8 +95,7 @@ class ClientAddDocumentScreenViewmodel(
 
             ClientAddDocumentScreenAction.AddDocumentScreen.PreviewUploadDocument -> {
                 sendEvent(
-                    ClientAddDocumentScreenEvents
-                        .AddDocumentEvent.NavigateToPreviewScreen,
+                    ClientAddDocumentScreenEvents.AddDocumentEvent.NavigateToPreviewScreen,
                 )
             }
 
@@ -106,11 +105,6 @@ class ClientAddDocumentScreenViewmodel(
 
             ClientAddDocumentScreenAction.AddDocumentScreen.RetryUpload -> {
                 observerNetworkAndUpload()
-            }
-            ClientAddDocumentScreenAction.AddDocumentScreen.ViewDocument -> {
-                sendEvent(
-                    ClientAddDocumentScreenEvents.PreviewDocumentEvent.OnNavigateToAddDocScreen
-                )
             }
 
             is ClientAddDocumentScreenAction.AddDocumentScreen.UpdateDescription -> {
@@ -145,8 +139,7 @@ class ClientAddDocumentScreenViewmodel(
                     it.copy(isUpdatingDocument = false)
                 }
                 sendEvent(
-                    ClientAddDocumentScreenEvents
-                        .PreviewDocumentEvent.OnNavigateToAddDocScreen,
+                    ClientAddDocumentScreenEvents.PreviewDocumentEvent.OnNavigateToAddDocScreen,
                 )
             }
 
@@ -169,8 +162,7 @@ class ClientAddDocumentScreenViewmodel(
                     it.copy(isDocumentAdded = true)
                 }
                 sendEvent(
-                    ClientAddDocumentScreenEvents
-                        .PreviewDocumentEvent.OnNavigateToAddDocScreen,
+                    ClientAddDocumentScreenEvents.PreviewDocumentEvent.OnNavigateToAddDocScreen,
                 )
             }
 
@@ -187,7 +179,7 @@ class ClientAddDocumentScreenViewmodel(
         viewModelScope.launch {
             val isConnected = observerNetwork()
             updateAddDocumentScreenState {
-                it.copy(isNetworkAvailable = isConnected,)
+                it.copy(isNetworkAvailable = isConnected)
             }
             when (isConnected) {
                 true -> {
@@ -196,8 +188,9 @@ class ClientAddDocumentScreenViewmodel(
                             is DataState.Error<*> -> {
                                 updateAddDocumentScreenState {
                                     it.copy(
-                                        dialogState = AddDocumentScreenState
-                                            .DialogState.UploadError(dataState.message),
+                                        dialogState = AddDocumentScreenState.DialogState.UploadError(
+                                            dataState.message,
+                                        ),
                                     )
                                 }
                             }
@@ -213,8 +206,7 @@ class ClientAddDocumentScreenViewmodel(
                                     it.copy(showProgressBar = false)
                                 }
                                 sendEvent(
-                                    ClientAddDocumentScreenEvents
-                                        .AddDocumentEvent.OnNavigateBack,
+                                    ClientAddDocumentScreenEvents.AddDocumentEvent.OnNavigateBack,
                                 )
                             }
                         }
@@ -242,8 +234,9 @@ class ClientAddDocumentScreenViewmodel(
                             is DataState.Error<*> -> {
                                 updateAddDocumentScreenState {
                                     it.copy(
-                                        dialogState = AddDocumentScreenState
-                                            .DialogState.UpdateError(dataState.message),
+                                        dialogState = AddDocumentScreenState.DialogState.UpdateError(
+                                            dataState.message,
+                                        ),
                                     )
                                 }
                             }
@@ -259,8 +252,7 @@ class ClientAddDocumentScreenViewmodel(
                                     it.copy(showProgressBar = true)
                                 }
                                 sendEvent(
-                                    ClientAddDocumentScreenEvents
-                                        .AddDocumentEvent.OnNavigateBack,
+                                    ClientAddDocumentScreenEvents.AddDocumentEvent.OnNavigateBack,
                                 )
                             }
                         }
@@ -350,23 +342,27 @@ class ClientAddDocumentScreenViewmodel(
                                 it.copy(
                                     platformFile = dataState.data,
                                     pickedDocumentName = dataState.data?.nameWithoutExtension ?: "",
+                                    isDocumentAdded = true
                                 )
                             }
-                            when(uploadScreen){
+                            when (uploadScreen) {
                                 UploadScreen.ADD -> {
                                     updateAddDocumentScreenState {
                                         it.copy(showBottomSheet = false)
                                     }
                                     sendEvent(
-                                        ClientAddDocumentScreenEvents.AddDocumentEvent.NavigateToPreviewScreen
+                                        ClientAddDocumentScreenEvents.AddDocumentEvent.NavigateToPreviewScreen,
                                     )
                                 }
                                 UploadScreen.PREVIEW -> {
                                     updateDocumentPreviewScreenState {
-                                        it.copy(showBottomSheet = false)
+                                        it.copy(
+                                            showBottomSheet = false,
+                                            isUpdatingDocument = false,
+                                        )
                                     }
                                     sendEvent(
-                                        ClientAddDocumentScreenEvents.PreviewDocumentEvent.OnNavigateToAddDocScreen
+                                        ClientAddDocumentScreenEvents.PreviewDocumentEvent.OnNavigateToAddDocScreen,
                                     )
                                 }
                             }
@@ -412,15 +408,16 @@ class ClientAddDocumentScreenViewmodel(
                                     pickedDocumentName = dataState.data?.nameWithoutExtension ?: "",
                                 )
                             }
-                            when(uploadScreen){
+                            when (uploadScreen) {
                                 UploadScreen.ADD -> {
                                     updateAddDocumentScreenState {
                                         it.copy(showBottomSheet = false)
                                     }
                                     sendEvent(
-                                        ClientAddDocumentScreenEvents.AddDocumentEvent.NavigateToPreviewScreen
+                                        ClientAddDocumentScreenEvents.AddDocumentEvent.NavigateToPreviewScreen,
                                     )
                                 }
+
                                 UploadScreen.PREVIEW -> {
                                     updateDocumentPreviewScreenState {
                                         it.copy(
@@ -428,7 +425,7 @@ class ClientAddDocumentScreenViewmodel(
                                         )
                                     }
                                     sendEvent(
-                                        ClientAddDocumentScreenEvents.PreviewDocumentEvent.OnNavigateToAddDocScreen
+                                        ClientAddDocumentScreenEvents.PreviewDocumentEvent.OnNavigateToAddDocScreen,
                                     )
                                 }
                             }
@@ -445,27 +442,29 @@ class ClientAddDocumentScreenViewmodel(
         state.addDocumentScreenState.enteredDocumentDescription,
     )
 
-    private suspend fun observerNetwork() =
-        networkMonitor.isOnline.first()
+    private suspend fun observerNetwork() = networkMonitor.isOnline.first()
 
 
     private fun loadDocumentFromCache(fileNameWithExtension: String) {
         viewModelScope.launch {
-            val appCache = FileKitUtil.appCache/fileNameWithExtension
+            val appCache = FileKitUtil.appCache / fileNameWithExtension
 
-            FileKitUtil.loadFile(appCache.path).collect {dataState ->
-                when(dataState){
+            FileKitUtil.loadFile(appCache.path).collect { dataState ->
+                when (dataState) {
                     is DataState.Error<*> -> {
                         errorDialogState(UploadScreen.PREVIEW, dataState.message)
                     }
+
                     DataState.Loading -> {
                         loadingDialogState(UploadScreen.PREVIEW)
                     }
+
                     is DataState.Success<*> -> {
                         mutableStateFlow.update {
                             it.copy(
                                 platformFile = dataState.data,
                                 isDocumentAdded = true,
+                                pickedDocumentName = dataState.data?.name ?: "document"
                             )
                         }
                         updateDocumentPreviewScreenState {
@@ -474,7 +473,7 @@ class ClientAddDocumentScreenViewmodel(
                         updateDialogState(
                             UploadScreen.PREVIEW,
                             null,
-                            null
+                            null,
                         )
                     }
                 }
@@ -523,8 +522,7 @@ class ClientAddDocumentScreenViewmodel(
     }
 
     private fun updateAddDocumentScreenState(
-        updateAddDocumentScreenState: (AddDocumentScreenState) ->
-        AddDocumentScreenState,
+        updateAddDocumentScreenState: (AddDocumentScreenState) -> AddDocumentScreenState,
     ) {
         mutableStateFlow.update {
             it.copy(
@@ -534,8 +532,7 @@ class ClientAddDocumentScreenViewmodel(
     }
 
     private fun updateDocumentPreviewScreenState(
-        updatePreviewScreenState: (DocumentPreviewScreenState) ->
-        DocumentPreviewScreenState,
+        updatePreviewScreenState: (DocumentPreviewScreenState) -> DocumentPreviewScreenState,
     ) {
         mutableStateFlow.update {
             it.copy(
@@ -563,8 +560,7 @@ class ClientAddDocumentScreenViewmodel(
 }
 
 enum class UploadScreen {
-    ADD,
-    PREVIEW
+    ADD, PREVIEW
 }
 
 
@@ -610,7 +606,6 @@ sealed interface ClientAddDocumentScreenAction {
 
         data object NavigateBack : AddDocumentScreen
         data object AddNewDocument : AddDocumentScreen
-        data object ViewDocument: AddDocumentScreen
         data object DismissBottomSheet : AddDocumentScreen
         data object UploadDocument : AddDocumentScreen
         data object UpdateDocument : AddDocumentScreen

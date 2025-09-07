@@ -55,6 +55,7 @@ interface DocumentService {
      * @param documentId    - Document Id
      * @return ResponseBody
      */
+
     @GET("{entityType}/{entityId}/" + APIEndPoint.DOCUMENTS + "/{documentId}/attachment")
     suspend fun downloadDocument(
         @Path("entityType") entityType: String,
