@@ -9,34 +9,84 @@
  */
 package com.mifos.feature.client.clientAddDocuments
 
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
+import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
+import androidx.navigation.navigation
 import kotlinx.serialization.Serializable
+import org.koin.compose.viewmodel.koinViewModel
+
 
 @Serializable
-data class ClientAddDocumentRoute(
+data class ClientAddDocumentGraphRoute(
     val clientId: Int = -1,
     val documentId: Int = -1,
     val entityType: String = "clients",
+    val isUpdating: Boolean = false
 )
 
-fun NavGraphBuilder.clientAddDocumentDestination(
+@Serializable
+data object ClientAddDocumentRoute
+
+@Serializable
+data object ClientDocumentPreviewRoute
+
+@Composable
+fun NavBackStackEntry.sharedViewModel(
+    navController: NavController
+): ClientAddDocumentScreenViewmodel {
+
+    val parentEntry = remember(this) {
+        navController.getBackStackEntry<ClientAddDocumentGraphRoute>()
+    }
+    return koinViewModel(viewModelStoreOwner = parentEntry)
+}
+
+
+fun NavGraphBuilder.clientAddDocumentGraphRoute(
     navController: NavController,
     navigateBack: () -> Unit,
+    navigateToDocumentPreview:() -> Unit
 ) {
-    composable<ClientAddDocumentRoute> {
-        ClientAddDocumentsScreen(
-            navController = navController,
-            navigateBack = navigateBack,
-        )
+    navigation<ClientAddDocumentGraphRoute>(startDestination = ClientAddDocumentRoute){
+        
+        composable<ClientAddDocumentRoute> {entry ->
+
+            val viewModel = entry.sharedViewModel(navController)
+
+            ClientAddDocumentsScreen(
+                navController = navController,
+                navigateBack = navigateBack,
+                navigateToDocumentPreviewScreen = navigateToDocumentPreview,
+                viewModel = viewModel
+            )
+        }
+        composable<ClientDocumentPreviewRoute> {entry ->
+            val viewModel = entry.sharedViewModel(navController)
+
+            ClientDocumentPreviewScreen(
+                navigateToAddDocumentScreen = navigateBack,
+                viewmodel = viewModel
+            )
+        }
     }
 }
 
-fun NavController.navigateToClientAddDocumentRoute(
+fun NavController.navigateToClientAddDocumentGraphRoute(
     clientId: Int,
     documentId: Int,
     entityType: String,
+    isUpdating: Boolean
 ) {
-    this.navigate(ClientAddDocumentRoute(clientId, documentId, entityType))
+    this.navigate(ClientAddDocumentGraphRoute(clientId, documentId, entityType, isUpdating))
 }
+
+
+
+fun NavController.navigateToClientDocumentPreviewScreen() {
+    this.navigate(ClientDocumentPreviewRoute)
+}
+

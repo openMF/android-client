@@ -54,84 +54,60 @@ import org.koin.compose.viewmodel.koinViewModel
 fun ClientAddDocumentsScreen(
     navController: NavController,
     navigateBack: () -> Unit,
-    viewModel: ClientAddDocumentViewModel = koinViewModel()
+    navigateToDocumentPreviewScreen: () -> Unit,
+    viewModel: ClientAddDocumentScreenViewmodel = koinViewModel()
 ) {
     val state by viewModel.stateFlow.collectAsStateWithLifecycle()
 
     EventsEffect(viewModel.eventFlow){ events ->
         when(events){
-            ClientAddDocumentEvents.OnNavigateBack -> navigateBack()
+            ClientAddDocumentScreenEvents.AddDocumentEvent.OnNavigateBack -> navigateBack()
+            ClientAddDocumentScreenEvents.AddDocumentEvent.NavigateToPreviewScreen -> navigateToDocumentPreviewScreen()
+            ClientAddDocumentScreenEvents.PreviewDocumentEvent.OnNavigateToAddDocScreen -> {}
         }
     }
 
-    if(state.showDocumentPreviewScreen && (state.documentPath!=null)){
-        DocumentPreviewScreen(
-            platformFile = state.documentPath!!,
-            canUpdateDocument = state.isDocumentUpdatingEnabled,
-            onBack = {
-                viewModel.trySendAction(ClientAddDocumentAction.CloseDocumentPreviewScreen)
-            },
-            onSubmit = {
-                viewModel.trySendAction(
-                    if(state.isDocumentUpdatingEnabled){
-                        ClientAddDocumentAction.CloseDocumentPreviewScreen
-                    } else {
-                        ClientAddDocumentAction.SubmitFromDocumentPreviewScreen(it)
-                    }
-                )
-            },
-            onUploadFromGallery = {
-                viewModel.trySendAction(ClientAddDocumentAction.PickFromGallery)
-            },
-            onUploadFromFiles = {
-                viewModel.trySendAction(ClientAddDocumentAction.PickFromFiles)
-            },
-            onClickMoreOptions = {
-                viewModel.trySendAction(ClientAddDocumentAction.UseMoreOptions)
-            },
-        )
-    } else {
-        ClientAddDocumentScaffold(
-            navController,
-            state,
-            onAction = remember(viewModel){{viewModel.trySendAction(it)}}
-        )
-    }
+    ClientAddDocumentScaffold(
+        navController,
+        state,
+        onAction = remember(viewModel){{viewModel.trySendAction(it)}}
+    )
 }
 
 @Composable
 private fun ClientAddDocumentsScreenDialog(
-    state: ClientAddDocumentState,
-    onAction: (ClientAddDocumentAction) -> Unit,
+    state: AddDocumentScreenState,
+    onAction: (ClientAddDocumentScreenAction.AddDocumentScreen) -> Unit,
 ) {
-
     when (state.dialogState) {
-        is ClientAddDocumentState.DialogState.Error -> {
+        is AddDocumentScreenState.DialogState.Error -> {
             MifosSweetError(
                 message = state.dialogState.message,
                 isRetryEnabled = true,
             )
         }
-        ClientAddDocumentState.DialogState.Loading -> {
+        AddDocumentScreenState.DialogState.Loading -> {
             MifosCircularProgress()
         }
-        is ClientAddDocumentState.DialogState.UpdateError -> {
-            MifosSweetError(
-                message = state.dialogState.message,
-                isRetryEnabled = true,
-            ){
-                onAction(ClientAddDocumentAction.RetryUpdate)
-            }
-        }
-        is ClientAddDocumentState.DialogState.UploadError -> {
-            MifosSweetError(
-                message = state.dialogState.message,
-                isRetryEnabled = true,
-            ){
-                onAction(ClientAddDocumentAction.RetryUpload)
-            }
-        }
         null -> {}
+        is AddDocumentScreenState.DialogState.UpdateError -> {
+            MifosSweetError(
+                message = state.dialogState.message,
+                isRetryEnabled = true,
+                onclick = {
+                    onAction(ClientAddDocumentScreenAction.AddDocumentScreen.RetryUpdate)
+                }
+            )
+        }
+        is AddDocumentScreenState.DialogState.UploadError -> {
+            MifosSweetError(
+                message = state.dialogState.message,
+                isRetryEnabled = true,
+                onclick = {
+                    onAction(ClientAddDocumentScreenAction.AddDocumentScreen.RetryUpload)
+                }
+            )
+        }
     }
 
 }
@@ -139,40 +115,40 @@ private fun ClientAddDocumentsScreenDialog(
 @Composable
 private fun ClientAddDocumentScaffold(
     navController: NavController,
-    state: ClientAddDocumentState,
+    state: ClientAddDocumentCombinedScreenState,
     modifier: Modifier = Modifier,
-    onAction: (ClientAddDocumentAction) -> Unit,
+    onAction: (ClientAddDocumentScreenAction.AddDocumentScreen) -> Unit,
 ) {
     MifosScaffold(
         modifier = modifier,
         onBackPressed = {
-            onAction(ClientAddDocumentAction.NavigateBack)
+            onAction(ClientAddDocumentScreenAction.AddDocumentScreen.NavigateBack)
         },
         bottomBar = {
             MifosFilePickerBottomSheet(
-                state.showFilePickerBottomSheet,
+                showBottomSheet = state.addDocumentScreenState.showBottomSheet,
                 onDismiss = {
-                    onAction(ClientAddDocumentAction.DismissBottomSheet)
+                    onAction(ClientAddDocumentScreenAction.AddDocumentScreen.DismissBottomSheet)
                 },
                 onGalleryClick = {
-                    onAction(ClientAddDocumentAction.PickFromGallery)
+                    onAction(ClientAddDocumentScreenAction.AddDocumentScreen.PickFromGallery)
                 },
                 onFilesClick = {
-                    onAction(ClientAddDocumentAction.PickFromFiles)
+                    onAction(ClientAddDocumentScreenAction.AddDocumentScreen.PickFromFiles)
                 },
                 onMoreClick ={
-                    onAction(ClientAddDocumentAction.UseMoreOptions)
+                    onAction(ClientAddDocumentScreenAction.AddDocumentScreen.UseMoreOptions)
                 },
             )
         },
         title = "",
     ) { paddingValues ->
-        if(state.dialogState!=null){
+        if(state.addDocumentScreenState.dialogState!=null) {
             ClientAddDocumentsScreenDialog(
-                state,
+                state.addDocumentScreenState,
                 onAction = onAction
             )
-        } else if(state.showProgressBar){
+        } else if(state.addDocumentScreenState.showProgressBar){
             MifosProgressIndicator()
         }else{
             Column(
@@ -196,10 +172,12 @@ private fun ClientAddDocumentScaffold(
                     Spacer(Modifier.height(DesignToken.spacing.largeIncreased))
 
                     MifosOutlinedTextField(
-                        value = state.enteredFileName,
+                        value = state.addDocumentScreenState.enteredFileName,
                         placeholder = "Enter document name",
                         onValueChange = {
-                            onAction(ClientAddDocumentAction.UpdateName(it))
+                            onAction(
+                                ClientAddDocumentScreenAction.AddDocumentScreen.UpdateFileName(it)
+                            )
                         },
                         label = "Document Name",
                         maxLines = 1,
@@ -207,10 +185,12 @@ private fun ClientAddDocumentScaffold(
                     )
 
                     MifosOutlinedTextField(
-                        value = state.enteredDocumentDescription,
+                        value = state.addDocumentScreenState.enteredDocumentDescription,
                         placeholder = "Enter description",
                         onValueChange = {
-                            onAction(ClientAddDocumentAction.UpdateDescription(it))
+                            onAction(
+                                ClientAddDocumentScreenAction.AddDocumentScreen.UpdateDescription(it)
+                            )
                         },
                         label = "Description",
                         maxLines = 1,
@@ -233,7 +213,7 @@ private fun ClientAddDocumentScaffold(
 
                         MifosOutlinedButton(
                             onClick = {
-                                onAction(ClientAddDocumentAction.NavigateBack)
+                                onAction(ClientAddDocumentScreenAction.AddDocumentScreen.NavigateBack)
                             },
                             colors = ButtonDefaults.outlinedButtonColors(
                                 containerColor = MaterialTheme.colorScheme.onPrimary,
@@ -265,8 +245,10 @@ private fun ClientAddDocumentScaffold(
 
                         MifosOutlinedButton(
                             onClick = {
-                                if(state.isDocumentAdded){
-                                    onAction(ClientAddDocumentAction.UploadDocument)
+                                if(state.previewScreenState.isUpdatingDocument){
+                                    onAction(ClientAddDocumentScreenAction.AddDocumentScreen.UpdateDocument)
+                                }else {
+                                    onAction(ClientAddDocumentScreenAction.AddDocumentScreen.UploadDocument)
                                 }
                             },
                             colors = ButtonDefaults.outlinedButtonColors(
@@ -300,15 +282,15 @@ private fun ClientAddDocumentScaffold(
                 }
             }
         }
-        }
+    }
 
 }
 
 
 @Composable
 private fun AddViewFileAndFileNameRow(
-    state: ClientAddDocumentState,
-    onAction: (ClientAddDocumentAction) -> Unit
+    state: ClientAddDocumentCombinedScreenState,
+    onAction: (ClientAddDocumentScreenAction.AddDocumentScreen) -> Unit
 ){
     Row(
         modifier = Modifier
@@ -342,9 +324,9 @@ private fun AddViewFileAndFileNameRow(
         MifosOutlinedButton(
             onClick = {
                 if(!state.isDocumentAdded){
-                    onAction(ClientAddDocumentAction.AddNewDocument)
+                    onAction(ClientAddDocumentScreenAction.AddDocumentScreen.AddNewDocument)
                 } else{
-                    onAction(ClientAddDocumentAction.PreviewUploadedDocument)
+                    onAction(ClientAddDocumentScreenAction.AddDocumentScreen.PreviewUploadDocument)
                 }
             },
             colors = ButtonDefaults.outlinedButtonColors(
@@ -359,7 +341,7 @@ private fun AddViewFileAndFileNameRow(
             modifier = Modifier
                 .padding(end = 16.dp)
                 .height(36.dp)
-                .width(72.dp)
+                .width(80.dp)
         ){
             Text(
                 text = if (!state.isDocumentAdded) {

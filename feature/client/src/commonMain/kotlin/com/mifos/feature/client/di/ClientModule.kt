@@ -9,7 +9,7 @@
  */
 package com.mifos.feature.client.di
 
-import com.mifos.feature.client.clientAddDocuments.ClientAddDocumentViewModel
+import com.mifos.feature.client.clientAddDocuments.ClientAddDocumentScreenViewmodel
 import com.mifos.feature.client.clientAddress.ClientAddressViewModel
 import com.mifos.feature.client.clientApplyNewApplications.ClientApplyNewApplicationsViewModel
 import com.mifos.feature.client.clientCharges.ClientChargesViewModel
@@ -73,6 +73,6 @@ val ClientModule = module {
     viewModelOf(::ClientApplyNewApplicationsViewModel)
     viewModelOf(::ClientUpcomingChargesViewmodel)
     viewModelOf(::ClientDocumentsViewModel)
-    viewModelOf(::ClientAddDocumentViewModel)
+    viewModelOf(::ClientAddDocumentScreenViewmodel)
     viewModelOf(::ShareAccountsViewModel)
 }

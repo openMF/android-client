@@ -22,6 +22,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
@@ -32,6 +33,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -48,6 +50,7 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 fun MifosBottomSheet(
     onDismiss: () -> Unit,
     modifier: Modifier = Modifier,
+    color: Color = MaterialTheme.colorScheme.onPrimary,
     content: @Composable () -> Unit,
 ) {
     val coroutineScope = rememberCoroutineScope()
@@ -73,6 +76,7 @@ fun MifosBottomSheet(
                 showBottomSheet = false
                 dismissSheet()
             },
+            containerColor = color,
             sheetState = modalSheetState,
             modifier = modifier,
         ) {
@@ -127,6 +131,42 @@ fun MifosBottomSheetOptionItem(
     ) {
         MifosCard(
             elevation = elevation,
+        ) {
+            Icon(
+                imageVector = icon,
+                contentDescription = null,
+                modifier = Modifier
+                    .padding(DesignToken.padding.medium)
+                    .size(DesignToken.sizes.iconAverage),
+                tint = MaterialTheme.colorScheme.primary,
+            )
+        }
+        Spacer(Modifier.height(DesignToken.padding.small))
+        Text(
+            text = label,
+            style = MifosTypography.labelMedium,
+        )
+    }
+}
+
+@Composable
+fun MifosBottomSheetOptionItem(
+    label: String,
+    icon: ImageVector,
+    onClick: () -> Unit,
+) {
+    Column(
+        modifier = Modifier
+            .padding(DesignToken.padding.large)
+            .clickable { onClick() },
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center,
+    ) {
+        Surface(
+            shadowElevation = DesignToken.elevation.elevation,
+            modifier = Modifier
+                .clickable(onClick = onClick),
+            shape = DesignToken.shapes.small,
         ) {
             Icon(
                 imageVector = icon,

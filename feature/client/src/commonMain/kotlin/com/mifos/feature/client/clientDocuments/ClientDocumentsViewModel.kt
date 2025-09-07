@@ -74,9 +74,6 @@ class ClientDocumentsViewModel(
             }
 
             ClientDocumentsActions.Refresh -> {
-                mutableStateFlow.update {
-                    it.copy(isRefreshing = true)
-                }
                 observeNetworkAndLoadDocuments()
             }
 
@@ -108,8 +105,8 @@ class ClientDocumentsViewModel(
                 sendEvent(
                     ClientDocumentsEvents.OnViewDocument(
                         clientId = route.clientId,
-                        documentNumber = action.documentId,
-                        documentType = entityType,
+                        documentId = action.documentId,
+                        entityType = entityType,
                     ),
                 )
             }
@@ -125,6 +122,7 @@ class ClientDocumentsViewModel(
             networkMonitor.isOnline.collect { isConnected ->
                 mutableStateFlow.update {
                     it.copy(
+                        isRefreshing = true,
                         isNetworkConnected = isConnected,
                     )
                 }
@@ -230,8 +228,8 @@ sealed interface ClientDocumentsEvents {
     data object OnNavigateBack : ClientDocumentsEvents
     data class OnViewDocument(
         val clientId: Int,
-        val documentNumber: Int,
-        val documentType: String,
+        val documentId: Int,
+        val entityType: String,
     ) : ClientDocumentsEvents
 
     data object OnAddDocument : ClientDocumentsEvents

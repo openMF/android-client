@@ -17,8 +17,9 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import androidx.navigation.navigation
 import com.mifos.core.common.utils.Constants
-import com.mifos.feature.client.clientAddDocuments.clientAddDocumentDestination
-import com.mifos.feature.client.clientAddDocuments.navigateToClientAddDocumentRoute
+import com.mifos.feature.client.clientAddDocuments.clientAddDocumentGraphRoute
+import com.mifos.feature.client.clientAddDocuments.navigateToClientAddDocumentGraphRoute
+import com.mifos.feature.client.clientAddDocuments.navigateToClientDocumentPreviewScreen
 import com.mifos.feature.client.clientAddress.addAddress.clientAddAddressRoute
 import com.mifos.feature.client.clientAddress.addAddress.navigateToClientAddAddressRoute
 import com.mifos.feature.client.clientAddress.clientAddressNavigation
@@ -171,14 +172,18 @@ fun NavGraphBuilder.clientNavGraph(
         clientDocumentsDestination(
             navController = navController,
             navigateBack = navController::popBackStack,
-            navigateToAddDocuments = navController::navigateToClientAddDocumentRoute,
-            onViewDocument = { clientId, documentId, entityType ->
+            navigateToAddDocuments = { clientId, documentId, entityType->
+                navController.navigateToClientAddDocumentGraphRoute(clientId, documentId, entityType, false)
+            },
+            onViewDocument = { clientId, documentId, entityType->
+                navController.navigateToClientAddDocumentGraphRoute(clientId, documentId, entityType, true)
             },
         )
 
-        clientAddDocumentDestination(
+        clientAddDocumentGraphRoute(
             navController = navController,
             navigateBack = navController::popBackStack,
+            navigateToDocumentPreview = navController::navigateToClientDocumentPreviewScreen
         )
 
         clientProfileGeneralDestination(

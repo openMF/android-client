@@ -47,7 +47,7 @@ fun MifosFilePickerBottomSheet(
                     .padding(
                         start = DesignToken.padding.large,
                         end = DesignToken.padding.large,
-                        bottom = DesignToken.padding.large,
+                        bottom = DesignToken.padding.extraLarge,
                     ),
             ) {
                 MifosBottomSheetOptionItem(

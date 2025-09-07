@@ -68,8 +68,14 @@ internal fun ClientDocumentScreen(
 
     EventsEffect(viewModel.eventFlow) { events ->
         when (events) {
-            ClientDocumentsEvents.OnNavigateBack -> onNavigateBack
-            is ClientDocumentsEvents.OnViewDocument -> onViewDocument
+            ClientDocumentsEvents.OnNavigateBack -> onNavigateBack()
+            is ClientDocumentsEvents.OnViewDocument -> {
+                onViewDocument(
+                    events.clientId,
+                    events.documentId,
+                    events.entityType
+                )
+            }
             ClientDocumentsEvents.OnAddDocument -> {
                 onNavigateToAddDocument(
                     state.clientId,
