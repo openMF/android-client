@@ -12,7 +12,9 @@ import com.mifos.core.data.util.NetworkMonitor
 import com.mifos.core.ui.util.BaseViewModel
 import com.mifos.feature.client.utils.createDocumentRequestBody
 import io.github.vinceglb.filekit.PlatformFile
+import io.github.vinceglb.filekit.div
 import io.github.vinceglb.filekit.nameWithoutExtension
+import io.github.vinceglb.filekit.path
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.update
@@ -508,6 +510,17 @@ class ClientAddDocumentScreenViewmodel(
             )
         }
     }
+
+    private fun loadDocument(extension: String){
+        viewModelScope.launch {
+            val appCache = FileKitUtil.appCache/"attachment.${extension}"
+
+            FileKitUtil.readFileAsByteArray(appCache.path).collect {
+
+            }
+        }
+    }
+
 }
 
 enum class UploadScreen {

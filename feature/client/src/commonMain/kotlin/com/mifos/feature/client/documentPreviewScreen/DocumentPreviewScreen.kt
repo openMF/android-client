@@ -10,6 +10,7 @@
 package com.mifos.feature.client.documentPreviewScreen
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -26,6 +27,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.mifos.core.designsystem.component.MifosOutlinedButton
 import com.mifos.core.designsystem.component.MifosScaffold
@@ -49,6 +51,7 @@ fun DocumentPreviewScreen(
 ) {
 
     MifosScaffold(
+        title = "",
         onBackPressed = {},
         bottomBar = {
             MifosFilePickerBottomSheet(
@@ -61,11 +64,11 @@ fun DocumentPreviewScreen(
                 onMoreClick = onClickMoreOptions,
             )
         },
-        modifier = Modifier.fillMaxSize(),
     ) { paddingValues ->
 
         Column(
             modifier = Modifier
+                .background(Color.Transparent)
                 .padding(paddingValues)
                 .fillMaxSize()
                 .padding(horizontal = DesignToken.padding.large),
@@ -103,9 +106,9 @@ fun DocumentPreviewScreen(
                     Icon(
                         imageVector = MifosIcons.ArrowBack,
                         "back button",
-                        modifier = Modifier.size(DesignToken.sizes.iconMinyMiny),
+                        modifier = Modifier.size(DesignToken.sizes.iconSmall),
                     )
-                    Spacer(Modifier.height(DesignToken.spacing.medium))
+                    Spacer(Modifier.height(DesignToken.spacing.small))
                     Text(
                         "Back",
                         style = MaterialTheme.typography.labelMedium,
@@ -137,10 +140,10 @@ fun DocumentPreviewScreen(
                     Icon(
                         imageVector = MifosIcons.RightTick,
                         "back button",
-                        modifier = Modifier.size(DesignToken.sizes.iconMinyMiny),
+                        modifier = Modifier.size(DesignToken.sizes.iconSmall),
                         tint = MaterialTheme.colorScheme.onPrimary,
                     )
-                    Spacer(Modifier.height(DesignToken.spacing.medium))
+                    Spacer(Modifier.height(DesignToken.spacing.small))
                     Text(
                         if (!canUpdateDocument) "Submit" else "Upload New",
                         style = MaterialTheme.typography.labelMedium,

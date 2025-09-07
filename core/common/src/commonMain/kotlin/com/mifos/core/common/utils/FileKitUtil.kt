@@ -19,9 +19,7 @@ import io.github.vinceglb.filekit.dialogs.FileKitType
 import io.github.vinceglb.filekit.dialogs.openDirectoryPicker
 import io.github.vinceglb.filekit.dialogs.openFilePicker
 import io.github.vinceglb.filekit.div
-import io.github.vinceglb.filekit.exceptions.FileKitException
 import io.github.vinceglb.filekit.filesDir
-import io.github.vinceglb.filekit.path
 import io.github.vinceglb.filekit.readBytes
 import io.github.vinceglb.filekit.write
 import kotlinx.coroutines.flow.Flow
@@ -36,53 +34,32 @@ object FileKitUtil {
     fun pickPdfFile(
         dialogTitle: String = "",
     ) = flow {
-        emit(DataState.Loading)
-        try {
-            val file = FileKit.openFilePicker(
-                type = FileKitType.File(setOf("pdf", "jpeg", "jpg", "png")),
-                mode = FileKitMode.Single,
-                title = dialogTitle
-            )
-            emit(DataState.Success(file))
-        } catch (fileException: FileKitException) {
-            emit(DataState.Error(fileException))
-        } catch (e: Exception) {
-            emit(DataState.Error(e))
-        }
-    }
+        val file = FileKit.openFilePicker(
+            type = FileKitType.File(setOf("pdf", "jpeg", "jpg", "png")),
+            mode = FileKitMode.Single,
+            title = dialogTitle
+        )
+        emit(file)
+    }.asDataStateFlow()
 
     fun pickImage(
         dialogTitle: String = "",
     ) = flow {
-        emit(DataState.Loading)
-        try {
-            val image = FileKit.openFilePicker(
-                type = FileKitType.Image,
-                mode = FileKitMode.Single,
-                title = dialogTitle,
-            )
-            emit(DataState.Success(image))
-        } catch (fileException: FileKitException) {
-            emit(DataState.Error(fileException))
-        } catch (e: Exception) {
-            emit(DataState.Error(e))
-        }
-    }
+        val image = FileKit.openFilePicker(
+            type = FileKitType.Image,
+            mode = FileKitMode.Single,
+            title = dialogTitle,
+        )
+        emit(image)
+    }.asDataStateFlow()
 
-    fun loadFile(
+    fun readFileAsByteArray(
         filePath: String,
     ) = flow {
-        emit(DataState.Loading)
-        try {
-            val file = PlatformFile(filePath)
-            val fileBytes = file.readBytes()
-            emit(DataState.Success(fileBytes))
-        } catch (fileException: FileKitException) {
-            emit(DataState.Error(fileException))
-        } catch (e: Exception) {
-            emit(DataState.Error(e))
-        }
-    }
+        val file = PlatformFile(filePath)
+        val fileBytes = file.readBytes()
+        emit(fileBytes)
+    }.asDataStateFlow()
 
     suspend fun pickDirectory(): PlatformFile? {
         return FileKit.openDirectoryPicker()
@@ -118,71 +95,43 @@ object FileKitUtil {
      *  databasesDir: Maps to a databases subdirectory within filesDir
      */
 
-    suspend fun writeFileToCache(
+    fun writeFileToCache(
         fileName: String,
         fileExtension: String,
         filesByteArray: ByteArray,
-    ) = try {
-        val cacheDir = appCache / "$fileName.$fileExtension"
-        cacheDir.write(filesByteArray)
-        DataState.Success(cacheDir.path)
-    } catch (fileException: FileKitException) {
-        DataState.Error(fileException)
-    } catch (e: Exception) {
-        DataState.Error(e)
-    }
+    ) = flow {
+        val filePath = appCache / "$fileName.$fileExtension"
+        emit(filePath.write(filesByteArray))
+    }.asDataStateFlow()
 
-    suspend fun writeFileToApplicationPrivateInternalStorage(
+    fun writeFileToApplicationPrivateInternalStorage(
         fileName: String,
         fileExtension: String,
         filesByteArray: ByteArray,
-    ) = try {
+    ) = flow {
         val privateInternalStorage = appPrivateInternalStorage / "$fileName.$fileExtension"
-        privateInternalStorage.write(filesByteArray)
-        DataState.Success(privateInternalStorage.path)
-    } catch (fileException: FileKitException) {
-        DataState.Error(fileException)
-    } catch (e: Exception) {
-        DataState.Error(e)
-    }
+        emit(privateInternalStorage.write(filesByteArray))
+    }.asDataStateFlow()
 
     // Use only if you are using a database service such as room or sqldelight
-    suspend fun writeFileToApplicationInternalStorage(
+    fun writeFileToApplicationInternalStorage(
         fileName: String,
         fileExtension: String,
         filesByteArray: ByteArray,
-    ) = try {
+    ) = flow{
         val internalStorage = appInternalStorage / "$fileName.$fileExtension"
-        internalStorage.write(filesByteArray)
-        DataState.Success(internalStorage.path)
-    } catch (fileException: FileKitException) {
-        DataState.Error(fileException)
-    } catch (e: Exception) {
-        DataState.Error(e)
-    }
+        emit(internalStorage.write(filesByteArray))
+    }.asDataStateFlow()
 
     suspend fun writeToSelectedDirectory(
         fileName: String,
         fileExtension: String,
         filesByteArray: ByteArray,
-    ): DataState<String> {
-        val directory = pickDirectory()
-
-        return if (directory == null) {
-            DataState.Error(IllegalStateException("Failed to pick file directory"))
-        } else {
-            val filePath = directory / "$fileName.$fileExtension"
-
-            try {
-                filePath.write(filesByteArray)
-                DataState.Success(filePath.path)
-            } catch (fileException: FileKitException) {
-                DataState.Error(fileException)
-            } catch (e: Exception) {
-                DataState.Error(e)
-            }
-        }
-    }
+        directoryPath: String,
+    )= flow {
+        val directory = PlatformFile(directoryPath)
+        emit(directory.write(filesByteArray))
+    }.asDataStateFlow()
 
     suspend fun deleteFile(
         file: PlatformFile,

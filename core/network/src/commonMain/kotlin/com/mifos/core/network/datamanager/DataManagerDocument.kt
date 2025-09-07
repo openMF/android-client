@@ -13,7 +13,6 @@ import com.mifos.core.common.utils.DataState
 import com.mifos.core.model.objects.noncoreobjects.Document
 import com.mifos.core.network.BaseApiManager
 import io.ktor.client.request.forms.MultiPartFormDataContent
-import io.ktor.client.statement.HttpResponse
 import kotlinx.coroutines.flow.Flow
 
 /**
@@ -76,9 +75,10 @@ class DataManagerDocument(val mBaseApiManager: BaseApiManager) {
         entityType: String,
         entityId: Int,
         documentId: Int,
-    ): HttpResponse {
-        return mBaseApiManager.documentService.downloadDocument(entityType, entityId, documentId)
-    }
+    )= mBaseApiManager
+        .documentService.downloadDocument(entityType, entityId, documentId)
+
+
 
     /**
      * This Method to Remove the Document from the server with EntityType and EntityId and

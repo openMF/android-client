@@ -15,11 +15,16 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import com.mifos.core.common.utils.DataState
+import com.mifos.core.common.utils.FileKitUtil
+import com.mifos.core.common.utils.asDataStateFlow
 import com.mifos.core.data.repository.DocumentListRepository
 import com.mifos.core.data.util.NetworkMonitor
 import com.mifos.core.model.objects.noncoreobjects.Document
 import com.mifos.core.ui.util.BaseViewModel
 import com.mifos.feature.client.clientDocuments.ClientDocumentsScreenState.DialogState.ConfirmDocumentDeletion
+import io.ktor.client.statement.readRawBytes
+import io.ktor.http.Headers
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.getString
@@ -175,7 +180,6 @@ class ClientDocumentsViewModel(
                 }
 
                 is DataState.Success<*> -> {
-                    println("Network Documents List: " + dataState.data)
                     mutableStateFlow.update {
                         it.copy(
                             dialogState = null,
@@ -205,6 +209,84 @@ class ClientDocumentsViewModel(
             }
         }
     }
+
+    private fun downloadAndSaveDocument(documentId: Int){
+        viewModelScope.launch {
+            downloadDocument(documentId)
+                .collect {documentState ->
+
+                    when(documentState) {
+                        is DataState.Error<*> -> {
+                            errorDialogState(documentState.message)
+                        }
+
+                        DataState.Loading -> {
+                            loadingDialogState()
+                        }
+                        is DataState.Success<*> -> {
+                            if(
+                                documentState.data!=null &&
+                                getFileExtension(documentState.data?.headers)!=null
+                            ) {
+                                FileKitUtil.writeFileToCache(
+                                    "attachment",
+                                    getFileExtension(documentState.data?.headers)!!,
+                                    documentState.data!!.readRawBytes()
+                                ).collect {
+                                    when(it) {
+                                        is DataState.Error<*> -> {
+                                            errorDialogState(it.message)
+                                        }
+                                        DataState.Loading -> {
+                                            loadingDialogState()
+                                        }
+                                        is DataState.Success<*> -> {
+                                            sendEvent(
+                                                ClientDocumentsEvents.OnViewDocument(
+                                                    route.clientId,
+                                                    documentId,
+                                                    "clients"
+                                                )
+                                            )
+                                        }
+                                    }
+                                }
+                            } else {
+                                errorDialogState("Failed to download document.")
+                            }
+                            mutableStateFlow.update {
+                                it.copy(dialogState = null)
+                            }
+                        }
+                    }
+
+                }
+        }
+
+    }
+
+    private fun downloadDocument(documentId: Int) = flow {
+        emit(documentsRepository.downloadDocument(entityType, route.clientId, documentId))
+    }.asDataStateFlow()
+
+    private fun loadingDialogState(){
+        mutableStateFlow.update {
+            it.copy(
+                dialogState = ClientDocumentsScreenState.DialogState.Loading
+            )
+        }
+    }
+    private fun errorDialogState(message: String){
+        mutableStateFlow.update {
+            it.copy(
+                dialogState = ClientDocumentsScreenState.DialogState.Error(message)
+            )
+        }
+    }
+}
+
+private fun getFileExtension(headers: Headers?): String? {
+    return  headers?.get("Content-Type")?.split('/')[1]
 }
 
 data class ClientDocumentsScreenState(
@@ -249,3 +331,5 @@ sealed interface ClientDocumentsActions {
     data class UpdateSearchQuery(val query: String) : ClientDocumentsActions
     data object CloseDialog : ClientDocumentsActions
 }
+
+
