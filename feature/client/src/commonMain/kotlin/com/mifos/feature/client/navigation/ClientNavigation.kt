@@ -175,8 +175,8 @@ fun NavGraphBuilder.clientNavGraph(
             navigateToAddDocuments = { clientId, documentId, entityType->
                 navController.navigateToClientAddDocumentGraphRoute(clientId, documentId, entityType, false)
             },
-            onViewDocument = { clientId, documentId, entityType->
-                navController.navigateToClientAddDocumentGraphRoute(clientId, documentId, entityType, true)
+            onViewDocument = { clientId, documentId, entityType, fileName->
+                navController.navigateToClientAddDocumentGraphRoute(clientId, documentId, entityType, true, fileName)
             },
         )
 

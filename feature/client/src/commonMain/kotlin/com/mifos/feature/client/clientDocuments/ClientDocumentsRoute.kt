@@ -21,7 +21,7 @@ fun NavGraphBuilder.clientDocumentsDestination(
     navController: NavController,
     navigateBack: () -> Unit,
     navigateToAddDocuments: (Int, Int, String) -> Unit,
-    onViewDocument: (Int, Int, String) -> Unit,
+    onViewDocument: (Int, Int, String, String) -> Unit,
 ) {
     composable<ClientDocumentsRoute> {
         ClientDocumentScreen(

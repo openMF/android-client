@@ -37,10 +37,16 @@ class ClientAddDocumentScreenViewmodel(
     private val clientId = stateHandler.toRoute<ClientAddDocumentGraphRoute>().clientId
     private val documentId = stateHandler.toRoute<ClientAddDocumentGraphRoute>().documentId
     private val entityType = stateHandler.toRoute<ClientAddDocumentGraphRoute>().entityType
-
+    val inViewMode = stateHandler.toRoute<ClientAddDocumentGraphRoute>().openInViewMode
+    val fileNameWithExtension = stateHandler.toRoute<ClientAddDocumentGraphRoute>().fileName
 
     init {
-        if(stateHandler.toRoute<ClientAddDocumentGraphRoute>().isUpdating) {
+        getWorkMode()
+    }
+
+    private fun getWorkMode(){
+        if(inViewMode){
+            loadDocumentFromCache(fileNameWithExtension)
             sendEvent(ClientAddDocumentScreenEvents.AddDocumentEvent.NavigateToPreviewScreen)
         }
     }
@@ -442,11 +448,53 @@ class ClientAddDocumentScreenViewmodel(
     private suspend fun observerNetwork() =
         networkMonitor.isOnline.first()
 
+
+    private fun loadDocumentFromCache(fileNameWithExtension: String) {
+        viewModelScope.launch {
+            val appCache = FileKitUtil.appCache/fileNameWithExtension
+
+            FileKitUtil.loadFile(appCache.path).collect {dataState ->
+                when(dataState){
+                    is DataState.Error<*> -> {
+                        errorDialogState(UploadScreen.PREVIEW, dataState.message)
+                    }
+                    DataState.Loading -> {
+                        loadingDialogState(UploadScreen.PREVIEW)
+                    }
+                    is DataState.Success<*> -> {
+                        mutableStateFlow.update {
+                            it.copy(
+                                platformFile = dataState.data,
+                                isDocumentAdded = true,
+                            )
+                        }
+                        updateDocumentPreviewScreenState {
+                            it.copy(isUpdatingDocument = true)
+                        }
+                        updateDialogState(
+                            UploadScreen.PREVIEW,
+                            null,
+                            null
+                        )
+                    }
+                }
+            }
+        }
+    }
+
     private fun loadingDialogState(uploadScreen: UploadScreen) {
         updateDialogState(
             uploadScreen,
             addDocumentScreenDialogState = AddDocumentScreenState.DialogState.Loading,
             documentPreviewScreenStateState = DocumentPreviewScreenState.DialogState.Loading,
+        )
+    }
+
+    private fun errorDialogState(uploadScreen: UploadScreen, message: String) {
+        updateDialogState(
+            uploadScreen,
+            addDocumentScreenDialogState = AddDocumentScreenState.DialogState.Error(message),
+            documentPreviewScreenStateState = DocumentPreviewScreenState.DialogState.Error(message),
         )
     }
 
@@ -511,15 +559,6 @@ class ClientAddDocumentScreenViewmodel(
         }
     }
 
-    private fun loadDocument(extension: String){
-        viewModelScope.launch {
-            val appCache = FileKitUtil.appCache/"attachment.${extension}"
-
-            FileKitUtil.readFileAsByteArray(appCache.path).collect {
-
-            }
-        }
-    }
 
 }
 
@@ -602,7 +641,6 @@ sealed interface ClientAddDocumentScreenEvents {
     sealed interface AddDocumentEvent : ClientAddDocumentScreenEvents {
         data object OnNavigateBack : AddDocumentEvent
         data object NavigateToPreviewScreen : AddDocumentEvent
-
     }
 
     sealed interface PreviewDocumentEvent : ClientAddDocumentScreenEvents {

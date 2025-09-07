@@ -107,13 +107,7 @@ class ClientDocumentsViewModel(
             }
 
             is ClientDocumentsActions.ViewDocument -> {
-                sendEvent(
-                    ClientDocumentsEvents.OnViewDocument(
-                        clientId = route.clientId,
-                        documentId = action.documentId,
-                        entityType = entityType,
-                    ),
-                )
+                downloadAndSaveDocument(action.documentId)
             }
 
             ClientDocumentsActions.AddDocument -> {
@@ -210,7 +204,7 @@ class ClientDocumentsViewModel(
         }
     }
 
-    private fun downloadAndSaveDocument(documentId: Int){
+    private fun downloadAndSaveDocument(documentId: Int) {
         viewModelScope.launch {
             downloadDocument(documentId)
                 .collect {documentState ->
@@ -245,21 +239,21 @@ class ClientDocumentsViewModel(
                                                 ClientDocumentsEvents.OnViewDocument(
                                                     route.clientId,
                                                     documentId,
-                                                    "clients"
+                                                    "clients",
+                                                    "attachment.${getFileExtension(documentState.data?.headers)}"
                                                 )
                                             )
                                         }
                                     }
                                 }
+                                mutableStateFlow.update {
+                                    it.copy(dialogState = null)
+                                }
                             } else {
                                 errorDialogState("Failed to download document.")
                             }
-                            mutableStateFlow.update {
-                                it.copy(dialogState = null)
-                            }
                         }
                     }
-
                 }
         }
 
@@ -312,6 +306,7 @@ sealed interface ClientDocumentsEvents {
         val clientId: Int,
         val documentId: Int,
         val entityType: String,
+        val fileName: String
     ) : ClientDocumentsEvents
 
     data object OnAddDocument : ClientDocumentsEvents

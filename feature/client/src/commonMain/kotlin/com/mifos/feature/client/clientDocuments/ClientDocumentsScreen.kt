@@ -60,7 +60,7 @@ import org.koin.compose.viewmodel.koinViewModel
 internal fun ClientDocumentScreen(
     navController: NavController,
     viewModel: ClientDocumentsViewModel = koinViewModel(),
-    onViewDocument: (Int, Int, String) -> Unit,
+    onViewDocument: (Int, Int, String, String) -> Unit,
     onNavigateToAddDocument: (Int, Int, String) -> Unit,
     onNavigateBack: () -> Unit,
 ) {
@@ -73,7 +73,8 @@ internal fun ClientDocumentScreen(
                 onViewDocument(
                     events.clientId,
                     events.documentId,
-                    events.entityType
+                    events.entityType,
+                    events.fileName
                 )
             }
             ClientDocumentsEvents.OnAddDocument -> {

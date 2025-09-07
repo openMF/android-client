@@ -53,6 +53,13 @@ object FileKitUtil {
         emit(image)
     }.asDataStateFlow()
 
+    fun loadFile(
+        filePath: String,
+    ) = flow {
+        val file = PlatformFile(filePath)
+        emit(file)
+    }.asDataStateFlow()
+
     fun readFileAsByteArray(
         filePath: String,
     ) = flow {

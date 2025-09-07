@@ -25,7 +25,8 @@ data class ClientAddDocumentGraphRoute(
     val clientId: Int = -1,
     val documentId: Int = -1,
     val entityType: String = "clients",
-    val isUpdating: Boolean = false
+    val openInViewMode: Boolean = false,
+    val fileName: String = ""
 )
 
 @Serializable
@@ -52,7 +53,7 @@ fun NavGraphBuilder.clientAddDocumentGraphRoute(
     navigateToDocumentPreview:() -> Unit
 ) {
     navigation<ClientAddDocumentGraphRoute>(startDestination = ClientAddDocumentRoute){
-        
+
         composable<ClientAddDocumentRoute> {entry ->
 
             val viewModel = entry.sharedViewModel(navController)
@@ -79,9 +80,10 @@ fun NavController.navigateToClientAddDocumentGraphRoute(
     clientId: Int,
     documentId: Int,
     entityType: String,
-    isUpdating: Boolean
+    openInViewMode: Boolean,
+    fileName: String = ""
 ) {
-    this.navigate(ClientAddDocumentGraphRoute(clientId, documentId, entityType, isUpdating))
+    this.navigate(ClientAddDocumentGraphRoute(clientId, documentId, entityType, openInViewMode, fileName))
 }
 
 
