@@ -274,7 +274,6 @@ class ClientAddDocumentScreenViewmodel(
                         loadingDialogState()
                     }
 
-
                     is DataState.Success<*> -> {
                         dataState.data?.let { platformFile ->
                             mutableStateFlow.update {
@@ -284,6 +283,8 @@ class ClientAddDocumentScreenViewmodel(
                                     pickedDocumentName = platformFile.nameWithoutExtension,
                                 )
                             }
+                            sendAction(ClientAddDocumentScreenAction.DismissBottomSheet)
+                            sendEvent(ClientAddDocumentScreenEvents.NavigateToPreviewScreen(platformFile.path))
                         } ?: nullDialogState()
                     }
                 }
@@ -312,6 +313,8 @@ class ClientAddDocumentScreenViewmodel(
                                     pickedDocumentName = platformFile.nameWithoutExtension,
                                 )
                             }
+                            sendAction(ClientAddDocumentScreenAction.DismissBottomSheet)
+                            sendEvent(ClientAddDocumentScreenEvents.NavigateToPreviewScreen(platformFile.path))
                         } ?: nullDialogState()
                     }
                 }
