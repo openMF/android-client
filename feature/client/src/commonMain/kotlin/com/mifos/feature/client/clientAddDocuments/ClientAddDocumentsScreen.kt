@@ -41,7 +41,7 @@ import org.koin.compose.viewmodel.koinViewModel
 fun ClientAddDocumentsScreen(
     navController: NavController,
     navigateBack: () -> Unit,
-    navigateToDocumentPreviewScreen: (String) -> Unit,
+    navigateToDocumentPreviewScreen: (documentState: DocumentState) -> Unit,
     viewModel: ClientAddDocumentScreenViewmodel = koinViewModel()
 ) {
     val state by viewModel.stateFlow.collectAsStateWithLifecycle()
@@ -49,8 +49,8 @@ fun ClientAddDocumentsScreen(
     EventsEffect(viewModel.eventFlow){ events ->
         when(events){
             ClientAddDocumentScreenEvents.OnNavigateBack -> navigateBack()
-            is ClientAddDocumentScreenEvents.NavigateToPreviewScreen -> {
-                navigateToDocumentPreviewScreen(events.documentPath)
+            is ClientAddDocumentScreenEvents.OnNavigateToPreviewScreen -> {
+                navigateToDocumentPreviewScreen(events.documentState)
             }
         }
     }

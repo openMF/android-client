@@ -7,6 +7,7 @@ import co.touchlab.kermit.Logger
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.common.utils.FileKitUtil
 import com.mifos.core.ui.util.BaseViewModel
+import com.mifos.feature.client.clientAddDocuments.DocumentState
 import io.github.vinceglb.filekit.*
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -21,44 +22,32 @@ class DocumentPreviewScreenViewModel(
         >(DocumentPreviewState()) {
 
     private val route = savedStateHandle.toRoute<DocumentPreviewScreenRoute>()
-    private val documentName = route.documentPath
+    private val documentState = route.documentState
+    private val documentPath = documentState.documentPath
     private val comingFromServer = route.comingFromServer
 
     init {
         viewModelScope.launch {
-            Logger.e { "File path: $documentName" }
+            Logger.e { "File path: $documentPath" }
             try {
-                val platformFile = FileKitUtil.appCache/documentName
+                val platformFile = PlatformFile(documentPath)
                 Logger.e { "File inside try catch: $platformFile" }
                 Logger.e { "File path inside try catch: ${platformFile.path}" }
                 mutableStateFlow.update {
-                    it.copy(documentPath = platformFile)
+                    it.copy(documentPath = platformFile.path)
                 }
                 val canUpdateDocument =route.canUpdateDocument
                 if (canUpdateDocument) {
                     sendAction(DocumentPreviewScreenAction.EnableUpdating)
                 }
-                mutableStateFlow.update {
-                    it.copy(documentPath = platformFile)
-                }
-                sendAction(DocumentPreviewScreenAction.LoadDocument(DocumentType.Image("jpg")))
-                loadDocumentFromPath(platformFile.path)
-//                if (platformFile.extension == "pdf" ||
-//                    platformFile.extension == "jpg" || platformFile.extension == "jpeg" || platformFile.extension == "png"
-//                ) {
-////                    sendAction(
-////                        DocumentPreviewScreenAction.LoadDocument(
-////                            if (platformFile.extension == "pdf") DocumentType.Pdf
-////                            else DocumentType.Image(platformFile.extension),
-////                        ),
-////                    )
-//
-//                } else {
-//                    sendEvent(DocumentPreviewEvent.OnNavigateBack)
-//                }
+                getDocumentType(extension = platformFile.extension)?.let {
+                    sendAction(
+                        DocumentPreviewScreenAction.LoadDocument(it),
+                    )
+                } ?: sendEvent(DocumentPreviewEvent.OnNavigateBack(documentState))
             } catch (e: Exception) {
                 Logger.e(e) { "Failed to load file"}
-                sendEvent(DocumentPreviewEvent.OnNavigateBack)
+                sendEvent(DocumentPreviewEvent.OnNavigateBack(documentState))
             }
         }
     }
@@ -66,11 +55,11 @@ class DocumentPreviewScreenViewModel(
     override fun handleAction(action: DocumentPreviewScreenAction) {
         when (action) {
             DocumentPreviewScreenAction.NavigateBack -> {
-                sendEvent(DocumentPreviewEvent.OnNavigateBack)
+                sendEvent(DocumentPreviewEvent.OnNavigateBack(documentState))
             }
 
             DocumentPreviewScreenAction.CancelUpdating -> {
-                sendEvent(DocumentPreviewEvent.OnCancelUpdating)
+                sendEvent(DocumentPreviewEvent.OnCancelUpdating(documentState))
             }
 
             DocumentPreviewScreenAction.DismissBottomSheet -> {
@@ -81,18 +70,18 @@ class DocumentPreviewScreenViewModel(
 
             DocumentPreviewScreenAction.EnableUpdating -> {
                 mutableStateFlow.update {
-                    it.copy(canUpdate = true)
+                    it.copy(showUpdateButton = true)
                 }
             }
 
             is DocumentPreviewScreenAction.LoadDocument -> {
-                if (documentName.isBlank()) {
+                if (state.documentPath.isNotBlank()) {
                     mutableStateFlow.update {
                         it.copy(documentType = action.documentType)
                     }
-                    loadDocumentFromPath(documentName)
+                    loadDocumentFromPath(state.documentPath)
                 } else {
-                    sendEvent(DocumentPreviewEvent.OnDocumentRejected)
+                    sendEvent(DocumentPreviewEvent.OnDocumentRejected(documentState))
                 }
             }
 
@@ -105,7 +94,7 @@ class DocumentPreviewScreenViewModel(
             }
 
             DocumentPreviewScreenAction.RejectDocument -> {
-                sendEvent(DocumentPreviewEvent.OnDocumentRejected)
+                sendEvent(DocumentPreviewEvent.OnDocumentRejected(documentState))
             }
 
             DocumentPreviewScreenAction.SubmitClicked -> {
@@ -141,21 +130,19 @@ class DocumentPreviewScreenViewModel(
                         dataState.data?.let { platformFile ->
                             mutableStateFlow.update {
                                 it.copy(
-                                    canUpdate = false,
+                                    showUpdateButton = false,
                                     dialogState = null,
-                                    documentPath = platformFile,
+                                    documentPath = platformFile.path,
                                 )
                             }
 
-                            if(comingFromServer) {
-                                sendEvent(
-                                    DocumentPreviewEvent.SendUpdatedDocument(platformFile.path, true)
+                            sendEvent(
+                                DocumentPreviewEvent.OnSubmitClinked(
+                                    documentState = documentState,
+                                    newDocumentPath = platformFile.path,
+                                    updateForServer = comingFromServer,
                                 )
-                            } else {
-                                sendEvent(
-                                    DocumentPreviewEvent.SendUpdatedDocument(platformFile.path, false)
-                                )
-                            }
+                            )
                         } ?: nullDialogState()
                     }
                 }
@@ -180,21 +167,18 @@ class DocumentPreviewScreenViewModel(
                         dataState.data?.let { platformFile ->
                             mutableStateFlow.update {
                                 it.copy(
-                                    canUpdate = false,
+                                    showUpdateButton = false,
                                     dialogState = null,
-                                    documentPath = platformFile,
+                                    documentPath = platformFile.path,
                                 )
                             }
-
-                            if(comingFromServer) {
-                                sendEvent(
-                                    DocumentPreviewEvent.SendUpdatedDocument(platformFile.path, true)
+                            sendEvent(
+                                DocumentPreviewEvent.OnSubmitClinked(
+                                    documentState = documentState,
+                                    newDocumentPath = platformFile.path,
+                                    updateForServer = comingFromServer
                                 )
-                            } else {
-                                sendEvent(
-                                    DocumentPreviewEvent.SendUpdatedDocument(platformFile.path, false)
-                                )
-                            }
+                            )
                         } ?: nullDialogState()
                     }
                 }
@@ -202,17 +186,17 @@ class DocumentPreviewScreenViewModel(
         }
     }
 
-    private fun loadDocumentFromPath(filePath: String) {
+    private fun loadDocumentFromPath(documentPath: String) {
         viewModelScope.launch {
             try {
-                val platformFile = FileKitUtil.appCache/documentName
+                val platformFile = PlatformFile(documentPath)
                 Logger.e { "Selected document: $platformFile" }
                 Logger.e { "Does file exist: ${platformFile.exists()}" }
 
                 val bytesString = platformFile.readBytes()
                 mutableStateFlow.update {
                     it.copy(
-                        documentPath = platformFile,
+                        documentPath = documentPath,
                         documentContent = bytesString,
                     )
                 }
@@ -249,8 +233,8 @@ class DocumentPreviewScreenViewModel(
 data class DocumentPreviewState(
     val dialogState: DialogState? = null,
     val showBottomSheet: Boolean = false,
-    val canUpdate: Boolean = false,
-    val documentPath: PlatformFile? = null,
+    val showUpdateButton: Boolean = false,
+    val documentPath: String = "",
     val documentType: DocumentType? = DocumentType.Image("jpg"),
     val documentContent: ByteArray? = null,
 ) {
@@ -280,15 +264,23 @@ sealed interface DocumentType {
     data object Pdf : DocumentType
 }
 
+private fun getDocumentType(extension: String): DocumentType? {
+    return if (extension == "pdf" ) DocumentType.Pdf
+    else if(
+        extension=="png" ||
+        extension=="jpeg" ||
+        extension=="jpg"
+    ) DocumentType.Image(extension)
+    else null
+}
+
 sealed interface DocumentPreviewEvent {
-    object OnCancelUpdating : DocumentPreviewEvent
-    object OnNavigateBack : DocumentPreviewEvent
-    object OnDocumentRejected : DocumentPreviewEvent
-    data class SendUpdatedDocument(
-        val documentPath: String,
-        val updateForServer: Boolean
-    ) : DocumentPreviewEvent
+    data class OnCancelUpdating(val documentState: DocumentState) : DocumentPreviewEvent
+    data class OnNavigateBack(val documentState: DocumentState) : DocumentPreviewEvent
+    data class OnDocumentRejected(val documentState: DocumentState) : DocumentPreviewEvent
     data class OnSubmitClinked(
-        val documentPath: String,
+        val documentState: DocumentState,
+        val newDocumentPath: String,
+        val updateForServer: Boolean
     ): DocumentPreviewEvent
 }

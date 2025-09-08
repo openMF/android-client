@@ -13,6 +13,7 @@ import FormWidgetDTO
 import androidx.navigation.*
 import androidx.navigation.compose.composable
 import com.mifos.core.common.utils.Constants
+import com.mifos.feature.client.clientAddDocuments.ClientAddDocumentRoute
 import com.mifos.feature.client.clientAddDocuments.clientAddDocumentGraphRoute
 import com.mifos.feature.client.clientAddDocuments.navigateToClientAddDocumentRoute
 import com.mifos.feature.client.clientAddDocuments.navigateToClientAddDocumentRouteFromPreview
@@ -63,7 +64,6 @@ import com.mifos.feature.client.clientsList.ClientListScreen
 import com.mifos.feature.client.createNewClient.CreateNewClientScreen
 import com.mifos.feature.client.documentPreviewScreen.createDocumentPreviewRoute
 import com.mifos.feature.client.documentPreviewScreen.navigateToDocumentPreviewForUpdatingLocal
-import com.mifos.feature.client.documentPreviewScreen.navigateToDocumentPreviewWhenCanUpdateToServer
 import com.mifos.feature.client.fixedDepositAccount.clientFixedDepositAccountDestination
 import com.mifos.feature.client.fixedDepositAccount.navigateToFixedDepositAccountRoute
 import com.mifos.feature.client.recurringDepositAccount.clientRecurringDepositAccountDestination
@@ -171,43 +171,43 @@ fun NavGraphBuilder.clientNavGraph(
         clientDocumentsDestination(
             navController = navController,
             navigateBack = navController::popBackStack,
-            navigateToAddDocuments = { clientId, documentId, entityType->
-                navController.navigateToClientAddDocumentRoute(clientId, documentId, entityType)
-            },
-            onViewDocument = navController::navigateToDocumentPreviewWhenCanUpdateToServer
+            navigateToAddDocuments = navController::navigateToClientAddDocumentRoute,
+            onViewDocument = navController::navigateToDocumentPreviewForUpdatingLocal
         )
 
         clientAddDocumentGraphRoute(
             navController = navController,
-            navigateBack = navController::popBackStack,
-            navigateToDocumentPreview = navController::navigateToDocumentPreviewForUpdatingLocal
+            navigateBack = {
+                navController.popBackStack<ClientAddDocumentRoute>(inclusive = true)
+            },
+            navigateToDocumentPreview = {
+                navController.navigateToDocumentPreviewForUpdatingLocal(it)
+            },
         )
 
         createDocumentPreviewRoute(
-            navigateOnDocumentUpdate = {documentPath, updateFromServer ->
-                navController.navigateToClientAddDocumentRouteFromPreview(
-                    documentPath = documentPath,
-                    updateOnServer = updateFromServer,
-                )
-            },
             navigateOnCancelUpdating = {
                 navController.navigateToClientAddDocumentRouteFromPreview(
-                    documentPath = "",
+                    documentState = it,
                 )
             },
             navigateOnDocumentRejected = {
                 navController.navigateToClientAddDocumentRouteFromPreview(
-                    documentPath = "",
+                    documentState = it,
                     isDocumentRejected = true,
                 )
             },
-            navigateOnSubmitClicked = {
+            navigateOnSubmitClicked = {documentState , newDocumentPath, updateFromServer->
                 navController.navigateToClientAddDocumentRouteFromPreview(
-                    documentPath = "",
-                    isDocumentRejected = false,
+                    documentState = documentState,
+                    documentPath = newDocumentPath,
+                    updateOnServer = updateFromServer,
+                    comingFromPreviewScreen = true,
                 )
             },
-            navigateBack = navController::popBackStack,
+            navigateBack = {
+                navController.navigateToClientAddDocumentRouteFromPreview(documentState = it)
+            },
         )
 
 

@@ -31,15 +31,19 @@ import com.mifos.core.designsystem.theme.AppColors
 import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.ui.components.MifosFilePickerBottomSheet
 import com.mifos.core.ui.util.EventsEffect
+import com.mifos.feature.client.clientAddDocuments.DocumentState
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun DocumentPreviewScreen(
-    navigateBack: () -> Unit,
-    navigateOnDocumentUpdate: (documentPath: String, updateForServer: Boolean) -> Unit,
-    navigateOnCancelUpdating: () -> Unit,
-    navigateOnDocumentRejected: () -> Unit,
-    navigateOnSubmitClicked: (documentPath: String, ) -> Unit,
+    navigateBack: (documentState: DocumentState) -> Unit,
+    navigateOnCancelUpdating: (documentState: DocumentState) -> Unit,
+    navigateOnDocumentRejected:(documentState: DocumentState) -> Unit,
+    navigateOnSubmitClicked: (
+        documentState: DocumentState,
+        newDocumentPath: String,
+        updateForServer: Boolean,
+    ) -> Unit,
     viewmodel: DocumentPreviewScreenViewModel = koinViewModel()
 ) {
 
@@ -47,15 +51,16 @@ fun DocumentPreviewScreen(
 
     EventsEffect(viewmodel.eventFlow){event ->
         when (event) {
-            DocumentPreviewEvent.OnCancelUpdating -> navigateOnCancelUpdating()
-            DocumentPreviewEvent.OnDocumentRejected -> navigateOnDocumentRejected()
+            is DocumentPreviewEvent.OnCancelUpdating -> navigateOnCancelUpdating(event.documentState)
+            is DocumentPreviewEvent.OnDocumentRejected -> navigateOnDocumentRejected(event.documentState)
             is DocumentPreviewEvent.OnSubmitClinked -> {
-                navigateOnSubmitClicked(event.documentPath)
+                navigateOnSubmitClicked(
+                    event.documentState,
+                    event.newDocumentPath,
+                    event.updateForServer,
+                    )
             }
-            is DocumentPreviewEvent.SendUpdatedDocument -> {
-                navigateOnDocumentUpdate(event.documentPath, event.updateForServer)
-            }
-            DocumentPreviewEvent.OnNavigateBack -> navigateBack()
+            is DocumentPreviewEvent.OnNavigateBack -> navigateBack(event.documentState)
         }
     }
 
@@ -117,7 +122,7 @@ private fun ViewDocumentScaffold(
                 ) {
                     MifosOutlinedButton(
                         onClick = {
-                            if (state.canUpdate) {
+                            if (state.showUpdateButton) {
                                 onAction(DocumentPreviewScreenAction.CancelUpdating)
                             } else {
                                 onAction(DocumentPreviewScreenAction.RejectDocument)
@@ -145,7 +150,7 @@ private fun ViewDocumentScaffold(
                     Spacer(modifier = Modifier.width(8.dp))
                     MifosOutlinedButton(
                         onClick = {
-                            if (state.canUpdate) {
+                            if (state.showUpdateButton) {
                                 onAction(DocumentPreviewScreenAction.SubmitClicked)
                             } else {
                                 onAction(DocumentPreviewScreenAction.UpdateNew)
@@ -165,7 +170,7 @@ private fun ViewDocumentScaffold(
                             .weight(1f)
                     ) {
                         Text(
-                            if (state.canUpdate) {
+                            if (state.showUpdateButton) {
                                 "Update New"
                             } else {
                                 "Submit"

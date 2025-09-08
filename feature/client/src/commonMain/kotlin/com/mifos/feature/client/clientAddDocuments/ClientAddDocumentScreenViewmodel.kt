@@ -32,24 +32,25 @@ class ClientAddDocumentScreenViewmodel(
     initialState = ClientAddDocumentScreenState(),
 ) {
     private val route = stateHandler.toRoute<ClientAddDocumentRoute>()
-    private val clientId = route.clientId
-    private val documentId = route.documentId
-    private val entityType = route.entityType
+    private val documentState = route.documentState
+    private val clientId = documentState.clientId
+    private val documentId = documentState.documentId
+    private val entityType = documentState.entityType
 
     init {
         viewModelScope.launch {
             val isComingFromPreviewScreen = route.comingFromPreviewScreen
             val isDocumentRejected = route.isDocumentRejected
-            val documentPath = route.documentPath
+            val documentPath = route.newDocumentPath
             val updateForServer = route.updateOnServer
             try {
-                if(isComingFromPreviewScreen) {
-                    if(isDocumentRejected) {
+                if (isComingFromPreviewScreen) {
+                    if (isDocumentRejected) {
                         mutableStateFlow.update {
                             it.copy(
                                 platformFile = null,
                                 isDocumentAdded = false,
-                                pickedDocumentName = ""
+                                pickedDocumentName = "",
                             )
                         }
                     } else {
@@ -65,21 +66,21 @@ class ClientAddDocumentScreenViewmodel(
                     }
                 }
             } catch (e: Exception) {
-                errorDialogState(e.message?:"Exception occurred")
+                errorDialogState(e.message ?: "Exception occurred")
             }
         }
     }
 
     override fun handleAction(action: ClientAddDocumentScreenAction) {
         when (action) {
-            ClientAddDocumentScreenAction.AddNewDocument-> {
-                mutableStateFlow.update  {
+            ClientAddDocumentScreenAction.AddNewDocument -> {
+                mutableStateFlow.update {
                     it.copy(showBottomSheet = true)
                 }
             }
 
             ClientAddDocumentScreenAction.DismissBottomSheet -> {
-                mutableStateFlow.update  {
+                mutableStateFlow.update {
                     it.copy(showBottomSheet = false)
                 }
             }
@@ -98,7 +99,13 @@ class ClientAddDocumentScreenViewmodel(
 
             ClientAddDocumentScreenAction.ViewDocument -> {
                 sendEvent(
-                    ClientAddDocumentScreenEvents.NavigateToPreviewScreen(state.platformFile!!.path),
+                    ClientAddDocumentScreenEvents.OnNavigateToPreviewScreen(
+                        documentState = DocumentState(
+                            clientId = clientId,
+                            documentId = documentId,
+                            entityType = entityType,
+                        ),
+                    ),
                 )
             }
 
@@ -121,7 +128,7 @@ class ClientAddDocumentScreenViewmodel(
             }
 
             is ClientAddDocumentScreenAction.UpdateFileName -> {
-                mutableStateFlow.update  {
+                mutableStateFlow.update {
                     it.copy(enteredFileName = action.text)
                 }
             }
@@ -167,13 +174,12 @@ class ClientAddDocumentScreenViewmodel(
 
                 false -> {
                     errorDialogState(
-                        getString(Res.string.no_internet_message)
+                        getString(Res.string.no_internet_message),
                     )
                 }
             }
         }
     }
-
 
 
     private fun observerNetworkAndUpdate() {
@@ -208,7 +214,7 @@ class ClientAddDocumentScreenViewmodel(
 
                 false -> {
                     errorDialogState(
-                        getString(Res.string.no_internet_message)
+                        getString(Res.string.no_internet_message),
                     )
                 }
             }
@@ -280,9 +286,9 @@ class ClientAddDocumentScreenViewmodel(
                             FileKitUtil.writeFileToCache(
                                 platformFile.nameWithoutExtension,
                                 platformFile.extension,
-                                fileBytes
-                            ).collect {writeState->
-                                when(writeState) {
+                                fileBytes,
+                            ).collect { writeState ->
+                                when (writeState) {
                                     is DataState.Error<*> -> {
                                         errorDialogState(writeState.message)
                                     }
@@ -290,6 +296,7 @@ class ClientAddDocumentScreenViewmodel(
                                     DataState.Loading -> {
                                         loadingDialogState()
                                     }
+
                                     is DataState.Success<*> -> {
                                         mutableStateFlow.update {
                                             it.copy(
@@ -300,7 +307,16 @@ class ClientAddDocumentScreenViewmodel(
                                         }
 
                                         sendAction(ClientAddDocumentScreenAction.DismissBottomSheet)
-                                        sendEvent(ClientAddDocumentScreenEvents.NavigateToPreviewScreen(platformFile.name))
+                                        sendEvent(
+                                            ClientAddDocumentScreenEvents.OnNavigateToPreviewScreen(
+                                                documentState = DocumentState(
+                                                    clientId = clientId,
+                                                    documentId = documentId,
+                                                    entityType = entityType,
+                                                    documentPath = state.platformFile!!.path,
+                                                ),
+                                            ),
+                                        )
 
                                     }
                                 }
@@ -333,9 +349,9 @@ class ClientAddDocumentScreenViewmodel(
                             FileKitUtil.writeFileToCache(
                                 platformFile.nameWithoutExtension,
                                 platformFile.extension,
-                                fileBytes
-                            ).collect {writeState->
-                                when(writeState) {
+                                fileBytes,
+                            ).collect { writeState ->
+                                when (writeState) {
                                     is DataState.Error<*> -> {
                                         errorDialogState(writeState.message)
                                     }
@@ -343,6 +359,7 @@ class ClientAddDocumentScreenViewmodel(
                                     DataState.Loading -> {
                                         loadingDialogState()
                                     }
+
                                     is DataState.Success<*> -> {
                                         mutableStateFlow.update {
                                             it.copy(
@@ -353,13 +370,22 @@ class ClientAddDocumentScreenViewmodel(
                                         }
 
                                         sendAction(ClientAddDocumentScreenAction.DismissBottomSheet)
-                                        sendEvent(ClientAddDocumentScreenEvents.NavigateToPreviewScreen(platformFile.name))
+                                        sendEvent(
+                                            ClientAddDocumentScreenEvents.OnNavigateToPreviewScreen(
+                                                documentState = DocumentState(
+                                                    clientId = clientId,
+                                                    documentId = documentId,
+                                                    entityType = entityType,
+                                                    documentPath = state.platformFile!!.path,
+                                                ),
+                                            ),
+                                        )
 
                                     }
                                 }
 
                             }
-                            } ?: nullDialogState()
+                        } ?: nullDialogState()
                     }
                 }
             }
@@ -375,25 +401,24 @@ class ClientAddDocumentScreenViewmodel(
     private suspend fun observerNetwork() = networkMonitor.isOnline.first()
 
 
-
     private fun nullDialogState() {
         mutableStateFlow.update {
             it.copy(dialogState = null)
         }
     }
 
-    private fun errorDialogState(message: String){
+    private fun errorDialogState(message: String) {
         mutableStateFlow.update {
             it.copy(
-                dialogState = ClientAddDocumentScreenState.DialogState.Error(message)
+                dialogState = ClientAddDocumentScreenState.DialogState.Error(message),
             )
         }
     }
 
-    private fun loadingDialogState(){
+    private fun loadingDialogState() {
         mutableStateFlow.update {
             it.copy(
-                dialogState = ClientAddDocumentScreenState.DialogState.Loading
+                dialogState = ClientAddDocumentScreenState.DialogState.Loading,
             )
         }
     }
@@ -422,7 +447,6 @@ data class ClientAddDocumentScreenState(
 }
 
 
-
 sealed interface ClientAddDocumentScreenAction {
 
     data object NavigateBack : ClientAddDocumentScreenAction
@@ -443,6 +467,8 @@ sealed interface ClientAddDocumentScreenAction {
 
 
 sealed interface ClientAddDocumentScreenEvents {
-    data object OnNavigateBack : ClientAddDocumentScreenEvents
-    data class NavigateToPreviewScreen(val documentPath: String) : ClientAddDocumentScreenEvents
+    object OnNavigateBack : ClientAddDocumentScreenEvents
+    data class OnNavigateToPreviewScreen(
+        val documentState: DocumentState,
+    ) : ClientAddDocumentScreenEvents
 }

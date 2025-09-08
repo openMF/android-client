@@ -17,19 +17,18 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class ClientAddDocumentRoute(
-    val clientId: Int = -1,
-    val documentId: Int = -1,
-    val documentPath: String = "",
-    val entityType: String = "clients",
+    @Serializable val documentState: DocumentState,
+    val newDocumentPath: String = "",
     val comingFromPreviewScreen: Boolean = false,
     val updateOnServer: Boolean = false,
+    val updatedDocument: Boolean = false,
     val isDocumentRejected: Boolean = true,
 )
 
 fun NavGraphBuilder.clientAddDocumentGraphRoute(
     navController: NavController,
     navigateBack: () -> Unit,
-    navigateToDocumentPreview:(String) -> Unit
+    navigateToDocumentPreview:(documentState: DocumentState) -> Unit
 ) {
     composable<ClientAddDocumentRoute> {
 
@@ -43,30 +42,42 @@ fun NavGraphBuilder.clientAddDocumentGraphRoute(
 }
 
 fun NavController.navigateToClientAddDocumentRoute(
-    clientId: Int,
-    documentId: Int,
-    entityType: String = "clients",
+    documentState: DocumentState,
 ) {
-    this.navigate(ClientAddDocumentRoute(clientId, documentId, entityType = entityType))
+    this.navigate(
+        ClientAddDocumentRoute(documentState)
+    ){
+        this.popUpTo<ClientAddDocumentRoute>()
+    }
 }
 
 
 fun NavController.navigateToClientAddDocumentRouteFromPreview(
+    documentState: DocumentState,
     documentPath: String = "",
-    entityType: String = "clients",
     updateOnServer: Boolean = false,
     comingFromPreviewScreen: Boolean = false,
     isDocumentRejected: Boolean = true,
 ) {
     this.navigate(
         ClientAddDocumentRoute(
-            documentPath = documentPath,
-            entityType = entityType,
+            documentState =  documentState,
+            newDocumentPath = documentPath,
             updateOnServer = updateOnServer,
             comingFromPreviewScreen = comingFromPreviewScreen,
             isDocumentRejected = isDocumentRejected,
-        )
-    )
+        ),
+    ){
+        this.popUpTo<ClientAddDocumentRoute>()
+    }
 }
 
 
+
+@Serializable
+data class DocumentState(
+    val clientId: Int = -1,
+    val documentId: Int = -1,
+    val entityType: String = "clients",
+    val documentPath: String = "",
+)

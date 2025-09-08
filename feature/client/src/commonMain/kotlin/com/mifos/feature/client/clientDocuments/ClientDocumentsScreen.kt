@@ -29,6 +29,7 @@ import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.designsystem.theme.MifosTypography
 import com.mifos.core.ui.components.*
 import com.mifos.core.ui.util.EventsEffect
+import com.mifos.feature.client.clientAddDocuments.DocumentState
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -36,8 +37,8 @@ import org.koin.compose.viewmodel.koinViewModel
 internal fun ClientDocumentScreen(
     navController: NavController,
     viewModel: ClientDocumentsViewModel = koinViewModel(),
-    onViewDocument: (documentPath : String, ) -> Unit,
-    onNavigateToAddDocument: (clientId: Int, documentId: Int, entityType: String,) -> Unit,
+    onViewDocument: (documentState: DocumentState) -> Unit,
+    onNavigateToAddDocument: (documentState: DocumentState) -> Unit,
     onNavigateBack: () -> Unit,
 ) {
     val state by viewModel.stateFlow.collectAsStateWithLifecycle()
@@ -46,16 +47,10 @@ internal fun ClientDocumentScreen(
         when (events) {
             ClientDocumentsEvents.OnNavigateBack -> onNavigateBack()
             is ClientDocumentsEvents.OnViewDocument -> {
-                onViewDocument(
-                    events.filePath,
-                )
+                onViewDocument(events.documentState)
             }
-            ClientDocumentsEvents.OnAddDocument -> {
-                onNavigateToAddDocument(
-                    state.clientId,
-                    -1,
-                    "clients",
-                )
+            is ClientDocumentsEvents.OnAddDocument -> {
+                onNavigateToAddDocument(events.documentState)
             }
         }
     }

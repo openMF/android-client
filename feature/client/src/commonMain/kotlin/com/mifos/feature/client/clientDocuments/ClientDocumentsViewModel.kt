@@ -21,7 +21,10 @@ import com.mifos.core.data.repository.DocumentListRepository
 import com.mifos.core.data.util.NetworkMonitor
 import com.mifos.core.model.objects.noncoreobjects.Document
 import com.mifos.core.ui.util.BaseViewModel
+import com.mifos.feature.client.clientAddDocuments.DocumentState
 import com.mifos.feature.client.clientDocuments.ClientDocumentsScreenState.DialogState.ConfirmDocumentDeletion
+import io.github.vinceglb.filekit.div
+import io.github.vinceglb.filekit.path
 import io.ktor.client.statement.*
 import io.ktor.http.*
 import kotlinx.coroutines.flow.flow
@@ -110,8 +113,15 @@ class ClientDocumentsViewModel(
                 downloadAndSaveDocument(action.documentId)
             }
 
-            ClientDocumentsActions.AddDocument -> {
-                sendEvent(ClientDocumentsEvents.OnAddDocument)
+            is ClientDocumentsActions.AddDocument -> {
+                sendEvent(
+                    ClientDocumentsEvents.OnAddDocument(
+                        documentState = DocumentState(
+                            clientId = route.clientId,
+                            entityType = "clients",
+                        )
+                    )
+                )
             }
         }
     }
@@ -235,9 +245,16 @@ class ClientDocumentsViewModel(
                                             loadingDialogState()
                                         }
                                         is DataState.Success<*> -> {
+                                            val documentPath =
+                                                (FileKitUtil.appCache/"attachment.${getFileExtension(documentState.data?.headers)}").path
                                             sendEvent(
                                                 ClientDocumentsEvents.OnViewDocument(
-                                                    "attachment.${getFileExtension(documentState.data?.headers)}"
+                                                    documentState = DocumentState(
+                                                        clientId = route.clientId,
+                                                        documentId = documentId,
+                                                        entityType = entityType,
+                                                        documentPath = documentPath
+                                                    )
                                                 )
                                             )
                                         }
@@ -298,17 +315,21 @@ data class ClientDocumentsScreenState(
 }
 
 sealed interface ClientDocumentsEvents {
-    data object OnNavigateBack : ClientDocumentsEvents
+    object OnNavigateBack : ClientDocumentsEvents
     data class OnViewDocument(
-        val filePath: String
+        val documentState: DocumentState
     ) : ClientDocumentsEvents
 
-    data object OnAddDocument : ClientDocumentsEvents
+    data class OnAddDocument(
+        val documentState: DocumentState,
+    ) : ClientDocumentsEvents
 }
 
 sealed interface ClientDocumentsActions {
     data object NavigateBack : ClientDocumentsActions
-    data class ViewDocument(val documentId: Int) : ClientDocumentsActions
+    data class ViewDocument(
+        val documentId: Int,
+    ) : ClientDocumentsActions
     data class DeleteDocument(val documentName: String, val documentId: Int) :
         ClientDocumentsActions
 
