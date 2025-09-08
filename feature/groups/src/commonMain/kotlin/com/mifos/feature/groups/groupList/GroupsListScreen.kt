@@ -39,7 +39,7 @@ import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 internal expect fun GroupsListRoute(
-    paddingValues: PaddingValues,
+    paddingValues: PaddingValues = PaddingValues(0.dp),
     onAddGroupClick: () -> Unit,
     onGroupClick: (groupId: Int) -> Unit,
     viewModel: GroupsListViewModel = koinViewModel(),

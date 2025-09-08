@@ -35,10 +35,9 @@ import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun EmptyDataView(
-    error: StringResource,
+    error: String,
     modifier: Modifier = Modifier.fillMaxSize(),
     icon: ImageVector = MifosIcons.Error,
-    errorString: String? = null,
 ) {
     Column(
         modifier = modifier,
@@ -55,7 +54,7 @@ fun EmptyDataView(
 
         Text(
             modifier = Modifier.padding(horizontal = 20.dp),
-            text = errorString ?: stringResource(error),
+            text = error,
             style = MaterialTheme.typography.labelSmall,
             textAlign = TextAlign.Center,
         )
@@ -95,7 +94,7 @@ fun EmptyDataView(
 
 @DevicePreview
 @Composable
-fun EmptyDataViewPreview(
+private fun EmptyDataViewPreview(
     modifier: Modifier = Modifier,
 ) {
     MifosTheme {
@@ -103,6 +102,19 @@ fun EmptyDataViewPreview(
             error = Res.string.core_ui_no_internet,
             modifier = modifier,
             image = null,
+        )
+    }
+}
+
+@DevicePreview
+@Composable
+private fun EmptyDataViewPreviewForIcon(
+    modifier: Modifier = Modifier,
+) {
+    MifosTheme {
+        EmptyDataView(
+            error = "This is error",
+            modifier = modifier,
         )
     }
 }

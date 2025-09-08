@@ -71,6 +71,8 @@ data class SavingsAccountEntity(
 
     val productId: Int? = null,
 
+    val shortProductName: String? = null,
+
     val productName: String? = null,
 
     @ColumnInfo(index = true, name = INHERIT_FIELD_NAME, typeAffinity = UNDEFINED, collate = UNSPECIFIED, defaultValue = VALUE_UNSPECIFIED)

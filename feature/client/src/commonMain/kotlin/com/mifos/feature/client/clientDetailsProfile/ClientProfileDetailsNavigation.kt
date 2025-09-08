@@ -20,6 +20,7 @@ data class ClientProfileDetailsRoute(
 )
 
 fun NavGraphBuilder.clientProfileDetailsDestination(
+    navController: NavController,
     onNavigateBack: () -> Unit,
     navigateToUpdatePhoto: (Int, String, String) -> Unit,
     navigateToUpdateDetails: (Int) -> Unit,
@@ -28,9 +29,11 @@ fun NavGraphBuilder.clientProfileDetailsDestination(
     navigateToClientTransfer: (Int) -> Unit,
     navigateToUpdateDefaultAccount: (Int) -> Unit,
     navigateToCollateral: (Int) -> Unit,
+    navigateToApplyNewApplication: (Int) -> Unit,
 ) {
     composable<ClientProfileDetailsRoute> {
         ClientProfileDetailsScreen(
+            navController = navController,
             onNavigateBack = onNavigateBack,
             navigateToUpdatePhoto = navigateToUpdatePhoto,
             navigateToAssignStaff = navigateToAssignStaff,
@@ -39,6 +42,7 @@ fun NavGraphBuilder.clientProfileDetailsDestination(
             navigateToUpdateDefaultAccount = navigateToUpdateDefaultAccount,
             navigateToClientClosure = navigateToClientClosure,
             navigateToCollateral = navigateToCollateral,
+            navigateToApplyNewApplication = navigateToApplyNewApplication,
         )
     }
 }

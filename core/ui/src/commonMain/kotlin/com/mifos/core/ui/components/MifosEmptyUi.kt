@@ -67,7 +67,7 @@ fun MifosEmptyUi(
 
 @Preview
 @Composable
-fun MifosEmptyUiPreview() {
+private fun MifosEmptyUiPreview() {
     MifosTheme {
         MifosEmptyUi(
             text = "No data available",

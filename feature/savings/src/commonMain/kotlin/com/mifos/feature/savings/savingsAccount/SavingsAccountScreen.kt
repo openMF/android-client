@@ -105,9 +105,6 @@ internal fun SavingsAccountScreen(
 ) {
     val uiState by viewModel.savingAccountUiState.collectAsStateWithLifecycle()
     val savingProductsTemplate by viewModel.savingProductsTemplate.collectAsStateWithLifecycle()
-    val groupId by viewModel.groupId.collectAsStateWithLifecycle()
-    val clientId by viewModel.clientId.collectAsStateWithLifecycle()
-    val isGroupAccount by viewModel.isGroupAccount.collectAsStateWithLifecycle()
 
     LaunchedEffect(key1 = Unit) {
         viewModel.loadSavingsAccountsAndTemplate()
@@ -121,22 +118,22 @@ internal fun SavingsAccountScreen(
             viewModel.loadSavingsAccountsAndTemplate()
         },
         onSavingsProductSelected = { productId ->
-            if (isGroupAccount) {
-                viewModel.loadGroupSavingAccountTemplateByProduct(groupId, productId)
+            if (viewModel.route.isGroupAccount) {
+                viewModel.loadGroupSavingAccountTemplateByProduct(productId)
             } else {
-                viewModel.loadClientSavingAccountTemplateByProduct(clientId, productId)
+                viewModel.loadClientSavingAccountTemplateByProduct(productId)
             }
         },
         fetchTemplate = { productId ->
-            if (isGroupAccount) {
-                viewModel.loadGroupSavingAccountTemplateByProduct(groupId, productId)
+            if (viewModel.route.isGroupAccount) {
+                viewModel.loadGroupSavingAccountTemplateByProduct(productId)
             } else {
-                viewModel.loadClientSavingAccountTemplateByProduct(clientId, productId)
+                viewModel.loadClientSavingAccountTemplateByProduct(productId)
             }
         },
-        clientId = clientId,
-        groupId = groupId,
-        isGroupAccount = isGroupAccount,
+        clientId = viewModel.route.clientId,
+        groupId = viewModel.route.groupId,
+        isGroupAccount = viewModel.route.isGroupAccount,
         createSavingsAccount = { savingsPayload ->
             viewModel.createSavingsAccount(savingsPayload)
         },

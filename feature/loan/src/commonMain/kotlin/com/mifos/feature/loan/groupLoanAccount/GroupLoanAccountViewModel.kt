@@ -16,7 +16,7 @@ import androidclient.feature.loan.generated.resources.feature_loan_failed_to_loa
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.mifos.core.common.utils.Constants
+import androidx.navigation.toRoute
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.domain.useCases.CreateGroupLoansAccountUseCase
 import com.mifos.core.domain.useCases.GetAllLoanUseCase
@@ -33,7 +33,7 @@ class GroupLoanAccountViewModel(
     savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
 
-    val groupId = savedStateHandle.getStateFlow(key = Constants.GROUP_ID, initialValue = 0)
+    val groupId = savedStateHandle.toRoute<GroupLoanScreenRoute>().groupId
 
     private val _groupLoanAccountUiState =
         MutableStateFlow<GroupLoanAccountUiState>(GroupLoanAccountUiState.Loading)
@@ -58,7 +58,7 @@ class GroupLoanAccountViewModel(
         }
     }
 
-    fun loadGroupLoansAccountTemplate(groupId: Int, productId: Int) =
+    fun loadGroupLoansAccountTemplate(productId: Int) =
         viewModelScope.launch {
             getGroupLoansAccountTemplateUseCase(groupId, productId).collect { result ->
                 when (result) {

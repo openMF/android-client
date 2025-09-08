@@ -14,6 +14,8 @@
     <string name="feature_client_failed_to_load_db_clients">Failed to load Database Clients</string>
     <string name="feature_client_no_more_clients_available">No more Clients Available!</string>
 
+    <string name="no_internet_message">No internet connection, Try Again</string>
+
     <string name="feature_client_personal_details">Personal Details</string>
     <string name="feature_client_account_information">Account Information</string>
     <string name="feature_client_office_use">Office Use</string>
@@ -191,11 +193,29 @@
     <string name="feature_client_county_district">County/District</string>
     <string name="feature_client_country">Country</string>
     <string name="feature_client_state_province">State/Province</string>
+    <string name="feature_client_province">Province</string>
     <string name="feature_client_postal_code">Postal Code</string>
     <string name="feature_client_address_active">Address Active</string>
     <string name="feature_client_error_address_type_is_required">Address Type is required</string>
     <string name="feature_client_failed_to_fetch_address_configuration">Failed to fetch address configuration</string>
     <string name="feature_client_failed_to_fetch_address_template">Failed to fetch address template</string>
+    <string name="feature_client_unable_to_create_address_for_client">Unable to create address for client</string>
+    <string name="feature_client_success_title">Address Created Successfully</string>
+    <string name="feature_client_create_address_success_message">Client Address created successfully. Click Continue to view the Client Addresses.</string>
+    <string name="feature_client_address_creation_failure_title">Address Creation Failed</string>
+
+
+    <string name="feature_client_empty_address_card_title">No Item Found</string>
+    <string name="feature_client_empty_address_card_message">Click on '+' Button to add an item. </string>
+    <string name="feature_client_failed_to_load_address">Failed to load addresses</string>
+
+    <string name="feature_client_address_type_error">Address Type cannot be empty.</string>
+    <string name="feature_client_address_line_error">Address Line 1 cannot be empty.</string>
+    <string name="feature_client_address_city_error">City cannot be empty.</string>
+    <string name="feature_client_address_state_province_error">State/Province cannot be empty.</string>
+    <string name="feature_client_address_country_error">Country cannot be empty.</string>
+    <string name="feature_client_address_postal_code_error">Postal Code cannot be empty.</string>
+
 
     <string name="feature_client_pinpoint_location_marker_title">Pinpoint Location</string>
     <string name="feature_client_select_location_dialog_title">Select Location</string>
@@ -222,6 +242,47 @@
     <string name="client_profile_documents_subtitle">Check or upload documents</string>
     <string name="client_profile_notes_title">Notes</string>
     <string name="client_profile_notes_subtitle">Check or update note accounts</string>
+
+    <string name="client_empty_card_message">Click Here To View Filled State.</string>
+
+    <!-- Client Products -->
+    <string name="client_product_saving_account">Savings Products</string>
+    <string name="client_product_fixed_deposit_account">Fixed Deposit Products</string>
+    <string name="client_product_recurring_deposit_account">Recurring Deposit Products</string>
+    <string name="client_product_shares_account">Shares Products</string>
+
+    <!-- Client_Profile-General-Headers -->
+    <string name="client_profile_general_header_performance_history">Performance History</string>
+    <string name="client_profile_general_header_actions">Actions</string>
+    <string name="client_profile_general_header_linked_accounts">Linked Accounts</string>
+
+    <!-- Client_Profile-General-Performance History -->
+    <string name="client_performance_history_loan_cycle_count_label">No. Of Loan Cycles : </string>
+    <string name="client_performance_history_active_loans_count_label">No. Of Active Loans : </string>
+    <string name="client_performance_history_active_savings_label">No. of Active Savings : </string>
+    <string name="client_performance_history_last_loan_amount_label">Last Loan Amount : </string>
+    <string name="client_performance_history_total_savings_label">Total Savings : </string>
+
+    <!-- Client_Profile-General-Actions -->
+    <string name="client_profile_general_action_title_upcoming_charges">Upcoming Charges</string>
+    <string name="client_profile_general_action_subtitle_upcoming_charges">Check all linked accounts</string>
+    <string name="client_profile_general_action_title_loan_accounts">Loan Accounts</string>
+    <string name="client_profile_general_action_subtitle_loan_accounts">View or edit the linked address</string>
+    <string name="client_profile_general_action_title_saving_account">Saving Accounts</string>
+    <string name="client_profile_general_action_subtitle_saving_account">Check or edit the linked accounts</string>
+    <string name="client_profile_general_action_title_fixed_deposit_accounts">Fixed Deposit Accounts</string>
+    <string name="client_profile_general_action_subtitle_fixed_deposit_accounts">Check or update the identities</string>
+    <string name="client_profile_general_action_title_recurring_deposit_accounts">Recurring Deposit Accounts</string>
+    <string name="client_profile_general_action_subtitle_recurring_deposit_accounts">Check or upload the documents</string>
+    <string name="client_profile_general_action_title_shares_accounts">Shares Accounts</string>
+    <string name="client_profile_general_action_subtitle_shares_accounts">Check or update the account notes</string>
+    <string name="client_profile_general_action_title_collateral_data">Collateral Data</string>
+    <string name="client_profile_general_action_subtitle_collateral_data">Check or update the account notes</string>
+
+    <!-- Client_Profile-Recurring Deposit Account Title -->
+    <string name="client_profile_recurring_deposit_account_title">Recurring Deposit Accounts</string>
+    <!-- Client_Profile-Fixed Deposit Account Title -->
+    <string name="client_profile_fixed_deposit_account_title">Fixed Deposit Accounts</string>
 
     <!-- Personal Info -->
     <string name="gender">Gender</string>
@@ -319,7 +380,7 @@
     <string name="btn_submit">Submit</string>
     <string name="msg_cannot_assign_staff">Can't Assign a Staff to this client</string>
 
-    <!-- Success & Failure Messages -->
+    <!-- ShowAddressList & Failure Messages -->
     <string name="staff_unassign_success_title">Staff Unassigned Successfully!!</string>
     <string name="staff_unassign_success_message">Your request was completed successfully.</string>
     <string name="staff_unassign_failure_title">Staff Unassigning Failed!</string>
@@ -379,4 +440,40 @@
     <string name="client_collateral_success_title">Collateral Created Successfully</string>
     <string name="client_collateral_success_message">Collateral created successfully. Click Continue to navigate to Client detail profile.</string>
     <string name="client_collateral_failure_title">Collateral Creation Failed</string>
+
+    <string name="client_profile_select_account_type">Select Account Type</string>
+    <string name="client_profile_savings_account">Savings Account</string>
+    <string name="client_profile_loan_account">Loan Account</string>
+
+    <string name="client_identifiers_click_on_plus_button_to_add_an_item">Click on “+” Button to add an item.</string>
+    <string name="client_identifiers_not_available">Not available</string>
+    <string name="client_identifiers_identities">Identities</string>
+    <string name="client_identifiers_identities_success_text">Success</string>
+    <string name="client_identifiers_error_text">Error</string>
+    <string name="client_identifiers_retry">Retry</string>
+    <string name="client_identifiers_identities_client_identifier_deletion_success">Successfully deleted client identifier with id</string>
+    <!--    <string name="client_identifiers_identities">Identities</string>-->
+
+    <!-- Apply New Applications Screen -->
+    <string name="client_apply_new_applications_title">Choose Application Type</string>
+    <string name="client_apply_new_applications_loan_account">New Loan Account</string>
+    <string name="client_apply_new_applications_savings_account">New Savings Account</string>
+    <string name="client_apply_new_applications_share_account">New Share Account</string>
+    <string name="client_apply_new_applications_recurring_account">New Recurring Deposit Account</string>
+    <string name="client_apply_new_applications_fixed_account">New Fixed Deposit Account</string>
+    <string name="client_apply_new_applications_apply_loan_account">Apply for new loan account</string>
+    <string name="client_apply_new_applications_apply_savings_account">Apply for new savings account</string>
+    <string name="client_apply_new_applications_apply_share_account">Apply for new share account</string>
+    <string name="client_apply_new_applications_apply_recurring_account">Apply for new recurring deposit account</string>
+    <string name="client_apply_new_applications_apply_fixed_account">Apply for new fixed deposit account</string>
+
+    <string name="client_share_accounts_share_accounts">Share Accounts</string>
+    <string name="client_share_accounts_an_error_occurred">An error occurred</string>
+    <string name="client_share_accounts_failed_to_fetch_share_accounts">Failed to fetch share accounts</string>
+    <string name="client_share_accounts_try_again">Try again</string>
+
+    <string name="client_upcoming_charges_failed_message">Failed to get upcoming charges</string>
+    <string name="client_upcoming_charges_no_more_charges_available">No more charges available!</string>
+    <string name="client_upcoming_charges_charges_overview">Charges Overview</string>
+
 </resources>

@@ -11,17 +11,18 @@ package com.mifos.core.ui.components
 
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
-import com.mifos.core.designsystem.component.MifosTextButton
 import com.mifos.core.designsystem.theme.MifosTheme
 import com.mifos.core.ui.util.DevicePreview
 
 @Composable
 fun MifosAlertDialog(
-    dialogTitle: String,
+    dialogTitle: String? = null,
     dialogText: String,
     dismissText: String? = "Cancel",
     confirmationText: String = "Ok",
@@ -36,22 +37,20 @@ fun MifosAlertDialog(
                 Icon(imageVector = icon, contentDescription = null)
             }
         },
-        title = { Text(text = dialogTitle) },
+        title = { if (dialogTitle != null) Text(text = dialogTitle) },
         text = { Text(text = dialogText) },
         modifier = modifier,
         onDismissRequest = onDismissRequest,
         confirmButton = {
-            MifosTextButton(
-                text = { Text(text = confirmationText) },
-                onClick = onConfirmation,
-            )
+            TextButton(onClick = onConfirmation) {
+                Text(text = confirmationText, color = MaterialTheme.colorScheme.primary)
+            }
         },
         dismissButton = {
             if (dismissText != null) {
-                MifosTextButton(
-                    text = { Text(text = dismissText) },
-                    onClick = onDismissRequest,
-                )
+                TextButton(onClick = onDismissRequest) {
+                    Text(text = dismissText, color = MaterialTheme.colorScheme.error)
+                }
             }
         },
     )

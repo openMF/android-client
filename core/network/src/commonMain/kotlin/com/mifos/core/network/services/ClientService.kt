@@ -12,6 +12,7 @@ package com.mifos.core.network.services
 import com.mifos.core.common.utils.Page
 import com.mifos.core.model.objects.clients.ActivatePayload
 import com.mifos.core.model.objects.clients.AssignStaffRequest
+import com.mifos.core.model.objects.clients.ClientAddressEntity
 import com.mifos.core.model.objects.clients.ClientAddressRequest
 import com.mifos.core.model.objects.clients.ClientAddressResponse
 import com.mifos.core.model.objects.clients.ClientCloseRequest
@@ -29,6 +30,8 @@ import com.mifos.core.network.model.GetClientsPageItemsResponse
 import com.mifos.core.network.model.PinpointLocationActionResponse
 import com.mifos.core.network.model.PostAuthenticationRequest
 import com.mifos.core.network.model.PostAuthenticationResponse
+import com.mifos.core.network.model.PostClientAddressRequest
+import com.mifos.core.network.model.PostClientAddressResponse
 import com.mifos.room.basemodel.APIEndPoint
 import com.mifos.room.entities.accounts.ClientAccounts
 import com.mifos.room.entities.client.AddressConfiguration
@@ -256,6 +259,16 @@ interface ClientService {
      */
     @GET("client/addresses/template")
     suspend fun getAddressTemplate(): AddressTemplate
+
+    @GET("client/{clientId}/addresses")
+    suspend fun getClientAddresses(@Path("clientId") clientId: Int): List<ClientAddressEntity>
+
+    @POST("client/{clientId}/addresses?type={addressTypeId}")
+    suspend fun createClientAddress(
+        @Path("clientId") clientId: Int,
+        @Path("addressTypeId") addressTypeId: Int,
+        @Body addressPayload: PostClientAddressRequest,
+    ): PostClientAddressResponse
 
     @GET("clients/{clientId}?template=true&staffInSelectedOfficeOnly=true")
     suspend fun getClientTemplate(@Path("clientId") clientId: Int): GetClientsPageItemsResponse

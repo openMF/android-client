@@ -173,7 +173,7 @@ fun MifosCustomDialog(
 
 @Preview
 @Composable
-fun MifosDialogBoxWithMessagePreview() {
+private fun MifosDialogBoxWithMessagePreview() {
     MifosTheme {
         MifosDialogBox(
             title = "Delete Item",
@@ -189,7 +189,7 @@ fun MifosDialogBoxWithMessagePreview() {
 
 @Preview
 @Composable
-fun MifosDialogBoxWithComposableMessagePreview() {
+private fun MifosDialogBoxWithComposableMessagePreview() {
     MifosTheme {
         MifosDialogBox(
             title = "Info",
@@ -211,7 +211,7 @@ fun MifosDialogBoxWithComposableMessagePreview() {
 
 @Preview
 @Composable
-fun MifosRadioButtonDialogPreview() {
+private fun MifosRadioButtonDialogPreview() {
     MifosTheme {
         MifosRadioButtonDialog(
             title = "Choose Option",
@@ -225,7 +225,7 @@ fun MifosRadioButtonDialogPreview() {
 
 @Preview
 @Composable
-fun MifosCustomDialogPreview() {
+private fun MifosCustomDialogPreview() {
     MifosTheme {
         MifosCustomDialog(
             onDismiss = {},

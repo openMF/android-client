@@ -31,6 +31,7 @@ object IdentifierMapper : AbstractMapper<GetClientsClientIdIdentifiersResponse, 
                     name = it.name,
                 )
             },
+            status = entity.status,
         )
     }
 
@@ -46,6 +47,7 @@ object IdentifierMapper : AbstractMapper<GetClientsClientIdIdentifiersResponse, 
                     name = it.name,
                 )
             },
+            status = domainModel.status,
         )
     }
 }

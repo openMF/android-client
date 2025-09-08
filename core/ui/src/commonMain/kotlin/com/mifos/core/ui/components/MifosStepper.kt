@@ -138,7 +138,7 @@ fun MifosStepper(
 
 @Preview
 @Composable
-fun MifosStepperDemo() {
+private fun MifosStepperDemo() {
     val steps = listOf(
         Step("Details") { Text("Step 1: Details Content") },
         Step("Terms") { Text("Step 2: Terms Content") },

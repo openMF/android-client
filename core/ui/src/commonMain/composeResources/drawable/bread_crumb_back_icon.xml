@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Copyright 2025 Mifos Initiative
+
+    This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+    If a copy of the MPL was not distributed with this file,
+    You can obtain one at https://mozilla.org/MPL/2.0/.
+
+    See https://github.com/openMF/android-client/blob/master/LICENSE.md
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="14dp"
+    android:height="8dp"
+    android:viewportWidth="14"
+    android:viewportHeight="8">
+  <path
+      android:pathData="M11.861,1.33V3.33H3.081L5.001,1.41C5.261,1.15 5.261,0.73 5.001,0.47C4.741,0.21 4.321,0.21 4.061,0.47L1.001,3.53C0.741,3.79 0.741,4.21 1.001,4.47L4.061,7.53C4.321,7.79 4.741,7.79 5.001,7.53C5.261,7.27 5.261,6.85 5.001,6.59L3.081,4.664H12.527C12.894,4.664 13.194,4.364 13.194,3.997V1.33C13.194,0.964 12.894,0.664 12.527,0.664C12.161,0.664 11.861,0.964 11.861,1.33Z"
+      android:fillColor="#191C20"/>
+</vector>

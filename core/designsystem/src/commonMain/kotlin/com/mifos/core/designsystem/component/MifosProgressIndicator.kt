@@ -48,7 +48,6 @@ fun MifosPagingAppendProgress(modifier: Modifier = Modifier) {
     }
 }
 
-@Preview
 @Composable
 fun MifosCircularProgress(
     modifier: Modifier = Modifier
@@ -75,5 +74,23 @@ fun MifosCircularProgress(
         text?.let {
             Text(text = text)
         }
+    }
+}
+
+@Preview
+@Composable
+private fun MifosPagingAppendProgressPreview() {
+    MaterialTheme {
+        MifosPagingAppendProgress()
+    }
+}
+
+@Preview
+@Composable
+private fun MifosCircularProgressPreview() {
+    MaterialTheme {
+        MifosCircularProgress(
+            text = "Loading...",
+        )
     }
 }

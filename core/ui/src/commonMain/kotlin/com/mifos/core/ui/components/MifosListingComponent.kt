@@ -55,13 +55,17 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.designsystem.theme.AppColors
 import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.designsystem.theme.MifosTheme
@@ -99,10 +103,53 @@ fun MifosListingRowItem(
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically,
     ) {
         keyContent()
         valueContent()
     }
+}
+
+@Composable
+fun MifosListingColumnItem(
+    keyContent: @Composable () -> Unit,
+    valueContent: @Composable () -> Unit,
+) {
+    Column(
+        modifier = Modifier.fillMaxWidth(),
+    ) {
+        keyContent()
+        valueContent()
+    }
+}
+
+@Composable
+fun MifosListingColumnItem(
+    key: String,
+    value: String,
+    keyStyle: TextStyle = MifosTypography.labelSmall,
+    keyColor: Color = MaterialTheme.colorScheme.secondary,
+    valueStyle: TextStyle = MifosTypography.bodySmall,
+    valueColor: Color = MaterialTheme.colorScheme.onSurface,
+) {
+    MifosListingColumnItem(
+        keyContent = {
+            Text(
+                text = key,
+                style = keyStyle.copy(color = keyColor),
+                maxLines = 1,
+                overflow = TextOverflow.Clip,
+            )
+        },
+        valueContent = {
+            Text(
+                text = value,
+                style = valueStyle.copy(color = valueColor),
+                overflow = TextOverflow.Clip,
+                maxLines = 1,
+            )
+        },
+    )
 }
 
 @Composable
@@ -116,10 +163,42 @@ fun MifosListingRowItem(
     MifosListingRowItem(
         keyContent = {
             if (key.isNotBlank()) {
-                Text(text = "$key:", style = keyStyle)
+                Text(
+                    text = "$key:",
+                    style = keyStyle,
+                    maxLines = 1,
+                    overflow = TextOverflow.Clip,
+                )
             }
         },
-        valueContent = { Text(text = value, style = valueStyle.copy(color = valueColor)) },
+        valueContent = {
+            Text(
+                text = value,
+                style = valueStyle.copy(color = valueColor),
+                overflow = TextOverflow.Clip,
+                maxLines = 1,
+            )
+        },
+    )
+}
+
+@Composable
+fun MifosListingRowItemHeader(
+    text: String,
+    keyStyle: TextStyle = MifosTypography.labelMediumEmphasized,
+) {
+    MifosListingRowItem(
+        keyContent = {
+            if (text.isNotBlank()) {
+                Text(text = text, style = keyStyle)
+            }
+        },
+        valueContent = {
+            Icon(
+                imageVector = MifosIcons.MoreHoriz,
+                contentDescription = "More vert",
+            )
+        },
     )
 }
 
@@ -401,7 +480,7 @@ fun MifosIdentifierListingComponent(
 }
 
 enum class Status(val color: Color) {
-    InActive(AppColors.lightRed),
+    Inactive(AppColors.lightRed),
     Pending(AppColors.customYellow),
     Active(AppColors.customEnable),
 }
@@ -427,7 +506,7 @@ fun MifosDelinquencyListingComponent(
             ) {
                 MifosListingRowItem(
                     key = stringResource(Res.string.core_ui_action),
-                    value = if (isPause)"Pause" else "Resume",
+                    value = if (isPause) "Pause" else "Resume",
                     valueColor = if (isPause) AppColors.customYellow else AppColors.customEnable,
                 )
                 MifosListingRowItem(
@@ -520,7 +599,7 @@ fun MifosSellLoanListingComponent(
         Column {
             MifosListingRowItem(
                 value = when (status) {
-                    Status.InActive -> stringResource(Res.string.core_ui_cancelled)
+                    Status.Inactive -> stringResource(Res.string.core_ui_cancelled)
                     Status.Pending -> stringResource(Res.string.core_ui_pending)
                     Status.Active -> stringResource(Res.string.core_ui_completed)
                 },
@@ -559,7 +638,7 @@ fun MifosSellLoanListingComponent(
 
 @Preview
 @Composable
-fun MifosDefaultListingComponentPreview() {
+private fun MifosDefaultListingComponentPreview() {
     val sampleData = mapOf(
         "Name" to "John Doe",
         "Email" to "john.doe@example.com",
@@ -574,7 +653,7 @@ fun MifosDefaultListingComponentPreview() {
 
 @Preview
 @Composable
-fun PreviewMifosClientFeeListingComponent() {
+private fun PreviewMifosClientFeeListingComponent() {
     MaterialTheme {
         MifosClientFeeListingComponent(
             name = "John Doe",
@@ -589,7 +668,7 @@ fun PreviewMifosClientFeeListingComponent() {
 
 @Preview
 @Composable
-fun PreviewMifosLoanListingComponent() {
+private fun PreviewMifosLoanListingComponent() {
     MaterialTheme {
         MifosLoanListingComponent(
             accountNo = "LN12345",
@@ -604,7 +683,7 @@ fun PreviewMifosLoanListingComponent() {
 
 @Preview
 @Composable
-fun PreviewMifosSavingsListingComponent() {
+private fun PreviewMifosSavingsListingComponent() {
     MaterialTheme {
         MifosSavingsListingComponent(
             accountNo = "SV9876",
@@ -617,7 +696,7 @@ fun PreviewMifosSavingsListingComponent() {
 
 @Preview
 @Composable
-fun PreviewMifosCollateralDataListingComponent() {
+private fun PreviewMifosCollateralDataListingComponent() {
     MaterialTheme {
         MifosCollateralDataListingComponent(
             name = "Gold Jewelry",
@@ -630,7 +709,7 @@ fun PreviewMifosCollateralDataListingComponent() {
 
 @Preview
 @Composable
-fun PreviewMifosIdentifierListingComponent() {
+private fun PreviewMifosIdentifierListingComponent() {
     MaterialTheme {
         MifosIdentifierListingComponent(
             type = "Passport",
@@ -645,7 +724,7 @@ fun PreviewMifosIdentifierListingComponent() {
 
 @Preview
 @Composable
-fun PreviewMifosDelinquencyListingComponent() {
+private fun PreviewMifosDelinquencyListingComponent() {
     MaterialTheme {
         MifosDelinquencyListingComponent(
             date = "2025-08-01",
@@ -659,7 +738,7 @@ fun PreviewMifosDelinquencyListingComponent() {
 
 @Preview
 @Composable
-fun PreviewMifosChargesListingComponent() {
+private fun PreviewMifosChargesListingComponent() {
     MaterialTheme {
         MifosChargesListingComponent(
             title = "Processing Fee",
@@ -676,7 +755,7 @@ fun PreviewMifosChargesListingComponent() {
 
 @Preview
 @Composable
-fun PreviewMifosSellLoanListingComponent() {
+private fun PreviewMifosSellLoanListingComponent() {
     MaterialTheme {
         MifosSellLoanListingComponent(
             status = Status.Pending,
@@ -685,6 +764,16 @@ fun PreviewMifosSellLoanListingComponent() {
             transferExternalId = "TRF456",
             settlementDate = "2025-08-25",
             purchasePriceRatio = "0.85",
+        )
+    }
+}
+
+@Preview
+@Composable
+private fun PreviewMifosHeader() {
+    MaterialTheme {
+        MifosListingRowItemHeader(
+            text = "Hello",
         )
     }
 }

@@ -150,7 +150,7 @@ internal fun SettingsScreen(
             items = stringArrayResource(Res.array.feature_settings_languages).toTypedArray(),
             selectItem = { _, index -> updateLanguage(MifosAppLanguage.entries[index]) },
             onDismissRequest = { showLanguageUpdateDialog = false },
-            selectedItem = MifosAppLanguage.fromCode(state.language.code).displayName,
+            selectedItem = state.language.languageName,
         )
     }
 

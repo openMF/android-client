@@ -38,6 +38,8 @@ import core.designsystem.generated.resources.core_designsystem_pref_base_url_tit
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
+// TODO: Remove it during settings new screen ui someone implemented it wrong.
+// It should not be in design system
 @Composable
 fun UpdateEndpointDialogScreen(
     initialBaseURL: String?,

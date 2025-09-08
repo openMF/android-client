@@ -14,8 +14,9 @@ import androidclient.feature.center.generated.resources.feature_center_failed_to
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.mifos.core.common.utils.Constants
+import androidx.navigation.toRoute
 import com.mifos.core.data.repository.GroupListRepository
+import com.mifos.feature.center.navigation.CenterGroupListRoute
 import com.mifos.room.entities.group.CenterWithAssociations
 import com.mifos.room.entities.group.GroupWithAssociations
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -29,7 +30,7 @@ class GroupListViewModel(
     savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
 
-    val centerId = savedStateHandle.getStateFlow(key = Constants.CENTER_ID, initialValue = 0)
+    val centerId = savedStateHandle.toRoute<CenterGroupListRoute>().centerId
 
     private val _groupListUiState = MutableStateFlow<GroupListUiState>(GroupListUiState.Loading)
     val groupListUiState = _groupListUiState.asStateFlow()
@@ -37,9 +38,9 @@ class GroupListViewModel(
     private val _groupAssociationState = MutableStateFlow<GroupWithAssociations?>(null)
     val groupAssociationState = _groupAssociationState.asStateFlow()
 
-    fun loadGroupByCenter(id: Int) = viewModelScope.launch {
+    fun loadGroupByCenter() = viewModelScope.launch {
         _groupListUiState.value = GroupListUiState.Loading
-        repository.getGroupsByCenter(id).catch {
+        repository.getGroupsByCenter(centerId).catch {
             _groupListUiState.value =
                 GroupListUiState.Error(Res.string.feature_center_failed_to_load_group_list)
         }.collect {

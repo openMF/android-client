@@ -9,6 +9,7 @@
  */
 package com.mifos.room.entities.accounts.loans
 
+import com.mifos.core.model.objects.account.loan.Currency
 import com.mifos.core.model.utils.Parcelable
 import com.mifos.core.model.utils.Parcelize
 import com.mifos.room.utils.ColumnInfo
@@ -67,6 +68,8 @@ data class LoanAccountEntity(
 
     val productName: String? = null,
 
+    val currency: Currency? = null,
+
     @ColumnInfo(index = true, name = INHERIT_FIELD_NAME, typeAffinity = UNDEFINED, collate = UNSPECIFIED, defaultValue = VALUE_UNSPECIFIED)
     val status: LoanStatusEntity? = null,
 
@@ -76,4 +79,10 @@ data class LoanAccountEntity(
     val loanCycle: Int? = null,
 
     val inArrears: Boolean? = null,
+
+    val originalLoan: Double? = null,
+
+    val loanBalance: Double? = null,
+
+    val amountPaid: Double? = null,
 ) : Parcelable

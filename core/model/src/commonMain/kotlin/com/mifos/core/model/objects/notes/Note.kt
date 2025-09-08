@@ -34,7 +34,7 @@ data class Note(
 
     val createdByUsername: String? = null,
 
-    val createdOn: Long? = null,
+    val createdOn: String? = null,
 
     val id: Long? = null,
 
@@ -44,6 +44,6 @@ data class Note(
 
     val updatedByUsername: String? = null,
 
-    val updatedOn: Long? = null,
+    val updatedOn: String? = null,
 
 )

@@ -43,7 +43,7 @@ fun MifosFAB(
 
 @Preview
 @Composable
-fun MifosFABPreview() {
+private fun MifosFABPreview() {
     MifosTheme {
         MifosFAB(
             icon = MifosIcons.Info,

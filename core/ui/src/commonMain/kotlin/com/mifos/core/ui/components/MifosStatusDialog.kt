@@ -28,8 +28,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import com.mifos.core.designsystem.component.MifosButton
 import com.mifos.core.designsystem.theme.DesignToken
+import com.mifos.core.designsystem.theme.MifosTheme
 import com.mifos.core.designsystem.theme.MifosTypography
 import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
 fun MifosStatusDialog(
@@ -103,4 +105,36 @@ fun MifosStatusDialog(
 enum class ResultStatus {
     SUCCESS,
     FAILURE,
+}
+
+@Composable
+@Preview
+private fun MifosSuccessStatusDialogPreview() {
+    MifosTheme {
+        MifosStatusDialog(
+            status = ResultStatus.SUCCESS,
+            onConfirm = {},
+            btnText = "OK",
+            successTitle = "Success",
+            successMessage = "Operation Successful",
+            failureTitle = "Failure",
+            failureMessage = "Operation Failed",
+        )
+    }
+}
+
+@Composable
+@Preview
+private fun MifosFailureStatusDialogPreview() {
+    MifosTheme {
+        MifosStatusDialog(
+            status = ResultStatus.FAILURE,
+            onConfirm = {},
+            btnText = "OK",
+            successTitle = "Success",
+            successMessage = "Operation Successful",
+            failureTitle = "Failure",
+            failureMessage = "Operation Failed",
+        )
+    }
 }

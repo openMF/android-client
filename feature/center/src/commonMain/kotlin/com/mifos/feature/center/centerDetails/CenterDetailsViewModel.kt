@@ -14,10 +14,11 @@ import androidclient.feature.center.generated.resources.feature_center_error_loa
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.mifos.core.common.utils.Constants
+import androidx.navigation.toRoute
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.domain.useCases.GetCenterDetailsUseCase
 import com.mifos.core.model.objects.groups.CenterInfo
+import com.mifos.feature.center.navigation.CenterDetailRoute
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
@@ -27,13 +28,13 @@ class CenterDetailsViewModel(
     savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
 
-    val centerId = savedStateHandle.getStateFlow(key = Constants.CENTER_ID, initialValue = 0)
+    val centerId = savedStateHandle.toRoute<CenterDetailRoute>().centerId
 
     private val _centerDetailsUiState =
         MutableStateFlow<CenterDetailsUiState>(CenterDetailsUiState.Loading)
     val centerDetailsUiState = _centerDetailsUiState.asStateFlow()
 
-    fun loadClientDetails(centerId: Int) = viewModelScope.launch {
+    fun loadClientDetails() = viewModelScope.launch {
         getCenterDetailsUseCase(centerId, false).collect { result ->
             when (result) {
                 is DataState.Error ->

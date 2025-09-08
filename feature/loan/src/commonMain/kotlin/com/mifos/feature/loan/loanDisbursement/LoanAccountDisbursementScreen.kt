@@ -77,18 +77,17 @@ internal fun LoanAccountDisbursementScreen(
     viewmodel: LoanAccountDisbursementViewModel = koinViewModel(),
 ) {
     val uiState by viewmodel.loanAccountDisbursementUiState.collectAsStateWithLifecycle()
-    val loanId by viewmodel.loadId.collectAsStateWithLifecycle()
 
     LaunchedEffect(key1 = Unit) {
-        viewmodel.loadLoanTemplate(loanId)
+        viewmodel.loadLoanTemplate()
     }
 
     LoanAccountDisbursementScreen(
         uiState = uiState,
         navigateBack = navigateBack,
-        onRetry = { viewmodel.loadLoanTemplate(loanId) },
+        onRetry = { viewmodel.loadLoanTemplate() },
         onDisburseLoan = {
-            viewmodel.disburseLoan(loanId, it)
+            viewmodel.disburseLoan(it)
         },
     )
 }
