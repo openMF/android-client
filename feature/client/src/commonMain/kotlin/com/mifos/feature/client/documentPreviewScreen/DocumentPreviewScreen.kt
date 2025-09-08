@@ -31,19 +31,14 @@ import com.mifos.core.designsystem.theme.AppColors
 import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.ui.components.MifosFilePickerBottomSheet
 import com.mifos.core.ui.util.EventsEffect
-import kotlinx.serialization.json.Json
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun DocumentPreviewScreen(
-    navigateBack: (documentState: String) -> Unit,
-    navigateOnCancelUpdating: (documentState: String) -> Unit,
-    navigateOnDocumentRejected:(documentState: String) -> Unit,
-    navigateOnSubmitClicked: (
-        documentState: String,
-        newDocumentPath: String,
-        updateForServer: Boolean,
-    ) -> Unit,
+    navigateBack: () -> Unit,
+    navigateOnCancelUpdating: () -> Unit,
+    navigateOnDocumentRejected:() -> Unit,
+    navigateOnSubmitClicked: () -> Unit,
     viewmodel: DocumentPreviewScreenViewModel = koinViewModel()
 ) {
 
@@ -51,29 +46,10 @@ fun DocumentPreviewScreen(
 
     EventsEffect(viewmodel.eventFlow){event ->
         when (event) {
-            is DocumentPreviewEvent.OnCancelUpdating -> {
-                val dataState = Json.encodeToString(event.documentState)
-
-                navigateOnCancelUpdating(dataState)
-            }
-            is DocumentPreviewEvent.OnDocumentRejected -> {
-                val dataState = Json.encodeToString(event.documentState)
-                navigateOnDocumentRejected(dataState)
-            }
-            is DocumentPreviewEvent.OnSubmitClinked -> {
-                val dataState = Json.encodeToString(event.documentState)
-
-                navigateOnSubmitClicked(
-                    dataState,
-                    event.newDocumentPath,
-                    event.updateForServer,
-                    )
-            }
-            is DocumentPreviewEvent.OnNavigateBack -> {
-                val dataState = Json.encodeToString(event.documentState)
-
-                navigateBack(dataState)
-            }
+            is DocumentPreviewEvent.OnCancelUpdating -> navigateOnCancelUpdating()
+            is DocumentPreviewEvent.OnDocumentRejected -> navigateOnDocumentRejected()
+            is DocumentPreviewEvent.OnSubmitClinked -> navigateOnSubmitClicked()
+            is DocumentPreviewEvent.OnNavigateBack -> navigateBack()
         }
     }
 
@@ -119,7 +95,7 @@ private fun ViewDocumentScaffold(
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            if(state.dialogState!=null){
+            if(state.isLoading || state.isException!=null){
                 DocumentsPreviewScreenDialog(state)
             } else {
                 ViewDocumentsScreenContent(
@@ -203,17 +179,13 @@ private fun ViewDocumentScaffold(
 private fun DocumentsPreviewScreenDialog(
     state: DocumentPreviewState,
 ) {
-    when (state.dialogState) {
-        is DocumentPreviewState.DialogState.Error -> {
-            MifosSweetError(
-                message = state.dialogState.message,
-                isRetryEnabled = false,
-            )
-        }
-        DocumentPreviewState.DialogState.Loading -> {
-            MifosCircularProgress()
-        }
-        null -> {}
+    if(state.isException!=null) {
+        MifosSweetError(
+            message = state.isException.message?:"Unknown error",
+            isRetryEnabled = false,
+        )
+    } else if(state.isLoading) {
+        MifosCircularProgress()
     }
 }
 
@@ -236,7 +208,7 @@ private fun ViewDocumentsScreenContent(
             when (state.documentType) {
                 is DocumentType.Image -> {
                     AsyncImage(
-                        model = state.documentContent,
+                        model = state.documentBytes,
                         contentDescription = "Document Image",
                         modifier = Modifier
                             .fillMaxSize()
@@ -247,6 +219,9 @@ private fun ViewDocumentsScreenContent(
                     Image(
                         imageVector = MifosIcons.Error,
                         "failed to load pdf",
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .align(Alignment.Center),
                     )
                 }
                 null -> {}

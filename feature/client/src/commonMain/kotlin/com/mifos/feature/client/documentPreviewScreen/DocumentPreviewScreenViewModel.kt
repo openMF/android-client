@@ -1,239 +1,147 @@
 package com.mifos.feature.client.documentPreviewScreen
 
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
-import androidx.navigation.toRoute
-import co.touchlab.kermit.Logger
-import com.mifos.core.common.utils.DataState
-import com.mifos.core.common.utils.FileKitUtil
 import com.mifos.core.ui.util.BaseViewModel
-import com.mifos.feature.client.clientAddDocuments.DocumentState
-import io.github.vinceglb.filekit.*
+import com.mifos.feature.client.DocumentSelectAndUploadRepository
+import io.github.vinceglb.filekit.extension
+import io.github.vinceglb.filekit.readBytes
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import kotlinx.serialization.json.Json
 
 
 class DocumentPreviewScreenViewModel(
-    savedStateHandle: SavedStateHandle,
+    private val documentSelectAndUploadRepository: DocumentSelectAndUploadRepository
 ) : BaseViewModel<
         DocumentPreviewState,
         DocumentPreviewEvent,
         DocumentPreviewScreenAction,
-        >(DocumentPreviewState()) {
+>(DocumentPreviewState()) {
 
-    private val route = savedStateHandle.toRoute<DocumentPreviewScreenRoute>()
-    private val documentStateString = route.documentStateString
-    private val documentState = Json.decodeFromString<DocumentState>(documentStateString)
+    private val documentSelectAndUploadFlow =
+        documentSelectAndUploadRepository.entityDocumentStateMutableStateFlow
 
-    private val documentPath = documentState.documentPath
-    private val comingFromServer = route.comingFromServer
-
-    init {
-        viewModelScope.launch {
-            Logger.e { "File path: $documentPath" }
-            try {
-                val platformFile = PlatformFile(documentPath)
-                Logger.e { "File inside try catch: $platformFile" }
-                Logger.e { "File path inside try catch: ${platformFile.path}" }
-                mutableStateFlow.update {
-                    it.copy(documentPath = platformFile.path)
-                }
-                val canUpdateDocument =route.canUpdateDocument
-                if (canUpdateDocument) {
-                    sendAction(DocumentPreviewScreenAction.EnableUpdating)
-                }
-                getDocumentType(extension = platformFile.extension)?.let {
-                    sendAction(
-                        DocumentPreviewScreenAction.LoadDocument(it),
-                    )
-                } ?: sendEvent(DocumentPreviewEvent.OnNavigateBack(documentState))
-            } catch (e: Exception) {
-                Logger.e(e) { "Failed to load file"}
-                sendEvent(DocumentPreviewEvent.OnNavigateBack(documentState))
-            }
-        }
-    }
+    val documentSelectAndUploadState = documentSelectAndUploadRepository.state
 
     override fun handleAction(action: DocumentPreviewScreenAction) {
         when (action) {
-            DocumentPreviewScreenAction.NavigateBack -> {
-                sendEvent(DocumentPreviewEvent.OnNavigateBack(documentState))
-            }
-
             DocumentPreviewScreenAction.CancelUpdating -> {
-                sendEvent(DocumentPreviewEvent.OnCancelUpdating(documentState))
+                sendEvent(DocumentPreviewEvent.OnNavigateBack)
             }
-
             DocumentPreviewScreenAction.DismissBottomSheet -> {
                 mutableStateFlow.update {
                     it.copy(showBottomSheet = false)
                 }
             }
-
             DocumentPreviewScreenAction.EnableUpdating -> {
+                documentSelectAndUploadFlow.update {
+                    it.copy(documentPreviewedAndAccepted = true)
+                }
                 mutableStateFlow.update {
                     it.copy(showUpdateButton = true)
                 }
             }
-
-            is DocumentPreviewScreenAction.LoadDocument -> {
-                if (state.documentPath.isNotBlank()) {
-                    mutableStateFlow.update {
-                        it.copy(documentType = action.documentType)
-                    }
-                    loadDocumentFromPath(state.documentPath)
-                } else {
-                    sendEvent(DocumentPreviewEvent.OnDocumentRejected(documentState))
-                }
+            DocumentPreviewScreenAction.NavigateBack -> {
+                sendEvent(DocumentPreviewEvent.OnNavigateBack)
             }
-
             DocumentPreviewScreenAction.PickFromFile -> {
-                selectImageFromFiles()
+                pickFromGallery()
             }
-
             DocumentPreviewScreenAction.PickFromGallery -> {
-                selectImageFromGallery()
+                pickFromFiles()
             }
-
             DocumentPreviewScreenAction.RejectDocument -> {
-                sendEvent(DocumentPreviewEvent.OnDocumentRejected(documentState))
-            }
-
-            DocumentPreviewScreenAction.SubmitClicked -> {
-                mutableStateFlow.update {
-                    it.copy(showBottomSheet = false)
+                documentSelectAndUploadFlow.update {
+                    it.copy(documentPreviewedAndAccepted = false)
                 }
-                sendEvent(
-                    DocumentPreviewEvent.OnSubmitClinked(
-                        documentState,
-                        newDocumentPath = state.documentPath,
-                        updateForServer = comingFromServer
-                    )
-                )
             }
-
+            DocumentPreviewScreenAction.SubmitClicked -> {
+                documentSelectAndUploadFlow.update {
+                    it.copy(documentPreviewedAndAccepted = true)
+                }
+                sendEvent(DocumentPreviewEvent.OnSubmitClinked)
+            }
             DocumentPreviewScreenAction.UpdateNew -> {
                 mutableStateFlow.update {
                     it.copy(showBottomSheet = true)
                 }
             }
-
             DocumentPreviewScreenAction.UseMoreOptions -> {}
         }
     }
 
-    private fun selectImageFromGallery() {
+    private fun pickFromGallery(){
         viewModelScope.launch {
-            FileKitUtil.pickImage().collect { dataState ->
-                when (dataState) {
-                    is DataState.Error<*> -> {
-                        errorDialogState(dataState.message)
-                    }
-
-                    DataState.Loading -> {
-                        loadingDialogState()
-                    }
-
-                    is DataState.Success -> {
-                        sendAction(DocumentPreviewScreenAction.DismissBottomSheet)
-                        dataState.data?.let { platformFile ->
-                            mutableStateFlow.update {
-                                it.copy(
-                                    showUpdateButton = false,
-                                    dialogState = null,
-                                    documentPath = platformFile.path,
-                                )
-                            }
-
-                            sendEvent(
-                                DocumentPreviewEvent.OnSubmitClinked(
-                                    documentState = documentState,
-                                    newDocumentPath = platformFile.path,
-                                    updateForServer = comingFromServer,
-                                )
+            collectLoadingState()
+            val result = documentSelectAndUploadRepository.selectImageFromGallery()
+            result.onSuccess {
+                 documentSelectAndUploadState.entityDocument?.readBytes()?.let {bytes->
+                        mutableStateFlow.update {
+                            it.copy(
+                                documentType = getDocumentType(documentSelectAndUploadState.entityDocument?.extension ?: ""),
+                                showUpdateButton = false,
+                                showBottomSheet = false,
+                                documentBytes = bytes
                             )
-                        } ?: nullDialogState()
-                    }
-                }
-            }
-        }
-    }
-
-    private fun selectImageFromFiles() {
-        viewModelScope.launch {
-            FileKitUtil.pickPdfFile().collect { dataState ->
-                when (dataState) {
-                    is DataState.Error<*> -> {
-                        errorDialogState(dataState.message)
+                        }
+                } ?: mutableStateFlow.update {
+                        it.copy(
+                            showUpdateButton = true,
+                            isException = Exception("Failed to read image"),
+                            showBottomSheet = false,
+                        )
                     }
 
-                    DataState.Loading -> {
-                        loadingDialogState()
-                    }
-
-                    is DataState.Success -> {
-                        sendAction(DocumentPreviewScreenAction.DismissBottomSheet)
-                        dataState.data?.let { platformFile ->
-                            mutableStateFlow.update {
-                                it.copy(
-                                    showUpdateButton = false,
-                                    dialogState = null,
-                                    documentPath = platformFile.path,
-                                )
-                            }
-                            sendEvent(
-                                DocumentPreviewEvent.OnSubmitClinked(
-                                    documentState = documentState,
-                                    newDocumentPath = platformFile.path,
-                                    updateForServer = comingFromServer
-                                )
-                            )
-                        } ?: nullDialogState()
-                    }
-                }
-            }
-        }
-    }
-
-    private fun loadDocumentFromPath(documentPath: String) {
-        viewModelScope.launch {
-            try {
-                val platformFile = PlatformFile(documentPath)
-                Logger.e { "Selected document: $platformFile" }
-                Logger.e { "Does file exist: ${platformFile.exists()}" }
-
-                val bytesString = platformFile.readBytes()
+            }.onFailure { throwable ->
                 mutableStateFlow.update {
                     it.copy(
-                        documentPath = documentPath,
-                        documentContent = bytesString,
+                        isException = Exception(throwable),
+                        showBottomSheet = false,
+                    )
+                }
+            }
+        }
+    }
+
+    private fun pickFromFiles() {
+        viewModelScope.launch {
+            collectLoadingState()
+            val result = documentSelectAndUploadRepository.selectImageFromFile()
+            result.onSuccess {
+                documentSelectAndUploadState.entityDocument?.readBytes()?.let {bytes->
+                    mutableStateFlow.update {
+                        it.copy(
+                            documentType = getDocumentType(documentSelectAndUploadState.entityDocument?.extension ?: ""),
+                            showUpdateButton = false,
+                            showBottomSheet = false,
+                            documentBytes = bytes
+                        )
+                    }
+                } ?: mutableStateFlow.update {
+                    it.copy(
+                        showUpdateButton = true,
+                        isException = Exception("Failed to read document"),
+                        showBottomSheet = false,
                     )
                 }
 
-            } catch (e: Exception) {
-                Logger.e { "Exception: ${e.message}" }
-                errorDialogState("Failed to load file.")
+            }.onFailure { throwable ->
+                mutableStateFlow.update {
+                    it.copy(
+                        isException = Exception(throwable),
+                        showBottomSheet = false,
+                    )
+                }
             }
-
         }
     }
 
-    private fun nullDialogState() {
-        mutableStateFlow.update {
-            it.copy(dialogState = null)
-        }
-    }
-
-    private fun errorDialogState(message: String) {
-        mutableStateFlow.update {
-            it.copy(dialogState = DocumentPreviewState.DialogState.Error(message))
-        }
-    }
-
-    private fun loadingDialogState() {
-        mutableStateFlow.update {
-            it.copy(dialogState = DocumentPreviewState.DialogState.Loading)
+    private suspend fun collectLoadingState(){
+        documentSelectAndUploadFlow.collect {entityDocumentState ->
+            mutableStateFlow.update {
+                it.copy(
+                    isLoading = entityDocumentState.isLoading,
+                )
+            }
         }
     }
 
@@ -241,19 +149,14 @@ class DocumentPreviewScreenViewModel(
 }
 
 data class DocumentPreviewState(
-    val dialogState: DialogState? = null,
+    val isLoading: Boolean = false,
+    val isException: Exception? = null,
     val showBottomSheet: Boolean = false,
     val showUpdateButton: Boolean = false,
-    val documentPath: String = "",
-    val documentType: DocumentType? = DocumentType.Image("jpg"),
-    val documentContent: ByteArray? = null,
-) {
-    sealed interface DialogState {
-        data object Loading : DialogState
-        data class Error(val message: String) : DialogState
-    }
+    val documentType: DocumentType? = null,
+    val documentBytes: ByteArray? = null,
+)
 
-}
 
 sealed interface DocumentPreviewScreenAction {
     object NavigateBack : DocumentPreviewScreenAction
@@ -266,7 +169,6 @@ sealed interface DocumentPreviewScreenAction {
     object PickFromFile : DocumentPreviewScreenAction
     object UseMoreOptions : DocumentPreviewScreenAction
     object EnableUpdating : DocumentPreviewScreenAction
-    data class LoadDocument(val documentType: DocumentType) : DocumentPreviewScreenAction
 }
 
 sealed interface DocumentType {
@@ -285,12 +187,8 @@ private fun getDocumentType(extension: String): DocumentType? {
 }
 
 sealed interface DocumentPreviewEvent {
-    data class OnCancelUpdating(val documentState: DocumentState) : DocumentPreviewEvent
-    data class OnNavigateBack(val documentState: DocumentState) : DocumentPreviewEvent
-    data class OnDocumentRejected(val documentState: DocumentState) : DocumentPreviewEvent
-    data class OnSubmitClinked(
-        val documentState: DocumentState,
-        val newDocumentPath: String,
-        val updateForServer: Boolean
-    ): DocumentPreviewEvent
+    object OnCancelUpdating : DocumentPreviewEvent
+    object OnNavigateBack : DocumentPreviewEvent
+    object OnDocumentRejected : DocumentPreviewEvent
+    object OnSubmitClinked: DocumentPreviewEvent
 }

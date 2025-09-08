@@ -9,6 +9,8 @@
  */
 package com.mifos.feature.client.di
 
+import com.mifos.feature.client.DocumentSelectAndUploadRepository
+import com.mifos.feature.client.DocumentSelectAndUploadRepositoryImpl
 import com.mifos.feature.client.clientAddDocuments.ClientAddDocumentScreenViewmodel
 import com.mifos.feature.client.clientAddress.ClientAddressViewModel
 import com.mifos.feature.client.clientApplyNewApplications.ClientApplyNewApplicationsViewModel
@@ -41,6 +43,8 @@ import com.mifos.feature.client.recurringDepositAccount.RecurringDepositAccountV
 import com.mifos.feature.client.savingsAccounts.SavingsAccountsViewModel
 import com.mifos.feature.client.shareAccounts.ShareAccountsViewModel
 import com.mifos.feature.client.syncClientDialog.SyncClientsDialogViewModel
+import org.koin.core.module.dsl.bind
+import org.koin.core.module.dsl.singleOf
 import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.module
 
@@ -77,4 +81,8 @@ val ClientModule = module {
     viewModelOf(::ClientAddDocumentScreenViewmodel)
     viewModelOf(::DocumentPreviewScreenViewModel)
     viewModelOf(::ShareAccountsViewModel)
+
+    singleOf(::DocumentSelectAndUploadRepositoryImpl) {
+        bind<DocumentSelectAndUploadRepository>()
+    }
 }

@@ -6,22 +6,13 @@ import androidx.navigation.compose.composable
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class DocumentPreviewScreenRoute(
-    val documentStateString: String ="",
-    val newDocumentPath: String? = null,
-    val canUpdateDocument: Boolean = false,
-    val comingFromServer: Boolean = false,
-)
+data object DocumentPreviewScreenRoute
 
 fun NavGraphBuilder.createDocumentPreviewRoute(
-    navigateOnCancelUpdating: (documentStateString: String) -> Unit,
-    navigateOnDocumentRejected: (documentStateString: String) -> Unit,
-    navigateOnSubmitClicked: (
-        documentStateString: String,
-        newDocumentPath: String,
-        updateForServer: Boolean,
-    ) -> Unit,
-    navigateBack: (documentStateString: String) -> Unit,
+    navigateOnCancelUpdating: () -> Unit,
+    navigateOnDocumentRejected: () -> Unit,
+    navigateOnSubmitClicked: () -> Unit,
+    navigateBack: () -> Unit,
 ){
 
     composable<DocumentPreviewScreenRoute> {
@@ -35,34 +26,6 @@ fun NavGraphBuilder.createDocumentPreviewRoute(
 }
 
 
-fun NavController.navigateToDocumentPreviewForUpdatingLocal(
-    documentStateString: String,
-){
-  this.navigate(
-      DocumentPreviewScreenRoute(
-          documentStateString = documentStateString,
-          canUpdateDocument = true
-      )
-  )
-}
-
-
-fun NavController.navigateToDocumentPreviewWhenCanUpdateToServer(
-    restoredDocumentStateString: String,
-) {
-  this.navigate(
-      DocumentPreviewScreenRoute(
-          documentStateString = restoredDocumentStateString,
-          canUpdateDocument = true,
-          comingFromServer = true
-      )
-  )
-}
-
-fun NavController.navigateToDocumentPreviewForPreview(
-    documentStateString: String,
-){
-    this.navigate(
-        DocumentPreviewScreenRoute(documentStateString = documentStateString)
-    )
+fun NavController.navigateToDocumentPreviewForUpdatingLocal(){
+  this.navigate(DocumentPreviewScreenRoute)
 }
