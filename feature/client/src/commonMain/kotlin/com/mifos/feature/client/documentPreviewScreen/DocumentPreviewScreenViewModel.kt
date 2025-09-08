@@ -2,11 +2,13 @@ package com.mifos.feature.client.documentPreviewScreen
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.toRoute
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.common.utils.FileKitUtil
 import com.mifos.core.ui.util.BaseViewModel
 import com.mifos.feature.client.utils.fromBase64DataUri
 import io.github.vinceglb.filekit.PlatformFile
+import io.github.vinceglb.filekit.extension
 import io.github.vinceglb.filekit.path
 import io.github.vinceglb.filekit.readBytes
 import io.ktor.util.*
@@ -16,13 +18,99 @@ import kotlinx.coroutines.launch
 
 class DocumentPreviewScreenViewModel(
     savedStateHandle: SavedStateHandle,
-): BaseViewModel<
+) : BaseViewModel<
         DocumentPreviewState,
         DocumentPreviewEvent,
-        DocumentPreviewScreenAction
->(DocumentPreviewState()) {
+        DocumentPreviewScreenAction,
+        >(DocumentPreviewState()) {
+
+    private val documentPath = savedStateHandle.toRoute<DocumentPreviewScreenRoute>().documentPath
+
+    init {
+        viewModelScope.launch {
+            try {
+                val platformFile = PlatformFile(documentPath)
+                mutableStateFlow.update {
+                    it.copy(documentPath = platformFile)
+                }
+                val canUpdateDocument = savedStateHandle.toRoute<DocumentPreviewScreenRoute>().canUpdateDocument
+                if (canUpdateDocument) {
+                    sendAction(DocumentPreviewScreenAction.EnableUpdating)
+                }
+                if (platformFile.extension == "pdf" ||
+                    platformFile.extension == "jpg" || platformFile.extension == "jpeg" || platformFile.extension == "png"
+                ) {
+                    sendAction(
+                        DocumentPreviewScreenAction.LoadDocument(
+                            if (platformFile.extension == "pdf") DocumentType.Pdf
+                            else DocumentType.Image(platformFile.extension),
+                        ),
+                    )
+                } else {
+                    sendEvent(DocumentPreviewEvent.OnNavigateBack)
+                }
+            } catch (e: Exception) {
+                sendEvent(DocumentPreviewEvent.OnNavigateBack)
+            }
+        }
+    }
+
     override fun handleAction(action: DocumentPreviewScreenAction) {
-        TODO("Not yet implemented")
+        when (action) {
+            DocumentPreviewScreenAction.NavigateBack -> {
+                sendEvent(DocumentPreviewEvent.OnNavigateBack)
+            }
+
+            DocumentPreviewScreenAction.CancelUpdating -> {
+                sendEvent(DocumentPreviewEvent.OnCancelUpdating)
+            }
+
+            DocumentPreviewScreenAction.DismissBottomSheet -> {
+                mutableStateFlow.update {
+                    it.copy(showBottomSheet = false)
+                }
+            }
+
+            DocumentPreviewScreenAction.EnableUpdating -> {
+                mutableStateFlow.update {
+                    it.copy(canUpdate = true)
+                }
+            }
+
+            is DocumentPreviewScreenAction.LoadDocument -> {
+                if (documentPath.isBlank()) {
+                    loadDocumentFromPath(documentPath)
+                } else {
+                    sendEvent(DocumentPreviewEvent.OnDocumentRejected)
+                }
+            }
+
+            DocumentPreviewScreenAction.PickFromFile -> {
+                selectImageFromFiles()
+            }
+
+            DocumentPreviewScreenAction.PickFromGallery -> {
+                selectImageFromGallery()
+            }
+
+            DocumentPreviewScreenAction.RejectDocument -> {
+                sendEvent(DocumentPreviewEvent.OnDocumentRejected)
+            }
+
+            DocumentPreviewScreenAction.SubmitClicked -> {
+                mutableStateFlow.update {
+                    it.copy(showBottomSheet = true)
+                }
+            }
+
+            DocumentPreviewScreenAction.UpdateNew -> {
+                mutableStateFlow.update {
+                    it.copy(showBottomSheet = true)
+                }
+            }
+
+            DocumentPreviewScreenAction.UseMoreOptions -> {}
+        }
     }
 
     private fun selectImageFromGallery() {
@@ -37,8 +125,8 @@ class DocumentPreviewScreenViewModel(
                         loadingDialogState()
                     }
 
-
                     is DataState.Success -> {
+                        sendAction(DocumentPreviewScreenAction.DismissBottomSheet)
                         dataState.data?.let { platformFile ->
                             mutableStateFlow.update {
                                 it.copy(
@@ -66,6 +154,7 @@ class DocumentPreviewScreenViewModel(
                     }
 
                     is DataState.Success -> {
+                        sendAction(DocumentPreviewScreenAction.DismissBottomSheet)
                         dataState.data?.let { platformFile ->
                             mutableStateFlow.update {
                                 it.copy(
@@ -114,13 +203,13 @@ class DocumentPreviewScreenViewModel(
         }
     }
 
-    private fun errorDialogState(message: String){
+    private fun errorDialogState(message: String) {
         mutableStateFlow.update {
             it.copy(dialogState = DocumentPreviewState.DialogState.Error(message))
         }
     }
 
-    private fun loadingDialogState(){
+    private fun loadingDialogState() {
         mutableStateFlow.update {
             it.copy(dialogState = DocumentPreviewState.DialogState.Loading)
         }
@@ -132,14 +221,16 @@ class DocumentPreviewScreenViewModel(
 data class DocumentPreviewState(
     val dialogState: DialogState? = null,
     val showBottomSheet: Boolean = false,
-    val enableUpdating: Boolean = false,
+    val canUpdate: Boolean = false,
     val documentPath: PlatformFile? = null,
-    val documentContent: Content? = null
+    val documentType: DocumentType? = null,
+    val documentContent: Content? = null,
 ) {
     sealed interface DialogState {
         data object Loading : DialogState
         data class Error(val message: String) : DialogState
     }
+
     class Content(val response: String) {
         val byteArray: ByteArray
             get() = response.fromBase64DataUri()
@@ -147,6 +238,7 @@ data class DocumentPreviewState(
 }
 
 sealed interface DocumentPreviewScreenAction {
+    object NavigateBack : DocumentPreviewScreenAction
     object CancelUpdating : DocumentPreviewScreenAction
     object RejectDocument : DocumentPreviewScreenAction
     object SubmitClicked : DocumentPreviewScreenAction
@@ -166,7 +258,8 @@ sealed interface DocumentType {
 
 sealed interface DocumentPreviewEvent {
     object OnCancelUpdating : DocumentPreviewEvent
+    object OnNavigateBack : DocumentPreviewEvent
     object OnDocumentRejected : DocumentPreviewEvent
-    data class SendUpdatedDocument(val documentPath: String): DocumentPreviewEvent
-    data object OnSubmitClinked: DocumentPreviewEvent
+    data class SendUpdatedDocument(val documentPath: String) : DocumentPreviewEvent
+    data object OnSubmitClinked : DocumentPreviewEvent
 }

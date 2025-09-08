@@ -19,9 +19,13 @@ fun NavGraphBuilder.createDocumentPreviewRoute(
 ){
 
     composable<DocumentPreviewScreenRoute>{
-
+        DocumentPreviewScreen(
+            navigateOnDocumentUpdate = navigateOnDocumentUpdate,
+            navigateOnCancelUpdating = navigateOnCancelUpdating,
+            navigateOnDocumentRejected = navigateOnDocumentRejected,
+            navigateOnSubmitClicked = navigateOnSubmitClicked,
+        )
     }
-
 }
 
 
