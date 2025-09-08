@@ -31,16 +31,16 @@ import com.mifos.core.designsystem.theme.AppColors
 import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.ui.components.MifosFilePickerBottomSheet
 import com.mifos.core.ui.util.EventsEffect
-import com.mifos.feature.client.clientAddDocuments.DocumentState
+import kotlinx.serialization.json.Json
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun DocumentPreviewScreen(
-    navigateBack: (documentState: DocumentState) -> Unit,
-    navigateOnCancelUpdating: (documentState: DocumentState) -> Unit,
-    navigateOnDocumentRejected:(documentState: DocumentState) -> Unit,
+    navigateBack: (documentState: String) -> Unit,
+    navigateOnCancelUpdating: (documentState: String) -> Unit,
+    navigateOnDocumentRejected:(documentState: String) -> Unit,
     navigateOnSubmitClicked: (
-        documentState: DocumentState,
+        documentState: String,
         newDocumentPath: String,
         updateForServer: Boolean,
     ) -> Unit,
@@ -51,16 +51,29 @@ fun DocumentPreviewScreen(
 
     EventsEffect(viewmodel.eventFlow){event ->
         when (event) {
-            is DocumentPreviewEvent.OnCancelUpdating -> navigateOnCancelUpdating(event.documentState)
-            is DocumentPreviewEvent.OnDocumentRejected -> navigateOnDocumentRejected(event.documentState)
+            is DocumentPreviewEvent.OnCancelUpdating -> {
+                val dataState = Json.encodeToString(event.documentState)
+
+                navigateOnCancelUpdating(dataState)
+            }
+            is DocumentPreviewEvent.OnDocumentRejected -> {
+                val dataState = Json.encodeToString(event.documentState)
+                navigateOnDocumentRejected(dataState)
+            }
             is DocumentPreviewEvent.OnSubmitClinked -> {
+                val dataState = Json.encodeToString(event.documentState)
+
                 navigateOnSubmitClicked(
-                    event.documentState,
+                    dataState,
                     event.newDocumentPath,
                     event.updateForServer,
                     )
             }
-            is DocumentPreviewEvent.OnNavigateBack -> navigateBack(event.documentState)
+            is DocumentPreviewEvent.OnNavigateBack -> {
+                val dataState = Json.encodeToString(event.documentState)
+
+                navigateBack(dataState)
+            }
         }
     }
 
@@ -150,7 +163,7 @@ private fun ViewDocumentScaffold(
                     Spacer(modifier = Modifier.width(8.dp))
                     MifosOutlinedButton(
                         onClick = {
-                            if (state.showUpdateButton) {
+                            if (!state.showUpdateButton) {
                                 onAction(DocumentPreviewScreenAction.SubmitClicked)
                             } else {
                                 onAction(DocumentPreviewScreenAction.UpdateNew)

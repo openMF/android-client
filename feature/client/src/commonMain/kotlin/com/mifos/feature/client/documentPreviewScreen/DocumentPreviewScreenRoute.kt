@@ -3,29 +3,28 @@ package com.mifos.feature.client.documentPreviewScreen
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
-import com.mifos.feature.client.clientAddDocuments.DocumentState
 import kotlinx.serialization.Serializable
 
 @Serializable
 data class DocumentPreviewScreenRoute(
-    @Serializable val documentState: DocumentState,
+    val documentStateString: String ="",
     val newDocumentPath: String? = null,
     val canUpdateDocument: Boolean = false,
     val comingFromServer: Boolean = false,
 )
 
 fun NavGraphBuilder.createDocumentPreviewRoute(
-    navigateOnCancelUpdating: (documentState: DocumentState) -> Unit,
-    navigateOnDocumentRejected: (documentState: DocumentState) -> Unit,
+    navigateOnCancelUpdating: (documentStateString: String) -> Unit,
+    navigateOnDocumentRejected: (documentStateString: String) -> Unit,
     navigateOnSubmitClicked: (
-        documentState: DocumentState,
+        documentStateString: String,
         newDocumentPath: String,
         updateForServer: Boolean,
     ) -> Unit,
-    navigateBack: (documentState: DocumentState) -> Unit,
+    navigateBack: (documentStateString: String) -> Unit,
 ){
 
-    composable<DocumentPreviewScreenRoute>{
+    composable<DocumentPreviewScreenRoute> {
         DocumentPreviewScreen(
             navigateOnCancelUpdating = navigateOnCancelUpdating,
             navigateOnDocumentRejected = navigateOnDocumentRejected,
@@ -37,11 +36,11 @@ fun NavGraphBuilder.createDocumentPreviewRoute(
 
 
 fun NavController.navigateToDocumentPreviewForUpdatingLocal(
-    documentState: DocumentState,
+    documentStateString: String,
 ){
   this.navigate(
       DocumentPreviewScreenRoute(
-          documentState = documentState,
+          documentStateString = documentStateString,
           canUpdateDocument = true
       )
   )
@@ -49,12 +48,11 @@ fun NavController.navigateToDocumentPreviewForUpdatingLocal(
 
 
 fun NavController.navigateToDocumentPreviewWhenCanUpdateToServer(
-    restoredDocumentPath: DocumentState,
-    newDocumentPath: String,
+    restoredDocumentStateString: String,
 ) {
   this.navigate(
       DocumentPreviewScreenRoute(
-          restoredDocumentPath,
+          documentStateString = restoredDocumentStateString,
           canUpdateDocument = true,
           comingFromServer = true
       )
@@ -62,9 +60,9 @@ fun NavController.navigateToDocumentPreviewWhenCanUpdateToServer(
 }
 
 fun NavController.navigateToDocumentPreviewForPreview(
-    documentState: DocumentState,
+    documentStateString: String,
 ){
     this.navigate(
-        DocumentPreviewScreenRoute(documentState = documentState)
+        DocumentPreviewScreenRoute(documentStateString = documentStateString)
     )
 }

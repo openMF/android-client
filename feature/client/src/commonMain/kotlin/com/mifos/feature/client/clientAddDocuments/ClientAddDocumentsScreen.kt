@@ -35,13 +35,14 @@ import com.mifos.core.ui.components.MifosBreadcrumbNavBar
 import com.mifos.core.ui.components.MifosFilePickerBottomSheet
 import com.mifos.core.ui.components.MifosProgressIndicator
 import com.mifos.core.ui.util.EventsEffect
+import kotlinx.serialization.json.Json
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun ClientAddDocumentsScreen(
     navController: NavController,
     navigateBack: () -> Unit,
-    navigateToDocumentPreviewScreen: (documentState: DocumentState) -> Unit,
+    navigateToDocumentPreviewScreen: (documentStateString: String) -> Unit,
     viewModel: ClientAddDocumentScreenViewmodel = koinViewModel()
 ) {
     val state by viewModel.stateFlow.collectAsStateWithLifecycle()
@@ -50,7 +51,8 @@ fun ClientAddDocumentsScreen(
         when(events){
             ClientAddDocumentScreenEvents.OnNavigateBack -> navigateBack()
             is ClientAddDocumentScreenEvents.OnNavigateToPreviewScreen -> {
-                navigateToDocumentPreviewScreen(events.documentState)
+                val dataState = Json.encodeToString(events.documentState)
+                navigateToDocumentPreviewScreen(dataState)
             }
         }
     }
@@ -234,9 +236,11 @@ private fun ClientAddDocumentScaffold(
                         MifosOutlinedButton(
                             onClick = {
                                 if(state.isDocumentAdded){
-                                    onAction(ClientAddDocumentScreenAction.UploadDocument)
-                                } else {
-                                    onAction(ClientAddDocumentScreenAction.UpdateDocument)
+                                    if(!state.updatingDocument){
+                                        onAction(ClientAddDocumentScreenAction.UploadDocument)
+                                    } else {
+                                        onAction(ClientAddDocumentScreenAction.UpdateDocument)
+                                    }
                                 }
                             },
                             colors = ButtonDefaults.outlinedButtonColors(

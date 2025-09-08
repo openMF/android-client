@@ -17,6 +17,7 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.serialization.json.Json
 import org.jetbrains.compose.resources.getString
 
 
@@ -32,17 +33,20 @@ class ClientAddDocumentScreenViewmodel(
     initialState = ClientAddDocumentScreenState(),
 ) {
     private val route = stateHandler.toRoute<ClientAddDocumentRoute>()
-    private val documentState = route.documentState
+    private val documentStateString = route.documentStateString
+    private val documentState = Json.decodeFromString<DocumentState>(documentStateString)
     private val clientId = documentState.clientId
     private val documentId = documentState.documentId
     private val entityType = documentState.entityType
+
+    private  val updateForServer = route.updateOnServer
+
 
     init {
         viewModelScope.launch {
             val isComingFromPreviewScreen = route.comingFromPreviewScreen
             val isDocumentRejected = route.isDocumentRejected
             val documentPath = route.newDocumentPath
-            val updateForServer = route.updateOnServer
             try {
                 if (isComingFromPreviewScreen) {
                     if (isDocumentRejected) {
@@ -58,11 +62,11 @@ class ClientAddDocumentScreenViewmodel(
                         mutableStateFlow.update {
                             it.copy(
                                 platformFile = platformFile,
-                                isDocumentAdded = false,
+                                isDocumentAdded = true,
                                 pickedDocumentName = platformFile.name,
+                                updatingDocument = updateForServer
                             )
                         }
-
                     }
                 }
             } catch (e: Exception) {
@@ -301,7 +305,7 @@ class ClientAddDocumentScreenViewmodel(
                                         mutableStateFlow.update {
                                             it.copy(
                                                 dialogState = null,
-                                                platformFile = platformFile,
+                                                platformFile = FileKitUtil.appCache/platformFile.name,
                                                 pickedDocumentName = platformFile.nameWithoutExtension,
                                             )
                                         }
@@ -364,7 +368,7 @@ class ClientAddDocumentScreenViewmodel(
                                         mutableStateFlow.update {
                                             it.copy(
                                                 dialogState = null,
-                                                platformFile = platformFile,
+                                                platformFile = FileKitUtil.appCache/platformFile.name,
                                                 pickedDocumentName = platformFile.nameWithoutExtension,
                                             )
                                         }

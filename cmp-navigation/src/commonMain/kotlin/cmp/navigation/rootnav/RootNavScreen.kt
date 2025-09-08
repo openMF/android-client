@@ -36,7 +36,10 @@ import com.mifos.core.ui.RootTransitionProviders
 import com.mifos.feature.auth.navigation.LoginRoute
 import com.mifos.feature.auth.navigation.authNavGraph
 import com.mifos.feature.auth.navigation.navigateToLogin
+import com.mifos.feature.client.clientAddDocuments.DocumentState
+import com.mifos.feature.client.utils.CustomNavType
 import org.koin.compose.viewmodel.koinViewModel
+import kotlin.reflect.typeOf
 
 @Suppress("LongMethod", "CyclomaticComplexMethod")
 @Composable

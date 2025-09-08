@@ -12,17 +12,18 @@ package com.mifos.feature.client.clientDocuments
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
-import com.mifos.feature.client.clientAddDocuments.DocumentState
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class ClientDocumentsRoute(val clientId: Int = -1)
+data class ClientDocumentsRoute(
+    val clientId: Int = -1
+)
 
 fun NavGraphBuilder.clientDocumentsDestination(
     navController: NavController,
     navigateBack: () -> Unit,
-    navigateToAddDocuments: (documentState: DocumentState) -> Unit,
-    onViewDocument:  (documentState: DocumentState) -> Unit,
+    navigateToAddDocuments: (documentState: String) -> Unit,
+    onViewDocument:  (documentState: String) -> Unit,
 ) {
     composable<ClientDocumentsRoute> {
         ClientDocumentScreen(

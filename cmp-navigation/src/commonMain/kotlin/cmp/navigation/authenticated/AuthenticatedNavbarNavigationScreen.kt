@@ -67,6 +67,7 @@ import cmp.navigation.components.MifosScaffold
 import cmp.navigation.components.ScaffoldNavigationData
 import cmp.navigation.navigation.HomeDestinationsScreen
 import cmp.navigation.ui.rememberMifosNavController
+import com.mifos.feature.client.utils.CustomNavType
 import com.mifos.core.common.utils.Constants
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.icon.MifosIcons
@@ -78,6 +79,7 @@ import com.mifos.feature.center.navigation.centerNavGraph
 import com.mifos.feature.center.navigation.navigateCenterDetailsScreenRoute
 import com.mifos.feature.center.navigation.navigateCreateCenterScreenRoute
 import com.mifos.feature.center.navigation.navigateToCenterListScreenRoute
+import com.mifos.feature.client.clientAddDocuments.DocumentState
 import com.mifos.feature.client.navigation.clientNavGraph
 import com.mifos.feature.client.navigation.navigateClientDetailsScreen
 import com.mifos.feature.client.navigation.navigateCreateClientScreen
@@ -107,6 +109,7 @@ import org.mifos.navigation.generated.resources.cmp_navigation_mifos
 import org.mifos.navigation.generated.resources.cmp_navigation_no_internet
 import org.mifos.navigation.generated.resources.drawer_profile_header
 import org.mifos.navigation.generated.resources.ic_dp_placeholder
+import kotlin.reflect.typeOf
 
 @Composable
 internal fun AuthenticatedNavbarNavigationScreen(

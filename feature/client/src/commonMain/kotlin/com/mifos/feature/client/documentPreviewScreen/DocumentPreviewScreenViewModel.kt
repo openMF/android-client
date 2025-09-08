@@ -11,6 +11,7 @@ import com.mifos.feature.client.clientAddDocuments.DocumentState
 import io.github.vinceglb.filekit.*
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.serialization.json.Json
 
 
 class DocumentPreviewScreenViewModel(
@@ -22,7 +23,9 @@ class DocumentPreviewScreenViewModel(
         >(DocumentPreviewState()) {
 
     private val route = savedStateHandle.toRoute<DocumentPreviewScreenRoute>()
-    private val documentState = route.documentState
+    private val documentStateString = route.documentStateString
+    private val documentState = Json.decodeFromString<DocumentState>(documentStateString)
+
     private val documentPath = documentState.documentPath
     private val comingFromServer = route.comingFromServer
 
@@ -99,8 +102,15 @@ class DocumentPreviewScreenViewModel(
 
             DocumentPreviewScreenAction.SubmitClicked -> {
                 mutableStateFlow.update {
-                    it.copy(showBottomSheet = true)
+                    it.copy(showBottomSheet = false)
                 }
+                sendEvent(
+                    DocumentPreviewEvent.OnSubmitClinked(
+                        documentState,
+                        newDocumentPath = state.documentPath,
+                        updateForServer = comingFromServer
+                    )
+                )
             }
 
             DocumentPreviewScreenAction.UpdateNew -> {

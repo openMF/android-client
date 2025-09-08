@@ -17,7 +17,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class ClientAddDocumentRoute(
-    @Serializable val documentState: DocumentState,
+    val documentStateString: String = "",
     val newDocumentPath: String = "",
     val comingFromPreviewScreen: Boolean = false,
     val updateOnServer: Boolean = false,
@@ -28,9 +28,9 @@ data class ClientAddDocumentRoute(
 fun NavGraphBuilder.clientAddDocumentGraphRoute(
     navController: NavController,
     navigateBack: () -> Unit,
-    navigateToDocumentPreview:(documentState: DocumentState) -> Unit
+    navigateToDocumentPreview:(documentStateString: String) -> Unit
 ) {
-    composable<ClientAddDocumentRoute> {
+    composable<ClientAddDocumentRoute>{
 
         ClientAddDocumentsScreen(
             navController = navController,
@@ -42,7 +42,7 @@ fun NavGraphBuilder.clientAddDocumentGraphRoute(
 }
 
 fun NavController.navigateToClientAddDocumentRoute(
-    documentState: DocumentState,
+    documentState: String,
 ) {
     this.navigate(
         ClientAddDocumentRoute(documentState)
@@ -53,7 +53,7 @@ fun NavController.navigateToClientAddDocumentRoute(
 
 
 fun NavController.navigateToClientAddDocumentRouteFromPreview(
-    documentState: DocumentState,
+    documentStateString: String,
     documentPath: String = "",
     updateOnServer: Boolean = false,
     comingFromPreviewScreen: Boolean = false,
@@ -61,7 +61,7 @@ fun NavController.navigateToClientAddDocumentRouteFromPreview(
 ) {
     this.navigate(
         ClientAddDocumentRoute(
-            documentState =  documentState,
+            documentStateString =  documentStateString,
             newDocumentPath = documentPath,
             updateOnServer = updateOnServer,
             comingFromPreviewScreen = comingFromPreviewScreen,
