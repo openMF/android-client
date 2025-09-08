@@ -11,11 +11,7 @@ import com.mifos.core.data.repository.DocumentDialogRepository
 import com.mifos.core.data.util.NetworkMonitor
 import com.mifos.core.ui.util.BaseViewModel
 import com.mifos.feature.client.utils.createDocumentRequestBody
-import io.github.vinceglb.filekit.PlatformFile
-import io.github.vinceglb.filekit.div
-import io.github.vinceglb.filekit.name
-import io.github.vinceglb.filekit.nameWithoutExtension
-import io.github.vinceglb.filekit.path
+import io.github.vinceglb.filekit.*
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.update
@@ -28,157 +24,86 @@ class ClientAddDocumentScreenViewmodel(
     private val networkMonitor: NetworkMonitor,
     private val documentDialogRepository: DocumentDialogRepository,
 ) : BaseViewModel<
-        ClientAddDocumentCombinedScreenState,
+        ClientAddDocumentScreenState,
         ClientAddDocumentScreenEvents,
         ClientAddDocumentScreenAction,
         >(
-    initialState = ClientAddDocumentCombinedScreenState(),
+    initialState = ClientAddDocumentScreenState(),
 ) {
-    private val clientId = stateHandler.toRoute<ClientAddDocumentGraphRoute>().clientId
-    private val documentId = stateHandler.toRoute<ClientAddDocumentGraphRoute>().documentId
-    private val entityType = stateHandler.toRoute<ClientAddDocumentGraphRoute>().entityType
-    val inViewMode = stateHandler.toRoute<ClientAddDocumentGraphRoute>().openInViewMode
-    val fileNameWithExtension = stateHandler.toRoute<ClientAddDocumentGraphRoute>().fileName
+    private val clientId = stateHandler.toRoute<ClientAddDocumentRoute>().clientId
+    private val documentId = stateHandler.toRoute<ClientAddDocumentRoute>().documentId
+    private val entityType = stateHandler.toRoute<ClientAddDocumentRoute>().entityType
 
-    init {
-        getWorkMode()
-    }
-
-    private fun getWorkMode() {
-        if (inViewMode) {
-            println("In view document work mode")
-            loadDocumentFromCache(fileNameWithExtension)
-            sendEvent(ClientAddDocumentScreenEvents.AddDocumentEvent.NavigateToPreviewScreen)
-        }
-    }
 
     override fun handleAction(action: ClientAddDocumentScreenAction) {
         when (action) {
-            is ClientAddDocumentScreenAction.AddDocumentScreen -> {
-                handleAddDocumentScreen(action)
-            }
-
-            is ClientAddDocumentScreenAction.PreviewDocumentActions -> {
-                handleDocumentPreviewScreenAction(action)
-            }
-        }
-    }
-
-    private fun handleAddDocumentScreen(action: ClientAddDocumentScreenAction.AddDocumentScreen) {
-
-        when (action) {
-            ClientAddDocumentScreenAction.AddDocumentScreen.AddNewDocument -> {
-                updateAddDocumentScreenState {
+            ClientAddDocumentScreenAction.AddNewDocument-> {
+                mutableStateFlow.update  {
                     it.copy(showBottomSheet = true)
                 }
             }
 
-            ClientAddDocumentScreenAction.AddDocumentScreen.DismissBottomSheet -> {
-                updateAddDocumentScreenState {
+            ClientAddDocumentScreenAction.DismissBottomSheet -> {
+                mutableStateFlow.update  {
                     it.copy(showBottomSheet = false)
                 }
             }
 
-            ClientAddDocumentScreenAction.AddDocumentScreen.NavigateBack -> {
+            ClientAddDocumentScreenAction.NavigateBack -> {
+                sendEvent(ClientAddDocumentScreenEvents.OnNavigateBack)
+            }
+
+            ClientAddDocumentScreenAction.PickFromFiles -> {
+                selectImageFromFiles()
+            }
+
+            ClientAddDocumentScreenAction.PickFromGallery -> {
+                selectImageFromGallery()
+            }
+
+            ClientAddDocumentScreenAction.ViewDocument -> {
                 sendEvent(
-                    ClientAddDocumentScreenEvents.AddDocumentEvent.OnNavigateBack,
+                    ClientAddDocumentScreenEvents.NavigateToPreviewScreen,
                 )
             }
 
-            ClientAddDocumentScreenAction.AddDocumentScreen.PickFromFiles -> {
-                selectImageFromFiles(UploadScreen.ADD)
-            }
-
-            ClientAddDocumentScreenAction.AddDocumentScreen.PickFromGallery -> {
-                selectImageFromGallery(UploadScreen.ADD)
-            }
-
-            ClientAddDocumentScreenAction.AddDocumentScreen.PreviewUploadDocument -> {
-                sendEvent(
-                    ClientAddDocumentScreenEvents.AddDocumentEvent.NavigateToPreviewScreen,
-                )
-            }
-
-            ClientAddDocumentScreenAction.AddDocumentScreen.RetryUpdate -> {
+            ClientAddDocumentScreenAction.RetryUpdate -> {
                 observerNetworkAndUpdate()
             }
 
-            ClientAddDocumentScreenAction.AddDocumentScreen.RetryUpload -> {
+            ClientAddDocumentScreenAction.RetryUpload -> {
                 observerNetworkAndUpload()
             }
 
-            is ClientAddDocumentScreenAction.AddDocumentScreen.UpdateDescription -> {
-                updateAddDocumentScreenState {
+            is ClientAddDocumentScreenAction.UpdateDescription -> {
+                mutableStateFlow.update {
                     it.copy(enteredDocumentDescription = action.text)
                 }
             }
 
-            ClientAddDocumentScreenAction.AddDocumentScreen.UpdateDocument -> {
+            ClientAddDocumentScreenAction.UpdateDocument -> {
                 observerNetworkAndUpdate()
             }
 
-            is ClientAddDocumentScreenAction.AddDocumentScreen.UpdateFileName -> {
-                updateAddDocumentScreenState {
+            is ClientAddDocumentScreenAction.UpdateFileName -> {
+                mutableStateFlow.update  {
                     it.copy(enteredFileName = action.text)
                 }
             }
 
-            ClientAddDocumentScreenAction.AddDocumentScreen.UploadDocument -> {
+            ClientAddDocumentScreenAction.UploadDocument -> {
                 observerNetworkAndUpload()
             }
 
-            ClientAddDocumentScreenAction.AddDocumentScreen.UseMoreOptions -> {}
-        }
-
-    }
-
-    private fun handleDocumentPreviewScreenAction(action: ClientAddDocumentScreenAction.PreviewDocumentActions) {
-        when (action) {
-            ClientAddDocumentScreenAction.PreviewDocumentActions.ClosePreviewActions -> {
-                updateDocumentPreviewScreenState {
-                    it.copy(isUpdatingDocument = false)
-                }
-                sendEvent(
-                    ClientAddDocumentScreenEvents.PreviewDocumentEvent.OnNavigateToAddDocScreen,
-                )
-            }
-
-            ClientAddDocumentScreenAction.PreviewDocumentActions.PickFromFiles -> {
-                selectImageFromFiles(UploadScreen.PREVIEW)
-            }
-
-            ClientAddDocumentScreenAction.PreviewDocumentActions.PickFromGallery -> {
-                selectImageFromGallery(UploadScreen.PREVIEW)
-            }
-
-            ClientAddDocumentScreenAction.PreviewDocumentActions.ToggleBottomSheet -> {
-                updateDocumentPreviewScreenState {
-                    it.copy(showBottomSheet = !it.showBottomSheet)
-                }
-            }
-
-            ClientAddDocumentScreenAction.PreviewDocumentActions.SubmitDocument -> {
-                mutableStateFlow.update {
-                    it.copy(isDocumentAdded = true)
-                }
-                sendEvent(
-                    ClientAddDocumentScreenEvents.PreviewDocumentEvent.OnNavigateToAddDocScreen,
-                )
-            }
-
-            ClientAddDocumentScreenAction.PreviewDocumentActions.UseMoreOptions -> {}
-            ClientAddDocumentScreenAction.PreviewDocumentActions.SubmitNew -> {
-                updateDocumentPreviewScreenState {
-                    it.copy(showBottomSheet = true)
-                }
-            }
+            ClientAddDocumentScreenAction.UseMoreOptions -> {}
         }
     }
+
 
     private fun observerNetworkAndUpload() {
         viewModelScope.launch {
             val isConnected = observerNetwork()
-            updateAddDocumentScreenState {
+            mutableStateFlow.update {
                 it.copy(isNetworkAvailable = isConnected)
             }
             when (isConnected) {
@@ -186,45 +111,40 @@ class ClientAddDocumentScreenViewmodel(
                     uploadDocument().collect { dataState ->
                         when (dataState) {
                             is DataState.Error<*> -> {
-                                updateAddDocumentScreenState {
-                                    it.copy(
-                                        dialogState = AddDocumentScreenState.DialogState.UploadError(
-                                            dataState.message,
-                                        ),
-                                    )
-                                }
+                                errorDialogState(dataState.message)
                             }
 
                             DataState.Loading -> {
-                                updateAddDocumentScreenState {
+                                mutableStateFlow.update {
                                     it.copy(showProgressBar = true)
                                 }
                             }
 
                             is DataState.Success<*> -> {
-                                updateAddDocumentScreenState {
+                                mutableStateFlow.update {
                                     it.copy(showProgressBar = false)
                                 }
-                                sendEvent(
-                                    ClientAddDocumentScreenEvents.AddDocumentEvent.OnNavigateBack,
-                                )
+                                sendEvent(ClientAddDocumentScreenEvents.OnNavigateBack)
                             }
                         }
                     }
                 }
 
                 false -> {
-                    noInternetErrorDialog()
+                    errorDialogState(
+                        getString(Res.string.no_internet_message)
+                    )
                 }
             }
         }
     }
 
 
+
     private fun observerNetworkAndUpdate() {
         viewModelScope.launch {
             val isConnected = observerNetwork()
-            updateAddDocumentScreenState {
+            mutableStateFlow.update {
                 it.copy(isNetworkAvailable = isConnected)
             }
             when (isConnected) {
@@ -232,35 +152,29 @@ class ClientAddDocumentScreenViewmodel(
                     updateDocument().collect { dataState ->
                         when (dataState) {
                             is DataState.Error<*> -> {
-                                updateAddDocumentScreenState {
-                                    it.copy(
-                                        dialogState = AddDocumentScreenState.DialogState.UpdateError(
-                                            dataState.message,
-                                        ),
-                                    )
-                                }
+                                errorDialogState(dataState.message)
                             }
 
                             DataState.Loading -> {
-                                updateAddDocumentScreenState {
+                                mutableStateFlow.update {
                                     it.copy(showProgressBar = true)
                                 }
                             }
 
                             is DataState.Success<*> -> {
-                                updateAddDocumentScreenState {
-                                    it.copy(showProgressBar = true)
+                                mutableStateFlow.update {
+                                    it.copy(showProgressBar = false)
                                 }
-                                sendEvent(
-                                    ClientAddDocumentScreenEvents.AddDocumentEvent.OnNavigateBack,
-                                )
+                                sendEvent(ClientAddDocumentScreenEvents.OnNavigateBack)
                             }
                         }
                     }
                 }
 
                 false -> {
-                    noInternetErrorDialog()
+                    errorDialogState(
+                        getString(Res.string.no_internet_message)
+                    )
                 }
             }
         }
@@ -311,125 +225,57 @@ class ClientAddDocumentScreenViewmodel(
         emit(result)
     }
 
-    private fun selectImageFromGallery(uploadScreen: UploadScreen) {
+    private fun selectImageFromGallery() {
         viewModelScope.launch {
             FileKitUtil.pickImage().collect { dataState ->
                 when (dataState) {
                     is DataState.Error<*> -> {
-                        updateDialogState(
-                            uploadScreen,
-                            addDocumentScreenDialogState = AddDocumentScreenState.DialogState.Error(
-                                dataState.message,
-                            ),
-                            documentPreviewScreenStateState = DocumentPreviewScreenState.DialogState.Error(
-                                dataState.message,
-                            ),
-                        )
+                        errorDialogState(dataState.message)
                     }
 
                     DataState.Loading -> {
-                        loadingDialogState(uploadScreen)
+                        loadingDialogState()
                     }
 
+
                     is DataState.Success<*> -> {
-                        updateDialogState(
-                            uploadScreen = uploadScreen,
-                            addDocumentScreenDialogState = null,
-                            documentPreviewScreenStateState = null,
-                        )
-                        if (dataState.data != null) {
+                        dataState.data?.let { platformFile ->
                             mutableStateFlow.update {
                                 it.copy(
-                                    platformFile = dataState.data,
-                                    pickedDocumentName = dataState.data?.nameWithoutExtension ?: "",
-                                    isDocumentAdded = true
+                                    dialogState = null,
+                                    platformFile = platformFile,
+                                    pickedDocumentName = platformFile.nameWithoutExtension,
                                 )
                             }
-                            when (uploadScreen) {
-                                UploadScreen.ADD -> {
-                                    updateAddDocumentScreenState {
-                                        it.copy(showBottomSheet = false)
-                                    }
-                                    sendEvent(
-                                        ClientAddDocumentScreenEvents.AddDocumentEvent.NavigateToPreviewScreen,
-                                    )
-                                }
-                                UploadScreen.PREVIEW -> {
-                                    updateDocumentPreviewScreenState {
-                                        it.copy(
-                                            showBottomSheet = false,
-                                            isUpdatingDocument = false,
-                                        )
-                                    }
-                                    sendEvent(
-                                        ClientAddDocumentScreenEvents.PreviewDocumentEvent.OnNavigateToAddDocScreen,
-                                    )
-                                }
-                            }
-
-                        }
+                        } ?: nullDialogState()
                     }
                 }
             }
         }
     }
 
-    private fun selectImageFromFiles(uploadScreen: UploadScreen) {
+    private fun selectImageFromFiles() {
         viewModelScope.launch {
             FileKitUtil.pickPdfFile().collect { dataState ->
                 when (dataState) {
                     is DataState.Error<*> -> {
-                        updateDialogState(
-                            uploadScreen,
-                            addDocumentScreenDialogState = AddDocumentScreenState.DialogState.Error(
-                                dataState.message,
-                            ),
-                            documentPreviewScreenStateState = DocumentPreviewScreenState.DialogState.Error(
-                                dataState.message,
-                            ),
-                        )
+                        errorDialogState(dataState.message)
                     }
 
                     DataState.Loading -> {
-                        loadingDialogState(uploadScreen)
+                        loadingDialogState()
                     }
 
                     is DataState.Success<*> -> {
-                        updateDialogState(
-                            uploadScreen = uploadScreen,
-                            addDocumentScreenDialogState = null,
-                            documentPreviewScreenStateState = null,
-                        )
-                        if (dataState.data != null) {
-
+                        dataState.data?.let { platformFile ->
                             mutableStateFlow.update {
                                 it.copy(
-                                    platformFile = dataState.data,
-                                    pickedDocumentName = dataState.data?.nameWithoutExtension ?: "",
+                                    dialogState = null,
+                                    platformFile = platformFile,
+                                    pickedDocumentName = platformFile.nameWithoutExtension,
                                 )
                             }
-                            when (uploadScreen) {
-                                UploadScreen.ADD -> {
-                                    updateAddDocumentScreenState {
-                                        it.copy(showBottomSheet = false)
-                                    }
-                                    sendEvent(
-                                        ClientAddDocumentScreenEvents.AddDocumentEvent.NavigateToPreviewScreen,
-                                    )
-                                }
-
-                                UploadScreen.PREVIEW -> {
-                                    updateDocumentPreviewScreenState {
-                                        it.copy(
-                                            showBottomSheet = false,
-                                        )
-                                    }
-                                    sendEvent(
-                                        ClientAddDocumentScreenEvents.PreviewDocumentEvent.OnNavigateToAddDocScreen,
-                                    )
-                                }
-                            }
-                        }
+                        } ?: nullDialogState()
                     }
                 }
             }
@@ -438,8 +284,8 @@ class ClientAddDocumentScreenViewmodel(
 
     private suspend fun getMultiPartFormDataContent(file: PlatformFile) = createDocumentRequestBody(
         file,
-        state.addDocumentScreenState.enteredFileName,
-        state.addDocumentScreenState.enteredDocumentDescription,
+        state.enteredFileName,
+        state.enteredDocumentDescription,
     )
 
     private suspend fun observerNetwork() = networkMonitor.isOnline.first()
@@ -452,11 +298,11 @@ class ClientAddDocumentScreenViewmodel(
             FileKitUtil.loadFile(appCache.path).collect { dataState ->
                 when (dataState) {
                     is DataState.Error<*> -> {
-                        errorDialogState(UploadScreen.PREVIEW, dataState.message)
+                        errorDialogState(dataState.message)
                     }
 
                     DataState.Loading -> {
-                        loadingDialogState(UploadScreen.PREVIEW)
+                        loadingDialogState()
                     }
 
                     is DataState.Success<*> -> {
@@ -467,112 +313,42 @@ class ClientAddDocumentScreenViewmodel(
                                 pickedDocumentName = dataState.data?.name ?: "document"
                             )
                         }
-                        updateDocumentPreviewScreenState {
-                            it.copy(isUpdatingDocument = true)
-                        }
-                        updateDialogState(
-                            UploadScreen.PREVIEW,
-                            null,
-                            null,
-                        )
+
                     }
                 }
             }
         }
     }
 
-    private fun loadingDialogState(uploadScreen: UploadScreen) {
-        updateDialogState(
-            uploadScreen,
-            addDocumentScreenDialogState = AddDocumentScreenState.DialogState.Loading,
-            documentPreviewScreenStateState = DocumentPreviewScreenState.DialogState.Loading,
-        )
-    }
-
-    private fun errorDialogState(uploadScreen: UploadScreen, message: String) {
-        updateDialogState(
-            uploadScreen,
-            addDocumentScreenDialogState = AddDocumentScreenState.DialogState.Error(message),
-            documentPreviewScreenStateState = DocumentPreviewScreenState.DialogState.Error(message),
-        )
-    }
-
-    private fun updateDialogState(
-        uploadScreen: UploadScreen,
-        addDocumentScreenDialogState: AddDocumentScreenState.DialogState?,
-        documentPreviewScreenStateState: DocumentPreviewScreenState.DialogState?,
-    ) {
-        when (uploadScreen) {
-            UploadScreen.ADD -> {
-                updateAddDocumentScreenState {
-                    it.copy(
-                        dialogState = addDocumentScreenDialogState,
-                    )
-                }
-            }
-
-            UploadScreen.PREVIEW -> {
-                updateDocumentPreviewScreenState {
-                    it.copy(
-                        dialogState = documentPreviewScreenStateState,
-                    )
-                }
-            }
+    private fun nullDialogState() {
+        mutableStateFlow.update {
+            it.copy(dialogState = null)
         }
     }
 
-    private fun updateAddDocumentScreenState(
-        updateAddDocumentScreenState: (AddDocumentScreenState) -> AddDocumentScreenState,
-    ) {
+    private fun errorDialogState(message: String){
         mutableStateFlow.update {
             it.copy(
-                addDocumentScreenState = updateAddDocumentScreenState(it.addDocumentScreenState),
+                dialogState = ClientAddDocumentScreenState.DialogState.Error(message)
             )
         }
     }
 
-    private fun updateDocumentPreviewScreenState(
-        updatePreviewScreenState: (DocumentPreviewScreenState) -> DocumentPreviewScreenState,
-    ) {
+    private fun loadingDialogState(){
         mutableStateFlow.update {
             it.copy(
-                previewScreenState = updatePreviewScreenState(it.previewScreenState),
+                dialogState = ClientAddDocumentScreenState.DialogState.Loading
             )
         }
     }
-
-    private fun noInternetErrorDialog() {
-        viewModelScope.launch {
-            val noInternet = getString(Res.string.no_internet_message)
-            updateDialogState(
-                UploadScreen.ADD,
-                addDocumentScreenDialogState = AddDocumentScreenState.DialogState.Error(
-                    noInternet,
-                ),
-                documentPreviewScreenStateState = DocumentPreviewScreenState.DialogState.Error(
-                    noInternet,
-                ),
-            )
-        }
-    }
-
 
 }
 
-enum class UploadScreen {
-    ADD, PREVIEW
-}
 
-
-data class ClientAddDocumentCombinedScreenState(
+data class ClientAddDocumentScreenState(
     val platformFile: PlatformFile? = null,
     val isDocumentAdded: Boolean = false,
     val pickedDocumentName: String = "",
-    val previewScreenState: DocumentPreviewScreenState = DocumentPreviewScreenState(),
-    val addDocumentScreenState: AddDocumentScreenState = AddDocumentScreenState(),
-)
-
-data class AddDocumentScreenState(
     val isNetworkAvailable: Boolean = false,
     val enteredDocumentDescription: String = "",
     val enteredFileName: String = "",
@@ -589,58 +365,27 @@ data class AddDocumentScreenState(
 }
 
 
-data class DocumentPreviewScreenState(
-    val dialogState: DialogState? = null,
-    val isUpdatingDocument: Boolean = false,
-    val showBottomSheet: Boolean = false,
-) {
-    sealed interface DialogState {
-        data object Loading : DialogState
-        data class Error(val message: String) : DialogState
-    }
-}
-
 
 sealed interface ClientAddDocumentScreenAction {
-    sealed interface AddDocumentScreen : ClientAddDocumentScreenAction {
 
-        data object NavigateBack : AddDocumentScreen
-        data object AddNewDocument : AddDocumentScreen
-        data object DismissBottomSheet : AddDocumentScreen
-        data object UploadDocument : AddDocumentScreen
-        data object UpdateDocument : AddDocumentScreen
-        data object RetryUpdate : AddDocumentScreen
-        data object RetryUpload : AddDocumentScreen
-        data object PickFromGallery : AddDocumentScreen
-        data object PickFromFiles : AddDocumentScreen
-        data object UseMoreOptions : AddDocumentScreen
-        data object PreviewUploadDocument : AddDocumentScreen
-        data class UpdateFileName(val text: String) : AddDocumentScreen
-        data class UpdateDescription(val text: String) : AddDocumentScreen
-    }
-
-    sealed interface PreviewDocumentActions : ClientAddDocumentScreenAction {
-        data object ClosePreviewActions : PreviewDocumentActions
-        data object PickFromGallery : PreviewDocumentActions
-        data object PickFromFiles : PreviewDocumentActions
-        data object UseMoreOptions : PreviewDocumentActions
-        data object SubmitDocument : PreviewDocumentActions
-        data object SubmitNew : PreviewDocumentActions
-        data object ToggleBottomSheet : PreviewDocumentActions
-    }
+    data object NavigateBack : ClientAddDocumentScreenAction
+    data object AddNewDocument : ClientAddDocumentScreenAction
+    data object DismissBottomSheet : ClientAddDocumentScreenAction
+    data object UploadDocument : ClientAddDocumentScreenAction
+    data object UpdateDocument : ClientAddDocumentScreenAction
+    data object RetryUpdate : ClientAddDocumentScreenAction
+    data object RetryUpload : ClientAddDocumentScreenAction
+    data object PickFromGallery : ClientAddDocumentScreenAction
+    data object PickFromFiles : ClientAddDocumentScreenAction
+    data object UseMoreOptions : ClientAddDocumentScreenAction
+    data object ViewDocument : ClientAddDocumentScreenAction
+    data class UpdateFileName(val text: String) : ClientAddDocumentScreenAction
+    data class UpdateDescription(val text: String) : ClientAddDocumentScreenAction
 
 }
 
 
 sealed interface ClientAddDocumentScreenEvents {
-    sealed interface AddDocumentEvent : ClientAddDocumentScreenEvents {
-        data object OnNavigateBack : AddDocumentEvent
-        data object NavigateToPreviewScreen : AddDocumentEvent
-    }
-
-    sealed interface PreviewDocumentEvent : ClientAddDocumentScreenEvents {
-        data object OnNavigateToAddDocScreen : PreviewDocumentEvent
-
-    }
-
+    data object OnNavigateBack : ClientAddDocumentScreenEvents
+    data object NavigateToPreviewScreen : ClientAddDocumentScreenEvents
 }

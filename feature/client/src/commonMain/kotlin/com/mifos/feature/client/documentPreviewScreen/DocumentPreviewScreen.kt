@@ -10,147 +10,115 @@
 package com.mifos.feature.client.documentPreviewScreen
 
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Card
-import androidx.compose.material3.Icon
+import androidx.compose.foundation.layout.*
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import coil3.compose.AsyncImage
+import com.mifos.core.designsystem.component.MifosCard
 import com.mifos.core.designsystem.component.MifosOutlinedButton
 import com.mifos.core.designsystem.component.MifosScaffold
-import com.mifos.core.designsystem.icon.MifosIcons
-import com.mifos.core.designsystem.theme.DesignToken
+import com.mifos.core.designsystem.theme.AppColors
 import com.mifos.core.ui.components.MifosFilePickerBottomSheet
-import io.github.vinceglb.filekit.PlatformFile
-import io.github.vinceglb.filekit.nameWithoutExtension
+import com.mifos.core.ui.components.MifosProgressIndicator
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
-fun DocumentPreviewScreen(
-    platformFile: PlatformFile?,
-    canUpdateDocument: Boolean,
-    isBottomSheetOpen: Boolean,
-    onBack: () -> Unit,
-    onSubmit: (String) -> Unit,
-    onUploadFromGallery: () -> Unit,
-    onUploadFromFiles: () -> Unit,
-    onClickMoreOptions: () -> Unit,
-    toggleBottomSheet: () -> Unit,
+fun ClientDocumentPreviewScreen(
+    navigateOnDocumentUpdate: (String) -> Unit,
+    navigateOnCancelUpdating: () -> Unit,
+    navigateOnDocumentRejected: () -> Unit,
+    navigateOnSubmitClicked: () -> Unit,
+    viewmodel: DocumentPreviewScreenViewModel = koinViewModel()
 ) {
 
+}
+
+
+@Composable
+private fun ViewDocumentsScreen(
+    state: DocumentPreviewState,
+    modifier: Modifier = Modifier,
+    onAction: (DocumentPreviewScreenAction) -> Unit,
+) {
     MifosScaffold(
+        modifier = Modifier
+            .fillMaxSize(),
         title = "",
-        onBackPressed = {},
         bottomBar = {
             MifosFilePickerBottomSheet(
-                showBottomSheet = isBottomSheetOpen,
+                showBottomSheet = state.showBottomSheet,
                 onDismiss = {
-                    toggleBottomSheet()
+                    onAction(DocumentPreviewScreenAction.DismissBottomSheet)
                 },
-                onGalleryClick = onUploadFromGallery,
-                onFilesClick = onUploadFromFiles,
-                onMoreClick = onClickMoreOptions,
+                onGalleryClick =  {
+                    onAction(DocumentPreviewScreenAction.PickFromGallery)
+                },
+                onFilesClick =  {
+                    onAction(DocumentPreviewScreenAction.PickFromFile)
+                },
+                onMoreClick =  {},
             )
         },
-    ) { paddingValues ->
-
-        Column(
-            modifier = Modifier
-                .background(Color.Transparent)
-                .padding(paddingValues)
-                .fillMaxSize()
-                .padding(horizontal = DesignToken.padding.large),
-        ) {
-            Card(
-                modifier = Modifier.weight(1f),
-                border = BorderStroke(
-                    1.dp,
-                    MaterialTheme.colorScheme.secondaryContainer
-                ),
-                shape = DesignToken.shapes.large
-            ) {
+        onBackPressed = {}
+    ) {
+        Column {
+            when (state.documentContent) {
+                null -> MifosProgressIndicator()
+                is DocumentPreviewState.Content -> {
+                    ViewDocumentsScreenContent(
+                        state = state.documentContent,
+                        modifier = modifier,
+                    )
+                }
             }
-
-            Spacer(modifier = Modifier.height(20.dp))
 
             Row(
+                modifier = Modifier,
                 horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically,
-            ) {
-                MifosOutlinedButton(
-                    onClick = onBack,
-                    colors = ButtonDefaults.outlinedButtonColors(
-                        containerColor = MaterialTheme.colorScheme.onPrimary,
-                        contentColor = MaterialTheme.colorScheme.primary,
-                    ),
-                    border = BorderStroke(
-                        1.dp,
-                        color = MaterialTheme.colorScheme.secondaryContainer,
-                    ),
-                    modifier = Modifier
-                        .height(40.dp)
-                        .weight(1f),
-                ) {
-                    Icon(
-                        imageVector = MifosIcons.ArrowBack,
-                        "back button",
-                        modifier = Modifier.size(DesignToken.sizes.iconSmall),
-                    )
-                    Spacer(Modifier.height(DesignToken.spacing.small))
-                    Text(
-                        "Back",
-                        style = MaterialTheme.typography.labelMedium,
-                    )
-                }
 
-                Spacer(Modifier.height(DesignToken.spacing.small))
-
+            ){
                 MifosOutlinedButton(
                     onClick = {
-                        if (canUpdateDocument) {
-                            toggleBottomSheet()
-                        } else {
-                            onSubmit(platformFile?.nameWithoutExtension?:"")
-                        }
-                    },
-                    colors = ButtonDefaults.outlinedButtonColors(
-                        containerColor = MaterialTheme.colorScheme.primary,
-                        contentColor = MaterialTheme.colorScheme.onPrimary,
-                    ),
-                    border = BorderStroke(
-                        1.dp,
-                        color = MaterialTheme.colorScheme.secondaryContainer,
-                    ),
-                    modifier = Modifier
-                        .height(40.dp)
-                        .weight(1f),
-                ) {
-                    Icon(
-                        imageVector = MifosIcons.RightTick,
-                        "back button",
-                        modifier = Modifier.size(DesignToken.sizes.iconSmall),
-                        tint = MaterialTheme.colorScheme.onPrimary,
-                    )
-                    Spacer(Modifier.height(DesignToken.spacing.small))
-                    Text(
-                        if (!canUpdateDocument) "Submit" else "Upload New",
-                        style = MaterialTheme.typography.labelMedium,
-                        color = MaterialTheme.colorScheme.onPrimary,
-                    )
+
+                    }
+                ){
+
                 }
             }
+        }
+    }
+}
+
+
+@Composable
+private fun ViewDocumentsScreenContent(
+    state: DocumentPreviewState.Content,
+    modifier: Modifier = Modifier,
+) {
+
+    MifosCard(
+        modifier = modifier
+            .fillMaxSize()
+            .padding(16.dp),
+        elevation = 4.dp,
+        colors = CardDefaults.cardColors(containerColor = AppColors.customWhite),
+        borderStroke = BorderStroke(1.dp, MaterialTheme.colorScheme.secondaryContainer),
+    ) {
+        Box(
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.Center,
+        ) {
+            AsyncImage(
+                model = state.byteArray,
+                contentDescription = "view image",
+                modifier = Modifier
+                    .fillMaxSize()
+                    .align(Alignment.Center),
+            )
         }
     }
 }

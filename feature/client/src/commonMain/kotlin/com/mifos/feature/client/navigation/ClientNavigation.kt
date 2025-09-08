@@ -18,7 +18,7 @@ import androidx.navigation.navArgument
 import androidx.navigation.navigation
 import com.mifos.core.common.utils.Constants
 import com.mifos.feature.client.clientAddDocuments.clientAddDocumentGraphRoute
-import com.mifos.feature.client.clientAddDocuments.navigateToClientAddDocumentGraphRoute
+import com.mifos.feature.client.clientAddDocuments.navigateToClientAddDocumentRoute
 import com.mifos.feature.client.clientAddDocuments.navigateToClientDocumentPreviewScreen
 import com.mifos.feature.client.clientAddress.addAddress.clientAddAddressRoute
 import com.mifos.feature.client.clientAddress.addAddress.navigateToClientAddAddressRoute
@@ -173,10 +173,10 @@ fun NavGraphBuilder.clientNavGraph(
             navController = navController,
             navigateBack = navController::popBackStack,
             navigateToAddDocuments = { clientId, documentId, entityType->
-                navController.navigateToClientAddDocumentGraphRoute(clientId, documentId, entityType, false)
+                navController.navigateToClientAddDocumentRoute(clientId, documentId, entityType, false)
             },
             onViewDocument = { clientId, documentId, entityType, fileName->
-                navController.navigateToClientAddDocumentGraphRoute(clientId, documentId, entityType, true, fileName)
+                navController.navigateToClientAddDocumentRoute(clientId, documentId, entityType, true, fileName)
             },
         )
 
