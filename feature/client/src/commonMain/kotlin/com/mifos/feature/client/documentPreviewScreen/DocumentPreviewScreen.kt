@@ -36,10 +36,11 @@ import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun DocumentPreviewScreen(
-    navigateOnDocumentUpdate: (String) -> Unit,
+    navigateBack: () -> Unit,
+    navigateOnDocumentUpdate: (documentPath: String, updateForServer: Boolean) -> Unit,
     navigateOnCancelUpdating: () -> Unit,
     navigateOnDocumentRejected: () -> Unit,
-    navigateOnSubmitClicked: () -> Unit,
+    navigateOnSubmitClicked: (documentPath: String, ) -> Unit,
     viewmodel: DocumentPreviewScreenViewModel = koinViewModel()
 ) {
 
@@ -49,8 +50,13 @@ fun DocumentPreviewScreen(
         when (event) {
             DocumentPreviewEvent.OnCancelUpdating -> navigateOnCancelUpdating()
             DocumentPreviewEvent.OnDocumentRejected -> navigateOnDocumentRejected()
-            DocumentPreviewEvent.OnSubmitClinked -> navigateOnSubmitClicked()
-            is DocumentPreviewEvent.SendUpdatedDocument -> navigateOnDocumentUpdate(event.documentPath)
+            is DocumentPreviewEvent.OnSubmitClinked -> {
+                navigateOnSubmitClicked(event.documentPath)
+            }
+            is DocumentPreviewEvent.SendUpdatedDocument -> {
+                navigateOnDocumentUpdate(event.documentPath, event.updateForServer)
+            }
+            DocumentPreviewEvent.OnNavigateBack -> navigateBack()
         }
     }
 

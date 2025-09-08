@@ -22,8 +22,8 @@ import com.mifos.core.data.util.NetworkMonitor
 import com.mifos.core.model.objects.noncoreobjects.Document
 import com.mifos.core.ui.util.BaseViewModel
 import com.mifos.feature.client.clientDocuments.ClientDocumentsScreenState.DialogState.ConfirmDocumentDeletion
-import io.ktor.client.statement.readRawBytes
-import io.ktor.http.Headers
+import io.ktor.client.statement.*
+import io.ktor.http.*
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -237,9 +237,6 @@ class ClientDocumentsViewModel(
                                         is DataState.Success<*> -> {
                                             sendEvent(
                                                 ClientDocumentsEvents.OnViewDocument(
-                                                    route.clientId,
-                                                    documentId,
-                                                    "clients",
                                                     "attachment.${getFileExtension(documentState.data?.headers)}"
                                                 )
                                             )
@@ -303,10 +300,7 @@ data class ClientDocumentsScreenState(
 sealed interface ClientDocumentsEvents {
     data object OnNavigateBack : ClientDocumentsEvents
     data class OnViewDocument(
-        val clientId: Int,
-        val documentId: Int,
-        val entityType: String,
-        val fileName: String
+        val filePath: String
     ) : ClientDocumentsEvents
 
     data object OnAddDocument : ClientDocumentsEvents

@@ -11,7 +11,10 @@ import com.mifos.core.data.repository.DocumentDialogRepository
 import com.mifos.core.data.util.NetworkMonitor
 import com.mifos.core.ui.util.BaseViewModel
 import com.mifos.feature.client.utils.createDocumentRequestBody
-import io.github.vinceglb.filekit.*
+import io.github.vinceglb.filekit.PlatformFile
+import io.github.vinceglb.filekit.name
+import io.github.vinceglb.filekit.nameWithoutExtension
+import io.github.vinceglb.filekit.path
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.update
@@ -30,10 +33,44 @@ class ClientAddDocumentScreenViewmodel(
         >(
     initialState = ClientAddDocumentScreenState(),
 ) {
-    private val clientId = stateHandler.toRoute<ClientAddDocumentRoute>().clientId
-    private val documentId = stateHandler.toRoute<ClientAddDocumentRoute>().documentId
-    private val entityType = stateHandler.toRoute<ClientAddDocumentRoute>().entityType
+    private val route = stateHandler.toRoute<ClientAddDocumentRoute>()
+    private val clientId = route.clientId
+    private val documentId = route.documentId
+    private val entityType = route.entityType
 
+    init {
+        viewModelScope.launch {
+            val isComingFromPreviewScreen = route.comingFromPreviewScreen
+            val isDocumentRejected = route.isDocumentRejected
+            val documentPath = route.documentPath
+            val updateForServer = route.updateOnServer
+            try {
+                if(isComingFromPreviewScreen) {
+                    if(isDocumentRejected) {
+                        mutableStateFlow.update {
+                            it.copy(
+                                platformFile = null,
+                                isDocumentAdded = false,
+                                pickedDocumentName = ""
+                            )
+                        }
+                    } else {
+                        val platformFile = PlatformFile(documentPath)
+                        mutableStateFlow.update {
+                            it.copy(
+                                platformFile = platformFile,
+                                isDocumentAdded = false,
+                                pickedDocumentName = platformFile.name,
+                            )
+                        }
+
+                    }
+                }
+            } catch (e: Exception) {
+                errorDialogState(e.message?:"Exception occurred")
+            }
+        }
+    }
 
     override fun handleAction(action: ClientAddDocumentScreenAction) {
         when (action) {
@@ -63,7 +100,7 @@ class ClientAddDocumentScreenViewmodel(
 
             ClientAddDocumentScreenAction.ViewDocument -> {
                 sendEvent(
-                    ClientAddDocumentScreenEvents.NavigateToPreviewScreen,
+                    ClientAddDocumentScreenEvents.NavigateToPreviewScreen(state.platformFile!!.path),
                 )
             }
 
@@ -291,34 +328,6 @@ class ClientAddDocumentScreenViewmodel(
     private suspend fun observerNetwork() = networkMonitor.isOnline.first()
 
 
-    private fun loadDocumentFromCache(fileNameWithExtension: String) {
-        viewModelScope.launch {
-            val appCache = FileKitUtil.appCache / fileNameWithExtension
-
-            FileKitUtil.loadFile(appCache.path).collect { dataState ->
-                when (dataState) {
-                    is DataState.Error<*> -> {
-                        errorDialogState(dataState.message)
-                    }
-
-                    DataState.Loading -> {
-                        loadingDialogState()
-                    }
-
-                    is DataState.Success<*> -> {
-                        mutableStateFlow.update {
-                            it.copy(
-                                platformFile = dataState.data,
-                                isDocumentAdded = true,
-                                pickedDocumentName = dataState.data?.name ?: "document"
-                            )
-                        }
-
-                    }
-                }
-            }
-        }
-    }
 
     private fun nullDialogState() {
         mutableStateFlow.update {
@@ -348,6 +357,7 @@ class ClientAddDocumentScreenViewmodel(
 data class ClientAddDocumentScreenState(
     val platformFile: PlatformFile? = null,
     val isDocumentAdded: Boolean = false,
+    val updatingDocument: Boolean = false,
     val pickedDocumentName: String = "",
     val isNetworkAvailable: Boolean = false,
     val enteredDocumentDescription: String = "",
@@ -387,5 +397,5 @@ sealed interface ClientAddDocumentScreenAction {
 
 sealed interface ClientAddDocumentScreenEvents {
     data object OnNavigateBack : ClientAddDocumentScreenEvents
-    data object NavigateToPreviewScreen : ClientAddDocumentScreenEvents
+    data class NavigateToPreviewScreen(val documentPath: String) : ClientAddDocumentScreenEvents
 }

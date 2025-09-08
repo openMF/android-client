@@ -41,7 +41,7 @@ import org.koin.compose.viewmodel.koinViewModel
 fun ClientAddDocumentsScreen(
     navController: NavController,
     navigateBack: () -> Unit,
-    navigateToDocumentPreviewScreen: () -> Unit,
+    navigateToDocumentPreviewScreen: (String) -> Unit,
     viewModel: ClientAddDocumentScreenViewmodel = koinViewModel()
 ) {
     val state by viewModel.stateFlow.collectAsStateWithLifecycle()
@@ -49,7 +49,9 @@ fun ClientAddDocumentsScreen(
     EventsEffect(viewModel.eventFlow){ events ->
         when(events){
             ClientAddDocumentScreenEvents.OnNavigateBack -> navigateBack()
-            ClientAddDocumentScreenEvents.NavigateToPreviewScreen -> navigateToDocumentPreviewScreen()
+            is ClientAddDocumentScreenEvents.NavigateToPreviewScreen -> {
+                navigateToDocumentPreviewScreen(events.documentPath)
+            }
         }
     }
 
@@ -231,7 +233,11 @@ private fun ClientAddDocumentScaffold(
 
                         MifosOutlinedButton(
                             onClick = {
-                                onAction(ClientAddDocumentScreenAction.UploadDocument)
+                                if(state.isDocumentAdded){
+                                    onAction(ClientAddDocumentScreenAction.UploadDocument)
+                                } else {
+                                    onAction(ClientAddDocumentScreenAction.UpdateDocument)
+                                }
                             },
                             colors = ButtonDefaults.outlinedButtonColors(
                                 containerColor = MaterialTheme.colorScheme.primary,

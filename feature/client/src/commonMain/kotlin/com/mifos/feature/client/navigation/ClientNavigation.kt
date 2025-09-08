@@ -10,16 +10,12 @@
 package com.mifos.feature.client.navigation
 
 import FormWidgetDTO
-import androidx.navigation.NavController
-import androidx.navigation.NavGraphBuilder
-import androidx.navigation.NavType
+import androidx.navigation.*
 import androidx.navigation.compose.composable
-import androidx.navigation.navArgument
-import androidx.navigation.navigation
 import com.mifos.core.common.utils.Constants
 import com.mifos.feature.client.clientAddDocuments.clientAddDocumentGraphRoute
 import com.mifos.feature.client.clientAddDocuments.navigateToClientAddDocumentRoute
-import com.mifos.feature.client.clientAddDocuments.navigateToClientDocumentPreviewScreen
+import com.mifos.feature.client.clientAddDocuments.navigateToClientAddDocumentRouteFromPreview
 import com.mifos.feature.client.clientAddress.addAddress.clientAddAddressRoute
 import com.mifos.feature.client.clientAddress.addAddress.navigateToClientAddAddressRoute
 import com.mifos.feature.client.clientAddress.clientAddressNavigation
@@ -65,6 +61,9 @@ import com.mifos.feature.client.clientUpdateDefaultAccount.navigateToUpdateDefau
 import com.mifos.feature.client.clientUpdateDefaultAccount.updateDefaultAccountDestination
 import com.mifos.feature.client.clientsList.ClientListScreen
 import com.mifos.feature.client.createNewClient.CreateNewClientScreen
+import com.mifos.feature.client.documentPreviewScreen.createDocumentPreviewRoute
+import com.mifos.feature.client.documentPreviewScreen.navigateToDocumentPreviewForUpdatingLocal
+import com.mifos.feature.client.documentPreviewScreen.navigateToDocumentPreviewWhenCanUpdateToServer
 import com.mifos.feature.client.fixedDepositAccount.clientFixedDepositAccountDestination
 import com.mifos.feature.client.fixedDepositAccount.navigateToFixedDepositAccountRoute
 import com.mifos.feature.client.recurringDepositAccount.clientRecurringDepositAccountDestination
@@ -173,18 +172,44 @@ fun NavGraphBuilder.clientNavGraph(
             navController = navController,
             navigateBack = navController::popBackStack,
             navigateToAddDocuments = { clientId, documentId, entityType->
-                navController.navigateToClientAddDocumentRoute(clientId, documentId, entityType, false)
+                navController.navigateToClientAddDocumentRoute(clientId, documentId, entityType)
             },
-            onViewDocument = { clientId, documentId, entityType, fileName->
-                navController.navigateToClientAddDocumentRoute(clientId, documentId, entityType, true, fileName)
-            },
+            onViewDocument = navController::navigateToDocumentPreviewWhenCanUpdateToServer
         )
 
         clientAddDocumentGraphRoute(
             navController = navController,
             navigateBack = navController::popBackStack,
-            navigateToDocumentPreview = navController::navigateToClientDocumentPreviewScreen
+            navigateToDocumentPreview = navController::navigateToDocumentPreviewForUpdatingLocal
         )
+
+        createDocumentPreviewRoute(
+            navigateOnDocumentUpdate = {documentPath, updateFromServer ->
+                navController.navigateToClientAddDocumentRouteFromPreview(
+                    documentPath = documentPath,
+                    updateOnServer = updateFromServer,
+                )
+            },
+            navigateOnCancelUpdating = {
+                navController.navigateToClientAddDocumentRouteFromPreview(
+                    documentPath = "",
+                )
+            },
+            navigateOnDocumentRejected = {
+                navController.navigateToClientAddDocumentRouteFromPreview(
+                    documentPath = "",
+                    isDocumentRejected = true,
+                )
+            },
+            navigateOnSubmitClicked = {
+                navController.navigateToClientAddDocumentRouteFromPreview(
+                    documentPath = "",
+                    isDocumentRejected = false,
+                )
+            },
+            navigateBack = navController::popBackStack,
+        )
+
 
         clientProfileGeneralDestination(
             onNavigateBack = navController::popBackStack,

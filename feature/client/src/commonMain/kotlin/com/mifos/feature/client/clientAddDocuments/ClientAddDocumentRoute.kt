@@ -19,15 +19,17 @@ import kotlinx.serialization.Serializable
 data class ClientAddDocumentRoute(
     val clientId: Int = -1,
     val documentId: Int = -1,
+    val documentPath: String = "",
     val entityType: String = "clients",
-    val openInViewMode: Boolean = false,
-    val fileName: String = ""
+    val comingFromPreviewScreen: Boolean = false,
+    val updateOnServer: Boolean = false,
+    val isDocumentRejected: Boolean = true,
 )
 
 fun NavGraphBuilder.clientAddDocumentGraphRoute(
     navController: NavController,
     navigateBack: () -> Unit,
-    navigateToDocumentPreview:() -> Unit
+    navigateToDocumentPreview:(String) -> Unit
 ) {
     composable<ClientAddDocumentRoute> {
 
@@ -43,10 +45,28 @@ fun NavGraphBuilder.clientAddDocumentGraphRoute(
 fun NavController.navigateToClientAddDocumentRoute(
     clientId: Int,
     documentId: Int,
-    entityType: String,
-    openInViewMode: Boolean,
-    fileName: String = ""
+    entityType: String = "clients",
 ) {
-    this.navigate(ClientAddDocumentRoute(clientId, documentId, entityType, openInViewMode, fileName))
+    this.navigate(ClientAddDocumentRoute(clientId, documentId, entityType = entityType))
 }
+
+
+fun NavController.navigateToClientAddDocumentRouteFromPreview(
+    documentPath: String = "",
+    entityType: String = "clients",
+    updateOnServer: Boolean = false,
+    comingFromPreviewScreen: Boolean = false,
+    isDocumentRejected: Boolean = true,
+) {
+    this.navigate(
+        ClientAddDocumentRoute(
+            documentPath = documentPath,
+            entityType = entityType,
+            updateOnServer = updateOnServer,
+            comingFromPreviewScreen = comingFromPreviewScreen,
+            isDocumentRejected = isDocumentRejected,
+        )
+    )
+}
+
 

@@ -24,7 +24,9 @@ class DocumentPreviewScreenViewModel(
         DocumentPreviewScreenAction,
         >(DocumentPreviewState()) {
 
-    private val documentPath = savedStateHandle.toRoute<DocumentPreviewScreenRoute>().documentPath
+    private val route = savedStateHandle.toRoute<DocumentPreviewScreenRoute>()
+    private val documentPath = route.documentPath
+    private val comingFromServer = route.comingFromServer
 
     init {
         viewModelScope.launch {
@@ -33,7 +35,7 @@ class DocumentPreviewScreenViewModel(
                 mutableStateFlow.update {
                     it.copy(documentPath = platformFile)
                 }
-                val canUpdateDocument = savedStateHandle.toRoute<DocumentPreviewScreenRoute>().canUpdateDocument
+                val canUpdateDocument =route.canUpdateDocument
                 if (canUpdateDocument) {
                     sendAction(DocumentPreviewScreenAction.EnableUpdating)
                 }
@@ -130,8 +132,19 @@ class DocumentPreviewScreenViewModel(
                         dataState.data?.let { platformFile ->
                             mutableStateFlow.update {
                                 it.copy(
+                                    canUpdate = false,
                                     dialogState = null,
                                     documentPath = platformFile,
+                                )
+                            }
+
+                            if(comingFromServer) {
+                                sendEvent(
+                                    DocumentPreviewEvent.SendUpdatedDocument(platformFile.path, true)
+                                )
+                            } else {
+                                sendEvent(
+                                    DocumentPreviewEvent.SendUpdatedDocument(platformFile.path, false)
                                 )
                             }
                         } ?: nullDialogState()
@@ -158,8 +171,19 @@ class DocumentPreviewScreenViewModel(
                         dataState.data?.let { platformFile ->
                             mutableStateFlow.update {
                                 it.copy(
+                                    canUpdate = false,
                                     dialogState = null,
                                     documentPath = platformFile,
+                                )
+                            }
+
+                            if(comingFromServer) {
+                                sendEvent(
+                                    DocumentPreviewEvent.SendUpdatedDocument(platformFile.path, true)
+                                )
+                            } else {
+                                sendEvent(
+                                    DocumentPreviewEvent.SendUpdatedDocument(platformFile.path, false)
                                 )
                             }
                         } ?: nullDialogState()
@@ -260,6 +284,11 @@ sealed interface DocumentPreviewEvent {
     object OnCancelUpdating : DocumentPreviewEvent
     object OnNavigateBack : DocumentPreviewEvent
     object OnDocumentRejected : DocumentPreviewEvent
-    data class SendUpdatedDocument(val documentPath: String) : DocumentPreviewEvent
-    data object OnSubmitClinked : DocumentPreviewEvent
+    data class SendUpdatedDocument(
+        val documentPath: String,
+        val updateForServer: Boolean
+    ) : DocumentPreviewEvent
+    data class OnSubmitClinked(
+        val documentPath: String,
+    ): DocumentPreviewEvent
 }
