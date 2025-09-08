@@ -5,16 +5,14 @@ import androidclient.feature.client.generated.resources.no_internet_message
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
+import co.touchlab.kermit.Logger
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.common.utils.FileKitUtil
 import com.mifos.core.data.repository.DocumentDialogRepository
 import com.mifos.core.data.util.NetworkMonitor
 import com.mifos.core.ui.util.BaseViewModel
 import com.mifos.feature.client.utils.createDocumentRequestBody
-import io.github.vinceglb.filekit.PlatformFile
-import io.github.vinceglb.filekit.name
-import io.github.vinceglb.filekit.nameWithoutExtension
-import io.github.vinceglb.filekit.path
+import io.github.vinceglb.filekit.*
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.update
@@ -276,15 +274,38 @@ class ClientAddDocumentScreenViewmodel(
 
                     is DataState.Success<*> -> {
                         dataState.data?.let { platformFile ->
-                            mutableStateFlow.update {
-                                it.copy(
-                                    dialogState = null,
-                                    platformFile = platformFile,
-                                    pickedDocumentName = platformFile.nameWithoutExtension,
-                                )
+                            Logger.e { "File from add screen: $platformFile" }
+                            Logger.e { "File absolute path: ${platformFile.absolutePath()}" }
+                            val fileBytes = platformFile.readBytes()
+                            FileKitUtil.writeFileToCache(
+                                platformFile.nameWithoutExtension,
+                                platformFile.extension,
+                                fileBytes
+                            ).collect {writeState->
+                                when(writeState) {
+                                    is DataState.Error<*> -> {
+                                        errorDialogState(writeState.message)
+                                    }
+
+                                    DataState.Loading -> {
+                                        loadingDialogState()
+                                    }
+                                    is DataState.Success<*> -> {
+                                        mutableStateFlow.update {
+                                            it.copy(
+                                                dialogState = null,
+                                                platformFile = platformFile,
+                                                pickedDocumentName = platformFile.nameWithoutExtension,
+                                            )
+                                        }
+
+                                        sendAction(ClientAddDocumentScreenAction.DismissBottomSheet)
+                                        sendEvent(ClientAddDocumentScreenEvents.NavigateToPreviewScreen(platformFile.name))
+
+                                    }
+                                }
+
                             }
-                            sendAction(ClientAddDocumentScreenAction.DismissBottomSheet)
-                            sendEvent(ClientAddDocumentScreenEvents.NavigateToPreviewScreen(platformFile.path))
                         } ?: nullDialogState()
                     }
                 }
@@ -306,16 +327,39 @@ class ClientAddDocumentScreenViewmodel(
 
                     is DataState.Success<*> -> {
                         dataState.data?.let { platformFile ->
-                            mutableStateFlow.update {
-                                it.copy(
-                                    dialogState = null,
-                                    platformFile = platformFile,
-                                    pickedDocumentName = platformFile.nameWithoutExtension,
-                                )
+                            Logger.e { "File from add screen: $platformFile" }
+                            Logger.e { "File absolute path: ${platformFile.absolutePath()}" }
+                            val fileBytes = platformFile.readBytes()
+                            FileKitUtil.writeFileToCache(
+                                platformFile.nameWithoutExtension,
+                                platformFile.extension,
+                                fileBytes
+                            ).collect {writeState->
+                                when(writeState) {
+                                    is DataState.Error<*> -> {
+                                        errorDialogState(writeState.message)
+                                    }
+
+                                    DataState.Loading -> {
+                                        loadingDialogState()
+                                    }
+                                    is DataState.Success<*> -> {
+                                        mutableStateFlow.update {
+                                            it.copy(
+                                                dialogState = null,
+                                                platformFile = platformFile,
+                                                pickedDocumentName = platformFile.nameWithoutExtension,
+                                            )
+                                        }
+
+                                        sendAction(ClientAddDocumentScreenAction.DismissBottomSheet)
+                                        sendEvent(ClientAddDocumentScreenEvents.NavigateToPreviewScreen(platformFile.name))
+
+                                    }
+                                }
+
                             }
-                            sendAction(ClientAddDocumentScreenAction.DismissBottomSheet)
-                            sendEvent(ClientAddDocumentScreenEvents.NavigateToPreviewScreen(platformFile.path))
-                        } ?: nullDialogState()
+                            } ?: nullDialogState()
                     }
                 }
             }

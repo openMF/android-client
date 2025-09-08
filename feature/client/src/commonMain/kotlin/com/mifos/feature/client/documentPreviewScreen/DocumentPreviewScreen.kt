@@ -30,7 +30,6 @@ import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.designsystem.theme.AppColors
 import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.ui.components.MifosFilePickerBottomSheet
-import com.mifos.core.ui.components.MifosProgressIndicator
 import com.mifos.core.ui.util.EventsEffect
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -105,15 +104,10 @@ private fun ViewDocumentScaffold(
             if(state.dialogState!=null){
                 DocumentsPreviewScreenDialog(state)
             } else {
-                when (state.documentContent) {
-                    null -> MifosProgressIndicator()
-                    is DocumentPreviewState.Content -> {
-                        ViewDocumentsScreenContent(
-                            state = state,
-                            modifier = Modifier.weight(1f),
-                        )
-                    }
-                }
+                ViewDocumentsScreenContent(
+                    state = state,
+                    modifier = Modifier.weight(1f),
+                )
                 Spacer(modifier = Modifier.height(DesignToken.spacing.largeIncreased))
                 Row(
                     modifier = Modifier
@@ -224,7 +218,7 @@ private fun ViewDocumentsScreenContent(
             when (state.documentType) {
                 is DocumentType.Image -> {
                     AsyncImage(
-                        model = state.documentContent?.byteArray,
+                        model = state.documentContent,
                         contentDescription = "Document Image",
                         modifier = Modifier
                             .fillMaxSize()

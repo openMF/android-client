@@ -3,15 +3,11 @@ package com.mifos.feature.client.documentPreviewScreen
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
+import co.touchlab.kermit.Logger
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.common.utils.FileKitUtil
 import com.mifos.core.ui.util.BaseViewModel
-import com.mifos.feature.client.utils.fromBase64DataUri
-import io.github.vinceglb.filekit.PlatformFile
-import io.github.vinceglb.filekit.extension
-import io.github.vinceglb.filekit.path
-import io.github.vinceglb.filekit.readBytes
-import io.ktor.util.*
+import io.github.vinceglb.filekit.*
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
@@ -25,13 +21,16 @@ class DocumentPreviewScreenViewModel(
         >(DocumentPreviewState()) {
 
     private val route = savedStateHandle.toRoute<DocumentPreviewScreenRoute>()
-    private val documentPath = route.documentPath
+    private val documentName = route.documentPath
     private val comingFromServer = route.comingFromServer
 
     init {
         viewModelScope.launch {
+            Logger.e { "File path: $documentName" }
             try {
-                val platformFile = PlatformFile(documentPath)
+                val platformFile = FileKitUtil.appCache/documentName
+                Logger.e { "File inside try catch: $platformFile" }
+                Logger.e { "File path inside try catch: ${platformFile.path}" }
                 mutableStateFlow.update {
                     it.copy(documentPath = platformFile)
                 }
@@ -39,19 +38,26 @@ class DocumentPreviewScreenViewModel(
                 if (canUpdateDocument) {
                     sendAction(DocumentPreviewScreenAction.EnableUpdating)
                 }
-                if (platformFile.extension == "pdf" ||
-                    platformFile.extension == "jpg" || platformFile.extension == "jpeg" || platformFile.extension == "png"
-                ) {
-                    sendAction(
-                        DocumentPreviewScreenAction.LoadDocument(
-                            if (platformFile.extension == "pdf") DocumentType.Pdf
-                            else DocumentType.Image(platformFile.extension),
-                        ),
-                    )
-                } else {
-                    sendEvent(DocumentPreviewEvent.OnNavigateBack)
+                mutableStateFlow.update {
+                    it.copy(documentPath = platformFile)
                 }
+                sendAction(DocumentPreviewScreenAction.LoadDocument(DocumentType.Image("jpg")))
+                loadDocumentFromPath(platformFile.path)
+//                if (platformFile.extension == "pdf" ||
+//                    platformFile.extension == "jpg" || platformFile.extension == "jpeg" || platformFile.extension == "png"
+//                ) {
+////                    sendAction(
+////                        DocumentPreviewScreenAction.LoadDocument(
+////                            if (platformFile.extension == "pdf") DocumentType.Pdf
+////                            else DocumentType.Image(platformFile.extension),
+////                        ),
+////                    )
+//
+//                } else {
+//                    sendEvent(DocumentPreviewEvent.OnNavigateBack)
+//                }
             } catch (e: Exception) {
+                Logger.e(e) { "Failed to load file"}
                 sendEvent(DocumentPreviewEvent.OnNavigateBack)
             }
         }
@@ -80,8 +86,11 @@ class DocumentPreviewScreenViewModel(
             }
 
             is DocumentPreviewScreenAction.LoadDocument -> {
-                if (documentPath.isBlank()) {
-                    loadDocumentFromPath(documentPath)
+                if (documentName.isBlank()) {
+                    mutableStateFlow.update {
+                        it.copy(documentType = action.documentType)
+                    }
+                    loadDocumentFromPath(documentName)
                 } else {
                     sendEvent(DocumentPreviewEvent.OnDocumentRejected)
                 }
@@ -195,29 +204,24 @@ class DocumentPreviewScreenViewModel(
 
     private fun loadDocumentFromPath(filePath: String) {
         viewModelScope.launch {
-            val appCache = PlatformFile(filePath)
+            try {
+                val platformFile = FileKitUtil.appCache/documentName
+                Logger.e { "Selected document: $platformFile" }
+                Logger.e { "Does file exist: ${platformFile.exists()}" }
 
-            FileKitUtil.loadFile(appCache.path).collect { dataState ->
-                when (dataState) {
-                    is DataState.Error -> {
-                        errorDialogState(dataState.message)
-                    }
-
-                    DataState.Loading -> {
-                        loadingDialogState()
-                    }
-
-                    is DataState.Success -> {
-                        val bytesString = dataState.data.readBytes().encodeBase64()
-                        mutableStateFlow.update {
-                            it.copy(
-                                documentPath = dataState.data,
-                                documentContent = DocumentPreviewState.Content(bytesString),
-                            )
-                        }
-                    }
+                val bytesString = platformFile.readBytes()
+                mutableStateFlow.update {
+                    it.copy(
+                        documentPath = platformFile,
+                        documentContent = bytesString,
+                    )
                 }
+
+            } catch (e: Exception) {
+                Logger.e { "Exception: ${e.message}" }
+                errorDialogState("Failed to load file.")
             }
+
         }
     }
 
@@ -247,18 +251,14 @@ data class DocumentPreviewState(
     val showBottomSheet: Boolean = false,
     val canUpdate: Boolean = false,
     val documentPath: PlatformFile? = null,
-    val documentType: DocumentType? = null,
-    val documentContent: Content? = null,
+    val documentType: DocumentType? = DocumentType.Image("jpg"),
+    val documentContent: ByteArray? = null,
 ) {
     sealed interface DialogState {
         data object Loading : DialogState
         data class Error(val message: String) : DialogState
     }
 
-    class Content(val response: String) {
-        val byteArray: ByteArray
-            get() = response.fromBase64DataUri()
-    }
 }
 
 sealed interface DocumentPreviewScreenAction {
