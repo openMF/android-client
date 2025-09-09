@@ -17,7 +17,9 @@ import com.mifos.core.data.repository.ClientDetailsRepository
 import com.mifos.core.data.util.NetworkMonitor
 import com.mifos.core.network.model.CollateralItem
 import com.mifos.core.ui.components.ResultStatus
+
 import com.mifos.core.ui.util.BaseViewModel
+
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
@@ -44,7 +46,7 @@ internal class ClientCollateralViewModel(
 
     private suspend fun loadCollaterals() {
         mutableStateFlow.update { it.copy(dialogState = ClientCollateralState.DialogState.Loading) }
-        val result = repo.getCollateralItems()
+        val result = repo.getCollateralItems(route.clientId)
         when (result) {
             is DataState.Error -> {
                 mutableStateFlow.update {

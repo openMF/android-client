@@ -1,152 +1,182 @@
 package com.mifos.feature.loan.ClientCollateral
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
+
+
+import androidclient.feature.client.generated.resources.Res
+import androidclient.feature.client.generated.resources.client_product_shares_account
+import androidclient.feature.client.generated.resources.client_savings_item
+import androidclient.feature.client.generated.resources.filter
+import androidclient.feature.client.generated.resources.search
+import androidclient.feature.client.generated.resources.string_not_available
+import androidclient.feature.loan.generated.resources.Res
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
-
-import androidx.compose.material3.Button
-import androidx.compose.material3.Card
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Alignment
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-// Koin ViewModel import
+import androidx.navigation.NavController
+import com.mifos.core.designsystem.component.MifosCircularProgress
+import com.mifos.core.designsystem.component.MifosScaffold
+import com.mifos.core.designsystem.component.MifosSweetError
+import com.mifos.core.designsystem.theme.DesignToken
+import com.mifos.core.designsystem.theme.MifosTypography
+import com.mifos.core.designsystem.utils.onClick
+import com.mifos.core.ui.components.Actions
+import com.mifos.core.ui.components.MifosActionsCollateralDataListingComponent
+import com.mifos.core.ui.components.MifosActionsShareListingComponent
+import com.mifos.core.ui.components.MifosBreadcrumbNavBar
+import com.mifos.core.ui.components.MifosEmptyCard
+import com.mifos.core.ui.util.EventsEffect
+import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ClientCollateralScreen(
-    viewModel: ClientCollateralViewModel = koinViewModel()
+internal fun CollateralScreenRoute(
+    navController: NavController,
+    viewAccount: (Int) -> Unit,
+    viewModel: ClientCollateralViewmodel = koinViewModel(),
 ) {
-    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val state by viewModel.stateFlow.collectAsStateWithLifecycle()
 
-    Scaffold(
-        topBar = {
-            TopAppBar(title = {
-                val titleText = when (val state = uiState) {
-                    is ClientCollateralUiState.Success -> "Collateral Data (${state.totalItems} ${if (state.totalItems == 1) "Item" else "Items"})"
-                    is ClientCollateralUiState.Empty -> "Collateral Data (0 Items)"
-                    else -> "Collateral Data"
-                }
-                Text(text = titleText)
-            })
+    EventsEffect(viewModel.eventFlow) { event ->
+        when (event) {
+            is collateralEvent.viewAccount -> viewAccount(event.accountsId)
         }
+    }
+
+    collateralScreen(
+        state = state,
+        navController = navController,
+        onAction = remember(viewModel) { { viewModel.trySendAction(it) } },
+    )
+
+    ShareAccountsDialog(
+        state = state,
+        onAction = remember(viewModel) { { viewModel.trySendAction(it) } },
+    )
+}
+
+@Composable
+internal fun collateralScreen(
+    navController: NavController,
+    state: collateralUiState,
+    onAction: (collateralAction) -> Unit,
+) {
+    MifosScaffold(
+        title = "Share Accounts",
+        onBackPressed = {},
     ) { paddingValues ->
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(paddingValues)
-                .padding(horizontal = 16.dp, vertical = 8.dp),
-            contentAlignment = Alignment.TopCenter // Changed to TopCenter for list display
-        ) {
-            when (val state = uiState) {
-                is ClientCollateralUiState.Loading -> {
-                    // Centered loading indicator
-                    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                        CircularProgressIndicator()
-                    }
-                }
-                is ClientCollateralUiState.Success -> {
-                    CollateralList(items = state.items)
-                }
-                is ClientCollateralUiState.Empty -> {
-                    // Centered empty state message
-                     Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                        EmptyCollateralState()
-                    }
-                }
-                is ClientCollateralUiState.Error -> {
-                    // Centered error state message
-                    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                        ErrorState(message = state.message, onRetry = { viewModel.loadCollateralItems() })
-                    }
-                }
-            }
-        }
-    }
-}
-
-@Composable
-fun CollateralList(items: List<CollateralDisplayItem>) {
-    LazyColumn(
-        verticalArrangement = Arrangement.spacedBy(8.dp),
-        contentPadding = PaddingValues(top = 8.dp, bottom = 8.dp)
-    ) {
-        items(items, key = { it.id }) { item -> // Use item.id as a key for better performance
-            CollateralListItem(item = item, onActionClick = { /* TODO: Handle action click */ })
-        }
-    }
-}
-
-@Composable
-fun CollateralListItem(item: CollateralDisplayItem, onActionClick: () -> Unit) {
-    Card(
-        modifier = Modifier
-            .fillMaxWidth()
-    ) {
-        Column(modifier = Modifier.padding(16.dp)) {
-            Text("Type/Name: ${item.typeName}", fontWeight = FontWeight.Bold, style = MaterialTheme.typography.titleMedium)
-            Spacer(modifier = Modifier.height(4.dp))
-            Text("Quantity: ${item.quantity}", style = MaterialTheme.typography.bodyMedium)
-            Spacer(modifier = Modifier.height(4.dp))
-            Text("Unit Value: ${item.unitValue}", style = MaterialTheme.typography.bodyMedium)
-            Spacer(modifier = Modifier.height(4.dp))
-            Text("Total Collateral Value: ${item.totalCollateralValue}", style = MaterialTheme.typography.bodyMedium)
-            Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.CenterEnd) {
-                 IconButton(onClick = onActionClick) {
-
-                }
-            }
-        }
-    }
-}
-
-@Composable
-fun EmptyCollateralState() {
-    Card(modifier = Modifier.padding(16.dp)) {
         Column(
-            modifier = Modifier
-                .padding(32.dp)
-                .fillMaxWidth(),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
+            modifier = Modifier.padding(paddingValues)
+                .fillMaxSize(),
         ) {
-            Text("No Item Found", style = MaterialTheme.typography.headlineSmall)
+            MifosBreadcrumbNavBar(
+                navController = navController,
+            )
+
+            when (state.isLoading) {
+                true -> MifosCircularProgress()
+
+                false -> {
+                    Column(
+                        modifier = Modifier.fillMaxSize()
+                            .padding(horizontal = DesignToken.padding.large),
+                    ) {
+                        ShareAccountHeader(
+                            totalItem = state.accounts.size.toString(),
+                            onAction = onAction,
+                        )
+
+                        Spacer(modifier = Modifier.height(DesignToken.padding.large))
+
+                        if (state.accounts.isNotEmpty()) {
+                            val emptyText = stringResource(Res.string.string_not_available)
+
+                            LazyColumn {
+                                item {
+                                    state.accounts.forEachIndexed { index, account ->
+                                     MifosActionsCollateralDataListingComponent(
+                                         name = account.name ?: emptyText,
+                                         quantity = account.quantity?.toString() ?: emptyText,
+                                         totalValue = account.totalValue?.toString() ?: emptyText,
+                                         totalCollateralValue = account.totalCollateralValue?.toString() ?: emptyText,
+                                     )
+
+                                        Spacer(Modifier.height(DesignToken.padding.small))
+                                    }
+                                }
+                            }
+                        } else {
+                            MifosEmptyCard()
+                        }
+                    }
+                }
+            }
         }
     }
 }
 
 @Composable
-fun ErrorState(message: String, onRetry: () -> Unit) {
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center,
-        modifier = Modifier.padding(16.dp)
+private fun ShareAccountHeader(
+    totalItem: String,
+    onAction: (collateralAction) -> Unit,
+) {
+    Row(
+        modifier = Modifier.fillMaxWidth(),
     ) {
-        Text("Error: $message", color = MaterialTheme.colorScheme.error, style = MaterialTheme.typography.bodyLarge)
-        Spacer(modifier = Modifier.height(16.dp))
-        Button(onClick = onRetry) {
-            Text("Retry")
+        Column {
+            Text(
+                text = stringResource(Res.string.client_product_shares_account),
+                style = MifosTypography.titleMedium,
+            )
+
+            Text(
+                text = totalItem + " " + stringResource(Res.string.client_savings_item),
+                style = MifosTypography.labelMedium,
+            )
         }
+
+        Spacer(modifier = Modifier.weight(1f))
+
+        // add a cross icon when its active, talk with design team
+        Icon(
+            modifier = Modifier.onClick { onAction.invoke(collateralAction.toggleSearchBar) },
+            painter = painterResource(Res.drawable.search),
+            contentDescription = null,
+        )
+
+        Icon(
+            modifier = Modifier.onClick { onAction.invoke(collateralAction.toggleFiler) },
+            painter = painterResource(Res.drawable.filter),
+            contentDescription = null,
+        )
     }
 }
 
+@Composable
+private fun ShareAccountsDialog(
+    state: collateralUiState,
+    onAction: (collateralAction) -> Unit,
+) {
+    when (state.dialogState) {
+        is collateralUiState.DialogState.Error -> {
+            MifosSweetError(
+                message = state.dialogState.message,
+                onclick = { onAction.invoke(collateralAction.refresh) },
+            )
+        }
+
+        null -> {}
+    }
+}
