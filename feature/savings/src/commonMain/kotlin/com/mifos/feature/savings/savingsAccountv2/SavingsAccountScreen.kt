@@ -59,6 +59,7 @@ internal fun SavingsAccountScreen(
 
     NewSavingsAccountDialog(
         state = state,
+        onAction = { viewModel.trySendAction(it) },
     )
 
     SavingsAccountScaffold(
@@ -128,6 +129,7 @@ private fun SavingsAccountScaffold(
             is SavingsAccountState.ScreenState.NetworkError -> {
                 MifosSweetError(
                     message = stringResource(Res.string.feature_savings_error_not_connected_internet),
+                    onclick = { onAction(SavingsAccountAction.Retry) },
                 )
             }
         }
@@ -140,11 +142,13 @@ private fun SavingsAccountScaffold(
 @Composable
 private fun NewSavingsAccountDialog(
     state: SavingsAccountState,
+    onAction: (SavingsAccountAction) -> Unit,
 ) {
     when (state.dialogState) {
         is SavingsAccountState.DialogState.Error -> {
             MifosSweetError(
                 message = state.dialogState.message,
+                onclick = { onAction(SavingsAccountAction.Retry) },
             )
         }
         null -> Unit
