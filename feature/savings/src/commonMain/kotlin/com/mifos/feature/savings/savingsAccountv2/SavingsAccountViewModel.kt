@@ -21,6 +21,7 @@ import com.mifos.core.ui.util.TextFieldsValidator
 import com.mifos.room.entities.templates.clients.ClientsTemplateEntity
 import com.mifos.room.entities.templates.clients.SavingProductOptionsEntity
 import com.mifos.room.entities.templates.clients.StaffOptionsEntity
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
@@ -38,7 +39,7 @@ internal class SavingsAccountViewModel(
     ) {
 
     init {
-        observeNetwork()
+        loadClientTemplate()
     }
 
     override fun handleAction(action: SavingsAccountAction) {
@@ -123,8 +124,18 @@ internal class SavingsAccountViewModel(
     }
 
     private fun loadClientTemplate() = viewModelScope.launch {
-        getClientTemplateUseCase().collect { result ->
-            sendAction(SavingsAccountAction.Internal.OnReceivingClientTemplate(result))
+        val online = networkMonitor.isOnline.first()
+        mutableStateFlow.update { it.copy(networkConnection = online) }
+        if (online) {
+            getClientTemplateUseCase().collect { result ->
+                sendAction(SavingsAccountAction.Internal.OnReceivingClientTemplate(result))
+            }
+        } else {
+            mutableStateFlow.update {
+                it.copy(
+                    screenState = SavingsAccountState.ScreenState.NetworkError,
+                )
+            }
         }
     }
 
@@ -134,7 +145,7 @@ internal class SavingsAccountViewModel(
                 dialogState = null,
             )
         }
-        observeNetwork()
+        loadClientTemplate()
     }
 
     private fun moveToNextStep() {
@@ -147,28 +158,6 @@ internal class SavingsAccountViewModel(
             }
         } else {
             sendEvent(SavingsAccountEvent.Finish)
-        }
-    }
-
-    private fun observeNetwork() {
-        viewModelScope.launch {
-            networkMonitor.isOnline.collect { isConnected ->
-                mutableStateFlow.update {
-                    it.copy(
-                        networkConnection = isConnected,
-                        screenState = SavingsAccountState.ScreenState.Success,
-                    )
-                }
-                if (isConnected) {
-                    loadClientTemplate()
-                } else {
-                    mutableStateFlow.update {
-                        it.copy(
-                            screenState = SavingsAccountState.ScreenState.NetworkError,
-                        )
-                    }
-                }
-            }
         }
     }
 }
