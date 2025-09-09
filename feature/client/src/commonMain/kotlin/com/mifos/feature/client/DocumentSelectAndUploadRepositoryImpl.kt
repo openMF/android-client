@@ -4,7 +4,6 @@ import com.mifos.core.common.utils.DataState
 import com.mifos.core.common.utils.FileKitUtil
 import com.mifos.core.data.repository.DocumentDialogRepository
 import com.mifos.core.data.repository.DocumentListRepository
-import com.mifos.feature.client.EntityDocumentState.UploadType
 import com.mifos.feature.client.utils.createDocumentRequestBody
 import io.github.vinceglb.filekit.div
 import io.github.vinceglb.filekit.extension
@@ -13,6 +12,7 @@ import io.github.vinceglb.filekit.readBytes
 import io.ktor.client.request.forms.*
 import io.ktor.client.statement.*
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.update
 
@@ -23,84 +23,66 @@ class DocumentSelectAndUploadRepositoryImpl (
 ): DocumentSelectAndUploadRepository {
     override val entityDocumentStateMutableStateFlow = MutableStateFlow(EntityDocumentState())
 
-    override val state = entityDocumentStateMutableStateFlow.value
+    override val entityDocumentState = entityDocumentStateMutableStateFlow.value
 
     override suspend fun selectImageFromGallery(
         dialogTitle: String
     ): Result<Unit> = runCatching {
-        FileKitUtil.pickImage(dialogTitle).collect {dataState ->
-            when(dataState){
-                is DataState.Error<*> -> {
-                    throw dataState.exception
-                }
-                DataState.Loading -> {
-                    setLoading(true)
-                }
-                is DataState.Success<*> -> {
-                    dataState.data?.let {platformFile ->
-                        FileKitUtil.writeFileToCache(
-                            platformFile.nameWithoutExtension,
-                            platformFile.extension,
-                            platformFile.readBytes()
-                        ).collect {
-                            when(it){
-                                is DataState.Error<*> -> {
-                                    setLoading(false)
-                                    throw  it.exception
-                                }
-                                DataState.Loading -> { }
-                                is DataState.Success<*> -> {
-                                    entityDocumentStateMutableStateFlow.update {
-                                        it.copy(entityDocument = platformFile,)
-                                    }
-                                    setLoading(false)
-                                }
-                            }
-                        }
-                    } ?: setLoading(false)
+        val pickResult = FileKitUtil.pickImage(dialogTitle)
+            .first { it !is DataState.Loading }
+
+        val platformFile = when (pickResult) {
+            is DataState.Success -> pickResult.data ?: throw IllegalStateException("Picker succeeded but returned no data.")
+            is DataState.Error -> throw pickResult.exception
+            DataState.Loading -> error("Unreachable")
+        }
+
+        val writeResult = FileKitUtil.writeFileToCache(
+            platformFile.nameWithoutExtension,
+            platformFile.extension,
+            platformFile.readBytes()
+        ).first { it !is DataState.Loading }
+
+        when (writeResult) {
+            is DataState.Error -> throw writeResult.exception
+            is DataState.Success -> {
+                entityDocumentStateMutableStateFlow.update {
+                    it.copy(entityDocument = platformFile,)
                 }
             }
+            DataState.Loading -> error("Unreachable")
         }
     }
     override suspend fun selectImageFromFile(dialogTitle: String): Result<Unit> = runCatching {
-        FileKitUtil.pickPdfFile(dialogTitle).collect {dataState ->
-            when(dataState){
-                is DataState.Error<*> -> {
-                    throw dataState.exception
-                }
-                DataState.Loading -> {
-                    setLoading(true)
-                }
-                is DataState.Success<*> -> {
-                    dataState.data?.let {platformFile ->
-                        FileKitUtil.writeFileToCache(
-                            platformFile.nameWithoutExtension,
-                            platformFile.extension,
-                            platformFile.readBytes()
-                        ).collect {
-                            when(it){
-                                is DataState.Error<*> -> {
-                                    setLoading(false)
-                                    throw  it.exception
-                                }
-                                DataState.Loading -> { }
-                                is DataState.Success<*> -> {
-                                    entityDocumentStateMutableStateFlow.update {
-                                        it.copy(entityDocument = platformFile,)
-                                    }
-                                    setLoading(false)
-                                }
-                            }
-                        }
-                    } ?: setLoading(false)
+        val pickResult = FileKitUtil.pickPdfFile(dialogTitle)
+            .first { it !is DataState.Loading }
+
+        val platformFile = when (pickResult) {
+            is DataState.Success -> pickResult.data ?: throw IllegalStateException("Picker succeeded but returned no data.")
+            is DataState.Error -> throw pickResult.exception
+            DataState.Loading -> error("Unreachable")
+        }
+
+        val writeResult = FileKitUtil.writeFileToCache(
+            platformFile.nameWithoutExtension,
+            platformFile.extension,
+            platformFile.readBytes()
+        ).first { it !is DataState.Loading }
+
+        when (writeResult) {
+            is DataState.Error -> throw writeResult.exception
+            is DataState.Success -> {
+                entityDocumentStateMutableStateFlow.update {
+                    it.copy(entityDocument = platformFile,)
                 }
             }
+            DataState.Loading -> error("Unreachable")
         }
     }
 
 
     override suspend fun downloadDocumentAndSaveToAppCache() = runCatching {
-        setLoading(true)
+        val state = entityDocumentStateMutableStateFlow.first()
         val response = documentsRepository.downloadDocument(
             entityType = when (state.entityType) {
                 EntityDocumentState.EntityType.Clients -> "clients"
@@ -113,32 +95,27 @@ class DocumentSelectAndUploadRepositoryImpl (
         val extension = response.headers["Content-Type"]?.split('/')?.last()
             ?: throw Exception("Failed to get document type")
 
-        FileKitUtil.writeFileToCache(
+        val writeResult = FileKitUtil.writeFileToCache(
             "attachment",
             extension,
             byte,
-        ).collect {
-            when(it){
-                is DataState.Error<*> -> {
-                    setLoading(false)
-                    throw  it.exception
-                }
-                DataState.Loading -> { }
-                is DataState.Success<*> -> {
-                    setLoading(false)
-                    entityDocumentStateMutableStateFlow.update {
-                        it.copy(
-                            entityDocument = FileKitUtil.appCache/"attachment.${extension}",
-                            uploadType = UploadType.Update
-                        )
-                    }
+        ).first{it !is DataState.Loading }
+
+        when (writeResult) {
+            is DataState.Error -> throw writeResult.exception
+            is DataState.Success -> {
+                entityDocumentStateMutableStateFlow.update {
+                    it.copy(entityDocument = FileKitUtil.appCache/"attachment.${extension}")
                 }
             }
+            DataState.Loading -> error("Unreachable")
         }
     }
 
     override suspend fun deleteDocument() = runCatching {
         setLoading(true)
+        val state = entityDocumentStateMutableStateFlow.first()
+
         documentsRepository.removeDocument(
             entityType = when (state.entityType) {
                 EntityDocumentState.EntityType.Clients -> "clients"
@@ -154,8 +131,11 @@ class DocumentSelectAndUploadRepositoryImpl (
         documentName: String,
         description: String,
     ) = flow {
-        runCatching {
-            emit(DataState.Loading)
+
+        emit(DataState.Loading)
+        try {
+            val state = entityDocumentStateMutableStateFlow.first()
+
             val multiPartFormDataContent = getMultiPartFormDataContent(
                 documentName, description
             )
@@ -167,21 +147,11 @@ class DocumentSelectAndUploadRepositoryImpl (
                 entityId = state.entityId,
                 file = multiPartFormDataContent
             )
-            when (result) {
-                is DataState.Error<*> -> throw result.exception
-                DataState.Loading -> {
-                    DataState.Loading
-                }
-                is DataState.Success<*> -> {
-                    DataState.Success(result.data)
-                }
-            }
-
-        }.onFailure {
-            emit(DataState.Error(it))
-        }.onSuccess {
-           emit(it)
+            emit(result)
+        } catch (e: Exception) {
+            emit(DataState.Error(e))
         }
+
     }
 
     override fun updateDocument(
@@ -189,7 +159,9 @@ class DocumentSelectAndUploadRepositoryImpl (
         description: String,
     ) = flow {
         emit(DataState.Loading)
-        runCatching {
+        try {
+            val state = entityDocumentStateMutableStateFlow.first()
+
             val multiPartFormDataContent = getMultiPartFormDataContent(
                 documentName, description
             )
@@ -202,20 +174,9 @@ class DocumentSelectAndUploadRepositoryImpl (
                 documentId = state.documentId,
                 file = multiPartFormDataContent
             )
-            when (result) {
-                is DataState.Error<*> -> throw result.exception
-                DataState.Loading -> {
-                    DataState.Loading
-                }
-                is DataState.Success<*> -> {
-                    DataState.Success(result.data)
-                }
-            }
-
-        }.onFailure {
-            emit(DataState.Error(it))
-        }.onSuccess {
-            emit(it)
+            emit(result)
+        } catch (e: Exception) {
+            emit(DataState.Error(e))
         }
     }
 
@@ -224,8 +185,9 @@ class DocumentSelectAndUploadRepositoryImpl (
         description: String,
     ): MultiPartFormDataContent {
         return try {
+            val state = entityDocumentStateMutableStateFlow.first()
             createDocumentRequestBody(
-                documentFile = state.entityDocument!!,
+                documentFile = state.entityDocument ?: throw IllegalStateException("Document not found"),
                 name = documentName,
                 description = description,
             )

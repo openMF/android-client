@@ -1,21 +1,20 @@
 package com.mifos.feature.client.clientAddDocuments
 
+import androidclient.feature.client.generated.resources.Res
+import androidclient.feature.client.generated.resources.no_internet_message
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
-import androidx.navigation.toRoute
 import com.mifos.core.common.utils.DataState
-import com.mifos.core.data.repository.DocumentDialogRepository
 import com.mifos.core.data.util.NetworkMonitor
 import com.mifos.core.ui.util.BaseViewModel
 import com.mifos.feature.client.DocumentSelectAndUploadRepository
 import com.mifos.feature.client.EntityDocumentState
-import com.mifos.feature.client.documentPreviewScreen.DocumentType
 import io.github.vinceglb.filekit.PlatformFile
-import kotlinx.coroutines.async
-import kotlinx.coroutines.awaitAll
+import io.github.vinceglb.filekit.name
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import org.jetbrains.compose.resources.getString
 
 
 class ClientAddDocumentScreenViewmodel(
@@ -29,16 +28,9 @@ class ClientAddDocumentScreenViewmodel(
         >(
     initialState = ClientAddDocumentScreenState(),
 ) {
-    private val route = stateHandler.toRoute<ClientAddDocumentRoute>()
 
     private val entityDocumentStateFlow =
         documentSelectAndUploadRepository.entityDocumentStateMutableStateFlow
-
-    val documentSelectAndUploadState = documentSelectAndUploadRepository.state
-
-    init {
-        updateStateReactively()
-    }
 
     override fun handleAction(action: ClientAddDocumentScreenAction) {
         when (action) {
@@ -71,10 +63,11 @@ class ClientAddDocumentScreenViewmodel(
             }
 
             ClientAddDocumentScreenAction.RetryUpdate -> {
-
+                updateDocument()
             }
 
             ClientAddDocumentScreenAction.RetryUpload -> {
+                uploadDocument()
             }
 
             is ClientAddDocumentScreenAction.UpdateDescription -> {
@@ -84,7 +77,7 @@ class ClientAddDocumentScreenViewmodel(
             }
 
             ClientAddDocumentScreenAction.UpdateDocument -> {
-
+                updateDocument()
             }
 
             is ClientAddDocumentScreenAction.UpdateFileName -> {
@@ -94,7 +87,7 @@ class ClientAddDocumentScreenViewmodel(
             }
 
             ClientAddDocumentScreenAction.UploadDocument -> {
-
+                uploadDocument()
             }
 
             ClientAddDocumentScreenAction.UseMoreOptions -> {}
@@ -103,66 +96,111 @@ class ClientAddDocumentScreenViewmodel(
 
     private fun pickFromGallery(){
         viewModelScope.launch {
-            val deferredLoadingState = async {  collectLoadingState() }
-            val resultDeferred = async {
-                val result = documentSelectAndUploadRepository.selectImageFromGallery()
+            loadingDialogState()
+            val result = documentSelectAndUploadRepository.selectImageFromGallery()
 
-                result.onSuccess {
-                    mutableStateFlow.update {
-                        it.copy(showBottomSheet = false,)
-                    }
-                    sendEvent(ClientAddDocumentScreenEvents.OnNavigateToPreviewScreen)
-                }.onFailure { throwable ->
-                    mutableStateFlow.update {
-                        it.copy(showBottomSheet = false,)
-                    }
-                    errorDialogState(throwable.message?: "Unknown error")
+            result.onSuccess {
+                mutableStateFlow.update {
+                    it.copy(
+                        showBottomSheet = false,
+                        dialogState = null
+                    )
                 }
+                updateStateReactively()
+                sendEvent(ClientAddDocumentScreenEvents.OnNavigateToPreviewScreen)
+            }.onFailure { throwable ->
+                mutableStateFlow.update {
+                    it.copy(showBottomSheet = false,)
+                }
+                errorDialogState(throwable.message?: "Unknown error")
             }
-            awaitAll(deferredLoadingState, resultDeferred)
+
         }
     }
 
     private fun pickFromFiles() {
         viewModelScope.launch {
-            val deferredLoadingState = async {  collectLoadingState() }
-            val resultDeferred = async {
-                val result = documentSelectAndUploadRepository.selectImageFromFile()
+            loadingDialogState()
+            val result = documentSelectAndUploadRepository.selectImageFromFile()
 
-                result.onSuccess {
-                    mutableStateFlow.update {
-                        it.copy(showBottomSheet = false,)
-                    }
-                    sendEvent(ClientAddDocumentScreenEvents.OnNavigateToPreviewScreen)
-                }.onFailure { throwable ->
-                    mutableStateFlow.update {
-                        it.copy(showBottomSheet = false,)
-                    }
-                    errorDialogState(throwable.message?: "Unknown error")
+            result.onSuccess {
+                mutableStateFlow.update {
+                    it.copy(
+                        showBottomSheet = false,
+                        dialogState = null
+                    )
                 }
+                updateStateReactively()
+                sendEvent(ClientAddDocumentScreenEvents.OnNavigateToPreviewScreen)
+            }.onFailure { throwable ->
+                mutableStateFlow.update {
+                    it.copy(showBottomSheet = false,)
+                }
+                errorDialogState(throwable.message?: "Unknown error")
             }
-            awaitAll(deferredLoadingState, resultDeferred)
         }
     }
 
     private fun uploadDocument() {
         viewModelScope.launch {
-            documentSelectAndUploadRepository.uploadDocument(
-                state.enteredFileName,
-                state.enteredDocumentDescription
-            ).collect {dataState ->
-                when(dataState) {
-                    is DataState.Error<*> -> {
-                        errorDialogState(dataState.message)
-                    }
-                    DataState.Loading -> {
-                        loadingDialogState()
-                    }
-                    is DataState.Success<*> -> {
-                        sendEvent(ClientAddDocumentScreenEvents.OnNavigateBack)
+            val isConnected = observerNetwork()
+            when(isConnected) {
+                true -> {
+                    updateStateReactively()
+                    documentSelectAndUploadRepository.uploadDocument(
+                        state.enteredFileName,
+                        state.enteredDocumentDescription
+                    ).collect {dataState ->
+                        when(dataState) {
+                            is DataState.Error<*> -> {
+                                errorDialogState(dataState.message)
+                            }
+                            DataState.Loading -> {
+                                loadingDialogState()
+                            }
+                            is DataState.Success<*> -> {
+                                nullDialogState()
+                                sendEvent(ClientAddDocumentScreenEvents.OnNavigateBack)
+                            }
+                        }
                     }
                 }
+                false -> {
+                    errorDialogState(getString(Res.string.no_internet_message))
+                }
             }
+
+        }
+    }
+
+    private fun updateDocument() {
+        viewModelScope.launch {
+            val isConnected = observerNetwork()
+            when(isConnected) {
+                true -> {
+                    documentSelectAndUploadRepository.updateDocument(
+                        state.enteredFileName,
+                        state.enteredDocumentDescription
+                    ).collect {dataState ->
+                        when(dataState) {
+                            is DataState.Error<*> -> {
+                                errorDialogState(dataState.message)
+                            }
+                            DataState.Loading -> {
+                                loadingDialogState()
+                            }
+                            is DataState.Success<*> -> {
+                                nullDialogState()
+                                sendEvent(ClientAddDocumentScreenEvents.OnNavigateBack)
+                            }
+                        }
+                    }
+                }
+                false -> {
+                    errorDialogState(getString(Res.string.no_internet_message))
+                }
+            }
+
         }
     }
 
@@ -185,7 +223,9 @@ class ClientAddDocumentScreenViewmodel(
             entityDocumentStateFlow.collect { state ->
                 mutableStateFlow.update {
                     it.copy(
+                        platformFile = state.entityDocument,
                         isDocumentAdded = state.documentPreviewedAndAccepted,
+                        pickedDocumentName = state.entityDocument?.name ?: "",
                         updatingDocument = if(state.uploadType== EntityDocumentState.UploadType.Update) true
                         else false
                     )
@@ -217,17 +257,6 @@ class ClientAddDocumentScreenViewmodel(
     }
 
 }
-
-private fun getDocumentType(extension: String): DocumentType? {
-    return if (extension == "pdf" ) DocumentType.Pdf
-    else if(
-        extension=="png" ||
-        extension=="jpeg" ||
-        extension=="jpg"
-    ) DocumentType.Image(extension)
-    else null
-}
-
 
 data class ClientAddDocumentScreenState(
     val platformFile: PlatformFile? = null,

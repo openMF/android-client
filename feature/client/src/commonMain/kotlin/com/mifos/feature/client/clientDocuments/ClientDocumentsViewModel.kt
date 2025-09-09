@@ -23,8 +23,6 @@ import com.mifos.feature.client.DocumentSelectAndUploadRepository
 import com.mifos.feature.client.EntityDocumentState
 import com.mifos.feature.client.clientDocuments.ClientDocumentsScreenState.DialogState.ConfirmDocumentDeletion
 import io.ktor.http.*
-import kotlinx.coroutines.async
-import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -53,7 +51,6 @@ class ClientDocumentsViewModel(
 
     init {
         observeNetworkAndLoadDocuments()
-        updateEntityDetails()
     }
 
 
@@ -117,10 +114,11 @@ class ClientDocumentsViewModel(
             }
 
             is ClientDocumentsActions.ViewDocument -> {
-                downloadAndSaveDocument(action.documentId)
+                downloadAndCacheDocument(action.documentId)
             }
 
             is ClientDocumentsActions.AddDocument -> {
+                updateEntityDetails()
                 sendEvent(ClientDocumentsEvents.OnAddDocument)
             }
         }
@@ -131,7 +129,7 @@ class ClientDocumentsViewModel(
         entityDocumentStateFlow.update {
             it.copy(
                 entityId = route.clientId,
-                entityType = EntityDocumentState.EntityType.Clients
+                entityType = EntityDocumentState.EntityType.Clients,
             )
         }
     }
@@ -201,7 +199,7 @@ class ClientDocumentsViewModel(
         }
     }
 
-    private fun downloadAndSaveDocument(documentId: Int) {
+    private fun downloadAndCacheDocument(documentId: Int) {
         viewModelScope.launch {
             val isConnected = networkMonitor.isOnline.first()
             mutableStateFlow.update {
@@ -209,23 +207,26 @@ class ClientDocumentsViewModel(
             }
             when(isConnected) {
                 true -> {
-                    val deferredLoading = async {
-                        collectLoadingState()
+                    updateEntityDetails()
+                    entityDocumentStateFlow.update {
+                        it.copy(documentId = documentId,)
                     }
-                    val deferredResult = async {
-                        val result = documentSelectAndUploadRepository
-                            .downloadDocumentAndSaveToAppCache()
-                        result.onSuccess {
-                            entityDocumentStateFlow.update {
-                                it.copy(uploadType = EntityDocumentState.UploadType.Update)
-                            }
-                            sendEvent(ClientDocumentsEvents.OnViewDocument)
-                        }.onFailure {throwable ->
-
-                            errorDialogState(throwable.message?:"Unknown error",)
+                    loadingDialogState()
+                    val result = documentSelectAndUploadRepository
+                        .downloadDocumentAndSaveToAppCache()
+                    result.onSuccess {
+                        entityDocumentStateFlow.update {
+                            it.copy(
+                                uploadType = EntityDocumentState.UploadType.Update,
+                                documentPreviewedAndAccepted = true
+                            )
                         }
+                        nullDialogState()
+                        sendEvent(ClientDocumentsEvents.OnViewDocument)
+                    }.onFailure {throwable ->
+
+                        errorDialogState(throwable.message?:"Unknown error",)
                     }
-                    awaitAll(deferredLoading, deferredResult)
                 }
                 false -> {
                    errorDialogState(getString(Res.string.no_internet_message),)
@@ -247,17 +248,12 @@ class ClientDocumentsViewModel(
             )
         }
     }
-    private suspend fun collectLoadingState(){
-        entityDocumentStateFlow.collect {entityDocumentState ->
-            mutableStateFlow.update {
-                it.copy(
-                    dialogState = if(entityDocumentState.isLoading)
-                        ClientDocumentsScreenState.DialogState.Loading
-                    else null
-                )
-            }
+    private fun nullDialogState() {
+        mutableStateFlow.update {
+            it.copy(dialogState = null)
         }
     }
+
 
 
 }

@@ -20,11 +20,7 @@ class DocumentPreviewScreenViewModel(
     private val documentSelectAndUploadFlow =
         documentSelectAndUploadRepository.entityDocumentStateMutableStateFlow
 
-    val documentSelectAndUploadState = documentSelectAndUploadRepository.state
-
-    init {
-        updateStateReactively()
-    }
+    val documentSelectAndUploadState = documentSelectAndUploadRepository.entityDocumentState
 
     override fun handleAction(action: DocumentPreviewScreenAction) {
         when (action) {
@@ -95,8 +91,8 @@ class DocumentPreviewScreenViewModel(
                             showBottomSheet = false,
                         )
                     }
+                updateStateReactively()
                 sendAction(DocumentPreviewScreenAction.EnableUpdating)
-
             }.onFailure { throwable ->
                 mutableStateFlow.update {
                     it.copy(
@@ -129,6 +125,8 @@ class DocumentPreviewScreenViewModel(
                         showBottomSheet = false,
                     )
                 }
+
+                updateStateReactively()
 
             }.onFailure { throwable ->
                 mutableStateFlow.update {

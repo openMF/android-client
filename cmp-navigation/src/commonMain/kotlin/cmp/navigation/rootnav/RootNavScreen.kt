@@ -10,11 +10,7 @@
 package cmp.navigation.rootnav
 
 import androidx.compose.animation.AnimatedContentTransitionScope
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavBackStackEntry
@@ -36,10 +32,7 @@ import com.mifos.core.ui.RootTransitionProviders
 import com.mifos.feature.auth.navigation.LoginRoute
 import com.mifos.feature.auth.navigation.authNavGraph
 import com.mifos.feature.auth.navigation.navigateToLogin
-import com.mifos.feature.client.clientAddDocuments.DocumentState
-import com.mifos.feature.client.utils.CustomNavType
 import org.koin.compose.viewmodel.koinViewModel
-import kotlin.reflect.typeOf
 
 @Suppress("LongMethod", "CyclomaticComplexMethod")
 @Composable
