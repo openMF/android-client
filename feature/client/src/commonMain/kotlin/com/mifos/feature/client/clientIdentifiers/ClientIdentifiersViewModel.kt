@@ -46,12 +46,12 @@ class ClientIdentifiersViewModel(
     private fun <T> sortByActiveThenAscending(
         list: List<T>,
         isActive: (T) -> Boolean,
-        label: (T) -> String
+        label: (T) -> String,
     ): List<T> {
         return list.sortedWith(
             compareByDescending<T> { isActive(it) }
-                .then(compareBy { label(it).lowercase() })
-            )
+                .then(compareBy { label(it).lowercase() }),
+        )
     }
 
     private val _showCreateDialog = MutableStateFlow(false)
@@ -97,9 +97,10 @@ class ClientIdentifiersViewModel(
                         ClientIdentifiersUiState.Loading
                 }
                 is DataState.Success -> {
-                    val sorted = sortByActiveThenAscending(result.data,
+                    val sorted = sortByActiveThenAscending(
+                        result.data,
                         isActive = { it.status.equals("ACTIVE", ignoreCase = true) },
-                        label = { it.description ?: "" }
+                        label = { it.description ?: "" },
                     )
                     _clientIdentifiersUiState.value =
                         ClientIdentifiersUiState.ClientIdentifiers(sorted)
@@ -121,9 +122,10 @@ class ClientIdentifiersViewModel(
                         ClientIdentifiersUiState.Loading
 
                 is DataState.Success -> {
-                    val sorted = sortByActiveThenAscending(result.data,
+                    val sorted = sortByActiveThenAscending(
+                        result.data,
                         isActive = { it.status.equals("ACTIVE", ignoreCase = true) },
-                        label = { it.description ?: "" }
+                        label = { it.description ?: "" },
                     )
                     _clientIdentifiersUiState.value =
                         ClientIdentifiersUiState.ClientIdentifiers(sorted)
