@@ -23,36 +23,35 @@ class DocumentSelectAndUploadRepositoryImpl (
 ): DocumentSelectAndUploadRepository {
     override val entityDocumentStateMutableStateFlow = MutableStateFlow(EntityDocumentState())
 
-    override val entityDocumentState = entityDocumentStateMutableStateFlow.value
-
     override suspend fun selectImageFromGallery(
         dialogTitle: String
     ): Result<Unit> = runCatching {
         val pickResult = FileKitUtil.pickImage(dialogTitle)
             .first { it !is DataState.Loading }
 
-        val platformFile = when (pickResult) {
+        val imageFile = when (pickResult) {
             is DataState.Success -> pickResult.data ?: throw IllegalStateException("Picker succeeded but returned no data.")
             is DataState.Error -> throw pickResult.exception
             DataState.Loading -> error("Unreachable")
         }
 
         val writeResult = FileKitUtil.writeFileToCache(
-            platformFile.nameWithoutExtension,
-            platformFile.extension,
-            platformFile.readBytes()
+            imageFile.nameWithoutExtension,
+            imageFile.extension,
+            imageFile.readBytes()
         ).first { it !is DataState.Loading }
 
         when (writeResult) {
             is DataState.Error -> throw writeResult.exception
             is DataState.Success -> {
                 entityDocumentStateMutableStateFlow.update {
-                    it.copy(entityDocument = platformFile,)
+                    it.copy(entityDocument = imageFile)
                 }
             }
             DataState.Loading -> error("Unreachable")
         }
     }
+
     override suspend fun selectImageFromFile(dialogTitle: String): Result<Unit> = runCatching {
         val pickResult = FileKitUtil.pickPdfFile(dialogTitle)
             .first { it !is DataState.Loading }
@@ -73,7 +72,7 @@ class DocumentSelectAndUploadRepositoryImpl (
             is DataState.Error -> throw writeResult.exception
             is DataState.Success -> {
                 entityDocumentStateMutableStateFlow.update {
-                    it.copy(entityDocument = platformFile,)
+                    it.copy(entityDocument = platformFile)
                 }
             }
             DataState.Loading -> error("Unreachable")
@@ -113,7 +112,6 @@ class DocumentSelectAndUploadRepositoryImpl (
     }
 
     override suspend fun deleteDocument() = runCatching {
-        setLoading(true)
         val state = entityDocumentStateMutableStateFlow.first()
 
         documentsRepository.removeDocument(
@@ -124,14 +122,12 @@ class DocumentSelectAndUploadRepositoryImpl (
             entityId = state.entityId,
             documentId = state.documentId,
         )
-        setLoading(false)
     }
 
     override fun uploadDocument(
         documentName: String,
         description: String,
     ) = flow {
-
         emit(DataState.Loading)
         try {
             val state = entityDocumentStateMutableStateFlow.first()
@@ -180,7 +176,7 @@ class DocumentSelectAndUploadRepositoryImpl (
         }
     }
 
-    suspend fun getMultiPartFormDataContent(
+    private suspend fun getMultiPartFormDataContent(
         documentName: String,
         description: String,
     ): MultiPartFormDataContent {
@@ -195,13 +191,17 @@ class DocumentSelectAndUploadRepositoryImpl (
             throw e
         }
     }
-
-    private fun setLoading(loading: Boolean) {
+    override fun resetState(){
         entityDocumentStateMutableStateFlow.update {
             it.copy(
-                isLoading = loading,
+                entityId = -1,
+                documentId = -1,
+                entityType = EntityDocumentState.EntityType.Clients,
+                isLoading = false,
+                entityDocument = null,
+                uploadType = EntityDocumentState.UploadType.Upload,
+                documentPreviewedAndAccepted=  false,
             )
         }
     }
-
 }

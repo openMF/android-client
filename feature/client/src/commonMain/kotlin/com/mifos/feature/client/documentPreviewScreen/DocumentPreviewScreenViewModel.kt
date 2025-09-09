@@ -5,6 +5,7 @@ import com.mifos.core.ui.util.BaseViewModel
 import com.mifos.feature.client.DocumentSelectAndUploadRepository
 import io.github.vinceglb.filekit.extension
 import io.github.vinceglb.filekit.readBytes
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
@@ -19,8 +20,6 @@ class DocumentPreviewScreenViewModel(
 
     private val documentSelectAndUploadFlow =
         documentSelectAndUploadRepository.entityDocumentStateMutableStateFlow
-
-    val documentSelectAndUploadState = documentSelectAndUploadRepository.entityDocumentState
 
     override fun handleAction(action: DocumentPreviewScreenAction) {
         when (action) {
@@ -51,7 +50,11 @@ class DocumentPreviewScreenViewModel(
             }
             DocumentPreviewScreenAction.RejectDocument -> {
                 documentSelectAndUploadFlow.update {
-                    it.copy(documentPreviewedAndAccepted = false)
+                    it.copy(
+                        documentPreviewedAndAccepted = false,
+                        entityDocument = null,
+                        documentId = -1
+                    )
                 }
                 sendEvent(DocumentPreviewEvent.OnNavigateBack)
             }
@@ -72,13 +75,13 @@ class DocumentPreviewScreenViewModel(
 
     private fun pickFromGallery(){
         viewModelScope.launch {
-            collectLoadingState()
             val result = documentSelectAndUploadRepository.selectImageFromGallery()
             result.onSuccess {
-                 documentSelectAndUploadState.entityDocument?.readBytes()?.let {bytes->
+                val entityDocState = documentSelectAndUploadFlow.first()
+                entityDocState.entityDocument?.readBytes()?.let { bytes->
                         mutableStateFlow.update {
                             it.copy(
-                                documentType = getDocumentType(documentSelectAndUploadState.entityDocument?.extension ?: ""),
+                                documentType = getDocumentType(entityDocState.entityDocument.extension),
                                 showUpdateButton = false,
                                 showBottomSheet = false,
                                 documentBytes = bytes
@@ -87,16 +90,16 @@ class DocumentPreviewScreenViewModel(
                 } ?: mutableStateFlow.update {
                         it.copy(
                             showUpdateButton = true,
-                            isException = Exception("Failed to read image"),
+                            exception = Exception("Failed to read image"),
                             showBottomSheet = false,
                         )
                     }
-                updateStateReactively()
+                updateDocumentPreviewState()
                 sendAction(DocumentPreviewScreenAction.EnableUpdating)
             }.onFailure { throwable ->
                 mutableStateFlow.update {
                     it.copy(
-                        isException = Exception(throwable),
+                        exception = Exception(throwable),
                         showBottomSheet = false,
                     )
                 }
@@ -106,13 +109,14 @@ class DocumentPreviewScreenViewModel(
 
     private fun pickFromFiles() {
         viewModelScope.launch {
-            collectLoadingState()
             val result = documentSelectAndUploadRepository.selectImageFromFile()
             result.onSuccess {
-                documentSelectAndUploadState.entityDocument?.readBytes()?.let {bytes->
+                val entityDocState = documentSelectAndUploadFlow.first()
+
+                entityDocState.entityDocument?.readBytes()?.let {bytes->
                     mutableStateFlow.update {
                         it.copy(
-                            documentType = getDocumentType(documentSelectAndUploadState.entityDocument.extension),
+                            documentType = getDocumentType(entityDocState.entityDocument.extension),
                             showUpdateButton = false,
                             showBottomSheet = false,
                             documentBytes = bytes
@@ -121,17 +125,17 @@ class DocumentPreviewScreenViewModel(
                 } ?: mutableStateFlow.update {
                     it.copy(
                         showUpdateButton = true,
-                        isException = Exception("Failed to read document"),
+                        exception = Exception("Failed to read document"),
                         showBottomSheet = false,
                     )
                 }
 
-                updateStateReactively()
+                updateDocumentPreviewState()
 
             }.onFailure { throwable ->
                 mutableStateFlow.update {
                     it.copy(
-                        isException = Exception(throwable),
+                        exception = Exception(throwable),
                         showBottomSheet = false,
                     )
                 }
@@ -139,16 +143,8 @@ class DocumentPreviewScreenViewModel(
         }
     }
 
-    private suspend fun collectLoadingState(){
-        documentSelectAndUploadFlow.collect {entityDocumentState ->
-            mutableStateFlow.update {
-                it.copy(
-                    isLoading = entityDocumentState.isLoading,
-                )
-            }
-        }
-    }
-    private fun updateStateReactively() {
+
+    private fun updateDocumentPreviewState() {
         viewModelScope.launch {
             documentSelectAndUploadFlow.collect {state ->
                 mutableStateFlow.update {
@@ -165,8 +161,7 @@ class DocumentPreviewScreenViewModel(
 }
 
 data class DocumentPreviewState(
-    val isLoading: Boolean = false,
-    val isException: Exception? = null,
+    val exception: Exception? = null,
     val showBottomSheet: Boolean = false,
     val showUpdateButton: Boolean = false,
     val documentType: DocumentType? = null,

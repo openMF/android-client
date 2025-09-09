@@ -22,7 +22,6 @@ import com.mifos.core.ui.util.BaseViewModel
 import com.mifos.feature.client.DocumentSelectAndUploadRepository
 import com.mifos.feature.client.EntityDocumentState
 import com.mifos.feature.client.clientDocuments.ClientDocumentsScreenState.DialogState.ConfirmDocumentDeletion
-import io.ktor.http.*
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -84,9 +83,6 @@ class ClientDocumentsViewModel(
                     it.copy(isRefreshing = true)
                 }
                 observeNetworkAndLoadDocuments()
-                mutableStateFlow.update {
-                    it.copy(isRefreshing = false)
-                }
             }
 
             ClientDocumentsActions.SearchDocument -> {
@@ -143,6 +139,7 @@ class ClientDocumentsViewModel(
                 when (isConnected) {
                     true -> {
                         loadClientDocuments()
+                        mutableStateFlow.update { it.copy(isRefreshing = false) }
                     }
                     false -> {
                         mutableStateFlow.update { it.copy(isRefreshing = false) }
@@ -258,9 +255,6 @@ class ClientDocumentsViewModel(
 
 }
 
-private fun getFileExtension(headers: Headers?): String? {
-    return  headers?.get("Content-Type")?.split('/')[1]
-}
 
 data class ClientDocumentsScreenState(
     val clientId: Int = -1,

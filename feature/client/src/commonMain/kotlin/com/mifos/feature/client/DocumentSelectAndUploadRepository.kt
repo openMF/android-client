@@ -9,8 +9,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 interface DocumentSelectAndUploadRepository {
     val entityDocumentStateMutableStateFlow: MutableStateFlow<EntityDocumentState>
 
-    val entityDocumentState: EntityDocumentState
-
     suspend fun selectImageFromGallery(
         dialogTitle: String = ""
     ): Result<Unit>
@@ -31,6 +29,8 @@ interface DocumentSelectAndUploadRepository {
         description: String,
     ): Flow<DataState<Unit?>>
 
+
+    fun resetState()
 }
 
 

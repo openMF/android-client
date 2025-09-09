@@ -25,7 +25,10 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.compose.AsyncImage
-import com.mifos.core.designsystem.component.*
+import com.mifos.core.designsystem.component.MifosCard
+import com.mifos.core.designsystem.component.MifosOutlinedButton
+import com.mifos.core.designsystem.component.MifosScaffold
+import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.designsystem.theme.AppColors
 import com.mifos.core.designsystem.theme.DesignToken
@@ -89,8 +92,11 @@ private fun ViewDocumentScaffold(
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            if(state.isLoading || state.isException!=null){
-                DocumentsPreviewScreenDialog(state)
+            if(state.exception!=null){
+                MifosSweetError(
+                    message = state.exception.message?: "Unknown error",
+                    isRetryEnabled = false,
+                )
             } else {
                 ViewDocumentsScreenContent(
                     state = state,
@@ -168,20 +174,6 @@ private fun ViewDocumentScaffold(
     }
 }
 
-
-@Composable
-private fun DocumentsPreviewScreenDialog(
-    state: DocumentPreviewState,
-) {
-    if(state.isException!=null) {
-        MifosSweetError(
-            message = state.isException.message?:"Unknown error",
-            isRetryEnabled = false,
-        )
-    } else if(state.isLoading) {
-        MifosCircularProgress()
-    }
-}
 
 
 @Composable
