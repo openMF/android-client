@@ -125,7 +125,6 @@ internal class SavingsAccountViewModel(
 
     private fun loadClientTemplate() = viewModelScope.launch {
         val online = networkMonitor.isOnline.first()
-        mutableStateFlow.update { it.copy(networkConnection = online) }
         if (online) {
             getClientTemplateUseCase().collect { result ->
                 sendAction(SavingsAccountAction.Internal.OnReceivingClientTemplate(result))
@@ -164,7 +163,6 @@ internal class SavingsAccountViewModel(
 
 data class SavingsAccountState(
     val clientId: Int,
-    val networkConnection: Boolean = false,
     val fieldOfficerIndex: Int = -1,
     val fieldOfficerOptions: List<StaffOptionsEntity> = emptyList(),
     val isOverLayLoadingActive: Boolean = false,

@@ -11,6 +11,7 @@ package com.mifos.feature.savings.savingsAccountv2
 
 import androidclient.feature.savings.generated.resources.Res
 import androidclient.feature.savings.generated.resources.feature_savings_create_savings_account
+import androidclient.feature.savings.generated.resources.feature_savings_error_not_connected_internet
 import androidclient.feature.savings.generated.resources.step_charges
 import androidclient.feature.savings.generated.resources.step_details
 import androidclient.feature.savings.generated.resources.step_preview
@@ -23,11 +24,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.mifos.core.designsystem.component.MifosScaffold
+import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.ui.components.MifosBreadcrumbNavBar
-import com.mifos.core.ui.components.MifosErrorComponent
 import com.mifos.core.ui.components.MifosProgressIndicator
 import com.mifos.core.ui.components.MifosProgressIndicatorOverlay
 import com.mifos.core.ui.components.MifosStepper
@@ -59,7 +59,6 @@ internal fun SavingsAccountScreen(
 
     NewSavingsAccountDialog(
         state = state,
-        onAction = { viewModel.trySendAction(it) },
     )
 
     SavingsAccountScaffold(
@@ -127,10 +126,8 @@ private fun SavingsAccountScaffold(
                 }
             }
             is SavingsAccountState.ScreenState.NetworkError -> {
-                MifosErrorComponent(
-                    isNetworkConnected = state.networkConnection,
-                    isRetryEnabled = true,
-                    onRetry = { onAction(SavingsAccountAction.Retry) },
+                MifosSweetError(
+                    message = stringResource(Res.string.feature_savings_error_not_connected_internet),
                 )
             }
         }
@@ -143,14 +140,11 @@ private fun SavingsAccountScaffold(
 @Composable
 private fun NewSavingsAccountDialog(
     state: SavingsAccountState,
-    onAction: (SavingsAccountAction) -> Unit,
 ) {
     when (state.dialogState) {
         is SavingsAccountState.DialogState.Error -> {
-            MifosErrorComponent(
-                isNetworkConnected = state.networkConnection,
-                isRetryEnabled = true,
-                onRetry = { onAction(SavingsAccountAction.Retry) },
+            MifosSweetError(
+                message = state.dialogState.message,
             )
         }
         null -> Unit
