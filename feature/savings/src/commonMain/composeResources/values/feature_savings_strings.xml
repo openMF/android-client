@@ -60,6 +60,8 @@
     <string name="feature_savings_go_back">Go Back</string>
     <string name="feature_savings_product">Savings Products</string>
     <string name="feature_savings_submit">Submit</string>
+    <string name="feature_savings_select">Select</string>
+    <string name="feature_savings_external_id_not_unique">ExternalId must be unique</string>
     <string name="feature_savings_submission_date">Submission Date</string>
     <string name="feature_savings_next">Next</string>
     <string name="feature_savings_back">Back</string>

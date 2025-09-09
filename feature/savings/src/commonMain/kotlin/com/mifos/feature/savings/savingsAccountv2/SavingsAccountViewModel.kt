@@ -12,17 +12,23 @@ package com.mifos.feature.savings.savingsAccountv2
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
+import com.mifos.core.common.utils.DataState
 import com.mifos.core.common.utils.DateHelper
 import com.mifos.core.data.util.NetworkMonitor
+import com.mifos.core.domain.useCases.GetClientTemplateUseCase
 import com.mifos.core.ui.util.BaseViewModel
 import com.mifos.core.ui.util.TextFieldsValidator
+import com.mifos.room.entities.templates.clients.ClientsTemplateEntity
+import com.mifos.room.entities.templates.clients.SavingProductOptionsEntity
+import com.mifos.room.entities.templates.clients.StaffOptionsEntity
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
 import org.jetbrains.compose.resources.StringResource
 
-internal class SavingsAccountViewModel (
+internal class SavingsAccountViewModel(
     private val networkMonitor: NetworkMonitor,
+    private val getClientTemplateUseCase: GetClientTemplateUseCase,
     val savedStateHandle: SavedStateHandle,
 ) :
     BaseViewModel<SavingsAccountState, SavingsAccountEvent, SavingsAccountAction>(
@@ -46,7 +52,45 @@ internal class SavingsAccountViewModel (
             is SavingsAccountAction.OnSubmissionDateChange -> handleSubmissionDateChange(action)
             is SavingsAccountAction.OnDetailsSubmit -> handleOnDetailsSubmit()
             is SavingsAccountAction.OnExternalIdChange -> handleExternalIdChange(action)
+            is SavingsAccountAction.OnProductNameChange -> handleOnProductNameChange(action)
+            is SavingsAccountAction.Internal.OnReceivingClientTemplate -> handleClientTemplateResponse(action.clientTemplate)
+            is SavingsAccountAction.OnFieldOfficerChange -> handleFieldOfficerChange(action)
         }
+    }
+
+
+    private fun handleFieldOfficerChange(action: SavingsAccountAction.OnFieldOfficerChange) {
+        mutableStateFlow.update { it.copy(fieldOfficerIndex = action.index) }
+    }
+
+    private fun handleClientTemplateResponse(result: DataState<ClientsTemplateEntity>) {
+        when (result) {
+            is DataState.Loading -> mutableStateFlow.update {
+                it.copy(
+                    screenState = SavingsAccountState.ScreenState.Loading,
+                )
+            }
+
+            is DataState.Error -> mutableStateFlow.update {
+                it.copy(
+                    dialogState = SavingsAccountState.DialogState.Error(result.message),
+                )
+            }
+
+            is DataState.Success -> mutableStateFlow.update {
+                it.copy(
+                    dialogState = null,
+                    screenState = SavingsAccountState.ScreenState.Success,
+                    savingProductOptions = result.data.savingProductOptions ?: emptyList(),
+                    fieldOfficerOptions = result.data.staffOptions ?: emptyList(),
+                )
+            }
+        }
+    }
+
+    private fun handleOnProductNameChange(action: SavingsAccountAction.OnProductNameChange) {
+        mutableStateFlow.update { it.copy(savingsProductSelected = action.index) }
+
     }
 
     private fun handleExternalIdChange(action: SavingsAccountAction.OnExternalIdChange) {
@@ -64,28 +108,37 @@ internal class SavingsAccountViewModel (
     private fun handleSubmissionDateChange(action: SavingsAccountAction.OnSubmissionDateChange) {
         mutableStateFlow.update { it.copy(submissionDate = action.date) }
     }
+
     private fun handleOnDetailsSubmit() {
-        mutableStateFlow.update { it.copy(
-            externalIdError = null
-        ) }
-        val externalIdError = null
-        if (externalIdError == null) {
-            moveToNextStep()
+        mutableStateFlow.update {
+            it.copy(
+                externalIdError = null,
+            )
+        }
+        val externalIdError = TextFieldsValidator.optionalStringValidator(state.externalId)
+        if (externalIdError != null) {
+            mutableStateFlow.update { it.copy(externalIdError = externalIdError) }
+            return
         } else {
-            mutableStateFlow.update {
-                it.copy(externalIdError = externalIdError)
-            }
+            moveToNextStep()
+        }
+    }
+
+    private fun loadClientTemplate() = viewModelScope.launch {
+        getClientTemplateUseCase().collect { result ->
+            sendAction(SavingsAccountAction.Internal.OnReceivingClientTemplate(result))
         }
     }
 
     private fun handleRetry() {
         mutableStateFlow.update {
             it.copy(
-                dialogState = null
+                dialogState = null,
             )
         }
         observeNetwork()
     }
+
     private fun moveToNextStep() {
         val current = state.currentStep
         if (current < state.totalSteps) {
@@ -98,15 +151,18 @@ internal class SavingsAccountViewModel (
             sendEvent(SavingsAccountEvent.Finish)
         }
     }
+
     private fun observeNetwork() {
         viewModelScope.launch {
             networkMonitor.isOnline.collect { isConnected ->
                 mutableStateFlow.update {
-                    it.copy(networkConnection = isConnected,
-                        screenState = SavingsAccountState.ScreenState.Success)
+                    it.copy(
+                        networkConnection = isConnected,
+                        screenState = SavingsAccountState.ScreenState.Success,
+                    )
                 }
                 if (isConnected) {
-                    println("Is connected ")
+                    loadClientTemplate()
                 } else {
                     mutableStateFlow.update {
                         it.copy(
@@ -124,8 +180,10 @@ data class SavingsAccountState(
     val clientId: Int,
     val networkConnection: Boolean = false,
     val fieldOfficerIndex: Int = -1,
+    val fieldOfficerOptions: List<StaffOptionsEntity> = emptyList(),
     val isOverLayLoadingActive: Boolean = false,
     val savingsProductSelected: Int = -1,
+    val savingProductOptions: List<SavingProductOptionsEntity> = emptyList(),
     val currentStep: Int = 0,
     val totalSteps: Int = 4,
     val dialogState: DialogState? = null,
@@ -133,20 +191,21 @@ data class SavingsAccountState(
     val externalIdError: StringResource? = null,
     val screenState: ScreenState = ScreenState.Loading,
     val submissionDate: String = DateHelper.getDateAsStringFromLong(Clock.System.now().toEpochMilliseconds()),
-    val showSubmissionDatePick: Boolean = false
+    val showSubmissionDatePick: Boolean = false,
 ) {
     sealed interface DialogState {
         data class Error(val message: String) : DialogState
     }
 
     sealed interface ScreenState {
-        data object Loading: ScreenState
-        data object Success: ScreenState
-        data object NetworkError: ScreenState
+        data object Loading : ScreenState
+        data object Success : ScreenState
+        data object NetworkError : ScreenState
     }
+
     val isDetailsNextEnabled = submissionDate.isNotEmpty()
-            && externalId.all { it.isLetterOrDigit() }
-//            && savingsProductSelected != -1
+            && savingsProductSelected != -1
+            && fieldOfficerIndex != -1
 }
 
 sealed interface SavingsAccountEvent {
@@ -162,6 +221,12 @@ sealed interface SavingsAccountAction {
     data class OnSubmissionDateChange(val date: String) : SavingsAccountAction
     data class OnSubmissionDatePick(val state: Boolean) : SavingsAccountAction
     data object OnDetailsSubmit : SavingsAccountAction
+    data class OnProductNameChange(val index: Int) : SavingsAccountAction
+    data class OnFieldOfficerChange(val index: Int) : SavingsAccountAction
     data class OnExternalIdChange(val value: String) : SavingsAccountAction
-    data object Retry: SavingsAccountAction
+    data object Retry : SavingsAccountAction
+
+    sealed interface Internal : SavingsAccountAction {
+        data class OnReceivingClientTemplate(val clientTemplate: DataState<ClientsTemplateEntity>) : Internal
+    }
 }

@@ -46,6 +46,7 @@ import com.mifos.core.domain.useCases.GetClientDetailsUseCase
 import com.mifos.core.domain.useCases.GetClientIdentifierTemplateUseCase
 import com.mifos.core.domain.useCases.GetClientPinpointLocationsUseCase
 import com.mifos.core.domain.useCases.GetClientSavingsAccountTemplateByProductUseCase
+import com.mifos.core.domain.useCases.GetClientTemplateUseCase
 import com.mifos.core.domain.useCases.GetDataTableInfoUseCase
 import com.mifos.core.domain.useCases.GetDocumentsListUseCase
 import com.mifos.core.domain.useCases.GetGroupDetailsUseCase
@@ -104,6 +105,7 @@ val UseCaseModule = module {
     factoryOf(::CreateLoanAccountUseCase)
     factoryOf(::CreateLoanChargesUseCase)
     factoryOf(::CreateSavingsAccountUseCase)
+    factoryOf(::GetClientTemplateUseCase)
     factoryOf(::DeleteCheckerUseCase)
     factoryOf(::DeleteClientAddressPinpointUseCase)
     factoryOf(::DeleteDataTableEntryUseCase)
