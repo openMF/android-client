@@ -16,7 +16,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class SavingsAccountRoute(
-   val clientId: Int = -1
+    val clientId: Int = -1,
 )
 
 fun NavGraphBuilder.savingsAccountDestination(
@@ -28,7 +28,7 @@ fun NavGraphBuilder.savingsAccountDestination(
         SavingsAccountScreen(
             onNavigateBack = onNavigateBack,
             onFinish = onFinish,
-            navController =  navController
+            navController = navController,
         )
     }
 }

@@ -180,7 +180,7 @@ internal fun AuthenticatedNavbarNavigationScreen(
         navigateToDocumentScreen = navigateToDocumentScreen,
         navigateToNoteScreen = navigateToNoteScreen,
         navigateToNewLoanAccountScreen = navigateToNewLoanAccountScreen,
-        navigateToNewSavingsAccountScreen = navigateToNewSavingsAccountScreen
+        navigateToNewSavingsAccountScreen = navigateToNewSavingsAccountScreen,
     )
 }
 
@@ -436,7 +436,7 @@ internal fun AuthenticatedNavbarNavigationScreenContent(
                     hasDatatables = navController::navigateDataTableList,
                     onDocumentClicked = navigateToDocumentScreen,
                     navigateToNewLoanAccount = navigateToNewLoanAccountScreen,
-                    navigateToNewSavingsAccount = navigateToNewSavingsAccountScreen
+                    navigateToNewSavingsAccount = navigateToNewSavingsAccountScreen,
                 )
             }
         }

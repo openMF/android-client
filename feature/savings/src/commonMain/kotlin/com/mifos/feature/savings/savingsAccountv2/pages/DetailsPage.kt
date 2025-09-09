@@ -112,13 +112,13 @@ fun DetailsPage(
                     state.savingProductOptions[state.savingsProductSelected].name
                 },
                 onValueChanged = {},
-                onOptionSelected = {index, value ->
+                onOptionSelected = { index, value ->
                     onAction(SavingsAccountAction.OnProductNameChange(index))
                 },
-                options = state.savingProductOptions.map{
+                options = state.savingProductOptions.map {
                     it.name
                 },
-                label = stringResource(Res.string.feature_savings_product_name)
+                label = stringResource(Res.string.feature_savings_product_name),
             )
             MifosDatePickerTextField(
                 value = state.submissionDate,

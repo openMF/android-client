@@ -58,7 +58,6 @@ internal class SavingsAccountViewModel(
         }
     }
 
-
     private fun handleFieldOfficerChange(action: SavingsAccountAction.OnFieldOfficerChange) {
         mutableStateFlow.update { it.copy(fieldOfficerIndex = action.index) }
     }
@@ -90,7 +89,6 @@ internal class SavingsAccountViewModel(
 
     private fun handleOnProductNameChange(action: SavingsAccountAction.OnProductNameChange) {
         mutableStateFlow.update { it.copy(savingsProductSelected = action.index) }
-
     }
 
     private fun handleExternalIdChange(action: SavingsAccountAction.OnExternalIdChange) {
@@ -173,7 +171,6 @@ internal class SavingsAccountViewModel(
             }
         }
     }
-
 }
 
 data class SavingsAccountState(
@@ -203,9 +200,9 @@ data class SavingsAccountState(
         data object NetworkError : ScreenState
     }
 
-    val isDetailsNextEnabled = submissionDate.isNotEmpty()
-            && savingsProductSelected != -1
-            && fieldOfficerIndex != -1
+    val isDetailsNextEnabled = submissionDate.isNotEmpty() &&
+        savingsProductSelected != -1 &&
+        fieldOfficerIndex != -1
 }
 
 sealed interface SavingsAccountEvent {

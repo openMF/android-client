@@ -35,7 +35,7 @@ internal fun NavGraphBuilder.authenticatedNavbarGraph(
             navigateToDocumentScreen = navigateToDocumentScreen,
             navigateToNoteScreen = navigateToNoteScreen,
             navigateToNewLoanAccountScreen = navigateToNewLoanAccountScreen,
-            navigateToNewSavingsAccountScreen = navigateToNewSavingsAccountScreen
+            navigateToNewSavingsAccountScreen = navigateToNewSavingsAccountScreen,
         )
     }
 }

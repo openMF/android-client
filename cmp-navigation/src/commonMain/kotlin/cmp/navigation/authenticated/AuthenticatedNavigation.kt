@@ -62,7 +62,7 @@ internal fun NavGraphBuilder.authenticatedGraph(
             navigateToDocumentScreen = navController::navigateToDocumentListScreen,
             navigateToNoteScreen = navController::navigateToNoteScreen,
             navigateToNewLoanAccountScreen = navController::navigateToNewLoanAccountRoute,
-            navigateToNewSavingsAccountScreen = navController::navigateToSavingsAccountRoute
+            navigateToNewSavingsAccountScreen = navController::navigateToSavingsAccountRoute,
         )
 
         checkerInboxTaskNavGraph(navController)

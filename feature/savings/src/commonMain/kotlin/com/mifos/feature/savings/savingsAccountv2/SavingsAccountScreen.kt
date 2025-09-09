@@ -59,7 +59,7 @@ internal fun SavingsAccountScreen(
 
     NewSavingsAccountDialog(
         state = state,
-        onAction = { viewModel.trySendAction(it) }
+        onAction = { viewModel.trySendAction(it) },
     )
 
     SavingsAccountScaffold(
@@ -81,7 +81,7 @@ private fun SavingsAccountScaffold(
         Step(stringResource(Res.string.step_details)) {
             DetailsPage(
                 state = state,
-                onAction = onAction
+                onAction = onAction,
             )
         },
         Step(stringResource(Res.string.step_terms)) {
@@ -106,7 +106,7 @@ private fun SavingsAccountScaffold(
         onBackPressed = { onAction(SavingsAccountAction.NavigateBack) },
         modifier = modifier,
     ) { paddingValues ->
-        when(state.screenState) {
+        when (state.screenState) {
             is SavingsAccountState.ScreenState.Loading -> MifosProgressIndicator()
             is SavingsAccountState.ScreenState.Success -> {
                 Column(
@@ -130,7 +130,7 @@ private fun SavingsAccountScaffold(
                 MifosErrorComponent(
                     isNetworkConnected = state.networkConnection,
                     isRetryEnabled = true,
-                    onRetry =  { onAction(SavingsAccountAction.Retry) }
+                    onRetry = { onAction(SavingsAccountAction.Retry) },
                 )
             }
         }
@@ -143,14 +143,14 @@ private fun SavingsAccountScaffold(
 @Composable
 private fun NewSavingsAccountDialog(
     state: SavingsAccountState,
-    onAction: (SavingsAccountAction) -> Unit
+    onAction: (SavingsAccountAction) -> Unit,
 ) {
-    when(state.dialogState) {
+    when (state.dialogState) {
         is SavingsAccountState.DialogState.Error -> {
             MifosErrorComponent(
                 isNetworkConnected = state.networkConnection,
                 isRetryEnabled = true,
-                onRetry = {onAction(SavingsAccountAction.Retry)}
+                onRetry = { onAction(SavingsAccountAction.Retry) },
             )
         }
         null -> Unit

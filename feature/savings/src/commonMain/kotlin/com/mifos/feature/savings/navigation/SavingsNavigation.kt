@@ -88,7 +88,7 @@ fun NavGraphBuilder.savingsNavGraph(
         savingsAccountDestination(
             navController = navController,
             onNavigateBack = onBackPressed,
-            onFinish = onBackPressed
+            onFinish = onBackPressed,
         )
     }
 }
