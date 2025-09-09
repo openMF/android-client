@@ -51,6 +51,7 @@ import org.koin.compose.viewmodel.koinViewModel
 @Composable
 fun DocumentPreviewScreen(
     navigateBack: () -> Unit,
+    documentRejected: () -> Unit,
     viewmodel: DocumentPreviewScreenViewModel = koinViewModel(),
 ) {
     val state by viewmodel.stateFlow.collectAsStateWithLifecycle()
@@ -58,6 +59,7 @@ fun DocumentPreviewScreen(
     EventsEffect(viewmodel.eventFlow) { event ->
         when (event) {
             DocumentPreviewEvent.OnNavigateBack -> navigateBack()
+            DocumentPreviewEvent.OnDocumentRejected -> documentRejected()
         }
     }
 
@@ -120,11 +122,7 @@ private fun ViewDocumentScaffold(
                 ) {
                     MifosOutlinedButton(
                         onClick = {
-                            if (state.step == EntityDocumentState.Step.UPDATE_PREVIEW) {
-                                onAction(DocumentPreviewScreenAction.CancelUpdating)
-                            } else {
-                                onAction(DocumentPreviewScreenAction.RejectDocument)
-                            }
+                            onAction(DocumentPreviewScreenAction.RejectDocument)
                         },
                         colors = ButtonDefaults.outlinedButtonColors(
                             containerColor = MaterialTheme.colorScheme.onPrimary,
@@ -163,6 +161,8 @@ private fun ViewDocumentScaffold(
                             MaterialTheme.colorScheme.secondaryContainer,
                         ),
                         shape = DesignToken.shapes.small,
+                        enabled = state.step == EntityDocumentState.Step.PREVIEW ||
+                            state.step == EntityDocumentState.Step.UPDATE_PREVIEW,
                         modifier = Modifier
                             .height(40.dp)
                             .weight(1f),

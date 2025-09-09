@@ -131,7 +131,6 @@ class ClientAddDocumentScreenViewmodel(
                                 documentSelectAndUploadRepository.updateEntityDocument(
                                     platformFile,
                                 )
-//                                updateAddDocumentState()
                                 sendEvent(ClientAddDocumentScreenEvents.OnNavigateToPreviewScreen)
                             }
                         }
@@ -166,7 +165,6 @@ class ClientAddDocumentScreenViewmodel(
                                 documentSelectAndUploadRepository.updateEntityDocument(
                                     platformFile,
                                 )
-//                                updateAddDocumentState()
                                 sendEvent(ClientAddDocumentScreenEvents.OnNavigateToPreviewScreen)
                             }
                         }

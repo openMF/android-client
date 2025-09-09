@@ -14,6 +14,7 @@ import com.mifos.room.basemodel.APIEndPoint
 import de.jensklingenberg.ktorfit.http.Body
 import de.jensklingenberg.ktorfit.http.DELETE
 import de.jensklingenberg.ktorfit.http.GET
+import de.jensklingenberg.ktorfit.http.Headers
 import de.jensklingenberg.ktorfit.http.POST
 import de.jensklingenberg.ktorfit.http.PUT
 import de.jensklingenberg.ktorfit.http.Path
@@ -56,6 +57,7 @@ interface DocumentService {
      * @return ResponseBody
      */
 
+    @Headers("Accept: text/plain, application/json, */*")
     @GET("{entityType}/{entityId}/" + APIEndPoint.DOCUMENTS + "/{documentId}/attachment")
     suspend fun downloadDocument(
         @Path("entityType") entityType: String,

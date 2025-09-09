@@ -198,8 +198,8 @@ class ClientDocumentsViewModel(
                             is DataState.Success -> {
                                 nullDialogState()
                                 documentSelectAndUploadRepository.updateEntityDocument(platformFile = dataState.data)
-                                documentSelectAndUploadRepository.updateStep(step = EntityDocumentState.Step.UPDATE_PREVIEW)
-                                documentSelectAndUploadRepository.changeSubmitMode(EntityDocumentState.SubmitMode.UPDATE)
+//                                documentSelectAndUploadRepository.updateStep(step = EntityDocumentState.Step.UPDATE_PREVIEW)
+//                                documentSelectAndUploadRepository.changeSubmitMode(EntityDocumentState.SubmitMode.UPDATE)
                                 sendEvent(ClientDocumentsEvents.OnViewDocument)
                             }
                         }

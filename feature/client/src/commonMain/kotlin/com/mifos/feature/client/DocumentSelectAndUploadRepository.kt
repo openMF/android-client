@@ -17,30 +17,30 @@ import kotlinx.coroutines.flow.MutableStateFlow
 interface DocumentSelectAndUploadRepository {
     val entityDocumentStateMutableStateFlow: MutableStateFlow<EntityDocumentState>
 
-    suspend fun selectImageFromGallery(
+    fun selectImageFromGallery(
         dialogTitle: String = "",
     ): Flow<DataState<PlatformFile?>>
 
-    suspend fun selectImageFromFile(dialogTitle: String = ""): Flow<DataState<PlatformFile?>>
+    fun selectImageFromFile(dialogTitle: String = ""): Flow<DataState<PlatformFile?>>
 
-    suspend fun downloadDocumentAndCache(): Flow<DataState<PlatformFile>>
+    fun downloadDocumentAndCache(): Flow<DataState<PlatformFile>>
 
     suspend fun deleteDocument(): Result<Unit>
 
     fun uploadDocument(
         documentName: String,
         description: String,
-    ): Flow<DataState<Unit?>>
+    ): Flow<DataState<Unit>>
 
     fun updateDocument(
         documentName: String,
         description: String,
-    ): Flow<DataState<Unit?>>
+    ): Flow<DataState<Unit>>
 
     fun resetState()
 
     fun updateStep(step: EntityDocumentState.Step)
-    fun changeSubmitMode(sumbitMode: EntityDocumentState.SubmitMode)
+    fun changeSubmitMode(submitMode: EntityDocumentState.SubmitMode)
     fun updateEntityDocument(platformFile: PlatformFile)
 }
 
@@ -53,7 +53,7 @@ data class EntityDocumentState(
     val submitMode: SubmitMode = SubmitMode.UPLOAD,
     val changePreviewDocument: Boolean = false,
     val documentPreviewedAndAccepted: Boolean = false,
-    val step: Step = Step.VIEW,
+    val step: Step = Step.ADD,
 ) {
     sealed interface EntityType {
         object Clients : EntityType

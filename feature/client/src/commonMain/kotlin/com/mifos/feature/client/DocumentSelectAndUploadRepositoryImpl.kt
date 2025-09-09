@@ -9,6 +9,7 @@
  */
 package com.mifos.feature.client
 
+import co.touchlab.kermit.Logger
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.common.utils.FileKitUtil
 import com.mifos.core.data.repository.DocumentDialogRepository
@@ -28,13 +29,13 @@ class DocumentSelectAndUploadRepositoryImpl(
 ) : DocumentSelectAndUploadRepository {
     override val entityDocumentStateMutableStateFlow = MutableStateFlow(EntityDocumentState())
 
-    override suspend fun selectImageFromGallery(
+    override fun selectImageFromGallery(
         dialogTitle: String,
     ) = FileKitUtil.pickImage(dialogTitle)
 
-    override suspend fun selectImageFromFile(dialogTitle: String) = FileKitUtil.pickPdfFile(dialogTitle)
+    override fun selectImageFromFile(dialogTitle: String) = FileKitUtil.pickPdfFile(dialogTitle)
 
-    override suspend fun downloadDocumentAndCache() = flow {
+    override fun downloadDocumentAndCache() = flow {
         emit(DataState.Loading)
         val state = entityDocumentStateMutableStateFlow.first()
         val response = documentsRepository.downloadDocument(
@@ -45,16 +46,19 @@ class DocumentSelectAndUploadRepositoryImpl(
             entityId = state.entityId,
             documentId = state.documentId,
         )
+
         val byte = response.readRawBytes()
         val extension = response.headers["Content-Type"]?.split('/')?.last()
             ?: throw Exception("Failed to get document type")
 
-        val writeResult = FileKitUtil.writeFileToCache(
+        FileKitUtil.writeFileToCache(
             "attachment",
             extension,
             byte,
         ).collect { writeState ->
-            emit(writeState)
+            if (writeState !is DataState.Loading) {
+                emit(writeState)
+            }
         }
     }
 
@@ -83,6 +87,8 @@ class DocumentSelectAndUploadRepositoryImpl(
                 documentName,
                 description,
             )
+            Logger.e { "MultipartFormData: ${multiPartFormDataContent.contentLength}" }
+
             val result = documentDialogRepository.createDocument(
                 entityType = when (state.entityType) {
                     EntityDocumentState.EntityType.Clients -> "clients"
@@ -91,7 +97,10 @@ class DocumentSelectAndUploadRepositoryImpl(
                 entityId = state.entityId,
                 file = multiPartFormDataContent,
             )
-            emit(result)
+            if (result !is DataState.Loading) {
+                Logger.e { "Update Data Result: ${result.data}" }
+                emit(result)
+            }
         } catch (e: Exception) {
             emit(DataState.Error(e))
         }
@@ -109,6 +118,7 @@ class DocumentSelectAndUploadRepositoryImpl(
                 documentName,
                 description,
             )
+            Logger.e { "MultipartFormData: ${multiPartFormDataContent.contentLength}" }
             val result = documentDialogRepository.updateDocument(
                 entityType = when (state.entityType) {
                     EntityDocumentState.EntityType.Clients -> "clients"
@@ -118,7 +128,10 @@ class DocumentSelectAndUploadRepositoryImpl(
                 documentId = state.documentId,
                 file = multiPartFormDataContent,
             )
-            emit(result)
+            if (result !is DataState.Loading) {
+                Logger.e { "Update Result: ${result.data}" }
+                emit(result)
+            }
         } catch (e: Exception) {
             emit(DataState.Error(e))
         }
@@ -152,9 +165,9 @@ class DocumentSelectAndUploadRepositoryImpl(
         }
     }
 
-    override fun changeSubmitMode(sumbitMode: EntityDocumentState.SubmitMode) {
+    override fun changeSubmitMode(submitMode: EntityDocumentState.SubmitMode) {
         entityDocumentStateMutableStateFlow.update {
-            it.copy(submitMode = sumbitMode)
+            it.copy(submitMode = submitMode)
         }
     }
 
@@ -168,6 +181,7 @@ class DocumentSelectAndUploadRepositoryImpl(
                 entityDocument = null,
                 submitMode = EntityDocumentState.SubmitMode.UPLOAD,
                 documentPreviewedAndAccepted = false,
+                step = EntityDocumentState.Step.ADD,
             )
         }
     }

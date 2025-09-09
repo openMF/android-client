@@ -17,7 +17,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import androidx.navigation.navArgument
 import com.mifos.core.common.utils.Constants
-import com.mifos.feature.client.clientAddDocuments.ClientAddDocumentRoute
+import com.mifos.feature.client.clientAddDocuments.AddDocumentRoute
 import com.mifos.feature.client.clientAddDocuments.clientAddDocumentGraphRoute
 import com.mifos.feature.client.clientAddDocuments.navigateToClientAddDocumentRoute
 import com.mifos.feature.client.clientAddress.addAddress.clientAddAddressRoute
@@ -36,6 +36,7 @@ import com.mifos.feature.client.clientDetails.ClientDetailsScreen
 import com.mifos.feature.client.clientDetailsProfile.clientProfileDetailsDestination
 import com.mifos.feature.client.clientDetailsProfile.navigateToClientDetailsProfileRoute
 import com.mifos.feature.client.clientDetailsProfile.navigateToClientDetailsProfileRouteOnStatus
+import com.mifos.feature.client.clientDocuments.ClientDocumentsRoute
 import com.mifos.feature.client.clientDocuments.clientDocumentsDestination
 import com.mifos.feature.client.clientDocuments.navigateToClientDocumentsRoute
 import com.mifos.feature.client.clientEditDetails.clientEditDetailsDestination
@@ -65,7 +66,6 @@ import com.mifos.feature.client.clientUpdateDefaultAccount.navigateToUpdateDefau
 import com.mifos.feature.client.clientUpdateDefaultAccount.updateDefaultAccountDestination
 import com.mifos.feature.client.clientsList.ClientListScreen
 import com.mifos.feature.client.createNewClient.CreateNewClientScreen
-import com.mifos.feature.client.documentPreviewScreen.DocumentPreviewScreenRoute
 import com.mifos.feature.client.documentPreviewScreen.createDocumentPreviewRoute
 import com.mifos.feature.client.documentPreviewScreen.navigateToDocumentPreviewRoute
 import com.mifos.feature.client.fixedDepositAccount.clientFixedDepositAccountDestination
@@ -182,14 +182,15 @@ fun NavGraphBuilder.clientNavGraph(
         clientAddDocumentGraphRoute(
             navController = navController,
             navigateBack = {
-                navController.popBackStack<ClientAddDocumentRoute>(inclusive = true)
+                navController.popBackStack<AddDocumentRoute>(inclusive = true)
             },
             navigateToDocumentPreview = navController::navigateToDocumentPreviewRoute,
         )
 
         createDocumentPreviewRoute(
-            navigateBack = {
-                navController.popBackStack<DocumentPreviewScreenRoute>(inclusive = true)
+            navigateBack = navController::popBackStack,
+            documentRejected = {
+                navController.popBackStack<ClientDocumentsRoute>(inclusive = false)
             },
         )
 

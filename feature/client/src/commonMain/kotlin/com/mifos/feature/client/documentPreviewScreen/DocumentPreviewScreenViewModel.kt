@@ -37,10 +37,6 @@ class DocumentPreviewScreenViewModel(
 
     override fun handleAction(action: DocumentPreviewScreenAction) {
         when (action) {
-            DocumentPreviewScreenAction.CancelUpdating -> {
-                documentSelectAndUploadRepository.updateStep(EntityDocumentState.Step.VIEW)
-                sendEvent(DocumentPreviewEvent.OnNavigateBack)
-            }
             DocumentPreviewScreenAction.DismissBottomSheet -> {
                 mutableStateFlow.update {
                     it.copy(showBottomSheet = false)
@@ -58,7 +54,7 @@ class DocumentPreviewScreenViewModel(
             }
             DocumentPreviewScreenAction.RejectDocument -> {
                 documentSelectAndUploadRepository.resetState()
-                sendEvent(DocumentPreviewEvent.OnNavigateBack)
+                sendEvent(DocumentPreviewEvent.OnDocumentRejected)
             }
             DocumentPreviewScreenAction.SubmitClicked -> {
                 documentSelectAndUploadRepository.updateStep(
@@ -201,7 +197,6 @@ data class DocumentPreviewState(
 
 sealed interface DocumentPreviewScreenAction {
     object NavigateBack : DocumentPreviewScreenAction
-    object CancelUpdating : DocumentPreviewScreenAction
     object RejectDocument : DocumentPreviewScreenAction
     object SubmitClicked : DocumentPreviewScreenAction
     object UpdateNew : DocumentPreviewScreenAction
@@ -232,4 +227,5 @@ private fun getDocumentType(extension: String): DocumentType? {
 
 sealed interface DocumentPreviewEvent {
     object OnNavigateBack : DocumentPreviewEvent
+    object OnDocumentRejected : DocumentPreviewEvent
 }

@@ -19,10 +19,12 @@ data object DocumentPreviewScreenRoute
 
 fun NavGraphBuilder.createDocumentPreviewRoute(
     navigateBack: () -> Unit,
+    documentRejected: () -> Unit,
 ) {
     composable<DocumentPreviewScreenRoute> {
         DocumentPreviewScreen(
             navigateBack = navigateBack,
+            documentRejected = documentRejected,
         )
     }
 }
