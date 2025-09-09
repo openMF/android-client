@@ -33,7 +33,9 @@ import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.designsystem.theme.AppColors
 import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.ui.components.MifosFilePickerBottomSheet
+import com.mifos.core.ui.components.MifosProgressIndicator
 import com.mifos.core.ui.util.EventsEffect
+import com.mifos.feature.client.EntityDocumentState
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -82,7 +84,9 @@ private fun ViewDocumentScaffold(
                 onMoreClick =  {},
             )
         },
-        onBackPressed = {}
+        onBackPressed = {
+            onAction(DocumentPreviewScreenAction.NavigateBack)
+        }
     ) {paddingValues ->
         Column(
             modifier = modifier
@@ -92,11 +96,8 @@ private fun ViewDocumentScaffold(
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            if(state.exception!=null){
-                MifosSweetError(
-                    message = state.exception.message?: "Unknown error",
-                    isRetryEnabled = false,
-                )
+            if(state.dialogState!=null){
+                DocumentsPreviewScreenDialog(state)
             } else {
                 ViewDocumentsScreenContent(
                     state = state,
@@ -111,7 +112,7 @@ private fun ViewDocumentScaffold(
                 ) {
                     MifosOutlinedButton(
                         onClick = {
-                            if (state.showUpdateButton) {
+                            if (state.step == EntityDocumentState.Step.UPDATE_PREVIEW) {
                                 onAction(DocumentPreviewScreenAction.CancelUpdating)
                             } else {
                                 onAction(DocumentPreviewScreenAction.RejectDocument)
@@ -139,7 +140,7 @@ private fun ViewDocumentScaffold(
                     Spacer(modifier = Modifier.width(8.dp))
                     MifosOutlinedButton(
                         onClick = {
-                            if (!state.showUpdateButton) {
+                            if (state.step == EntityDocumentState.Step.PREVIEW) {
                                 onAction(DocumentPreviewScreenAction.SubmitClicked)
                             } else {
                                 onAction(DocumentPreviewScreenAction.UpdateNew)
@@ -159,7 +160,7 @@ private fun ViewDocumentScaffold(
                             .weight(1f)
                     ) {
                         Text(
-                            if (state.showUpdateButton) {
+                            if (state.step == EntityDocumentState.Step.UPDATE_PREVIEW) {
                                 "Update New"
                             } else {
                                 "Submit"
@@ -170,10 +171,29 @@ private fun ViewDocumentScaffold(
                     }
                 }
             }
+
         }
     }
 }
 
+
+@Composable
+private fun DocumentsPreviewScreenDialog(
+    state: DocumentPreviewState,
+) {
+    when(state.dialogState){
+        is DocumentPreviewState.DialogState.Error -> {
+            MifosSweetError(
+                message = state.dialogState.message,
+                isRetryEnabled = false,
+            )
+        }
+        DocumentPreviewState.DialogState.Loading -> {
+            MifosProgressIndicator()
+        }
+        null -> {}
+    }
+}
 
 
 @Composable

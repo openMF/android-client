@@ -21,7 +21,7 @@ import com.mifos.core.model.objects.noncoreobjects.Document
 import com.mifos.core.ui.util.BaseViewModel
 import com.mifos.feature.client.DocumentSelectAndUploadRepository
 import com.mifos.feature.client.EntityDocumentState
-import com.mifos.feature.client.clientDocuments.ClientDocumentsScreenState.DialogState.ConfirmDocumentDeletion
+import com.mifos.feature.client.EntityDocumentState.EntityType
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -52,21 +52,28 @@ class ClientDocumentsViewModel(
         observeNetworkAndLoadDocuments()
     }
 
-
     override fun handleAction(action: ClientDocumentsActions) {
         when (action) {
-            ClientDocumentsActions.CloseDialog -> {
-                observeNetworkAndLoadDocuments()
+            ClientDocumentsActions.AddDocument -> {
+                updateEntityDocumentState()
+                documentSelectAndUploadRepository.updateStep(EntityDocumentState.Step.ADD)
+                sendEvent(ClientDocumentsEvents.OnAddDocument)
             }
+
+            ClientDocumentsActions.CloseDialog -> {
+                nullDialogState()
+            }
+
 
             is ClientDocumentsActions.ConfirmDeleteDocument -> {
                 deleteDocument(action.documentId)
+                observeNetworkAndLoadDocuments()
             }
 
             is ClientDocumentsActions.DeleteDocument -> {
                 mutableStateFlow.update {
                     it.copy(
-                        dialogState = ConfirmDocumentDeletion(
+                        dialogState = ClientDocumentsScreenState.DialogState.ConfirmDocumentDeletion(
                             documentName = action.documentName,
                             documentId = action.documentId,
                         ),
@@ -80,9 +87,19 @@ class ClientDocumentsViewModel(
 
             ClientDocumentsActions.Refresh -> {
                 mutableStateFlow.update {
-                    it.copy(isRefreshing = true)
+                    it.copy(pullDownRefresh = true)
                 }
                 observeNetworkAndLoadDocuments()
+            }
+
+            is ClientDocumentsActions.UpdateSearchQuery ->{
+                mutableStateFlow.update {
+                    it.copy(searchText = action.query,)
+                }
+            }
+            is ClientDocumentsActions.ViewDocument ->{
+                downloadDownloadAndCache(action.documentId)
+                sendEvent(ClientDocumentsEvents.OnViewDocument)
             }
 
             ClientDocumentsActions.SearchDocument -> {
@@ -97,138 +114,118 @@ class ClientDocumentsViewModel(
 
             ClientDocumentsActions.ToggleSearch -> {
                 mutableStateFlow.update {
-                    it.copy(
-                        isSearchBarActive = !it.isSearchBarActive,
-                    )
+                    it.copy(isSearchBarActive = !it.isSearchBarActive,)
                 }
-            }
-
-            is ClientDocumentsActions.UpdateSearchQuery -> {
-                mutableStateFlow.update {
-                    it.copy(searchText = action.query)
-                }
-            }
-
-            is ClientDocumentsActions.ViewDocument -> {
-                downloadAndCacheDocument(action.documentId)
-            }
-
-            is ClientDocumentsActions.AddDocument -> {
-                updateEntityDetails()
-                sendEvent(ClientDocumentsEvents.OnAddDocument)
             }
         }
     }
 
-
-    private fun updateEntityDetails() {
-        entityDocumentStateFlow.update {
-            it.copy(
-                entityId = route.clientId,
-                entityType = EntityDocumentState.EntityType.Clients,
-            )
-        }
-    }
 
     private fun observeNetworkAndLoadDocuments() {
         viewModelScope.launch {
-            networkMonitor.isOnline.collect { isConnected ->
-                mutableStateFlow.update {
-                    it.copy(isNetworkConnected = isConnected)
-                }
-                when (isConnected) {
-                    true -> {
-                        loadClientDocuments()
-                        mutableStateFlow.update { it.copy(isRefreshing = false) }
-                    }
-                    false -> {
-                        mutableStateFlow.update { it.copy(isRefreshing = false) }
-                        errorDialogState(getString(Res.string.no_internet_message),)
-                    }
-                }
-            }
-        }
-    }
-
-    private suspend fun loadClientDocuments() {
-        val documentsListFlow = documentsRepository.getDocumentsList(
-            entityType = entityType,
-            entityId = route.clientId,
-        )
-
-        documentsListFlow.collect { dataState ->
-            when (dataState) {
-                is DataState.Error<*> -> {
-                    errorDialogState(dataState.message)
-                }
-
-                DataState.Loading -> {
-                    loadingDialogState()
-                }
-
-                is DataState.Success -> {
-                    mutableStateFlow.update {
-                        it.copy(
-                            dialogState = null,
-                            clientDocuments = dataState.data
-                        )
-                    }
-                }
-            }
-        }
-    }
-
-    private fun deleteDocument(documentId: Int)  {
-        viewModelScope.launch {
-            mutableStateFlow.update {
-                it.copy(dialogState = ClientDocumentsScreenState.DialogState.Loading)
-            }
-
-            documentsRepository.removeDocument(
-                entityType = entityType,
-                entityId = route.clientId,
-                documentId = documentId,
-            )
-
-            mutableStateFlow.update {
-                it.copy(dialogState = null)
-            }
-        }
-    }
-
-    private fun downloadAndCacheDocument(documentId: Int) {
-        viewModelScope.launch {
-            val isConnected = networkMonitor.isOnline.first()
-            mutableStateFlow.update {
-                it.copy(isNetworkConnected = isConnected,)
-            }
+            val isConnected = observeNetwork()
+            updateNetworkState(isConnected)
             when(isConnected) {
                 true -> {
-                    updateEntityDetails()
-                    entityDocumentStateFlow.update {
-                        it.copy(documentId = documentId,)
-                    }
-                    loadingDialogState()
-                    val result = documentSelectAndUploadRepository
-                        .downloadDocumentAndSaveToAppCache()
-                    result.onSuccess {
-                        entityDocumentStateFlow.update {
-                            it.copy(
-                                uploadType = EntityDocumentState.UploadType.Update,
-                                changePreviewDocument = true
-                            )
-                        }
-                        nullDialogState()
-                        sendEvent(ClientDocumentsEvents.OnViewDocument)
-                    }.onFailure {throwable ->
+                    documentsRepository.getDocumentsList(
+                        "clients",
+                        route.clientId
+                    ).collect {dataState ->
+                        when (dataState) {
+                            is DataState.Error<*> -> {
+                                errorDialogState(dataState.message)
+                                mutableStateFlow.update {
+                                    it.copy(
+                                        pullDownRefresh = false,
+                                    )
+                                }
 
-                        errorDialogState(throwable.message?:"Unknown error",)
+                            }
+                            DataState.Loading -> {
+                                loadingDialogState()
+                            }
+                            is DataState.Success -> {
+
+                                nullDialogState()
+                                mutableStateFlow.update {
+                                    it.copy(
+                                        clientDocuments = dataState.data,
+                                        pullDownRefresh = false
+                                    )
+                                }
+                            }
+                        }
                     }
                 }
                 false -> {
-                   errorDialogState(getString(Res.string.no_internet_message),)
+                    errorDialogState(getString(Res.string.no_internet_message))
                 }
             }
+
+        }
+    }
+
+    private fun deleteDocument(documentId: Int) {
+        viewModelScope.launch {
+            loadingDialogState()
+            runCatching {
+                documentsRepository.removeDocument(
+                    entityId = route.clientId,
+                    entityType = entityType,
+                    documentId = documentId
+                )
+            }.onFailure {
+                errorDialogState(it.message?:"Failed to delete document")
+            }.onSuccess {
+                nullDialogState()
+                sendAction(ClientDocumentsActions.Refresh)
+            }
+        }
+    }
+
+    private fun downloadDownloadAndCache(documentId: Int) {
+        viewModelScope.launch {
+            val isConnected = observeNetwork()
+            updateNetworkState(isConnected)
+            when (isConnected) {
+                true ->{
+                    updateEntityDocumentState()
+
+                    entityDocumentStateFlow.update {
+                        it.copy(documentId = documentId,)
+                    }
+                    documentSelectAndUploadRepository.downloadDocumentAndCache().collect {dataState ->
+                        when (dataState) {
+                            is DataState.Error<*> -> {
+                                errorDialogState(dataState.message)
+                            }
+                            DataState.Loading -> {
+                                loadingDialogState()
+                            }
+                            is DataState.Success -> {
+                                nullDialogState()
+                                documentSelectAndUploadRepository.updateEntityDocument(platformFile = dataState.data)
+                                documentSelectAndUploadRepository.updateStep(step= EntityDocumentState.Step.UPDATE_PREVIEW)
+                                documentSelectAndUploadRepository.changeSubmitMode(EntityDocumentState.SubmitMode.UPDATE)
+                                sendEvent(ClientDocumentsEvents.OnViewDocument)
+                            }
+                        }
+                    }
+                }
+                false -> {
+                    errorDialogState(getString(Res.string.no_internet_message))
+                }
+            }
+
+        }
+    }
+
+    private suspend fun observeNetwork() = networkMonitor.isOnline.first()
+
+
+    private fun updateNetworkState(isConnected: Boolean) {
+        mutableStateFlow.update {
+            it.copy(isNetworkConnected = isConnected)
         }
     }
     private fun loadingDialogState(){
@@ -251,14 +248,21 @@ class ClientDocumentsViewModel(
         }
     }
 
-
+    private fun updateEntityDocumentState() {
+        entityDocumentStateFlow.update {
+            it.copy(
+                entityId = route.clientId,
+                entityType = EntityType.Clients
+            )
+        }
+    }
 
 }
 
 
 data class ClientDocumentsScreenState(
     val clientId: Int = -1,
-    val isRefreshing: Boolean = false,
+    val pullDownRefresh: Boolean = false,
     val clientDocuments: List<Document> = emptyList(),
     val searchText: String = "",
     val isNetworkConnected: Boolean = false,

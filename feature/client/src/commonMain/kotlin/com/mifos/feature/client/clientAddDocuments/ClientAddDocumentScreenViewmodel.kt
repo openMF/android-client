@@ -31,6 +31,10 @@ class ClientAddDocumentScreenViewmodel(
     private val entityDocumentStateFlow =
         documentSelectAndUploadRepository.entityDocumentStateMutableStateFlow
 
+    init {
+        updateAddDocumentState()
+    }
+
     override fun handleAction(action: ClientAddDocumentScreenAction) {
         when (action) {
             ClientAddDocumentScreenAction.AddNewDocument -> {
@@ -58,6 +62,7 @@ class ClientAddDocumentScreenViewmodel(
             }
 
             ClientAddDocumentScreenAction.ViewDocument -> {
+                documentSelectAndUploadRepository.updateStep(EntityDocumentState.Step.UPDATE_PREVIEW)
                 sendEvent(ClientAddDocumentScreenEvents.OnNavigateToPreviewScreen)
             }
 
@@ -95,57 +100,82 @@ class ClientAddDocumentScreenViewmodel(
 
     private fun pickFromGallery(){
         viewModelScope.launch {
-            loadingDialogState()
-            val result = documentSelectAndUploadRepository.selectImageFromGallery()
+            documentSelectAndUploadRepository.selectImageFromGallery()
+                .collect { dataState ->
+                    when(dataState) {
+                        is DataState.Error<*> -> {
+                            mutableStateFlow.update {
+                                it.copy(showBottomSheet = false,)
+                            }
+                            errorDialogState(dataState.message)
+                        }
+                        DataState.Loading -> {
+                            loadingDialogState()
+                        }
+                        is DataState.Success -> {
+                            dataState.data?.let {platformFile ->
+                                mutableStateFlow.update {
+                                    it.copy(
+                                        showBottomSheet = false,
+                                        dialogState = null
+                                    )
+                                }
+                                documentSelectAndUploadRepository.updateStep(EntityDocumentState.Step.PREVIEW)
+                                documentSelectAndUploadRepository.updateEntityDocument(
+                                    platformFile
+                                )
+                                updateAddDocumentState()
+                                sendEvent(ClientAddDocumentScreenEvents.OnNavigateToPreviewScreen)
+                            }
+                        }
+                    }
 
-            result.onSuccess {
-                mutableStateFlow.update {
-                    it.copy(
-                        showBottomSheet = false,
-                        dialogState = null
-                    )
                 }
-                updateAddDocumentState()
-                sendEvent(ClientAddDocumentScreenEvents.OnNavigateToPreviewScreen)
-            }.onFailure { throwable ->
-                mutableStateFlow.update {
-                    it.copy(showBottomSheet = false,)
-                }
-                errorDialogState(throwable.message?: "Unknown error")
-            }
-
         }
     }
 
     private fun pickFromFiles() {
         viewModelScope.launch {
-            loadingDialogState()
-            val result = documentSelectAndUploadRepository.selectImageFromFile()
+            documentSelectAndUploadRepository.selectImageFromFile()
+                .collect { dataState ->
+                    when(dataState) {
+                        is DataState.Error<*> -> {
+                            mutableStateFlow.update {
+                                it.copy(showBottomSheet = false,)
+                            }
+                            errorDialogState(dataState.message)
+                        }
+                        DataState.Loading -> {
+                            loadingDialogState()
+                        }
+                        is DataState.Success ->{
+                            dataState.data?.let {platformFile ->
+                                mutableStateFlow.update {
+                                    it.copy(
+                                        showBottomSheet = false,
+                                        dialogState = null
+                                    )
+                                }
+                                documentSelectAndUploadRepository.updateStep(EntityDocumentState.Step.PREVIEW)
+                                documentSelectAndUploadRepository.updateEntityDocument(
+                                    platformFile
+                                )
+                                updateAddDocumentState()
+                                sendEvent(ClientAddDocumentScreenEvents.OnNavigateToPreviewScreen)
+                            }
+                        }
+                    }
 
-            result.onSuccess {
-                mutableStateFlow.update {
-                    it.copy(
-                        showBottomSheet = false,
-                        dialogState = null
-                    )
                 }
-                updateAddDocumentState()
-                sendEvent(ClientAddDocumentScreenEvents.OnNavigateToPreviewScreen)
-            }.onFailure { throwable ->
-                mutableStateFlow.update {
-                    it.copy(showBottomSheet = false,)
-                }
-                errorDialogState(throwable.message?: "Unknown error")
-            }
         }
     }
+
 
     private fun uploadDocument() {
         viewModelScope.launch {
             val isConnected = observerNetwork()
             when(isConnected) {
                 true -> {
-                    updateAddDocumentState()
                     documentSelectAndUploadRepository.uploadDocument(
                         state.enteredFileName,
                         state.enteredDocumentDescription
@@ -169,7 +199,6 @@ class ClientAddDocumentScreenViewmodel(
                     errorDialogState(getString(Res.string.no_internet_message))
                 }
             }
-
         }
     }
 
@@ -201,7 +230,6 @@ class ClientAddDocumentScreenViewmodel(
                     errorDialogState(getString(Res.string.no_internet_message))
                 }
             }
-
         }
     }
 
@@ -214,10 +242,9 @@ class ClientAddDocumentScreenViewmodel(
                 mutableStateFlow.update {
                     it.copy(
                         platformFile = state.entityDocument,
-                        changePreviewedDocument = state.changePreviewDocument,
-                        documentAccepted = state.documentPreviewedAndAccepted,
                         pickedDocumentName = state.entityDocument?.name ?: "",
-                        isUploadingDocument = state.uploadType== EntityDocumentState.UploadType.Update
+                        step = state.step,
+                        submitMode = state.submitMode,
                     )
                 }
             }
@@ -240,9 +267,7 @@ class ClientAddDocumentScreenViewmodel(
 
     private fun loadingDialogState() {
         mutableStateFlow.update {
-            it.copy(
-                dialogState = ClientAddDocumentScreenState.DialogState.Loading,
-            )
+            it.copy(dialogState = ClientAddDocumentScreenState.DialogState.Loading)
         }
     }
 
@@ -250,16 +275,15 @@ class ClientAddDocumentScreenViewmodel(
 
 data class ClientAddDocumentScreenState(
     val platformFile: PlatformFile? = null,
-    val changePreviewedDocument: Boolean = false,
     val documentAccepted: Boolean = false,
-    val isUploadingDocument: Boolean = false,
     val pickedDocumentName: String = "",
     val isNetworkAvailable: Boolean = false,
     val enteredDocumentDescription: String = "",
     val enteredFileName: String = "",
     val dialogState: DialogState? = null,
     val showBottomSheet: Boolean = false,
-    val showProgressBar: Boolean = false,
+    val step: EntityDocumentState.Step = EntityDocumentState.Step.ADD,
+    val submitMode: EntityDocumentState.SubmitMode = EntityDocumentState.SubmitMode.UPLOAD
 ) {
     sealed interface DialogState {
         data object Loading : DialogState

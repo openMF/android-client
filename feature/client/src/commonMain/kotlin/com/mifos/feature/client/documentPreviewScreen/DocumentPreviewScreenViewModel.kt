@@ -1,8 +1,10 @@
 package com.mifos.feature.client.documentPreviewScreen
 
 import androidx.lifecycle.viewModelScope
+import com.mifos.core.common.utils.DataState
 import com.mifos.core.ui.util.BaseViewModel
 import com.mifos.feature.client.DocumentSelectAndUploadRepository
+import com.mifos.feature.client.EntityDocumentState
 import io.github.vinceglb.filekit.extension
 import io.github.vinceglb.filekit.readBytes
 import kotlinx.coroutines.flow.first
@@ -21,9 +23,14 @@ class DocumentPreviewScreenViewModel(
     private val documentSelectAndUploadFlow =
         documentSelectAndUploadRepository.entityDocumentStateMutableStateFlow
 
+    init {
+        updateDocumentPreviewState()
+    }
+
     override fun handleAction(action: DocumentPreviewScreenAction) {
         when (action) {
             DocumentPreviewScreenAction.CancelUpdating -> {
+                documentSelectAndUploadRepository.updateStep(EntityDocumentState.Step.VIEW)
                 sendEvent(DocumentPreviewEvent.OnNavigateBack)
             }
             DocumentPreviewScreenAction.DismissBottomSheet -> {
@@ -31,37 +38,26 @@ class DocumentPreviewScreenViewModel(
                     it.copy(showBottomSheet = false)
                 }
             }
-            DocumentPreviewScreenAction.EnableUpdating -> {
-                documentSelectAndUploadFlow.update {
-                    it.copy(documentPreviewedAndAccepted = true)
-                }
-                mutableStateFlow.update {
-                    it.copy(showUpdateButton = true)
-                }
-            }
+
             DocumentPreviewScreenAction.NavigateBack -> {
                 sendEvent(DocumentPreviewEvent.OnNavigateBack)
             }
             DocumentPreviewScreenAction.PickFromFile -> {
-                pickFromGallery()
-            }
-            DocumentPreviewScreenAction.PickFromGallery -> {
                 pickFromFiles()
             }
+            DocumentPreviewScreenAction.PickFromGallery -> {
+                pickFromGallery()
+            }
             DocumentPreviewScreenAction.RejectDocument -> {
-                documentSelectAndUploadFlow.update {
-                    it.copy(
-                        documentPreviewedAndAccepted = false,
-                        entityDocument = null,
-                        documentId = -1
-                    )
-                }
+                documentSelectAndUploadRepository.resetState()
+                updateDocumentPreviewState()
                 sendEvent(DocumentPreviewEvent.OnNavigateBack)
             }
             DocumentPreviewScreenAction.SubmitClicked -> {
-                documentSelectAndUploadFlow.update {
-                    it.copy(documentPreviewedAndAccepted = true)
-                }
+                documentSelectAndUploadRepository.updateStep(
+                   EntityDocumentState.Step.VIEW
+                )
+                updateDocumentPreviewState()
                 sendEvent(DocumentPreviewEvent.OnNavigateBack)
             }
             DocumentPreviewScreenAction.UpdateNew -> {
@@ -73,86 +69,93 @@ class DocumentPreviewScreenViewModel(
         }
     }
 
+
     private fun pickFromGallery(){
         viewModelScope.launch {
-            val result = documentSelectAndUploadRepository.selectImageFromGallery()
-            result.onSuccess {
-                documentSelectAndUploadFlow.collect { entityState->
-
-                    entityState.entityDocument?.readBytes()?.let { bytes->
-                        mutableStateFlow.update {
-                            it.copy(
-                                documentType = getDocumentType(entityState.entityDocument.extension),
-                                showUpdateButton = false,
-                                showBottomSheet = false,
-                                documentBytes = bytes
-                            )
+            documentSelectAndUploadRepository.selectImageFromGallery()
+                .collect { dataState ->
+                    when(dataState) {
+                        is DataState.Error<*> -> {
+                            mutableStateFlow.update {
+                                it.copy(showBottomSheet = false,)
+                            }
+                            errorDialogState(dataState.message)
                         }
-                    } ?: mutableStateFlow.update {
-                        it.copy(
-                            showUpdateButton = true,
-                            exception = Exception("Failed to read image"),
-                            showBottomSheet = false,
-                        )
+                        DataState.Loading -> {
+                            loadingDialogState()
+                        }
+                        is DataState.Success -> {
+                            nullDialogState()
+                            dataState.data?.let {platformFile ->
+                                mutableStateFlow.update {
+                                    it.copy(
+                                        showBottomSheet = false,
+                                        documentBytes = platformFile.readBytes()
+                                    )
+                                }
+                                if(documentSelectAndUploadFlow.first().step== EntityDocumentState.Step.PREVIEW){
+                                    documentSelectAndUploadRepository.updateStep(EntityDocumentState.Step.UPDATE_PREVIEW)
+                                } else {
+                                    documentSelectAndUploadRepository.updateStep(EntityDocumentState.Step.PREVIEW)
+                                }
+                                documentSelectAndUploadRepository.updateEntityDocument(
+                                    platformFile
+                                )
+                                updateDocumentPreviewState()
+                            }
+                        }
                     }
-                    updateDocumentPreviewState()
-                    sendAction(DocumentPreviewScreenAction.EnableUpdating)
-                }
 
-            }.onFailure { throwable ->
-                mutableStateFlow.update {
-                    it.copy(
-                        exception = Exception(throwable),
-                        showBottomSheet = false,
-                    )
                 }
-            }
         }
     }
 
     private fun pickFromFiles() {
         viewModelScope.launch {
-            val result = documentSelectAndUploadRepository.selectImageFromFile()
-            result.onSuccess {
-                val entityDocState = documentSelectAndUploadFlow.first()
-
-                entityDocState.entityDocument?.readBytes()?.let {bytes->
-                    mutableStateFlow.update {
-                        it.copy(
-                            documentType = getDocumentType(entityDocState.entityDocument.extension),
-                            showUpdateButton = false,
-                            showBottomSheet = false,
-                            documentBytes = bytes
-                        )
+            documentSelectAndUploadRepository.selectImageFromFile()
+                .collect { dataState ->
+                    when(dataState) {
+                        is DataState.Error<*> -> {
+                            mutableStateFlow.update {
+                                it.copy(showBottomSheet = false,)
+                            }
+                            errorDialogState(dataState.message)
+                        }
+                        DataState.Loading -> {
+                            loadingDialogState()
+                        }
+                        is DataState.Success ->{
+                            nullDialogState()
+                            dataState.data?.let {platformFile ->
+                                mutableStateFlow.update {
+                                    it.copy(
+                                        showBottomSheet = false,
+                                        documentBytes = platformFile.readBytes()
+                                    )
+                                }
+                                if(documentSelectAndUploadFlow.first().step== EntityDocumentState.Step.PREVIEW){
+                                    documentSelectAndUploadRepository.updateStep(EntityDocumentState.Step.UPDATE_PREVIEW)
+                                } else {
+                                    documentSelectAndUploadRepository.updateStep(EntityDocumentState.Step.PREVIEW)
+                                }
+                                documentSelectAndUploadRepository.updateEntityDocument(
+                                    platformFile
+                                )
+                                updateDocumentPreviewState()
+                            }
+                        }
                     }
-                } ?: mutableStateFlow.update {
-                    it.copy(
-                        showUpdateButton = true,
-                        exception = Exception("Failed to read document"),
-                        showBottomSheet = false,
-                    )
-                }
 
-                updateDocumentPreviewState()
-
-            }.onFailure { throwable ->
-                mutableStateFlow.update {
-                    it.copy(
-                        exception = Exception(throwable),
-                        showBottomSheet = false,
-                    )
                 }
-            }
         }
     }
-
 
     private fun updateDocumentPreviewState() {
         viewModelScope.launch {
             documentSelectAndUploadFlow.collect {state ->
                 mutableStateFlow.update {
                     it.copy(
-                        showUpdateButton = state.documentPreviewedAndAccepted,
+                        step = state.step,
                         documentBytes = state.entityDocument?.readBytes(),
                         documentType = getDocumentType(state.entityDocument?.extension ?: ""),
                     )
@@ -161,15 +164,40 @@ class DocumentPreviewScreenViewModel(
         }
     }
 
+    private fun nullDialogState() {
+        mutableStateFlow.update {
+            it.copy(dialogState = null)
+        }
+    }
+
+    private fun errorDialogState(message: String) {
+        mutableStateFlow.update {
+            it.copy(
+                dialogState = DocumentPreviewState.DialogState.Error(message),
+            )
+        }
+    }
+
+    private fun loadingDialogState() {
+        mutableStateFlow.update {
+            it.copy(dialogState = DocumentPreviewState.DialogState.Loading)
+        }
+    }
 }
 
 data class DocumentPreviewState(
-    val exception: Exception? = null,
     val showBottomSheet: Boolean = false,
-    val showUpdateButton: Boolean = false,
     val documentType: DocumentType? = null,
+    val dialogState: DialogState? = null,
+    val step: EntityDocumentState.Step = EntityDocumentState.Step.PREVIEW,
     val documentBytes: ByteArray? = null,
-)
+) {
+    sealed interface DialogState {
+        data object Loading : DialogState
+        data class Error(val message: String) : DialogState
+    }
+}
+
 
 
 sealed interface DocumentPreviewScreenAction {
@@ -182,7 +210,6 @@ sealed interface DocumentPreviewScreenAction {
     object PickFromGallery : DocumentPreviewScreenAction
     object PickFromFile : DocumentPreviewScreenAction
     object UseMoreOptions : DocumentPreviewScreenAction
-    object EnableUpdating : DocumentPreviewScreenAction
 }
 
 sealed interface DocumentType {

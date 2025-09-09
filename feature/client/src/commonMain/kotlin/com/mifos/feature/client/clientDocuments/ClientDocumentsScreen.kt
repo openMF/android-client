@@ -140,7 +140,7 @@ private fun ClientDocumentsScaffold(
         ) {
             MifosBreadcrumbNavBar(navController)
             PullToRefreshBox(
-                isRefreshing = state.isRefreshing,
+                isRefreshing = state.pullDownRefresh,
                 onRefresh = {
                     onAction(ClientDocumentsActions.Refresh)
                 }

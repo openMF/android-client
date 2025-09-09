@@ -11,11 +11,11 @@ interface DocumentSelectAndUploadRepository {
 
     suspend fun selectImageFromGallery(
         dialogTitle: String = ""
-    ): Result<Unit>
+    ): Flow<DataState<PlatformFile?>>
 
-    suspend fun selectImageFromFile(dialogTitle: String =""): Result<Unit>
+    suspend fun selectImageFromFile(dialogTitle: String =""): Flow<DataState<PlatformFile?>>
 
-    suspend fun downloadDocumentAndSaveToAppCache():Result<Unit>
+    suspend fun downloadDocumentAndCache(): Flow<DataState<PlatformFile>>
 
     suspend fun deleteDocument(): Result<Unit>
 
@@ -29,8 +29,15 @@ interface DocumentSelectAndUploadRepository {
         description: String,
     ): Flow<DataState<Unit?>>
 
+    fun confirmDocument()
+
+    fun rejectDocument()
 
     fun resetState()
+
+    fun updateStep(step: EntityDocumentState.Step)
+    fun changeSubmitMode(sumbitMode: EntityDocumentState.SubmitMode)
+    fun updateEntityDocument(platformFile: PlatformFile)
 }
 
 
@@ -40,16 +47,24 @@ data class EntityDocumentState(
     val entityType: EntityType = EntityType.Clients,
     val isLoading: Boolean = false,
     val entityDocument: PlatformFile? = null,
-    val uploadType: UploadType = UploadType.Upload,
+    val submitMode: SubmitMode = SubmitMode.UPLOAD,
     val changePreviewDocument: Boolean = false,
     val documentPreviewedAndAccepted: Boolean=  false,
+    val step: Step = Step.VIEW
 ){
     sealed interface EntityType {
         object Clients: EntityType
         object Loans: EntityType
     }
-    sealed interface UploadType {
-        object Upload: UploadType
-        object Update: UploadType
+    enum class Step {
+        ADD,
+        PREVIEW,
+        VIEW,
+        UPDATE_PREVIEW,
+        SUBMIT,
+    }
+    enum class SubmitMode {
+        UPLOAD,
+        UPDATE
     }
 }

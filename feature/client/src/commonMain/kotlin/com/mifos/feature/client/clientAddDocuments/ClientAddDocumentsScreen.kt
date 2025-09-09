@@ -33,8 +33,8 @@ import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.designsystem.theme.MifosTypography
 import com.mifos.core.ui.components.MifosBreadcrumbNavBar
 import com.mifos.core.ui.components.MifosFilePickerBottomSheet
-import com.mifos.core.ui.components.MifosProgressIndicator
 import com.mifos.core.ui.util.EventsEffect
+import com.mifos.feature.client.EntityDocumentState
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -134,9 +134,7 @@ private fun ClientAddDocumentScaffold(
                 state,
                 onAction = onAction
             )
-        } else if(state.showProgressBar){
-            MifosProgressIndicator()
-        }else{
+        } else{
             Column(
                 modifier = Modifier
                     .padding(paddingValues)
@@ -231,7 +229,7 @@ private fun ClientAddDocumentScaffold(
 
                         MifosOutlinedButton(
                             onClick = {
-                                if(!state.isUploadingDocument){
+                                if(state.submitMode== EntityDocumentState.SubmitMode.UPLOAD){
                                     onAction(ClientAddDocumentScreenAction.UploadDocument)
                                 } else {
                                     onAction(ClientAddDocumentScreenAction.UpdateDocument)
@@ -253,8 +251,8 @@ private fun ClientAddDocumentScaffold(
                             modifier = Modifier
                                 .height(40.dp)
                                 .weight(1f),
-                            enabled = state.documentAccepted
-                        ){
+                            enabled = state.step==EntityDocumentState.Step.VIEW
+                        ) {
                             Icon(
                                 imageVector = MifosIcons.RightTick,
                                 "back button",
@@ -296,7 +294,7 @@ private fun AddViewFileAndFileNameRow(
         verticalAlignment = Alignment.CenterVertically
     ){
         Text(
-            text = if (!state.changePreviewedDocument) {
+            text = if (state.step==EntityDocumentState.Step.ADD) {
                 "No File Selected"
             } else {
                 state.pickedDocumentName
@@ -315,7 +313,7 @@ private fun AddViewFileAndFileNameRow(
 
         MifosOutlinedButton(
             onClick = {
-                if(!state.changePreviewedDocument){
+                if(state.step==EntityDocumentState.Step.ADD){
                     onAction(ClientAddDocumentScreenAction.AddNewDocument)
                 } else{
                     onAction(ClientAddDocumentScreenAction.ViewDocument)
@@ -336,7 +334,7 @@ private fun AddViewFileAndFileNameRow(
                 .width(80.dp)
         ){
             Text(
-                text = if (!state.changePreviewedDocument) {
+                text =  if(state.step==EntityDocumentState.Step.ADD) {
                     "Add"
                 } else {
                     "View"
