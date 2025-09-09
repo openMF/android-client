@@ -2,7 +2,6 @@ package com.mifos.feature.client.clientAddDocuments
 
 import androidclient.feature.client.generated.resources.Res
 import androidclient.feature.client.generated.resources.no_internet_message
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.util.NetworkMonitor
@@ -18,7 +17,6 @@ import org.jetbrains.compose.resources.getString
 
 
 class ClientAddDocumentScreenViewmodel(
-    stateHandler: SavedStateHandle,
     private val networkMonitor: NetworkMonitor,
     private val documentSelectAndUploadRepository: DocumentSelectAndUploadRepository,
 ) : BaseViewModel<
@@ -125,7 +123,7 @@ class ClientAddDocumentScreenViewmodel(
                                 documentSelectAndUploadRepository.updateEntityDocument(
                                     platformFile
                                 )
-                                updateAddDocumentState()
+//                                updateAddDocumentState()
                                 sendEvent(ClientAddDocumentScreenEvents.OnNavigateToPreviewScreen)
                             }
                         }
@@ -161,7 +159,7 @@ class ClientAddDocumentScreenViewmodel(
                                 documentSelectAndUploadRepository.updateEntityDocument(
                                     platformFile
                                 )
-                                updateAddDocumentState()
+//                                updateAddDocumentState()
                                 sendEvent(ClientAddDocumentScreenEvents.OnNavigateToPreviewScreen)
                             }
                         }

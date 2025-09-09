@@ -55,7 +55,6 @@ class ClientDocumentsViewModel(
     override fun handleAction(action: ClientDocumentsActions) {
         when (action) {
             ClientDocumentsActions.AddDocument -> {
-                updateEntityDocumentState()
                 documentSelectAndUploadRepository.updateStep(EntityDocumentState.Step.ADD)
                 sendEvent(ClientDocumentsEvents.OnAddDocument)
             }
@@ -145,7 +144,7 @@ class ClientDocumentsViewModel(
                                 loadingDialogState()
                             }
                             is DataState.Success -> {
-
+                                updateEntityDocumentState()
                                 nullDialogState()
                                 mutableStateFlow.update {
                                     it.copy(
@@ -189,8 +188,6 @@ class ClientDocumentsViewModel(
             updateNetworkState(isConnected)
             when (isConnected) {
                 true ->{
-                    updateEntityDocumentState()
-
                     entityDocumentStateFlow.update {
                         it.copy(documentId = documentId,)
                     }

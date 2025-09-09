@@ -9,9 +9,24 @@
  */
 package com.mifos.feature.client.clientDocuments
 
-import androidclient.feature.client.generated.resources.*
+import androidclient.feature.client.generated.resources.Res
+import androidclient.feature.client.generated.resources.client_empty_card_message
+import androidclient.feature.client.generated.resources.client_profile_documents_title
+import androidclient.feature.client.generated.resources.client_savings_item
+import androidclient.feature.client.generated.resources.confirm_text
+import androidclient.feature.client.generated.resources.delete_dialog_title
+import androidclient.feature.client.generated.resources.dismiss_text
+import androidclient.feature.client.generated.resources.document_delete_dialog_message
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.*

@@ -6,8 +6,8 @@ import com.mifos.core.data.repository.DocumentDialogRepository
 import com.mifos.core.data.repository.DocumentListRepository
 import com.mifos.feature.client.utils.createDocumentRequestBody
 import io.github.vinceglb.filekit.PlatformFile
-import io.ktor.client.request.forms.*
-import io.ktor.client.statement.*
+import io.ktor.client.request.forms.MultiPartFormDataContent
+import io.ktor.client.statement.readRawBytes
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow

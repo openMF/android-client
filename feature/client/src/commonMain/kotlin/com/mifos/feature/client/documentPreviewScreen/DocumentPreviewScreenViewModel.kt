@@ -50,14 +50,12 @@ class DocumentPreviewScreenViewModel(
             }
             DocumentPreviewScreenAction.RejectDocument -> {
                 documentSelectAndUploadRepository.resetState()
-                updateDocumentPreviewState()
                 sendEvent(DocumentPreviewEvent.OnNavigateBack)
             }
             DocumentPreviewScreenAction.SubmitClicked -> {
                 documentSelectAndUploadRepository.updateStep(
                    EntityDocumentState.Step.VIEW
                 )
-                updateDocumentPreviewState()
                 sendEvent(DocumentPreviewEvent.OnNavigateBack)
             }
             DocumentPreviewScreenAction.UpdateNew -> {
@@ -101,7 +99,6 @@ class DocumentPreviewScreenViewModel(
                                 documentSelectAndUploadRepository.updateEntityDocument(
                                     platformFile
                                 )
-                                updateDocumentPreviewState()
                             }
                         }
                     }
@@ -141,7 +138,6 @@ class DocumentPreviewScreenViewModel(
                                 documentSelectAndUploadRepository.updateEntityDocument(
                                     platformFile
                                 )
-                                updateDocumentPreviewState()
                             }
                         }
                     }

@@ -75,10 +75,8 @@ class DataManagerDocument(val mBaseApiManager: BaseApiManager) {
         entityType: String,
         entityId: Int,
         documentId: Int,
-    )= mBaseApiManager
+    ) = mBaseApiManager
         .documentService.downloadDocument(entityType, entityId, documentId)
-
-
 
     /**
      * This Method to Remove the Document from the server with EntityType and EntityId and

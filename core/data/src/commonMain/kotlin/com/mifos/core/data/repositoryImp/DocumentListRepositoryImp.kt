@@ -32,8 +32,7 @@ class DocumentListRepositoryImp(
         entityType: String,
         entityId: Int,
         documentId: Int,
-    )= dataManagerDocument.downloadDocument(entityType, entityId, documentId)
-
+    ) = dataManagerDocument.downloadDocument(entityType, entityId, documentId)
 
     override suspend fun removeDocument(
         entityType: String,
