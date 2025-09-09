@@ -43,6 +43,17 @@ class ClientIdentifiersViewModel(
 
     val clientId = savedStateHandle.getStateFlow(key = Constants.CLIENT_ID, initialValue = 0)
 
+    private fun <T> sortByActiveThenAscending(
+        list: List<T>,
+        isActive: (T) -> Boolean,
+        label: (T) -> String
+    ): List<T> {
+        return list.sortedWith(
+            compareByDescending<T> { isActive(it) }
+                .then(compareBy { label(it).lowercase() })
+            )
+    }
+
     private val _showCreateDialog = MutableStateFlow(false)
     val showCreateDialog = _showCreateDialog.asStateFlow()
 
@@ -86,8 +97,12 @@ class ClientIdentifiersViewModel(
                         ClientIdentifiersUiState.Loading
                 }
                 is DataState.Success -> {
+                    val sorted = sortByActiveThenAscending(result.data,
+                        isActive = { it.status.equals("ACTIVE", ignoreCase = true) },
+                        label = { it.description ?: "" }
+                    )
                     _clientIdentifiersUiState.value =
-                        ClientIdentifiersUiState.ClientIdentifiers(result.data)
+                        ClientIdentifiersUiState.ClientIdentifiers(sorted)
                     _isRefreshing.value = false
                 }
             }
@@ -105,9 +120,14 @@ class ClientIdentifiersViewModel(
                     _clientIdentifiersUiState.value =
                         ClientIdentifiersUiState.Loading
 
-                is DataState.Success ->
+                is DataState.Success -> {
+                    val sorted = sortByActiveThenAscending(result.data,
+                        isActive = { it.status.equals("ACTIVE", ignoreCase = true) },
+                        label = { it.description ?: "" }
+                    )
                     _clientIdentifiersUiState.value =
-                        ClientIdentifiersUiState.ClientIdentifiers(result.data)
+                        ClientIdentifiersUiState.ClientIdentifiers(sorted)
+                }
             }
         }
     }
