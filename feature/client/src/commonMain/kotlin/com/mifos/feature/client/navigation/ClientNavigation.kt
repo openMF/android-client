@@ -20,7 +20,6 @@ import com.mifos.core.common.utils.Constants
 import com.mifos.feature.client.clientAddDocuments.ClientAddDocumentRoute
 import com.mifos.feature.client.clientAddDocuments.clientAddDocumentGraphRoute
 import com.mifos.feature.client.clientAddDocuments.navigateToClientAddDocumentRoute
-import com.mifos.feature.client.clientAddDocuments.navigateToClientAddDocumentRouteFromPreview
 import com.mifos.feature.client.clientAddress.addAddress.clientAddAddressRoute
 import com.mifos.feature.client.clientAddress.addAddress.navigateToClientAddAddressRoute
 import com.mifos.feature.client.clientAddress.clientAddressNavigation
@@ -66,9 +65,9 @@ import com.mifos.feature.client.clientUpdateDefaultAccount.navigateToUpdateDefau
 import com.mifos.feature.client.clientUpdateDefaultAccount.updateDefaultAccountDestination
 import com.mifos.feature.client.clientsList.ClientListScreen
 import com.mifos.feature.client.createNewClient.CreateNewClientScreen
+import com.mifos.feature.client.documentPreviewScreen.DocumentPreviewScreenRoute
 import com.mifos.feature.client.documentPreviewScreen.createDocumentPreviewRoute
-import com.mifos.feature.client.documentPreviewScreen.navigateToDocumentPreviewForPreview
-import com.mifos.feature.client.documentPreviewScreen.navigateToDocumentPreviewWhenCanUpdateToServer
+import com.mifos.feature.client.documentPreviewScreen.navigateToDocumentPreviewRoute
 import com.mifos.feature.client.fixedDepositAccount.clientFixedDepositAccountDestination
 import com.mifos.feature.client.fixedDepositAccount.navigateToFixedDepositAccountRoute
 import com.mifos.feature.client.recurringDepositAccount.clientRecurringDepositAccountDestination
@@ -177,7 +176,7 @@ fun NavGraphBuilder.clientNavGraph(
             navController = navController,
             navigateBack = navController::popBackStack,
             navigateToAddDocuments = navController::navigateToClientAddDocumentRoute,
-            onViewDocument = navController::navigateToDocumentPreviewWhenCanUpdateToServer
+            onViewDocument = navController::navigateToDocumentPreviewRoute
         )
 
         clientAddDocumentGraphRoute(
@@ -185,34 +184,13 @@ fun NavGraphBuilder.clientNavGraph(
             navigateBack = {
                 navController.popBackStack<ClientAddDocumentRoute>(inclusive = true)
             },
-            navigateToDocumentPreview = {
-                navController.navigateToDocumentPreviewForPreview(it)
-            },
+            navigateToDocumentPreview = navController::navigateToDocumentPreviewRoute,
         )
 
         createDocumentPreviewRoute(
-            navigateOnCancelUpdating = {
-                navController.navigateToClientAddDocumentRouteFromPreview(
-                    documentStateString = it,
-                )
-            },
-            navigateOnDocumentRejected = {
-                navController.navigateToClientAddDocumentRouteFromPreview(
-                    documentStateString = it,
-                    isDocumentRejected = true,
-                )
-            },
-            navigateOnSubmitClicked = {documentState , newDocumentPath, updateFromServer->
-                navController.navigateToClientAddDocumentRouteFromPreview(
-                    documentStateString = documentState,
-                    documentPath = newDocumentPath,
-                    updateOnServer = updateFromServer,
-                    comingFromPreviewScreen = true,
-                )
-            },
             navigateBack = {
-                navController.navigateToClientAddDocumentRouteFromPreview(documentStateString = it)
-            },
+                navController.popBackStack<DocumentPreviewScreenRoute>(inclusive = true)
+            }
         )
 
 

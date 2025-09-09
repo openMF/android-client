@@ -9,23 +9,17 @@ import kotlinx.serialization.Serializable
 data object DocumentPreviewScreenRoute
 
 fun NavGraphBuilder.createDocumentPreviewRoute(
-    navigateOnCancelUpdating: () -> Unit,
-    navigateOnDocumentRejected: () -> Unit,
-    navigateOnSubmitClicked: () -> Unit,
     navigateBack: () -> Unit,
 ){
 
     composable<DocumentPreviewScreenRoute> {
         DocumentPreviewScreen(
-            navigateOnCancelUpdating = navigateOnCancelUpdating,
-            navigateOnDocumentRejected = navigateOnDocumentRejected,
-            navigateOnSubmitClicked = navigateOnSubmitClicked,
             navigateBack = navigateBack
         )
     }
 }
 
 
-fun NavController.navigateToDocumentPreviewForUpdatingLocal(){
+fun NavController.navigateToDocumentPreviewRoute(){
   this.navigate(DocumentPreviewScreenRoute)
 }

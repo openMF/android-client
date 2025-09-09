@@ -22,8 +22,8 @@ data class ClientDocumentsRoute(
 fun NavGraphBuilder.clientDocumentsDestination(
     navController: NavController,
     navigateBack: () -> Unit,
-    navigateToAddDocuments: (documentState: String) -> Unit,
-    onViewDocument:  (documentState: String) -> Unit,
+    navigateToAddDocuments: () -> Unit,
+    onViewDocument:  () -> Unit,
 ) {
     composable<ClientDocumentsRoute> {
         ClientDocumentScreen(
@@ -42,5 +42,4 @@ fun NavController.navigateToClientDocumentsRoute(
         this.popUpTo<ClientDocumentsRoute>()
     }
 }
-
 

@@ -35,14 +35,13 @@ import com.mifos.core.ui.components.MifosBreadcrumbNavBar
 import com.mifos.core.ui.components.MifosFilePickerBottomSheet
 import com.mifos.core.ui.components.MifosProgressIndicator
 import com.mifos.core.ui.util.EventsEffect
-import kotlinx.serialization.json.Json
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun ClientAddDocumentsScreen(
     navController: NavController,
     navigateBack: () -> Unit,
-    navigateToDocumentPreviewScreen: (documentStateString: String) -> Unit,
+    navigateToDocumentPreviewScreen: () -> Unit,
     viewModel: ClientAddDocumentScreenViewmodel = koinViewModel()
 ) {
     val state by viewModel.stateFlow.collectAsStateWithLifecycle()
@@ -50,10 +49,7 @@ fun ClientAddDocumentsScreen(
     EventsEffect(viewModel.eventFlow){ events ->
         when(events){
             ClientAddDocumentScreenEvents.OnNavigateBack -> navigateBack()
-            is ClientAddDocumentScreenEvents.OnNavigateToPreviewScreen -> {
-                val dataState = Json.encodeToString(events.documentState)
-                navigateToDocumentPreviewScreen(dataState)
-            }
+            is ClientAddDocumentScreenEvents.OnNavigateToPreviewScreen -> navigateToDocumentPreviewScreen()
         }
     }
 
@@ -235,12 +231,10 @@ private fun ClientAddDocumentScaffold(
 
                         MifosOutlinedButton(
                             onClick = {
-                                if(state.isDocumentAdded){
-                                    if(!state.updatingDocument){
-                                        onAction(ClientAddDocumentScreenAction.UploadDocument)
-                                    } else {
-                                        onAction(ClientAddDocumentScreenAction.UpdateDocument)
-                                    }
+                                if(!state.updatingDocument){
+                                    onAction(ClientAddDocumentScreenAction.UploadDocument)
+                                } else {
+                                    onAction(ClientAddDocumentScreenAction.UpdateDocument)
                                 }
                             },
                             colors = ButtonDefaults.outlinedButtonColors(
@@ -254,7 +248,8 @@ private fun ClientAddDocumentScaffold(
                             shape = DesignToken.shapes.medium,
                             modifier = Modifier
                                 .height(40.dp)
-                                .weight(1f)
+                                .weight(1f),
+                            enabled = state.isDocumentAdded
                         ){
                             Icon(
                                 imageVector = MifosIcons.RightTick,

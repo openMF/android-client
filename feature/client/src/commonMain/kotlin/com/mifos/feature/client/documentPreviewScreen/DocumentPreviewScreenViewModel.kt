@@ -22,6 +22,10 @@ class DocumentPreviewScreenViewModel(
 
     val documentSelectAndUploadState = documentSelectAndUploadRepository.state
 
+    init {
+        updateStateReactively()
+    }
+
     override fun handleAction(action: DocumentPreviewScreenAction) {
         when (action) {
             DocumentPreviewScreenAction.CancelUpdating -> {
@@ -53,12 +57,13 @@ class DocumentPreviewScreenViewModel(
                 documentSelectAndUploadFlow.update {
                     it.copy(documentPreviewedAndAccepted = false)
                 }
+                sendEvent(DocumentPreviewEvent.OnNavigateBack)
             }
             DocumentPreviewScreenAction.SubmitClicked -> {
                 documentSelectAndUploadFlow.update {
                     it.copy(documentPreviewedAndAccepted = true)
                 }
-                sendEvent(DocumentPreviewEvent.OnSubmitClinked)
+                sendEvent(DocumentPreviewEvent.OnNavigateBack)
             }
             DocumentPreviewScreenAction.UpdateNew -> {
                 mutableStateFlow.update {
@@ -90,6 +95,7 @@ class DocumentPreviewScreenViewModel(
                             showBottomSheet = false,
                         )
                     }
+                sendAction(DocumentPreviewScreenAction.EnableUpdating)
 
             }.onFailure { throwable ->
                 mutableStateFlow.update {
@@ -110,7 +116,7 @@ class DocumentPreviewScreenViewModel(
                 documentSelectAndUploadState.entityDocument?.readBytes()?.let {bytes->
                     mutableStateFlow.update {
                         it.copy(
-                            documentType = getDocumentType(documentSelectAndUploadState.entityDocument?.extension ?: ""),
+                            documentType = getDocumentType(documentSelectAndUploadState.entityDocument.extension),
                             showUpdateButton = false,
                             showBottomSheet = false,
                             documentBytes = bytes
@@ -144,7 +150,19 @@ class DocumentPreviewScreenViewModel(
             }
         }
     }
-
+    private fun updateStateReactively() {
+        viewModelScope.launch {
+            documentSelectAndUploadFlow.collect {state ->
+                mutableStateFlow.update {
+                    it.copy(
+                        showUpdateButton = state.documentPreviewedAndAccepted,
+                        documentBytes = state.entityDocument?.readBytes(),
+                        documentType = getDocumentType(state.entityDocument?.extension ?: ""),
+                    )
+                }
+            }
+        }
+    }
 
 }
 
@@ -187,8 +205,5 @@ private fun getDocumentType(extension: String): DocumentType? {
 }
 
 sealed interface DocumentPreviewEvent {
-    object OnCancelUpdating : DocumentPreviewEvent
     object OnNavigateBack : DocumentPreviewEvent
-    object OnDocumentRejected : DocumentPreviewEvent
-    object OnSubmitClinked: DocumentPreviewEvent
 }

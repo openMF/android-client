@@ -16,19 +16,12 @@ import kotlinx.serialization.Serializable
 
 
 @Serializable
-data class ClientAddDocumentRoute(
-    val documentStateString: String = "",
-    val newDocumentPath: String = "",
-    val comingFromPreviewScreen: Boolean = false,
-    val updateOnServer: Boolean = false,
-    val updatedDocument: Boolean = false,
-    val isDocumentRejected: Boolean = true,
-)
+data object ClientAddDocumentRoute
 
 fun NavGraphBuilder.clientAddDocumentGraphRoute(
     navController: NavController,
     navigateBack: () -> Unit,
-    navigateToDocumentPreview:(documentStateString: String) -> Unit
+    navigateToDocumentPreview:() -> Unit
 ) {
     composable<ClientAddDocumentRoute>{
 
@@ -41,43 +34,8 @@ fun NavGraphBuilder.clientAddDocumentGraphRoute(
 
 }
 
-fun NavController.navigateToClientAddDocumentRoute(
-    documentState: String,
-) {
-    this.navigate(
-        ClientAddDocumentRoute(documentState)
-    ){
+fun NavController.navigateToClientAddDocumentRoute() {
+    this.navigate(ClientAddDocumentRoute){
         this.popUpTo<ClientAddDocumentRoute>()
     }
 }
-
-
-fun NavController.navigateToClientAddDocumentRouteFromPreview(
-    documentStateString: String,
-    documentPath: String = "",
-    updateOnServer: Boolean = false,
-    comingFromPreviewScreen: Boolean = false,
-    isDocumentRejected: Boolean = true,
-) {
-    this.navigate(
-        ClientAddDocumentRoute(
-            documentStateString =  documentStateString,
-            newDocumentPath = documentPath,
-            updateOnServer = updateOnServer,
-            comingFromPreviewScreen = comingFromPreviewScreen,
-            isDocumentRejected = isDocumentRejected,
-        ),
-    ){
-        this.popUpTo<ClientAddDocumentRoute>()
-    }
-}
-
-
-
-@Serializable
-data class DocumentState(
-    val clientId: Int = -1,
-    val documentId: Int = -1,
-    val entityType: String = "clients",
-    val documentPath: String = "",
-)

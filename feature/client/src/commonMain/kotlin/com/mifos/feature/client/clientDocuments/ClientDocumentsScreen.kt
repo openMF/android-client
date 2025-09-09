@@ -29,7 +29,6 @@ import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.designsystem.theme.MifosTypography
 import com.mifos.core.ui.components.*
 import com.mifos.core.ui.util.EventsEffect
-import kotlinx.serialization.json.Json
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -37,8 +36,8 @@ import org.koin.compose.viewmodel.koinViewModel
 internal fun ClientDocumentScreen(
     navController: NavController,
     viewModel: ClientDocumentsViewModel = koinViewModel(),
-    onViewDocument: (documentState: String) -> Unit,
-    onNavigateToAddDocument: (documentState: String) -> Unit,
+    onViewDocument: () -> Unit,
+    onNavigateToAddDocument: () -> Unit,
     onNavigateBack: () -> Unit,
 ) {
     val state by viewModel.stateFlow.collectAsStateWithLifecycle()
@@ -46,14 +45,8 @@ internal fun ClientDocumentScreen(
     EventsEffect(viewModel.eventFlow) { events ->
         when (events) {
             ClientDocumentsEvents.OnNavigateBack -> onNavigateBack()
-            is ClientDocumentsEvents.OnViewDocument -> {
-                val documentState = Json.encodeToString(events.documentState)
-                onViewDocument(documentState)
-            }
-            is ClientDocumentsEvents.OnAddDocument -> {
-                val dataState = Json.encodeToString(events.documentState)
-                onNavigateToAddDocument(dataState)
-            }
+            ClientDocumentsEvents.OnViewDocument -> onViewDocument()
+            ClientDocumentsEvents.OnAddDocument -> onNavigateToAddDocument()
         }
     }
 
