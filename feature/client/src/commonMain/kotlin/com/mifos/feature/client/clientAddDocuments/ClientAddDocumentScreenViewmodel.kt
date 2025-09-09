@@ -214,10 +214,10 @@ class ClientAddDocumentScreenViewmodel(
                 mutableStateFlow.update {
                     it.copy(
                         platformFile = state.entityDocument,
-                        isDocumentAdded = state.documentPreviewedAndAccepted,
+                        changePreviewedDocument = state.changePreviewDocument,
+                        documentAccepted = state.documentPreviewedAndAccepted,
                         pickedDocumentName = state.entityDocument?.name ?: "",
-                        updatingDocument = if(state.uploadType== EntityDocumentState.UploadType.Update) true
-                        else false
+                        isUploadingDocument = state.uploadType== EntityDocumentState.UploadType.Update
                     )
                 }
             }
@@ -250,8 +250,9 @@ class ClientAddDocumentScreenViewmodel(
 
 data class ClientAddDocumentScreenState(
     val platformFile: PlatformFile? = null,
-    val isDocumentAdded: Boolean = false,
-    val updatingDocument: Boolean = false,
+    val changePreviewedDocument: Boolean = false,
+    val documentAccepted: Boolean = false,
+    val isUploadingDocument: Boolean = false,
     val pickedDocumentName: String = "",
     val isNetworkAvailable: Boolean = false,
     val enteredDocumentDescription: String = "",

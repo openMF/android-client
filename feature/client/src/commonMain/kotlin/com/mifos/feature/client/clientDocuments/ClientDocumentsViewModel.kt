@@ -215,7 +215,7 @@ class ClientDocumentsViewModel(
                         entityDocumentStateFlow.update {
                             it.copy(
                                 uploadType = EntityDocumentState.UploadType.Update,
-                                documentPreviewedAndAccepted = true
+                                changePreviewDocument = true
                             )
                         }
                         nullDialogState()

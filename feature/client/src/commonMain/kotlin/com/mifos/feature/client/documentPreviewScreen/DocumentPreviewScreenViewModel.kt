@@ -77,25 +77,28 @@ class DocumentPreviewScreenViewModel(
         viewModelScope.launch {
             val result = documentSelectAndUploadRepository.selectImageFromGallery()
             result.onSuccess {
-                val entityDocState = documentSelectAndUploadFlow.first()
-                entityDocState.entityDocument?.readBytes()?.let { bytes->
+                documentSelectAndUploadFlow.collect { entityState->
+
+                    entityState.entityDocument?.readBytes()?.let { bytes->
                         mutableStateFlow.update {
                             it.copy(
-                                documentType = getDocumentType(entityDocState.entityDocument.extension),
+                                documentType = getDocumentType(entityState.entityDocument.extension),
                                 showUpdateButton = false,
                                 showBottomSheet = false,
                                 documentBytes = bytes
                             )
                         }
-                } ?: mutableStateFlow.update {
+                    } ?: mutableStateFlow.update {
                         it.copy(
                             showUpdateButton = true,
                             exception = Exception("Failed to read image"),
                             showBottomSheet = false,
                         )
                     }
-                updateDocumentPreviewState()
-                sendAction(DocumentPreviewScreenAction.EnableUpdating)
+                    updateDocumentPreviewState()
+                    sendAction(DocumentPreviewScreenAction.EnableUpdating)
+                }
+
             }.onFailure { throwable ->
                 mutableStateFlow.update {
                     it.copy(

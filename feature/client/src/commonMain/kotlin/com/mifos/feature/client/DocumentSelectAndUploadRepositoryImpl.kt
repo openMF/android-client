@@ -27,25 +27,25 @@ class DocumentSelectAndUploadRepositoryImpl (
         dialogTitle: String
     ): Result<Unit> = runCatching {
         val pickResult = FileKitUtil.pickImage(dialogTitle)
-            .first { it !is DataState.Loading }
+            .first{it !is DataState.Loading }
 
-        val imageFile = when (pickResult) {
+        val platformFile = when (pickResult) {
             is DataState.Success -> pickResult.data ?: throw IllegalStateException("Picker succeeded but returned no data.")
             is DataState.Error -> throw pickResult.exception
             DataState.Loading -> error("Unreachable")
         }
 
         val writeResult = FileKitUtil.writeFileToCache(
-            imageFile.nameWithoutExtension,
-            imageFile.extension,
-            imageFile.readBytes()
+            platformFile.nameWithoutExtension,
+            platformFile.extension,
+            platformFile.readBytes()
         ).first { it !is DataState.Loading }
 
         when (writeResult) {
             is DataState.Error -> throw writeResult.exception
             is DataState.Success -> {
                 entityDocumentStateMutableStateFlow.update {
-                    it.copy(entityDocument = imageFile)
+                    it.copy(entityDocument = writeResult.data)
                 }
             }
             DataState.Loading -> error("Unreachable")
@@ -72,7 +72,7 @@ class DocumentSelectAndUploadRepositoryImpl (
             is DataState.Error -> throw writeResult.exception
             is DataState.Success -> {
                 entityDocumentStateMutableStateFlow.update {
-                    it.copy(entityDocument = platformFile)
+                    it.copy(entityDocument = writeResult.data)
                 }
             }
             DataState.Loading -> error("Unreachable")
@@ -147,7 +147,6 @@ class DocumentSelectAndUploadRepositoryImpl (
         } catch (e: Exception) {
             emit(DataState.Error(e))
         }
-
     }
 
     override fun updateDocument(

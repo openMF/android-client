@@ -231,7 +231,7 @@ private fun ClientAddDocumentScaffold(
 
                         MifosOutlinedButton(
                             onClick = {
-                                if(!state.updatingDocument){
+                                if(!state.isUploadingDocument){
                                     onAction(ClientAddDocumentScreenAction.UploadDocument)
                                 } else {
                                     onAction(ClientAddDocumentScreenAction.UpdateDocument)
@@ -253,7 +253,7 @@ private fun ClientAddDocumentScaffold(
                             modifier = Modifier
                                 .height(40.dp)
                                 .weight(1f),
-                            enabled = state.isDocumentAdded
+                            enabled = state.documentAccepted
                         ){
                             Icon(
                                 imageVector = MifosIcons.RightTick,
@@ -296,7 +296,7 @@ private fun AddViewFileAndFileNameRow(
         verticalAlignment = Alignment.CenterVertically
     ){
         Text(
-            text = if (!state.isDocumentAdded) {
+            text = if (!state.changePreviewedDocument) {
                 "No File Selected"
             } else {
                 state.pickedDocumentName
@@ -312,9 +312,10 @@ private fun AddViewFileAndFileNameRow(
             overflow = TextOverflow.Ellipsis,
             maxLines = 1
         )
+
         MifosOutlinedButton(
             onClick = {
-                if(!state.isDocumentAdded){
+                if(!state.changePreviewedDocument){
                     onAction(ClientAddDocumentScreenAction.AddNewDocument)
                 } else{
                     onAction(ClientAddDocumentScreenAction.ViewDocument)
@@ -335,7 +336,7 @@ private fun AddViewFileAndFileNameRow(
                 .width(80.dp)
         ){
             Text(
-                text = if (!state.isDocumentAdded) {
+                text = if (!state.changePreviewedDocument) {
                     "Add"
                 } else {
                     "View"

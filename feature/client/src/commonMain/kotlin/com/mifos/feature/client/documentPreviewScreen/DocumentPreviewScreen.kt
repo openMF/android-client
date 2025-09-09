@@ -183,7 +183,6 @@ private fun ViewDocumentsScreenContent(
 ) {
     MifosCard(
         modifier = modifier,
-        elevation = 4.dp,
         colors = CardDefaults.cardColors(containerColor = AppColors.customWhite),
         borderStroke = BorderStroke(1.dp, MaterialTheme.colorScheme.secondaryContainer),
     ) {

@@ -41,6 +41,7 @@ data class EntityDocumentState(
     val isLoading: Boolean = false,
     val entityDocument: PlatformFile? = null,
     val uploadType: UploadType = UploadType.Upload,
+    val changePreviewDocument: Boolean = false,
     val documentPreviewedAndAccepted: Boolean=  false,
 ){
     sealed interface EntityType {

@@ -97,7 +97,8 @@ object FileKitUtil {
         filesByteArray: ByteArray,
     ) = flow {
         val filePath = appCache / "$fileName.$fileExtension"
-        emit(filePath.write(filesByteArray))
+        filePath.write(filesByteArray)
+        emit(filePath)
     }.asDataStateFlow()
 
     fun writeFileToApplicationPrivateInternalStorage(
@@ -106,7 +107,8 @@ object FileKitUtil {
         filesByteArray: ByteArray,
     ) = flow {
         val privateInternalStorage = appPrivateInternalStorage / "$fileName.$fileExtension"
-        emit(privateInternalStorage.write(filesByteArray))
+        privateInternalStorage.write(filesByteArray)
+        emit(privateInternalStorage)
     }.asDataStateFlow()
 
     // Use only if you are using a database service such as room or sqldelight
@@ -116,7 +118,8 @@ object FileKitUtil {
         filesByteArray: ByteArray,
     ) = flow{
         val internalStorage = appInternalStorage / "$fileName.$fileExtension"
-        emit(internalStorage.write(filesByteArray))
+        internalStorage.write(filesByteArray)
+        emit(internalStorage)
     }.asDataStateFlow()
 
     suspend fun writeToSelectedDirectory(
