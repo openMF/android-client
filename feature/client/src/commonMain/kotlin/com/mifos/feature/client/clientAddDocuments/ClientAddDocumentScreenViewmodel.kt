@@ -63,6 +63,7 @@ class ClientAddDocumentScreenViewmodel(
 
             ClientAddDocumentScreenAction.ViewDocument -> {
                 documentSelectAndUploadRepository.updateStep(EntityDocumentState.Step.UPDATE_PREVIEW)
+                documentSelectAndUploadRepository.changeSubmitMode(EntityDocumentState.SubmitMode.UPDATE)
                 sendEvent(ClientAddDocumentScreenEvents.OnNavigateToPreviewScreen)
             }
 

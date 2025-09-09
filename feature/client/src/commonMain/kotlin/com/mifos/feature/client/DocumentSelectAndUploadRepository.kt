@@ -29,9 +29,6 @@ interface DocumentSelectAndUploadRepository {
         description: String,
     ): Flow<DataState<Unit?>>
 
-    fun confirmDocument()
-
-    fun rejectDocument()
 
     fun resetState()
 
@@ -61,7 +58,6 @@ data class EntityDocumentState(
         PREVIEW,
         VIEW,
         UPDATE_PREVIEW,
-        SUBMIT,
     }
     enum class SubmitMode {
         UPLOAD,

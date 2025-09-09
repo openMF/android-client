@@ -131,11 +131,6 @@ class DocumentSelectAndUploadRepositoryImpl (
         }
     }
 
-    override fun confirmDocument() {
-        entityDocumentStateMutableStateFlow.update {
-            it.copy(step = EntityDocumentState.Step.SUBMIT,)
-        }
-    }
 
     override fun updateEntityDocument(platformFile: PlatformFile) {
         entityDocumentStateMutableStateFlow.update {
@@ -152,16 +147,6 @@ class DocumentSelectAndUploadRepositoryImpl (
     override fun changeSubmitMode(sumbitMode: EntityDocumentState.SubmitMode) {
         entityDocumentStateMutableStateFlow.update {
             it.copy(submitMode = sumbitMode)
-        }
-    }
-
-    override fun rejectDocument() {
-        resetState()
-        entityDocumentStateMutableStateFlow.update {
-            it.copy(
-                entityDocument = null,
-                step = EntityDocumentState.Step.ADD
-            )
         }
     }
 
