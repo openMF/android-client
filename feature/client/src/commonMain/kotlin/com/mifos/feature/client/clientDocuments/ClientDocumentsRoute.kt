@@ -16,14 +16,14 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class ClientDocumentsRoute(
-    val clientId: Int = -1
+    val clientId: Int = -1,
 )
 
 fun NavGraphBuilder.clientDocumentsDestination(
     navController: NavController,
     navigateBack: () -> Unit,
     navigateToAddDocuments: () -> Unit,
-    onViewDocument:  () -> Unit,
+    onViewDocument: () -> Unit,
 ) {
     composable<ClientDocumentsRoute> {
         ClientDocumentScreen(
@@ -38,8 +38,7 @@ fun NavGraphBuilder.clientDocumentsDestination(
 fun NavController.navigateToClientDocumentsRoute(
     clientId: Int,
 ) {
-    this.navigate(ClientDocumentsRoute(clientId = clientId)){
+    this.navigate(ClientDocumentsRoute(clientId = clientId)) {
         this.popUpTo<ClientDocumentsRoute>()
     }
 }
-

@@ -1,3 +1,12 @@
+/*
+ * Copyright 2025 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ */
 package com.mifos.feature.client.clientAddDocuments
 
 import androidclient.feature.client.generated.resources.Res
@@ -15,15 +24,14 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.getString
 
-
 class ClientAddDocumentScreenViewmodel(
     private val networkMonitor: NetworkMonitor,
     private val documentSelectAndUploadRepository: DocumentSelectAndUploadRepository,
 ) : BaseViewModel<
-        ClientAddDocumentScreenState,
-        ClientAddDocumentScreenEvents,
-        ClientAddDocumentScreenAction,
-        >(
+    ClientAddDocumentScreenState,
+    ClientAddDocumentScreenEvents,
+    ClientAddDocumentScreenAction,
+    >(
     initialState = ClientAddDocumentScreenState(),
 ) {
     private val entityDocumentStateFlow =
@@ -97,14 +105,14 @@ class ClientAddDocumentScreenViewmodel(
         }
     }
 
-    private fun pickFromGallery(){
+    private fun pickFromGallery() {
         viewModelScope.launch {
             documentSelectAndUploadRepository.selectImageFromGallery()
                 .collect { dataState ->
-                    when(dataState) {
+                    when (dataState) {
                         is DataState.Error<*> -> {
                             mutableStateFlow.update {
-                                it.copy(showBottomSheet = false,)
+                                it.copy(showBottomSheet = false)
                             }
                             errorDialogState(dataState.message)
                         }
@@ -112,23 +120,22 @@ class ClientAddDocumentScreenViewmodel(
                             loadingDialogState()
                         }
                         is DataState.Success -> {
-                            dataState.data?.let {platformFile ->
+                            dataState.data?.let { platformFile ->
                                 mutableStateFlow.update {
                                     it.copy(
                                         showBottomSheet = false,
-                                        dialogState = null
+                                        dialogState = null,
                                     )
                                 }
                                 documentSelectAndUploadRepository.updateStep(EntityDocumentState.Step.PREVIEW)
                                 documentSelectAndUploadRepository.updateEntityDocument(
-                                    platformFile
+                                    platformFile,
                                 )
 //                                updateAddDocumentState()
                                 sendEvent(ClientAddDocumentScreenEvents.OnNavigateToPreviewScreen)
                             }
                         }
                     }
-
                 }
         }
     }
@@ -137,49 +144,47 @@ class ClientAddDocumentScreenViewmodel(
         viewModelScope.launch {
             documentSelectAndUploadRepository.selectImageFromFile()
                 .collect { dataState ->
-                    when(dataState) {
+                    when (dataState) {
                         is DataState.Error<*> -> {
                             mutableStateFlow.update {
-                                it.copy(showBottomSheet = false,)
+                                it.copy(showBottomSheet = false)
                             }
                             errorDialogState(dataState.message)
                         }
                         DataState.Loading -> {
                             loadingDialogState()
                         }
-                        is DataState.Success ->{
-                            dataState.data?.let {platformFile ->
+                        is DataState.Success -> {
+                            dataState.data?.let { platformFile ->
                                 mutableStateFlow.update {
                                     it.copy(
                                         showBottomSheet = false,
-                                        dialogState = null
+                                        dialogState = null,
                                     )
                                 }
                                 documentSelectAndUploadRepository.updateStep(EntityDocumentState.Step.PREVIEW)
                                 documentSelectAndUploadRepository.updateEntityDocument(
-                                    platformFile
+                                    platformFile,
                                 )
 //                                updateAddDocumentState()
                                 sendEvent(ClientAddDocumentScreenEvents.OnNavigateToPreviewScreen)
                             }
                         }
                     }
-
                 }
         }
     }
 
-
     private fun uploadDocument() {
         viewModelScope.launch {
             val isConnected = observerNetwork()
-            when(isConnected) {
+            when (isConnected) {
                 true -> {
                     documentSelectAndUploadRepository.uploadDocument(
                         state.enteredFileName,
-                        state.enteredDocumentDescription
-                    ).collect {dataState ->
-                        when(dataState) {
+                        state.enteredDocumentDescription,
+                    ).collect { dataState ->
+                        when (dataState) {
                             is DataState.Error<*> -> {
                                 errorDialogState(dataState.message)
                             }
@@ -204,13 +209,13 @@ class ClientAddDocumentScreenViewmodel(
     private fun updateDocument() {
         viewModelScope.launch {
             val isConnected = observerNetwork()
-            when(isConnected) {
+            when (isConnected) {
                 true -> {
                     documentSelectAndUploadRepository.updateDocument(
                         state.enteredFileName,
-                        state.enteredDocumentDescription
-                    ).collect {dataState ->
-                        when(dataState) {
+                        state.enteredDocumentDescription,
+                    ).collect { dataState ->
+                        when (dataState) {
                             is DataState.Error<*> -> {
                                 errorDialogState(dataState.message)
                             }
@@ -234,8 +239,7 @@ class ClientAddDocumentScreenViewmodel(
 
     private suspend fun observerNetwork() = networkMonitor.isOnline.first()
 
-
-    private fun updateAddDocumentState(){
+    private fun updateAddDocumentState() {
         viewModelScope.launch {
             entityDocumentStateFlow.collect { state ->
                 mutableStateFlow.update {
@@ -269,7 +273,6 @@ class ClientAddDocumentScreenViewmodel(
             it.copy(dialogState = ClientAddDocumentScreenState.DialogState.Loading)
         }
     }
-
 }
 
 data class ClientAddDocumentScreenState(
@@ -282,7 +285,7 @@ data class ClientAddDocumentScreenState(
     val dialogState: DialogState? = null,
     val showBottomSheet: Boolean = false,
     val step: EntityDocumentState.Step = EntityDocumentState.Step.ADD,
-    val submitMode: EntityDocumentState.SubmitMode = EntityDocumentState.SubmitMode.UPLOAD
+    val submitMode: EntityDocumentState.SubmitMode = EntityDocumentState.SubmitMode.UPLOAD,
 ) {
     sealed interface DialogState {
         data object Loading : DialogState
@@ -291,7 +294,6 @@ data class ClientAddDocumentScreenState(
         data class UploadError(val message: String) : DialogState
     }
 }
-
 
 sealed interface ClientAddDocumentScreenAction {
 
@@ -308,11 +310,9 @@ sealed interface ClientAddDocumentScreenAction {
     data object ViewDocument : ClientAddDocumentScreenAction
     data class UpdateFileName(val text: String) : ClientAddDocumentScreenAction
     data class UpdateDescription(val text: String) : ClientAddDocumentScreenAction
-
 }
-
 
 sealed interface ClientAddDocumentScreenEvents {
     object OnNavigateBack : ClientAddDocumentScreenEvents
-    object OnNavigateToPreviewScreen: ClientAddDocumentScreenEvents
+    object OnNavigateToPreviewScreen : ClientAddDocumentScreenEvents
 }

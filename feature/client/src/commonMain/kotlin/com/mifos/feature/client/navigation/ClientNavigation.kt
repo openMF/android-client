@@ -176,7 +176,7 @@ fun NavGraphBuilder.clientNavGraph(
             navController = navController,
             navigateBack = navController::popBackStack,
             navigateToAddDocuments = navController::navigateToClientAddDocumentRoute,
-            onViewDocument = navController::navigateToDocumentPreviewRoute
+            onViewDocument = navController::navigateToDocumentPreviewRoute,
         )
 
         clientAddDocumentGraphRoute(
@@ -190,9 +190,8 @@ fun NavGraphBuilder.clientNavGraph(
         createDocumentPreviewRoute(
             navigateBack = {
                 navController.popBackStack<DocumentPreviewScreenRoute>(inclusive = true)
-            }
+            },
         )
-
 
         clientProfileGeneralDestination(
             onNavigateBack = navController::popBackStack,

@@ -51,12 +51,11 @@ import org.koin.compose.viewmodel.koinViewModel
 @Composable
 fun DocumentPreviewScreen(
     navigateBack: () -> Unit,
-    viewmodel: DocumentPreviewScreenViewModel = koinViewModel()
+    viewmodel: DocumentPreviewScreenViewModel = koinViewModel(),
 ) {
-
     val state by viewmodel.stateFlow.collectAsStateWithLifecycle()
 
-    EventsEffect(viewmodel.eventFlow){event ->
+    EventsEffect(viewmodel.eventFlow) { event ->
         when (event) {
             DocumentPreviewEvent.OnNavigateBack -> navigateBack()
         }
@@ -64,9 +63,8 @@ fun DocumentPreviewScreen(
 
     ViewDocumentScaffold(
         state = state,
-        onAction = remember(viewmodel){{viewmodel.trySendAction(it)}}
+        onAction = remember(viewmodel) { { viewmodel.trySendAction(it) } },
     )
-
 }
 
 @Composable
@@ -85,19 +83,19 @@ private fun ViewDocumentScaffold(
                 onDismiss = {
                     onAction(DocumentPreviewScreenAction.DismissBottomSheet)
                 },
-                onGalleryClick =  {
+                onGalleryClick = {
                     onAction(DocumentPreviewScreenAction.PickFromGallery)
                 },
-                onFilesClick =  {
+                onFilesClick = {
                     onAction(DocumentPreviewScreenAction.PickFromFile)
                 },
-                onMoreClick =  {},
+                onMoreClick = {},
             )
         },
         onBackPressed = {
             onAction(DocumentPreviewScreenAction.NavigateBack)
-        }
-    ) {paddingValues ->
+        },
+    ) { paddingValues ->
         Column(
             modifier = modifier
                 .padding(paddingValues)
@@ -106,7 +104,7 @@ private fun ViewDocumentScaffold(
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            if(state.dialogState!=null){
+            if (state.dialogState != null) {
                 DocumentsPreviewScreenDialog(state)
             } else {
                 ViewDocumentsScreenContent(
@@ -139,7 +137,7 @@ private fun ViewDocumentScaffold(
                         shape = DesignToken.shapes.small,
                         modifier = Modifier
                             .height(40.dp)
-                            .weight(1f)
+                            .weight(1f),
                     ) {
                         Text(
                             "Back",
@@ -167,7 +165,7 @@ private fun ViewDocumentScaffold(
                         shape = DesignToken.shapes.small,
                         modifier = Modifier
                             .height(40.dp)
-                            .weight(1f)
+                            .weight(1f),
                     ) {
                         Text(
                             if (state.step == EntityDocumentState.Step.UPDATE_PREVIEW) {
@@ -181,17 +179,15 @@ private fun ViewDocumentScaffold(
                     }
                 }
             }
-
         }
     }
 }
-
 
 @Composable
 private fun DocumentsPreviewScreenDialog(
     state: DocumentPreviewState,
 ) {
-    when(state.dialogState){
+    when (state.dialogState) {
         is DocumentPreviewState.DialogState.Error -> {
             MifosSweetError(
                 message = state.dialogState.message,
@@ -204,7 +200,6 @@ private fun DocumentsPreviewScreenDialog(
         null -> {}
     }
 }
-
 
 @Composable
 private fun ViewDocumentsScreenContent(

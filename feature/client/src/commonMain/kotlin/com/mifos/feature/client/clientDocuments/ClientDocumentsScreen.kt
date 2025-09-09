@@ -167,7 +167,7 @@ private fun ClientDocumentsScaffold(
                 isRefreshing = state.pullDownRefresh,
                 onRefresh = {
                     onAction(ClientDocumentsActions.Refresh)
-                }
+                },
             ) {
                 Column(
                     Modifier.fillMaxSize()
@@ -240,7 +240,6 @@ private fun ClientDocumentsScaffold(
                         }
                     }
                 }
-
             }
         }
     }

@@ -14,28 +14,25 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import kotlinx.serialization.Serializable
 
-
 @Serializable
 data object ClientAddDocumentRoute
 
 fun NavGraphBuilder.clientAddDocumentGraphRoute(
     navController: NavController,
     navigateBack: () -> Unit,
-    navigateToDocumentPreview:() -> Unit
+    navigateToDocumentPreview: () -> Unit,
 ) {
-    composable<ClientAddDocumentRoute>{
-
+    composable<ClientAddDocumentRoute> {
         ClientAddDocumentsScreen(
             navController = navController,
             navigateBack = navigateBack,
             navigateToDocumentPreviewScreen = navigateToDocumentPreview,
         )
     }
-
 }
 
 fun NavController.navigateToClientAddDocumentRoute() {
-    this.navigate(ClientAddDocumentRoute){
+    this.navigate(ClientAddDocumentRoute) {
         this.popUpTo<ClientAddDocumentRoute>()
     }
 }

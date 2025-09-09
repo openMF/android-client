@@ -1,3 +1,12 @@
+/*
+ * Copyright 2025 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ */
 package com.mifos.feature.client.documentPreviewScreen
 
 import androidx.lifecycle.viewModelScope
@@ -11,14 +20,13 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-
 class DocumentPreviewScreenViewModel(
-    private val documentSelectAndUploadRepository: DocumentSelectAndUploadRepository
+    private val documentSelectAndUploadRepository: DocumentSelectAndUploadRepository,
 ) : BaseViewModel<
-        DocumentPreviewState,
-        DocumentPreviewEvent,
-        DocumentPreviewScreenAction,
->(DocumentPreviewState()) {
+    DocumentPreviewState,
+    DocumentPreviewEvent,
+    DocumentPreviewScreenAction,
+    >(DocumentPreviewState()) {
 
     private val documentSelectAndUploadFlow =
         documentSelectAndUploadRepository.entityDocumentStateMutableStateFlow
@@ -54,7 +62,7 @@ class DocumentPreviewScreenViewModel(
             }
             DocumentPreviewScreenAction.SubmitClicked -> {
                 documentSelectAndUploadRepository.updateStep(
-                   EntityDocumentState.Step.VIEW
+                    EntityDocumentState.Step.VIEW,
                 )
                 sendEvent(DocumentPreviewEvent.OnNavigateBack)
             }
@@ -67,15 +75,14 @@ class DocumentPreviewScreenViewModel(
         }
     }
 
-
-    private fun pickFromGallery(){
+    private fun pickFromGallery() {
         viewModelScope.launch {
             documentSelectAndUploadRepository.selectImageFromGallery()
                 .collect { dataState ->
-                    when(dataState) {
+                    when (dataState) {
                         is DataState.Error<*> -> {
                             mutableStateFlow.update {
-                                it.copy(showBottomSheet = false,)
+                                it.copy(showBottomSheet = false)
                             }
                             errorDialogState(dataState.message)
                         }
@@ -84,25 +91,24 @@ class DocumentPreviewScreenViewModel(
                         }
                         is DataState.Success -> {
                             nullDialogState()
-                            dataState.data?.let {platformFile ->
+                            dataState.data?.let { platformFile ->
                                 mutableStateFlow.update {
                                     it.copy(
                                         showBottomSheet = false,
-                                        documentBytes = platformFile.readBytes()
+                                        documentBytes = platformFile.readBytes(),
                                     )
                                 }
-                                if(documentSelectAndUploadFlow.first().step== EntityDocumentState.Step.PREVIEW){
+                                if (documentSelectAndUploadFlow.first().step == EntityDocumentState.Step.PREVIEW) {
                                     documentSelectAndUploadRepository.updateStep(EntityDocumentState.Step.UPDATE_PREVIEW)
                                 } else {
                                     documentSelectAndUploadRepository.updateStep(EntityDocumentState.Step.PREVIEW)
                                 }
                                 documentSelectAndUploadRepository.updateEntityDocument(
-                                    platformFile
+                                    platformFile,
                                 )
                             }
                         }
                     }
-
                 }
         }
     }
@@ -111,44 +117,43 @@ class DocumentPreviewScreenViewModel(
         viewModelScope.launch {
             documentSelectAndUploadRepository.selectImageFromFile()
                 .collect { dataState ->
-                    when(dataState) {
+                    when (dataState) {
                         is DataState.Error<*> -> {
                             mutableStateFlow.update {
-                                it.copy(showBottomSheet = false,)
+                                it.copy(showBottomSheet = false)
                             }
                             errorDialogState(dataState.message)
                         }
                         DataState.Loading -> {
                             loadingDialogState()
                         }
-                        is DataState.Success ->{
+                        is DataState.Success -> {
                             nullDialogState()
-                            dataState.data?.let {platformFile ->
+                            dataState.data?.let { platformFile ->
                                 mutableStateFlow.update {
                                     it.copy(
                                         showBottomSheet = false,
-                                        documentBytes = platformFile.readBytes()
+                                        documentBytes = platformFile.readBytes(),
                                     )
                                 }
-                                if(documentSelectAndUploadFlow.first().step== EntityDocumentState.Step.PREVIEW){
+                                if (documentSelectAndUploadFlow.first().step == EntityDocumentState.Step.PREVIEW) {
                                     documentSelectAndUploadRepository.updateStep(EntityDocumentState.Step.UPDATE_PREVIEW)
                                 } else {
                                     documentSelectAndUploadRepository.updateStep(EntityDocumentState.Step.PREVIEW)
                                 }
                                 documentSelectAndUploadRepository.updateEntityDocument(
-                                    platformFile
+                                    platformFile,
                                 )
                             }
                         }
                     }
-
                 }
         }
     }
 
     private fun updateDocumentPreviewState() {
         viewModelScope.launch {
-            documentSelectAndUploadFlow.collect {state ->
+            documentSelectAndUploadFlow.collect { state ->
                 mutableStateFlow.update {
                     it.copy(
                         step = state.step,
@@ -194,8 +199,6 @@ data class DocumentPreviewState(
     }
 }
 
-
-
 sealed interface DocumentPreviewScreenAction {
     object NavigateBack : DocumentPreviewScreenAction
     object CancelUpdating : DocumentPreviewScreenAction
@@ -214,13 +217,17 @@ sealed interface DocumentType {
 }
 
 private fun getDocumentType(extension: String): DocumentType? {
-    return if (extension == "pdf" ) DocumentType.Pdf
-    else if(
-        extension=="png" ||
-        extension=="jpeg" ||
-        extension=="jpg"
-    ) DocumentType.Image(extension)
-    else null
+    return if (extension == "pdf") {
+        DocumentType.Pdf
+    } else if (
+        extension == "png" ||
+        extension == "jpeg" ||
+        extension == "jpg"
+    ) {
+        DocumentType.Image(extension)
+    } else {
+        null
+    }
 }
 
 sealed interface DocumentPreviewEvent {

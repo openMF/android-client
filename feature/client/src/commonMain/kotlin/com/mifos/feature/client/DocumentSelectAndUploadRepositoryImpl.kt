@@ -1,3 +1,12 @@
+/*
+ * Copyright 2025 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ */
 package com.mifos.feature.client
 
 import com.mifos.core.common.utils.DataState
@@ -13,21 +22,19 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.update
 
-
-class DocumentSelectAndUploadRepositoryImpl (
+class DocumentSelectAndUploadRepositoryImpl(
     private val documentsRepository: DocumentListRepository,
     private val documentDialogRepository: DocumentDialogRepository,
-): DocumentSelectAndUploadRepository {
+) : DocumentSelectAndUploadRepository {
     override val entityDocumentStateMutableStateFlow = MutableStateFlow(EntityDocumentState())
 
     override suspend fun selectImageFromGallery(
-        dialogTitle: String
-    ) =FileKitUtil.pickImage(dialogTitle)
+        dialogTitle: String,
+    ) = FileKitUtil.pickImage(dialogTitle)
 
     override suspend fun selectImageFromFile(dialogTitle: String) = FileKitUtil.pickPdfFile(dialogTitle)
 
-
-    override suspend fun downloadDocumentAndCache()  = flow {
+    override suspend fun downloadDocumentAndCache() = flow {
         emit(DataState.Loading)
         val state = entityDocumentStateMutableStateFlow.first()
         val response = documentsRepository.downloadDocument(
@@ -46,7 +53,7 @@ class DocumentSelectAndUploadRepositoryImpl (
             "attachment",
             extension,
             byte,
-        ).collect {writeState ->
+        ).collect { writeState ->
             emit(writeState)
         }
     }
@@ -73,15 +80,16 @@ class DocumentSelectAndUploadRepositoryImpl (
             val state = entityDocumentStateMutableStateFlow.first()
 
             val multiPartFormDataContent = getMultiPartFormDataContent(
-                documentName, description
+                documentName,
+                description,
             )
             val result = documentDialogRepository.createDocument(
-                entityType = when(state.entityType){
+                entityType = when (state.entityType) {
                     EntityDocumentState.EntityType.Clients -> "clients"
                     EntityDocumentState.EntityType.Loans -> "loans"
                 },
                 entityId = state.entityId,
-                file = multiPartFormDataContent
+                file = multiPartFormDataContent,
             )
             emit(result)
         } catch (e: Exception) {
@@ -98,16 +106,17 @@ class DocumentSelectAndUploadRepositoryImpl (
             val state = entityDocumentStateMutableStateFlow.first()
 
             val multiPartFormDataContent = getMultiPartFormDataContent(
-                documentName, description
+                documentName,
+                description,
             )
             val result = documentDialogRepository.updateDocument(
-                entityType = when(state.entityType){
+                entityType = when (state.entityType) {
                     EntityDocumentState.EntityType.Clients -> "clients"
                     EntityDocumentState.EntityType.Loans -> "loans"
                 },
                 entityId = state.entityId,
                 documentId = state.documentId,
-                file = multiPartFormDataContent
+                file = multiPartFormDataContent,
             )
             emit(result)
         } catch (e: Exception) {
@@ -131,7 +140,6 @@ class DocumentSelectAndUploadRepositoryImpl (
         }
     }
 
-
     override fun updateEntityDocument(platformFile: PlatformFile) {
         entityDocumentStateMutableStateFlow.update {
             it.copy(entityDocument = platformFile)
@@ -150,7 +158,7 @@ class DocumentSelectAndUploadRepositoryImpl (
         }
     }
 
-    override fun resetState(){
+    override fun resetState() {
         entityDocumentStateMutableStateFlow.update {
             it.copy(
                 entityId = -1,
@@ -159,7 +167,7 @@ class DocumentSelectAndUploadRepositoryImpl (
                 isLoading = false,
                 entityDocument = null,
                 submitMode = EntityDocumentState.SubmitMode.UPLOAD,
-                documentPreviewedAndAccepted=  false,
+                documentPreviewedAndAccepted = false,
             )
         }
     }

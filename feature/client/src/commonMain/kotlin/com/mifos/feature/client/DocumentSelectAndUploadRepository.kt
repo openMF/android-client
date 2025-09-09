@@ -1,3 +1,12 @@
+/*
+ * Copyright 2025 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ */
 package com.mifos.feature.client
 
 import com.mifos.core.common.utils.DataState
@@ -5,15 +14,14 @@ import io.github.vinceglb.filekit.PlatformFile
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 
-
 interface DocumentSelectAndUploadRepository {
     val entityDocumentStateMutableStateFlow: MutableStateFlow<EntityDocumentState>
 
     suspend fun selectImageFromGallery(
-        dialogTitle: String = ""
+        dialogTitle: String = "",
     ): Flow<DataState<PlatformFile?>>
 
-    suspend fun selectImageFromFile(dialogTitle: String =""): Flow<DataState<PlatformFile?>>
+    suspend fun selectImageFromFile(dialogTitle: String = ""): Flow<DataState<PlatformFile?>>
 
     suspend fun downloadDocumentAndCache(): Flow<DataState<PlatformFile>>
 
@@ -29,14 +37,12 @@ interface DocumentSelectAndUploadRepository {
         description: String,
     ): Flow<DataState<Unit?>>
 
-
     fun resetState()
 
     fun updateStep(step: EntityDocumentState.Step)
     fun changeSubmitMode(sumbitMode: EntityDocumentState.SubmitMode)
     fun updateEntityDocument(platformFile: PlatformFile)
 }
-
 
 data class EntityDocumentState(
     val entityId: Int = -1,
@@ -46,12 +52,12 @@ data class EntityDocumentState(
     val entityDocument: PlatformFile? = null,
     val submitMode: SubmitMode = SubmitMode.UPLOAD,
     val changePreviewDocument: Boolean = false,
-    val documentPreviewedAndAccepted: Boolean=  false,
-    val step: Step = Step.VIEW
-){
+    val documentPreviewedAndAccepted: Boolean = false,
+    val step: Step = Step.VIEW,
+) {
     sealed interface EntityType {
-        object Clients: EntityType
-        object Loans: EntityType
+        object Clients : EntityType
+        object Loans : EntityType
     }
     enum class Step {
         ADD,
@@ -61,6 +67,6 @@ data class EntityDocumentState(
     }
     enum class SubmitMode {
         UPLOAD,
-        UPDATE
+        UPDATE,
     }
 }
