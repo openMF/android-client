@@ -9,7 +9,6 @@
  */
 package com.mifos.core.common.utils
 
-
 import io.github.vinceglb.filekit.FileKit
 import io.github.vinceglb.filekit.PlatformFile
 import io.github.vinceglb.filekit.cacheDir
@@ -38,7 +37,7 @@ object FileKitUtil {
         val file = FileKit.openFilePicker(
             type = FileKitType.File(setOf("pdf", "jpeg", "jpg", "png")),
             mode = FileKitMode.Single,
-            title = dialogTitle
+            title = dialogTitle,
         )
         emit(file)
     }.asDataStateFlow()
@@ -125,7 +124,7 @@ object FileKitUtil {
         fileName: String,
         fileExtension: String,
         filesByteArray: ByteArray,
-    ) = flow{
+    ) = flow {
         val internalStorage = appInternalStorage / "$fileName.$fileExtension"
         internalStorage.write(filesByteArray)
         emit(internalStorage)
@@ -136,7 +135,7 @@ object FileKitUtil {
         fileExtension: String,
         filesByteArray: ByteArray,
         directoryPath: String,
-    )= flow {
+    ) = flow {
         val directory = PlatformFile(directoryPath)
         emit(directory.write(filesByteArray))
     }.asDataStateFlow()
