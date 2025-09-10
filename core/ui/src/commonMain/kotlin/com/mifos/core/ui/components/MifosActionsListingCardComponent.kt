@@ -311,12 +311,12 @@ fun MifosActionsCollateralDataListingComponent(
 fun MifosActionsClientDocumentListingComponent(
     documentDescription: String,
     documentName: String,
+    isExpanded: Boolean,
     menuList: List<Actions>,
+    onClick: () -> Unit,
     onActionClicked: (Actions) -> Unit,
 ) {
-    var isExpanded by rememberSaveable {
-        mutableStateOf(false)
-    }
+
     val density = LocalDensity.current
     Column {
         MifosActionsListingComponentOutline(
@@ -324,7 +324,7 @@ fun MifosActionsClientDocumentListingComponent(
         ) {
             Column(
                 modifier = Modifier
-                    .onClick { isExpanded = !isExpanded }
+                    .clickable{onClick()}
                     .padding(DesignToken.padding.large),
             ) {
                 MifosListingRowItemHeader(

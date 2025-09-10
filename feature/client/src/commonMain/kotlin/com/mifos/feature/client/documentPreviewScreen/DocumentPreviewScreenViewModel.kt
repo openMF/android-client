@@ -36,7 +36,7 @@ class DocumentPreviewScreenViewModel(
         documentSelectAndUploadRepository.entityDocumentStateMutableStateFlow
 
     init {
-        updateDocumentPreviewState()
+        updateDocumentPreviewStateReactively()
     }
 
     override fun handleAction(action: DocumentPreviewScreenAction) {
@@ -57,7 +57,7 @@ class DocumentPreviewScreenViewModel(
                 pickFromGallery()
             }
             DocumentPreviewScreenAction.RejectDocument -> {
-                documentSelectAndUploadRepository.resetState()
+                documentSelectAndUploadRepository.resetStateAndRefresh()
                 sendEvent(DocumentPreviewEvent.OnDocumentRejected)
             }
             DocumentPreviewScreenAction.SubmitClicked -> {
@@ -93,10 +93,9 @@ class DocumentPreviewScreenViewModel(
                             nullDialogState()
                             dataState.data?.let { platformFile ->
                                 mutableStateFlow.update {
-                                    it.copy(
-                                        showBottomSheet = false,
-                                    )
+                                    it.copy(showBottomSheet = false,)
                                 }
+                                // 1MB File size check.
                                 if (platformFile.size() > 1048576L) {
                                     mutableStateFlow.update {
                                         it.copy(
@@ -118,6 +117,7 @@ class DocumentPreviewScreenViewModel(
                                     )
                                 }
                             }
+
                         }
                     }
                 }
@@ -144,25 +144,29 @@ class DocumentPreviewScreenViewModel(
                                 mutableStateFlow.update {
                                     it.copy(showBottomSheet = false)
                                 }
-                                if (platformFile.size() > 1048576L) {
-                                    mutableStateFlow.update {
-                                        it.copy(
-                                            dialogState = DocumentPreviewState
-                                                .DialogState.Error(getString(Res.string.error_document_size_exceeded)),
+                                when {
+                                    // 1MB File size check.
+                                    platformFile.size() > 1048576L -> {
+                                        mutableStateFlow.update {
+                                            it.copy(
+                                                dialogState = DocumentPreviewState
+                                                    .DialogState.Error(getString(Res.string.error_document_size_exceeded)),
+                                            )
+                                        }
+                                    }
+                                    else -> {
+                                        mutableStateFlow.update {
+                                            it.copy(documentBytes = platformFile.readBytes())
+                                        }
+                                        if (documentSelectAndUploadFlow.first().step == EntityDocumentState.Step.PREVIEW) {
+                                            documentSelectAndUploadRepository.updateStep(EntityDocumentState.Step.UPDATE_PREVIEW)
+                                        } else {
+                                            documentSelectAndUploadRepository.updateStep(EntityDocumentState.Step.PREVIEW)
+                                        }
+                                        documentSelectAndUploadRepository.updateEntityDocument(
+                                            platformFile,
                                         )
                                     }
-                                } else {
-                                    mutableStateFlow.update {
-                                        it.copy(documentBytes = platformFile.readBytes())
-                                    }
-                                    if (documentSelectAndUploadFlow.first().step == EntityDocumentState.Step.PREVIEW) {
-                                        documentSelectAndUploadRepository.updateStep(EntityDocumentState.Step.UPDATE_PREVIEW)
-                                    } else {
-                                        documentSelectAndUploadRepository.updateStep(EntityDocumentState.Step.PREVIEW)
-                                    }
-                                    documentSelectAndUploadRepository.updateEntityDocument(
-                                        platformFile,
-                                    )
                                 }
                             }
                         }
@@ -171,7 +175,7 @@ class DocumentPreviewScreenViewModel(
         }
     }
 
-    private fun updateDocumentPreviewState() {
+    private fun updateDocumentPreviewStateReactively() {
         viewModelScope.launch {
             documentSelectAndUploadFlow.collect { state ->
                 mutableStateFlow.update {

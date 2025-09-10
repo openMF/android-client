@@ -40,7 +40,7 @@ class ClientAddDocumentScreenViewmodel(
         documentSelectAndUploadRepository.entityDocumentStateMutableStateFlow
 
     init {
-        updateAddDocumentState()
+        updateAddDocumentStateReactively()
     }
 
     override fun handleAction(action: ClientAddDocumentScreenAction) {
@@ -113,6 +113,7 @@ class ClientAddDocumentScreenViewmodel(
                             loadingDialogState()
                         }
                         is DataState.Success -> {
+                            nullDialogState()
                             dataState.data?.let { platformFile ->
                                 mutableStateFlow.update {
                                     it.copy(showBottomSheet = false)
@@ -158,6 +159,7 @@ class ClientAddDocumentScreenViewmodel(
                             loadingDialogState()
                         }
                         is DataState.Success -> {
+                            nullDialogState()
                             dataState.data?.let { platformFile ->
                                 mutableStateFlow.update {
                                     it.copy(showBottomSheet = false)
@@ -206,7 +208,7 @@ class ClientAddDocumentScreenViewmodel(
                             }
                             is DataState.Success<*> -> {
                                 nullDialogState()
-                                documentSelectAndUploadRepository.resetState()
+                                documentSelectAndUploadRepository.resetStateAndRefresh()
                                 sendEvent(ClientAddDocumentScreenEvents.OnNavigateBack)
                             }
                         }
@@ -237,7 +239,7 @@ class ClientAddDocumentScreenViewmodel(
                             }
                             is DataState.Success<*> -> {
                                 nullDialogState()
-                                documentSelectAndUploadRepository.resetState()
+                                documentSelectAndUploadRepository.resetStateAndRefresh()
                                 sendEvent(ClientAddDocumentScreenEvents.OnNavigateBack)
                             }
                         }
@@ -252,7 +254,7 @@ class ClientAddDocumentScreenViewmodel(
 
     private suspend fun observerNetwork() = networkMonitor.isOnline.first()
 
-    private fun updateAddDocumentState() {
+    private fun updateAddDocumentStateReactively() {
         viewModelScope.launch {
             entityDocumentStateFlow.collect { state ->
                 mutableStateFlow.update {

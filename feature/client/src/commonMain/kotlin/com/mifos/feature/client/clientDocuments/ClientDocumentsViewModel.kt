@@ -50,6 +50,7 @@ class ClientDocumentsViewModel(
 
     init {
         observeNetworkAndLoadDocuments()
+        observeForRefresh()
     }
 
     override fun handleAction(action: ClientDocumentsActions) {
@@ -125,7 +126,7 @@ class ClientDocumentsViewModel(
             when (isConnected) {
                 true -> {
                     documentsRepository.getDocumentsList(
-                        "clients",
+                        entityType = entityType,
                         route.clientId,
                     ).collect { dataState ->
                         when (dataState) {
@@ -157,6 +158,7 @@ class ClientDocumentsViewModel(
                     errorDialogState(getString(Res.string.no_internet_message))
                 }
             }
+            documentSelectAndUploadRepository.resetRefreshState()
         }
     }
 
@@ -253,6 +255,17 @@ class ClientDocumentsViewModel(
             }
         }
     }
+
+    private fun observeForRefresh() {
+        viewModelScope.launch {
+            entityDocumentStateFlow.collect { clientDocuments ->
+                if(clientDocuments.doARefresh){
+                    sendAction(ClientDocumentsActions.Refresh)
+                }
+            }
+        }
+    }
+
 }
 
 data class ClientDocumentsScreenState(

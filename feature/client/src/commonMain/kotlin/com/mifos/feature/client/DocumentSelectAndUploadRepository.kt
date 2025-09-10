@@ -10,6 +10,7 @@
 package com.mifos.feature.client
 
 import com.mifos.core.common.utils.DataState
+import com.mifos.core.network.GenericResponse
 import io.github.vinceglb.filekit.PlatformFile
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -25,30 +26,35 @@ interface DocumentSelectAndUploadRepository {
 
     fun downloadDocumentAndCache(): Flow<DataState<PlatformFile>>
 
-    suspend fun deleteDocument(): Result<Unit>
+    suspend fun deleteDocument(): Result<GenericResponse>
 
     fun uploadDocument(
         documentName: String,
         description: String,
-    ): Flow<DataState<Unit>>
+    ): Flow<DataState<GenericResponse>>
 
     fun updateDocument(
         documentName: String,
         description: String,
-    ): Flow<DataState<Unit>>
+    ): Flow<DataState<GenericResponse>>
 
-    fun resetState()
+    suspend fun deleteDocumentFormCache()
+
+    fun resetStateAndRefresh()
 
     fun updateStep(step: EntityDocumentState.Step)
     fun changeSubmitMode(submitMode: EntityDocumentState.SubmitMode)
     fun updateEntityDocument(platformFile: PlatformFile)
+
+    fun resetRefreshState()
+
 }
 
 data class EntityDocumentState(
     val entityId: Int = -1,
     val documentId: Int = -1,
     val entityType: EntityType = EntityType.Clients,
-    val isLoading: Boolean = false,
+    val doARefresh: Boolean = false,
     val entityDocument: PlatformFile? = null,
     val submitMode: SubmitMode = SubmitMode.UPLOAD,
     val changePreviewDocument: Boolean = false,

@@ -39,7 +39,9 @@ import androidx.compose.material3.TextButton
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
@@ -208,11 +210,28 @@ private fun ClientDocumentsScaffold(
                     if (state.clientDocuments.isEmpty()) {
                         MifosEmptyCard(msg = stringResource(Res.string.client_empty_card_message))
                     } else {
+                        var selectedDocumentID by remember {
+                            mutableStateOf(-1)
+                        };
+                        var isAlreadyExpanded by remember {
+                            mutableStateOf(false)
+                        };
                         LazyColumn {
                             items(state.clientDocuments) { clientDocument ->
                                 MifosActionsClientDocumentListingComponent(
                                     clientDocument.description ?: "",
                                     clientDocument.fileName ?: "",
+                                    isExpanded =  (selectedDocumentID == clientDocument.id)
+                                            && isAlreadyExpanded,
+                                    onClick = {
+                                        if(selectedDocumentID == clientDocument.id) {
+                                            isAlreadyExpanded = false
+                                            selectedDocumentID = -1
+                                        }else {
+                                            selectedDocumentID = clientDocument.id
+                                            isAlreadyExpanded = true
+                                        }
+                                    },
                                     menuList = listOf(
                                         Actions.ViewDocument(),
                                         Actions.DeleteDocument(),
