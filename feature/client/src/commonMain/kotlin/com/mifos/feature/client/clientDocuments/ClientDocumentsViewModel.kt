@@ -265,6 +265,10 @@ class ClientDocumentsViewModel(
             }
         }
     }
+
+    override fun onCleared() {
+        super.onCleared()
+    }
 }
 
 data class ClientDocumentsScreenState(

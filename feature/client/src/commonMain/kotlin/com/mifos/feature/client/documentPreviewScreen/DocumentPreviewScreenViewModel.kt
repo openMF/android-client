@@ -57,6 +57,7 @@ class DocumentPreviewScreenViewModel(
                 pickFromGallery()
             }
             DocumentPreviewScreenAction.RejectDocument -> {
+                deleteDocumentFromCacheIfPresent()
                 documentSelectAndUploadRepository.resetStateAndRefresh()
                 sendEvent(DocumentPreviewEvent.OnDocumentRejected)
             }
@@ -174,6 +175,11 @@ class DocumentPreviewScreenViewModel(
         }
     }
 
+    private fun deleteDocumentFromCacheIfPresent() {
+        viewModelScope.launch {
+            documentSelectAndUploadRepository.deleteDocumentFormCache()
+        }
+    }
     private fun updateDocumentPreviewStateReactively() {
         viewModelScope.launch {
             documentSelectAndUploadFlow.collect { state ->
