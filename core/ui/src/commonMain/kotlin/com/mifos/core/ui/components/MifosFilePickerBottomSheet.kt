@@ -13,7 +13,6 @@ import androidclient.core.ui.generated.resources.Res
 import androidclient.core.ui.generated.resources.file_picker_bottom_sheet_files
 import androidclient.core.ui.generated.resources.file_picker_bottom_sheet_gallery
 import androidclient.core.ui.generated.resources.file_picker_bottom_sheet_more
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
@@ -28,44 +27,40 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
 fun MifosFilePickerBottomSheet(
-    showBottomSheet: Boolean,
     onDismiss: () -> Unit,
     onGalleryClick: () -> Unit,
     onFilesClick: () -> Unit,
     modifier: Modifier = Modifier,
     onMoreClick: () -> Unit,
 ) {
-    if (showBottomSheet) {
-        MifosBottomSheet(
-            onDismiss = onDismiss,
-            modifier = modifier.background(
-                MaterialTheme.colorScheme.onPrimary,
-            ),
+    MifosBottomSheet(
+        onDismiss = onDismiss,
+        modifier = modifier,
+        color = MaterialTheme.colorScheme.onPrimary,
+    ) {
+        Row(
+            modifier = Modifier
+                .padding(
+                    start = DesignToken.padding.large,
+                    end = DesignToken.padding.large,
+                    bottom = DesignToken.padding.extraLarge,
+                ),
         ) {
-            Row(
-                modifier = Modifier
-                    .padding(
-                        start = DesignToken.padding.large,
-                        end = DesignToken.padding.large,
-                        bottom = DesignToken.padding.extraLarge,
-                    ),
-            ) {
-                MifosBottomSheetOptionItem(
-                    label = stringResource(Res.string.file_picker_bottom_sheet_gallery),
-                    icon = MifosIcons.Gallery,
-                    onClick = onGalleryClick,
-                )
-                MifosBottomSheetOptionItem(
-                    label = stringResource(Res.string.file_picker_bottom_sheet_files),
-                    icon = MifosIcons.PickDocument,
-                    onClick = onFilesClick,
-                )
-                MifosBottomSheetOptionItem(
-                    label = stringResource(Res.string.file_picker_bottom_sheet_more),
-                    icon = MifosIcons.MoreHoriz,
-                    onClick = onMoreClick,
-                )
-            }
+            MifosBottomSheetOptionItem(
+                label = stringResource(Res.string.file_picker_bottom_sheet_gallery),
+                icon = MifosIcons.Gallery,
+                onClick = onGalleryClick,
+            )
+            MifosBottomSheetOptionItem(
+                label = stringResource(Res.string.file_picker_bottom_sheet_files),
+                icon = MifosIcons.PickDocument,
+                onClick = onFilesClick,
+            )
+            MifosBottomSheetOptionItem(
+                label = stringResource(Res.string.file_picker_bottom_sheet_more),
+                icon = MifosIcons.MoreHoriz,
+                onClick = onMoreClick,
+            )
         }
     }
 }
@@ -75,7 +70,6 @@ fun MifosFilePickerBottomSheet(
 fun PreviewMifosFilePickerBottomSheet() {
     MaterialTheme {
         MifosFilePickerBottomSheet(
-            true,
             {},
             {},
             {},

@@ -9,6 +9,10 @@
  */
 package com.mifos.feature.client.clientAddDocuments
 
+import androidclient.feature.client.generated.resources.Res
+import androidclient.feature.client.generated.resources.btn_back
+import androidclient.feature.client.generated.resources.btn_submit
+import androidclient.feature.client.generated.resources.feature_client_description
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -21,6 +25,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -48,6 +53,7 @@ import com.mifos.core.ui.components.MifosBreadcrumbNavBar
 import com.mifos.core.ui.components.MifosFilePickerBottomSheet
 import com.mifos.core.ui.util.EventsEffect
 import com.mifos.feature.client.EntityDocumentState
+import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -88,7 +94,7 @@ private fun ClientAddDocumentsScreenDialog(
         ClientAddDocumentScreenState.DialogState.Loading -> {
             MifosCircularProgress()
         }
-        null -> {}
+
         is ClientAddDocumentScreenState.DialogState.UpdateError -> {
             MifosSweetError(
                 message = state.dialogState.message,
@@ -107,6 +113,8 @@ private fun ClientAddDocumentsScreenDialog(
                 },
             )
         }
+
+        else -> {}
     }
 }
 
@@ -118,28 +126,11 @@ private fun ClientAddDocumentScaffold(
     onAction: (ClientAddDocumentScreenAction) -> Unit,
 ) {
     MifosScaffold(
-        modifier = modifier,
+        title = "",
         onBackPressed = {
             onAction(ClientAddDocumentScreenAction.NavigateBack)
         },
-        bottomBar = {
-            MifosFilePickerBottomSheet(
-                showBottomSheet = state.showBottomSheet,
-                onDismiss = {
-                    onAction(ClientAddDocumentScreenAction.DismissBottomSheet)
-                },
-                onGalleryClick = {
-                    onAction(ClientAddDocumentScreenAction.PickFromGallery)
-                },
-                onFilesClick = {
-                    onAction(ClientAddDocumentScreenAction.PickFromFiles)
-                },
-                onMoreClick = {
-                    onAction(ClientAddDocumentScreenAction.UseMoreOptions)
-                },
-            )
-        },
-        title = "",
+        modifier = modifier,
     ) { paddingValues ->
         if (state.dialogState != null) {
             ClientAddDocumentsScreenDialog(
@@ -187,7 +178,7 @@ private fun ClientAddDocumentScaffold(
                                 ClientAddDocumentScreenAction.UpdateDescription(it),
                             )
                         },
-                        label = "Description",
+                        label = stringResource(Res.string.feature_client_description),
                         maxLines = 1,
                         shape = DesignToken.shapes.medium,
                         modifier = Modifier
@@ -225,13 +216,14 @@ private fun ClientAddDocumentScaffold(
                             Icon(
                                 imageVector = MifosIcons.ArrowBack,
                                 "back button",
-                                modifier = Modifier.size(DesignToken.sizes.iconSmall),
+                                modifier = Modifier.size(DesignToken.sizes.iconMedium),
                                 tint = MaterialTheme.colorScheme.primary,
                             )
-                            Spacer(Modifier.width(DesignToken.spacing.small))
+                            Spacer(Modifier.width(DesignToken.spacing.extraSmall))
                             Text(
-                                "Back",
-                                style = MaterialTheme.typography.labelMedium,
+                                stringResource(Res.string.btn_back),
+                                style = MaterialTheme.typography.labelLarge,
+                                fontFamily = FontFamily.SansSerif,
                             )
                         }
 
@@ -251,10 +243,16 @@ private fun ClientAddDocumentScaffold(
                                 disabledContainerColor = MaterialTheme.colorScheme.onSurface.copy(
                                     alpha = .12f,
                                 ),
-                                disabledContentColor = MaterialTheme.colorScheme.onSurface.copy(),
+                                disabledContentColor = MaterialTheme.colorScheme.onSurface.copy(
+                                    .5f,
+                                ),
                             ),
                             border = BorderStroke(
-                                1.dp,
+                                if (state.step == EntityDocumentState.Step.VIEW) {
+                                    1.dp
+                                } else {
+                                    0.dp
+                                },
                                 color = MaterialTheme.colorScheme.secondaryContainer,
                             ),
                             shape = DesignToken.shapes.medium,
@@ -265,17 +263,33 @@ private fun ClientAddDocumentScaffold(
                         ) {
                             Icon(
                                 imageVector = MifosIcons.RightTick,
-                                "back button",
-                                modifier = Modifier.size(DesignToken.sizes.iconMiny),
-                                tint = MaterialTheme.colorScheme.onPrimary,
+                                contentDescription = "submit button",
+                                modifier = Modifier.size(DesignToken.sizes.iconSmall),
                             )
                             Spacer(Modifier.width(DesignToken.spacing.small))
                             Text(
-                                "Submit",
-                                style = MaterialTheme.typography.labelMedium,
-                                color = MaterialTheme.colorScheme.onPrimary,
+                                stringResource(Res.string.btn_submit),
+                                style = MaterialTheme.typography.labelLarge,
+                                fontFamily = FontFamily.SansSerif,
                             )
                         }
+                    }
+
+                    if (state.showBottomSheet) {
+                        MifosFilePickerBottomSheet(
+                            onDismiss = {
+                                onAction(ClientAddDocumentScreenAction.DismissBottomSheet)
+                            },
+                            onGalleryClick = {
+                                onAction(ClientAddDocumentScreenAction.PickFromGallery)
+                            },
+                            onFilesClick = {
+                                onAction(ClientAddDocumentScreenAction.PickFromFiles)
+                            },
+                            onMoreClick = {
+                                onAction(ClientAddDocumentScreenAction.UseMoreOptions)
+                            },
+                        )
                     }
                 }
             }
@@ -306,7 +320,7 @@ private fun AddViewFileAndFileNameRow(
             } else {
                 state.pickedDocumentName
             },
-            style = MaterialTheme.typography.labelLarge,
+            style = MaterialTheme.typography.bodyLarge,
             fontFamily = FontFamily.SansSerif,
             modifier = Modifier.padding(
                 start = 16.dp,
@@ -338,7 +352,7 @@ private fun AddViewFileAndFileNameRow(
             modifier = Modifier
                 .padding(end = 16.dp)
                 .height(36.dp)
-                .width(80.dp),
+                .wrapContentWidth(),
         ) {
             Text(
                 text = if (state.step == EntityDocumentState.Step.ADD) {
@@ -346,7 +360,8 @@ private fun AddViewFileAndFileNameRow(
                 } else {
                     "View"
                 },
-                style = MaterialTheme.typography.labelMedium,
+                style = MaterialTheme.typography.labelLarge,
+                fontFamily = FontFamily.SansSerif,
             )
         }
     }

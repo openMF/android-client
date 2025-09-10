@@ -174,7 +174,6 @@ class DocumentSelectAndUploadRepositoryImpl(
     override fun resetState() {
         entityDocumentStateMutableStateFlow.update {
             it.copy(
-                entityId = -1,
                 documentId = -1,
                 entityType = EntityDocumentState.EntityType.Clients,
                 isLoading = false,

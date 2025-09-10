@@ -18,6 +18,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -162,10 +163,14 @@ fun MifosBottomSheetOptionItem(
         verticalArrangement = Arrangement.Center,
     ) {
         MifosCard(
-            elevation = 4.dp,
+            elevation = 2.dp,
             modifier = Modifier
                 .clickable(onClick = onClick),
             shape = DesignToken.shapes.small,
+            colors = CardDefaults.cardColors(
+                containerColor = MaterialTheme.colorScheme.onPrimary,
+                contentColor = MaterialTheme.colorScheme.primary,
+            ),
         ) {
             Icon(
                 imageVector = icon,
@@ -173,7 +178,6 @@ fun MifosBottomSheetOptionItem(
                 modifier = Modifier
                     .padding(DesignToken.padding.medium)
                     .size(DesignToken.sizes.iconAverage),
-                tint = MaterialTheme.colorScheme.primary,
             )
         }
         Spacer(Modifier.height(DesignToken.padding.small))

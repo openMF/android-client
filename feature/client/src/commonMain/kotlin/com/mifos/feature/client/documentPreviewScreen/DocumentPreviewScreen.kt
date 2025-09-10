@@ -79,21 +79,6 @@ private fun ViewDocumentScaffold(
         modifier = Modifier
             .fillMaxSize(),
         title = "",
-        bottomBar = {
-            MifosFilePickerBottomSheet(
-                showBottomSheet = state.showBottomSheet,
-                onDismiss = {
-                    onAction(DocumentPreviewScreenAction.DismissBottomSheet)
-                },
-                onGalleryClick = {
-                    onAction(DocumentPreviewScreenAction.PickFromGallery)
-                },
-                onFilesClick = {
-                    onAction(DocumentPreviewScreenAction.PickFromFile)
-                },
-                onMoreClick = {},
-            )
-        },
         onBackPressed = {
             onAction(DocumentPreviewScreenAction.NavigateBack)
         },
@@ -106,78 +91,91 @@ private fun ViewDocumentScaffold(
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            if (state.dialogState != null) {
-                DocumentsPreviewScreenDialog(state)
-            } else {
-                ViewDocumentsScreenContent(
-                    state = state,
-                    modifier = Modifier.weight(1f),
-                )
-                Spacer(modifier = Modifier.height(DesignToken.spacing.largeIncreased))
-                Row(
+            ViewDocumentsScreenContent(
+                state = state,
+                modifier = Modifier.weight(1f),
+            )
+            Spacer(modifier = Modifier.height(DesignToken.spacing.largeIncreased))
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .wrapContentHeight(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+            ) {
+                MifosOutlinedButton(
+                    onClick = {
+                        onAction(DocumentPreviewScreenAction.RejectDocument)
+                    },
+                    colors = ButtonDefaults.outlinedButtonColors(
+                        containerColor = MaterialTheme.colorScheme.onPrimary,
+                        contentColor = MaterialTheme.colorScheme.primary,
+                    ),
+                    border = BorderStroke(
+                        1.dp,
+                        MaterialTheme.colorScheme.secondaryContainer,
+                    ),
+                    shape = DesignToken.shapes.small,
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .wrapContentHeight(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
+                        .height(40.dp)
+                        .weight(1f),
                 ) {
-                    MifosOutlinedButton(
-                        onClick = {
-                            onAction(DocumentPreviewScreenAction.RejectDocument)
-                        },
-                        colors = ButtonDefaults.outlinedButtonColors(
-                            containerColor = MaterialTheme.colorScheme.onPrimary,
-                            contentColor = MaterialTheme.colorScheme.primary,
-                        ),
-                        border = BorderStroke(
-                            1.dp,
-                            MaterialTheme.colorScheme.secondaryContainer,
-                        ),
-                        shape = DesignToken.shapes.small,
-                        modifier = Modifier
-                            .height(40.dp)
-                            .weight(1f),
-                    ) {
-                        Text(
-                            "Back",
-                            fontFamily = FontFamily.SansSerif,
-                            style = MaterialTheme.typography.labelLarge,
-                        )
-                    }
-                    Spacer(modifier = Modifier.width(8.dp))
-                    MifosOutlinedButton(
-                        onClick = {
-                            if (state.step == EntityDocumentState.Step.PREVIEW) {
-                                onAction(DocumentPreviewScreenAction.SubmitClicked)
-                            } else {
-                                onAction(DocumentPreviewScreenAction.UpdateNew)
-                            }
-                        },
-                        colors = ButtonDefaults.outlinedButtonColors(
-                            containerColor = MaterialTheme.colorScheme.primary,
-                            contentColor = MaterialTheme.colorScheme.onPrimary,
-                        ),
-                        border = BorderStroke(
-                            1.dp,
-                            MaterialTheme.colorScheme.secondaryContainer,
-                        ),
-                        shape = DesignToken.shapes.small,
-                        enabled = state.step == EntityDocumentState.Step.PREVIEW ||
-                            state.step == EntityDocumentState.Step.UPDATE_PREVIEW,
-                        modifier = Modifier
-                            .height(40.dp)
-                            .weight(1f),
-                    ) {
-                        Text(
-                            if (state.step == EntityDocumentState.Step.UPDATE_PREVIEW) {
-                                "Update New"
-                            } else {
-                                "Submit"
-                            },
-                            fontFamily = FontFamily.SansSerif,
-                            style = MaterialTheme.typography.labelLarge,
-                        )
-                    }
+                    Text(
+                        "Back",
+                        fontFamily = FontFamily.SansSerif,
+                        style = MaterialTheme.typography.labelLarge,
+                    )
                 }
+                Spacer(modifier = Modifier.width(8.dp))
+                MifosOutlinedButton(
+                    onClick = {
+                        if (state.step == EntityDocumentState.Step.PREVIEW) {
+                            onAction(DocumentPreviewScreenAction.SubmitClicked)
+                        } else {
+                            onAction(DocumentPreviewScreenAction.UpdateNew)
+                        }
+                    },
+                    colors = ButtonDefaults.outlinedButtonColors(
+                        containerColor = MaterialTheme.colorScheme.primary,
+                        contentColor = MaterialTheme.colorScheme.onPrimary,
+                    ),
+                    border = BorderStroke(
+                        1.dp,
+                        MaterialTheme.colorScheme.secondaryContainer,
+                    ),
+                    shape = DesignToken.shapes.small,
+                    enabled = state.step == EntityDocumentState.Step.PREVIEW ||
+                        state.step == EntityDocumentState.Step.UPDATE_PREVIEW,
+                    modifier = Modifier
+                        .height(40.dp)
+                        .weight(1f),
+                ) {
+                    Text(
+                        if (state.step == EntityDocumentState.Step.UPDATE_PREVIEW) {
+                            "Update New"
+                        } else {
+                            "Submit"
+                        },
+                        fontFamily = FontFamily.SansSerif,
+                        style = MaterialTheme.typography.labelLarge,
+                    )
+                }
+            }
+
+            if (state.showBottomSheet) {
+                MifosFilePickerBottomSheet(
+                    onDismiss = {
+                        onAction(DocumentPreviewScreenAction.DismissBottomSheet)
+                    },
+                    onGalleryClick = {
+                        onAction(DocumentPreviewScreenAction.PickFromGallery)
+                    },
+                    onFilesClick = {
+                        onAction(DocumentPreviewScreenAction.PickFromFile)
+                    },
+                    onMoreClick = {
+                        onAction(DocumentPreviewScreenAction.UseMoreOptions)
+                    },
+                )
             }
         }
     }
@@ -209,32 +207,37 @@ private fun ViewDocumentsScreenContent(
     MifosCard(
         modifier = modifier,
         colors = CardDefaults.cardColors(containerColor = AppColors.customWhite),
+        elevation = 0.dp,
         borderStroke = BorderStroke(1.dp, MaterialTheme.colorScheme.secondaryContainer),
     ) {
         Box(
             modifier = Modifier.fillMaxSize(),
             contentAlignment = Alignment.Center,
         ) {
-            when (state.documentType) {
-                is DocumentType.Image -> {
-                    AsyncImage(
-                        model = state.documentBytes,
-                        contentDescription = "Document Image",
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .align(Alignment.Center),
-                    )
+            if (state.dialogState != null) {
+                DocumentsPreviewScreenDialog(state)
+            } else {
+                when (state.documentType) {
+                    is DocumentType.Image -> {
+                        AsyncImage(
+                            model = state.documentBytes,
+                            contentDescription = "Document Image",
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .align(Alignment.Center),
+                        )
+                    }
+                    DocumentType.Pdf -> {
+                        Image(
+                            imageVector = MifosIcons.Error,
+                            "failed to load pdf",
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .align(Alignment.Center),
+                        )
+                    }
+                    null -> {}
                 }
-                DocumentType.Pdf -> {
-                    Image(
-                        imageVector = MifosIcons.Error,
-                        "failed to load pdf",
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .align(Alignment.Center),
-                    )
-                }
-                null -> {}
             }
         }
     }
