@@ -198,7 +198,7 @@ class ClientDocumentsViewModel(
                             is DataState.Success -> {
                                 nullDialogState()
                                 documentSelectAndUploadRepository.updateEntityDocument(platformFile = dataState.data)
-                                // Enable them when you want to enable document update.
+                                // Uncomment them when you want to enable document update.
                                 // And also enable the button on the UI Screen also, for SubmitMode.UPDATE.
 //                                documentSelectAndUploadRepository.updateStep(step = EntityDocumentState.Step.UPDATE_PREVIEW)
 //                                documentSelectAndUploadRepository.changeSubmitMode(EntityDocumentState.SubmitMode.UPDATE)
