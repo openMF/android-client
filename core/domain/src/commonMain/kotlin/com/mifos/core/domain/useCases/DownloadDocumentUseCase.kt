@@ -10,11 +10,9 @@
 package com.mifos.core.domain.useCases
 
 import com.mifos.core.common.utils.DataState
-import com.mifos.core.common.utils.asDataStateFlow
 import com.mifos.core.data.repository.DocumentListRepository
 import io.ktor.client.statement.HttpResponse
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
 
 class DownloadDocumentUseCase(
     private val repository: DocumentListRepository,
@@ -24,7 +22,6 @@ class DownloadDocumentUseCase(
         entityType: String,
         entityId: Int,
         documentId: Int,
-    ): Flow<DataState<HttpResponse>> = flow {
-        emit(repository.downloadDocument(entityType, entityId, documentId))
-    }.asDataStateFlow()
+    ): Flow<DataState<HttpResponse>> =
+        repository.downloadDocument(entityType, entityId, documentId)
 }

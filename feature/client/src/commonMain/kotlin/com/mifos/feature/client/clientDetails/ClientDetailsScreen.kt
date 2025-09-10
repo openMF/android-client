@@ -125,7 +125,7 @@ internal fun ClientDetailsScreen(
     notes: (Int) -> Unit,
     pinpointLocation: (Int) -> Unit,
     survey: (Int) -> Unit,
-    uploadSignature: (Int) -> Unit,
+    uploadSignature: (Int, String, String) -> Unit,
     loanAccountSelected: (Int) -> Unit,
     savingsAccountSelected: (Int, SavingAccountDepositTypeEntity) -> Unit,
     activateClient: (Int) -> Unit,
@@ -152,8 +152,7 @@ internal fun ClientDetailsScreen(
     }
 
     val cameraLauncher = rememberPlatformCameraLauncher(
-        onImageCapturedPath = {
-                file ->
+        onImageCapturedPath = { file ->
             showSelectImageDialog = false
             clientDetailsViewModel.saveClientImage(clientId, file)
         },
@@ -271,7 +270,11 @@ internal fun ClientDetailsScreen(
                 MifosMenuDropDownItem(
                     option = stringResource(Res.string.feature_client_upload_signature),
                     onClick = {
-                        uploadSignature(clientId)
+                        client?.displayName?.let { name ->
+                            client.accountNo?.let { accountNo ->
+                                uploadSignature(clientId, name, accountNo)
+                            }
+                        }
                         showMenu = false
                     },
                 )
@@ -873,7 +876,7 @@ private fun ClientDetailsScreenPreview() {
         notes = {},
         pinpointLocation = {},
         survey = {},
-        uploadSignature = {},
+        uploadSignature = { _, _, _ -> },
         loanAccountSelected = {},
         savingsAccountSelected = { _, _ -> },
         activateClient = {},

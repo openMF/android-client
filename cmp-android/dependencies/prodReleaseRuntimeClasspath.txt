@@ -160,6 +160,10 @@ com.arkivanov.essenty:back-handler-android:2.1.0
 com.arkivanov.essenty:back-handler:2.1.0
 com.arkivanov.essenty:utils-internal-android:2.1.0
 com.arkivanov.essenty:utils-internal:2.1.0
+com.attafitamim.krop:core-android:0.2.0
+com.attafitamim.krop:core:0.2.0
+com.attafitamim.krop:ui-android:0.2.0
+com.attafitamim.krop:ui:0.2.0
 com.caverock:androidsvg-aar:1.4
 com.google.accompanist:accompanist-drawablepainter:0.37.3
 com.google.accompanist:accompanist-permissions:0.36.0

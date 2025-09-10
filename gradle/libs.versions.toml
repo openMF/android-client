@@ -141,6 +141,7 @@ fileKitDialog = "0.10.0-beta04"
 wire = "5.0.0"
 compose_ui = "1.8.0-alpha03"
 composeSignature = "1.0.1"
+krop = "0.2.0"
 # Jetbrains CMP
 windowsSizeClass = "0.5.0"
 uiDesktopVersion = "1.7.0"
@@ -379,6 +380,7 @@ coil-network-ktor = { group = "io.coil-kt.coil3", name = "coil-network-ktor3", v
 coil-svg = { group = "io.coil-kt.coil3", name = "coil-svg", version.ref = "coil" }
 coil-network-okhttp = { group = "io.coil-kt.coil3", name = "coil-network-okhttp", version.ref = "coil" }
 
+crop-krop-ui = { module = "com.attafitamim.krop:ui", version.ref = "krop"}
 compose-signature = { module = "io.github.niyajali:compose-signature", version.ref = "composeSignature" }
 compose-gradlePlugin = { group = "org.jetbrains.kotlin", name = "compose-compiler-gradle-plugin", version.ref = "kotlin" }
 squareup-okio = { group = "com.squareup.okio", name = "okio", version.ref = "okioVersion" }

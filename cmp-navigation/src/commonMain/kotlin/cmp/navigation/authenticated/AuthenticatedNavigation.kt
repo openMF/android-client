@@ -33,6 +33,7 @@ import com.mifos.feature.offline.navigation.offlineNavGraph
 import com.mifos.feature.path.tracking.navigation.pathTrackingRoute
 import com.mifos.feature.report.navigation.reportNavGraph
 import com.mifos.feature.savings.navigation.savingsNavGraph
+import com.mifos.feature.savings.savingsAccountv2.navigateToSavingsAccountRoute
 import com.mifos.feature.settings.navigation.settingsScreen
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.InternalSerializationApi
@@ -61,6 +62,7 @@ internal fun NavGraphBuilder.authenticatedGraph(
             navigateToDocumentScreen = navController::navigateToDocumentListScreen,
             navigateToNoteScreen = navController::navigateToNoteScreen,
             navigateToNewLoanAccountScreen = navController::navigateToNewLoanAccountRoute,
+            navigateToNewSavingsAccountScreen = navController::navigateToSavingsAccountRoute,
         )
 
         checkerInboxTaskNavGraph(navController)

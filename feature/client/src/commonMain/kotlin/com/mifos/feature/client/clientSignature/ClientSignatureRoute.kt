@@ -7,7 +7,7 @@
  *
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
-package com.mifos.feature.savings.savingsAccountv2
+package com.mifos.feature.client.clientSignature
 
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
@@ -15,26 +15,26 @@ import androidx.navigation.compose.composable
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class SavingsAccountRoute(
-    val clientId: Int = -1,
+data class ClientSignatureRoute(
+    val clientId: Int,
+    val name: String = "",
+    val accountNo: String = "",
 )
 
-fun NavGraphBuilder.savingsAccountDestination(
-    navController: NavController,
+fun NavGraphBuilder.clientSignatureDestination(
     onNavigateBack: () -> Unit,
-    onFinish: () -> Unit,
+    navController: NavController,
 ) {
-    composable<SavingsAccountRoute> {
-        SavingsAccountScreen(
+    composable<ClientSignatureRoute> {
+        ClientSignatureScreen(
             onNavigateBack = onNavigateBack,
-            onFinish = onFinish,
             navController = navController,
         )
     }
 }
 
-fun NavController.navigateToSavingsAccountRoute(clientId: Int) {
+fun NavController.navigateToClientSignatureScreen(clientId: Int, name: String, accountNo: String) {
     this.navigate(
-        SavingsAccountRoute(clientId = clientId),
+        ClientSignatureRoute(clientId = clientId, name = name, accountNo = accountNo),
     )
 }

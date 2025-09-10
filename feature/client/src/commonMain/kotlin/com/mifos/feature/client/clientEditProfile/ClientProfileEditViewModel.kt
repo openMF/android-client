@@ -19,8 +19,8 @@ import com.mifos.core.data.util.NetworkMonitor
 import com.mifos.core.domain.useCases.UploadClientImageUseCase
 import com.mifos.core.ui.util.BaseViewModel
 import com.mifos.core.ui.util.imageToByteArray
-import com.mifos.feature.client.clientSignature.toPlatformFile
-import com.mifos.feature.client.utils.createImageRequestBody
+import com.mifos.core.ui.util.multipartRequestBody
+import com.mifos.feature.client.utils.toPlatformFile
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
@@ -112,7 +112,7 @@ internal class ClientProfileEditViewModel(
     private fun uploadImage(id: Int, imageFile: ImageBitmap) = viewModelScope.launch {
         uploadClientImageUseCase(
             id,
-            createImageRequestBody(imageFile.toPlatformFile(id.toString())),
+            multipartRequestBody(imageFile.toPlatformFile(id.toString())),
         ).collect { result ->
             when (result) {
                 is DataState.Error -> {

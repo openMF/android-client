@@ -53,7 +53,8 @@ import com.mifos.feature.client.clientLoanAccounts.navigateToClientLoanAccountsR
 import com.mifos.feature.client.clientPinpoint.PinpointClientScreen
 import com.mifos.feature.client.clientProfile.clientProfileDestination
 import com.mifos.feature.client.clientProfile.navigateToClientProfileRoute
-import com.mifos.feature.client.clientSignature.SignatureScreen
+import com.mifos.feature.client.clientSignature.clientSignatureDestination
+import com.mifos.feature.client.clientSignature.navigateToClientSignatureScreen
 import com.mifos.feature.client.clientStaff.clientStaffDestination
 import com.mifos.feature.client.clientStaff.navigateToClientStaffRoute
 import com.mifos.feature.client.clientSurveyList.SurveyListScreen
@@ -99,6 +100,7 @@ fun NavGraphBuilder.clientNavGraph(
     hasDatatables: KFunction4<List<DataTableEntity>, Any?, Int, MutableList<List<FormWidgetDTO>>, Unit>,
     onDocumentClicked: (Int, String) -> Unit,
     navigateToNewLoanAccount: (Int) -> Unit,
+    navigateToNewSavingsAccount: (Int) -> Unit,
 ) {
     navigation<ClientNavGraph>(
         startDestination = ClientListScreenRoute,
@@ -118,7 +120,7 @@ fun NavGraphBuilder.clientNavGraph(
             notes = notes,
             pinpointLocation = navController::navigateClientPinPointScreen,
             survey = navController::navigateClientSurveyListScreen,
-            uploadSignature = navController::navigateClientSignatureScreen,
+            uploadSignature = navController::navigateToClientSignatureScreen,
             loanAccountSelected = loanAccountSelected,
             savingsAccountSelected = savingsAccountSelected,
             activateClient = activateClient,
@@ -133,8 +135,9 @@ fun NavGraphBuilder.clientNavGraph(
         clientPinPointRoute(
             onBackPressed = navController::popBackStack,
         )
-        clientSignatureRoute(
-            onBackPressed = navController::popBackStack,
+        clientSignatureDestination(
+            onNavigateBack = navController::popBackStack,
+            navController = navController,
         )
         clientSurveyListRoute(
             onBackPressed = navController::popBackStack,
@@ -230,6 +233,8 @@ fun NavGraphBuilder.clientNavGraph(
             navigateToClientClosure = navController::navigateToClientClosureRoute,
             navigateToCollateral = navController::navigateToClientCollateralRoute,
             navigateToApplyNewApplication = navController::navigateToClientApplyNewApplicationScreen,
+            navigateToUpdateSignature = navController::navigateToClientSignatureScreen,
+
         )
         clientEditProfileDestination(
             onNavigateBack = navController::popBackStack,
@@ -282,7 +287,7 @@ fun NavGraphBuilder.clientNavGraph(
         clientApplyNewApplicationRoute(
             onNavigateBack = navController::popBackStack,
             onNavigateApplyLoanAccount = navigateToNewLoanAccount,
-            onNavigateApplySavingsAccount = { },
+            onNavigateApplySavingsAccount = navigateToNewSavingsAccount,
             onNavigateApplyShareAccount = { },
             onNavigateApplyRecurringAccount = { },
             onNavigateApplyFixedAccount = { },
@@ -323,7 +328,7 @@ fun NavGraphBuilder.clientDetailRoute(
     notes: (Int) -> Unit,
     pinpointLocation: (Int) -> Unit,
     survey: (Int) -> Unit,
-    uploadSignature: (Int) -> Unit,
+    uploadSignature: (Int, String, String) -> Unit,
     loanAccountSelected: (Int) -> Unit,
     savingsAccountSelected: (Int, SavingAccountDepositTypeEntity) -> Unit,
     activateClient: (Int) -> Unit,
@@ -391,20 +396,6 @@ fun NavGraphBuilder.clientPinPointRoute(
         )
     }
 }
-
-fun NavGraphBuilder.clientSignatureRoute(
-    onBackPressed: () -> Unit,
-) {
-    composable(
-        route = ClientScreens.ClientSignatureScreen.route,
-        arguments = listOf(navArgument(Constants.CLIENT_ID, builder = { type = NavType.IntType })),
-    ) {
-        SignatureScreen(
-            onBackPressed = onBackPressed,
-        )
-    }
-}
-
 fun NavGraphBuilder.clientSurveyListRoute(
     onBackPressed: () -> Unit,
     onCardClicked: (Int, SurveyEntity) -> Unit,
@@ -463,10 +454,6 @@ fun NavController.navigateClientChargesScreen(clientId: Int) {
 
 fun NavController.navigateClientPinPointScreen(clientId: Int) {
     navigate(ClientScreens.ClientPinPointScreen.argument(clientId))
-}
-
-fun NavController.navigateClientSignatureScreen(clientId: Int) {
-    navigate(ClientScreens.ClientSignatureScreen.argument(clientId))
 }
 
 fun NavController.navigateClientSurveyListScreen(clientId: Int) {

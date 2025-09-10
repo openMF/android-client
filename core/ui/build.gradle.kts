@@ -42,6 +42,11 @@ kotlin{
             implementation(compose.material3)
             implementation(compose.components.resources)
             implementation(compose.components.uiToolingPreview)
+            implementation(libs.filekit.dialog.compose)
+            implementation(libs.ktor.client.core)
+            implementation(libs.compose.signature)
+            implementation(libs.crop.krop.ui)
+
         }
     }
 }

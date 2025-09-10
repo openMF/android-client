@@ -18,8 +18,8 @@ import com.mifos.core.data.repository.ClientDetailsRepository
 import com.mifos.core.domain.useCases.GetClientDetailsUseCase
 import com.mifos.core.domain.useCases.UploadClientImageUseCase
 import com.mifos.core.ui.util.imageToByteArray
+import com.mifos.core.ui.util.multipartRequestBody
 import com.mifos.feature.client.utils.compressImage
-import com.mifos.feature.client.utils.createImageRequestBody
 import com.mifos.room.entities.accounts.loans.LoanAccountEntity
 import com.mifos.room.entities.accounts.savings.SavingsAccountEntity
 import com.mifos.room.entities.client.ClientEntity
@@ -65,7 +65,7 @@ class ClientDetailsViewModel(
         }
     }
     private fun uploadImage(id: Int, imageFile: PlatformFile) = viewModelScope.launch {
-        uploadClientImageUseCase(id, createImageRequestBody(imageFile)).collect { result ->
+        uploadClientImageUseCase(id, multipartRequestBody(imageFile)).collect { result ->
             when (result) {
                 is DataState.Error -> {
                     _clientDetailsUiState.value =

@@ -27,6 +27,13 @@ object TextFieldsValidator {
         }
     }
 
+    fun optionalStringValidator(input: String): StringResource? {
+        return when {
+            input.any { !it.isLetterOrDigit() && !it.isWhitespace() } -> Res.string.error_invalid_characters
+            else -> null // valid
+        }
+    }
+
     fun numberValidator(input: String): StringResource? {
         return when {
             input.isBlank() -> Res.string.error_field_empty

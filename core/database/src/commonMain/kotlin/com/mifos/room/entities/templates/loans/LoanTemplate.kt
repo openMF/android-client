@@ -38,6 +38,7 @@ import com.mifos.core.model.objects.template.loan.TransactionProcessingStrategyO
 import com.mifos.core.model.utils.IgnoredOnParcel
 import com.mifos.core.model.utils.Parcelable
 import com.mifos.core.model.utils.Parcelize
+import com.mifos.room.entities.client.ChargesEntity
 import com.mifos.room.entities.noncore.DataTableEntity
 import kotlinx.serialization.Serializable
 
@@ -189,5 +190,7 @@ data class LoanTemplate(
     val accountLinkingOptions: List<AccountLinkingOptions> = emptyList(),
 
     val loanScheduleType: TermFrequencyTypeOptions? = null,
+
+    val overdueCharges: List<ChargesEntity> = emptyList(),
 
 ) : Parcelable

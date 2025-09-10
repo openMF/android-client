@@ -117,6 +117,7 @@ internal fun AuthenticatedNavbarNavigationScreen(
         name = "AuthenticatedNavbarScreen",
     ),
     navigateToNewLoanAccountScreen: (Int) -> Unit,
+    navigateToNewSavingsAccountScreen: (Int) -> Unit,
     viewModel: AuthenticatedNavbarNavigationViewModel = koinViewModel(),
 ) {
     val scope = rememberCoroutineScope()
@@ -178,6 +179,7 @@ internal fun AuthenticatedNavbarNavigationScreen(
         navigateToDocumentScreen = navigateToDocumentScreen,
         navigateToNoteScreen = navigateToNoteScreen,
         navigateToNewLoanAccountScreen = navigateToNewLoanAccountScreen,
+        navigateToNewSavingsAccountScreen = navigateToNewSavingsAccountScreen,
     )
 }
 
@@ -189,6 +191,7 @@ internal fun AuthenticatedNavbarNavigationScreenContent(
     navigateToDocumentScreen: (Int, String) -> Unit,
     navigateToNoteScreen: (Int, String) -> Unit,
     navigateToNewLoanAccountScreen: (Int) -> Unit,
+    navigateToNewSavingsAccountScreen: (Int) -> Unit,
     modifier: Modifier = Modifier,
     snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
     onAction: (AuthenticatedNavBarAction) -> Unit,
@@ -432,6 +435,7 @@ internal fun AuthenticatedNavbarNavigationScreenContent(
                     hasDatatables = navController::navigateDataTableList,
                     onDocumentClicked = navigateToDocumentScreen,
                     navigateToNewLoanAccount = navigateToNewLoanAccountScreen,
+                    navigateToNewSavingsAccount = navigateToNewSavingsAccountScreen,
                 )
             }
         }

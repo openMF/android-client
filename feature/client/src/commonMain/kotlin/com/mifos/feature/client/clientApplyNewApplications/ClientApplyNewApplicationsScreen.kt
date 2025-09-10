@@ -57,7 +57,7 @@ import org.koin.compose.viewmodel.koinViewModel
 internal fun ClientApplyNewApplicationsScreen(
     onNavigateBack: () -> Unit,
     onNavigateApplyLoanAccount: (Int) -> Unit,
-    onNavigateApplySavingsAccount: () -> Unit,
+    onNavigateApplySavingsAccount: (Int) -> Unit,
     onNavigateApplyShareAccount: () -> Unit,
     onNavigateApplyRecurringAccount: () -> Unit,
     onNavigateApplyFixedAccount: () -> Unit,
@@ -74,7 +74,7 @@ internal fun ClientApplyNewApplicationsScreen(
                     ClientApplyNewApplicationsItem.NewFixedAccount -> onNavigateApplyFixedAccount()
                     ClientApplyNewApplicationsItem.NewLoanAccount -> onNavigateApplyLoanAccount(state.clientId)
                     ClientApplyNewApplicationsItem.NewRecurringAccount -> onNavigateApplyRecurringAccount()
-                    ClientApplyNewApplicationsItem.NewSavingsAccount -> onNavigateApplySavingsAccount()
+                    ClientApplyNewApplicationsItem.NewSavingsAccount -> onNavigateApplySavingsAccount(state.clientId)
                     ClientApplyNewApplicationsItem.NewShareAccount -> onNavigateApplyShareAccount()
                 }
             }
