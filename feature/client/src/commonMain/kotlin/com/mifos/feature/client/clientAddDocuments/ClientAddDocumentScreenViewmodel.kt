@@ -122,7 +122,7 @@ class ClientAddDocumentScreenViewmodel(
                                         it.copy(
                                             dialogState = ClientAddDocumentScreenState
                                                 .DialogState.Error(
-                                                    getString(Res.string.error_document_size_exceeded)
+                                                    getString(Res.string.error_document_size_exceeded),
                                                 ),
                                         )
                                     }
@@ -167,7 +167,7 @@ class ClientAddDocumentScreenViewmodel(
                                         it.copy(
                                             dialogState = ClientAddDocumentScreenState
                                                 .DialogState.Error(
-                                                    getString(Res.string.error_document_size_exceeded)
+                                                    getString(Res.string.error_document_size_exceeded),
                                                 ),
                                         )
                                     }

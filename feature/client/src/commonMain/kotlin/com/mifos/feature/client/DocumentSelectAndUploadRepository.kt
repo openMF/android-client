@@ -64,7 +64,7 @@ data class EntityDocumentState(
      *  ADD : When picking a new document. Default. Set by DocumentList screen.
      *  PREVIEW : Set by AddDocument screen. Use for showing preview of the screen
      *  VIEW: If submit is clicked on the preview screen, then that document is ready for upload,
- *          but it can also be previewed again and updates,
+     *          but it can also be previewed again and updates,
      *  UPDATE_PREVIEW: This brings the Update New button. Used for selecting a new document in place
      *  of the old one.
      */

@@ -11,6 +11,7 @@ package com.mifos.feature.client.clientAddDocuments
 
 import androidclient.feature.client.generated.resources.Res
 import androidclient.feature.client.generated.resources.action_go_back
+import androidclient.feature.client.generated.resources.add_document_title
 import androidclient.feature.client.generated.resources.btn_back
 import androidclient.feature.client.generated.resources.btn_submit
 import androidclient.feature.client.generated.resources.document_name
@@ -18,7 +19,6 @@ import androidclient.feature.client.generated.resources.feature_client_descripti
 import androidclient.feature.client.generated.resources.hint_description
 import androidclient.feature.client.generated.resources.hint_document_name
 import androidclient.feature.client.generated.resources.no_file_selected
-import androidclient.feature.client.generated.resources.add_document_title
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -60,7 +60,6 @@ import com.mifos.core.ui.components.MifosBreadcrumbNavBar
 import com.mifos.core.ui.components.MifosFilePickerBottomSheet
 import com.mifos.core.ui.util.EventsEffect
 import com.mifos.feature.client.EntityDocumentState
-import org.jetbrains.compose.resources.getString
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 

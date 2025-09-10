@@ -12,7 +12,6 @@ package com.mifos.feature.client
 import androidclient.feature.client.generated.resources.Res
 import androidclient.feature.client.generated.resources.error_document_not_found
 import androidclient.feature.client.generated.resources.error_failed_to_get_document_type
-import co.touchlab.kermit.Logger
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.common.utils.FileKitUtil
 import com.mifos.core.data.repository.DocumentDialogRepository
@@ -144,7 +143,7 @@ class DocumentSelectAndUploadRepositoryImpl(
             val state = entityDocumentStateMutableStateFlow.first()
             createDocumentRequestBody(
                 documentFile = state.entityDocument ?: throw IllegalStateException(
-                    getString(Res.string.error_document_not_found)
+                    getString(Res.string.error_document_not_found),
                 ),
                 name = documentName,
                 description = description,
