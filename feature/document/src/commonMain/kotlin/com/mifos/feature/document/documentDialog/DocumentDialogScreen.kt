@@ -62,10 +62,10 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mifos.core.designsystem.component.MifosButton
-import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosOutlinedTextField
 import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.model.objects.noncoreobjects.Document
+import com.mifos.core.ui.components.MifosProgressIndicator
 import io.github.vinceglb.filekit.PlatformFile
 import io.github.vinceglb.filekit.name
 import org.jetbrains.compose.resources.StringResource
@@ -169,7 +169,7 @@ internal fun DocumentDialogScreen(
 
         is DocumentDialogUiState.ShowProgressbar -> {
             Box(modifier = modifier.fillMaxSize()) {
-                MifosCircularProgress()
+                MifosProgressIndicator()
             }
         }
 

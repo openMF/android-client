@@ -47,13 +47,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
-import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosOutlinedTextField
 import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.component.MifosTextFieldDropdown
 import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.model.objects.noncoreobjects.IdentifierPayload
 import com.mifos.core.model.objects.noncoreobjects.IdentifierTemplate
+import com.mifos.core.ui.components.MifosProgressIndicator
 import com.mifos.core.ui.util.DevicePreview
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
@@ -123,7 +123,7 @@ internal fun ClientIdentifiersDialogScreen(
                         is ClientIdentifierDialogUiState.IdentifierCreatedSuccessfully -> {
                         }
 
-                        is ClientIdentifierDialogUiState.Loading -> MifosCircularProgress()
+                        is ClientIdentifierDialogUiState.Loading -> MifosProgressIndicator()
                     }
                 }
             }

@@ -92,11 +92,11 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mifos.core.common.utils.Utils
-import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosMenuDropDownItem
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.icon.MifosIcons
+import com.mifos.core.ui.components.MifosProgressIndicator
 import com.mifos.core.ui.components.MifosUserImage
 import com.mifos.core.ui.util.DevicePreview
 import com.mifos.feature.client.utils.rememberPlatformCameraLauncher
@@ -324,7 +324,7 @@ internal fun ClientDetailsScreen(
             }
         } else {
             if (showLoading) {
-                MifosCircularProgress()
+                MifosProgressIndicator()
             } else {
                 MifosClientDetailsScreen(
                     padding = padding,

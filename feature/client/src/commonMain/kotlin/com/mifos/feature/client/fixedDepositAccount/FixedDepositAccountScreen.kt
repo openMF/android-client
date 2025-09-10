@@ -43,7 +43,6 @@ import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.mifos.core.common.utils.DateHelper
-import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.designsystem.theme.DesignToken
@@ -52,6 +51,7 @@ import com.mifos.core.ui.components.Actions
 import com.mifos.core.ui.components.MifosActionsSavingsListingComponent
 import com.mifos.core.ui.components.MifosBreadcrumbNavBar
 import com.mifos.core.ui.components.MifosEmptyCard
+import com.mifos.core.ui.components.MifosProgressIndicator
 import com.mifos.core.ui.components.MifosSearchBar
 import com.mifos.core.ui.util.EventsEffect
 import org.jetbrains.compose.resources.painterResource
@@ -119,7 +119,7 @@ internal fun FixedDepositAccountDialog(
             )
         }
 
-        FixedDepositAccountState.DialogState.Loading -> MifosCircularProgress()
+        FixedDepositAccountState.DialogState.Loading -> MifosProgressIndicator()
 
         else -> null
     }

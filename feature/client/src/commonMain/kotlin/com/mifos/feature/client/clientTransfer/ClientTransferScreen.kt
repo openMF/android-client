@@ -63,9 +63,10 @@ import com.mifos.core.ui.components.MifosProgressIndicator
 import com.mifos.core.ui.components.MifosStatusDialog
 import com.mifos.core.ui.components.ResultStatus
 import com.mifos.core.ui.util.EventsEffect
-import kotlinx.datetime.Clock
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
+import kotlin.time.Clock
+import kotlin.time.ExperimentalTime
 
 @Composable
 internal fun ClientTransferScreen(
@@ -96,7 +97,7 @@ internal fun ClientTransferScreen(
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalTime::class)
 @Composable
 private fun ClientTransferScaffold(
     state: ClientTransferState,

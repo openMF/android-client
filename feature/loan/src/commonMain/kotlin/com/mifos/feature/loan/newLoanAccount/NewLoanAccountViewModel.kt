@@ -26,8 +26,9 @@ import com.mifos.feature.loan.newLoanAccount.NewLoanAccountState.DialogState
 import com.mifos.room.entities.templates.loans.LoanTemplate
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import kotlinx.datetime.Clock
 import org.jetbrains.compose.resources.StringResource
+import kotlin.time.Clock
+import kotlin.time.ExperimentalTime
 
 internal class NewLoanAccountViewModel(
     private val getAllLoanUseCase: GetAllLoanUseCase,
@@ -694,7 +695,9 @@ internal class NewLoanAccountViewModel(
     }
 }
 
-data class NewLoanAccountState(
+data class NewLoanAccountState
+@OptIn(ExperimentalTime::class)
+constructor(
     val networkConnection: Boolean = false,
     val clientId: Int,
     val productLoans: List<LoanProducts> = emptyList(),

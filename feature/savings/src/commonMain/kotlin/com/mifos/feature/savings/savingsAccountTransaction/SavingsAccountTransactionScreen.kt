@@ -71,7 +71,6 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import co.touchlab.kermit.Logger
 import com.mifos.core.common.utils.Constants
 import com.mifos.core.common.utils.DateHelper
-import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosDatePickerTextField
 import com.mifos.core.designsystem.component.MifosOutlinedTextField
 import com.mifos.core.designsystem.component.MifosScaffold
@@ -79,9 +78,9 @@ import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.component.MifosTextFieldDropdown
 import com.mifos.core.model.objects.account.saving.SavingsAccountTransactionResponse
 import com.mifos.core.ui.components.MifosAlertDialog
+import com.mifos.core.ui.components.MifosProgressIndicator
 import com.mifos.room.entities.accounts.savings.SavingsAccountTransactionRequestEntity
 import com.mifos.room.entities.templates.savings.SavingsAccountTransactionTemplateEntity
-import kotlinx.datetime.Clock
 import kotlinx.serialization.json.Json
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
@@ -89,6 +88,8 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameterProvider
 import org.koin.compose.viewmodel.koinViewModel
+import kotlin.time.Clock
+import kotlin.time.ExperimentalTime
 
 /**
  * Created by Pronay Sarker on 18/07/2024 (8:28 PM)
@@ -191,7 +192,7 @@ internal fun SavingsAccountTransactionScreen(
                 }
 
                 SavingsAccountTransactionUiState.ShowProgressbar -> {
-                    MifosCircularProgress()
+                    MifosProgressIndicator()
                 }
 
                 is SavingsAccountTransactionUiState.ShowSavingAccountTemplate -> {
@@ -243,7 +244,7 @@ internal fun SavingsAccountTransactionScreen(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalTime::class)
 @Composable
 private fun SavingsAccountTransactionContent(
     clientName: String?,

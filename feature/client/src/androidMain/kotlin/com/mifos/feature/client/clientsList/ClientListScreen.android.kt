@@ -24,11 +24,11 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.paging.LoadState
 import androidx.paging.PagingData
 import androidx.paging.compose.collectAsLazyPagingItems
-import com.mifos.core.designsystem.component.MifosCircularProgress
-import com.mifos.core.designsystem.component.MifosPagingAppendProgress
 import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.designsystem.theme.MifosTypography
+import com.mifos.core.ui.components.MifosPagingAppendProgress
+import com.mifos.core.ui.components.MifosProgressIndicator
 import com.mifos.room.entities.client.ClientEntity
 import kotlinx.coroutines.flow.Flow
 import org.jetbrains.compose.resources.stringResource
@@ -50,7 +50,7 @@ internal actual fun LazyColumnForClientListApi(
             }
         }
 
-        is LoadState.Loading -> MifosCircularProgress()
+        is LoadState.Loading -> MifosProgressIndicator()
 
         is LoadState.NotLoading -> Unit
     }

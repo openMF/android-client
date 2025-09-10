@@ -59,22 +59,23 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mifos.core.common.utils.formatDate
 import com.mifos.core.designsystem.component.MifosButton
-import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosDatePickerTextField
 import com.mifos.core.designsystem.component.MifosOutlinedTextField
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.component.MifosTextFieldDropdown
 import com.mifos.core.ui.components.MifosAlertDialog
+import com.mifos.core.ui.components.MifosProgressIndicator
 import com.mifos.room.entities.center.CenterPayloadEntity
 import com.mifos.room.entities.organisation.OfficeEntity
-import kotlinx.datetime.Clock
 import org.jetbrains.compose.resources.getString
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameterProvider
 import org.koin.compose.viewmodel.koinViewModel
+import kotlin.time.Clock
+import kotlin.time.ExperimentalTime
 
 @Composable
 internal fun CreateNewCenterScreen(
@@ -131,7 +132,7 @@ internal fun CreateNewCenterScreen(
                     onRetry()
                 }
 
-                is CreateNewCenterUiState.Loading -> MifosCircularProgress()
+                is CreateNewCenterUiState.Loading -> MifosProgressIndicator()
 
                 is CreateNewCenterUiState.Offices -> {
                     CreateNewCenterContent(offices = state.offices, createCenter = createCenter)
@@ -141,6 +142,7 @@ internal fun CreateNewCenterScreen(
     }
 }
 
+@OptIn(ExperimentalTime::class)
 @Composable
 private fun CreateNewCenterContent(
     offices: List<OfficeEntity>,

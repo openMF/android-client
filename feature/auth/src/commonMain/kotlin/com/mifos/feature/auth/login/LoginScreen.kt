@@ -28,7 +28,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -56,11 +55,10 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.window.Dialog
-import androidx.compose.ui.window.DialogProperties
 import com.mifos.core.designsystem.component.MifosAndroidClientIcon
 import com.mifos.core.designsystem.component.MifosOutlinedTextField
 import com.mifos.core.designsystem.icon.MifosIcons
+import com.mifos.core.ui.components.MifosProgressIndicatorOverlay
 import com.mifos.core.ui.util.DevicePreview
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.StringResource
@@ -250,15 +248,7 @@ internal fun LoginScreen(
             }
         }
         if (showDialog.value) {
-            Dialog(
-                onDismissRequest = { showDialog.value },
-                properties = DialogProperties(
-                    dismissOnBackPress = false,
-                    dismissOnClickOutside = false,
-                ),
-            ) {
-                CircularProgressIndicator(color = White)
-            }
+            MifosProgressIndicatorOverlay()
         }
     }
 }

@@ -46,10 +46,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosErrorContent
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.icon.MifosIcons
+import com.mifos.core.ui.components.MifosProgressIndicator
 import com.mifos.core.ui.util.DevicePreview
 import com.mifos.room.entities.group.GroupPayloadEntity
 import kotlinx.coroutines.launch
@@ -147,7 +147,7 @@ internal fun SyncGroupPayloadsScreen(
             ) {
                 when (uiState) {
                     is SyncGroupPayloadsUiState.Loading -> {
-                        MifosCircularProgress()
+                        MifosProgressIndicator()
                     }
 
                     is SyncGroupPayloadsUiState.Error -> {

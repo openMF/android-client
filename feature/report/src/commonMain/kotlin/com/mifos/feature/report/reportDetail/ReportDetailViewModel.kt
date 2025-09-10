@@ -31,8 +31,9 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import kotlinx.datetime.Clock
 import kotlinx.serialization.json.Json
+import kotlin.time.Clock
+import kotlin.time.ExperimentalTime
 
 class ReportDetailViewModel(
     private val getReportFullParameterListUseCase: GetReportFullParameterListUseCase,
@@ -155,6 +156,7 @@ class ReportDetailViewModel(
             }
         }
 
+    @OptIn(ExperimentalTime::class)
     fun exportCsv(report: FullParameterListResponse) {
         _reportUiState.value = ReportUiState.Message(Res.string.feature_report_export_started)
 

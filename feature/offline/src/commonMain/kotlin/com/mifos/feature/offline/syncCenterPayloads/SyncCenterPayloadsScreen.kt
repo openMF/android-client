@@ -43,11 +43,11 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.ui.components.MifosEmptyUi
+import com.mifos.core.ui.components.MifosProgressIndicator
 import com.mifos.room.entities.center.CenterPayloadEntity
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
@@ -142,7 +142,7 @@ internal fun SyncCenterPayloadsScreen(
         ) {
             when (uiState) {
                 is SyncCenterPayloadsUiState.ShowProgressbar -> {
-                    MifosCircularProgress()
+                    MifosProgressIndicator()
                 }
 
                 is SyncCenterPayloadsUiState.ShowError -> {

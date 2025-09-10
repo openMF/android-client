@@ -45,10 +45,11 @@ import com.mifos.core.designsystem.theme.MifosTypography
 import com.mifos.core.ui.components.MifosTwoButtonRow
 import com.mifos.feature.savings.savingsAccountv2.SavingsAccountAction
 import com.mifos.feature.savings.savingsAccountv2.SavingsAccountState
-import kotlinx.datetime.Clock
 import org.jetbrains.compose.resources.stringResource
+import kotlin.time.Clock
+import kotlin.time.ExperimentalTime
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalTime::class)
 @Composable
 fun DetailsPage(
     state: SavingsAccountState,

@@ -48,7 +48,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.mifos.core.designsystem.component.MifosCircularProgress
+import com.mifos.core.ui.components.MifosProgressIndicator
 import com.mifos.core.ui.util.DevicePreview
 import com.mifos.room.entities.client.ClientEntity
 import org.jetbrains.compose.resources.stringResource
@@ -99,7 +99,7 @@ internal fun SyncClientsDialogScreen(
         when (uiState) {
             is SyncClientsDialogUiState.Success -> Unit
 
-            is SyncClientsDialogUiState.Loading -> MifosCircularProgress()
+            is SyncClientsDialogUiState.Loading -> MifosProgressIndicator()
 
             is SyncClientsDialogUiState.Error -> {
                 val message = uiState.message

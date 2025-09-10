@@ -43,7 +43,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
-import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.icon.MifosIcons
@@ -53,6 +52,7 @@ import com.mifos.core.designsystem.theme.MifosTypography
 import com.mifos.core.ui.components.MifosAddressCard
 import com.mifos.core.ui.components.MifosBreadcrumbNavBar
 import com.mifos.core.ui.components.MifosErrorComponent
+import com.mifos.core.ui.components.MifosProgressIndicator
 import com.mifos.core.ui.util.EventsEffect
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
@@ -119,7 +119,7 @@ private fun ClientAddressScaffold(
         onBackPressed = { onAction(ClientAddressAction.NavigateBack) },
     ) { paddingValues ->
         when (state.addressListScreenState) {
-            is ClientAddressState.AddressListScreenState.Loading -> MifosCircularProgress()
+            is ClientAddressState.AddressListScreenState.Loading -> MifosProgressIndicator()
             is ClientAddressState.AddressListScreenState.ShowAddressList -> {
                 Column(
                     modifier = Modifier

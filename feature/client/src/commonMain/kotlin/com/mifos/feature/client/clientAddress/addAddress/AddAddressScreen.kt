@@ -70,7 +70,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
-import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosOutlinedTextField
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
@@ -79,6 +78,7 @@ import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.network.model.PostClientAddressRequest
 import com.mifos.core.ui.components.MifosBreadcrumbNavBar
+import com.mifos.core.ui.components.MifosProgressIndicator
 import com.mifos.core.ui.components.MifosStatusDialog
 import com.mifos.core.ui.components.ResultStatus
 import com.mifos.core.ui.util.EventsEffect
@@ -235,7 +235,7 @@ private fun AddAddressScaffold(
         },
     ) { paddingValues ->
         when (state.addressFormScreenState) {
-            is ClientAddressState.AddressFormScreenState.Loading -> MifosCircularProgress()
+            is ClientAddressState.AddressFormScreenState.Loading -> MifosProgressIndicator()
             is ClientAddressState.AddressFormScreenState.ShowAddressForm -> {
                 Column(
                     modifier = Modifier

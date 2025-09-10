@@ -46,11 +46,11 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewModelScope
 import com.mifos.core.common.utils.DateHelper
-import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.model.objects.account.loan.Period
 import com.mifos.core.model.objects.account.loan.RepaymentSchedule
+import com.mifos.core.ui.components.MifosProgressIndicator
 import com.mifos.room.entities.accounts.loans.LoanWithAssociationsEntity
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
@@ -112,7 +112,7 @@ internal fun LoanRepaymentScheduleScreen(
                 }
 
                 LoanRepaymentScheduleUiState.ShowProgressbar -> {
-                    MifosCircularProgress()
+                    MifosProgressIndicator()
                 }
             }
         }

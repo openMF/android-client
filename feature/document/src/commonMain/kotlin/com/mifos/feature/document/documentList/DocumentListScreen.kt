@@ -54,12 +54,12 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mifos.core.designsystem.component.MifosButton
-import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.model.objects.noncoreobjects.Document
 import com.mifos.core.ui.components.MifosEmptyUi
+import com.mifos.core.ui.components.MifosProgressIndicator
 import com.mifos.feature.document.documentDialog.DocumentDialogScreen
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.getString
@@ -226,7 +226,7 @@ internal fun DocumentListScreen(
                         onRetry()
                     }
 
-                    is DocumentListUiState.Loading -> MifosCircularProgress()
+                    is DocumentListUiState.Loading -> MifosProgressIndicator()
                 }
             }
         }

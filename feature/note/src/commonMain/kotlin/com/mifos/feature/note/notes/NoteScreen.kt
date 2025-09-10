@@ -46,7 +46,6 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.mifos.core.common.utils.DateHelper
-import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.designsystem.theme.DesignToken
@@ -58,14 +57,16 @@ import com.mifos.core.ui.components.MifosAlertDialog
 import com.mifos.core.ui.components.MifosBreadcrumbNavBar
 import com.mifos.core.ui.components.MifosEmptyCard
 import com.mifos.core.ui.components.MifosErrorComponent
+import com.mifos.core.ui.components.MifosProgressIndicator
 import com.mifos.core.ui.util.DevicePreview
 import com.mifos.core.ui.util.EventsEffect
-import kotlinx.datetime.Clock
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.resources.vectorResource
 import org.koin.compose.viewmodel.koinViewModel
+import kotlin.time.Clock
+import kotlin.time.ExperimentalTime
 
 @Composable
 internal fun NoteScreen(
@@ -121,7 +122,7 @@ private fun NoteScreenDialog(
         }
 
         NoteState.DialogState.Loading -> {
-            MifosCircularProgress()
+            MifosProgressIndicator()
         }
 
         NoteState.DialogState.ShowDialog -> {
@@ -269,6 +270,8 @@ private fun NoteContent(
         }
     }
 }
+
+@OptIn(ExperimentalTime::class)
 internal val demoNotes = listOf(
     Note(
         id = 1,

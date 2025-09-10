@@ -56,13 +56,13 @@ import androidx.compose.ui.unit.sp
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
-import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosPaginationSweetError
-import com.mifos.core.designsystem.component.MifosPagingAppendProgress
 import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.ui.components.MifosEmptyUi
 import com.mifos.core.ui.components.MifosFAB
+import com.mifos.core.ui.components.MifosPagingAppendProgress
+import com.mifos.core.ui.components.MifosProgressIndicator
 import com.mifos.core.ui.components.SelectionModeTopAppBar
 import com.mifos.feature.groups.syncGroupDialog.SyncGroupDialogScreen
 import com.mifos.room.entities.group.GroupEntity
@@ -224,7 +224,7 @@ private fun LazyListScope.refreshState(data: LazyPagingItems<GroupEntity>) {
 
         is LoadState.Loading -> {
             item {
-                MifosCircularProgress(text = "GroupItems::Loading")
+                MifosProgressIndicator()
             }
         }
 
