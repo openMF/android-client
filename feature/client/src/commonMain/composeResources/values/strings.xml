@@ -284,7 +284,21 @@
     <!-- Client_Profile-Fixed Deposit Account Title -->
     <string name="client_profile_fixed_deposit_account_title">Fixed Deposit Accounts</string>
 
+    <!-- Client Documents -->
+    <string name="document_name">Document Name</string>
+    <string name="add_document_title">"Add Document"</string>
+    <string name="hint_document_name">Enter document name</string>
+    <string name="hint_description">Enter description</string>
+    <string name="action_go_back">Go Back</string>
+    <string name="no_file_selected">No File Selected</string>
+    <string name="action_add">Add</string>
+    <string name="action_view">View</string>
+    <string name="btn_update_new">Update New</string>
 
+    <string name="error_document_size_exceeded">Document size cannot be greater than %1$d MB.</string>
+
+    <string name="error_failed_to_get_document_type">Failed to get document type</string>
+    <string name="error_document_not_found">Document not found</string>
 
     <!-- Personal Info -->
     <string name="gender">Gender</string>

@@ -10,9 +10,15 @@
 package com.mifos.feature.client.clientAddDocuments
 
 import androidclient.feature.client.generated.resources.Res
+import androidclient.feature.client.generated.resources.action_go_back
 import androidclient.feature.client.generated.resources.btn_back
 import androidclient.feature.client.generated.resources.btn_submit
+import androidclient.feature.client.generated.resources.document_name
 import androidclient.feature.client.generated.resources.feature_client_description
+import androidclient.feature.client.generated.resources.hint_description
+import androidclient.feature.client.generated.resources.hint_document_name
+import androidclient.feature.client.generated.resources.no_file_selected
+import androidclient.feature.client.generated.resources.add_document_title
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -54,6 +60,7 @@ import com.mifos.core.ui.components.MifosBreadcrumbNavBar
 import com.mifos.core.ui.components.MifosFilePickerBottomSheet
 import com.mifos.core.ui.util.EventsEffect
 import com.mifos.feature.client.EntityDocumentState
+import org.jetbrains.compose.resources.getString
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -90,7 +97,7 @@ private fun ClientAddDocumentsScreenDialog(
             MifosSweetError(
                 message = state.dialogState.message,
                 isRetryEnabled = false,
-                buttonText = "Go Back",
+                buttonText = stringResource(Res.string.action_go_back),
             ) {
                 onAction(ClientAddDocumentScreenAction.NavigateBack)
             }
@@ -137,7 +144,7 @@ private fun ClientAddDocumentScaffold(
                         ),
                 ) {
                     Text(
-                        "Add Document",
+                        stringResource(Res.string.add_document_title),
                         style = MifosTypography.titleMedium,
                     )
 
@@ -145,20 +152,20 @@ private fun ClientAddDocumentScaffold(
 
                     MifosOutlinedTextField(
                         value = state.enteredFileName,
-                        placeholder = "Enter document name",
+                        placeholder = stringResource(Res.string.hint_document_name),
                         onValueChange = {
                             onAction(
                                 ClientAddDocumentScreenAction.UpdateFileName(it),
                             )
                         },
-                        label = "Document Name",
+                        label = stringResource(Res.string.document_name),
                         maxLines = 1,
                         shape = DesignToken.shapes.medium,
                     )
 
                     MifosOutlinedTextField(
                         value = state.enteredDocumentDescription,
-                        placeholder = "Enter description",
+                        placeholder = stringResource(Res.string.hint_description),
                         onValueChange = {
                             onAction(
                                 ClientAddDocumentScreenAction.UpdateDescription(it),
@@ -302,7 +309,7 @@ private fun AddViewFileAndFileNameRow(
     ) {
         Text(
             text = if (state.step == EntityDocumentState.Step.ADD) {
-                "No File Selected"
+                stringResource(Res.string.no_file_selected)
             } else {
                 state.pickedDocumentName
             },

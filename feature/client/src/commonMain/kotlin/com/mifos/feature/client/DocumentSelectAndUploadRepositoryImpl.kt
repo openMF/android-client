@@ -9,6 +9,9 @@
  */
 package com.mifos.feature.client
 
+import androidclient.feature.client.generated.resources.Res
+import androidclient.feature.client.generated.resources.error_document_not_found
+import androidclient.feature.client.generated.resources.error_failed_to_get_document_type
 import co.touchlab.kermit.Logger
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.common.utils.FileKitUtil
@@ -22,6 +25,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.update
+import org.jetbrains.compose.resources.getString
 
 class DocumentSelectAndUploadRepositoryImpl(
     private val documentsRepository: DocumentListRepository,
@@ -49,7 +53,7 @@ class DocumentSelectAndUploadRepositoryImpl(
 
         val byte = response.readRawBytes()
         val extension = response.headers["Content-Type"]?.split('/')?.last()
-            ?: throw Exception("Failed to get document type")
+            ?: throw Exception(getString(Res.string.error_failed_to_get_document_type))
 
         FileKitUtil.writeFileToCache(
             "attachment",
@@ -87,8 +91,6 @@ class DocumentSelectAndUploadRepositoryImpl(
                 documentName,
                 description,
             )
-            Logger.e { "MultipartFormData: ${multiPartFormDataContent.contentLength}" }
-
             val result = documentDialogRepository.createDocument(
                 entityType = when (state.entityType) {
                     EntityDocumentState.EntityType.Clients -> "clients"
@@ -98,7 +100,6 @@ class DocumentSelectAndUploadRepositoryImpl(
                 file = multiPartFormDataContent,
             )
             if (result !is DataState.Loading) {
-                Logger.e { "Update Data Result: ${result.data}" }
                 emit(result)
             }
         } catch (e: Exception) {
@@ -118,7 +119,6 @@ class DocumentSelectAndUploadRepositoryImpl(
                 documentName,
                 description,
             )
-            Logger.e { "MultipartFormData: ${multiPartFormDataContent.contentLength}" }
             val result = documentDialogRepository.updateDocument(
                 entityType = when (state.entityType) {
                     EntityDocumentState.EntityType.Clients -> "clients"
@@ -129,7 +129,6 @@ class DocumentSelectAndUploadRepositoryImpl(
                 file = multiPartFormDataContent,
             )
             if (result !is DataState.Loading) {
-                Logger.e { "Update Result: ${result.data}" }
                 emit(result)
             }
         } catch (e: Exception) {
@@ -144,7 +143,9 @@ class DocumentSelectAndUploadRepositoryImpl(
         return try {
             val state = entityDocumentStateMutableStateFlow.first()
             createDocumentRequestBody(
-                documentFile = state.entityDocument ?: throw IllegalStateException("Document not found"),
+                documentFile = state.entityDocument ?: throw IllegalStateException(
+                    getString(Res.string.error_document_not_found)
+                ),
                 name = documentName,
                 description = description,
             )

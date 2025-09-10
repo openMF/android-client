@@ -10,6 +10,7 @@
 package com.mifos.feature.client.clientAddDocuments
 
 import androidclient.feature.client.generated.resources.Res
+import androidclient.feature.client.generated.resources.error_document_size_exceeded
 import androidclient.feature.client.generated.resources.no_internet_message
 import androidx.lifecycle.viewModelScope
 import com.mifos.core.common.utils.DataState
@@ -120,7 +121,9 @@ class ClientAddDocumentScreenViewmodel(
                                     mutableStateFlow.update {
                                         it.copy(
                                             dialogState = ClientAddDocumentScreenState
-                                                .DialogState.Error("Document size cannot be greater than 1 MB."),
+                                                .DialogState.Error(
+                                                    getString(Res.string.error_document_size_exceeded)
+                                                ),
                                         )
                                     }
                                 } else {
@@ -163,7 +166,9 @@ class ClientAddDocumentScreenViewmodel(
                                     mutableStateFlow.update {
                                         it.copy(
                                             dialogState = ClientAddDocumentScreenState
-                                                .DialogState.Error("Document size cannot be greater than 1 MB."),
+                                                .DialogState.Error(
+                                                    getString(Res.string.error_document_size_exceeded)
+                                                ),
                                         )
                                     }
                                 } else {

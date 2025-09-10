@@ -9,6 +9,8 @@
  */
 package com.mifos.feature.client.documentPreviewScreen
 
+import androidclient.feature.client.generated.resources.Res
+import androidclient.feature.client.generated.resources.error_document_size_exceeded
 import androidx.lifecycle.viewModelScope
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.ui.util.BaseViewModel
@@ -20,6 +22,7 @@ import io.github.vinceglb.filekit.size
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import org.jetbrains.compose.resources.getString
 
 class DocumentPreviewScreenViewModel(
     private val documentSelectAndUploadRepository: DocumentSelectAndUploadRepository,
@@ -98,7 +101,7 @@ class DocumentPreviewScreenViewModel(
                                     mutableStateFlow.update {
                                         it.copy(
                                             dialogState = DocumentPreviewState
-                                                .DialogState.Error("Document size cannot be greater than 1 MB."),
+                                                .DialogState.Error(getString(Res.string.error_document_size_exceeded)),
                                         )
                                     }
                                 } else {
@@ -145,7 +148,7 @@ class DocumentPreviewScreenViewModel(
                                     mutableStateFlow.update {
                                         it.copy(
                                             dialogState = DocumentPreviewState
-                                                .DialogState.Error("Document size cannot be greater than 1 MB."),
+                                                .DialogState.Error(getString(Res.string.error_document_size_exceeded)),
                                         )
                                     }
                                 } else {

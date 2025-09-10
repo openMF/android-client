@@ -9,6 +9,11 @@
  */
 package com.mifos.feature.client.documentPreviewScreen
 
+import androidclient.feature.client.generated.resources.Res
+import androidclient.feature.client.generated.resources.action_go_back
+import androidclient.feature.client.generated.resources.btn_back
+import androidclient.feature.client.generated.resources.btn_submit
+import androidclient.feature.client.generated.resources.btn_update_new
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
@@ -45,6 +50,7 @@ import com.mifos.core.ui.components.MifosFilePickerBottomSheet
 import com.mifos.core.ui.components.MifosProgressIndicator
 import com.mifos.core.ui.util.EventsEffect
 import com.mifos.feature.client.EntityDocumentState
+import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -120,7 +126,7 @@ private fun ViewDocumentScaffold(
                         .weight(1f),
                 ) {
                     Text(
-                        "Back",
+                        stringResource(Res.string.btn_back),
                         fontFamily = FontFamily.SansSerif,
                         style = MaterialTheme.typography.labelLarge,
                     )
@@ -151,9 +157,9 @@ private fun ViewDocumentScaffold(
                 ) {
                     Text(
                         if (state.step == EntityDocumentState.Step.UPDATE_PREVIEW) {
-                            "Update New"
+                            stringResource(Res.string.btn_update_new)
                         } else {
-                            "Submit"
+                            stringResource(Res.string.btn_submit)
                         },
                         fontFamily = FontFamily.SansSerif,
                         style = MaterialTheme.typography.labelLarge,
@@ -191,7 +197,7 @@ private fun DocumentsPreviewScreenDialog(
             MifosSweetError(
                 message = state.dialogState.message,
                 isRetryEnabled = false,
-                buttonText = "Go Back",
+                buttonText = stringResource(Res.string.action_go_back),
             ) {
                 onAction(DocumentPreviewScreenAction.RejectDocument)
             }
