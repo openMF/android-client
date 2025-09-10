@@ -145,7 +145,7 @@ class ClientDocumentsViewModel(
                                 nullDialogState()
                                 mutableStateFlow.update {
                                     it.copy(
-                                        clientDocuments = dataState.data,
+                                        clientDocuments = dataState.data.reversed(),
                                         pullDownRefresh = false,
                                     )
                                 }
@@ -198,6 +198,8 @@ class ClientDocumentsViewModel(
                             is DataState.Success -> {
                                 nullDialogState()
                                 documentSelectAndUploadRepository.updateEntityDocument(platformFile = dataState.data)
+                                // Enable them when you want to enable document update.
+                                // And also enable the button on the UI Screen also, for SubmitMode.UPDATE.
 //                                documentSelectAndUploadRepository.updateStep(step = EntityDocumentState.Step.UPDATE_PREVIEW)
 //                                documentSelectAndUploadRepository.changeSubmitMode(EntityDocumentState.SubmitMode.UPDATE)
                                 sendEvent(ClientDocumentsEvents.OnViewDocument)
