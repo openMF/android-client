@@ -59,12 +59,32 @@ data class EntityDocumentState(
         object Clients : EntityType
         object Loans : EntityType
     }
+
+    /**
+     *  ADD : When picking a new document. Default. Set by DocumentList screen.
+     *  PREVIEW : Set by AddDocument screen. Use for showing preview of the screen
+     *  VIEW: If submit is clicked on the preview screen, then that document is ready for upload,
+ *          but it can also be previewed again and updates,
+     *  UPDATE_PREVIEW: This brings the Update New button. Used for selecting a new document in place
+     *  of the old one.
+     */
     enum class Step {
         ADD,
         PREVIEW,
         VIEW,
         UPDATE_PREVIEW,
     }
+
+    /**
+     * UPLOAD: Default value. Set by ClientListScreen only.
+     * UPDATE: Set by ClientListScreen when the user choose to view an uploaded document.
+     *
+     * These values help SUBMIT button to decide whether to upload new document or update an
+     * existing one.
+     *
+     * Currently, the UPDATE is not used. Because the PUT HTTP Request is not updating value on the
+     * server. So, I am not using it.
+     */
     enum class SubmitMode {
         UPLOAD,
         UPDATE,
