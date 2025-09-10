@@ -47,7 +47,6 @@ interface DocumentSelectAndUploadRepository {
     fun updateEntityDocument(platformFile: PlatformFile)
 
     fun resetRefreshState()
-
 }
 
 data class EntityDocumentState(

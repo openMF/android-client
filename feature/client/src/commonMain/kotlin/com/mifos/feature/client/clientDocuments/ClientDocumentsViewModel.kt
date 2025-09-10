@@ -259,13 +259,12 @@ class ClientDocumentsViewModel(
     private fun observeForRefresh() {
         viewModelScope.launch {
             entityDocumentStateFlow.collect { clientDocuments ->
-                if(clientDocuments.doARefresh){
+                if (clientDocuments.doARefresh) {
                     sendAction(ClientDocumentsActions.Refresh)
                 }
             }
         }
     }
-
 }
 
 data class ClientDocumentsScreenState(

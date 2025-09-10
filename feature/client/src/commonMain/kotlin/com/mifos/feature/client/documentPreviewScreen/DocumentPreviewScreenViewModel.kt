@@ -93,7 +93,7 @@ class DocumentPreviewScreenViewModel(
                             nullDialogState()
                             dataState.data?.let { platformFile ->
                                 mutableStateFlow.update {
-                                    it.copy(showBottomSheet = false,)
+                                    it.copy(showBottomSheet = false)
                                 }
                                 // 1MB File size check.
                                 if (platformFile.size() > 1048576L) {
@@ -117,7 +117,6 @@ class DocumentPreviewScreenViewModel(
                                     )
                                 }
                             }
-
                         }
                     }
                 }

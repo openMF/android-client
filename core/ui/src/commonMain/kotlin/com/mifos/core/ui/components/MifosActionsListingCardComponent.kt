@@ -316,7 +316,6 @@ fun MifosActionsClientDocumentListingComponent(
     onClick: () -> Unit,
     onActionClicked: (Actions) -> Unit,
 ) {
-
     val density = LocalDensity.current
     Column {
         MifosActionsListingComponentOutline(
@@ -324,7 +323,7 @@ fun MifosActionsClientDocumentListingComponent(
         ) {
             Column(
                 modifier = Modifier
-                    .clickable{onClick()}
+                    .clickable { onClick() }
                     .padding(DesignToken.padding.large),
             ) {
                 MifosListingRowItemHeader(

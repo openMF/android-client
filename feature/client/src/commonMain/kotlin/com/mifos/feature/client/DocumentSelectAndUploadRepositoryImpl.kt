@@ -19,7 +19,6 @@ import com.mifos.core.data.repository.DocumentListRepository
 import com.mifos.feature.client.utils.createDocumentRequestBody
 import io.github.vinceglb.filekit.PlatformFile
 import io.github.vinceglb.filekit.div
-import io.github.vinceglb.filekit.exists
 import io.ktor.client.request.forms.MultiPartFormDataContent
 import io.ktor.client.statement.readRawBytes
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -50,13 +49,13 @@ class DocumentSelectAndUploadRepositoryImpl(
             },
             entityId = state.entityId,
             documentId = state.documentId,
-        ).first{it !is DataState.Loading}
+        ).first { it !is DataState.Loading }
 
-        if(response is DataState.Error){
+        if (response is DataState.Error) {
             emit(DataState.Error(Exception(response.message)))
             return@flow
         } else {
-            response.data?.let {httpResponse ->
+            response.data?.let { httpResponse ->
                 val byte = httpResponse.readRawBytes()
                 val extension = httpResponse.headers["Content-Type"]?.split('/')?.last()
                     ?: throw Exception(getString(Res.string.error_failed_to_get_document_type))
@@ -71,7 +70,6 @@ class DocumentSelectAndUploadRepositoryImpl(
                 }
             } ?: emit(DataState.Error(Exception("Received null data.")))
         }
-
     }
 
     override suspend fun deleteDocument() = runCatching {
@@ -90,7 +88,7 @@ class DocumentSelectAndUploadRepositoryImpl(
     override fun uploadDocument(
         documentName: String,
         description: String,
-    ) = flow{
+    ) = flow {
         emit(DataState.Loading)
         try {
             val state = entityDocumentStateMutableStateFlow.first()
@@ -111,7 +109,6 @@ class DocumentSelectAndUploadRepositoryImpl(
         } catch (e: Exception) {
             emit(DataState.Error(e))
         }
-
     }
 
     override fun updateDocument(
@@ -202,5 +199,4 @@ class DocumentSelectAndUploadRepositoryImpl(
             it.copy(doARefresh = false)
         }
     }
-
 }

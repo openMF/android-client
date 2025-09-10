@@ -212,22 +212,22 @@ private fun ClientDocumentsScaffold(
                     } else {
                         var selectedDocumentID by remember {
                             mutableStateOf(-1)
-                        };
+                        }
                         var isAlreadyExpanded by remember {
                             mutableStateOf(false)
-                        };
+                        }
                         LazyColumn {
                             items(state.clientDocuments) { clientDocument ->
                                 MifosActionsClientDocumentListingComponent(
                                     clientDocument.description ?: "",
                                     clientDocument.fileName ?: "",
-                                    isExpanded =  (selectedDocumentID == clientDocument.id)
-                                            && isAlreadyExpanded,
+                                    isExpanded = (selectedDocumentID == clientDocument.id) &&
+                                        isAlreadyExpanded,
                                     onClick = {
-                                        if(selectedDocumentID == clientDocument.id) {
+                                        if (selectedDocumentID == clientDocument.id) {
                                             isAlreadyExpanded = false
                                             selectedDocumentID = -1
-                                        }else {
+                                        } else {
                                             selectedDocumentID = clientDocument.id
                                             isAlreadyExpanded = true
                                         }
