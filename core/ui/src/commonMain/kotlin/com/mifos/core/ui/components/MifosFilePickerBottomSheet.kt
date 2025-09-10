@@ -36,7 +36,7 @@ fun MifosFilePickerBottomSheet(
     MifosBottomSheet(
         onDismiss = onDismiss,
         modifier = modifier,
-        color = MaterialTheme.colorScheme.onPrimary,
+        containerColor = MaterialTheme.colorScheme.onPrimary,
     ) {
         Row(
             modifier = Modifier
