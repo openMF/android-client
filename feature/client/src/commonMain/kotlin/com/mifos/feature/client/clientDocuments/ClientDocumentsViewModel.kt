@@ -240,11 +240,15 @@ class ClientDocumentsViewModel(
     }
 
     private fun updateEntityDocumentState() {
-        entityDocumentStateFlow.update {
-            it.copy(
-                entityId = route.clientId,
-                entityType = EntityType.Clients,
-            )
+        viewModelScope.launch {
+            mutableStateFlow.collect { clientState ->
+                entityDocumentStateFlow.update {
+                    it.copy(
+                        entityId = clientState.clientId,
+                        entityType = EntityType.Clients,
+                    )
+                }
+            }
         }
     }
 }

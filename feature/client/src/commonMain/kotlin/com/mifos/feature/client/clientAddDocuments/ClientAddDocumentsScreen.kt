@@ -14,6 +14,7 @@ import androidclient.feature.client.generated.resources.btn_back
 import androidclient.feature.client.generated.resources.btn_submit
 import androidclient.feature.client.generated.resources.feature_client_description
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -89,29 +90,13 @@ private fun ClientAddDocumentsScreenDialog(
             MifosSweetError(
                 message = state.dialogState.message,
                 isRetryEnabled = false,
-            )
+                buttonText = "Go Back",
+            ) {
+                onAction(ClientAddDocumentScreenAction.NavigateBack)
+            }
         }
         ClientAddDocumentScreenState.DialogState.Loading -> {
             MifosCircularProgress()
-        }
-
-        is ClientAddDocumentScreenState.DialogState.UpdateError -> {
-            MifosSweetError(
-                message = state.dialogState.message,
-                isRetryEnabled = true,
-                onclick = {
-                    onAction(ClientAddDocumentScreenAction.RetryUpdate)
-                },
-            )
-        }
-        is ClientAddDocumentScreenState.DialogState.UploadError -> {
-            MifosSweetError(
-                message = state.dialogState.message,
-                isRetryEnabled = true,
-                onclick = {
-                    onAction(ClientAddDocumentScreenAction.RetryUpload)
-                },
-            )
         }
 
         else -> {}
@@ -130,7 +115,8 @@ private fun ClientAddDocumentScaffold(
         onBackPressed = {
             onAction(ClientAddDocumentScreenAction.NavigateBack)
         },
-        modifier = modifier,
+        modifier = modifier
+            .background(MaterialTheme.colorScheme.onPrimary),
     ) { paddingValues ->
         if (state.dialogState != null) {
             ClientAddDocumentsScreenDialog(

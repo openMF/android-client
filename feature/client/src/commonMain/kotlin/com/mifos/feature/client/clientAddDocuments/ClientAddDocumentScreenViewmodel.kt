@@ -19,6 +19,7 @@ import com.mifos.feature.client.DocumentSelectAndUploadRepository
 import com.mifos.feature.client.EntityDocumentState
 import io.github.vinceglb.filekit.PlatformFile
 import io.github.vinceglb.filekit.name
+import io.github.vinceglb.filekit.size
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -69,16 +70,7 @@ class ClientAddDocumentScreenViewmodel(
 
             ClientAddDocumentScreenAction.ViewDocument -> {
                 documentSelectAndUploadRepository.updateStep(EntityDocumentState.Step.UPDATE_PREVIEW)
-                documentSelectAndUploadRepository.changeSubmitMode(EntityDocumentState.SubmitMode.UPDATE)
                 sendEvent(ClientAddDocumentScreenEvents.OnNavigateToPreviewScreen)
-            }
-
-            ClientAddDocumentScreenAction.RetryUpdate -> {
-                updateDocument()
-            }
-
-            ClientAddDocumentScreenAction.RetryUpload -> {
-                uploadDocument()
             }
 
             is ClientAddDocumentScreenAction.UpdateDescription -> {
@@ -122,16 +114,25 @@ class ClientAddDocumentScreenViewmodel(
                         is DataState.Success -> {
                             dataState.data?.let { platformFile ->
                                 mutableStateFlow.update {
-                                    it.copy(
-                                        showBottomSheet = false,
-                                        dialogState = null,
-                                    )
+                                    it.copy(showBottomSheet = false)
                                 }
-                                documentSelectAndUploadRepository.updateStep(EntityDocumentState.Step.PREVIEW)
-                                documentSelectAndUploadRepository.updateEntityDocument(
-                                    platformFile,
-                                )
-                                sendEvent(ClientAddDocumentScreenEvents.OnNavigateToPreviewScreen)
+                                if (platformFile.size() > 1048576L) {
+                                    mutableStateFlow.update {
+                                        it.copy(
+                                            dialogState = ClientAddDocumentScreenState
+                                                .DialogState.Error("Document size cannot be greater than 1 MB."),
+                                        )
+                                    }
+                                } else {
+                                    mutableStateFlow.update {
+                                        it.copy(dialogState = null)
+                                    }
+                                    documentSelectAndUploadRepository.updateStep(EntityDocumentState.Step.PREVIEW)
+                                    documentSelectAndUploadRepository.updateEntityDocument(
+                                        platformFile,
+                                    )
+                                    sendEvent(ClientAddDocumentScreenEvents.OnNavigateToPreviewScreen)
+                                }
                             }
                         }
                     }
@@ -156,16 +157,25 @@ class ClientAddDocumentScreenViewmodel(
                         is DataState.Success -> {
                             dataState.data?.let { platformFile ->
                                 mutableStateFlow.update {
-                                    it.copy(
-                                        showBottomSheet = false,
-                                        dialogState = null,
-                                    )
+                                    it.copy(showBottomSheet = false)
                                 }
-                                documentSelectAndUploadRepository.updateStep(EntityDocumentState.Step.PREVIEW)
-                                documentSelectAndUploadRepository.updateEntityDocument(
-                                    platformFile,
-                                )
-                                sendEvent(ClientAddDocumentScreenEvents.OnNavigateToPreviewScreen)
+                                if (platformFile.size() > 1048576L) {
+                                    mutableStateFlow.update {
+                                        it.copy(
+                                            dialogState = ClientAddDocumentScreenState
+                                                .DialogState.Error("Document size cannot be greater than 1 MB."),
+                                        )
+                                    }
+                                } else {
+                                    mutableStateFlow.update {
+                                        it.copy(dialogState = null)
+                                    }
+                                    documentSelectAndUploadRepository.updateStep(EntityDocumentState.Step.PREVIEW)
+                                    documentSelectAndUploadRepository.updateEntityDocument(
+                                        platformFile,
+                                    )
+                                    sendEvent(ClientAddDocumentScreenEvents.OnNavigateToPreviewScreen)
+                                }
                             }
                         }
                     }
@@ -288,8 +298,6 @@ data class ClientAddDocumentScreenState(
     sealed interface DialogState {
         data object Loading : DialogState
         data class Error(val message: String) : DialogState
-        data class UpdateError(val message: String) : DialogState
-        data class UploadError(val message: String) : DialogState
     }
 }
 
@@ -300,8 +308,6 @@ sealed interface ClientAddDocumentScreenAction {
     data object DismissBottomSheet : ClientAddDocumentScreenAction
     data object UploadDocument : ClientAddDocumentScreenAction
     data object UpdateDocument : ClientAddDocumentScreenAction
-    data object RetryUpdate : ClientAddDocumentScreenAction
-    data object RetryUpload : ClientAddDocumentScreenAction
     data object PickFromGallery : ClientAddDocumentScreenAction
     data object PickFromFiles : ClientAddDocumentScreenAction
     data object UseMoreOptions : ClientAddDocumentScreenAction

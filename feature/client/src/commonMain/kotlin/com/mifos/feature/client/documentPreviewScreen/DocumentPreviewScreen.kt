@@ -40,7 +40,6 @@ import com.mifos.core.designsystem.component.MifosOutlinedButton
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.icon.MifosIcons
-import com.mifos.core.designsystem.theme.AppColors
 import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.ui.components.MifosFilePickerBottomSheet
 import com.mifos.core.ui.components.MifosProgressIndicator
@@ -94,6 +93,7 @@ private fun ViewDocumentScaffold(
             ViewDocumentsScreenContent(
                 state = state,
                 modifier = Modifier.weight(1f),
+                onAction = onAction,
             )
             Spacer(modifier = Modifier.height(DesignToken.spacing.largeIncreased))
             Row(
@@ -184,13 +184,17 @@ private fun ViewDocumentScaffold(
 @Composable
 private fun DocumentsPreviewScreenDialog(
     state: DocumentPreviewState,
+    onAction: (DocumentPreviewScreenAction) -> Unit,
 ) {
     when (state.dialogState) {
         is DocumentPreviewState.DialogState.Error -> {
             MifosSweetError(
                 message = state.dialogState.message,
                 isRetryEnabled = false,
-            )
+                buttonText = "Go Back",
+            ) {
+                onAction(DocumentPreviewScreenAction.RejectDocument)
+            }
         }
         DocumentPreviewState.DialogState.Loading -> {
             MifosProgressIndicator()
@@ -203,20 +207,24 @@ private fun DocumentsPreviewScreenDialog(
 private fun ViewDocumentsScreenContent(
     state: DocumentPreviewState,
     modifier: Modifier = Modifier,
+    onAction: (DocumentPreviewScreenAction) -> Unit,
 ) {
     MifosCard(
         modifier = modifier,
-        colors = CardDefaults.cardColors(containerColor = AppColors.customWhite),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.onPrimary),
         elevation = 0.dp,
         borderStroke = BorderStroke(1.dp, MaterialTheme.colorScheme.secondaryContainer),
     ) {
-        Box(
-            modifier = Modifier.fillMaxSize(),
-            contentAlignment = Alignment.Center,
-        ) {
-            if (state.dialogState != null) {
-                DocumentsPreviewScreenDialog(state)
-            } else {
+        if (state.dialogState != null) {
+            DocumentsPreviewScreenDialog(
+                state,
+                onAction = onAction,
+            )
+        } else {
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center,
+            ) {
                 when (state.documentType) {
                     is DocumentType.Image -> {
                         AsyncImage(
@@ -227,6 +235,7 @@ private fun ViewDocumentsScreenContent(
                                 .align(Alignment.Center),
                         )
                     }
+
                     DocumentType.Pdf -> {
                         Image(
                             imageVector = MifosIcons.Error,
@@ -236,6 +245,7 @@ private fun ViewDocumentsScreenContent(
                                 .align(Alignment.Center),
                         )
                     }
+
                     null -> {}
                 }
             }

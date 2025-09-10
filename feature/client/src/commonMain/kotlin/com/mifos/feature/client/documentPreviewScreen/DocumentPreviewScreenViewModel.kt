@@ -16,6 +16,7 @@ import com.mifos.feature.client.DocumentSelectAndUploadRepository
 import com.mifos.feature.client.EntityDocumentState
 import io.github.vinceglb.filekit.extension
 import io.github.vinceglb.filekit.readBytes
+import io.github.vinceglb.filekit.size
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -91,17 +92,28 @@ class DocumentPreviewScreenViewModel(
                                 mutableStateFlow.update {
                                     it.copy(
                                         showBottomSheet = false,
-                                        documentBytes = platformFile.readBytes(),
                                     )
                                 }
-                                if (documentSelectAndUploadFlow.first().step == EntityDocumentState.Step.PREVIEW) {
-                                    documentSelectAndUploadRepository.updateStep(EntityDocumentState.Step.UPDATE_PREVIEW)
+                                if (platformFile.size() > 1048576L) {
+                                    mutableStateFlow.update {
+                                        it.copy(
+                                            dialogState = DocumentPreviewState
+                                                .DialogState.Error("Document size cannot be greater than 1 MB."),
+                                        )
+                                    }
                                 } else {
-                                    documentSelectAndUploadRepository.updateStep(EntityDocumentState.Step.PREVIEW)
+                                    mutableStateFlow.update {
+                                        it.copy(documentBytes = platformFile.readBytes())
+                                    }
+                                    if (documentSelectAndUploadFlow.first().step == EntityDocumentState.Step.PREVIEW) {
+                                        documentSelectAndUploadRepository.updateStep(EntityDocumentState.Step.UPDATE_PREVIEW)
+                                    } else {
+                                        documentSelectAndUploadRepository.updateStep(EntityDocumentState.Step.PREVIEW)
+                                    }
+                                    documentSelectAndUploadRepository.updateEntityDocument(
+                                        platformFile,
+                                    )
                                 }
-                                documentSelectAndUploadRepository.updateEntityDocument(
-                                    platformFile,
-                                )
                             }
                         }
                     }
@@ -127,19 +139,28 @@ class DocumentPreviewScreenViewModel(
                             nullDialogState()
                             dataState.data?.let { platformFile ->
                                 mutableStateFlow.update {
-                                    it.copy(
-                                        showBottomSheet = false,
-                                        documentBytes = platformFile.readBytes(),
+                                    it.copy(showBottomSheet = false)
+                                }
+                                if (platformFile.size() > 1048576L) {
+                                    mutableStateFlow.update {
+                                        it.copy(
+                                            dialogState = DocumentPreviewState
+                                                .DialogState.Error("Document size cannot be greater than 1 MB."),
+                                        )
+                                    }
+                                } else {
+                                    mutableStateFlow.update {
+                                        it.copy(documentBytes = platformFile.readBytes())
+                                    }
+                                    if (documentSelectAndUploadFlow.first().step == EntityDocumentState.Step.PREVIEW) {
+                                        documentSelectAndUploadRepository.updateStep(EntityDocumentState.Step.UPDATE_PREVIEW)
+                                    } else {
+                                        documentSelectAndUploadRepository.updateStep(EntityDocumentState.Step.PREVIEW)
+                                    }
+                                    documentSelectAndUploadRepository.updateEntityDocument(
+                                        platformFile,
                                     )
                                 }
-                                if (documentSelectAndUploadFlow.first().step == EntityDocumentState.Step.PREVIEW) {
-                                    documentSelectAndUploadRepository.updateStep(EntityDocumentState.Step.UPDATE_PREVIEW)
-                                } else {
-                                    documentSelectAndUploadRepository.updateStep(EntityDocumentState.Step.PREVIEW)
-                                }
-                                documentSelectAndUploadRepository.updateEntityDocument(
-                                    platformFile,
-                                )
                             }
                         }
                     }
