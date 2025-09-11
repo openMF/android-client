@@ -202,12 +202,22 @@
     <string name="grace_on_principal_payment">Grace On Principal Payment</string>
     <string name="grace_on_interest_payment">Grace On Interest Payment</string>
     <string name="on_arrears_ageing">On Arrears Ageing</string>
-    <string name="view">View</string>
     <string name="select">Select</string>
     <string name="cancel">Cancel</string>
     <string name="collateral_count">%1$d Collaterals</string>
     <string name="recalculate_interest">Recalculate Interest</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
-
+    <string name="add_new_charge">Add New Charge</string>
+    <string name="edit_charge">Edit Charge</string>
+    <string name="view_charges">View Charges</string>
+    <string name="ok">Ok</string>
+    <string name="edit">Edit</string>
+    <string name="view">View</string>
+    <string name="charges">Charges</string>
+    <string name="name">Name</string>
+    <string name="date">Date</string>
+    <string name="amount">Amount</string>
+    <string name="type">Type</string>
+    <string name="collected_on">Collected On</string>
 </resources>

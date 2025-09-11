@@ -53,11 +53,11 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.ui.components.MifosEmptyUi
+import com.mifos.core.ui.components.MifosProgressIndicator
 import com.mifos.feature.loan.loanChargeDialog.LoanChargeDialogScreen
 import com.mifos.room.entities.client.ChargesEntity
 import org.jetbrains.compose.resources.stringResource
@@ -144,7 +144,7 @@ internal fun LoanChargeScreen(
                         onRetry()
                     }
 
-                    is LoanChargeUiState.Loading -> MifosCircularProgress()
+                    is LoanChargeUiState.Loading -> MifosProgressIndicator()
 
                     is LoanChargeUiState.LoanChargesList -> {
                         if (state.loanCharges.isEmpty()) {

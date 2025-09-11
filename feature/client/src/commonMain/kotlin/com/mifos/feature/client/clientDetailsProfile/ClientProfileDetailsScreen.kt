@@ -83,6 +83,7 @@ internal fun ClientProfileDetailsScreen(
     navigateToApplyNewApplication: (Int) -> Unit,
     navigateToUpdateDefaultAccount: (Int) -> Unit,
     navigateToCollateral: (Int) -> Unit,
+    navigateToUpdateSignature: (Int, String, String) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: ClientProfileDetailsViewModel = koinViewModel(),
 ) {
@@ -130,6 +131,14 @@ internal fun ClientProfileDetailsScreen(
 
             ClientProfileDetailsEvent.NavigateToUpdatePhoto -> {
                 navigateToUpdatePhoto(
+                    state.client?.id ?: -1,
+                    state.client?.displayName ?: "",
+                    state.client?.accountNo ?: "",
+                )
+            }
+
+            ClientProfileDetailsEvent.NavigateToUpdateSignature -> {
+                navigateToUpdateSignature(
                     state.client?.id ?: -1,
                     state.client?.displayName ?: "",
                     state.client?.accountNo ?: "",

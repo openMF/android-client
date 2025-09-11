@@ -22,7 +22,7 @@ data class ClientApplyNewApplicationRoute(
 fun NavGraphBuilder.clientApplyNewApplicationRoute(
     onNavigateBack: () -> Unit,
     onNavigateApplyLoanAccount: (Int) -> Unit,
-    onNavigateApplySavingsAccount: () -> Unit,
+    onNavigateApplySavingsAccount: (Int) -> Unit,
     onNavigateApplyShareAccount: () -> Unit,
     onNavigateApplyRecurringAccount: () -> Unit,
     onNavigateApplyFixedAccount: () -> Unit,

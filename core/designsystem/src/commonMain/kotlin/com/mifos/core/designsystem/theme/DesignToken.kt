@@ -300,6 +300,7 @@ data class AppSizes(
     val cardMinHeight: Dp = 120.dp,
     val profile: Dp = 72.dp,
     val headerToContentHeight: Dp = 28.dp,
+    val topBarStandardHeight: Dp = 40.dp,
 )
 
 /**

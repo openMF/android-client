@@ -54,7 +54,6 @@ import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosMenuDropDownItem
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
@@ -64,6 +63,7 @@ import com.mifos.core.designsystem.theme.identifierTextStyleLight
 import com.mifos.core.model.objects.noncoreobjects.Identifier
 import com.mifos.core.model.objects.noncoreobjects.IdentifierPayload
 import com.mifos.core.ui.components.MifosEmptyUi
+import com.mifos.core.ui.components.MifosProgressIndicator
 import com.mifos.core.ui.util.DevicePreview
 import com.mifos.feature.client.clientIdentifiersDialog.ClientIdentifierDialogUiState
 import com.mifos.feature.client.clientIdentifiersDialog.ClientIdentifiersDialogScreen
@@ -199,7 +199,7 @@ internal fun ClientIdentifiersScreen(
                     is ClientIdentifiersUiState.IdentifierDeletedSuccessfully -> {
                     }
 
-                    is ClientIdentifiersUiState.Loading -> MifosCircularProgress()
+                    is ClientIdentifiersUiState.Loading -> MifosProgressIndicator()
                 }
             }
         }

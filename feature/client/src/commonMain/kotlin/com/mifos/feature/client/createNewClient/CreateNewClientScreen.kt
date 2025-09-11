@@ -117,13 +117,13 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.compose.rememberAsyncImagePainter
 import com.mifos.core.common.utils.DateHelper
 import com.mifos.core.common.utils.formatDate
-import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosDatePickerTextField
 import com.mifos.core.designsystem.component.MifosOutlinedTextField
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.component.MifosTextFieldDropdown
 import com.mifos.core.model.objects.clients.Address
+import com.mifos.core.ui.components.MifosProgressIndicator
 import com.mifos.feature.client.utils.PhoneNumberUtil
 import com.mifos.feature.client.utils.rememberPlatformCameraLauncher
 import com.mifos.room.entities.client.AddressTemplate
@@ -138,7 +138,6 @@ import io.github.vinceglb.filekit.dialogs.compose.rememberFilePickerLauncher
 import io.github.vinceglb.filekit.path
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
-import kotlinx.datetime.Clock
 import org.jetbrains.compose.resources.getString
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
@@ -146,6 +145,8 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameterProvider
 import org.koin.compose.viewmodel.koinViewModel
+import kotlin.time.Clock
+import kotlin.time.ExperimentalTime
 
 /**
  * Created by Pronay Sarker on 07/07/2024 (3:45 AM)
@@ -208,11 +209,11 @@ internal fun CreateNewClientScreen(
         Column(modifier = Modifier.padding(paddingValues)) {
             when (uiState) {
                 CreateNewClientUiState.ShowProgressbar -> {
-                    MifosCircularProgress()
+                    MifosProgressIndicator()
                 }
 
                 is CreateNewClientUiState.ShowProgress -> {
-                    MifosCircularProgress(text = uiState.message)
+                    MifosProgressIndicator()
                 }
 
                 is CreateNewClientUiState.ShowClientTemplate -> {
@@ -292,7 +293,7 @@ internal fun CreateNewClientScreen(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalTime::class)
 @Composable
 private fun CreateNewClientContent(
     scope: CoroutineScope,

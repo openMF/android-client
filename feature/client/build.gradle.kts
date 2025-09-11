@@ -40,10 +40,9 @@ kotlin {
             implementation(libs.filekit.core)
             implementation(libs.filekit.compose)
             implementation(libs.filekit.dialog.compose)
-
-            implementation(libs.compose.signature)
-
             implementation(libs.cmp.image.pick.n.crop)
+            implementation(libs.crop.krop.ui)
+
         }
         
         androidMain.dependencies {

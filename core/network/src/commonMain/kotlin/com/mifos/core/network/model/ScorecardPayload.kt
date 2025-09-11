@@ -10,12 +10,15 @@
 package com.mifos.core.network.model
 
 import com.mifos.core.model.objects.surveys.ScorecardValues
-import kotlinx.datetime.Instant
+import kotlin.time.ExperimentalTime
+import kotlin.time.Instant
 
 /**
  * Created by Nasim Banu on 28,January,2016.
  */
-data class ScorecardPayload(
+data class ScorecardPayload
+@OptIn(ExperimentalTime::class)
+constructor(
     var userId: Int = 0,
     var clientId: Int = 0,
     var createdOn: Instant? = null,

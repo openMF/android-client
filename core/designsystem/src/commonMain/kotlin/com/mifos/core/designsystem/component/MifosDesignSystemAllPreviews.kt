@@ -25,7 +25,6 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
@@ -437,24 +436,6 @@ private fun MifosPasswordField_preview_withoutInput_showPassword() {
             onValueChange = {},
             initialShowPassword = true,
             hint = "Hint",
-        )
-    }
-}
-
-@Preview
-@Composable
-private fun MifosPagingAppendProgressPreview() {
-    MaterialTheme {
-        MifosPagingAppendProgress()
-    }
-}
-
-@Preview
-@Composable
-private fun MifosCircularProgressPreview() {
-    MaterialTheme {
-        MifosCircularProgress(
-            text = "Loading...",
         )
     }
 }

@@ -35,7 +35,6 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.paging.PagingData
-import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.theme.DesignToken
@@ -43,6 +42,7 @@ import com.mifos.core.designsystem.theme.MifosTypography
 import com.mifos.core.designsystem.utils.onClick
 import com.mifos.core.ui.components.MifosBreadcrumbNavBar
 import com.mifos.core.ui.components.MifosEmptyCard
+import com.mifos.core.ui.components.MifosProgressIndicator
 import com.mifos.core.ui.util.EventsEffect
 import com.mifos.room.entities.client.ChargesEntity
 import kotlinx.coroutines.flow.Flow
@@ -93,7 +93,7 @@ fun ClientUpcomingChargesScreen(
             MifosBreadcrumbNavBar(navController)
 
             when (state.isLoading) {
-                true -> MifosCircularProgress()
+                true -> MifosProgressIndicator()
                 false -> {
                     Column(
                         modifier = Modifier.fillMaxSize()

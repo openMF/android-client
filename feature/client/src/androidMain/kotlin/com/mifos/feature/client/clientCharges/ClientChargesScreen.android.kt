@@ -26,11 +26,11 @@ import androidx.compose.ui.unit.dp
 import androidx.paging.LoadState
 import androidx.paging.PagingData
 import androidx.paging.compose.collectAsLazyPagingItems
-import com.mifos.core.designsystem.component.MifosCircularProgress
-import com.mifos.core.designsystem.component.MifosPagingAppendProgress
 import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.ui.components.MifosEmptyUi
+import com.mifos.core.ui.components.MifosPagingAppendProgress
+import com.mifos.core.ui.components.MifosProgressIndicator
 import com.mifos.room.entities.client.ChargesEntity
 import kotlinx.coroutines.flow.Flow
 import org.jetbrains.compose.resources.stringResource
@@ -49,7 +49,7 @@ actual fun ClientChargeContent(
             }
         }
 
-        is LoadState.Loading -> MifosCircularProgress()
+        is LoadState.Loading -> MifosProgressIndicator()
 
         is LoadState.NotLoading -> {
             if (chargesPagingList.itemCount == 0) {

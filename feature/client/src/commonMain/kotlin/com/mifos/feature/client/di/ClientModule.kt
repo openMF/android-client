@@ -24,7 +24,7 @@ import com.mifos.feature.client.clientIdentitiesList.ClientIdentitiesListViewMod
 import com.mifos.feature.client.clientLoanAccounts.ClientLoanAccountsViewModel
 import com.mifos.feature.client.clientPinpoint.PinPointClientViewModel
 import com.mifos.feature.client.clientProfile.ClientProfileViewModel
-import com.mifos.feature.client.clientSignature.SignatureViewModel
+import com.mifos.feature.client.clientSignature.ClientSignatureViewModel
 import com.mifos.feature.client.clientStaff.ClientStaffViewModel
 import com.mifos.feature.client.clientSurveyList.SurveyListViewModel
 import com.mifos.feature.client.clientSurveySubmit.SurveySubmitViewModel
@@ -48,7 +48,6 @@ val ClientModule = module {
     viewModelOf(::ClientAddressViewModel)
     viewModelOf(::ClientListViewModel)
     viewModelOf(::PinPointClientViewModel)
-    viewModelOf(::SignatureViewModel)
     viewModelOf(::SurveyListViewModel)
     viewModelOf(::SurveySubmitViewModel)
     viewModelOf(::CreateNewClientViewModel)
@@ -69,6 +68,7 @@ val ClientModule = module {
     viewModelOf(::ClientLoanAccountsViewModel)
     viewModelOf(::ClientIdentitiesListViewModel)
     viewModelOf(::ClientApplyNewApplicationsViewModel)
+    viewModelOf(::ClientSignatureViewModel)
     viewModelOf(::ClientUpcomingChargesViewmodel)
     viewModelOf(::ShareAccountsViewModel)
 }

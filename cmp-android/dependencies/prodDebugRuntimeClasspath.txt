@@ -160,6 +160,10 @@ com.arkivanov.essenty:back-handler-android:2.1.0
 com.arkivanov.essenty:back-handler:2.1.0
 com.arkivanov.essenty:utils-internal-android:2.1.0
 com.arkivanov.essenty:utils-internal:2.1.0
+com.attafitamim.krop:core-android:0.2.0
+com.attafitamim.krop:core:0.2.0
+com.attafitamim.krop:ui-android:0.2.0
+com.attafitamim.krop:ui:0.2.0
 com.caverock:androidsvg-aar:1.4
 com.google.accompanist:accompanist-drawablepainter:0.37.3
 com.google.accompanist:accompanist-permissions:0.36.0
@@ -183,8 +187,8 @@ com.russhwolf:multiplatform-settings-serialization:1.2.0
 com.russhwolf:multiplatform-settings:1.2.0
 com.squareup.okhttp3:okhttp-sse:4.12.0
 com.squareup.okhttp3:okhttp:4.12.0
-com.squareup.okio:okio-jvm:3.11.0
-com.squareup.okio:okio:3.11.0
+com.squareup.okio:okio-jvm:3.15.0
+com.squareup.okio:okio:3.15.0
 com.squareup:javawriter:2.1.1
 de.jensklingenberg.ktorfit:ktorfit-annotations-android-debug:2.5.2
 de.jensklingenberg.ktorfit:ktorfit-annotations:2.5.2
@@ -210,6 +214,14 @@ io.coil-kt.coil3:coil-network-okhttp:3.2.0
 io.coil-kt.coil3:coil-svg-android:3.2.0
 io.coil-kt.coil3:coil-svg:3.2.0
 io.coil-kt.coil3:coil:3.2.0
+io.github.alexzhirkevich:compottie-core-android:2.0.0-rc05
+io.github.alexzhirkevich:compottie-core:2.0.0-rc05
+io.github.alexzhirkevich:compottie-lite-android:2.0.0-rc05
+io.github.alexzhirkevich:compottie-lite:2.0.0-rc05
+io.github.alexzhirkevich:compottie-resources-android:2.0.0-rc05
+io.github.alexzhirkevich:compottie-resources:2.0.0-rc05
+io.github.alexzhirkevich:keight-core-android:0.0.02
+io.github.alexzhirkevich:keight-core:0.0.02
 io.github.niyajali:compose-signature-android:1.0.1
 io.github.niyajali:compose-signature:1.0.1
 io.github.niyajali:fluentui-system-icons-android:1.0.0
@@ -331,6 +343,8 @@ org.jetbrains.kotlin:kotlin-reflect:2.1.0
 org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.9.23
 org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.9.20
 org.jetbrains.kotlin:kotlin-stdlib:2.2.0
+org.jetbrains.kotlinx:atomicfu-jvm:0.23.2
+org.jetbrains.kotlinx:atomicfu:0.23.2
 org.jetbrains.kotlinx:kotlinx-collections-immutable-jvm:0.3.8
 org.jetbrains.kotlinx:kotlinx-collections-immutable:0.3.8
 org.jetbrains.kotlinx:kotlinx-coroutines-android:1.10.2
@@ -341,8 +355,8 @@ org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.10.2
 org.jetbrains.kotlinx:kotlinx-coroutines-slf4j:1.10.2
 org.jetbrains.kotlinx:kotlinx-coroutines-test-jvm:1.10.2
 org.jetbrains.kotlinx:kotlinx-coroutines-test:1.10.2
-org.jetbrains.kotlinx:kotlinx-datetime-jvm:0.6.2
-org.jetbrains.kotlinx:kotlinx-datetime:0.6.2
+org.jetbrains.kotlinx:kotlinx-datetime-jvm:0.7.1
+org.jetbrains.kotlinx:kotlinx-datetime:0.7.1
 org.jetbrains.kotlinx:kotlinx-io-bytestring-jvm:0.7.0
 org.jetbrains.kotlinx:kotlinx-io-bytestring:0.7.0
 org.jetbrains.kotlinx:kotlinx-io-core-jvm:0.7.0

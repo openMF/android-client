@@ -85,7 +85,11 @@ fun NavGraphBuilder.savingsNavGraph(
             onBackPressed()
         }
 
-        savingsAccountDestination()
+        savingsAccountDestination(
+            navController = navController,
+            onNavigateBack = onBackPressed,
+            onFinish = onBackPressed,
+        )
     }
 }
 

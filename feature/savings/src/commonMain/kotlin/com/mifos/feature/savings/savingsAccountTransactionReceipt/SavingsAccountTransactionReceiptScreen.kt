@@ -21,8 +21,8 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosSweetError
+import com.mifos.core.ui.components.MifosProgressIndicator
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -60,7 +60,7 @@ fun SavingsAccountTransactionReceiptScreen(
         }
 
         is SavingsAccountTransactionReceiptUiState.ShowProgressbar -> {
-            MifosCircularProgress()
+            MifosProgressIndicator()
         }
 
         is SavingsAccountTransactionReceiptUiState.ShowReceipt -> {

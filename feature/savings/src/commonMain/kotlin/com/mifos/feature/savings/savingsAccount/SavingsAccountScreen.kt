@@ -75,7 +75,6 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mifos.core.common.utils.DateHelper
-import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosDatePickerTextField
 import com.mifos.core.designsystem.component.MifosOutlinedTextField
 import com.mifos.core.designsystem.component.MifosScaffold
@@ -85,15 +84,17 @@ import com.mifos.core.model.objects.account.saving.FieldOfficerOptions
 import com.mifos.core.model.objects.organisations.ProductSavings
 import com.mifos.core.model.objects.payloads.SavingsPayload
 import com.mifos.core.ui.components.MifosAlertDialog
+import com.mifos.core.ui.components.MifosProgressIndicator
 import com.mifos.room.entities.client.Savings
 import com.mifos.room.entities.templates.savings.SavingProductsTemplate
 import com.mifos.room.entities.zipmodels.SavingProductsAndTemplate
-import kotlinx.datetime.Clock
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameterProvider
 import org.koin.compose.viewmodel.koinViewModel
+import kotlin.time.Clock
+import kotlin.time.ExperimentalTime
 
 /**
  * Created by Pronay Sarker on 14/07/2024 (12:04 AM)
@@ -171,7 +172,7 @@ internal fun SavingsAccountScreen(
         ) {
             when (uiState) {
                 is SavingAccountUiState.ShowProgress -> {
-                    MifosCircularProgress()
+                    MifosProgressIndicator()
                 }
 
                 is SavingAccountUiState.ShowFetchingError -> {
@@ -220,7 +221,7 @@ internal fun SavingsAccountScreen(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalTime::class)
 @Composable
 private fun SavingsAccountContent(
     clientId: Int,

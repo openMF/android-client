@@ -9,23 +9,32 @@
  */
 package com.mifos.core.data.repositoryImp
 
-import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.repository.SignatureRepository
+import com.mifos.core.network.GenericResponse
 import com.mifos.core.network.datamanager.DataManagerDocument
 import io.ktor.client.request.forms.MultiPartFormDataContent
 
 /**
- * Created by Aditya Gupta on 08/08/23.
+ * Created by Arin Yadav on 04/09/25.
  */
 class SignatureRepositoryImp(
     private val dataManagerDocument: DataManagerDocument,
 ) : SignatureRepository {
 
-    override suspend fun createDocument(
+    override suspend fun createSignature(
         entityType: String,
         entityId: Int,
         file: MultiPartFormDataContent,
-    ): DataState<Unit> {
+    ): GenericResponse {
         return dataManagerDocument.createDocument(entityType, entityId, file)
+    }
+
+    override suspend fun updateSignature(
+        entityType: String,
+        entityId: Int,
+        documentId: Int,
+        file: MultiPartFormDataContent,
+    ): GenericResponse {
+        return dataManagerDocument.updateDocument(entityType, entityId, documentId, file)
     }
 }

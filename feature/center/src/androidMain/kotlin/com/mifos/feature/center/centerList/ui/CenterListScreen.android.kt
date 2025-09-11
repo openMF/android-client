@@ -26,9 +26,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
-import com.mifos.core.designsystem.component.MifosCircularProgress
-import com.mifos.core.designsystem.component.MifosPagingAppendProgress
 import com.mifos.core.designsystem.component.MifosSweetError
+import com.mifos.core.ui.components.MifosPagingAppendProgress
+import com.mifos.core.ui.components.MifosProgressIndicator
 import org.jetbrains.compose.resources.stringResource
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -50,7 +50,7 @@ actual fun CenterListContent(
                 }
             }
 
-            is LoadState.Loading -> MifosCircularProgress()
+            is LoadState.Loading -> MifosProgressIndicator()
 
             is LoadState.NotLoading -> Unit
         }

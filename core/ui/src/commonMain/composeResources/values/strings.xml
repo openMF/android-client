@@ -98,6 +98,14 @@
     <string name="error_digits_only">This field should contain digits only</string>
     <string name="error_number_zero">Number should not be zero</string>
 
+    <string name="ok">Ok</string>
+    <string name="cancel">Cancel</string>
+    <string name="name">Name</string>
+    <string name="date">Date</string>
+    <string name="amount">Amount</string>
+    <string name="type">Type</string>
+    <string name="collected_on">Collected On</string>
+
     <string name="client_share_accounts_share_product">Share Product</string>
     <string name="client_share_accounts_pending_for_approval_shares">Pending For Approval Shares</string>
     <string name="client_share_accounts_approved_shares">Approved Shares</string>

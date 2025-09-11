@@ -58,6 +58,8 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -73,12 +75,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.designsystem.theme.AppColors
 import com.mifos.core.designsystem.theme.DesignToken
+import com.mifos.core.designsystem.theme.MifosTheme
 import com.mifos.core.designsystem.theme.MifosTypography
 import com.mifos.core.designsystem.utils.onClick
+import com.mifos.core.ui.util.TextUtil
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
@@ -523,6 +528,138 @@ fun MifosActionCollateralData (
 }
 
 @Composable
+fun MifosActionsChargeListingComponent(
+    chargeTitle: String,
+    type: String,
+    date: String,
+    collectedOn: String,
+    amount: String,
+    menuList: List<Actions> = listOf<Actions>(
+        Actions.Edit(),
+        Actions.Delete(),
+    ),
+    onActionClicked: (Actions) -> Unit,
+    isExpandable: Boolean = true,
+) {
+    var isActive by rememberSaveable { mutableStateOf(false) }
+
+    Column(
+        Modifier.fillMaxWidth(),
+    ) {
+        MifosActionsListingComponentOutline(
+            isExpanded = isActive,
+        ) {
+            Row(
+                modifier = Modifier.fillMaxWidth().clickable(
+                    enabled = isExpandable,
+                    onClick = { isActive = !isActive },
+                ).padding(
+                    horizontal = DesignToken.padding.large,
+                    vertical = DesignToken.padding.medium,
+                ),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween,
+
+            ) {
+                Column(
+                    modifier = Modifier.weight(1f),
+                    verticalArrangement = Arrangement.spacedBy(DesignToken.padding.extraExtraSmall),
+                ) {
+                    PrintTextUtil(
+                        TextUtil(
+                            text = chargeTitle,
+                            style = MifosTypography.titleSmallEmphasized,
+                        ),
+                    )
+                    PrintTextUtil(
+                        TextUtil(
+                            text = type,
+                        ),
+                    )
+                    PrintTextUtil(
+                        TextUtil(
+                            text = date,
+                        ),
+                    )
+                }
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Column(
+                        verticalArrangement = Arrangement.spacedBy(DesignToken.padding.extraExtraSmall),
+                        horizontalAlignment = Alignment.End,
+                    ) {
+                        Text(
+                            text = collectedOn,
+                            color = AppColors.customEnable,
+                            style = MifosTypography.bodySmall,
+                            textAlign = TextAlign.End,
+                        )
+                        Text(
+                            text = amount,
+                            style = MifosTypography.labelMedium,
+                            textAlign = TextAlign.End,
+                        )
+                    }
+                    Icon(
+                        modifier = Modifier
+                            .size(DesignToken.sizes.iconSmall)
+                            .padding(horizontal = DesignToken.padding.extraSmall),
+                        imageVector = if (isActive) {
+                            MifosIcons.ChevronUp
+                        } else {
+                            MifosIcons.ChevronDown
+                        },
+                        contentDescription = "",
+                    )
+                }
+            }
+        }
+        if (isActive) {
+            Surface(
+                modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(
+                    bottomStart = DesignToken.padding.medium,
+                    bottomEnd = DesignToken.padding.medium,
+                ),
+                color = MaterialTheme.colorScheme.surfaceContainer,
+            ) {
+                Column(
+                    modifier = Modifier.padding(
+                        vertical = DesignToken.padding.small,
+                    ),
+                ) {
+                    menuList.map { menuItem ->
+                        Row(
+                            modifier = Modifier.fillMaxWidth()
+                                .height(DesignToken.sizes.avatarMedium)
+                                .clickable {
+                                    onActionClicked(menuItem)
+                                },
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.Start,
+                        ) {
+                            Icon(
+                                modifier = Modifier.padding(horizontal = DesignToken.padding.large),
+                                imageVector = menuItem.icon,
+                                contentDescription = "",
+                            )
+
+                            Text(
+                                modifier = Modifier.fillMaxWidth(),
+                                text = menuItem::class.simpleName ?: "",
+                                color = MaterialTheme.colorScheme.onSurface,
+                                fontSize = MaterialTheme.typography.bodyLarge.fontSize,
+                            )
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
 fun MifosActionsSavingsListingComponent(
     accountNo: String,
     savingsProduct: String,
@@ -733,7 +870,7 @@ sealed class Actions(open val icon: ImageVector) {
         Actions(icon)
 
     data class Edit(override val icon: ImageVector = MifosIcons.Edit) : Actions(icon)
-    data class Delete(override val icon: ImageVector = MifosIcons.Delete) : Actions(icon)
+    data class Delete(override val icon: ImageVector = MifosIcons.DeleteDocument) : Actions(icon)
 }
 
 @Composable
@@ -834,7 +971,7 @@ fun MifosActionsNoteListingComponent(
 @Preview
 @Composable
 private fun PreviewMifosActionsNoteListingComponent() {
-    MaterialTheme {
+    MifosTheme {
         MifosActionsNoteListingComponent(
             createdBy = "John Doe",
             date = "02 September 2025",
@@ -859,7 +996,7 @@ private fun PreviewMifosActionsNoteListingComponent() {
 @Preview
 @Composable
 private fun PreviewMifosActionsIdentifierListingComponent() {
-    MaterialTheme {
+    MifosTheme {
         MifosActionsIdentifierListingComponent(
             type = "Passport",
             id = "P1234567",
@@ -889,7 +1026,7 @@ private fun PreviewMifosActionsIdentifierListingComponent() {
 @Preview
 @Composable
 private fun PreviewMifosActionsClientFeeListingComponent() {
-    MaterialTheme {
+    MifosTheme {
         MifosActionsClientFeeListingComponent(
             name = "John Doe",
             dueAsOf = "2025-08-19",
@@ -917,7 +1054,7 @@ private fun PreviewMifosActionsClientFeeListingComponent() {
 @Preview
 @Composable
 private fun PreviewMifosActionsSavingsListingComponent() {
-    MaterialTheme {
+    MifosTheme {
         MifosActionsSavingsListingComponent(
             accountNo = "SV9876",
             savingsProduct = "Savings Product",
@@ -942,7 +1079,7 @@ private fun PreviewMifosActionsSavingsListingComponent() {
 @Preview
 @Composable
 private fun PreviewMifosActionsCollateralDataListingComponent() {
-    MaterialTheme {
+    MifosTheme {
         MifosActionsCollateralDataListingComponent(
             name = "Gold Jewelry",
             quantity = "5",
@@ -966,7 +1103,7 @@ private fun PreviewMifosActionsCollateralDataListingComponent() {
 @Preview
 @Composable
 private fun PreviewMifosActionsLoanListingComponent() {
-    MaterialTheme {
+    MifosTheme {
         MifosActionsLoanListingComponent(
             accountNo = "LN12345",
             loanProduct = "Personal Loan",
@@ -985,6 +1122,44 @@ private fun PreviewMifosActionsLoanListingComponent() {
                     else -> println("Action not Handled")
                 }
             },
+        )
+    }
+}
+
+@Preview
+@Composable
+private fun MifosActionsChargeListingComponentPreview() {
+    MifosTheme {
+        MifosActionsChargeListingComponent(
+            chargeTitle = "Bank Fee",
+            type = "Flat",
+            date = "06-09-2025",
+            collectedOn = "06-09-2025",
+            amount = "1500 UGX",
+            onActionClicked = { },
+            isExpandable = true,
+        )
+    }
+}
+
+@Preview
+@Composable
+private fun PreviewMifosActionsShareListingComponent() {
+    val sampleMenu = listOf(
+        Actions.Edit(),
+        Actions.Delete(),
+    )
+
+    MifosTheme {
+        MifosActionsShareListingComponent(
+            accountNo = "AC123456",
+            shareProductName = "Gold Savings Plan",
+            pendingForApprovalShares = 5,
+            approvedShares = 10,
+            isExpanded = true,
+            onClick = {},
+            menuList = sampleMenu,
+            onActionClicked = { },
         )
     }
 }

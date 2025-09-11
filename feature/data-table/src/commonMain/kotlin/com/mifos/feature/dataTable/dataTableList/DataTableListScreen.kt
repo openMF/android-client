@@ -55,17 +55,18 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mifos.core.common.utils.DateHelper
-import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosDatePickerTextField
 import com.mifos.core.designsystem.component.MifosOutlinedTextField
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosTextFieldDropdown
+import com.mifos.core.ui.components.MifosProgressIndicator
 import com.mifos.room.entities.client.ClientPayloadEntity
 import com.mifos.room.entities.noncore.DataTableEntity
-import kotlinx.datetime.Clock
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.viewmodel.koinViewModel
+import kotlin.time.Clock
+import kotlin.time.ExperimentalTime
 
 @Composable
 fun DataTableListScreen(
@@ -132,7 +133,7 @@ fun DataTableListScreen(
                     }
                 }
 
-                is DataTableListUiState.Loading -> MifosCircularProgress()
+                is DataTableListUiState.Loading -> MifosProgressIndicator()
                 is DataTableListUiState.Success -> {
                     uiState.client?.let { client ->
                         clientCreated(client)
@@ -191,7 +192,7 @@ fun DataTableListContent(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalTime::class)
 @Composable
 fun TableColumnHeader(
     table: DataTableEntity,

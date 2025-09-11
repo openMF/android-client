@@ -64,21 +64,22 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mifos.core.common.utils.DateHelper
-import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosDatePickerTextField
 import com.mifos.core.designsystem.component.MifosOutlinedTextField
 import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.component.MifosTextFieldDropdown
 import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.model.objects.payloads.ChargesPayload
+import com.mifos.core.ui.components.MifosProgressIndicator
 import com.mifos.room.entities.client.ChargesEntity
 import kotlinx.coroutines.launch
-import kotlinx.datetime.Clock
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameterProvider
 import org.koin.compose.viewmodel.koinViewModel
+import kotlin.time.Clock
+import kotlin.time.ExperimentalTime
 
 @Composable
 internal fun LoanChargeDialogScreen(
@@ -103,6 +104,7 @@ internal fun LoanChargeDialogScreen(
     )
 }
 
+@OptIn(ExperimentalTime::class)
 @Composable
 internal fun LoanChargeDialogScreen(
     state: LoanChargeDialogUiState,
@@ -306,7 +308,7 @@ internal fun LoanChargeDialogScreen(
                     ) {
                     }
 
-                    is LoanChargeDialogUiState.Loading -> MifosCircularProgress(
+                    is LoanChargeDialogUiState.Loading -> MifosProgressIndicator(
                         modifier = Modifier
                             .fillMaxWidth()
                             .heightIn(300.dp),

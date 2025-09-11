@@ -60,12 +60,12 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mifos.core.common.utils.DateHelper
 import com.mifos.core.designsystem.component.MifosButton
-import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosDatePickerTextField
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.component.MifosTextFieldDropdown
 import com.mifos.core.model.objects.collectionsheets.CollectionSheetRequestPayload
+import com.mifos.core.ui.components.MifosProgressIndicator
 import com.mifos.room.entities.collectionsheet.CenterDetail
 import com.mifos.room.entities.collectionsheet.CollectionSheetPayload
 import com.mifos.room.entities.collectionsheet.CollectionSheetResponse
@@ -75,9 +75,10 @@ import com.mifos.room.entities.group.GroupEntity
 import com.mifos.room.entities.organisation.OfficeEntity
 import com.mifos.room.entities.organisation.StaffEntity
 import kotlinx.coroutines.launch
-import kotlinx.datetime.Clock
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
+import kotlin.time.Clock
+import kotlin.time.ExperimentalTime
 
 @Composable
 internal fun GenerateCollectionSheetScreen(
@@ -169,7 +170,7 @@ internal fun GenerateCollectionSheetScreen(
                     onRetry()
                 }
 
-                is GenerateCollectionSheetUiState.Loading -> MifosCircularProgress()
+                is GenerateCollectionSheetUiState.Loading -> MifosProgressIndicator()
 
                 is GenerateCollectionSheetUiState.CollectionSheetSuccess -> {
                     val message = stringResource(Res.string.feature_collection_sheet_collection_sheet_submitted)
@@ -209,7 +210,7 @@ internal fun GenerateCollectionSheetScreen(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalTime::class)
 @Composable
 private fun GenerateCollectionSheetContent(
     centerDetailsState: List<CenterDetail>?,

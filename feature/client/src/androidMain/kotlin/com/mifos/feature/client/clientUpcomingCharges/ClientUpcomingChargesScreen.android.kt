@@ -22,19 +22,18 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.paging.LoadState
 import androidx.paging.PagingData
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.mifos.core.common.utils.DateHelper
-import com.mifos.core.designsystem.component.MifosCircularProgress
-import com.mifos.core.designsystem.component.MifosPagingAppendProgress
 import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.ui.components.Actions
 import com.mifos.core.ui.components.MifosActionsClientFeeListingComponent
+import com.mifos.core.ui.components.MifosPagingAppendProgress
+import com.mifos.core.ui.components.MifosProgressIndicator
 import com.mifos.room.entities.client.ChargesEntity
 import kotlinx.coroutines.flow.Flow
 import org.jetbrains.compose.resources.stringResource
@@ -55,7 +54,7 @@ actual fun ChargesListContent(
             onclick = refresh,
         )
 
-        LoadState.Loading -> MifosCircularProgress()
+        LoadState.Loading -> MifosProgressIndicator()
 
         is LoadState.NotLoading -> Unit
     }

@@ -13,6 +13,7 @@ import com.mifos.core.common.utils.DataState
 import com.mifos.core.common.utils.asDataStateFlow
 import com.mifos.core.data.repository.DocumentListRepository
 import com.mifos.core.model.objects.noncoreobjects.Document
+import com.mifos.core.network.GenericResponse
 import com.mifos.core.network.datamanager.DataManagerDocument
 import io.ktor.client.statement.HttpResponse
 import kotlinx.coroutines.flow.Flow
@@ -29,19 +30,19 @@ class DocumentListRepositoryImp(
             .asDataStateFlow()
     }
 
-    override suspend fun downloadDocument(
+    override fun downloadDocument(
         entityType: String,
         entityId: Int,
         documentId: Int,
-    ): HttpResponse {
-        return dataManagerDocument.downloadDocument(entityType, entityId, documentId)
+    ): Flow<DataState<HttpResponse>> {
+        return dataManagerDocument.downloadDocument(entityType, entityId, documentId).asDataStateFlow()
     }
 
     override suspend fun removeDocument(
         entityType: String,
         entityId: Int,
         documentId: Int,
-    ) {
+    ): GenericResponse {
         return dataManagerDocument.removeDocument(entityType, entityId, documentId)
     }
 }

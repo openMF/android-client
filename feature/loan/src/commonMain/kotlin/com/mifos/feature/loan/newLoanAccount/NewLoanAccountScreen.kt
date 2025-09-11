@@ -12,9 +12,11 @@ package com.mifos.feature.loan.newLoanAccount
 import androidclient.feature.loan.generated.resources.Res
 import androidclient.feature.loan.generated.resources.add
 import androidclient.feature.loan.generated.resources.add_new
+import androidclient.feature.loan.generated.resources.add_new_charge
 import androidclient.feature.loan.generated.resources.add_new_collateral
 import androidclient.feature.loan.generated.resources.back
 import androidclient.feature.loan.generated.resources.collateral
+import androidclient.feature.loan.generated.resources.edit_charge
 import androidclient.feature.loan.generated.resources.feature_loan_cancel
 import androidclient.feature.loan.generated.resources.new_loan_account_title
 import androidclient.feature.loan.generated.resources.quantity
@@ -25,6 +27,7 @@ import androidclient.feature.loan.generated.resources.step_schedule
 import androidclient.feature.loan.generated.resources.step_terms
 import androidclient.feature.loan.generated.resources.total_collateral_value
 import androidclient.feature.loan.generated.resources.total_value
+import androidclient.feature.loan.generated.resources.view_charges
 import androidclient.feature.loan.generated.resources.view_collaterals
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -34,19 +37,25 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
+import com.mifos.core.common.utils.DateHelper
 import com.mifos.core.designsystem.component.MifosBasicDialog
+import com.mifos.core.designsystem.component.MifosBottomSheet
 import com.mifos.core.designsystem.component.MifosOutlinedTextField
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosTextFieldConfig
 import com.mifos.core.designsystem.component.MifosTextFieldDropdown
 import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.designsystem.theme.MifosTypography
+import com.mifos.core.ui.components.Actions
+import com.mifos.core.ui.components.AddChargeBottomSheet
+import com.mifos.core.ui.components.MifosActionsChargeListingComponent
 import com.mifos.core.ui.components.MifosBreadcrumbNavBar
 import com.mifos.core.ui.components.MifosErrorComponent
 import com.mifos.core.ui.components.MifosListingComponentOutline
@@ -54,6 +63,7 @@ import com.mifos.core.ui.components.MifosListingRowItem
 import com.mifos.core.ui.components.MifosProgressIndicator
 import com.mifos.core.ui.components.MifosProgressIndicatorOverlay
 import com.mifos.core.ui.components.MifosStepper
+import com.mifos.core.ui.components.MifosTwoButtonRow
 import com.mifos.core.ui.components.Step
 import com.mifos.core.ui.util.EventsEffect
 import com.mifos.feature.loan.newLoanAccount.pages.ChargesPage
@@ -115,9 +125,10 @@ private fun NewLoanAccountScaffold(
             )
         },
         Step(stringResource(Res.string.step_charges)) {
-            ChargesPage {
-                onAction(NewLoanAccountAction.NextStep)
-            }
+            ChargesPage(
+                state = state,
+                onAction = onAction,
+            )
         },
         Step(stringResource(Res.string.step_schedule)) {
             SchedulePage {
@@ -200,6 +211,24 @@ private fun NewLoanAccountDialogs(
             state = state,
             onAction = onAction,
         )
+
+        is NewLoanAccountState.DialogState.AddNewCharge -> AddNewChargeDialog(
+            isEdit = state.dialogState.edit,
+            state = state,
+            onAction = onAction,
+            index = state.dialogState.index,
+        )
+
+        NewLoanAccountState.DialogState.ShowCharges -> ShowChargesDialog(
+            state = state,
+            onAction = onAction,
+        )
+
+        NewLoanAccountState.DialogState.ShowOverDueCharges -> ShowChargesDialog(
+            state = state,
+            onAction = onAction,
+            isOverDue = true,
+        )
     }
 }
 
@@ -217,7 +246,7 @@ private fun AddNewCollateralDialog(
             onAction(NewLoanAccountAction.AddCollateralToList)
         },
         onDismissRequest = {
-            onAction(NewLoanAccountAction.DismissAddCollateralDialog)
+            onAction(NewLoanAccountAction.DismissDialog)
         },
         content = {
             Column {
@@ -285,7 +314,7 @@ private fun ShowCollateralsDialog(
             onAction(NewLoanAccountAction.ShowAddCollateralDialog)
         },
         onDismissRequest = {
-            onAction(NewLoanAccountAction.DismissAddCollateralDialog)
+            onAction(NewLoanAccountAction.DismissDialog)
         },
         content = {
             Column(
@@ -317,6 +346,139 @@ private fun ShowCollateralsDialog(
                         }
                     }
                 }
+            }
+        },
+    )
+}
+
+@Composable
+private fun AddNewChargeDialog(
+    isEdit: Boolean,
+    index: Int = -1,
+    state: NewLoanAccountState,
+    onAction: (NewLoanAccountAction) -> Unit,
+) {
+    AddChargeBottomSheet(
+        title = if (isEdit) {
+            stringResource(Res.string.edit_charge)
+        } else {
+            stringResource(Res.string.add_new_charge)
+        },
+        confirmText = if (isEdit) {
+            stringResource(Res.string.edit_charge)
+        } else {
+            stringResource(Res.string.add)
+        },
+        dismissText = stringResource(Res.string.feature_loan_cancel),
+        showDatePicker = state.showChargesDatePick,
+        selectedChargeName = if (state.chooseChargeIndex == -1) {
+            ""
+        } else {
+            state.loanTemplate?.chargeOptions[state.chooseChargeIndex]?.name ?: ""
+        },
+        selectedDate = state.chargeDate,
+        chargeAmount = state.chargeAmount,
+        chargeType = if (state.chooseChargeIndex == -1) {
+            ""
+        } else {
+            state.loanTemplate?.chargeOptions[state.chooseChargeIndex]?.chargeCalculationType?.value
+                ?: ""
+        },
+        chargeCollectedOn = if (state.chooseChargeIndex == -1) {
+            ""
+        } else {
+            state.loanTemplate?.chargeOptions[state.chooseChargeIndex]?.chargeTimeType?.value
+                ?: ""
+        },
+        chargeOptions = state.loanTemplate?.chargeOptions?.map { it.name ?: "" } ?: emptyList(),
+        onConfirm = {
+            if (isEdit) {
+                onAction(NewLoanAccountAction.EditCharge(index))
+            } else {
+                onAction(NewLoanAccountAction.AddChargeToList)
+            }
+        },
+        onDismiss = { onAction(NewLoanAccountAction.DismissDialog) },
+        onChargeSelected = { index, _ ->
+            onAction(NewLoanAccountAction.OnChooseChargeIndexChange(index))
+        },
+        onDatePick = { show ->
+            onAction(NewLoanAccountAction.OnChargesDatePick(show))
+        },
+        onDateChange = { newDate ->
+            onAction(NewLoanAccountAction.OnChargesDateChange(DateHelper.getDateAsStringFromLong(newDate)))
+        },
+        onAmountChange = { amount ->
+            onAction(NewLoanAccountAction.OnChargesAmountChange(amount))
+        },
+    )
+}
+
+@Composable
+private fun ShowChargesDialog(
+    isOverDue: Boolean = false,
+    state: NewLoanAccountState,
+    onAction: (NewLoanAccountAction) -> Unit,
+) {
+    MifosBottomSheet(
+        onDismiss = {
+            onAction(NewLoanAccountAction.DismissDialog)
+        },
+        content = {
+            Column(
+                modifier = Modifier.fillMaxWidth().padding(DesignToken.padding.large),
+                verticalArrangement = Arrangement.spacedBy(DesignToken.padding.largeIncreased),
+            ) {
+                Text(
+                    text = stringResource(Res.string.view_charges),
+                    style = MifosTypography.titleMediumEmphasized,
+                )
+                if (isOverDue) {
+                    state.loanTemplate?.overdueCharges?.forEachIndexed { index, it ->
+                        MifosActionsChargeListingComponent(
+                            chargeTitle = it.name.toString(),
+                            type = it.chargeCalculationType?.value.toString(),
+                            date = it.formattedDueDate,
+                            collectedOn = it.chargeTimeType?.value.toString(),
+                            amount = it.amount.toString(),
+                            onActionClicked = {},
+                            isExpandable = false,
+                        )
+                    }
+                } else {
+                    state.addedCharges.forEachIndexed { index, it ->
+                        MifosActionsChargeListingComponent(
+                            chargeTitle = it.name.toString(),
+                            type = it.type.toString(),
+                            date = it.date,
+                            collectedOn = it.collectedOn,
+                            amount = it.amount.toString(),
+                            onActionClicked = { action ->
+                                when (action) {
+                                    is Actions.Delete -> {
+                                        onAction(NewLoanAccountAction.DeleteChargeFromSelectedCharges(index))
+                                    }
+                                    is Actions.Edit -> {
+                                        onAction(NewLoanAccountAction.EditChargeDialog(index))
+                                    }
+                                    else -> {}
+                                }
+                            },
+                            isExpandable = true,
+                        )
+                    }
+                }
+
+                MifosTwoButtonRow(
+                    firstBtnText = stringResource(Res.string.back),
+                    secondBtnText = stringResource(Res.string.add_new),
+                    onFirstBtnClick = {
+                        onAction(NewLoanAccountAction.DismissDialog)
+                    },
+                    onSecondBtnClick = {
+                        onAction(NewLoanAccountAction.ShowAddChargeDialog)
+                    },
+                )
             }
         },
     )

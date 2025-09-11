@@ -54,10 +54,10 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.PagingData
 import coil3.compose.AsyncImage
-import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.icon.MifosIcons
+import com.mifos.core.ui.components.MifosProgressIndicator
 import com.mifos.core.ui.components.SelectionModeTopAppBar
 import com.mifos.feature.center.syncCentersDialog.SyncCenterDialogScreen
 import com.mifos.room.entities.group.CenterEntity
@@ -168,7 +168,7 @@ internal fun CenterListScreen(
                     }
 
                     is CenterListUiState.Loading -> {
-                        MifosCircularProgress()
+                        MifosProgressIndicator()
                     }
 
                     is CenterListUiState.CenterList -> {
