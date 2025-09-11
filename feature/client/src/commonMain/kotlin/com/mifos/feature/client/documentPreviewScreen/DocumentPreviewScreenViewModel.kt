@@ -156,16 +156,23 @@ class DocumentPreviewScreenViewModel(
                                     }
                                     else -> {
                                         mutableStateFlow.update {
-                                            it.copy(documentBytes = platformFile.readBytes())
-                                        }
-                                        if (documentSelectAndUploadFlow.first().step == EntityDocumentState.Step.PREVIEW) {
-                                            documentSelectAndUploadRepository.updateStep(EntityDocumentState.Step.UPDATE_PREVIEW)
-                                        } else {
-                                            documentSelectAndUploadRepository.updateStep(EntityDocumentState.Step.PREVIEW)
+                                            it.copy(
+                                                platformFile = platformFile,
+                                                documentBytes = platformFile.readBytes()
+                                            )
                                         }
                                         documentSelectAndUploadRepository.updateEntityDocument(
                                             platformFile,
                                         )
+                                        if(platformFile.extension=="pdf"){
+                                            sendAction(DocumentPreviewScreenAction.SubmitClicked)
+                                        } else {
+                                            if (documentSelectAndUploadFlow.first().step == EntityDocumentState.Step.PREVIEW) {
+                                                documentSelectAndUploadRepository.updateStep(EntityDocumentState.Step.UPDATE_PREVIEW)
+                                            } else {
+                                                documentSelectAndUploadRepository.updateStep(EntityDocumentState.Step.PREVIEW)
+                                            }
+                                        }
                                     }
                                 }
                             }
