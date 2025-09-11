@@ -186,12 +186,14 @@ class DocumentPreviewScreenViewModel(
                         documentType = getDocumentType(state.entityDocument?.extension ?: ""),
                     )
                 }
+                state.entityDocument?.let {
+                    if(it.extension=="pdf"){
+                        openFileWithDefaultExternalApp(it)
+                    }
+                }
             }
-        }
-    }
 
-    private fun shouldOpenExternalDocumentViewerApp(platformFile: PlatformFile){
-        openFileWithDefaultExternalApp(platformFile)
+        }
     }
 
 
