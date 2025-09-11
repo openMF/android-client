@@ -9,6 +9,7 @@
  */
 package com.mifos.core.ui.components
 
+import com.mifos.core.ui.components.Actions
 import androidclient.core.ui.generated.resources.Res
 import androidclient.core.ui.generated.resources.client_share_accounts_approved_shares
 import androidclient.core.ui.generated.resources.client_share_accounts_pending_for_approval_shares
@@ -495,6 +496,31 @@ fun MifosActionsShareListingComponent(
         }
     }
 }
+@Composable
+fun MifosActionCollateralData (
+    name : String,
+    quantity : String,
+    totalValue : String,
+    totalCollateralValue : String,
+    isExpaneded : Boolean,
+    onClick : () -> Unit,
+    menuList : List<Actions>,
+    onActionClicked : (Actions) -> Unit,
+){
+    MifosActionsListingComponentOutline {
+        Column(
+            modifier = Modifier.clickable { onClick() },
+        ) {
+            Column(
+                modifier = Modifier.padding(DesignToken.padding.large),
+            ) {
+                MifosListingRowItemHeader(
+                    text = name,
+                    keyStyle = MifosTypography.titleSmallEmphasized,
+                )
+
+
+}
 
 @Composable
 fun MifosActionsSavingsListingComponent(
@@ -586,6 +612,7 @@ fun MifosActionsSavingsListingComponent(
         }
     }
 }
+
 
 @Composable
 fun MifosActionsClientFeeListingComponent(

@@ -2,10 +2,7 @@ package com.mifos.feature.loan.ClientCollateral
 
 
 
-import androidclient.feature.client.generated.resources.Res
-import androidclient.feature.client.generated.resources.client_product_shares_account
-import androidclient.feature.client.generated.resources.client_savings_item
-import androidclient.feature.client.generated.resources.filter
+
 import androidclient.feature.client.generated.resources.search
 import androidclient.feature.client.generated.resources.string_not_available
 import androidclient.feature.loan.generated.resources.Res
@@ -74,7 +71,7 @@ internal fun collateralScreen(
     onAction: (collateralAction) -> Unit,
 ) {
     MifosScaffold(
-        title = "Share Accounts",
+        title = "Collateral data",
         onBackPressed = {},
     ) { paddingValues ->
         Column(
@@ -93,7 +90,7 @@ internal fun collateralScreen(
                         modifier = Modifier.fillMaxSize()
                             .padding(horizontal = DesignToken.padding.large),
                     ) {
-                        ShareAccountHeader(
+                        CollateralHeader(
                             totalItem = state.accounts.size.toString(),
                             onAction = onAction,
                         )
@@ -109,8 +106,8 @@ internal fun collateralScreen(
                                      MifosActionsCollateralDataListingComponent(
                                          name = account.name ?: emptyText,
                                          quantity = account.quantity?.toString() ?: emptyText,
-                                         totalValue = account.totalValue?.toString() ?: emptyText,
-                                         totalCollateralValue = account.totalCollateralValue?.toString() ?: emptyText,
+                                         totalValue = account.total?.toString() ?: emptyText,
+                                        totalCollateralValue = account.totalCollateral?.toString() ?: emptyText
                                      )
 
                                         Spacer(Modifier.height(DesignToken.padding.small))
@@ -128,7 +125,7 @@ internal fun collateralScreen(
 }
 
 @Composable
-private fun ShareAccountHeader(
+private fun CollateralHeader(
     totalItem: String,
     onAction: (collateralAction) -> Unit,
 ) {
@@ -137,12 +134,12 @@ private fun ShareAccountHeader(
     ) {
         Column {
             Text(
-                text = stringResource(Res.string.client_product_shares_account),
+                text = Text("Collateral data"),
                 style = MifosTypography.titleMedium,
             )
 
             Text(
-                text = totalItem + " " + stringResource(Res.string.client_savings_item),
+                text = totalItem + " " + "items",
                 style = MifosTypography.labelMedium,
             )
         }

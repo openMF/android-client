@@ -13,11 +13,11 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class CollateralItem(
-    val quality: String,
-    val basePrice: Double,
-    val unitType: String,
-    val pctToBase: Double,
-    val currency: String,
-    val name: String,
     val id: Int,
+    val name: String,
+    val quantity: Double,
+    val pctToBase: Double,
+    val unitPrice: Double,
+    val total: Double,
+    val totalCollateral: Double
 )

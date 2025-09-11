@@ -3,6 +3,7 @@ package com.mifos.feature.loan.ClientCollateral
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
+import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.repository.ClientDetailsRepository
 import com.mifos.core.ui.util.BaseViewModel
 
@@ -44,15 +45,35 @@ class ClientCollateralViewmodel (
             }
             try{
                 val result = repository.getCollateralItems(route.clientId)
-                mutableStateFlow.update {
-                    it.copy(
-                        isLoading = false,
-                        accounts = result as List<CollateralItem>,
-                        dialogState = null
+
+                when(result){
+                    is DataState.Success -> {
+                        mutableStateFlow.update {
+                            it.copy(
+                                isLoading = false,
+                                accounts = result.data,
+                                dialogState = null
+                            )
+                        }
+
+                    }
+                    is DataState.Error -> {
+                        mutableStateFlow.update {
+                            it.copy(
+                                isLoading = false,
+                                dialogState = collateralUiState.DialogState.Error(result.message)
+                            )
+                        }
+                    }
+                    is DataState.Loading -> {
+
+                    }
 
 
-                    )
                 }
+
+
+
             }catch(e : Exception){
                 mutableStateFlow.update{
                     it.copy(
