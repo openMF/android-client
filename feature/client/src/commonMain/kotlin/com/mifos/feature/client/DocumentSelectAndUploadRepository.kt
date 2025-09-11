@@ -38,8 +38,6 @@ interface DocumentSelectAndUploadRepository {
         description: String,
     ): Flow<DataState<GenericResponse>>
 
-    suspend fun deleteDocumentFormCache()
-
     fun resetStateAndRefresh()
 
     fun updateStep(step: EntityDocumentState.Step)

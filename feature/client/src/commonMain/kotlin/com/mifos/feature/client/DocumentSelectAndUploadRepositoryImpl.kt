@@ -19,7 +19,6 @@ import com.mifos.core.data.repository.DocumentListRepository
 import com.mifos.feature.client.utils.createDocumentRequestBody
 import io.github.vinceglb.filekit.PlatformFile
 import io.github.vinceglb.filekit.div
-import io.github.vinceglb.filekit.parent
 import io.ktor.client.request.forms.MultiPartFormDataContent
 import io.ktor.client.statement.readRawBytes
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -154,13 +153,6 @@ class DocumentSelectAndUploadRepositoryImpl(
             )
         } catch (e: Exception) {
             throw e
-        }
-    }
-
-    override suspend fun deleteDocumentFormCache() {
-        val state = entityDocumentStateMutableStateFlow.first()
-        state.entityDocument?.let {
-            if (it.parent() == FileKitUtil.appCache) FileKitUtil.deleteFile(it)
         }
     }
 

@@ -219,8 +219,9 @@ private fun ClientDocumentsScaffold(
                         LazyColumn {
                             items(state.clientDocuments) { clientDocument ->
                                 MifosActionsClientDocumentListingComponent(
-                                    clientDocument.description ?: "",
-                                    clientDocument.fileName ?: "",
+                                    documentName = clientDocument.name ?: "",
+                                    documentDescription = clientDocument.description ?: "",
+                                    fileName = clientDocument.fileName ?: "",
                                     isExpanded = (selectedDocumentID == clientDocument.id) &&
                                         isAlreadyExpanded,
                                     onClick = {

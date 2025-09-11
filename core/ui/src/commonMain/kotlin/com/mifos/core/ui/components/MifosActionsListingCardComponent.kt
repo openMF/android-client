@@ -12,7 +12,6 @@ package com.mifos.core.ui.components
 import androidclient.core.ui.generated.resources.Res
 import androidclient.core.ui.generated.resources.client_documents_component_header_subtitle_description
 import androidclient.core.ui.generated.resources.client_documents_component_header_subtitle_file_name
-import androidclient.core.ui.generated.resources.client_documents_component_header_title
 import androidclient.core.ui.generated.resources.client_share_accounts_approved_shares
 import androidclient.core.ui.generated.resources.client_share_accounts_pending_for_approval_shares
 import androidclient.core.ui.generated.resources.client_share_accounts_share_product
@@ -309,8 +308,9 @@ fun MifosActionsCollateralDataListingComponent(
 
 @Composable
 fun MifosActionsClientDocumentListingComponent(
-    documentDescription: String,
     documentName: String,
+    documentDescription: String,
+    fileName: String,
     isExpanded: Boolean,
     menuList: List<Actions>,
     onClick: () -> Unit,
@@ -327,7 +327,7 @@ fun MifosActionsClientDocumentListingComponent(
                     .padding(DesignToken.padding.large),
             ) {
                 MifosListingRowItemHeader(
-                    text = stringResource(Res.string.client_documents_component_header_title),
+                    text = documentName,
                     keyStyle = MifosTypography.titleSmallEmphasized,
                 )
                 Spacer(Modifier.height(DesignToken.padding.large))
@@ -340,7 +340,7 @@ fun MifosActionsClientDocumentListingComponent(
                     )
                     MifosListingRowItem(
                         key = stringResource(Res.string.client_documents_component_header_subtitle_file_name),
-                        value = documentName,
+                        value = fileName,
                     )
                 }
             }
