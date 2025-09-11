@@ -185,10 +185,10 @@ class ClientAddDocumentScreenViewmodel(
                                     mutableStateFlow.update {
                                         it.copy(dialogState = null)
                                     }
-                                    documentSelectAndUploadRepository.updateStep(EntityDocumentState.Step.PREVIEW)
                                     documentSelectAndUploadRepository.updateEntityDocument(
                                         platformFile,
                                     )
+                                    documentSelectAndUploadRepository.updateStep(EntityDocumentState.Step.PREVIEW)
                                     sendEvent(ClientAddDocumentScreenEvents.OnNavigateToPreviewScreen)
                                 }
                             }

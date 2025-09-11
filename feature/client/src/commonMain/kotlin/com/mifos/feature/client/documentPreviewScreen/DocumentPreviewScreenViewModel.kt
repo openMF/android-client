@@ -16,6 +16,8 @@ import com.mifos.core.common.utils.DataState
 import com.mifos.core.ui.util.BaseViewModel
 import com.mifos.feature.client.DocumentSelectAndUploadRepository
 import com.mifos.feature.client.EntityDocumentState
+import com.mifos.feature.client.utils.openFileWithDefaultExternalApp
+import io.github.vinceglb.filekit.PlatformFile
 import io.github.vinceglb.filekit.extension
 import io.github.vinceglb.filekit.readBytes
 import io.github.vinceglb.filekit.size
@@ -144,7 +146,6 @@ class DocumentPreviewScreenViewModel(
                                     it.copy(showBottomSheet = false)
                                 }
                                 when {
-                                    // 1MB File size check.
                                     platformFile.size() > 1048576L -> {
                                         mutableStateFlow.update {
                                             it.copy(
@@ -180,6 +181,7 @@ class DocumentPreviewScreenViewModel(
                 mutableStateFlow.update {
                     it.copy(
                         step = state.step,
+                        platformFile = state.entityDocument,
                         documentBytes = state.entityDocument?.readBytes(),
                         documentType = getDocumentType(state.entityDocument?.extension ?: ""),
                     )
@@ -187,6 +189,11 @@ class DocumentPreviewScreenViewModel(
             }
         }
     }
+
+    private fun shouldOpenExternalDocumentViewerApp(platformFile: PlatformFile){
+        openFileWithDefaultExternalApp(platformFile)
+    }
+
 
     private fun nullDialogState() {
         mutableStateFlow.update {
@@ -210,6 +217,7 @@ class DocumentPreviewScreenViewModel(
 }
 
 data class DocumentPreviewState(
+    val platformFile: PlatformFile? = null,
     val showBottomSheet: Boolean = false,
     val documentType: DocumentType? = null,
     val dialogState: DialogState? = null,
