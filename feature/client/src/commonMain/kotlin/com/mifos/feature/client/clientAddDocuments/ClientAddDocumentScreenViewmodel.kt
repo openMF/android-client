@@ -18,7 +18,9 @@ import com.mifos.core.data.util.NetworkMonitor
 import com.mifos.core.ui.util.BaseViewModel
 import com.mifos.feature.client.DocumentSelectAndUploadRepository
 import com.mifos.feature.client.EntityDocumentState
+import com.mifos.feature.client.utils.openFileWithDefaultExternalApp
 import io.github.vinceglb.filekit.PlatformFile
+import io.github.vinceglb.filekit.extension
 import io.github.vinceglb.filekit.name
 import io.github.vinceglb.filekit.size
 import kotlinx.coroutines.flow.first
@@ -70,8 +72,14 @@ class ClientAddDocumentScreenViewmodel(
             }
 
             ClientAddDocumentScreenAction.ViewDocument -> {
-                documentSelectAndUploadRepository.updateStep(EntityDocumentState.Step.UPDATE_PREVIEW)
-                sendEvent(ClientAddDocumentScreenEvents.OnNavigateToPreviewScreen)
+                if(state.platformFile?.extension=="pdf"){
+                    state.platformFile?.let {
+                       openFileWithDefaultExternalApp(it)
+                    }
+                } else {
+                    documentSelectAndUploadRepository.updateStep(EntityDocumentState.Step.UPDATE_PREVIEW)
+                    sendEvent(ClientAddDocumentScreenEvents.OnNavigateToPreviewScreen)
+                }
             }
 
             is ClientAddDocumentScreenAction.UpdateDescription -> {
