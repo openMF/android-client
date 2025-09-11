@@ -110,7 +110,11 @@ private fun ViewDocumentScaffold(
             ) {
                 MifosOutlinedButton(
                     onClick = {
-                        onAction(DocumentPreviewScreenAction.RejectDocument)
+                        if(state.step== EntityDocumentState.Step.PREVIEW){
+                            onAction(DocumentPreviewScreenAction.RejectDocument)
+                        } else {
+                            onAction(DocumentPreviewScreenAction.NavigateBack)
+                        }
                     },
                     colors = ButtonDefaults.outlinedButtonColors(
                         containerColor = MaterialTheme.colorScheme.onPrimary,

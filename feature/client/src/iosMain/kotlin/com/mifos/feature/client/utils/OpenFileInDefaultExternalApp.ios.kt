@@ -6,7 +6,7 @@ import platform.UIKit.UIApplication
 import platform.UIKit.UIDocumentInteractionController
 
 @OptIn(ExperimentalForeignApi::class)
-actual fun openFileWithDefaultExternalApp(platformFile: PlatformFile) {
+actual suspend fun openPdfWithDefaultExternalApp(platformFile: PlatformFile) {
 
     val opened = UIApplication.sharedApplication.openURL(platformFile.nsUrl)
 
