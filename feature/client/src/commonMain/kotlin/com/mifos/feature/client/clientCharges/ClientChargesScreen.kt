@@ -51,11 +51,11 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.PagingData
 import com.mifos.core.common.utils.CurrencyFormatter
 import com.mifos.core.common.utils.DateHelper
-import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.model.objects.payloads.ChargesPayload
+import com.mifos.core.ui.components.MifosProgressIndicator
 import com.mifos.core.ui.util.DevicePreview
 import com.mifos.feature.client.clientChargeDialog.ChargeDialogScreen
 import com.mifos.feature.client.clientChargeDialog.ChargeDialogUiState
@@ -159,7 +159,7 @@ fun ClientChargesScreen(
                             onRetry()
                         }
 
-                    is ClientChargeUiState.Loading -> MifosCircularProgress()
+                    is ClientChargeUiState.Loading -> MifosProgressIndicator()
                 }
             }
         }

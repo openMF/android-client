@@ -46,7 +46,8 @@ kotlin{
             implementation(libs.ktor.client.core)
             implementation(libs.compose.signature)
             implementation(libs.crop.krop.ui)
-
+            implementation(libs.compottie.resources)
+            implementation(libs.compottie.lite)
         }
     }
 }

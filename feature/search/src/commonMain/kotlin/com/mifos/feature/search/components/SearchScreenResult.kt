@@ -34,9 +34,9 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.model.objects.SearchedEntity
 import com.mifos.core.ui.components.MifosEmptyUi
+import com.mifos.core.ui.components.MifosProgressIndicator
 import com.mifos.core.ui.util.DevicePreview
 import com.mifos.feature.search.SearchResultState
 import org.jetbrains.compose.resources.stringResource
@@ -57,7 +57,7 @@ internal fun SearchScreenResult(
         ) { state ->
             when (state) {
                 is SearchResultState.Loading -> {
-                    MifosCircularProgress(contentDesc = "searchResultIndicator")
+                    MifosProgressIndicator()
                 }
 
                 is SearchResultState.Empty -> {

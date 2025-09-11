@@ -63,11 +63,11 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.ui.components.MifosEmptyUi
+import com.mifos.core.ui.components.MifosProgressIndicator
 import com.mifos.feature.dataTable.dataTableRowDialog.DataTableRowDialogScreen
 import com.mifos.room.entities.noncore.DataTableEntity
 import kotlinx.coroutines.launch
@@ -202,7 +202,7 @@ fun DataTableDataScreen(
                         onRetry()
                     }
 
-                    is DataTableDataUiState.Loading -> MifosCircularProgress()
+                    is DataTableDataUiState.Loading -> MifosProgressIndicator()
                 }
             }
         }

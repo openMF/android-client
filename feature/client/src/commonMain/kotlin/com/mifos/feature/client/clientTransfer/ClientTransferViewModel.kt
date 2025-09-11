@@ -22,7 +22,8 @@ import com.mifos.core.ui.util.BaseViewModel
 import com.mifos.room.entities.organisation.OfficeEntity
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import kotlinx.datetime.Clock
+import kotlin.time.Clock
+import kotlin.time.ExperimentalTime
 
 internal class ClientTransferViewModel(
     savedStateHandle: SavedStateHandle,
@@ -113,6 +114,7 @@ internal class ClientTransferViewModel(
         }
     }
 
+    @OptIn(ExperimentalTime::class)
     override fun handleAction(action: ClientTransferAction) {
         when (action) {
             ClientTransferAction.NavigateBack -> sendEvent(ClientTransferEvent.NavigateBack)
@@ -154,7 +156,9 @@ internal class ClientTransferViewModel(
     }
 }
 
-data class ClientTransferState(
+data class ClientTransferState
+@OptIn(ExperimentalTime::class)
+constructor(
     val id: Int = -1,
     val offices: List<OfficeEntity> = emptyList(),
     val showDatePicker: Boolean = false,

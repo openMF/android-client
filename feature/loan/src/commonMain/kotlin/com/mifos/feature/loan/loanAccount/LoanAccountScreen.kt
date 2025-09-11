@@ -78,7 +78,6 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mifos.core.common.utils.Constants
 import com.mifos.core.common.utils.DateHelper
-import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosDatePickerTextField
 import com.mifos.core.designsystem.component.MifosOutlinedTextField
 import com.mifos.core.designsystem.component.MifosScaffold
@@ -86,15 +85,17 @@ import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.component.MifosTextFieldDropdown
 import com.mifos.core.model.objects.organisations.LoanProducts
 import com.mifos.core.network.model.LoansPayload
+import com.mifos.core.ui.components.MifosProgressIndicator
 import com.mifos.room.entities.noncore.DataTableEntity
 import com.mifos.room.entities.templates.loans.LoanTemplate
 import kotlinx.coroutines.launch
-import kotlinx.datetime.Clock
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameterProvider
 import org.koin.compose.viewmodel.koinViewModel
+import kotlin.time.Clock
+import kotlin.time.ExperimentalTime
 
 @Composable
 fun LoanAccountScreen(
@@ -177,7 +178,7 @@ fun LoanAccountScreen(
                         modifier = Modifier.fillMaxSize(),
                         verticalArrangement = Arrangement.Center,
                     ) {
-                        MifosCircularProgress()
+                        MifosProgressIndicator()
                     }
                 }
 
@@ -198,6 +199,7 @@ fun LoanAccountScreen(
     }
 }
 
+@OptIn(ExperimentalTime::class)
 @Composable
 private fun LoanAccountContent(
     clientsId: Int,

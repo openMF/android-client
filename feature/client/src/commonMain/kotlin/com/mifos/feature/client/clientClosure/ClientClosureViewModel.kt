@@ -21,7 +21,8 @@ import com.mifos.core.ui.components.ResultStatus
 import com.mifos.core.ui.util.BaseViewModel
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import kotlinx.datetime.Clock
+import kotlin.time.Clock
+import kotlin.time.ExperimentalTime
 
 internal class ClientClosureViewModel(
     savedStateHandle: SavedStateHandle,
@@ -129,7 +130,9 @@ internal class ClientClosureViewModel(
     }
 }
 
-data class ClientClosureState(
+data class ClientClosureState
+@OptIn(ExperimentalTime::class)
+constructor(
     val id: Int = -1,
     val reasons: List<Narration> = emptyList(),
     val showDatePicker: Boolean = false,

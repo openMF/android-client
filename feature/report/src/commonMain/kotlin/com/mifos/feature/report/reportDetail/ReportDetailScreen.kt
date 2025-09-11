@@ -64,12 +64,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mifos.core.common.utils.Constants
-import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.component.MifosTextFieldDropdown
 import com.mifos.core.model.objects.runreport.DataRow
 import com.mifos.core.model.objects.runreport.client.ClientReportTypeItem
+import com.mifos.core.ui.components.MifosProgressIndicator
 import com.mifos.feature.report.report.ReportScreen
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
@@ -251,7 +251,7 @@ internal fun ReportDetailScreen(
                     onRetry()
                 }
 
-                is ReportDetailUiState.Loading -> MifosCircularProgress()
+                is ReportDetailUiState.Loading -> MifosProgressIndicator()
 
                 ReportDetailUiState.ParameterDetailsSuccess -> {
                     RunReportContent(

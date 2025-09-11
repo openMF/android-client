@@ -93,7 +93,6 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.mifos.core.common.utils.DateHelper
 import com.mifos.core.common.utils.formatDate
-import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosDatePickerTextField
 import com.mifos.core.designsystem.component.MifosOutlinedTextField
 import com.mifos.core.designsystem.component.MifosScaffold
@@ -104,6 +103,7 @@ import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.designsystem.theme.MifosTypography
 import com.mifos.core.ui.components.MifosBreadcrumbNavBar
+import com.mifos.core.ui.components.MifosProgressIndicator
 import com.mifos.core.ui.components.MifosStatusDialog
 import com.mifos.core.ui.util.EventsEffect
 import com.mifos.feature.client.utils.PhoneNumberUtil
@@ -113,7 +113,6 @@ import com.mifos.room.entities.organisation.StaffEntity
 import com.mifos.room.entities.templates.clients.ClientsTemplateEntity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
-import kotlinx.datetime.Clock
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
@@ -121,6 +120,8 @@ import kotlinx.datetime.toInstant
 import org.jetbrains.compose.resources.getString
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
+import kotlin.time.Clock
+import kotlin.time.ExperimentalTime
 
 /**
  * Created by Samarth Chaplot on 25/08/2025.
@@ -190,7 +191,7 @@ private fun ClientEditDetailsScaffold(
             MifosBreadcrumbNavBar(navController)
             when (state.dialogState) {
                 is ClientEditDetailsState.DialogState.Loading -> {
-                    MifosCircularProgress()
+                    MifosProgressIndicator()
                 }
                 is ClientEditDetailsState.DialogState.ShowUpdateDetailsContent -> {
                     UpdateClientDetailsContent(
@@ -228,7 +229,7 @@ private fun ClientEditDetailsScaffold(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalTime::class)
 @Composable
 private fun UpdateClientDetailsContent(
     state: ClientEditDetailsState,
@@ -1177,6 +1178,7 @@ private fun isMiddleNameValid(
  * @param dateList The date as a List of integers [year, month, day]
  * @return The date as milliseconds since epoch
  */
+@OptIn(ExperimentalTime::class)
 fun dateListToTimestamp(dateList: List<Int?>): Long {
     if (dateList.size < 3 || dateList.any { it == null }) {
         return Clock.System.now().toEpochMilliseconds()
@@ -1187,7 +1189,7 @@ fun dateListToTimestamp(dateList: List<Int?>): Long {
     val day = dateList[2]!!
 
     val date = LocalDate(year, month, day)
-    val dateTime = LocalDateTime(date.year, date.month, date.dayOfMonth, 12, 0, 0)
+    val dateTime = LocalDateTime(date.year, date.month, date.day, 12, 0, 0)
     val instant = dateTime.toInstant(TimeZone.currentSystemDefault())
 
     return instant.toEpochMilliseconds()

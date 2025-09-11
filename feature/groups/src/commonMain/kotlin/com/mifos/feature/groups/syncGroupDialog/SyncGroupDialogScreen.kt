@@ -49,7 +49,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.mifos.core.designsystem.component.MifosCircularProgress
+import com.mifos.core.ui.components.MifosProgressIndicator
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.viewmodel.koinViewModel
@@ -96,7 +96,7 @@ internal fun SyncGroupDialogScreen(
         when (uiState) {
             is SyncGroupsDialogUiState.Success -> Unit
 
-            is SyncGroupsDialogUiState.Loading -> MifosCircularProgress()
+            is SyncGroupsDialogUiState.Loading -> MifosProgressIndicator()
 
             is SyncGroupsDialogUiState.Error -> {
                 val message = uiState.message

@@ -63,7 +63,6 @@ import com.mifos.core.common.utils.Constants.DATE_FORMAT_LONG
 import com.mifos.core.common.utils.Constants.LOCALE_EN
 import com.mifos.core.common.utils.DateHelper
 import com.mifos.core.common.utils.formatDate
-import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosDatePickerTextField
 import com.mifos.core.designsystem.component.MifosOutlinedTextField
 import com.mifos.core.designsystem.component.MifosSweetError
@@ -71,11 +70,13 @@ import com.mifos.core.designsystem.component.MifosTextFieldDropdown
 import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.model.objects.payloads.ChargesPayload
 import com.mifos.core.model.objects.template.client.ChargeTemplate
+import com.mifos.core.ui.components.MifosProgressIndicator
 import com.mifos.core.ui.util.DevicePreview
-import kotlinx.datetime.Clock
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameterProvider
+import kotlin.time.Clock
+import kotlin.time.ExperimentalTime
 
 @Composable
 internal fun ChargeDialogScreen(
@@ -116,7 +117,7 @@ internal fun ChargeDialogScreen(
                         onRetry()
                     }
 
-                    is ChargeDialogUiState.Loading -> MifosCircularProgress()
+                    is ChargeDialogUiState.Loading -> MifosProgressIndicator()
 
                     is ChargeDialogUiState.ChargesCreatedSuccessfully -> {
                         onChargeCreated()
@@ -127,6 +128,7 @@ internal fun ChargeDialogScreen(
     }
 }
 
+@OptIn(ExperimentalTime::class)
 @Composable
 private fun ChargeDialogContent(
     chargeTemplate: ChargeTemplate,

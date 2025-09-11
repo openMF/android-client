@@ -24,8 +24,9 @@ import com.mifos.room.entities.templates.clients.StaffOptionsEntity
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import kotlinx.datetime.Clock
 import org.jetbrains.compose.resources.StringResource
+import kotlin.time.Clock
+import kotlin.time.ExperimentalTime
 
 internal class SavingsAccountViewModel(
     private val networkMonitor: NetworkMonitor,
@@ -161,7 +162,9 @@ internal class SavingsAccountViewModel(
     }
 }
 
-data class SavingsAccountState(
+data class SavingsAccountState
+@OptIn(ExperimentalTime::class)
+constructor(
     val clientId: Int,
     val fieldOfficerIndex: Int = -1,
     val fieldOfficerOptions: List<StaffOptionsEntity> = emptyList(),

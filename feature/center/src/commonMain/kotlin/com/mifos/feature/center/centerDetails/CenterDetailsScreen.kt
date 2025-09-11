@@ -59,12 +59,12 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mifos.core.common.utils.Utils
 import com.mifos.core.designsystem.component.MifosButton
-import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosMenuDropDownItem
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.model.objects.groups.CenterInfo
+import com.mifos.core.ui.components.MifosProgressIndicator
 import com.mifos.room.entities.group.CenterWithAssociations
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
@@ -170,7 +170,7 @@ internal fun CenterDetailsScreen(
                     }
                 }
 
-                is CenterDetailsUiState.Loading -> MifosCircularProgress()
+                is CenterDetailsUiState.Loading -> MifosProgressIndicator()
 
                 is CenterDetailsUiState.CenterDetails -> {
                     CenterDetailsContent(

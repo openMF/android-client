@@ -41,11 +41,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mifos.core.designsystem.component.MifosCard
-import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.ui.components.MifosEmptyUi
+import com.mifos.core.ui.components.MifosProgressIndicator
 import com.mifos.room.entities.client.ClientEntity
 import com.mifos.room.entities.client.ClientStatusEntity
 import com.mifos.room.entities.group.CenterWithAssociations
@@ -111,7 +111,7 @@ internal fun GroupListScreen(
                     onRetry()
                 }
 
-                is GroupListUiState.Loading -> MifosCircularProgress()
+                is GroupListUiState.Loading -> MifosProgressIndicator()
 
                 is GroupListUiState.GroupList -> {
                     if (state.centerWithAssociations.groupMembers.isEmpty()) {
