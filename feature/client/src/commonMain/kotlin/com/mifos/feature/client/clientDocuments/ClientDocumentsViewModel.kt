@@ -22,6 +22,9 @@ import com.mifos.core.ui.util.BaseViewModel
 import com.mifos.feature.client.DocumentSelectAndUploadRepository
 import com.mifos.feature.client.EntityDocumentState
 import com.mifos.feature.client.EntityDocumentState.EntityType
+import com.mifos.feature.client.utils.openFileWithDefaultExternalApp
+import io.github.vinceglb.filekit.PlatformFile
+import io.github.vinceglb.filekit.extension
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -99,6 +102,10 @@ class ClientDocumentsViewModel(
             is ClientDocumentsActions.ViewDocument -> {
                 downloadDownloadAndCache(action.documentId)
                 sendEvent(ClientDocumentsEvents.OnViewDocument)
+            }
+
+            is ClientDocumentsActions.OpenExternalPdfViewer -> {
+                openFileWithDefaultExternalApp(action.platformFile)
             }
 
             ClientDocumentsActions.SearchDocument -> {
@@ -199,12 +206,16 @@ class ClientDocumentsViewModel(
                             }
                             is DataState.Success -> {
                                 nullDialogState()
-                                documentSelectAndUploadRepository.updateEntityDocument(platformFile = dataState.data)
-                                // Uncomment them when you want to enable document update.
-                                // And also enable the button on the UI Screen also, for SubmitMode.UPDATE.
+                                if(dataState.data.extension=="pdf"){
+                                    sendAction(ClientDocumentsActions.OpenExternalPdfViewer(dataState.data))
+                                } else {
+                                    documentSelectAndUploadRepository.updateEntityDocument(platformFile = dataState.data)
+                                    // Uncomment them when you want to enable document update.
+                                    // And also enable the button on the UI Screen also, for SubmitMode.UPDATE.
 //                                documentSelectAndUploadRepository.updateStep(step = EntityDocumentState.Step.UPDATE_PREVIEW)
 //                                documentSelectAndUploadRepository.changeSubmitMode(EntityDocumentState.SubmitMode.UPDATE)
-                                sendEvent(ClientDocumentsEvents.OnViewDocument)
+                                    sendEvent(ClientDocumentsEvents.OnViewDocument)
+                                }
                             }
                         }
                     }
@@ -297,6 +308,7 @@ sealed interface ClientDocumentsActions {
     data class DeleteDocument(val documentName: String, val documentId: Int) :
         ClientDocumentsActions
 
+    data class OpenExternalPdfViewer(val platformFile: PlatformFile): ClientDocumentsActions
     data class ConfirmDeleteDocument(val documentId: Int) : ClientDocumentsActions
     data object Refresh : ClientDocumentsActions
     data object AddDocument : ClientDocumentsActions
