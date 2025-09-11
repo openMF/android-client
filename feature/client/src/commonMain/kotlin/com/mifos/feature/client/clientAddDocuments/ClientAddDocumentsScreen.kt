@@ -48,7 +48,6 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
-import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosOutlinedButton
 import com.mifos.core.designsystem.component.MifosOutlinedTextField
 import com.mifos.core.designsystem.component.MifosScaffold
@@ -58,6 +57,7 @@ import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.designsystem.theme.MifosTypography
 import com.mifos.core.ui.components.MifosBreadcrumbNavBar
 import com.mifos.core.ui.components.MifosFilePickerBottomSheet
+import com.mifos.core.ui.components.MifosProgressIndicator
 import com.mifos.core.ui.util.EventsEffect
 import com.mifos.feature.client.EntityDocumentState
 import org.jetbrains.compose.resources.stringResource
@@ -102,7 +102,7 @@ private fun ClientAddDocumentsScreenDialog(
             }
         }
         ClientAddDocumentScreenState.DialogState.Loading -> {
-            MifosCircularProgress()
+            MifosProgressIndicator()
         }
 
         else -> {}

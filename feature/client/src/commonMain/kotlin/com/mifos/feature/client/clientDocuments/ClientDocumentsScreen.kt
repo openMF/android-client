@@ -10,7 +10,7 @@
 package com.mifos.feature.client.clientDocuments
 
 import androidclient.feature.client.generated.resources.Res
-import androidclient.feature.client.generated.resources.client_empty_card_message
+import androidclient.feature.client.generated.resources.client_identifiers_click_on_plus_button_to_add_an_item
 import androidclient.feature.client.generated.resources.client_profile_documents_title
 import androidclient.feature.client.generated.resources.client_savings_item
 import androidclient.feature.client.generated.resources.confirm_text
@@ -45,7 +45,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
-import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.designsystem.theme.DesignToken
@@ -55,6 +54,7 @@ import com.mifos.core.ui.components.MifosActionsClientDocumentListingComponent
 import com.mifos.core.ui.components.MifosBreadcrumbNavBar
 import com.mifos.core.ui.components.MifosEmptyCard
 import com.mifos.core.ui.components.MifosErrorComponent
+import com.mifos.core.ui.components.MifosProgressIndicator
 import com.mifos.core.ui.components.MifosSearchBar
 import com.mifos.core.ui.util.EventsEffect
 import org.jetbrains.compose.resources.stringResource
@@ -108,7 +108,7 @@ private fun ClientDocumentDialog(
             )
         }
         ClientDocumentsScreenState.DialogState.Loading -> {
-            MifosCircularProgress()
+            MifosProgressIndicator()
         }
         is ClientDocumentsScreenState.DialogState.ConfirmDocumentDeletion -> {
             AlertDialog(
@@ -208,7 +208,7 @@ private fun ClientDocumentsScaffold(
                     Spacer(modifier = Modifier.height(DesignToken.padding.largeIncreasedExtra))
 
                     if (state.clientDocuments.isEmpty()) {
-                        MifosEmptyCard(msg = stringResource(Res.string.client_empty_card_message))
+                        MifosEmptyCard(msg = stringResource(Res.string.client_identifiers_click_on_plus_button_to_add_an_item))
                     } else {
                         var selectedDocumentID by remember {
                             mutableStateOf(-1)
