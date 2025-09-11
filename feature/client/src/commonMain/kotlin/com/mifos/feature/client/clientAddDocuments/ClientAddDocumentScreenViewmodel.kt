@@ -14,14 +14,12 @@ import androidclient.feature.client.generated.resources.error_document_size_exce
 import androidclient.feature.client.generated.resources.no_internet_message
 import androidx.lifecycle.viewModelScope
 import com.mifos.core.common.utils.DataState
-import com.mifos.core.common.utils.FileKitUtil
 import com.mifos.core.data.util.NetworkMonitor
 import com.mifos.core.ui.util.BaseViewModel
 import com.mifos.feature.client.DocumentSelectAndUploadRepository
 import com.mifos.feature.client.EntityDocumentState
 import com.mifos.feature.client.utils.openPdfWithDefaultExternalApp
 import io.github.vinceglb.filekit.PlatformFile
-import io.github.vinceglb.filekit.div
 import io.github.vinceglb.filekit.extension
 import io.github.vinceglb.filekit.name
 import io.github.vinceglb.filekit.size
@@ -74,11 +72,9 @@ class ClientAddDocumentScreenViewmodel(
             }
 
             ClientAddDocumentScreenAction.ViewDocument -> {
-                if(state.platformFile?.extension=="pdf"){
+                if (state.platformFile?.extension == "pdf") {
                     state.platformFile?.let {
-                        viewModelScope.launch {
-                            openPdfWithDefaultExternalApp(it)
-                        }
+                        previewPdfInExternalApp(it)
                     }
                 }
                 documentSelectAndUploadRepository.updateStep(EntityDocumentState.Step.UPDATE_PREVIEW)
@@ -191,9 +187,9 @@ class ClientAddDocumentScreenViewmodel(
                                     documentSelectAndUploadRepository.updateEntityDocument(
                                         platformFile,
                                     )
-                                    if(platformFile.extension=="pdf"){
+                                    if (platformFile.extension == "pdf") {
                                         documentSelectAndUploadRepository.updateStep(EntityDocumentState.Step.VIEW)
-                                    } else{
+                                    } else {
                                         documentSelectAndUploadRepository.updateStep(EntityDocumentState.Step.PREVIEW)
                                         sendEvent(ClientAddDocumentScreenEvents.OnNavigateToPreviewScreen)
                                     }
@@ -280,6 +276,18 @@ class ClientAddDocumentScreenViewmodel(
                         submitMode = state.submitMode,
                     )
                 }
+            }
+        }
+    }
+
+    private fun previewPdfInExternalApp(platformFile: PlatformFile) {
+        viewModelScope.launch {
+            loadingDialogState()
+            try {
+                openPdfWithDefaultExternalApp(platformFile)
+                nullDialogState()
+            } catch (e: Exception) {
+                errorDialogState(e.message ?: "Unknown error")
             }
         }
     }

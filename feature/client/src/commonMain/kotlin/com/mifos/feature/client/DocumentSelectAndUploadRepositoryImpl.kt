@@ -10,6 +10,7 @@
 package com.mifos.feature.client
 
 import androidclient.feature.client.generated.resources.Res
+import androidclient.feature.client.generated.resources.default_preview_pdf_name
 import androidclient.feature.client.generated.resources.error_document_not_found
 import androidclient.feature.client.generated.resources.error_failed_to_get_document_type
 import com.mifos.core.common.utils.DataState
@@ -60,7 +61,7 @@ class DocumentSelectAndUploadRepositoryImpl(
                 val extension = httpResponse.headers["Content-Type"]?.split('/')?.last()
                     ?: throw Exception(getString(Res.string.error_failed_to_get_document_type))
                 FileKitUtil.writeFileToCache(
-                    "attachment",
+                    getString(Res.string.default_preview_pdf_name),
                     extension,
                     byte,
                 ).collect { writeState ->

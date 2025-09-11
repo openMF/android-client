@@ -11,12 +11,10 @@ package com.mifos.feature.client.clientDocuments
 
 import androidclient.feature.client.generated.resources.Res
 import androidclient.feature.client.generated.resources.no_internet_message
-import androidx.collection.emptyIntSet
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import com.mifos.core.common.utils.DataState
-import com.mifos.core.common.utils.FileKitUtil
 import com.mifos.core.data.repository.DocumentListRepository
 import com.mifos.core.data.util.NetworkMonitor
 import com.mifos.core.model.objects.noncoreobjects.Document
@@ -26,10 +24,8 @@ import com.mifos.feature.client.EntityDocumentState
 import com.mifos.feature.client.EntityDocumentState.EntityType
 import com.mifos.feature.client.utils.openPdfWithDefaultExternalApp
 import io.github.vinceglb.filekit.PlatformFile
-import io.github.vinceglb.filekit.div
 import io.github.vinceglb.filekit.extension
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.getString
@@ -108,7 +104,7 @@ class ClientDocumentsViewModel(
             }
 
             is ClientDocumentsActions.OpenExternalPdfViewer -> {
-                openPdfExternalApp(action.platformFile)
+                previewPdfInExternalApp(action.platformFile)
             }
 
             ClientDocumentsActions.SearchDocument -> {
@@ -210,7 +206,7 @@ class ClientDocumentsViewModel(
                             is DataState.Success -> {
                                 documentSelectAndUploadRepository.updateEntityDocument(platformFile = dataState.data)
                                 nullDialogState()
-                                if(dataState.data.extension=="pdf"){
+                                if (dataState.data.extension == "pdf") {
                                     sendAction(ClientDocumentsActions.OpenExternalPdfViewer(dataState.data))
                                 } else {
                                     // Uncomment them when you want to enable document update on backend.
@@ -231,18 +227,16 @@ class ClientDocumentsViewModel(
         }
     }
 
-    private fun openPdfExternalApp(platformFile: PlatformFile){
+    private fun previewPdfInExternalApp(platformFile: PlatformFile) {
         viewModelScope.launch {
-            openPdfWithDefaultExternalApp(platformFile)
-            mutableStateFlow.update {
-                it.copy(dialogState = ClientDocumentsScreenState.DialogState.Loading)
-            }
-            openPdfWithDefaultExternalApp(platformFile)
-            mutableStateFlow.update {
-                it.copy(dialogState = null)
+            loadingDialogState()
+            try {
+                openPdfWithDefaultExternalApp(platformFile)
+                nullDialogState()
+            } catch (e: Exception) {
+                errorDialogState(e.message ?: "Unknown error")
             }
         }
-
     }
 
     private suspend fun observeNetwork() = networkMonitor.isOnline.first()
@@ -326,7 +320,7 @@ sealed interface ClientDocumentsActions {
     data class DeleteDocument(val documentName: String, val documentId: Int) :
         ClientDocumentsActions
 
-    data class OpenExternalPdfViewer(val platformFile: PlatformFile): ClientDocumentsActions
+    data class OpenExternalPdfViewer(val platformFile: PlatformFile) : ClientDocumentsActions
     data class ConfirmDeleteDocument(val documentId: Int) : ClientDocumentsActions
     data object Refresh : ClientDocumentsActions
     data object AddDocument : ClientDocumentsActions

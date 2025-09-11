@@ -13,13 +13,11 @@ import androidclient.feature.client.generated.resources.Res
 import androidclient.feature.client.generated.resources.error_document_size_exceeded
 import androidx.lifecycle.viewModelScope
 import com.mifos.core.common.utils.DataState
-import com.mifos.core.common.utils.FileKitUtil
 import com.mifos.core.ui.util.BaseViewModel
 import com.mifos.feature.client.DocumentSelectAndUploadRepository
 import com.mifos.feature.client.EntityDocumentState
 import com.mifos.feature.client.utils.openPdfWithDefaultExternalApp
 import io.github.vinceglb.filekit.PlatformFile
-import io.github.vinceglb.filekit.div
 import io.github.vinceglb.filekit.extension
 import io.github.vinceglb.filekit.readBytes
 import io.github.vinceglb.filekit.size
@@ -161,13 +159,13 @@ class DocumentPreviewScreenViewModel(
                                         mutableStateFlow.update {
                                             it.copy(
                                                 platformFile = platformFile,
-                                                documentBytes = platformFile.readBytes()
+                                                documentBytes = platformFile.readBytes(),
                                             )
                                         }
                                         documentSelectAndUploadRepository.updateEntityDocument(
                                             platformFile,
                                         )
-                                        if(platformFile.extension=="pdf") {
+                                        if (platformFile.extension == "pdf") {
                                             documentSelectAndUploadRepository.updateStep(EntityDocumentState.Step.VIEW)
                                             sendAction(DocumentPreviewScreenAction.SubmitClicked)
                                         } else {
@@ -198,15 +196,24 @@ class DocumentPreviewScreenViewModel(
                     )
                 }
                 state.entityDocument?.let {
-                    if(it.extension=="pdf" && (state.step== EntityDocumentState.Step.PREVIEW)){
-                        openPdfWithDefaultExternalApp(it)
+                    if (it.extension == "pdf" && (state.step == EntityDocumentState.Step.PREVIEW)) {
+                        previewPdfInExternalApp(it)
                     }
                 }
             }
-
         }
     }
-
+    private fun previewPdfInExternalApp(platformFile: PlatformFile) {
+        viewModelScope.launch {
+            loadingDialogState()
+            try {
+                openPdfWithDefaultExternalApp(platformFile)
+                nullDialogState()
+            } catch (e: Exception) {
+                errorDialogState(e.message ?: "Unknown error")
+            }
+        }
+    }
 
     private fun nullDialogState() {
         mutableStateFlow.update {

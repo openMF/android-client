@@ -1,11 +1,25 @@
+/*
+ * Copyright 2025 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ */
 package com.mifos.feature.client.utils
 
 import android.content.Intent
 import android.content.Intent.ACTION_VIEW
 import android.content.Intent.FLAG_ACTIVITY_NEW_TASK
 import android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION
+import androidclient.feature.client.generated.resources.Res
+import androidclient.feature.client.generated.resources.client_documents_fail_to_open
+import androidclient.feature.client.generated.resources.default_preview_pdf_name
+import androidclient.feature.client.generated.resources.returned_invalid_data_after_caching
+import androidclient.feature.client.generated.resources.unexpected_loading
+import androidclient.feature.client.generated.resources.unknown_file_caching_error
 import androidx.core.content.FileProvider
-import co.touchlab.kermit.Logger
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.common.utils.FileKitUtil
 import com.mifos.core.ui.util.getMimeTypeFromPlatformFile
@@ -16,6 +30,7 @@ import io.github.vinceglb.filekit.context
 import io.github.vinceglb.filekit.path
 import io.github.vinceglb.filekit.readBytes
 import kotlinx.coroutines.flow.last
+import org.jetbrains.compose.resources.getString
 import java.io.File
 
 @Throws
@@ -25,11 +40,11 @@ actual suspend fun openPdfWithDefaultExternalApp(platformFile: PlatformFile) {
     try {
         val fileInCache = File(ensurePdfIsInCache(platformFile).path)
 
-
+        // Do no change authority value, if you don't know what you are doing.
         val uri = FileProvider.getUriForFile(
             context,
             "${context.packageName}.fileprovider",
-            fileInCache
+            fileInCache,
         )
         val mimeType = getMimeTypeFromPlatformFile(platformFile)
         val intent = Intent(ACTION_VIEW).apply {
@@ -39,33 +54,31 @@ actual suspend fun openPdfWithDefaultExternalApp(platformFile: PlatformFile) {
         }
         context.startActivity(intent)
     } catch (e: Exception) {
-        Logger.e(e) { "Failed to open document" }
-        throw Exception("Failed to load the document. Reason: ${e.message}")
+        throw Exception(getString(Res.string.client_documents_fail_to_open) + "${e.message}")
     }
 }
-
 
 private suspend fun ensurePdfIsInCache(platformFile: PlatformFile): PlatformFile {
     val inputFile = platformFile
     val cacheDir = FileKitUtil.appCache
 
     if (inputFile.absolutePath().startsWith(cacheDir.absolutePath())) {
-        Logger.d { "File is already in cache. Using it directly." }
         return inputFile
     }
 
-    Logger.d { "File is outside cache. Copying it." }
     val finalState = FileKitUtil.writeFileToCache(
-        "attachment",
+        getString(Res.string.default_preview_pdf_name),
         "pdf",
-        platformFile.readBytes()
+        platformFile.readBytes(),
     ).last()
 
     return when (finalState) {
-        is DataState.Success<*> -> finalState.data
-            ?: throw IllegalStateException("File writing succeeded but returned invalid data.")
-        is DataState.Error<*> -> throw finalState.exception as? Exception
-            ?: Exception("An unknown error occurred while caching the file.")
-        DataState.Loading -> throw IllegalStateException("File writing flow finished unexpectedly in a Loading state.")
+        is DataState.Success<*> ->
+            finalState.data
+                ?: throw IllegalStateException(getString(Res.string.returned_invalid_data_after_caching))
+        is DataState.Error<*> ->
+            throw finalState.exception as? Exception
+                ?: Exception(getString(Res.string.unknown_file_caching_error))
+        DataState.Loading -> throw IllegalStateException(getString(Res.string.unexpected_loading))
     }
 }
