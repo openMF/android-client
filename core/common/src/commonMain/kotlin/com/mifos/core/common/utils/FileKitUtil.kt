@@ -53,21 +53,12 @@ object FileKitUtil {
         emit(image)
     }.asDataStateFlow()
 
-    fun loadFile(
-        filePath: String,
-    ) = PlatformFile(filePath)
-
-    fun readFileAsByteArray(
-        filePath: String,
-    ) = flow {
-        val file = PlatformFile(filePath)
-        val fileBytes = file.readBytes()
-        emit(fileBytes)
-    }.asDataStateFlow()
 
     suspend fun pickDirectory(): PlatformFile? {
         return FileKit.openDirectoryPicker()
     }
+
+
 
     /**
      *  Android
@@ -131,13 +122,10 @@ object FileKitUtil {
     }.asDataStateFlow()
 
     suspend fun writeToSelectedDirectory(
-        fileName: String,
-        fileExtension: String,
         filesByteArray: ByteArray,
-        directoryPath: String,
+        platformFile: PlatformFile
     ) = flow {
-        val directory = PlatformFile(directoryPath)
-        emit(directory.write(filesByteArray))
+        emit(platformFile.write(filesByteArray))
     }.asDataStateFlow()
 
     suspend fun deleteFile(
