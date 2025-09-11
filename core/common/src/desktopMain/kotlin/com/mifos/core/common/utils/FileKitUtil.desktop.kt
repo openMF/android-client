@@ -9,9 +9,10 @@
  */
 package com.mifos.core.common.utils
 
+import io.github.vinceglb.filekit.PlatformFile
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
-actual suspend fun takePhotoIfSupported(): Flow<DataState<String>> = flow {
+actual fun takePhotoIfSupported(): Flow<DataState<PlatformFile?>> = flow {
     emit(DataState.Error(IllegalStateException("Platform not supported")))
 }

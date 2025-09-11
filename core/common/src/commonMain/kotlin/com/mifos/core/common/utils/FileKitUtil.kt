@@ -20,11 +20,16 @@ import io.github.vinceglb.filekit.dialogs.openDirectoryPicker
 import io.github.vinceglb.filekit.dialogs.openFilePicker
 import io.github.vinceglb.filekit.div
 import io.github.vinceglb.filekit.filesDir
-import io.github.vinceglb.filekit.readBytes
 import io.github.vinceglb.filekit.write
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
+/**
+ *  Do not pass the path or absolute path you get by using any picker,
+ *  to PlatformFile class to create an instance of PlatformFile.
+ *  It won't work.
+ *  Use PlatformFile object returned by pickers directly.
+ */
 object FileKitUtil {
 
     val appCache = FileKit.cacheDir
@@ -53,12 +58,9 @@ object FileKitUtil {
         emit(image)
     }.asDataStateFlow()
 
-
     suspend fun pickDirectory(): PlatformFile? {
         return FileKit.openDirectoryPicker()
     }
-
-
 
     /**
      *  Android
@@ -121,9 +123,9 @@ object FileKitUtil {
         emit(internalStorage)
     }.asDataStateFlow()
 
-    suspend fun writeToSelectedDirectory(
+    fun writeToSelectedDirectory(
         filesByteArray: ByteArray,
-        platformFile: PlatformFile
+        platformFile: PlatformFile,
     ) = flow {
         emit(platformFile.write(filesByteArray))
     }.asDataStateFlow()
@@ -134,7 +136,7 @@ object FileKitUtil {
         file.delete(false)
     }
 
-    suspend fun takePhoto() = takePhotoIfSupported()
+    fun takePhoto() = takePhotoIfSupported()
 }
 
-expect suspend fun takePhotoIfSupported(): Flow<DataState<String>>
+expect fun takePhotoIfSupported(): Flow<DataState<PlatformFile?>>
