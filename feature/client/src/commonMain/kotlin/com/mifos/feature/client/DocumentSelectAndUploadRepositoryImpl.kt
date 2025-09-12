@@ -37,7 +37,7 @@ class DocumentSelectAndUploadRepositoryImpl(
         dialogTitle: String,
     ) = FileKitUtil.pickImage(dialogTitle)
 
-    override fun selectImageFromFile(dialogTitle: String) = FileKitUtil.pickFile(dialogTitle)
+    override fun selectDocumentFromFile(dialogTitle: String) = FileKitUtil.pickFile(dialogTitle)
 
     override fun downloadDocumentAndCache() = flow {
         emit(DataState.Loading)

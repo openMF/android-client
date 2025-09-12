@@ -22,7 +22,7 @@ interface DocumentSelectAndUploadRepository {
         dialogTitle: String = "",
     ): Flow<DataState<PlatformFile?>>
 
-    fun selectImageFromFile(dialogTitle: String = ""): Flow<DataState<PlatformFile?>>
+    fun selectDocumentFromFile(dialogTitle: String = ""): Flow<DataState<PlatformFile?>>
 
     fun downloadDocumentAndCache(): Flow<DataState<PlatformFile>>
 

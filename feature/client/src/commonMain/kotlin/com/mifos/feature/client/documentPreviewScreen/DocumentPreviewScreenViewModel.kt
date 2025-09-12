@@ -129,7 +129,7 @@ class DocumentPreviewScreenViewModel(
 
     private fun pickFromFiles() {
         viewModelScope.launch {
-            documentSelectAndUploadRepository.selectImageFromFile()
+            documentSelectAndUploadRepository.selectDocumentFromFile()
                 .collect { dataState ->
                     when (dataState) {
                         is DataState.Error -> {
