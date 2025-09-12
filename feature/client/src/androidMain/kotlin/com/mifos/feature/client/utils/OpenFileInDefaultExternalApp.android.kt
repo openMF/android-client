@@ -18,7 +18,6 @@ import androidclient.feature.client.generated.resources.client_documents_fail_to
 import androidclient.feature.client.generated.resources.default_preview_pdf_name
 import androidclient.feature.client.generated.resources.returned_invalid_data_after_caching
 import androidclient.feature.client.generated.resources.unexpected_loading
-import androidclient.feature.client.generated.resources.unknown_file_caching_error
 import androidx.core.content.FileProvider
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.common.utils.FileKitUtil
