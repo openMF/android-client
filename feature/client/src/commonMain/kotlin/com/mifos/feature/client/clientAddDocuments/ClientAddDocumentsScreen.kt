@@ -10,7 +10,9 @@
 package com.mifos.feature.client.clientAddDocuments
 
 import androidclient.feature.client.generated.resources.Res
+import androidclient.feature.client.generated.resources.action_add
 import androidclient.feature.client.generated.resources.action_go_back
+import androidclient.feature.client.generated.resources.action_view
 import androidclient.feature.client.generated.resources.add_document_title
 import androidclient.feature.client.generated.resources.btn_back
 import androidclient.feature.client.generated.resources.btn_submit
@@ -174,7 +176,7 @@ private fun ClientAddDocumentScaffold(
                         maxLines = 1,
                         shape = DesignToken.shapes.medium,
                         modifier = Modifier
-                            .padding(bottom = 8.dp),
+                            .padding(bottom = DesignToken.padding.small),
                     )
 
                     AddViewFileAndFileNameRow(
@@ -202,7 +204,7 @@ private fun ClientAddDocumentScaffold(
                             ),
                             shape = DesignToken.shapes.medium,
                             modifier = Modifier
-                                .height(40.dp)
+                                .height(DesignToken.sizes.iconExtraLarge)
                                 .weight(1f),
                         ) {
                             Icon(
@@ -315,9 +317,9 @@ private fun AddViewFileAndFileNameRow(
             style = MaterialTheme.typography.bodyLarge,
             fontFamily = FontFamily.SansSerif,
             modifier = Modifier.padding(
-                start = 16.dp,
-                top = 18.dp,
-                bottom = 18.dp,
+                start = DesignToken.padding.large,
+                top = DesignToken.padding.large,
+                bottom = DesignToken.padding.large,
             )
                 .weight(.6f),
             overflow = TextOverflow.Ellipsis,
@@ -342,15 +344,15 @@ private fun AddViewFileAndFileNameRow(
                 color = MaterialTheme.colorScheme.secondaryContainer,
             ),
             modifier = Modifier
-                .padding(end = 16.dp)
-                .height(36.dp)
+                .padding(end = DesignToken.padding.large)
+                .height(DesignToken.sizes.iconExtraLarge)
                 .wrapContentWidth(),
         ) {
             Text(
                 text = if (state.step == EntityDocumentState.Step.ADD) {
-                    "Add"
+                    stringResource(Res.string.action_add)
                 } else {
-                    "View"
+                    stringResource(Res.string.action_view)
                 },
                 style = MaterialTheme.typography.labelLarge,
                 fontFamily = FontFamily.SansSerif,

@@ -127,7 +127,7 @@ private fun ViewDocumentScaffold(
                     ),
                     shape = DesignToken.shapes.small,
                     modifier = Modifier
-                        .height(40.dp)
+                        .height(DesignToken.sizes.iconExtraLarge)
                         .weight(1f),
                 ) {
                     Text(
@@ -157,7 +157,7 @@ private fun ViewDocumentScaffold(
                     enabled = state.step == EntityDocumentState.Step.PREVIEW ||
                         state.step == EntityDocumentState.Step.UPDATE_PREVIEW,
                     modifier = Modifier
-                        .height(40.dp)
+                        .height(DesignToken.sizes.iconExtraLarge)
                         .weight(1f),
                 ) {
                     Text(
@@ -250,7 +250,7 @@ private fun ViewDocumentsScreenContent(
                     DocumentType.Pdf -> {
                         Icon(
                             imageVector = MifosIcons.PickDocument,
-                            "failed to load pdf",
+                            "Failed to load pdf",
                             modifier = Modifier
                                 .fillMaxSize()
                                 .align(Alignment.Center),

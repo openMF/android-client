@@ -60,7 +60,7 @@ private fun MifosCardPreview() {
     MifosTheme {
         MifosCard {
             Column(
-                modifier = Modifier.padding(16.dp),
+                modifier = Modifier.padding(DesignToken.padding.large),
             ) {
                 Text("Simple Mifos Card")
                 Text("This is the card content.")

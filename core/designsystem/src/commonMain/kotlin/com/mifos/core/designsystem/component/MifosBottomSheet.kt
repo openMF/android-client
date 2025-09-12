@@ -169,7 +169,7 @@ fun MifosBottomSheetOptionItem(
         verticalArrangement = Arrangement.Center,
     ) {
         MifosCard(
-            elevation = 2.dp,
+            elevation = DesignToken.padding.extraExtraSmall,
             modifier = Modifier
                 .clickable(onClick = onClick),
             shape = DesignToken.shapes.small,
