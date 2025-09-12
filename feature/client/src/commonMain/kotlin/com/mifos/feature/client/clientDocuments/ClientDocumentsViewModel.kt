@@ -108,13 +108,7 @@ class ClientDocumentsViewModel(
             }
 
             ClientDocumentsActions.SearchDocument -> {
-                mutableStateFlow.update { it ->
-                    it.copy(
-                        clientDocuments = it.clientDocuments.filter { document ->
-                            document.fileName.toString().contains(state.searchText)
-                        },
-                    )
-                }
+                observeNetworkAndLoadDocuments()
             }
 
             ClientDocumentsActions.ToggleSearch -> {
@@ -152,7 +146,10 @@ class ClientDocumentsViewModel(
                                 nullDialogState()
                                 mutableStateFlow.update {
                                     it.copy(
-                                        clientDocuments = dataState.data.reversed(),
+                                        clientDocuments = dataState.data.reversed()
+                                            .filter {document ->
+                                                document.fileName?.contains(state.searchText)?: false
+                                            },
                                         pullDownRefresh = false,
                                     )
                                 }

@@ -251,7 +251,7 @@ private fun ClientAddDocumentScaffold(
                             ),
                             shape = DesignToken.shapes.medium,
                             modifier = Modifier
-                                .height(40.dp)
+                                .height(DesignToken.sizes.iconExtraLarge)
                                 .weight(1f),
                             enabled = state.step == EntityDocumentState.Step.VIEW,
                         ) {
