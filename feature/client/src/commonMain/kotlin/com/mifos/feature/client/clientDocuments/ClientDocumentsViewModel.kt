@@ -10,6 +10,7 @@
 package com.mifos.feature.client.clientDocuments
 
 import androidclient.feature.client.generated.resources.Res
+import androidclient.feature.client.generated.resources.client_documents_failed_to_delete
 import androidclient.feature.client.generated.resources.no_internet_message
 import androidclient.feature.client.generated.resources.unknown_error
 import androidx.lifecycle.SavedStateHandle
@@ -176,7 +177,7 @@ class ClientDocumentsViewModel(
                     documentId = documentId,
                 )
             }.onFailure {
-                errorDialogState(it.message ?: "Failed to delete document")
+                errorDialogState(it.message ?: getString(Res.string.client_documents_failed_to_delete))
             }.onSuccess {
                 nullDialogState()
                 sendAction(ClientDocumentsActions.Refresh)
@@ -230,10 +231,10 @@ class ClientDocumentsViewModel(
             loadingDialogState()
             try {
                 openPdfWithDefaultExternalApp(platformFile)
-                nullDialogState()
             } catch (e: Exception) {
                 errorDialogState(e.message ?: getString(Res.string.unknown_error))
             }
+            nullDialogState()
         }
     }
 
@@ -298,7 +299,7 @@ data class ClientDocumentsScreenState(
     val isSearchBarActive: Boolean = false,
 ) {
     sealed interface DialogState {
-        data object Loading : DialogState
+        object Loading : DialogState
         data class Error(val message: String) : DialogState
         data class ConfirmDocumentDeletion(val documentName: String, val documentId: Int) : DialogState
     }

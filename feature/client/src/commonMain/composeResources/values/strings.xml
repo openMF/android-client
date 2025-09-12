@@ -301,7 +301,8 @@
     <string name="error_document_not_found">Document not found</string>
 
     <string name="default_preview_pdf_name">attachment</string>
-    <string name="client_documents_fail_to_open">Failed to open document</string>
+    <string name="client_documents_failed_to_open">Failed to open document</string>
+    <string name="client_documents_failed_to_delete">"Failed to delete document"</string>
     <string name="unknown_file_caching_error">An unknown error occurred while caching the file</string>
     <string name="unexpected_loading">File writing flow finished unexpectedly in a Loading state</string>
     <string name="returned_invalid_data_after_caching">File writing succeeded but returned invalid data.</string>

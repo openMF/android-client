@@ -14,7 +14,7 @@ import android.content.Intent.ACTION_VIEW
 import android.content.Intent.FLAG_ACTIVITY_NEW_TASK
 import android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION
 import androidclient.feature.client.generated.resources.Res
-import androidclient.feature.client.generated.resources.client_documents_fail_to_open
+import androidclient.feature.client.generated.resources.client_documents_failed_to_open
 import androidclient.feature.client.generated.resources.default_preview_pdf_name
 import androidclient.feature.client.generated.resources.returned_invalid_data_after_caching
 import androidclient.feature.client.generated.resources.unexpected_loading
@@ -53,7 +53,7 @@ actual suspend fun openPdfWithDefaultExternalApp(platformFile: PlatformFile) {
         }
         context.startActivity(intent)
     } catch (e: Exception) {
-        throw Exception(getString(Res.string.client_documents_fail_to_open) + "${e.message}")
+        throw Exception(getString(Res.string.client_documents_failed_to_open) + "${e.message}")
     }
 }
 
