@@ -77,8 +77,7 @@ private suspend fun ensurePdfIsInCache(platformFile: PlatformFile): PlatformFile
             finalState.data
                 ?: throw IllegalStateException(getString(Res.string.returned_invalid_data_after_caching))
         is DataState.Error<*> ->
-            throw finalState.exception as? Exception
-                ?: Exception(getString(Res.string.unknown_file_caching_error))
+            throw Exception(finalState.exception)
         DataState.Loading -> throw IllegalStateException(getString(Res.string.unexpected_loading))
     }
 }
