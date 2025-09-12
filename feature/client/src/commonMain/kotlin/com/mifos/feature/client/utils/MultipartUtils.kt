@@ -18,24 +18,6 @@ import io.ktor.client.request.forms.formData
 import io.ktor.http.Headers
 import io.ktor.http.HttpHeaders
 
-internal suspend fun createImageRequestBody(
-    imageFile: PlatformFile,
-): MultiPartFormDataContent {
-    val byteArray = imageFile.readBytes()
-    return MultiPartFormDataContent(
-        formData {
-            append(
-                "file",
-                byteArray,
-                Headers.build {
-                    append(HttpHeaders.ContentType, getMimeType(imageFile.extension))
-                    append(HttpHeaders.ContentDisposition, "filename=\"${imageFile.name}\"")
-                },
-            )
-        },
-    )
-}
-
 internal suspend fun createDocumentRequestBody(
     documentFile: PlatformFile,
 ): MultiPartFormDataContent {
@@ -68,28 +50,6 @@ internal suspend fun createDocumentRequestBody(
                 Headers.build {
                     append(HttpHeaders.ContentType, getMimeType(documentFile.extension))
                     append(HttpHeaders.ContentDisposition, "filename=\"${documentFile.name}\"")
-                },
-            )
-            append("name", name)
-            append("description", description)
-        },
-    )
-}
-
-internal suspend fun createImageRequestBody(
-    imageFile: PlatformFile,
-    name: String,
-    description: String,
-): MultiPartFormDataContent {
-    val byteArray = imageFile.readBytes()
-    return MultiPartFormDataContent(
-        formData {
-            append(
-                "file",
-                byteArray,
-                Headers.build {
-                    append(HttpHeaders.ContentType, getMimeType(imageFile.extension))
-                    append(HttpHeaders.ContentDisposition, "filename=\"${imageFile.name}\"")
                 },
             )
             append("name", name)
