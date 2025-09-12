@@ -148,8 +148,8 @@ class ClientDocumentsViewModel(
                                 mutableStateFlow.update {
                                     it.copy(
                                         clientDocuments = dataState.data.reversed()
-                                            .filter {document ->
-                                                document.fileName?.contains(state.searchText)?: false
+                                            .filter { document ->
+                                                document.fileName?.contains(state.searchText) ?: false
                                             },
                                         pullDownRefresh = false,
                                     )
