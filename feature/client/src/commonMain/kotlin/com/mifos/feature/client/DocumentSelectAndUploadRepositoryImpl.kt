@@ -19,7 +19,6 @@ import com.mifos.core.data.repository.DocumentDialogRepository
 import com.mifos.core.data.repository.DocumentListRepository
 import com.mifos.feature.client.utils.createDocumentRequestBody
 import io.github.vinceglb.filekit.PlatformFile
-import io.github.vinceglb.filekit.div
 import io.ktor.client.request.forms.MultiPartFormDataContent
 import io.ktor.client.statement.readRawBytes
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -38,7 +37,7 @@ class DocumentSelectAndUploadRepositoryImpl(
         dialogTitle: String,
     ) = FileKitUtil.pickImage(dialogTitle)
 
-    override fun selectImageFromFile(dialogTitle: String) = FileKitUtil.pickPdfFile(dialogTitle)
+    override fun selectImageFromFile(dialogTitle: String) = FileKitUtil.pickFile(dialogTitle)
 
     override fun downloadDocumentAndCache() = flow {
         emit(DataState.Loading)

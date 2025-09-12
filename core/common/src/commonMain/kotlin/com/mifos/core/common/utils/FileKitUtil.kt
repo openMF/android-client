@@ -36,11 +36,12 @@ object FileKitUtil {
     val appPrivateInternalStorage = FileKit.filesDir
     val appInternalStorage = FileKit.databasesDir
 
-    fun pickPdfFile(
+    fun pickFile(
         dialogTitle: String = "",
+        extensions: Set<String> = setOf("pdf", "jpeg", "jpg", "png"),
     ) = flow {
         val file = FileKit.openFilePicker(
-            type = FileKitType.File(setOf("pdf", "jpeg", "jpg", "png")),
+            type = FileKitType.File(extensions),
             mode = FileKitMode.Single,
             title = dialogTitle,
         )
