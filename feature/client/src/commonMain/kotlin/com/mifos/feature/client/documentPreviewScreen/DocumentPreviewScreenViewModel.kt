@@ -11,6 +11,7 @@ package com.mifos.feature.client.documentPreviewScreen
 
 import androidclient.feature.client.generated.resources.Res
 import androidclient.feature.client.generated.resources.error_document_size_exceeded
+import androidclient.feature.client.generated.resources.unknown_error
 import androidx.lifecycle.viewModelScope
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.ui.util.BaseViewModel
@@ -83,7 +84,7 @@ class DocumentPreviewScreenViewModel(
             documentSelectAndUploadRepository.selectImageFromGallery()
                 .collect { dataState ->
                     when (dataState) {
-                        is DataState.Error<*> -> {
+                        is DataState.Error -> {
                             mutableStateFlow.update {
                                 it.copy(showBottomSheet = false)
                             }
@@ -131,7 +132,7 @@ class DocumentPreviewScreenViewModel(
             documentSelectAndUploadRepository.selectImageFromFile()
                 .collect { dataState ->
                     when (dataState) {
-                        is DataState.Error<*> -> {
+                        is DataState.Error -> {
                             mutableStateFlow.update {
                                 it.copy(showBottomSheet = false)
                             }
@@ -210,7 +211,7 @@ class DocumentPreviewScreenViewModel(
                 openPdfWithDefaultExternalApp(platformFile)
                 nullDialogState()
             } catch (e: Exception) {
-                errorDialogState(e.message ?: "Unknown error")
+                errorDialogState(e.message ?: getString(Res.string.unknown_error))
             }
         }
     }

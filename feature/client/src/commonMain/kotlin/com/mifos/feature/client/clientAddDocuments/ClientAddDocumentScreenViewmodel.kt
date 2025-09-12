@@ -12,6 +12,7 @@ package com.mifos.feature.client.clientAddDocuments
 import androidclient.feature.client.generated.resources.Res
 import androidclient.feature.client.generated.resources.error_document_size_exceeded
 import androidclient.feature.client.generated.resources.no_internet_message
+import androidclient.feature.client.generated.resources.unknown_error
 import androidx.lifecycle.viewModelScope
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.util.NetworkMonitor
@@ -110,7 +111,7 @@ class ClientAddDocumentScreenViewmodel(
             documentSelectAndUploadRepository.selectImageFromGallery()
                 .collect { dataState ->
                     when (dataState) {
-                        is DataState.Error<*> -> {
+                        is DataState.Error -> {
                             mutableStateFlow.update {
                                 it.copy(showBottomSheet = false)
                             }
@@ -156,7 +157,7 @@ class ClientAddDocumentScreenViewmodel(
             documentSelectAndUploadRepository.selectImageFromFile()
                 .collect { dataState ->
                     when (dataState) {
-                        is DataState.Error<*> -> {
+                        is DataState.Error -> {
                             mutableStateFlow.update {
                                 it.copy(showBottomSheet = false)
                             }
@@ -211,13 +212,13 @@ class ClientAddDocumentScreenViewmodel(
                         state.enteredDocumentDescription,
                     ).collect { dataState ->
                         when (dataState) {
-                            is DataState.Error<*> -> {
+                            is DataState.Error -> {
                                 errorDialogState(dataState.message)
                             }
                             DataState.Loading -> {
                                 loadingDialogState()
                             }
-                            is DataState.Success<*> -> {
+                            is DataState.Success -> {
                                 nullDialogState()
                                 documentSelectAndUploadRepository.resetStateAndRefresh()
                                 sendEvent(ClientAddDocumentScreenEvents.OnNavigateBack)
@@ -242,13 +243,13 @@ class ClientAddDocumentScreenViewmodel(
                         state.enteredDocumentDescription,
                     ).collect { dataState ->
                         when (dataState) {
-                            is DataState.Error<*> -> {
+                            is DataState.Error -> {
                                 errorDialogState(dataState.message)
                             }
                             DataState.Loading -> {
                                 loadingDialogState()
                             }
-                            is DataState.Success<*> -> {
+                            is DataState.Success -> {
                                 nullDialogState()
                                 documentSelectAndUploadRepository.resetStateAndRefresh()
                                 sendEvent(ClientAddDocumentScreenEvents.OnNavigateBack)
@@ -287,7 +288,7 @@ class ClientAddDocumentScreenViewmodel(
                 openPdfWithDefaultExternalApp(platformFile)
                 nullDialogState()
             } catch (e: Exception) {
-                errorDialogState(e.message ?: "Unknown error")
+                errorDialogState(e.message ?: getString(Res.string.unknown_error))
             }
         }
     }

@@ -11,6 +11,7 @@ package com.mifos.feature.client.clientDocuments
 
 import androidclient.feature.client.generated.resources.Res
 import androidclient.feature.client.generated.resources.no_internet_message
+import androidclient.feature.client.generated.resources.unknown_error
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
@@ -231,7 +232,7 @@ class ClientDocumentsViewModel(
                 openPdfWithDefaultExternalApp(platformFile)
                 nullDialogState()
             } catch (e: Exception) {
-                errorDialogState(e.message ?: "Unknown error")
+                errorDialogState(e.message ?: getString(Res.string.unknown_error))
             }
         }
     }
