@@ -55,6 +55,11 @@ kotlin {
             implementation(libs.play.services.location)
             implementation(libs.kotlinx.coroutines.play.services)
         }
+
+
+        desktopMain.dependencies {
+            implementation(libs.pdfbox)
+        }
     }
 }
 

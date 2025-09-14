@@ -19,7 +19,6 @@ import com.mifos.core.data.repository.CheckerInboxTasksRepository
 import com.mifos.core.data.repository.ClientChargeRepository
 import com.mifos.core.data.repository.ClientDetailsEditRepository
 import com.mifos.core.data.repository.ClientDetailsRepository
-import com.mifos.core.data.repository.ClientIdentifierDialogRepository
 import com.mifos.core.data.repository.ClientIdentifiersRepository
 import com.mifos.core.data.repository.ClientListRepository
 import com.mifos.core.data.repository.CreateNewCenterRepository
@@ -29,7 +28,7 @@ import com.mifos.core.data.repository.DataTableDataRepository
 import com.mifos.core.data.repository.DataTableListRepository
 import com.mifos.core.data.repository.DataTableRepository
 import com.mifos.core.data.repository.DataTableRowDialogRepository
-import com.mifos.core.data.repository.DocumentDialogRepository
+import com.mifos.core.data.repository.DocumentCreateUpdateRepository
 import com.mifos.core.data.repository.DocumentListRepository
 import com.mifos.core.data.repository.GenerateCollectionSheetRepository
 import com.mifos.core.data.repository.GroupDetailsRepository
@@ -81,7 +80,6 @@ import com.mifos.core.data.repositoryImp.CheckerInboxTasksRepositoryImp
 import com.mifos.core.data.repositoryImp.ClientChargeRepositoryImp
 import com.mifos.core.data.repositoryImp.ClientDetailsEditRepositoryImpl
 import com.mifos.core.data.repositoryImp.ClientDetailsRepositoryImp
-import com.mifos.core.data.repositoryImp.ClientIdentifierDialogRepositoryImp
 import com.mifos.core.data.repositoryImp.ClientIdentifiersRepositoryImp
 import com.mifos.core.data.repositoryImp.ClientListRepositoryImp
 import com.mifos.core.data.repositoryImp.CreateNewCenterRepositoryImp
@@ -91,7 +89,7 @@ import com.mifos.core.data.repositoryImp.DataTableDataRepositoryImp
 import com.mifos.core.data.repositoryImp.DataTableListRepositoryImp
 import com.mifos.core.data.repositoryImp.DataTableRepositoryImp
 import com.mifos.core.data.repositoryImp.DataTableRowDialogRepositoryImp
-import com.mifos.core.data.repositoryImp.DocumentDialogRepositoryImp
+import com.mifos.core.data.repositoryImp.DocumentCreateUpdateRepositoryImp
 import com.mifos.core.data.repositoryImp.DocumentListRepositoryImp
 import com.mifos.core.data.repositoryImp.GenerateCollectionSheetRepositoryImp
 import com.mifos.core.data.repositoryImp.GroupDetailsRepositoryImp
@@ -151,7 +149,6 @@ val RepositoryModule = module {
     singleOf(::ClientDetailsRepositoryImp) bind ClientDetailsRepository::class
     singleOf(::ClientListRepositoryImp) bind ClientListRepository::class
     singleOf(::ClientChargeRepositoryImp) bind ClientChargeRepository::class
-    singleOf(::ClientIdentifierDialogRepositoryImp) bind ClientIdentifierDialogRepository::class
     singleOf(::ClientIdentifiersRepositoryImp) bind ClientIdentifiersRepository::class
     singleOf(::CreateNewClientRepositoryImp) bind CreateNewClientRepository::class
     singleOf(::ClientDetailsEditRepositoryImpl) bind ClientDetailsEditRepository::class
@@ -207,7 +204,7 @@ val RepositoryModule = module {
     singleOf(::DataTableListRepositoryImp) bind DataTableListRepository::class
     singleOf(::DataTableRepositoryImp) bind DataTableRepository::class
     singleOf(::DataTableRowDialogRepositoryImp) bind DataTableRowDialogRepository::class
-    singleOf(::DocumentDialogRepositoryImp) bind DocumentDialogRepository::class
+    singleOf(::DocumentCreateUpdateRepositoryImp) bind DocumentCreateUpdateRepository::class
     singleOf(::DocumentListRepositoryImp) bind DocumentListRepository::class
     singleOf(::IndividualCollectionSheetDetailsRepositoryImp) bind IndividualCollectionSheetDetailsRepository::class
     singleOf(::NewIndividualCollectionSheetRepositoryImp) bind NewIndividualCollectionSheetRepository::class

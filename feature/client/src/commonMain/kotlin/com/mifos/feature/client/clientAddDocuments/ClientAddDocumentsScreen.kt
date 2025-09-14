@@ -29,12 +29,10 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -44,9 +42,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
@@ -60,6 +56,7 @@ import com.mifos.core.designsystem.theme.MifosTypography
 import com.mifos.core.ui.components.MifosBreadcrumbNavBar
 import com.mifos.core.ui.components.MifosFilePickerBottomSheet
 import com.mifos.core.ui.components.MifosProgressIndicator
+import com.mifos.core.ui.components.MifosRowWithTextAndButton
 import com.mifos.core.ui.util.EventsEffect
 import com.mifos.feature.client.EntityDocumentState
 import org.jetbrains.compose.resources.stringResource
@@ -179,9 +176,25 @@ private fun ClientAddDocumentScaffold(
                             .padding(bottom = DesignToken.padding.small),
                     )
 
-                    AddViewFileAndFileNameRow(
-                        state = state,
-                        onAction = onAction,
+                    MifosRowWithTextAndButton(
+                        text = if (state.step == EntityDocumentState.Step.ADD) {
+                            stringResource(Res.string.no_file_selected)
+                        } else {
+                            state.pickedDocumentName
+                        },
+                        onBtnClick = {
+                            if (state.step == EntityDocumentState.Step.ADD) {
+                                onAction(ClientAddDocumentScreenAction.AddNewDocument)
+                            } else {
+                                onAction(ClientAddDocumentScreenAction.ViewDocument)
+                            }
+                        },
+                        btnText = if (state.step == EntityDocumentState.Step.ADD) {
+                            stringResource(Res.string.action_add)
+                        } else {
+                            stringResource(Res.string.action_view)
+                        },
+
                     )
 
                     Spacer(Modifier.height(DesignToken.spacing.largeIncreased))
@@ -287,76 +300,6 @@ private fun ClientAddDocumentScaffold(
                     }
                 }
             }
-        }
-    }
-}
-
-@Composable
-private fun AddViewFileAndFileNameRow(
-    state: ClientAddDocumentScreenState,
-    onAction: (ClientAddDocumentScreenAction) -> Unit,
-) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clip(shape = DesignToken.shapes.medium)
-            .border(
-                1.dp,
-                color = MaterialTheme.colorScheme.secondaryContainer,
-                shape = DesignToken.shapes.medium,
-            ),
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically,
-    ) {
-        Text(
-            text = if (state.step == EntityDocumentState.Step.ADD) {
-                stringResource(Res.string.no_file_selected)
-            } else {
-                state.pickedDocumentName
-            },
-            style = MaterialTheme.typography.bodyLarge,
-            fontFamily = FontFamily.SansSerif,
-            modifier = Modifier.padding(
-                start = DesignToken.padding.large,
-                top = DesignToken.padding.large,
-                bottom = DesignToken.padding.large,
-            )
-                .weight(.6f),
-            overflow = TextOverflow.Ellipsis,
-            maxLines = 1,
-        )
-
-        MifosOutlinedButton(
-            onClick = {
-                if (state.step == EntityDocumentState.Step.ADD) {
-                    onAction(ClientAddDocumentScreenAction.AddNewDocument)
-                } else {
-                    onAction(ClientAddDocumentScreenAction.ViewDocument)
-                }
-            },
-            colors = ButtonDefaults.outlinedButtonColors(
-                containerColor = MaterialTheme.colorScheme.onPrimary,
-                contentColor = MaterialTheme.colorScheme.primary,
-            ),
-            shape = DesignToken.shapes.small,
-            border = BorderStroke(
-                1.dp,
-                color = MaterialTheme.colorScheme.secondaryContainer,
-            ),
-            modifier = Modifier
-                .padding(end = DesignToken.padding.large)
-                .height(DesignToken.sizes.iconExtraLarge)
-                .wrapContentWidth(),
-        ) {
-            Text(
-                text = if (state.step == EntityDocumentState.Step.ADD) {
-                    stringResource(Res.string.action_add)
-                } else {
-                    stringResource(Res.string.action_view)
-                },
-                style = MaterialTheme.typography.labelLarge,
-                fontFamily = FontFamily.SansSerif,
-            )
         }
     }
 }

@@ -7,19 +7,13 @@
  *
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
-package com.mifos.core.network.model
+package com.mifos.feature.client.utils
 
-import kotlinx.serialization.Serializable
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 
-/**
- * GetClientsClientIdIdentifiersTemplateResponse
- *
- * @param allowedDocumentTypes
- */
-
-@Serializable
-data class GetClientsClientIdIdentifiersTemplateResponse(
-
-    val allowedDocumentTypes: Set<GetClientsAllowedDocumentTypes>? = null,
-
+@Composable
+expect fun PdfPreview(
+    pdfBytes: ByteArray,
+    modifier: Modifier = Modifier,
 )

@@ -95,18 +95,6 @@
     <string name="feature_client_failed_to_create_charge">Failed To Create Charge</string>
     <string name="feature_client_no_charges_found">No Charges Found</string>
 
-    <string name="feature_client_failed_to_load_identifiers">Failed To Load Identifiers</string>
-    <string name="feature_client_failed_to_create_identifier">Failed To Create Identifier</string>
-    <string name="feature_client_identifier_created_successfully">Identifier Created Successfully</string>
-    <string name="feature_client_create_identifier_dialog">Create Identifier</string>
-    <string name="feature_client_identifier_document_type">Document Type</string>
-    <string name="feature_client_identifier_status">Status</string>
-    <string name="feature_client_identifier_unique_id">Unique Id</string>
-    <string name="feature_client_identifier_description">Description</string>
-    <string name="feature_client_identifier_message_field_required">Required Field</string>
-    <string name="feature_client_identifier_submit">Submit</string>
-    <string name="feature_client_identifier_isActive">Active</string>
-
     <string name="feature_client_failed_to_add_signature">Failed To Add Signature</string>
     <string name="feature_client_signature_empty">Signature Should Not Be Empty</string>
     <string name="feature_client_signature_title">Signature</string>
@@ -479,7 +467,6 @@
     <string name="client_identifiers_error_text">Error</string>
     <string name="client_identifiers_retry">Retry</string>
     <string name="client_identifiers_identities_client_identifier_deletion_success">Successfully deleted client identifier with id</string>
-    <!--    <string name="client_identifiers_identities">Identities</string>-->
 
     <!-- Apply New Applications Screen -->
     <string name="client_apply_new_applications_title">Choose Application Type</string>
@@ -504,13 +491,32 @@
     <string name="client_signature_draw">Draw</string>
     <string name="client_signature_more">More</string>
 
+    <!-- Client Share Account-->
     <string name="client_share_accounts_share_accounts">Share Accounts</string>
     <string name="client_share_accounts_an_error_occurred">An error occurred</string>
     <string name="client_share_accounts_failed_to_fetch_share_accounts">Failed to fetch share accounts</string>
     <string name="client_share_accounts_try_again">Try again</string>
 
+    <!-- Client Upcoming Charges-->
     <string name="client_upcoming_charges_failed_message">Failed to get upcoming charges</string>
     <string name="client_upcoming_charges_no_more_charges_available">No more charges available!</string>
     <string name="client_upcoming_charges_charges_overview">Charges Overview</string>
+
+    <!-- Client Identifier-->
+    <string name="client_identifier_title">Add Identifiers</string>
+    <string name="client_identifier_document_type">Document Type*</string>
+    <string name="client_identifier_status">Status*</string>
+    <string name="client_identifier_document_key">Document Key*</string>
+    <string name="client_identifier_description">Description</string>
+    <string name="client_identifier_document_name">Document Name*</string>
+    <string name="client_identifier_btn_create_new">Create New</string>
+    <string name="client_identifier_btn_upload_new">Upload New</string>
+    <string name="client_identifier_btn_next">Next</string>
+    <string name="client_identifier_btn_back">Back</string>
+    <string name="client_identifier_btn_add">Add</string>
+    <string name="client_identifier_btn_view">View</string>
+    <string name="client_identifier_btn_submit">Submit</string>
+    <string name="client_identifier_no_file_selected">No File Selected</string>
+    <string name="client_identifier_document_not_found">Document not found</string>
 
 </resources>

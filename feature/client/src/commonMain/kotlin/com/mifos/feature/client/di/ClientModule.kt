@@ -23,8 +23,8 @@ import com.mifos.feature.client.clientDocuments.ClientDocumentsViewModel
 import com.mifos.feature.client.clientEditDetails.ClientEditDetailsViewModel
 import com.mifos.feature.client.clientEditProfile.ClientProfileEditViewModel
 import com.mifos.feature.client.clientGeneral.ClientProfileGeneralViewmodel
-import com.mifos.feature.client.clientIdentifiers.ClientIdentifiersViewModel
-import com.mifos.feature.client.clientIdentitiesList.ClientIdentitiesListViewModel
+import com.mifos.feature.client.clientIdentifiersAddUpdate.ClientIdentifiersAddUpdateViewModel
+import com.mifos.feature.client.clientIdentifiersList.ClientIdentifiersListViewModel
 import com.mifos.feature.client.clientLoanAccounts.ClientLoanAccountsViewModel
 import com.mifos.feature.client.clientPinpoint.PinPointClientViewModel
 import com.mifos.feature.client.clientProfile.ClientProfileViewModel
@@ -51,7 +51,6 @@ import org.koin.dsl.module
 val ClientModule = module {
     viewModelOf(::ClientChargesViewModel)
     viewModelOf(::ClientDetailsViewModel)
-    viewModelOf(::ClientIdentifiersViewModel)
     viewModelOf(::ClientAddressViewModel)
     viewModelOf(::ClientListViewModel)
     viewModelOf(::PinPointClientViewModel)
@@ -73,7 +72,6 @@ val ClientModule = module {
     viewModelOf(::FixedDepositAccountViewModel)
     viewModelOf(::ClientCollateralViewModel)
     viewModelOf(::ClientLoanAccountsViewModel)
-    viewModelOf(::ClientIdentitiesListViewModel)
     viewModelOf(::ClientApplyNewApplicationsViewModel)
     viewModelOf(::ClientSignatureViewModel)
     viewModelOf(::ClientUpcomingChargesViewmodel)
@@ -81,6 +79,8 @@ val ClientModule = module {
     viewModelOf(::ClientAddDocumentScreenViewmodel)
     viewModelOf(::DocumentPreviewScreenViewModel)
     viewModelOf(::ShareAccountsViewModel)
+    viewModelOf(::ClientIdentifiersListViewModel)
+    viewModelOf(::ClientIdentifiersAddUpdateViewModel)
 
     singleOf(::DocumentSelectAndUploadRepositoryImpl) {
         bind<DocumentSelectAndUploadRepository>()

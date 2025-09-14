@@ -13,17 +13,25 @@ import com.mifos.core.common.utils.DataState
 import com.mifos.core.common.utils.asDataStateFlow
 import com.mifos.core.data.repository.ClientIdentifiersRepository
 import com.mifos.core.model.objects.noncoreobjects.IdentifierPayload
-import io.ktor.client.statement.HttpResponse
+import com.mifos.core.network.GenericResponse
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
-class CreateClientIdentifierUseCase(
+class UpdateClientIdentifierUseCase(
     private val repository: ClientIdentifiersRepository,
 ) {
+
     operator fun invoke(
         clientId: Long,
+        identifierId: Long,
         identifierPayload: IdentifierPayload,
-    ): Flow<DataState<HttpResponse>> = flow {
-        emit(repository.createClientIdentifier(clientId, identifierPayload))
+    ): Flow<DataState<GenericResponse>> = flow {
+        emit(
+            repository.updateClientIdentifier(
+                clientId = clientId,
+                identifierId = identifierId,
+                identifierPayload = identifierPayload,
+            ),
+        )
     }.asDataStateFlow()
 }

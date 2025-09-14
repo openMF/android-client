@@ -16,11 +16,11 @@ import kotlinx.serialization.Serializable
 @Parcelize
 @Serializable
 data class MifosError(
-    var developerMessage: String = "",
+    var developerMessage: String? = null,
 
-    var httpStatusCode: String = "",
+    var httpStatusCode: String? = null,
 
-    var defaultUserMessage: String = "",
+    var defaultUserMessage: String? = null,
 
     var userMessageGlobalisationCode: String? = null,
 

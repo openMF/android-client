@@ -7,7 +7,7 @@
  *
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
-package com.mifos.feature.client.clientIdentitiesList
+package com.mifos.feature.client.clientIdentifiersList
 
 import androidclient.feature.client.generated.resources.Res
 import androidclient.feature.client.generated.resources.add_icon
@@ -39,8 +39,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
-import com.mifos.core.designsystem.component.LoadingDialogState
-import com.mifos.core.designsystem.component.MifosLoadingDialog
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.designsystem.theme.MifosTypography
@@ -50,49 +48,55 @@ import com.mifos.core.ui.components.MifosActionsIdentifierListingComponent
 import com.mifos.core.ui.components.MifosAlertDialog
 import com.mifos.core.ui.components.MifosBreadcrumbNavBar
 import com.mifos.core.ui.components.MifosEmptyCard
+import com.mifos.core.ui.components.MifosProgressIndicator
+import com.mifos.core.ui.components.MifosProgressIndicatorOverlay
 import com.mifos.core.ui.util.EventsEffect
+import com.mifos.feature.client.clientIdentifiersAddUpdate.Feature
 import com.mifos.feature.client.utils.getClientIdentifierStatus
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
-internal fun ClientIdentitiesListScreenRoute(
-    addNewClientIdentity: (Int) -> Unit,
+internal fun ClientIdentifiersListScreen(
+    addNewClientIdentity: (Int, Feature, String?) -> Unit,
+    onBackPress: () -> Unit,
     navController: NavController,
-    viewModel: ClientIdentitiesListViewModel = koinViewModel(),
+    viewModel: ClientIdentifiersListViewModel = koinViewModel(),
 ) {
     val state by viewModel.stateFlow.collectAsStateWithLifecycle()
 
     EventsEffect(viewModel.eventFlow) { event ->
         when (event) {
-            is ClientIdentitiesListEvent.AddNewClientIdentity -> addNewClientIdentity(event.id)
-            ClientIdentitiesListEvent.ViewDocument -> {}
+            is ClientIdentifiersListEvent.AddNewClientIdentity -> addNewClientIdentity(event.id, event.feature, event.uniqueKeyForHandleDocument)
+            ClientIdentifiersListEvent.NavigateBack -> onBackPress()
         }
     }
 
-    ClientIdentitiesListScreen(
+    ClientIdentifiersListScreen(
         state = state,
         onAction = remember(viewModel) { { viewModel.trySendAction(it) } },
         navController = navController,
     )
 
-    ClientIdentitiesDialog(
+    ClientIdentifiersDialog(
         state = state,
         onAction = remember(viewModel) { { viewModel.trySendAction(it) } },
     )
 }
 
 @Composable
-internal fun ClientIdentitiesListScreen(
-    state: ClientIdentitiesListState,
+internal fun ClientIdentifiersListScreen(
+    state: ClientIdentifiersListState,
     navController: NavController,
-    onAction: (ClientIdentitiesListAction) -> Unit,
+    onAction: (ClientIdentifiersListAction) -> Unit,
 ) {
     val emptyMessage = stringResource(Res.string.client_identifiers_not_available)
 
     MifosScaffold(
-        onBackPressed = {},
+        onBackPressed = {
+            onAction(ClientIdentifiersListAction.NavigateBack)
+        },
         title = "Client Identities",
     ) { paddingValues ->
         Column(
@@ -118,12 +122,28 @@ internal fun ClientIdentitiesListScreen(
                 } else {
                     LazyColumn {
                         item {
-                            state.clientIdentitiesList.forEachIndexed { index, item ->
+                            state.clientIdentitiesList.reversed().forEachIndexed { index, item ->
+
+                                val status = getClientIdentifierStatus(item.status)
+
+                                /**
+                                 * A unique key generated for document operations (update/delete).
+                                 *
+                                 * This key is built by concatenating:
+                                 * - the document type name
+                                 * - the document key
+                                 * - the current status
+                                 *
+                                 * It ensures each document can be uniquely identified and handled
+                                 * even if multiple documents share the same type or key.
+                                 */
+                                val uniqueKeyForHandleDocument = item.documentType?.name + item.documentKey + status
+
                                 MifosActionsIdentifierListingComponent(
                                     type = item.documentType?.name ?: emptyMessage,
                                     id = if (item.id != null) item.id.toString() else emptyMessage,
                                     key = item.documentKey ?: emptyMessage,
-                                    status = getClientIdentifierStatus(item.status),
+                                    status = status,
                                     description = item.description ?: emptyMessage,
                                     // TODO check what is identifyDocuments, couldnot find in the api
                                     identifyDocuments = item.documentType?.name ?: emptyMessage,
@@ -135,16 +155,17 @@ internal fun ClientIdentitiesListScreen(
                                     onActionClicked = { actions ->
                                         when (actions) {
                                             is Actions.ViewDocument -> onAction.invoke(
-                                                ClientIdentitiesListAction.ViewDocument,
+                                                ClientIdentifiersListAction.ViewDocument(uniqueKeyForHandleDocument),
                                             )
 
                                             is Actions.UploadAgain -> onAction.invoke(
-                                                ClientIdentitiesListAction.UploadAgain,
+                                                ClientIdentifiersListAction.UploadAgain(uniqueKeyForHandleDocument),
                                             )
 
                                             is Actions.DeleteDocument -> onAction.invoke(
-                                                ClientIdentitiesListAction.DeleteDocument(
+                                                ClientIdentifiersListAction.DeleteDocument(
                                                     item.id ?: -1,
+                                                    uniqueKeyForHandleDocument,
                                                 ),
                                             )
 
@@ -153,7 +174,7 @@ internal fun ClientIdentitiesListScreen(
                                     },
                                     onClick = {
                                         onAction.invoke(
-                                            ClientIdentitiesListAction.ToggleShowMenu(
+                                            ClientIdentifiersListAction.ToggleShowMenu(
                                                 index,
                                             ),
                                         )
@@ -174,7 +195,7 @@ internal fun ClientIdentitiesListScreen(
 @Composable
 private fun ClientIdentifiersHeader(
     totalItem: String,
-    onAction: (ClientIdentitiesListAction) -> Unit,
+    onAction: (ClientIdentifiersListAction) -> Unit,
 ) {
     Row(
         modifier = Modifier.fillMaxWidth(),
@@ -195,7 +216,7 @@ private fun ClientIdentifiersHeader(
 
         Icon(
             modifier = Modifier.onClick {
-                onAction.invoke(ClientIdentitiesListAction.ToggleSearch)
+                onAction.invoke(ClientIdentifiersListAction.ToggleSearch)
             },
             painter = painterResource(Res.drawable.search),
             contentDescription = null,
@@ -205,7 +226,7 @@ private fun ClientIdentifiersHeader(
 
         Icon(
             modifier = Modifier.onClick {
-                onAction.invoke(ClientIdentitiesListAction.AddNewClientIdentity)
+                onAction.invoke(ClientIdentifiersListAction.AddNewClientIdentity)
             },
             painter = painterResource(Res.drawable.add_icon),
             contentDescription = null,
@@ -215,40 +236,46 @@ private fun ClientIdentifiersHeader(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun ClientIdentitiesDialog(
-    state: ClientIdentitiesListState,
-    onAction: (ClientIdentitiesListAction) -> Unit,
+private fun ClientIdentifiersDialog(
+    state: ClientIdentifiersListState,
+    onAction: (ClientIdentifiersListAction) -> Unit,
 ) {
     when (state.dialogState) {
-        is ClientIdentitiesListState.DialogState.Error -> {
+        is ClientIdentifiersListState.DialogState.Error -> {
             MifosAlertDialog(
                 dialogTitle = stringResource(Res.string.client_identifiers_error_text),
                 dialogText = state.dialogState.message,
-                onDismissRequest = { onAction.invoke(ClientIdentitiesListAction.CloseDialog) },
-                onConfirmation = { onAction.invoke(ClientIdentitiesListAction.CloseDialog) },
+                onDismissRequest = { onAction.invoke(ClientIdentifiersListAction.CloseDialog) },
+                onConfirmation = { onAction.invoke(ClientIdentifiersListAction.CloseDialog) },
             )
         }
 
-        ClientIdentitiesListState.DialogState.Loading -> MifosLoadingDialog(LoadingDialogState.Shown)
+        ClientIdentifiersListState.DialogState.Loading -> {
+            if (state.isOverlayLoading) {
+                MifosProgressIndicatorOverlay()
+            } else {
+                MifosProgressIndicator()
+            }
+        }
 
-        is ClientIdentitiesListState.DialogState.DeletedSuccessfully -> {
+        is ClientIdentifiersListState.DialogState.DeletedSuccessfully -> {
             MifosAlertDialog(
                 dialogTitle = stringResource(Res.string.client_identifiers_identities_success_text),
                 dialogText = stringResource(Res.string.client_identifiers_identities_client_identifier_deletion_success) +
                     " " + state.dialogState.id,
-                onDismissRequest = { onAction.invoke(ClientIdentitiesListAction.CloseDialog) },
-                onConfirmation = { onAction.invoke(ClientIdentitiesListAction.CloseDialog) },
+                onDismissRequest = { onAction.invoke(ClientIdentifiersListAction.CloseDialog) },
+                onConfirmation = { onAction.invoke(ClientIdentifiersListAction.CloseDialog) },
             )
         }
 
         null -> {}
 
-        ClientIdentitiesListState.DialogState.NoInternet -> {
+        ClientIdentifiersListState.DialogState.NoInternet -> {
             MifosAlertDialog(
                 dialogTitle = stringResource(Res.string.client_identifiers_error_text),
                 dialogText = stringResource(Res.string.feature_client_error_not_connected_internet),
-                onDismissRequest = { onAction.invoke(ClientIdentitiesListAction.CloseDialog) },
-                onConfirmation = { onAction.invoke(ClientIdentitiesListAction.Refresh) },
+                onDismissRequest = { onAction.invoke(ClientIdentifiersListAction.CloseDialog) },
+                onConfirmation = { onAction.invoke(ClientIdentifiersListAction.Refresh) },
                 confirmationText = stringResource(Res.string.client_identifiers_retry),
             )
         }

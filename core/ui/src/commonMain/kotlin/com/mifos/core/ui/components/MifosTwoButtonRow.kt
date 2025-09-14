@@ -33,6 +33,7 @@ fun MifosTwoButtonRow(
     secondBtnText: String,
     onFirstBtnClick: () -> Unit,
     onSecondBtnClick: () -> Unit,
+    isButtonIconVisible: Boolean = true,
     isFirstButtonEnabled: Boolean = true,
     isSecondButtonEnabled: Boolean = true,
     modifier: Modifier = Modifier,
@@ -43,12 +44,14 @@ fun MifosTwoButtonRow(
                 onFirstBtnClick()
             },
             leadingIcon = {
-                Icon(
-                    imageVector = MifosIcons.ChevronLeft,
-                    contentDescription = null,
-                    modifier = Modifier.size(DesignToken.sizes.iconAverage),
-                    tint = MaterialTheme.colorScheme.primary,
-                )
+                if (isButtonIconVisible) {
+                    Icon(
+                        imageVector = MifosIcons.ChevronLeft,
+                        contentDescription = null,
+                        modifier = Modifier.size(DesignToken.sizes.iconAverage),
+                        tint = MaterialTheme.colorScheme.primary,
+                    )
+                }
             },
             text = {
                 Text(
@@ -66,11 +69,13 @@ fun MifosTwoButtonRow(
                 onSecondBtnClick()
             },
             leadingIcon = {
-                Icon(
-                    imageVector = MifosIcons.Check,
-                    contentDescription = null,
-                    modifier = Modifier.size(DesignToken.sizes.iconAverage),
-                )
+                if (isButtonIconVisible) {
+                    Icon(
+                        imageVector = MifosIcons.Check,
+                        contentDescription = null,
+                        modifier = Modifier.size(DesignToken.sizes.iconAverage),
+                    )
+                }
             },
             text = {
                 Text(

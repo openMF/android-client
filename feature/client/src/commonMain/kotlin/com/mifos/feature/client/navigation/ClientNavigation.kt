@@ -45,9 +45,11 @@ import com.mifos.feature.client.clientEditProfile.clientEditProfileDestination
 import com.mifos.feature.client.clientEditProfile.navigateToClientProfileEditProfileRoute
 import com.mifos.feature.client.clientGeneral.clientProfileGeneralDestination
 import com.mifos.feature.client.clientGeneral.navigateToClientProfileGeneralRoute
-import com.mifos.feature.client.clientIdentifiers.ClientIdentifiersScreen
-import com.mifos.feature.client.clientIdentitiesList.clientIdentitiesListDestination
-import com.mifos.feature.client.clientIdentitiesList.navigateToClientIdentifiersScreen
+import com.mifos.feature.client.clientIdentifiersAddUpdate.clientIdentifiersAddUpdateDestination
+import com.mifos.feature.client.clientIdentifiersAddUpdate.onNavigateToClientIdentifiersAddUpdateScreen
+import com.mifos.feature.client.clientIdentifiersList.clientIdentifiersListDestination
+import com.mifos.feature.client.clientIdentifiersList.navigateBackToUpdateClientIdentifiersListScreen
+import com.mifos.feature.client.clientIdentifiersList.navigateToClientIdentifiersListScreen
 import com.mifos.feature.client.clientLoanAccounts.clientLoanAccountsDestination
 import com.mifos.feature.client.clientLoanAccounts.navigateToClientLoanAccountsRoute
 import com.mifos.feature.client.clientPinpoint.PinpointClientScreen
@@ -115,7 +117,7 @@ fun NavGraphBuilder.clientNavGraph(
             addSavingsAccount = addSavingsAccount,
             charges = navController::navigateClientChargesScreen,
             documents = documents,
-            identifiers = navController::navigateClientIdentifierScreen,
+            identifiers = navController::navigateToClientIdentifiersListScreen,
             moreClientInfo = moreClientInfo,
             notes = notes,
             pinpointLocation = navController::navigateClientPinPointScreen,
@@ -128,9 +130,10 @@ fun NavGraphBuilder.clientNavGraph(
         clientChargesRoute(
             onBackPressed = navController::popBackStack,
         )
-        clientIdentifierRoute(
-            onDocumentClicked = onDocumentClicked,
+        clientIdentifiersAddUpdateDestination(
             onBackPressed = navController::popBackStack,
+            onUpdatedListBack = navController::navigateBackToUpdateClientIdentifiersListScreen,
+            navController = navController,
         )
         clientPinPointRoute(
             onBackPressed = navController::popBackStack,
@@ -156,7 +159,7 @@ fun NavGraphBuilder.clientNavGraph(
             onNavigateBack = navController::popBackStack,
             notes = notes,
             documents = navController::navigateToClientDocumentsRoute,
-            identifiers = navController::navigateToClientIdentifiersScreen,
+            identifiers = navController::navigateToClientIdentifiersListScreen,
             navigateToClientDetailsScreen = navController::navigateToClientDetailsProfileRoute,
             viewAddress = navController::navigateToClientAddressRoute,
             viewAssociatedAccounts = navController::navigateToClientProfileGeneralRoute,
@@ -280,8 +283,9 @@ fun NavGraphBuilder.clientNavGraph(
             navigateToViewAccount = {},
             navigateToMakeRepayment = {},
         )
-        clientIdentitiesListDestination(
-            addNewClientIdentity = {},
+        clientIdentifiersListDestination(
+            addNewClientIdentity = navController::onNavigateToClientIdentifiersAddUpdateScreen,
+            onBackPress = navController::popBackStack,
             navController = navController,
         )
         clientApplyNewApplicationRoute(
@@ -352,21 +356,6 @@ fun NavGraphBuilder.clientDetailRoute(
             loanAccountSelected = loanAccountSelected,
             savingsAccountSelected = savingsAccountSelected,
             activateClient = activateClient,
-        )
-    }
-}
-
-fun NavGraphBuilder.clientIdentifierRoute(
-    onDocumentClicked: (Int, String) -> Unit,
-    onBackPressed: () -> Unit,
-) {
-    composable(
-        route = ClientScreens.ClientIdentifierScreen.route,
-        arguments = listOf(navArgument(Constants.CLIENT_ID, builder = { type = NavType.IntType })),
-    ) {
-        ClientIdentifiersScreen(
-            onBackPressed = onBackPressed,
-            onDocumentClicked = { onDocumentClicked(it, Constants.ENTITY_TYPE_CLIENTS) },
         )
     }
 }
@@ -442,10 +431,6 @@ fun NavGraphBuilder.createClientRoute(
 
 fun NavController.navigateClientDetailsScreen(clientId: Int) {
     navigate(ClientScreens.ClientDetailScreen.argument(clientId))
-}
-
-fun NavController.navigateClientIdentifierScreen(clientId: Int) {
-    navigate(ClientScreens.ClientIdentifierScreen.argument(clientId))
 }
 
 fun NavController.navigateClientChargesScreen(clientId: Int) {

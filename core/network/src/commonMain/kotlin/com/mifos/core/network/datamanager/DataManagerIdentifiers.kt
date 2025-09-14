@@ -7,23 +7,22 @@
  *
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
-package com.mifos.core.network.apis
+package com.mifos.core.network.datamanager
 
 import com.mifos.core.model.objects.noncoreobjects.Identifier
 import com.mifos.core.model.objects.noncoreobjects.IdentifierPayload
 import com.mifos.core.model.objects.noncoreobjects.IdentifierTemplate
+import com.mifos.core.network.BaseApiManager
 import com.mifos.core.network.GenericResponse
-import com.mifos.room.basemodel.APIEndPoint
-import de.jensklingenberg.ktorfit.http.Body
-import de.jensklingenberg.ktorfit.http.DELETE
-import de.jensklingenberg.ktorfit.http.GET
-import de.jensklingenberg.ktorfit.http.POST
-import de.jensklingenberg.ktorfit.http.PUT
-import de.jensklingenberg.ktorfit.http.Path
 import io.ktor.client.statement.HttpResponse
 import kotlinx.coroutines.flow.Flow
 
-interface ClientIdentifierApi {
+/**
+ * Created by Arin Yadav on 12/09/25.
+ */
+class DataManagerIdentifiers(
+    val mBaseApiManager: BaseApiManager,
+) {
 
     /**
      * Fetches the list of identifiers for a given client.
@@ -34,8 +33,9 @@ interface ClientIdentifierApi {
      * @param clientId The unique ID of the client.
      * @return [Flow] emitting a list of [Identifier]s for the specified client.
      */
-    @GET(APIEndPoint.CLIENTS + "/{clientId}/" + APIEndPoint.IDENTIFIERS)
-    fun getClientListIdentifiers(@Path("clientId") clientId: Long): Flow<List<Identifier>>
+    fun getClientListIdentifiers(clientId: Long): Flow<List<Identifier>> {
+        return mBaseApiManager.clientIdentifiersApi.getClientListIdentifiers(clientId)
+    }
 
     /**
      * Retrieves a specific client identifier.
@@ -47,11 +47,9 @@ interface ClientIdentifierApi {
      * @param identifierId The unique ID of the identifier.
      * @return [Flow] emitting the [Identifier] object.
      */
-    @GET(APIEndPoint.CLIENTS + "/{clientId}/" + APIEndPoint.IDENTIFIERS + "/{identifierId}")
-    fun getClientIdentifiers(
-        @Path("clientId") clientId: Long,
-        @Path("identifierId") identifierId: Long,
-    ): Flow<Identifier>
+    fun getClientIdentifiers(clientId: Long, identifierId: Long): Flow<Identifier> {
+        return mBaseApiManager.clientIdentifiersApi.getClientIdentifiers(clientId, identifierId)
+    }
 
     /**
      * Fetches the client identifier template for a given client.
@@ -62,8 +60,9 @@ interface ClientIdentifierApi {
      * @param clientId The unique ID of the client.
      * @return [Flow] emitting the [IdentifierTemplate] for the specified client.
      */
-    @GET(APIEndPoint.CLIENTS + "/{clientId}/identifiers/template")
-    fun getClientIdentifierTemplate(@Path("clientId") clientId: Long): Flow<IdentifierTemplate>
+    fun getClientIdentifierTemplate(clientId: Long): Flow<IdentifierTemplate> {
+        return mBaseApiManager.clientIdentifiersApi.getClientIdentifierTemplate(clientId)
+    }
 
     /**
      * Deletes a client identifier for a given client.
@@ -75,11 +74,9 @@ interface ClientIdentifierApi {
      * @param identifierId The unique ID of the identifier to be deleted.
      * @return [GenericResponse] indicating the result of the delete operation.
      */
-    @DELETE(APIEndPoint.CLIENTS + "/{clientId}/" + APIEndPoint.IDENTIFIERS + "/{identifierId}")
-    suspend fun deleteClientIdentifier(
-        @Path("clientId") clientId: Long,
-        @Path("identifierId") identifierId: Long,
-    ): GenericResponse
+    suspend fun deleteClientIdentifier(clientId: Long, identifierId: Long): GenericResponse {
+        return mBaseApiManager.clientIdentifiersApi.deleteClientIdentifier(clientId, identifierId)
+    }
 
     /**
      * Creates a new identifier for a given client.
@@ -91,11 +88,12 @@ interface ClientIdentifierApi {
      * @param identifierPayload The payload containing identifier details.
      * @return [GenericResponse] indicating the result of the create operation.
      */
-    @POST(APIEndPoint.CLIENTS + "/{clientId}/" + APIEndPoint.IDENTIFIERS)
     suspend fun createClientIdentifier(
-        @Path("clientId") clientId: Long,
-        @Body identifierPayload: IdentifierPayload,
-    ): HttpResponse
+        clientId: Long,
+        identifierPayload: IdentifierPayload,
+    ): HttpResponse {
+        return mBaseApiManager.clientIdentifiersApi.createClientIdentifier(clientId, identifierPayload)
+    }
 
     /**
      * Updates an existing client identifier for a given client.
@@ -108,10 +106,11 @@ interface ClientIdentifierApi {
      * @param identifierPayload The updated payload for the identifier.
      * @return [GenericResponse] indicating the result of the update operation.
      */
-    @PUT(APIEndPoint.CLIENTS + "/{clientId}/" + APIEndPoint.IDENTIFIERS + "/{identifierId}")
     suspend fun updateClientIdentifier(
-        @Path("clientId") clientId: Long,
-        @Path("identifierId") identifierId: Long,
-        @Body identifierPayload: IdentifierPayload,
-    ): GenericResponse
+        clientId: Long,
+        identifierId: Long,
+        identifierPayload: IdentifierPayload,
+    ): GenericResponse {
+        return mBaseApiManager.clientIdentifiersApi.updateClientIdentifier(clientId, identifierId, identifierPayload)
+    }
 }

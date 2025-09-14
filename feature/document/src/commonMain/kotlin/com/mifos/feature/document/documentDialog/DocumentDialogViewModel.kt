@@ -12,7 +12,7 @@ package com.mifos.feature.document.documentDialog
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mifos.core.common.utils.DataState
-import com.mifos.core.data.repository.DocumentDialogRepository
+import com.mifos.core.data.repository.DocumentCreateUpdateRepository
 import com.mifos.core.ui.util.multipartRequestBody
 import io.github.vinceglb.filekit.FileKit
 import io.github.vinceglb.filekit.PlatformFile
@@ -24,7 +24,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 class DocumentDialogViewModel(
-    private val repository: DocumentDialogRepository,
+    private val repository: DocumentCreateUpdateRepository,
 ) : ViewModel() {
 
     private val _documentDialogUiState =

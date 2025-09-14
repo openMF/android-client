@@ -43,7 +43,6 @@ import com.mifos.core.domain.useCases.GetCentersInOfficeUseCase
 import com.mifos.core.domain.useCases.GetCheckerInboxBadgesUseCase
 import com.mifos.core.domain.useCases.GetCheckerTasksUseCase
 import com.mifos.core.domain.useCases.GetClientDetailsUseCase
-import com.mifos.core.domain.useCases.GetClientIdentifierTemplateUseCase
 import com.mifos.core.domain.useCases.GetClientPinpointLocationsUseCase
 import com.mifos.core.domain.useCases.GetClientSavingsAccountTemplateByProductUseCase
 import com.mifos.core.domain.useCases.GetClientTemplateUseCase
@@ -78,6 +77,7 @@ import com.mifos.core.domain.useCases.SaveIndividualCollectionSheetUseCase
 import com.mifos.core.domain.useCases.ServerConfigValidatorUseCase
 import com.mifos.core.domain.useCases.SubmitCollectionSheetUseCase
 import com.mifos.core.domain.useCases.SubmitProductiveSheetUseCase
+import com.mifos.core.domain.useCases.UpdateClientIdentifierUseCase
 import com.mifos.core.domain.useCases.UpdateClientPinpointUseCase
 import com.mifos.core.domain.useCases.UpdateNoteUseCase
 import com.mifos.core.domain.useCases.UpdateSignatureUseCase
@@ -125,7 +125,7 @@ val UseCaseModule = module {
     factoryOf(::GetCheckerInboxBadgesUseCase)
     factoryOf(::GetCheckerTasksUseCase)
     factoryOf(::GetClientDetailsUseCase)
-    factoryOf(::GetClientIdentifierTemplateUseCase)
+    factoryOf(::UpdateClientIdentifierUseCase)
     factoryOf(::GetClientPinpointLocationsUseCase)
     factoryOf(::GetClientSavingsAccountTemplateByProductUseCase)
     factoryOf(::GetDataTableInfoUseCase)

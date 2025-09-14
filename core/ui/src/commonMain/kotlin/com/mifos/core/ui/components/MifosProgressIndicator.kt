@@ -52,7 +52,8 @@ fun MifosProgressIndicator(
     )
 
     Box(
-        modifier = modifier,
+        modifier = modifier
+            .background(MaterialTheme.colorScheme.background),
         contentAlignment = Alignment.Center,
     ) {
         Image(

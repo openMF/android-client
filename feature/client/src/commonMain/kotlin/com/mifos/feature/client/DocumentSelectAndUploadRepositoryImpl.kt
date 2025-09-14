@@ -15,7 +15,7 @@ import androidclient.feature.client.generated.resources.error_document_not_found
 import androidclient.feature.client.generated.resources.error_failed_to_get_document_type
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.common.utils.FileKitUtil
-import com.mifos.core.data.repository.DocumentDialogRepository
+import com.mifos.core.data.repository.DocumentCreateUpdateRepository
 import com.mifos.core.data.repository.DocumentListRepository
 import com.mifos.feature.client.utils.createDocumentRequestBody
 import io.github.vinceglb.filekit.PlatformFile
@@ -29,7 +29,7 @@ import org.jetbrains.compose.resources.getString
 
 class DocumentSelectAndUploadRepositoryImpl(
     private val documentsRepository: DocumentListRepository,
-    private val documentDialogRepository: DocumentDialogRepository,
+    private val documentDialogRepository: DocumentCreateUpdateRepository,
 ) : DocumentSelectAndUploadRepository {
     override val entityDocumentStateMutableStateFlow = MutableStateFlow(EntityDocumentState())
 

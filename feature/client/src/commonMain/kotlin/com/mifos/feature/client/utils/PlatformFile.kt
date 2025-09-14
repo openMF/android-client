@@ -24,3 +24,9 @@ suspend fun ImageBitmap.toPlatformFile(fileName: String): PlatformFile {
     outFile.write(bytearray)
     return compressImage(outFile, fileName)
 }
+
+suspend fun ByteArray.toPlatformFile(fileName: String): PlatformFile {
+    val outFile = FileKit.filesDir / fileName
+    outFile.write(this)
+    return outFile
+}

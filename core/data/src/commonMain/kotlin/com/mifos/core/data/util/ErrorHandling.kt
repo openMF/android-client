@@ -24,8 +24,13 @@ suspend fun extractErrorMessage(response: HttpResponse): String {
         val errorResponse = json.decodeFromString<MifosError>(responseText)
         errorResponse.errors.firstOrNull()?.defaultUserMessage
             ?: errorResponse.defaultUserMessage
-            ?: "Unknown error"
+            ?: Error.MSG_NOT_FOUND
     } catch (e: Exception) {
-        "Failed to parse error response"
+        Error.FAILED_TO_PARSE_ERROR_RESPONSE
     }
+}
+
+data object Error {
+    const val MSG_NOT_FOUND = "Message Not Found"
+    const val FAILED_TO_PARSE_ERROR_RESPONSE = "Failed to parse error response"
 }

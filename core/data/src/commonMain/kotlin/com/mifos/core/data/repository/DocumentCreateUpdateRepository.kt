@@ -17,7 +17,7 @@ import kotlinx.coroutines.flow.Flow
 /**
  * Created by Aditya Gupta on 16/08/23.
  */
-interface DocumentDialogRepository {
+interface DocumentCreateUpdateRepository {
 
     suspend fun createDocument(
         entityType: String,

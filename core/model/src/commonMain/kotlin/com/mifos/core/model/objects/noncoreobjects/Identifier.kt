@@ -11,11 +11,13 @@ package com.mifos.core.model.objects.noncoreobjects
 
 import com.mifos.core.model.utils.Parcelable
 import com.mifos.core.model.utils.Parcelize
+import kotlinx.serialization.Serializable
 
 /**
  * Created by ishankhanna on 03/07/14.
  */
 @Parcelize
+@Serializable
 data class Identifier(
     var id: Int? = null,
 
