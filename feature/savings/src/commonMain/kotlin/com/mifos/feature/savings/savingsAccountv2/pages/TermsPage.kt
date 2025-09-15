@@ -49,13 +49,17 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
 import com.mifos.core.designsystem.component.MifosOutlinedTextField
 import com.mifos.core.designsystem.component.MifosTextFieldConfig
 import com.mifos.core.designsystem.component.MifosTextFieldDropdown
@@ -76,6 +80,23 @@ fun TermsPage(
     modifier: Modifier = Modifier,
 ) {
     val scope = rememberCoroutineScope()
+
+    LaunchedEffect(
+        state.currencyIndex,
+        state.frequency,
+        state.monthlyMinimumBalance,
+        state.minimumOpeningBalance,
+        state.decimalPlaces,
+        state.interestCalcIndex,
+        state.interestCompPeriodIndex,
+        state.interestPostingPeriodIndex,
+        state.daysInYearIndex,
+        state.freqTypeIndex,
+        state.isCheckedMinimumBalance,
+    ) {
+        validateAllFields(state, onAction)
+    }
+
     Column(modifier = Modifier.fillMaxSize()) {
         Column(
             modifier = modifier.weight(1f).verticalScroll(rememberScrollState()),
@@ -110,6 +131,10 @@ fun TermsPage(
                 config = MifosTextFieldConfig(
                     isError = state.decimalPlacesError != null,
                     errorText = state.decimalPlacesError,
+                    keyboardOptions = KeyboardOptions(
+                        keyboardType = KeyboardType.Number,
+                        imeAction = ImeAction.Next,
+                    ),
                 ),
             )
             Spacer(Modifier.height(DesignToken.padding.large))
@@ -188,6 +213,10 @@ fun TermsPage(
                 config = MifosTextFieldConfig(
                     isError = state.minimumOpeningBalanceError != null,
                     errorText = state.minimumOpeningBalanceError,
+                    keyboardOptions = KeyboardOptions(
+                        keyboardType = KeyboardType.Number,
+                        imeAction = ImeAction.Next,
+                    ),
                 ),
             )
             Spacer(Modifier.height(DesignToken.padding.large))
@@ -222,6 +251,10 @@ fun TermsPage(
                 config = MifosTextFieldConfig(
                     isError = state.frequencyError != null,
                     errorText = state.frequencyError,
+                    keyboardOptions = KeyboardOptions(
+                        keyboardType = KeyboardType.Number,
+                        imeAction = ImeAction.Next,
+                    ),
                 ),
             )
             Spacer(Modifier.height(DesignToken.padding.large))
@@ -299,6 +332,10 @@ fun TermsPage(
                     enabled = state.isCheckedMinimumBalance,
                     isError = state.monthlyMinimumBalanceError != null,
                     errorText = state.monthlyMinimumBalanceError,
+                    keyboardOptions = KeyboardOptions(
+                        keyboardType = KeyboardType.Number,
+                        imeAction = ImeAction.Done,
+                    ),
                 ),
             )
             Spacer(Modifier.height(DesignToken.padding.large))
@@ -328,100 +365,108 @@ private fun handleNext(
     scope: CoroutineScope,
 ) {
     scope.launch {
-        var isValid = true
-        if (state.currencyIndex == -1) {
-            onAction(SavingsAccountAction.SetCurrencyError(getString(Res.string.step_terms_currency_required)))
-            isValid = false
-        } else {
-            onAction(SavingsAccountAction.SetCurrencyError(null))
-        }
-
-        val decimalPlaces = state.decimalPlaces.toIntOrNull()
-        if (decimalPlaces == null || decimalPlaces < 0 || decimalPlaces > 6) {
-            onAction(SavingsAccountAction.SetDecimalPlacesError(getString(Res.string.step_terms_decimal_places_error)))
-            isValid = false
-        } else {
-            onAction(SavingsAccountAction.SetDecimalPlacesError(null))
-        }
-
-        if (state.interestCompPeriodIndex == -1) {
-            onAction(SavingsAccountAction.SetInterestCompPeriodError(getString(Res.string.step_terms_interest_comp_period_required)))
-            isValid = false
-        } else {
-            onAction(SavingsAccountAction.SetInterestCompPeriodError(null))
-        }
-
-        if (state.interestPostingPeriodIndex == -1) {
-            onAction(SavingsAccountAction.SetInterestPostingPeriodError(getString(Res.string.step_terms_interest_posting_period_required)))
-            isValid = false
-        } else {
-            onAction(SavingsAccountAction.SetInterestPostingPeriodError(null))
-        }
-
-        if (state.interestCalcIndex == -1) {
-            onAction(SavingsAccountAction.SetInterestCalcError(getString(Res.string.step_terms_interest_calc_required)))
-            isValid = false
-        } else {
-            onAction(SavingsAccountAction.SetInterestCalcError(null))
-        }
-
-        if (state.daysInYearIndex == -1) {
-            onAction(SavingsAccountAction.SetDaysInYearError(getString(Res.string.step_terms_days_in_year_required)))
-            isValid = false
-        } else {
-            onAction(SavingsAccountAction.SetDaysInYearError(null))
-        }
-
-        if (state.minimumOpeningBalance.isNotEmpty()) {
-            val minimumOpeningBalance = state.minimumOpeningBalance.toDoubleOrNull()
-            if (minimumOpeningBalance == null || minimumOpeningBalance < 0) {
-                onAction(SavingsAccountAction.OnMinimumOpeningBalanceError(getString(Res.string.step_terms_min_opening_balance_error)))
-                isValid = false
-            } else {
-                onAction(SavingsAccountAction.OnMinimumOpeningBalanceError(null))
-            }
-        } else {
-            onAction(SavingsAccountAction.OnMinimumOpeningBalanceError(null))
-        }
-
-        if (state.frequency.isNotEmpty()) {
-            val frequency = state.frequency.toIntOrNull()
-            if (frequency == null || frequency < 0) {
-                onAction(SavingsAccountAction.SetFrequencyError(getString(Res.string.step_terms_lock_in_period_freq_error)))
-                isValid = false
-            } else {
-                onAction(SavingsAccountAction.SetFrequencyError(null))
-            }
-
-            if (state.freqTypeIndex == -1) {
-                onAction(SavingsAccountAction.SetFreqTypeError(getString(Res.string.step_terms_lock_in_type_required)))
-                isValid = false
-            } else {
-                onAction(SavingsAccountAction.SetFreqTypeError(null))
-            }
-        } else {
-            onAction(SavingsAccountAction.SetFrequencyError(null))
-            onAction(SavingsAccountAction.SetFreqTypeError(null))
-        }
-
-        if (state.isCheckedMinimumBalance) {
-            if (state.monthlyMinimumBalance.isEmpty()) {
-                onAction(SavingsAccountAction.OnMonthlyMinimumBalanceError(getString(Res.string.step_terms_min_balance_required)))
-                isValid = false
-            } else {
-                val minimumBalance = state.monthlyMinimumBalance.toDoubleOrNull()
-                if (minimumBalance == null || minimumBalance < 0) {
-                    onAction(SavingsAccountAction.OnMonthlyMinimumBalanceError(getString(Res.string.step_terms_min_monthly_balance_error)))
-                    isValid = false
-                } else {
-                    onAction(SavingsAccountAction.OnMonthlyMinimumBalanceError(null))
-                }
-            }
-        } else {
-            onAction(SavingsAccountAction.OnMonthlyMinimumBalanceError(null))
-        }
+        val isValid = validateAllFields(state, onAction)
         if (isValid) {
             onAction(SavingsAccountAction.NextStep)
         }
     }
+}
+
+private suspend fun validateAllFields(
+    state: SavingsAccountState,
+    onAction: (SavingsAccountAction) -> Unit,
+): Boolean {
+    var isValid = true
+    if (state.currencyIndex == -1) {
+        onAction(SavingsAccountAction.SetCurrencyError(getString(Res.string.step_terms_currency_required)))
+        isValid = false
+    } else {
+        onAction(SavingsAccountAction.SetCurrencyError(null))
+    }
+
+    val decimalPlaces = state.decimalPlaces.toIntOrNull()
+    if (decimalPlaces == null || decimalPlaces < 0 || decimalPlaces > 6 || state.decimalPlaces.length != 1) {
+        onAction(SavingsAccountAction.SetDecimalPlacesError(getString(Res.string.step_terms_decimal_places_error)))
+        isValid = false
+    } else {
+        onAction(SavingsAccountAction.SetDecimalPlacesError(null))
+    }
+
+    if (state.interestCompPeriodIndex == -1) {
+        onAction(SavingsAccountAction.SetInterestCompPeriodError(getString(Res.string.step_terms_interest_comp_period_required)))
+        isValid = false
+    } else {
+        onAction(SavingsAccountAction.SetInterestCompPeriodError(null))
+    }
+
+    if (state.interestPostingPeriodIndex == -1) {
+        onAction(SavingsAccountAction.SetInterestPostingPeriodError(getString(Res.string.step_terms_interest_posting_period_required)))
+        isValid = false
+    } else {
+        onAction(SavingsAccountAction.SetInterestPostingPeriodError(null))
+    }
+
+    if (state.interestCalcIndex == -1) {
+        onAction(SavingsAccountAction.SetInterestCalcError(getString(Res.string.step_terms_interest_calc_required)))
+        isValid = false
+    } else {
+        onAction(SavingsAccountAction.SetInterestCalcError(null))
+    }
+
+    if (state.daysInYearIndex == -1) {
+        onAction(SavingsAccountAction.SetDaysInYearError(getString(Res.string.step_terms_days_in_year_required)))
+        isValid = false
+    } else {
+        onAction(SavingsAccountAction.SetDaysInYearError(null))
+    }
+
+    if (state.minimumOpeningBalance.isNotEmpty()) {
+        val minimumOpeningBalance = state.minimumOpeningBalance.toDoubleOrNull()
+        if (minimumOpeningBalance == null || minimumOpeningBalance < 0) {
+            onAction(SavingsAccountAction.OnMinimumOpeningBalanceError(getString(Res.string.step_terms_min_opening_balance_error)))
+            isValid = false
+        } else {
+            onAction(SavingsAccountAction.OnMinimumOpeningBalanceError(null))
+        }
+    } else {
+        onAction(SavingsAccountAction.OnMinimumOpeningBalanceError(null))
+    }
+
+    if (state.frequency.isNotEmpty()) {
+        val frequency = state.frequency.toIntOrNull()
+        if (frequency == null || frequency < 0) {
+            onAction(SavingsAccountAction.SetFrequencyError(getString(Res.string.step_terms_lock_in_period_freq_error)))
+            isValid = false
+        } else {
+            onAction(SavingsAccountAction.SetFrequencyError(null))
+        }
+
+        if (state.freqTypeIndex == -1) {
+            onAction(SavingsAccountAction.SetFreqTypeError(getString(Res.string.step_terms_lock_in_type_required)))
+            isValid = false
+        } else {
+            onAction(SavingsAccountAction.SetFreqTypeError(null))
+        }
+    } else {
+        onAction(SavingsAccountAction.SetFrequencyError(null))
+        onAction(SavingsAccountAction.SetFreqTypeError(null))
+    }
+
+    if (state.isCheckedMinimumBalance) {
+        if (state.monthlyMinimumBalance.isEmpty()) {
+            onAction(SavingsAccountAction.OnMonthlyMinimumBalanceError(getString(Res.string.step_terms_min_balance_required)))
+            isValid = false
+        } else {
+            val minimumBalance = state.monthlyMinimumBalance.toDoubleOrNull()
+            if (minimumBalance == null || minimumBalance < 0) {
+                onAction(SavingsAccountAction.OnMonthlyMinimumBalanceError(getString(Res.string.step_terms_min_monthly_balance_error)))
+                isValid = false
+            } else {
+                onAction(SavingsAccountAction.OnMonthlyMinimumBalanceError(null))
+            }
+        }
+    } else {
+        onAction(SavingsAccountAction.OnMonthlyMinimumBalanceError(null))
+    }
+    return isValid
 }
