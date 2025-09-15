@@ -33,6 +33,19 @@ class ClientIdentitiesListViewModel(
 ) {
     private val route = savedStateHandle.toRoute<ClientIdentitiesListRoute>()
 
+    private fun <T> sortByActiveThenAscending(
+        list: List<T>,
+        isActive: (T) -> Boolean,
+        label: (T) -> String,
+    ): List<T> {
+        return list.sortedWith(
+            compareBy<T>(
+                { if (isActive(it)) 0 else 1 },
+                { label(it).lowercase() },
+            ),
+        )
+    }
+
     override fun handleAction(action: ClientIdentitiesListAction) {
         when (action) {
             ClientIdentitiesListAction.AddNewClientIdentity -> sendEvent(
@@ -117,10 +130,21 @@ class ClientIdentitiesListViewModel(
                 }
 
                 is DataState.Success -> {
+                    val sortedList = sortByActiveThenAscending(
+                        dataState.data,
+                        isActive = { identifier ->
+                            val s = identifier.status?.lowercase() ?: ""
+                            s.contains("active") && !s.contains("inactive")
+                        },
+                        label = { identifier ->
+                            identifier.description ?: ""
+                        },
+                    )
+
                     mutableStateFlow.update {
                         it.copy(
                             dialogState = null,
-                            clientIdentitiesList = dataState.data,
+                            clientIdentitiesList = sortedList,
                         )
                     }
                 }
