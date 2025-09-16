@@ -220,4 +220,45 @@
     <string name="amount">Amount</string>
     <string name="type">Type</string>
     <string name="collected_on">Collected On</string>
+
+<!--    Apply new loan Preview screen-->
+    <string name="loan_new_loan_on_principal_payment">On principal payment</string>
+    <string name="loan_new_loan_on_interest_payment">On interest payment</string>
+    <string name="loan_new_loan_on_arrears_aging">On Arrears Aging</string>
+    <string name="loan_new_loan_enable_installment_level">Enable installment level Delinquency</string>
+    <string name="loan_new_loan_recalculate_interest">Recalculate Interest</string>
+    <string name="loan_new_loan_days_in_month">Days in month</string>
+    <string name="loan_new_loan_principal">Principal</string>
+    <string name="loan_new_loan_loan_term">Loan Term</string>
+    <string name="loan_new_loan_number_of_repayments">Number of Repayments</string>
+    <string name="loan_new_loan_first_repayment_date">First Repayment Date</string>
+    <string name="loan_new_loan_interest_charges_from">Interest Charged From</string>
+    <string name="loan_new_loan_repaid_every">Repaid Every</string>
+    <string name="loan_new_loan_nominal_interest_rate">Nominal Interest Rate</string>
+    <string name="loan_new_loan_is_equal_amortization">Is Equal Amortization</string>
+    <string name="loan_new_loan_amortization">Amortization</string>
+    <string name="loan_new_loan_interest_calculation_period">Interest Calculation Period</string>
+    <string name="loan_new_loan_calculate_interest_for_exact_days_in_pertial">Calculate interest for exact days in partial</string>
+    <string name="loan_new_loan_arrears_tolerance">Arrears tolerance</string>
+    <string name="loan_new_loan_interest_free_period">Interest free period</string>
+    <string name="loan_new_loan_repayment_strategy">Repayment strategy</string>
+    <string name="loan_new_loan_installment_amount">Installment Amount</string>
+    <string name="loan_new_loan_ballon_repayment_amount">Balloon Repayment Amount</string>
+    <string name="loan_new_loan_product_name">Product Name</string>
+    <string name="loan_new_loan_loan_officer">Loan Officer</string>
+    <string name="loan_new_loan_external_id">External ID</string>
+    <string name="loan_new_loan_submitted_date">Submitted Date</string>
+    <string name="loan_new_loan_expected_disbursement">Expected Disbursement</string>
+    <string name="loan_new_loan_loan_purpose">Loan Purpose</string>
+    <string name="loan_new_loan_is_savings_linked">Is Savings Linked</string>
+    <string name="loan_new_loan_yes">Yes</string>
+    <string name="loan_new_loan_no">No</string>
+    <string name="loan_new_loan_terms">Terms</string>
+    <string name="loan_new_loan_moratorium">Moratorium</string>
+    <string name="loan_new_loan_details_details">Details</string>
+    <string name="loan_new_loan_charges">Charges</string>
+    <string name="loan_new_loan_view">View</string>
+    <string name="loan_new_loan_active_charges">Active Charges</string>
+
+
 </resources>
