@@ -23,6 +23,7 @@ import com.mifos.core.network.model.CollateralItem
 import com.mifos.core.ui.util.BaseViewModel
 import com.mifos.core.ui.util.TextFieldsValidator
 import com.mifos.feature.loan.newLoanAccount.NewLoanAccountState.DialogState
+import com.mifos.room.entities.accounts.loans.LoanAccountEntity
 import com.mifos.room.entities.templates.loans.LoanTemplate
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -172,9 +173,19 @@ internal class NewLoanAccountViewModel(
             is NewLoanAccountAction.EditChargeDialog -> handleEditChargeDialog(action.index)
 
             is NewLoanAccountAction.EditCharge -> handleEditCharge(action.index)
+
+            NewLoanAccountAction.GotoPreviousStep -> {}
+            NewLoanAccountAction.SubmitLoanApplication -> {
+
+            }
         }
     }
 
+    private fun submitLoanApplication() {
+        viewModelScope.launch {
+            LoanAccountEntity
+        }
+    }
     private fun handleChooseChargeIndexChange(action: NewLoanAccountAction.OnChooseChargeIndexChange) {
         mutableStateFlow.update {
             it.copy(chooseChargeIndex = action.index)
@@ -851,6 +862,8 @@ sealed interface NewLoanAccountAction {
     data class DeleteChargeFromSelectedCharges(val index: Int) : NewLoanAccountAction
     data class EditChargeDialog(val index: Int) : NewLoanAccountAction
     data class EditCharge(val index: Int) : NewLoanAccountAction
+    data object SubmitLoanApplication  : NewLoanAccountAction
+    data object GotoPreviousStep : NewLoanAccountAction
 }
 
 data class CreatedCollateral(

@@ -146,6 +146,7 @@ fun PreviewPage(
                 state.loanTemplate?.transactionProcessingStrategyOptions[state.repaymentStrategyIndex]?.name
                     ?: ""
             },
+            //todo
             installmentAmount = "",
             ballonRepayment = state.balloonRepaymentAmount.toString(),
         )
@@ -158,8 +159,14 @@ fun PreviewPage(
             onPrincipalPayment = state.moratoriumGraceOnPrincipalPayment.toString(),
             onInternestPayment = state.moratoriumGraceOnInterestPayment.toString(),
             onAreasAging = state.moratoriumOnArrearsAgeing.toString(),
+            //todo
             enableInstallmentLevelDelinquency = "",
-            recalculateInterest = "",
+            recalculateInterest = if (state.loanTemplate?.isInterestRecalculationEnabled ?: false) {
+                stringResource(Res.string.yes)
+            } else {
+                stringResource(Res.string.no)
+            },
+            //todo
             daysInMonth = "",
         )
 
