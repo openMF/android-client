@@ -117,10 +117,22 @@ class ClientIdentitiesListViewModel(
                 }
 
                 is DataState.Success -> {
+                    val sortedList = dataState.data.sortedWith(
+                        compareBy(
+                            { identifier ->
+                                val s = identifier.status?.lowercase() ?: ""
+                                if (s.contains("active") && !s.contains("inactive")) 0 else 1
+                            },
+                            { identifier ->
+                                identifier.description?.lowercase() ?: ""
+                            },
+                        ),
+                    )
+
                     mutableStateFlow.update {
                         it.copy(
                             dialogState = null,
-                            clientIdentitiesList = dataState.data,
+                            clientIdentitiesList = sortedList,
                         )
                     }
                 }
