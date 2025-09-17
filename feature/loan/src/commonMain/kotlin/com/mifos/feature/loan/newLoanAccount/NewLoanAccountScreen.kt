@@ -137,7 +137,7 @@ private fun NewLoanAccountScaffold(
         },
         Step(stringResource(Res.string.step_preview)) {
             PreviewPage(
-                state = state
+                state = state,
             ) {
                 onAction(NewLoanAccountAction.NextStep)
             }
@@ -485,4 +485,3 @@ private fun ShowChargesDialog(
         },
     )
 }
-

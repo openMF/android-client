@@ -56,19 +56,16 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.CardColors
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.mifos.core.designsystem.theme.MifosTypography
+import com.mifos.core.ui.components.MifosProgressIndicator
 import com.mifos.core.ui.components.MifosRowWithTextAndButton
 import com.mifos.core.ui.components.MifosTwoButtonRow
 import com.mifos.feature.loan.newLoanAccount.NewLoanAccountAction
@@ -77,6 +74,21 @@ import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun PreviewPage(
+    state: NewLoanAccountState,
+    onAction: (NewLoanAccountAction) -> Unit,
+) {
+    if (state.isLoading) {
+        MifosProgressIndicator()
+    } else {
+        PreviewPageContent(
+            state,
+            onAction = onAction,
+        )
+    }
+}
+
+@Composable
+fun PreviewPageContent(
     state: NewLoanAccountState,
     onAction: (NewLoanAccountAction) -> Unit,
 ) {
@@ -101,10 +113,14 @@ fun PreviewPage(
             expectedDisbursement = state.expectedDisbursementDate,
             loadPurpose = if (state.loanPurposeIndex == -1) {
                 ""
-            } else state.loanTemplate?.loanPurposeOptions[state.loanPurposeIndex]?.name.toString(),
+            } else {
+                state.loanTemplate?.loanPurposeOptions[state.loanPurposeIndex]?.name.toString()
+            },
             isSavingsLinked = if (state.linkSavingsIndex == -1) {
                 stringResource(Res.string.no)
-            } else stringResource(Res.string.yes),
+            } else {
+                stringResource(Res.string.yes)
+            },
         )
 
         Text(
@@ -112,7 +128,7 @@ fun PreviewPage(
             style = MifosTypography.labelLarge,
         )
         TermsCard(
-            //todo currency
+            // todo currency
             principal = state.principalAmount.toString(),
             loanTerm = if (state.termFrequencyIndex == -1) {
                 ""
@@ -146,7 +162,7 @@ fun PreviewPage(
                 state.loanTemplate?.transactionProcessingStrategyOptions[state.repaymentStrategyIndex]?.name
                     ?: ""
             },
-            //todo
+            // todo
             installmentAmount = "",
             ballonRepayment = state.balloonRepaymentAmount.toString(),
         )
@@ -159,14 +175,14 @@ fun PreviewPage(
             onPrincipalPayment = state.moratoriumGraceOnPrincipalPayment.toString(),
             onInternestPayment = state.moratoriumGraceOnInterestPayment.toString(),
             onAreasAging = state.moratoriumOnArrearsAgeing.toString(),
-            //todo
+            // todo
             enableInstallmentLevelDelinquency = "",
             recalculateInterest = if (state.loanTemplate?.isInterestRecalculationEnabled ?: false) {
                 stringResource(Res.string.yes)
             } else {
                 stringResource(Res.string.no)
             },
-            //todo
+            // todo
             daysInMonth = "",
         )
 
@@ -176,18 +192,18 @@ fun PreviewPage(
         )
 
         MifosRowWithTextAndButton(
-            onBtnClick = {},
+            onBtnClick = { onAction(NewLoanAccountAction.ShowCharges) },
             text = state.addedCharges.size.toString() + " " + stringResource(Res.string.loan_new_loan_active_charges),
             btnText = stringResource(Res.string.loan_new_loan_view),
             modifier = Modifier.fillMaxWidth(),
         )
 
         MifosTwoButtonRow(
-            modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
+            modifier = Modifier.fillMaxWidth(),
             firstBtnText = stringResource(Res.string.back),
             secondBtnText = stringResource(Res.string.feature_loan_charge_submit),
-            onFirstBtnClick = {},
-            onSecondBtnClick = {},
+            onFirstBtnClick = { onAction(NewLoanAccountAction.GotoPreviousStep) },
+            onSecondBtnClick = { onAction(NewLoanAccountAction.SubmitLoanApplication) },
         )
     }
 }
