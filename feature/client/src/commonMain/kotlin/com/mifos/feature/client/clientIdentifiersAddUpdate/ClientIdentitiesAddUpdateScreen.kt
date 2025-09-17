@@ -344,7 +344,7 @@ private fun ClientIdentifiersAddUpdateDocument(
 
     MifosTwoButtonRow(
         firstBtnText = stringResource(Res.string.client_identifier_btn_back),
-        secondBtnText = when{
+        secondBtnText = when {
             state.documentKey == null -> stringResource(Res.string.client_identifier_btn_update)
             else -> stringResource(Res.string.client_identifier_btn_submit)
         },
