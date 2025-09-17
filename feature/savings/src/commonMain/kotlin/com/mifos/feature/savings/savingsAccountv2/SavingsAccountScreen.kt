@@ -85,9 +85,10 @@ private fun SavingsAccountScaffold(
             )
         },
         Step(stringResource(Res.string.step_terms)) {
-            TermsPage {
-                onAction(SavingsAccountAction.NextStep)
-            }
+            TermsPage(
+                state = state,
+                onAction = onAction,
+            )
         },
         Step(stringResource(Res.string.step_charges)) {
             ChargesPage {
