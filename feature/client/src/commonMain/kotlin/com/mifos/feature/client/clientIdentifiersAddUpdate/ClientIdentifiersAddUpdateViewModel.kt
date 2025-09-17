@@ -572,6 +572,7 @@ class ClientIdentifiersAddUpdateViewModel(
                     it.copy(
                         dialogState = null,
                         feature = Feature.ADD_UPDATE_DOCUMENT,
+                        documentKey = "",
                     )
                 }
             }

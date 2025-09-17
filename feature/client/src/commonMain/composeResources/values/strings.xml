@@ -518,5 +518,7 @@
     <string name="client_identifier_btn_submit">Submit</string>
     <string name="client_identifier_no_file_selected">No File Selected</string>
     <string name="client_identifier_document_not_found">Document not found</string>
+    <string name="client_identifier_btn_update">Update</string>
+    <string name="client_update_document_title">Update Document</string>
 
 </resources>

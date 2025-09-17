@@ -12,11 +12,13 @@
 package com.mifos.feature.client.clientIdentifiersAddUpdate
 
 import androidclient.feature.client.generated.resources.Res
+import androidclient.feature.client.generated.resources.add_document_title
 import androidclient.feature.client.generated.resources.client_identifier_btn_add
 import androidclient.feature.client.generated.resources.client_identifier_btn_back
 import androidclient.feature.client.generated.resources.client_identifier_btn_create_new
 import androidclient.feature.client.generated.resources.client_identifier_btn_next
 import androidclient.feature.client.generated.resources.client_identifier_btn_submit
+import androidclient.feature.client.generated.resources.client_identifier_btn_update
 import androidclient.feature.client.generated.resources.client_identifier_btn_upload_new
 import androidclient.feature.client.generated.resources.client_identifier_btn_view
 import androidclient.feature.client.generated.resources.client_identifier_description
@@ -27,6 +29,7 @@ import androidclient.feature.client.generated.resources.client_identifier_no_fil
 import androidclient.feature.client.generated.resources.client_identifier_status
 import androidclient.feature.client.generated.resources.client_identifier_title
 import androidclient.feature.client.generated.resources.client_identifiers_error_text
+import androidclient.feature.client.generated.resources.client_update_document_title
 import androidclient.feature.client.generated.resources.feature_client_cancel
 import androidclient.feature.client.generated.resources.feature_client_dialog_action_ok
 import androidx.compose.foundation.BorderStroke
@@ -202,7 +205,13 @@ internal fun ClientIdentifiersAddUpdateScaffold(
             ) {
                 if (state.feature != Feature.VIEW_DOCUMENT) {
                     Text(
-                        text = stringResource(Res.string.client_identifier_title),
+                        text = when {
+                            state.feature == Feature.VIEW_DOCUMENT -> stringResource(Res.string.client_identifier_title)
+
+                            state.documentKey == null -> stringResource(Res.string.client_update_document_title)
+
+                            else -> stringResource(Res.string.add_document_title)
+                        },
                         style = MifosTypography.titleMedium,
                     )
                 }
@@ -335,7 +344,10 @@ private fun ClientIdentifiersAddUpdateDocument(
 
     MifosTwoButtonRow(
         firstBtnText = stringResource(Res.string.client_identifier_btn_back),
-        secondBtnText = stringResource(Res.string.client_identifier_btn_submit),
+        secondBtnText = when{
+            state.documentKey == null -> stringResource(Res.string.client_identifier_btn_update)
+            else -> stringResource(Res.string.client_identifier_btn_submit)
+        },
         onFirstBtnClick = {
             onAction(ClientIdentifiersAddUpdateAction.NavigateBack)
         },
