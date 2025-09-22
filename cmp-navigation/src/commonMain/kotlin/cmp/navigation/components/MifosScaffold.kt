@@ -33,6 +33,7 @@ import androidx.compose.material3.FabPosition
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.ScaffoldDefaults
+import androidx.compose.material3.contentColorFor
 import androidx.compose.material3.pulltorefresh.PullToRefreshDefaults
 import androidx.compose.material3.pulltorefresh.pullToRefresh
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
@@ -42,12 +43,14 @@ import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import com.mifos.core.designsystem.component.MifosNavigationRail
 import com.mifos.core.designsystem.component.MifosPullToRefreshState
 import com.mifos.core.designsystem.component.rememberMifosPullToRefreshState
+import com.mifos.core.designsystem.theme.AppColors
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3WindowSizeClassApi::class)
 @Suppress("LongMethod")
@@ -62,6 +65,8 @@ fun MifosScaffold(
     floatingActionButtonPosition: FabPosition = FabPosition.End,
     navigationData: ScaffoldNavigationData? = null,
     pullToRefreshState: MifosPullToRefreshState = rememberMifosPullToRefreshState(),
+    containerColor: Color = AppColors.customWhite,
+    contentColor: Color = contentColorFor(containerColor),
     contentWindowInsets: WindowInsets = ScaffoldDefaults
         .contentWindowInsets
         .only(WindowInsetsSides.Horizontal),
@@ -74,11 +79,13 @@ fun MifosScaffold(
     val isNavigationBarVisible = isCompact && hasNavigationItems
     Scaffold(
         modifier = modifier,
-        topBar = if (isNavigationBarVisible) {
-            topBar
-        } else {
-            {}
+        topBar = {
+            if (isCompact) {
+                topBar()
+            }
         },
+        containerColor = containerColor,
+        contentColor = contentColor,
         bottomBar = {
             AnimatedVisibility(
                 visible = isNavigationBarVisible,

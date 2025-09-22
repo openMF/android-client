@@ -29,6 +29,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.mifos.core.designsystem.theme.AppColors
 import com.mifos.core.designsystem.theme.MifosTheme
 import com.mifos.core.ui.util.LottieConstants
 import io.github.alexzhirkevich.compottie.LottieCompositionSpec
@@ -53,7 +54,7 @@ fun MifosProgressIndicator(
 
     Box(
         modifier = modifier
-            .background(MaterialTheme.colorScheme.background),
+            .background(AppColors.customWhite),
         contentAlignment = Alignment.Center,
     ) {
         Image(
@@ -82,7 +83,7 @@ fun MifosProgressIndicatorOverlay(
 
     Box(
         modifier = modifier
-            .background(MaterialTheme.colorScheme.background.copy(alpha = 0.7f))
+            .background(AppColors.customWhite.copy(alpha = 0.7f))
             .clickable(
                 enabled = false,
                 indication = null,

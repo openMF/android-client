@@ -25,6 +25,10 @@ kotlin {
             implementation(projects.core.designsystem)
             implementation(projects.core.ui)
             implementation(projects.feature.dataTable)
+            implementation(projects.feature.note)
+            implementation(projects.feature.savings)
+            implementation(projects.feature.loan)
+            implementation(projects.feature.document)
 
             implementation(compose.ui)
             implementation(compose.material3)

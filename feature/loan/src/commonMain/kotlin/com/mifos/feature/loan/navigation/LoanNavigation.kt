@@ -16,7 +16,6 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import androidx.navigation.navigation
 import com.mifos.core.common.utils.Constants
-import com.mifos.feature.loan.loanAccountSummary.LoanAccountSummaryScreenRoute
 import com.mifos.feature.loan.loanAccountSummary.loanAccountSummary
 import com.mifos.feature.loan.loanApproval.LoanAccountApprovalScreen
 import com.mifos.feature.loan.loanCharge.loanChargeScreen
@@ -31,55 +30,47 @@ import com.mifos.feature.loan.loanTransaction.loanTransactionScreen
 import com.mifos.feature.loan.loanTransaction.navigateToLoanTransactionScreen
 import com.mifos.feature.loan.newLoanAccount.newLoanAccountDestination
 import com.mifos.room.entities.accounts.loans.LoanWithAssociationsEntity
-import kotlinx.serialization.Serializable
 
-@Serializable
-data object LoanAccountNavGraph
-
-fun NavGraphBuilder.loanNavGraph(
+fun NavGraphBuilder.loanDestination(
     navController: NavController,
     onDocumentsClicked: (Int, String) -> Unit,
     onMoreInfoClicked: (String, Int) -> Unit,
 ) {
-    navigation<LoanAccountNavGraph>(
-        startDestination = LoanAccountSummaryScreenRoute(-1),
-    ) {
-        loanAccountSummary(
-            onBackPressed = navController::popBackStack,
-            onMoreInfoClicked = onMoreInfoClicked,
-            onTransactionsClicked = navController::navigateToLoanTransactionScreen,
-            onRepaymentScheduleClicked = navController::navigateToLoanRepaymentScheduleScreen,
-            onDocumentsClicked = { onDocumentsClicked(it, Constants.ENTITY_TYPE_LOANS) },
-            onChargesClicked = navController::navigateToLoanChargesScreen,
-            approveLoan = navController::navigateToLoanApprovalScreen,
-            disburseLoan = navController::navigateToLoanDisbursementScreen,
-            onRepaymentClick = navController::navigateToLoanRepaymentScreen,
-        )
+    loanAccountSummary(
+        onBackPressed = navController::popBackStack,
+        onMoreInfoClicked = onMoreInfoClicked,
+        onTransactionsClicked = navController::navigateToLoanTransactionScreen,
+        onRepaymentScheduleClicked = navController::navigateToLoanRepaymentScheduleScreen,
+        onDocumentsClicked = { onDocumentsClicked(it, Constants.ENTITY_TYPE_LOANS) },
+        onChargesClicked = navController::navigateToLoanChargesScreen,
+        approveLoan = navController::navigateToLoanApprovalScreen,
+        disburseLoan = navController::navigateToLoanDisbursementScreen,
+        onRepaymentClick = navController::navigateToLoanRepaymentScreen,
+    )
 
-        loanDisbursementScreen {
-            navController.popBackStack()
-        }
-        loanApprovalScreen {
-            navController.popBackStack()
-        }
-        loanRepaymentSchedule {
-            navController.popBackStack()
-        }
-        loanTransactionScreen {
-            navController.popBackStack()
-        }
-        loanChargeScreen {
-            navController.popBackStack()
-        }
-        loanRepaymentScreen {
-            navController.popBackStack()
-        }
-        newLoanAccountDestination(
-            onNavigateBack = navController::popBackStack,
-            onFinish = navController::popBackStack,
-            navController = navController,
-        )
+    loanDisbursementScreen {
+        navController.popBackStack()
     }
+    loanApprovalScreen {
+        navController.popBackStack()
+    }
+    loanRepaymentSchedule {
+        navController.popBackStack()
+    }
+    loanTransactionScreen {
+        navController.popBackStack()
+    }
+    loanChargeScreen {
+        navController.popBackStack()
+    }
+    loanRepaymentScreen {
+        navController.popBackStack()
+    }
+    newLoanAccountDestination(
+        onNavigateBack = navController::popBackStack,
+        onFinish = navController::popBackStack,
+        navController = navController,
+    )
 }
 
 fun NavGraphBuilder.loanApprovalScreen(

@@ -63,7 +63,7 @@ fun MifosBreadcrumbNavBar(
         verticalAlignment = Alignment.CenterVertically,
         modifier = modifier.fillMaxWidth()
             .padding(horizontal = DesignToken.padding.large)
-            .padding(bottom = DesignToken.padding.small),
+            .padding(vertical = DesignToken.padding.large),
     ) {
         val routes = if (backStack.size <= 3) {
             backStack
@@ -93,7 +93,10 @@ fun MifosBreadcrumbNavBar(
             }
         }
 
-        IconButton(onClick = { navController.popBackStack() }) {
+        IconButton(
+            onClick = { navController.popBackStack() },
+            modifier = Modifier.size(DesignToken.sizes.iconMedium),
+        ) {
             Icon(
                 painter = painterResource(Res.drawable.bread_crumb_back_icon),
                 contentDescription = "Back",

@@ -21,6 +21,7 @@ data class ClientLoanAccountsRoute(
 
 fun NavGraphBuilder.clientLoanAccountsDestination(
     navigateBack: () -> Unit,
+    navController: NavController,
     navigateToViewAccount: (Int) -> Unit,
     navigateToMakeRepayment: (Int) -> Unit,
 ) {
@@ -29,6 +30,7 @@ fun NavGraphBuilder.clientLoanAccountsDestination(
             navigateBack = navigateBack,
             viewAccount = navigateToViewAccount,
             makeRepayment = navigateToMakeRepayment,
+            navController = navController,
         )
     }
 }

@@ -11,36 +11,26 @@ package com.mifos.feature.note.navigation
 
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
-import androidx.navigation.navigation
 import com.mifos.feature.note.addEditNotes.addEditNoteRoute
 import com.mifos.feature.note.addEditNotes.navigateToAddEditNoteScreen
-import com.mifos.feature.note.notes.NoteRoute
 import com.mifos.feature.note.notes.navigateToNoteScreenWithUpdatedList
 import com.mifos.feature.note.notes.noteRoute
-import kotlinx.serialization.Serializable
 
-@Serializable
-object NoteNavigationRoute
-
-fun NavGraphBuilder.noteNavGraph(
+fun NavGraphBuilder.noteDestination(
     navController: NavController,
     onBackPressed: () -> Unit,
 ) {
-    navigation<NoteNavigationRoute>(
-        startDestination = NoteRoute::class,
-    ) {
-        noteRoute(
-            onNavigateBack = onBackPressed,
-            onNavigateAddEditNote = navController::navigateToAddEditNoteScreen,
-            navController = navController,
-        )
+    noteRoute(
+        onNavigateBack = onBackPressed,
+        onNavigateAddEditNote = navController::navigateToAddEditNoteScreen,
+        navController = navController,
+    )
 
-        addEditNoteRoute(
-            onBackPressed = {
-                navController.popBackStack()
-            },
-            onNavigateWithUpdatedList = navController::navigateToNoteScreenWithUpdatedList,
-            navController = navController,
-        )
-    }
+    addEditNoteRoute(
+        onBackPressed = {
+            navController.popBackStack()
+        },
+        onNavigateWithUpdatedList = navController::navigateToNoteScreenWithUpdatedList,
+        navController = navController,
+    )
 }

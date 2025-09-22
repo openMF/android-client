@@ -67,6 +67,7 @@ import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.HomeWork
 import androidx.compose.material.icons.outlined.Mail
 import androidx.compose.material.icons.outlined.MobileFriendly
+import androidx.compose.material.icons.outlined.Notifications
 import androidx.compose.material.icons.outlined.Numbers
 import androidx.compose.material.icons.outlined.Payments
 import androidx.compose.material.icons.outlined.PersonOutline
@@ -199,7 +200,7 @@ object MifosIcons {
     val FlashOn = Icons.Default.FlashOn
     val FlashOff = Icons.Default.FlashOff
     val Error2 = Icons.Filled.Error
-    val Notifications = Icons.Filled.Notifications
+    val Notifications = Icons.Outlined.Notifications
     val Numbers = Icons.Outlined.Numbers
     val Homework = Icons.Outlined.HomeWork
     val PersonOutline = Icons.Outlined.PersonOutline

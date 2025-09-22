@@ -39,11 +39,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavController
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.designsystem.theme.MifosTypography
 import com.mifos.core.ui.components.Actions
 import com.mifos.core.ui.components.MifosActionsLoanListingComponent
+import com.mifos.core.ui.components.MifosBreadcrumbNavBar
 import com.mifos.core.ui.components.MifosEmptyCard
 import com.mifos.core.ui.components.MifosProgressIndicator
 import com.mifos.core.ui.components.MifosSearchBar
@@ -58,6 +60,7 @@ internal fun ClientLoanAccountsScreenRoute(
     navigateBack: () -> Unit,
     makeRepayment: (Int) -> Unit,
     viewAccount: (Int) -> Unit,
+    navController: NavController,
     viewModel: ClientLoanAccountsViewModel = koinViewModel(),
 ) {
     val state by viewModel.stateFlow.collectAsStateWithLifecycle()
@@ -77,6 +80,7 @@ internal fun ClientLoanAccountsScreenRoute(
 
     ClientLoanAccountsScreen(
         state = state,
+        navController = navController,
         onAction = remember(viewModel) { { viewModel.trySendAction(it) } },
     )
 }
@@ -84,6 +88,7 @@ internal fun ClientLoanAccountsScreenRoute(
 @Composable
 private fun ClientLoanAccountsScreen(
     state: ClientLoanAccountsState,
+    navController: NavController,
     onAction: (ClientLoanAccountsAction) -> Unit,
 ) {
     MifosScaffold(
@@ -91,80 +96,98 @@ private fun ClientLoanAccountsScreen(
         onBackPressed = { onAction(ClientLoanAccountsAction.NavigateBack) },
         modifier = Modifier,
     ) { paddingValues ->
+
         Column(
-            modifier = Modifier.padding(paddingValues)
-                .fillMaxSize()
-                .padding(
-                    start = DesignToken.padding.large,
-                    end = DesignToken.padding.large,
-                    top = DesignToken.padding.large,
-                ),
+            modifier = Modifier
+                .padding(paddingValues)
+                .fillMaxSize(),
         ) {
-            ClientsAccountHeader(
-                totalItem = state.loanAccounts.size.toString(),
-                onAction = onAction,
-            )
+            MifosBreadcrumbNavBar(navController)
 
-            if (state.isSearchBarActive) {
-                MifosSearchBar(
-                    query = state.searchText,
-                    onQueryChange = { onAction.invoke(ClientLoanAccountsAction.UpdateSearchValue(it)) },
-                    onSearchClick = { onAction.invoke(ClientLoanAccountsAction.OnSearchClick) },
-                    onBackClick = { onAction.invoke(ClientLoanAccountsAction.ToggleSearch) },
+            Column(
+                modifier = Modifier.fillMaxSize()
+                    .padding(horizontal = DesignToken.padding.large),
+            ) {
+                ClientsAccountHeader(
+                    totalItem = state.loanAccounts.size.toString(),
+                    onAction = onAction,
                 )
-            }
 
-            Spacer(modifier = Modifier.height(DesignToken.padding.large))
-
-            if (state.loanAccounts.isEmpty()) {
-                MifosEmptyCard()
-            } else {
-                LazyColumn {
-                    items(state.loanAccounts) { loan ->
-                        val symbol = loan.currency?.displaySymbol ?: ""
-                        MifosActionsLoanListingComponent(
-                            accountNo = (loan.accountNo ?: "Not Available"),
-                            loanProduct = loan.productName ?: "Not Available",
-                            originalLoan = symbol + (
-                                (loan.originalLoan ?: "Not Available").toString()
+                if (state.isSearchBarActive) {
+                    MifosSearchBar(
+                        query = state.searchText,
+                        onQueryChange = {
+                            onAction.invoke(
+                                ClientLoanAccountsAction.UpdateSearchValue(
+                                    it,
                                 ),
-                            amountPaid = symbol + ((loan.amountPaid ?: "Not Available").toString()),
-                            loanBalance = symbol + (
-                                (loan.amountPaid ?: "Not Available").toString()
-                                ),
-                            type = loan.loanType?.value ?: "Not Available",
-                            // TODO check if we need to add other options as well, such as disburse and all
-                            // currently didn't add it cuz its not in the UI design
-                            menuList = when {
-                                loan.status?.active == true -> {
-                                    listOf(
-                                        Actions.ViewAccount(
-                                            vectorResource(Res.drawable.wallet),
-                                        ),
-                                        Actions.MakeRepayment(
-                                            vectorResource(Res.drawable.cash_bundel),
-                                        ),
-                                    )
-                                }
+                            )
+                        },
+                        onSearchClick = { onAction.invoke(ClientLoanAccountsAction.OnSearchClick) },
+                        onBackClick = { onAction.invoke(ClientLoanAccountsAction.ToggleSearch) },
+                    )
+                }
 
-                                else -> {
-                                    listOf(
-                                        Actions.ViewAccount(
-                                            vectorResource(Res.drawable.wallet),
-                                        ),
-                                    )
-                                }
-                            },
-                            onActionClicked = { actions ->
-                                when (actions) {
-                                    is Actions.ViewAccount -> onAction(ClientLoanAccountsAction.ViewAccount)
-                                    is Actions.MakeRepayment -> onAction(ClientLoanAccountsAction.MakeRepayment)
-                                    else -> null
-                                }
-                            },
-                        )
+                Spacer(modifier = Modifier.height(DesignToken.padding.large))
 
-                        Spacer(modifier = Modifier.height(8.dp))
+                if (state.loanAccounts.isEmpty()) {
+                    MifosEmptyCard()
+                } else {
+                    LazyColumn {
+                        items(state.loanAccounts) { loan ->
+                            val symbol = loan.currency?.displaySymbol ?: ""
+                            MifosActionsLoanListingComponent(
+                                accountNo = (loan.accountNo ?: "Not Available"),
+                                loanProduct = loan.productName ?: "Not Available",
+                                originalLoan = symbol + (
+                                    (loan.originalLoan ?: "Not Available").toString()
+                                    ),
+                                amountPaid = symbol + (
+                                    (
+                                        loan.amountPaid
+                                            ?: "Not Available"
+                                        ).toString()
+                                    ),
+                                loanBalance = symbol + (
+                                    (loan.amountPaid ?: "Not Available").toString()
+                                    ),
+                                type = loan.loanType?.value ?: "Not Available",
+                                // TODO check if we need to add other options as well, such as disburse and all
+                                // currently didn't add it cuz its not in the UI design
+                                menuList = when {
+                                    loan.status?.active == true -> {
+                                        listOf(
+                                            Actions.ViewAccount(
+                                                vectorResource(Res.drawable.wallet),
+                                            ),
+                                            Actions.MakeRepayment(
+                                                vectorResource(Res.drawable.cash_bundel),
+                                            ),
+                                        )
+                                    }
+
+                                    else -> {
+                                        listOf(
+                                            Actions.ViewAccount(
+                                                vectorResource(Res.drawable.wallet),
+                                            ),
+                                        )
+                                    }
+                                },
+                                onActionClicked = { actions ->
+                                    when (actions) {
+                                        is Actions.ViewAccount -> onAction(ClientLoanAccountsAction.ViewAccount)
+                                        is Actions.MakeRepayment -> onAction(
+                                            ClientLoanAccountsAction.MakeRepayment,
+                                        )
+
+                                        else -> null
+                                    }
+                                },
+                            )
+
+                            Spacer(modifier = Modifier.height(8.dp))
+                        }
                     }
                 }
             }

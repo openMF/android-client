@@ -18,22 +18,15 @@ import com.mifos.feature.activate.activateDestination
 import com.mifos.feature.checker.inbox.task.navigation.checkerInboxTaskNavGraph
 import com.mifos.feature.client.navigation.navigateClientDetailsScreen
 import com.mifos.feature.dataTable.navigation.dataTableNavGraph
-import com.mifos.feature.dataTable.navigation.navigateToDataTable
 import com.mifos.feature.document.navigation.documentListScreen
 import com.mifos.feature.document.navigation.navigateToDocumentListScreen
 import com.mifos.feature.individualCollectionSheet.navigation.generateCollectionSheetScreen
 import com.mifos.feature.individualCollectionSheet.navigation.individualCollectionSheetNavGraph
 import com.mifos.feature.loan.groupLoanAccount.groupLoanScreen
 import com.mifos.feature.loan.loanAccount.addLoanAccountScreen
-import com.mifos.feature.loan.navigation.loanNavGraph
-import com.mifos.feature.loan.newLoanAccount.navigateToNewLoanAccountRoute
-import com.mifos.feature.note.navigation.noteNavGraph
-import com.mifos.feature.note.notes.navigateToNoteScreen
 import com.mifos.feature.offline.navigation.offlineNavGraph
 import com.mifos.feature.path.tracking.navigation.pathTrackingRoute
 import com.mifos.feature.report.navigation.reportNavGraph
-import com.mifos.feature.savings.navigation.savingsNavGraph
-import com.mifos.feature.savings.savingsAccountv2.navigateToSavingsAccountRoute
 import com.mifos.feature.settings.navigation.settingsScreen
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.InternalSerializationApi
@@ -60,9 +53,6 @@ internal fun NavGraphBuilder.authenticatedGraph(
                 }
             },
             navigateToDocumentScreen = navController::navigateToDocumentListScreen,
-            navigateToNoteScreen = navController::navigateToNoteScreen,
-            navigateToNewLoanAccountScreen = navController::navigateToNewLoanAccountRoute,
-            navigateToNewSavingsAccountScreen = navController::navigateToSavingsAccountRoute,
         )
 
         checkerInboxTaskNavGraph(navController)
@@ -80,21 +70,9 @@ internal fun NavGraphBuilder.authenticatedGraph(
             },
         )
 
-        savingsNavGraph(
-            navController = navController,
-            onBackPressed = navController::popBackStack,
-            loadMoreSavingsAccountInfo = navController::navigateToDataTable,
-            loadDocuments = navController::navigateToDocumentListScreen,
-        )
-
         aboutDestination(onBackPressed = navController::popBackStack)
 
         offlineNavGraph(navController = navController)
-
-        noteNavGraph(
-            navController = navController,
-            onBackPressed = navController::popBackStack,
-        )
 
         activateDestination(onBackPressed = navController::popBackStack)
 
@@ -113,12 +91,6 @@ internal fun NavGraphBuilder.authenticatedGraph(
         pathTrackingRoute(navController::popBackStack)
 
         reportNavGraph(navController = navController)
-
-        loanNavGraph(
-            navController = navController,
-            onMoreInfoClicked = navController::navigateToDataTable,
-            onDocumentsClicked = navController::navigateToDocumentListScreen,
-        )
 
         groupLoanScreen { navController.popBackStack() }
 

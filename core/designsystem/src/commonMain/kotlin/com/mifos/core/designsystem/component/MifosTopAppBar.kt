@@ -37,7 +37,6 @@ import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.designsystem.theme.MifosTheme
 import com.mifos.core.designsystem.utils.mirrorIfRtl
 import org.jetbrains.compose.ui.tooling.preview.Preview
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MifosTopAppBar(

@@ -84,6 +84,7 @@ object DesignToken {
 data class AppSpacing(
     val none: Dp = 0.dp,
     val extraSmall: Dp = 4.dp,
+    val mediumSmall: Dp = 6.dp,
     val small: Dp = 8.dp,
     val medium: Dp = 12.dp,
     val large: Dp = 16.dp,
@@ -231,10 +232,12 @@ data class AppShapes(
  *
  * @param none No elevation for flat components at surface level
  * @param elevation Dialog elevation for maximum prominence (25dp)
+ * @param appBar Elevation for top app bar (2dp)
  */
 @Immutable
 data class AppElevation(
     val none: Dp = 0.dp,
+    val appBar: Dp = 5.dp,
     val elevation: Dp = 25.dp,
 )
 
@@ -280,6 +283,8 @@ data class AppElevation(
  * @param inputHeight Standard height for input field components (56dp)
  * @param cardMinHeight Minimum height for card components to ensure proper
  *    proportions (120dp)
+ * @param topAppBarHeight Height for top app bar components (40dp)
+ * @param topBarStandardHeight Height for top bar components (40dp)
  */
 @Immutable
 data class AppSizes(
@@ -301,6 +306,8 @@ data class AppSizes(
     val profile: Dp = 72.dp,
     val headerToContentHeight: Dp = 28.dp,
     val topBarStandardHeight: Dp = 40.dp,
+    val logoSizeTopAppBar: Dp = 28.dp,
+    val topAppBarHeight: Dp = 85.dp,
 )
 
 /**

@@ -27,7 +27,6 @@ import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalDrawerSheet
 import androidx.compose.material3.ModalNavigationDrawer
@@ -37,7 +36,6 @@ import androidx.compose.material3.SnackbarDuration.Indefinite
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -64,11 +62,11 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.navOptions
 import cmp.navigation.components.MifosScaffold
+import cmp.navigation.components.MifosTopAppBar
 import cmp.navigation.components.ScaffoldNavigationData
 import cmp.navigation.navigation.HomeDestinationsScreen
 import cmp.navigation.ui.rememberMifosNavController
 import com.mifos.core.common.utils.Constants
-import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.ui.RootTransitionProviders
 import com.mifos.core.ui.util.EventsEffect
@@ -88,7 +86,6 @@ import com.mifos.feature.groups.navigation.navigateToCreateNewGroupScreen
 import com.mifos.feature.groups.navigation.navigateToGroupDetailsScreen
 import com.mifos.feature.groups.navigation.navigateToGroupListScreen
 import com.mifos.feature.loan.groupLoanAccount.navigateToGroupLoanScreen
-import com.mifos.feature.loan.loanAccount.navigateToLoanAccountScreen
 import com.mifos.feature.loan.loanAccountSummary.navigateToLoanAccountSummaryScreen
 import com.mifos.feature.note.notes.navigateToNoteScreen
 import com.mifos.feature.savings.navigation.navigateToAddSavingsAccount
@@ -101,6 +98,7 @@ import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
+import org.mifos.core.designsystem.component.MifosTopAppBar
 import org.mifos.navigation.generated.resources.Res
 import org.mifos.navigation.generated.resources.cmp_navigation_mifos
 import org.mifos.navigation.generated.resources.cmp_navigation_no_internet
@@ -110,14 +108,11 @@ import org.mifos.navigation.generated.resources.ic_dp_placeholder
 @Composable
 internal fun AuthenticatedNavbarNavigationScreen(
     navigateToDocumentScreen: (Int, String) -> Unit,
-    navigateToNoteScreen: (Int, String) -> Unit,
     onDrawerItemClick: (String) -> Unit,
     modifier: Modifier = Modifier,
     navController: NavHostController = rememberMifosNavController(
         name = "AuthenticatedNavbarScreen",
     ),
-    navigateToNewLoanAccountScreen: (Int) -> Unit,
-    navigateToNewSavingsAccountScreen: (Int) -> Unit,
     viewModel: AuthenticatedNavbarNavigationViewModel = koinViewModel(),
 ) {
     val scope = rememberCoroutineScope()
@@ -177,9 +172,6 @@ internal fun AuthenticatedNavbarNavigationScreen(
         },
         onDrawerItemClick = onDrawerItemClick,
         navigateToDocumentScreen = navigateToDocumentScreen,
-        navigateToNoteScreen = navigateToNoteScreen,
-        navigateToNewLoanAccountScreen = navigateToNewLoanAccountScreen,
-        navigateToNewSavingsAccountScreen = navigateToNewSavingsAccountScreen,
     )
 }
 
@@ -189,9 +181,6 @@ internal fun AuthenticatedNavbarNavigationScreenContent(
     navController: NavHostController,
     onDrawerItemClick: (String) -> Unit,
     navigateToDocumentScreen: (Int, String) -> Unit,
-    navigateToNoteScreen: (Int, String) -> Unit,
-    navigateToNewLoanAccountScreen: (Int) -> Unit,
-    navigateToNewSavingsAccountScreen: (Int) -> Unit,
     modifier: Modifier = Modifier,
     snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
     onAction: (AuthenticatedNavBarAction) -> Unit,
@@ -296,26 +285,14 @@ internal fun AuthenticatedNavbarNavigationScreenContent(
     ) {
         MifosScaffold(
             topBar = {
-                TopAppBar(
-                    title = {
-                        Text(stringResource(Res.string.cmp_navigation_mifos))
-                    },
-                    navigationIcon = {
-                        IconButton(
-                            onClick = {
-                                scope.launch {
-                                    drawerState.apply {
-                                        if (isClosed) open() else close()
-                                    }
-                                }
-                            },
-                        ) {
-                            Icon(
-                                imageVector = MifosIcons.Menu,
-                                contentDescription = "Menu",
-                            )
+                MifosTopAppBar(
+                    onNavigationIconClick = {
+                        scope.launch {
+                            drawerState.open()
                         }
                     },
+                    onSearchIconClick = {},
+                    onNotificationIconClick = {},
                 )
             },
             contentWindowInsets = WindowInsets(0.dp),
@@ -398,33 +375,11 @@ internal fun AuthenticatedNavbarNavigationScreenContent(
 
                 clientNavGraph(
                     navController = navController,
-                    addLoanAccount = navController::navigateToLoanAccountScreen,
-                    addSavingsAccount = { clientId ->
-                        navController.navigateToAddSavingsAccount(0, clientId, false)
-                    },
-                    documents = { clientId ->
-                        navigateToDocumentScreen(
-                            clientId,
-                            Constants.ENTITY_TYPE_CLIENTS,
-                        )
-                    },
                     moreClientInfo = { clientId ->
                         navController.navigateToDataTable(
                             Constants.DATA_TABLE_NAME_CLIENT,
                             clientId,
                         )
-                    },
-                    notes = { clientId ->
-                        navigateToNoteScreen(
-                            clientId,
-                            Constants.ENTITY_TYPE_CLIENTS,
-                        )
-                    },
-                    loanAccountSelected = { loanAccountNumber ->
-                        navController.navigateToLoanAccountSummaryScreen(loanAccountNumber)
-                    },
-                    savingsAccountSelected = { clientId, depositType ->
-                        navController.navigateToSavingsAccountSummaryScreen(clientId, depositType)
                     },
                     activateClient = { clientId ->
                         navController.navigateToActivateRoute(
@@ -433,9 +388,6 @@ internal fun AuthenticatedNavbarNavigationScreenContent(
                         )
                     },
                     hasDatatables = navController::navigateDataTableList,
-                    onDocumentClicked = navigateToDocumentScreen,
-                    navigateToNewLoanAccount = navigateToNewLoanAccountScreen,
-                    navigateToNewSavingsAccount = navigateToNewSavingsAccountScreen,
                 )
             }
         }
