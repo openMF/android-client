@@ -9,7 +9,7 @@
  */
 package com.mifos.core.ui.components
 
-import com.mifos.core.ui.components.Actions
+
 import androidclient.core.ui.generated.resources.Res
 import androidclient.core.ui.generated.resources.client_share_accounts_approved_shares
 import androidclient.core.ui.generated.resources.client_share_accounts_pending_for_approval_shares
@@ -502,29 +502,86 @@ fun MifosActionsShareListingComponent(
     }
 }
 @Composable
-fun MifosActionCollateralData (
-    name : String,
-    quantity : String,
-    totalValue : String,
-    totalCollateralValue : String,
-    isExpaneded : Boolean,
-    onClick : () -> Unit,
-    menuList : List<Actions>,
-    onActionClicked : (Actions) -> Unit,
-){
+fun MifosActionsCollateralDataComponent(
+    name: String,
+    quantity: String,
+    totalValue: String,
+    totalCollateralValue: String,
+    menuList: List<Actions>,
+    onActionClicked: (Actions) -> Unit,
+) {
     MifosActionsListingComponentOutline {
-        Column(
-            modifier = Modifier.clickable { onClick() },
-        ) {
+        Column {
             Column(
                 modifier = Modifier.padding(DesignToken.padding.large),
             ) {
-                MifosListingRowItemHeader(
-                    text = name,
+                MifosListingRowItem(
+                    key = "Name",
+                    value = name,
                     keyStyle = MifosTypography.titleSmallEmphasized,
+                    valueStyle = MifosTypography.titleSmall,
                 )
+                Spacer(Modifier.height(DesignToken.padding.large))
+                Column(
+                    verticalArrangement = Arrangement.spacedBy(DesignToken.padding.extraExtraSmall),
+                ) {
+                    MifosListingRowItem(
+                        key = stringResource(Res.string.core_ui_quantity),
+                        value = quantity,
+                    )
+                    MifosListingRowItem(
+                        key = stringResource(Res.string.core_ui_total_value),
+                        value = totalValue,
+                    )
+                }
+                Spacer(Modifier.height(DesignToken.padding.medium))
+                MifosListingRowItem(
+                    key = stringResource(Res.string.core_ui_total_collateral_value),
+                    value = totalCollateralValue,
+                    valueColor = MaterialTheme.colorScheme.primary,
+                )
+            }
 
+            Surface(
+                modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(
+                    bottomStart = DesignToken.padding.medium,
+                    bottomEnd = DesignToken.padding.medium,
+                ),
+            ) {
+                Column(
+                    modifier = Modifier.padding(
+                        vertical = DesignToken.padding.small,
+                    ),
+                ) {
+                    menuList.map { menuItem ->
+                        Row(
+                            modifier = Modifier.fillMaxWidth()
+                                .height(DesignToken.sizes.avatarMedium)
+                                .clickable {
+                                    onActionClicked(menuItem)
+                                },
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.Start,
+                        ) {
+                            Icon(
+                                modifier = Modifier.padding(horizontal = DesignToken.padding.large),
+                                imageVector = menuItem.icon,
+                                contentDescription = "",
+                            )
 
+                            Text(
+                                modifier = Modifier.fillMaxWidth(),
+                                text = menuItem::class.simpleName ?: "",
+                                color = MaterialTheme.colorScheme.onSurface,
+                                fontSize = MaterialTheme.typography.bodyLarge.fontSize,
+                            )
+                        }
+                    }
+                }
+            }
+        }
+    }
 }
 
 @Composable
@@ -1160,6 +1217,29 @@ private fun PreviewMifosActionsShareListingComponent() {
             onClick = {},
             menuList = sampleMenu,
             onActionClicked = { },
+        )
+    }
+}
+@Preview
+@Composable
+private fun PreviewMifosActionsCollateralDataComponent() {
+    MifosTheme {
+        MifosActionsCollateralDataComponent(
+            name = "Gold ",
+            quantity = "5",
+            totalValue = "$2500",
+            totalCollateralValue = "$2500",
+            menuList = listOf(
+                Actions.ViewAccount(),
+                Actions.ApproveAccount(),
+            ),
+            onActionClicked = { action ->
+                when (action) {
+                    is Actions.ViewAccount -> println(Actions.ViewDocument::class.simpleName)
+                    is Actions.ApproveAccount -> println(Actions.ApproveAccount::class.simpleName)
+                    else -> println("Action not Handled")
+                }
+            },
         )
     }
 }

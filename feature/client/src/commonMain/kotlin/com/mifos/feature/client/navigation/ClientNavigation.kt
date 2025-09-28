@@ -60,6 +60,8 @@ import com.mifos.feature.client.clientUpcomingCharges.navigateToClientUpcomingCh
 import com.mifos.feature.client.clientUpdateDefaultAccount.navigateToUpdateDefaultAccountRoute
 import com.mifos.feature.client.clientUpdateDefaultAccount.updateDefaultAccountDestination
 import com.mifos.feature.client.clientsList.ClientListScreen
+import com.mifos.feature.client.collateralData.clientCollateralDestination
+import com.mifos.feature.client.collateralData.navigateCollateralScreen
 import com.mifos.feature.client.createNewClient.CreateNewClientScreen
 import com.mifos.feature.client.fixedDepositAccount.clientFixedDepositAccountDestination
 import com.mifos.feature.client.fixedDepositAccount.navigateToFixedDepositAccountRoute
@@ -175,6 +177,7 @@ fun NavGraphBuilder.clientNavGraph(
             recurringDepositAccounts = navController::navigateToRecurringDepositAccountRoute,
             collateralData = {},
             sharesAccounts = navController::navigateToShareAccountsScreen,
+            collateralDatadates = navController::navigateCollateralScreen,
             fixedDepositAccounts = navController::navigateToFixedDepositAccountRoute,
             upcomingCharges = navController::navigateToClientUpcomingChargesRoute,
         )
@@ -215,6 +218,7 @@ fun NavGraphBuilder.clientNavGraph(
             onNavigateNext = navController::navigateToClientDetailsProfileRouteOnStatus,
             navController = navController,
         )
+
         clientStaffDestination(
             onNavigateBack = navController::popBackStack,
             onNavigateNext = navController::navigateToClientDetailsProfileRouteOnStatus,
@@ -269,6 +273,10 @@ fun NavGraphBuilder.clientNavGraph(
 
         )
         shareAccountsDestination(
+            navController = navController,
+            navigateToViewAccount = {},
+        )
+        clientCollateralDestination(
             navController = navController,
             navigateToViewAccount = {},
         )

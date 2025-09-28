@@ -1,11 +1,15 @@
-package com.mifos.feature.loan.ClientCollateral
+package com.mifos.feature.client.collateralData
 
 
 
 
-import androidclient.feature.client.generated.resources.search
+
+
+
+
+import androidclient.feature.client.generated.resources.Res
 import androidclient.feature.client.generated.resources.string_not_available
-import androidclient.feature.loan.generated.resources.Res
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -22,9 +26,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
-import com.mifos.core.designsystem.component.MifosCircularProgress
+
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
+import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.designsystem.theme.MifosTypography
 import com.mifos.core.designsystem.utils.onClick
@@ -33,10 +38,14 @@ import com.mifos.core.ui.components.MifosActionsCollateralDataListingComponent
 import com.mifos.core.ui.components.MifosActionsShareListingComponent
 import com.mifos.core.ui.components.MifosBreadcrumbNavBar
 import com.mifos.core.ui.components.MifosEmptyCard
+import com.mifos.core.ui.components.MifosProgressIndicator
 import com.mifos.core.ui.util.EventsEffect
+import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
+
+
 
 @Composable
 internal fun CollateralScreenRoute(
@@ -48,7 +57,7 @@ internal fun CollateralScreenRoute(
 
     EventsEffect(viewModel.eventFlow) { event ->
         when (event) {
-            is collateralEvent.viewAccount -> viewAccount(event.accountsId)
+            is CollateralEvent.ViewAccount -> viewAccount(event.accountsId)
         }
     }
 
@@ -58,7 +67,7 @@ internal fun CollateralScreenRoute(
         onAction = remember(viewModel) { { viewModel.trySendAction(it) } },
     )
 
-    ShareAccountsDialog(
+    CollateralDialog(
         state = state,
         onAction = remember(viewModel) { { viewModel.trySendAction(it) } },
     )
@@ -67,8 +76,8 @@ internal fun CollateralScreenRoute(
 @Composable
 internal fun collateralScreen(
     navController: NavController,
-    state: collateralUiState,
-    onAction: (collateralAction) -> Unit,
+    state: CollateralUiState,
+    onAction: (CollateralAction) -> Unit,
 ) {
     MifosScaffold(
         title = "Collateral data",
@@ -83,7 +92,7 @@ internal fun collateralScreen(
             )
 
             when (state.isLoading) {
-                true -> MifosCircularProgress()
+                true -> MifosProgressIndicator()
 
                 false -> {
                     Column(
@@ -103,12 +112,29 @@ internal fun collateralScreen(
                             LazyColumn {
                                 item {
                                     state.accounts.forEachIndexed { index, account ->
-                                     MifosActionsCollateralDataListingComponent(
-                                         name = account.name ?: emptyText,
-                                         quantity = account.quantity?.toString() ?: emptyText,
-                                         totalValue = account.total?.toString() ?: emptyText,
-                                        totalCollateralValue = account.totalCollateral?.toString() ?: emptyText
-                                     )
+                                        MifosActionsCollateralDataListingComponent(
+                                            name = account.name ?: emptyText,
+                                            quantity = account.quantity?.toString() ?: emptyText,
+                                            totalValue = account.total?.toString() ?: emptyText,
+                                            totalCollateralValue = account.totalCollateral?.toString() ?: emptyText,
+                                            menuList = (listOf(Actions.ViewAccount())),
+                                            onActionClicked = { actions ->
+                                                when (actions) {
+                                                    is Actions.ViewAccount -> {
+                                                        onAction(
+                                                            CollateralAction.ViewAccount(accountId = -1)
+                                                        )
+                                                    }
+
+                                                    else -> {
+
+                                                    }
+                                                }
+
+                                            }
+
+
+                                        )
 
                                         Spacer(Modifier.height(DesignToken.padding.small))
                                     }
@@ -127,50 +153,52 @@ internal fun collateralScreen(
 @Composable
 private fun CollateralHeader(
     totalItem: String,
-    onAction: (collateralAction) -> Unit,
+    onAction: (CollateralAction) -> Unit,
 ) {
     Row(
         modifier = Modifier.fillMaxWidth(),
     ) {
         Column {
             Text(
-                text = Text("Collateral data"),
-                style = MifosTypography.titleMedium,
+                text = "Collateral Data",
+                style = MifosTypography.titleMedium
             )
 
             Text(
                 text = totalItem + " " + "items",
                 style = MifosTypography.labelMedium,
             )
+
         }
 
         Spacer(modifier = Modifier.weight(1f))
 
         // add a cross icon when its active, talk with design team
         Icon(
-            modifier = Modifier.onClick { onAction.invoke(collateralAction.toggleSearchBar) },
-            painter = painterResource(Res.drawable.search),
+            modifier = Modifier.onClick { onAction.invoke(CollateralAction.ToggleSearchBar) },
+            imageVector = MifosIcons.Search ,
+
             contentDescription = null,
         )
 
         Icon(
-            modifier = Modifier.onClick { onAction.invoke(collateralAction.toggleFiler) },
-            painter = painterResource(Res.drawable.filter),
+            modifier = Modifier.onClick { onAction.invoke(CollateralAction.ToggleFiler) },
+            imageVector = MifosIcons.Filter,
             contentDescription = null,
         )
     }
 }
 
 @Composable
-private fun ShareAccountsDialog(
-    state: collateralUiState,
-    onAction: (collateralAction) -> Unit,
+private fun CollateralDialog(
+    state: CollateralUiState,
+    onAction: (CollateralAction) -> Unit,
 ) {
     when (state.dialogState) {
-        is collateralUiState.DialogState.Error -> {
+        is CollateralUiState.DialogState.Error -> {
             MifosSweetError(
                 message = state.dialogState.message,
-                onclick = { onAction.invoke(collateralAction.refresh) },
+                onclick = { onAction.invoke(CollateralAction.Refresh) },
             )
         }
 

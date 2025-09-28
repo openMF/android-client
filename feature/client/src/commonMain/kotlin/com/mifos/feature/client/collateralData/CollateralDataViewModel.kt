@@ -1,4 +1,5 @@
-package com.mifos.feature.loan.ClientCollateral
+package com.mifos.feature.client.collateralData
+
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
@@ -8,7 +9,7 @@ import com.mifos.core.data.repository.ClientDetailsRepository
 import com.mifos.core.ui.util.BaseViewModel
 
 import com.mifos.core.network.model.CollateralItem
-import com.mifos.feature.loan.Clientcollateral.clientCollateralRoute
+
 
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -17,17 +18,17 @@ import kotlinx.coroutines.launch
 class ClientCollateralViewmodel (
     savedStateHandle: SavedStateHandle,
     private val repository: ClientDetailsRepository
-): BaseViewModel<collateralUiState,collateralEvent,collateralAction>(
-    initialState = collateralUiState()
+): BaseViewModel<CollateralUiState,CollateralEvent,CollateralAction>(
+    initialState = CollateralUiState()
 ){
     private val route = savedStateHandle.toRoute<clientCollateralRoute>()
-    override fun handleAction(action: collateralAction) {
+    override fun handleAction(action: CollateralAction) {
         when (action) {
-            is collateralAction.cardClicked -> handleCardClicked(action.activeIndex)
-            collateralAction.toggleFiler -> toggleFiler()
-            collateralAction.toggleSearchBar -> toggleSearchBar()
-            is collateralAction.viewAccount -> sendEvent(collateralEvent.viewAccount(action.accountId))
-            collateralAction.refresh -> fetchAllCollateralAccount()
+            is CollateralAction.CardClicked -> handleCardClicked(action.activeIndex)
+            CollateralAction.ToggleFiler -> toggleFiler()
+            CollateralAction.ToggleSearchBar -> toggleSearchBar()
+            is CollateralAction.ViewAccount -> sendEvent(CollateralEvent.ViewAccount(action.accountId))
+            CollateralAction.Refresh -> fetchAllCollateralAccount()
 
         }
 
@@ -61,11 +62,17 @@ class ClientCollateralViewmodel (
                         mutableStateFlow.update {
                             it.copy(
                                 isLoading = false,
-                                dialogState = collateralUiState.DialogState.Error(result.message)
+                                dialogState = CollateralUiState.DialogState.Error(result.message)
                             )
                         }
                     }
                     is DataState.Loading -> {
+                        mutableStateFlow.update {
+                            it.copy(
+                                isLoading = true
+                            )
+                        }
+
 
                     }
 
@@ -78,7 +85,7 @@ class ClientCollateralViewmodel (
                 mutableStateFlow.update{
                     it.copy(
                         isLoading = false,
-                        dialogState = collateralUiState.DialogState.Error(e.message ?: "Unknown Error")
+                        dialogState = CollateralUiState.DialogState.Error(e.message ?: "Unknown Error")
                     )
                 }
             }
@@ -115,34 +122,33 @@ class ClientCollateralViewmodel (
 
 }
 
-    data class collateralUiState(
-        val isLoading : Boolean = false,
-        val isFilterActive : Boolean = false,
-        val accounts : List<CollateralItem> = emptyList(),
-        val isSearchBarActive :Boolean = false,
-        val isCardActive : Boolean = false,
-        val currentlyActiveIndex: Int = -1,
-        val dialogState : DialogState? = null,){
+data class CollateralUiState(
+    val isLoading : Boolean = false,
+    val isFilterActive : Boolean = false,
+    val accounts : List<CollateralItem> = emptyList(),
+    val isSearchBarActive :Boolean = false,
+    val isCardActive : Boolean = false,
+    val currentlyActiveIndex: Int = -1,
+    val dialogState : DialogState? = null,){
 
-        sealed interface DialogState{
-            data class Error (val message : String) : DialogState
-        }
-
-
-
-
+    sealed interface DialogState{
+        data class Error (val message : String) : DialogState
     }
-sealed interface collateralEvent{
-    data class viewAccount ( val accountsId : Int) : collateralEvent
 
-}
-sealed interface collateralAction{
-    data object toggleFiler : collateralAction
-    data object toggleSearchBar : collateralAction
-    data class cardClicked (val activeIndex : Int ): collateralAction
-    data class viewAccount (val accountId : Int) : collateralAction
-    data object refresh : collateralAction
+
 
 
 }
+sealed interface CollateralEvent{
+    data class ViewAccount ( val accountsId : Int) : CollateralEvent
 
+}
+sealed interface CollateralAction{
+    data object ToggleFiler : CollateralAction
+    data object ToggleSearchBar : CollateralAction
+    data class CardClicked (val activeIndex : Int ): CollateralAction
+    data class ViewAccount (val accountId : Int) : CollateralAction
+    data object Refresh : CollateralAction
+
+
+}

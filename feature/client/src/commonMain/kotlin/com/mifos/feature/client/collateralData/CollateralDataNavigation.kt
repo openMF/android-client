@@ -1,10 +1,9 @@
-package com.mifos.feature.loan.Clientcollateral
-
+package com.mifos.feature.client.collateralData
 
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
-import com.mifos.feature.loan.ClientCollateral.CollateralScreenRoute
+
 
 import kotlinx.serialization.Serializable
 
@@ -24,7 +23,7 @@ fun NavGraphBuilder.clientCollateralDestination(
     }
 
 }
-fun NavController.navigatetoCollateralScreen(
+fun NavController.navigateCollateralScreen(
     clientId : Int,
 ){
     this.navigate(
