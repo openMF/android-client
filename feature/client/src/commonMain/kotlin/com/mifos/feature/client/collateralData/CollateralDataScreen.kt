@@ -9,7 +9,7 @@ package com.mifos.feature.client.collateralData
 
 import androidclient.feature.client.generated.resources.Res
 import androidclient.feature.client.generated.resources.string_not_available
-import androidx.compose.foundation.Image
+
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -35,13 +35,12 @@ import com.mifos.core.designsystem.theme.MifosTypography
 import com.mifos.core.designsystem.utils.onClick
 import com.mifos.core.ui.components.Actions
 import com.mifos.core.ui.components.MifosActionsCollateralDataListingComponent
-import com.mifos.core.ui.components.MifosActionsShareListingComponent
+
 import com.mifos.core.ui.components.MifosBreadcrumbNavBar
 import com.mifos.core.ui.components.MifosEmptyCard
 import com.mifos.core.ui.components.MifosProgressIndicator
 import com.mifos.core.ui.util.EventsEffect
-import org.jetbrains.compose.resources.DrawableResource
-import org.jetbrains.compose.resources.painterResource
+
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -61,7 +60,7 @@ internal fun CollateralScreenRoute(
         }
     }
 
-    collateralScreen(
+    CollateralScreen(
         state = state,
         navController = navController,
         onAction = remember(viewModel) { { viewModel.trySendAction(it) } },
@@ -74,7 +73,7 @@ internal fun CollateralScreenRoute(
 }
 
 @Composable
-internal fun collateralScreen(
+internal fun CollateralScreen(
     navController: NavController,
     state: CollateralUiState,
     onAction: (CollateralAction) -> Unit,

@@ -8,14 +8,14 @@ import androidx.navigation.compose.composable
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class clientCollateralRoute(
+data class ClientCollateralRoute(
     val clientId : Int = -1,
 )
 fun NavGraphBuilder.clientCollateralDestination(
     navController: NavController,
     navigateToViewAccount: (Int) -> Unit,
 ) {
-    composable<clientCollateralRoute> {
+    composable<ClientCollateralRoute> {
         CollateralScreenRoute(
             navController = navController,
             viewAccount =  navigateToViewAccount,
@@ -27,7 +27,7 @@ fun NavController.navigateCollateralScreen(
     clientId : Int,
 ){
     this.navigate(
-        clientCollateralRoute(
+        ClientCollateralRoute(
             clientId = clientId,
         )
 

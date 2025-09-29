@@ -21,7 +21,7 @@ class ClientCollateralViewmodel (
 ): BaseViewModel<CollateralUiState,CollateralEvent,CollateralAction>(
     initialState = CollateralUiState()
 ){
-    private val route = savedStateHandle.toRoute<clientCollateralRoute>()
+    private val route = savedStateHandle.toRoute<ClientCollateralRoute>()
     override fun handleAction(action: CollateralAction) {
         when (action) {
             is CollateralAction.CardClicked -> handleCardClicked(action.activeIndex)
@@ -104,7 +104,7 @@ class ClientCollateralViewmodel (
     private fun toggleSearchBar() {
         mutableStateFlow.update {
             it.copy(
-                isSearchBarActive = !state.isSearchBarActive,
+                isSearchBarActive = !it.isSearchBarActive,
             )
         }
 
@@ -112,7 +112,7 @@ class ClientCollateralViewmodel (
     private fun handleCardClicked(index : Int){
         mutableStateFlow.update {
             it.copy(
-                isCardActive = !state.isCardActive,
+                isCardActive = !it.isCardActive,
                 currentlyActiveIndex = index,
             )
         }
