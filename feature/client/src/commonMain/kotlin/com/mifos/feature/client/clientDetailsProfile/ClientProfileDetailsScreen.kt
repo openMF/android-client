@@ -86,6 +86,7 @@ internal fun ClientProfileDetailsScreen(
     navigateToUpdateSignature: (Int, String, String) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: ClientProfileDetailsViewModel = koinViewModel(),
+    navigateToAddCharge: (Int) -> Unit,
 ) {
     val state by viewModel.stateFlow.collectAsStateWithLifecycle()
 
