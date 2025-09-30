@@ -27,7 +27,7 @@ import com.mifos.feature.client.clientAddress.navigateToClientAddressRoute
 import com.mifos.feature.client.clientAddress.navigateToClientAddressRouteOnStatus
 import com.mifos.feature.client.clientApplyNewApplications.clientApplyNewApplicationRoute
 import com.mifos.feature.client.clientApplyNewApplications.navigateToClientApplyNewApplicationScreen
-import com.mifos.feature.client.clientCharges.ClientChargesScreen
+import com.mifos.feature.client.clientCharges.navigateToClientChargesRoute
 import com.mifos.feature.client.clientClosure.clientClosureDestination
 import com.mifos.feature.client.clientClosure.navigateToClientClosureRoute
 import com.mifos.feature.client.clientCollateral.clientCollateralDestination
@@ -126,7 +126,7 @@ fun NavGraphBuilder.clientNavGraph(
             addSavingsAccount = { clientId ->
                 navController.navigateToAddSavingsAccount(0, clientId, false)
             },
-            charges = navController::navigateClientChargesScreen,
+            charges = navController::navigateToClientChargesRoute,
             documents = {
                 navController.navigateToDocumentListScreen(it, Constants.ENTITY_TYPE_CLIENTS)
             },
@@ -142,9 +142,9 @@ fun NavGraphBuilder.clientNavGraph(
             savingsAccountSelected = navController::navigateToSavingsAccountSummaryScreen,
             activateClient = activateClient,
         )
-        clientChargesRoute(
-            onBackPressed = navController::popBackStack,
-        )
+//        clientChargesRoute(
+//            onBackPressed = navController::popBackStack,
+//        )
         clientIdentifiersAddUpdateDestination(
             onBackPressed = navController::popBackStack,
             onUpdatedListBack = navController::navigateBackToUpdateClientIdentifiersListScreen,
@@ -181,6 +181,7 @@ fun NavGraphBuilder.clientNavGraph(
             viewAddress = navController::navigateToClientAddressRoute,
             viewAssociatedAccounts = navController::navigateToClientProfileGeneralRoute,
             navController = navController,
+            navigateToAddCharge = navController::navigateToClientChargesRoute,
         )
 
         clientAddressNavigation(
@@ -254,7 +255,7 @@ fun NavGraphBuilder.clientNavGraph(
             navigateToCollateral = navController::navigateToClientCollateralRoute,
             navigateToApplyNewApplication = navController::navigateToClientApplyNewApplicationScreen,
             navigateToUpdateSignature = navController::navigateToClientSignatureScreen,
-
+            navigateToAddCharge = navController::navigateToClientChargesRoute,
         )
         clientEditProfileDestination(
             onNavigateBack = navController::popBackStack,
@@ -401,18 +402,18 @@ fun NavGraphBuilder.clientDetailRoute(
     }
 }
 
-fun NavGraphBuilder.clientChargesRoute(
-    onBackPressed: () -> Unit,
-) {
-    composable(
-        route = ClientScreens.ClientChargesScreen.route,
-        arguments = listOf(navArgument(Constants.CLIENT_ID, builder = { type = NavType.IntType })),
-    ) {
-        ClientChargesScreen(
-            onBackPressed = onBackPressed,
-        )
-    }
-}
+//fun NavGraphBuilder.clientChargesRoute(
+//    onBackPressed: () -> Unit,
+//) {
+//    composable(
+//        route = ClientScreens.ClientChargesScreen.route,
+//        arguments = listOf(navArgument(Constants.CLIENT_ID, builder = { type = NavType.IntType })),
+//    ) {
+//        ClientChargesScreen(
+//            onBackPressed = onBackPressed,
+//        )
+//    }
+//}
 
 fun NavGraphBuilder.clientPinPointRoute(
     onBackPressed: () -> Unit,
