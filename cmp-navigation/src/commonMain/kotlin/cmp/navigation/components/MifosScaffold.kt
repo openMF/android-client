@@ -87,7 +87,7 @@ fun MifosScaffold(
         containerColor = containerColor,
         contentColor = contentColor,
         bottomBar = {
-            if(isNavigationBarVisible){
+            if (isNavigationBarVisible) {
                 AnimatedVisibility(
                     visible = isNavigationBarVisible,
                     enter = fadeIn() + slideInVertically(initialOffsetY = { it / 2 }),
@@ -95,10 +95,9 @@ fun MifosScaffold(
                 ) {
                     ScaffoldBottomAppBar(navigationData = requireNotNull(navigationData))
                 }
-            }else{
+            } else {
                 MifosBottomBar()
             }
-
         },
         snackbarHost = {
             Box(modifier = Modifier.imePadding()) {
