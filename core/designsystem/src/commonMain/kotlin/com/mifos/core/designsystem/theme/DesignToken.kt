@@ -89,6 +89,7 @@ data class AppSpacing(
     val medium: Dp = 12.dp,
     val large: Dp = 16.dp,
     val largeIncreased: Dp = 20.dp,
+    val largeMediumIncreased: Dp = 24.dp,
     val extraLarge: Dp = 28.dp,
     val extraLargeIncreased: Dp = 32.dp,
     val extraExtraLarge: Dp = 48.dp,
@@ -308,6 +309,7 @@ data class AppSizes(
     val topBarStandardHeight: Dp = 40.dp,
     val logoSizeTopAppBar: Dp = 28.dp,
     val topAppBarHeight: Dp = 85.dp,
+    val bottomAppBarHeight: Dp = 70.dp,
 )
 
 /**
