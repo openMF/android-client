@@ -760,7 +760,7 @@ constructor(
     val showChargesDatePick: Boolean = false,
     val chargeAmount: String = "",
 
-) {
+    ) {
     sealed interface DialogState {
         data class Error(val message: String) : DialogState
         data object AddNewCollateral : DialogState
