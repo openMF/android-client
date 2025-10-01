@@ -39,7 +39,7 @@ interface ClientDetailsRepository {
 
     suspend fun getClientCloseTemplate(): DataState<ClientCloseTemplateResponse>
 
-    suspend fun getCollateralItem(clientId: Int): DataState<List<CollateralItem>>
+    suspend fun getCollateralItem(): DataState<List<CollateralItem>>
 
     suspend fun getClient(clientId: Int): ClientEntity
 

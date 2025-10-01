@@ -45,7 +45,7 @@ class ClientCollateralViewmodel (
 
             }
             try{
-                val result = repository.getCollateralItems(route.clientId)
+                val result = repository.getCollateralItems()
 
                 when(result){
                     is DataState.Success -> {
