@@ -19,6 +19,7 @@ import com.mifos.core.domain.useCases.GetClientTemplateUseCase
 import com.mifos.core.domain.useCases.GetSavingsProductTemplateUseCase
 import com.mifos.core.ui.util.BaseViewModel
 import com.mifos.core.ui.util.TextFieldsValidator
+import com.mifos.room.entities.accounts.savings.Charge
 import com.mifos.room.entities.templates.clients.ClientsTemplateEntity
 import com.mifos.room.entities.templates.clients.SavingProductOptionsEntity
 import com.mifos.room.entities.templates.clients.StaffOptionsEntity
@@ -86,6 +87,90 @@ internal class SavingsAccountViewModel(
             is SavingsAccountAction.SetFrequencyError -> handleFrequencyError(action)
             is SavingsAccountAction.SetFreqTypeError -> handleFreqTypeError(action)
             is SavingsAccountAction.OnMonthlyMinimumBalanceError -> handleMonthlyMinimumBalanceError(action)
+
+            is SavingsAccountAction.ShowAddChargeDialog -> handleShowAddChargeDialog()
+            is SavingsAccountAction.ShowCharges -> handleShowChargeDialog()
+            is SavingsAccountAction.EditCharge -> handleEditCharge(action)
+            is SavingsAccountAction.AddChargeToList -> handleAddChargeToList()
+            is SavingsAccountAction.DismissDialog -> handleDismissDialog()
+            is SavingsAccountAction.OnChargesAmountChange -> handleChargesAmountChange(action)
+            is SavingsAccountAction.OnChargesDateChange -> handleChargesDateChange(action)
+            is SavingsAccountAction.OnChargesDatePick -> handleChargesDatePick(action)
+            is SavingsAccountAction.OnChooseChargeIndexChange -> handleChooseChargeIndexChange(action)
+            is SavingsAccountAction.DeleteChargeFromSelectedCharges -> handleDeleteCharge(action.index)
+            is SavingsAccountAction.EditChargeDialog -> handleEditChargeDialog(action.index)
+        }
+    }
+
+    private fun handleEditChargeDialog(index: Int) {
+        val selectedEditCharge = state.addedCharges[index]
+//        val chooseChargeIndex = state.loanTemplate
+//            ?.chargeOptions
+//            ?.indexOfFirst { it.id == selectedEditCharge.id } ?: -1
+        mutableStateFlow.update {
+            it.copy(
+                chargeAmount = selectedEditCharge.amount.toString(),
+                chargeDate = selectedEditCharge.date,
+                chooseChargeIndex = index,
+                dialogState = SavingsAccountState.DialogState.AddNewCharge(true, index),
+            )
+        }
+    }
+
+    private fun handleDeleteCharge(index: Int) {
+        val newCharges = state.addedCharges.toMutableList().apply {
+            removeAt(index)
+        }
+        mutableStateFlow.update {
+            it.copy(addedCharges = newCharges)
+        }
+    }
+
+    private fun handleChargesDatePick(action: SavingsAccountAction.OnChargesDatePick) {
+        mutableStateFlow.update {
+            it.copy(showChargesDatePick = action.state)
+        }
+    }
+
+    private fun handleChooseChargeIndexChange(action: SavingsAccountAction.OnChooseChargeIndexChange) {
+        mutableStateFlow.update {
+            it.copy(chooseChargeIndex = action.index)
+        }
+    }
+
+    private fun handleChargesDateChange(action: SavingsAccountAction.OnChargesDateChange) {
+        mutableStateFlow.update {
+            it.copy(chargeDate = action.date)
+        }
+    }
+
+    private fun handleChargesAmountChange(action: SavingsAccountAction.OnChargesAmountChange) {
+        mutableStateFlow.update {
+            it.copy(chargeAmount = action.amount)
+        }
+    }
+
+    private fun handleDismissDialog() {
+        mutableStateFlow.update { it.copy(dialogState = null) }
+    }
+
+    private fun handleAddChargeToList() {
+
+    }
+
+    private fun handleEditCharge(action: SavingsAccountAction.EditCharge) {
+
+    }
+
+    private fun handleShowAddChargeDialog() {
+        mutableStateFlow.update {
+            it.copy(dialogState = SavingsAccountState.DialogState.AddNewCharge(false))
+        }
+    }
+
+    private fun handleShowChargeDialog() {
+        mutableStateFlow.update {
+            it.copy(dialogState = SavingsAccountState.DialogState.ShowCharges)
         }
     }
 
@@ -160,11 +245,13 @@ internal class SavingsAccountViewModel(
                     screenState = SavingsAccountState.ScreenState.Loading,
                 )
             }
+
             is DataState.Error -> mutableStateFlow.update {
                 it.copy(
                     dialogState = SavingsAccountState.DialogState.Error(result.message),
                 )
             }
+
             is DataState.Success -> mutableStateFlow.update {
                 it.copy(
                     dialogState = null,
@@ -172,10 +259,14 @@ internal class SavingsAccountViewModel(
                     savingsProductTemplate = result.data,
                     currencyIndex = result.data.currencyOptions?.indexOf(result.data.currency) ?: -1,
                     decimalPlaces = result.data.currency?.decimalPlaces?.toInt().toString(),
-                    interestPostingPeriodIndex = result.data.interestPostingPeriodTypeOptions?.indexOf(result.data.interestPostingPeriodType) ?: -1,
-                    interestCalcIndex = result.data.interestCalculationTypeOptions?.indexOf(result.data.interestCalculationType) ?: -1,
-                    interestCompPeriodIndex = result.data.interestCompoundingPeriodTypeOptions?.indexOf(result.data.interestCompoundingPeriodType) ?: -1,
-                    daysInYearIndex = result.data.interestCalculationDaysInYearTypeOptions?.indexOf(result.data.interestCalculationDaysInYearType) ?: -1,
+                    interestPostingPeriodIndex = result.data.interestPostingPeriodTypeOptions?.indexOf(result.data.interestPostingPeriodType)
+                        ?: -1,
+                    interestCalcIndex = result.data.interestCalculationTypeOptions?.indexOf(result.data.interestCalculationType)
+                        ?: -1,
+                    interestCompPeriodIndex = result.data.interestCompoundingPeriodTypeOptions?.indexOf(result.data.interestCompoundingPeriodType)
+                        ?: -1,
+                    daysInYearIndex = result.data.interestCalculationDaysInYearTypeOptions?.indexOf(result.data.interestCalculationDaysInYearType)
+                        ?: -1,
                 )
             }
         }
@@ -376,9 +467,17 @@ constructor(
     val daysInYearError: String? = null,
     val freqTypeIndex: Int = -1,
     val freqTypeError: String? = null,
+
+    val chooseChargeIndex: Int = -1,
+    val addedCharges: List<CreatedCharges> = emptyList(),
+    val chargeDate: String = DateHelper.getDateAsStringFromLong(Clock.System.now().toEpochMilliseconds()),
+    val showChargesDatePick: Boolean = false,
+    val chargeAmount: String = "",
 ) {
     sealed interface DialogState {
         data class Error(val message: String) : DialogState
+        data object ShowCharges : DialogState
+        data class AddNewCharge(val edit: Boolean, val index: Int = -1) : DialogState
     }
 
     sealed interface ScreenState {
@@ -388,14 +487,16 @@ constructor(
     }
 
     val isDetailsNextEnabled = submissionDate.isNotEmpty() &&
-        savingsProductSelected != -1 &&
-        fieldOfficerIndex != -1
+            savingsProductSelected != -1 &&
+            fieldOfficerIndex != -1
 
     val isTermsNextEnabled = isDetailsNextEnabled &&
-        currencyIndex != -1 &&
-        interestCalcIndex != -1 &&
-        interestPostingPeriodIndex != -1 &&
-        interestCompPeriodIndex != -1
+            currencyIndex != -1 &&
+            interestCalcIndex != -1 &&
+            interestPostingPeriodIndex != -1 &&
+            interestCompPeriodIndex != -1
+
+    val isChargesNextEnabled = isTermsNextEnabled
 }
 
 sealed interface SavingsAccountEvent {
@@ -440,8 +541,32 @@ sealed interface SavingsAccountAction {
     data class SetFrequencyError(val message: String?) : SavingsAccountAction
     data class SetFreqTypeError(val message: String?) : SavingsAccountAction
     data class OnMonthlyMinimumBalanceError(val message: String?) : SavingsAccountAction
+    data object ShowAddChargeDialog : SavingsAccountAction
+    data object ShowCharges : SavingsAccountAction
+    data class EditCharge(val index: Int) : SavingsAccountAction
+
+    data class OnChooseChargeIndexChange(val index: Int) : SavingsAccountAction
+    data object DismissDialog : SavingsAccountAction
+
+    //    data object ShowOverDueCharges : SavingsAccountAction
+    data class OnChargesDatePick(val state: Boolean) : SavingsAccountAction
+    data class OnChargesDateChange(val date: String) : SavingsAccountAction
+    data class OnChargesAmountChange(val amount: String) : SavingsAccountAction
+    data object AddChargeToList : SavingsAccountAction
+    data class DeleteChargeFromSelectedCharges(val index: Int) : SavingsAccountAction
+    data class EditChargeDialog(val index: Int) : SavingsAccountAction
+
     sealed interface Internal : SavingsAccountAction {
         data class OnReceivingClientTemplate(val clientTemplate: DataState<ClientsTemplateEntity>) : Internal
         data class OnReceivingSavingsProductTemplate(val savingsProductTemplate: DataState<SavingProductsTemplate>) : Internal
     }
 }
+
+data class CreatedCharges(
+    val id: Int? = -1,
+    val name: String?,
+    val date: String,
+    val type: String?,
+    val amount: Double? = 0.0,
+    val collectedOn: String = "",
+)
