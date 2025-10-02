@@ -150,7 +150,7 @@ private fun NewLoanAccountScaffold(
         modifier = modifier,
     ) { paddingValues ->
 
-        if(state.dialogState !is NewLoanAccountState.DialogState.Error){
+        if (state.dialogState !is NewLoanAccountState.DialogState.Error) {
             Column(
                 Modifier.fillMaxSize().padding(paddingValues),
             ) {

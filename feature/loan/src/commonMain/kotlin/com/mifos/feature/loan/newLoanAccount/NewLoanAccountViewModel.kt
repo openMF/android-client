@@ -18,8 +18,8 @@ import androidclient.feature.loan.generated.resources.total_installments
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
-import com.mifos.core.common.utils.CurrencyFormatter
 import co.touchlab.kermit.Logger
+import com.mifos.core.common.utils.CurrencyFormatter
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.common.utils.DateHelper
 import com.mifos.core.data.repository.ClientDetailsRepository
@@ -239,7 +239,7 @@ internal class NewLoanAccountViewModel(
 
             is NewLoanAccountAction.RepaymentScheduler -> {
                 moveToNextStep()
-                if(state.repaymentSchedules.isEmpty()){
+                if (state.repaymentSchedules.isEmpty()) {
                     viewModelScope.launch {
                         repaymentScheduler()
                     }

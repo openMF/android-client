@@ -80,7 +80,7 @@ fun DetailsPage(
         },
     )
 
-    if(state.isOverLayLoadingActive){
+    if (state.isOverLayLoadingActive) {
         MifosProgressIndicatorOverlay()
     }
 

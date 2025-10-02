@@ -36,16 +36,15 @@ import com.mifos.feature.loan.newLoanAccount.NewLoanAccountAction
 import com.mifos.feature.loan.newLoanAccount.NewLoanAccountState
 import org.jetbrains.compose.resources.stringResource
 
-
 @Composable
 fun SchedulePage(
     state: NewLoanAccountState,
     onAction: (NewLoanAccountAction) -> Unit,
     modifier: Modifier = Modifier,
-){
-    if(state.isLoading){
+) {
+    if (state.isLoading) {
         MifosProgressIndicator()
-    }else{
+    } else {
         ScheduleContent(
             state = state,
             onAction = onAction,
