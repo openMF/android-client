@@ -131,9 +131,10 @@ private fun NewLoanAccountScaffold(
             )
         },
         Step(stringResource(Res.string.step_schedule)) {
-            SchedulePage {
-                onAction(NewLoanAccountAction.NextStep)
-            }
+            SchedulePage(
+                state = state,
+                onAction = onAction,
+            )
         },
         Step(stringResource(Res.string.step_preview)) {
             PreviewPage(
