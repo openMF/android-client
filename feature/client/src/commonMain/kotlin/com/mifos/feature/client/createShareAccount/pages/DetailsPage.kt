@@ -1,13 +1,3 @@
-/*
- * Copyright 2025 Mifos Initiative
- *
- * This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at https://mozilla.org/MPL/2.0/.
- *
- * See https://github.com/openMF/android-client/blob/master/LICENSE.md
- */
-package com.mifos.feature.client.createShareAccount
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -20,12 +10,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun DetailsPage(onNext: () -> Unit) {
+fun DetailPage(onNext: () -> Unit) {
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
-        Text("Step: Details (placeholder)")
+        Text("Details Page")
         Spacer(Modifier.height(8.dp))
         Button(onClick = onNext) {
-            Text("Next")
+            Text("Next Button")
         }
     }
 }
