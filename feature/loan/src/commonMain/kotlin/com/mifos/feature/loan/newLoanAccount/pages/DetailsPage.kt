@@ -52,6 +52,7 @@ import com.mifos.core.designsystem.component.MifosTextFieldConfig
 import com.mifos.core.designsystem.component.MifosTextFieldDropdown
 import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.designsystem.theme.MifosTypography
+import com.mifos.core.ui.components.MifosProgressIndicatorOverlay
 import com.mifos.core.ui.components.MifosTwoButtonRow
 import com.mifos.feature.loan.newLoanAccount.NewLoanAccountAction
 import com.mifos.feature.loan.newLoanAccount.NewLoanAccountState
@@ -78,6 +79,10 @@ fun DetailsPage(
             }
         },
     )
+
+    if(state.isOverLayLoadingActive){
+        MifosProgressIndicatorOverlay()
+    }
 
     if (state.showSubmissionDatePick) {
         DatePickerDialog(

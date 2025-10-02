@@ -738,7 +738,7 @@ internal class NewLoanAccountViewModel(
                 } else {
                     mutableStateFlow.update {
                         it.copy(
-                            screenState = NewLoanAccountState.ScreenState.NetworkError,
+                            dialogState = NewLoanAccountState.DialogState.Error("No internet connection"),
                         )
                     }
                 }
@@ -781,13 +781,12 @@ internal class NewLoanAccountViewModel(
             }
 
             is DataState.Loading -> mutableStateFlow.update {
-                it.copy(screenState = NewLoanAccountState.ScreenState.Loading)
+                it.copy(dialogState = NewLoanAccountState.DialogState.Loading)
             }
 
             is DataState.Success -> mutableStateFlow.update {
                 it.copy(
                     dialogState = null,
-                    screenState = NewLoanAccountState.ScreenState.Success,
                     productLoans = result.data,
                 )
             }
@@ -882,7 +881,6 @@ internal class NewLoanAccountViewModel(
                         mutableStateFlow.update {
                             it.copy(
                                 dialogState = null,
-                                screenState = NewLoanAccountState.ScreenState.Success,
                                 repaymentSchedules = schedulerDetails,
                                 loanWithAssociationsEntity = dataState.data,
                                 isLoading = false,
@@ -908,7 +906,6 @@ constructor(
     val currentStep: Int = 0,
     val totalSteps: Int = 4,
     val dialogState: DialogState? = null,
-    val screenState: ScreenState = ScreenState.Loading,
     val isOverLayLoadingActive: Boolean = false,
     val externalId: String = "",
     val externalIdError: StringResource? = null,
@@ -980,12 +977,7 @@ constructor(
         data object ShowCollaterals : DialogState
         data object ShowCharges : DialogState
         data object ShowOverDueCharges : DialogState
-    }
-
-    sealed interface ScreenState {
-        data object Loading : ScreenState
-        data object Success : ScreenState
-        data object NetworkError : ScreenState
+        data object Loading : DialogState
     }
 
     val isDetailsNextEnabled =
