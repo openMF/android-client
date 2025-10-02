@@ -1025,9 +1025,7 @@ sealed interface NewLoanAccountAction {
     data class OnRepaidEveryChange(val number: Int) : NewLoanAccountAction
     data class OnSelectedOnIndexChange(val index: Int) : NewLoanAccountAction
     data class OnSelectedDayIndexChange(val index: Int) : NewLoanAccountAction
-    data class OnNominalInterestRateChange(val rate: Double, val text: String) :
-        NewLoanAccountAction
-
+    data class OnNominalInterestRateChange(val rate: Double, val text: String) : NewLoanAccountAction
     data class OnNominalFrequencyIndexChange(val index: Int) : NewLoanAccountAction
     data class OnNominalMethodIndexChange(val index: Int) : NewLoanAccountAction
     data class OnNominalAmortizationIndexChange(val index: Int) : NewLoanAccountAction
