@@ -45,27 +45,27 @@ import androidclient.feature.loan.generated.resources.number_of_repayments
 import androidclient.feature.loan.generated.resources.principal
 import androidclient.feature.loan.generated.resources.product_name
 import androidclient.feature.loan.generated.resources.repayment_strategy
+import androidclient.feature.loan.generated.resources.step_details
 import androidclient.feature.loan.generated.resources.submission_date
 import androidclient.feature.loan.generated.resources.terms
 import androidclient.feature.loan.generated.resources.yes
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.mifos.core.common.utils.CurrencyFormatter
+import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.designsystem.theme.MifosTypography
+import com.mifos.core.ui.components.MifosDefaultListingComponentFromStringResources
 import com.mifos.core.ui.components.MifosProgressIndicator
+import com.mifos.core.ui.components.MifosProgressIndicatorOverlay
 import com.mifos.core.ui.components.MifosRowWithTextAndButton
 import com.mifos.core.ui.components.MifosTwoButtonRow
 import com.mifos.feature.loan.newLoanAccount.NewLoanAccountAction
@@ -78,7 +78,7 @@ fun PreviewPage(
     onAction: (NewLoanAccountAction) -> Unit,
 ) {
     if (state.isLoading) {
-        MifosProgressIndicator()
+        MifosProgressIndicatorOverlay()
     } else {
         PreviewPageContent(
             state,
@@ -93,113 +93,122 @@ fun PreviewPageContent(
     onAction: (NewLoanAccountAction) -> Unit,
 ) {
     Column(
-        modifier = Modifier.fillMaxSize()
-            .verticalScroll(rememberScrollState()),
-        verticalArrangement = Arrangement.spacedBy(20.dp),
+        Modifier.fillMaxSize().padding(bottom = DesignToken.padding.large),
     ) {
-        Text(
-            text = stringResource(Res.string.terms),
-            style = MifosTypography.labelLarge,
-        )
-        DetailsCard(
-            productName = state.productLoans[state.loanProductSelected].name.toString(),
-            loanOfficer = if (state.loanOfficerIndex == -1) {
-                ""
-            } else {
-                state.loanTemplate?.loanOfficerOptions[state.loanOfficerIndex]?.displayName.toString()
-            },
-            externalId = state.externalId,
-            submittedDate = state.submissionDate,
-            expectedDisbursement = state.expectedDisbursementDate,
-            loadPurpose = if (state.loanPurposeIndex == -1) {
-                ""
-            } else {
-                state.loanTemplate?.loanPurposeOptions[state.loanPurposeIndex]?.name.toString()
-            },
-            isSavingsLinked = if (state.linkSavingsIndex == -1) {
-                stringResource(Res.string.no)
-            } else {
-                stringResource(Res.string.yes)
-            },
-        )
+        Column(
+            modifier = Modifier.weight(1f)
+                .verticalScroll(rememberScrollState()),
+            verticalArrangement = Arrangement.spacedBy(20.dp),
+        ) {
+            Text(
+                text = stringResource(Res.string.step_details),
+                style = MifosTypography.labelLarge,
+            )
+            DetailsCard(
+                productName = state.productLoans[state.loanProductSelected].name.toString(),
+                loanOfficer = if (state.loanOfficerIndex == -1) {
+                    ""
+                } else {
+                    state.loanTemplate?.loanOfficerOptions[state.loanOfficerIndex]?.displayName.toString()
+                },
+                externalId = state.externalId,
+                submittedDate = state.submissionDate,
+                expectedDisbursement = state.expectedDisbursementDate,
+                loadPurpose = if (state.loanPurposeIndex == -1) {
+                    ""
+                } else {
+                    state.loanTemplate?.loanPurposeOptions[state.loanPurposeIndex]?.name.toString()
+                },
+                isSavingsLinked = if (state.linkSavingsIndex == -1) {
+                    stringResource(Res.string.no)
+                } else {
+                    stringResource(Res.string.yes)
+                },
+            )
 
-        Text(
-            text = stringResource(Res.string.terms),
-            style = MifosTypography.labelLarge,
-        )
-        TermsCard(
-            // todo currency
-            principal = state.principalAmount.toString(),
-            loanTerm = if (state.termFrequencyIndex == -1) {
-                ""
-            } else {
-                state.loanTemplate?.termFrequencyTypeOptions[state.termFrequencyIndex]?.value ?: ""
-            },
-            numberOfRepayments = state.noOfRepayments.toString(),
-            firstRepaymentDate = state.firstRepaymentDate,
-            interestChargedForm = state.interestChargedFromDate,
-            repaidEvery = "",
-            nominalInterestRate = state.nominalInterestRate.toString(),
-            isEqualAmortization = state.isCheckedEqualAmortization.toString(),
-            amortization = if (state.nominalAmortizationIndex == -1) {
-                ""
-            } else {
-                state.loanTemplate?.amortizationTypeOptions[state.nominalAmortizationIndex]?.value
-                    ?: ""
-            },
-            interestCalculationPeriod = if (state.interestCalculationPeriodIndex == -1) {
-                ""
-            } else {
-                state.loanTemplate?.interestCalculationPeriodTypeOptions[state.interestCalculationPeriodIndex]?.value
-                    ?: ""
-            },
-            calculateInterestForExactDaysInPartial = "",
-            arrearsTolerance = state.arrearsTolerance.toString(),
-            interestFreePeriod = state.interestFreePeriod.toString(),
-            repaymentStrategy = if (state.repaymentStrategyIndex == -1) {
-                ""
-            } else {
-                state.loanTemplate?.transactionProcessingStrategyOptions[state.repaymentStrategyIndex]?.name
-                    ?: ""
-            },
-            // todo
-            installmentAmount = "",
-            ballonRepayment = state.balloonRepaymentAmount.toString(),
-        )
+            Text(
+                text = stringResource(Res.string.terms),
+                style = MifosTypography.labelLarge,
+            )
+            TermsCard(
+                principal = CurrencyFormatter.format(
+                    balance = state.principalAmount,
+                    currencyCode = state.loanTemplate?.currency?.code,
+                    maximumFractionDigits = 2,
+                ),
+                loanTerm = if (state.termFrequencyIndex == -1) {
+                    ""
+                } else {
+                    state.loanTemplate?.termFrequencyTypeOptions[state.termFrequencyIndex]?.value
+                        ?: ""
+                },
+                numberOfRepayments = state.noOfRepayments.toString(),
+                firstRepaymentDate = state.firstRepaymentDate,
+                interestChargedForm = state.interestChargedFromDate,
+                repaidEvery = "",
+                nominalInterestRate = state.nominalInterestRate.toString(),
+                isEqualAmortization = state.isCheckedEqualAmortization.toString(),
+                amortization = if (state.nominalAmortizationIndex == -1) {
+                    ""
+                } else {
+                    state.loanTemplate?.amortizationTypeOptions[state.nominalAmortizationIndex]?.value
+                        ?: ""
+                },
+                interestCalculationPeriod = if (state.interestCalculationPeriodIndex == -1) {
+                    ""
+                } else {
+                    state.loanTemplate?.interestCalculationPeriodTypeOptions[state.interestCalculationPeriodIndex]?.value
+                        ?: ""
+                },
+                calculateInterestForExactDaysInPartial = "",
+                arrearsTolerance = state.arrearsTolerance.toString(),
+                interestFreePeriod = state.interestFreePeriod.toString(),
+                repaymentStrategy = if (state.repaymentStrategyIndex == -1) {
+                    ""
+                } else {
+                    state.loanTemplate?.transactionProcessingStrategyOptions[state.repaymentStrategyIndex]?.name
+                        ?: ""
+                },
+                // todo
+                installmentAmount = "",
+                ballonRepayment = state.balloonRepaymentAmount.toString(),
+            )
 
-        Text(
-            text = stringResource(Res.string.loan_new_loan_moratorium),
-            style = MifosTypography.labelLarge,
-        )
-        MoratoriumCard(
-            onPrincipalPayment = state.moratoriumGraceOnPrincipalPayment.toString(),
-            onInternestPayment = state.moratoriumGraceOnInterestPayment.toString(),
-            onAreasAging = state.moratoriumOnArrearsAgeing.toString(),
-            // todo
-            enableInstallmentLevelDelinquency = "",
-            recalculateInterest = if (state.loanTemplate?.isInterestRecalculationEnabled ?: false) {
-                stringResource(Res.string.yes)
-            } else {
-                stringResource(Res.string.no)
-            },
-            // todo
-            daysInMonth = "",
-        )
+            Text(
+                text = stringResource(Res.string.loan_new_loan_moratorium),
+                style = MifosTypography.labelLarge,
+            )
+            MoratoriumCard(
+                onPrincipalPayment = state.moratoriumGraceOnPrincipalPayment.toString(),
+                onInternestPayment = state.moratoriumGraceOnInterestPayment.toString(),
+                onAreasAging = state.moratoriumOnArrearsAgeing.toString(),
+                // todo
+                enableInstallmentLevelDelinquency = "",
+                recalculateInterest = if (state.loanTemplate?.isInterestRecalculationEnabled
+                    ?: false
+                ) {
+                    stringResource(Res.string.yes)
+                } else {
+                    stringResource(Res.string.no)
+                },
+                // todo
+                daysInMonth = "",
+            )
 
-        Text(
-            text = stringResource(Res.string.loan_new_loan_charges),
-            style = MifosTypography.labelLarge,
-        )
+            Text(
+                text = stringResource(Res.string.loan_new_loan_charges),
+                style = MifosTypography.labelLarge,
+            )
 
-        MifosRowWithTextAndButton(
-            onBtnClick = { onAction(NewLoanAccountAction.ShowCharges) },
-            text = state.addedCharges.size.toString() + " " + stringResource(Res.string.loan_new_loan_active_charges),
-            btnText = stringResource(Res.string.loan_new_loan_view),
-            modifier = Modifier.fillMaxWidth(),
-        )
-
+            MifosRowWithTextAndButton(
+                onBtnClick = { onAction(NewLoanAccountAction.ShowCharges) },
+                text = state.addedCharges.size.toString() + " " + stringResource(Res.string.loan_new_loan_active_charges),
+                btnText = stringResource(Res.string.loan_new_loan_view),
+                modifier = Modifier.fillMaxWidth(),
+            )
+        }
         MifosTwoButtonRow(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier.padding(top = DesignToken.padding.small),
             firstBtnText = stringResource(Res.string.back),
             secondBtnText = stringResource(Res.string.feature_loan_charge_submit),
             onFirstBtnClick = { onAction(NewLoanAccountAction.GotoPreviousStep) },
@@ -217,42 +226,16 @@ private fun MoratoriumCard(
     recalculateInterest: String,
     daysInMonth: String,
 ) {
-    OutlinedCard(
-        modifier = Modifier.fillMaxWidth(),
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.background,
+    MifosDefaultListingComponentFromStringResources(
+        data = mapOf(
+            Res.string.loan_new_loan_on_principal_payment to onPrincipalPayment,
+            Res.string.loan_new_loan_on_interest_payment to onInternestPayment,
+            Res.string.loan_new_loan_on_arrears_aging to onAreasAging,
+            Res.string.loan_new_loan_enable_installment_level to enableInstallmentLevelDelinquency,
+            Res.string.loan_new_loan_recalculate_interest to recalculateInterest,
+            Res.string.loan_new_loan_days_in_month to daysInMonth,
         ),
-    ) {
-        Column(
-            modifier = Modifier.fillMaxWidth().padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp),
-        ) {
-            LoanPreviewItemRow(
-                title = stringResource(Res.string.loan_new_loan_on_principal_payment),
-                description = onPrincipalPayment,
-            )
-            LoanPreviewItemRow(
-                title = stringResource(Res.string.loan_new_loan_on_interest_payment),
-                description = onInternestPayment,
-            )
-            LoanPreviewItemRow(
-                title = stringResource(Res.string.loan_new_loan_on_arrears_aging),
-                description = onAreasAging,
-            )
-            LoanPreviewItemRow(
-                title = stringResource(Res.string.loan_new_loan_enable_installment_level),
-                description = enableInstallmentLevelDelinquency,
-            )
-            LoanPreviewItemRow(
-                title = stringResource(Res.string.loan_new_loan_recalculate_interest),
-                description = recalculateInterest,
-            )
-            LoanPreviewItemRow(
-                title = stringResource(Res.string.loan_new_loan_days_in_month),
-                description = daysInMonth,
-            )
-        }
-    }
+    )
 }
 
 @Composable
@@ -274,82 +257,26 @@ private fun TermsCard(
     installmentAmount: String,
     ballonRepayment: String,
 ) {
-    OutlinedCard(
-        modifier = Modifier.fillMaxWidth(),
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.background,
+    MifosDefaultListingComponentFromStringResources(
+        data = mapOf(
+            Res.string.principal to principal,
+            Res.string.loan_new_loan_loan_term to loanTerm,
+            Res.string.number_of_repayments to numberOfRepayments,
+            Res.string.first_repayment_date to firstRepaymentDate,
+            Res.string.interest_charged_from to interestChargedForm,
+            Res.string.loan_new_loan_repaid_every to repaidEvery,
+            Res.string.loan_new_loan_nominal_interest_rate to nominalInterestRate,
+            Res.string.loan_new_loan_is_equal_amortization to isEqualAmortization,
+            Res.string.loan_new_loan_amortization to amortization,
+            Res.string.interest_calculation_period to interestCalculationPeriod,
+            Res.string.loan_new_loan_calculate_interest_for_exact_days_in_pertial to calculateInterestForExactDaysInPartial,
+            Res.string.loan_new_loan_arrears_tolerance to arrearsTolerance,
+            Res.string.loan_new_loan_interest_free_period to interestFreePeriod,
+            Res.string.repayment_strategy to repaymentStrategy,
+            Res.string.loan_new_loan_installment_amount to installmentAmount,
+            Res.string.loan_new_loan_ballon_repayment_amount to ballonRepayment,
         ),
-    ) {
-        Column(
-            modifier = Modifier.fillMaxWidth().padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp),
-        ) {
-            LoanPreviewItemRow(
-                title = stringResource(Res.string.principal),
-                description = principal,
-            )
-            LoanPreviewItemRow(
-                title = stringResource(Res.string.loan_new_loan_loan_term),
-                description = loanTerm,
-            )
-            LoanPreviewItemRow(
-                title = stringResource(Res.string.number_of_repayments),
-                description = numberOfRepayments,
-            )
-            LoanPreviewItemRow(
-                title = stringResource(Res.string.first_repayment_date),
-                description = firstRepaymentDate,
-            )
-            LoanPreviewItemRow(
-                title = stringResource(Res.string.interest_charged_from),
-                description = interestChargedForm,
-            )
-            LoanPreviewItemRow(
-                title = stringResource(Res.string.loan_new_loan_repaid_every),
-                description = repaidEvery,
-            )
-            LoanPreviewItemRow(
-                title = stringResource(Res.string.loan_new_loan_nominal_interest_rate),
-                description = nominalInterestRate,
-            )
-            LoanPreviewItemRow(
-                title = stringResource(Res.string.loan_new_loan_is_equal_amortization),
-                description = isEqualAmortization,
-            )
-            LoanPreviewItemRow(
-                title = stringResource(Res.string.loan_new_loan_amortization),
-                description = amortization,
-            )
-            LoanPreviewItemRow(
-                title = stringResource(Res.string.interest_calculation_period),
-                description = interestCalculationPeriod,
-            )
-            LoanPreviewItemRow(
-                title = stringResource(Res.string.loan_new_loan_calculate_interest_for_exact_days_in_pertial),
-                description = calculateInterestForExactDaysInPartial,
-            )
-            LoanPreviewItemRow(
-                title = stringResource(Res.string.loan_new_loan_arrears_tolerance),
-                description = arrearsTolerance,
-            )
-            LoanPreviewItemRow(
-                title = stringResource(Res.string.loan_new_loan_interest_free_period),
-                description = interestFreePeriod,
-            )
-            LoanPreviewItemRow(
-                title = stringResource(Res.string.repayment_strategy),
-                description = repaymentStrategy,
-            )
-            LoanPreviewItemRow(
-                title = stringResource(Res.string.loan_new_loan_installment_amount),
-                description = installmentAmount,
-            )
-            LoanPreviewItemRow(
-                title = stringResource(Res.string.loan_new_loan_ballon_repayment_amount),
-                description = ballonRepayment,
-            )
-        }
-    }
+    )
 }
 
 @Composable
@@ -362,66 +289,15 @@ private fun DetailsCard(
     loadPurpose: String,
     isSavingsLinked: String,
 ) {
-    OutlinedCard(
-        modifier = Modifier.fillMaxWidth(),
-    ) {
-        Column(
-            modifier = Modifier.fillMaxWidth().padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp),
-        ) {
-            LoanPreviewItemRow(
-                title = stringResource(Res.string.product_name),
-                description = productName,
-            )
-            LoanPreviewItemRow(
-                title = stringResource(Res.string.loan_new_loan_loan_officer),
-                description = loanOfficer,
-            )
-            LoanPreviewItemRow(
-                title = stringResource(Res.string.external_id),
-                description = externalId,
-            )
-            LoanPreviewItemRow(
-                title = stringResource(Res.string.submission_date),
-                description = submittedDate,
-            )
-            LoanPreviewItemRow(
-                title = stringResource(Res.string.expected_disbursement),
-                description = expectedDisbursement,
-            )
-            LoanPreviewItemRow(
-                title = stringResource(Res.string.loan_new_loan_loan_purpose),
-                description = loadPurpose,
-            )
-            LoanPreviewItemRow(
-                title = stringResource(Res.string.loan_new_loan_is_savings_linked),
-                description = isSavingsLinked,
-            )
-        }
-    }
-}
-
-@Composable
-private fun LoanPreviewItemRow(
-    title: String,
-    description: String,
-) {
-    Row(
-        modifier = Modifier.fillMaxWidth(),
-    ) {
-        Text(
-            text = "$title:",
-            style = MifosTypography.labelMediumEmphasized,
-            modifier = Modifier.weight(5f),
-            maxLines = 1,
-        )
-
-        Text(
-            text = description,
-            modifier = Modifier.weight(5f),
-            maxLines = 1,
-            textAlign = TextAlign.End,
-            style = MifosTypography.labelMedium,
-        )
-    }
+    MifosDefaultListingComponentFromStringResources(
+        data = mapOf(
+            Res.string.product_name to productName,
+            Res.string.loan_new_loan_loan_officer to loanOfficer,
+            Res.string.external_id to externalId,
+            Res.string.submission_date to submittedDate,
+            Res.string.expected_disbursement to expectedDisbursement,
+            Res.string.loan_new_loan_loan_purpose to loadPurpose,
+            Res.string.loan_new_loan_is_savings_linked to isSavingsLinked,
+        ),
+    )
 }

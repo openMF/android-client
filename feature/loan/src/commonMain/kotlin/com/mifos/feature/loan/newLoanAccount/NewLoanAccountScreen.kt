@@ -138,9 +138,8 @@ private fun NewLoanAccountScaffold(
         Step(stringResource(Res.string.step_preview)) {
             PreviewPage(
                 state = state,
-            ) {
-                onAction(NewLoanAccountAction.NextStep)
-            }
+                onAction = onAction,
+            )
         },
     )
 

@@ -262,7 +262,7 @@ internal class NewLoanAccountViewModel(
                 linkAccountId = state.linkSavingsIndex,
             )
 
-            loanUseCase.invoke(payload).collect { dataState ->
+            loanUseCase(payload).collect { dataState ->
                 when (dataState) {
                     is DataState.Error -> {
                         mutableStateFlow.update {
