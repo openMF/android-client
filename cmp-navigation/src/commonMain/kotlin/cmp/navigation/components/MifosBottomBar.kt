@@ -9,18 +9,44 @@
  */
 package cmp.navigation.components
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.BottomAppBarDefaults
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.dropShadow
+import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.BlendMode
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.graphics.shadow.Shadow
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import cmp.navigation.authenticated.NavigationItem
-import com.mifos.core.designsystem.component.MifosNavigationBarItem
 import com.mifos.core.designsystem.theme.AppColors
+import com.mifos.core.designsystem.theme.DesignToken
+import com.mifos.core.designsystem.theme.MifosTypography
+import core.designsystem.generated.resources.Res
+import core.designsystem.generated.resources.core_designsystem_app_title
+import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.resources.stringResource
+import org.mifos.navigation.generated.resources.powered_by
+import org.mifos.navigation.generated.resources.topbarlogo
 
 @Composable
 fun MifosBottomBar(
@@ -47,6 +73,65 @@ fun MifosBottomBar(
                 onClick = { onClick(navigationItem) },
                 modifier = Modifier.testTag(tag = navigationItem.testTag),
             )
+        }
+    }
+}
+
+@Composable
+fun MifosBottomBar(
+    modifier: Modifier = Modifier,
+    windowInsets: WindowInsets = BottomAppBarDefaults.windowInsets,
+) {
+    Box(
+        modifier = Modifier.dropShadow(
+            shape = DesignToken.shapes.bottomSheet,
+            shadow = Shadow(
+                radius = 10.dp,
+                spread = 5.dp,
+                color = Color.Gray.copy(alpha = 0.40f),
+                offset = DpOffset(x = 4.dp, 4.dp),
+            ),
+        ),
+    ) {
+        BottomAppBar(
+            windowInsets = windowInsets,
+            modifier = modifier.fillMaxWidth().height(DesignToken.sizes.bottomAppBarHeight)
+                .clip(
+                    DesignToken.shapes.bottomSheet,
+                ),
+            containerColor = MaterialTheme.colorScheme.surfaceContainerLowest,
+        ) {
+            Box(
+                modifier.fillMaxSize().padding(DesignToken.padding.small),
+            ) {
+                Row(
+                    modifier = modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.Center,
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Text(
+                        text = stringResource(org.mifos.navigation.generated.resources.Res.string.powered_by) + " ",
+                        style = MifosTypography.tag,
+                        color = MaterialTheme.colorScheme.primary,
+                    )
+
+                    Image(
+                        painter = painterResource(org.mifos.navigation.generated.resources.Res.drawable.topbarlogo),
+                        contentDescription = null,
+                        colorFilter = ColorFilter.tint(
+                            MaterialTheme.colorScheme.primary,
+                            blendMode = BlendMode.SrcIn,
+                        ),
+                        modifier = Modifier.size(DesignToken.sizes.iconMiny),
+                    )
+
+                    Text(
+                        text = " " + stringResource(Res.string.core_designsystem_app_title),
+                        style = MifosTypography.tag,
+                        color = MaterialTheme.colorScheme.primary,
+                    )
+                }
+            }
         }
     }
 }

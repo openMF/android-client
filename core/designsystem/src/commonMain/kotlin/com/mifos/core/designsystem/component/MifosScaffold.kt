@@ -50,7 +50,7 @@ fun MifosScaffold(
 ) {
     Scaffold(
         topBar = {},
-        bottomBar = bottomBar,
+        bottomBar = {},
         floatingActionButton = {
             floatingActionButtonContent?.let { content ->
                 FloatingActionButton(
