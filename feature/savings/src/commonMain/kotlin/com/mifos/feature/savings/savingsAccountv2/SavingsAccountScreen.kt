@@ -23,9 +23,14 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -52,6 +57,8 @@ import com.mifos.feature.savings.savingsAccountv2.pages.PreviewPage
 import com.mifos.feature.savings.savingsAccountv2.pages.TermsPage
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
+import kotlin.time.Clock
+import kotlin.time.ExperimentalTime
 
 @Composable
 internal fun SavingsAccountScreen(
@@ -104,7 +111,7 @@ private fun SavingsAccountScaffold(
             )
         },
         Step(stringResource(Res.string.step_charges)) {
-            ChargesPage (
+            ChargesPage(
                 state = state,
                 onAction = onAction,
             )
@@ -141,6 +148,7 @@ private fun SavingsAccountScaffold(
                     )
                 }
             }
+
             is SavingsAccountState.ScreenState.NetworkError -> {
                 MifosSweetError(
                     message = stringResource(Res.string.feature_savings_error_not_connected_internet),
@@ -166,20 +174,24 @@ private fun NewSavingsAccountDialog(
                 onclick = { onAction(SavingsAccountAction.Retry) },
             )
         }
+
         is SavingsAccountState.DialogState.AddNewCharge -> AddNewChargeDialog(
             isEdit = state.dialogState.edit,
             state = state,
             onAction = onAction,
             index = state.dialogState.index,
         )
+
         is SavingsAccountState.DialogState.ShowCharges -> ShowChargesDialog(
             state = state,
             onAction = onAction,
         )
+
         null -> Unit
     }
 }
 
+@OptIn(ExperimentalTime::class)
 @Composable
 private fun AddNewChargeDialog(
     isEdit: Boolean,
@@ -189,9 +201,9 @@ private fun AddNewChargeDialog(
 ) {
     AddChargeBottomSheet(
         title = if (isEdit) {
-            "Edit charge"
+            "Edit Charge"
         } else {
-            "Add new charge"
+            "Add New Charge"
         },
         confirmText = if (isEdit) {
             "Edit charge"
@@ -203,27 +215,26 @@ private fun AddNewChargeDialog(
         selectedChargeName = if (state.chooseChargeIndex == -1) {
             ""
         } else {
-            ""
-//            state.loanTemplate?.chargeOptions[state.chooseChargeIndex]?.name ?: ""
+            state.savingsProductTemplate?.chargeOptions?.get(state.chooseChargeIndex)?.name ?: ""
         },
-        selectedDate = state.chargeDate,
+        selectedDate = if (state.chargeDate >= DateHelper.getDateAsStringFromLong(Clock.System.now().toEpochMilliseconds())) {
+            state.chargeDate
+        } else {
+            DateHelper.getDateAsStringFromLong(Clock.System.now().toEpochMilliseconds())
+        },
         chargeAmount = state.chargeAmount,
         chargeType = if (state.chooseChargeIndex == -1) {
             ""
         } else {
-//            state.loanTemplate?.chargeOptions[state.chooseChargeIndex]?.chargeCalculationType?.value
-//                ?: ""
-            ""
+            state.savingsProductTemplate?.chargeOptions?.get(state.chooseChargeIndex)?.chargeCalculationType?.value
+                ?: ""
         },
         chargeCollectedOn = if (state.chooseChargeIndex == -1) {
             ""
         } else {
-            ""
-//            state.loanTemplate?.chargeOptions[state.chooseChargeIndex]?.chargeTimeType?.value
-//                ?: ""
+            state.savingsProductTemplate?.chargeOptions?.get(state.chooseChargeIndex)?.chargeTimeType?.value ?: ""
         },
-//        chargeOptions = state.loanTemplate?.chargeOptions?.map { it.name ?: "" } ?: emptyList(),
-        chargeOptions = emptyList(),
+        chargeOptions = state.savingsProductTemplate?.chargeOptions?.map { it.name ?: "" } ?: emptyList(),
         onConfirm = {
             if (isEdit) {
                 onAction(SavingsAccountAction.EditCharge(index))
@@ -241,6 +252,7 @@ private fun AddNewChargeDialog(
         onDateChange = { newDate ->
             onAction(SavingsAccountAction.OnChargesDateChange(DateHelper.getDateAsStringFromLong(newDate)))
         },
+        amountError = state.chargeAmountError,
         onAmountChange = { amount ->
             onAction(SavingsAccountAction.OnChargesAmountChange(amount))
         },
@@ -249,7 +261,6 @@ private fun AddNewChargeDialog(
 
 @Composable
 private fun ShowChargesDialog(
-    isOverDue: Boolean = false,
     state: SavingsAccountState,
     onAction: (SavingsAccountAction) -> Unit,
 ) {
@@ -258,60 +269,51 @@ private fun ShowChargesDialog(
             onAction(SavingsAccountAction.DismissDialog)
         },
         content = {
-            Column(
+            LazyColumn(
                 modifier = Modifier.fillMaxWidth().padding(DesignToken.padding.large),
                 verticalArrangement = Arrangement.spacedBy(DesignToken.padding.largeIncreased),
             ) {
-                Text(
-                    text = "View Charges",
-                    style = MifosTypography.titleMediumEmphasized,
-                )
-                if (isOverDue) {
-//                    state.loanTemplate?.overdueCharges?.forEachIndexed { index, it ->
-//                        MifosActionsChargeListingComponent(
-//                            chargeTitle = it.name.toString(),
-//                            type = it.chargeCalculationType?.value.toString(),
-//                            date = it.formattedDueDate,
-//                            collectedOn = it.chargeTimeType?.value.toString(),
-//                            amount = it.amount.toString(),
-//                            onActionClicked = {},
-//                            isExpandable = false,
-//                        )
-//                    }
-                } else {
-                    state.addedCharges.forEachIndexed { index, it ->
-                        MifosActionsChargeListingComponent(
-                            chargeTitle = it.name.toString(),
-                            type = it.type.toString(),
-                            date = it.date,
-                            collectedOn = it.collectedOn,
-                            amount = it.amount.toString(),
-                            onActionClicked = { action ->
-                                when (action) {
-                                    is Actions.Delete -> {
-                                        onAction(SavingsAccountAction.DeleteChargeFromSelectedCharges(index))
-                                    }
-                                    is Actions.Edit -> {
-                                        onAction(SavingsAccountAction.EditChargeDialog(index))
-                                    }
-                                    else -> {}
-                                }
-                            },
-                            isExpandable = true,
-                        )
-                    }
+                item {
+                    Text(
+                        text = "View Charges",
+                        style = MifosTypography.titleMediumEmphasized,
+                    )
                 }
+                itemsIndexed(items = state.addedCharges) { index, it ->
+                    MifosActionsChargeListingComponent(
+                        chargeTitle = it.name.toString(),
+                        type = it.type.toString(),
+                        date = it.date,
+                        collectedOn = it.collectedOn,
+                        amount = it.amount.toString(),
+                        onActionClicked = { action ->
+                            when (action) {
+                                is Actions.Delete -> {
+                                    onAction(SavingsAccountAction.DeleteChargeFromSelectedCharges(index))
+                                }
 
-                MifosTwoButtonRow(
-                    firstBtnText = stringResource(Res.string.feature_savings_back),
-                    secondBtnText = "Add New",
-                    onFirstBtnClick = {
-                        onAction(SavingsAccountAction.DismissDialog)
-                    },
-                    onSecondBtnClick = {
-                        onAction(SavingsAccountAction.ShowAddChargeDialog)
-                    },
-                )
+                                is Actions.Edit -> {
+                                    onAction(SavingsAccountAction.EditChargeDialog(index))
+                                }
+
+                                else -> {}
+                            }
+                        },
+                        isExpandable = true,
+                    )
+                }
+                item {
+                    MifosTwoButtonRow(
+                        firstBtnText = stringResource(Res.string.feature_savings_back),
+                        secondBtnText = "Add New",
+                        onFirstBtnClick = {
+                            onAction(SavingsAccountAction.DismissDialog)
+                        },
+                        onSecondBtnClick = {
+                            onAction(SavingsAccountAction.ShowAddChargeDialog)
+                        },
+                    )
+                }
             }
         },
     )

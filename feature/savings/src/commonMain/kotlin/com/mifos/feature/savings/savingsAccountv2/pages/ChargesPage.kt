@@ -12,6 +12,7 @@ package com.mifos.feature.savings.savingsAccountv2.pages
 import androidclient.feature.savings.generated.resources.Res
 import androidclient.feature.savings.generated.resources.feature_savings_back
 import androidclient.feature.savings.generated.resources.feature_savings_currency
+import androidclient.feature.savings.generated.resources.feature_savings_interest_comp
 import androidclient.feature.savings.generated.resources.feature_savings_next
 import androidclient.feature.savings.generated.resources.feature_savings_submit
 import androidclient.feature.savings.generated.resources.step_charges
@@ -61,7 +62,23 @@ fun ChargesPage(
                 style = MifosTypography.labelLargeEmphasized,
             )
             Spacer(Modifier.height(DesignToken.padding.large))
-            // TODO: Choose Charges Dropdown
+//            MifosTextFieldDropdown(
+//                value = if (state.chooseChargeIndex == -1) {
+//                    ""
+//                } else {
+//                    state.savingsProductTemplate?.chargeOptions?.get(state.chooseChargeIndex)?.name
+//                        ?: ""
+//                },
+//                onValueChanged = {},
+//                onOptionSelected = { index, value ->
+//                    onAction(SavingsAccountAction.OnChooseChargeIndexChange(index))
+//                },
+//                options = state.savingsProductTemplate?.chargeOptions?.map { charge ->
+//                    charge.name ?: ""
+//                } ?:emptyList(),
+//                label = "Choose Charge",
+//                errorMessage = state.chooseChargeError,
+//            )
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically,
@@ -95,7 +112,7 @@ fun ChargesPage(
                     onAction(SavingsAccountAction.ShowCharges)
                 },
                 btnText = "View",
-                text = state.addedCharges.size.toString() + " " + stringResource(Res.string.step_charges),
+                text = state.addedCharges.size.toString() + " Active " + stringResource(Res.string.step_charges),
                 btnEnabled = state.addedCharges.isNotEmpty(),
             )
         }

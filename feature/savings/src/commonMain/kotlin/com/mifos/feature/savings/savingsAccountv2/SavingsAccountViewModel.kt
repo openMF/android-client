@@ -28,6 +28,7 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.StringResource
+import org.jetbrains.compose.resources.getString
 import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
 
@@ -90,7 +91,7 @@ internal class SavingsAccountViewModel(
 
             is SavingsAccountAction.ShowAddChargeDialog -> handleShowAddChargeDialog()
             is SavingsAccountAction.ShowCharges -> handleShowChargeDialog()
-            is SavingsAccountAction.EditCharge -> handleEditCharge(action)
+            is SavingsAccountAction.EditCharge -> handleEditCharge(action.index)
             is SavingsAccountAction.AddChargeToList -> handleAddChargeToList()
             is SavingsAccountAction.DismissDialog -> handleDismissDialog()
             is SavingsAccountAction.OnChargesAmountChange -> handleChargesAmountChange(action)
@@ -99,19 +100,28 @@ internal class SavingsAccountViewModel(
             is SavingsAccountAction.OnChooseChargeIndexChange -> handleChooseChargeIndexChange(action)
             is SavingsAccountAction.DeleteChargeFromSelectedCharges -> handleDeleteCharge(action.index)
             is SavingsAccountAction.EditChargeDialog -> handleEditChargeDialog(action.index)
+            is SavingsAccountAction.OnChargesAmountChangeError -> handleChargesAmountChangeError(action.error)
+        }
+    }
+
+    private fun handleChargesAmountChangeError(error: String) {
+        mutableStateFlow.update {
+            it.copy(
+                chargeAmountError = error
+            )
         }
     }
 
     private fun handleEditChargeDialog(index: Int) {
         val selectedEditCharge = state.addedCharges[index]
-//        val chooseChargeIndex = state.loanTemplate
-//            ?.chargeOptions
-//            ?.indexOfFirst { it.id == selectedEditCharge.id } ?: -1
+        val chooseChargeIndex = state.savingsProductTemplate
+            ?.chargeOptions
+            ?.indexOfFirst { it.id == selectedEditCharge.id } ?: -1
         mutableStateFlow.update {
             it.copy(
                 chargeAmount = selectedEditCharge.amount.toString(),
                 chargeDate = selectedEditCharge.date,
-                chooseChargeIndex = index,
+                chooseChargeIndex = chooseChargeIndex,
                 dialogState = SavingsAccountState.DialogState.AddNewCharge(true, index),
             )
         }
@@ -145,8 +155,12 @@ internal class SavingsAccountViewModel(
     }
 
     private fun handleChargesAmountChange(action: SavingsAccountAction.OnChargesAmountChange) {
-        mutableStateFlow.update {
-            it.copy(chargeAmount = action.amount)
+        if (action.amount.contains("-")) {
+            trySendAction(SavingsAccountAction.OnChargesAmountChangeError("Charge Amount must be greater than 0"))
+        } else {
+            mutableStateFlow.update {
+                it.copy(chargeAmount = action.amount)
+            }
         }
     }
 
@@ -155,11 +169,62 @@ internal class SavingsAccountViewModel(
     }
 
     private fun handleAddChargeToList() {
+        val selectedIndex = state.chooseChargeIndex
+        val selectedCharge = state.savingsProductTemplate?.chargeOptions?.getOrNull(selectedIndex)
+        val amount = state.chargeAmount.toDoubleOrNull() ?: selectedCharge?.amount ?: 0.0
+        if (selectedCharge != null) {
+            val newCharge = CreatedCharges(
+                id = selectedCharge.id,
+                name = selectedCharge.name,
+                amount = amount,
+                date = state.chargeDate,
+                type = selectedCharge.chargeCalculationType?.value ?: "",
+                collectedOn = selectedCharge.chargeTimeType?.value ?: "",
+            )
 
+            mutableStateFlow.update {
+                it.copy(
+                    addedCharges = it.addedCharges + newCharge,
+                    chooseChargeIndex = -1,
+                    dialogState = null,
+                    chargeAmount = "",
+                )
+            }
+        } else {
+            mutableStateFlow.update {
+                it.copy(
+                    chooseChargeIndex = -1,
+                    dialogState = null,
+                    chargeAmount = "",
+                )
+            }
+        }
     }
 
-    private fun handleEditCharge(action: SavingsAccountAction.EditCharge) {
-
+    private fun handleEditCharge(index: Int) {
+        val selectedIndex = state.chooseChargeIndex
+        val selectedCharge = state.savingsProductTemplate?.chargeOptions?.getOrNull(selectedIndex)
+        val amount = state.chargeAmount.toDoubleOrNull() ?: selectedCharge?.amount ?: 0.0
+        if (selectedCharge != null) {
+            val newCharge = CreatedCharges(
+                id = selectedCharge.id,
+                name = selectedCharge.name,
+                amount = amount,
+                date = state.chargeDate,
+                type = selectedCharge.chargeCalculationType?.value ?: "",
+                collectedOn = selectedCharge.chargeTimeType?.value ?: "",
+            )
+            val currentAddedCharges = state.addedCharges.toMutableList()
+            currentAddedCharges[index] = newCharge
+            mutableStateFlow.update {
+                it.copy(
+                    addedCharges = currentAddedCharges,
+                    chooseChargeIndex = -1,
+                    dialogState = SavingsAccountState.DialogState.ShowCharges,
+                    chargeAmount = "",
+                )
+            }
+        }
     }
 
     private fun handleShowAddChargeDialog() {
@@ -473,6 +538,7 @@ constructor(
     val chargeDate: String = DateHelper.getDateAsStringFromLong(Clock.System.now().toEpochMilliseconds()),
     val showChargesDatePick: Boolean = false,
     val chargeAmount: String = "",
+    val chargeAmountError: String? = null
 ) {
     sealed interface DialogState {
         data class Error(val message: String) : DialogState
@@ -548,10 +614,10 @@ sealed interface SavingsAccountAction {
     data class OnChooseChargeIndexChange(val index: Int) : SavingsAccountAction
     data object DismissDialog : SavingsAccountAction
 
-    //    data object ShowOverDueCharges : SavingsAccountAction
     data class OnChargesDatePick(val state: Boolean) : SavingsAccountAction
     data class OnChargesDateChange(val date: String) : SavingsAccountAction
     data class OnChargesAmountChange(val amount: String) : SavingsAccountAction
+    data class OnChargesAmountChangeError(val error: String) : SavingsAccountAction
     data object AddChargeToList : SavingsAccountAction
     data class DeleteChargeFromSelectedCharges(val index: Int) : SavingsAccountAction
     data class EditChargeDialog(val index: Int) : SavingsAccountAction
