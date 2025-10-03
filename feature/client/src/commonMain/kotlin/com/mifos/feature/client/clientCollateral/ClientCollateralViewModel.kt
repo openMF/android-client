@@ -46,7 +46,7 @@ internal class ClientCollateralViewModel(
 
     private suspend fun loadCollaterals() {
         mutableStateFlow.update { it.copy(dialogState = ClientCollateralState.DialogState.Loading) }
-        val result = repo.getCollateralItems(route.clientId)
+        val result = repo.getCollateralItems()
         when (result) {
             is DataState.Error -> {
                 mutableStateFlow.update {
