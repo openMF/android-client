@@ -16,6 +16,9 @@ import androidclient.feature.savings.generated.resources.feature_savings_interes
 import androidclient.feature.savings.generated.resources.feature_savings_next
 import androidclient.feature.savings.generated.resources.feature_savings_submit
 import androidclient.feature.savings.generated.resources.step_charges
+import androidclient.feature.savings.generated.resources.step_charges_active
+import androidclient.feature.savings.generated.resources.step_charges_add_new
+import androidclient.feature.savings.generated.resources.step_charges_view
 import androidclient.feature.savings.generated.resources.step_terms
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -62,23 +65,6 @@ fun ChargesPage(
                 style = MifosTypography.labelLargeEmphasized,
             )
             Spacer(Modifier.height(DesignToken.padding.large))
-//            MifosTextFieldDropdown(
-//                value = if (state.chooseChargeIndex == -1) {
-//                    ""
-//                } else {
-//                    state.savingsProductTemplate?.chargeOptions?.get(state.chooseChargeIndex)?.name
-//                        ?: ""
-//                },
-//                onValueChanged = {},
-//                onOptionSelected = { index, value ->
-//                    onAction(SavingsAccountAction.OnChooseChargeIndexChange(index))
-//                },
-//                options = state.savingsProductTemplate?.chargeOptions?.map { charge ->
-//                    charge.name ?: ""
-//                } ?:emptyList(),
-//                label = "Choose Charge",
-//                errorMessage = state.chooseChargeError,
-//            )
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically,
@@ -98,7 +84,7 @@ fun ChargesPage(
                     )
 
                     Text(
-                        text = "Add New",
+                        text = stringResource(Res.string.step_charges_add_new),
                         color = MaterialTheme.colorScheme.primary,
                         style = MifosTypography.labelLargeEmphasized,
                     )
@@ -111,8 +97,8 @@ fun ChargesPage(
                 onBtnClick = {
                     onAction(SavingsAccountAction.ShowCharges)
                 },
-                btnText = "View",
-                text = state.addedCharges.size.toString() + " Active " + stringResource(Res.string.step_charges),
+                btnText = stringResource(Res.string.step_charges_view),
+                text = state.addedCharges.size.toString() + " " + stringResource(Res.string.step_charges_active) + " " + stringResource(Res.string.step_charges),
                 btnEnabled = state.addedCharges.isNotEmpty(),
             )
         }
@@ -125,7 +111,7 @@ fun ChargesPage(
             onSecondBtnClick = {
                 onAction(SavingsAccountAction.NextStep)
             },
-            isSecondButtonEnabled = state.isChargesNextEnabled,
+            isSecondButtonEnabled = state.isTermsNextEnabled,
             modifier = Modifier.padding(top = DesignToken.padding.small),
         )
     }

@@ -15,6 +15,10 @@ import androidclient.feature.savings.generated.resources.feature_savings_cancel
 import androidclient.feature.savings.generated.resources.feature_savings_create_savings_account
 import androidclient.feature.savings.generated.resources.feature_savings_error_not_connected_internet
 import androidclient.feature.savings.generated.resources.step_charges
+import androidclient.feature.savings.generated.resources.step_charges_add
+import androidclient.feature.savings.generated.resources.step_charges_add_new
+import androidclient.feature.savings.generated.resources.step_charges_edit_charge
+import androidclient.feature.savings.generated.resources.step_charges_view
 import androidclient.feature.savings.generated.resources.step_details
 import androidclient.feature.savings.generated.resources.step_preview
 import androidclient.feature.savings.generated.resources.step_terms
@@ -25,12 +29,11 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.key
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -51,6 +54,7 @@ import com.mifos.core.ui.components.MifosStepper
 import com.mifos.core.ui.components.MifosTwoButtonRow
 import com.mifos.core.ui.components.Step
 import com.mifos.core.ui.util.EventsEffect
+import com.mifos.core.ui.util.TextFieldsValidator.doubleNumberValidator
 import com.mifos.feature.savings.savingsAccountv2.pages.ChargesPage
 import com.mifos.feature.savings.savingsAccountv2.pages.DetailsPage
 import com.mifos.feature.savings.savingsAccountv2.pages.PreviewPage
@@ -191,7 +195,7 @@ private fun NewSavingsAccountDialog(
     }
 }
 
-@OptIn(ExperimentalTime::class)
+@OptIn(ExperimentalTime::class, ExperimentalMaterial3Api::class)
 @Composable
 private fun AddNewChargeDialog(
     isEdit: Boolean,
@@ -199,16 +203,23 @@ private fun AddNewChargeDialog(
     state: SavingsAccountState,
     onAction: (SavingsAccountAction) -> Unit,
 ) {
+    LaunchedEffect(state.chargeAmount) {
+        val amountError = doubleNumberValidator(state.chargeAmount)
+        onAction(SavingsAccountAction.OnChargesAmountChangeError(amountError))
+    }
+    fun isSelectableDate(utcTimeMillis: Long): Boolean {
+        return utcTimeMillis >= Clock.System.now().toEpochMilliseconds().minus(86_400_000L)
+    }
     AddChargeBottomSheet(
         title = if (isEdit) {
-            "Edit Charge"
+            stringResource(Res.string.step_charges_edit_charge)
         } else {
-            "Add New Charge"
+            stringResource(Res.string.step_charges_add_new) + " " + stringResource(Res.string.step_charges)
         },
         confirmText = if (isEdit) {
-            "Edit charge"
+            stringResource(Res.string.step_charges_edit_charge)
         } else {
-            "Add"
+            stringResource(Res.string.step_charges_add)
         },
         dismissText = stringResource(Res.string.feature_savings_cancel),
         showDatePicker = state.showChargesDatePick,
@@ -250,9 +261,11 @@ private fun AddNewChargeDialog(
             onAction(SavingsAccountAction.OnChargesDatePick(show))
         },
         onDateChange = { newDate ->
-            onAction(SavingsAccountAction.OnChargesDateChange(DateHelper.getDateAsStringFromLong(newDate)))
+           if(isSelectableDate(newDate)) {
+               onAction(SavingsAccountAction.OnChargesDateChange(DateHelper.getDateAsStringFromLong(newDate)))
+           }
         },
-        amountError = state.chargeAmountError,
+        amountError = if (state.chargeAmountError != null) stringResource(state.chargeAmountError) else null,
         onAmountChange = { amount ->
             onAction(SavingsAccountAction.OnChargesAmountChange(amount))
         },
@@ -275,7 +288,7 @@ private fun ShowChargesDialog(
             ) {
                 item {
                     Text(
-                        text = "View Charges",
+                        text = stringResource(Res.string.step_charges_view) + " " + stringResource(Res.string.step_charges),
                         style = MifosTypography.titleMediumEmphasized,
                     )
                 }
@@ -305,7 +318,7 @@ private fun ShowChargesDialog(
                 item {
                     MifosTwoButtonRow(
                         firstBtnText = stringResource(Res.string.feature_savings_back),
-                        secondBtnText = "Add New",
+                        secondBtnText = stringResource(Res.string.step_charges_add_new),
                         onFirstBtnClick = {
                             onAction(SavingsAccountAction.DismissDialog)
                         },

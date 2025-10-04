@@ -161,7 +161,7 @@ fun AddChargeBottomSheet(
                     secondBtnText = confirmText,
                     onFirstBtnClick = onDismiss,
                     onSecondBtnClick = onConfirm,
-                    isSecondButtonEnabled = chargeAmount.isNotEmpty() && chargeType.isNotEmpty(),
+                    isSecondButtonEnabled = chargeAmount.isNotEmpty() && chargeType.isNotEmpty() && amountError.isNullOrEmpty(),
                 )
             }
         },

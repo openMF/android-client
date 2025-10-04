@@ -19,7 +19,6 @@ import com.mifos.core.domain.useCases.GetClientTemplateUseCase
 import com.mifos.core.domain.useCases.GetSavingsProductTemplateUseCase
 import com.mifos.core.ui.util.BaseViewModel
 import com.mifos.core.ui.util.TextFieldsValidator
-import com.mifos.room.entities.accounts.savings.Charge
 import com.mifos.room.entities.templates.clients.ClientsTemplateEntity
 import com.mifos.room.entities.templates.clients.SavingProductOptionsEntity
 import com.mifos.room.entities.templates.clients.StaffOptionsEntity
@@ -28,7 +27,6 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.StringResource
-import org.jetbrains.compose.resources.getString
 import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
 
@@ -104,7 +102,7 @@ internal class SavingsAccountViewModel(
         }
     }
 
-    private fun handleChargesAmountChangeError(error: String) {
+    private fun handleChargesAmountChangeError(error: StringResource?) {
         mutableStateFlow.update {
             it.copy(
                 chargeAmountError = error
@@ -155,12 +153,8 @@ internal class SavingsAccountViewModel(
     }
 
     private fun handleChargesAmountChange(action: SavingsAccountAction.OnChargesAmountChange) {
-        if (action.amount.contains("-")) {
-            trySendAction(SavingsAccountAction.OnChargesAmountChangeError("Charge Amount must be greater than 0"))
-        } else {
-            mutableStateFlow.update {
-                it.copy(chargeAmount = action.amount)
-            }
+        mutableStateFlow.update {
+            it.copy(chargeAmount = action.amount)
         }
     }
 
@@ -172,7 +166,7 @@ internal class SavingsAccountViewModel(
         val selectedIndex = state.chooseChargeIndex
         val selectedCharge = state.savingsProductTemplate?.chargeOptions?.getOrNull(selectedIndex)
         val amount = state.chargeAmount.toDoubleOrNull() ?: selectedCharge?.amount ?: 0.0
-        if (selectedCharge != null) {
+        if (selectedCharge != null && state.chargeAmountError == null) {
             val newCharge = CreatedCharges(
                 id = selectedCharge.id,
                 name = selectedCharge.name,
@@ -205,7 +199,7 @@ internal class SavingsAccountViewModel(
         val selectedIndex = state.chooseChargeIndex
         val selectedCharge = state.savingsProductTemplate?.chargeOptions?.getOrNull(selectedIndex)
         val amount = state.chargeAmount.toDoubleOrNull() ?: selectedCharge?.amount ?: 0.0
-        if (selectedCharge != null) {
+        if (selectedCharge != null && state.chargeAmountError == null) {
             val newCharge = CreatedCharges(
                 id = selectedCharge.id,
                 name = selectedCharge.name,
@@ -538,7 +532,7 @@ constructor(
     val chargeDate: String = DateHelper.getDateAsStringFromLong(Clock.System.now().toEpochMilliseconds()),
     val showChargesDatePick: Boolean = false,
     val chargeAmount: String = "",
-    val chargeAmountError: String? = null
+    val chargeAmountError: StringResource? = null
 ) {
     sealed interface DialogState {
         data class Error(val message: String) : DialogState
@@ -561,8 +555,6 @@ constructor(
             interestCalcIndex != -1 &&
             interestPostingPeriodIndex != -1 &&
             interestCompPeriodIndex != -1
-
-    val isChargesNextEnabled = isTermsNextEnabled
 }
 
 sealed interface SavingsAccountEvent {
@@ -617,7 +609,7 @@ sealed interface SavingsAccountAction {
     data class OnChargesDatePick(val state: Boolean) : SavingsAccountAction
     data class OnChargesDateChange(val date: String) : SavingsAccountAction
     data class OnChargesAmountChange(val amount: String) : SavingsAccountAction
-    data class OnChargesAmountChangeError(val error: String) : SavingsAccountAction
+    data class OnChargesAmountChangeError(val error: StringResource?) : SavingsAccountAction
     data object AddChargeToList : SavingsAccountAction
     data class DeleteChargeFromSelectedCharges(val index: Int) : SavingsAccountAction
     data class EditChargeDialog(val index: Int) : SavingsAccountAction

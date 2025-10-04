@@ -131,6 +131,14 @@
     <string name="step_terms_apply_withdrawal_fee">Apply Withdrawal Fee for Transfers</string>
     <string name="step_terms_min_opening_balance">Minimum Opening Balance</string>
 
+
+    <!-- Charges Page -->
+    <string name="step_charges_add_new">Add New</string>
+    <string name="step_charges_add">Add</string>
+    <string name="step_charges_view">View</string>
+    <string name="step_charges_active">Active</string>
+    <string name="step_charges_edit_charge">Edit Charge</string>
+
 </resources>
 
 
