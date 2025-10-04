@@ -105,7 +105,7 @@ internal class SavingsAccountViewModel(
     private fun handleChargesAmountChangeError(error: StringResource?) {
         mutableStateFlow.update {
             it.copy(
-                chargeAmountError = error
+                chargeAmountError = error,
             )
         }
     }
@@ -532,7 +532,7 @@ constructor(
     val chargeDate: String = DateHelper.getDateAsStringFromLong(Clock.System.now().toEpochMilliseconds()),
     val showChargesDatePick: Boolean = false,
     val chargeAmount: String = "",
-    val chargeAmountError: StringResource? = null
+    val chargeAmountError: StringResource? = null,
 ) {
     sealed interface DialogState {
         data class Error(val message: String) : DialogState
@@ -547,14 +547,14 @@ constructor(
     }
 
     val isDetailsNextEnabled = submissionDate.isNotEmpty() &&
-            savingsProductSelected != -1 &&
-            fieldOfficerIndex != -1
+        savingsProductSelected != -1 &&
+        fieldOfficerIndex != -1
 
     val isTermsNextEnabled = isDetailsNextEnabled &&
-            currencyIndex != -1 &&
-            interestCalcIndex != -1 &&
-            interestPostingPeriodIndex != -1 &&
-            interestCompPeriodIndex != -1
+        currencyIndex != -1 &&
+        interestCalcIndex != -1 &&
+        interestPostingPeriodIndex != -1 &&
+        interestCompPeriodIndex != -1
 }
 
 sealed interface SavingsAccountEvent {

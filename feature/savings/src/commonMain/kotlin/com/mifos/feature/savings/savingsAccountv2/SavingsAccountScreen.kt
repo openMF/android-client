@@ -261,9 +261,9 @@ private fun AddNewChargeDialog(
             onAction(SavingsAccountAction.OnChargesDatePick(show))
         },
         onDateChange = { newDate ->
-           if(isSelectableDate(newDate)) {
-               onAction(SavingsAccountAction.OnChargesDateChange(DateHelper.getDateAsStringFromLong(newDate)))
-           }
+            if (isSelectableDate(newDate)) {
+                onAction(SavingsAccountAction.OnChargesDateChange(DateHelper.getDateAsStringFromLong(newDate)))
+            }
         },
         amountError = if (state.chargeAmountError != null) stringResource(state.chargeAmountError) else null,
         onAmountChange = { amount ->

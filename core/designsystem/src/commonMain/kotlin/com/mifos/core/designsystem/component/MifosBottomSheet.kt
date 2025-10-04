@@ -23,7 +23,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
-import androidx.compose.material3.SheetState
 import androidx.compose.material3.SheetValue
 import androidx.compose.material3.Text
 import androidx.compose.material3.contentColorFor
@@ -56,9 +55,12 @@ fun MifosBottomSheet(
     content: @Composable () -> Unit,
 ) {
     val coroutineScope = rememberCoroutineScope()
-    val modalSheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true,
-        confirmValueChange = { newValue -> newValue != SheetValue.Hidden
-    })
+    val modalSheetState = rememberModalBottomSheetState(
+        skipPartiallyExpanded = true,
+        confirmValueChange = { newValue ->
+            newValue != SheetValue.Hidden
+        },
+    )
     var showBottomSheet by remember { mutableStateOf(true) }
 
     fun dismissSheet() {

@@ -11,15 +11,11 @@ package com.mifos.feature.savings.savingsAccountv2.pages
 
 import androidclient.feature.savings.generated.resources.Res
 import androidclient.feature.savings.generated.resources.feature_savings_back
-import androidclient.feature.savings.generated.resources.feature_savings_currency
-import androidclient.feature.savings.generated.resources.feature_savings_interest_comp
 import androidclient.feature.savings.generated.resources.feature_savings_next
-import androidclient.feature.savings.generated.resources.feature_savings_submit
 import androidclient.feature.savings.generated.resources.step_charges
 import androidclient.feature.savings.generated.resources.step_charges_active
 import androidclient.feature.savings.generated.resources.step_charges_add_new
 import androidclient.feature.savings.generated.resources.step_charges_view
-import androidclient.feature.savings.generated.resources.step_terms
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -32,15 +28,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
-import com.mifos.core.designsystem.component.MifosTextFieldDropdown
 import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.designsystem.theme.MifosTypography

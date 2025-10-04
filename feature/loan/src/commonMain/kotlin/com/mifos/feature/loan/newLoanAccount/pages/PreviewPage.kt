@@ -64,7 +64,6 @@ import com.mifos.core.common.utils.CurrencyFormatter
 import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.designsystem.theme.MifosTypography
 import com.mifos.core.ui.components.MifosDefaultListingComponentFromStringResources
-import com.mifos.core.ui.components.MifosProgressIndicator
 import com.mifos.core.ui.components.MifosProgressIndicatorOverlay
 import com.mifos.core.ui.components.MifosRowWithTextAndButton
 import com.mifos.core.ui.components.MifosTwoButtonRow

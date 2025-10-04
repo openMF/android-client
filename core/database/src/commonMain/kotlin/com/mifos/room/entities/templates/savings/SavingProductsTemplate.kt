@@ -85,5 +85,5 @@ class SavingProductsTemplate(
     val fieldOfficerOptions: List<FieldOfficerOptions>? = null,
 
     @IgnoredOnParcel
-    val chargeOptions: List<ChargeOptions>? = null
+    val chargeOptions: List<ChargeOptions>? = null,
 ) : Parcelable
