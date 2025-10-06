@@ -100,7 +100,8 @@ fun MifosBreadcrumbNavBar(
             navController.previousBackStackEntry
                 ?.savedStateHandle
                 ?.set("shouldRefresh", true)
-                navController.popBackStack()}) {
+            navController.popBackStack()
+        }) {
             Icon(
                 painter = painterResource(Res.drawable.bread_crumb_back_icon),
                 contentDescription = "Back",

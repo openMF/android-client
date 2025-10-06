@@ -76,7 +76,6 @@ internal fun ClientProfileEditScreen(
 ) {
     val state by viewModel.stateFlow.collectAsStateWithLifecycle()
 
-
     EventsEffect(viewModel.eventFlow) { event ->
         when (event) {
             ClientProfileEditEvent.NavigateBack -> onNavigateBack()

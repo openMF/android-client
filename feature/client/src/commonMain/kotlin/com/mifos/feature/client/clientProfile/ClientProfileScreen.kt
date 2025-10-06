@@ -43,7 +43,6 @@ import com.mifos.core.ui.components.MifosProgressIndicator
 import com.mifos.core.ui.components.MifosRowCard
 import com.mifos.core.ui.util.EventsEffect
 import com.mifos.core.ui.util.TextUtil
-import com.mifos.feature.client.clientDetailsProfile.ClientProfileDetailsAction
 import com.mifos.feature.client.clientProfile.components.ClientProfileActionItem
 import com.mifos.feature.client.clientProfile.components.ProfileCard
 import com.mifos.feature.client.clientProfile.components.clientsActionItems
