@@ -81,6 +81,9 @@ fun MifosBreadcrumbNavBar(
                             isActive = index == routes.lastIndex,
                             onClick = {
                                 if (index != routes.lastIndex && route != "...") {
+                                    navController.previousBackStackEntry
+                                        ?.savedStateHandle
+                                        ?.set("shouldRefresh", true)
                                     navController.popBackStack(route, inclusive = false)
                                 }
                             },
@@ -93,7 +96,10 @@ fun MifosBreadcrumbNavBar(
             }
         }
 
-        IconButton(onClick = { navController.popBackStack() }) {
+        IconButton(onClick = {
+            navController.previousBackStackEntry
+                ?.savedStateHandle
+                ?.set("shouldRefresh", true) }) {
             Icon(
                 painter = painterResource(Res.drawable.bread_crumb_back_icon),
                 contentDescription = "Back",
