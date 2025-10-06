@@ -24,4 +24,6 @@
     <string name="settings">Settings</string>
     <string name="about">About</string>
     <string name="offline_sync">Offline Sync</string>
+    <string name="powered_by">Powered By</string>
+
 </resources>
