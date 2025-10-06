@@ -483,6 +483,18 @@ fun NavController.navigateCreateClientScreen() {
     navigate(ClientScreens.CreateClientScreen.route)
 }
 
+// Add to your NavHost
+composable<FixedDepositAccountRoute> {
+    FixedDepositAccountFlow(
+        navController = navController,
+        // ... other params
+    )
+}
+
+// Inside FixedDepositAccountFlow
+NavHost(
+    navController = localNav
+    
 @Serializable
 data object ClientListScreenRoute
 

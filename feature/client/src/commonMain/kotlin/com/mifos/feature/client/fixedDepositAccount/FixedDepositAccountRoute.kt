@@ -31,8 +31,32 @@ fun NavGraphBuilder.clientFixedDepositAccountDestination(
             navigateBack = navigateBack,
             onApproveAccount = onApproveAccount,
             onViewAccount = onViewAccount,
+            onCreateNew = { clientId ->
+                // Navigate to the multi-step flow
+                navController.navigateToFixedDepositFlow(clientId)
         )
     }
+}
+// Add the multi-step flow route
+    composable<FixedDepositAccountFlowRoute> { backStackEntry ->
+        val route = backStackEntry.toRoute<FixedDepositAccountFlowRoute>()
+        FixedDepositAccountFlowScreen(
+            clientId = route.clientId,
+            navigateBack = { navController.popBackStack() },
+            onAccountCreated = { accountId ->
+                // Navigate back to listing or details
+                navController.popBackStack()
+            }
+        )
+    }
+}
+@Serializable
+data class FixedDepositAccountFlowRoute(
+    val clientId: Int
+)
+
+fun NavController.navigateToFixedDepositFlow(clientId: Int) {
+    this.navigate(FixedDepositAccountFlowRoute(clientId = clientId))
 }
 
 fun NavController.navigateToFixedDepositAccountRoute(
