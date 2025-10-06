@@ -7,6 +7,7 @@
  *
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
+
 import org.mifos.MifosBuildType
 import org.mifos.dynamicVersion
 
