@@ -27,6 +27,7 @@ import com.mifos.feature.client.clientAddress.navigateToClientAddressRoute
 import com.mifos.feature.client.clientAddress.navigateToClientAddressRouteOnStatus
 import com.mifos.feature.client.clientApplyNewApplications.clientApplyNewApplicationRoute
 import com.mifos.feature.client.clientApplyNewApplications.navigateToClientApplyNewApplicationScreen
+import com.mifos.feature.client.clientCharges.clientChargesDestination
 import com.mifos.feature.client.clientCharges.navigateToClientChargesRoute
 import com.mifos.feature.client.clientClosure.clientClosureDestination
 import com.mifos.feature.client.clientClosure.navigateToClientClosureRoute
@@ -136,9 +137,10 @@ fun NavGraphBuilder.clientNavGraph(
             savingsAccountSelected = navController::navigateToSavingsAccountSummaryScreen,
             activateClient = activateClient,
         )
-//        clientChargesRoute(
-//            onBackPressed = navController::popBackStack,
-//        )
+        clientChargesDestination(
+            navController = navController,
+            onNavigateBack = navController::popBackStack,
+        )
         clientIdentifiersAddUpdateDestination(
             onBackPressed = navController::popBackStack,
             onUpdatedListBack = navController::navigateBackToUpdateClientIdentifiersListScreen,

@@ -22,7 +22,7 @@ import kotlinx.coroutines.flow.Flow
 @Composable
 actual fun ClientChargeContent(
     pagingFlow: Flow<PagingData<ChargesEntity>>,
-    onRetry: () -> Unit,
+    onAction: (ClientChargesAction) -> Unit,
 ) {
     Box(
         modifier = Modifier.fillMaxSize(),
