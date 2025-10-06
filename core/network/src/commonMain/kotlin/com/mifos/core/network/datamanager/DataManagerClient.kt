@@ -22,18 +22,11 @@ import com.mifos.core.model.objects.clients.ClientCloseRequest
 import com.mifos.core.model.objects.clients.CollateralPayload
 import com.mifos.core.model.objects.clients.ProposeTransferRequest
 import com.mifos.core.model.objects.clients.UpdateSavingsAccountRequest
-import com.mifos.core.model.objects.noncoreobjects.Identifier
-import com.mifos.core.model.objects.noncoreobjects.IdentifierCreationResponse
-import com.mifos.core.model.objects.noncoreobjects.IdentifierPayload
-import com.mifos.core.model.objects.noncoreobjects.IdentifierTemplate
 import com.mifos.core.network.BaseApiManager
 import com.mifos.core.network.mappers.clients.GetClientResponseMapper
 import com.mifos.core.network.mappers.clients.GetClientsClientIdAccountMapper
-import com.mifos.core.network.mappers.clients.GetIdentifiersTemplateMapper
-import com.mifos.core.network.mappers.clients.IdentifierMapper
 import com.mifos.core.network.model.ClientCloseTemplateResponse
 import com.mifos.core.network.model.CollateralItem
-import com.mifos.core.network.model.DeleteClientsClientIdIdentifiersIdentifierIdResponse
 import com.mifos.core.network.model.PinpointLocationActionResponse
 import com.mifos.core.network.model.PostClientAddressRequest
 import com.mifos.core.network.model.PostClientAddressResponse
@@ -349,61 +342,6 @@ class DataManagerClient(
      */
     suspend fun updateClientPayload(clientPayload: ClientPayloadEntity) {
         clientDatabaseHelper.updateDatabaseClientPayload(clientPayload)
-    }
-
-    /**
-     * This Method is for fetching the Client identifier from the REST API.
-     *
-     * @param clientId Client Id
-     * @return List<Identifier>
-     </Identifier> */
-    fun getClientIdentifiers(clientId: Int): Flow<List<Identifier>> {
-        return mBaseApiManager.clientIdentifiersApi.retrieveAllClientIdentifiers(clientId.toLong())
-            .map { responseList ->
-                responseList.map(IdentifierMapper::mapFromEntity)
-            }
-    }
-
-    /**
-     * This Method is, for creating the Client Identifier.
-     *
-     * @param clientId          Client Id
-     * @param identifierPayload IdentifierPayload
-     * @return IdentifierCreationResponse
-     */
-    suspend fun createClientIdentifier(
-        clientId: Int,
-        identifierPayload: IdentifierPayload,
-    ): IdentifierCreationResponse {
-        return mBaseApiManager.clientService.createClientIdentifier(clientId, identifierPayload)
-    }
-
-    /**
-     * This Method is, for fetching the Client Identifier Template.
-     *
-     * @param clientId Client Id
-     * @return IdentifierTemplate
-     */
-    suspend fun getClientIdentifierTemplate(clientId: Int): IdentifierTemplate {
-        return mBaseApiManager.clientIdentifiersApi.newClientIdentifierDetails(clientId.toLong())
-            .let(GetIdentifiersTemplateMapper::mapFromEntity)
-    }
-
-    /**
-     * This Method is for deleting the Client Identifier.
-     *
-     * @param clientId     Client Id
-     * @param identifierId Identifier Id
-     * @return GenericResponse
-     */
-    suspend fun deleteClientIdentifier(
-        clientId: Int,
-        identifierId: Int,
-    ): DeleteClientsClientIdIdentifiersIdentifierIdResponse {
-        return mBaseApiManager.clientIdentifiersApi.deleteClientIdentifier(
-            clientId.toLong(),
-            identifierId.toLong(),
-        )
     }
 
     /**

@@ -212,8 +212,14 @@ fun MifosTextButton(
         modifier = modifier.height(48.dp),
         enabled = enabled,
         colors = ButtonDefaults.textButtonColors(
-            contentColor = AppColors.customWhite,
             containerColor = MaterialTheme.colorScheme.primary,
+            contentColor = MaterialTheme.colorScheme.onPrimary,
+            disabledContainerColor = MaterialTheme.colorScheme.onSurface.copy(
+                alpha = .12f,
+            ),
+            disabledContentColor = MaterialTheme.colorScheme.onSurface.copy(
+                .5f,
+            ),
         ),
         content = content,
         shape = DesignToken.shapes.medium,

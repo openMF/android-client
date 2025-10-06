@@ -91,12 +91,29 @@
     <!-- MifosActionsIdentifierListingComponent -->
     <string name="listing_component_identifier_not_available">Not Available</string>
 
+    <!-- Mifos Client Documents-->
+    <string name="client_documents_component_header_title">Document Name</string>
+    <string name="client_documents_component_header_subtitle_description">Description</string>
+    <string name="client_documents_component_header_subtitle_file_name">File Name</string>
+
+    <!-- MifosFilePickerBottomSheet -->
+    <string name="file_picker_bottom_sheet_gallery">Gallery</string>
+    <string name="file_picker_bottom_sheet_files">Files</string>
+    <string name="file_picker_bottom_sheet_more">More</string>
 
     <string name="error_field_empty">This field cannot be empty</string>
     <string name="error_invalid_characters">This field contains invalid characters</string>
     <string name="error_invalid_number">Invalid number entered</string>
     <string name="error_digits_only">This field should contain digits only</string>
     <string name="error_number_zero">Number should not be zero</string>
+
+    <string name="ok">Ok</string>
+    <string name="cancel">Cancel</string>
+    <string name="name">Name</string>
+    <string name="date">Date</string>
+    <string name="amount">Amount</string>
+    <string name="type">Type</string>
+    <string name="collected_on">Collected On</string>
 
     <string name="client_share_accounts_share_product">Share Product</string>
     <string name="client_share_accounts_pending_for_approval_shares">Pending For Approval Shares</string>

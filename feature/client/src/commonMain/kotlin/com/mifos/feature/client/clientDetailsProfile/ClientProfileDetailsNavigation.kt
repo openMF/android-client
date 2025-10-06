@@ -29,6 +29,7 @@ fun NavGraphBuilder.clientProfileDetailsDestination(
     navigateToClientTransfer: (Int) -> Unit,
     navigateToUpdateDefaultAccount: (Int) -> Unit,
     navigateToCollateral: (Int) -> Unit,
+    navigateToUpdateSignature: (Int, String, String) -> Unit,
     navigateToApplyNewApplication: (Int) -> Unit,
 ) {
     composable<ClientProfileDetailsRoute> {
@@ -43,6 +44,7 @@ fun NavGraphBuilder.clientProfileDetailsDestination(
             navigateToClientClosure = navigateToClientClosure,
             navigateToCollateral = navigateToCollateral,
             navigateToApplyNewApplication = navigateToApplyNewApplication,
+            navigateToUpdateSignature = navigateToUpdateSignature,
         )
     }
 }

@@ -31,6 +31,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
 import com.mifos.core.designsystem.theme.MifosTheme
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
@@ -161,13 +162,15 @@ fun MifosRadioButtonDialog(
 @Composable
 fun MifosCustomDialog(
     onDismiss: () -> Unit,
-    content: @Composable () -> Unit,
     modifier: Modifier = Modifier,
+    properties: DialogProperties = DialogProperties(),
+    content: @Composable () -> Unit,
 ) {
     BasicAlertDialog(
         onDismissRequest = onDismiss,
         content = content,
         modifier = modifier,
+        properties = properties,
     )
 }
 

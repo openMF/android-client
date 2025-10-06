@@ -11,20 +11,19 @@ package com.mifos.core.domain.useCases
 
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.common.utils.asDataStateFlow
-import com.mifos.core.data.repository.ClientIdentifierDialogRepository
-import com.mifos.core.model.objects.noncoreobjects.IdentifierCreationResponse
+import com.mifos.core.data.repository.ClientIdentifiersRepository
 import com.mifos.core.model.objects.noncoreobjects.IdentifierPayload
+import io.ktor.client.statement.HttpResponse
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
 class CreateClientIdentifierUseCase(
-    private val repository: ClientIdentifierDialogRepository,
+    private val repository: ClientIdentifiersRepository,
 ) {
-
     operator fun invoke(
-        clientId: Int,
+        clientId: Long,
         identifierPayload: IdentifierPayload,
-    ): Flow<DataState<IdentifierCreationResponse>> = flow {
+    ): Flow<DataState<HttpResponse>> = flow {
         emit(repository.createClientIdentifier(clientId, identifierPayload))
     }.asDataStateFlow()
 }

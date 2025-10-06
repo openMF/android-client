@@ -48,18 +48,19 @@ import com.mifos.core.common.utils.Constants
 import com.mifos.core.common.utils.DateHelper
 import com.mifos.core.common.utils.formatDate
 import com.mifos.core.designsystem.component.MifosButton
-import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosDatePickerTextField
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.model.objects.clients.ActivatePayload
 import com.mifos.core.ui.components.MifosAlertDialog
-import kotlinx.datetime.Clock
+import com.mifos.core.ui.components.MifosProgressIndicator
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameterProvider
 import org.koin.compose.viewmodel.koinViewModel
+import kotlin.time.Clock
+import kotlin.time.ExperimentalTime
 
 @Composable
 internal fun ActivateScreen(
@@ -126,7 +127,7 @@ internal fun ActivateScreen(
 
                 is ActivateUiState.Error -> MifosSweetError(message = stringResource(state.message)) {}
 
-                is ActivateUiState.Loading -> MifosCircularProgress()
+                is ActivateUiState.Loading -> MifosProgressIndicator()
 
                 is ActivateUiState.Initial -> ActivateContent(onActivate = onActivate)
             }
@@ -134,6 +135,7 @@ internal fun ActivateScreen(
     }
 }
 
+@OptIn(ExperimentalTime::class)
 @Composable
 private fun ActivateContent(
     onActivate: (ActivatePayload) -> Unit,

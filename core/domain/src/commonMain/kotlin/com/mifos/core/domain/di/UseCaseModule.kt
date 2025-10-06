@@ -20,11 +20,11 @@ import com.mifos.core.domain.useCases.ApproveCheckerUseCase
 import com.mifos.core.domain.useCases.ApproveSavingsApplicationUseCase
 import com.mifos.core.domain.useCases.CreateChargesUseCase
 import com.mifos.core.domain.useCases.CreateClientIdentifierUseCase
-import com.mifos.core.domain.useCases.CreateDocumentUseCase
 import com.mifos.core.domain.useCases.CreateGroupLoansAccountUseCase
 import com.mifos.core.domain.useCases.CreateLoanAccountUseCase
 import com.mifos.core.domain.useCases.CreateLoanChargesUseCase
 import com.mifos.core.domain.useCases.CreateSavingsAccountUseCase
+import com.mifos.core.domain.useCases.CreateSignatureUseCase
 import com.mifos.core.domain.useCases.DeleteCheckerUseCase
 import com.mifos.core.domain.useCases.DeleteClientAddressPinpointUseCase
 import com.mifos.core.domain.useCases.DeleteDataTableEntryUseCase
@@ -43,9 +43,9 @@ import com.mifos.core.domain.useCases.GetCentersInOfficeUseCase
 import com.mifos.core.domain.useCases.GetCheckerInboxBadgesUseCase
 import com.mifos.core.domain.useCases.GetCheckerTasksUseCase
 import com.mifos.core.domain.useCases.GetClientDetailsUseCase
-import com.mifos.core.domain.useCases.GetClientIdentifierTemplateUseCase
 import com.mifos.core.domain.useCases.GetClientPinpointLocationsUseCase
 import com.mifos.core.domain.useCases.GetClientSavingsAccountTemplateByProductUseCase
+import com.mifos.core.domain.useCases.GetClientTemplateUseCase
 import com.mifos.core.domain.useCases.GetDataTableInfoUseCase
 import com.mifos.core.domain.useCases.GetDocumentsListUseCase
 import com.mifos.core.domain.useCases.GetGroupDetailsUseCase
@@ -64,6 +64,7 @@ import com.mifos.core.domain.useCases.GetRunReportOfficesUseCase
 import com.mifos.core.domain.useCases.GetRunReportProductUseCase
 import com.mifos.core.domain.useCases.GetRunReportWithQueryUseCase
 import com.mifos.core.domain.useCases.GetSavingsAccountAndTemplateUseCase
+import com.mifos.core.domain.useCases.GetSavingsProductTemplateUseCase
 import com.mifos.core.domain.useCases.GetStaffInOfficeUseCase
 import com.mifos.core.domain.useCases.GetUserPathTrackingUseCase
 import com.mifos.core.domain.useCases.GroupsListPagingDataSource
@@ -76,8 +77,10 @@ import com.mifos.core.domain.useCases.SaveIndividualCollectionSheetUseCase
 import com.mifos.core.domain.useCases.ServerConfigValidatorUseCase
 import com.mifos.core.domain.useCases.SubmitCollectionSheetUseCase
 import com.mifos.core.domain.useCases.SubmitProductiveSheetUseCase
+import com.mifos.core.domain.useCases.UpdateClientIdentifierUseCase
 import com.mifos.core.domain.useCases.UpdateClientPinpointUseCase
 import com.mifos.core.domain.useCases.UpdateNoteUseCase
+import com.mifos.core.domain.useCases.UpdateSignatureUseCase
 import com.mifos.core.domain.useCases.UploadClientImageUseCase
 import com.mifos.core.domain.useCases.UsernameValidationUseCase
 import com.mifos.core.domain.useCases.ValidateServerApiPathUseCase
@@ -99,11 +102,12 @@ val UseCaseModule = module {
     factoryOf(::ApproveSavingsApplicationUseCase)
     factoryOf(::CreateChargesUseCase)
     factoryOf(::CreateClientIdentifierUseCase)
-    factoryOf(::CreateDocumentUseCase)
     factoryOf(::CreateGroupLoansAccountUseCase)
     factoryOf(::CreateLoanAccountUseCase)
     factoryOf(::CreateLoanChargesUseCase)
     factoryOf(::CreateSavingsAccountUseCase)
+    factoryOf(::GetSavingsProductTemplateUseCase)
+    factoryOf(::GetClientTemplateUseCase)
     factoryOf(::DeleteCheckerUseCase)
     factoryOf(::DeleteClientAddressPinpointUseCase)
     factoryOf(::DeleteDataTableEntryUseCase)
@@ -121,7 +125,7 @@ val UseCaseModule = module {
     factoryOf(::GetCheckerInboxBadgesUseCase)
     factoryOf(::GetCheckerTasksUseCase)
     factoryOf(::GetClientDetailsUseCase)
-    factoryOf(::GetClientIdentifierTemplateUseCase)
+    factoryOf(::UpdateClientIdentifierUseCase)
     factoryOf(::GetClientPinpointLocationsUseCase)
     factoryOf(::GetClientSavingsAccountTemplateByProductUseCase)
     factoryOf(::GetDataTableInfoUseCase)
@@ -165,4 +169,6 @@ val UseCaseModule = module {
     factoryOf(::AddNoteUseCase)
     factoryOf(::UpdateNoteUseCase)
     factoryOf(::DeleteNoteUseCase)
+    factoryOf(::CreateSignatureUseCase)
+    factoryOf(::UpdateSignatureUseCase)
 }

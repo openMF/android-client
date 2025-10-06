@@ -72,22 +72,24 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosDialogBox
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.model.objects.checkerinboxtask.CheckerTask
+import com.mifos.core.ui.components.MifosProgressIndicator
 import com.mifos.core.ui.components.SelectionModeTopAppBar
 import com.mifos.feature.checker.inbox.task.checkerInboxDialog.CheckerInboxTasksFilterDialog
 import kotlinx.coroutines.launch
-import kotlinx.datetime.Instant
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameterProvider
 import org.koin.compose.viewmodel.koinViewModel
+import kotlin.time.ExperimentalTime
+import kotlin.time.Instant
 
+@OptIn(ExperimentalTime::class)
 @Composable
 internal fun CheckerInboxScreen(
     onBackPressed: () -> Unit,
@@ -422,7 +424,7 @@ private fun CheckerInboxScreen(
                 }
 
                 is CheckerInboxUiState.Loading -> {
-                    MifosCircularProgress()
+                    MifosProgressIndicator()
                 }
 
                 is CheckerInboxUiState.SuccessResponse -> {
@@ -639,6 +641,7 @@ private fun CheckerInboxItem(
     }
 }
 
+@OptIn(ExperimentalTime::class)
 private fun getFilteredList(
     searchQuery: String,
     fromDate: Instant?,

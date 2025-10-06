@@ -9,6 +9,7 @@
  */
 package com.mifos.core.designsystem.component
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
@@ -20,6 +21,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -31,6 +33,7 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 fun MifosCard(
     modifier: Modifier = Modifier,
     shape: Shape = DesignToken.shapes.small,
+    borderStroke: BorderStroke = BorderStroke(0.dp, Color.Transparent),
     elevation: Dp = 1.dp,
     onClick: (() -> Unit)? = null,
     colors: CardColors = CardDefaults.cardColors(
@@ -45,6 +48,7 @@ fun MifosCard(
         elevation = CardDefaults.cardElevation(
             defaultElevation = elevation,
         ),
+        border = borderStroke,
         colors = colors,
         content = content,
     )
@@ -56,7 +60,7 @@ private fun MifosCardPreview() {
     MifosTheme {
         MifosCard {
             Column(
-                modifier = Modifier.padding(16.dp),
+                modifier = Modifier.padding(DesignToken.padding.large),
             ) {
                 Text("Simple Mifos Card")
                 Text("This is the card content.")

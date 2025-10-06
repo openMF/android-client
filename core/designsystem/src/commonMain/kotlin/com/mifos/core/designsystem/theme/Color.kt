@@ -248,4 +248,5 @@ object AppColors {
     val peach = Color(0xFFFF926E)
     val lightPurple = Color(0xFF706EFF)
     val stepperColor = Color(0xFF9ECAFC)
+    val titleColorTopAbbBar = Color(0xFF0773BB)
 }

@@ -113,7 +113,7 @@ appcompat = "1.7.0"
 kotlin = "2.1.0"
 kotlinInject = "0.7.2"
 kotlinxCoroutines = "1.10.1"
-kotlinxDatetime = "0.6.1"
+kotlinxDatetime = "0.7.1"
 kotlinxImmutable = "0.3.8"
 kotlinxSerializationJson = "1.7.3"
 ksp = "2.1.0-1.0.29"
@@ -128,7 +128,7 @@ koin = "4.0.1-RC1"
 koinAnnotationsVersion = "1.4.0-RC4"
 
 # CMP Libraries
-compose-plugin = "1.8.2"
+compose-plugin = "1.9.0"
 coil = "3.2.0"
 backHandlerVersion = "2.1.0"
 constraintLayout = "0.4.0"
@@ -141,6 +141,7 @@ fileKitDialog = "0.10.0-beta04"
 wire = "5.0.0"
 compose_ui = "1.8.0-alpha03"
 composeSignature = "1.0.1"
+krop = "0.2.0"
 # Jetbrains CMP
 windowsSizeClass = "0.5.0"
 uiDesktopVersion = "1.7.0"
@@ -148,6 +149,9 @@ composeLifecycle = "2.8.3"
 composeNavigation = "2.8.0-alpha10"
 jbCoreBundle = "1.0.1"
 jbSavedState = "1.2.2"
+lottie = "6.6.7"
+compottie = "2.0.0-rc05"
+pdfbox = "2.0.30"
 
 # Desktop Version
 packageName = "AndroidClient"
@@ -379,6 +383,7 @@ coil-network-ktor = { group = "io.coil-kt.coil3", name = "coil-network-ktor3", v
 coil-svg = { group = "io.coil-kt.coil3", name = "coil-svg", version.ref = "coil" }
 coil-network-okhttp = { group = "io.coil-kt.coil3", name = "coil-network-okhttp", version.ref = "coil" }
 
+crop-krop-ui = { module = "com.attafitamim.krop:ui", version.ref = "krop"}
 compose-signature = { module = "io.github.niyajali:compose-signature", version.ref = "composeSignature" }
 compose-gradlePlugin = { group = "org.jetbrains.kotlin", name = "compose-compiler-gradle-plugin", version.ref = "kotlin" }
 squareup-okio = { group = "com.squareup.okio", name = "okio", version.ref = "okioVersion" }
@@ -397,6 +402,13 @@ multiplatform-settings-coroutines = { group = "com.russhwolf", name = "multiplat
 multiplatform-settings-serialization = { group = "com.russhwolf", name = "multiplatform-settings-serialization", version.ref = "multiplatformSettings" }
 
 window-size = { group = "dev.chrisbanes.material3", name = "material3-window-size-class-multiplatform", version.ref = "windowsSizeClass" }
+
+# Animation Library
+compottie-lite = { module = "io.github.alexzhirkevich:compottie-lite", version.ref = "compottie" }
+compottie-resources = { module = "io.github.alexzhirkevich:compottie-resources", version.ref = "compottie" }
+
+pdfbox = { module = "org.apache.pdfbox:pdfbox", version.ref = "pdfbox" }
+
 
 [plugins]
 

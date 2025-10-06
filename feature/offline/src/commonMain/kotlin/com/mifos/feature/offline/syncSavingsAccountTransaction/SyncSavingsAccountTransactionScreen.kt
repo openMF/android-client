@@ -53,10 +53,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.ui.components.MifosEmptyUi
+import com.mifos.core.ui.components.MifosProgressIndicator
 import com.mifos.room.entities.PaymentTypeOptionEntity
 import com.mifos.room.entities.accounts.savings.SavingsAccountTransactionRequestEntity
 import kotlinx.coroutines.launch
@@ -149,7 +149,7 @@ internal fun SyncSavingsAccountTransactionScreen(
             ) {
                 when (uiState) {
                     is SyncSavingsAccountTransactionUiState.Loading -> {
-                        MifosCircularProgress()
+                        MifosProgressIndicator()
                     }
 
                     is SyncSavingsAccountTransactionUiState.ShowEmptySavingsAccountTransactions -> {

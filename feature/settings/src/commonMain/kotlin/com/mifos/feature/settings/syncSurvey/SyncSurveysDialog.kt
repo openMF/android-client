@@ -57,7 +57,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import co.touchlab.kermit.Logger
-import com.mifos.core.designsystem.component.MifosCircularProgress
+import com.mifos.core.ui.components.MifosProgressIndicator
 import com.mifos.core.ui.util.DevicePreview
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
@@ -151,7 +151,7 @@ internal fun SyncSurveysDialog(
         }
 
         is SyncSurveysDialogUiState.ShowProgressbar -> {
-            MifosCircularProgress()
+            MifosProgressIndicator()
         }
 
         is SyncSurveysDialogUiState.ShowSurveysSyncSuccessfully -> {

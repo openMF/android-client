@@ -206,7 +206,9 @@ internal class ClientProfileDetailsViewModel(
             ClientProfileDetailsAction.OnRetry -> getClientAndObserveNetwork()
             ClientProfileDetailsAction.OnUpdateDetailsClick -> sendEvent(ClientProfileDetailsEvent.NavigateToUpdateDetails)
             ClientProfileDetailsAction.OnUpdatePhotoClick -> sendEvent(ClientProfileDetailsEvent.NavigateToUpdatePhoto)
-            ClientProfileDetailsAction.OnUpdateSignatureClick -> {}
+            ClientProfileDetailsAction.OnUpdateSignatureClick -> {
+                sendEvent(ClientProfileDetailsEvent.NavigateToUpdateSignature)
+            }
             ClientProfileDetailsAction.ConfirmUnAssignStaff -> {
                 viewModelScope.launch {
                     unAssignStaff()
@@ -295,6 +297,8 @@ sealed interface ClientProfileDetailsEvent {
     data object NavigateToUpdatePhoto : ClientProfileDetailsEvent
 
     data object NavigateToUpdateDetails : ClientProfileDetailsEvent
+
+    data object NavigateToUpdateSignature : ClientProfileDetailsEvent
 }
 
 /**

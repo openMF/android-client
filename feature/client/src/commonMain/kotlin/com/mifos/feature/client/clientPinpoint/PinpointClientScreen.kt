@@ -56,7 +56,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.component.PermissionBox
@@ -64,6 +63,7 @@ import com.mifos.core.designsystem.component.getRequiredPermissionsForLocation
 import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.model.objects.clients.ClientAddressRequest
 import com.mifos.core.model.objects.clients.ClientAddressResponse
+import com.mifos.core.ui.components.MifosProgressIndicator
 import com.mifos.core.ui.util.DevicePreview
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.getString
@@ -230,7 +230,7 @@ internal fun PinpointClientScreen(
                         onRetry()
                     }
 
-                    is PinPointClientUiState.Loading -> MifosCircularProgress()
+                    is PinPointClientUiState.Loading -> MifosProgressIndicator()
 
                     is PinPointClientUiState.SuccessMessage -> {
                         scope.launch {

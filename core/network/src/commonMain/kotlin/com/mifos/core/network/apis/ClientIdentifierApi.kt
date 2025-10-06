@@ -9,52 +9,109 @@
  */
 package com.mifos.core.network.apis
 
-import com.mifos.core.network.model.DeleteClientsClientIdIdentifiersIdentifierIdResponse
-import com.mifos.core.network.model.GetClientsClientIdIdentifiersResponse
-import com.mifos.core.network.model.GetClientsClientIdIdentifiersTemplateResponse
+import com.mifos.core.model.objects.noncoreobjects.Identifier
+import com.mifos.core.model.objects.noncoreobjects.IdentifierPayload
+import com.mifos.core.model.objects.noncoreobjects.IdentifierTemplate
+import com.mifos.core.network.GenericResponse
+import com.mifos.room.basemodel.APIEndPoint
+import de.jensklingenberg.ktorfit.http.Body
 import de.jensklingenberg.ktorfit.http.DELETE
 import de.jensklingenberg.ktorfit.http.GET
+import de.jensklingenberg.ktorfit.http.POST
+import de.jensklingenberg.ktorfit.http.PUT
 import de.jensklingenberg.ktorfit.http.Path
+import io.ktor.client.statement.HttpResponse
 import kotlinx.coroutines.flow.Flow
 
 interface ClientIdentifierApi {
-    /**
-     * List all Identifiers for a Client
-     * Example Requests: clients/1/identifiers   clients/1/identifiers?fields&#x3D;documentKey,documentType,description
-     * Responses:
-     *  - 200: OK
-     *
-     * @param clientId clientId
-     * @return [kotlin.collections.List<GetClientsClientIdIdentifiersResponse>]
-     */
-    @GET("clients/{clientId}/identifiers")
-    fun retrieveAllClientIdentifiers(@Path("clientId") clientId: Long): Flow<List<GetClientsClientIdIdentifiersResponse>>
 
     /**
-     * Retrieve Client Identifier Details Template
-     * This is a convenience resource useful for building maintenance user interface screens for client applications. The template data returned consists of any or all of:   Field Defaults  Allowed description Lists   Example Request: clients/1/identifiers/template
-     * Responses:
-     *  - 200: OK
+     * Fetches the list of identifiers for a given client.
      *
-     * @param clientId clientId
-     * @return [GetClientsClientIdIdentifiersTemplateResponse]
+     * REST END POINT:
+     * https://demo.openmf.org/fineract-provider/api/v1/clients/{clientId}/identifiers
+     *
+     * @param clientId The unique ID of the client.
+     * @return [Flow] emitting a list of [Identifier]s for the specified client.
      */
-    @GET("clients/{clientId}/identifiers/template")
-    suspend fun newClientIdentifierDetails(@Path("clientId") clientId: Long): GetClientsClientIdIdentifiersTemplateResponse
+    @GET(APIEndPoint.CLIENTS + "/{clientId}/" + APIEndPoint.IDENTIFIERS)
+    fun getClientListIdentifiers(@Path("clientId") clientId: Long): Flow<List<Identifier>>
 
     /**
-     * Delete a Client Identifier
-     * Deletes a Client Identifier
-     * Responses:
-     *  - 200: OK
+     * Retrieves a specific client identifier.
      *
-     * @param clientId clientId
-     * @param identifierId identifierId
-     * @return [DeleteClientsClientIdIdentifiersIdentifierIdResponse]
+     * REST END POINT:
+     * https://demo.openmf.org/fineract-provider/api/v1/clients/{clientId}/identifiers/{identifierId}
+     *
+     * @param clientId The unique ID of the client.
+     * @param identifierId The unique ID of the identifier.
+     * @return [Flow] emitting the [Identifier] object.
      */
-    @DELETE("clients/{clientId}/identifiers/{identifierId}")
+    @GET(APIEndPoint.CLIENTS + "/{clientId}/" + APIEndPoint.IDENTIFIERS + "/{identifierId}")
+    fun getClientIdentifiers(
+        @Path("clientId") clientId: Long,
+        @Path("identifierId") identifierId: Long,
+    ): Flow<Identifier>
+
+    /**
+     * Fetches the client identifier template for a given client.
+     *
+     * REST END POINT:
+     * https://demo.openmf.org/fineract-provider/api/v1/clients/{clientId}/identifiers/template
+     *
+     * @param clientId The unique ID of the client.
+     * @return [Flow] emitting the [IdentifierTemplate] for the specified client.
+     */
+    @GET(APIEndPoint.CLIENTS + "/{clientId}/identifiers/template")
+    fun getClientIdentifierTemplate(@Path("clientId") clientId: Long): Flow<IdentifierTemplate>
+
+    /**
+     * Deletes a client identifier for a given client.
+     *
+     * REST END POINT:
+     * https://demo.openmf.org/fineract-provider/api/v1/clients/{clientId}/identifiers/{identifierId}
+     *
+     * @param clientId The unique ID of the client.
+     * @param identifierId The unique ID of the identifier to be deleted.
+     * @return [GenericResponse] indicating the result of the delete operation.
+     */
+    @DELETE(APIEndPoint.CLIENTS + "/{clientId}/" + APIEndPoint.IDENTIFIERS + "/{identifierId}")
     suspend fun deleteClientIdentifier(
         @Path("clientId") clientId: Long,
         @Path("identifierId") identifierId: Long,
-    ): DeleteClientsClientIdIdentifiersIdentifierIdResponse
+    ): GenericResponse
+
+    /**
+     * Creates a new identifier for a given client.
+     *
+     * REST END POINT:
+     * https://demo.openmf.org/fineract-provider/api/v1/clients/{clientId}/identifiers
+     *
+     * @param clientId The unique ID of the client.
+     * @param identifierPayload The payload containing identifier details.
+     * @return [GenericResponse] indicating the result of the create operation.
+     */
+    @POST(APIEndPoint.CLIENTS + "/{clientId}/" + APIEndPoint.IDENTIFIERS)
+    suspend fun createClientIdentifier(
+        @Path("clientId") clientId: Long,
+        @Body identifierPayload: IdentifierPayload,
+    ): HttpResponse
+
+    /**
+     * Updates an existing client identifier for a given client.
+     *
+     * REST END POINT:
+     * https://demo.openmf.org/fineract-provider/api/v1/clients/{clientId}/identifiers/{identifierId}
+     *
+     * @param clientId The unique ID of the client.
+     * @param identifierId The unique ID of the identifier to be updated.
+     * @param identifierPayload The updated payload for the identifier.
+     * @return [GenericResponse] indicating the result of the update operation.
+     */
+    @PUT(APIEndPoint.CLIENTS + "/{clientId}/" + APIEndPoint.IDENTIFIERS + "/{identifierId}")
+    suspend fun updateClientIdentifier(
+        @Path("clientId") clientId: Long,
+        @Path("identifierId") identifierId: Long,
+        @Body identifierPayload: IdentifierPayload,
+    ): GenericResponse
 }

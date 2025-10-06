@@ -105,8 +105,20 @@ fun MifosListingRowItem(
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        keyContent()
-        valueContent()
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Box(
+                modifier = Modifier.weight(1f),
+                contentAlignment = Alignment.CenterStart,
+            ) { keyContent() }
+
+            Box(
+                modifier = Modifier.weight(1f),
+                contentAlignment = Alignment.CenterEnd,
+            ) { valueContent() }
+        }
     }
 }
 
@@ -167,7 +179,7 @@ fun MifosListingRowItem(
                     text = "$key:",
                     style = keyStyle,
                     maxLines = 1,
-                    overflow = TextOverflow.Clip,
+                    overflow = TextOverflow.Ellipsis,
                 )
             }
         },
@@ -175,7 +187,7 @@ fun MifosListingRowItem(
             Text(
                 text = value,
                 style = valueStyle.copy(color = valueColor),
-                overflow = TextOverflow.Clip,
+                overflow = TextOverflow.Ellipsis,
                 maxLines = 1,
             )
         },

@@ -12,6 +12,7 @@ package com.mifos.core.ui.components
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Icon
@@ -19,6 +20,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import com.mifos.core.designsystem.component.MifosOutlinedButton
 import com.mifos.core.designsystem.component.MifosTextButton
 import com.mifos.core.designsystem.icon.MifosIcons
@@ -33,6 +35,7 @@ fun MifosTwoButtonRow(
     secondBtnText: String,
     onFirstBtnClick: () -> Unit,
     onSecondBtnClick: () -> Unit,
+    isButtonIconVisible: Boolean = true,
     isFirstButtonEnabled: Boolean = true,
     isSecondButtonEnabled: Boolean = true,
     modifier: Modifier = Modifier,
@@ -43,12 +46,14 @@ fun MifosTwoButtonRow(
                 onFirstBtnClick()
             },
             leadingIcon = {
-                Icon(
-                    imageVector = MifosIcons.ChevronLeft,
-                    contentDescription = null,
-                    modifier = Modifier.size(DesignToken.sizes.iconAverage),
-                    tint = MaterialTheme.colorScheme.primary,
-                )
+                if (isButtonIconVisible) {
+                    Icon(
+                        imageVector = MifosIcons.ChevronLeft,
+                        contentDescription = null,
+                        modifier = Modifier.size(DesignToken.sizes.iconAverage),
+                        tint = MaterialTheme.colorScheme.primary,
+                    )
+                }
             },
             text = {
                 Text(
@@ -57,7 +62,7 @@ fun MifosTwoButtonRow(
                     style = MifosTypography.labelLarge,
                 )
             },
-            modifier = Modifier.weight(1f),
+            modifier = Modifier.weight(1f).height(40.dp),
             enabled = isFirstButtonEnabled,
         )
         Spacer(Modifier.padding(DesignToken.padding.small))
@@ -66,11 +71,13 @@ fun MifosTwoButtonRow(
                 onSecondBtnClick()
             },
             leadingIcon = {
-                Icon(
-                    imageVector = MifosIcons.Check,
-                    contentDescription = null,
-                    modifier = Modifier.size(DesignToken.sizes.iconAverage),
-                )
+                if (isButtonIconVisible) {
+                    Icon(
+                        imageVector = MifosIcons.Check,
+                        contentDescription = null,
+                        modifier = Modifier.size(DesignToken.sizes.iconAverage),
+                    )
+                }
             },
             text = {
                 Text(
@@ -78,7 +85,7 @@ fun MifosTwoButtonRow(
                     style = MifosTypography.labelLarge,
                 )
             },
-            modifier = Modifier.weight(1f),
+            modifier = Modifier.weight(1f).height(40.dp),
             enabled = isSecondButtonEnabled,
         )
     }

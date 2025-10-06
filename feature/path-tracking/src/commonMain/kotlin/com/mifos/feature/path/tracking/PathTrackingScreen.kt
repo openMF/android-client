@@ -40,7 +40,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.component.PermissionBox
@@ -48,6 +47,7 @@ import com.mifos.core.designsystem.component.getRequiredPermissionsForLocation
 import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.model.objects.users.UserLatLng
 import com.mifos.core.model.objects.users.UserLocation
+import com.mifos.core.ui.components.MifosProgressIndicator
 import com.mifos.core.ui.util.DevicePreview
 import io.ktor.client.HttpClient
 import io.ktor.client.request.get
@@ -132,7 +132,7 @@ fun PathTrackingScreen(
                         }
                     }
 
-                    is PathTrackingUiState.Loading -> MifosCircularProgress()
+                    is PathTrackingUiState.Loading -> MifosProgressIndicator()
 
                     is PathTrackingUiState.PathTracking -> {
                         PathTrackingContent(

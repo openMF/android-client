@@ -63,18 +63,19 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mifos.core.common.utils.DateHelper
 import com.mifos.core.designsystem.component.MifosBottomSheet
 import com.mifos.core.designsystem.component.MifosButton
-import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosDatePickerTextField
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosTextFieldDropdown
 import com.mifos.core.network.model.RequestCollectionSheetPayload
+import com.mifos.core.ui.components.MifosProgressIndicator
 import com.mifos.core.ui.util.DevicePreview
 import com.mifos.room.entities.collectionsheet.IndividualCollectionSheet
 import com.mifos.room.entities.organisation.OfficeEntity
 import com.mifos.room.entities.organisation.StaffEntity
-import kotlinx.datetime.Clock
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
+import kotlin.time.Clock
+import kotlin.time.ExperimentalTime
 
 @Composable
 internal fun NewIndividualCollectionSheetScreen(
@@ -103,6 +104,7 @@ internal fun NewIndividualCollectionSheetScreen(
     )
 }
 
+@OptIn(ExperimentalTime::class)
 @Composable
 internal fun NewIndividualCollectionSheetScreen(
     state: NewIndividualCollectionSheetUiState,
@@ -206,7 +208,7 @@ internal fun NewIndividualCollectionSheetScreen(
             )
         }
         if (state.isLoading) {
-            MifosCircularProgress()
+            MifosProgressIndicator()
         } else {
             Column(
                 modifier = Modifier

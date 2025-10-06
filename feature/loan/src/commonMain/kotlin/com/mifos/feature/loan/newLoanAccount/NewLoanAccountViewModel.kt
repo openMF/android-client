@@ -12,27 +12,33 @@ package com.mifos.feature.loan.newLoanAccount
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
+import co.touchlab.kermit.Logger
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.common.utils.DateHelper
 import com.mifos.core.data.repository.ClientDetailsRepository
 import com.mifos.core.data.util.NetworkMonitor
+import com.mifos.core.domain.useCases.CreateLoanAccountUseCase
 import com.mifos.core.domain.useCases.GetAllLoanUseCase
 import com.mifos.core.domain.useCases.GetLoansAccountTemplateUseCase
 import com.mifos.core.model.objects.organisations.LoanProducts
 import com.mifos.core.network.model.CollateralItem
+import com.mifos.core.network.model.LoansPayload
 import com.mifos.core.ui.util.BaseViewModel
 import com.mifos.core.ui.util.TextFieldsValidator
+import com.mifos.feature.loan.newLoanAccount.NewLoanAccountState.DialogState
 import com.mifos.room.entities.templates.loans.LoanTemplate
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import kotlinx.datetime.Clock
 import org.jetbrains.compose.resources.StringResource
+import kotlin.time.Clock
+import kotlin.time.ExperimentalTime
 
 internal class NewLoanAccountViewModel(
     private val getAllLoanUseCase: GetAllLoanUseCase,
     private val repo: ClientDetailsRepository,
     private val getLoansAccountTemplateUseCase: GetLoansAccountTemplateUseCase,
     private val networkMonitor: NetworkMonitor,
+    private val loanUseCase: CreateLoanAccountUseCase,
     val savedStateHandle: SavedStateHandle,
 ) :
     BaseViewModel<NewLoanAccountState, NewLoanAccountEvent, NewLoanAccountAction>(
@@ -69,9 +75,13 @@ internal class NewLoanAccountViewModel(
 
             is NewLoanAccountAction.OnLoanPurposeChange -> handleLoanPurposeChange(action)
 
-            is NewLoanAccountAction.OnExpectedDisbursementDateChange -> handleExpectedDisbursementDateChange(action)
+            is NewLoanAccountAction.OnExpectedDisbursementDateChange -> handleExpectedDisbursementDateChange(
+                action,
+            )
 
-            is NewLoanAccountAction.OnExpectedDisbursementDatePick -> handleExpectedDisbursementDatePick(action)
+            is NewLoanAccountAction.OnExpectedDisbursementDatePick -> handleExpectedDisbursementDatePick(
+                action,
+            )
 
             is NewLoanAccountAction.OnSubmissionDateChange -> handleSubmissionDateChange(action)
 
@@ -79,27 +89,41 @@ internal class NewLoanAccountViewModel(
 
             is NewLoanAccountAction.OnLinkSavingsChange -> handleLinkSavingsChange(action)
 
-            is NewLoanAccountAction.OnStandingInstructionsChange -> handleStandingInstructionsChange(action)
+            is NewLoanAccountAction.OnStandingInstructionsChange -> handleStandingInstructionsChange(
+                action,
+            )
 
             is NewLoanAccountAction.OnDetailsSubmit -> handleOnDetailsSubmit()
 
-            is NewLoanAccountAction.Internal.OnReceivingLoanAccounts -> handleAllLoansResponse(action.loans)
+            is NewLoanAccountAction.Internal.OnReceivingLoanAccounts -> handleAllLoansResponse(
+                action.loans,
+            )
 
-            is NewLoanAccountAction.Internal.OnReceivingLoanTemplate -> handleLoanTemplateResponse(action.template)
+            is NewLoanAccountAction.Internal.OnReceivingLoanTemplate -> handleLoanTemplateResponse(
+                action.template,
+            )
 
-            is NewLoanAccountAction.OnFirstRepaymentDateChange -> handleFirstRepaymentDateChange(action)
+            is NewLoanAccountAction.OnFirstRepaymentDateChange -> handleFirstRepaymentDateChange(
+                action,
+            )
 
             is NewLoanAccountAction.OnFirstRepaymentDatePick -> handleFirstRepaymentDatePick(action)
 
-            is NewLoanAccountAction.OnInterestChargedFromChange -> handleInterestChargedFromChange(action)
+            is NewLoanAccountAction.OnInterestChargedFromChange -> handleInterestChargedFromChange(
+                action,
+            )
 
-            is NewLoanAccountAction.OnInterestChargedFromDatePick -> handleInterestChargedFromDatePick(action)
+            is NewLoanAccountAction.OnInterestChargedFromDatePick -> handleInterestChargedFromDatePick(
+                action,
+            )
 
             is NewLoanAccountAction.OnNoOfRepaymentsChange -> handleNoOfRepaymentsChange(action)
 
             is NewLoanAccountAction.OnPrincipalAmountChange -> handlePrincipalAmountChange(action)
 
-            is NewLoanAccountAction.OnTermFrequencyIndexChange -> handleTermFrequencyIndexChange(action)
+            is NewLoanAccountAction.OnTermFrequencyIndexChange -> handleTermFrequencyIndexChange(
+                action,
+            )
 
             is NewLoanAccountAction.OnRepaidEveryChange -> handleRepaidEveryChange(action)
 
@@ -107,47 +131,255 @@ internal class NewLoanAccountViewModel(
 
             is NewLoanAccountAction.OnSelectedOnIndexChange -> handleSelectedOnIndexChange(action)
 
-            is NewLoanAccountAction.OnNominalInterestRateChange -> handleNominalInterestRateChange(action)
+            is NewLoanAccountAction.OnNominalInterestRateChange -> handleNominalInterestRateChange(
+                action,
+            )
 
-            is NewLoanAccountAction.OnNominalFrequencyIndexChange -> handleNominalFrequencyIndexChange(action)
+            is NewLoanAccountAction.OnNominalFrequencyIndexChange -> handleNominalFrequencyIndexChange(
+                action,
+            )
 
-            is NewLoanAccountAction.OnNominalMethodIndexChange -> handleNominalMethodIndexChange(action)
+            is NewLoanAccountAction.OnNominalMethodIndexChange -> handleNominalMethodIndexChange(
+                action,
+            )
 
-            is NewLoanAccountAction.OnNominalAmortizationIndexChange -> handleNominalAmortizationIndexChange(action)
+            is NewLoanAccountAction.OnNominalAmortizationIndexChange -> handleNominalAmortizationIndexChange(
+                action,
+            )
 
-            is NewLoanAccountAction.OnEqualAmortizationCheckChange -> handleEqualAmortizationCheckChange(action)
+            is NewLoanAccountAction.OnEqualAmortizationCheckChange -> handleEqualAmortizationCheckChange(
+                action,
+            )
 
-            is NewLoanAccountAction.OnRepaymentStrategyIndexChange -> handleRepaymentStrategyIndexChange(action)
+            is NewLoanAccountAction.OnRepaymentStrategyIndexChange -> handleRepaymentStrategyIndexChange(
+                action,
+            )
 
-            is NewLoanAccountAction.OnBalloonRepaymentAmountChange -> handleBalloonRepaymentAmountChange(action)
+            is NewLoanAccountAction.OnBalloonRepaymentAmountChange -> handleBalloonRepaymentAmountChange(
+                action,
+            )
 
-            is NewLoanAccountAction.OnInterestCalculationPeriodIndexChange -> handleInterestCalculationPeriodIndexChange(action)
+            is NewLoanAccountAction.OnInterestCalculationPeriodIndexChange -> handleInterestCalculationPeriodIndexChange(
+                action,
+            )
 
-            is NewLoanAccountAction.OnInterestPartialPeriodCheckChange -> handleInterestPartialPeriodCheckChange(action)
+            is NewLoanAccountAction.OnInterestPartialPeriodCheckChange -> handleInterestPartialPeriodCheckChange(
+                action,
+            )
 
             is NewLoanAccountAction.OnArrearsToleranceChange -> handleArrearsToleranceChange(action)
 
-            is NewLoanAccountAction.OnInterestFreePeriodChange -> handleInterestFreePeriodChange(action)
+            is NewLoanAccountAction.OnInterestFreePeriodChange -> handleInterestFreePeriodChange(
+                action,
+            )
 
-            is NewLoanAccountAction.OnMoratoriumGraceOnInterestPaymentChange -> handleMoratoriumGraceOnInterestPaymentChange(action)
+            is NewLoanAccountAction.OnMoratoriumGraceOnInterestPaymentChange -> handleMoratoriumGraceOnInterestPaymentChange(
+                action,
+            )
 
-            is NewLoanAccountAction.OnMoratoriumGraceOnPrincipalPaymentChange -> handleMoratoriumGraceOnPrincipalPaymentChange(action)
+            is NewLoanAccountAction.OnMoratoriumGraceOnPrincipalPaymentChange -> handleMoratoriumGraceOnPrincipalPaymentChange(
+                action,
+            )
 
-            is NewLoanAccountAction.OnMoratoriumOnArrearsAgeingChange -> handleMoratoriumOnArrearsAgeingChange(action)
+            is NewLoanAccountAction.OnMoratoriumOnArrearsAgeingChange -> handleMoratoriumOnArrearsAgeingChange(
+                action,
+            )
 
-            is NewLoanAccountAction.DismissAddCollateralDialog -> handleDismissAddCollateralDialog()
+            is NewLoanAccountAction.DismissDialog -> handleDismissAddCollateralDialog()
 
             is NewLoanAccountAction.ShowAddCollateralDialog -> handleShowAddCollateralDialog()
 
             is NewLoanAccountAction.AddCollateralToList -> handleAddCollateralToList()
 
-            is NewLoanAccountAction.OnCollateralQuantityChanged -> handleCollateralQuantityChanged(action)
+            is NewLoanAccountAction.OnCollateralQuantityChanged -> handleCollateralQuantityChanged(
+                action,
+            )
 
-            is NewLoanAccountAction.SelectedCollateralIndexChange -> handleSelectedCollateralIndexChange(action)
+            is NewLoanAccountAction.SelectedCollateralIndexChange -> handleSelectedCollateralIndexChange(
+                action,
+            )
 
             is NewLoanAccountAction.HideCollaterals -> handleHideCollaterals()
 
             is NewLoanAccountAction.ShowCollaterals -> handleShowCollaterals()
+
+            is NewLoanAccountAction.AddChargeToList -> handleAddChargeToList()
+
+            is NewLoanAccountAction.OnChooseChargeIndexChange -> handleChooseChargeIndexChange(
+                action,
+            )
+
+            is NewLoanAccountAction.ShowAddChargeDialog -> handleShowAddChargeDialog()
+
+            is NewLoanAccountAction.ShowCharges -> handleShowChargesDialog()
+
+            is NewLoanAccountAction.ShowOverDueCharges -> handleShowOverDueChargesDialog()
+
+            is NewLoanAccountAction.OnChargesDatePick -> handleChargesDatePick(action)
+
+            is NewLoanAccountAction.OnChargesDateChange -> handleChargesDateChange(action)
+
+            is NewLoanAccountAction.OnChargesAmountChange -> handleChargesAmountChange(action)
+
+            is NewLoanAccountAction.DeleteChargeFromSelectedCharges -> handleDeleteCharge(action.index)
+
+            is NewLoanAccountAction.EditChargeDialog -> handleEditChargeDialog(action.index)
+
+            is NewLoanAccountAction.EditCharge -> handleEditCharge(action.index)
+
+            NewLoanAccountAction.GotoPreviousStep -> {}
+
+            NewLoanAccountAction.SubmitLoanApplication -> submitLoanApplication()
+        }
+    }
+
+    private fun submitLoanApplication() {
+        viewModelScope.launch {
+            val payload = LoansPayload(
+                loanOfficerId = state.loanOfficerIndex,
+                principal = state.principalAmount,
+                clientId = state.clientId,
+                allowPartialPeriodInterestCalcualtion = state.isCheckedInterestPartialPeriod,
+                amortizationType = state.nominalAmortizationIndex,
+                dateFormat = DateHelper.SHORT_MONTH,
+                interestCalculationPeriodType = state.interestCalculationPeriodIndex,
+                interestRatePerPeriod = state.nominalInterestRate,
+                interestType = state.nominalInterestMethodIndex,
+                loanTermFrequency = state.termFrequencyIndex,
+                loanTermFrequencyType = state.termFrequencyIndex,
+                loanType = "individual",
+                locale = "en",
+                numberOfRepayments = state.noOfRepayments,
+                productId = state.loanProductSelected,
+                repaymentEvery = state.repaidEvery,
+                repaymentFrequencyDayOfWeekType = state.selectedDayIndex,
+                repaymentFrequencyNthDayType = state.selectedOnIndex,
+                repaymentFrequencyType = state.repaymentStrategyIndex,
+                expectedDisbursementDate = state.expectedDisbursementDate,
+                submittedOnDate = state.submissionDate,
+                loanPurposeId = state.loanPurposeIndex,
+                fundId = state.fundIndex,
+                linkAccountId = state.linkSavingsIndex,
+            )
+
+            loanUseCase(payload).collect { dataState ->
+                when (dataState) {
+                    is DataState.Error -> {
+                        mutableStateFlow.update {
+                            it.copy(
+                                dialogState = NewLoanAccountState.DialogState.Error(dataState.message),
+                                isLoading = false,
+                            )
+                        }
+                    }
+
+                    DataState.Loading -> {
+                        mutableStateFlow.update {
+                            it.copy(
+                                isLoading = true,
+                            )
+                        }
+                    }
+
+                    is DataState.Success -> {
+                        Logger.d("DebugTtt success")
+                        sendEvent(NewLoanAccountEvent.Finish)
+                    }
+                }
+            }
+        }
+    }
+
+    private fun handleChooseChargeIndexChange(action: NewLoanAccountAction.OnChooseChargeIndexChange) {
+        mutableStateFlow.update {
+            it.copy(chooseChargeIndex = action.index)
+        }
+    }
+
+    private fun handleShowAddChargeDialog() {
+        mutableStateFlow.update {
+            it.copy(dialogState = DialogState.AddNewCharge(false))
+        }
+    }
+
+    private fun handleShowChargesDialog() {
+        mutableStateFlow.update {
+            it.copy(dialogState = DialogState.ShowCharges)
+        }
+    }
+
+    private fun handleShowOverDueChargesDialog() {
+        mutableStateFlow.update {
+            it.copy(dialogState = DialogState.ShowOverDueCharges)
+        }
+    }
+
+    private fun handleChargesDatePick(action: NewLoanAccountAction.OnChargesDatePick) {
+        mutableStateFlow.update {
+            it.copy(showChargesDatePick = action.state)
+        }
+    }
+
+    private fun handleChargesDateChange(action: NewLoanAccountAction.OnChargesDateChange) {
+        mutableStateFlow.update {
+            it.copy(chargeDate = action.date)
+        }
+    }
+
+    private fun handleChargesAmountChange(action: NewLoanAccountAction.OnChargesAmountChange) {
+        mutableStateFlow.update {
+            it.copy(chargeAmount = action.amount)
+        }
+    }
+
+    private fun handleDeleteCharge(index: Int) {
+        val newCharges = state.addedCharges.toMutableList().apply {
+            removeAt(index)
+        }
+        mutableStateFlow.update {
+            it.copy(addedCharges = newCharges)
+        }
+    }
+
+    private fun handleEditChargeDialog(index: Int) {
+        val selectedEditCharge = state.addedCharges[index]
+        val chooseChargeIndex = state.loanTemplate
+            ?.chargeOptions
+            ?.indexOfFirst { it.id == selectedEditCharge.id } ?: -1
+
+        mutableStateFlow.update {
+            it.copy(
+                chargeAmount = selectedEditCharge.amount.toString(),
+                chargeDate = selectedEditCharge.date,
+                chooseChargeIndex = chooseChargeIndex,
+                dialogState = DialogState.AddNewCharge(true, index),
+            )
+        }
+    }
+
+    private fun handleEditCharge(index: Int) {
+        val selectedIndex = state.chooseChargeIndex
+        val selectedCharge = state.loanTemplate?.chargeOptions?.getOrNull(selectedIndex)
+        val amount = state.chargeAmount.toDoubleOrNull() ?: selectedCharge?.amount ?: 0.0
+        if (selectedCharge != null) {
+            val newCharge = CreatedCharges(
+                id = selectedCharge.id,
+                name = selectedCharge.name,
+                amount = amount,
+                date = state.chargeDate,
+                type = selectedCharge.chargeCalculationType?.value ?: "",
+                collectedOn = selectedCharge.chargeTimeType?.value ?: "",
+            )
+            val currentAddedCharges = state.addedCharges.toMutableList()
+            currentAddedCharges[index] = newCharge
+            mutableStateFlow.update {
+                it.copy(
+                    addedCharges = currentAddedCharges,
+                    chooseChargeIndex = -1,
+                    dialogState = DialogState.ShowCharges,
+                    chargeAmount = "",
+                )
+            }
         }
     }
 
@@ -275,6 +507,39 @@ internal class NewLoanAccountViewModel(
                     totalCollateral = 0.0,
                     collateralTotal = 0.0,
                     dialogState = null,
+                )
+            }
+        }
+    }
+
+    private fun handleAddChargeToList() {
+        val selectedIndex = state.chooseChargeIndex
+        val selectedCharge = state.loanTemplate?.chargeOptions?.getOrNull(selectedIndex)
+        val amount = state.chargeAmount.toDoubleOrNull() ?: selectedCharge?.amount ?: 0.0
+        if (selectedCharge != null) {
+            val newCharge = CreatedCharges(
+                id = selectedCharge.id,
+                name = selectedCharge.name,
+                amount = amount,
+                date = state.chargeDate,
+                type = selectedCharge.chargeCalculationType?.value ?: "",
+                collectedOn = selectedCharge.chargeTimeType?.value ?: "",
+            )
+
+            mutableStateFlow.update {
+                it.copy(
+                    addedCharges = it.addedCharges + newCharge,
+                    chooseChargeIndex = -1,
+                    dialogState = null,
+                    chargeAmount = "",
+                )
+            }
+        } else {
+            mutableStateFlow.update {
+                it.copy(
+                    chooseChargeIndex = -1,
+                    dialogState = null,
+                    chargeAmount = "",
                 )
             }
         }
@@ -473,6 +738,7 @@ internal class NewLoanAccountViewModel(
                     )
                 }
             }
+
             else -> Unit
         }
     }
@@ -545,7 +811,10 @@ internal class NewLoanAccountViewModel(
     }
 }
 
-data class NewLoanAccountState(
+data class NewLoanAccountState
+@OptIn(ExperimentalTime::class)
+constructor(
+    val isLoading: Boolean = false,
     val networkConnection: Boolean = false,
     val clientId: Int,
     val productLoans: List<LoanProducts> = emptyList(),
@@ -561,9 +830,13 @@ data class NewLoanAccountState(
     val loanOfficerIndex: Int = -1,
     val loanPurposeIndex: Int = -1,
     val fundIndex: Int = -1,
-    val submissionDate: String = DateHelper.getDateAsStringFromLong(Clock.System.now().toEpochMilliseconds()),
+    val submissionDate: String = DateHelper.getDateAsStringFromLong(
+        Clock.System.now().toEpochMilliseconds(),
+    ),
     val showSubmissionDatePick: Boolean = false,
-    val expectedDisbursementDate: String = DateHelper.getDateAsStringFromLong(Clock.System.now().toEpochMilliseconds()),
+    val expectedDisbursementDate: String = DateHelper.getDateAsStringFromLong(
+        Clock.System.now().toEpochMilliseconds(),
+    ),
     val showExpectedDisbursementDatePick: Boolean = false,
     val linkSavingsIndex: Int = -1,
     val isCheckedStandingInstructions: Boolean = false,
@@ -572,8 +845,12 @@ data class NewLoanAccountState(
     val principalAmountText: String = "",
     val noOfRepayments: Int = 0,
     val termFrequencyIndex: Int = -1,
-    val firstRepaymentDate: String = DateHelper.getDateAsStringFromLong(Clock.System.now().toEpochMilliseconds()),
-    val interestChargedFromDate: String = DateHelper.getDateAsStringFromLong(Clock.System.now().toEpochMilliseconds()),
+    val firstRepaymentDate: String = DateHelper.getDateAsStringFromLong(
+        Clock.System.now().toEpochMilliseconds(),
+    ),
+    val interestChargedFromDate: String = DateHelper.getDateAsStringFromLong(
+        Clock.System.now().toEpochMilliseconds(),
+    ),
     val showFirstRepaymentDatePick: Boolean = false,
     val showInterestChargedFromDatePick: Boolean = false,
     val repaidEvery: Int = 1,
@@ -602,18 +879,32 @@ data class NewLoanAccountState(
     val collateralTotal: Double = 0.0,
     val totalCollateral: Double = 0.0,
 
+    val chooseChargeIndex: Int = -1,
+    val addedCharges: List<CreatedCharges> = emptyList(),
+    val chargeDate: String = DateHelper.getDateAsStringFromLong(
+        Clock.System.now().toEpochMilliseconds(),
+    ),
+    val showChargesDatePick: Boolean = false,
+    val chargeAmount: String = "",
+
 ) {
     sealed interface DialogState {
         data class Error(val message: String) : DialogState
         data object AddNewCollateral : DialogState
+        data class AddNewCharge(val edit: Boolean, val index: Int = -1) : DialogState
         data object ShowCollaterals : DialogState
+        data object ShowCharges : DialogState
+        data object ShowOverDueCharges : DialogState
     }
+
     sealed interface ScreenState {
         data object Loading : ScreenState
         data object Success : ScreenState
         data object NetworkError : ScreenState
     }
-    val isDetailsNextEnabled = loanProductSelected != -1 && externalId.isNotEmpty() && submissionDate.isNotEmpty() && expectedDisbursementDate.isNotEmpty()
+
+    val isDetailsNextEnabled =
+        loanProductSelected != -1 && externalId.isNotEmpty() && submissionDate.isNotEmpty() && expectedDisbursementDate.isNotEmpty()
     val isCollateralBtnEnabled = collateralQuantity != 0 && collateralSelectedIndex != -1
 }
 
@@ -657,7 +948,9 @@ sealed interface NewLoanAccountAction {
     data class OnRepaidEveryChange(val number: Int) : NewLoanAccountAction
     data class OnSelectedOnIndexChange(val index: Int) : NewLoanAccountAction
     data class OnSelectedDayIndexChange(val index: Int) : NewLoanAccountAction
-    data class OnNominalInterestRateChange(val rate: Double, val text: String) : NewLoanAccountAction
+    data class OnNominalInterestRateChange(val rate: Double, val text: String) :
+        NewLoanAccountAction
+
     data class OnNominalFrequencyIndexChange(val index: Int) : NewLoanAccountAction
     data class OnNominalMethodIndexChange(val index: Int) : NewLoanAccountAction
     data class OnNominalAmortizationIndexChange(val index: Int) : NewLoanAccountAction
@@ -672,12 +965,26 @@ sealed interface NewLoanAccountAction {
     data class OnMoratoriumGraceOnInterestPaymentChange(val number: Int) : NewLoanAccountAction
     data class OnMoratoriumOnArrearsAgeingChange(val number: Int) : NewLoanAccountAction
     data object ShowAddCollateralDialog : NewLoanAccountAction
-    data object DismissAddCollateralDialog : NewLoanAccountAction
     data object AddCollateralToList : NewLoanAccountAction
     data class SelectedCollateralIndexChange(val index: Int) : NewLoanAccountAction
     data class OnCollateralQuantityChanged(val number: Int) : NewLoanAccountAction
     data object ShowCollaterals : NewLoanAccountAction
     data object HideCollaterals : NewLoanAccountAction
+
+    data class OnChooseChargeIndexChange(val index: Int) : NewLoanAccountAction
+    data object ShowAddChargeDialog : NewLoanAccountAction
+    data object DismissDialog : NewLoanAccountAction
+    data object ShowCharges : NewLoanAccountAction
+    data object ShowOverDueCharges : NewLoanAccountAction
+    data class OnChargesDatePick(val state: Boolean) : NewLoanAccountAction
+    data class OnChargesDateChange(val date: String) : NewLoanAccountAction
+    data class OnChargesAmountChange(val amount: String) : NewLoanAccountAction
+    data object AddChargeToList : NewLoanAccountAction
+    data class DeleteChargeFromSelectedCharges(val index: Int) : NewLoanAccountAction
+    data class EditChargeDialog(val index: Int) : NewLoanAccountAction
+    data class EditCharge(val index: Int) : NewLoanAccountAction
+    data object SubmitLoanApplication : NewLoanAccountAction
+    data object GotoPreviousStep : NewLoanAccountAction
 }
 
 data class CreatedCollateral(
@@ -686,4 +993,13 @@ data class CreatedCollateral(
     val name: String = "",
     val totalValue: Double = 0.0,
     val totalCollateral: Double = 0.0,
+)
+
+data class CreatedCharges(
+    val id: Int? = -1,
+    val name: String?,
+    val date: String,
+    val type: String?,
+    val amount: Double? = 0.0,
+    val collectedOn: String = "",
 )

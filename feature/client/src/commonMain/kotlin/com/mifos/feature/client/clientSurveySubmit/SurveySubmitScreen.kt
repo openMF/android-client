@@ -35,8 +35,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.unit.dp
-import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.model.objects.surveys.Scorecard
+import com.mifos.core.ui.components.MifosProgressIndicator
 import com.mifos.core.ui.util.DevicePreview
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
@@ -96,7 +96,7 @@ internal fun SurveySubmitScreen(
                 displayText = stringResource(Res.string.feature_client_survey_successfully_submitted),
                 submitSurvey = submitSurvey,
             )
-            MifosCircularProgress()
+            MifosProgressIndicator()
         }
     }
 }

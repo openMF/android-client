@@ -14,7 +14,6 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavType
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
-import androidx.navigation.navigation
 import com.mifos.core.common.utils.Constants
 import com.mifos.feature.savings.savingsAccount.SavingsAccountScreen
 import com.mifos.feature.savings.savingsAccountActivate.SavingsAccountActivateScreen
@@ -26,67 +25,68 @@ import com.mifos.room.entities.accounts.savings.SavingAccountDepositTypeEntity
 import com.mifos.room.entities.accounts.savings.SavingsAccountWithAssociationsEntity
 import kotlinx.serialization.Serializable
 
-@Serializable
-data object SavingsNavGraph
-
-fun NavGraphBuilder.savingsNavGraph(
+fun NavGraphBuilder.savingsDestination(
     navController: NavController,
     onBackPressed: () -> Unit,
     loadMoreSavingsAccountInfo: (String, Int) -> Unit,
     loadDocuments: (Int, String) -> Unit,
 ) {
-    navigation(
-        startDestination = SavingsScreens.SavingsAccountSummary.route,
-        route = "savings_nav_graph",
-    ) {
-        savingsSummaryScreen(
-            onBackPressed = navController::popBackStack,
-            loadMoreSavingsAccountInfo = { loadMoreSavingsAccountInfo(Constants.DATA_TABLE_NAME_SAVINGS, it) },
-            loadDocuments = { loadDocuments(it, Constants.ENTITY_TYPE_SAVINGS) },
-            onDepositClick = { savingsAccountWithAssociations, depositType ->
-                navController.navigateToSavingsAccountTransactionScreen(
-                    savingsAccountWithAssociations = savingsAccountWithAssociations,
-                    depositType = depositType,
-                    transactionType = Constants.SAVINGS_ACCOUNT_TRANSACTION_DEPOSIT,
-                )
-            },
-            onWithdrawButtonClicked = { savingsAccountWithAssociations, depositType ->
-                navController.navigateToSavingsAccountTransactionScreen(
-                    savingsAccountWithAssociations = savingsAccountWithAssociations,
-                    depositType = depositType,
-                    transactionType = Constants.SAVINGS_ACCOUNT_TRANSACTION_WITHDRAWAL,
-                )
-            },
-            approveSavings = { _, accountNumber ->
-                navController.navigateToSavingsAccountApproval(
-                    accountNumber,
-                )
-            },
-            activateSavings = { _, accountNumber ->
-                navController.navigateToSavingsAccountActivate(
-                    accountNumber,
-                )
-            },
-        )
+    savingsSummaryScreen(
+        onBackPressed = navController::popBackStack,
+        loadMoreSavingsAccountInfo = {
+            loadMoreSavingsAccountInfo(
+                Constants.DATA_TABLE_NAME_SAVINGS,
+                it,
+            )
+        },
+        loadDocuments = { loadDocuments(it, Constants.ENTITY_TYPE_SAVINGS) },
+        onDepositClick = { savingsAccountWithAssociations, depositType ->
+            navController.navigateToSavingsAccountTransactionScreen(
+                savingsAccountWithAssociations = savingsAccountWithAssociations,
+                depositType = depositType,
+                transactionType = Constants.SAVINGS_ACCOUNT_TRANSACTION_DEPOSIT,
+            )
+        },
+        onWithdrawButtonClicked = { savingsAccountWithAssociations, depositType ->
+            navController.navigateToSavingsAccountTransactionScreen(
+                savingsAccountWithAssociations = savingsAccountWithAssociations,
+                depositType = depositType,
+                transactionType = Constants.SAVINGS_ACCOUNT_TRANSACTION_WITHDRAWAL,
+            )
+        },
+        approveSavings = { _, accountNumber ->
+            navController.navigateToSavingsAccountApproval(
+                accountNumber,
+            )
+        },
+        activateSavings = { _, accountNumber ->
+            navController.navigateToSavingsAccountActivate(
+                accountNumber,
+            )
+        },
+    )
 
-        addSavingsAccountScreen {
-            onBackPressed()
-        }
-
-        savingsAccountActivateScreen {
-            onBackPressed()
-        }
-
-        savingsAccountApprovalScreen {
-            onBackPressed()
-        }
-
-        savingsAccountTransactionScreen {
-            onBackPressed()
-        }
-
-        savingsAccountDestination()
+    addSavingsAccountScreen {
+        onBackPressed()
     }
+
+    savingsAccountActivateScreen {
+        onBackPressed()
+    }
+
+    savingsAccountApprovalScreen {
+        onBackPressed()
+    }
+
+    savingsAccountTransactionScreen {
+        onBackPressed()
+    }
+
+    savingsAccountDestination(
+        navController = navController,
+        onNavigateBack = onBackPressed,
+        onFinish = onBackPressed,
+    )
 }
 
 fun NavGraphBuilder.addSavingsAccountScreen(
@@ -194,7 +194,10 @@ fun NavController.navigateToSavingsAccountActivate(savingsAccountId: Int) {
     navigate(SavingsAccountActivate(savingsAccountId))
 }
 
-fun NavController.navigateToSavingsAccountSummaryScreen(id: Int, type: SavingAccountDepositTypeEntity) {
+fun NavController.navigateToSavingsAccountSummaryScreen(
+    id: Int,
+    type: SavingAccountDepositTypeEntity,
+) {
     navigate(SavingsScreens.SavingsAccountSummary.argument(id, type))
 }
 

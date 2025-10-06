@@ -78,11 +78,11 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mifos.core.common.utils.Constants
 import com.mifos.core.common.utils.Utils
-import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosMenuDropDownItem
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.icon.MifosIcons
+import com.mifos.core.ui.components.MifosProgressIndicator
 import com.mifos.room.entities.accounts.loans.LoanAccountEntity
 import com.mifos.room.entities.accounts.savings.SavingAccountDepositTypeEntity
 import com.mifos.room.entities.accounts.savings.SavingsAccountEntity
@@ -248,7 +248,7 @@ internal fun GroupDetailsScreen(
                 is GroupDetailsUiState.Error -> MifosSweetError(message = stringResource(state.message)) {
                 }
 
-                is GroupDetailsUiState.Loading -> MifosCircularProgress()
+                is GroupDetailsUiState.Loading -> MifosProgressIndicator()
 
                 is GroupDetailsUiState.ShowGroup -> {
                     GroupDetailsContent(

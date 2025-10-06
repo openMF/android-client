@@ -11,10 +11,11 @@ package com.mifos.core.model.objects.checkerinboxtask
 
 import com.mifos.core.model.utils.Parcelable
 import com.mifos.core.model.utils.Parcelize
-import kotlinx.datetime.Instant
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 import kotlinx.serialization.Serializable
+import kotlin.time.ExperimentalTime
+import kotlin.time.Instant
 
 @Parcelize
 @Serializable
@@ -29,14 +30,17 @@ data class CheckerTask(
 ) : Parcelable {
 
     var selectedFlag = false
+
+    @OptIn(ExperimentalTime::class)
     fun getDate(): String {
         val instant = Instant.fromEpochMilliseconds(madeOnDate)
         val localDate = instant.toLocalDateTime(TimeZone.currentSystemDefault()).date
-        return "${localDate.dayOfMonth} ${
+        return "${localDate.day} ${
             localDate.month.name.take(3).lowercase().replaceFirstChar { it.uppercase() }
         } ${localDate.year}"
     }
 
+    @OptIn(ExperimentalTime::class)
     fun getTimeStamp(): Instant {
         return Instant.fromEpochMilliseconds(madeOnDate)
     }

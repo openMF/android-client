@@ -19,5 +19,8 @@ import kotlinx.serialization.Serializable
 @Parcelize
 @Serializable
 class IdentifierTemplate(
+
+    @Serializable
     var allowedDocumentTypes: List<DocumentType>? = emptyList(),
+
 ) : Parcelable

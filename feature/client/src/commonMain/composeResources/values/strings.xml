@@ -95,18 +95,6 @@
     <string name="feature_client_failed_to_create_charge">Failed To Create Charge</string>
     <string name="feature_client_no_charges_found">No Charges Found</string>
 
-    <string name="feature_client_failed_to_load_identifiers">Failed To Load Identifiers</string>
-    <string name="feature_client_failed_to_create_identifier">Failed To Create Identifier</string>
-    <string name="feature_client_identifier_created_successfully">Identifier Created Successfully</string>
-    <string name="feature_client_create_identifier_dialog">Create Identifier</string>
-    <string name="feature_client_identifier_document_type">Document Type</string>
-    <string name="feature_client_identifier_status">Status</string>
-    <string name="feature_client_identifier_unique_id">Unique Id</string>
-    <string name="feature_client_identifier_description">Description</string>
-    <string name="feature_client_identifier_message_field_required">Required Field</string>
-    <string name="feature_client_identifier_submit">Submit</string>
-    <string name="feature_client_identifier_isActive">Active</string>
-
     <string name="feature_client_failed_to_add_signature">Failed To Add Signature</string>
     <string name="feature_client_signature_empty">Signature Should Not Be Empty</string>
     <string name="feature_client_signature_title">Signature</string>
@@ -284,6 +272,30 @@
     <!-- Client_Profile-Fixed Deposit Account Title -->
     <string name="client_profile_fixed_deposit_account_title">Fixed Deposit Accounts</string>
 
+    <!-- Client Documents -->
+    <string name="document_name">Document Name</string>
+    <string name="add_document_title">Add Document</string>
+    <string name="hint_document_name">Enter document name</string>
+    <string name="hint_description">Enter description</string>
+    <string name="action_go_back">Go Back</string>
+    <string name="no_file_selected">No File Selected</string>
+    <string name="action_add">Add</string>
+    <string name="action_view">View</string>
+    <string name="btn_update_new">Update New</string>
+
+    <string name="error_document_size_exceeded">Document size cannot be greater than 1 MB.</string>
+
+    <string name="error_failed_to_get_document_type">Failed to get document type</string>
+    <string name="error_document_not_found">Document not found</string>
+
+    <string name="default_preview_pdf_name">attachment</string>
+    <string name="client_documents_failed_to_open">Failed to open document</string>
+    <string name="client_documents_failed_to_delete">"Failed to delete document"</string>
+    <string name="unknown_file_caching_error">An unknown error occurred while caching the file</string>
+    <string name="unexpected_loading">File writing flow finished unexpectedly in a Loading state</string>
+    <string name="returned_invalid_data_after_caching">File writing succeeded but returned invalid data.</string>
+
+    <string name="unknown_error">Unknown error</string>
     <!-- Personal Info -->
     <string name="gender">Gender</string>
     <string name="date_of_birth">Date of Birth</string>
@@ -347,10 +359,13 @@
     <string name="upload_new_photo">Upload New Photo</string>
 
     <!-- Delete Confirmation Dialog -->
-    <string name="delete_dialog_title">Are you sure?</string>
     <string name="delete_dialog_message">Please confirm that you want to remove the photo? You can upload the new photo again through the app or website.</string>
     <string name="remove">Remove</string>
     <string name="cancel">Cancel</string>
+
+    <!-- Document Delete Confirmation Dialog -->
+    <string name="delete_dialog_title">Are you sure?</string>
+    <string name="document_delete_dialog_message">Please confirm that you want to delete this document?</string>
 
     <!-- Upload Options -->
     <string name="choose_from_option">Choose from option</string>
@@ -452,7 +467,6 @@
     <string name="client_identifiers_error_text">Error</string>
     <string name="client_identifiers_retry">Retry</string>
     <string name="client_identifiers_identities_client_identifier_deletion_success">Successfully deleted client identifier with id</string>
-    <!--    <string name="client_identifiers_identities">Identities</string>-->
 
     <!-- Apply New Applications Screen -->
     <string name="client_apply_new_applications_title">Choose Application Type</string>
@@ -467,13 +481,44 @@
     <string name="client_apply_new_applications_apply_recurring_account">Apply for new recurring deposit account</string>
     <string name="client_apply_new_applications_apply_fixed_account">Apply for new fixed deposit account</string>
 
+    <!-- Client Signature -->
+    <string name="client_signature_delete">Delete Signature</string>
+    <string name="client_signature_upload">Upload New Signature</string>
+    <string name="client_signature_not_found">No Signature Found!</string>
+    <string name="client_signature_upload_message">Please update your signature\nat earliest!</string>
+    <string name="client_signature_delete_warning_message">Please confirm that you want to remove the signature? You can upload the new signature again through the app or website.</string>
+    <string name="client_signature_gallery">Gallery</string>
+    <string name="client_signature_draw">Draw</string>
+    <string name="client_signature_more">More</string>
+
+    <!-- Client Share Account-->
     <string name="client_share_accounts_share_accounts">Share Accounts</string>
     <string name="client_share_accounts_an_error_occurred">An error occurred</string>
     <string name="client_share_accounts_failed_to_fetch_share_accounts">Failed to fetch share accounts</string>
     <string name="client_share_accounts_try_again">Try again</string>
 
+    <!-- Client Upcoming Charges-->
     <string name="client_upcoming_charges_failed_message">Failed to get upcoming charges</string>
     <string name="client_upcoming_charges_no_more_charges_available">No more charges available!</string>
     <string name="client_upcoming_charges_charges_overview">Charges Overview</string>
+
+    <!-- Client Identifier-->
+    <string name="client_identifier_title">Add Identifiers</string>
+    <string name="client_identifier_document_type">Document Type*</string>
+    <string name="client_identifier_status">Status*</string>
+    <string name="client_identifier_document_key">Document Key*</string>
+    <string name="client_identifier_description">Description</string>
+    <string name="client_identifier_document_name">Document Name*</string>
+    <string name="client_identifier_btn_create_new">Create New</string>
+    <string name="client_identifier_btn_upload_new">Upload New</string>
+    <string name="client_identifier_btn_next">Next</string>
+    <string name="client_identifier_btn_back">Back</string>
+    <string name="client_identifier_btn_add">Add</string>
+    <string name="client_identifier_btn_view">View</string>
+    <string name="client_identifier_btn_submit">Submit</string>
+    <string name="client_identifier_no_file_selected">No File Selected</string>
+    <string name="client_identifier_document_not_found">Document not found</string>
+    <string name="client_identifier_btn_update">Update</string>
+    <string name="client_update_document_title">Update Document</string>
 
 </resources>

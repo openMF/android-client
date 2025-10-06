@@ -15,19 +15,26 @@ import androidx.navigation.compose.composable
 import kotlinx.serialization.Serializable
 
 @Serializable
-data object SavingsAccountRoute
+data class SavingsAccountRoute(
+    val clientId: Int = -1,
+)
 
-fun NavGraphBuilder.savingsAccountDestination() {
+fun NavGraphBuilder.savingsAccountDestination(
+    navController: NavController,
+    onNavigateBack: () -> Unit,
+    onFinish: () -> Unit,
+) {
     composable<SavingsAccountRoute> {
         SavingsAccountScreen(
-            onNavigateBack = {},
-            onFinish = {},
+            onNavigateBack = onNavigateBack,
+            onFinish = onFinish,
+            navController = navController,
         )
     }
 }
 
-fun NavController.navigateToSavingsAccountRoute() {
+fun NavController.navigateToSavingsAccountRoute(clientId: Int) {
     this.navigate(
-        SavingsAccountRoute,
+        SavingsAccountRoute(clientId = clientId),
     )
 }

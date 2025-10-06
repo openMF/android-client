@@ -17,4 +17,6 @@
     <string name="core_designsystem_cancel">Cancel</string>
     <string name="core_designsystem_dialog_action_ok">Save</string>
 
+    <string name="core_designsystem_app_title">Mifos</string>
+
 </resources>

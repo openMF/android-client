@@ -43,9 +43,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
+import com.mifos.core.ui.components.MifosProgressIndicator
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
@@ -91,7 +91,7 @@ internal fun CheckerInboxTasksScreen(
                 }
 
                 is CheckerInboxTasksUiState.Loading -> {
-                    MifosCircularProgress()
+                    MifosProgressIndicator()
                 }
 
                 is CheckerInboxTasksUiState.Success -> {

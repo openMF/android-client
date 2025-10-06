@@ -369,3 +369,133 @@ val Wallet: ImageVector
     }
 
 private var wallet: ImageVector? = null
+
+val GalleryIcon: ImageVector
+    get() {
+        if (galleryIcon != null) {
+            return galleryIcon!!
+        }
+        galleryIcon = ImageVector.Builder(
+            name = "GalleryIcon",
+            defaultWidth = 18.dp,
+            defaultHeight = 18.dp,
+            viewportWidth = 18f,
+            viewportHeight = 18f,
+        ).apply {
+            path(fill = SolidColor(Color(0xFF33618D))) {
+                moveTo(16f, 2f)
+                verticalLineTo(16f)
+                horizontalLineTo(2f)
+                verticalLineTo(2f)
+                horizontalLineTo(16f)
+                close()
+                moveTo(16f, 0f)
+                horizontalLineTo(2f)
+                curveTo(0.9f, 0f, 0f, 0.9f, 0f, 2f)
+                verticalLineTo(16f)
+                curveTo(0f, 17.1f, 0.9f, 18f, 2f, 18f)
+                horizontalLineTo(16f)
+                curveTo(17.1f, 18f, 18f, 17.1f, 18f, 16f)
+                verticalLineTo(2f)
+                curveTo(18f, 0.9f, 17.1f, 0f, 16f, 0f)
+                close()
+                moveTo(11.14f, 8.86f)
+                lineTo(8.14f, 12.73f)
+                lineTo(6f, 10.14f)
+                lineTo(3f, 14f)
+                horizontalLineTo(15f)
+                lineTo(11.14f, 8.86f)
+                close()
+            }
+        }.build()
+
+        return galleryIcon!!
+    }
+
+private var galleryIcon: ImageVector? = null
+
+val ClipDocument: ImageVector
+    get() {
+        if (clipDocument != null) {
+            return clipDocument!!
+        }
+        clipDocument = ImageVector.Builder(
+            name = "ClipDocument",
+            defaultWidth = 16.dp,
+            defaultHeight = 20.dp,
+            viewportWidth = 16f,
+            viewportHeight = 20f,
+        ).apply {
+            path(fill = SolidColor(Color(0xFF33618D))) {
+                moveTo(10f, 0f)
+                horizontalLineTo(2f)
+                curveTo(0.9f, 0f, 0f, 0.9f, 0f, 2f)
+                verticalLineTo(18f)
+                curveTo(0f, 19.1f, 0.9f, 20f, 2f, 20f)
+                horizontalLineTo(14f)
+                curveTo(15.1f, 20f, 16f, 19.1f, 16f, 18f)
+                verticalLineTo(6f)
+                lineTo(10f, 0f)
+                close()
+                moveTo(14f, 18f)
+                horizontalLineTo(2f)
+                verticalLineTo(2f)
+                horizontalLineTo(10f)
+                verticalLineTo(6f)
+                horizontalLineTo(14f)
+                verticalLineTo(18f)
+                close()
+                moveTo(8f, 15f)
+                curveTo(6.9f, 15f, 6f, 14.1f, 6f, 13f)
+                verticalLineTo(7.5f)
+                curveTo(6f, 7.22f, 6.22f, 7f, 6.5f, 7f)
+                curveTo(6.78f, 7f, 7f, 7.22f, 7f, 7.5f)
+                verticalLineTo(13f)
+                horizontalLineTo(9f)
+                verticalLineTo(7.5f)
+                curveTo(9f, 6.12f, 7.88f, 5f, 6.5f, 5f)
+                curveTo(5.12f, 5f, 4f, 6.12f, 4f, 7.5f)
+                verticalLineTo(13f)
+                curveTo(4f, 15.21f, 5.79f, 17f, 8f, 17f)
+                curveTo(10.21f, 17f, 12f, 15.21f, 12f, 13f)
+                verticalLineTo(9f)
+                horizontalLineTo(10f)
+                verticalLineTo(13f)
+                curveTo(10f, 14.1f, 9.1f, 15f, 8f, 15f)
+                close()
+            }
+        }.build()
+
+        return clipDocument!!
+    }
+
+private var clipDocument: ImageVector? = null
+
+val RightTick: ImageVector
+    get() {
+        if (rightTick != null) {
+            return rightTick!!
+        }
+        rightTick = ImageVector.Builder(
+            name = "RightTick",
+            defaultWidth = 16.dp,
+            defaultHeight = 12.dp,
+            viewportWidth = 16f,
+            viewportHeight = 12f,
+        ).apply {
+            path(fill = SolidColor(Color(0xFF191C20))) {
+                moveTo(5.329f, 9.229f)
+                lineTo(1.854f, 5.754f)
+                lineTo(0.671f, 6.929f)
+                lineTo(5.329f, 11.587f)
+                lineTo(15.329f, 1.587f)
+                lineTo(14.154f, 0.412f)
+                lineTo(5.329f, 9.229f)
+                close()
+            }
+        }.build()
+
+        return rightTick!!
+    }
+
+private var rightTick: ImageVector? = null

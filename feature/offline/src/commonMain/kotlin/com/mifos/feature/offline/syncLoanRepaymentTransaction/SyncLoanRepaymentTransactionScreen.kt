@@ -53,9 +53,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.icon.MifosIcons
+import com.mifos.core.ui.components.MifosProgressIndicator
 import com.mifos.feature.offline.syncSavingsAccountTransaction.getPaymentTypeName
 import com.mifos.room.entities.PaymentTypeOptionEntity
 import com.mifos.room.entities.accounts.loans.LoanRepaymentRequestEntity
@@ -152,7 +152,7 @@ internal fun SyncLoanRepaymentTransactionScreen(
             ) {
                 when (uiState) {
                     is SyncLoanRepaymentTransactionUiState.ShowProgressbar -> {
-                        MifosCircularProgress()
+                        MifosProgressIndicator()
                     }
 
                     is SyncLoanRepaymentTransactionUiState.ShowError -> {

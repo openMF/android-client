@@ -64,13 +64,13 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewModelScope
 import com.mifos.core.common.utils.DateHelper
-import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.model.objects.account.loan.Transaction
 import com.mifos.core.model.objects.account.loan.Type
 import com.mifos.core.ui.components.MifosEmptyUi
+import com.mifos.core.ui.components.MifosProgressIndicator
 import com.mifos.room.entities.accounts.loans.LoanWithAssociationsEntity
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
@@ -137,7 +137,7 @@ internal fun LoanTransactionsScreen(
                 }
 
                 LoanTransactionsUiState.ShowProgressBar -> {
-                    MifosCircularProgress()
+                    MifosProgressIndicator()
                 }
             }
         }

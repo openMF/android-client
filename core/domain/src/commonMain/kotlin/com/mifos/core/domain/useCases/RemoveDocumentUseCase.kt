@@ -12,6 +12,7 @@ package com.mifos.core.domain.useCases
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.common.utils.asDataStateFlow
 import com.mifos.core.data.repository.DocumentListRepository
+import com.mifos.core.network.GenericResponse
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
@@ -23,7 +24,7 @@ class RemoveDocumentUseCase(
         entityType: String,
         entityId: Int,
         documentId: Int,
-    ): Flow<DataState<Unit>> = flow {
+    ): Flow<DataState<GenericResponse>> = flow {
         emit(repository.removeDocument(entityType, entityId, documentId))
     }.asDataStateFlow()
 }

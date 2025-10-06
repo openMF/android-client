@@ -14,9 +14,12 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavType
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.navigation
 import androidx.navigation.navArgument
-import androidx.navigation.navigation
 import com.mifos.core.common.utils.Constants
+import com.mifos.feature.client.clientAddDocuments.AddDocumentRoute
+import com.mifos.feature.client.clientAddDocuments.clientAddDocumentGraphRoute
+import com.mifos.feature.client.clientAddDocuments.navigateToClientAddDocumentRoute
 import com.mifos.feature.client.clientAddress.addAddress.clientAddAddressRoute
 import com.mifos.feature.client.clientAddress.addAddress.navigateToClientAddAddressRoute
 import com.mifos.feature.client.clientAddress.clientAddressNavigation
@@ -33,21 +36,27 @@ import com.mifos.feature.client.clientDetails.ClientDetailsScreen
 import com.mifos.feature.client.clientDetailsProfile.clientProfileDetailsDestination
 import com.mifos.feature.client.clientDetailsProfile.navigateToClientDetailsProfileRoute
 import com.mifos.feature.client.clientDetailsProfile.navigateToClientDetailsProfileRouteOnStatus
+import com.mifos.feature.client.clientDocuments.ClientDocumentsRoute
+import com.mifos.feature.client.clientDocuments.clientDocumentsDestination
+import com.mifos.feature.client.clientDocuments.navigateToClientDocumentsRoute
 import com.mifos.feature.client.clientEditDetails.clientEditDetailsDestination
 import com.mifos.feature.client.clientEditDetails.navigateToClientEditDetailsRoute
 import com.mifos.feature.client.clientEditProfile.clientEditProfileDestination
 import com.mifos.feature.client.clientEditProfile.navigateToClientProfileEditProfileRoute
 import com.mifos.feature.client.clientGeneral.clientProfileGeneralDestination
 import com.mifos.feature.client.clientGeneral.navigateToClientProfileGeneralRoute
-import com.mifos.feature.client.clientIdentifiers.ClientIdentifiersScreen
-import com.mifos.feature.client.clientIdentitiesList.clientIdentitiesListDestination
-import com.mifos.feature.client.clientIdentitiesList.navigateToClientIdentifiersScreen
+import com.mifos.feature.client.clientIdentifiersAddUpdate.clientIdentifiersAddUpdateDestination
+import com.mifos.feature.client.clientIdentifiersAddUpdate.onNavigateToClientIdentifiersAddUpdateScreen
+import com.mifos.feature.client.clientIdentifiersList.clientIdentifiersListDestination
+import com.mifos.feature.client.clientIdentifiersList.navigateBackToUpdateClientIdentifiersListScreen
+import com.mifos.feature.client.clientIdentifiersList.navigateToClientIdentifiersListScreen
 import com.mifos.feature.client.clientLoanAccounts.clientLoanAccountsDestination
 import com.mifos.feature.client.clientLoanAccounts.navigateToClientLoanAccountsRoute
 import com.mifos.feature.client.clientPinpoint.PinpointClientScreen
 import com.mifos.feature.client.clientProfile.clientProfileDestination
 import com.mifos.feature.client.clientProfile.navigateToClientProfileRoute
-import com.mifos.feature.client.clientSignature.SignatureScreen
+import com.mifos.feature.client.clientSignature.clientSignatureDestination
+import com.mifos.feature.client.clientSignature.navigateToClientSignatureScreen
 import com.mifos.feature.client.clientStaff.clientStaffDestination
 import com.mifos.feature.client.clientStaff.navigateToClientStaffRoute
 import com.mifos.feature.client.clientSurveyList.SurveyListScreen
@@ -60,6 +69,8 @@ import com.mifos.feature.client.clientUpdateDefaultAccount.navigateToUpdateDefau
 import com.mifos.feature.client.clientUpdateDefaultAccount.updateDefaultAccountDestination
 import com.mifos.feature.client.clientsList.ClientListScreen
 import com.mifos.feature.client.createNewClient.CreateNewClientScreen
+import com.mifos.feature.client.documentPreviewScreen.createDocumentPreviewRoute
+import com.mifos.feature.client.documentPreviewScreen.navigateToDocumentPreviewRoute
 import com.mifos.feature.client.fixedDepositAccount.clientFixedDepositAccountDestination
 import com.mifos.feature.client.fixedDepositAccount.navigateToFixedDepositAccountRoute
 import com.mifos.feature.client.recurringDepositAccount.clientRecurringDepositAccountDestination
@@ -68,6 +79,18 @@ import com.mifos.feature.client.savingsAccounts.navigateToClientSavingsAccountsR
 import com.mifos.feature.client.savingsAccounts.savingsAccountsDestination
 import com.mifos.feature.client.shareAccounts.navigateToShareAccountsScreen
 import com.mifos.feature.client.shareAccounts.shareAccountsDestination
+import com.mifos.feature.dataTable.navigation.navigateToDataTable
+import com.mifos.feature.document.navigation.navigateToDocumentListScreen
+import com.mifos.feature.loan.loanAccount.navigateToLoanAccountScreen
+import com.mifos.feature.loan.loanAccountSummary.navigateToLoanAccountSummaryScreen
+import com.mifos.feature.loan.navigation.loanDestination
+import com.mifos.feature.loan.newLoanAccount.navigateToNewLoanAccountRoute
+import com.mifos.feature.note.navigation.noteDestination
+import com.mifos.feature.note.notes.navigateToNoteScreen
+import com.mifos.feature.savings.navigation.navigateToAddSavingsAccount
+import com.mifos.feature.savings.navigation.navigateToSavingsAccountSummaryScreen
+import com.mifos.feature.savings.navigation.savingsDestination
+import com.mifos.feature.savings.savingsAccountv2.navigateToSavingsAccountRoute
 import com.mifos.room.entities.accounts.savings.SavingAccountDepositTypeEntity
 import com.mifos.room.entities.noncore.DataTableEntity
 import com.mifos.room.entities.survey.SurveyEntity
@@ -80,17 +103,9 @@ data object ClientNavGraph
 
 fun NavGraphBuilder.clientNavGraph(
     navController: NavController,
-    addLoanAccount: (Int) -> Unit,
-    addSavingsAccount: (Int) -> Unit,
-    documents: (Int) -> Unit,
     moreClientInfo: (Int) -> Unit,
-    notes: (Int) -> Unit,
-    loanAccountSelected: (Int) -> Unit,
-    savingsAccountSelected: (Int, SavingAccountDepositTypeEntity) -> Unit,
     activateClient: (Int) -> Unit,
     hasDatatables: KFunction4<List<DataTableEntity>, Any?, Int, MutableList<List<FormWidgetDTO>>, Unit>,
-    onDocumentClicked: (Int, String) -> Unit,
-    navigateToNewLoanAccount: (Int) -> Unit,
 ) {
     navigation<ClientNavGraph>(
         startDestination = ClientListScreenRoute,
@@ -101,32 +116,40 @@ fun NavGraphBuilder.clientNavGraph(
         )
         clientDetailRoute(
             onBackPressed = navController::popBackStack,
-            addLoanAccount = addLoanAccount,
-            addSavingsAccount = addSavingsAccount,
+            addLoanAccount = navController::navigateToLoanAccountScreen,
+            addSavingsAccount = { clientId ->
+                navController.navigateToAddSavingsAccount(0, clientId, false)
+            },
             charges = navController::navigateClientChargesScreen,
-            documents = documents,
-            identifiers = navController::navigateClientIdentifierScreen,
+            documents = {
+                navController.navigateToDocumentListScreen(it, Constants.ENTITY_TYPE_CLIENTS)
+            },
+            identifiers = navController::navigateToClientIdentifiersListScreen,
             moreClientInfo = moreClientInfo,
-            notes = notes,
+            notes = {
+                navController.navigateToNoteScreen(it, Constants.ENTITY_TYPE_CLIENTS)
+            },
             pinpointLocation = navController::navigateClientPinPointScreen,
             survey = navController::navigateClientSurveyListScreen,
-            uploadSignature = navController::navigateClientSignatureScreen,
-            loanAccountSelected = loanAccountSelected,
-            savingsAccountSelected = savingsAccountSelected,
+            uploadSignature = navController::navigateToClientSignatureScreen,
+            loanAccountSelected = navController::navigateToLoanAccountSummaryScreen,
+            savingsAccountSelected = navController::navigateToSavingsAccountSummaryScreen,
             activateClient = activateClient,
         )
         clientChargesRoute(
             onBackPressed = navController::popBackStack,
         )
-        clientIdentifierRoute(
-            onDocumentClicked = onDocumentClicked,
+        clientIdentifiersAddUpdateDestination(
             onBackPressed = navController::popBackStack,
+            onUpdatedListBack = navController::navigateBackToUpdateClientIdentifiersListScreen,
+            navController = navController,
         )
         clientPinPointRoute(
             onBackPressed = navController::popBackStack,
         )
-        clientSignatureRoute(
-            onBackPressed = navController::popBackStack,
+        clientSignatureDestination(
+            onNavigateBack = navController::popBackStack,
+            navController = navController,
         )
         clientSurveyListRoute(
             onBackPressed = navController::popBackStack,
@@ -143,9 +166,11 @@ fun NavGraphBuilder.clientNavGraph(
         )
         clientProfileDestination(
             onNavigateBack = navController::popBackStack,
-            notes = notes,
-            documents = documents,
-            identifiers = navController::navigateToClientIdentifiersScreen,
+            notes = {
+                navController.navigateToNoteScreen(it, Constants.ENTITY_TYPE_CLIENTS)
+            },
+            documents = navController::navigateToClientDocumentsRoute,
+            identifiers = navController::navigateToClientIdentifiersListScreen,
             navigateToClientDetailsScreen = navController::navigateToClientDetailsProfileRoute,
             viewAddress = navController::navigateToClientAddressRoute,
             viewAssociatedAccounts = navController::navigateToClientProfileGeneralRoute,
@@ -162,6 +187,28 @@ fun NavGraphBuilder.clientNavGraph(
             onNavigateBack = navController::popBackStack,
             navController = navController,
             onNavigateNext = navController::navigateToClientAddressRouteOnStatus,
+        )
+
+        clientDocumentsDestination(
+            navController = navController,
+            navigateBack = navController::popBackStack,
+            navigateToAddDocuments = navController::navigateToClientAddDocumentRoute,
+            onViewDocument = navController::navigateToDocumentPreviewRoute,
+        )
+
+        clientAddDocumentGraphRoute(
+            navController = navController,
+            navigateBack = {
+                navController.popBackStack<AddDocumentRoute>(inclusive = true)
+            },
+            navigateToDocumentPreview = navController::navigateToDocumentPreviewRoute,
+        )
+
+        createDocumentPreviewRoute(
+            navigateBack = navController::popBackStack,
+            documentRejected = {
+                navController.popBackStack<ClientDocumentsRoute>(inclusive = false)
+            },
         )
 
         clientProfileGeneralDestination(
@@ -200,6 +247,8 @@ fun NavGraphBuilder.clientNavGraph(
             navigateToClientClosure = navController::navigateToClientClosureRoute,
             navigateToCollateral = navController::navigateToClientCollateralRoute,
             navigateToApplyNewApplication = navController::navigateToClientApplyNewApplicationScreen,
+            navigateToUpdateSignature = navController::navigateToClientSignatureScreen,
+
         )
         clientEditProfileDestination(
             onNavigateBack = navController::popBackStack,
@@ -244,15 +293,17 @@ fun NavGraphBuilder.clientNavGraph(
             navigateBack = navController::popBackStack,
             navigateToViewAccount = {},
             navigateToMakeRepayment = {},
+            navController = navController,
         )
-        clientIdentitiesListDestination(
-            addNewClientIdentity = {},
+        clientIdentifiersListDestination(
+            addNewClientIdentity = navController::onNavigateToClientIdentifiersAddUpdateScreen,
+            onBackPress = navController::popBackStack,
             navController = navController,
         )
         clientApplyNewApplicationRoute(
             onNavigateBack = navController::popBackStack,
-            onNavigateApplyLoanAccount = navigateToNewLoanAccount,
-            onNavigateApplySavingsAccount = { },
+            onNavigateApplyLoanAccount = navController::navigateToNewLoanAccountRoute,
+            onNavigateApplySavingsAccount = navController::navigateToSavingsAccountRoute,
             onNavigateApplyShareAccount = { },
             onNavigateApplyRecurringAccount = { },
             onNavigateApplyFixedAccount = { },
@@ -261,11 +312,27 @@ fun NavGraphBuilder.clientNavGraph(
         clientUpcomingChargesDestination(
             navController = navController,
             payOutstandingAmount = {},
-
         )
         shareAccountsDestination(
             navController = navController,
             navigateToViewAccount = {},
+        )
+        noteDestination(
+            navController = navController,
+            onBackPressed = navController::popBackStack,
+        )
+
+        loanDestination(
+            navController = navController,
+            onMoreInfoClicked = navController::navigateToDataTable,
+            onDocumentsClicked = navController::navigateToDocumentListScreen,
+        )
+
+        savingsDestination(
+            navController = navController,
+            onBackPressed = navController::popBackStack,
+            loadMoreSavingsAccountInfo = navController::navigateToDataTable,
+            loadDocuments = navController::navigateToDocumentListScreen,
         )
     }
 }
@@ -293,7 +360,7 @@ fun NavGraphBuilder.clientDetailRoute(
     notes: (Int) -> Unit,
     pinpointLocation: (Int) -> Unit,
     survey: (Int) -> Unit,
-    uploadSignature: (Int) -> Unit,
+    uploadSignature: (Int, String, String) -> Unit,
     loanAccountSelected: (Int) -> Unit,
     savingsAccountSelected: (Int, SavingAccountDepositTypeEntity) -> Unit,
     activateClient: (Int) -> Unit,
@@ -321,21 +388,6 @@ fun NavGraphBuilder.clientDetailRoute(
     }
 }
 
-fun NavGraphBuilder.clientIdentifierRoute(
-    onDocumentClicked: (Int, String) -> Unit,
-    onBackPressed: () -> Unit,
-) {
-    composable(
-        route = ClientScreens.ClientIdentifierScreen.route,
-        arguments = listOf(navArgument(Constants.CLIENT_ID, builder = { type = NavType.IntType })),
-    ) {
-        ClientIdentifiersScreen(
-            onBackPressed = onBackPressed,
-            onDocumentClicked = { onDocumentClicked(it, Constants.ENTITY_TYPE_CLIENTS) },
-        )
-    }
-}
-
 fun NavGraphBuilder.clientChargesRoute(
     onBackPressed: () -> Unit,
 ) {
@@ -357,19 +409,6 @@ fun NavGraphBuilder.clientPinPointRoute(
         arguments = listOf(navArgument(Constants.CLIENT_ID, builder = { type = NavType.IntType })),
     ) {
         PinpointClientScreen(
-            onBackPressed = onBackPressed,
-        )
-    }
-}
-
-fun NavGraphBuilder.clientSignatureRoute(
-    onBackPressed: () -> Unit,
-) {
-    composable(
-        route = ClientScreens.ClientSignatureScreen.route,
-        arguments = listOf(navArgument(Constants.CLIENT_ID, builder = { type = NavType.IntType })),
-    ) {
-        SignatureScreen(
             onBackPressed = onBackPressed,
         )
     }
@@ -423,20 +462,12 @@ fun NavController.navigateClientDetailsScreen(clientId: Int) {
     navigate(ClientScreens.ClientDetailScreen.argument(clientId))
 }
 
-fun NavController.navigateClientIdentifierScreen(clientId: Int) {
-    navigate(ClientScreens.ClientIdentifierScreen.argument(clientId))
-}
-
 fun NavController.navigateClientChargesScreen(clientId: Int) {
     navigate(ClientScreens.ClientChargesScreen.argument(clientId))
 }
 
 fun NavController.navigateClientPinPointScreen(clientId: Int) {
     navigate(ClientScreens.ClientPinPointScreen.argument(clientId))
-}
-
-fun NavController.navigateClientSignatureScreen(clientId: Int) {
-    navigate(ClientScreens.ClientSignatureScreen.argument(clientId))
 }
 
 fun NavController.navigateClientSurveyListScreen(clientId: Int) {

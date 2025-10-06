@@ -18,38 +18,38 @@ import io.ktor.client.request.forms.formData
 import io.ktor.http.Headers
 import io.ktor.http.HttpHeaders
 
-internal suspend fun createImageRequestBody(
-    imageFile: PlatformFile,
+internal suspend fun createDocumentRequestBody(
+    documentFile: PlatformFile,
 ): MultiPartFormDataContent {
-    val byteArray = imageFile.readBytes()
+    val byteArray = documentFile.readBytes()
     return MultiPartFormDataContent(
         formData {
             append(
                 "file",
                 byteArray,
                 Headers.build {
-                    append(HttpHeaders.ContentType, getMimeType(imageFile.extension))
-                    append(HttpHeaders.ContentDisposition, "filename=\"${imageFile.name}\"")
+                    append(HttpHeaders.ContentType, getMimeType(documentFile.extension))
+                    append(HttpHeaders.ContentDisposition, "filename=\"${documentFile.name}\"")
                 },
             )
         },
     )
 }
 
-internal suspend fun createImageRequestBody(
-    imageFile: PlatformFile,
+internal suspend fun createDocumentRequestBody(
+    documentFile: PlatformFile,
     name: String,
     description: String,
 ): MultiPartFormDataContent {
-    val byteArray = imageFile.readBytes()
+    val byteArray = documentFile.readBytes()
     return MultiPartFormDataContent(
         formData {
             append(
                 "file",
                 byteArray,
                 Headers.build {
-                    append(HttpHeaders.ContentType, getMimeType(imageFile.extension))
-                    append(HttpHeaders.ContentDisposition, "filename=\"${imageFile.name}\"")
+                    append(HttpHeaders.ContentType, getMimeType(documentFile.extension))
+                    append(HttpHeaders.ContentDisposition, "filename=\"${documentFile.name}\"")
                 },
             )
             append("name", name)
@@ -61,5 +61,6 @@ internal suspend fun createImageRequestBody(
 private fun getMimeType(extension: String): String = when (extension.lowercase()) {
     "jpg", "jpeg" -> "image/jpeg"
     "png" -> "image/png"
+    "pdf" -> "application/pdf"
     else -> "application/octet-stream"
 }

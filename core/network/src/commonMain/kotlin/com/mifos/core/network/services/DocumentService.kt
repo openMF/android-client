@@ -10,10 +10,12 @@
 package com.mifos.core.network.services
 
 import com.mifos.core.model.objects.noncoreobjects.Document
+import com.mifos.core.network.GenericResponse
 import com.mifos.room.basemodel.APIEndPoint
 import de.jensklingenberg.ktorfit.http.Body
 import de.jensklingenberg.ktorfit.http.DELETE
 import de.jensklingenberg.ktorfit.http.GET
+import de.jensklingenberg.ktorfit.http.Headers
 import de.jensklingenberg.ktorfit.http.POST
 import de.jensklingenberg.ktorfit.http.PUT
 import de.jensklingenberg.ktorfit.http.Path
@@ -41,7 +43,7 @@ interface DocumentService {
         @Path("entityType") entityType: String,
         @Path("entityId") entityId: Int,
         @Body request: MultiPartFormDataContent,
-    ): Unit
+    ): GenericResponse
 
     /**
      * This Service is for downloading the Document with EntityType and EntityId and Document Id
@@ -55,12 +57,14 @@ interface DocumentService {
      * @param documentId    - Document Id
      * @return ResponseBody
      */
+
+    @Headers("Accept: text/plain, application/json, */*")
     @GET("{entityType}/{entityId}/" + APIEndPoint.DOCUMENTS + "/{documentId}/attachment")
-    suspend fun downloadDocument(
+    fun downloadDocument(
         @Path("entityType") entityType: String,
         @Path("entityId") entityId: Int,
         @Path("documentId") documentId: Int,
-    ): HttpResponse
+    ): Flow<HttpResponse>
 
     /**
      * This Service is for Deleting the Document with EntityType and EntityId and Document Id.
@@ -79,7 +83,7 @@ interface DocumentService {
         @Path("entityType") entityType: String,
         @Path("entityId") entityId: Int,
         @Path("documentId") documentId: Int,
-    ): Unit
+    ): GenericResponse
 
     /**
      * This Service for Updating the Document with EntityType and EntityId and Document Id.
@@ -102,5 +106,5 @@ interface DocumentService {
         @Path("entityId") entityId: Int,
         @Path("documentId") documentId: Int,
         @Body request: MultiPartFormDataContent,
-    ): Unit
+    ): GenericResponse
 }

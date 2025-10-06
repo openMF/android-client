@@ -19,10 +19,6 @@ import com.mifos.core.model.objects.clients.ClientCloseRequest
 import com.mifos.core.model.objects.clients.CollateralPayload
 import com.mifos.core.model.objects.clients.ProposeTransferRequest
 import com.mifos.core.model.objects.clients.UpdateSavingsAccountRequest
-import com.mifos.core.model.objects.noncoreobjects.Identifier
-import com.mifos.core.model.objects.noncoreobjects.IdentifierCreationResponse
-import com.mifos.core.model.objects.noncoreobjects.IdentifierPayload
-import com.mifos.core.model.objects.noncoreobjects.IdentifierTemplate
 import com.mifos.core.network.GenericResponse
 import com.mifos.core.network.model.ClientCloseTemplateResponse
 import com.mifos.core.network.model.CollateralItem
@@ -103,59 +99,6 @@ interface ClientService {
 
     @GET(APIEndPoint.CLIENTS + "/{clientId}/accounts")
     fun getClientAccounts(@Path("clientId") clientId: Int): Flow<ClientAccounts>
-
-    /**
-     * This Service is for fetching the List of Identifiers.
-     * REST END POINT:
-     * https://demo.openmf.org/fineract-provider/api/v1/clients/{clientId}/identifiers
-     *
-     * @param clientId Client Id
-     * @return List<Identifier>
-     </Identifier> */
-    @GET(APIEndPoint.CLIENTS + "/{clientId}/" + APIEndPoint.IDENTIFIERS)
-    fun getClientIdentifiers(@Path("clientId") clientId: Int): Flow<List<Identifier>>
-
-    /**
-     * This Service is for Creating the Client Identifier.
-     * REST END POINT:
-     * https://demo.openmf.org/fineract-provider/api/v1/clients/{clientId}/identifiers
-     *
-     * @param clientId          Client Id
-     * @param identifierPayload IdentifierPayload
-     * @return IdentifierCreationResponse
-     */
-    @POST(APIEndPoint.CLIENTS + "/{clientId}/identifiers")
-    suspend fun createClientIdentifier(
-        @Path("clientId") clientId: Int,
-        @Body identifierPayload: IdentifierPayload,
-    ): IdentifierCreationResponse
-
-    /**
-     * This Service is for the Fetching the Client Identifier Template.
-     * REST END POINT:
-     * https://demo.openmf.org/fineract-provider/api/v1/clients/{clientId}/identifiers/template
-     *
-     * @param clientId Client Id
-     * @return IdentifierTemplate
-     */
-    @GET(APIEndPoint.CLIENTS + "/{clientId}/identifiers/template")
-    fun getClientIdentifierTemplate(@Path("clientId") clientId: Int): Flow<IdentifierTemplate>
-
-    /**
-     * This Service for Deleting the Client Identifier.
-     * REST END POINT:
-     * https://demo.openmf.org/fineract-provider/api/v1/clients/{clientId}/identifiers/
-     * {identifierId}
-     *
-     * @param clientId     Client Id
-     * @param identifierId Identifier Id
-     * @return GenericResponse
-     */
-    @DELETE(APIEndPoint.CLIENTS + "/{clientId}/" + APIEndPoint.IDENTIFIERS + "/{identifierId}")
-    fun deleteClientIdentifier(
-        @Path("clientId") clientId: Int,
-        @Path("identifierId") identifierId: Int,
-    ): Flow<GenericResponse>
 
     /**
      * This is the service for fetching the client pinpoint locations from the dataTable

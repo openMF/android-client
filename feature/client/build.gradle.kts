@@ -25,6 +25,10 @@ kotlin {
             implementation(projects.core.designsystem)
             implementation(projects.core.ui)
             implementation(projects.feature.dataTable)
+            implementation(projects.feature.note)
+            implementation(projects.feature.savings)
+            implementation(projects.feature.loan)
+            implementation(projects.feature.document)
 
             implementation(compose.ui)
             implementation(compose.material3)
@@ -40,10 +44,9 @@ kotlin {
             implementation(libs.filekit.core)
             implementation(libs.filekit.compose)
             implementation(libs.filekit.dialog.compose)
-
-            implementation(libs.compose.signature)
-
             implementation(libs.cmp.image.pick.n.crop)
+            implementation(libs.crop.krop.ui)
+
         }
         
         androidMain.dependencies {
@@ -55,6 +58,11 @@ kotlin {
             implementation(libs.coil.network.okhttp)
             implementation(libs.play.services.location)
             implementation(libs.kotlinx.coroutines.play.services)
+        }
+
+
+        desktopMain.dependencies {
+            implementation(libs.pdfbox)
         }
     }
 }
