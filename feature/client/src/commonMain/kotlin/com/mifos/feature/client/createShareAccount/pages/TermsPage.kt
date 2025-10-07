@@ -11,7 +11,7 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun TermsPage (onNext: () -> Unit) {
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
-        Text("Details Page")
+        Text("Terms Page")
         Spacer(Modifier.height(8.dp))
         Button(onClick = onNext) {
             Text("Next Button")

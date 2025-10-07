@@ -1,6 +1,5 @@
 package com.mifos.feature.client.createShareAccount
 
-import ChargesPage
 import PreviewPage
 import TermsPage
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -15,6 +14,8 @@ import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.ui.components.MifosStepper
 import com.mifos.core.ui.components.Step
 import com.mifos.core.ui.util.EventsEffect
+import com.mifos.feature.client.createShareAccount.pages.ChargesPage
+import com.mifos.feature.client.createShareAccount.pages.DetailsPage
 
 @Composable
 internal fun ShareAccountScreen(
@@ -45,18 +46,34 @@ private fun ShareAccountScaffold(
     modifier: Modifier = Modifier,
     onAction: (ShareAccountAction) -> Unit,
 ) {
-    // Using literal strings so this file can live in commonMain without Android 'R'
     val steps = remember {
         listOf(
-            Step("Details") { DetailsPage(onContinue = { onAction(ShareAccountAction.NextStep) }, state = state) },
-            Step("Terms") { TermsPage { onAction(ShareAccountAction.NextStep) } },
-            Step("Charges") { ChargesPage { onAction(ShareAccountAction.NextStep) } },
-            Step("Preview") { PreviewPage { onAction(ShareAccountAction.Finish) } },
+            Step(name = "Details") {
+                
+                DetailsPage(
+                    onNext = { onAction(ShareAccountAction.NextStep) }
+                )
+            },
+            Step(name = "Terms") {
+                TermsPage(
+                    onNext = { onAction(ShareAccountAction.NextStep) }
+                )
+            },
+            Step(name = "Charges") {
+                ChargesPage(
+                    onNext = { onAction(ShareAccountAction.NextStep) }
+                )
+            },
+            Step(name = "Preview") {
+                PreviewPage(
+                    onNext = { onAction(ShareAccountAction.Finish) }
+                )
+            }
         )
     }
 
     MifosScaffold(
-        title = "Create Share Account", // literal so commonMain is happy
+        title = "Create Share Account",
         onBackPressed = { onAction(ShareAccountAction.NavigateBack) },
         modifier = modifier,
     ) { paddingValues ->
@@ -74,11 +91,3 @@ private fun ShareAccountScaffold(
         }
     }
 }
-
-@Composable
-fun DetailsPage(onContinue: () -> Unit, state: ShareAccountState) {
-    TODO("Not yet implemented")
-}
-
-
-
