@@ -88,7 +88,6 @@ fun ScheduleContent(
                     .filter { it.period != null },
                 currencyCode = state.loanWithAssociationsEntity.currency.code,
                 maxDigits = state.loanWithAssociationsEntity.currency.decimalPlaces,
-                onPayClick = {},
             )
         }
 
@@ -112,7 +111,6 @@ fun RepaymentScheduleList(
     currencyCode: String?,
     maxDigits: Int?,
     modifier: Modifier = Modifier,
-    onPayClick: (Period) -> Unit = {},
 ) {
     Column(
         modifier = modifier,
@@ -123,7 +121,6 @@ fun RepaymentScheduleList(
                 period = period,
                 currencyCode = currencyCode,
                 maxDigits = maxDigits,
-                onPayClick = { onPayClick(period) },
             )
         }
     }

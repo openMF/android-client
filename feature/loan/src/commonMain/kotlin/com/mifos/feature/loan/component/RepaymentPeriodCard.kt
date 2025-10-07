@@ -13,7 +13,6 @@ import androidclient.feature.loan.generated.resources.Res
 import androidclient.feature.loan.generated.resources.due
 import androidclient.feature.loan.generated.resources.installment
 import androidclient.feature.loan.generated.resources.paid
-import androidclient.feature.loan.generated.resources.repayment_pay
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -23,7 +22,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -40,14 +38,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.mifos.core.common.utils.CurrencyFormatter
 import com.mifos.core.common.utils.DateHelper
-import com.mifos.core.designsystem.component.MifosButton
 import com.mifos.core.designsystem.component.MifosCard
 import com.mifos.core.designsystem.theme.AppColors
 import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.designsystem.theme.MifosTypography
 import com.mifos.core.model.objects.account.loan.Period
 import org.jetbrains.compose.resources.stringResource
-import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
 
 @OptIn(ExperimentalTime::class)
@@ -57,19 +53,14 @@ fun RepaymentPeriodCard(
     currencyCode: String?,
     maxDigits: Int?,
     modifier: Modifier = Modifier,
-    onPayClick: () -> Unit = {},
 ) {
     val isPaid = period.complete == true
-    val dueDateMillis = DateHelper.getDateAsLongFromList(period.dueDate)
     val dueDate = DateHelper.getDateAsString(period.dueDate!!)
     val amount = CurrencyFormatter.format(
         period.totalDueForPeriod ?: 0.0,
         currencyCode ?: "N/A",
         maxDigits ?: 0,
     )
-
-    val todayMillis = Clock.System.now().toEpochMilliseconds()
-    val canPay = !isPaid && (dueDateMillis?.let { it <= todayMillis } ?: false)
 
     MifosCard(
         modifier = modifier
@@ -115,16 +106,18 @@ fun RepaymentPeriodCard(
                     text = stringResource(
                         Res.string.installment,
                         period.period?.let {
-                            "$it${if (it % 100 in 11..13) {
-                                "th"
-                            } else {
-                                when (it) {
-                                    1 -> "st"
-                                    2 -> "nd"
-                                    3 -> "rd"
-                                    else -> "th"
+                            "$it${
+                                if (it % 100 in 11..13) {
+                                    "th"
+                                } else {
+                                    when (it) {
+                                        1 -> "st"
+                                        2 -> "nd"
+                                        3 -> "rd"
+                                        else -> "th"
+                                    }
                                 }
-                            }}"
+                            }"
                         } ?: "-",
                     ),
                     color = MaterialTheme.colorScheme.outline,
@@ -137,40 +130,25 @@ fun RepaymentPeriodCard(
                     color = MaterialTheme.colorScheme.onSurface,
                 )
             }
-            if (canPay) {
-                MifosButton(
-                    modifier = Modifier
-                        .wrapContentWidth()
-                        .height(DesignToken.sizes.buttonHeightMedium),
-                    onClick = onPayClick,
-                    text = {
-                        Text(
-                            text = stringResource(Res.string.repayment_pay, amount),
-                            style = MifosTypography.titleMedium,
-                        )
+            Column(
+                horizontalAlignment = Alignment.End,
+                modifier = Modifier.wrapContentWidth(),
+            ) {
+                Text(
+                    text = if (isPaid) {
+                        stringResource(Res.string.paid)
+                    } else {
+                        stringResource(Res.string.due)
                     },
-                )
-            } else {
-                Column(
-                    horizontalAlignment = Alignment.End,
-                    modifier = Modifier.wrapContentWidth(),
-                ) {
-                    Text(
-                        text = if (isPaid) {
-                            stringResource(Res.string.paid)
-                        } else {
-                            stringResource(Res.string.due)
-                        },
-                        style = MifosTypography.labelSmall.copy(
-                            color = if (isPaid) AppColors.customEnable else MaterialTheme.colorScheme.error,
-                        ),
-                    )
-                    Text(
-                        text = amount,
-                        style = MifosTypography.titleSmallEmphasized,
+                    style = MifosTypography.labelSmall.copy(
                         color = if (isPaid) AppColors.customEnable else MaterialTheme.colorScheme.error,
-                    )
-                }
+                    ),
+                )
+                Text(
+                    text = amount,
+                    style = MifosTypography.titleSmallEmphasized,
+                    color = if (isPaid) AppColors.customEnable else MaterialTheme.colorScheme.error,
+                )
             }
         }
     }
