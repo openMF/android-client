@@ -304,12 +304,9 @@ fun NavGraphBuilder.clientNavGraph(
         )
         clientApplyNewApplicationRoute(
             onNavigateBack = navController::popBackStack,
-            onNavigateApplyLoanAccount = navigateToNewLoanAccount,
-            onNavigateApplySavingsAccount = navigateToNewSavingsAccount,
             onNavigateApplyShareAccount = navController::navigateToShareAccountRoute,
             onNavigateApplyLoanAccount = navController::navigateToNewLoanAccountRoute,
             onNavigateApplySavingsAccount = navController::navigateToSavingsAccountRoute,
-            onNavigateApplyShareAccount = { },
             onNavigateApplyRecurringAccount = { },
             onNavigateApplyFixedAccount = { },
             navController = navController,
