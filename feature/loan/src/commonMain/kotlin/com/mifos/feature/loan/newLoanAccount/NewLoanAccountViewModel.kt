@@ -9,13 +9,21 @@
  */
 package com.mifos.feature.loan.newLoanAccount
 
+import androidclient.feature.loan.generated.resources.Res
+import androidclient.feature.loan.generated.resources.account_number
+import androidclient.feature.loan.generated.resources.disbursement_date
+import androidclient.feature.loan.generated.resources.installment_paid
+import androidclient.feature.loan.generated.resources.principle_paid_off
+import androidclient.feature.loan.generated.resources.total_installments
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import co.touchlab.kermit.Logger
+import com.mifos.core.common.utils.CurrencyFormatter
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.common.utils.DateHelper
 import com.mifos.core.data.repository.ClientDetailsRepository
+import com.mifos.core.data.repository.SyncClientsDialogRepository
 import com.mifos.core.data.util.NetworkMonitor
 import com.mifos.core.domain.useCases.CreateLoanAccountUseCase
 import com.mifos.core.domain.useCases.GetAllLoanUseCase
@@ -26,6 +34,7 @@ import com.mifos.core.network.model.LoansPayload
 import com.mifos.core.ui.util.BaseViewModel
 import com.mifos.core.ui.util.TextFieldsValidator
 import com.mifos.feature.loan.newLoanAccount.NewLoanAccountState.DialogState
+import com.mifos.room.entities.accounts.loans.LoanWithAssociationsEntity
 import com.mifos.room.entities.templates.loans.LoanTemplate
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -37,6 +46,7 @@ internal class NewLoanAccountViewModel(
     private val getAllLoanUseCase: GetAllLoanUseCase,
     private val repo: ClientDetailsRepository,
     private val getLoansAccountTemplateUseCase: GetLoansAccountTemplateUseCase,
+    private val getLoanWithAssociations: SyncClientsDialogRepository,
     private val networkMonitor: NetworkMonitor,
     private val loanUseCase: CreateLoanAccountUseCase,
     val savedStateHandle: SavedStateHandle,
@@ -226,6 +236,15 @@ internal class NewLoanAccountViewModel(
             is NewLoanAccountAction.EditChargeDialog -> handleEditChargeDialog(action.index)
 
             is NewLoanAccountAction.EditCharge -> handleEditCharge(action.index)
+
+            is NewLoanAccountAction.RepaymentScheduler -> {
+                moveToNextStep()
+                if (state.repaymentSchedules.isEmpty()) {
+                    viewModelScope.launch {
+                        repaymentScheduler()
+                    }
+                }
+            }
 
             NewLoanAccountAction.GotoPreviousStep -> {}
 
@@ -719,7 +738,7 @@ internal class NewLoanAccountViewModel(
                 } else {
                     mutableStateFlow.update {
                         it.copy(
-                            screenState = NewLoanAccountState.ScreenState.NetworkError,
+                            dialogState = NewLoanAccountState.DialogState.Error("No internet connection"),
                         )
                     }
                 }
@@ -762,13 +781,12 @@ internal class NewLoanAccountViewModel(
             }
 
             is DataState.Loading -> mutableStateFlow.update {
-                it.copy(screenState = NewLoanAccountState.ScreenState.Loading)
+                it.copy(dialogState = NewLoanAccountState.DialogState.Loading)
             }
 
             is DataState.Success -> mutableStateFlow.update {
                 it.copy(
                     dialogState = null,
-                    screenState = NewLoanAccountState.ScreenState.Success,
                     productLoans = result.data,
                 )
             }
@@ -809,6 +827,69 @@ internal class NewLoanAccountViewModel(
             }
         }
     }
+
+    private suspend fun repaymentScheduler() {
+        getLoanWithAssociations.syncLoanById(state.clientId)
+            .collect { dataState ->
+                when (dataState) {
+                    is DataState.Error -> {
+                        mutableStateFlow.update {
+                            it.copy(
+                                dialogState = DialogState.Error(dataState.message),
+                                isLoading = false,
+                            )
+                        }
+                    }
+
+                    DataState.Loading -> {
+                        mutableStateFlow.update {
+                            it.copy(
+                                isLoading = true,
+                            )
+                        }
+                    }
+
+                    is DataState.Success -> {
+                        val schedulerDetails = mapOf(
+                            Res.string.account_number to dataState.data.accountNo,
+                            Res.string.disbursement_date to (
+                                dataState.data.timeline.actualDisbursementDate?.filterNotNull()
+                                    ?.let { date ->
+                                        DateHelper.getDateAsString(date)
+                                    } ?: "N/A"
+                                ),
+                            Res.string.principle_paid_off to CurrencyFormatter.format(
+                                balance = dataState.data.summary.principalPaid ?: 0.0,
+                                currencyCode = dataState.data.currency.code ?: "N/A",
+                                maximumFractionDigits = dataState.data.currency.decimalPlaces ?: 0,
+                            ),
+                            Res.string.installment_paid to (
+                                dataState.data.repaymentSchedule.periods
+                                    ?.count { it.complete == true }
+                                    ?.toString()
+                                    ?: "N/A"
+                                ),
+                            Res.string.installment_paid to (
+                                dataState.data.repaymentSchedule.periods
+                                    ?.count { it.complete == false }
+                                    ?.toString()
+                                    ?: "N/A"
+                                ),
+                            Res.string.total_installments to dataState.data.termFrequency.toString(),
+                        )
+
+                        mutableStateFlow.update {
+                            it.copy(
+                                dialogState = null,
+                                repaymentSchedules = schedulerDetails,
+                                loanWithAssociationsEntity = dataState.data,
+                                isLoading = false,
+                            )
+                        }
+                    }
+                }
+            }
+    }
 }
 
 data class NewLoanAccountState
@@ -819,11 +900,12 @@ constructor(
     val clientId: Int,
     val productLoans: List<LoanProducts> = emptyList(),
     val loanProductSelected: Int = -1,
+    val loanWithAssociationsEntity: LoanWithAssociationsEntity = LoanWithAssociationsEntity(),
+    val repaymentSchedules: Map<StringResource, String> = emptyMap(),
     val loanTemplate: LoanTemplate? = null,
     val currentStep: Int = 0,
     val totalSteps: Int = 4,
     val dialogState: DialogState? = null,
-    val screenState: ScreenState = ScreenState.Loading,
     val isOverLayLoadingActive: Boolean = false,
     val externalId: String = "",
     val externalIdError: StringResource? = null,
@@ -895,12 +977,7 @@ constructor(
         data object ShowCollaterals : DialogState
         data object ShowCharges : DialogState
         data object ShowOverDueCharges : DialogState
-    }
-
-    sealed interface ScreenState {
-        data object Loading : ScreenState
-        data object Success : ScreenState
-        data object NetworkError : ScreenState
+        data object Loading : DialogState
     }
 
     val isDetailsNextEnabled =
@@ -948,9 +1025,7 @@ sealed interface NewLoanAccountAction {
     data class OnRepaidEveryChange(val number: Int) : NewLoanAccountAction
     data class OnSelectedOnIndexChange(val index: Int) : NewLoanAccountAction
     data class OnSelectedDayIndexChange(val index: Int) : NewLoanAccountAction
-    data class OnNominalInterestRateChange(val rate: Double, val text: String) :
-        NewLoanAccountAction
-
+    data class OnNominalInterestRateChange(val rate: Double, val text: String) : NewLoanAccountAction
     data class OnNominalFrequencyIndexChange(val index: Int) : NewLoanAccountAction
     data class OnNominalMethodIndexChange(val index: Int) : NewLoanAccountAction
     data class OnNominalAmortizationIndexChange(val index: Int) : NewLoanAccountAction
@@ -983,6 +1058,7 @@ sealed interface NewLoanAccountAction {
     data class DeleteChargeFromSelectedCharges(val index: Int) : NewLoanAccountAction
     data class EditChargeDialog(val index: Int) : NewLoanAccountAction
     data class EditCharge(val index: Int) : NewLoanAccountAction
+    data object RepaymentScheduler : NewLoanAccountAction
     data object SubmitLoanApplication : NewLoanAccountAction
     data object GotoPreviousStep : NewLoanAccountAction
 }

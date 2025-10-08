@@ -234,6 +234,7 @@ private fun MoratoriumCard(
             Res.string.loan_new_loan_recalculate_interest to recalculateInterest,
             Res.string.loan_new_loan_days_in_month to daysInMonth,
         ),
+        verticalArrangement = Arrangement.spacedBy(DesignToken.padding.small),
     )
 }
 
@@ -275,6 +276,7 @@ private fun TermsCard(
             Res.string.loan_new_loan_installment_amount to installmentAmount,
             Res.string.loan_new_loan_ballon_repayment_amount to ballonRepayment,
         ),
+        verticalArrangement = Arrangement.spacedBy(DesignToken.padding.small),
     )
 }
 
@@ -298,5 +300,6 @@ private fun DetailsCard(
             Res.string.loan_new_loan_loan_purpose to loadPurpose,
             Res.string.loan_new_loan_is_savings_linked to isSavingsLinked,
         ),
+        verticalArrangement = Arrangement.spacedBy(DesignToken.padding.small),
     )
 }

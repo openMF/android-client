@@ -87,9 +87,9 @@ fun MifosBottomBar(
             shape = DesignToken.shapes.bottomSheet,
             shadow = Shadow(
                 radius = 10.dp,
-                spread = 5.dp,
-                color = Color.Gray.copy(alpha = 0.40f),
-                offset = DpOffset(x = 4.dp, 4.dp),
+                spread = 0.dp,
+                color = Color.Black.copy(alpha = 0.25f),
+                offset = DpOffset(0.dp, 2.dp),
             ),
         ),
     ) {
