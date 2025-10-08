@@ -76,14 +76,14 @@ internal fun ClientProfileEditScreen(
 ) {
     val state by viewModel.stateFlow.collectAsStateWithLifecycle()
 
-    EventsEffect(viewModel.eventFlow) { event ->
+    /*EventsEffect(viewModel.eventFlow) { event ->
         when (event) {
             ClientProfileEditEvent.NavigateBack -> onNavigateBack()
             ClientProfileEditEvent.OnSaveSuccess -> {
                 onNavigateBack()
             }
         }
-    }
+    }*/
 
     ClientProfileEditScaffold(
         modifier = modifier,
@@ -203,6 +203,16 @@ private fun ClientProfileEditDialogs(
                 message = state.dialogState.message,
                 isRetryEnabled = true,
                 onRetry = onRetry,
+            )
+        }
+
+        is ClientProfileEditState.DialogState.Success -> {
+            MifosBasicDialog(
+                title = "Success",
+                content = { Text("Your profile image has been updated successfully!") },
+                confirmText = "Done",
+                onConfirm = { onAction(ClientProfileEditAction.DismissModalBottomSheet) },
+                onDismissRequest = { onAction(ClientProfileEditAction.DismissModalBottomSheet) },
             )
         }
 

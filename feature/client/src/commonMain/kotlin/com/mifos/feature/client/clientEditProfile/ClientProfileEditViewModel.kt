@@ -21,6 +21,7 @@ import com.mifos.core.ui.util.BaseViewModel
 import com.mifos.core.ui.util.imageToByteArray
 import com.mifos.core.ui.util.multipartRequestBody
 import com.mifos.feature.client.utils.toPlatformFile
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
@@ -123,6 +124,7 @@ internal class ClientProfileEditViewModel(
                     }
                 }
 
+
                 is DataState.Loading -> {
                     mutableStateFlow.update {
                         it.copy(
@@ -132,13 +134,15 @@ internal class ClientProfileEditViewModel(
                 }
 
                 is DataState.Success -> {
+
+                    loadImage(route.id)
+                    delay(2000)
                     mutableStateFlow.update {
                         it.copy(
-                            dialogState = ClientProfileEditState.DialogState.Loading,
+                            dialogState = ClientProfileEditState.DialogState.Success,
                             openImagePicker = false,
                         )
                     }
-                    loadImage(route.id)
                 }
             }
         }
@@ -179,14 +183,18 @@ data class ClientProfileEditState(
     sealed interface DialogState {
         data class Error(val message: String) : DialogState
         data object Loading : DialogState
+        data object Success : DialogState
         data object ShowDeleteDialog : DialogState
         data object ShowUploadOptions : DialogState
+
     }
 }
 
 sealed interface ClientProfileEditEvent {
     data object NavigateBack : ClientProfileEditEvent
     data object OnSaveSuccess : ClientProfileEditEvent
+    data class OnError(val message: String) : ClientProfileEditEvent
+
 }
 
 sealed interface ClientProfileEditAction {
