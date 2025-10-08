@@ -9,7 +9,6 @@
  */
 package com.mifos.feature.client.createShareAccount
 
-
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
@@ -59,26 +58,25 @@ private fun ShareAccountScaffold(
     val steps = remember {
         listOf(
             Step(name = "Details") {
-
                 DetailsPage(
-                    onNext = { onAction(ShareAccountAction.NextStep) }
+                    onNext = { onAction(ShareAccountAction.NextStep) },
                 )
             },
             Step(name = "Terms") {
                 TermsPage(
-                    onNext = { onAction(ShareAccountAction.NextStep) }
+                    onNext = { onAction(ShareAccountAction.NextStep) },
                 )
             },
             Step(name = "Charges") {
                 ChargesPage(
-                    onNext = { onAction(ShareAccountAction.NextStep) }
+                    onNext = { onAction(ShareAccountAction.NextStep) },
                 )
             },
             Step(name = "Preview") {
                 PreviewPage(
-                    onNext = { onAction(ShareAccountAction.Finish) }
+                    onNext = { onAction(ShareAccountAction.Finish) },
                 )
-            }
+            },
         )
     }
 
@@ -96,7 +94,7 @@ private fun ShareAccountScaffold(
                 },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(paddingValues)
+                    .padding(paddingValues),
             )
         }
     }

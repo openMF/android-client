@@ -12,9 +12,7 @@ package com.mifos.feature.client.createShareAccount
 import com.mifos.core.ui.util.BaseViewModel
 import kotlinx.coroutines.flow.update
 
-
-
-class ShareAccountViewModel : BaseViewModel <ShareAccountState, ShareAccountEvent, ShareAccountAction> (ShareAccountState()) {
+class ShareAccountViewModel : BaseViewModel<ShareAccountState, ShareAccountEvent, ShareAccountAction> (ShareAccountState()) {
 
     override fun handleAction(action: ShareAccountAction) {
         when (action) {
@@ -28,7 +26,7 @@ class ShareAccountViewModel : BaseViewModel <ShareAccountState, ShareAccountEven
                 mutableStateFlow.update { it.copy(currentStep = action.index) }
             }
             ShareAccountAction.NavigateBack -> {
-               sendEvent(ShareAccountEvent.NavigateBack)
+                sendEvent(ShareAccountEvent.NavigateBack)
             }
             ShareAccountAction.Finish -> {
                 sendEvent(ShareAccountEvent.Finish)
@@ -39,7 +37,7 @@ class ShareAccountViewModel : BaseViewModel <ShareAccountState, ShareAccountEven
 
 data class ShareAccountState(
     val currentStep: Int = 0,
-    val dialogState: Any? = null
+    val dialogState: Any? = null,
 )
 
 sealed class ShareAccountAction {

@@ -20,7 +20,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun TermsPage (onNext: () -> Unit) {
+fun TermsPage(onNext: () -> Unit) {
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
         Text("Terms Page")
         Spacer(Modifier.height(8.dp))
