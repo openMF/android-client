@@ -134,15 +134,15 @@ internal class ClientProfileEditViewModel(
                 }
 
                 is DataState.Success -> {
-
-                    loadImage(route.id)
-                    delay(2000)
                     mutableStateFlow.update {
                         it.copy(
                             dialogState = ClientProfileEditState.DialogState.Success,
                             openImagePicker = false,
                         )
                     }
+
+                    loadImage(route.id)
+
                 }
             }
         }
