@@ -46,11 +46,10 @@ object TextFieldsValidator {
 
     fun doubleNumberValidator(input: String): StringResource? {
         return when {
-            input.isBlank() -> null
             input.count { it == '.' } > 1 -> Res.string.error_invalid_number
             input.any { !it.isDigit() && it != '.' } -> Res.string.error_digits_only
             input.toDoubleOrNull() == null -> Res.string.error_invalid_number
-            input.toDouble() == 0.0 -> Res.string.error_number_zero
+            input == "0" || input == "0.0" || input.toDoubleOrNull() == 0.0 -> Res.string.error_number_zero
             else -> null
         }
     }

@@ -204,8 +204,12 @@ private fun AddNewChargeDialog(
     onAction: (SavingsAccountAction) -> Unit,
 ) {
     LaunchedEffect(state.chargeAmount) {
-        val amountError = doubleNumberValidator(state.chargeAmount)
-        onAction(SavingsAccountAction.OnChargesAmountChangeError(amountError))
+        if (state.chargeAmount.isNotBlank()) {
+            val amountError = doubleNumberValidator(state.chargeAmount)
+            onAction(SavingsAccountAction.OnChargesAmountChangeError(amountError))
+        } else {
+            onAction(SavingsAccountAction.OnChargesAmountChangeError(null))
+        }
     }
     fun isSelectableDate(utcTimeMillis: Long): Boolean {
         return utcTimeMillis >= Clock.System.now().toEpochMilliseconds().minus(86_400_000L)
@@ -226,13 +230,9 @@ private fun AddNewChargeDialog(
         selectedChargeName = if (state.chooseChargeIndex == -1) {
             ""
         } else {
-            state.savingsProductTemplate?.chargeOptions?.get(state.chooseChargeIndex)?.name ?: ""
+            state.savingsProductTemplate?.chargeOptions?.getOrNull(state.chooseChargeIndex)?.name ?: ""
         },
-        selectedDate = if (state.chargeDate >= DateHelper.getDateAsStringFromLong(Clock.System.now().toEpochMilliseconds())) {
-            state.chargeDate
-        } else {
-            DateHelper.getDateAsStringFromLong(Clock.System.now().toEpochMilliseconds())
-        },
+        selectedDate = state.chargeDate,
         chargeAmount = state.chargeAmount,
         chargeType = if (state.chooseChargeIndex == -1) {
             ""
@@ -243,7 +243,7 @@ private fun AddNewChargeDialog(
         chargeCollectedOn = if (state.chooseChargeIndex == -1) {
             ""
         } else {
-            state.savingsProductTemplate?.chargeOptions?.get(state.chooseChargeIndex)?.chargeTimeType?.value ?: ""
+            state.savingsProductTemplate?.chargeOptions?.getOrNull(state.chooseChargeIndex)?.chargeTimeType?.value ?: ""
         },
         chargeOptions = state.savingsProductTemplate?.chargeOptions?.map { it.name ?: "" } ?: emptyList(),
         onConfirm = {
