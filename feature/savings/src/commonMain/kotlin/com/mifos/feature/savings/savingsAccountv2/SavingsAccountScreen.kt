@@ -121,9 +121,10 @@ private fun SavingsAccountScaffold(
             )
         },
         Step(stringResource(Res.string.step_preview)) {
-            PreviewPage {
-                onAction(SavingsAccountAction.NextStep)
-            }
+            PreviewPage(
+                state = state,
+                onAction = onAction,
+            )
         },
     )
 
