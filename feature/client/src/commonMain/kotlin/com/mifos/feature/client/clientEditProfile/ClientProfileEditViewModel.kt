@@ -134,15 +134,22 @@ internal class ClientProfileEditViewModel(
                 }
 
                 is DataState.Success -> {
-                    mutableStateFlow.update {
-                        it.copy(
-                            dialogState = ClientProfileEditState.DialogState.Success,
-                            openImagePicker = false,
-                        )
+                    viewModelScope.launch {
+                        clientDetailsRepo.getImage(route.id).collect { result ->
+                            when (result) {
+                                is DataState.Success -> mutableStateFlow.update {
+                                    it.copy(
+                                        profileImage = imageToByteArray(result.data),
+                                        dialogState = ClientProfileEditState.DialogState.Success,
+                                    )
+                                }
+                                is DataState.Loading -> mutableStateFlow.update {
+                                    it.copy(dialogState = ClientProfileEditState.DialogState.Loading)
+                                }
+                                else -> Unit
+                            }
+                        }
                     }
-
-                    loadImage(route.id)
-
                 }
             }
         }
