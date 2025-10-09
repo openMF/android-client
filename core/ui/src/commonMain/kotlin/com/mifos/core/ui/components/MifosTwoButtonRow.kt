@@ -20,7 +20,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import com.mifos.core.designsystem.component.MifosOutlinedButton
 import com.mifos.core.designsystem.component.MifosTextButton
 import com.mifos.core.designsystem.icon.MifosIcons
@@ -62,7 +61,7 @@ fun MifosTwoButtonRow(
                     style = MifosTypography.labelLarge,
                 )
             },
-            modifier = Modifier.weight(1f).height(40.dp),
+            modifier = Modifier.weight(1f).height(DesignToken.sizes.buttonHeightMedium),
             enabled = isFirstButtonEnabled,
         )
         Spacer(Modifier.padding(DesignToken.padding.small))
@@ -85,7 +84,7 @@ fun MifosTwoButtonRow(
                     style = MifosTypography.labelLarge,
                 )
             },
-            modifier = Modifier.weight(1f).height(40.dp),
+            modifier = Modifier.weight(1f).height(DesignToken.sizes.buttonHeightMedium),
             enabled = isSecondButtonEnabled,
         )
     }

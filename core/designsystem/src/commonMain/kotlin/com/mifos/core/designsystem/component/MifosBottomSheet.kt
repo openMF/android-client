@@ -54,7 +54,9 @@ fun MifosBottomSheet(
     content: @Composable () -> Unit,
 ) {
     val coroutineScope = rememberCoroutineScope()
-    val modalSheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
+    val modalSheetState = rememberModalBottomSheetState(
+        skipPartiallyExpanded = true,
+    )
     var showBottomSheet by remember { mutableStateOf(true) }
 
     fun dismissSheet() {
