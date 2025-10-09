@@ -14,7 +14,6 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
 import androidx.compose.ui.Modifier
 
-// Import all your step destinations
 import com.mifos.feature.client.fixedDepositAccount.details.DetailsStepRoute
 import com.mifos.feature.client.fixedDepositAccount.details.detailsStepDestination
 import com.mifos.feature.client.fixedDepositAccount.details.navigateToDetailsStep
@@ -43,49 +42,50 @@ fun FixedDepositAccountFlowScreen(
         startDestination = DetailsStepRoute(clientId),
         modifier = modifier
     ) {
-        // Step 1: Details
+        
         detailsStepDestination(
             navController = navController,
             navigateBack = navigateBack,
             onNext = { navController.navigateToCurrencyStep(clientId) }
         )
         
-        // Step 2: Currency  👈 ADD HERE
+        
         currencyStepDestination(
             navController = navController,
             navigateBack = { navController.popBackStack() },
             onNext = { navController.navigateToTermsStep(clientId) }
         )
         
-        // Step 3: Terms
+        
         termsStepDestination(
             navController = navController,
             navigateBack = { navController.popBackStack() },
             onNext = { navController.navigateToSettingsStep(clientId) }
         )
         
-        // Step 4: Settings
+        
         settingsStepDestination(
             navController = navController,
             navigateBack = { navController.popBackStack() },
             onNext = { navController.navigateToChargesStep(clientId) }
         )
         
-        // Step 5: Charges
+        
         chargesStepDestination(
             navController = navController,
             navigateBack = { navController.popBackStack() },
             onNext = { navController.navigateToPreviewStep(clientId) }
         )
         
-        // Step 6: Preview
+        
         previewStepDestination(
             navController = navController,
             navigateBack = { navController.popBackStack() },
             onSubmit = { 
-                // Account created successfully
+                
                 onAccountCreated("accountId")
             }
         )
     }
+
 }
