@@ -47,9 +47,12 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.mifos.core.designsystem.component.BasicDialogState
+import com.mifos.core.designsystem.component.DialogStatus
 import com.mifos.core.designsystem.component.MifosBasicDialog
+import com.mifos.core.designsystem.component.MifosDialogStatus
 import com.mifos.core.designsystem.component.MifosOutlinedButton
 import com.mifos.core.designsystem.component.MifosScaffold
+import com.mifos.core.designsystem.component.MifosStatusDialog
 import com.mifos.core.designsystem.component.MifosTextButton
 import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.designsystem.theme.DesignToken
@@ -198,21 +201,18 @@ private fun ClientProfileEditDialogs(
         is ClientProfileEditState.DialogState.Loading -> MifosProgressIndicator()
 
         is ClientProfileEditState.DialogState.Error -> {
-            MifosErrorComponent(
-                isNetworkConnected = state.networkConnection,
-                message = state.dialogState.message,
-                isRetryEnabled = true,
-                onRetry = onRetry,
+            MifosStatusDialog(
+                status = MifosDialogStatus.FAILURE,
+                message = "Failed to update profile. Please try again.",
+                onDismissRequest = { onAction(ClientProfileEditAction.DismissModalBottomSheet) }
             )
         }
 
         is ClientProfileEditState.DialogState.Success -> {
-            MifosBasicDialog(
-                title = "Success",
-                content = { Text("Your profile image has been updated successfully!") },
-                confirmText = "Done",
-                onConfirm = { onAction(ClientProfileEditAction.DismissModalBottomSheet) },
-                onDismissRequest = { onAction(ClientProfileEditAction.DismissModalBottomSheet) },
+            MifosStatusDialog(
+                status = MifosDialogStatus.SUCCESS,
+                message = "Profile updated successfully!",
+                onDismissRequest = { onAction(ClientProfileEditAction.DismissModalBottomSheet) }
             )
         }
 

@@ -15,8 +15,11 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -32,6 +35,10 @@ import com.mifos.core.designsystem.theme.MifosTypography
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameterProvider
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.CheckCircle
+import androidx.compose.material.icons.filled.Error
+import androidx.compose.ui.graphics.Color
 
 @Composable
 fun MifosBasicDialog(
@@ -194,6 +201,73 @@ fun MifosBasicDialog(
         text = { content() },
         containerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
         modifier = Modifier.semantics { testTag = "AlertPopup" },
+    )
+}
+
+
+
+enum class MifosDialogStatus { SUCCESS, FAILURE }
+
+@Composable
+fun MifosStatusDialog(
+    status: MifosDialogStatus,
+    message: String,
+    onDismissRequest: () -> Unit
+) {
+    data class DialogUI(
+        val title: String,
+        val icon: androidx.compose.ui.graphics.vector.ImageVector,
+        val color: Color
+    )
+
+    val dialogUI: DialogUI = when (status) {
+        MifosDialogStatus.SUCCESS -> DialogUI(
+            title = "Success",
+            icon = Icons.Filled.CheckCircle,
+            color = Color(0xFF4CAF50)
+        )
+        MifosDialogStatus.FAILURE -> DialogUI(
+            title = "Error",
+            icon = Icons.Filled.Error,
+            color = Color(0xFFF44336)
+        )
+    }
+
+    AlertDialog(
+        onDismissRequest = onDismissRequest,
+        icon = {
+            Icon(
+                imageVector = dialogUI.icon,
+                contentDescription = dialogUI.title,
+                tint = dialogUI.color,
+                modifier = Modifier
+                    .size(84.dp)
+                    .padding(bottom = 4.dp)
+            )
+        },
+        title = {
+            Text(
+                text = dialogUI.title,
+                style = MaterialTheme.typography.titleLarge
+            )
+        },
+        text = {
+            Text(
+                text = message,
+                style = MaterialTheme.typography.bodyMedium
+            )
+        },
+        confirmButton = {
+            Button(
+                onClick = onDismissRequest,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp, vertical = 8.dp)
+            ) {
+                Text("Continue")
+            }
+        },
+        modifier = Modifier.testTag("MifosStatusDialog")
     )
 }
 
