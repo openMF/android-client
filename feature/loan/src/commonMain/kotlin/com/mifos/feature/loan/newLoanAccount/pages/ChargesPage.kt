@@ -48,7 +48,7 @@ fun ChargesPage(
     onAction: (NewLoanAccountAction) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    Column(Modifier.fillMaxSize()) {
+    Column(Modifier.fillMaxSize().padding(bottom = DesignToken.padding.large)) {
         Column(
             modifier = modifier.weight(1f).verticalScroll(rememberScrollState()),
         ) {
@@ -117,7 +117,7 @@ fun ChargesPage(
                 onAction(NewLoanAccountAction.PreviousStep)
             },
             onSecondBtnClick = {
-                onAction(NewLoanAccountAction.NextStep)
+                onAction(NewLoanAccountAction.RepaymentScheduler)
             },
             modifier = Modifier.padding(top = DesignToken.padding.small),
         )

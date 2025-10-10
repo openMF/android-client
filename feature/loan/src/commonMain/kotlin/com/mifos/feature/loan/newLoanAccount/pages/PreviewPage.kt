@@ -64,7 +64,6 @@ import com.mifos.core.common.utils.CurrencyFormatter
 import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.designsystem.theme.MifosTypography
 import com.mifos.core.ui.components.MifosDefaultListingComponentFromStringResources
-import com.mifos.core.ui.components.MifosProgressIndicator
 import com.mifos.core.ui.components.MifosProgressIndicatorOverlay
 import com.mifos.core.ui.components.MifosRowWithTextAndButton
 import com.mifos.core.ui.components.MifosTwoButtonRow
@@ -235,6 +234,7 @@ private fun MoratoriumCard(
             Res.string.loan_new_loan_recalculate_interest to recalculateInterest,
             Res.string.loan_new_loan_days_in_month to daysInMonth,
         ),
+        verticalArrangement = Arrangement.spacedBy(DesignToken.padding.small),
     )
 }
 
@@ -276,6 +276,7 @@ private fun TermsCard(
             Res.string.loan_new_loan_installment_amount to installmentAmount,
             Res.string.loan_new_loan_ballon_repayment_amount to ballonRepayment,
         ),
+        verticalArrangement = Arrangement.spacedBy(DesignToken.padding.small),
     )
 }
 
@@ -299,5 +300,6 @@ private fun DetailsCard(
             Res.string.loan_new_loan_loan_purpose to loadPurpose,
             Res.string.loan_new_loan_is_savings_linked to isSavingsLinked,
         ),
+        verticalArrangement = Arrangement.spacedBy(DesignToken.padding.small),
     )
 }

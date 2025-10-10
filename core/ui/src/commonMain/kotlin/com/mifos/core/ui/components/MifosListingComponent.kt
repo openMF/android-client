@@ -46,6 +46,7 @@ import androidclient.core.ui.generated.resources.core_ui_total_value
 import androidclient.core.ui.generated.resources.core_ui_transfer_external_id
 import androidclient.core.ui.generated.resources.core_ui_type
 import androidclient.core.ui.generated.resources.core_ui_waived
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -62,6 +63,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -77,7 +79,9 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 @Composable
 fun MifosListingComponentOutline(
     modifier: Modifier = Modifier,
-    color: Color = MaterialTheme.colorScheme.secondaryContainer,
+    borderColor: Color = MaterialTheme.colorScheme.secondaryContainer,
+    backgroundColor: Color = AppColors.customWhite,
+    shape: Shape = DesignToken.shapes.medium,
     content: @Composable () -> Unit,
 ) {
     Box(
@@ -86,9 +90,10 @@ fun MifosListingComponentOutline(
             .padding(DesignToken.padding.extraExtraSmall)
             .border(
                 width = 1.dp,
-                shape = DesignToken.shapes.medium,
-                color = color,
+                shape = shape,
+                color = borderColor,
             )
+            .background(color = backgroundColor, shape = shape)
             .padding(DesignToken.padding.large),
     ) {
         content()
@@ -220,7 +225,7 @@ fun MifosDefaultListingComponent(
     data: Map<String, String>,
 ) {
     MifosListingComponentOutline(
-        color = color,
+        borderColor = color,
     ) {
         Column(
             modifier = Modifier.fillMaxWidth(),
@@ -238,15 +243,18 @@ fun MifosDefaultListingComponent(
 
 @Composable
 fun MifosDefaultListingComponentFromStringResources(
-    color: Color = MaterialTheme.colorScheme.primary.copy(alpha = 0.5f),
+    borderColor: Color = MaterialTheme.colorScheme.primary.copy(alpha = 0.5f),
+    verticalArrangement: Arrangement.Vertical = Arrangement.spacedBy(DesignToken.padding.extraExtraSmall),
+    backgroundColor: Color = AppColors.customWhite,
     data: Map<StringResource, String>,
 ) {
     MifosListingComponentOutline(
-        color = color,
+        borderColor = borderColor,
+        backgroundColor = backgroundColor,
     ) {
         Column(
             modifier = Modifier.fillMaxWidth(),
-            verticalArrangement = Arrangement.spacedBy(DesignToken.padding.extraExtraSmall),
+            verticalArrangement = verticalArrangement,
         ) {
             data.forEach { (key, value) ->
                 MifosListingRowItem(

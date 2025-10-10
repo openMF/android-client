@@ -69,6 +69,8 @@ import com.mifos.feature.client.clientUpdateDefaultAccount.navigateToUpdateDefau
 import com.mifos.feature.client.clientUpdateDefaultAccount.updateDefaultAccountDestination
 import com.mifos.feature.client.clientsList.ClientListScreen
 import com.mifos.feature.client.createNewClient.CreateNewClientScreen
+import com.mifos.feature.client.createShareAccount.navigateToShareAccountRoute
+import com.mifos.feature.client.createShareAccount.shareAccountDestination
 import com.mifos.feature.client.documentPreviewScreen.createDocumentPreviewRoute
 import com.mifos.feature.client.documentPreviewScreen.navigateToDocumentPreviewRoute
 import com.mifos.feature.client.fixedDepositAccount.clientFixedDepositAccountDestination
@@ -302,9 +304,9 @@ fun NavGraphBuilder.clientNavGraph(
         )
         clientApplyNewApplicationRoute(
             onNavigateBack = navController::popBackStack,
+            onNavigateApplyShareAccount = navController::navigateToShareAccountRoute,
             onNavigateApplyLoanAccount = navController::navigateToNewLoanAccountRoute,
             onNavigateApplySavingsAccount = navController::navigateToSavingsAccountRoute,
-            onNavigateApplyShareAccount = { },
             onNavigateApplyRecurringAccount = { },
             onNavigateApplyFixedAccount = { },
             navController = navController,
@@ -334,6 +336,8 @@ fun NavGraphBuilder.clientNavGraph(
             loadMoreSavingsAccountInfo = navController::navigateToDataTable,
             loadDocuments = navController::navigateToDocumentListScreen,
         )
+
+        shareAccountDestination()
     }
 }
 

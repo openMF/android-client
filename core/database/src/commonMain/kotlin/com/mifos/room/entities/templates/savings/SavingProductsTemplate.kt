@@ -12,6 +12,7 @@ package com.mifos.room.entities.templates.savings
 import com.mifos.core.model.objects.account.loan.Currency
 import com.mifos.core.model.objects.account.saving.FieldOfficerOptions
 import com.mifos.core.model.objects.commonfiles.InterestType
+import com.mifos.core.model.objects.template.client.ChargeOptions
 import com.mifos.core.model.objects.template.saving.AccountOptions
 import com.mifos.core.model.utils.IgnoredOnParcel
 import com.mifos.core.model.utils.Parcelable
@@ -82,4 +83,6 @@ class SavingProductsTemplate(
 
     @IgnoredOnParcel
     val fieldOfficerOptions: List<FieldOfficerOptions>? = null,
+
+    val chargeOptions: List<ChargeOptions>? = null,
 ) : Parcelable

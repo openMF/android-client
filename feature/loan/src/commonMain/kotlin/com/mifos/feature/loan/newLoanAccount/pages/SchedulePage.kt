@@ -10,26 +10,118 @@
 package com.mifos.feature.loan.newLoanAccount.pages
 
 import androidclient.feature.loan.generated.resources.Res
+import androidclient.feature.loan.generated.resources.back
 import androidclient.feature.loan.generated.resources.next
-import androidclient.feature.loan.generated.resources.step_schedule
+import androidclient.feature.loan.generated.resources.repayment_schedule
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
-import androidx.compose.material3.Button
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
+import com.mifos.core.designsystem.theme.DesignToken
+import com.mifos.core.designsystem.theme.MifosTypography
+import com.mifos.core.model.objects.account.loan.Period
+import com.mifos.core.ui.components.MifosDefaultListingComponentFromStringResources
+import com.mifos.core.ui.components.MifosProgressIndicator
+import com.mifos.core.ui.components.MifosTwoButtonRow
+import com.mifos.feature.loan.component.RepaymentPeriodCard
+import com.mifos.feature.loan.newLoanAccount.NewLoanAccountAction
+import com.mifos.feature.loan.newLoanAccount.NewLoanAccountState
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
-fun SchedulePage(onNext: () -> Unit) {
-    Column(horizontalAlignment = Alignment.CenterHorizontally) {
-        Text(stringResource(Res.string.step_schedule))
-        Spacer(Modifier.height(8.dp))
-        Button(onClick = onNext) {
-            Text(stringResource(Res.string.next))
+fun SchedulePage(
+    state: NewLoanAccountState,
+    onAction: (NewLoanAccountAction) -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    if (state.isLoading) {
+        MifosProgressIndicator()
+    } else {
+        ScheduleContent(
+            state = state,
+            onAction = onAction,
+            modifier = modifier,
+        )
+    }
+}
+
+@Composable
+fun ScheduleContent(
+    state: NewLoanAccountState,
+    onAction: (NewLoanAccountAction) -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    Column(
+        Modifier.fillMaxSize().padding(bottom = DesignToken.padding.large),
+    ) {
+        Column(
+            modifier = modifier.weight(1f).verticalScroll(rememberScrollState()),
+        ) {
+            Text(
+                text = stringResource(Res.string.repayment_schedule),
+                style = MifosTypography.labelLargeEmphasized,
+            )
+
+            Spacer(Modifier.height(DesignToken.padding.large))
+
+            if (!state.repaymentSchedules.isEmpty()) {
+                MifosDefaultListingComponentFromStringResources(
+                    data = state.repaymentSchedules,
+                    backgroundColor = MaterialTheme.colorScheme.surfaceContainer,
+                    borderColor = MaterialTheme.colorScheme.surfaceDim,
+                    verticalArrangement = Arrangement.spacedBy(DesignToken.padding.small),
+                )
+            }
+
+            Spacer(Modifier.height(DesignToken.padding.large))
+
+            RepaymentScheduleList(
+                periods = state.loanWithAssociationsEntity.repaymentSchedule.periods.orEmpty()
+                    .filter { it.period != null },
+                currencyCode = state.loanWithAssociationsEntity.currency.code,
+                maxDigits = state.loanWithAssociationsEntity.currency.decimalPlaces,
+            )
+        }
+
+        MifosTwoButtonRow(
+            firstBtnText = stringResource(Res.string.back),
+            secondBtnText = stringResource(Res.string.next),
+            onFirstBtnClick = {
+                onAction(NewLoanAccountAction.PreviousStep)
+            },
+            onSecondBtnClick = {
+                onAction(NewLoanAccountAction.NextStep)
+            },
+            modifier = Modifier.padding(top = DesignToken.padding.small),
+        )
+    }
+}
+
+@Composable
+fun RepaymentScheduleList(
+    periods: List<Period>,
+    currencyCode: String?,
+    maxDigits: Int?,
+    modifier: Modifier = Modifier,
+) {
+    Column(
+        modifier = modifier,
+        verticalArrangement = Arrangement.spacedBy(DesignToken.spacing.medium),
+    ) {
+        periods.forEach { period ->
+            RepaymentPeriodCard(
+                period = period,
+                currencyCode = currencyCode,
+                maxDigits = maxDigits,
+            )
         }
     }
 }
