@@ -421,6 +421,10 @@
     <string name="no_more_clients_available">No more Clients Available</string>
     <string name="feature_groups_no_more_groups_available">No more Groups Available</string>
     <string name="no_more_centers_available">No more Centers Available</string>
+    <string name="feature_client_profile_update_success_message">Your profile image has been updated successfully!</string>
+    <string name="feature_client_profile_update_error_message">We couldn’t update your profile image. Please try again.</string>
+    <string name="should_refresh">should_refresh</string>
+
 
     <string name="numberofrepayments">Number of repayments</string>
 

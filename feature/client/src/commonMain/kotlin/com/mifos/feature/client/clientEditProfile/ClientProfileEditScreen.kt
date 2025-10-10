@@ -17,7 +17,10 @@ import androidclient.feature.client.generated.resources.choose_from_option
 import androidclient.feature.client.generated.resources.delete_dialog_message
 import androidclient.feature.client.generated.resources.delete_dialog_title
 import androidclient.feature.client.generated.resources.delete_photo
+import androidclient.feature.client.generated.resources.dialog_continue
 import androidclient.feature.client.generated.resources.edit_profile_title
+import androidclient.feature.client.generated.resources.feature_client_Image_Upload_Failed
+import androidclient.feature.client.generated.resources.feature_client_Image_Upload_Successful
 import androidclient.feature.client.generated.resources.from_camera
 import androidclient.feature.client.generated.resources.from_gallery
 import androidclient.feature.client.generated.resources.remove
@@ -47,7 +50,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.mifos.core.designsystem.component.BasicDialogState
-import com.mifos.core.designsystem.component.DialogStatus
 import com.mifos.core.designsystem.component.MifosBasicDialog
 import com.mifos.core.designsystem.component.MifosDialogStatus
 import com.mifos.core.designsystem.component.MifosOutlinedButton
@@ -203,7 +205,7 @@ private fun ClientProfileEditDialogs(
         is ClientProfileEditState.DialogState.Error -> {
             MifosStatusDialog(
                 status = MifosDialogStatus.FAILURE,
-                message = "Failed to update profile. Please try again.",
+                message = stringResource(Res.string.feature_client_Image_Upload_Failed),
                 onDismissRequest = { onAction(ClientProfileEditAction.DismissModalBottomSheet) }
             )
         }
@@ -211,7 +213,7 @@ private fun ClientProfileEditDialogs(
         is ClientProfileEditState.DialogState.Success -> {
             MifosStatusDialog(
                 status = MifosDialogStatus.SUCCESS,
-                message = "Profile updated successfully!",
+                message = stringResource(Res.string.feature_client_profile_update_success_message),
                 onDismissRequest = { onAction(ClientProfileEditAction.DismissModalBottomSheet) }
             )
         }
