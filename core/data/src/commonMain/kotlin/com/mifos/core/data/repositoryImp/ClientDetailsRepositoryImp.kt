@@ -63,7 +63,7 @@ class ClientDetailsRepositoryImp(
         }
     }
 
-    override suspend fun getCollateralItems(): DataState<List<CollateralItem>> {
+    override suspend fun getCollateralItems(clientId: Int): DataState<List<CollateralItem>> {
         return try {
             val res = dataManagerClient.getCollateralItems()
             return DataState.Success(res)

@@ -45,29 +45,28 @@ internal class ClientCollateralViewModel(
     }
 
     private suspend fun loadCollaterals() {
-        mutableStateFlow.update { it.copy(dialogState = ClientCollateralState.DialogState.Loading) }
         val result = repo.getCollateralItems()
-        when (result) {
-            is DataState.Error -> {
-                mutableStateFlow.update {
-                    it.copy(
-                        dialogState = ClientCollateralState.DialogState.Error(
-                            result.message,
-                        ),
-                    )
-                }
-            }
-            is DataState.Success -> {
-                mutableStateFlow.update {
-                    it.copy(
-                        collaterals = result.data,
-                        dialogState = null,
-                    )
-                }
-            }
-            else -> Unit
+    when (result) {
+        is DataState.Error -> {
+        mutableStateFlow.update {
+            it.copy(
+                dialogState = ClientCollateralState.DialogState.Error(
+                    result.message,
+                ),
+            )
         }
     }
+        is DataState.Success -> {
+        mutableStateFlow.update {
+            it.copy(
+                collaterals = result.data,
+                dialogState = null,
+            )
+        }
+    }
+        else -> Unit
+    }
+ }
 
     private suspend fun saveCollateral() {
         mutableStateFlow.update { it.copy(dialogState = ClientCollateralState.DialogState.Loading) }

@@ -613,7 +613,7 @@ internal class NewLoanAccountViewModel(
     }
 
     private suspend fun loadCollaterals() {
-        val result = repo.getCollateralItems()
+        val result = repo.getCollateralItems(clientId = state.clientId)
         when (result) {
             is DataState.Error -> {}
             is DataState.Success -> {
