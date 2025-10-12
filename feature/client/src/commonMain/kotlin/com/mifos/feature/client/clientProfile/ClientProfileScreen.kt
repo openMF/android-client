@@ -47,6 +47,7 @@ import com.mifos.feature.client.clientEditProfile.ClientProfileKeys
 import com.mifos.feature.client.clientProfile.components.ClientProfileActionItem
 import com.mifos.feature.client.clientProfile.components.ProfileCard
 import com.mifos.feature.client.clientProfile.components.clientsActionItems
+import com.mifos.feature.client.utils.PROFILE_SHOULD_REFRESH_KEY
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -68,14 +69,14 @@ internal fun ClientProfileScreen(
     val savedStateHandle = currentBackStackEntry?.savedStateHandle
 
     val profileUpdated by savedStateHandle
-        ?.getStateFlow(ClientProfileKeys.PROFILE_SHOULD_REFRESH_KEY, false)
+        ?.getStateFlow(PROFILE_SHOULD_REFRESH_KEY, false)
         ?.collectAsStateWithLifecycle(initialValue = false)
         ?: remember { mutableStateOf(false) }
 
     LaunchedEffect(profileUpdated) {
         if (profileUpdated) {
             viewModel.trySendAction(ClientProfileAction.OnRetry)
-            savedStateHandle?.set(ClientProfileKeys.PROFILE_SHOULD_REFRESH_KEY, false) // reset after refresh
+            savedStateHandle?.set(PROFILE_SHOULD_REFRESH_KEY, false) // reset after refresh
         }
     }
 
