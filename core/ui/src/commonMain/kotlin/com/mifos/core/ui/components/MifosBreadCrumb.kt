@@ -83,7 +83,7 @@ fun MifosBreadcrumbNavBar(
                                 if (index != routes.lastIndex && route != "...") {
                                     navController.previousBackStackEntry
                                         ?.savedStateHandle
-                                        ?.set("shouldRefresh", true)
+                                        ?.set(SavedStateKeys.PROFILE_SHOULD_REFRESH_KEY, true)
                                     navController.popBackStack(route, inclusive = false)
                                 }
                             },

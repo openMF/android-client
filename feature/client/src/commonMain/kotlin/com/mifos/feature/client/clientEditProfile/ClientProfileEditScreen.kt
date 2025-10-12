@@ -23,8 +23,10 @@ import androidclient.feature.client.generated.resources.feature_client_Image_Upl
 import androidclient.feature.client.generated.resources.feature_client_Image_Upload_Successful
 import androidclient.feature.client.generated.resources.from_camera
 import androidclient.feature.client.generated.resources.from_gallery
+import androidclient.feature.client.generated.resources.profile_update_error_message
 import androidclient.feature.client.generated.resources.remove
 import androidclient.feature.client.generated.resources.update_profile_photo_message
+import androidclient.feature.client.generated.resources.update_success_message
 import androidclient.feature.client.generated.resources.upload_new_photo
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -80,15 +82,6 @@ internal fun ClientProfileEditScreen(
     viewModel: ClientProfileEditViewModel = koinViewModel(),
 ) {
     val state by viewModel.stateFlow.collectAsStateWithLifecycle()
-
-    /*EventsEffect(viewModel.eventFlow) { event ->
-        when (event) {
-            ClientProfileEditEvent.NavigateBack -> onNavigateBack()
-            ClientProfileEditEvent.OnSaveSuccess -> {
-                onNavigateBack()
-            }
-        }
-    }*/
 
     ClientProfileEditScaffold(
         modifier = modifier,
@@ -205,7 +198,7 @@ private fun ClientProfileEditDialogs(
         is ClientProfileEditState.DialogState.Error -> {
             MifosStatusDialog(
                 status = MifosDialogStatus.FAILURE,
-                message = stringResource(Res.string.feature_client_Image_Upload_Failed),
+                message = stringResource(Res.string.profile_update_error_message),
                 onDismissRequest = { onAction(ClientProfileEditAction.DismissModalBottomSheet) }
             )
         }
@@ -213,7 +206,7 @@ private fun ClientProfileEditDialogs(
         is ClientProfileEditState.DialogState.Success -> {
             MifosStatusDialog(
                 status = MifosDialogStatus.SUCCESS,
-                message = stringResource(Res.string.feature_client_profile_update_success_message),
+                message = stringResource(Res.string.update_success_message),
                 onDismissRequest = { onAction(ClientProfileEditAction.DismissModalBottomSheet) }
             )
         }

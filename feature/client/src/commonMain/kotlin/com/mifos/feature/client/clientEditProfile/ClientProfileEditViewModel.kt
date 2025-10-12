@@ -217,3 +217,7 @@ sealed interface ClientProfileEditAction {
     data class UpdateImagePicker(val status: Boolean) : ClientProfileEditAction
     data class OnImageSelected(val image: ImageBitmap) : ClientProfileEditAction
 }
+
+object SavedStateKeys {
+    const val PROFILE_SHOULD_REFRESH_KEY = "profile_should_refresh"
+}

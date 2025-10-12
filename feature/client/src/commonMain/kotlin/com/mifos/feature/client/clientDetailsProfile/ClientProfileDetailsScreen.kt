@@ -19,6 +19,7 @@ import androidclient.feature.client.generated.resources.dialog_continue
 import androidclient.feature.client.generated.resources.dialog_unassign_message
 import androidclient.feature.client.generated.resources.dismiss_text
 import androidclient.feature.client.generated.resources.pen_icon
+import androidclient.feature.client.generated.resources.profile_should_refresh
 import androidclient.feature.client.generated.resources.scroll_for_more_options
 import androidclient.feature.client.generated.resources.staff_unassign_failure_title
 import androidclient.feature.client.generated.resources.staff_unassign_success_message
@@ -69,6 +70,7 @@ import com.mifos.core.ui.util.TextUtil
 import com.mifos.feature.client.clientDetailsProfile.components.ClientDetailsProfile
 import com.mifos.feature.client.clientDetailsProfile.components.ClientProfileDetailsActionItem
 import com.mifos.feature.client.clientDetailsProfile.components.clientsDetailsActionItems
+import com.mifos.feature.client.clientEditProfile.ClientProfileKeys
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
@@ -94,14 +96,14 @@ internal fun ClientProfileDetailsScreen(
     val savedStateHandle = currentBackStackEntry?.savedStateHandle
 
     val profileUpdated by savedStateHandle
-        ?.getStateFlow("shouldRefresh", false)
+        ?.getStateFlow(ClientProfileKeys.PROFILE_SHOULD_REFRESH_KEY, false)
         ?.collectAsStateWithLifecycle(initialValue = false)
         ?: remember { mutableStateOf(false) }
 
     LaunchedEffect(profileUpdated) {
         if (profileUpdated) {
             viewModel.trySendAction(ClientProfileDetailsAction.OnRetry)
-            savedStateHandle?.set("shouldRefresh", false) // reset after refresh
+            savedStateHandle?.set(ClientProfileKeys.PROFILE_SHOULD_REFRESH_KEY, false)
         }
     }
 

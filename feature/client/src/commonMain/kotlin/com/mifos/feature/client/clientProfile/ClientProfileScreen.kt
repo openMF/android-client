@@ -43,6 +43,7 @@ import com.mifos.core.ui.components.MifosProgressIndicator
 import com.mifos.core.ui.components.MifosRowCard
 import com.mifos.core.ui.util.EventsEffect
 import com.mifos.core.ui.util.TextUtil
+import com.mifos.feature.client.clientEditProfile.ClientProfileKeys
 import com.mifos.feature.client.clientProfile.components.ClientProfileActionItem
 import com.mifos.feature.client.clientProfile.components.ProfileCard
 import com.mifos.feature.client.clientProfile.components.clientsActionItems
@@ -67,14 +68,14 @@ internal fun ClientProfileScreen(
     val savedStateHandle = currentBackStackEntry?.savedStateHandle
 
     val profileUpdated by savedStateHandle
-        ?.getStateFlow("shouldRefresh", false)
+        ?.getStateFlow(ClientProfileKeys.PROFILE_SHOULD_REFRESH_KEY, false)
         ?.collectAsStateWithLifecycle(initialValue = false)
         ?: remember { mutableStateOf(false) }
 
     LaunchedEffect(profileUpdated) {
         if (profileUpdated) {
             viewModel.trySendAction(ClientProfileAction.OnRetry)
-            savedStateHandle?.set("shouldRefresh", false) // reset after refresh
+            savedStateHandle?.set(ClientProfileKeys.PROFILE_SHOULD_REFRESH_KEY, false) // reset after refresh
         }
     }
 
