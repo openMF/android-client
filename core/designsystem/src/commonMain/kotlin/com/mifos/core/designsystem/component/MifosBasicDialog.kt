@@ -39,6 +39,12 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Error
 import androidx.compose.ui.graphics.Color
+import core.designsystem.generated.resources.Res
+import core.designsystem.generated.resources.core_designsystem_dialog_continue
+import core.designsystem.generated.resources.core_designsystem_dialog_failure
+import core.designsystem.generated.resources.core_designsystem_dialog_success
+import core.designsystem.generated.resources.core_designsystem_mifosStatusDialog
+import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun MifosBasicDialog(
@@ -222,12 +228,12 @@ fun MifosStatusDialog(
 
     val dialogUI: DialogUI = when (status) {
         MifosDialogStatus.SUCCESS -> DialogUI(
-            title = "Success",
+            title = stringResource(Res.string.core_designsystem_dialog_success),
             icon = Icons.Filled.CheckCircle,
             color = Color(0xFF4CAF50)
         )
         MifosDialogStatus.FAILURE -> DialogUI(
-            title = "Error",
+            title = stringResource(Res.string.core_designsystem_dialog_failure),
             icon = Icons.Filled.Error,
             color = Color(0xFFF44336)
         )
@@ -264,10 +270,10 @@ fun MifosStatusDialog(
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp, vertical = 8.dp)
             ) {
-                Text("Continue")
+                Text(stringResource(Res.string.core_designsystem_dialog_continue))
             }
         },
-        modifier = Modifier.testTag("MifosStatusDialog")
+        modifier = Modifier.testTag(stringResource(Res.string.core_designsystem_mifosStatusDialog))
     )
 }
 

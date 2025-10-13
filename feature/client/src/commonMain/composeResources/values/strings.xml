@@ -390,6 +390,8 @@
     <string name="update_success_message">Your profile image has been updated successfully!</string>
     <string name="profile_update_error_message">We couldn’t update your profile image. Please try again.</string>
     <string name="profile_should_refresh">should refresh</string>
+    <string name="success">Success</string>
+    <string name="failure">Failure</string>
 
     <!-- Assign Staff Screen -->
     <string name="label_assign_staff">Assign Staff</string>
