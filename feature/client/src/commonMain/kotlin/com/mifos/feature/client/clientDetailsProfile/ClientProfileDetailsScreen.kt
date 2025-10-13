@@ -70,7 +70,6 @@ import com.mifos.core.ui.util.TextUtil
 import com.mifos.feature.client.clientDetailsProfile.components.ClientDetailsProfile
 import com.mifos.feature.client.clientDetailsProfile.components.ClientProfileDetailsActionItem
 import com.mifos.feature.client.clientDetailsProfile.components.clientsDetailsActionItems
-import com.mifos.feature.client.clientEditProfile.ClientProfileKeys
 import com.mifos.feature.client.utils.PROFILE_SHOULD_REFRESH_KEY
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource

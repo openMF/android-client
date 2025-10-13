@@ -30,6 +30,7 @@ import androidx.navigation.NavController
 import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.designsystem.theme.MifosTheme
 import com.mifos.core.designsystem.theme.MifosTypography
+import com.mifos.core.ui.util.PROFILE_SHOULD_REFRESH_KEY
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
@@ -83,7 +84,7 @@ fun MifosBreadcrumbNavBar(
                                 if (index != routes.lastIndex && route != "...") {
                                     navController.previousBackStackEntry
                                         ?.savedStateHandle
-                                        ?.set(SavedStateKeys.PROFILE_SHOULD_REFRESH_KEY, true)
+                                        ?.set(PROFILE_SHOULD_REFRESH_KEY, true)
                                     navController.popBackStack(route, inclusive = false)
                                 }
                             },
@@ -100,7 +101,7 @@ fun MifosBreadcrumbNavBar(
         IconButton(onClick = {
             navController.previousBackStackEntry
                 ?.savedStateHandle
-                ?.set("shouldRefresh", true)
+                ?.set(PROFILE_SHOULD_REFRESH_KEY, true)
             navController.popBackStack()
         }) {
             Icon(
