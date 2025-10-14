@@ -211,6 +211,11 @@ fun NavGraphBuilder.clientNavGraph(
             onNavigateBack = navController::popBackStack,
             navController = navController,
         )
+        FixedAccountDestination(
+            navController = navController,
+            onNavigateBack = navController::popBackStack,
+            onFinish = navController::popBackStack,
+        )
         clientEditDetailsDestination(
             onNavigateBack = navController::popBackStack,
             onNavigateNext = navController::navigateToClientDetailsProfileRouteOnStatus,
