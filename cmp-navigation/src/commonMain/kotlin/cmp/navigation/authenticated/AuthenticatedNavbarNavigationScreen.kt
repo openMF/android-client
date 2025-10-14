@@ -119,6 +119,7 @@ internal fun AuthenticatedNavbarNavigationScreen(
     ),
     navigateToNewLoanAccountScreen: (Int) -> Unit,
     navigateToNewSavingsAccountScreen: (Int) -> Unit,
+    navigateToNewFixedDepositAccountScreen: (Int) -> Unit,
     viewModel: AuthenticatedNavbarNavigationViewModel = koinViewModel(),
 ) {
     val scope = rememberCoroutineScope()
@@ -181,6 +182,8 @@ internal fun AuthenticatedNavbarNavigationScreen(
         navigateToNoteScreen = navigateToNoteScreen,
         navigateToNewLoanAccountScreen = navigateToNewLoanAccountScreen,
         navigateToNewSavingsAccountScreen = navigateToNewSavingsAccountScreen,
+        navigateToNewFixedDepositAccountScreen = navigateToNewFixedDepositAccountScreen,
+
     )
 }
 
@@ -193,6 +196,7 @@ internal fun AuthenticatedNavbarNavigationScreenContent(
     navigateToNoteScreen: (Int, String) -> Unit,
     navigateToNewLoanAccountScreen: (Int) -> Unit,
     navigateToNewSavingsAccountScreen: (Int) -> Unit,
+    navigateToNewFixedDepositAccountScreen:(Int) -> Unit,
     modifier: Modifier = Modifier,
     snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
     onAction: (AuthenticatedNavBarAction) -> Unit,
@@ -437,6 +441,7 @@ internal fun AuthenticatedNavbarNavigationScreenContent(
                     onDocumentClicked = navigateToDocumentScreen,
                     navigateToNewLoanAccount = navigateToNewLoanAccountScreen,
                     navigateToNewSavingsAccount = navigateToNewSavingsAccountScreen,
+                    navigateToNewFixedDepositAccount = navigateToNewFixedDepositAccountScreen,
                 )
             }
         }

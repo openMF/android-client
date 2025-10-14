@@ -16,6 +16,7 @@ import androidx.navigation.navigation
 import com.mifos.feature.about.aboutDestination
 import com.mifos.feature.activate.activateDestination
 import com.mifos.feature.checker.inbox.task.navigation.checkerInboxTaskNavGraph
+import com.mifos.feature.client.NewFixedDepositAccount.navigateToFixedDepositAccountRoute
 import com.mifos.feature.client.navigation.navigateClientDetailsScreen
 import com.mifos.feature.dataTable.navigation.dataTableNavGraph
 import com.mifos.feature.dataTable.navigation.navigateToDataTable
@@ -63,6 +64,7 @@ internal fun NavGraphBuilder.authenticatedGraph(
             navigateToNoteScreen = navController::navigateToNoteScreen,
             navigateToNewLoanAccountScreen = navController::navigateToNewLoanAccountRoute,
             navigateToNewSavingsAccountScreen = navController::navigateToSavingsAccountRoute,
+            navigateToNewFixedDepositAccountScreen = navController::navigateToFixedDepositAccountRoute
         )
 
         checkerInboxTaskNavGraph(navController)

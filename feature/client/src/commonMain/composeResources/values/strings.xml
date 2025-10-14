@@ -486,4 +486,9 @@
     <string name="client_upcoming_charges_no_more_charges_available">No more charges available!</string>
     <string name="client_upcoming_charges_charges_overview">Charges Overview</string>
 
+    <string name="step_details">Details</string>
+    <string name="step_terms">Terms</string>
+    <string name="step_charges">Charges</string>
+    <string name="step_preview">Preview</string>
+
 </resources>

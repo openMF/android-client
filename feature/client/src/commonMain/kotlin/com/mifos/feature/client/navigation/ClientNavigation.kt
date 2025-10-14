@@ -17,6 +17,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import androidx.navigation.navigation
 import com.mifos.core.common.utils.Constants
+import com.mifos.feature.client.NewFixedDepositAccount.FixedAccountDestination
 import com.mifos.feature.client.clientAddress.addAddress.clientAddAddressRoute
 import com.mifos.feature.client.clientAddress.addAddress.navigateToClientAddAddressRoute
 import com.mifos.feature.client.clientAddress.clientAddressNavigation
@@ -93,6 +94,7 @@ fun NavGraphBuilder.clientNavGraph(
     onDocumentClicked: (Int, String) -> Unit,
     navigateToNewLoanAccount: (Int) -> Unit,
     navigateToNewSavingsAccount: (Int) -> Unit,
+    navigateToNewFixedDepositAccount: (Int) -> Unit,
 ) {
     navigation<ClientNavGraph>(
         startDestination = ClientListScreenRoute,
@@ -166,7 +168,6 @@ fun NavGraphBuilder.clientNavGraph(
             navController = navController,
             onNavigateNext = navController::navigateToClientAddressRouteOnStatus,
         )
-
         clientProfileGeneralDestination(
             onNavigateBack = navController::popBackStack,
             navController = navController,
@@ -260,7 +261,7 @@ fun NavGraphBuilder.clientNavGraph(
             onNavigateApplySavingsAccount = navigateToNewSavingsAccount,
             onNavigateApplyShareAccount = { },
             onNavigateApplyRecurringAccount = { },
-            onNavigateApplyFixedAccount = { },
+            onNavigateApplyFixedAccount = { navigateToNewFixedDepositAccount},
             navController = navController,
         )
         clientUpcomingChargesDestination(

@@ -28,6 +28,7 @@ internal fun NavGraphBuilder.authenticatedNavbarGraph(
     navigateToNoteScreen: (Int, String) -> Unit,
     navigateToNewLoanAccountScreen: (Int) -> Unit,
     navigateToNewSavingsAccountScreen: (Int) -> Unit,
+    navigateToNewFixedDepositAccountScreen: (Int) -> Unit,
 ) {
     composable<AuthenticatedNavbar> {
         AuthenticatedNavbarNavigationScreen(
@@ -36,6 +37,7 @@ internal fun NavGraphBuilder.authenticatedNavbarGraph(
             navigateToNoteScreen = navigateToNoteScreen,
             navigateToNewLoanAccountScreen = navigateToNewLoanAccountScreen,
             navigateToNewSavingsAccountScreen = navigateToNewSavingsAccountScreen,
+            navigateToNewFixedDepositAccountScreen = navigateToNewFixedDepositAccountScreen,
         )
     }
 }
