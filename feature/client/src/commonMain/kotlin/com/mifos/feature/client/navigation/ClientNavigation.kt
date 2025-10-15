@@ -17,6 +17,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import androidx.navigation.navArgument
 import com.mifos.core.common.utils.Constants
+import com.mifos.feature.client.NewFixedDepositAccount.fixedAccountDestination
+
 import com.mifos.feature.client.clientAddDocuments.AddDocumentRoute
 import com.mifos.feature.client.clientAddDocuments.clientAddDocumentGraphRoute
 import com.mifos.feature.client.clientAddDocuments.navigateToClientAddDocumentRoute
@@ -93,6 +95,7 @@ import com.mifos.feature.savings.navigation.navigateToAddSavingsAccount
 import com.mifos.feature.savings.navigation.navigateToSavingsAccountSummaryScreen
 import com.mifos.feature.savings.navigation.savingsDestination
 import com.mifos.feature.savings.savingsAccountv2.navigateToSavingsAccountRoute
+import com.mifos.feature.client.NewFixedDepositAccount.navigateToNewFixedDepositAccountRoute
 import com.mifos.room.entities.accounts.savings.SavingAccountDepositTypeEntity
 import com.mifos.room.entities.noncore.DataTableEntity
 import com.mifos.room.entities.survey.SurveyEntity
@@ -189,6 +192,11 @@ fun NavGraphBuilder.clientNavGraph(
             onNavigateBack = navController::popBackStack,
             navController = navController,
             onNavigateNext = navController::navigateToClientAddressRouteOnStatus,
+        )
+        fixedAccountDestination(
+            navController = navController,
+            onNavigateBack = navController::popBackStack,
+            onFinish = navController::popBackStack,
         )
 
         clientDocumentsDestination(
@@ -308,7 +316,7 @@ fun NavGraphBuilder.clientNavGraph(
             onNavigateApplyLoanAccount = navController::navigateToNewLoanAccountRoute,
             onNavigateApplySavingsAccount = navController::navigateToSavingsAccountRoute,
             onNavigateApplyRecurringAccount = { },
-            onNavigateApplyFixedAccount = { },
+            onNavigateApplyFixedAccount = { navController::navigateToNewFixedDepositAccountRoute },
             navController = navController,
         )
         clientUpcomingChargesDestination(
@@ -338,6 +346,7 @@ fun NavGraphBuilder.clientNavGraph(
         )
 
         shareAccountDestination()
+
     }
 }
 
