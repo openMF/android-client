@@ -40,6 +40,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -61,7 +62,6 @@ import com.mifos.core.ui.components.MifosErrorComponent
 import com.mifos.core.ui.components.MifosListingComponentOutline
 import com.mifos.core.ui.components.MifosListingRowItem
 import com.mifos.core.ui.components.MifosProgressIndicator
-import com.mifos.core.ui.components.MifosProgressIndicatorOverlay
 import com.mifos.core.ui.components.MifosStepper
 import com.mifos.core.ui.components.MifosTwoButtonRow
 import com.mifos.core.ui.components.Step
@@ -93,13 +93,13 @@ internal fun NewLoanAccountScreen(
 
     NewLoanAccountDialogs(
         state = state,
-        onAction = { viewModel.trySendAction(it) },
+        onAction = remember(viewModel) { { viewModel.trySendAction(it) } },
     )
 
     NewLoanAccountScaffold(
         modifier = modifier,
         state = state,
-        onAction = { viewModel.trySendAction(it) },
+        onAction = remember(viewModel) { { viewModel.trySendAction(it) } },
         navController = navController,
     )
 }
@@ -131,9 +131,10 @@ private fun NewLoanAccountScaffold(
             )
         },
         Step(stringResource(Res.string.step_schedule)) {
-            SchedulePage {
-                onAction(NewLoanAccountAction.NextStep)
-            }
+            SchedulePage(
+                state = state,
+                onAction = onAction,
+            )
         },
         Step(stringResource(Res.string.step_preview)) {
             PreviewPage(
@@ -148,39 +149,24 @@ private fun NewLoanAccountScaffold(
         onBackPressed = { onAction(NewLoanAccountAction.NavigateBack) },
         modifier = modifier,
     ) { paddingValues ->
-        when (state.screenState) {
-            NewLoanAccountState.ScreenState.Loading -> MifosProgressIndicator()
-            NewLoanAccountState.ScreenState.Success -> {
-                Column(
-                    Modifier.fillMaxSize().padding(paddingValues),
-                ) {
-                    MifosBreadcrumbNavBar(
-                        navController,
-                    )
-                    MifosStepper(
-                        steps = steps,
-                        currentIndex = state.currentStep,
-                        onStepChange = { newIndex ->
-                            onAction(NewLoanAccountAction.OnStepChange(newIndex))
-                        },
-                        modifier = Modifier
-                            .fillMaxWidth(),
-                    )
-                }
-            }
 
-            NewLoanAccountState.ScreenState.NetworkError -> {
-                MifosErrorComponent(
-                    isNetworkConnected = state.networkConnection,
-                    isRetryEnabled = true,
-                    onRetry = {
-                        onAction(NewLoanAccountAction.Retry)
+        if (state.dialogState !is NewLoanAccountState.DialogState.Error) {
+            Column(
+                Modifier.fillMaxSize().padding(paddingValues),
+            ) {
+                MifosBreadcrumbNavBar(
+                    navController,
+                )
+                MifosStepper(
+                    steps = steps,
+                    currentIndex = state.currentStep,
+                    onStepChange = { newIndex ->
+                        onAction(NewLoanAccountAction.OnStepChange(newIndex))
                     },
+                    modifier = Modifier
+                        .fillMaxWidth(),
                 )
             }
-        }
-        if (state.isOverLayLoadingActive) {
-            MifosProgressIndicatorOverlay()
         }
     }
 }
@@ -230,6 +216,10 @@ private fun NewLoanAccountDialogs(
             onAction = onAction,
             isOverDue = true,
         )
+
+        NewLoanAccountState.DialogState.Loading -> {
+            MifosProgressIndicator()
+        }
     }
 }
 

@@ -75,6 +75,7 @@ android {
         }
     }
 
+    @Suppress("UnstableApiUsage")
     testOptions {
         unitTests {
             isIncludeAndroidResources = true

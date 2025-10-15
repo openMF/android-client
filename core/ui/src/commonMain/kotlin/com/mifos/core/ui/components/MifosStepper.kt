@@ -11,6 +11,7 @@ package com.mifos.core.ui.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -73,59 +74,63 @@ fun MifosStepper(
                 .padding(vertical = DesignToken.padding.largeIncreasedExtra)
                 .padding(start = DesignToken.padding.small)
                 .fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
         ) {
             steps.forEachIndexed { index, step ->
-                item {
-                    Row(
-                        verticalAlignment = Alignment.Top,
-                    ) {
-                        Column(
-                            horizontalAlignment = Alignment.CenterHorizontally,
-                            modifier = Modifier.width(DesignToken.sizes.avatarMediumExtra),
+                repeat(2) { it ->
+                    item {
+                        Row(
+                            verticalAlignment = Alignment.Top,
                         ) {
-                            Box(
-                                modifier = Modifier
-                                    .size(DesignToken.sizes.iconLarge)
-                                    .clip(CircleShape)
-                                    .background(
-                                        when {
-                                            index == currentIndex -> AppColors.customWhite
-                                            else -> AppColors.stepperColor
-                                        },
-                                    )
-                                    .clickable(enabled = index < currentIndex) {
-                                        if (index < currentIndex) onStepChange(index)
-                                    },
-                                contentAlignment = Alignment.Center,
-                            ) {
-                                Text(
-                                    text = (index + 1).toString(),
-                                    color = MaterialTheme.colorScheme.primary,
-                                )
-                            }
+                            if (it == 0) {
+                                Column(
+                                    horizontalAlignment = Alignment.CenterHorizontally,
+                                    modifier = Modifier.width(DesignToken.sizes.avatarMediumExtra),
+                                ) {
+                                    Box(
+                                        modifier = Modifier
+                                            .size(DesignToken.sizes.iconLarge)
+                                            .clip(CircleShape)
+                                            .background(
+                                                when {
+                                                    index == currentIndex -> AppColors.customWhite
+                                                    else -> AppColors.stepperColor
+                                                },
+                                            )
+                                            .clickable(enabled = index < currentIndex) {
+                                                if (index < currentIndex) onStepChange(index)
+                                            },
+                                        contentAlignment = Alignment.Center,
+                                    ) {
+                                        Text(
+                                            text = (index + 1).toString(),
+                                            color = MaterialTheme.colorScheme.primary,
+                                        )
+                                    }
 
-                            Spacer(modifier = Modifier.height(DesignToken.padding.small))
-                            BasicText(
-                                text = step.name,
-                                autoSize = TextAutoSize.StepBased(
-                                    minFontSize = 2.sp,
-                                    maxFontSize = 11.sp,
-                                ),
-                                style = MifosTypography.labelSmall.copy(
-                                    color = AppColors.customWhite,
-                                ),
-                            )
-                        }
-                        if (index != steps.lastIndex) {
-                            Box(
-                                modifier = Modifier
-                                    .padding(vertical = DesignToken.padding.large)
-                                    .width(DesignToken.padding.small)
-                                    .height(1.dp)
-                                    .background(AppColors.stepperColor),
-                            )
-                        } else {
-                            Spacer(Modifier.width(DesignToken.padding.small))
+                                    Spacer(modifier = Modifier.height(DesignToken.padding.small))
+                                    BasicText(
+                                        text = step.name,
+                                        autoSize = TextAutoSize.StepBased(
+                                            minFontSize = 2.sp,
+                                            maxFontSize = 11.sp,
+                                        ),
+                                        style = MifosTypography.labelSmall.copy(
+                                            color = AppColors.customWhite,
+                                        ),
+                                    )
+                                }
+                            } else {
+                                if (index != steps.lastIndex) {
+                                    Box(
+                                        modifier = Modifier
+                                            .padding(vertical = DesignToken.padding.large)
+                                            .width(DesignToken.padding.small)
+                                            .height(1.dp)
+                                            .background(AppColors.stepperColor),
+                                    )
+                                }
+                            }
                         }
                     }
                 }

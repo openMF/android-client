@@ -62,6 +62,7 @@ fun AddChargeBottomSheet(
     onChargeSelected: (Int, String) -> Unit,
     onDatePick: (Boolean) -> Unit,
     onDateChange: (Long) -> Unit,
+    amountError: String? = null,
     onAmountChange: (String) -> Unit,
 ) {
     MifosBottomSheet(
@@ -121,6 +122,8 @@ fun AddChargeBottomSheet(
                     onValueChange = onAmountChange,
                     label = stringResource(Res.string.amount),
                     config = MifosTextFieldConfig(
+                        isError = amountError != null,
+                        errorText = amountError,
                         keyboardOptions = KeyboardOptions(
                             keyboardType = KeyboardType.Decimal,
                         ),
@@ -158,7 +161,7 @@ fun AddChargeBottomSheet(
                     secondBtnText = confirmText,
                     onFirstBtnClick = onDismiss,
                     onSecondBtnClick = onConfirm,
-                    isSecondButtonEnabled = chargeAmount.isNotEmpty() && chargeType.isNotEmpty(),
+                    isSecondButtonEnabled = chargeAmount.isNotEmpty() && chargeType.isNotEmpty() && amountError.isNullOrEmpty(),
                 )
             }
         },
@@ -187,6 +190,7 @@ private fun AddChargeBottomSheetPreview() {
             onChargeSelected = { _, _ -> },
             onDatePick = { },
             onDateChange = { },
+            amountError = null,
             onAmountChange = {},
         )
     }
