@@ -520,5 +520,14 @@
     <string name="client_identifier_document_not_found">Document not found</string>
     <string name="client_identifier_btn_update">Update</string>
     <string name="client_update_document_title">Update Document</string>
+    <!-- Screen Title -->
+    <string name="title_new_fixed_deposit_account">New Fixed Deposit Account</string>
+
+    <!-- Step Titles -->
+    <string name="step_details">Details</string>
+    <string name="step_terms">Terms</string>
+    <string name="step_settings">Settings</string>
+    <string name="step_interest">Interest</string>
+    <string name="step_charges">Charges</string>
 
 </resources>

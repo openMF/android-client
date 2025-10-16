@@ -1,5 +1,10 @@
 package com.mifos.feature.client.NewFixedDepositAccount
 
+import androidclient.feature.client.generated.resources.Res
+import androidclient.feature.client.generated.resources.step_charges
+import androidclient.feature.client.generated.resources.step_interest
+import androidclient.feature.client.generated.resources.step_settings
+import androidclient.feature.client.generated.resources.step_terms
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
@@ -10,15 +15,15 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.ui.util.EventsEffect
-import com.mifos.feature.client.NewFixedDepositAccount.NewFixedDepositAccountAction
 import com.mifos.core.ui.components.MifosStepper
 
 import com.mifos.core.ui.components.Step
-import com.mifos.feature.client.newFixedDepositAccount.Pages.TermsPage
-import com.mifos.feature.client.newFixedDepositAccount.Pages.ChargesPage
-import com.mifos.feature.client.newFixedDepositAccount.Pages.DetailsPage
-import com.mifos.feature.client.newFixedDepositAccount.Pages.InterestPage
-import com.mifos.feature.client.newFixedDepositAccount.Pages.SettingPage
+import com.mifos.feature.client.NewFixedDepositAccount.Pages.TermsPage
+import com.mifos.feature.client.NewFixedDepositAccount.Pages.ChargesPage
+import com.mifos.feature.client.NewFixedDepositAccount.Pages.DetailsPage
+import com.mifos.feature.client.NewFixedDepositAccount.Pages.InterestPage
+import com.mifos.feature.client.NewFixedDepositAccount.Pages.SettingPage
+import org.jetbrains.compose.resources.stringResource
 
 @Composable
 internal fun FixedDepositAccountScreen(
@@ -52,36 +57,36 @@ private fun FixeDepositAccountScaffold(
     modifier: Modifier = Modifier
 
 ){
-    val steps = remember {
+    val steps =
         listOf(
-            Step(name = "Details") {
+            Step(stringResource(Res.string.step_charges)) {
                 DetailsPage(
                     onNext = { onAction(NewFixedDepositAccountAction.NextStep) },
                 )
             },
-            Step(name = "Terms") {
+            Step(name = stringResource(Res.string.step_terms)) {
                 TermsPage(
                     onNext = { onAction(NewFixedDepositAccountAction.NextStep) },
                 )
             },
 
-            Step(name = "Settings") {
+            Step(name = stringResource(Res.string.step_settings)) {
                 SettingPage(
                     onNext = { onAction(NewFixedDepositAccountAction.NextStep) },
                 )
             },
-            Step(name = "Interest") {
+            Step(stringResource(Res.string.step_interest)) {
                 InterestPage(
                     onNext = { onAction(NewFixedDepositAccountAction.NextStep) },
                 )
             },
-            Step(name = "Charges") {
+            Step(stringResource(Res.string.step_charges)) {
                 ChargesPage(
                     onNext = { onAction(NewFixedDepositAccountAction.NextStep) },
                 )
             },
         )
-    }
+
 
     MifosScaffold(
         title = "New Fixed Deposit Account",
