@@ -17,6 +17,9 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import androidx.navigation.navArgument
 import com.mifos.core.common.utils.Constants
+import com.mifos.feature.client.NewFixedDepositAccount.FixedAccountdestination
+import com.mifos.feature.client.NewFixedDepositAccount.FixedDepositRoute
+import com.mifos.feature.client.NewFixedDepositAccount.navigateToNewFixedDepositRoute
 import com.mifos.feature.client.clientAddDocuments.AddDocumentRoute
 import com.mifos.feature.client.clientAddDocuments.clientAddDocumentGraphRoute
 import com.mifos.feature.client.clientAddDocuments.navigateToClientAddDocumentRoute
@@ -308,7 +311,7 @@ fun NavGraphBuilder.clientNavGraph(
             onNavigateApplyLoanAccount = navController::navigateToNewLoanAccountRoute,
             onNavigateApplySavingsAccount = navController::navigateToSavingsAccountRoute,
             onNavigateApplyRecurringAccount = { },
-            onNavigateApplyFixedAccount = { },
+            onNavigateApplyFixedAccount = navController::navigateToNewFixedDepositRoute ,
             navController = navController,
         )
         clientUpcomingChargesDestination(
@@ -338,6 +341,7 @@ fun NavGraphBuilder.clientNavGraph(
         )
 
         shareAccountDestination()
+        FixedAccountdestination()
     }
 }
 
