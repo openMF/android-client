@@ -5,6 +5,7 @@ import androidclient.feature.client.generated.resources.step_charges
 import androidclient.feature.client.generated.resources.step_interest
 import androidclient.feature.client.generated.resources.step_settings
 import androidclient.feature.client.generated.resources.step_terms
+import androidclient.feature.client.generated.resources.title_new_fixed_deposit_account
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
@@ -89,7 +90,7 @@ private fun FixeDepositAccountScaffold(
 
 
     MifosScaffold(
-        title = "New Fixed Deposit Account",
+        title = stringResource(Res.string.title_new_fixed_deposit_account),
         onBackPressed = { onAction(NewFixedDepositAccountAction.NavigateBack) },
         modifier = modifier
 
@@ -103,7 +104,7 @@ private fun FixeDepositAccountScaffold(
                 },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(paddingValues),
+                    
             )
         }
     }
