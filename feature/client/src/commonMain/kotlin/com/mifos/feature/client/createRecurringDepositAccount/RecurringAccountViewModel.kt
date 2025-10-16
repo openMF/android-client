@@ -19,7 +19,7 @@ class RecurringAccountViewModel :
         when (action) {
             RecurringAccountAction.NextStep -> {
                 mutableStateFlow.update { state ->
-                    val maxIndex = 4 // total steps - 1 (Details, Terms, Settings, Interest, Charges)
+                    val maxIndex = 4
                     state.copy(currentStep = (state.currentStep + 1).coerceAtMost(maxIndex))
                 }
             }
