@@ -197,6 +197,8 @@ fun NavGraphBuilder.clientNavGraph(
             navController = navController,
             onNavigateBack = navController::popBackStack,
             onFinish = navController::popBackStack,
+
+
         )
 
         clientDocumentsDestination(
@@ -316,7 +318,7 @@ fun NavGraphBuilder.clientNavGraph(
             onNavigateApplyLoanAccount = navController::navigateToNewLoanAccountRoute,
             onNavigateApplySavingsAccount = navController::navigateToSavingsAccountRoute,
             onNavigateApplyRecurringAccount = { },
-            onNavigateApplyFixedAccount = { navController::navigateToNewFixedDepositAccountRoute },
+            onNavigateApplyFixedAccount = navController::navigateToNewFixedDepositAccountRoute ,
             navController = navController,
         )
         clientUpcomingChargesDestination(

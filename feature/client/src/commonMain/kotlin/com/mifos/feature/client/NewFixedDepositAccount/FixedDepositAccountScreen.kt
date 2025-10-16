@@ -5,8 +5,7 @@ package com.mifos.feature.client.NewFixedDepositAccount
 import androidclient.feature.client.generated.resources.Res
 import androidclient.feature.client.generated.resources.client_signature_delete
 import androidclient.feature.client.generated.resources.feature_client
-import androidclient.feature.client.generated.resources.feature_client_Image_Upload_Failed
-import androidclient.feature.client.generated.resources.feature_client_account_number
+
 import androidclient.feature.client.generated.resources.feature_client_accounts
 import androidclient.feature.client.generated.resources.feature_client_id
 import androidclient.feature.client.generated.resources.from_camera
@@ -29,7 +28,7 @@ import com.mifos.core.ui.components.MifosProgressIndicatorOverlay
 import com.mifos.core.ui.components.MifosStepper
 import com.mifos.core.ui.components.Step
 import com.mifos.core.ui.util.EventsEffect
-import com.mifos.feature.client.NewFixedDepositAccount.FixedDepositAccountAction.*
+
 import com.mifos.feature.client.NewFixedDepositAccount.Pages.ChargesPage
 import com.mifos.feature.client.NewFixedDepositAccount.Pages.DetailPage
 import com.mifos.feature.client.NewFixedDepositAccount.Pages.InterestChartsPage

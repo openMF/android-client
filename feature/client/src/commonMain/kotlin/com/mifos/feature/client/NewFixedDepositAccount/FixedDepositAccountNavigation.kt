@@ -7,9 +7,9 @@ import androidx.navigation.compose.composable
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class  FixedDepositAccountRoute(
-   val  clientId : Int = -1,
-)
+data class FixedDepositAccountRoute(
+        val clientId: Int = -1,
+        )
 
 fun NavGraphBuilder.fixedAccountDestination(
     navController: NavController,
@@ -22,12 +22,12 @@ fun NavGraphBuilder.fixedAccountDestination(
             onNavigateBack = onNavigateBack,
             onFinish = onFinish,
             navController = navController,
-        )
+            )
     }
 }
 fun NavController.navigateToNewFixedDepositAccountRoute(clientId: Int){
     this.navigate(
-        FixedDepositAccountRoute(clientId = clientId)
+        FixedDepositAccountRoute(clientId=clientId)
 
         )
 }
