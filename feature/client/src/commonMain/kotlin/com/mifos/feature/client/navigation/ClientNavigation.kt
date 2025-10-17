@@ -69,12 +69,16 @@ import com.mifos.feature.client.clientUpdateDefaultAccount.navigateToUpdateDefau
 import com.mifos.feature.client.clientUpdateDefaultAccount.updateDefaultAccountDestination
 import com.mifos.feature.client.clientsList.ClientListScreen
 import com.mifos.feature.client.createNewClient.CreateNewClientScreen
+import com.mifos.feature.client.createRecurringDepositAccount.navigateToRecurringAccountRoute
+import com.mifos.feature.client.createRecurringDepositAccount.recurringAccountDestination
 import com.mifos.feature.client.createShareAccount.navigateToShareAccountRoute
 import com.mifos.feature.client.createShareAccount.shareAccountDestination
 import com.mifos.feature.client.documentPreviewScreen.createDocumentPreviewRoute
 import com.mifos.feature.client.documentPreviewScreen.navigateToDocumentPreviewRoute
 import com.mifos.feature.client.fixedDepositAccount.clientFixedDepositAccountDestination
 import com.mifos.feature.client.fixedDepositAccount.navigateToFixedDepositAccountRoute
+import com.mifos.feature.client.newFixedDepositAccount.fixedAccountdestination
+import com.mifos.feature.client.newFixedDepositAccount.navigateToNewFixedDepositRoute
 import com.mifos.feature.client.recurringDepositAccount.clientRecurringDepositAccountDestination
 import com.mifos.feature.client.recurringDepositAccount.navigateToRecurringDepositAccountRoute
 import com.mifos.feature.client.savingsAccounts.navigateToClientSavingsAccountsRoute
@@ -307,8 +311,8 @@ fun NavGraphBuilder.clientNavGraph(
             onNavigateApplyShareAccount = navController::navigateToShareAccountRoute,
             onNavigateApplyLoanAccount = navController::navigateToNewLoanAccountRoute,
             onNavigateApplySavingsAccount = navController::navigateToSavingsAccountRoute,
-            onNavigateApplyRecurringAccount = { },
-            onNavigateApplyFixedAccount = { },
+            onNavigateApplyRecurringAccount = {navController::navigateToRecurringAccountRoute},
+            onNavigateApplyFixedAccount = {navController::navigateToNewFixedDepositRoute},
             navController = navController,
         )
         clientUpcomingChargesDestination(
@@ -338,6 +342,8 @@ fun NavGraphBuilder.clientNavGraph(
         )
 
         shareAccountDestination()
+        recurringAccountDestination()
+        fixedAccountdestination()
     }
 }
 
