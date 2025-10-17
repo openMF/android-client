@@ -9,13 +9,13 @@
  */
 package com.mifos.feature.recurringDeposit.newRecurringDepositAccount
 
-import androidclient.feature.client.generated.resources.Res
-import androidclient.feature.client.generated.resources.create_recurring_deposit_account
-import androidclient.feature.client.generated.resources.step_charges
-import androidclient.feature.client.generated.resources.step_details
-import androidclient.feature.client.generated.resources.step_interest
-import androidclient.feature.client.generated.resources.step_settings
-import androidclient.feature.client.generated.resources.step_terms
+import androidclient.feature.recurringdeposit.generated.resources.Res
+import androidclient.feature.recurringdeposit.generated.resources.create_recurring_deposit_account
+import androidclient.feature.recurringdeposit.generated.resources.step_charges
+import androidclient.feature.recurringdeposit.generated.resources.step_details
+import androidclient.feature.recurringdeposit.generated.resources.step_interest
+import androidclient.feature.recurringdeposit.generated.resources.step_settings
+import androidclient.feature.recurringdeposit.generated.resources.step_terms
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable

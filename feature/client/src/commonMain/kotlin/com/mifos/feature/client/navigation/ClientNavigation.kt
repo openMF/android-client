@@ -69,8 +69,6 @@ import com.mifos.feature.client.clientUpdateDefaultAccount.navigateToUpdateDefau
 import com.mifos.feature.client.clientUpdateDefaultAccount.updateDefaultAccountDestination
 import com.mifos.feature.client.clientsList.ClientListScreen
 import com.mifos.feature.client.createNewClient.CreateNewClientScreen
-import com.mifos.feature.client.createRecurringDepositAccount.navigateToRecurringAccountRoute
-import com.mifos.feature.client.createRecurringDepositAccount.recurringAccountDestination
 import com.mifos.feature.client.createShareAccount.navigateToShareAccountRoute
 import com.mifos.feature.client.createShareAccount.shareAccountDestination
 import com.mifos.feature.client.documentPreviewScreen.createDocumentPreviewRoute
@@ -91,6 +89,8 @@ import com.mifos.feature.loan.navigation.loanDestination
 import com.mifos.feature.loan.newLoanAccount.navigateToNewLoanAccountRoute
 import com.mifos.feature.note.navigation.noteDestination
 import com.mifos.feature.note.notes.navigateToNoteScreen
+import com.mifos.feature.recurringDeposit.newRecurringDepositAccount.navigateToRecurringAccountRoute
+import com.mifos.feature.recurringDeposit.newRecurringDepositAccount.recurringAccountDestination
 import com.mifos.feature.savings.navigation.navigateToAddSavingsAccount
 import com.mifos.feature.savings.navigation.navigateToSavingsAccountSummaryScreen
 import com.mifos.feature.savings.navigation.savingsDestination

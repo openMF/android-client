@@ -12,8 +12,11 @@ package com.mifos.feature.recurringDeposit.newRecurringDepositAccount
 import com.mifos.core.ui.util.BaseViewModel
 import kotlinx.coroutines.flow.update
 
-class RecurringAccountViewModel :
-    BaseViewModel<RecurringAccountState, RecurringAccountEvent, RecurringAccountAction>(RecurringAccountState()) {
+class RecurringAccountViewModel : BaseViewModel<
+        RecurringAccountState,
+        RecurringAccountEvent,
+        RecurringAccountAction,
+        >(RecurringAccountState()) {
 
     override fun handleAction(action: RecurringAccountAction) {
         when (action) {
@@ -23,12 +26,15 @@ class RecurringAccountViewModel :
                     state.copy(currentStep = (state.currentStep + 1).coerceAtMost(maxIndex))
                 }
             }
+
             is RecurringAccountAction.OnStepChange -> {
                 mutableStateFlow.update { it.copy(currentStep = action.index) }
             }
+
             RecurringAccountAction.NavigateBack -> {
                 sendEvent(RecurringAccountEvent.NavigateBack)
             }
+
             RecurringAccountAction.Finish -> {
                 sendEvent(RecurringAccountEvent.Finish)
             }
@@ -41,10 +47,9 @@ data class RecurringAccountState(
     val dialogState: Any? = null,
     val currencyIndex: Int = -1,
     val currencyError: String? = null,
-    val recurringDepositAccountSettings: RecurringAccountSettingsState
-    = RecurringAccountSettingsState(),
+    val recurringDepositAccountSettings: RecurringAccountSettingsState = RecurringAccountSettingsState(),
 
-)
+    )
 
 data class RecurringAccountSettingsState(
     val isMandatory: Boolean = false,
@@ -55,27 +60,29 @@ data class RecurringAccountSettingsState(
     val depositPeriod: DepositPeriod = DepositPeriod(),
     val minimumDepositTerm: MinimumDepositTerm = MinimumDepositTerm(),
     val preMatureClosure: PreMatureClosure = PreMatureClosure(),
-){
+) {
     data class LockInPeriod(
         val frequency: String = "",
         val frequencyTypeIndex: Int = -1,
         val freqTypeError: String? = null,
     )
+
     data class RecurringDepositDetails(
-        val depositAmount: String ="",
+        val depositAmount: String = "",
     )
+
     data class DepositPeriod(
         val period: String = "",
         val periodType: Int = -1,
         val periodTypeError: String? = null,
-        val depositFrequencySameAsGroupCenterMeeting: Boolean =  false,
+        val depositFrequencySameAsGroupCenterMeeting: Boolean = false,
     )
 
     data class MinimumDepositTerm(
         val frequency: String = "",
         val frequencyTypeIndex: Int = -1,
         val freqTypeError: String? = null,
-        val frequencyAfterInMultiplesOf: String ="",
+        val frequencyAfterInMultiplesOf: String = "",
         val frequencyTypeIndexAfterInMultiplesOf: Int = -1,
         val freqTypeAfterInMultiplesOfError: String? = null,
     )
