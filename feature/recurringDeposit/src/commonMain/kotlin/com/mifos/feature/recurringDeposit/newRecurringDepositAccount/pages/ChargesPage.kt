@@ -7,7 +7,7 @@
  *
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
-package com.mifos.feature.client.createRecurringDepositAccount.pages
+package com.mifos.feature.recurringDeposit.newRecurringDepositAccount.pages
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -20,9 +20,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun InterestPage(onNext: () -> Unit) {
+fun ChargesPage(onNext: () -> Unit) {
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
-        Text("Interest Page")
+        Text("Charges Page")
         Spacer(Modifier.height(8.dp))
         Button(onClick = onNext) {
             Text("Next Button")

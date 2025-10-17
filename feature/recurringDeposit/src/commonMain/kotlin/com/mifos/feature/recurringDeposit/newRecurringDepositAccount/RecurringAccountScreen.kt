@@ -7,7 +7,7 @@
  *
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
-package com.mifos.feature.client.createRecurringDepositAccount
+package com.mifos.feature.recurringDeposit.newRecurringDepositAccount
 
 import androidclient.feature.client.generated.resources.Res
 import androidclient.feature.client.generated.resources.create_recurring_deposit_account
@@ -27,11 +27,11 @@ import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.ui.components.MifosStepper
 import com.mifos.core.ui.components.Step
 import com.mifos.core.ui.util.EventsEffect
-import com.mifos.feature.client.createRecurringDepositAccount.pages.ChargesPage
-import com.mifos.feature.client.createRecurringDepositAccount.pages.DetailsPage
-import com.mifos.feature.client.createRecurringDepositAccount.pages.InterestPage
-import com.mifos.feature.client.createRecurringDepositAccount.pages.SettingPage
-import com.mifos.feature.client.createRecurringDepositAccount.pages.TermsPage
+import com.mifos.feature.recurringDeposit.newRecurringDepositAccount.pages.ChargesPage
+import com.mifos.feature.recurringDeposit.newRecurringDepositAccount.pages.DetailsPage
+import com.mifos.feature.recurringDeposit.newRecurringDepositAccount.pages.InterestPage
+import com.mifos.feature.recurringDeposit.newRecurringDepositAccount.pages.SettingPage
+import com.mifos.feature.recurringDeposit.newRecurringDepositAccount.pages.TermsPage
 import org.jetbrains.compose.resources.stringResource
 
 @Composable

@@ -7,7 +7,7 @@
  *
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
-package com.mifos.feature.client.createRecurringDepositAccount
+package com.mifos.feature.recurringDeposit.newRecurringDepositAccount
 
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
