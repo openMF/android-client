@@ -1,4 +1,4 @@
-package com.mifos.feature.client.NewFixedDepositAccount
+package com.mifos.feature.client.newFixedDepositAccount
 
 import com.mifos.core.ui.util.BaseViewModel
 import kotlinx.coroutines.flow.update

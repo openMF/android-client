@@ -1,4 +1,4 @@
-package com.mifos.feature.client.NewFixedDepositAccount
+package com.mifos.feature.client.newFixedDepositAccount
 
 import androidclient.feature.client.generated.resources.Res
 import androidclient.feature.client.generated.resources.step_charges
@@ -7,10 +7,8 @@ import androidclient.feature.client.generated.resources.step_settings
 import androidclient.feature.client.generated.resources.step_terms
 import androidclient.feature.client.generated.resources.title_new_fixed_deposit_account
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -19,11 +17,11 @@ import com.mifos.core.ui.util.EventsEffect
 import com.mifos.core.ui.components.MifosStepper
 
 import com.mifos.core.ui.components.Step
-import com.mifos.feature.client.NewFixedDepositAccount.Pages.TermsPage
-import com.mifos.feature.client.NewFixedDepositAccount.Pages.ChargesPage
-import com.mifos.feature.client.NewFixedDepositAccount.Pages.DetailsPage
-import com.mifos.feature.client.NewFixedDepositAccount.Pages.InterestPage
-import com.mifos.feature.client.NewFixedDepositAccount.Pages.SettingPage
+import com.mifos.feature.client.newFixedDepositAccount.pages.TermsPage
+import com.mifos.feature.client.newFixedDepositAccount.pages.ChargesPage
+import com.mifos.feature.client.newFixedDepositAccount.pages.DetailsPage
+import com.mifos.feature.client.newFixedDepositAccount.pages.InterestPage
+import com.mifos.feature.client.newFixedDepositAccount.pages.SettingPage
 import org.jetbrains.compose.resources.stringResource
 
 @Composable

@@ -1,4 +1,4 @@
-package com.mifos.feature.client.NewFixedDepositAccount
+package com.mifos.feature.client.newFixedDepositAccount
 
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
@@ -9,7 +9,7 @@ import kotlinx.serialization.Serializable
 @Serializable
  data  object FixedDepositRoute
 
-fun NavGraphBuilder.FixedAccountdestination(){
+fun NavGraphBuilder.fixedAccountdestination(){
     composable <FixedDepositRoute> {
         FixedDepositAccountScreen(
             onNavigateBack = {},

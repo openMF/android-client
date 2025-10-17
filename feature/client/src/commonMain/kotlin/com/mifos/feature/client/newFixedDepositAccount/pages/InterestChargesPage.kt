@@ -1,7 +1,8 @@
-package com.mifos.feature.client.NewFixedDepositAccount.Pages
+package com.mifos.feature.client.newFixedDepositAccount.pages
+
 
 import androidclient.feature.client.generated.resources.Res
-import androidclient.feature.client.generated.resources.step_settings
+import androidclient.feature.client.generated.resources.step_interest
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
@@ -14,9 +15,9 @@ import androidx.compose.ui.unit.dp
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
-fun SettingPage(onNext: () -> Unit) {
+fun InterestPage(onNext: () -> Unit) {
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
-        Text(stringResource(Res.string.step_settings))
+        Text(stringResource(Res.string.step_interest))
         Spacer(Modifier.height(8.dp))
         Button(onClick = onNext) {
             Text("Next Button")
