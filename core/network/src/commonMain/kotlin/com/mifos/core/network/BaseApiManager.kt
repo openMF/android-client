@@ -55,6 +55,7 @@ import com.mifos.core.network.services.createGroupService
 import com.mifos.core.network.services.createLoanService
 import com.mifos.core.network.services.createNoteService
 import com.mifos.core.network.services.createOfficeService
+import com.mifos.core.network.services.createRecurringAccountService
 import com.mifos.core.network.services.createRunReportsService
 import com.mifos.core.network.services.createSavingsAccountService
 import com.mifos.core.network.services.createSearchService
