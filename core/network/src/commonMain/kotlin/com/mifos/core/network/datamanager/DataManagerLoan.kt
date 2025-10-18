@@ -15,7 +15,6 @@ import com.mifos.core.network.BaseApiManager
 import com.mifos.core.network.GenericResponse
 import com.mifos.core.network.model.LoansPayload
 import com.mifos.room.entities.PaymentTypeOptionEntity
-import com.mifos.room.entities.accounts.loans.Loan
 import com.mifos.room.entities.accounts.loans.LoanRepaymentRequestEntity
 import com.mifos.room.entities.accounts.loans.LoanRepaymentResponseEntity
 import com.mifos.room.entities.accounts.loans.LoanWithAssociationsEntity
@@ -23,6 +22,7 @@ import com.mifos.room.entities.templates.loans.LoanRepaymentTemplateEntity
 import com.mifos.room.entities.templates.loans.LoanTemplate
 import com.mifos.room.entities.templates.loans.LoanTransactionTemplate
 import com.mifos.room.helper.LoanDaoHelper
+import io.ktor.client.statement.HttpResponse
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
@@ -90,7 +90,7 @@ class DataManagerLoan(
         return mBaseApiManager.loanService.getLoansAccountTemplate(clientId, productId)
     }
 
-    fun createLoansAccount(loansPayload: LoansPayload?): Flow<Loan> {
+    fun createLoansAccount(loansPayload: LoansPayload?): Flow<HttpResponse> {
         return mBaseApiManager.loanService.createLoansAccount(loansPayload)
     }
 

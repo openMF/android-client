@@ -23,7 +23,7 @@
 
     <string name="feature_loan_external_id">External ID</string>
     <string name="feature_loan_principal">Principal</string>
-    <string name="feature_loan_number_of_repayments">Number of Repayments</string>
+    <string name="feature_loan_number_of_repayments">Number of Repayments*</string>
     <string name="feature_loan_nominal">Nominal</string>
     <string name="feature_loan_repaid_every">Repaid Every</string>
     <string name="feature_loan_loan_terms">Loan Terms</string>
@@ -32,7 +32,7 @@
     <string name="feature_loan_per_month">Per month</string>
     <string name="feature_loan_term">Term</string>
     <string name="feature_loan_amortization">Amortization</string>
-    <string name="feature_loan_interest_calculation_period">Interest Calculation Period</string>
+    <string name="feature_loan_interest_calculation_period">Interest Calculation Period*</string>
     <string name="feature_loan_repayment_strategy">Repayment Strategy</string>
     <string name="feature_loan_interest_type_method">Interest Type Method</string>
     <string name="feature_loan_calculate_interest_for_exact_days_in">Calculate Interest for exact days in</string>
@@ -143,8 +143,8 @@
     <string name="loan_officer">Loan Officer</string>
     <string name="loan_purpose">Loan Purpose</string>
     <string name="fund">Fund</string>
-    <string name="submission_date">Submission Date</string>
-    <string name="expected_disbursement">Expected Disbursement</string>
+    <string name="submission_date">Submission Date*</string>
+    <string name="expected_disbursement">Expected Disbursement*</string>
     <string name="savings_linkage">Savings Linkage</string>
     <string name="link_savings">Link Savings</string>
     <string name="create_standing_instructions">Create Standing Instructions at disbursement</string>
@@ -178,22 +178,23 @@
     <string name="interest_calculations">Interest Calculations</string>
     <string name="moratorium">Moratorium?</string>
     <string name="collateral_data">Collateral Data</string>
-    <string name="principal">Principal</string>
+    <string name="principal">Principal*</string>
     <string name="loan_term">Loan Term</string>
-    <string name="term_frequency">Term Frequency</string>
-    <string name="number_of_repayments">Number of Repayments</string>
+    <string name="term_frequency">Term Frequency*</string>
+    <string name="number_of_repayments">Number of Repayments*</string>
     <string name="first_repayment_date">First Repayment Date</string>
     <string name="interest_charged_from">Interest Charged From</string>
-    <string name="repaid_every_label">Repaid Every</string>
-    <string name="frequency">Frequency</string>
+    <string name="repaid_every_label">Repaid Every*</string>
+    <string name="repayment_frequency">Frequency*</string>
+    <string name="interest_frequency">Frequency</string>
     <string name="select_on">Select On</string>
     <string name="select_day">Select Day</string>
-    <string name="nominal_interest_rate_percent">Nominal interest rate (in %)</string>
+    <string name="nominal_interest_rate_percent">Nominal interest rate (in %)*</string>
     <string name="interest_method">Interest Method</string>
-    <string name="amortization">Amortization</string>
+    <string name="amortization">Amortization*</string>
     <string name="is_equal_amortization">Is Equal Amortization</string>
     <string name="loan_schedule_type">Loan Schedule Type</string>
-    <string name="repayment_strategy">Repayment Strategy</string>
+    <string name="repayment_strategy">Repayment Strategy*</string>
     <string name="balloon_repayment_amount">Balloon Repayment Amount</string>
     <string name="interest_calculation_period">Interest Calculation Period</string>
     <string name="calculate_interest_partial">Calculate interest for exact days in partial period</string>
@@ -272,6 +273,9 @@
     <string name="loan_new_loan_charges">Charges</string>
     <string name="loan_new_loan_view">View</string>
     <string name="loan_new_loan_active_charges">Active Charges</string>
+
+    <!-- Handle Error-->
+    <string name="field_empty">This field cannot be empty</string>
 
 
 </resources>

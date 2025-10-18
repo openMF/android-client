@@ -12,8 +12,8 @@ package com.mifos.core.data.repository
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.model.objects.organisations.LoanProducts
 import com.mifos.core.network.model.LoansPayload
-import com.mifos.room.entities.accounts.loans.Loan
 import com.mifos.room.entities.templates.loans.LoanTemplate
+import io.ktor.client.statement.HttpResponse
 import kotlinx.coroutines.flow.Flow
 
 /**
@@ -25,5 +25,5 @@ interface LoanAccountRepository {
 
     fun getLoansAccountTemplate(clientId: Int, productId: Int): Flow<DataState<LoanTemplate>>
 
-    fun createLoansAccount(loansPayload: LoansPayload): Flow<DataState<Loan>>
+    fun createLoansAccount(loansPayload: LoansPayload): Flow<DataState<HttpResponse>>
 }

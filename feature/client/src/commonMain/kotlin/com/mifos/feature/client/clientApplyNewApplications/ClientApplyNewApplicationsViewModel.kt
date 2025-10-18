@@ -17,27 +17,39 @@ class ClientApplyNewApplicationsViewModel(
     val savedStateHandle: SavedStateHandle,
 ) : BaseViewModel<ClientApplyNewApplicationsState, ClientApplyNewApplicationsEvent, ClientApplyNewApplicationsAction>(
     initialState = run {
-        ClientApplyNewApplicationsState(savedStateHandle.toRoute<ClientApplyNewApplicationRoute>().clientId)
+        val route = savedStateHandle.toRoute<ClientApplyNewApplicationRoute>()
+        ClientApplyNewApplicationsState(
+            clientId = route.clientId,
+            status = route.status,
+        )
     },
 ) {
     override fun handleAction(action: ClientApplyNewApplicationsAction) {
         when (action) {
-            ClientApplyNewApplicationsAction.NavigateBack -> sendEvent(ClientApplyNewApplicationsEvent.NavigateBack)
-            is ClientApplyNewApplicationsAction.OnActionClick -> sendEvent(ClientApplyNewApplicationsEvent.OnActionClick(action.action))
+            ClientApplyNewApplicationsAction.NavigateBack -> sendEvent(
+                ClientApplyNewApplicationsEvent.NavigateBack,
+            )
+
+            is ClientApplyNewApplicationsAction.OnActionClick -> sendEvent(
+                ClientApplyNewApplicationsEvent.OnActionClick(action.action),
+            )
         }
     }
 }
 
 data class ClientApplyNewApplicationsState(
     val clientId: Int,
+    val status: String,
 )
 
 sealed interface ClientApplyNewApplicationsEvent {
     data object NavigateBack : ClientApplyNewApplicationsEvent
-    data class OnActionClick(val action: ClientApplyNewApplicationsItem) : ClientApplyNewApplicationsEvent
+    data class OnActionClick(val action: ClientApplyNewApplicationsItem) :
+        ClientApplyNewApplicationsEvent
 }
 
 sealed interface ClientApplyNewApplicationsAction {
     data object NavigateBack : ClientApplyNewApplicationsAction
-    data class OnActionClick(val action: ClientApplyNewApplicationsItem) : ClientApplyNewApplicationsAction
+    data class OnActionClick(val action: ClientApplyNewApplicationsItem) :
+        ClientApplyNewApplicationsAction
 }

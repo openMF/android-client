@@ -11,10 +11,9 @@ package com.mifos.core.ui.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -66,22 +65,23 @@ fun MifosStepper(
             ),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        LazyRow(
-            state = listState,
+        Box(
             modifier = Modifier
                 .clip(shape = DesignToken.shapes.medium)
                 .background(MaterialTheme.colorScheme.primary)
-                .padding(vertical = DesignToken.padding.largeIncreasedExtra)
-                .padding(start = DesignToken.padding.small)
+                .padding(
+                    vertical = DesignToken.padding.largeIncreasedExtra,
+                )
                 .fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
+            contentAlignment = Alignment.Center,
         ) {
-            steps.forEachIndexed { index, step ->
-                repeat(2) { it ->
-                    item {
-                        Row(
-                            verticalAlignment = Alignment.Top,
-                        ) {
+            LazyRow(
+                state = listState,
+                contentPadding = PaddingValues(horizontal = DesignToken.padding.small),
+            ) {
+                steps.forEachIndexed { index, step ->
+                    repeat(2) { it ->
+                        item {
                             if (it == 0) {
                                 Column(
                                     horizontalAlignment = Alignment.CenterHorizontally,
@@ -107,7 +107,6 @@ fun MifosStepper(
                                             color = MaterialTheme.colorScheme.primary,
                                         )
                                     }
-
                                     Spacer(modifier = Modifier.height(DesignToken.padding.small))
                                     BasicText(
                                         text = step.name,
@@ -120,16 +119,14 @@ fun MifosStepper(
                                         ),
                                     )
                                 }
-                            } else {
-                                if (index != steps.lastIndex) {
-                                    Box(
-                                        modifier = Modifier
-                                            .padding(vertical = DesignToken.padding.large)
-                                            .width(DesignToken.padding.small)
-                                            .height(1.dp)
-                                            .background(AppColors.stepperColor),
-                                    )
-                                }
+                            } else if (index != steps.lastIndex) {
+                                Box(
+                                    modifier = Modifier
+                                        .padding(vertical = DesignToken.padding.large)
+                                        .width(DesignToken.padding.small)
+                                        .height(1.dp)
+                                        .background(AppColors.stepperColor),
+                                )
                             }
                         }
                     }
@@ -154,7 +151,7 @@ private fun MifosStepperDemo() {
 
     MifosStepper(
         steps = steps,
-        currentIndex = 2,
+        currentIndex = 0,
         onStepChange = { },
         modifier = Modifier
             .fillMaxWidth(),

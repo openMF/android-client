@@ -64,7 +64,6 @@ import com.mifos.core.common.utils.CurrencyFormatter
 import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.designsystem.theme.MifosTypography
 import com.mifos.core.ui.components.MifosDefaultListingComponentFromStringResources
-import com.mifos.core.ui.components.MifosProgressIndicatorOverlay
 import com.mifos.core.ui.components.MifosRowWithTextAndButton
 import com.mifos.core.ui.components.MifosTwoButtonRow
 import com.mifos.feature.loan.newLoanAccount.NewLoanAccountAction
@@ -73,21 +72,6 @@ import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun PreviewPage(
-    state: NewLoanAccountState,
-    onAction: (NewLoanAccountAction) -> Unit,
-) {
-    if (state.isLoading) {
-        MifosProgressIndicatorOverlay()
-    } else {
-        PreviewPageContent(
-            state,
-            onAction = onAction,
-        )
-    }
-}
-
-@Composable
-fun PreviewPageContent(
     state: NewLoanAccountState,
     onAction: (NewLoanAccountAction) -> Unit,
 ) {
@@ -131,7 +115,7 @@ fun PreviewPageContent(
             )
             TermsCard(
                 principal = CurrencyFormatter.format(
-                    balance = state.principalAmount,
+                    balance = state.principalAmount.toDouble(),
                     currencyCode = state.loanTemplate?.currency?.code,
                     maximumFractionDigits = 2,
                 ),
@@ -210,7 +194,7 @@ fun PreviewPageContent(
             modifier = Modifier.padding(top = DesignToken.padding.small),
             firstBtnText = stringResource(Res.string.back),
             secondBtnText = stringResource(Res.string.feature_loan_charge_submit),
-            onFirstBtnClick = { onAction(NewLoanAccountAction.GotoPreviousStep) },
+            onFirstBtnClick = { onAction(NewLoanAccountAction.PreviousStep) },
             onSecondBtnClick = { onAction(NewLoanAccountAction.SubmitLoanApplication) },
         )
     }
