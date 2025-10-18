@@ -13,10 +13,10 @@ import com.mifos.core.ui.util.BaseViewModel
 import kotlinx.coroutines.flow.update
 
 class RecurringAccountViewModel : BaseViewModel<
-        RecurringAccountState,
-        RecurringAccountEvent,
-        RecurringAccountAction,
-        >(RecurringAccountState()) {
+    RecurringAccountState,
+    RecurringAccountEvent,
+    RecurringAccountAction,
+    >(RecurringAccountState()) {
 
     override fun handleAction(action: RecurringAccountAction) {
         when (action) {
@@ -49,7 +49,7 @@ data class RecurringAccountState(
     val currencyError: String? = null,
     val recurringDepositAccountSettings: RecurringAccountSettingsState = RecurringAccountSettingsState(),
 
-    )
+)
 
 data class RecurringAccountSettingsState(
     val isMandatory: Boolean = false,

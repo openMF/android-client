@@ -1,3 +1,12 @@
+/*
+ * Copyright 2025 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ */
 package com.mifos.room.entities.accounts.recurring
 
 import com.mifos.room.entities.accounts.recurring.deposit.DepositPeriodFrequency
@@ -10,7 +19,6 @@ import com.mifos.room.entities.accounts.recurring.interest.InterestCalculationTy
 import com.mifos.room.entities.accounts.recurring.interest.InterestCompoundingPeriodType
 import com.mifos.room.entities.accounts.recurring.interest.InterestPostingPeriodType
 import kotlinx.serialization.Serializable
-
 
 @Serializable
 data class RecurringDeposit(

@@ -1,12 +1,24 @@
+/*
+ * Copyright 2025 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ */
 package com.mifos.room.entities.templates.recurringDeposit
 
 import com.mifos.core.model.objects.template.recurring.AccountChart
-import com.mifos.core.model.objects.template.recurring.charge.ChargeOption
 import com.mifos.core.model.objects.template.recurring.Currency
-import com.mifos.core.model.objects.template.recurring.deposit.DepositType
 import com.mifos.core.model.objects.template.recurring.FieldOfficerOption
 import com.mifos.core.model.objects.template.recurring.Timeline
+import com.mifos.core.model.objects.template.recurring.WithdrawalFeeTypeOption
+import com.mifos.core.model.objects.template.recurring.charge.ChargeOption
+import com.mifos.core.model.objects.template.recurring.deposit.DepositType
 import com.mifos.core.model.objects.template.recurring.deposit.InMultiplesOfDepositTermType
+import com.mifos.core.model.objects.template.recurring.deposit.MaxDepositTermType
+import com.mifos.core.model.objects.template.recurring.deposit.MinDepositTermType
 import com.mifos.core.model.objects.template.recurring.interest.InterestCalculationDaysInYearType
 import com.mifos.core.model.objects.template.recurring.interest.InterestCalculationDaysInYearTypeOption
 import com.mifos.core.model.objects.template.recurring.interest.InterestCalculationType
@@ -15,14 +27,11 @@ import com.mifos.core.model.objects.template.recurring.interest.InterestCompound
 import com.mifos.core.model.objects.template.recurring.interest.InterestCompoundingPeriodTypeOption
 import com.mifos.core.model.objects.template.recurring.interest.InterestPostingPeriodType
 import com.mifos.core.model.objects.template.recurring.interest.InterestPostingPeriodTypeOption
+import com.mifos.core.model.objects.template.recurring.interest.PreClosurePenalInterestOnTypeOption
 import com.mifos.core.model.objects.template.recurring.period.LockinPeriodFrequencyType
 import com.mifos.core.model.objects.template.recurring.period.LockinPeriodFrequencyTypeOption
-import com.mifos.core.model.objects.template.recurring.deposit.MaxDepositTermType
-import com.mifos.core.model.objects.template.recurring.deposit.MinDepositTermType
 import com.mifos.core.model.objects.template.recurring.period.PeriodFrequencyTypeOption
-import com.mifos.core.model.objects.template.recurring.interest.PreClosurePenalInterestOnTypeOption
 import com.mifos.core.model.objects.template.recurring.period.ProductOption
-import com.mifos.core.model.objects.template.recurring.WithdrawalFeeTypeOption
 import com.mifos.core.model.utils.IgnoredOnParcel
 import com.mifos.core.model.utils.Parcelable
 import com.mifos.core.model.utils.Parcelize
