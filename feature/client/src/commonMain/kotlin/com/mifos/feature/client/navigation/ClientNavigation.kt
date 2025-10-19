@@ -311,8 +311,8 @@ fun NavGraphBuilder.clientNavGraph(
             onNavigateApplyShareAccount = navController::navigateToShareAccountRoute,
             onNavigateApplyLoanAccount = navController::navigateToNewLoanAccountRoute,
             onNavigateApplySavingsAccount = navController::navigateToSavingsAccountRoute,
-            onNavigateApplyRecurringAccount = {navController::navigateToRecurringAccountRoute},
-            onNavigateApplyFixedAccount = {navController::navigateToNewFixedDepositRoute},
+            onNavigateApplyRecurringAccount = navController::navigateToRecurringAccountRoute,
+            onNavigateApplyFixedAccount =  navController::navigateToNewFixedDepositRoute,
             navController = navController,
         )
         clientUpcomingChargesDestination(
