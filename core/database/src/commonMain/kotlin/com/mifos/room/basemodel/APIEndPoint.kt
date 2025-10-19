@@ -25,6 +25,8 @@ object APIEndPoint {
     const val CREATE_SAVINGS_PRODUCTS = "savingsproducts"
     const val CREATE_LOANS_ACCOUNTS = "loans"
     const val CREATE_LOANS_PRODUCTS = "loanproducts"
+
+    const val CREATE_RECURRING_DEPOSIT_ACCOUNTS = "recurringdepositaccounts"
     const val DATATABLES = "datatables"
     const val GROUPS = "groups"
     const val DOCUMENTS = "documents"

@@ -481,6 +481,14 @@
     <string name="client_apply_new_applications_apply_recurring_account">Apply for new recurring deposit account</string>
     <string name="client_apply_new_applications_apply_fixed_account">Apply for new fixed deposit account</string>
 
+    <string name="step_details">Details</string>
+    <string name="step_terms">Terms</string>
+    <string name="step_settings">Settings</string>
+    <string name="step_interest">Interest</string>
+    <string name="step_charges">Charges</string>
+    <string name="create_recurring_deposit_account">Create Recurring Deposit Account</string>
+
+
     <!-- Client Signature -->
     <string name="client_signature_delete">Delete Signature</string>
     <string name="client_signature_upload">Upload New Signature</string>
