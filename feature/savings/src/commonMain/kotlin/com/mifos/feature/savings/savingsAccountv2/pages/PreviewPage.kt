@@ -43,12 +43,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.designsystem.theme.MifosTypography
+import com.mifos.core.model.objects.payloads.ChargesPayload
+import com.mifos.core.model.objects.payloads.SavingsPayload
 import com.mifos.core.ui.components.MifosGeneralCard
 import com.mifos.core.ui.components.MifosRowWithTextAndButton
 import com.mifos.core.ui.components.MifosTwoButtonRow
 import com.mifos.feature.savings.savingsAccountv2.SavingsAccountAction
 import com.mifos.feature.savings.savingsAccountv2.SavingsAccountState
 import org.jetbrains.compose.resources.stringResource
+import kotlin.Int
 
 @Composable
 fun PreviewPage(
@@ -102,7 +105,7 @@ fun PreviewPage(
                 ""
             } else {
                 (
-                    state.frequency + (
+                    state.frequency + " " + (
                         state.savingsProductTemplate?.lockinPeriodFrequencyTypeOptions?.get(
                             state.freqTypeIndex,
                         )?.value ?: ""
@@ -181,3 +184,17 @@ fun PreviewPage(
         )
     }
 }
+
+//
+//{
+//    "nominalAnnualInterestRate": 9,
+//
+//    "withdrawalFeeForTransfers": true,
+//
+//    "charges": [
+//    {
+//        "chargeId": 8,
+//        "amount": 50
+//    }
+//    ],
+//}

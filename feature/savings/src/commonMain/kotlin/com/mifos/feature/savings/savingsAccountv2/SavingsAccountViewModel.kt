@@ -14,9 +14,13 @@ import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.common.utils.DateHelper
+import com.mifos.core.common.utils.DateHelper.toFormattedDateTime
 import com.mifos.core.data.util.NetworkMonitor
+import com.mifos.core.domain.useCases.CreateSavingsAccountUseCase
 import com.mifos.core.domain.useCases.GetClientTemplateUseCase
 import com.mifos.core.domain.useCases.GetSavingsProductTemplateUseCase
+import com.mifos.core.model.objects.payloads.ChargesPayload
+import com.mifos.core.model.objects.payloads.SavingsPayload
 import com.mifos.core.ui.util.BaseViewModel
 import com.mifos.core.ui.util.TextFieldsValidator
 import com.mifos.room.entities.templates.clients.ClientsTemplateEntity
@@ -34,6 +38,7 @@ internal class SavingsAccountViewModel(
     private val networkMonitor: NetworkMonitor,
     private val getClientTemplateUseCase: GetClientTemplateUseCase,
     private val getSavingsProductTemplateUseCase: GetSavingsProductTemplateUseCase,
+    private val createSavingsAccountUseCase: CreateSavingsAccountUseCase,
     val savedStateHandle: SavedStateHandle,
 ) :
     BaseViewModel<SavingsAccountState, SavingsAccountEvent, SavingsAccountAction>(
@@ -52,10 +57,11 @@ internal class SavingsAccountViewModel(
             is SavingsAccountAction.NavigateBack -> sendEvent(SavingsAccountEvent.NavigateBack)
             is SavingsAccountAction.NextStep -> moveToNextStep()
             is SavingsAccountAction.PreviousStep -> moveToPreviousStep()
-            is SavingsAccountAction.Finish -> sendEvent(SavingsAccountEvent.Finish)
+            is SavingsAccountAction.Finish -> handleFinishClick()
             is SavingsAccountAction.OnStepChange -> handleStepChange(action)
-            is SavingsAccountAction.OnSubmissionDatePick -> handleSubmissionDatePick(action)
             is SavingsAccountAction.Retry -> handleRetry()
+
+            is SavingsAccountAction.OnSubmissionDatePick -> handleSubmissionDatePick(action)
             is SavingsAccountAction.OnSubmissionDateChange -> handleSubmissionDateChange(action)
             is SavingsAccountAction.OnDetailsSubmit -> handleOnDetailsSubmit()
             is SavingsAccountAction.OnExternalIdChange -> handleExternalIdChange(action)
@@ -100,6 +106,55 @@ internal class SavingsAccountViewModel(
             is SavingsAccountAction.EditChargeDialog -> handleEditChargeDialog(action.index)
             is SavingsAccountAction.OnChargesAmountChangeError -> handleChargesAmountChangeError(action.error)
         }
+    }
+
+    fun handleFinishClick() {
+        val savingsPayload = SavingsPayload()
+        savingsPayload.apply {
+            locale = "en"
+            dateFormat = "dd-MM-yyyy"
+            productId = state.savingsProductSelected + 1
+            clientId = state.clientId
+            fieldOfficerId = state.fieldOfficerOptions[state.fieldOfficerIndex].id
+            submittedOnDate = state.submissionDate
+            externalId = state.externalId
+            allowOverdraft = state.isCheckedOverdraftAllowed
+            enforceMinRequiredBalance = state.isCheckedMinimumBalance
+            minRequiredOpeningBalance = state.minimumOpeningBalance
+            minRequiredBalance = state.monthlyMinimumBalance
+            lockinPeriodFrequency = state.frequency.toInt()
+            lockinPeriodFrequencyType = state.freqTypeIndex
+            charges = state.addedCharges.map { charges ->
+                ChargesPayload(
+                    chargeId = charges.id,
+                    amount = charges.amount.toString(),
+                )
+            }
+            interestCompoundingPeriodType =
+                state.savingsProductTemplate?.interestCompoundingPeriodTypeOptions?.get(state.interestCompPeriodIndex)?.id
+            interestCalculationType =
+                state.savingsProductTemplate?.interestCompoundingPeriodTypeOptions?.get(state.interestCalcIndex)?.id
+            interestCalculationDaysInYearType =
+                state.savingsProductTemplate?.interestCalculationDaysInYearTypeOptions?.get(state.daysInYearIndex)?.id
+            interestPostingPeriodType =
+                state.savingsProductTemplate?.interestCompoundingPeriodTypeOptions?.get(state.interestPostingPeriodIndex)?.id
+        }
+        viewModelScope.launch {
+            val online = networkMonitor.isOnline.first()
+            if (online) {
+                createSavingsAccountUseCase(savingsPayload).collect { result ->
+                    println(result)
+                }
+            } else {
+                mutableStateFlow.update {
+                    it.copy(
+                        screenState = SavingsAccountState.ScreenState.NetworkError,
+                    )
+                }
+            }
+        }
+
+        sendEvent(SavingsAccountEvent.Finish)
     }
 
     private fun handleChargesAmountChangeError(error: StringResource?) {
@@ -480,7 +535,8 @@ internal class SavingsAccountViewModel(
                 )
             }
         } else {
-            sendEvent(SavingsAccountEvent.Finish)
+            trySendAction(SavingsAccountAction.Finish)
+//            sendEvent(SavingsAccountEvent.Finish)
         }
     }
 }
@@ -547,14 +603,14 @@ constructor(
     }
 
     val isDetailsNextEnabled = submissionDate.isNotEmpty() &&
-        savingsProductSelected != -1 &&
-        fieldOfficerIndex != -1
+            savingsProductSelected != -1 &&
+            fieldOfficerIndex != -1
 
     val isTermsNextEnabled = isDetailsNextEnabled &&
-        currencyIndex != -1 &&
-        interestCalcIndex != -1 &&
-        interestPostingPeriodIndex != -1 &&
-        interestCompPeriodIndex != -1
+            currencyIndex != -1 &&
+            interestCalcIndex != -1 &&
+            interestPostingPeriodIndex != -1 &&
+            interestCompPeriodIndex != -1
 }
 
 sealed interface SavingsAccountEvent {
@@ -616,7 +672,8 @@ sealed interface SavingsAccountAction {
 
     sealed interface Internal : SavingsAccountAction {
         data class OnReceivingClientTemplate(val clientTemplate: DataState<ClientsTemplateEntity>) : Internal
-        data class OnReceivingSavingsProductTemplate(val savingsProductTemplate: DataState<SavingProductsTemplate>) : Internal
+        data class OnReceivingSavingsProductTemplate(val savingsProductTemplate: DataState<SavingProductsTemplate>) :
+            Internal
     }
 }
 
