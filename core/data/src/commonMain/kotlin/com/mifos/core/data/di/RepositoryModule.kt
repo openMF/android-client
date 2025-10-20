@@ -51,6 +51,7 @@ import com.mifos.core.data.repository.NoteRepository
 import com.mifos.core.data.repository.OfflineDashboardRepository
 import com.mifos.core.data.repository.PathTrackingRepository
 import com.mifos.core.data.repository.PinPointClientRepository
+import com.mifos.core.data.repository.RecurringAccountRepository
 import com.mifos.core.data.repository.ReportCategoryRepository
 import com.mifos.core.data.repository.ReportDetailRepository
 import com.mifos.core.data.repository.SavingsAccountActivateRepository
@@ -112,6 +113,7 @@ import com.mifos.core.data.repositoryImp.NoteRepositoryImp
 import com.mifos.core.data.repositoryImp.OfflineDashboardRepositoryImp
 import com.mifos.core.data.repositoryImp.PathTrackingRepositoryImp
 import com.mifos.core.data.repositoryImp.PinPointClientRepositoryImp
+import com.mifos.core.data.repositoryImp.RecurringAccountRepositoryImp
 import com.mifos.core.data.repositoryImp.ReportCategoryRepositoryImp
 import com.mifos.core.data.repositoryImp.ReportDetailRepositoryImp
 import com.mifos.core.data.repositoryImp.SavingsAccountActivateRepositoryImp
@@ -219,6 +221,8 @@ val RepositoryModule = module {
     singleOf(::SurveyListRepositoryImp) bind SurveyListRepository::class
     singleOf(::SurveySubmitRepositoryImp) bind SurveySubmitRepository::class
     singleOf(::SignatureRepositoryImp) bind SignatureRepository::class
+
+    singleOf(::RecurringAccountRepositoryImp) bind RecurringAccountRepository::class
 
     includes(platformModule)
     single<PlatformDependentDataModule> { getPlatformDataModule }

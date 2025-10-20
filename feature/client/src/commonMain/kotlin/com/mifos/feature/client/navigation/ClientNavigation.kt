@@ -89,6 +89,8 @@ import com.mifos.feature.loan.navigation.loanDestination
 import com.mifos.feature.loan.newLoanAccount.navigateToNewLoanAccountRoute
 import com.mifos.feature.note.navigation.noteDestination
 import com.mifos.feature.note.notes.navigateToNoteScreen
+import com.mifos.feature.recurringDeposit.newRecurringDepositAccount.navigateToRecurringAccountRoute
+import com.mifos.feature.recurringDeposit.newRecurringDepositAccount.recurringAccountDestination
 import com.mifos.feature.savings.navigation.navigateToAddSavingsAccount
 import com.mifos.feature.savings.navigation.navigateToSavingsAccountSummaryScreen
 import com.mifos.feature.savings.navigation.savingsDestination
@@ -307,7 +309,7 @@ fun NavGraphBuilder.clientNavGraph(
             onNavigateApplyShareAccount = navController::navigateToShareAccountRoute,
             onNavigateApplyLoanAccount = navController::navigateToNewLoanAccountRoute,
             onNavigateApplySavingsAccount = navController::navigateToSavingsAccountRoute,
-            onNavigateApplyRecurringAccount = { },
+            onNavigateApplyRecurringAccount = navController::navigateToRecurringAccountRoute,
             onNavigateApplyFixedAccount = { },
             navController = navController,
         )
@@ -338,6 +340,8 @@ fun NavGraphBuilder.clientNavGraph(
         )
 
         shareAccountDestination()
+
+        recurringAccountDestination()
     }
 }
 
