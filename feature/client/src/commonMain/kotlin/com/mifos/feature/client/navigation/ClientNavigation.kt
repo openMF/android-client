@@ -312,7 +312,7 @@ fun NavGraphBuilder.clientNavGraph(
             onNavigateApplyLoanAccount = navController::navigateToNewLoanAccountRoute,
             onNavigateApplySavingsAccount = navController::navigateToSavingsAccountRoute,
             onNavigateApplyRecurringAccount = navController::navigateToRecurringAccountRoute,
-            onNavigateApplyFixedAccount =  navController::navigateToNewFixedDepositRoute,
+            onNavigateApplyFixedAccount = navController::navigateToNewFixedDepositRoute,
             navController = navController,
         )
         clientUpcomingChargesDestination(
