@@ -18,7 +18,6 @@ import kotlinx.coroutines.flow.Flow
 
 class DataManagerRecurringAccount(
     val mBaseApiManager: BaseApiManager,
-    private val prefManager: UserPreferencesRepository,
 ) {
 
     fun createRecurringDepositAccount(

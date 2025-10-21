@@ -24,12 +24,14 @@ import com.mifos.core.network.datamanager.DataManagerIdentifiers
 import com.mifos.core.network.datamanager.DataManagerLoan
 import com.mifos.core.network.datamanager.DataManagerNote
 import com.mifos.core.network.datamanager.DataManagerOffices
+import com.mifos.core.network.datamanager.DataManagerRecurringAccount
 import com.mifos.core.network.datamanager.DataManagerRunReport
 import com.mifos.core.network.datamanager.DataManagerSavings
 import com.mifos.core.network.datamanager.DataManagerSearch
 import com.mifos.core.network.datamanager.DataManagerShare
 import com.mifos.core.network.datamanager.DataManagerStaff
 import com.mifos.core.network.datamanager.DataManagerSurveys
+import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
 
 val DataManagerModule = module {
@@ -52,5 +54,6 @@ val DataManagerModule = module {
     single { DataManagerStaff(get(), get(), get()) }
     single { DataManagerSurveys(get(), get(), get()) }
     single { DataManagerIdentifiers(get()) }
+    single{ DataManagerRecurringAccount(get())}
     single { DataManagerShare(get()) }
 }

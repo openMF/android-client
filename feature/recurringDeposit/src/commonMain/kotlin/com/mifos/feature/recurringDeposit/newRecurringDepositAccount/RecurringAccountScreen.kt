@@ -24,6 +24,7 @@ import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.mifos.core.designsystem.component.MifosScaffold
+import com.mifos.core.ui.components.MifosErrorComponent
 import com.mifos.core.ui.components.MifosStepper
 import com.mifos.core.ui.components.Step
 import com.mifos.core.ui.util.EventsEffect
@@ -33,13 +34,14 @@ import com.mifos.feature.recurringDeposit.newRecurringDepositAccount.pages.Inter
 import com.mifos.feature.recurringDeposit.newRecurringDepositAccount.pages.SettingPage
 import com.mifos.feature.recurringDeposit.newRecurringDepositAccount.pages.TermsPage
 import org.jetbrains.compose.resources.stringResource
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 internal fun RecurringAccountScreen(
     onNavigateBack: () -> Unit,
     onFinish: () -> Unit,
     modifier: Modifier = Modifier,
-    viewModel: RecurringAccountViewModel = viewModel(),
+    viewModel: RecurringAccountViewModel = koinViewModel(),
 ) {
     val state by viewModel.stateFlow.collectAsStateWithLifecycle()
 
@@ -76,7 +78,8 @@ private fun RecurringAccountScaffold(
         },
         Step(name = stringResource(Res.string.step_settings)) {
             SettingPage(
-                onNext = { onAction(RecurringAccountAction.NextStep) },
+                state = state,
+                onAction = onAction,
             )
         },
         Step(name = stringResource(Res.string.step_interest)) {
@@ -108,5 +111,27 @@ private fun RecurringAccountScaffold(
                     .padding(paddingValues),
             )
         }
+    }
+}
+
+@Composable
+fun RecurringDepositAccountDialogBox(
+    state: RecurringAccountState
+){
+    when(state.dialogState){
+        is RecurringAccountState.DialogState.Error ->{
+            MifosErrorComponent(
+                message = state.dialogState.message,
+                isRetryEnabled = true,
+                onRetry = {
+                    // Retry action can be handled here
+                },
+            )
+        }
+        RecurringAccountState.DialogState.Loading ->{
+
+        }
+        RecurringAccountState.DialogState.Success -> TODO()
+        null -> TODO()
     }
 }

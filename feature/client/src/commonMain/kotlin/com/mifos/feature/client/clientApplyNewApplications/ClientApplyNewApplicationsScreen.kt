@@ -62,7 +62,7 @@ internal fun ClientApplyNewApplicationsScreen(
     onNavigateApplyLoanAccount: (Int) -> Unit,
     onNavigateApplySavingsAccount: (Int) -> Unit,
     onNavigateApplyShareAccount: (Int) -> Unit,
-    onNavigateApplyRecurringAccount: () -> Unit,
+    onNavigateApplyRecurringAccount: (Int) -> Unit,
     onNavigateApplyFixedAccount: () -> Unit,
     navController: NavController,
     viewModel: ClientApplyNewApplicationsViewModel = koinViewModel(),
@@ -75,15 +75,9 @@ internal fun ClientApplyNewApplicationsScreen(
             is ClientApplyNewApplicationsEvent.OnActionClick -> {
                 when (event.action) {
                     ClientApplyNewApplicationsItem.NewFixedAccount -> onNavigateApplyFixedAccount()
-                    ClientApplyNewApplicationsItem.NewLoanAccount -> onNavigateApplyLoanAccount(
-                        state.clientId,
-                    )
-
-                    ClientApplyNewApplicationsItem.NewRecurringAccount -> onNavigateApplyRecurringAccount()
-                    ClientApplyNewApplicationsItem.NewSavingsAccount -> onNavigateApplySavingsAccount(
-                        state.clientId,
-                    )
-
+                    ClientApplyNewApplicationsItem.NewLoanAccount -> onNavigateApplyLoanAccount(state.clientId,)
+                    ClientApplyNewApplicationsItem.NewRecurringAccount -> onNavigateApplyRecurringAccount(state.clientId)
+                    ClientApplyNewApplicationsItem.NewSavingsAccount -> onNavigateApplySavingsAccount(state.clientId,)
                     ClientApplyNewApplicationsItem.NewShareAccount -> onNavigateApplyShareAccount(state.clientId)
                 }
             }
