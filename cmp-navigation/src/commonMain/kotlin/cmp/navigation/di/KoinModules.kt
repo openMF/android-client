@@ -34,6 +34,7 @@ import com.mifos.feature.path.tracking.di.PathTrackingModule
 import com.mifos.feature.recurringDeposit.di.RecurringDepositModule
 import com.mifos.feature.report.di.ReportModule
 import com.mifos.feature.savings.di.SavingsModule
+import com.mifos.feature.recurringDeposit.di.RecurringDepositModule
 import com.mifos.feature.search.di.SearchModule
 import com.mifos.feature.settings.di.SettingsModule
 import com.mifos.room.di.DaoModule
