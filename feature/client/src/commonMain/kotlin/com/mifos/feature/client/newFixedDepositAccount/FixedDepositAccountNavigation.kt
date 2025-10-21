@@ -17,7 +17,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 data object FixedDepositRoute
 
-fun NavGraphBuilder.fixedAccountdestination() {
+fun NavGraphBuilder.fixedAccountDestination() {
     composable<FixedDepositRoute> {
         FixedDepositAccountScreen(
             onNavigateBack = {},
