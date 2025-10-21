@@ -36,8 +36,8 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -46,9 +46,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.mifos.core.designsystem.component.MifosOutlinedTextField
+import com.mifos.core.designsystem.component.MifosTextFieldConfig
 import com.mifos.core.designsystem.component.MifosTextFieldDropdown
 import com.mifos.core.ui.components.MifosCheckBox
 import com.mifos.core.ui.components.MifosTwoButtonRow
@@ -101,6 +104,12 @@ fun SettingPage(
             value = settingsState.lockInPeriod.frequency,
             onValueChange = { onAction(RecurringAccountAction.RecurringAccountSettingsAction.SetLockInPeriod(it)) },
             label = stringResource(Res.string.frequency),
+            config = MifosTextFieldConfig(
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Number,
+                    imeAction = ImeAction.Next
+                ),
+            ),
             modifier = Modifier.fillMaxWidth()
         )
         MifosTextFieldDropdown(
@@ -126,6 +135,12 @@ fun SettingPage(
             value = settingsState.recurringDepositDetails.depositAmount,
             onValueChange = { onAction(RecurringAccountAction.RecurringAccountSettingsAction.SetRecurringDepositAmount(it)) },
             label = stringResource(Res.string.recurring_deposit_amount),
+            config = MifosTextFieldConfig(
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Number,
+                    imeAction = ImeAction.Next
+                ),
+            ),
             modifier = Modifier.fillMaxWidth()
         )
         Spacer(Modifier.height(16.dp))
@@ -134,6 +149,12 @@ fun SettingPage(
             value = settingsState.depositPeriod.period,
             onValueChange = { onAction(RecurringAccountAction.RecurringAccountSettingsAction.SetDepositPeriod(it)) },
             label = stringResource(Res.string.deposit_period),
+            config = MifosTextFieldConfig(
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Number,
+                    imeAction = ImeAction.Next
+                ),
+            ),
             modifier = Modifier.fillMaxWidth()
         )
         MifosTextFieldDropdown(
@@ -165,6 +186,12 @@ fun SettingPage(
                 onAction(RecurringAccountAction.RecurringAccountSettingsAction.SetMinDepositTermFreq(it))
             },
             label = stringResource(Res.string.frequency),
+            config = MifosTextFieldConfig(
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Number,
+                    imeAction = ImeAction.Next
+                ),
+            ),
             modifier = Modifier.fillMaxWidth()
         )
         MifosTextFieldDropdown(
@@ -187,6 +214,12 @@ fun SettingPage(
             value = settingsState.minDepositTerm.frequencyAfterInMultiplesOf,
             onValueChange = { onAction(RecurringAccountAction.RecurringAccountSettingsAction.SetMinDepositTermFreqAfterInMultiOf(it)) },
             label = stringResource(Res.string.frequency),
+            config = MifosTextFieldConfig(
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Number,
+                    imeAction = ImeAction.Next
+                ),
+            ),
             modifier = Modifier.fillMaxWidth()
         )
         MifosTextFieldDropdown(
@@ -209,6 +242,12 @@ fun SettingPage(
             value = settingsState.maxDepositTerm.frequency,
             onValueChange = { onAction(RecurringAccountAction.RecurringAccountSettingsAction.SetMaxDepositTermFreq(it)) },
             label = stringResource(Res.string.frequency),
+            config = MifosTextFieldConfig(
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Number,
+                    imeAction = ImeAction.Next
+                ),
+            ),
             modifier = Modifier.fillMaxWidth()
         )
         MifosTextFieldDropdown(
@@ -238,6 +277,12 @@ fun SettingPage(
             value = settingsState.preMatureClosure.penalInterest,
             onValueChange = { onAction(RecurringAccountAction.RecurringAccountSettingsAction.SetPreMatureClosurePenalInterest(it)) },
             label = stringResource(Res.string.penal_interest_percentage),
+            config = MifosTextFieldConfig(
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Number,
+                    imeAction = ImeAction.Next
+                ),
+            ),
             modifier = Modifier.fillMaxWidth()
         )
         MifosTextFieldDropdown(
@@ -258,6 +303,12 @@ fun SettingPage(
             value = settingsState.preMatureClosure.minimumBalanceForInterestCalculation,
             onValueChange = { onAction(RecurringAccountAction.RecurringAccountSettingsAction.SetPreMatureClosureMinimumBalanceForInterestCalculation(it)) },
             label = stringResource(Res.string.minimum_balance_for_interest),
+            config = MifosTextFieldConfig(
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Number,
+                    imeAction = ImeAction.Next
+                ),
+            ),
             modifier = Modifier.fillMaxWidth()
         )
         Spacer(Modifier.height(24.dp))
