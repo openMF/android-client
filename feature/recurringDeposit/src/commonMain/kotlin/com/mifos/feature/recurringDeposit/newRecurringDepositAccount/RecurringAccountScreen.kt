@@ -116,10 +116,10 @@ private fun RecurringAccountScaffold(
 
 @Composable
 fun RecurringDepositAccountDialogBox(
-    state: RecurringAccountState
-){
-    when(state.dialogState){
-        is RecurringAccountState.DialogState.Error ->{
+    state: RecurringAccountState,
+) {
+    when (state.dialogState) {
+        is RecurringAccountState.DialogState.Error -> {
             MifosErrorComponent(
                 message = state.dialogState.message,
                 isRetryEnabled = true,
@@ -128,8 +128,7 @@ fun RecurringDepositAccountDialogBox(
                 },
             )
         }
-        RecurringAccountState.DialogState.Loading ->{
-
+        RecurringAccountState.DialogState.Loading -> {
         }
         RecurringAccountState.DialogState.Success -> TODO()
         null -> TODO()

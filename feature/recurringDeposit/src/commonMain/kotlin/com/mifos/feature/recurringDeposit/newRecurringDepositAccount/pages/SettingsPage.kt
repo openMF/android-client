@@ -60,14 +60,12 @@ import com.mifos.feature.recurringDeposit.newRecurringDepositAccount.RecurringAc
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingPage(
     state: RecurringAccountState,
-    onAction: (RecurringAccountAction.RecurringAccountSettingsAction) -> Unit
+    onAction: (RecurringAccountAction.RecurringAccountSettingsAction) -> Unit,
 ) {
-
     val settingsState = state.recurringDepositAccountSettings
 
     val scrollState = rememberScrollState()
@@ -76,7 +74,7 @@ fun SettingPage(
         modifier = Modifier
             .fillMaxWidth()
             .verticalScroll(scrollState),
-        horizontalAlignment = Alignment.Start
+        horizontalAlignment = Alignment.Start,
     ) {
         Text(stringResource(Res.string.step_settings), fontWeight = FontWeight.Bold, fontSize = 18.sp)
         Spacer(Modifier.height(8.dp))
@@ -87,15 +85,15 @@ fun SettingPage(
         Row(verticalAlignment = Alignment.CenterVertically) {
             MifosCheckBox(
                 text = stringResource(Res.string.adjust_advance_payments),
-                checked=settingsState.adjustAdvancePayments,
-                onCheckChanged = { onAction(RecurringAccountAction.RecurringAccountSettingsAction.ToggleAdvancePaymentsTowardsFutureInstallments) }
+                checked = settingsState.adjustAdvancePayments,
+                onCheckChanged = { onAction(RecurringAccountAction.RecurringAccountSettingsAction.ToggleAdvancePaymentsTowardsFutureInstallments) },
             )
         }
         Row(verticalAlignment = Alignment.CenterVertically) {
             MifosCheckBox(
                 text = stringResource(Res.string.allow_withdrawals),
-                checked=settingsState.allowWithdrawals,
-                onCheckChanged = { onAction(RecurringAccountAction.RecurringAccountSettingsAction.ToggleAllowWithdrawals) }
+                checked = settingsState.allowWithdrawals,
+                onCheckChanged = { onAction(RecurringAccountAction.RecurringAccountSettingsAction.ToggleAllowWithdrawals) },
             )
         }
         Spacer(Modifier.height(16.dp))
@@ -107,24 +105,24 @@ fun SettingPage(
             config = MifosTextFieldConfig(
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Number,
-                    imeAction = ImeAction.Next
+                    imeAction = ImeAction.Next,
                 ),
             ),
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
         )
         MifosTextFieldDropdown(
-            value = if(settingsState.lockInPeriod.frequencyTypeIndex!=-1) {
-                state.recurringDepositAccountTemplate.lockinPeriodFrequencyTypeOptions?.get(settingsState.lockInPeriod.frequencyTypeIndex)?.value?: ""
-            }else {
+            value = if (settingsState.lockInPeriod.frequencyTypeIndex != -1) {
+                state.recurringDepositAccountTemplate.lockinPeriodFrequencyTypeOptions?.get(settingsState.lockInPeriod.frequencyTypeIndex)?.value ?: ""
+            } else {
                 ""
             },
             options = state.recurringDepositAccountTemplate.lockinPeriodFrequencyTypeOptions?.map {
-                it.value?:""
-            } ?:emptyList(),
+                it.value ?: ""
+            } ?: emptyList(),
             onValueChanged = {},
             onOptionSelected = { id, name ->
                 onAction(
-                    RecurringAccountAction.RecurringAccountSettingsAction.SetLockInPeriodType(id)
+                    RecurringAccountAction.RecurringAccountSettingsAction.SetLockInPeriodType(id),
                 )
             },
             label = stringResource(Res.string.type),
@@ -138,10 +136,10 @@ fun SettingPage(
             config = MifosTextFieldConfig(
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Number,
-                    imeAction = ImeAction.Next
+                    imeAction = ImeAction.Next,
                 ),
             ),
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
         )
         Spacer(Modifier.height(16.dp))
         Text(stringResource(Res.string.deposit_period), fontWeight = FontWeight.Bold)
@@ -152,30 +150,32 @@ fun SettingPage(
             config = MifosTextFieldConfig(
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Number,
-                    imeAction = ImeAction.Next
+                    imeAction = ImeAction.Next,
                 ),
             ),
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
         )
         MifosTextFieldDropdown(
-            value = if(settingsState.depositPeriod.periodType!=-1) {
+            value = if (settingsState.depositPeriod.periodType != -1) {
                 state.recurringDepositAccountTemplate.periodFrequencyTypeOptions?.get(settingsState.depositPeriod.periodType)?.value ?: ""
-            } else "",
+            } else {
+                ""
+            },
             options = state.recurringDepositAccountTemplate.periodFrequencyTypeOptions?.map {
-                it.value?:""
-            } ?:emptyList(),
+                it.value ?: ""
+            } ?: emptyList(),
             onValueChanged = {},
             onOptionSelected = { id, name ->
                 onAction(RecurringAccountAction.RecurringAccountSettingsAction.SetDepositPeriodType(id))
             },
             label = stringResource(Res.string.type),
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
         )
         Row(verticalAlignment = Alignment.CenterVertically) {
             MifosCheckBox(
                 text = stringResource(Res.string.deposit_frequency_same_as_meeting),
-                checked=settingsState.depositPeriod.depositFrequencySameAsGroupCenterMeeting,
-                onCheckChanged = { onAction(RecurringAccountAction.RecurringAccountSettingsAction.ToggleDepositFrequencySameAsGroupCenterMeeting) }
+                checked = settingsState.depositPeriod.depositFrequencySameAsGroupCenterMeeting,
+                onCheckChanged = { onAction(RecurringAccountAction.RecurringAccountSettingsAction.ToggleDepositFrequencySameAsGroupCenterMeeting) },
             )
         }
         Spacer(Modifier.height(16.dp))
@@ -189,24 +189,26 @@ fun SettingPage(
             config = MifosTextFieldConfig(
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Number,
-                    imeAction = ImeAction.Next
+                    imeAction = ImeAction.Next,
                 ),
             ),
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
         )
         MifosTextFieldDropdown(
-            value = if(settingsState.depositPeriod.periodType!=-1) {
+            value = if (settingsState.depositPeriod.periodType != -1) {
                 state.recurringDepositAccountTemplate.periodFrequencyTypeOptions?.get(settingsState.minDepositTerm.frequencyTypeIndex)?.value ?: ""
-            } else "",
+            } else {
+                ""
+            },
             options = state.recurringDepositAccountTemplate.periodFrequencyTypeOptions?.map {
-                it.value?:""
-            } ?:emptyList(),
+                it.value ?: ""
+            } ?: emptyList(),
             onValueChanged = {},
             onOptionSelected = { id, name ->
                 onAction(RecurringAccountAction.RecurringAccountSettingsAction.SetMinDepositTermFreqType(id))
             },
             label = stringResource(Res.string.type),
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
         )
         Spacer(Modifier.height(16.dp))
         Text(stringResource(Res.string.in_multiples_of), fontWeight = FontWeight.Bold)
@@ -217,24 +219,26 @@ fun SettingPage(
             config = MifosTextFieldConfig(
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Number,
-                    imeAction = ImeAction.Next
+                    imeAction = ImeAction.Next,
                 ),
             ),
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
         )
         MifosTextFieldDropdown(
-            value = if(settingsState.minDepositTerm.frequencyTypeIndexAfterInMultiplesOf!=-1) {
+            value = if (settingsState.minDepositTerm.frequencyTypeIndexAfterInMultiplesOf != -1) {
                 state.recurringDepositAccountTemplate.periodFrequencyTypeOptions?.get(settingsState.minDepositTerm.frequencyTypeIndexAfterInMultiplesOf)?.value ?: ""
-            } else "",
+            } else {
+                ""
+            },
             options = state.recurringDepositAccountTemplate?.periodFrequencyTypeOptions?.map {
-                it.value?:""
-            } ?:emptyList(),
+                it.value ?: ""
+            } ?: emptyList(),
             onValueChanged = {},
-            onOptionSelected = {  id , name ->
+            onOptionSelected = { id, name ->
                 onAction(RecurringAccountAction.RecurringAccountSettingsAction.SetMinDepositTermFreqTypeAfterInMultiOf(id))
             },
             label = stringResource(Res.string.type),
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
         )
         Spacer(Modifier.height(16.dp))
         Text(stringResource(Res.string.maximum_deposit_term), fontWeight = FontWeight.Bold)
@@ -245,31 +249,33 @@ fun SettingPage(
             config = MifosTextFieldConfig(
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Number,
-                    imeAction = ImeAction.Next
+                    imeAction = ImeAction.Next,
                 ),
             ),
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
         )
         MifosTextFieldDropdown(
-            value = if(settingsState.maxDepositTerm.frequencyTypeIndex!=-1) {
+            value = if (settingsState.maxDepositTerm.frequencyTypeIndex != -1) {
                 state.recurringDepositAccountTemplate.periodFrequencyTypeOptions?.get(settingsState.maxDepositTerm.frequencyTypeIndex)?.value ?: ""
-            } else "",
+            } else {
+                ""
+            },
             options = state.recurringDepositAccountTemplate.periodFrequencyTypeOptions?.map {
-                it.value?:""
-            } ?:emptyList(),
+                it.value ?: ""
+            } ?: emptyList(),
             onValueChanged = {},
             onOptionSelected = { id, name ->
                 onAction(RecurringAccountAction.RecurringAccountSettingsAction.SetMaxDepositTermFreqType(id))
             },
             label = stringResource(Res.string.type),
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
         )
         Spacer(Modifier.height(16.dp))
         Text(stringResource(Res.string.for_pre_mature_closure), fontWeight = FontWeight.Bold)
         Row(verticalAlignment = Alignment.CenterVertically) {
             Checkbox(
                 settingsState.preMatureClosure.applyPenalInterest,
-                onCheckedChange = { onAction(RecurringAccountAction.RecurringAccountSettingsAction.TogglePreMatureClosureApplyPenalInterest) }
+                onCheckedChange = { onAction(RecurringAccountAction.RecurringAccountSettingsAction.TogglePreMatureClosureApplyPenalInterest) },
             )
             Text(stringResource(Res.string.apply_penal_interest))
         }
@@ -280,24 +286,26 @@ fun SettingPage(
             config = MifosTextFieldConfig(
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Number,
-                    imeAction = ImeAction.Next
+                    imeAction = ImeAction.Next,
                 ),
             ),
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
         )
         MifosTextFieldDropdown(
-            value = if(settingsState.preMatureClosure.interestPeriodIndex!=-1) {
+            value = if (settingsState.preMatureClosure.interestPeriodIndex != -1) {
                 state.recurringDepositAccountTemplate.preClosurePenalInterestOnTypeOptions?.get(settingsState.preMatureClosure.interestPeriodIndex)?.value ?: ""
-            } else "",
+            } else {
+                ""
+            },
             options = state.recurringDepositAccountTemplate.preClosurePenalInterestOnTypeOptions?.map {
-                it.value?:""
-            } ?:emptyList(),
+                it.value ?: ""
+            } ?: emptyList(),
             onValueChanged = {},
             onOptionSelected = { id, name ->
                 onAction(RecurringAccountAction.RecurringAccountSettingsAction.SetPreMatureClosureInterestPeriodIndex(id))
             },
             label = stringResource(Res.string.period),
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
         )
         MifosOutlinedTextField(
             value = settingsState.preMatureClosure.minimumBalanceForInterestCalculation,
@@ -306,28 +314,27 @@ fun SettingPage(
             config = MifosTextFieldConfig(
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Number,
-                    imeAction = ImeAction.Next
+                    imeAction = ImeAction.Next,
                 ),
             ),
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
         )
         Spacer(Modifier.height(24.dp))
         MifosTwoButtonRow(
             firstBtnText = stringResource(Res.string.back),
             secondBtnText = stringResource(Res.string.next),
-            onFirstBtnClick =  { onAction(RecurringAccountAction.RecurringAccountSettingsAction.OnBackPress) },
+            onFirstBtnClick = { onAction(RecurringAccountAction.RecurringAccountSettingsAction.OnBackPress) },
             onSecondBtnClick = { onAction(RecurringAccountAction.RecurringAccountSettingsAction.OnNextPress) },
             isButtonIconVisible = true,
             isSecondButtonEnabled = settingsState.preMatureClosure.penalInterest.isNotBlank() &&
-            settingsState.preMatureClosure.minimumBalanceForInterestCalculation.isNotBlank() &&
-            settingsState.recurringDepositDetails.depositAmount.isNotBlank() &&
-            settingsState.depositPeriod.period.isNotBlank() &&
-            settingsState.lockInPeriod.frequency.isNotBlank() &&
-            settingsState.minDepositTerm.frequency.isNotBlank() &&
-            settingsState.minDepositTerm.frequencyAfterInMultiplesOf.isNotBlank() &&
-            settingsState.maxDepositTerm.frequency.isNotBlank(),
+                settingsState.preMatureClosure.minimumBalanceForInterestCalculation.isNotBlank() &&
+                settingsState.recurringDepositDetails.depositAmount.isNotBlank() &&
+                settingsState.depositPeriod.period.isNotBlank() &&
+                settingsState.lockInPeriod.frequency.isNotBlank() &&
+                settingsState.minDepositTerm.frequency.isNotBlank() &&
+                settingsState.minDepositTerm.frequencyAfterInMultiplesOf.isNotBlank() &&
+                settingsState.maxDepositTerm.frequency.isNotBlank(),
         )
-
     }
 }
 
@@ -336,6 +343,6 @@ fun SettingPage(
 private fun SettingPagePreview() {
     SettingPage(
         state = RecurringAccountState(),
-        onAction = {}
+        onAction = {},
     )
 }
