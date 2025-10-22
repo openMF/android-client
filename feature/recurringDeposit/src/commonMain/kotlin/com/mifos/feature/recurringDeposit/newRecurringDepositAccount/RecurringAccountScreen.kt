@@ -53,6 +53,8 @@ internal fun RecurringAccountScreen(
         }
     }
 
+    RecurringDepositAccountDialogBox(state = state)
+
     RecurringAccountScaffold(
         modifier = modifier,
         state = state,
