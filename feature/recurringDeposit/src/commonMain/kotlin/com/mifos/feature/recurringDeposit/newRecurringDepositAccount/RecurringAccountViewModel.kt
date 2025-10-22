@@ -160,18 +160,15 @@ class RecurringAccountViewModel(
             recurringAccountRepository.createRecurringDepositAccount(payload).collect { dataState ->
                 when (dataState) {
                     is DataState.Error -> {
-                        mutableStateFlow.update {
-                            it.copy(dialogState = DialogState.Error(dataState.message))
-                        }
+                        setErrorState(dataState.message)
+
                     }
                     is DataState.Loading -> {
-                        mutableStateFlow.update {
-                            it.copy(dialogState = DialogState.Loading)
-                        }
+                        setLoadingState()
                     }
                     is DataState.Success -> {
                         mutableStateFlow.update {
-                            it.copy(dialogState = DialogState.Success)
+                            it.copy(dialogState = null)
                         }
                     }
                 }
@@ -468,7 +465,6 @@ data class RecurringAccountState(
     sealed interface DialogState {
         data class Error(val message: String) : DialogState
         data object Loading : DialogState
-        data object Success : DialogState
     }
 }
 

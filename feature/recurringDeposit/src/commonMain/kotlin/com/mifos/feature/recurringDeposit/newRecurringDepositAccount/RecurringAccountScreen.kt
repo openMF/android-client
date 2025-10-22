@@ -25,6 +25,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.ui.components.MifosErrorComponent
+import com.mifos.core.ui.components.MifosProgressIndicator
 import com.mifos.core.ui.components.MifosStepper
 import com.mifos.core.ui.components.Step
 import com.mifos.core.ui.util.EventsEffect
@@ -129,8 +130,8 @@ fun RecurringDepositAccountDialogBox(
             )
         }
         RecurringAccountState.DialogState.Loading -> {
+            MifosProgressIndicator()
         }
-        RecurringAccountState.DialogState.Success -> TODO()
-        null -> TODO()
+        null -> {}
     }
 }
