@@ -16,9 +16,11 @@ import androidclient.feature.client.generated.resources.step_settings
 import androidclient.feature.client.generated.resources.step_terms
 import androidclient.feature.client.generated.resources.title_new_fixed_deposit_account
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.mifos.core.designsystem.component.MifosScaffold
@@ -77,7 +79,7 @@ private fun FixeDepositAccountScaffold(
                     onNext = { onAction(NewFixedDepositAccountAction.NextStep) },
                 )
             },
-            Step(stringResource(Res.string.step_interest)) {
+            Step(name = stringResource(Res.string.step_interest)) {
                 InterestPage(
                     onNext = { onAction(NewFixedDepositAccountAction.NextStep) },
                 )
