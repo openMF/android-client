@@ -161,7 +161,6 @@ class RecurringAccountViewModel(
                 when (dataState) {
                     is DataState.Error -> {
                         setErrorState(dataState.message)
-
                     }
                     is DataState.Loading -> {
                         setLoadingState()
