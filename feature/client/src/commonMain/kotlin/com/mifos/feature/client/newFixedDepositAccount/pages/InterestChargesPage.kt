@@ -25,9 +25,10 @@ import org.jetbrains.compose.resources.stringResource
 @Composable
 fun InterestPage(onNext: () -> Unit) {
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
-        Text(stringResource(Res.string.step_interest),
+        Text(
+            stringResource(Res.string.step_interest),
 
-            )
+        )
         Spacer(Modifier.height(8.dp))
         Button(onClick = onNext) {
             Text("Next Button")
