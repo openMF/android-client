@@ -11,6 +11,7 @@ package com.mifos.feature.client.newFixedDepositAccount
 
 import androidclient.feature.client.generated.resources.Res
 import androidclient.feature.client.generated.resources.step_charges
+import androidclient.feature.client.generated.resources.step_details
 import androidclient.feature.client.generated.resources.step_interest
 import androidclient.feature.client.generated.resources.step_settings
 import androidclient.feature.client.generated.resources.step_terms
@@ -46,7 +47,7 @@ internal fun FixedDepositAccountScreen(
             NewFixedDepositAccountEvent.Finish -> onFinish()
         }
     }
-    FixeDepositAccountScaffold(
+    FixedDepositAccountScaffold(
         state = state,
         onAction = { viewModel.trySendAction(it) },
         modifier = modifier,
@@ -54,14 +55,14 @@ internal fun FixedDepositAccountScreen(
 }
 
 @Composable
-private fun FixeDepositAccountScaffold(
+private fun FixedDepositAccountScaffold(
     state: NewFixedDepositAccountState,
     onAction: (NewFixedDepositAccountAction) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val steps =
         listOf(
-            Step(stringResource(Res.string.step_charges)) {
+            Step(stringResource(Res.string.step_details)) {
                 DetailsPage(
                     onNext = { onAction(NewFixedDepositAccountAction.NextStep) },
                 )
