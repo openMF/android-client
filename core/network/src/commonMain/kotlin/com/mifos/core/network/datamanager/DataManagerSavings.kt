@@ -18,10 +18,10 @@ import com.mifos.core.network.BaseApiManager
 import com.mifos.core.network.GenericResponse
 import com.mifos.room.entities.accounts.savings.SavingsAccountTransactionRequestEntity
 import com.mifos.room.entities.accounts.savings.SavingsAccountWithAssociationsEntity
-import com.mifos.room.entities.client.Savings
 import com.mifos.room.entities.templates.savings.SavingProductsTemplate
 import com.mifos.room.entities.templates.savings.SavingsAccountTransactionTemplateEntity
 import com.mifos.room.helper.SavingsDaoHelper
+import io.ktor.client.statement.HttpResponse
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flatMapLatest
@@ -284,7 +284,7 @@ class DataManagerSavings(
     val getSavingsAccounts: Flow<List<ProductSavings>>
         get() = mBaseApiManager.savingsService.allSavingsAccounts()
 
-    fun createSavingsAccount(savingsPayload: SavingsPayload?): Flow<Savings> {
+    fun createSavingsAccount(savingsPayload: SavingsPayload?): Flow<HttpResponse> {
         return mBaseApiManager.savingsService.createSavingsAccount(savingsPayload)
     }
 

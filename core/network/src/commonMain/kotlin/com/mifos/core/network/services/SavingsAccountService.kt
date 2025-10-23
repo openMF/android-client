@@ -17,7 +17,6 @@ import com.mifos.core.network.GenericResponse
 import com.mifos.room.basemodel.APIEndPoint
 import com.mifos.room.entities.accounts.savings.SavingsAccountTransactionRequestEntity
 import com.mifos.room.entities.accounts.savings.SavingsAccountWithAssociationsEntity
-import com.mifos.room.entities.client.Savings
 import com.mifos.room.entities.templates.savings.SavingProductsTemplate
 import com.mifos.room.entities.templates.savings.SavingsAccountTransactionTemplateEntity
 import de.jensklingenberg.ktorfit.http.Body
@@ -25,6 +24,7 @@ import de.jensklingenberg.ktorfit.http.GET
 import de.jensklingenberg.ktorfit.http.POST
 import de.jensklingenberg.ktorfit.http.Path
 import de.jensklingenberg.ktorfit.http.Query
+import io.ktor.client.statement.HttpResponse
 import kotlinx.coroutines.flow.Flow
 
 /**
@@ -106,7 +106,7 @@ interface SavingsAccountService {
     fun allSavingsAccounts(): Flow<List<ProductSavings>>
 
     @POST(APIEndPoint.CREATE_SAVINGS_ACCOUNTS)
-    fun createSavingsAccount(@Body savingsPayload: SavingsPayload?): Flow<Savings>
+    fun createSavingsAccount(@Body savingsPayload: SavingsPayload?): Flow<HttpResponse>
 
     @GET(APIEndPoint.CREATE_SAVINGS_PRODUCTS + "/template")
     fun savingsAccountTemplate(): Flow<SavingProductsTemplate>

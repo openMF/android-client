@@ -17,7 +17,9 @@ import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.common.utils.DateHelper
+import com.mifos.core.data.util.Error
 import com.mifos.core.data.util.NetworkMonitor
+import com.mifos.core.data.util.extractErrorMessage
 import com.mifos.core.domain.useCases.CreateSavingsAccountUseCase
 import com.mifos.core.domain.useCases.GetClientTemplateUseCase
 import com.mifos.core.domain.useCases.GetSavingsProductTemplateUseCase
@@ -171,14 +173,27 @@ internal class SavingsAccountViewModel(
                         }
                     }
                     is DataState.Success -> {
-                        mutableStateFlow.update {
-                            it.copy(
-                                isOverLayLoadingActive = false,
-                                screenState = SavingsAccountState.ScreenState.ShowStatusDialog(
-                                    ResultStatus.SUCCESS,
-                                    getString(Res.string.feature_savings_new_savings_account_submitted_success),
-                                ),
-                            )
+                        val error = extractErrorMessage(result.data)
+                        if (error == Error.MSG_NOT_FOUND) {
+                            mutableStateFlow.update {
+                                it.copy(
+                                    isOverLayLoadingActive = false,
+                                    screenState = SavingsAccountState.ScreenState.ShowStatusDialog(
+                                        ResultStatus.SUCCESS,
+                                        getString(Res.string.feature_savings_new_savings_account_submitted_success),
+                                    ),
+                                )
+                            }
+                        } else {
+                            mutableStateFlow.update {
+                                it.copy(
+                                    screenState = SavingsAccountState.ScreenState.ShowStatusDialog(
+                                        ResultStatus.FAILURE,
+                                        error,
+                                    ),
+                                    isOverLayLoadingActive = false,
+                                )
+                            }
                         }
                     }
                     is DataState.Error -> {

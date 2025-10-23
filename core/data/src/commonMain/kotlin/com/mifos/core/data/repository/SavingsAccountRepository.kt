@@ -12,8 +12,8 @@ package com.mifos.core.data.repository
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.model.objects.organisations.ProductSavings
 import com.mifos.core.model.objects.payloads.SavingsPayload
-import com.mifos.room.entities.client.Savings
 import com.mifos.room.entities.templates.savings.SavingProductsTemplate
+import io.ktor.client.statement.HttpResponse
 import kotlinx.coroutines.flow.Flow
 
 /**
@@ -35,5 +35,5 @@ interface SavingsAccountRepository {
         productId: Int,
     ): Flow<DataState<SavingProductsTemplate>>
 
-    fun createSavingsAccount(savingsPayload: SavingsPayload?): Flow<DataState<Savings>>
+    fun createSavingsAccount(savingsPayload: SavingsPayload?): Flow<DataState<HttpResponse>>
 }

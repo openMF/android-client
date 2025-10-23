@@ -16,6 +16,7 @@ import androidclient.feature.savings.generated.resources.feature_savings_continu
 import androidclient.feature.savings.generated.resources.feature_savings_create_savings_account
 import androidclient.feature.savings.generated.resources.feature_savings_error_not_connected_internet
 import androidclient.feature.savings.generated.resources.feature_savings_failed
+import androidclient.feature.savings.generated.resources.feature_savings_retry
 import androidclient.feature.savings.generated.resources.feature_savings_success
 import androidclient.feature.savings.generated.resources.step_charges
 import androidclient.feature.savings.generated.resources.step_charges_add
@@ -169,7 +170,7 @@ private fun SavingsAccountScaffold(
             is SavingsAccountState.ScreenState.ShowStatusDialog -> {
                 MifosStatusDialog(
                     status = state.screenState.status,
-                    btnText = stringResource(Res.string.feature_savings_continue),
+                    btnText = if (state.screenState.status == ResultStatus.SUCCESS) stringResource(Res.string.feature_savings_continue) else stringResource(Res.string.feature_savings_retry),
                     onConfirm = { if (state.screenState.status == ResultStatus.SUCCESS) onAction(SavingsAccountAction.Finish) else onAction(SavingsAccountAction.Retry) },
                     successTitle = stringResource(Res.string.feature_savings_success),
                     successMessage = state.screenState.msg,
