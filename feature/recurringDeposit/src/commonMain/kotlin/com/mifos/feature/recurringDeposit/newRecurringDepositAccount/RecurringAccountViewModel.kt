@@ -9,6 +9,7 @@
  */
 package com.mifos.feature.recurringDeposit.newRecurringDepositAccount
 
+import androidclient.feature.recurringdeposit.generated.resources.Res
 import androidclient.feature.recurringdeposit.generated.resources.no_internet_connection
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
@@ -21,12 +22,10 @@ import com.mifos.core.model.objects.template.recurring.FieldOfficerOption
 import com.mifos.core.ui.util.BaseViewModel
 import com.mifos.feature.recurringDeposit.newRecurringDepositAccount.RecurringAccountState.ScreenState
 import com.mifos.room.entities.templates.recurringDeposit.RecurringDepositAccountTemplate
-import androidclient.feature.recurringdeposit.generated.resources.Res
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.getString
-
 
 class RecurringAccountViewModel(
     savedStateHandle: SavedStateHandle,
@@ -62,7 +61,7 @@ class RecurringAccountViewModel(
         viewModelScope.launch {
             val isConnected = networkMonitor.isOnline.first()
             mutableStateFlow.update {
-                it.copy(isOnline = isConnected,)
+                it.copy(isOnline = isConnected)
             }
             if (isConnected) {
 //                loadTemplate()
@@ -72,7 +71,7 @@ class RecurringAccountViewModel(
                 loadTemplateByProduct()
             } else {
                 setErrorState(
-                    getString(Res.string.no_internet_connection)
+                    getString(Res.string.no_internet_connection),
                 )
             }
         }
@@ -152,7 +151,7 @@ class RecurringAccountViewModel(
         var formattedAmount = ""
         revStr.forEachIndexed { index, ch ->
             formattedAmount += ch
-            if ((index + 1) % 3 == 0 ) {
+            if ((index + 1) % 3 == 0) {
                 formattedAmount += ","
             }
         }
@@ -192,7 +191,7 @@ class RecurringAccountViewModel(
             )
             observeNetwork()
 
-            if(state.isOnline) {
+            if (state.isOnline) {
                 recurringAccountRepository.createRecurringDepositAccount(payload).collect { dataState ->
                     when (dataState) {
                         is DataState.Error -> {
@@ -399,16 +398,14 @@ class RecurringAccountViewModel(
                             val strLen = action.depositAmount.length
                             val rev = action.depositAmount.reversed()
                             action.depositAmount.forEachIndexed { index, ch ->
-                                formattedAmount+=ch
-
+                                formattedAmount += ch
                             }
-
 
                             state.copy(
                                 recurringDepositAccountSettings = state.recurringDepositAccountSettings.copy(
                                     recurringDepositDetails = state.recurringDepositAccountSettings
                                         .recurringDepositDetails.copy(
-                                            depositAmount =  formattedAmount(action.depositAmount)
+                                            depositAmount = formattedAmount(action.depositAmount),
                                         ),
                                 ),
                             )
@@ -480,7 +477,6 @@ class RecurringAccountViewModel(
             }
         }
     }
-
 }
 
 data class RecurringAccountState(

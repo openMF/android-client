@@ -274,7 +274,7 @@ fun SettingPage(
         }
         AnimatedVisibility(
             visible = settingsState.preMatureClosure.applyPenalInterest,
-        ){
+        ) {
             MifosOutlinedTextField(
                 value = settingsState.preMatureClosure.penalInterest,
                 onValueChange = { onAction(RecurringAccountAction.RecurringAccountSettingsAction.SetPreMatureClosurePenalInterest(it)) },
@@ -317,8 +317,7 @@ fun SettingPage(
             )
         }
 
-
-        val isNextButtonActive  = settingsState.preMatureClosure.penalInterest.isNotBlank() &&
+        val isNextButtonActive = settingsState.preMatureClosure.penalInterest.isNotBlank() &&
             settingsState.preMatureClosure.minimumBalanceForInterestCalculation.isNotBlank() &&
             settingsState.recurringDepositDetails.depositAmount.isNotBlank() &&
             settingsState.depositPeriod.period.isNotBlank() &&
