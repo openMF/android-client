@@ -128,11 +128,13 @@ class SavingAccountViewModel(
                             _savingAccountUiState.value =
                                 SavingAccountUiState.ShowProgress
 
-                        is DataState.Success ->
-                            _savingAccountUiState.value =
-                                SavingAccountUiState.ShowSavingsAccountCreatedSuccessfully(
-                                    dataState.data,
-                                )
+                        is DataState.Success -> {
+                            // Not used in New UI implementation, however was causing build issue so commented for now, can be updated in further code refactoring.
+//                            _savingAccountUiState.value =
+//                                SavingAccountUiState.ShowSavingsAccountCreatedSuccessfully(
+//                                    dataState.data,
+//                                )
+                        }
                     }
                 }
         }
