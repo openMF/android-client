@@ -31,11 +31,11 @@ import androidclient.feature.recurringdeposit.generated.resources.recurring_depo
 import androidclient.feature.recurringdeposit.generated.resources.recurring_deposit_details
 import androidclient.feature.recurringdeposit.generated.resources.step_settings
 import androidclient.feature.recurringdeposit.generated.resources.type
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
@@ -75,9 +75,9 @@ fun SettingPage(
             .fillMaxWidth()
             .verticalScroll(scrollState),
         horizontalAlignment = Alignment.Start,
+        verticalArrangement = Arrangement.spacedBy(20.dp),
     ) {
         Text(stringResource(Res.string.step_settings), fontWeight = FontWeight.Bold, fontSize = 18.sp)
-        Spacer(Modifier.height(8.dp))
         Row(verticalAlignment = Alignment.CenterVertically) {
             Checkbox(settingsState.isMandatory, onCheckedChange = { onAction(RecurringAccountAction.RecurringAccountSettingsAction.ToggleMandatoryDeposit) })
             Text(stringResource(Res.string.is_mandatory_deposit))
@@ -96,7 +96,6 @@ fun SettingPage(
                 onCheckChanged = { onAction(RecurringAccountAction.RecurringAccountSettingsAction.ToggleAllowWithdrawals) },
             )
         }
-        Spacer(Modifier.height(16.dp))
         Text(stringResource(Res.string.lock_in_period), fontWeight = FontWeight.Bold)
         MifosOutlinedTextField(
             value = settingsState.lockInPeriod.frequency,
@@ -127,7 +126,6 @@ fun SettingPage(
             },
             label = stringResource(Res.string.type),
         )
-        Spacer(Modifier.height(16.dp))
         Text(stringResource(Res.string.recurring_deposit_details), fontWeight = FontWeight.Bold)
         MifosOutlinedTextField(
             value = settingsState.recurringDepositDetails.depositAmount,
@@ -141,7 +139,6 @@ fun SettingPage(
             ),
             modifier = Modifier.fillMaxWidth(),
         )
-        Spacer(Modifier.height(16.dp))
         Text(stringResource(Res.string.deposit_period), fontWeight = FontWeight.Bold)
         MifosOutlinedTextField(
             value = settingsState.depositPeriod.period,
@@ -178,7 +175,6 @@ fun SettingPage(
                 onCheckChanged = { onAction(RecurringAccountAction.RecurringAccountSettingsAction.ToggleDepositFrequencySameAsGroupCenterMeeting) },
             )
         }
-        Spacer(Modifier.height(16.dp))
         Text(stringResource(Res.string.minimum_deposit_term), fontWeight = FontWeight.Bold)
         MifosOutlinedTextField(
             value = settingsState.minDepositTerm.frequency,
@@ -210,7 +206,6 @@ fun SettingPage(
             label = stringResource(Res.string.type),
             modifier = Modifier.fillMaxWidth(),
         )
-        Spacer(Modifier.height(16.dp))
         Text(stringResource(Res.string.in_multiples_of), fontWeight = FontWeight.Bold)
         MifosOutlinedTextField(
             value = settingsState.minDepositTerm.frequencyAfterInMultiplesOf,
@@ -240,7 +235,6 @@ fun SettingPage(
             label = stringResource(Res.string.type),
             modifier = Modifier.fillMaxWidth(),
         )
-        Spacer(Modifier.height(16.dp))
         Text(stringResource(Res.string.maximum_deposit_term), fontWeight = FontWeight.Bold)
         MifosOutlinedTextField(
             value = settingsState.maxDepositTerm.frequency,
@@ -270,7 +264,6 @@ fun SettingPage(
             label = stringResource(Res.string.type),
             modifier = Modifier.fillMaxWidth(),
         )
-        Spacer(Modifier.height(16.dp))
         Text(stringResource(Res.string.for_pre_mature_closure), fontWeight = FontWeight.Bold)
         Row(verticalAlignment = Alignment.CenterVertically) {
             Checkbox(
@@ -279,61 +272,68 @@ fun SettingPage(
             )
             Text(stringResource(Res.string.apply_penal_interest))
         }
-        MifosOutlinedTextField(
-            value = settingsState.preMatureClosure.penalInterest,
-            onValueChange = { onAction(RecurringAccountAction.RecurringAccountSettingsAction.SetPreMatureClosurePenalInterest(it)) },
-            label = stringResource(Res.string.penal_interest_percentage),
-            config = MifosTextFieldConfig(
-                keyboardOptions = KeyboardOptions(
-                    keyboardType = KeyboardType.Number,
-                    imeAction = ImeAction.Next,
+        AnimatedVisibility(
+            visible = settingsState.preMatureClosure.applyPenalInterest,
+        ){
+            MifosOutlinedTextField(
+                value = settingsState.preMatureClosure.penalInterest,
+                onValueChange = { onAction(RecurringAccountAction.RecurringAccountSettingsAction.SetPreMatureClosurePenalInterest(it)) },
+                label = stringResource(Res.string.penal_interest_percentage),
+                config = MifosTextFieldConfig(
+                    keyboardOptions = KeyboardOptions(
+                        keyboardType = KeyboardType.Number,
+                        imeAction = ImeAction.Next,
+                    ),
                 ),
-            ),
-            modifier = Modifier.fillMaxWidth(),
-        )
-        MifosTextFieldDropdown(
-            value = if (settingsState.preMatureClosure.interestPeriodIndex != -1) {
-                state.recurringDepositAccountTemplate.preClosurePenalInterestOnTypeOptions?.get(settingsState.preMatureClosure.interestPeriodIndex)?.value ?: ""
-            } else {
-                ""
-            },
-            options = state.recurringDepositAccountTemplate.preClosurePenalInterestOnTypeOptions?.map {
-                it.value ?: ""
-            } ?: emptyList(),
-            onValueChanged = {},
-            onOptionSelected = { id, name ->
-                onAction(RecurringAccountAction.RecurringAccountSettingsAction.SetPreMatureClosureInterestPeriodIndex(id))
-            },
-            label = stringResource(Res.string.period),
-            modifier = Modifier.fillMaxWidth(),
-        )
-        MifosOutlinedTextField(
-            value = settingsState.preMatureClosure.minimumBalanceForInterestCalculation,
-            onValueChange = { onAction(RecurringAccountAction.RecurringAccountSettingsAction.SetPreMatureClosureMinimumBalanceForInterestCalculation(it)) },
-            label = stringResource(Res.string.minimum_balance_for_interest),
-            config = MifosTextFieldConfig(
-                keyboardOptions = KeyboardOptions(
-                    keyboardType = KeyboardType.Number,
-                    imeAction = ImeAction.Next,
+                modifier = Modifier.fillMaxWidth(),
+            )
+            MifosTextFieldDropdown(
+                value = if (settingsState.preMatureClosure.interestPeriodIndex != -1) {
+                    state.recurringDepositAccountTemplate.preClosurePenalInterestOnTypeOptions?.get(settingsState.preMatureClosure.interestPeriodIndex)?.value ?: ""
+                } else {
+                    ""
+                },
+                options = state.recurringDepositAccountTemplate.preClosurePenalInterestOnTypeOptions?.map {
+                    it.value ?: ""
+                } ?: emptyList(),
+                onValueChanged = {},
+                onOptionSelected = { id, name ->
+                    onAction(RecurringAccountAction.RecurringAccountSettingsAction.SetPreMatureClosureInterestPeriodIndex(id))
+                },
+                label = stringResource(Res.string.period),
+                modifier = Modifier.fillMaxWidth(),
+            )
+            MifosOutlinedTextField(
+                value = settingsState.preMatureClosure.minimumBalanceForInterestCalculation,
+                onValueChange = { onAction(RecurringAccountAction.RecurringAccountSettingsAction.SetPreMatureClosureMinimumBalanceForInterestCalculation(it)) },
+                label = stringResource(Res.string.minimum_balance_for_interest),
+                config = MifosTextFieldConfig(
+                    keyboardOptions = KeyboardOptions(
+                        keyboardType = KeyboardType.Number,
+                        imeAction = ImeAction.Next,
+                    ),
                 ),
-            ),
-            modifier = Modifier.fillMaxWidth(),
-        )
-        Spacer(Modifier.height(24.dp))
+                modifier = Modifier.fillMaxWidth(),
+            )
+        }
+
+
+        val isNextButtonActive  = settingsState.preMatureClosure.penalInterest.isNotBlank() &&
+            settingsState.preMatureClosure.minimumBalanceForInterestCalculation.isNotBlank() &&
+            settingsState.recurringDepositDetails.depositAmount.isNotBlank() &&
+            settingsState.depositPeriod.period.isNotBlank() &&
+            settingsState.lockInPeriod.frequency.isNotBlank() &&
+            settingsState.minDepositTerm.frequency.isNotBlank() &&
+            settingsState.minDepositTerm.frequencyAfterInMultiplesOf.isNotBlank() &&
+            settingsState.maxDepositTerm.frequency.isNotBlank()
+
         MifosTwoButtonRow(
             firstBtnText = stringResource(Res.string.back),
             secondBtnText = stringResource(Res.string.next),
             onFirstBtnClick = { onAction(RecurringAccountAction.RecurringAccountSettingsAction.OnBackPress) },
             onSecondBtnClick = { onAction(RecurringAccountAction.RecurringAccountSettingsAction.OnNextPress) },
             isButtonIconVisible = true,
-            isSecondButtonEnabled = settingsState.preMatureClosure.penalInterest.isNotBlank() &&
-                settingsState.preMatureClosure.minimumBalanceForInterestCalculation.isNotBlank() &&
-                settingsState.recurringDepositDetails.depositAmount.isNotBlank() &&
-                settingsState.depositPeriod.period.isNotBlank() &&
-                settingsState.lockInPeriod.frequency.isNotBlank() &&
-                settingsState.minDepositTerm.frequency.isNotBlank() &&
-                settingsState.minDepositTerm.frequencyAfterInMultiplesOf.isNotBlank() &&
-                settingsState.maxDepositTerm.frequency.isNotBlank(),
+            isSecondButtonEnabled = isNextButtonActive,
         )
     }
 }

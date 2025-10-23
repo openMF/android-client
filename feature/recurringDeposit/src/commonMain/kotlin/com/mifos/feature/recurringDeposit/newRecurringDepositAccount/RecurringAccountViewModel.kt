@@ -9,6 +9,7 @@
  */
 package com.mifos.feature.recurringDeposit.newRecurringDepositAccount
 
+import androidclient.feature.recurringdeposit.generated.resources.no_internet_connection
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
@@ -18,11 +19,14 @@ import com.mifos.core.data.util.NetworkMonitor
 import com.mifos.core.model.objects.payloads.RecurringDepositAccountPayload
 import com.mifos.core.model.objects.template.recurring.FieldOfficerOption
 import com.mifos.core.ui.util.BaseViewModel
-import com.mifos.feature.recurringDeposit.newRecurringDepositAccount.RecurringAccountState.DialogState
+import com.mifos.feature.recurringDeposit.newRecurringDepositAccount.RecurringAccountState.ScreenState
 import com.mifos.room.entities.templates.recurringDeposit.RecurringDepositAccountTemplate
+import androidclient.feature.recurringdeposit.generated.resources.Res
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import org.jetbrains.compose.resources.getString
+
 
 class RecurringAccountViewModel(
     savedStateHandle: SavedStateHandle,
@@ -42,14 +46,14 @@ class RecurringAccountViewModel(
     private fun setLoadingState() {
         mutableStateFlow.update {
             it.copy(
-                dialogState = DialogState.Loading,
+                screenState = ScreenState.Loading,
             )
         }
     }
     private fun setErrorState(message: String) {
         mutableStateFlow.update {
             it.copy(
-                dialogState = DialogState.Error(message),
+                screenState = ScreenState.Error(message),
             )
         }
     }
@@ -57,30 +61,47 @@ class RecurringAccountViewModel(
     private fun observeNetwork() {
         viewModelScope.launch {
             val isConnected = networkMonitor.isOnline.first()
-
+            mutableStateFlow.update {
+                it.copy(isOnline = isConnected,)
+            }
             if (isConnected) {
 //                loadTemplate()
+                // TODO
                 // Used only for testing purpose
                 // Must be removed from here after the implementation of detail screen is finished.
                 loadTemplateByProduct()
             } else {
-                setErrorState("No internet connection")
+                setErrorState(
+                    getString(Res.string.no_internet_connection)
+                )
             }
         }
     }
     private fun handleRetry() {
         mutableStateFlow.update {
             it.copy(
-                dialogState = null,
+                screenState = null,
                 recurringDepositAccountTemplate = RecurringDepositAccountTemplate(),
             )
         }
         observeNetwork()
     }
 
+    private fun moveToNextStep() {
+        if (state.currentStep < state.totalSteps) {
+            mutableStateFlow.update {
+                it.copy(
+                    currentStep = state.currentStep + 1,
+                )
+            }
+        } else {
+            sendEvent(RecurringAccountEvent.Finish)
+        }
+    }
+
     private fun loadTemplate() {
         viewModelScope.launch {
-            recurringAccountRepository.getRecuttingAccountTemplate().collect { templateState ->
+            recurringAccountRepository.getRecurringAccountTemplate().collect { templateState ->
                 when (templateState) {
                     is DataState.Error -> {
                         setErrorState(message = templateState.message)
@@ -91,7 +112,7 @@ class RecurringAccountViewModel(
                     is DataState.Success -> {
                         mutableStateFlow.update {
                             it.copy(
-                                dialogState = null,
+                                screenState = null,
                                 recurringDepositAccountTemplate = templateState.data,
                             )
                         }
@@ -102,7 +123,7 @@ class RecurringAccountViewModel(
     }
     private fun loadTemplateByProduct() {
         viewModelScope.launch {
-            recurringAccountRepository.getRecuttingAccountTemplateByProduct(
+            recurringAccountRepository.getRecurringAccountTemplateByProduct(
                 clientId = clientId,
                 productId = state.recurringDepositAccountDetail.productId,
             ).collect { templateState ->
@@ -116,7 +137,7 @@ class RecurringAccountViewModel(
                     is DataState.Success -> {
                         mutableStateFlow.update {
                             it.copy(
-                                dialogState = null,
+                                screenState = null,
                                 recurringDepositAccountTemplate = templateState.data,
                             )
                         }
@@ -126,7 +147,19 @@ class RecurringAccountViewModel(
         }
     }
 
-    fun createRecurringDepositAccount() {
+    private fun formattedAmount(amount: String): String {
+        val revStr = amount.reversed()
+        var formattedAmount = ""
+        revStr.forEachIndexed { index, ch ->
+            formattedAmount += ch
+            if ((index + 1) % 3 == 0 ) {
+                formattedAmount += ","
+            }
+        }
+        return "$ ${formattedAmount.reversed()}"
+    }
+
+    private fun createRecurringDepositAccount() {
         viewModelScope.launch {
             val s = state
             val settings = s.recurringDepositAccountSettings
@@ -157,17 +190,21 @@ class RecurringAccountViewModel(
                 // date in dd MM yyyy format.
                 submittedOnDate = s.recurringDepositAccountDetail.submittedOnDate,
             )
-            recurringAccountRepository.createRecurringDepositAccount(payload).collect { dataState ->
-                when (dataState) {
-                    is DataState.Error -> {
-                        setErrorState(dataState.message)
-                    }
-                    is DataState.Loading -> {
-                        setLoadingState()
-                    }
-                    is DataState.Success -> {
-                        mutableStateFlow.update {
-                            it.copy(dialogState = null)
+            observeNetwork()
+
+            if(state.isOnline) {
+                recurringAccountRepository.createRecurringDepositAccount(payload).collect { dataState ->
+                    when (dataState) {
+                        is DataState.Error -> {
+                            setErrorState(dataState.message)
+                        }
+                        is DataState.Loading -> {
+                            setLoadingState()
+                        }
+                        is DataState.Success -> {
+                            mutableStateFlow.update {
+                                it.copy(screenState = null)
+                            }
                         }
                     }
                 }
@@ -178,16 +215,7 @@ class RecurringAccountViewModel(
     override fun handleAction(action: RecurringAccountAction) {
         when (action) {
             RecurringAccountAction.NextStep -> {
-                val current = state.currentStep
-                if (current < state.totalSteps) {
-                    mutableStateFlow.update {
-                        it.copy(
-                            currentStep = current + 1,
-                        )
-                    }
-                } else {
-                    sendEvent(RecurringAccountEvent.Finish)
-                }
+                moveToNextStep()
             }
 
             is RecurringAccountAction.OnStepChange -> {
@@ -211,15 +239,7 @@ class RecurringAccountViewModel(
                         sendEvent(RecurringAccountEvent.NavigateBack)
                     }
                     RecurringAccountAction.RecurringAccountSettingsAction.OnNextPress -> {
-                        if (state.currentStep < state.totalSteps) {
-                            mutableStateFlow.update {
-                                it.copy(
-                                    currentStep = state.currentStep + 1,
-                                )
-                            }
-                        } else {
-                            sendEvent(RecurringAccountEvent.Finish)
-                        }
+                        moveToNextStep()
                     }
                     is RecurringAccountAction.RecurringAccountSettingsAction.SetDepositPeriod -> {
                         mutableStateFlow.update { state ->
@@ -356,7 +376,7 @@ class RecurringAccountViewModel(
                             state.copy(
                                 recurringDepositAccountSettings = state.recurringDepositAccountSettings.copy(
                                     preMatureClosure = state.recurringDepositAccountSettings.preMatureClosure.copy(
-                                        minimumBalanceForInterestCalculation = action.minimumBalanceForInterestCalculation,
+                                        minimumBalanceForInterestCalculation = formattedAmount(action.minimumBalanceForInterestCalculation),
                                     ),
                                 ),
                             )
@@ -375,11 +395,20 @@ class RecurringAccountViewModel(
                     }
                     is RecurringAccountAction.RecurringAccountSettingsAction.SetRecurringDepositAmount -> {
                         mutableStateFlow.update {
+                            var formattedAmount = ""
+                            val strLen = action.depositAmount.length
+                            val rev = action.depositAmount.reversed()
+                            action.depositAmount.forEachIndexed { index, ch ->
+                                formattedAmount+=ch
+
+                            }
+
+
                             state.copy(
                                 recurringDepositAccountSettings = state.recurringDepositAccountSettings.copy(
                                     recurringDepositDetails = state.recurringDepositAccountSettings
                                         .recurringDepositDetails.copy(
-                                            depositAmount = action.depositAmount,
+                                            depositAmount =  formattedAmount(action.depositAmount)
                                         ),
                                 ),
                             )
@@ -451,23 +480,26 @@ class RecurringAccountViewModel(
             }
         }
     }
+
 }
 
 data class RecurringAccountState(
+    val isOnline: Boolean = false,
     val currentStep: Int = 0,
     val totalSteps: Int = 4,
-    val dialogState: DialogState? = null,
+    val screenState: ScreenState? = null,
     val recurringDepositAccountDetail: RecurringAccountDetailsState = RecurringAccountDetailsState(),
     val recurringDepositAccountTemplate: RecurringDepositAccountTemplate = RecurringDepositAccountTemplate(),
     val recurringDepositAccountSettings: RecurringAccountSettingsState = RecurringAccountSettingsState(),
 ) {
-    sealed interface DialogState {
-        data class Error(val message: String) : DialogState
-        data object Loading : DialogState
+    sealed interface ScreenState {
+        data class Error(val message: String) : ScreenState
+        data object Loading : ScreenState
     }
 }
 
 data class RecurringAccountDetailsState(
+    // TODO
     // productId is set 6 only for testing.
     // It should be set -1 when the implementation of detail screen is finished.
     val productId: Int = 6,
@@ -494,7 +526,7 @@ data class RecurringAccountSettingsState(
     )
 
     data class RecurringDepositDetails(
-        val depositAmount: String = "",
+        val depositAmount: String = "$",
     )
 
     data class DepositPeriod(

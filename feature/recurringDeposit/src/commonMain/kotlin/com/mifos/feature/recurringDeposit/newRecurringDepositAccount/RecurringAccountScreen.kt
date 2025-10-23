@@ -22,7 +22,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.ui.components.MifosErrorComponent
 import com.mifos.core.ui.components.MifosProgressIndicator
@@ -102,7 +101,7 @@ private fun RecurringAccountScaffold(
         onBackPressed = { onAction(RecurringAccountAction.NavigateBack) },
         modifier = modifier,
     ) { paddingValues ->
-        if (state.dialogState == null) {
+        if (state.screenState == null) {
             MifosStepper(
                 steps = steps,
                 currentIndex = state.currentStep,
@@ -121,17 +120,17 @@ private fun RecurringAccountScaffold(
 fun RecurringDepositAccountDialogBox(
     state: RecurringAccountState,
 ) {
-    when (state.dialogState) {
-        is RecurringAccountState.DialogState.Error -> {
+    when (state.screenState) {
+        is RecurringAccountState.ScreenState.Error -> {
             MifosErrorComponent(
-                message = state.dialogState.message,
+                message = state.screenState.message,
                 isRetryEnabled = true,
                 onRetry = {
                     // Retry action can be handled here
                 },
             )
         }
-        RecurringAccountState.DialogState.Loading -> {
+        RecurringAccountState.ScreenState.Loading -> {
             MifosProgressIndicator()
         }
         null -> {}
