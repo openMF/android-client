@@ -170,7 +170,7 @@ private fun SavingsAccountScaffold(
                 MifosStatusDialog(
                     status = state.screenState.status,
                     btnText = stringResource(Res.string.feature_savings_continue),
-                    onConfirm = { if(state.screenState.status == ResultStatus.SUCCESS) onAction(SavingsAccountAction.Finish) else onAction(SavingsAccountAction.Retry) },
+                    onConfirm = { if (state.screenState.status == ResultStatus.SUCCESS) onAction(SavingsAccountAction.Finish) else onAction(SavingsAccountAction.Retry) },
                     successTitle = stringResource(Res.string.feature_savings_success),
                     successMessage = state.screenState.msg,
                     failureTitle = stringResource(Res.string.feature_savings_failed),

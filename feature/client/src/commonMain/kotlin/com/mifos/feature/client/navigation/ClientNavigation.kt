@@ -340,7 +340,7 @@ fun NavGraphBuilder.clientNavGraph(
             onBackPressed = navController::popBackStack,
             loadMoreSavingsAccountInfo = navController::navigateToDataTable,
             loadDocuments = navController::navigateToDocumentListScreen,
-            onFinish = navController::navigateToClientProfileGeneralRouteOnStatus
+            onFinish = navController::navigateToClientProfileGeneralRouteOnStatus,
         )
 
         shareAccountDestination()

@@ -36,7 +36,7 @@ class SavingsPayload {
     var lockinPeriodFrequency: Int? = null
     var lockinPeriodFrequencyType: Int? = null
 
-    var charges : List<ChargesPayload>? = null
+    var charges: List<ChargesPayload>? = null
     var nominalAnnualInterestRateOverdraft: String? = null
     var overdraftLimit: String? = null
     var minOverdraftForInterestCalculation: String? = null

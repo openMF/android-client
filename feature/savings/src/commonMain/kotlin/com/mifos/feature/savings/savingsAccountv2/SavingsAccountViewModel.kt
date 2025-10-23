@@ -64,7 +64,7 @@ internal class SavingsAccountViewModel(
             is SavingsAccountAction.Finish -> {
                 mutableStateFlow.update {
                     it.copy(
-                        screenState = SavingsAccountState.ScreenState.Success
+                        screenState = SavingsAccountState.ScreenState.Success,
                     )
                 }
                 sendEvent(SavingsAccountEvent.Finish)
@@ -124,7 +124,7 @@ internal class SavingsAccountViewModel(
         submitSavingsApplication(createSavingsPayload())
     }
 
-    private fun createSavingsPayload() : SavingsPayload {
+    private fun createSavingsPayload(): SavingsPayload {
         val savingsPayload = SavingsPayload()
         savingsPayload.apply {
             locale = "en"
@@ -139,7 +139,7 @@ internal class SavingsAccountViewModel(
             minRequiredOpeningBalance = state.minimumOpeningBalance
             minRequiredBalance = state.monthlyMinimumBalance
             lockinPeriodFrequency = state.frequency.let { if (it.isNotBlank()) it.toInt() else null }
-            lockinPeriodFrequencyType = state.freqTypeIndex.let { if (it != -1) it else null}
+            lockinPeriodFrequencyType = state.freqTypeIndex.let { if (it != -1) it else null }
             charges = state.addedCharges.map { charges ->
                 ChargesPayload(
                     chargeId = charges.id,
@@ -162,7 +162,7 @@ internal class SavingsAccountViewModel(
         val online = networkMonitor.isOnline.first()
         if (online) {
             createSavingsAccountUseCase(savingsPayload).collect { result ->
-                when(result) {
+                when (result) {
                     is DataState.Loading -> {
                         mutableStateFlow.update {
                             it.copy(
@@ -177,7 +177,7 @@ internal class SavingsAccountViewModel(
                                 screenState = SavingsAccountState.ScreenState.ShowStatusDialog(
                                     ResultStatus.SUCCESS,
                                     getString(Res.string.feature_savings_new_savings_account_submitted_success),
-                                )
+                                ),
                             )
                         }
                     }
@@ -202,7 +202,6 @@ internal class SavingsAccountViewModel(
             }
         }
     }
-
 
     private fun handleChargesAmountChangeError(error: StringResource?) {
         mutableStateFlow.update {
@@ -648,14 +647,14 @@ constructor(
     }
 
     val isDetailsNextEnabled = submissionDate.isNotEmpty() &&
-            savingsProductSelected != -1 &&
-            fieldOfficerIndex != -1
+        savingsProductSelected != -1 &&
+        fieldOfficerIndex != -1
 
     val isTermsNextEnabled = isDetailsNextEnabled &&
-            currencyIndex != -1 &&
-            interestCalcIndex != -1 &&
-            interestPostingPeriodIndex != -1 &&
-            interestCompPeriodIndex != -1
+        currencyIndex != -1 &&
+        interestCalcIndex != -1 &&
+        interestPostingPeriodIndex != -1 &&
+        interestCompPeriodIndex != -1
 }
 
 sealed interface SavingsAccountEvent {
@@ -668,7 +667,7 @@ sealed interface SavingsAccountAction {
     data object NextStep : SavingsAccountAction
     data object PreviousStep : SavingsAccountAction
     data object Finish : SavingsAccountAction
-    data object SubmitSavingsApplication: SavingsAccountAction
+    data object SubmitSavingsApplication : SavingsAccountAction
     data class OnStepChange(val newIndex: Int) : SavingsAccountAction
     data class OnSubmissionDateChange(val date: String) : SavingsAccountAction
     data class OnSubmissionDatePick(val state: Boolean) : SavingsAccountAction
