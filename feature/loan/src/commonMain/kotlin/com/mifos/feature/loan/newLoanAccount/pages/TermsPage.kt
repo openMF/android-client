@@ -21,13 +21,13 @@ import androidclient.feature.loan.generated.resources.collateral_data
 import androidclient.feature.loan.generated.resources.feature_loan_cancel
 import androidclient.feature.loan.generated.resources.feature_loan_select
 import androidclient.feature.loan.generated.resources.first_repayment_date
-import androidclient.feature.loan.generated.resources.frequency
 import androidclient.feature.loan.generated.resources.grace_on_interest_payment
 import androidclient.feature.loan.generated.resources.grace_on_principal_payment
 import androidclient.feature.loan.generated.resources.interest_calculation_period
 import androidclient.feature.loan.generated.resources.interest_calculations
 import androidclient.feature.loan.generated.resources.interest_charged_from
 import androidclient.feature.loan.generated.resources.interest_free_period
+import androidclient.feature.loan.generated.resources.interest_frequency
 import androidclient.feature.loan.generated.resources.interest_method
 import androidclient.feature.loan.generated.resources.is_equal_amortization
 import androidclient.feature.loan.generated.resources.loan_schedule
@@ -44,6 +44,7 @@ import androidclient.feature.loan.generated.resources.principal
 import androidclient.feature.loan.generated.resources.recalculate_interest
 import androidclient.feature.loan.generated.resources.repaid_every
 import androidclient.feature.loan.generated.resources.repaid_every_label
+import androidclient.feature.loan.generated.resources.repayment_frequency
 import androidclient.feature.loan.generated.resources.repayment_strategy
 import androidclient.feature.loan.generated.resources.repayments
 import androidclient.feature.loan.generated.resources.select_day
@@ -122,7 +123,13 @@ fun TermsPage(
                     onClick = {
                         onAction(NewLoanAccountAction.OnFirstRepaymentDatePick(false))
                         firstRepaymentOnDatePickerState.selectedDateMillis?.let {
-                            onAction(NewLoanAccountAction.OnFirstRepaymentDateChange(DateHelper.getDateAsStringFromLong(it)))
+                            onAction(
+                                NewLoanAccountAction.OnFirstRepaymentDateChange(
+                                    DateHelper.getDateAsStringFromLong(
+                                        it,
+                                    ),
+                                ),
+                            )
                         }
                     },
                 ) { Text(stringResource(Res.string.feature_loan_select)) }
@@ -149,7 +156,13 @@ fun TermsPage(
                     onClick = {
                         onAction(NewLoanAccountAction.OnInterestChargedFromDatePick(false))
                         interestChargedFromDatePickerState.selectedDateMillis?.let {
-                            onAction(NewLoanAccountAction.OnInterestChargedFromChange(DateHelper.getDateAsStringFromLong(it)))
+                            onAction(
+                                NewLoanAccountAction.OnInterestChargedFromChange(
+                                    DateHelper.getDateAsStringFromLong(
+                                        it,
+                                    ),
+                                ),
+                            )
                         }
                     },
                 ) { Text(stringResource(Res.string.feature_loan_select)) }
@@ -178,9 +191,9 @@ fun TermsPage(
             Spacer(Modifier.height(DesignToken.padding.large))
 
             MifosOutlinedTextField(
-                value = state.principalAmountText,
+                value = state.principalAmount,
                 onValueChange = {
-                    onAction(NewLoanAccountAction.OnPrincipalAmountChange(it.toDoubleOrNull() ?: 0.0, it))
+                    onAction(NewLoanAccountAction.OnPrincipalAmountChange(if (state.principalAmount.isEmpty()) "0" else it))
                 },
                 label = stringResource(Res.string.principal),
                 config = MifosTextFieldConfig(
@@ -213,13 +226,15 @@ fun TermsPage(
                 value = if (state.termFrequencyIndex == -1) {
                     ""
                 } else {
-                    state.loanTemplate?.termFrequencyTypeOptions[state.termFrequencyIndex]?.value ?: ""
+                    state.loanTemplate?.termFrequencyTypeOptions[state.termFrequencyIndex]?.value
+                        ?: ""
                 },
                 onValueChanged = {},
                 onOptionSelected = { index, value ->
                     onAction(NewLoanAccountAction.OnTermFrequencyIndexChange(index))
                 },
-                options = state.loanTemplate?.termFrequencyTypeOptions?.map { it.value ?: "" } ?: emptyList(),
+                options = state.loanTemplate?.termFrequencyTypeOptions?.map { it.value ?: "" }
+                    ?: emptyList(),
                 label = stringResource(Res.string.term_frequency),
             )
 
@@ -277,12 +292,16 @@ fun TermsPage(
                 value = if (state.termFrequencyIndex == -1) {
                     ""
                 } else {
-                    state.loanTemplate?.termFrequencyTypeOptions[state.termFrequencyIndex]?.value ?: ""
+                    state.loanTemplate?.termFrequencyTypeOptions[state.termFrequencyIndex]?.value
+                        ?: ""
                 },
                 onValueChanged = {},
-                onOptionSelected = { index, value -> },
-                options = state.loanTemplate?.termFrequencyTypeOptions?.map { it.value ?: "" } ?: emptyList(),
-                label = stringResource(Res.string.frequency),
+                onOptionSelected = { index, value ->
+                    onAction(NewLoanAccountAction.OnTermFrequencyIndexChange(index))
+                },
+                options = state.loanTemplate?.termFrequencyTypeOptions?.map { it.value ?: "" }
+                    ?: emptyList(),
+                label = stringResource(Res.string.repayment_frequency),
                 readOnly = true,
             )
 
@@ -295,13 +314,16 @@ fun TermsPage(
                     value = if (state.selectedOnIndex == -1) {
                         ""
                     } else {
-                        state.loanTemplate?.repaymentFrequencyNthDayTypeOptions[state.selectedOnIndex]?.value ?: ""
+                        state.loanTemplate?.repaymentFrequencyNthDayTypeOptions[state.selectedOnIndex]?.value
+                            ?: ""
                     },
                     onValueChanged = {},
                     onOptionSelected = { index, value ->
                         onAction(NewLoanAccountAction.OnSelectedOnIndexChange(index))
                     },
-                    options = state.loanTemplate?.repaymentFrequencyNthDayTypeOptions?.map { it.value ?: "" } ?: emptyList(),
+                    options = state.loanTemplate?.repaymentFrequencyNthDayTypeOptions?.map {
+                        it.value ?: ""
+                    } ?: emptyList(),
                     label = stringResource(Res.string.select_on),
                 )
 
@@ -309,13 +331,16 @@ fun TermsPage(
                     value = if (state.selectedDayIndex == -1) {
                         ""
                     } else {
-                        state.loanTemplate?.repaymentFrequencyDaysOfWeekTypeOptions[state.selectedDayIndex]?.value ?: ""
+                        state.loanTemplate?.repaymentFrequencyDaysOfWeekTypeOptions[state.selectedDayIndex]?.value
+                            ?: ""
                     },
                     onValueChanged = {},
                     onOptionSelected = { index, value ->
                         onAction(NewLoanAccountAction.OnSelectedDayIndexChange(index))
                     },
-                    options = state.loanTemplate?.repaymentFrequencyDaysOfWeekTypeOptions?.map { it.value ?: "" } ?: emptyList(),
+                    options = state.loanTemplate?.repaymentFrequencyDaysOfWeekTypeOptions?.map {
+                        it.value ?: ""
+                    } ?: emptyList(),
                     label = stringResource(Res.string.select_day),
                 )
 
@@ -329,9 +354,13 @@ fun TermsPage(
             Spacer(Modifier.height(DesignToken.padding.large))
 
             MifosOutlinedTextField(
-                value = state.nominalInterestRateText,
+                value = state.nominalInterestRate,
                 onValueChange = {
-                    onAction(NewLoanAccountAction.OnNominalInterestRateChange(it.toDoubleOrNull() ?: 0.0, it))
+                    onAction(
+                        NewLoanAccountAction.OnNominalInterestRateChange(
+                            if (state.nominalInterestRate.isBlank()) "0" else it,
+                        ),
+                    )
                 },
                 label = stringResource(Res.string.nominal_interest_rate_percent),
                 config = MifosTextFieldConfig(
@@ -347,27 +376,32 @@ fun TermsPage(
                 value = if (state.nominalFrequencyIndex == -1) {
                     ""
                 } else {
-                    state.loanTemplate?.interestRateFrequencyTypeOptions[state.nominalFrequencyIndex]?.value ?: ""
+                    state.loanTemplate?.interestRateFrequencyTypeOptions[state.nominalFrequencyIndex]?.value
+                        ?: ""
                 },
                 onValueChanged = {},
                 onOptionSelected = { index, value ->
                     onAction(NewLoanAccountAction.OnNominalFrequencyIndexChange(index))
                 },
-                options = state.loanTemplate?.interestRateFrequencyTypeOptions?.map { it.value ?: "" } ?: emptyList(),
-                label = stringResource(Res.string.frequency),
+                options = state.loanTemplate?.interestRateFrequencyTypeOptions?.map {
+                    it.value ?: ""
+                } ?: emptyList(),
+                label = stringResource(Res.string.interest_frequency),
             )
 
             MifosTextFieldDropdown(
                 value = if (state.nominalInterestMethodIndex == -1) {
                     ""
                 } else {
-                    state.loanTemplate?.interestTypeOptions[state.nominalInterestMethodIndex]?.value ?: ""
+                    state.loanTemplate?.interestTypeOptions[state.nominalInterestMethodIndex]?.value
+                        ?: ""
                 },
                 onValueChanged = {},
                 onOptionSelected = { index, value ->
                     onAction(NewLoanAccountAction.OnNominalMethodIndexChange(index))
                 },
-                options = state.loanTemplate?.interestTypeOptions?.map { it.value ?: "" } ?: emptyList(),
+                options = state.loanTemplate?.interestTypeOptions?.map { it.value ?: "" }
+                    ?: emptyList(),
                 label = stringResource(Res.string.interest_method),
             )
 
@@ -375,13 +409,15 @@ fun TermsPage(
                 value = if (state.nominalAmortizationIndex == -1) {
                     ""
                 } else {
-                    state.loanTemplate?.amortizationTypeOptions[state.nominalAmortizationIndex]?.value ?: ""
+                    state.loanTemplate?.amortizationTypeOptions[state.nominalAmortizationIndex]?.value
+                        ?: ""
                 },
                 onValueChanged = {},
                 onOptionSelected = { index, value ->
                     onAction(NewLoanAccountAction.OnNominalAmortizationIndexChange(index))
                 },
-                options = state.loanTemplate?.amortizationTypeOptions?.map { it.value ?: "" } ?: emptyList(),
+                options = state.loanTemplate?.amortizationTypeOptions?.map { it.value ?: "" }
+                    ?: emptyList(),
                 label = stringResource(Res.string.amortization),
             )
 
@@ -427,20 +463,27 @@ fun TermsPage(
                 value = if (state.repaymentStrategyIndex == -1) {
                     ""
                 } else {
-                    state.loanTemplate?.transactionProcessingStrategyOptions[state.repaymentStrategyIndex]?.name ?: ""
+                    state.loanTemplate?.transactionProcessingStrategyOptions[state.repaymentStrategyIndex]?.name
+                        ?: ""
                 },
                 onValueChanged = {},
                 onOptionSelected = { index, value ->
                     onAction(NewLoanAccountAction.OnRepaymentStrategyIndexChange(index))
                 },
-                options = state.loanTemplate?.transactionProcessingStrategyOptions?.map { it.name ?: "" } ?: emptyList(),
+                options = state.loanTemplate?.transactionProcessingStrategyOptions?.map {
+                    it.name ?: ""
+                } ?: emptyList(),
                 label = stringResource(Res.string.repayment_strategy),
             )
 
             MifosOutlinedTextField(
                 value = state.balloonRepaymentAmount.toString(),
                 onValueChange = {
-                    onAction(NewLoanAccountAction.OnBalloonRepaymentAmountChange(it.toIntOrNull() ?: 0))
+                    onAction(
+                        NewLoanAccountAction.OnBalloonRepaymentAmountChange(
+                            it.toIntOrNull() ?: 0,
+                        ),
+                    )
                 },
                 label = stringResource(Res.string.balloon_repayment_amount),
                 config = MifosTextFieldConfig(
@@ -463,13 +506,16 @@ fun TermsPage(
                 value = if (state.interestCalculationPeriodIndex == -1) {
                     ""
                 } else {
-                    state.loanTemplate?.interestCalculationPeriodTypeOptions[state.interestCalculationPeriodIndex]?.value ?: ""
+                    state.loanTemplate?.interestCalculationPeriodTypeOptions[state.interestCalculationPeriodIndex]?.value
+                        ?: ""
                 },
                 onValueChanged = {},
                 onOptionSelected = { index, value ->
                     onAction(NewLoanAccountAction.OnInterestCalculationPeriodIndexChange(index))
                 },
-                options = state.loanTemplate?.interestCalculationPeriodTypeOptions?.map { it.value ?: "" } ?: emptyList(),
+                options = state.loanTemplate?.interestCalculationPeriodTypeOptions?.map {
+                    it.value ?: ""
+                } ?: emptyList(),
                 label = stringResource(Res.string.interest_calculation_period),
             )
 
@@ -532,7 +578,11 @@ fun TermsPage(
             MifosOutlinedTextField(
                 value = state.moratoriumGraceOnPrincipalPayment.toString(),
                 onValueChange = {
-                    onAction(NewLoanAccountAction.OnMoratoriumGraceOnPrincipalPaymentChange(it.toIntOrNull() ?: 0))
+                    onAction(
+                        NewLoanAccountAction.OnMoratoriumGraceOnPrincipalPaymentChange(
+                            it.toIntOrNull() ?: 0,
+                        ),
+                    )
                 },
                 label = stringResource(Res.string.grace_on_principal_payment),
                 config = MifosTextFieldConfig(
@@ -547,7 +597,11 @@ fun TermsPage(
             MifosOutlinedTextField(
                 value = state.moratoriumGraceOnInterestPayment.toString(),
                 onValueChange = {
-                    onAction(NewLoanAccountAction.OnMoratoriumGraceOnInterestPaymentChange(it.toIntOrNull() ?: 0))
+                    onAction(
+                        NewLoanAccountAction.OnMoratoriumGraceOnInterestPaymentChange(
+                            it.toIntOrNull() ?: 0,
+                        ),
+                    )
                 },
                 label = stringResource(Res.string.grace_on_interest_payment),
                 config = MifosTextFieldConfig(
@@ -562,7 +616,11 @@ fun TermsPage(
             MifosOutlinedTextField(
                 value = state.moratoriumOnArrearsAgeing.toString(),
                 onValueChange = {
-                    onAction(NewLoanAccountAction.OnMoratoriumOnArrearsAgeingChange(it.toIntOrNull() ?: 0))
+                    onAction(
+                        NewLoanAccountAction.OnMoratoriumOnArrearsAgeingChange(
+                            it.toIntOrNull() ?: 0,
+                        ),
+                    )
                 },
                 label = stringResource(Res.string.on_arrears_ageing),
                 config = MifosTextFieldConfig(

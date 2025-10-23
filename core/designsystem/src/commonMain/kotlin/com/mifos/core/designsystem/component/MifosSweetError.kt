@@ -28,6 +28,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.mifos.core.designsystem.theme.MifosTheme
 import core.designsystem.generated.resources.Res
@@ -39,6 +40,7 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 @Composable
 fun MifosSweetError(
     message: String,
+    isShowLoadMsg: Boolean = true,
     modifier: Modifier = Modifier
         .fillMaxSize()
         .padding(18.dp)
@@ -52,14 +54,16 @@ fun MifosSweetError(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        Text(
-            text = stringResource(Res.string.core_designsystem_unable_to_load),
-            style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.secondary,
-        )
+        if (isShowLoadMsg) {
+            Text(
+                text = stringResource(Res.string.core_designsystem_unable_to_load),
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.secondary,
+            )
+        }
         Text(
             text = message,
-            style = MaterialTheme.typography.bodyMedium,
+            style = MaterialTheme.typography.bodyMedium.copy(textAlign = TextAlign.Center),
             color = MaterialTheme.colorScheme.secondary,
         )
         if (isRetryEnabled) {

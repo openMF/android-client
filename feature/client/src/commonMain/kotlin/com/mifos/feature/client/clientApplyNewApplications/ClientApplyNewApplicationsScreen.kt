@@ -16,6 +16,7 @@ import androidclient.feature.client.generated.resources.client_apply_new_applica
 import androidclient.feature.client.generated.resources.client_apply_new_applications_apply_loan_account
 import androidclient.feature.client.generated.resources.client_apply_new_applications_apply_recurring_account
 import androidclient.feature.client.generated.resources.client_apply_new_applications_apply_savings_account
+import androidclient.feature.client.generated.resources.client_apply_new_applications_client_inactive_msg
 import androidclient.feature.client.generated.resources.client_apply_new_applications_fixed_account
 import androidclient.feature.client.generated.resources.client_apply_new_applications_loan_account
 import androidclient.feature.client.generated.resources.client_apply_new_applications_recurring_account
@@ -40,12 +41,14 @@ import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.mifos.core.designsystem.component.MifosScaffold
+import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.designsystem.theme.MifosTypography
 import com.mifos.core.ui.components.MifosBreadcrumbNavBar
 import com.mifos.core.ui.components.MifosRowCard
 import com.mifos.core.ui.util.EventsEffect
 import com.mifos.core.ui.util.TextUtil
+import com.mifos.room.entities.client.ClientStatusEntity
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import org.jetbrains.compose.resources.DrawableResource
@@ -72,9 +75,15 @@ internal fun ClientApplyNewApplicationsScreen(
             is ClientApplyNewApplicationsEvent.OnActionClick -> {
                 when (event.action) {
                     ClientApplyNewApplicationsItem.NewFixedAccount -> onNavigateApplyFixedAccount()
-                    ClientApplyNewApplicationsItem.NewLoanAccount -> onNavigateApplyLoanAccount(state.clientId)
+                    ClientApplyNewApplicationsItem.NewLoanAccount -> onNavigateApplyLoanAccount(
+                        state.clientId,
+                    )
+
                     ClientApplyNewApplicationsItem.NewRecurringAccount -> onNavigateApplyRecurringAccount()
-                    ClientApplyNewApplicationsItem.NewSavingsAccount -> onNavigateApplySavingsAccount(state.clientId)
+                    ClientApplyNewApplicationsItem.NewSavingsAccount -> onNavigateApplySavingsAccount(
+                        state.clientId,
+                    )
+
                     ClientApplyNewApplicationsItem.NewShareAccount -> onNavigateApplyShareAccount()
                 }
             }
@@ -82,6 +91,7 @@ internal fun ClientApplyNewApplicationsScreen(
     }
 
     ClientApplyNewApplicationsContent(
+        state = state,
         navController = navController,
         onAction = remember(viewModel) { { viewModel.trySendAction(it) } },
     )
@@ -89,6 +99,7 @@ internal fun ClientApplyNewApplicationsScreen(
 
 @Composable
 private fun ClientApplyNewApplicationsContent(
+    state: ClientApplyNewApplicationsState,
     navController: NavController,
     onAction: (ClientApplyNewApplicationsAction) -> Unit,
 ) {
@@ -102,35 +113,41 @@ private fun ClientApplyNewApplicationsContent(
             modifier = Modifier.fillMaxSize().padding(paddingValues),
         ) {
             MifosBreadcrumbNavBar(navController)
-            Column(
-                modifier = Modifier.padding(horizontal = DesignToken.padding.large),
-            ) {
-                Text(
-                    text = stringResource(Res.string.client_apply_new_applications_title),
-                    style = MifosTypography.labelLargeEmphasized,
-                )
-
-                Spacer(modifier = Modifier.height(DesignToken.spacing.medium))
-
-                clientApplyNewApplicationsItems.forEach {
-                    MifosRowCard(
-                        title = stringResource(it.title),
-                        imageVector = it.icon,
-                        leftValues = listOf(
-                            TextUtil(
-                                text = stringResource(it.subTitle),
-                                style = MifosTypography.bodySmall,
-                                color = MaterialTheme.colorScheme.secondary,
-                            ),
-                        ),
-                        rightValues = emptyList(),
-                        modifier = Modifier
-                            .clickable {
-                                onAction(ClientApplyNewApplicationsAction.OnActionClick(it))
-                            }
-                            .padding(vertical = DesignToken.padding.medium),
+            if (state.status == ClientStatusEntity.STATUS_ACTIVE) {
+                Column(
+                    modifier = Modifier.padding(horizontal = DesignToken.padding.large),
+                ) {
+                    Text(
+                        text = stringResource(Res.string.client_apply_new_applications_title),
+                        style = MifosTypography.labelLargeEmphasized,
                     )
+                    Spacer(modifier = Modifier.height(DesignToken.spacing.medium))
+                    clientApplyNewApplicationsItems.forEach {
+                        MifosRowCard(
+                            title = stringResource(it.title),
+                            imageVector = it.icon,
+                            leftValues = listOf(
+                                TextUtil(
+                                    text = stringResource(it.subTitle),
+                                    style = MifosTypography.bodySmall,
+                                    color = MaterialTheme.colorScheme.secondary,
+                                ),
+                            ),
+                            rightValues = emptyList(),
+                            modifier = Modifier
+                                .clickable {
+                                    onAction(ClientApplyNewApplicationsAction.OnActionClick(it))
+                                }
+                                .padding(vertical = DesignToken.padding.medium),
+                        )
+                    }
                 }
+            } else {
+                MifosSweetError(
+                    message = stringResource(Res.string.client_apply_new_applications_client_inactive_msg),
+                    isShowLoadMsg = false,
+                    isRetryEnabled = false,
+                )
             }
         }
     }

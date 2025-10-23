@@ -29,7 +29,6 @@ import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.designsystem.theme.MifosTypography
 import com.mifos.core.model.objects.account.loan.Period
 import com.mifos.core.ui.components.MifosDefaultListingComponentFromStringResources
-import com.mifos.core.ui.components.MifosProgressIndicator
 import com.mifos.core.ui.components.MifosTwoButtonRow
 import com.mifos.feature.loan.component.RepaymentPeriodCard
 import com.mifos.feature.loan.newLoanAccount.NewLoanAccountAction
@@ -38,23 +37,6 @@ import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun SchedulePage(
-    state: NewLoanAccountState,
-    onAction: (NewLoanAccountAction) -> Unit,
-    modifier: Modifier = Modifier,
-) {
-    if (state.isLoading) {
-        MifosProgressIndicator()
-    } else {
-        ScheduleContent(
-            state = state,
-            onAction = onAction,
-            modifier = modifier,
-        )
-    }
-}
-
-@Composable
-fun ScheduleContent(
     state: NewLoanAccountState,
     onAction: (NewLoanAccountAction) -> Unit,
     modifier: Modifier = Modifier,

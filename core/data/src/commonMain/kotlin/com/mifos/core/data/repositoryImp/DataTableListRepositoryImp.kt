@@ -19,6 +19,7 @@ import com.mifos.core.network.datamanager.DataManagerLoan
 import com.mifos.core.network.model.LoansPayload
 import com.mifos.room.entities.accounts.loans.Loan
 import com.mifos.room.entities.client.ClientPayloadEntity
+import io.ktor.client.statement.HttpResponse
 import kotlinx.coroutines.flow.Flow
 
 /**
@@ -30,7 +31,7 @@ class DataTableListRepositoryImp(
     private val dataManagerClient: DataManagerClient,
 ) : DataTableListRepository {
 
-    override fun createLoansAccount(loansPayload: LoansPayload?): Flow<DataState<Loan>> {
+    override fun createLoansAccount(loansPayload: LoansPayload?): Flow<DataState<HttpResponse>> {
         return dataManagerLoan.createLoansAccount(loansPayload)
             .asDataStateFlow()
     }

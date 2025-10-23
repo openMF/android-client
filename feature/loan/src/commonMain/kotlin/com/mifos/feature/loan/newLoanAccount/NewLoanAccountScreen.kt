@@ -17,8 +17,8 @@ import androidclient.feature.loan.generated.resources.add_new_collateral
 import androidclient.feature.loan.generated.resources.back
 import androidclient.feature.loan.generated.resources.collateral
 import androidclient.feature.loan.generated.resources.edit_charge
+import androidclient.feature.loan.generated.resources.feature_loan_account_created_successfully
 import androidclient.feature.loan.generated.resources.feature_loan_cancel
-import androidclient.feature.loan.generated.resources.new_loan_account_title
 import androidclient.feature.loan.generated.resources.quantity
 import androidclient.feature.loan.generated.resources.step_charges
 import androidclient.feature.loan.generated.resources.step_details
@@ -37,8 +37,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -50,6 +52,7 @@ import com.mifos.core.designsystem.component.MifosBasicDialog
 import com.mifos.core.designsystem.component.MifosBottomSheet
 import com.mifos.core.designsystem.component.MifosOutlinedTextField
 import com.mifos.core.designsystem.component.MifosScaffold
+import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.component.MifosTextFieldConfig
 import com.mifos.core.designsystem.component.MifosTextFieldDropdown
 import com.mifos.core.designsystem.theme.DesignToken
@@ -58,10 +61,10 @@ import com.mifos.core.ui.components.Actions
 import com.mifos.core.ui.components.AddChargeBottomSheet
 import com.mifos.core.ui.components.MifosActionsChargeListingComponent
 import com.mifos.core.ui.components.MifosBreadcrumbNavBar
-import com.mifos.core.ui.components.MifosErrorComponent
 import com.mifos.core.ui.components.MifosListingComponentOutline
 import com.mifos.core.ui.components.MifosListingRowItem
 import com.mifos.core.ui.components.MifosProgressIndicator
+import com.mifos.core.ui.components.MifosProgressIndicatorOverlay
 import com.mifos.core.ui.components.MifosStepper
 import com.mifos.core.ui.components.MifosTwoButtonRow
 import com.mifos.core.ui.components.Step
@@ -71,8 +74,11 @@ import com.mifos.feature.loan.newLoanAccount.pages.DetailsPage
 import com.mifos.feature.loan.newLoanAccount.pages.PreviewPage
 import com.mifos.feature.loan.newLoanAccount.pages.SchedulePage
 import com.mifos.feature.loan.newLoanAccount.pages.TermsPage
+import kotlinx.coroutines.delay
+import org.jetbrains.compose.resources.getString
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
+import kotlin.time.ExperimentalTime
 
 @Composable
 internal fun NewLoanAccountScreen(
@@ -104,6 +110,8 @@ internal fun NewLoanAccountScreen(
     )
 }
 
+@OptIn(ExperimentalTime::class)
+@Suppress("SuspiciousIndentation")
 @Composable
 private fun NewLoanAccountScaffold(
     navController: NavController,
@@ -111,6 +119,8 @@ private fun NewLoanAccountScaffold(
     modifier: Modifier = Modifier,
     onAction: (NewLoanAccountAction) -> Unit,
 ) {
+    val snackbarHostState = remember { SnackbarHostState() }
+
     val steps = listOf(
         Step(stringResource(Res.string.step_details)) {
             DetailsPage(
@@ -145,27 +155,55 @@ private fun NewLoanAccountScaffold(
     )
 
     MifosScaffold(
-        title = stringResource(Res.string.new_loan_account_title),
-        onBackPressed = { onAction(NewLoanAccountAction.NavigateBack) },
         modifier = modifier,
+        snackbarHostState = snackbarHostState,
     ) { paddingValues ->
 
-        if (state.dialogState !is NewLoanAccountState.DialogState.Error) {
-            Column(
-                Modifier.fillMaxSize().padding(paddingValues),
-            ) {
-                MifosBreadcrumbNavBar(
-                    navController,
+        Column(
+            modifier.fillMaxSize(),
+        ) {
+            MifosBreadcrumbNavBar(
+                navController,
+            )
+            when (state.screenState) {
+                is NewLoanAccountState.ScreenState.Loading -> MifosProgressIndicator()
+                is NewLoanAccountState.ScreenState.Success -> {
+                    MifosStepper(
+                        steps = steps,
+                        currentIndex = state.currentStep,
+                        onStepChange = { newIndex ->
+                            onAction(NewLoanAccountAction.OnStepChange(newIndex))
+                        },
+                        modifier = Modifier
+                            .fillMaxWidth(),
+                    )
+                }
+
+                is NewLoanAccountState.ScreenState.Error -> {
+                    MifosSweetError(
+                        message = state.screenState.message,
+                        onclick = { onAction(NewLoanAccountAction.Retry) },
+                    )
+                }
+
+                null -> Unit
+            }
+        }
+
+        if (state.isOverLayLoadingActive) {
+            MifosProgressIndicatorOverlay()
+        }
+
+        if (state.responseErrorMsg != null) {
+            LaunchedEffect(state.launchEffectKey) {
+                snackbarHostState.showSnackbar(
+                    message = state.responseErrorMsg,
                 )
-                MifosStepper(
-                    steps = steps,
-                    currentIndex = state.currentStep,
-                    onStepChange = { newIndex ->
-                        onAction(NewLoanAccountAction.OnStepChange(newIndex))
-                    },
-                    modifier = Modifier
-                        .fillMaxWidth(),
-                )
+
+                if (state.responseErrorMsg == getString(Res.string.feature_loan_account_created_successfully)) {
+                    delay(1000)
+                    onAction(NewLoanAccountAction.Finish)
+                }
             }
         }
     }
@@ -177,18 +215,6 @@ private fun NewLoanAccountDialogs(
     onAction: (NewLoanAccountAction) -> Unit,
 ) {
     when (state.dialogState) {
-        is NewLoanAccountState.DialogState.Error -> {
-            MifosErrorComponent(
-                message = state.dialogState.message,
-                isRetryEnabled = true,
-                onRetry = {
-                    onAction(NewLoanAccountAction.Retry)
-                },
-            )
-        }
-
-        null -> Unit
-
         NewLoanAccountState.DialogState.AddNewCollateral -> AddNewCollateralDialog(
             state = state,
             onAction = onAction,
@@ -217,9 +243,7 @@ private fun NewLoanAccountDialogs(
             isOverDue = true,
         )
 
-        NewLoanAccountState.DialogState.Loading -> {
-            MifosProgressIndicator()
-        }
+        null -> Unit
     }
 }
 
@@ -258,7 +282,11 @@ private fun AddNewCollateralDialog(
                 MifosOutlinedTextField(
                     value = state.collateralQuantity.toString(),
                     onValueChange = {
-                        onAction(NewLoanAccountAction.OnCollateralQuantityChanged(it.toIntOrNull() ?: 0))
+                        onAction(
+                            NewLoanAccountAction.OnCollateralQuantityChanged(
+                                it.toIntOrNull() ?: 0,
+                            ),
+                        )
                     },
                     label = stringResource(Res.string.quantity),
                     config = MifosTextFieldConfig(
@@ -397,7 +425,13 @@ private fun AddNewChargeDialog(
             onAction(NewLoanAccountAction.OnChargesDatePick(show))
         },
         onDateChange = { newDate ->
-            onAction(NewLoanAccountAction.OnChargesDateChange(DateHelper.getDateAsStringFromLong(newDate)))
+            onAction(
+                NewLoanAccountAction.OnChargesDateChange(
+                    DateHelper.getDateAsStringFromLong(
+                        newDate,
+                    ),
+                ),
+            )
         },
         onAmountChange = { amount ->
             onAction(NewLoanAccountAction.OnChargesAmountChange(amount))
@@ -447,11 +481,17 @@ private fun ShowChargesDialog(
                             onActionClicked = { action ->
                                 when (action) {
                                     is Actions.Delete -> {
-                                        onAction(NewLoanAccountAction.DeleteChargeFromSelectedCharges(index))
+                                        onAction(
+                                            NewLoanAccountAction.DeleteChargeFromSelectedCharges(
+                                                index,
+                                            ),
+                                        )
                                     }
+
                                     is Actions.Edit -> {
                                         onAction(NewLoanAccountAction.EditChargeDialog(index))
                                     }
+
                                     else -> {}
                                 }
                             },
