@@ -139,6 +139,17 @@
     <string name="step_charges_active">Active</string>
     <string name="step_charges_edit_charge">Edit Charge</string>
 
+    <string name="feature_savings_yes">Yes</string>
+    <string name="feature_savings_no">No</string>
+    <string name="feature_savings_continue">Continue</string>
+    <string name="feature_savings_success">Success</string>
+    <string name="feature_savings_failed">Failed</string>
+
+    <string name="feature_savings_new_savings_account_submitted_success">New Savings Account Application Submitted Successfully</string>
+    <string name="feature_savings_new_savings_account_submitted_failed">Failed to apply for new savings account with the provided details</string>
+
+
+
 </resources>
 
 

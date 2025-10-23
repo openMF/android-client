@@ -18,9 +18,11 @@ import androidclient.feature.savings.generated.resources.feature_savings_field_o
 import androidclient.feature.savings.generated.resources.feature_savings_interest_calc
 import androidclient.feature.savings.generated.resources.feature_savings_interest_comp
 import androidclient.feature.savings.generated.resources.feature_savings_interest_p_period
+import androidclient.feature.savings.generated.resources.feature_savings_no
 import androidclient.feature.savings.generated.resources.feature_savings_product_name
 import androidclient.feature.savings.generated.resources.feature_savings_submission_date
 import androidclient.feature.savings.generated.resources.feature_savings_submit
+import androidclient.feature.savings.generated.resources.feature_savings_yes
 import androidclient.feature.savings.generated.resources.step_charges
 import androidclient.feature.savings.generated.resources.step_charges_active
 import androidclient.feature.savings.generated.resources.step_charges_view
@@ -98,8 +100,12 @@ fun PreviewPage(
             )?.value
                 ?: ""
             ),
-        stringResource(Res.string.step_terms_apply_withdrawal_fee) + " : " to (state.isCheckedApplyWithdrawalFee.let { if (it) "Yes" else "No" }),
-        stringResource(Res.string.step_terms_is_allowed_overdraft) + " : " to (state.isCheckedOverdraftAllowed.let { if (it) "Yes" else "No" }),
+        stringResource(Res.string.step_terms_apply_withdrawal_fee) + " : "
+                to (state.isCheckedApplyWithdrawalFee.let {
+                    if (it) stringResource(Res.string.feature_savings_yes)
+                    else stringResource(Res.string.feature_savings_no)
+                }),
+        stringResource(Res.string.step_terms_is_allowed_overdraft) + " : " to (state.isCheckedOverdraftAllowed.let { if (it) stringResource(Res.string.feature_savings_yes) else stringResource(Res.string.feature_savings_no) }),
         stringResource(Res.string.step_terms_lock_in_period) + " : " to
             if (state.freqTypeIndex == -1) {
                 ""
@@ -177,24 +183,10 @@ fun PreviewPage(
                 onAction(SavingsAccountAction.PreviousStep)
             },
             onSecondBtnClick = {
-                onAction(SavingsAccountAction.Finish)
+                onAction(SavingsAccountAction.SubmitSavingsApplication)
             },
             isSecondButtonEnabled = state.isTermsNextEnabled,
             modifier = Modifier.padding(top = DesignToken.padding.small),
         )
     }
 }
-
-//
-//{
-//    "nominalAnnualInterestRate": 9,
-//
-//    "withdrawalFeeForTransfers": true,
-//
-//    "charges": [
-//    {
-//        "chargeId": 8,
-//        "amount": 50
-//    }
-//    ],
-//}
