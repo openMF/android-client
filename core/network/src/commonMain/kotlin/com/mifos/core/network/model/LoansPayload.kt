@@ -44,4 +44,5 @@ data class LoansPayload(
     var fundId: Int? = null,
     var linkAccountId: Int? = null,
     var dataTables: ArrayList<DataTablePayload>? = null,
+    var externalId: String? = null,
 )

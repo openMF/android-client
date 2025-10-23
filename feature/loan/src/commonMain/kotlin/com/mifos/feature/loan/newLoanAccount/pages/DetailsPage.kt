@@ -48,7 +48,6 @@ import androidx.compose.ui.Modifier
 import com.mifos.core.common.utils.DateHelper
 import com.mifos.core.designsystem.component.MifosDatePickerTextField
 import com.mifos.core.designsystem.component.MifosOutlinedTextField
-import com.mifos.core.designsystem.component.MifosTextFieldConfig
 import com.mifos.core.designsystem.component.MifosTextFieldDropdown
 import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.designsystem.theme.MifosTypography
@@ -78,7 +77,6 @@ fun DetailsPage(
             }
         },
     )
-
     if (state.showSubmissionDatePick) {
         DatePickerDialog(
             onDismissRequest = {
@@ -89,7 +87,13 @@ fun DetailsPage(
                     onClick = {
                         onAction(NewLoanAccountAction.OnSubmissionDatePick(false))
                         submissionDatePickerState.selectedDateMillis?.let {
-                            onAction(NewLoanAccountAction.OnSubmissionDateChange(DateHelper.getDateAsStringFromLong(it)))
+                            onAction(
+                                NewLoanAccountAction.OnSubmissionDateChange(
+                                    DateHelper.getDateAsStringFromLong(
+                                        it,
+                                    ),
+                                ),
+                            )
                         }
                     },
                 ) { Text(stringResource(Res.string.feature_loan_select)) }
@@ -116,7 +120,11 @@ fun DetailsPage(
                     onClick = {
                         onAction(NewLoanAccountAction.OnExpectedDisbursementDatePick(false))
                         expectedDisbursementDatePickerState.selectedDateMillis?.let {
-                            onAction(NewLoanAccountAction.OnExpectedDisbursementDateChange(DateHelper.getDateAsStringFromLong(it)))
+                            onAction(
+                                NewLoanAccountAction.OnExpectedDisbursementDateChange(
+                                    DateHelper.getDateAsStringFromLong(it),
+                                ),
+                            )
                         }
                     },
                 ) { Text(stringResource(Res.string.feature_loan_select)) }
@@ -158,7 +166,6 @@ fun DetailsPage(
                 },
                 label = stringResource(Res.string.product_name),
             )
-
             if (state.loanTemplate != null) {
                 MifosOutlinedTextField(
                     value = state.externalId,
@@ -166,10 +173,6 @@ fun DetailsPage(
                         onAction(NewLoanAccountAction.OnExternalIdChange(it))
                     },
                     label = stringResource(Res.string.external_id),
-                    config = MifosTextFieldConfig(
-                        isError = state.externalIdError != null,
-                        errorText = if (state.externalIdError != null)stringResource(state.externalIdError) else null,
-                    ),
                 )
                 Spacer(Modifier.height(DesignToken.padding.large))
                 MifosTextFieldDropdown(
@@ -271,6 +274,7 @@ fun DetailsPage(
                 Spacer(Modifier.height(DesignToken.padding.large))
             }
         }
+
         MifosTwoButtonRow(
             firstBtnText = stringResource(Res.string.back),
             secondBtnText = stringResource(Res.string.next),
@@ -278,7 +282,7 @@ fun DetailsPage(
                 onAction(NewLoanAccountAction.NavigateBack)
             },
             onSecondBtnClick = {
-                onAction(NewLoanAccountAction.OnDetailsSubmit)
+                onAction(NewLoanAccountAction.NextStep)
             },
             isSecondButtonEnabled = state.isDetailsNextEnabled,
             modifier = Modifier.padding(top = DesignToken.padding.small),

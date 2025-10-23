@@ -480,6 +480,7 @@
     <string name="client_apply_new_applications_apply_share_account">Apply for new share account</string>
     <string name="client_apply_new_applications_apply_recurring_account">Apply for new recurring deposit account</string>
     <string name="client_apply_new_applications_apply_fixed_account">Apply for new fixed deposit account</string>
+    <string name="client_apply_new_applications_client_inactive_msg">This client account is currently inactive. Activation is required before a new account can be created.</string>
 
     <string name="step_details">Details</string>
     <string name="step_terms">Terms</string>
@@ -528,5 +529,8 @@
     <string name="client_identifier_document_not_found">Document not found</string>
     <string name="client_identifier_btn_update">Update</string>
     <string name="client_update_document_title">Update Document</string>
+    <!-- Screen Title -->
+    <string name="title_new_fixed_deposit_account">New Fixed Deposit Account</string>
 
+  
 </resources>

@@ -31,6 +31,7 @@ import de.jensklingenberg.ktorfit.http.GET
 import de.jensklingenberg.ktorfit.http.POST
 import de.jensklingenberg.ktorfit.http.Path
 import de.jensklingenberg.ktorfit.http.Query
+import io.ktor.client.statement.HttpResponse
 import kotlinx.coroutines.flow.Flow
 
 /**
@@ -75,7 +76,7 @@ interface LoanService {
     fun getAllLoans(): Flow<List<LoanProducts>>
 
     @POST(APIEndPoint.CREATE_LOANS_ACCOUNTS)
-    fun createLoansAccount(@Body loansPayload: LoansPayload?): Flow<Loan>
+    fun createLoansAccount(@Body loansPayload: LoansPayload?): Flow<HttpResponse>
 
     @GET(APIEndPoint.CREATE_LOANS_ACCOUNTS + "/template?templateType=individual")
     fun getLoansAccountTemplate(
