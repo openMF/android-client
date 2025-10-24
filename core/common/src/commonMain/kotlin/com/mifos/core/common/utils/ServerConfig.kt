@@ -28,7 +28,7 @@ data class ServerConfig(
     companion object {
         val DEFAULT = ServerConfig(
             protocol = "https://",
-            endPoint = "gsoc.mifos.community",
+            endPoint = "tt.mifos.community",
             apiPath = "/fineract-provider/api/v1/",
             port = "80",
             tenant = "default",

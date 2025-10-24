@@ -19,7 +19,10 @@ import androidclient.feature.client.generated.resources.feature_client_no_charge
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -63,23 +66,37 @@ actual fun ClientChargeContent(
 
         is LoadState.NotLoading -> {
             if (chargesPagingList.itemCount == 0) {
-                MifosEmptyUi(
-                    text = stringResource(Res.string.feature_client_no_charges_found),
-                    icon = MifosIcons.Payments,
-                )
+                MifosBottomSheet(
+                    onDismiss = {
+                        onAction(ClientChargesAction.CloseShowChargesDialog)
+                    },
+                ){
+                    Column(
+                        modifier = Modifier
+                            .height(256.dp)
+                            .fillMaxWidth()
+                            .padding(DesignToken.padding.large),
+                        verticalArrangement = Arrangement.spacedBy(DesignToken.padding.largeIncreased),
+                    ) {
+                        MifosEmptyUi(
+                            text = stringResource(Res.string.feature_client_no_charges_found),
+                            icon = MifosIcons.Payments,
+                        )
+                    }
+                }
             } else {
                 val chargesList = List(chargesPagingList.itemCount){index ->
                     chargesPagingList[index]
                 }.filterNotNull()
-                // Use a composite key of id and index to guarantee uniqueness,
-                // preventing LazyColumn crashes when duplicate ids are present in paged data.
 
                 MifosBottomSheet(onDismiss = {
-                    onAction(ClientChargesAction.CloseDialog)
+                    onAction(ClientChargesAction.CloseShowChargesDialog)
                 },
                     content = {
                         Column(
-                            modifier = Modifier.fillMaxWidth().padding(DesignToken.padding.large),
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(DesignToken.padding.large),
                             verticalArrangement = Arrangement.spacedBy(DesignToken.padding.largeIncreased),
                         ) {
                             Text(
