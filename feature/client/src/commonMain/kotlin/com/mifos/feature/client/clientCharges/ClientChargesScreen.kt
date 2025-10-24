@@ -67,6 +67,7 @@ import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -347,23 +348,27 @@ private fun ClientAddChargeDialogContent(
     val amountValidation = validateAmount(state.amount.toString(), currencyDecimalPlaces)
     val isAmountValid = amountValidation == AmountValidationResult.VALID
 
-    val dueDatePickerState = rememberDatePickerState(
-        initialSelectedDateMillis = state.dueDate,
-        selectableDates = object : SelectableDates {
-            override fun isSelectableDate(utcTimeMillis: Long): Boolean {
-                return utcTimeMillis >= Clock.System.now().toEpochMilliseconds()
-            }
-        },
-    )
+    val dueDatePickerState = key(state.dueDate){
+        rememberDatePickerState(
+            initialSelectedDateMillis = state.dueDate,
+            selectableDates = object : SelectableDates {
+                override fun isSelectableDate(utcTimeMillis: Long): Boolean {
+                    return utcTimeMillis >= Clock.System.now().toEpochMilliseconds()
+                }
+            },
+        )
+    }
 
-    val collectedOnDatePickerState = rememberDatePickerState(
-        initialSelectedDateMillis = state.dueDate,
-        selectableDates = object : SelectableDates {
-            override fun isSelectableDate(utcTimeMillis: Long): Boolean {
-                return utcTimeMillis >= Clock.System.now().toEpochMilliseconds()
-            }
-        },
-    )
+    val collectedOnDatePickerState = key(state.collectedOn){
+        rememberDatePickerState(
+            initialSelectedDateMillis = state.collectedOn,
+            selectableDates = object : SelectableDates {
+                override fun isSelectableDate(utcTimeMillis: Long): Boolean {
+                    return utcTimeMillis >= Clock.System.now().toEpochMilliseconds()
+                }
+            },
+        )
+    }
 
     if (state.showDueDatePicker) {
         DatePickerDialog(
