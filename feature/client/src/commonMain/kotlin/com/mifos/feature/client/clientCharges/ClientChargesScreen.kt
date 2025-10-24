@@ -29,6 +29,9 @@ import androidclient.feature.client.generated.resources.feature_client_charge_ti
 import androidclient.feature.client.generated.resources.feature_client_charges
 import androidclient.feature.client.generated.resources.feature_client_choose_charge
 import androidclient.feature.client.generated.resources.feature_client_collected_on_date
+import androidclient.feature.client.generated.resources.feature_client_created_charge_failure_title
+import androidclient.feature.client.generated.resources.feature_client_created_charge_success_message
+import androidclient.feature.client.generated.resources.feature_client_created_charge_success_title
 import androidclient.feature.client.generated.resources.feature_client_due_date
 import androidclient.feature.client.generated.resources.feature_client_message_field_required
 import androidclient.feature.client.generated.resources.feature_client_success_title
@@ -251,10 +254,10 @@ private fun ClientAddChargesDialog(
             MifosStatusDialog(
                 status = state.dialogState.status,
                 btnText = stringResource(Res.string.dialog_continue),
-                onConfirm = { onAction(ClientChargesAction.OnRetry) },
-                successTitle = stringResource(Res.string.feature_client_success_title),
-                successMessage = stringResource(Res.string.feature_client_charge_created_successfully),
-                failureTitle = stringResource(Res.string.client_closure_failure_title),
+                onConfirm = { onAction(ClientChargesAction.NavigateBack) },
+                successTitle = stringResource(Res.string.feature_client_created_charge_success_title),
+                successMessage = stringResource(Res.string.feature_client_created_charge_success_message),
+                failureTitle = stringResource(Res.string.feature_client_created_charge_failure_title),
                 failureMessage = state.dialogState.message,
                 modifier = Modifier.fillMaxSize().background(Color.White),
             )
