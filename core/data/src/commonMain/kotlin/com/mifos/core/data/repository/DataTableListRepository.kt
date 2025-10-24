@@ -14,6 +14,7 @@ import com.mifos.core.model.objects.payloads.GroupLoanPayload
 import com.mifos.core.network.model.LoansPayload
 import com.mifos.room.entities.accounts.loans.Loan
 import com.mifos.room.entities.client.ClientPayloadEntity
+import io.ktor.client.statement.HttpResponse
 import kotlinx.coroutines.flow.Flow
 
 /**
@@ -21,7 +22,7 @@ import kotlinx.coroutines.flow.Flow
  */
 interface DataTableListRepository {
 
-    fun createLoansAccount(loansPayload: LoansPayload?): Flow<DataState<Loan>>
+    fun createLoansAccount(loansPayload: LoansPayload?): Flow<DataState<HttpResponse>>
 
     fun createGroupLoansAccount(loansPayload: GroupLoanPayload?): Flow<DataState<Loan>>
 
