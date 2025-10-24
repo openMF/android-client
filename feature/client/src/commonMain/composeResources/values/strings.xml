@@ -60,9 +60,12 @@
     <string name="feature_client_identifier_deleted_successfully">Identifier Deleted Successfully</string>
     <string name="feature_client_failed_to_load_client_charges">Failed To Load Client Charges</string>
     <string name="feature_client_charge_id">Charge Id</string>
+    <string name="feature_client_choose_charge">Choose Charge</string>
+    <string name="feature_client_charge_title">Charge Title</string>
     <string name="feature_client_charge_name">Charge Name</string>
     <string name="feature_client_charge_amount">Amount</string>
     <string name="feature_client_due_date">Due Date</string>
+    <string name="feature_client_collected_on_date">Collected On</string>
     <string name="feature_client_charge_invalid_amount_format">Invalid amount format</string>
     <string name="feature_client_no_more_charges_available">No More Charges Available!</string>
     <string name="feature_client_failed_to_load_more_charges">Failed to load more Charges</string>
