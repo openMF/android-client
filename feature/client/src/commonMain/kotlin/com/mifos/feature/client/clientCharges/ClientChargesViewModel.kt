@@ -69,7 +69,6 @@ class ClientChargesViewModel(
                         chargeTitleTouched = false,
                         dueDate = null,
                         collectedOn = null,
-
                     )
                 }
             }
