@@ -12,7 +12,7 @@ package com.mifos.core.domain.useCases
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.repository.SavingsAccountRepository
 import com.mifos.core.model.objects.payloads.SavingsPayload
-import io.ktor.client.statement.HttpResponse
+import com.mifos.room.entities.client.Savings
 import kotlinx.coroutines.flow.Flow
 
 /**
@@ -23,6 +23,6 @@ class CreateSavingsAccountUseCase(
     private val repository: SavingsAccountRepository,
 ) {
 
-    operator fun invoke(savingsPayload: SavingsPayload?): Flow<DataState<HttpResponse>> =
+    operator fun invoke(savingsPayload: SavingsPayload?): Flow<DataState<Savings>> =
         repository.createSavingsAccount(savingsPayload)
 }

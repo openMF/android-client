@@ -17,9 +17,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.common.utils.DateHelper
-import com.mifos.core.data.util.Error
 import com.mifos.core.data.util.NetworkMonitor
-import com.mifos.core.data.util.extractErrorMessage
 import com.mifos.core.domain.useCases.CreateSavingsAccountUseCase
 import com.mifos.core.domain.useCases.GetClientTemplateUseCase
 import com.mifos.core.domain.useCases.GetSavingsProductTemplateUseCase
@@ -32,7 +30,6 @@ import com.mifos.room.entities.templates.clients.ClientsTemplateEntity
 import com.mifos.room.entities.templates.clients.SavingProductOptionsEntity
 import com.mifos.room.entities.templates.clients.StaffOptionsEntity
 import com.mifos.room.entities.templates.savings.SavingProductsTemplate
-import io.ktor.http.isSuccess
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -176,27 +173,14 @@ internal class SavingsAccountViewModel(
                         }
                     }
                     is DataState.Success -> {
-                        val error = extractErrorMessage(result.data)
-                        if (error == Error.MSG_NOT_FOUND) {
-                            mutableStateFlow.update {
-                                it.copy(
-                                    isOverLayLoadingActive = false,
-                                    screenState = SavingsAccountState.ScreenState.ShowStatusDialog(
-                                        ResultStatus.SUCCESS,
-                                        getString(Res.string.feature_savings_new_savings_account_submitted_success),
-                                    ),
-                                )
-                            }
-                        } else {
-                            mutableStateFlow.update {
-                                it.copy(
-                                    screenState = SavingsAccountState.ScreenState.ShowStatusDialog(
-                                        ResultStatus.FAILURE,
-                                        error,
-                                    ),
-                                    isOverLayLoadingActive = false,
-                                )
-                            }
+                        mutableStateFlow.update {
+                            it.copy(
+                                isOverLayLoadingActive = false,
+                                screenState = SavingsAccountState.ScreenState.ShowStatusDialog(
+                                    ResultStatus.SUCCESS,
+                                    getString(Res.string.feature_savings_new_savings_account_submitted_success),
+                                ),
+                            )
                         }
                     }
                     is DataState.Error -> {
@@ -204,7 +188,7 @@ internal class SavingsAccountViewModel(
                             it.copy(
                                 screenState = SavingsAccountState.ScreenState.ShowStatusDialog(
                                     ResultStatus.FAILURE,
-                                    getString(Res.string.feature_savings_new_savings_account_submitted_failed),
+                                    msg = result.exception.message ?: getString(Res.string.feature_savings_new_savings_account_submitted_failed),
                                 ),
                                 isOverLayLoadingActive = false,
                             )
