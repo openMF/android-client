@@ -60,23 +60,17 @@ fun MifosGeneralRowItem(
 ) {
     Row(
         modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            Box(
-                modifier = Modifier.weight(1f),
-                contentAlignment = Alignment.CenterStart,
-            ) { keyContent() }
+        Box(
+            modifier = Modifier.weight(1f),
+            contentAlignment = Alignment.CenterStart,
+        ) { keyContent() }
 
-            Box(
-                modifier = Modifier.weight(1f),
-                contentAlignment = Alignment.CenterEnd,
-            ) { valueContent() }
-        }
+        Box(
+            modifier = Modifier.weight(1f),
+            contentAlignment = Alignment.CenterEnd,
+        ) { valueContent() }
     }
 }
 
@@ -84,17 +78,20 @@ fun MifosGeneralRowItem(
 fun MifosGeneralCard(
     modifier: Modifier = Modifier,
     contentMap: Map<String, String>,
+    separator: String = " : ",
 ) {
     MifosGeneralCardComponentOutline {
         Column(
             modifier = modifier.padding(DesignToken.padding.large),
         ) {
-            contentMap.forEach { map ->
+            contentMap.entries.forEachIndexed { index, map ->
                 MifosGeneralRowItem(
-                    keyContent = { Text(text = map.key, style = MifosTypography.labelMediumEmphasized) },
+                    keyContent = { Text(text = map.key + separator, style = MifosTypography.labelMediumEmphasized) },
                     valueContent = { Text(text = map.value, style = MifosTypography.labelMediumEmphasized) },
                 )
-                Spacer(modifier = Modifier.height(DesignToken.padding.small))
+                if (index < contentMap.size - 1) {
+                    Spacer(modifier = Modifier.height(DesignToken.padding.small))
+                }
             }
         }
     }
@@ -106,11 +103,11 @@ fun MifosPreviewGeneralCard() {
     MaterialTheme {
         MifosGeneralCard(
             contentMap = mapOf(
-                "title:" to "answer",
-                "title1:" to "ans1",
-                "title2:" to "ans2",
-                "title3:" to "ans3",
-                "title4:" to "ans4",
+                "title" to "answer",
+                "title1" to "ans1",
+                "title2" to "ans2",
+                "title3" to "ans3",
+                "title4" to "ans4",
             ),
         )
     }

@@ -22,6 +22,7 @@ import com.mifos.core.domain.useCases.GetGroupSavingsAccountTemplateByProductUse
 import com.mifos.core.domain.useCases.LoadSavingsAccountsAndTemplateUseCase
 import com.mifos.core.model.objects.payloads.SavingsPayload
 import com.mifos.feature.savings.navigation.SavingsAccountRoute
+import com.mifos.room.entities.client.Savings
 import com.mifos.room.entities.templates.savings.SavingProductsTemplate
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -129,11 +130,11 @@ class SavingAccountViewModel(
                                 SavingAccountUiState.ShowProgress
 
                         is DataState.Success -> {
-                            // Not used in New UI implementation, however was causing build issue so commented for now, can be updated in further code refactoring.
-//                            _savingAccountUiState.value =
-//                                SavingAccountUiState.ShowSavingsAccountCreatedSuccessfully(
+                            _savingAccountUiState.value =
+                                SavingAccountUiState.ShowSavingsAccountCreatedSuccessfully(
+                                    Savings()
 //                                    dataState.data,
-//                                )
+                                )
                         }
                     }
                 }

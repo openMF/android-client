@@ -51,6 +51,8 @@ import com.mifos.core.ui.components.MifosTwoButtonRow
 import com.mifos.feature.savings.savingsAccountv2.SavingsAccountAction
 import com.mifos.feature.savings.savingsAccountv2.SavingsAccountState
 import org.jetbrains.compose.resources.stringResource
+import kotlin.collections.mapOf
+import kotlin.math.absoluteValue
 
 @Composable
 fun PreviewPage(
@@ -59,71 +61,64 @@ fun PreviewPage(
     modifier: Modifier = Modifier,
 ) {
     val previewDetailsMap = mapOf(
-        stringResource(Res.string.feature_savings_product_name) + " : " to state.savingProductOptions[state.savingsProductSelected].name,
-        stringResource(Res.string.feature_savings_field_officer) + " : " to state.fieldOfficerOptions[state.fieldOfficerIndex].displayName,
-        stringResource(Res.string.feature_savings_submission_date) + " : " to state.submissionDate,
-        stringResource(Res.string.feature_savings_external_id) + " : " to state.externalId,
+        stringResource(Res.string.feature_savings_product_name) to state.savingProductOptions[state.savingsProductSelected].name,
+        stringResource(Res.string.feature_savings_field_officer) to state.fieldOfficerOptions[state.fieldOfficerIndex].displayName,
+        stringResource(Res.string.feature_savings_submission_date) to state.submissionDate,
+        stringResource(Res.string.feature_savings_external_id) to state.externalId,
     )
 
     val termsDetailsMap = mapOf(
-        stringResource(Res.string.feature_savings_currency) + " : " to (
-            state.savingsProductTemplate?.currencyOptions?.get(
-                state.currencyIndex,
-            )?.name ?: ""
-            ),
-        stringResource(Res.string.step_terms_decimal_places) + " : " to state.decimalPlaces,
-        stringResource(Res.string.feature_savings_interest_comp) + " : " to (
-            state.savingsProductTemplate?.interestCompoundingPeriodTypeOptions?.get(
-                state.interestCompPeriodIndex,
-            )?.value
-                ?: ""
-            ),
-        stringResource(Res.string.feature_savings_interest_p_period) + " : " to (
-            state.savingsProductTemplate?.interestPostingPeriodTypeOptions?.get(
-                state.interestPostingPeriodIndex,
-            )?.value
-                ?: ""
-            ),
-        stringResource(Res.string.feature_savings_interest_calc) + " : " to (
-            state.savingsProductTemplate?.interestCalculationTypeOptions?.get(
-                state.interestCalcIndex,
-            )?.value
-                ?: ""
-            ),
+        stringResource(Res.string.feature_savings_currency) to (
+                state.savingsProductTemplate?.currencyOptions?.getOrNull(
+                    state.currencyIndex,
+                )?.name.orEmpty()),
+        stringResource(Res.string.step_terms_decimal_places) to state.decimalPlaces,
+        stringResource(Res.string.feature_savings_interest_comp) to (
+                state.savingsProductTemplate?.interestCompoundingPeriodTypeOptions?.getOrNull(
+                    state.interestCompPeriodIndex,
+                )?.value.orEmpty()),
+        stringResource(Res.string.feature_savings_interest_p_period) to (
+                state.savingsProductTemplate?.interestPostingPeriodTypeOptions?.getOrNull(
+                    state.interestPostingPeriodIndex,
+                )?.value.orEmpty()),
+        stringResource(Res.string.feature_savings_interest_calc) to (
+                state.savingsProductTemplate?.interestCalculationTypeOptions?.getOrNull(
+                    state.interestCalcIndex,
+                )?.value.orEmpty()),
 
-        stringResource(Res.string.feature_savings_days_in_year) + " : " to (
-            state.savingsProductTemplate?.interestCalculationDaysInYearTypeOptions?.get(
-                state.daysInYearIndex,
-            )?.value
-                ?: ""
-            ),
-        stringResource(Res.string.step_terms_apply_withdrawal_fee) + " : "
-            to (
+        stringResource(Res.string.feature_savings_days_in_year) to (
+                state.savingsProductTemplate?.interestCalculationDaysInYearTypeOptions?.getOrNull(
+                    state.daysInYearIndex,
+                )?.value.orEmpty()),
+        stringResource(Res.string.step_terms_apply_withdrawal_fee)
+                to (
                 state.isCheckedApplyWithdrawalFee.let {
                     if (it) {
                         stringResource(Res.string.feature_savings_yes)
                     } else {
                         stringResource(Res.string.feature_savings_no)
                     }
-                }
-                ),
-        stringResource(Res.string.step_terms_is_allowed_overdraft) + " : " to (state.isCheckedOverdraftAllowed.let { if (it) stringResource(Res.string.feature_savings_yes) else stringResource(Res.string.feature_savings_no) }),
-        stringResource(Res.string.step_terms_lock_in_period) + " : " to
-            if (state.freqTypeIndex == -1) {
-                ""
-            } else {
-                (
-                    state.frequency + " " + (
-                        state.savingsProductTemplate?.lockinPeriodFrequencyTypeOptions?.get(
-                            state.freqTypeIndex,
-                        )?.value ?: ""
-                        )
-                    )
-            },
-        stringResource(Res.string.step_terms_minimum_balance) + " : " to state.monthlyMinimumBalance,
-        stringResource(Res.string.step_terms_min_opening_balance) + " : " to state.minimumOpeningBalance,
+                }),
+        stringResource(Res.string.step_terms_is_allowed_overdraft) to
+                (state.isCheckedOverdraftAllowed.let {
+                    if (it) {
+                        stringResource(Res.string.feature_savings_yes)
+                    } else {
+                        stringResource(Res.string.feature_savings_no)
+                    }
+                }),
+        stringResource(Res.string.step_terms_lock_in_period) to
+                if (state.freqTypeIndex == -1 || state.frequency.toIntOrNull() == null) {
+                    ""
+                } else {
+                    state.savingsProductTemplate?.lockinPeriodFrequencyTypeOptions
+                        ?.getOrNull(state.freqTypeIndex)?.value
+                        ?.let { "${state.frequency} $it" }.orEmpty()
+                },
+        stringResource(Res.string.step_terms_minimum_balance) to state.monthlyMinimumBalance,
+        stringResource(Res.string.step_terms_min_opening_balance) to state.minimumOpeningBalance,
 
-    )
+        )
 
     Column(modifier = Modifier.fillMaxSize()) {
         LazyColumn(modifier = modifier.weight(1f)) {

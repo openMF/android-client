@@ -32,6 +32,7 @@ import com.mifos.room.entities.templates.clients.ClientsTemplateEntity
 import com.mifos.room.entities.templates.clients.SavingProductOptionsEntity
 import com.mifos.room.entities.templates.clients.StaffOptionsEntity
 import com.mifos.room.entities.templates.savings.SavingProductsTemplate
+import io.ktor.http.isSuccess
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -131,7 +132,7 @@ internal class SavingsAccountViewModel(
         savingsPayload.apply {
             locale = "en"
             dateFormat = "dd-MM-yyyy"
-            productId = state.savingsProductSelected + 1
+            productId = state.savingProductOptions.getOrNull(state.savingsProductSelected)?.id
             clientId = state.clientId
             fieldOfficerId = state.fieldOfficerOptions[state.fieldOfficerIndex].id
             submittedOnDate = state.submissionDate
@@ -140,8 +141,10 @@ internal class SavingsAccountViewModel(
             enforceMinRequiredBalance = state.isCheckedMinimumBalance
             minRequiredOpeningBalance = state.minimumOpeningBalance
             minRequiredBalance = state.monthlyMinimumBalance
-            lockinPeriodFrequency = state.frequency.let { if (it.isNotBlank()) it.toInt() else null }
-            lockinPeriodFrequencyType = state.freqTypeIndex.let { if (it != -1) it else null }
+            lockinPeriodFrequency = state.frequency.toIntOrNull()
+            lockinPeriodFrequencyType = state.freqTypeIndex.let {
+                if (it != -1 && state.frequency.toIntOrNull() != null) it else null
+            }
             charges = state.addedCharges.map { charges ->
                 ChargesPayload(
                     chargeId = charges.id,
@@ -149,13 +152,13 @@ internal class SavingsAccountViewModel(
                 )
             }
             interestCompoundingPeriodType =
-                state.savingsProductTemplate?.interestCompoundingPeriodTypeOptions?.get(state.interestCompPeriodIndex)?.id
+                state.savingsProductTemplate?.interestCompoundingPeriodTypeOptions?.getOrNull(state.interestCompPeriodIndex)?.id
             interestCalculationType =
-                state.savingsProductTemplate?.interestCompoundingPeriodTypeOptions?.get(state.interestCalcIndex)?.id
+                state.savingsProductTemplate?.interestCalculationTypeOptions?.getOrNull(state.interestCalcIndex)?.id
             interestCalculationDaysInYearType =
-                state.savingsProductTemplate?.interestCalculationDaysInYearTypeOptions?.get(state.daysInYearIndex)?.id
+                state.savingsProductTemplate?.interestCalculationDaysInYearTypeOptions?.getOrNull(state.daysInYearIndex)?.id
             interestPostingPeriodType =
-                state.savingsProductTemplate?.interestCompoundingPeriodTypeOptions?.get(state.interestPostingPeriodIndex)?.id
+                state.savingsProductTemplate?.interestPostingPeriodTypeOptions?.getOrNull(state.interestPostingPeriodIndex)?.id
         }
         return savingsPayload
     }

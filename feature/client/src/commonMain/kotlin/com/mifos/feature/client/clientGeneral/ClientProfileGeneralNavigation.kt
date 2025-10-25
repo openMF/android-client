@@ -55,14 +55,10 @@ fun NavController.navigateToClientProfileGeneralRoute(id: Int) {
 }
 
 fun NavController.navigateToClientProfileGeneralRouteOnStatus(id: Int) {
-    this.navigate(
-        ClientProfileGeneralRoute(id = id),
-    ) {
-        popBackStack(0, true)
-        navigate(ClientListScreenRoute)
-        navigate(ClientProfileRoute(id))
-
-        popUpTo(ClientProfileGeneralRoute(id = id)) { inclusive = true }
+    popBackStack(0, true)
+    navigate(ClientListScreenRoute)
+    navigate(ClientProfileRoute(id))
+    navigate(ClientProfileGeneralRoute(id = id)) {
         launchSingleTop = true
     }
 }
