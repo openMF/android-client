@@ -131,7 +131,7 @@ internal class SavingsAccountViewModel(
             dateFormat = "dd-MM-yyyy"
             productId = state.savingProductOptions.getOrNull(state.savingsProductSelected)?.id
             clientId = state.clientId
-            fieldOfficerId = state.fieldOfficerOptions[state.fieldOfficerIndex].id
+            fieldOfficerId = state.fieldOfficerOptions.getOrNull(state.fieldOfficerIndex)?.id
             submittedOnDate = state.submissionDate
             externalId = state.externalId
             allowOverdraft = state.isCheckedOverdraftAllowed
@@ -139,9 +139,9 @@ internal class SavingsAccountViewModel(
             minRequiredOpeningBalance = state.minimumOpeningBalance
             minRequiredBalance = state.monthlyMinimumBalance
             lockinPeriodFrequency = state.frequency.toIntOrNull()
-            lockinPeriodFrequencyType = state.freqTypeIndex.let {
-                if (it != -1 && state.frequency.toIntOrNull() != null) it else null
-            }
+            lockinPeriodFrequencyType = state.savingsProductTemplate?.lockinPeriodFrequencyTypeOptions
+                ?.getOrNull(state.freqTypeIndex)?.id
+                .takeIf { state.frequency.toIntOrNull() != null }
             charges = state.addedCharges.map { charges ->
                 ChargesPayload(
                     chargeId = charges.id,

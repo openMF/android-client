@@ -11,6 +11,7 @@ package com.mifos.feature.savings.savingsAccountv2.pages
 
 import androidclient.feature.savings.generated.resources.Res
 import androidclient.feature.savings.generated.resources.feature_savings_back
+import androidclient.feature.savings.generated.resources.feature_savings_charges_active_count
 import androidclient.feature.savings.generated.resources.feature_savings_currency
 import androidclient.feature.savings.generated.resources.feature_savings_days_in_year
 import androidclient.feature.savings.generated.resources.feature_savings_external_id
@@ -24,7 +25,6 @@ import androidclient.feature.savings.generated.resources.feature_savings_submiss
 import androidclient.feature.savings.generated.resources.feature_savings_submit
 import androidclient.feature.savings.generated.resources.feature_savings_yes
 import androidclient.feature.savings.generated.resources.step_charges
-import androidclient.feature.savings.generated.resources.step_charges_active
 import androidclient.feature.savings.generated.resources.step_charges_view
 import androidclient.feature.savings.generated.resources.step_details
 import androidclient.feature.savings.generated.resources.step_terms
@@ -60,8 +60,10 @@ fun PreviewPage(
     modifier: Modifier = Modifier,
 ) {
     val previewDetailsMap = mapOf(
-        stringResource(Res.string.feature_savings_product_name) to state.savingProductOptions[state.savingsProductSelected].name,
-        stringResource(Res.string.feature_savings_field_officer) to state.fieldOfficerOptions[state.fieldOfficerIndex].displayName,
+        stringResource(Res.string.feature_savings_product_name) to
+            state.savingProductOptions.getOrNull(state.savingsProductSelected)?.name.orEmpty(),
+        stringResource(Res.string.feature_savings_field_officer) to
+            state.fieldOfficerOptions.getOrNull(state.fieldOfficerIndex)?.displayName.orEmpty(),
         stringResource(Res.string.feature_savings_submission_date) to state.submissionDate,
         stringResource(Res.string.feature_savings_external_id) to state.externalId,
     )
@@ -173,8 +175,9 @@ fun PreviewPage(
                         onAction(SavingsAccountAction.ShowCharges)
                     },
                     btnText = stringResource(Res.string.step_charges_view),
-                    text = state.addedCharges.size.toString() + " " + stringResource(Res.string.step_charges_active) + " " + stringResource(
-                        Res.string.step_charges,
+                    text = stringResource(
+                        Res.string.feature_savings_charges_active_count,
+                        state.addedCharges.size,
                     ),
                     btnEnabled = state.addedCharges.isNotEmpty(),
                 )

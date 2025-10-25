@@ -23,7 +23,6 @@ import com.mifos.room.entities.client.Savings
 import com.mifos.room.entities.templates.savings.SavingProductsTemplate
 import com.mifos.room.entities.templates.savings.SavingsAccountTransactionTemplateEntity
 import com.mifos.room.helper.SavingsDaoHelper
-import io.ktor.client.statement.HttpResponse
 import io.ktor.client.statement.bodyAsText
 import io.ktor.http.isSuccess
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -290,29 +289,22 @@ class DataManagerSavings(
         get() = mBaseApiManager.savingsService.allSavingsAccounts()
 
     fun createSavingsAccount(savingsPayload: SavingsPayload?): Flow<Savings> {
-        suspend fun extractErrorMessage(response: HttpResponse): String {
-            val responseText = response.bodyAsText()
-            var result = ""
-            try {
-                if (!response.status.isSuccess()) {
-                    val json = Json { ignoreUnknownKeys = true }
-                    val errorResponse = json.decodeFromString<MifosError>(responseText)
-                    result = errorResponse.errors.firstOrNull()?.defaultUserMessage
-                        ?: errorResponse.defaultUserMessage
-                        ?: "Message Not Found"
-                }
-            } catch (e: Exception) {
-                result = "Failed to parse error response"
-            }
-            return result
-        }
         return mBaseApiManager.savingsService.createSavingsAccount(savingsPayload).map { response ->
-            val errorMessage = extractErrorMessage(response)
-            if (errorMessage.isNotEmpty()) {
-                throw Exception(errorMessage)
-            }
             val responseText = response.bodyAsText()
             val json = Json { ignoreUnknownKeys = true }
+
+            if (!response.status.isSuccess()) {
+                val errorMessage = try {
+                    val errorResponse = json.decodeFromString<MifosError>(responseText)
+                    errorResponse.errors.firstOrNull()?.defaultUserMessage
+                        ?: errorResponse.defaultUserMessage
+                        ?: "HTTP ${response.status.value} ${response.status.description}"
+                } catch (e: Exception) {
+                    "HTTP ${response.status.value} ${response.status.description}"
+                }
+                throw IllegalStateException(errorMessage)
+            }
+
             json.decodeFromString<Savings>(responseText)
         }
     }
