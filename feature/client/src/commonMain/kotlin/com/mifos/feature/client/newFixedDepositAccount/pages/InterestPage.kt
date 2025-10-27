@@ -216,6 +216,74 @@ fun InterestPage(onNext: () -> Unit) {
     }
 }
 
+
+@Composable
+private fun RateChartHeaderCard() {
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(8.dp),
+        border = BorderStroke(0.dp, Color.Transparent),
+        colors = CardDefaults.cardColors(
+            containerColor = Color(0xFFF5F5F5)
+        ),
+        elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp, vertical = 14.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.Top
+        ) {
+            Column(
+                modifier = Modifier.weight(1f),
+                verticalArrangement = Arrangement.spacedBy(3.dp)
+            ) {
+                Text(
+                    text = "Amount Range",
+                    style = MaterialTheme.typography.titleSmall,
+                    fontWeight = FontWeight.SemiBold,
+                    fontSize = 14.sp,
+                    color = Color(0xFF212121),
+                    textAlign = TextAlign.Start
+                )
+                Text(
+                    text = "Description",
+                    style = MaterialTheme.typography.bodySmall,
+                    fontSize = 12.sp,
+                    color = Color(0xFF757575),
+                    textAlign = TextAlign.Start
+                )
+                Text(
+                    text = "Period",
+                    style = MaterialTheme.typography.bodySmall,
+                    fontSize = 12.sp,
+                    color = Color(0xFF757575),
+                    textAlign = TextAlign.Start
+                )
+            }
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(4.dp)
+            ) {
+                Text(
+                    text = "@Interest Rate",
+                    style = MaterialTheme.typography.titleSmall,
+                    fontWeight = FontWeight.SemiBold,
+                    fontSize = 14.sp,
+                    color = Color(0xFF4CAF50),
+                    textAlign = TextAlign.End
+                )
+                Text(
+                    text = "▲",
+                    fontSize = 10.sp,
+                    color = Color(0xFF4CAF50)
+                )
+            }
+        }
+    }
+}
+
 @Composable
 private fun ChartInformationCard(
     chartInfo: ChartInformation,
@@ -338,69 +406,7 @@ private fun RateChartModal(
                 )
 
                 // Amount Range Header Card
-                Card(
-                    modifier = Modifier.fillMaxWidth(),
-                    shape = RoundedCornerShape(8.dp),
-                    border = BorderStroke(0.dp, Color.Transparent),
-                    colors = CardDefaults.cardColors(
-                        containerColor = Color(0xFFF5F5F5)
-                    ),
-                    elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
-                ) {
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 16.dp, vertical = 14.dp),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.Top
-                    ) {
-                        Column(
-                            modifier = Modifier.weight(1f),
-                            verticalArrangement = Arrangement.spacedBy(3.dp)
-                        ) {
-                            Text(
-                                text = "Amount Range",
-                                style = MaterialTheme.typography.titleSmall,
-                                fontWeight = FontWeight.SemiBold,
-                                fontSize = 14.sp,
-                                color = Color(0xFF212121),
-                                textAlign = TextAlign.Start
-                            )
-                            Text(
-                                text = "Description",
-                                style = MaterialTheme.typography.bodySmall,
-                                fontSize = 12.sp,
-                                color = Color(0xFF757575),
-                                textAlign = TextAlign.Start
-                            )
-                            Text(
-                                text = "Period",
-                                style = MaterialTheme.typography.bodySmall,
-                                fontSize = 12.sp,
-                                color = Color(0xFF757575),
-                                textAlign = TextAlign.Start
-                            )
-                        }
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.spacedBy(4.dp)
-                        ) {
-                            Text(
-                                text = "@Interest Rate",
-                                style = MaterialTheme.typography.titleSmall,
-                                fontWeight = FontWeight.SemiBold,
-                                fontSize = 14.sp,
-                                color = Color(0xFF4CAF50),
-                                textAlign = TextAlign.End
-                            )
-                            Text(
-                                text = "▲",
-                                fontSize = 10.sp,
-                                color = Color(0xFF4CAF50)
-                            )
-                        }
-                    }
-                }
+                RateChartHeaderCard()
 
                 Spacer(modifier = Modifier.height(16.dp))
 
@@ -568,69 +574,7 @@ private fun ActionModal(
                 )
 
                 // Amount Range Header Card
-                Card(
-                    modifier = Modifier.fillMaxWidth(),
-                    shape = RoundedCornerShape(8.dp),
-                    border = BorderStroke(0.dp, Color.Transparent),
-                    colors = CardDefaults.cardColors(
-                        containerColor = Color(0xFFF5F5F5)
-                    ),
-                    elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
-                ) {
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 16.dp, vertical = 14.dp),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.Top
-                    ) {
-                        Column(
-                            modifier = Modifier.weight(1f),
-                            verticalArrangement = Arrangement.spacedBy(3.dp)
-                        ) {
-                            Text(
-                                text = "Amount Range",
-                                style = MaterialTheme.typography.titleSmall,
-                                fontWeight = FontWeight.SemiBold,
-                                fontSize = 14.sp,
-                                color = Color(0xFF212121),
-                                textAlign = TextAlign.Start
-                            )
-                            Text(
-                                text = "Description",
-                                style = MaterialTheme.typography.bodySmall,
-                                fontSize = 12.sp,
-                                color = Color(0xFF757575),
-                                textAlign = TextAlign.Start
-                            )
-                            Text(
-                                text = "Period",
-                                style = MaterialTheme.typography.bodySmall,
-                                fontSize = 12.sp,
-                                color = Color(0xFF757575),
-                                textAlign = TextAlign.Start
-                            )
-                        }
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.spacedBy(4.dp)
-                        ) {
-                            Text(
-                                text = "@Interest Rate",
-                                style = MaterialTheme.typography.titleSmall,
-                                fontWeight = FontWeight.SemiBold,
-                                fontSize = 14.sp,
-                                color = Color(0xFF4CAF50),
-                                textAlign = TextAlign.End
-                            )
-                            Text(
-                                text = "▲",
-                                fontSize = 10.sp,
-                                color = Color(0xFF4CAF50)
-                            )
-                        }
-                    }
-                }
+                RateChartHeaderCard()
 
                 // Item Details Card
                 Card(
