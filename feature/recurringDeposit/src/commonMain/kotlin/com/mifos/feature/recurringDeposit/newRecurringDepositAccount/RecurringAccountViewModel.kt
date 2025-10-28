@@ -147,16 +147,63 @@ class RecurringAccountViewModel(
     }
 
     private fun formattedAmount(amount: String): String {
-        val revStr = amount.reversed()
-        var formattedAmount = ""
-        revStr.forEachIndexed { index, ch ->
-            formattedAmount += ch
-            if ((index + 1) % 3 == 0) {
-                formattedAmount += ","
+
+        val currencySymbol = state.recurringDepositAccountTemplate.currency?.displaySymbol ?: ""
+        // 1. Handle empty input
+        if (amount.isEmpty()) return ""
+
+        // 2. Remove all non-numeric/non-dot characters, including currency symbols like '$'
+        // We keep only digits, dots, and a potential leading minus sign.
+        val cleaned = amount.replace("[^0-9.-]".toRegex(), "")
+
+        // 3. Handle special cases
+        if (cleaned.isEmpty()) return ""
+        if (cleaned == "-") return "-"
+        if (cleaned == ".") return "." // Allows user to type just '.'
+
+        // 4. Separate sign and magnitude
+        val negative = cleaned.startsWith("-")
+        val magnitude = if (negative) cleaned.substring(1) else cleaned
+
+        // 5. Separate integer and decimal parts
+        val parts = magnitude.split('.', limit = 2)
+        var intPart = parts[0].trimStart('0').ifEmpty { "0" } // Clean up leading zeros
+
+        var decimalPart = ""
+        if (parts.size > 1) {
+            // Take the first 2 digits after the dot
+            decimalPart = parts[1].take(2)
+            // Only append the dot if there are decimals or the user just typed the dot (i.e., parts[1] is empty)
+            if (decimalPart.isNotEmpty() || parts[1].isEmpty()) {
+                decimalPart = ".$decimalPart"
             }
         }
-        return "$ ${formattedAmount.reversed()}"
+
+        // Special handling for ".50" input (no integer part)
+        if (intPart == "0" && magnitude.startsWith('.') && decimalPart.isNotEmpty()) {
+            intPart = ""
+        }
+
+        // 6. Assemble the numeric part
+        val numericPart = when {
+            // If the original input started with a dot (e.g., ".50"), and we have decimals, return ".50"
+            amount.startsWith('.') && decimalPart.isNotEmpty() -> decimalPart
+            // If the original input was something like "-.50", and we have decimals
+            amount.startsWith("-.") && decimalPart.isNotEmpty() -> decimalPart
+            // Otherwise, use the cleaned integer and decimal parts
+            else -> "$intPart$decimalPart"
+        }
+
+        // 7. Add back the sign
+        val signedNumericPart = if (negative && numericPart.isNotEmpty()) "-$numericPart" else numericPart
+
+        // If the input started with just '.', return '.'
+        if (amount == "." && signedNumericPart.isEmpty()) return "."
+
+        // 8. Attach the currency symbol
+        return "$currencySymbol$signedNumericPart"
     }
+
 
     private fun createRecurringDepositAccount() {
         viewModelScope.launch {
@@ -394,13 +441,6 @@ class RecurringAccountViewModel(
                     }
                     is RecurringAccountAction.RecurringAccountSettingsAction.SetRecurringDepositAmount -> {
                         mutableStateFlow.update {
-                            var formattedAmount = ""
-                            val strLen = action.depositAmount.length
-                            val rev = action.depositAmount.reversed()
-                            action.depositAmount.forEachIndexed { index, ch ->
-                                formattedAmount += ch
-                            }
-
                             state.copy(
                                 recurringDepositAccountSettings = state.recurringDepositAccountSettings.copy(
                                     recurringDepositDetails = state.recurringDepositAccountSettings
@@ -522,7 +562,7 @@ data class RecurringAccountSettingsState(
     )
 
     data class RecurringDepositDetails(
-        val depositAmount: String = "$",
+        val depositAmount: String = "",
     )
 
     data class DepositPeriod(

@@ -78,24 +78,31 @@ fun SettingPage(
         verticalArrangement = Arrangement.spacedBy(20.dp),
     ) {
         Text(stringResource(Res.string.step_settings), fontWeight = FontWeight.Bold, fontSize = 18.sp)
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            Checkbox(settingsState.isMandatory, onCheckedChange = { onAction(RecurringAccountAction.RecurringAccountSettingsAction.ToggleMandatoryDeposit) })
-            Text(stringResource(Res.string.is_mandatory_deposit))
+
+        Column (
+            horizontalAlignment = Alignment.Start,
+            verticalArrangement = Arrangement.spacedBy(10.dp)
+        ){
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Checkbox(settingsState.isMandatory, onCheckedChange = { onAction(RecurringAccountAction.RecurringAccountSettingsAction.ToggleMandatoryDeposit) })
+                Text(stringResource(Res.string.is_mandatory_deposit))
+            }
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                MifosCheckBox(
+                    text = stringResource(Res.string.adjust_advance_payments),
+                    checked = settingsState.adjustAdvancePayments,
+                    onCheckChanged = { onAction(RecurringAccountAction.RecurringAccountSettingsAction.ToggleAdvancePaymentsTowardsFutureInstallments) },
+                )
+            }
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                MifosCheckBox(
+                    text = stringResource(Res.string.allow_withdrawals),
+                    checked = settingsState.allowWithdrawals,
+                    onCheckChanged = { onAction(RecurringAccountAction.RecurringAccountSettingsAction.ToggleAllowWithdrawals) },
+                )
+            }
         }
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            MifosCheckBox(
-                text = stringResource(Res.string.adjust_advance_payments),
-                checked = settingsState.adjustAdvancePayments,
-                onCheckChanged = { onAction(RecurringAccountAction.RecurringAccountSettingsAction.ToggleAdvancePaymentsTowardsFutureInstallments) },
-            )
-        }
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            MifosCheckBox(
-                text = stringResource(Res.string.allow_withdrawals),
-                checked = settingsState.allowWithdrawals,
-                onCheckChanged = { onAction(RecurringAccountAction.RecurringAccountSettingsAction.ToggleAllowWithdrawals) },
-            )
-        }
+
         Text(stringResource(Res.string.lock_in_period), fontWeight = FontWeight.Bold)
         MifosOutlinedTextField(
             value = settingsState.lockInPeriod.frequency,
@@ -275,46 +282,51 @@ fun SettingPage(
         AnimatedVisibility(
             visible = settingsState.preMatureClosure.applyPenalInterest,
         ) {
-            MifosOutlinedTextField(
-                value = settingsState.preMatureClosure.penalInterest,
-                onValueChange = { onAction(RecurringAccountAction.RecurringAccountSettingsAction.SetPreMatureClosurePenalInterest(it)) },
-                label = stringResource(Res.string.penal_interest_percentage),
-                config = MifosTextFieldConfig(
-                    keyboardOptions = KeyboardOptions(
-                        keyboardType = KeyboardType.Number,
-                        imeAction = ImeAction.Next,
+            Column(
+                horizontalAlignment = Alignment.Start,
+                verticalArrangement = Arrangement.spacedBy(20.dp)
+            ) {
+                MifosOutlinedTextField(
+                    value = settingsState.preMatureClosure.penalInterest,
+                    onValueChange = { onAction(RecurringAccountAction.RecurringAccountSettingsAction.SetPreMatureClosurePenalInterest(it)) },
+                    label = stringResource(Res.string.penal_interest_percentage),
+                    config = MifosTextFieldConfig(
+                        keyboardOptions = KeyboardOptions(
+                            keyboardType = KeyboardType.Number,
+                            imeAction = ImeAction.Next,
+                        ),
                     ),
-                ),
-                modifier = Modifier.fillMaxWidth(),
-            )
-            MifosTextFieldDropdown(
-                value = if (settingsState.preMatureClosure.interestPeriodIndex != -1) {
-                    state.recurringDepositAccountTemplate.preClosurePenalInterestOnTypeOptions?.get(settingsState.preMatureClosure.interestPeriodIndex)?.value ?: ""
-                } else {
-                    ""
-                },
-                options = state.recurringDepositAccountTemplate.preClosurePenalInterestOnTypeOptions?.map {
-                    it.value ?: ""
-                } ?: emptyList(),
-                onValueChanged = {},
-                onOptionSelected = { id, name ->
-                    onAction(RecurringAccountAction.RecurringAccountSettingsAction.SetPreMatureClosureInterestPeriodIndex(id))
-                },
-                label = stringResource(Res.string.period),
-                modifier = Modifier.fillMaxWidth(),
-            )
-            MifosOutlinedTextField(
-                value = settingsState.preMatureClosure.minimumBalanceForInterestCalculation,
-                onValueChange = { onAction(RecurringAccountAction.RecurringAccountSettingsAction.SetPreMatureClosureMinimumBalanceForInterestCalculation(it)) },
-                label = stringResource(Res.string.minimum_balance_for_interest),
-                config = MifosTextFieldConfig(
-                    keyboardOptions = KeyboardOptions(
-                        keyboardType = KeyboardType.Number,
-                        imeAction = ImeAction.Next,
+                    modifier = Modifier.fillMaxWidth(),
+                )
+                MifosTextFieldDropdown(
+                    value = if (settingsState.preMatureClosure.interestPeriodIndex != -1) {
+                        state.recurringDepositAccountTemplate.preClosurePenalInterestOnTypeOptions?.get(settingsState.preMatureClosure.interestPeriodIndex)?.value ?: ""
+                    } else {
+                        ""
+                    },
+                    options = state.recurringDepositAccountTemplate.preClosurePenalInterestOnTypeOptions?.map {
+                        it.value ?: ""
+                    } ?: emptyList(),
+                    onValueChanged = {},
+                    onOptionSelected = { id, name ->
+                        onAction(RecurringAccountAction.RecurringAccountSettingsAction.SetPreMatureClosureInterestPeriodIndex(id))
+                    },
+                    label = stringResource(Res.string.period),
+                    modifier = Modifier.fillMaxWidth(),
+                )
+                MifosOutlinedTextField(
+                    value = settingsState.preMatureClosure.minimumBalanceForInterestCalculation,
+                    onValueChange = { onAction(RecurringAccountAction.RecurringAccountSettingsAction.SetPreMatureClosureMinimumBalanceForInterestCalculation(it)) },
+                    label = stringResource(Res.string.minimum_balance_for_interest),
+                    config = MifosTextFieldConfig(
+                        keyboardOptions = KeyboardOptions(
+                            keyboardType = KeyboardType.Number,
+                            imeAction = ImeAction.Next,
+                        ),
                     ),
-                ),
-                modifier = Modifier.fillMaxWidth(),
-            )
+                    modifier = Modifier.fillMaxWidth(),
+                )
+            }
         }
 
         val isNextButtonActive = settingsState.preMatureClosure.penalInterest.isNotBlank() &&
