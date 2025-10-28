@@ -129,9 +129,9 @@ class RecurringAccountViewModel(
         viewModelScope.launch {
             val online = networkMonitor.isOnline.first()
             if (!online) {
-                        setErrorState(getString(Res.string.no_internet_connection))
-                        return@launch
-                    }
+                setErrorState(getString(Res.string.no_internet_connection))
+                return@launch
+            }
             recurringAccountRepository.getRecurringAccountTemplateByProduct(
                 clientId = clientId,
                 productId = state.recurringDepositAccountDetail.productId,
@@ -157,10 +157,8 @@ class RecurringAccountViewModel(
     }
 
     private fun formattedAmount(amount: String): String {
-
         val currencySymbol = state.recurringDepositAccountTemplate.currency?.displaySymbol ?: ""
         if (amount.isEmpty()) return ""
-
 
         val cleaned = amount.replace("[^0-9.-]".toRegex(), "")
 
@@ -198,7 +196,6 @@ class RecurringAccountViewModel(
 
         return "$currencySymbol$signedNumericPart"
     }
-
 
     private fun createRecurringDepositAccount() {
         viewModelScope.launch {
@@ -245,21 +242,19 @@ class RecurringAccountViewModel(
                 submittedOnDate = s.recurringDepositAccountDetail.submittedOnDate,
             )
 
-
             if (state.isOnline) {
                 recurringAccountRepository.createRecurringDepositAccount(payload).collect { dataState ->
                     when (dataState) {
                         is DataState.Error -> {
                             if (depositAmountInt == null) {
                                 setErrorState("Deposit amount is required")
-                            }else if (lockinFreq == null) {
+                            } else if (lockinFreq == null) {
                                 setErrorState("Lock-in period frequency is required")
                             } else if (recurringFreq == null) {
                                 setErrorState("Recurring frequency is required")
                             } else {
                                 setErrorState(dataState.message)
                             }
-
                         }
                         is DataState.Loading -> {
                             setLoadingState()
