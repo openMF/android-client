@@ -198,7 +198,7 @@ fun SettingPage(
             modifier = Modifier.fillMaxWidth(),
         )
         MifosTextFieldDropdown(
-            value = if (settingsState.depositPeriod.periodType != -1) {
+            value = if (settingsState.minDepositTerm.frequencyTypeIndex != -1) {
                 state.recurringDepositAccountTemplate.periodFrequencyTypeOptions?.get(settingsState.minDepositTerm.frequencyTypeIndex)?.value ?: ""
             } else {
                 ""
