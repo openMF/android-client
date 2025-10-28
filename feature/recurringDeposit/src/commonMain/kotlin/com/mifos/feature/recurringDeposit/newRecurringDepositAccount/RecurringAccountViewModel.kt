@@ -38,7 +38,7 @@ class RecurringAccountViewModel(
     >(RecurringAccountState()) {
 
     init {
-        observeNetwork()
+        checkInitialConnectivity()
     }
     private val clientId = savedStateHandle.toRoute<RecurringAccountRoute>().clientId
 
@@ -57,7 +57,7 @@ class RecurringAccountViewModel(
         }
     }
 
-    private fun observeNetwork() {
+    private fun checkInitialConnectivity() {
         viewModelScope.launch {
             val isConnected = networkMonitor.isOnline.first()
             mutableStateFlow.update {
@@ -83,7 +83,7 @@ class RecurringAccountViewModel(
                 recurringDepositAccountTemplate = RecurringDepositAccountTemplate(),
             )
         }
-        observeNetwork()
+        checkInitialConnectivity()
     }
 
     private fun moveToNextStep() {
@@ -100,6 +100,11 @@ class RecurringAccountViewModel(
 
     private fun loadTemplate() {
         viewModelScope.launch {
+            val online = networkMonitor.isOnline.first()
+            if (!online) {
+                setErrorState(getString(Res.string.no_internet_connection))
+                return@launch
+            }
             recurringAccountRepository.getRecurringAccountTemplate().collect { templateState ->
                 when (templateState) {
                     is DataState.Error -> {
@@ -122,6 +127,11 @@ class RecurringAccountViewModel(
     }
     private fun loadTemplateByProduct() {
         viewModelScope.launch {
+            val online = networkMonitor.isOnline.first()
+            if (!online) {
+                        setErrorState(getString(Res.string.no_internet_connection))
+                        return@launch
+                    }
             recurringAccountRepository.getRecurringAccountTemplateByProduct(
                 clientId = clientId,
                 productId = state.recurringDepositAccountDetail.productId,
@@ -235,11 +245,21 @@ class RecurringAccountViewModel(
                 submittedOnDate = s.recurringDepositAccountDetail.submittedOnDate,
             )
 
+
             if (state.isOnline) {
                 recurringAccountRepository.createRecurringDepositAccount(payload).collect { dataState ->
                     when (dataState) {
                         is DataState.Error -> {
-                            setErrorState(dataState.message)
+                            if (depositAmountInt == null) {
+                                setErrorState("Deposit amount is required")
+                            }else if (lockinFreq == null) {
+                                setErrorState("Lock-in period frequency is required")
+                            } else if (recurringFreq == null) {
+                                setErrorState("Recurring frequency is required")
+                            } else {
+                                setErrorState(dataState.message)
+                            }
+
                         }
                         is DataState.Loading -> {
                             setLoadingState()
