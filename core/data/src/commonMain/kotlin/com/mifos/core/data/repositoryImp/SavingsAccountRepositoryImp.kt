@@ -15,8 +15,8 @@ import com.mifos.core.data.repository.SavingsAccountRepository
 import com.mifos.core.model.objects.organisations.ProductSavings
 import com.mifos.core.model.objects.payloads.SavingsPayload
 import com.mifos.core.network.datamanager.DataManagerSavings
-import com.mifos.room.entities.client.Savings
 import com.mifos.room.entities.templates.savings.SavingProductsTemplate
+import io.ktor.client.statement.HttpResponse
 import kotlinx.coroutines.flow.Flow
 
 /**
@@ -51,7 +51,7 @@ class SavingsAccountRepositoryImp(
             .asDataStateFlow()
     }
 
-    override fun createSavingsAccount(savingsPayload: SavingsPayload?): Flow<DataState<Savings>> {
+    override fun createSavingsAccount(savingsPayload: SavingsPayload?): Flow<DataState<HttpResponse>> {
         return dataManagerSavings.createSavingsAccount(savingsPayload)
             .asDataStateFlow()
     }
