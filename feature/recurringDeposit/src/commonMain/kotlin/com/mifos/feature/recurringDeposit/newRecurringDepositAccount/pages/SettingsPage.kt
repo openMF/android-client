@@ -10,27 +10,27 @@
 package com.mifos.feature.recurringDeposit.newRecurringDepositAccount.pages
 
 import androidclient.feature.recurringdeposit.generated.resources.Res
-import androidclient.feature.recurringdeposit.generated.resources.adjust_advance_payments
-import androidclient.feature.recurringdeposit.generated.resources.allow_withdrawals
-import androidclient.feature.recurringdeposit.generated.resources.apply_penal_interest
-import androidclient.feature.recurringdeposit.generated.resources.back
-import androidclient.feature.recurringdeposit.generated.resources.deposit_frequency_same_as_meeting
-import androidclient.feature.recurringdeposit.generated.resources.deposit_period
-import androidclient.feature.recurringdeposit.generated.resources.for_pre_mature_closure
-import androidclient.feature.recurringdeposit.generated.resources.frequency
-import androidclient.feature.recurringdeposit.generated.resources.in_multiples_of
-import androidclient.feature.recurringdeposit.generated.resources.is_mandatory_deposit
-import androidclient.feature.recurringdeposit.generated.resources.lock_in_period
-import androidclient.feature.recurringdeposit.generated.resources.maximum_deposit_term
-import androidclient.feature.recurringdeposit.generated.resources.minimum_balance_for_interest
-import androidclient.feature.recurringdeposit.generated.resources.minimum_deposit_term
-import androidclient.feature.recurringdeposit.generated.resources.next
-import androidclient.feature.recurringdeposit.generated.resources.penal_interest_percentage
-import androidclient.feature.recurringdeposit.generated.resources.period
-import androidclient.feature.recurringdeposit.generated.resources.recurring_deposit_amount
-import androidclient.feature.recurringdeposit.generated.resources.recurring_deposit_details
-import androidclient.feature.recurringdeposit.generated.resources.step_settings
-import androidclient.feature.recurringdeposit.generated.resources.type
+import androidclient.feature.recurringdeposit.generated.resources.feature_recurringDeposit_adjust_advance_payments
+import androidclient.feature.recurringdeposit.generated.resources.feature_recurringDeposit_allow_withdrawals
+import androidclient.feature.recurringdeposit.generated.resources.feature_recurringDeposit_apply_penal_interest
+import androidclient.feature.recurringdeposit.generated.resources.feature_recurringDeposit_back
+import androidclient.feature.recurringdeposit.generated.resources.feature_recurringDeposit_deposit_frequency_same_as_meeting
+import androidclient.feature.recurringdeposit.generated.resources.feature_recurringDeposit_deposit_period
+import androidclient.feature.recurringdeposit.generated.resources.feature_recurringDeposit_for_pre_mature_closure
+import androidclient.feature.recurringdeposit.generated.resources.feature_recurringDeposit_frequency
+import androidclient.feature.recurringdeposit.generated.resources.feature_recurringDeposit_in_multiples_of
+import androidclient.feature.recurringdeposit.generated.resources.feature_recurringDeposit_is_mandatory_deposit
+import androidclient.feature.recurringdeposit.generated.resources.feature_recurringDeposit_lock_in_period
+import androidclient.feature.recurringdeposit.generated.resources.feature_recurringDeposit_maximum_deposit_term
+import androidclient.feature.recurringdeposit.generated.resources.feature_recurringDeposit_minimum_balance_for_interest
+import androidclient.feature.recurringdeposit.generated.resources.feature_recurringDeposit_minimum_deposit_term
+import androidclient.feature.recurringdeposit.generated.resources.feature_recurringDeposit_next
+import androidclient.feature.recurringdeposit.generated.resources.feature_recurringDeposit_penal_interest_percentage
+import androidclient.feature.recurringdeposit.generated.resources.feature_recurringDeposit_period
+import androidclient.feature.recurringdeposit.generated.resources.feature_recurringDeposit_recurring_deposit_amount
+import androidclient.feature.recurringdeposit.generated.resources.feature_recurringDeposit_recurring_deposit_details
+import androidclient.feature.recurringdeposit.generated.resources.feature_recurringDeposit_step_settings
+import androidclient.feature.recurringdeposit.generated.resources.feature_recurringDeposit_type
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -77,7 +77,7 @@ fun SettingPage(
         horizontalAlignment = Alignment.Start,
         verticalArrangement = Arrangement.spacedBy(20.dp),
     ) {
-        Text(stringResource(Res.string.step_settings), fontWeight = FontWeight.Bold, fontSize = 18.sp)
+        Text(stringResource(Res.string.feature_recurringDeposit_step_settings), fontWeight = FontWeight.Bold, fontSize = 18.sp)
 
         Column(
             horizontalAlignment = Alignment.Start,
@@ -85,29 +85,29 @@ fun SettingPage(
         ) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Checkbox(settingsState.isMandatory, onCheckedChange = { onAction(RecurringAccountAction.RecurringAccountSettingsAction.ToggleMandatoryDeposit) })
-                Text(stringResource(Res.string.is_mandatory_deposit))
+                Text(stringResource(Res.string.feature_recurringDeposit_is_mandatory_deposit))
             }
             Row(verticalAlignment = Alignment.CenterVertically) {
                 MifosCheckBox(
-                    text = stringResource(Res.string.adjust_advance_payments),
+                    text = stringResource(Res.string.feature_recurringDeposit_adjust_advance_payments),
                     checked = settingsState.adjustAdvancePayments,
                     onCheckChanged = { onAction(RecurringAccountAction.RecurringAccountSettingsAction.ToggleAdvancePaymentsTowardsFutureInstallments) },
                 )
             }
             Row(verticalAlignment = Alignment.CenterVertically) {
                 MifosCheckBox(
-                    text = stringResource(Res.string.allow_withdrawals),
+                    text = stringResource(Res.string.feature_recurringDeposit_allow_withdrawals),
                     checked = settingsState.allowWithdrawals,
                     onCheckChanged = { onAction(RecurringAccountAction.RecurringAccountSettingsAction.ToggleAllowWithdrawals) },
                 )
             }
         }
 
-        Text(stringResource(Res.string.lock_in_period), fontWeight = FontWeight.Bold)
+        Text(stringResource(Res.string.feature_recurringDeposit_lock_in_period), fontWeight = FontWeight.Bold)
         MifosOutlinedTextField(
             value = settingsState.lockInPeriod.frequency,
             onValueChange = { onAction(RecurringAccountAction.RecurringAccountSettingsAction.SetLockInPeriod(it)) },
-            label = stringResource(Res.string.frequency),
+            label = stringResource(Res.string.feature_recurringDeposit_frequency),
             config = MifosTextFieldConfig(
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Number,
@@ -131,13 +131,13 @@ fun SettingPage(
                     RecurringAccountAction.RecurringAccountSettingsAction.SetLockInPeriodType(id),
                 )
             },
-            label = stringResource(Res.string.type),
+            label = stringResource(Res.string.feature_recurringDeposit_type),
         )
-        Text(stringResource(Res.string.recurring_deposit_details), fontWeight = FontWeight.Bold)
+        Text(stringResource(Res.string.feature_recurringDeposit_recurring_deposit_details), fontWeight = FontWeight.Bold)
         MifosOutlinedTextField(
             value = settingsState.recurringDepositDetails.depositAmount,
             onValueChange = { onAction(RecurringAccountAction.RecurringAccountSettingsAction.SetRecurringDepositAmount(it)) },
-            label = stringResource(Res.string.recurring_deposit_amount),
+            label = stringResource(Res.string.feature_recurringDeposit_recurring_deposit_amount),
             config = MifosTextFieldConfig(
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Number,
@@ -146,11 +146,11 @@ fun SettingPage(
             ),
             modifier = Modifier.fillMaxWidth(),
         )
-        Text(stringResource(Res.string.deposit_period), fontWeight = FontWeight.Bold)
+        Text(stringResource(Res.string.feature_recurringDeposit_deposit_period), fontWeight = FontWeight.Bold)
         MifosOutlinedTextField(
             value = settingsState.depositPeriod.period,
             onValueChange = { onAction(RecurringAccountAction.RecurringAccountSettingsAction.SetDepositPeriod(it)) },
-            label = stringResource(Res.string.deposit_period),
+            label = stringResource(Res.string.feature_recurringDeposit_deposit_period),
             config = MifosTextFieldConfig(
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Number,
@@ -172,23 +172,23 @@ fun SettingPage(
             onOptionSelected = { id, name ->
                 onAction(RecurringAccountAction.RecurringAccountSettingsAction.SetDepositPeriodType(id))
             },
-            label = stringResource(Res.string.type),
+            label = stringResource(Res.string.feature_recurringDeposit_type),
             modifier = Modifier.fillMaxWidth(),
         )
         Row(verticalAlignment = Alignment.CenterVertically) {
             MifosCheckBox(
-                text = stringResource(Res.string.deposit_frequency_same_as_meeting),
+                text = stringResource(Res.string.feature_recurringDeposit_deposit_frequency_same_as_meeting),
                 checked = settingsState.depositPeriod.depositFrequencySameAsGroupCenterMeeting,
                 onCheckChanged = { onAction(RecurringAccountAction.RecurringAccountSettingsAction.ToggleDepositFrequencySameAsGroupCenterMeeting) },
             )
         }
-        Text(stringResource(Res.string.minimum_deposit_term), fontWeight = FontWeight.Bold)
+        Text(stringResource(Res.string.feature_recurringDeposit_minimum_deposit_term), fontWeight = FontWeight.Bold)
         MifosOutlinedTextField(
             value = settingsState.minDepositTerm.frequency,
             onValueChange = {
                 onAction(RecurringAccountAction.RecurringAccountSettingsAction.SetMinDepositTermFreq(it))
             },
-            label = stringResource(Res.string.frequency),
+            label = stringResource(Res.string.feature_recurringDeposit_frequency),
             config = MifosTextFieldConfig(
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Number,
@@ -210,14 +210,14 @@ fun SettingPage(
             onOptionSelected = { id, name ->
                 onAction(RecurringAccountAction.RecurringAccountSettingsAction.SetMinDepositTermFreqType(id))
             },
-            label = stringResource(Res.string.type),
+            label = stringResource(Res.string.feature_recurringDeposit_type),
             modifier = Modifier.fillMaxWidth(),
         )
-        Text(stringResource(Res.string.in_multiples_of), fontWeight = FontWeight.Bold)
+        Text(stringResource(Res.string.feature_recurringDeposit_in_multiples_of), fontWeight = FontWeight.Bold)
         MifosOutlinedTextField(
             value = settingsState.minDepositTerm.frequencyAfterInMultiplesOf,
             onValueChange = { onAction(RecurringAccountAction.RecurringAccountSettingsAction.SetMinDepositTermFreqAfterInMultiOf(it)) },
-            label = stringResource(Res.string.frequency),
+            label = stringResource(Res.string.feature_recurringDeposit_frequency),
             config = MifosTextFieldConfig(
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Number,
@@ -232,21 +232,21 @@ fun SettingPage(
             } else {
                 ""
             },
-            options = state.recurringDepositAccountTemplate?.periodFrequencyTypeOptions?.map {
+            options = state.recurringDepositAccountTemplate.periodFrequencyTypeOptions?.map {
                 it.value ?: ""
             } ?: emptyList(),
             onValueChanged = {},
             onOptionSelected = { id, name ->
                 onAction(RecurringAccountAction.RecurringAccountSettingsAction.SetMinDepositTermFreqTypeAfterInMultiOf(id))
             },
-            label = stringResource(Res.string.type),
+            label = stringResource(Res.string.feature_recurringDeposit_type),
             modifier = Modifier.fillMaxWidth(),
         )
-        Text(stringResource(Res.string.maximum_deposit_term), fontWeight = FontWeight.Bold)
+        Text(stringResource(Res.string.feature_recurringDeposit_maximum_deposit_term), fontWeight = FontWeight.Bold)
         MifosOutlinedTextField(
             value = settingsState.maxDepositTerm.frequency,
             onValueChange = { onAction(RecurringAccountAction.RecurringAccountSettingsAction.SetMaxDepositTermFreq(it)) },
-            label = stringResource(Res.string.frequency),
+            label = stringResource(Res.string.feature_recurringDeposit_frequency),
             config = MifosTextFieldConfig(
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Number,
@@ -268,16 +268,16 @@ fun SettingPage(
             onOptionSelected = { id, name ->
                 onAction(RecurringAccountAction.RecurringAccountSettingsAction.SetMaxDepositTermFreqType(id))
             },
-            label = stringResource(Res.string.type),
+            label = stringResource(Res.string.feature_recurringDeposit_type),
             modifier = Modifier.fillMaxWidth(),
         )
-        Text(stringResource(Res.string.for_pre_mature_closure), fontWeight = FontWeight.Bold)
+        Text(stringResource(Res.string.feature_recurringDeposit_for_pre_mature_closure), fontWeight = FontWeight.Bold)
         Row(verticalAlignment = Alignment.CenterVertically) {
             Checkbox(
                 settingsState.preMatureClosure.applyPenalInterest,
                 onCheckedChange = { onAction(RecurringAccountAction.RecurringAccountSettingsAction.TogglePreMatureClosureApplyPenalInterest) },
             )
-            Text(stringResource(Res.string.apply_penal_interest))
+            Text(stringResource(Res.string.feature_recurringDeposit_apply_penal_interest))
         }
         AnimatedVisibility(
             visible = settingsState.preMatureClosure.applyPenalInterest,
@@ -289,7 +289,7 @@ fun SettingPage(
                 MifosOutlinedTextField(
                     value = settingsState.preMatureClosure.penalInterest,
                     onValueChange = { onAction(RecurringAccountAction.RecurringAccountSettingsAction.SetPreMatureClosurePenalInterest(it)) },
-                    label = stringResource(Res.string.penal_interest_percentage),
+                    label = stringResource(Res.string.feature_recurringDeposit_penal_interest_percentage),
                     config = MifosTextFieldConfig(
                         keyboardOptions = KeyboardOptions(
                             keyboardType = KeyboardType.Number,
@@ -311,13 +311,13 @@ fun SettingPage(
                     onOptionSelected = { id, name ->
                         onAction(RecurringAccountAction.RecurringAccountSettingsAction.SetPreMatureClosureInterestPeriodIndex(id))
                     },
-                    label = stringResource(Res.string.period),
+                    label = stringResource(Res.string.feature_recurringDeposit_period),
                     modifier = Modifier.fillMaxWidth(),
                 )
                 MifosOutlinedTextField(
                     value = settingsState.preMatureClosure.minimumBalanceForInterestCalculation,
                     onValueChange = { onAction(RecurringAccountAction.RecurringAccountSettingsAction.SetPreMatureClosureMinimumBalanceForInterestCalculation(it)) },
-                    label = stringResource(Res.string.minimum_balance_for_interest),
+                    label = stringResource(Res.string.feature_recurringDeposit_minimum_balance_for_interest),
                     config = MifosTextFieldConfig(
                         keyboardOptions = KeyboardOptions(
                             keyboardType = KeyboardType.Number,
@@ -339,8 +339,8 @@ fun SettingPage(
             settingsState.maxDepositTerm.frequency.isNotBlank()
 
         MifosTwoButtonRow(
-            firstBtnText = stringResource(Res.string.back),
-            secondBtnText = stringResource(Res.string.next),
+            firstBtnText = stringResource(Res.string.feature_recurringDeposit_back),
+            secondBtnText = stringResource(Res.string.feature_recurringDeposit_next),
             onFirstBtnClick = { onAction(RecurringAccountAction.RecurringAccountSettingsAction.OnBackPress) },
             onSecondBtnClick = { onAction(RecurringAccountAction.RecurringAccountSettingsAction.OnNextPress) },
             isButtonIconVisible = true,

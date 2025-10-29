@@ -10,12 +10,12 @@
 package com.mifos.feature.recurringDeposit.newRecurringDepositAccount
 
 import androidclient.feature.recurringdeposit.generated.resources.Res
-import androidclient.feature.recurringdeposit.generated.resources.create_recurring_deposit_account
-import androidclient.feature.recurringdeposit.generated.resources.step_charges
-import androidclient.feature.recurringdeposit.generated.resources.step_details
-import androidclient.feature.recurringdeposit.generated.resources.step_interest
-import androidclient.feature.recurringdeposit.generated.resources.step_settings
-import androidclient.feature.recurringdeposit.generated.resources.step_terms
+import androidclient.feature.recurringdeposit.generated.resources.feature_recurringDeposit_create_recurring_deposit_account
+import androidclient.feature.recurringdeposit.generated.resources.feature_recurringDeposit_step_charges
+import androidclient.feature.recurringdeposit.generated.resources.feature_recurringDeposit_step_details
+import androidclient.feature.recurringdeposit.generated.resources.feature_recurringDeposit_step_interest
+import androidclient.feature.recurringdeposit.generated.resources.feature_recurringDeposit_step_settings
+import androidclient.feature.recurringdeposit.generated.resources.feature_recurringDeposit_step_terms
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
@@ -68,28 +68,28 @@ private fun RecurringAccountScaffold(
     onAction: (RecurringAccountAction) -> Unit,
 ) {
     val steps = listOf(
-        Step(name = stringResource(Res.string.step_details)) {
+        Step(name = stringResource(Res.string.feature_recurringDeposit_step_details)) {
             DetailsPage(
                 onNext = { onAction(RecurringAccountAction.NextStep) },
             )
         },
-        Step(name = stringResource(Res.string.step_terms)) {
+        Step(name = stringResource(Res.string.feature_recurringDeposit_step_terms)) {
             TermsPage(
                 onNext = { onAction(RecurringAccountAction.NextStep) },
             )
         },
-        Step(name = stringResource(Res.string.step_settings)) {
+        Step(name = stringResource(Res.string.feature_recurringDeposit_step_settings)) {
             SettingPage(
                 state = state,
                 onAction = onAction,
             )
         },
-        Step(name = stringResource(Res.string.step_interest)) {
+        Step(name = stringResource(Res.string.feature_recurringDeposit_step_interest)) {
             InterestPage(
                 onNext = { onAction(RecurringAccountAction.NextStep) },
             )
         },
-        Step(name = stringResource(Res.string.step_charges)) {
+        Step(name = stringResource(Res.string.feature_recurringDeposit_step_charges)) {
             ChargesPage(
                 onNext = { onAction(RecurringAccountAction.NextStep) },
             )
@@ -97,7 +97,7 @@ private fun RecurringAccountScaffold(
     )
 
     MifosScaffold(
-        title = stringResource(Res.string.create_recurring_deposit_account),
+        title = stringResource(Res.string.feature_recurringDeposit_create_recurring_deposit_account),
         onBackPressed = { onAction(RecurringAccountAction.NavigateBack) },
         modifier = modifier,
     ) { paddingValues ->

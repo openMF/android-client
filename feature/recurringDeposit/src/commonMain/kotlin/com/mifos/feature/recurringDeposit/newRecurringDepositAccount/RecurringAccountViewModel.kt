@@ -10,7 +10,7 @@
 package com.mifos.feature.recurringDeposit.newRecurringDepositAccount
 
 import androidclient.feature.recurringdeposit.generated.resources.Res
-import androidclient.feature.recurringdeposit.generated.resources.no_internet_connection
+import androidclient.feature.recurringdeposit.generated.resources.feature_recurringDeposit_no_internet_connection
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
@@ -71,7 +71,7 @@ class RecurringAccountViewModel(
                 loadTemplateByProduct()
             } else {
                 setErrorState(
-                    getString(Res.string.no_internet_connection),
+                    getString(Res.string.feature_recurringDeposit_no_internet_connection),
                 )
             }
         }
@@ -102,7 +102,7 @@ class RecurringAccountViewModel(
         viewModelScope.launch {
             val online = networkMonitor.isOnline.first()
             if (!online) {
-                setErrorState(getString(Res.string.no_internet_connection))
+                setErrorState(getString(Res.string.feature_recurringDeposit_no_internet_connection))
                 return@launch
             }
             recurringAccountRepository.getRecurringAccountTemplate().collect { templateState ->
@@ -129,7 +129,7 @@ class RecurringAccountViewModel(
         viewModelScope.launch {
             val online = networkMonitor.isOnline.first()
             if (!online) {
-                setErrorState(getString(Res.string.no_internet_connection))
+                setErrorState(getString(Res.string.feature_recurringDeposit_no_internet_connection))
                 return@launch
             }
             recurringAccountRepository.getRecurringAccountTemplateByProduct(
@@ -204,7 +204,7 @@ class RecurringAccountViewModel(
 
             val online = networkMonitor.isOnline.first()
             if (!online) {
-                setErrorState(getString(Res.string.no_internet_connection))
+                setErrorState(getString(Res.string.feature_recurringDeposit_no_internet_connection))
                 return@launch
             }
 
