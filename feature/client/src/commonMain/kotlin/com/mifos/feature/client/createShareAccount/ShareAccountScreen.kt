@@ -81,8 +81,6 @@ private fun ShareAccountScaffold(
     }
 
     MifosScaffold(
-        title = "Create Share Account",
-        onBackPressed = { onAction(ShareAccountAction.NavigateBack) },
         modifier = modifier,
     ) { paddingValues ->
         if (state.dialogState == null) {

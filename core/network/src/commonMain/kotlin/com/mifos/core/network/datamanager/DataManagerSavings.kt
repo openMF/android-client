@@ -9,6 +9,7 @@
  */
 package com.mifos.core.network.datamanager
 
+import com.mifos.core.common.utils.extractErrorMessage
 import com.mifos.core.datastore.UserPreferencesRepository
 import com.mifos.core.model.objects.account.loan.SavingsApproval
 import com.mifos.core.model.objects.account.saving.SavingsAccountTransactionResponse
@@ -18,15 +19,18 @@ import com.mifos.core.network.BaseApiManager
 import com.mifos.core.network.GenericResponse
 import com.mifos.room.entities.accounts.savings.SavingsAccountTransactionRequestEntity
 import com.mifos.room.entities.accounts.savings.SavingsAccountWithAssociationsEntity
+import com.mifos.room.entities.client.Savings
 import com.mifos.room.entities.templates.savings.SavingProductsTemplate
 import com.mifos.room.entities.templates.savings.SavingsAccountTransactionTemplateEntity
 import com.mifos.room.helper.SavingsDaoHelper
-import io.ktor.client.statement.HttpResponse
+import io.ktor.client.statement.bodyAsText
+import io.ktor.http.isSuccess
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
+import kotlinx.serialization.json.Json
 
 /**
  * Created by Rajan Maurya on 17/08/16.
@@ -284,8 +288,19 @@ class DataManagerSavings(
     val getSavingsAccounts: Flow<List<ProductSavings>>
         get() = mBaseApiManager.savingsService.allSavingsAccounts()
 
-    fun createSavingsAccount(savingsPayload: SavingsPayload?): Flow<HttpResponse> {
-        return mBaseApiManager.savingsService.createSavingsAccount(savingsPayload)
+    fun createSavingsAccount(savingsPayload: SavingsPayload?): Flow<Savings> {
+        return mBaseApiManager.savingsService.createSavingsAccount(savingsPayload).map { response ->
+
+            val json = Json { ignoreUnknownKeys = true }
+
+            if (!response.status.isSuccess()) {
+                val errorMessage = extractErrorMessage(response)
+
+                throw IllegalStateException(errorMessage)
+            }
+
+            json.decodeFromString<Savings>(response.bodyAsText())
+        }
     }
 
     val getSavingsAccountTemplate: Flow<SavingProductsTemplate>

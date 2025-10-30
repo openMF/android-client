@@ -7,7 +7,7 @@
  *
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
-package com.mifos.core.data.util
+package com.mifos.core.common.utils
 
 import com.mifos.core.model.objects.error.MifosError
 import io.ktor.client.statement.HttpResponse
@@ -24,13 +24,8 @@ suspend fun extractErrorMessage(response: HttpResponse): String {
         val errorResponse = json.decodeFromString<MifosError>(responseText)
         errorResponse.errors.firstOrNull()?.defaultUserMessage
             ?: errorResponse.defaultUserMessage
-            ?: Error.MSG_NOT_FOUND
+            ?: "HTTP ${response.status.value} ${response.status.description}"
     } catch (e: Exception) {
-        Error.FAILED_TO_PARSE_ERROR_RESPONSE
+        "HTTP ${response.status.value} ${response.status.description}"
     }
-}
-
-data object Error {
-    const val MSG_NOT_FOUND = "Message Not Found"
-    const val FAILED_TO_PARSE_ERROR_RESPONSE = "Failed to parse error response"
 }

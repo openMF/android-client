@@ -30,10 +30,10 @@ interface ClientIdentifiersRepository {
 
     suspend fun deleteClientIdentifier(clientId: Long, identifierId: Long): GenericResponse
 
-    suspend fun createClientIdentifier(
+    fun createClientIdentifier(
         clientId: Long,
         identifierPayload: IdentifierPayload,
-    ): HttpResponse
+    ): Flow<DataState<HttpResponse>>
 
     suspend fun updateClientIdentifier(
         clientId: Long,

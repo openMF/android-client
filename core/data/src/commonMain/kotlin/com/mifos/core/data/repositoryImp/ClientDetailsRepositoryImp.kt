@@ -10,8 +10,8 @@
 package com.mifos.core.data.repositoryImp
 
 import com.mifos.core.common.utils.DataState
+import com.mifos.core.common.utils.extractErrorMessage
 import com.mifos.core.data.repository.ClientDetailsRepository
-import com.mifos.core.data.util.extractErrorMessage
 import com.mifos.core.model.objects.account.share.ShareAccounts
 import com.mifos.core.network.datamanager.DataManagerClient
 import com.mifos.core.network.model.ClientCloseTemplateResponse

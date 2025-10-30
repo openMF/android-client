@@ -9,13 +9,16 @@
  */
 package com.mifos.core.network.datamanager
 
+import com.mifos.core.common.utils.extractErrorMessage
 import com.mifos.core.model.objects.noncoreobjects.Identifier
 import com.mifos.core.model.objects.noncoreobjects.IdentifierPayload
 import com.mifos.core.model.objects.noncoreobjects.IdentifierTemplate
 import com.mifos.core.network.BaseApiManager
 import com.mifos.core.network.GenericResponse
 import io.ktor.client.statement.HttpResponse
+import io.ktor.http.isSuccess
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 
 /**
  * Created by Arin Yadav on 12/09/25.
@@ -88,11 +91,20 @@ class DataManagerIdentifiers(
      * @param identifierPayload The payload containing identifier details.
      * @return [GenericResponse] indicating the result of the create operation.
      */
-    suspend fun createClientIdentifier(
+    fun createClientIdentifier(
         clientId: Long,
         identifierPayload: IdentifierPayload,
-    ): HttpResponse {
-        return mBaseApiManager.clientIdentifiersApi.createClientIdentifier(clientId, identifierPayload)
+    ): Flow<HttpResponse> {
+        return mBaseApiManager.clientIdentifiersApi.createClientIdentifier(clientId, identifierPayload).map { response ->
+
+            if (!response.status.isSuccess()) {
+                val errorMessage = extractErrorMessage(response)
+
+                throw IllegalStateException(errorMessage)
+            }
+
+            response
+        }
     }
 
     /**

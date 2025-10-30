@@ -9,6 +9,7 @@
  */
 package com.mifos.core.network.datamanager
 
+import com.mifos.core.common.utils.extractErrorMessage
 import com.mifos.core.datastore.UserPreferencesRepository
 import com.mifos.core.model.objects.account.loan.LoanDisbursement
 import com.mifos.core.network.BaseApiManager
@@ -23,11 +24,13 @@ import com.mifos.room.entities.templates.loans.LoanTemplate
 import com.mifos.room.entities.templates.loans.LoanTransactionTemplate
 import com.mifos.room.helper.LoanDaoHelper
 import io.ktor.client.statement.HttpResponse
+import io.ktor.http.isSuccess
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.map
 
 /**
  * Created by Rajan Maurya on 15/07/16.
@@ -56,7 +59,14 @@ class DataManagerLoan(
     fun getLoanById(loanId: Int): Flow<LoanWithAssociationsEntity?> {
         return prefManager.userInfo.flatMapLatest { userData ->
             when (userData.userStatus) {
-                false -> flow { emit(mBaseApiManager.loanService.getLoanByIdWithAllAssociations(loanId)) }
+                false -> flow {
+                    emit(
+                        mBaseApiManager.loanService.getLoanByIdWithAllAssociations(
+                            loanId,
+                        ),
+                    )
+                }
+
                 true ->
                     /**
                      * offline Mode, Return LoanWithAssociation from LoanDaoHelper.
@@ -77,7 +87,8 @@ class DataManagerLoan(
      */
     fun syncLoanById(loanId: Int): Flow<LoanWithAssociationsEntity> {
         return flow {
-            val loanWithAssociations = mBaseApiManager.loanService.getLoanByIdWithAllAssociations(loanId)
+            val loanWithAssociations =
+                mBaseApiManager.loanService.getLoanByIdWithAllAssociations(loanId)
             loanDaoHelper.saveLoanById(loanWithAssociations)
             emit(loanWithAssociations)
         }
@@ -91,7 +102,16 @@ class DataManagerLoan(
     }
 
     fun createLoansAccount(loansPayload: LoansPayload?): Flow<HttpResponse> {
-        return mBaseApiManager.loanService.createLoansAccount(loansPayload)
+        return mBaseApiManager.loanService.createLoansAccount(loansPayload).map { response ->
+
+            if (!response.status.isSuccess()) {
+                val errorMessage = extractErrorMessage(response)
+
+                throw IllegalStateException(errorMessage)
+            }
+
+            response
+        }
     }
 
     /**

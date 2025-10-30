@@ -43,11 +43,11 @@ class ClientIdentifiersRepositoryImp(
         return dataManagerIdentifiers.deleteClientIdentifier(clientId, identifierId)
     }
 
-    override suspend fun createClientIdentifier(
+    override fun createClientIdentifier(
         clientId: Long,
         identifierPayload: IdentifierPayload,
-    ): HttpResponse {
-        return dataManagerIdentifiers.createClientIdentifier(clientId, identifierPayload)
+    ): Flow<DataState<HttpResponse>> {
+        return dataManagerIdentifiers.createClientIdentifier(clientId, identifierPayload).asDataStateFlow()
     }
 
     override suspend fun updateClientIdentifier(

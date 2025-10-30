@@ -92,10 +92,10 @@ interface ClientIdentifierApi {
      * @return [GenericResponse] indicating the result of the create operation.
      */
     @POST(APIEndPoint.CLIENTS + "/{clientId}/" + APIEndPoint.IDENTIFIERS)
-    suspend fun createClientIdentifier(
+    fun createClientIdentifier(
         @Path("clientId") clientId: Long,
         @Body identifierPayload: IdentifierPayload,
-    ): HttpResponse
+    ): Flow<HttpResponse>
 
     /**
      * Updates an existing client identifier for a given client.

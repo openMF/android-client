@@ -13,7 +13,6 @@ import androidclient.feature.savings.generated.resources.Res
 import androidclient.feature.savings.generated.resources.feature_savings_back
 import androidclient.feature.savings.generated.resources.feature_savings_cancel
 import androidclient.feature.savings.generated.resources.feature_savings_create_savings_account
-import androidclient.feature.savings.generated.resources.feature_savings_new_savings_account_created_successfully
 import androidclient.feature.savings.generated.resources.step_charges
 import androidclient.feature.savings.generated.resources.step_charges_add
 import androidclient.feature.savings.generated.resources.step_charges_add_new
@@ -62,7 +61,6 @@ import com.mifos.feature.savings.savingsAccountv2.pages.DetailsPage
 import com.mifos.feature.savings.savingsAccountv2.pages.PreviewPage
 import com.mifos.feature.savings.savingsAccountv2.pages.TermsPage
 import kotlinx.coroutines.delay
-import org.jetbrains.compose.resources.getString
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 import kotlin.time.Clock
@@ -85,9 +83,12 @@ internal fun SavingsAccountScreen(
         }
     }
 
+    val snackbarHostState = remember { SnackbarHostState() }
+
     NewSavingsAccountDialog(
         state = state,
         onAction = { viewModel.trySendAction(it) },
+        snackbarHostState = snackbarHostState,
     )
 
     SavingsAccountScaffold(
@@ -95,6 +96,7 @@ internal fun SavingsAccountScreen(
         state = state,
         onAction = { viewModel.trySendAction(it) },
         navController = navController,
+        snackbarHostState = snackbarHostState,
     )
 }
 
@@ -104,6 +106,7 @@ private fun SavingsAccountScaffold(
     state: SavingsAccountState,
     modifier: Modifier = Modifier,
     onAction: (SavingsAccountAction) -> Unit,
+    snackbarHostState: SnackbarHostState,
 ) {
     val steps = listOf(
         Step(stringResource(Res.string.step_details)) {
@@ -131,8 +134,6 @@ private fun SavingsAccountScaffold(
             )
         },
     )
-
-    val snackbarHostState = remember { SnackbarHostState() }
 
     MifosScaffold(
         title = stringResource(Res.string.feature_savings_create_savings_account),
@@ -168,21 +169,9 @@ private fun SavingsAccountScaffold(
                 )
             }
         }
+
         if (state.isOverLayLoadingActive) {
             MifosProgressIndicatorOverlay()
-        }
-
-        if (state.responseErrorMsg != null) {
-            LaunchedEffect(state.launchEffectKey) {
-                snackbarHostState.showSnackbar(
-                    message = state.responseErrorMsg,
-                )
-
-                if (state.responseErrorMsg == getString(Res.string.feature_savings_new_savings_account_created_successfully)) {
-                    delay(1000)
-                    onAction(SavingsAccountAction.Finish)
-                }
-            }
         }
     }
 }
@@ -191,6 +180,7 @@ private fun SavingsAccountScaffold(
 private fun NewSavingsAccountDialog(
     state: SavingsAccountState,
     onAction: (SavingsAccountAction) -> Unit,
+    snackbarHostState: SnackbarHostState,
 ) {
     when (state.dialogState) {
         is SavingsAccountState.DialogState.AddNewCharge -> AddNewChargeDialog(
@@ -204,6 +194,19 @@ private fun NewSavingsAccountDialog(
             state = state,
             onAction = onAction,
         )
+
+        is SavingsAccountState.DialogState.SuccessResponseStatus -> {
+            LaunchedEffect(state.launchEffectKey) {
+                snackbarHostState.showSnackbar(
+                    message = state.dialogState.msg,
+                )
+
+                if (state.dialogState.successStatus) {
+                    delay(1000)
+                    onAction(SavingsAccountAction.Finish)
+                }
+            }
+        }
 
         null -> Unit
     }

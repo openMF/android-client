@@ -14,15 +14,12 @@ import androidclient.feature.savings.generated.resources.feature_savings_error_n
 import androidclient.feature.savings.generated.resources.feature_savings_new_savings_account_created_successfully
 import androidclient.feature.savings.generated.resources.field_empty_msg
 import androidclient.feature.savings.generated.resources.step_terms_decimal_places_error
-import androidx.compose.ui.platform.LocalFocusManager
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.common.utils.DateHelper
-import com.mifos.core.data.util.Error
 import com.mifos.core.data.util.NetworkMonitor
-import com.mifos.core.data.util.extractErrorMessage
 import com.mifos.core.domain.useCases.CreateSavingsAccountUseCase
 import com.mifos.core.domain.useCases.GetClientTemplateUseCase
 import com.mifos.core.domain.useCases.GetSavingsProductTemplateUseCase
@@ -54,8 +51,6 @@ internal class SavingsAccountViewModel(
             SavingsAccountState(clientId = savedStateHandle.toRoute<SavingsAccountRoute>().clientId)
         },
     ) {
-
-    val focusManager = LocalFocusManager
 
     init {
         loadClientTemplate()
@@ -186,13 +181,26 @@ internal class SavingsAccountViewModel(
                         }
 
                         is DataState.Success -> {
-                            val error = extractErrorMessage(result.data)
+                            mutableStateFlow.update {
+                                it.copy(
+                                    isOverLayLoadingActive = false,
+                                    dialogState = SavingsAccountState.DialogState.SuccessResponseStatus(
+                                        successStatus = true,
+                                        msg = getString(Res.string.feature_savings_new_savings_account_created_successfully),
+                                    ),
+                                    launchEffectKey = Random.nextInt(),
+                                )
+                            }
+                        }
 
-                            // Successful create lona account if response error not found
-                            if (error == Error.MSG_NOT_FOUND) {
+                        is DataState.Error -> {
+                            if (result.exception is IllegalStateException) {
                                 mutableStateFlow.update {
                                     it.copy(
-                                        responseErrorMsg = getString(Res.string.feature_savings_new_savings_account_created_successfully),
+                                        dialogState = SavingsAccountState.DialogState.SuccessResponseStatus(
+                                            successStatus = false,
+                                            msg = result.message,
+                                        ),
                                         launchEffectKey = Random.nextInt(),
                                         isOverLayLoadingActive = false,
                                     )
@@ -200,20 +208,10 @@ internal class SavingsAccountViewModel(
                             } else {
                                 mutableStateFlow.update {
                                     it.copy(
+                                        screenState = SavingsAccountState.ScreenState.Error(result.message),
                                         isOverLayLoadingActive = false,
-                                        responseErrorMsg = error,
-                                        launchEffectKey = Random.nextInt(),
                                     )
                                 }
-                            }
-                        }
-
-                        is DataState.Error -> {
-                            mutableStateFlow.update {
-                                it.copy(
-                                    screenState = SavingsAccountState.ScreenState.Error(result.message),
-                                    isOverLayLoadingActive = false,
-                                )
                             }
                         }
                     }
@@ -676,7 +674,6 @@ constructor(
     val chargeAmount: String = "",
     val chargeAmountError: StringResource? = null,
 
-    val responseErrorMsg: String? = null,
     val launchEffectKey: Int? = null,
 
     val savingProductError: String? = null,
@@ -685,6 +682,8 @@ constructor(
     sealed interface DialogState {
         data object ShowCharges : DialogState
         data class AddNewCharge(val edit: Boolean, val index: Int = -1) : DialogState
+        data class SuccessResponseStatus(val successStatus: Boolean, val msg: String = "") :
+            DialogState
     }
 
     sealed interface ScreenState {
