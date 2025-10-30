@@ -94,6 +94,7 @@ class ClientIdentifiersAddUpdateViewModel(
                                             .replace("under", " under"),
                                     ),
                                     handleServerResponse = true,
+                                    isOverlayLoading = false,
                                 )
                             }
                         } else {
@@ -102,6 +103,7 @@ class ClientIdentifiersAddUpdateViewModel(
                                     dialogState = ClientIdentifiersAddUpdateState.DialogState.Error(
                                         dataState.message,
                                     ),
+                                    isOverlayLoading = false,
                                 )
                             }
                         }
