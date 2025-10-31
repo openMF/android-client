@@ -532,5 +532,21 @@
     <!-- Screen Title -->
     <string name="title_new_fixed_deposit_account">New Fixed Deposit Account</string>
 
-  
+    <!-- Create Share Account -->
+    <string name="share_account_details">Details</string>
+    <string name="share_account_terms">Terms</string>
+    <string name="share_account_charges">Charges</string>
+    <string name="share_account_preview">Preview</string>
+    <string name="share_account_back">Back</string>
+    <string name="share_account_next">Next</string>
+
+    <string name="share_account_detail_product_name">Product Name*</string>
+    <string name="share_account_detail_submission_date">Submission Date*</string>
+    <string name="share_account_detail_external_id">External Id</string>
+    <string name="share_account_detail_date_select">Select</string>
+    <string name="share_account_detail_date_cancel">Cancel</string>
+
+    <!-- Handle Error-->
+    <string name="field_empty">This field cannot be empty</string>
+
 </resources>

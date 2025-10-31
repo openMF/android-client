@@ -15,19 +15,24 @@ import androidx.navigation.compose.composable
 import kotlinx.serialization.Serializable
 
 @Serializable
-data object ShareAccountRoute
+data class CreateShareAccountRoute(
+    val clientId: Int,
+)
 
-fun NavGraphBuilder.shareAccountDestination() {
-    composable<ShareAccountRoute> {
-        ShareAccountScreen(
-            onNavigateBack = {},
+fun NavGraphBuilder.createShareAccountDestination(navController: NavController) {
+    composable<CreateShareAccountRoute> {
+        CreateShareAccountScreen(
+            onNavigateBack = navController::popBackStack,
             onFinish = {},
+            navController = navController,
         )
     }
 }
 
-fun NavController.navigateToShareAccountRoute() {
+fun NavController.navigateToCreateShareAccountRoute(
+    clientId: Int,
+) {
     this.navigate(
-        ShareAccountRoute,
+        CreateShareAccountRoute(clientId = clientId),
     )
 }

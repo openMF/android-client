@@ -40,4 +40,5 @@ object APIEndPoint {
     const val DISBURSE = "disburse"
     const val NOTES = "notes"
     const val MAKER_CHECKER = "makercheckers"
+    const val SHARE = "share"
 }

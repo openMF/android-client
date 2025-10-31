@@ -70,8 +70,8 @@ import com.mifos.feature.client.clientUpdateDefaultAccount.navigateToUpdateDefau
 import com.mifos.feature.client.clientUpdateDefaultAccount.updateDefaultAccountDestination
 import com.mifos.feature.client.clientsList.ClientListScreen
 import com.mifos.feature.client.createNewClient.CreateNewClientScreen
-import com.mifos.feature.client.createShareAccount.navigateToShareAccountRoute
-import com.mifos.feature.client.createShareAccount.shareAccountDestination
+import com.mifos.feature.client.createShareAccount.createShareAccountDestination
+import com.mifos.feature.client.createShareAccount.navigateToCreateShareAccountRoute
 import com.mifos.feature.client.documentPreviewScreen.createDocumentPreviewRoute
 import com.mifos.feature.client.documentPreviewScreen.navigateToDocumentPreviewRoute
 import com.mifos.feature.client.fixedDepositAccount.clientFixedDepositAccountDestination
@@ -309,7 +309,7 @@ fun NavGraphBuilder.clientNavGraph(
         )
         clientApplyNewApplicationRoute(
             onNavigateBack = navController::popBackStack,
-            onNavigateApplyShareAccount = navController::navigateToShareAccountRoute,
+            onNavigateApplyShareAccount = navController::navigateToCreateShareAccountRoute,
             onNavigateApplyLoanAccount = navController::navigateToNewLoanAccountRoute,
             onNavigateApplySavingsAccount = navController::navigateToSavingsAccountRoute,
             onNavigateApplyRecurringAccount = navController::navigateToRecurringAccountRoute,
@@ -343,7 +343,9 @@ fun NavGraphBuilder.clientNavGraph(
             onFinish = navController::navigateToClientProfileGeneralRouteOnStatus,
         )
 
-        shareAccountDestination()
+        createShareAccountDestination(
+            navController = navController,
+        )
         recurringAccountDestination()
         fixedAccountDestination()
     }
