@@ -91,20 +91,18 @@ class DataManagerIdentifiers(
      * @param identifierPayload The payload containing identifier details.
      * @return [GenericResponse] indicating the result of the create operation.
      */
-    fun createClientIdentifier(
+    suspend fun createClientIdentifier(
         clientId: Long,
         identifierPayload: IdentifierPayload,
-    ): Flow<HttpResponse> {
-        return mBaseApiManager.clientIdentifiersApi.createClientIdentifier(clientId, identifierPayload).map { response ->
+    ): HttpResponse {
+        val response =
+            mBaseApiManager.clientIdentifiersApi.createClientIdentifier(clientId, identifierPayload)
 
-            if (!response.status.isSuccess()) {
-                val errorMessage = extractErrorMessage(response)
-
-                throw IllegalStateException(errorMessage)
-            }
-
-            response
+        if (!response.status.isSuccess()) {
+            throw IllegalStateException(extractErrorMessage(response))
         }
+
+        return response
     }
 
     /**
@@ -123,6 +121,10 @@ class DataManagerIdentifiers(
         identifierId: Long,
         identifierPayload: IdentifierPayload,
     ): GenericResponse {
-        return mBaseApiManager.clientIdentifiersApi.updateClientIdentifier(clientId, identifierId, identifierPayload)
+        return mBaseApiManager.clientIdentifiersApi.updateClientIdentifier(
+            clientId,
+            identifierId,
+            identifierPayload,
+        )
     }
 }
