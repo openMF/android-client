@@ -63,7 +63,7 @@ fun DetailsPage(
         },
     )
 
-    if (state.showDatePicker) {
+    if (state.showSubmissionDatePicker) {
         DatePickerDialog(
             onDismissRequest = {
                 onAction(ShareAccountAction.OnOpenDatePicker(state = false))

@@ -79,7 +79,8 @@ private fun CreateShareAccountContent(
         },
         Step(name = stringResource(Res.string.share_account_terms)) {
             TermsPage(
-                onNext = { onAction(ShareAccountAction.NextStep) },
+                state = state,
+                onAction = onAction,
             )
         },
         Step(name = stringResource(Res.string.share_account_charges)) {

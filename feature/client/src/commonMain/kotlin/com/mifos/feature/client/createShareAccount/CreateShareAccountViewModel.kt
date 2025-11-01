@@ -145,7 +145,7 @@ class CreateShareAccountViewModel(
             is ShareAccountAction.OnOpenDatePicker -> {
                 mutableStateFlow.update {
                     it.copy(
-                        showDatePicker = action.state,
+                        showSubmissionDatePicker = action.state,
                     )
                 }
             }
@@ -194,8 +194,24 @@ constructor(
     val submissionDate: String = DateHelper.getDateAsStringFromLong(
         Clock.System.now().toEpochMilliseconds(),
     ),
-    val showDatePicker: Boolean = false,
+    val showSubmissionDatePicker: Boolean = false,
     val productOption: List<ProductOption> = emptyList(),
+    val currency: String? = "USD",
+    val currentPrice: Int? = 2,
+    val totalShares: Int? = null,
+    val savingsAccountIdx: Int? = null,
+    val savingsAccountError: StringResource? = null,
+    val applicationDate: String = DateHelper.getDateAsStringFromLong(
+        Clock.System.now().toEpochMilliseconds(),
+    ),
+    val showApplicationDatePicker: Boolean = false,
+    val isDividendAllowed: Boolean = false,
+    val minActivePeriodFreq: Int? = null,
+    val minActivePeriodFreqTypeIdx: Int? = null,
+    val minActivePeriodFreqTypeError: StringResource? = null,
+    val lockInPeriodFreq: Int? = null,
+    val lockInPeriodFreqTypeIdx: Int? = null,
+    val lockInPeriodFreqTypeError: StringResource? = null,
     val screenState: ScreenState = ScreenState.Loading,
 ) {
     interface ScreenState {
