@@ -61,7 +61,7 @@ internal fun ClientApplyNewApplicationsScreen(
     onNavigateBack: () -> Unit,
     onNavigateApplyLoanAccount: (Int) -> Unit,
     onNavigateApplySavingsAccount: (Int) -> Unit,
-    onNavigateApplyShareAccount: () -> Unit,
+    onNavigateApplyShareAccount: (Int) -> Unit,
     onNavigateApplyRecurringAccount: () -> Unit,
     onNavigateApplyFixedAccount: () -> Unit,
     navController: NavController,
@@ -84,7 +84,7 @@ internal fun ClientApplyNewApplicationsScreen(
                         state.clientId,
                     )
 
-                    ClientApplyNewApplicationsItem.NewShareAccount -> onNavigateApplyShareAccount()
+                    ClientApplyNewApplicationsItem.NewShareAccount -> onNavigateApplyShareAccount(state.clientId)
                 }
             }
         }
