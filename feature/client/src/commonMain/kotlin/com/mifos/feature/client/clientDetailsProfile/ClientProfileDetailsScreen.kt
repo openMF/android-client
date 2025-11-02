@@ -99,7 +99,7 @@ internal fun ClientProfileDetailsScreen(
             is ClientProfileDetailsEvent.OnActionClick -> {
                 when (event.action) {
                     ClientProfileDetailsActionItem.AddCharge -> {
-                        navigateToAddCharge(state.client?.id?:-1)
+                        navigateToAddCharge(state.client?.id ?: -1)
                     }
                     ClientProfileDetailsActionItem.ApplyNewApplication -> {
                         navigateToApplyNewApplication(

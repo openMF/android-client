@@ -16,7 +16,8 @@ import com.mifos.room.entities.client.ChargesEntity
 import kotlinx.coroutines.flow.first
 
 class ClientChargesPagingSource(
-    private val clientId: Int,
+    private val resourceType: String,
+    private val resourceId: Int,
     private val dataManagerCharge: DataManagerCharge,
 ) :
     PagingSource<Int, ChargesEntity>() {
@@ -33,7 +34,7 @@ class ClientChargesPagingSource(
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, ChargesEntity> {
         val position = params.key ?: 0
         return try {
-            val (clientChargesList, totalCharges) = getClientChargeList(clientId, position)
+            val (clientChargesList, totalCharges) = getListOfPagingCharges(resourceType, resourceId, position)
 
             LoadResult.Page(
                 data = clientChargesList,
@@ -45,12 +46,14 @@ class ClientChargesPagingSource(
         }
     }
 
-    private suspend fun getClientChargeList(
-        clientId: Int,
+    private suspend fun getListOfPagingCharges(
+        resourceType: String,
+        resourceId: Int,
         position: Int,
     ): Pair<List<ChargesEntity>, Int> {
-        val page = dataManagerCharge.getClientCharges(
-            clientId = clientId,
+        val page = dataManagerCharge.getListOfPagingCharges(
+            resourceType = resourceType,
+            resourceId = resourceId,
             offset = position,
             limit = 10,
         ).first()

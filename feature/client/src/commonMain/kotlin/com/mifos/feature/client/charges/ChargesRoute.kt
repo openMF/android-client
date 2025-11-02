@@ -7,7 +7,7 @@
  *
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
-package com.mifos.feature.client.clientCharges
+package com.mifos.feature.client.charges
 
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
@@ -15,28 +15,31 @@ import androidx.navigation.compose.composable
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class ClientChargesRoute(
-    val clientId: Int = -1,
+data class ChargesRoute(
+    val resourceId: Int = -1,
+    val resourceType: String = "",
 )
 
-fun NavGraphBuilder.clientChargesDestination(
+fun NavGraphBuilder.chargesDestination(
     onNavigateBack: () -> Unit,
     navController: NavController,
 ) {
-    composable<ClientChargesRoute> {
-        ClientChargesScreen(
+    composable<ChargesRoute> {
+        ChargesScreen(
             navigateBack = onNavigateBack,
-            navController = navController
+            navController = navController,
         )
     }
 }
 
-fun NavController.navigateToClientChargesRoute(
-    clientId: Int,
+fun NavController.navigateToChargesRoute(
+    resourceId: Int,
+    resourceType: String,
 ) {
     this.navigate(
-        ClientChargesRoute(
-            clientId = clientId,
+        ChargesRoute(
+            resourceId = resourceId,
+            resourceType = resourceType,
         ),
     )
 }

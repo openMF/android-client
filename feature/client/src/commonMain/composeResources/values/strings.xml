@@ -555,4 +555,9 @@
     <!-- Handle Error-->
     <string name="field_empty">This field cannot be empty</string>
 
+    <!-- Charges -->
+    <string name="charges_update">Update</string>
+    <string name="charges_view_charges">View Charges</string>
+    <string name="charges_client_update_not_support_error_msg">Updating client charges is not supported. Please delete the existing charge and create a new one.</string>
+
 </resources>

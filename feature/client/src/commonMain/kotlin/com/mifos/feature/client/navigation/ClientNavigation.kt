@@ -17,6 +17,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import androidx.navigation.navArgument
 import com.mifos.core.common.utils.Constants
+import com.mifos.feature.client.charges.chargesDestination
+import com.mifos.feature.client.charges.navigateToChargesRoute
 import com.mifos.feature.client.clientAddDocuments.AddDocumentRoute
 import com.mifos.feature.client.clientAddDocuments.clientAddDocumentGraphRoute
 import com.mifos.feature.client.clientAddDocuments.navigateToClientAddDocumentRoute
@@ -27,8 +29,6 @@ import com.mifos.feature.client.clientAddress.navigateToClientAddressRoute
 import com.mifos.feature.client.clientAddress.navigateToClientAddressRouteOnStatus
 import com.mifos.feature.client.clientApplyNewApplications.clientApplyNewApplicationRoute
 import com.mifos.feature.client.clientApplyNewApplications.navigateToClientApplyNewApplicationScreen
-import com.mifos.feature.client.clientCharges.clientChargesDestination
-import com.mifos.feature.client.clientCharges.navigateToClientChargesRoute
 import com.mifos.feature.client.clientClosure.clientClosureDestination
 import com.mifos.feature.client.clientClosure.navigateToClientClosureRoute
 import com.mifos.feature.client.clientCollateral.clientCollateralDestination
@@ -127,7 +127,9 @@ fun NavGraphBuilder.clientNavGraph(
             addSavingsAccount = { clientId ->
                 navController.navigateToAddSavingsAccount(0, clientId, false)
             },
-            charges = navController::navigateToClientChargesRoute,
+            charges = {
+                navController.navigateToChargesRoute(it, Constants.ENTITY_TYPE_CLIENTS)
+            },
             documents = {
                 navController.navigateToDocumentListScreen(it, Constants.ENTITY_TYPE_CLIENTS)
             },
@@ -143,7 +145,7 @@ fun NavGraphBuilder.clientNavGraph(
             savingsAccountSelected = navController::navigateToSavingsAccountSummaryScreen,
             activateClient = activateClient,
         )
-        clientChargesDestination(
+        chargesDestination(
             navController = navController,
             onNavigateBack = navController::popBackStack,
         )
@@ -183,7 +185,9 @@ fun NavGraphBuilder.clientNavGraph(
             viewAddress = navController::navigateToClientAddressRoute,
             viewAssociatedAccounts = navController::navigateToClientProfileGeneralRoute,
             navController = navController,
-            navigateToAddCharge = navController::navigateToClientChargesRoute,
+            navigateToAddCharge = {
+                navController.navigateToChargesRoute(it, Constants.ENTITY_TYPE_CLIENTS)
+            },
         )
 
         clientAddressNavigation(
@@ -229,7 +233,9 @@ fun NavGraphBuilder.clientNavGraph(
             collateralData = {},
             sharesAccounts = navController::navigateToShareAccountsScreen,
             fixedDepositAccounts = navController::navigateToFixedDepositAccountRoute,
-            upcomingCharges = navController::navigateToClientUpcomingChargesRoute,
+            upcomingCharges = {
+                navController.navigateToClientUpcomingChargesRoute(it, Constants.ENTITY_TYPE_CLIENTS)
+            },
         )
 
         clientRecurringDepositAccountDestination(
@@ -257,7 +263,9 @@ fun NavGraphBuilder.clientNavGraph(
             navigateToCollateral = navController::navigateToClientCollateralRoute,
             navigateToApplyNewApplication = navController::navigateToClientApplyNewApplicationScreen,
             navigateToUpdateSignature = navController::navigateToClientSignatureScreen,
-            navigateToAddCharge = navController::navigateToClientChargesRoute,
+            navigateToAddCharge = {
+                navController.navigateToChargesRoute(it, Constants.ENTITY_TYPE_CLIENTS)
+            },
         )
         clientEditProfileDestination(
             onNavigateBack = navController::popBackStack,
@@ -404,9 +412,9 @@ fun NavGraphBuilder.clientDetailRoute(
     }
 }
 
-//fun NavGraphBuilder.clientChargesRoute(
+// fun NavGraphBuilder.clientChargesRoute(
 //    onBackPressed: () -> Unit,
-//) {
+// ) {
 //    composable(
 //        route = ClientScreens.ClientChargesScreen.route,
 //        arguments = listOf(navArgument(Constants.CLIENT_ID, builder = { type = NavType.IntType })),
@@ -415,7 +423,7 @@ fun NavGraphBuilder.clientDetailRoute(
 //            onBackPressed = onBackPressed,
 //        )
 //    }
-//}
+// }
 
 fun NavGraphBuilder.clientPinPointRoute(
     onBackPressed: () -> Unit,
