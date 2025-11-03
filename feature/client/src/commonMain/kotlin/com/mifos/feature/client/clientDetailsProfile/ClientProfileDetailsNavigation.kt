@@ -46,7 +46,7 @@ fun NavGraphBuilder.clientProfileDetailsDestination(
             navigateToCollateral = navigateToCollateral,
             navigateToApplyNewApplication = navigateToApplyNewApplication,
             navigateToUpdateSignature = navigateToUpdateSignature,
-            navigateToAddCharge = navigateToAddCharge
+            navigateToAddCharge = navigateToAddCharge,
         )
     }
 }

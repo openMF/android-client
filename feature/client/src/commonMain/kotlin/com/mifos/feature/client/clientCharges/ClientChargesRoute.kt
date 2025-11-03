@@ -26,7 +26,7 @@ fun NavGraphBuilder.clientChargesDestination(
     composable<ClientChargesRoute> {
         ClientChargesScreen(
             navigateBack = onNavigateBack,
-            navController = navController
+            navController = navController,
         )
     }
 }

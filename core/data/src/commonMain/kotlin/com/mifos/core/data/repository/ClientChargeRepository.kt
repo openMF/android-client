@@ -19,4 +19,6 @@ import kotlinx.coroutines.flow.Flow
 interface ClientChargeRepository {
 
     fun getClientCharges(clientId: Int): Flow<PagingData<ChargesEntity>>
+
+    suspend fun getClientChargesTotal(clientId: Int): Int
 }

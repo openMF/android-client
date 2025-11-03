@@ -401,9 +401,9 @@ fun NavGraphBuilder.clientDetailRoute(
     }
 }
 
-//fun NavGraphBuilder.clientChargesRoute(
+// fun NavGraphBuilder.clientChargesRoute(
 //    onBackPressed: () -> Unit,
-//) {
+// ) {
 //    composable(
 //        route = ClientScreens.ClientChargesScreen.route,
 //        arguments = listOf(navArgument(Constants.CLIENT_ID, builder = { type = NavType.IntType })),
@@ -412,7 +412,7 @@ fun NavGraphBuilder.clientDetailRoute(
 //            onBackPressed = onBackPressed,
 //        )
 //    }
-//}
+// }
 
 fun NavGraphBuilder.clientPinPointRoute(
     onBackPressed: () -> Unit,

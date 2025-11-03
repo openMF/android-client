@@ -14,6 +14,7 @@ import androidclient.feature.client.generated.resources.feature_client_failed_to
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
+import androidx.paging.PagingData
 import com.mifos.core.common.utils.Constants.LOCALE_EN
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.repository.ClientChargeRepository
@@ -23,7 +24,8 @@ import com.mifos.core.model.objects.payloads.ChargesPayload
 import com.mifos.core.model.objects.template.client.ChargeTemplate
 import com.mifos.core.ui.components.ResultStatus
 import com.mifos.core.ui.util.BaseViewModel
-import com.mifos.feature.client.clientClosure.ClientClosureAction
+import com.mifos.room.entities.client.ChargesEntity
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.StringResource
@@ -35,8 +37,8 @@ class ClientChargesViewModel(
     private val createChargesUseCase: CreateChargesUseCase,
 ) : BaseViewModel<ClientChargesState, ClientChargesEvent, ClientChargesAction>(
     initialState = ClientChargesState(
-        clientId = savedStateHandle.toRoute<ClientChargesRoute>().clientId
-    )
+        clientId = savedStateHandle.toRoute<ClientChargesRoute>().clientId,
+    ),
 ) {
 
     init {
@@ -53,7 +55,7 @@ class ClientChargesViewModel(
             ClientChargesAction.CloseShowChargesDialog -> {
                 mutableStateFlow.update {
                     it.copy(
-                        showCharges = false
+                        showCharges = false,
                     )
                 }
             }
@@ -63,27 +65,24 @@ class ClientChargesViewModel(
                         showAddCharges = false,
                         chargeId = -1,
                         amount = null,
-                        chargeTitle = null,
                         chargeNameTouched = false,
                         amountTouched = false,
-                        chargeTitleTouched = false,
                         dueDate = null,
-                        collectedOn = null,
                     )
                 }
             }
-            ClientChargesAction.ShowCharges ->{
+            ClientChargesAction.ShowCharges -> {
                 mutableStateFlow.update {
                     it.copy(
                         showCharges = true,
                     )
                 }
             }
-            is ClientChargesAction.AddCharge ->{
+            is ClientChargesAction.AddCharge -> {
                 mutableStateFlow.update {
                     it.copy(
                         showAddCharges = true,
-                        showCharges = false
+                        showCharges = false,
                     )
                 }
                 loadChargeTemplate()
@@ -92,7 +91,7 @@ class ClientChargesViewModel(
             is ClientChargesAction.OnChargeNameChange -> {
                 mutableStateFlow.update {
                     it.copy(
-                        chargeName = action.chargeName
+                        chargeName = action.chargeName,
                     )
                 }
             }
@@ -105,17 +104,11 @@ class ClientChargesViewModel(
             is ClientChargesAction.OnChargeIdChange -> {
                 mutableStateFlow.update { it.copy(chargeId = action.chargeId) }
             }
-            is ClientChargesAction.OnChargeTitleChange -> {
-                mutableStateFlow.update { it.copy(chargeTitle = action.chargeTitle) }
-            }
-            is ClientChargesAction.OnCollectedOnDateChange -> {
-                mutableStateFlow.update { it.copy(collectedOn = action.collectedOn) }
-            }
             is ClientChargesAction.OnShowAddCharge -> {
                 mutableStateFlow.update {
                     it.copy(
                         showAddCharges = true,
-                        showCharges = false
+                        showCharges = false,
                     )
                 }
             }
@@ -123,33 +116,23 @@ class ClientChargesViewModel(
             ClientChargesAction.OnAmountTouched -> {
                 mutableStateFlow.update {
                     it.copy(
-                        amountTouched = true
+                        amountTouched = true,
                     )
                 }
             }
             ClientChargesAction.OnChargeNameTouched -> {
                 mutableStateFlow.update {
                     it.copy(
-                        chargeNameTouched = true
+                        chargeNameTouched = true,
                     )
                 }
-            }
-            ClientChargesAction.OnChargeTitleTouched -> {
-                mutableStateFlow.update {
-                    it.copy(
-                        chargeTitleTouched = true
-                    )
-                }
-            }
-            is ClientChargesAction.OnCollectedOnDatePick -> {
-                mutableStateFlow.update { it.copy(
-                    showCollectedOnDatePicker = action.collectedOnPick
-                ) }
             }
             is ClientChargesAction.OnDueDatePick -> {
-                mutableStateFlow.update { it.copy(
-                    showDueDatePicker = action.dueDatePick
-                ) }
+                mutableStateFlow.update {
+                    it.copy(
+                        showDueDatePicker = action.dueDatePick,
+                    )
+                }
             }
         }
     }
@@ -160,11 +143,13 @@ class ClientChargesViewModel(
 
             try {
                 val response = mutableStateFlow.value.clientId?.let { repository.getClientCharges(it) }
+                val count = mutableStateFlow.value.clientId?.let { repository.getClientChargesTotal(it) }!!
                 mutableStateFlow.update {
                     it.copy(
                         isLoading = false,
                         chargesFlow = response,
-                        error = null
+                        totalClientCharges = count,
+                        error = null,
                     )
                 }
             } catch (e: Exception) {
@@ -172,7 +157,7 @@ class ClientChargesViewModel(
                     it.copy(
                         isLoading = false,
                         error = e.message ?: "Failed to load charges",
-                        chargesFlow = null
+                        chargesFlow = null,
                     )
                 }
             }
@@ -191,7 +176,7 @@ class ClientChargesViewModel(
         viewModelScope.launch {
             mutableStateFlow.update {
                 it.copy(
-                    chargeDialogState = ChargeDialogState.Loading
+                    chargeDialogState = ChargeDialogState.Loading,
                 )
             }
 
@@ -201,8 +186,8 @@ class ClientChargesViewModel(
                         mutableStateFlow.update {
                             it.copy(
                                 chargeDialogState = ChargeDialogState.Error(
-                                    message = Res.string.feature_client_failed_to_load_client_charges
-                                )
+                                    message = Res.string.feature_client_failed_to_load_client_charges,
+                                ),
                             )
                         }
                     }
@@ -222,7 +207,7 @@ class ClientChargesViewModel(
                                     chargeTemplate = template,
                                     selectedChargeName = firstOption?.name.orEmpty(),
                                     selectedChargeId = firstOption?.id ?: -1,
-                                )
+                                ),
                             )
                         }
                     }
@@ -239,37 +224,36 @@ class ClientChargesViewModel(
 
             mutableStateFlow.value.clientId?.let { createChargesUseCase(it, payload) }
                 ?.collect { result ->
-                when (result) {
-                    is DataState.Error -> {
-                        mutableStateFlow.update {
-                            it.copy(
-                                dialogState = ClientChargesState.DialogState.ShowStatusDialog(
-                                    ResultStatus.FAILURE,
-                                    message = result.message
-                                ),
-                            )
-                        }
-                    }
-
-                    is DataState.Loading -> {
-                        mutableStateFlow.update {
-                            it.copy(dialogState = ClientChargesState.DialogState.Loading)
-                        }
-                    }
-
-                    is DataState.Success -> {
-                        mutableStateFlow.update {
-                            it.copy(
-                                dialogState = ClientChargesState.DialogState.ShowStatusDialog(
-                                    ResultStatus.SUCCESS,
+                    when (result) {
+                        is DataState.Error -> {
+                            mutableStateFlow.update {
+                                it.copy(
+                                    dialogState = ClientChargesState.DialogState.ShowStatusDialog(
+                                        ResultStatus.FAILURE,
+                                        message = result.message,
+                                    ),
                                 )
-                            )
+                            }
                         }
-                        // Refresh the charges list after successful creation
-                        loadCharges()
+
+                        is DataState.Loading -> {
+                            mutableStateFlow.update {
+                                it.copy(dialogState = ClientChargesState.DialogState.Loading)
+                            }
+                        }
+
+                        is DataState.Success -> {
+                            mutableStateFlow.update {
+                                it.copy(
+                                    dialogState = ClientChargesState.DialogState.ShowStatusDialog(
+                                        ResultStatus.SUCCESS,
+                                    ),
+                                )
+                            }
+                            loadCharges()
+                        }
                     }
                 }
-            }
         }
     }
 
@@ -281,14 +265,12 @@ class ClientChargesViewModel(
             val selectedChargeName: String,
             val selectedChargeId: Int,
         ) : ChargeDialogState()
-//        data object Success : ChargeDialogState()
     }
 }
 
 data class ClientChargesState(
-    val clientId: Int?=null,
-    val chargesFlow: Any? = null,
-    val addedCharges: List<ChargesPayload> = emptyList(),
+    val clientId: Int? = null,
+    val chargesFlow: Flow<PagingData<ChargesEntity>>? = null,
     val isLoading: Boolean = false,
     val isRefreshing: Boolean = false,
     val error: String? = null,
@@ -296,26 +278,23 @@ data class ClientChargesState(
     val showSuccessSnackbar: Boolean = false,
     val showAddCharges: Boolean = false,
     val showCharges: Boolean = false,
-    val dialogState: DialogState?=null,
+    val dialogState: DialogState? = null,
+    val totalClientCharges: Int = 0,
+    val showDueDatePicker: Boolean = false,
 
-    val showDueDatePicker : Boolean = false,
-    val showCollectedOnDatePicker : Boolean = false,
-    val chargeTitle: String? = null,
-    val chargeTitleTouched: Boolean = false,
-
-    val amount: String?=null,
+    val amount: String? = null,
     val amountTouched: Boolean = false,
 
     val chargeName: String? = "",
     val chargeNameTouched: Boolean = false,
 
+    val chargeType: String? = null,
     val dueDate: Long? = null,
-    val collectedOn: Long? = null,
 
-    val chargeId: Int? = -1,
+    val chargeId: Int = -1,
 
-    val locale: String = LOCALE_EN
-){
+    val locale: String = LOCALE_EN,
+) {
     sealed interface DialogState {
         data object Loading : DialogState
         data object Error : DialogState
@@ -337,16 +316,12 @@ sealed interface ClientChargesAction {
     data object CloseAddChargesDialog : ClientChargesAction
     data object ShowCharges : ClientChargesAction
     data object AddCharge : ClientChargesAction
-    data class OnChargeTitleChange(val chargeTitle:String) : ClientChargesAction
-    data class OnChargeNameChange(val chargeName:String) : ClientChargesAction
-    data class OnCollectedOnDateChange(val collectedOn:Long) : ClientChargesAction
+    data class OnChargeNameChange(val chargeName: String) : ClientChargesAction
     data class OnDueDateChange(val dueDate: Long?) : ClientChargesAction
-    data class OnCollectedOnDatePick(val collectedOnPick:Boolean) : ClientChargesAction
     data class OnDueDatePick(val dueDatePick: Boolean) : ClientChargesAction
     data object OnShowAddCharge : ClientChargesAction
     data class OnChargeIdChange(val chargeId: Int) : ClientChargesAction
-    data class OnAmountChange(val amount:String) : ClientChargesAction
+    data class OnAmountChange(val amount: String) : ClientChargesAction
     data object OnAmountTouched : ClientChargesAction
     data object OnChargeNameTouched : ClientChargesAction
-    data object OnChargeTitleTouched : ClientChargesAction
 }

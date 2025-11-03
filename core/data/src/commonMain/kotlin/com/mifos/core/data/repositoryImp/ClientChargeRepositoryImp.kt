@@ -17,6 +17,7 @@ import com.mifos.core.data.repository.ClientChargeRepository
 import com.mifos.core.network.datamanager.DataManagerCharge
 import com.mifos.room.entities.client.ChargesEntity
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
 
 /**
  * Created by Aditya Gupta on 08/08/23.
@@ -36,5 +37,13 @@ class ClientChargeRepositoryImp(
                 ClientChargesPagingSource(clientId, dataManagerCharge)
             },
         ).flow
+    }
+
+    override suspend fun getClientChargesTotal(clientId: Int): Int {
+        return dataManagerCharge.getClientCharges(
+            clientId = clientId,
+            offset = 0,
+            limit = 1,
+        ).first().totalFilteredRecords
     }
 }

@@ -41,7 +41,7 @@ kotlin {
             implementation(libs.coil.kt.compose)
             implementation(libs.coil.network.ktor)
             implementation(libs.ui.backhandler)
-
+            implementation(libs.androidx.paging.compose)
             implementation(libs.filekit.core)
             implementation(libs.filekit.compose)
             implementation(libs.filekit.dialog.compose)
