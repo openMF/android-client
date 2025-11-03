@@ -66,15 +66,15 @@ fun DetailsPage(
     if (state.showSubmissionDatePicker) {
         DatePickerDialog(
             onDismissRequest = {
-                onAction(ShareAccountAction.OnOpenDatePicker(state = false))
+                onAction(ShareAccountAction.OnOpenSubmissionDatePicker(state = false))
             },
             confirmButton = {
                 TextButton(
                     onClick = {
-                        onAction(ShareAccountAction.OnOpenDatePicker(state = false))
+                        onAction(ShareAccountAction.OnOpenSubmissionDatePicker(state = false))
                         submissionDatePickerState.selectedDateMillis?.let {
                             onAction(
-                                ShareAccountAction.OnDateChange(
+                                ShareAccountAction.OnSubmissionDateChange(
                                     DateHelper.getDateAsStringFromLong(it),
                                 ),
                             )
@@ -85,7 +85,7 @@ fun DetailsPage(
             dismissButton = {
                 TextButton(
                     onClick = {
-                        onAction(ShareAccountAction.OnOpenDatePicker(state = false))
+                        onAction(ShareAccountAction.OnOpenSubmissionDatePicker(state = false))
                     },
                 ) { Text(stringResource(Res.string.share_account_detail_date_cancel)) }
             },
@@ -124,7 +124,7 @@ fun DetailsPage(
                 value = state.submissionDate,
                 label = stringResource(Res.string.share_account_detail_submission_date),
                 openDatePicker = {
-                    onAction(ShareAccountAction.OnOpenDatePicker(true))
+                    onAction(ShareAccountAction.OnOpenSubmissionDatePicker(true))
                 },
             )
 

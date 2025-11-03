@@ -134,7 +134,7 @@ class CreateShareAccountViewModel(
                 sendEvent(ShareAccountEvent.Finish)
             }
 
-            is ShareAccountAction.OnDateChange -> {
+            is ShareAccountAction.OnSubmissionDateChange -> {
                 mutableStateFlow.update {
                     it.copy(
                         submissionDate = action.date,
@@ -142,10 +142,26 @@ class CreateShareAccountViewModel(
                 }
             }
 
-            is ShareAccountAction.OnOpenDatePicker -> {
+            is ShareAccountAction.OnApplicationDateChange -> {
+                mutableStateFlow.update {
+                    it.copy(
+                        applicationDate = action.date,
+                    )
+                }
+            }
+
+            is ShareAccountAction.OnOpenSubmissionDatePicker -> {
                 mutableStateFlow.update {
                     it.copy(
                         showSubmissionDatePicker = action.state,
+                    )
+                }
+            }
+
+            is ShareAccountAction.OnOpenApplicationDatePicker -> {
+                mutableStateFlow.update {
+                    it.copy(
+                        showApplicationDatePicker = action.state,
                     )
                 }
             }
@@ -159,10 +175,69 @@ class CreateShareAccountViewModel(
                 }
             }
 
+            is ShareAccountAction.OnSavingsAccountChange -> {
+                mutableStateFlow.update {
+                    it.copy(
+                        savingsAccountIdx = action.index,
+                        savingsAccountError = null,
+                    )
+                }
+            }
+
+            is ShareAccountAction.OnMinActiveFreqTypeChange -> {
+                mutableStateFlow.update {
+                    it.copy(
+                        minActivePeriodFreqTypeIdx = action.index,
+                        minActivePeriodFreqTypeError = null,
+                    )
+                }
+            }
+
+            is ShareAccountAction.OnLockInFreqTypeChange -> {
+                mutableStateFlow.update {
+                    it.copy(
+                        lockInPeriodFreqTypeIdx = action.index,
+                        lockInPeriodFreqTypeError = null,
+                    )
+                }
+            }
+
             is ShareAccountAction.OnExternalIdChange -> {
                 mutableStateFlow.update {
                     it.copy(
                         externalId = action.value,
+                    )
+                }
+            }
+
+            is ShareAccountAction.OnTotalSharesChange -> {
+                mutableStateFlow.update {
+                    it.copy(
+                        totalShares = action.value.toString(),
+                    )
+                }
+            }
+
+            is ShareAccountAction.OnMinActiveFreqChange -> {
+                mutableStateFlow.update {
+                    it.copy(
+                        minActivePeriodFreq = action.value.toString(),
+                    )
+                }
+            }
+
+            is ShareAccountAction.OnLockInFreqChange -> {
+                mutableStateFlow.update {
+                    it.copy(
+                        lockInPeriodFreq = action.value.toString(),
+                    )
+                }
+            }
+
+            is ShareAccountAction.OnIsDividendAllowedClicked -> {
+                mutableStateFlow.update {
+                    it.copy(
+                        isDividendAllowed = !it.isDividendAllowed
                     )
                 }
             }
@@ -178,6 +253,7 @@ class CreateShareAccountViewModel(
             ShareAccountAction.PreviousStep -> {
                 moveToPreviousStep()
             }
+
         }
     }
 }
@@ -197,8 +273,8 @@ constructor(
     val showSubmissionDatePicker: Boolean = false,
     val productOption: List<ProductOption> = emptyList(),
     val currency: String? = "USD",
-    val currentPrice: Int? = 2,
-    val totalShares: Int? = null,
+    val currentPrice: String = "2",
+    val totalShares: String = "",
     val savingsAccountIdx: Int? = null,
     val savingsAccountError: StringResource? = null,
     val applicationDate: String = DateHelper.getDateAsStringFromLong(
@@ -206,10 +282,10 @@ constructor(
     ),
     val showApplicationDatePicker: Boolean = false,
     val isDividendAllowed: Boolean = false,
-    val minActivePeriodFreq: Int? = null,
+    val minActivePeriodFreq: String = "",
     val minActivePeriodFreqTypeIdx: Int? = null,
     val minActivePeriodFreqTypeError: StringResource? = null,
-    val lockInPeriodFreq: Int? = null,
+    val lockInPeriodFreq: String = "",
     val lockInPeriodFreqTypeIdx: Int? = null,
     val lockInPeriodFreqTypeError: StringResource? = null,
     val screenState: ScreenState = ScreenState.Loading,
@@ -228,9 +304,18 @@ sealed interface ShareAccountAction {
     object NavigateBack : ShareAccountAction
     object Finish : ShareAccountAction
     data class OnShareProductChange(val index: Int) : ShareAccountAction
-    data class OnDateChange(val date: String) : ShareAccountAction
-    data class OnOpenDatePicker(val state: Boolean) : ShareAccountAction
+    data class OnSavingsAccountChange(val index: Int) : ShareAccountAction
+    data class OnSubmissionDateChange(val date: String) : ShareAccountAction
+    data class OnApplicationDateChange(val date: String) : ShareAccountAction
+    data class OnOpenSubmissionDatePicker(val state: Boolean) : ShareAccountAction
+    data class OnOpenApplicationDatePicker(val state: Boolean) : ShareAccountAction
     data class OnExternalIdChange(val value: String?) : ShareAccountAction
+    data class OnTotalSharesChange(val value: String) : ShareAccountAction
+    data class OnMinActiveFreqChange(val value: String) : ShareAccountAction
+    data class OnMinActiveFreqTypeChange(val index: Int?) : ShareAccountAction
+    data class OnLockInFreqChange(val value: String) : ShareAccountAction
+    data class OnLockInFreqTypeChange(val index: Int?) : ShareAccountAction
+    data object OnIsDividendAllowedClicked : ShareAccountAction
     object OnDetailNext : ShareAccountAction
     object Retry : ShareAccountAction
 }

@@ -22,6 +22,7 @@ import androidclient.feature.client.generated.resources.share_account_terms_curr
 import androidclient.feature.client.generated.resources.share_account_terms_default_savings_account
 import androidclient.feature.client.generated.resources.share_account_terms_frequency
 import androidclient.feature.client.generated.resources.share_account_terms_lock_in_period
+import androidclient.feature.client.generated.resources.share_account_terms_min_active_period
 import androidclient.feature.client.generated.resources.share_account_terms_total_shares
 import androidclient.feature.client.generated.resources.share_account_terms_type
 import androidx.compose.foundation.layout.Column
@@ -30,6 +31,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
@@ -40,11 +43,15 @@ import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.input.KeyboardType
+import com.mifos.core.common.utils.DateHelper
 import com.mifos.core.designsystem.component.MifosDatePickerTextField
 import com.mifos.core.designsystem.component.MifosOutlinedTextField
+import com.mifos.core.designsystem.component.MifosTextFieldConfig
 import com.mifos.core.designsystem.component.MifosTextFieldDropdown
 import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.designsystem.theme.MifosTypography
+import com.mifos.core.ui.components.MifosCheckBox
 import com.mifos.core.ui.components.MifosTwoButtonRow
 import com.mifos.feature.client.createShareAccount.ShareAccountAction
 import com.mifos.feature.client.createShareAccount.ShareAccountState
@@ -71,18 +78,18 @@ fun TermsPage(
     if (state.showApplicationDatePicker) {
         DatePickerDialog(
             onDismissRequest = {
-//                onAction(ShareAccountAction.OnOpenDatePicker(state = false))
+                onAction(ShareAccountAction.OnOpenApplicationDatePicker(state = false))
             },
             confirmButton = {
                 TextButton(
                     onClick = {
-//                        onAction(ShareAccountAction.OnOpenDatePicker(state = false))
+                        onAction(ShareAccountAction.OnOpenApplicationDatePicker(state = false))
                         applicationDatePickerState.selectedDateMillis?.let {
-//                            onAction(
-//                                ShareAccountAction.OnDateChange(
-//                                    DateHelper.getDateAsStringFromLong(it),
-//                                ),
-//                            )
+                            onAction(
+                                ShareAccountAction.OnApplicationDateChange(
+                                    DateHelper.getDateAsStringFromLong(it),
+                                ),
+                            )
                         }
                     },
                 ) { Text(stringResource(Res.string.share_account_detail_date_select)) }
@@ -90,7 +97,7 @@ fun TermsPage(
             dismissButton = {
                 TextButton(
                     onClick = {
-//                        onAction(ShareAccountAction.OnOpenDatePicker(state = false))
+                        onAction(ShareAccountAction.OnOpenApplicationDatePicker(state = false))
                     },
                 ) { Text(stringResource(Res.string.share_account_detail_date_cancel)) }
             },
@@ -120,23 +127,33 @@ fun TermsPage(
                 },
                 label = stringResource(Res.string.share_account_terms_currency),
                 errorMessage = state.shareProductError?.let { stringResource(it) },
+                enabled = false
             )
             MifosOutlinedTextField(
-                value = state.currentPrice.toString(),
+                value = state.currentPrice,
                 onValueChange = {
 //                    onAction(ShareAccountAction.OnExternalIdChange(it))
                 },
                 label = stringResource(Res.string.share_account_terms_current_price),
+                config = MifosTextFieldConfig(
+                    enabled = false
+                )
             )
             Spacer(Modifier.height(DesignToken.padding.large))
             MifosOutlinedTextField(
-                value = state.totalShares.toString(),
+                value = state.totalShares,
                 onValueChange = {
-//                    onAction(ShareAccountAction.OnExternalIdChange(it))
+                    onAction(ShareAccountAction.OnTotalSharesChange(it))
                 },
                 label = stringResource(Res.string.share_account_terms_total_shares),
+                config = MifosTextFieldConfig(
+                    keyboardOptions = KeyboardOptions(
+                        keyboardType = KeyboardType.Number
+                    )
+                )
             )
             Spacer(Modifier.height(DesignToken.padding.large))
+
             MifosTextFieldDropdown(
                 value = if (state.savingsAccountIdx == null) {
                     ""
@@ -145,7 +162,7 @@ fun TermsPage(
                 },
                 onValueChanged = {},
                 onOptionSelected = { index, value ->
-//                    onAction(ShareAccountAction.OnShareProductChange(index))
+                    onAction(ShareAccountAction.OnSavingsAccountChange(index))
                 },
                 options = state.productOption.map {
                     it.name
@@ -153,26 +170,45 @@ fun TermsPage(
                 label = stringResource(Res.string.share_account_terms_default_savings_account),
                 errorMessage = state.savingsAccountError?.let { stringResource(it) },
             )
+
             MifosDatePickerTextField(
                 value = state.applicationDate,
                 label = stringResource(Res.string.share_account_terms_application_date),
                 openDatePicker = {
-//                    onAction(ShareAccountAction.OnOpenDatePicker(true))
+                    onAction(ShareAccountAction.OnOpenApplicationDatePicker(true))
                 },
             )
-            Text(
+
+            MifosCheckBox(
                 text = stringResource(Res.string.share_account_terms_allow_dividends),
+                checked = state.isDividendAllowed,
+                onCheckChanged = {
+                    onAction(ShareAccountAction.OnIsDividendAllowedClicked)
+                },
+            )
+            Spacer(Modifier.height(DesignToken.padding.large))
+
+            Text(
+                text = stringResource(Res.string.share_account_terms_min_active_period),
                 style = MifosTypography.labelLargeEmphasized,
             )
             Spacer(Modifier.height(DesignToken.padding.large))
+
             MifosOutlinedTextField(
-                value = state.minActivePeriodFreq.toString(),
+                value = state.minActivePeriodFreq,
                 onValueChange = {
-//                    onAction(ShareAccountAction.OnExternalIdChange(it))
+                    onAction(ShareAccountAction.OnMinActiveFreqChange(it))
                 },
                 label = stringResource(Res.string.share_account_terms_frequency),
+                config = MifosTextFieldConfig(
+                    keyboardOptions = KeyboardOptions(
+                        keyboardType = KeyboardType.Number
+                    ),
+                    enabled = state.isDividendAllowed
+                )
             )
             Spacer(Modifier.height(DesignToken.padding.large))
+
             MifosTextFieldDropdown(
                 value = if (state.minActivePeriodFreqTypeIdx == null) {
                     ""
@@ -181,12 +217,13 @@ fun TermsPage(
                 },
                 onValueChanged = {},
                 onOptionSelected = { index, value ->
-//                    onAction(ShareAccountAction.OnShareProductChange(index))
+                    onAction(ShareAccountAction.OnMinActiveFreqTypeChange(index))
                 },
                 options = state.productOption.map {
                     it.name
                 },
                 label = stringResource(Res.string.share_account_terms_type),
+                enabled = state.isDividendAllowed,
                 errorMessage = state.minActivePeriodFreqTypeError?.let { stringResource(it) },
             )
 
@@ -197,23 +234,28 @@ fun TermsPage(
             Spacer(Modifier.height(DesignToken.padding.large))
 
             MifosOutlinedTextField(
-                value = state.lockInPeriodFreq.toString(),
+                value = state.lockInPeriodFreq,
                 onValueChange = {
-//                    onAction(ShareAccountAction.OnExternalIdChange(it))
+                    onAction(ShareAccountAction.OnLockInFreqChange(it))
                 },
                 label = stringResource(Res.string.share_account_terms_frequency),
+                config = MifosTextFieldConfig(
+                    keyboardOptions = KeyboardOptions(
+                        keyboardType = KeyboardType.Number
+                    )
+                )
             )
             Spacer(Modifier.height(DesignToken.padding.large))
 
             MifosTextFieldDropdown(
-                value = if (state.minActivePeriodFreqTypeIdx == null) {
+                value = if (state.lockInPeriodFreqTypeIdx == null) {
                     ""
                 } else {
-                    state.productOption[state.minActivePeriodFreqTypeIdx].name
+                    state.productOption[state.lockInPeriodFreqTypeIdx].name
                 },
                 onValueChanged = {},
                 onOptionSelected = { index, value ->
-//                    onAction(ShareAccountAction.OnShareProductChange(index))
+                    onAction(ShareAccountAction.OnLockInFreqTypeChange(index))
                 },
                 options = state.productOption.map {
                     it.name
