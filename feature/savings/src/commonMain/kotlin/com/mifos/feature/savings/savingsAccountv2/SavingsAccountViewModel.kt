@@ -9,14 +9,21 @@
  */
 package com.mifos.feature.savings.savingsAccountv2
 
+import androidclient.feature.savings.generated.resources.Res
+import androidclient.feature.savings.generated.resources.feature_savings_new_savings_account_submitted_failed
+import androidclient.feature.savings.generated.resources.feature_savings_new_savings_account_submitted_success
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.common.utils.DateHelper
 import com.mifos.core.data.util.NetworkMonitor
+import com.mifos.core.domain.useCases.CreateSavingsAccountUseCase
 import com.mifos.core.domain.useCases.GetClientTemplateUseCase
 import com.mifos.core.domain.useCases.GetSavingsProductTemplateUseCase
+import com.mifos.core.model.objects.payloads.ChargesPayload
+import com.mifos.core.model.objects.payloads.SavingsPayload
+import com.mifos.core.ui.components.ResultStatus
 import com.mifos.core.ui.util.BaseViewModel
 import com.mifos.core.ui.util.TextFieldsValidator
 import com.mifos.room.entities.templates.clients.ClientsTemplateEntity
@@ -27,6 +34,7 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.StringResource
+import org.jetbrains.compose.resources.getString
 import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
 
@@ -34,6 +42,7 @@ internal class SavingsAccountViewModel(
     private val networkMonitor: NetworkMonitor,
     private val getClientTemplateUseCase: GetClientTemplateUseCase,
     private val getSavingsProductTemplateUseCase: GetSavingsProductTemplateUseCase,
+    private val createSavingsAccountUseCase: CreateSavingsAccountUseCase,
     val savedStateHandle: SavedStateHandle,
 ) :
     BaseViewModel<SavingsAccountState, SavingsAccountEvent, SavingsAccountAction>(
@@ -52,10 +61,18 @@ internal class SavingsAccountViewModel(
             is SavingsAccountAction.NavigateBack -> sendEvent(SavingsAccountEvent.NavigateBack)
             is SavingsAccountAction.NextStep -> moveToNextStep()
             is SavingsAccountAction.PreviousStep -> moveToPreviousStep()
-            is SavingsAccountAction.Finish -> sendEvent(SavingsAccountEvent.Finish)
+            is SavingsAccountAction.Finish -> {
+                mutableStateFlow.update {
+                    it.copy(
+                        screenState = SavingsAccountState.ScreenState.Success,
+                    )
+                }
+                sendEvent(SavingsAccountEvent.Finish)
+            }
             is SavingsAccountAction.OnStepChange -> handleStepChange(action)
-            is SavingsAccountAction.OnSubmissionDatePick -> handleSubmissionDatePick(action)
             is SavingsAccountAction.Retry -> handleRetry()
+
+            is SavingsAccountAction.OnSubmissionDatePick -> handleSubmissionDatePick(action)
             is SavingsAccountAction.OnSubmissionDateChange -> handleSubmissionDateChange(action)
             is SavingsAccountAction.OnDetailsSubmit -> handleOnDetailsSubmit()
             is SavingsAccountAction.OnExternalIdChange -> handleExternalIdChange(action)
@@ -99,6 +116,92 @@ internal class SavingsAccountViewModel(
             is SavingsAccountAction.DeleteChargeFromSelectedCharges -> handleDeleteCharge(action.index)
             is SavingsAccountAction.EditChargeDialog -> handleEditChargeDialog(action.index)
             is SavingsAccountAction.OnChargesAmountChangeError -> handleChargesAmountChangeError(action.error)
+            is SavingsAccountAction.SubmitSavingsApplication -> handleFinishClick()
+        }
+    }
+
+    private fun handleFinishClick() {
+        submitSavingsApplication(createSavingsPayload())
+    }
+
+    private fun createSavingsPayload(): SavingsPayload {
+        val savingsPayload = SavingsPayload()
+        savingsPayload.apply {
+            locale = "en"
+            dateFormat = "dd-MM-yyyy"
+            productId = state.savingProductOptions.getOrNull(state.savingsProductSelected)?.id
+            clientId = state.clientId
+            fieldOfficerId = state.fieldOfficerOptions.getOrNull(state.fieldOfficerIndex)?.id
+            submittedOnDate = state.submissionDate
+            externalId = state.externalId
+            allowOverdraft = state.isCheckedOverdraftAllowed
+            enforceMinRequiredBalance = state.isCheckedMinimumBalance
+            minRequiredOpeningBalance = state.minimumOpeningBalance
+            minRequiredBalance = state.monthlyMinimumBalance
+            lockinPeriodFrequency = state.frequency.toIntOrNull()
+            lockinPeriodFrequencyType = state.savingsProductTemplate?.lockinPeriodFrequencyTypeOptions
+                ?.getOrNull(state.freqTypeIndex)?.id
+                .takeIf { state.frequency.toIntOrNull() != null }
+            charges = state.addedCharges.map { charges ->
+                ChargesPayload(
+                    chargeId = charges.id,
+                    amount = charges.amount.toString(),
+                )
+            }
+            interestCompoundingPeriodType =
+                state.savingsProductTemplate?.interestCompoundingPeriodTypeOptions?.getOrNull(state.interestCompPeriodIndex)?.id
+            interestCalculationType =
+                state.savingsProductTemplate?.interestCalculationTypeOptions?.getOrNull(state.interestCalcIndex)?.id
+            interestCalculationDaysInYearType =
+                state.savingsProductTemplate?.interestCalculationDaysInYearTypeOptions?.getOrNull(state.daysInYearIndex)?.id
+            interestPostingPeriodType =
+                state.savingsProductTemplate?.interestPostingPeriodTypeOptions?.getOrNull(state.interestPostingPeriodIndex)?.id
+        }
+        return savingsPayload
+    }
+
+    private fun submitSavingsApplication(savingsPayload: SavingsPayload) = viewModelScope.launch {
+        val online = networkMonitor.isOnline.first()
+        if (online) {
+            createSavingsAccountUseCase(savingsPayload).collect { result ->
+                when (result) {
+                    is DataState.Loading -> {
+                        mutableStateFlow.update {
+                            it.copy(
+                                isOverLayLoadingActive = true,
+                            )
+                        }
+                    }
+                    is DataState.Success -> {
+                        mutableStateFlow.update {
+                            it.copy(
+                                isOverLayLoadingActive = false,
+                                screenState = SavingsAccountState.ScreenState.ShowStatusDialog(
+                                    ResultStatus.SUCCESS,
+                                    getString(Res.string.feature_savings_new_savings_account_submitted_success),
+                                ),
+                            )
+                        }
+                    }
+                    is DataState.Error -> {
+                        mutableStateFlow.update {
+                            it.copy(
+                                screenState = SavingsAccountState.ScreenState.ShowStatusDialog(
+                                    ResultStatus.FAILURE,
+                                    msg = result.exception.message ?: getString(Res.string.feature_savings_new_savings_account_submitted_failed),
+                                ),
+                                isOverLayLoadingActive = false,
+                            )
+                        }
+                    }
+                }
+            }
+        } else {
+            mutableStateFlow.update {
+                it.copy(
+                    screenState = SavingsAccountState.ScreenState.NetworkError,
+                )
+            }
         }
     }
 
@@ -479,8 +582,6 @@ internal class SavingsAccountViewModel(
                     currentStep = current + 1,
                 )
             }
-        } else {
-            sendEvent(SavingsAccountEvent.Finish)
         }
     }
 }
@@ -544,6 +645,7 @@ constructor(
         data object Loading : ScreenState
         data object Success : ScreenState
         data object NetworkError : ScreenState
+        data class ShowStatusDialog(val status: ResultStatus, val msg: String = "") : ScreenState
     }
 
     val isDetailsNextEnabled = submissionDate.isNotEmpty() &&
@@ -567,6 +669,7 @@ sealed interface SavingsAccountAction {
     data object NextStep : SavingsAccountAction
     data object PreviousStep : SavingsAccountAction
     data object Finish : SavingsAccountAction
+    data object SubmitSavingsApplication : SavingsAccountAction
     data class OnStepChange(val newIndex: Int) : SavingsAccountAction
     data class OnSubmissionDateChange(val date: String) : SavingsAccountAction
     data class OnSubmissionDatePick(val state: Boolean) : SavingsAccountAction
@@ -616,7 +719,8 @@ sealed interface SavingsAccountAction {
 
     sealed interface Internal : SavingsAccountAction {
         data class OnReceivingClientTemplate(val clientTemplate: DataState<ClientsTemplateEntity>) : Internal
-        data class OnReceivingSavingsProductTemplate(val savingsProductTemplate: DataState<SavingProductsTemplate>) : Internal
+        data class OnReceivingSavingsProductTemplate(val savingsProductTemplate: DataState<SavingProductsTemplate>) :
+            Internal
     }
 }
 

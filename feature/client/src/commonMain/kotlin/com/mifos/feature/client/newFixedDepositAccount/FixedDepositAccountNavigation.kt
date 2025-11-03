@@ -7,7 +7,7 @@
  *
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
-package com.mifos.feature.client.createShareAccount
+package com.mifos.feature.client.newFixedDepositAccount
 
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
@@ -15,19 +15,18 @@ import androidx.navigation.compose.composable
 import kotlinx.serialization.Serializable
 
 @Serializable
-data object ShareAccountRoute
+data object FixedDepositRoute
 
-fun NavGraphBuilder.shareAccountDestination() {
-    composable<ShareAccountRoute> {
-        ShareAccountScreen(
+fun NavGraphBuilder.fixedAccountDestination() {
+    composable<FixedDepositRoute> {
+        FixedDepositAccountScreen(
             onNavigateBack = {},
             onFinish = {},
         )
     }
 }
-
-fun NavController.navigateToShareAccountRoute() {
+fun NavController.navigateToNewFixedDepositRoute() {
     this.navigate(
-        ShareAccountRoute,
+        FixedDepositRoute,
     )
 }

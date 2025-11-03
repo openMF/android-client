@@ -45,6 +45,7 @@ import com.mifos.feature.client.clientEditProfile.clientEditProfileDestination
 import com.mifos.feature.client.clientEditProfile.navigateToClientProfileEditProfileRoute
 import com.mifos.feature.client.clientGeneral.clientProfileGeneralDestination
 import com.mifos.feature.client.clientGeneral.navigateToClientProfileGeneralRoute
+import com.mifos.feature.client.clientGeneral.navigateToClientProfileGeneralRouteOnStatus
 import com.mifos.feature.client.clientIdentifiersAddUpdate.clientIdentifiersAddUpdateDestination
 import com.mifos.feature.client.clientIdentifiersAddUpdate.onNavigateToClientIdentifiersAddUpdateScreen
 import com.mifos.feature.client.clientIdentifiersList.clientIdentifiersListDestination
@@ -69,12 +70,14 @@ import com.mifos.feature.client.clientUpdateDefaultAccount.navigateToUpdateDefau
 import com.mifos.feature.client.clientUpdateDefaultAccount.updateDefaultAccountDestination
 import com.mifos.feature.client.clientsList.ClientListScreen
 import com.mifos.feature.client.createNewClient.CreateNewClientScreen
-import com.mifos.feature.client.createShareAccount.navigateToShareAccountRoute
-import com.mifos.feature.client.createShareAccount.shareAccountDestination
+import com.mifos.feature.client.createShareAccount.createShareAccountDestination
+import com.mifos.feature.client.createShareAccount.navigateToCreateShareAccountRoute
 import com.mifos.feature.client.documentPreviewScreen.createDocumentPreviewRoute
 import com.mifos.feature.client.documentPreviewScreen.navigateToDocumentPreviewRoute
 import com.mifos.feature.client.fixedDepositAccount.clientFixedDepositAccountDestination
 import com.mifos.feature.client.fixedDepositAccount.navigateToFixedDepositAccountRoute
+import com.mifos.feature.client.newFixedDepositAccount.fixedAccountDestination
+import com.mifos.feature.client.newFixedDepositAccount.navigateToNewFixedDepositRoute
 import com.mifos.feature.client.recurringDepositAccount.clientRecurringDepositAccountDestination
 import com.mifos.feature.client.recurringDepositAccount.navigateToRecurringDepositAccountRoute
 import com.mifos.feature.client.savingsAccounts.navigateToClientSavingsAccountsRoute
@@ -89,6 +92,8 @@ import com.mifos.feature.loan.navigation.loanDestination
 import com.mifos.feature.loan.newLoanAccount.navigateToNewLoanAccountRoute
 import com.mifos.feature.note.navigation.noteDestination
 import com.mifos.feature.note.notes.navigateToNoteScreen
+import com.mifos.feature.recurringDeposit.newRecurringDepositAccount.navigateToRecurringAccountRoute
+import com.mifos.feature.recurringDeposit.newRecurringDepositAccount.recurringAccountDestination
 import com.mifos.feature.savings.navigation.navigateToAddSavingsAccount
 import com.mifos.feature.savings.navigation.navigateToSavingsAccountSummaryScreen
 import com.mifos.feature.savings.navigation.savingsDestination
@@ -304,11 +309,11 @@ fun NavGraphBuilder.clientNavGraph(
         )
         clientApplyNewApplicationRoute(
             onNavigateBack = navController::popBackStack,
-            onNavigateApplyShareAccount = navController::navigateToShareAccountRoute,
+            onNavigateApplyShareAccount = navController::navigateToCreateShareAccountRoute,
             onNavigateApplyLoanAccount = navController::navigateToNewLoanAccountRoute,
             onNavigateApplySavingsAccount = navController::navigateToSavingsAccountRoute,
-            onNavigateApplyRecurringAccount = { },
-            onNavigateApplyFixedAccount = { },
+            onNavigateApplyRecurringAccount = navController::navigateToRecurringAccountRoute,
+            onNavigateApplyFixedAccount = navController::navigateToNewFixedDepositRoute,
             navController = navController,
         )
         clientUpcomingChargesDestination(
@@ -335,9 +340,14 @@ fun NavGraphBuilder.clientNavGraph(
             onBackPressed = navController::popBackStack,
             loadMoreSavingsAccountInfo = navController::navigateToDataTable,
             loadDocuments = navController::navigateToDocumentListScreen,
+            onFinish = navController::navigateToClientProfileGeneralRouteOnStatus,
         )
 
-        shareAccountDestination()
+        createShareAccountDestination(
+            navController = navController,
+        )
+        recurringAccountDestination()
+        fixedAccountDestination()
     }
 }
 

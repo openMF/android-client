@@ -37,9 +37,11 @@ import com.mifos.core.network.services.GroupService
 import com.mifos.core.network.services.LoanService
 import com.mifos.core.network.services.NoteService
 import com.mifos.core.network.services.OfficeService
+import com.mifos.core.network.services.RecurringAccountService
 import com.mifos.core.network.services.RunReportsService
 import com.mifos.core.network.services.SavingsAccountService
 import com.mifos.core.network.services.SearchService
+import com.mifos.core.network.services.ShareAccountService
 import com.mifos.core.network.services.StaffService
 import com.mifos.core.network.services.SurveyService
 import com.mifos.core.network.services.createCenterService
@@ -54,9 +56,11 @@ import com.mifos.core.network.services.createGroupService
 import com.mifos.core.network.services.createLoanService
 import com.mifos.core.network.services.createNoteService
 import com.mifos.core.network.services.createOfficeService
+import com.mifos.core.network.services.createRecurringAccountService
 import com.mifos.core.network.services.createRunReportsService
 import com.mifos.core.network.services.createSavingsAccountService
 import com.mifos.core.network.services.createSearchService
+import com.mifos.core.network.services.createShareAccountService
 import com.mifos.core.network.services.createStaffService
 import com.mifos.core.network.services.createSurveyService
 import de.jensklingenberg.ktorfit.Ktorfit
@@ -72,6 +76,8 @@ class BaseApiManager(
     val dataTableService: DataTableService = ktorfit.createDataTableService()
     val loanService: LoanService = ktorfit.createLoanService()
     val savingsService: SavingsAccountService = ktorfit.createSavingsAccountService()
+
+    val recurringSavingsAccountService: RecurringAccountService = ktorfit.createRecurringAccountService()
     val searchService: SearchService = ktorfit.createSearchService()
     val groupService: GroupService = ktorfit.createGroupService()
     val documentService: DocumentService = ktorfit.createDocumentService()
@@ -83,6 +89,7 @@ class BaseApiManager(
     val collectionSheetService: CollectionSheetService = ktorfit.createCollectionSheetService()
     val noteService: NoteService = ktorfit.createNoteService()
     val runReportsService: RunReportsService = ktorfit.createRunReportsService()
+    val shareAccountService: ShareAccountService = ktorfit.createShareAccountService()
 
     // sdk apis
     val clientIdentifiersApi: ClientIdentifierApi = ktorfit.createClientIdentifierApi()
@@ -92,7 +99,6 @@ class BaseApiManager(
     val groupApi: GroupsApi = ktorfit.createGroupsApi()
     val staffApi: StaffApi = ktorfit.createStaffApi()
     val dataTableApi: DataTablesApi = ktorfit.createDataTablesApi()
-
     companion object {
         fun build(prefManager: UserPreferencesRepository): BaseApiManager {
             val ktorfitClient = KtorfitClient.builder()

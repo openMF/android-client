@@ -23,6 +23,6 @@ class CreateSavingsAccountUseCase(
     private val repository: SavingsAccountRepository,
 ) {
 
-    operator fun invoke(savingsPayload: SavingsPayload?): Flow<DataState<Savings?>> =
+    operator fun invoke(savingsPayload: SavingsPayload?): Flow<DataState<Savings>> =
         repository.createSavingsAccount(savingsPayload)
 }

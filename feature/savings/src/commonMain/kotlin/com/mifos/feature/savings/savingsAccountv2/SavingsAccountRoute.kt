@@ -22,7 +22,7 @@ data class SavingsAccountRoute(
 fun NavGraphBuilder.savingsAccountDestination(
     navController: NavController,
     onNavigateBack: () -> Unit,
-    onFinish: () -> Unit,
+    onFinish: (id: Int) -> Unit,
 ) {
     composable<SavingsAccountRoute> {
         SavingsAccountScreen(

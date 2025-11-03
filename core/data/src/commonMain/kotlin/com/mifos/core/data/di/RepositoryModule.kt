@@ -51,6 +51,7 @@ import com.mifos.core.data.repository.NoteRepository
 import com.mifos.core.data.repository.OfflineDashboardRepository
 import com.mifos.core.data.repository.PathTrackingRepository
 import com.mifos.core.data.repository.PinPointClientRepository
+import com.mifos.core.data.repository.RecurringAccountRepository
 import com.mifos.core.data.repository.ReportCategoryRepository
 import com.mifos.core.data.repository.ReportDetailRepository
 import com.mifos.core.data.repository.SavingsAccountActivateRepository
@@ -60,6 +61,7 @@ import com.mifos.core.data.repository.SavingsAccountSummaryRepository
 import com.mifos.core.data.repository.SavingsAccountTransactionReceiptRepository
 import com.mifos.core.data.repository.SavingsAccountTransactionRepository
 import com.mifos.core.data.repository.SearchRepository
+import com.mifos.core.data.repository.ShareAccountRepository
 import com.mifos.core.data.repository.SignatureRepository
 import com.mifos.core.data.repository.SurveyListRepository
 import com.mifos.core.data.repository.SurveySubmitRepository
@@ -112,6 +114,7 @@ import com.mifos.core.data.repositoryImp.NoteRepositoryImp
 import com.mifos.core.data.repositoryImp.OfflineDashboardRepositoryImp
 import com.mifos.core.data.repositoryImp.PathTrackingRepositoryImp
 import com.mifos.core.data.repositoryImp.PinPointClientRepositoryImp
+import com.mifos.core.data.repositoryImp.RecurringAccountRepositoryImp
 import com.mifos.core.data.repositoryImp.ReportCategoryRepositoryImp
 import com.mifos.core.data.repositoryImp.ReportDetailRepositoryImp
 import com.mifos.core.data.repositoryImp.SavingsAccountActivateRepositoryImp
@@ -121,6 +124,7 @@ import com.mifos.core.data.repositoryImp.SavingsAccountSummaryRepositoryImp
 import com.mifos.core.data.repositoryImp.SavingsAccountTransactionReceiptRepositoryImpl
 import com.mifos.core.data.repositoryImp.SavingsAccountTransactionRepositoryImp
 import com.mifos.core.data.repositoryImp.SearchRepositoryImp
+import com.mifos.core.data.repositoryImp.ShareAccountRepositoryImpl
 import com.mifos.core.data.repositoryImp.SignatureRepositoryImp
 import com.mifos.core.data.repositoryImp.SurveyListRepositoryImp
 import com.mifos.core.data.repositoryImp.SurveySubmitRepositoryImp
@@ -219,6 +223,9 @@ val RepositoryModule = module {
     singleOf(::SurveyListRepositoryImp) bind SurveyListRepository::class
     singleOf(::SurveySubmitRepositoryImp) bind SurveySubmitRepository::class
     singleOf(::SignatureRepositoryImp) bind SignatureRepository::class
+
+    singleOf(::RecurringAccountRepositoryImp) bind RecurringAccountRepository::class
+    singleOf(::ShareAccountRepositoryImpl) bind ShareAccountRepository::class
 
     includes(platformModule)
     single<PlatformDependentDataModule> { getPlatformDataModule }

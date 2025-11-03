@@ -12,6 +12,7 @@ package com.mifos.core.network.datamanager
 import com.mifos.core.datastore.UserPreferencesRepository
 import com.mifos.core.model.objects.account.loan.SavingsApproval
 import com.mifos.core.model.objects.account.saving.SavingsAccountTransactionResponse
+import com.mifos.core.model.objects.error.MifosError
 import com.mifos.core.model.objects.organisations.ProductSavings
 import com.mifos.core.model.objects.payloads.SavingsPayload
 import com.mifos.core.network.BaseApiManager
@@ -22,11 +23,14 @@ import com.mifos.room.entities.client.Savings
 import com.mifos.room.entities.templates.savings.SavingProductsTemplate
 import com.mifos.room.entities.templates.savings.SavingsAccountTransactionTemplateEntity
 import com.mifos.room.helper.SavingsDaoHelper
+import io.ktor.client.statement.bodyAsText
+import io.ktor.http.isSuccess
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
+import kotlinx.serialization.json.Json
 
 /**
  * Created by Rajan Maurya on 17/08/16.
@@ -285,7 +289,24 @@ class DataManagerSavings(
         get() = mBaseApiManager.savingsService.allSavingsAccounts()
 
     fun createSavingsAccount(savingsPayload: SavingsPayload?): Flow<Savings> {
-        return mBaseApiManager.savingsService.createSavingsAccount(savingsPayload)
+        return mBaseApiManager.savingsService.createSavingsAccount(savingsPayload).map { response ->
+            val responseText = response.bodyAsText()
+            val json = Json { ignoreUnknownKeys = true }
+
+            if (!response.status.isSuccess()) {
+                val errorMessage = try {
+                    val errorResponse = json.decodeFromString<MifosError>(responseText)
+                    errorResponse.errors.firstOrNull()?.defaultUserMessage
+                        ?: errorResponse.defaultUserMessage
+                        ?: "HTTP ${response.status.value} ${response.status.description}"
+                } catch (e: Exception) {
+                    "HTTP ${response.status.value} ${response.status.description}"
+                }
+                throw IllegalStateException(errorMessage)
+            }
+
+            json.decodeFromString<Savings>(responseText)
+        }
     }
 
     val getSavingsAccountTemplate: Flow<SavingProductsTemplate>

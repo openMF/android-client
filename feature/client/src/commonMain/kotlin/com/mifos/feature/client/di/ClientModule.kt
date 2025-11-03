@@ -37,6 +37,7 @@ import com.mifos.feature.client.clientUpcomingCharges.ClientUpcomingChargesViewm
 import com.mifos.feature.client.clientUpdateDefaultAccount.UpdateDefaultAccountViewModel
 import com.mifos.feature.client.clientsList.ClientListViewModel
 import com.mifos.feature.client.createNewClient.CreateNewClientViewModel
+import com.mifos.feature.client.createShareAccount.CreateShareAccountViewModel
 import com.mifos.feature.client.documentPreviewScreen.DocumentPreviewScreenViewModel
 import com.mifos.feature.client.fixedDepositAccount.FixedDepositAccountViewModel
 import com.mifos.feature.client.recurringDepositAccount.RecurringDepositAccountViewModel
@@ -81,6 +82,7 @@ val ClientModule = module {
     viewModelOf(::ShareAccountsViewModel)
     viewModelOf(::ClientIdentifiersListViewModel)
     viewModelOf(::ClientIdentifiersAddUpdateViewModel)
+    viewModelOf(::CreateShareAccountViewModel)
 
     singleOf(::DocumentSelectAndUploadRepositoryImpl) {
         bind<DocumentSelectAndUploadRepository>()

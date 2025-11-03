@@ -32,6 +32,11 @@ class SavingsPayload {
     var allowOverdraft: Boolean? = null
     var enforceMinRequiredBalance: Boolean? = null
     var minRequiredOpeningBalance: String? = null
+    var minRequiredBalance: String? = null
+    var lockinPeriodFrequency: Int? = null
+    var lockinPeriodFrequencyType: Int? = null
+
+    var charges: List<ChargesPayload>? = null
     var nominalAnnualInterestRateOverdraft: String? = null
     var overdraftLimit: String? = null
     var minOverdraftForInterestCalculation: String? = null

@@ -12,6 +12,8 @@ package com.mifos.feature.client.clientGeneral
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
+import com.mifos.feature.client.clientProfile.ClientProfileRoute
+import com.mifos.feature.client.navigation.ClientListScreenRoute
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -50,4 +52,13 @@ fun NavController.navigateToClientProfileGeneralRoute(id: Int) {
     this.navigate(
         ClientProfileGeneralRoute(id = id),
     )
+}
+
+fun NavController.navigateToClientProfileGeneralRouteOnStatus(id: Int) {
+    popBackStack(0, true)
+    navigate(ClientListScreenRoute)
+    navigate(ClientProfileRoute(id))
+    navigate(ClientProfileGeneralRoute(id = id)) {
+        launchSingleTop = true
+    }
 }

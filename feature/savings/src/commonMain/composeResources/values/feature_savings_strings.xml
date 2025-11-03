@@ -13,7 +13,7 @@
     <string name="feature_savings_savingsAccountSummary">Savings Account Summary</string>
     <string name="feature_savings_documents">Documents</string>
     <string name="feature_savings_client_name">Client Name</string>
-    <string name="feature_savings_product_name">Product Name</string>
+    <string name="feature_savings_product_name">Product Name*</string>
     <string name="feature_savings_account_balance">Account Balance</string>
     <string name="feature_savings_total_deposits">Total Deposits</string>
     <string name="feature_savings_total_withdrawals">Total Withdrawals</string>
@@ -28,7 +28,7 @@
     <string name="feature_savings_running_balance">Running Balance</string>
     <string name="feature_savings_saving_account_id">Saving Account Id</string>
     <string name="feature_savings_account_number">Account Number</string>
-    <string name="feature_savings_currency">Currency</string>
+    <string name="feature_savings_currency">Currency*</string>
     <string name="feature_savings_approve_savings">Approve Savings</string>
     <string name="feature_savings_activate_savings">Activate Savings</string>
     <string name="feature_savings_savings_account_closed">Savings Account Closed</string>
@@ -67,7 +67,7 @@
     <string name="feature_savings_back">Back</string>
     <string name="feature_savings_create_savings_account">Add Savings Account</string>
     <string name="feature_savings_savings_account_submitted_for_approval">The Savings Account has been submitted forApproval</string>
-    <string name="feature_savings_field_officer">Field Officer</string>
+    <string name="feature_savings_field_officer">Field Officer*</string>
     <string name="feature_savings_external_id">External ID</string>
     <string name="feature_savings_submitted_on">Submitted On</string>
     <string name="feature_savings_nominal">Nominal annual interest </string>
@@ -138,6 +138,17 @@
     <string name="step_charges_view">View</string>
     <string name="step_charges_active">Active</string>
     <string name="step_charges_edit_charge">Edit Charge</string>
+
+    <string name="feature_savings_yes">Yes</string>
+    <string name="feature_savings_no">No</string>
+    <string name="feature_savings_continue">Continue</string>
+    <string name="feature_savings_success">Success</string>
+    <string name="feature_savings_failed">Failed</string>
+
+    <string name="feature_savings_new_savings_account_submitted_success">New Savings Account Application Submitted Successfully</string>
+    <string name="feature_savings_new_savings_account_submitted_failed">Failed to apply for new savings account with the provided details</string>
+
+    <string name="feature_savings_charges_active_count">%1$d active charges</string>
 
 </resources>
 

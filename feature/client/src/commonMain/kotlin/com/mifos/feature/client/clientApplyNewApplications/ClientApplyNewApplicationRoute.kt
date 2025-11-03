@@ -16,14 +16,15 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class ClientApplyNewApplicationRoute(
-    val clientId: Int = -1,
+    val clientId: Int,
+    val status: String,
 )
 
 fun NavGraphBuilder.clientApplyNewApplicationRoute(
     onNavigateBack: () -> Unit,
     onNavigateApplyLoanAccount: (Int) -> Unit,
     onNavigateApplySavingsAccount: (Int) -> Unit,
-    onNavigateApplyShareAccount: () -> Unit,
+    onNavigateApplyShareAccount: (Int) -> Unit,
     onNavigateApplyRecurringAccount: () -> Unit,
     onNavigateApplyFixedAccount: () -> Unit,
     navController: NavController,
@@ -41,6 +42,6 @@ fun NavGraphBuilder.clientApplyNewApplicationRoute(
     }
 }
 
-fun NavController.navigateToClientApplyNewApplicationScreen(clientId: Int) {
-    this.navigate(ClientApplyNewApplicationRoute(clientId))
+fun NavController.navigateToClientApplyNewApplicationScreen(clientId: Int, status: String) {
+    this.navigate(ClientApplyNewApplicationRoute(clientId, status))
 }

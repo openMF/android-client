@@ -22,6 +22,7 @@ import com.mifos.core.domain.useCases.GetGroupSavingsAccountTemplateByProductUse
 import com.mifos.core.domain.useCases.LoadSavingsAccountsAndTemplateUseCase
 import com.mifos.core.model.objects.payloads.SavingsPayload
 import com.mifos.feature.savings.navigation.SavingsAccountRoute
+import com.mifos.room.entities.client.Savings
 import com.mifos.room.entities.templates.savings.SavingProductsTemplate
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -128,11 +129,13 @@ class SavingAccountViewModel(
                             _savingAccountUiState.value =
                                 SavingAccountUiState.ShowProgress
 
-                        is DataState.Success ->
+                        is DataState.Success -> {
                             _savingAccountUiState.value =
                                 SavingAccountUiState.ShowSavingsAccountCreatedSuccessfully(
-                                    dataState.data,
+                                    Savings(),
+//                                    dataState.data,
                                 )
+                        }
                     }
                 }
         }

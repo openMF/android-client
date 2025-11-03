@@ -12,8 +12,12 @@ package com.mifos.feature.savings.savingsAccountv2
 import androidclient.feature.savings.generated.resources.Res
 import androidclient.feature.savings.generated.resources.feature_savings_back
 import androidclient.feature.savings.generated.resources.feature_savings_cancel
+import androidclient.feature.savings.generated.resources.feature_savings_continue
 import androidclient.feature.savings.generated.resources.feature_savings_create_savings_account
 import androidclient.feature.savings.generated.resources.feature_savings_error_not_connected_internet
+import androidclient.feature.savings.generated.resources.feature_savings_failed
+import androidclient.feature.savings.generated.resources.feature_savings_retry
+import androidclient.feature.savings.generated.resources.feature_savings_success
 import androidclient.feature.savings.generated.resources.step_charges
 import androidclient.feature.savings.generated.resources.step_charges_add
 import androidclient.feature.savings.generated.resources.step_charges_add_new
@@ -50,8 +54,10 @@ import com.mifos.core.ui.components.MifosActionsChargeListingComponent
 import com.mifos.core.ui.components.MifosBreadcrumbNavBar
 import com.mifos.core.ui.components.MifosProgressIndicator
 import com.mifos.core.ui.components.MifosProgressIndicatorOverlay
+import com.mifos.core.ui.components.MifosStatusDialog
 import com.mifos.core.ui.components.MifosStepper
 import com.mifos.core.ui.components.MifosTwoButtonRow
+import com.mifos.core.ui.components.ResultStatus
 import com.mifos.core.ui.components.Step
 import com.mifos.core.ui.util.EventsEffect
 import com.mifos.core.ui.util.TextFieldsValidator.doubleNumberValidator
@@ -68,7 +74,7 @@ import kotlin.time.ExperimentalTime
 internal fun SavingsAccountScreen(
     navController: NavController,
     onNavigateBack: () -> Unit,
-    onFinish: () -> Unit,
+    onFinish: (id: Int) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: SavingsAccountViewModel = koinViewModel(),
 ) {
@@ -77,7 +83,7 @@ internal fun SavingsAccountScreen(
     EventsEffect(viewModel.eventFlow) { event ->
         when (event) {
             SavingsAccountEvent.NavigateBack -> onNavigateBack()
-            SavingsAccountEvent.Finish -> onFinish()
+            SavingsAccountEvent.Finish -> onFinish(state.clientId)
         }
     }
 
@@ -121,9 +127,10 @@ private fun SavingsAccountScaffold(
             )
         },
         Step(stringResource(Res.string.step_preview)) {
-            PreviewPage {
-                onAction(SavingsAccountAction.NextStep)
-            }
+            PreviewPage(
+                state = state,
+                onAction = onAction,
+            )
         },
     )
 
@@ -157,6 +164,19 @@ private fun SavingsAccountScaffold(
                 MifosSweetError(
                     message = stringResource(Res.string.feature_savings_error_not_connected_internet),
                     onclick = { onAction(SavingsAccountAction.Retry) },
+                )
+            }
+
+            is SavingsAccountState.ScreenState.ShowStatusDialog -> {
+                MifosStatusDialog(
+                    status = state.screenState.status,
+                    btnText = if (state.screenState.status == ResultStatus.SUCCESS) stringResource(Res.string.feature_savings_continue) else stringResource(Res.string.feature_savings_retry),
+                    onConfirm = { if (state.screenState.status == ResultStatus.SUCCESS) onAction(SavingsAccountAction.Finish) else onAction(SavingsAccountAction.Retry) },
+                    successTitle = stringResource(Res.string.feature_savings_success),
+                    successMessage = state.screenState.msg,
+                    failureTitle = stringResource(Res.string.feature_savings_failed),
+                    failureMessage = state.screenState.msg,
+                    modifier = Modifier.fillMaxSize(),
                 )
             }
         }

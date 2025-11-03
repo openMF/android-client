@@ -485,6 +485,15 @@
     <string name="client_apply_new_applications_apply_share_account">Apply for new share account</string>
     <string name="client_apply_new_applications_apply_recurring_account">Apply for new recurring deposit account</string>
     <string name="client_apply_new_applications_apply_fixed_account">Apply for new fixed deposit account</string>
+    <string name="client_apply_new_applications_client_inactive_msg">This client account is currently inactive. Activation is required before a new account can be created.</string>
+
+    <string name="step_details">Details</string>
+    <string name="step_terms">Terms</string>
+    <string name="step_settings">Settings</string>
+    <string name="step_interest">Interest</string>
+    <string name="step_charges">Charges</string>
+    <string name="create_recurring_deposit_account">Create Recurring Deposit Account</string>
+
 
     <!-- Client Signature -->
     <string name="client_signature_delete">Delete Signature</string>
@@ -525,5 +534,24 @@
     <string name="client_identifier_document_not_found">Document not found</string>
     <string name="client_identifier_btn_update">Update</string>
     <string name="client_update_document_title">Update Document</string>
+    <!-- Screen Title -->
+    <string name="title_new_fixed_deposit_account">New Fixed Deposit Account</string>
+
+    <!-- Create Share Account -->
+    <string name="share_account_details">Details</string>
+    <string name="share_account_terms">Terms</string>
+    <string name="share_account_charges">Charges</string>
+    <string name="share_account_preview">Preview</string>
+    <string name="share_account_back">Back</string>
+    <string name="share_account_next">Next</string>
+
+    <string name="share_account_detail_product_name">Product Name*</string>
+    <string name="share_account_detail_submission_date">Submission Date*</string>
+    <string name="share_account_detail_external_id">External Id</string>
+    <string name="share_account_detail_date_select">Select</string>
+    <string name="share_account_detail_date_cancel">Cancel</string>
+
+    <!-- Handle Error-->
+    <string name="field_empty">This field cannot be empty</string>
 
 </resources>
