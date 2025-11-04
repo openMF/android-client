@@ -26,6 +26,8 @@ import com.mifos.core.ui.util.TextFieldsValidator
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.atStartOfDayIn
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.getString
 import kotlin.time.Clock
@@ -145,9 +147,18 @@ class CreateShareAccountViewModel(
         }
 
         // Validate Application Date (not in future)
-        val applicationDateMillis = DateHelper.getDateAsLongFromString(state.applicationDate)
-        if (applicationDateMillis > Clock.System.now().toEpochMilliseconds()) {
-            newState = newState.copy(applicationDateError = TextFieldsValidator.stringValidator("Cannot be in the future"))
+        try {
+            val dateList = DateHelper.getDateAsList(state.applicationDate)
+            val localDate = kotlinx.datetime.LocalDate(dateList[0], dateList[1], dateList[2])
+            val applicationDateMillis = localDate.atStartOfDayIn(kotlinx.datetime.TimeZone.UTC).toEpochMilliseconds()
+            
+            if (applicationDateMillis > Clock.System.now().toEpochMilliseconds()) {
+                newState = newState.copy(applicationDateError = TextFieldsValidator.stringValidator("Cannot be in the future"))
+                hasError = true
+            }
+        } catch (e: Exception) {
+            // If date parsing fails, assume invalid date
+            newState = newState.copy(applicationDateError = TextFieldsValidator.stringValidator("Invalid date"))
             hasError = true
         }
 
