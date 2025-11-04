@@ -23,4 +23,11 @@ class ShareAccountRepositoryImpl(
     override fun getShareTemplate(clientId: Int): Flow<DataState<ShareTemplate>> {
         return dataManagerShare.getShareTemplate(clientId).asDataStateFlow()
     }
+
+    override fun getShareTemplateFromProduct(
+        clientId: Int,
+        productId: Int,
+    ): Flow<DataState<ShareTemplate>> {
+        return dataManagerShare.getShareTemplateFromProduct(clientId, productId).asDataStateFlow()
+    }
 }

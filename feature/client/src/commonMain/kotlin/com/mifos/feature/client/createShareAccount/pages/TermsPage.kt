@@ -69,8 +69,7 @@ fun TermsPage(
         initialSelectedDateMillis = Clock.System.now().toEpochMilliseconds(),
         selectableDates = object : SelectableDates {
             override fun isSelectableDate(utcTimeMillis: Long): Boolean {
-                // Prevent future dates - only allow today or past dates
-                return utcTimeMillis <= Clock.System.now().toEpochMilliseconds()
+                return utcTimeMillis <= Clock.System.now().toEpochMilliseconds().plus(86_400_000L)
             }
         },
     )
@@ -117,7 +116,7 @@ fun TermsPage(
             Spacer(Modifier.height(DesignToken.padding.large))
 
             MifosTextFieldDropdown(
-                value = state.selectedProduct?.currency?.displayLabel ?: state.selectedProduct?.currency?.name ?: "",
+                value = state.currency.orEmpty(),
                 onValueChanged = {},
                 onOptionSelected = { _, _ -> },
                 options = emptyList(),
@@ -125,7 +124,7 @@ fun TermsPage(
                 enabled = false,
             )
             MifosOutlinedTextField(
-                value = state.selectedProduct?.unitPrice?.toString() ?: "",
+                value = state.currentPrice.orEmpty(),
                 onValueChange = {},
                 label = stringResource(Res.string.share_account_terms_current_price),
                 config = MifosTextFieldConfig(
@@ -133,6 +132,7 @@ fun TermsPage(
                 ),
             )
             Spacer(Modifier.height(DesignToken.padding.large))
+
             MifosOutlinedTextField(
                 value = state.totalShares,
                 onValueChange = {
@@ -143,8 +143,8 @@ fun TermsPage(
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.Number,
                     ),
+                    errorText = state.totalSharesError?.let { stringResource(it) }
                 ),
-                errorMessage = state.totalSharesError?.let { stringResource(it) },
             )
             Spacer(Modifier.height(DesignToken.padding.large))
 
@@ -159,7 +159,7 @@ fun TermsPage(
                     onAction(ShareAccountAction.OnSavingsAccountChange(index))
                 },
                 options = state.savingsAccountOptions.map {
-                    it.accountNo + (it.productName?.let { name -> " - $name" } ?: "")
+                    it.accountNo + (it.savingsProductName?.let { name -> " - $name" } ?: "")
                 },
                 label = stringResource(Res.string.share_account_terms_default_savings_account),
                 errorMessage = state.savingsAccountError?.let { stringResource(it) },
@@ -199,8 +199,8 @@ fun TermsPage(
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.Number,
                     ),
+                    errorText = state.minActivePeriodFreqError?.let { stringResource(it) }
                 ),
-                errorMessage = state.minActivePeriodFreqError?.let { stringResource(it) },
             )
             Spacer(Modifier.height(DesignToken.padding.large))
 
@@ -237,8 +237,8 @@ fun TermsPage(
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.Number,
                     ),
+                    errorText = state.lockInPeriodFreqError?.let { stringResource(it) }
                 ),
-                errorMessage = state.lockInPeriodFreqError?.let { stringResource(it) },
             )
             Spacer(Modifier.height(DesignToken.padding.large))
 
@@ -246,13 +246,13 @@ fun TermsPage(
                 value = if (state.lockInPeriodFreqTypeIdx == null) {
                     ""
                 } else {
-                    state.lockinPeriodFrequencyTypeOptions[state.lockInPeriodFreqTypeIdx].value
+                    state.lockInPeriodFrequencyTypeOptions[state.lockInPeriodFreqTypeIdx].value
                 },
                 onValueChanged = {},
                 onOptionSelected = { index, value ->
                     onAction(ShareAccountAction.OnLockInFreqTypeChange(index))
                 },
-                options = state.lockinPeriodFrequencyTypeOptions.map {
+                options = state.lockInPeriodFrequencyTypeOptions.map {
                     it.value
                 },
                 label = stringResource(Res.string.share_account_terms_type),

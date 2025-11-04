@@ -368,8 +368,8 @@ fun MifosDatePickerTextField(
         .fillMaxWidth()
         .clip(DesignToken.shapes.medium),
     label: String? = null,
-    openDatePicker: () -> Unit,
     errorMessage: String? = null,
+    openDatePicker: () -> Unit,
 ) {
     OutlinedTextField(
         enabled = enabled,

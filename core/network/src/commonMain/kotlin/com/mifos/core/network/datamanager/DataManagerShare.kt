@@ -19,4 +19,7 @@ class DataManagerShare(
 
     fun getShareTemplate(clientId: Int): Flow<ShareTemplate> =
         baseApiManager.shareAccountService.shareProductTemplate(clientId)
+
+    fun getShareTemplateFromProduct(clientId: Int, productId: Int): Flow<ShareTemplate> =
+        baseApiManager.shareAccountService.shareProductTemplateFromProduct(clientId, productId)
 }

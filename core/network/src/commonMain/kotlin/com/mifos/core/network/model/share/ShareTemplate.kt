@@ -9,6 +9,7 @@
  */
 package com.mifos.core.network.model.share
 
+import com.mifos.core.model.objects.template.client.Currency
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -20,10 +21,16 @@ data class ShareTemplate(
     @SerialName(value = "clientName")
     val clientName: String,
 
+    @SerialName("currency")
+    val currency: Currency? = null,
+
+    @SerialName("currentMarketPrice")
+    val currentMarketPrice: Double? = null,
+
     @SerialName("productOptions")
     val productOptions: List<ProductOption> = emptyList(),
 
-    @SerialName("savingsAccountOptions")
+    @SerialName("clientSavingsAccounts")
     val savingsAccountOptions: List<SavingsAccountOption>? = emptyList(),
 
     @SerialName("lockinPeriodFrequencyTypeOptions")
@@ -41,11 +48,11 @@ data class SavingsAccountOption(
     @SerialName("accountNo")
     val accountNo: String,
 
-    @SerialName("productName")
-    val productName: String? = null,
+    @SerialName("savingsProductName")
+    val savingsProductName: String? = null,
 
-    @SerialName("productId")
-    val productId: Int? = null,
+    @SerialName("savingsProductId")
+    val savingsProductId: Int? = null,
 )
 
 @Serializable
