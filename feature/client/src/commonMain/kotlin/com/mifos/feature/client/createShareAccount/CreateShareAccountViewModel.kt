@@ -164,6 +164,11 @@ class CreateShareAccountViewModel(
                 newState = newState.copy(minActivePeriodFreqError = freqError)
                 hasError = true
             }
+            // If frequency is provided, type must also be selected
+            if (state.minActivePeriodFreqTypeIdx == null) {
+                newState = newState.copy(minActivePeriodFreqTypeError = TextFieldsValidator.stringValidator(""))
+                hasError = true
+            }
         }
 
         // Validate Lock-in Period if filled
@@ -171,6 +176,11 @@ class CreateShareAccountViewModel(
             val freqError = TextFieldsValidator.numberValidator(state.lockInPeriodFreq)
             if (freqError != null) {
                 newState = newState.copy(lockInPeriodFreqError = freqError)
+                hasError = true
+            }
+            // If frequency is provided, type must also be selected
+            if (state.lockInPeriodFreqTypeIdx == null) {
+                newState = newState.copy(lockInPeriodFreqTypeError = TextFieldsValidator.stringValidator(""))
                 hasError = true
             }
         }
