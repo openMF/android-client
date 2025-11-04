@@ -26,7 +26,6 @@ import com.mifos.core.ui.util.TextFieldsValidator
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import kotlinx.datetime.TimeZone
 import kotlinx.datetime.atStartOfDayIn
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.getString
