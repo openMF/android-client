@@ -129,15 +129,10 @@ class CreateShareAccountViewModel(
         var newState = state
 
         // Validate Total Number of Shares
-        if (state.totalShares.isBlank()) {
-            newState = newState.copy(totalSharesError = TextFieldsValidator.stringValidator(""))
+        val totalSharesError = TextFieldsValidator.numberValidator(state.totalShares)
+        if (totalSharesError != null) {
+            newState = newState.copy(totalSharesError = totalSharesError)
             hasError = true
-        } else {
-            val shares = state.totalShares.toIntOrNull()
-            if (shares == null || shares < 1) {
-                newState = newState.copy(totalSharesError = TextFieldsValidator.stringValidator("Must be at least 1"))
-                hasError = true
-            }
         }
 
         // Validate Default Savings Account
@@ -153,29 +148,29 @@ class CreateShareAccountViewModel(
             val applicationDateMillis = localDate.atStartOfDayIn(kotlinx.datetime.TimeZone.UTC).toEpochMilliseconds()
             
             if (applicationDateMillis > Clock.System.now().toEpochMilliseconds()) {
-                newState = newState.copy(applicationDateError = TextFieldsValidator.stringValidator("Cannot be in the future"))
+                newState = newState.copy(applicationDateError = TextFieldsValidator.stringValidator(""))
                 hasError = true
             }
         } catch (e: Exception) {
             // If date parsing fails, assume invalid date
-            newState = newState.copy(applicationDateError = TextFieldsValidator.stringValidator("Invalid date"))
+            newState = newState.copy(applicationDateError = TextFieldsValidator.stringValidator(""))
             hasError = true
         }
 
         // Validate Minimum Active Period if filled
         if (state.minActivePeriodFreq.isNotBlank()) {
-            val freq = state.minActivePeriodFreq.toIntOrNull()
-            if (freq == null || freq < 0) {
-                newState = newState.copy(minActivePeriodFreqError = TextFieldsValidator.stringValidator("Must be a valid number"))
+            val freqError = TextFieldsValidator.numberValidator(state.minActivePeriodFreq)
+            if (freqError != null) {
+                newState = newState.copy(minActivePeriodFreqError = freqError)
                 hasError = true
             }
         }
 
         // Validate Lock-in Period if filled
         if (state.lockInPeriodFreq.isNotBlank()) {
-            val freq = state.lockInPeriodFreq.toIntOrNull()
-            if (freq == null || freq < 0) {
-                newState = newState.copy(lockInPeriodFreqError = TextFieldsValidator.stringValidator("Must be a valid number"))
+            val freqError = TextFieldsValidator.numberValidator(state.lockInPeriodFreq)
+            if (freqError != null) {
+                newState = newState.copy(lockInPeriodFreqError = freqError)
                 hasError = true
             }
         }
@@ -283,7 +278,7 @@ class CreateShareAccountViewModel(
             is ShareAccountAction.OnTotalSharesChange -> {
                 mutableStateFlow.update {
                     it.copy(
-                        totalShares = action.value.toString(),
+                        totalShares = action.value,
                         totalSharesError = null,
                     )
                 }
@@ -292,7 +287,7 @@ class CreateShareAccountViewModel(
             is ShareAccountAction.OnMinActiveFreqChange -> {
                 mutableStateFlow.update {
                     it.copy(
-                        minActivePeriodFreq = action.value.toString(),
+                        minActivePeriodFreq = action.value,
                         minActivePeriodFreqError = null,
                     )
                 }
@@ -301,7 +296,7 @@ class CreateShareAccountViewModel(
             is ShareAccountAction.OnLockInFreqChange -> {
                 mutableStateFlow.update {
                     it.copy(
-                        lockInPeriodFreq = action.value.toString(),
+                        lockInPeriodFreq = action.value,
                         lockInPeriodFreqError = null,
                     )
                 }
