@@ -69,7 +69,7 @@ fun TermsPage(
         initialSelectedDateMillis = Clock.System.now().toEpochMilliseconds(),
         selectableDates = object : SelectableDates {
             override fun isSelectableDate(utcTimeMillis: Long): Boolean {
-                return utcTimeMillis >= Clock.System.now().toEpochMilliseconds().minus(86_400_000L)
+                return utcTimeMillis <= Clock.System.now().toEpochMilliseconds().plus(86_400_000L)
             }
         },
     )
@@ -118,25 +118,21 @@ fun TermsPage(
             MifosTextFieldDropdown(
                 value = state.currency.orEmpty(),
                 onValueChanged = {},
-                onOptionSelected = { index, value ->
-                },
-                options = state.productOption.map {
-                    it.name
-                },
+                onOptionSelected = { _, _ -> },
+                options = emptyList(),
                 label = stringResource(Res.string.share_account_terms_currency),
-                errorMessage = state.shareProductError?.let { stringResource(it) },
                 enabled = false,
             )
             MifosOutlinedTextField(
-                value = state.currentPrice,
-                onValueChange = {
-                },
+                value = state.currentPrice.orEmpty(),
+                onValueChange = {},
                 label = stringResource(Res.string.share_account_terms_current_price),
                 config = MifosTextFieldConfig(
                     enabled = false,
                 ),
             )
             Spacer(Modifier.height(DesignToken.padding.large))
+
             MifosOutlinedTextField(
                 value = state.totalShares,
                 onValueChange = {
@@ -147,6 +143,7 @@ fun TermsPage(
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.Number,
                     ),
+                    errorText = state.totalSharesError?.let { stringResource(it) }
                 ),
             )
             Spacer(Modifier.height(DesignToken.padding.large))
@@ -155,14 +152,14 @@ fun TermsPage(
                 value = if (state.savingsAccountIdx == null) {
                     ""
                 } else {
-                    state.productOption[state.savingsAccountIdx].name
+                    state.savingsAccountOptions[state.savingsAccountIdx].accountNo
                 },
                 onValueChanged = {},
                 onOptionSelected = { index, value ->
                     onAction(ShareAccountAction.OnSavingsAccountChange(index))
                 },
-                options = state.productOption.map {
-                    it.name
+                options = state.savingsAccountOptions.map {
+                    it.accountNo + (it.savingsProductName?.let { name -> " - $name" } ?: "")
                 },
                 label = stringResource(Res.string.share_account_terms_default_savings_account),
                 errorMessage = state.savingsAccountError?.let { stringResource(it) },
@@ -174,6 +171,7 @@ fun TermsPage(
                 openDatePicker = {
                     onAction(ShareAccountAction.OnOpenApplicationDatePicker(true))
                 },
+                errorMessage = state.applicationDateError?.let { stringResource(it) },
             )
 
             MifosCheckBox(
@@ -201,7 +199,7 @@ fun TermsPage(
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.Number,
                     ),
-                    enabled = state.isDividendAllowed,
+                    errorText = state.minActivePeriodFreqError?.let { stringResource(it) }
                 ),
             )
             Spacer(Modifier.height(DesignToken.padding.large))
@@ -210,17 +208,16 @@ fun TermsPage(
                 value = if (state.minActivePeriodFreqTypeIdx == null) {
                     ""
                 } else {
-                    state.productOption[state.minActivePeriodFreqTypeIdx].name
+                    state.minimumActivePeriodFrequencyTypeOptions[state.minActivePeriodFreqTypeIdx].value
                 },
                 onValueChanged = {},
                 onOptionSelected = { index, value ->
                     onAction(ShareAccountAction.OnMinActiveFreqTypeChange(index))
                 },
-                options = state.productOption.map {
-                    it.name
+                options = state.minimumActivePeriodFrequencyTypeOptions.map {
+                    it.value
                 },
                 label = stringResource(Res.string.share_account_terms_type),
-                enabled = state.isDividendAllowed,
                 errorMessage = state.minActivePeriodFreqTypeError?.let { stringResource(it) },
             )
 
@@ -240,6 +237,7 @@ fun TermsPage(
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.Number,
                     ),
+                    errorText = state.lockInPeriodFreqError?.let { stringResource(it) }
                 ),
             )
             Spacer(Modifier.height(DesignToken.padding.large))
@@ -248,14 +246,14 @@ fun TermsPage(
                 value = if (state.lockInPeriodFreqTypeIdx == null) {
                     ""
                 } else {
-                    state.productOption[state.lockInPeriodFreqTypeIdx].name
+                    state.lockInPeriodFrequencyTypeOptions[state.lockInPeriodFreqTypeIdx].value
                 },
                 onValueChanged = {},
                 onOptionSelected = { index, value ->
                     onAction(ShareAccountAction.OnLockInFreqTypeChange(index))
                 },
-                options = state.productOption.map {
-                    it.name
+                options = state.lockInPeriodFrequencyTypeOptions.map {
+                    it.value
                 },
                 label = stringResource(Res.string.share_account_terms_type),
                 errorMessage = state.lockInPeriodFreqTypeError?.let { stringResource(it) },
@@ -265,10 +263,10 @@ fun TermsPage(
             firstBtnText = stringResource(Res.string.share_account_back),
             secondBtnText = stringResource(Res.string.share_account_next),
             onFirstBtnClick = {
-                onAction(ShareAccountAction.NavigateBack)
+                onAction(ShareAccountAction.PreviousStep)
             },
             onSecondBtnClick = {
-                onAction(ShareAccountAction.NextStep)
+                onAction(ShareAccountAction.OnTermsNext)
             },
             modifier = Modifier.padding(top = DesignToken.padding.small),
         )
