@@ -10,8 +10,10 @@
 package com.mifos.feature.savings.savingsAccountv2
 
 import androidclient.feature.savings.generated.resources.Res
-import androidclient.feature.savings.generated.resources.feature_savings_new_savings_account_submitted_failed
-import androidclient.feature.savings.generated.resources.feature_savings_new_savings_account_submitted_success
+import androidclient.feature.savings.generated.resources.feature_savings_error_not_connected_internet
+import androidclient.feature.savings.generated.resources.feature_savings_new_savings_account_created_successfully
+import androidclient.feature.savings.generated.resources.field_empty_msg
+import androidclient.feature.savings.generated.resources.step_terms_decimal_places_error
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
@@ -23,9 +25,7 @@ import com.mifos.core.domain.useCases.GetClientTemplateUseCase
 import com.mifos.core.domain.useCases.GetSavingsProductTemplateUseCase
 import com.mifos.core.model.objects.payloads.ChargesPayload
 import com.mifos.core.model.objects.payloads.SavingsPayload
-import com.mifos.core.ui.components.ResultStatus
 import com.mifos.core.ui.util.BaseViewModel
-import com.mifos.core.ui.util.TextFieldsValidator
 import com.mifos.room.entities.templates.clients.ClientsTemplateEntity
 import com.mifos.room.entities.templates.clients.SavingProductOptionsEntity
 import com.mifos.room.entities.templates.clients.StaffOptionsEntity
@@ -35,6 +35,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.getString
+import kotlin.random.Random
 import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
 
@@ -62,13 +63,9 @@ internal class SavingsAccountViewModel(
             is SavingsAccountAction.NextStep -> moveToNextStep()
             is SavingsAccountAction.PreviousStep -> moveToPreviousStep()
             is SavingsAccountAction.Finish -> {
-                mutableStateFlow.update {
-                    it.copy(
-                        screenState = SavingsAccountState.ScreenState.Success,
-                    )
-                }
                 sendEvent(SavingsAccountEvent.Finish)
             }
+
             is SavingsAccountAction.OnStepChange -> handleStepChange(action)
             is SavingsAccountAction.Retry -> handleRetry()
 
@@ -77,32 +74,39 @@ internal class SavingsAccountViewModel(
             is SavingsAccountAction.OnDetailsSubmit -> handleOnDetailsSubmit()
             is SavingsAccountAction.OnExternalIdChange -> handleExternalIdChange(action)
             is SavingsAccountAction.OnProductNameChange -> handleOnProductNameChange(action)
-            is SavingsAccountAction.Internal.OnReceivingClientTemplate -> handleClientTemplateResponse(action.clientTemplate)
+            is SavingsAccountAction.Internal.OnReceivingClientTemplate -> handleClientTemplateResponse(
+                action.clientTemplate,
+            )
+
             is SavingsAccountAction.OnFieldOfficerChange -> handleFieldOfficerChange(action)
             is SavingsAccountAction.OnDecimalPlacesChange -> handleDecimalPlacesChange(action)
-            is SavingsAccountAction.OnMinimumOpeningBalanceChange -> handleMinimumOpeningBalanceChange(action)
+            is SavingsAccountAction.OnMinimumOpeningBalanceChange -> handleMinimumOpeningBalanceChange(
+                action,
+            )
+
             is SavingsAccountAction.OnFrequencyChange -> handleFrequencyChange(action)
-            is SavingsAccountAction.OnMonthlyMinimumBalanceChange -> handleMonthlyMinimumBalanceChange(action)
+            is SavingsAccountAction.OnMonthlyMinimumBalanceChange -> handleMonthlyMinimumBalanceChange(
+                action,
+            )
+
             is SavingsAccountAction.OnApplyWithdrawalFeeChange -> handleApplyWithdrawalChange(action)
             is SavingsAccountAction.OnMinimumBalanceChange -> handleMinimumBalanceChange(action)
             is SavingsAccountAction.OnOverDraftAllowedChange -> handleApplyOverdraftChange(action)
-            is SavingsAccountAction.Internal.OnReceivingSavingsProductTemplate -> handleSavingsProductTemplate(action.savingsProductTemplate)
+            is SavingsAccountAction.Internal.OnReceivingSavingsProductTemplate -> handleSavingsProductTemplate(
+                action.savingsProductTemplate,
+            )
+
             is SavingsAccountAction.OnCurrencyChange -> handleCurrencyChange(action)
             is SavingsAccountAction.OnDaysInYearChange -> handleDaysInYearChange(action)
             is SavingsAccountAction.OnFreqTypeChange -> handleFreqTypeChange(action)
             is SavingsAccountAction.OnInterestCalcChange -> handleInterestCalcChange(action)
-            is SavingsAccountAction.OnInterestCompPeriodChange -> handleInterestCompPeriodChange(action)
-            is SavingsAccountAction.OnInterestPostingPeriodChange -> handleInterestPostingPeriodChange(action)
-            is SavingsAccountAction.SetCurrencyError -> handleCurrencyError(action)
-            is SavingsAccountAction.SetDecimalPlacesError -> handleDecimalPlacesError(action)
-            is SavingsAccountAction.SetInterestCompPeriodError -> handleInterestCompPeriodError(action)
-            is SavingsAccountAction.SetInterestPostingPeriodError -> handleInterestPostingPeriodError(action)
-            is SavingsAccountAction.SetInterestCalcError -> handleInterestCalcError(action)
-            is SavingsAccountAction.SetDaysInYearError -> handleDaysInYearError(action)
-            is SavingsAccountAction.OnMinimumOpeningBalanceError -> handleMinimumOpeningBalanceError(action)
-            is SavingsAccountAction.SetFrequencyError -> handleFrequencyError(action)
-            is SavingsAccountAction.SetFreqTypeError -> handleFreqTypeError(action)
-            is SavingsAccountAction.OnMonthlyMinimumBalanceError -> handleMonthlyMinimumBalanceError(action)
+            is SavingsAccountAction.OnInterestCompPeriodChange -> handleInterestCompPeriodChange(
+                action,
+            )
+
+            is SavingsAccountAction.OnInterestPostingPeriodChange -> handleInterestPostingPeriodChange(
+                action,
+            )
 
             is SavingsAccountAction.ShowAddChargeDialog -> handleShowAddChargeDialog()
             is SavingsAccountAction.ShowCharges -> handleShowChargeDialog()
@@ -112,21 +116,23 @@ internal class SavingsAccountViewModel(
             is SavingsAccountAction.OnChargesAmountChange -> handleChargesAmountChange(action)
             is SavingsAccountAction.OnChargesDateChange -> handleChargesDateChange(action)
             is SavingsAccountAction.OnChargesDatePick -> handleChargesDatePick(action)
-            is SavingsAccountAction.OnChooseChargeIndexChange -> handleChooseChargeIndexChange(action)
+            is SavingsAccountAction.OnChooseChargeIndexChange -> handleChooseChargeIndexChange(
+                action,
+            )
+
             is SavingsAccountAction.DeleteChargeFromSelectedCharges -> handleDeleteCharge(action.index)
             is SavingsAccountAction.EditChargeDialog -> handleEditChargeDialog(action.index)
-            is SavingsAccountAction.OnChargesAmountChangeError -> handleChargesAmountChangeError(action.error)
-            is SavingsAccountAction.SubmitSavingsApplication -> handleFinishClick()
+            is SavingsAccountAction.OnChargesAmountChangeError -> handleChargesAmountChangeError(
+                action.error,
+            )
+
+            is SavingsAccountAction.SubmitSavingsApplication -> submitSavingsApplication()
+            SavingsAccountAction.OnTermSubmit -> handleOnTermSubmit()
         }
     }
 
-    private fun handleFinishClick() {
-        submitSavingsApplication(createSavingsPayload())
-    }
-
-    private fun createSavingsPayload(): SavingsPayload {
-        val savingsPayload = SavingsPayload()
-        savingsPayload.apply {
+    private fun submitSavingsApplication() {
+        val savingsPayload = SavingsPayload().apply {
             locale = "en"
             dateFormat = "dd-MM-yyyy"
             productId = state.savingProductOptions.getOrNull(state.savingsProductSelected)?.id
@@ -139,9 +145,10 @@ internal class SavingsAccountViewModel(
             minRequiredOpeningBalance = state.minimumOpeningBalance
             minRequiredBalance = state.monthlyMinimumBalance
             lockinPeriodFrequency = state.frequency.toIntOrNull()
-            lockinPeriodFrequencyType = state.savingsProductTemplate?.lockinPeriodFrequencyTypeOptions
-                ?.getOrNull(state.freqTypeIndex)?.id
-                .takeIf { state.frequency.toIntOrNull() != null }
+            lockinPeriodFrequencyType =
+                state.savingsProductTemplate?.lockinPeriodFrequencyTypeOptions
+                    ?.getOrNull(state.freqTypeIndex)?.id
+                    .takeIf { state.frequency.toIntOrNull() != null }
             charges = state.addedCharges.map { charges ->
                 ChargesPayload(
                     chargeId = charges.id,
@@ -153,54 +160,119 @@ internal class SavingsAccountViewModel(
             interestCalculationType =
                 state.savingsProductTemplate?.interestCalculationTypeOptions?.getOrNull(state.interestCalcIndex)?.id
             interestCalculationDaysInYearType =
-                state.savingsProductTemplate?.interestCalculationDaysInYearTypeOptions?.getOrNull(state.daysInYearIndex)?.id
+                state.savingsProductTemplate?.interestCalculationDaysInYearTypeOptions?.getOrNull(
+                    state.daysInYearIndex,
+                )?.id
             interestPostingPeriodType =
                 state.savingsProductTemplate?.interestPostingPeriodTypeOptions?.getOrNull(state.interestPostingPeriodIndex)?.id
         }
-        return savingsPayload
-    }
 
-    private fun submitSavingsApplication(savingsPayload: SavingsPayload) = viewModelScope.launch {
-        val online = networkMonitor.isOnline.first()
-        if (online) {
-            createSavingsAccountUseCase(savingsPayload).collect { result ->
-                when (result) {
-                    is DataState.Loading -> {
-                        mutableStateFlow.update {
-                            it.copy(
-                                isOverLayLoadingActive = true,
-                            )
+        viewModelScope.launch {
+            val online = networkMonitor.isOnline.first()
+            if (online) {
+                createSavingsAccountUseCase(savingsPayload).collect { result ->
+                    when (result) {
+                        is DataState.Loading -> {
+                            mutableStateFlow.update {
+                                it.copy(
+                                    isOverLayLoadingActive = true,
+                                )
+                            }
                         }
-                    }
-                    is DataState.Success -> {
-                        mutableStateFlow.update {
-                            it.copy(
-                                isOverLayLoadingActive = false,
-                                screenState = SavingsAccountState.ScreenState.ShowStatusDialog(
-                                    ResultStatus.SUCCESS,
-                                    getString(Res.string.feature_savings_new_savings_account_submitted_success),
-                                ),
-                            )
+
+                        is DataState.Success -> {
+                            mutableStateFlow.update {
+                                it.copy(
+                                    isOverLayLoadingActive = false,
+                                    dialogState = SavingsAccountState.DialogState.SuccessResponseStatus(
+                                        successStatus = true,
+                                        msg = getString(Res.string.feature_savings_new_savings_account_created_successfully),
+                                    ),
+                                    launchEffectKey = Random.nextInt(),
+                                )
+                            }
                         }
-                    }
-                    is DataState.Error -> {
-                        mutableStateFlow.update {
-                            it.copy(
-                                screenState = SavingsAccountState.ScreenState.ShowStatusDialog(
-                                    ResultStatus.FAILURE,
-                                    msg = result.exception.message ?: getString(Res.string.feature_savings_new_savings_account_submitted_failed),
-                                ),
-                                isOverLayLoadingActive = false,
-                            )
+
+                        is DataState.Error -> {
+                            if (result.exception is IllegalStateException) {
+                                mutableStateFlow.update {
+                                    it.copy(
+                                        dialogState = SavingsAccountState.DialogState.SuccessResponseStatus(
+                                            successStatus = false,
+                                            msg = result.message,
+                                        ),
+                                        launchEffectKey = Random.nextInt(),
+                                        isOverLayLoadingActive = false,
+                                    )
+                                }
+                            } else {
+                                mutableStateFlow.update {
+                                    it.copy(
+                                        screenState = SavingsAccountState.ScreenState.Error(result.message),
+                                        isOverLayLoadingActive = false,
+                                    )
+                                }
+                            }
                         }
                     }
                 }
+            } else {
+                mutableStateFlow.update {
+                    it.copy(
+                        screenState = SavingsAccountState.ScreenState.Error(getString(Res.string.feature_savings_error_not_connected_internet)),
+                    )
+                }
             }
-        } else {
-            mutableStateFlow.update {
-                it.copy(
-                    screenState = SavingsAccountState.ScreenState.NetworkError,
-                )
+        }
+    }
+
+    private fun handleOnTermSubmit() {
+        viewModelScope.launch {
+            val decimalPlaces = state.decimalPlaces.toIntOrNull()
+            val isCurrencyInvalid = state.currencyIndex == -1
+            val isDecimalInvalid = decimalPlaces == null || decimalPlaces < 0 || decimalPlaces > 6
+
+            if (isCurrencyInvalid || isDecimalInvalid) {
+                mutableStateFlow.update {
+                    it.copy(
+                        currencyError = if (isCurrencyInvalid) getString(Res.string.field_empty_msg) else null,
+                        decimalPlacesError = if (isDecimalInvalid) getString(Res.string.step_terms_decimal_places_error) else null,
+                    )
+                }
+            } else {
+                mutableStateFlow.update {
+                    it.copy(
+                        currencyError = null,
+                        decimalPlacesError = null,
+                    )
+                }
+                moveToNextStep()
+            }
+        }
+    }
+
+    private fun handleOnDetailsSubmit() {
+        viewModelScope.launch {
+            val msg = getString(Res.string.field_empty_msg)
+
+            val isSavingProductInvalid = state.savingsProductSelected == -1
+            val isFieldOfficerInvalid = state.fieldOfficerIndex == -1
+
+            if (isSavingProductInvalid || isFieldOfficerInvalid) {
+                mutableStateFlow.update {
+                    it.copy(
+                        savingProductError = if (isSavingProductInvalid) msg else null,
+                        fieldOfficerError = if (isFieldOfficerInvalid) msg else null,
+                    )
+                }
+            } else {
+                mutableStateFlow.update {
+                    it.copy(
+                        savingProductError = null,
+                        fieldOfficerError = null,
+                    )
+                }
+                moveToNextStep()
             }
         }
     }
@@ -336,46 +408,6 @@ internal class SavingsAccountViewModel(
         }
     }
 
-    private fun handleCurrencyError(action: SavingsAccountAction.SetCurrencyError) {
-        mutableStateFlow.update { it.copy(currencyError = action.message) }
-    }
-
-    private fun handleDecimalPlacesError(action: SavingsAccountAction.SetDecimalPlacesError) {
-        mutableStateFlow.update { it.copy(decimalPlacesError = action.message) }
-    }
-
-    private fun handleInterestCompPeriodError(action: SavingsAccountAction.SetInterestCompPeriodError) {
-        mutableStateFlow.update { it.copy(interestCompPeriodError = action.message) }
-    }
-
-    private fun handleInterestPostingPeriodError(action: SavingsAccountAction.SetInterestPostingPeriodError) {
-        mutableStateFlow.update { it.copy(interestPostingPeriodError = action.message) }
-    }
-
-    private fun handleInterestCalcError(action: SavingsAccountAction.SetInterestCalcError) {
-        mutableStateFlow.update { it.copy(interestCalcError = action.message) }
-    }
-
-    private fun handleDaysInYearError(action: SavingsAccountAction.SetDaysInYearError) {
-        mutableStateFlow.update { it.copy(daysInYearError = action.message) }
-    }
-
-    private fun handleMinimumOpeningBalanceError(action: SavingsAccountAction.OnMinimumOpeningBalanceError) {
-        mutableStateFlow.update { it.copy(minimumOpeningBalanceError = action.message) }
-    }
-
-    private fun handleFrequencyError(action: SavingsAccountAction.SetFrequencyError) {
-        mutableStateFlow.update { it.copy(frequencyError = action.message) }
-    }
-
-    private fun handleFreqTypeError(action: SavingsAccountAction.SetFreqTypeError) {
-        mutableStateFlow.update { it.copy(freqTypeError = action.message) }
-    }
-
-    private fun handleMonthlyMinimumBalanceError(action: SavingsAccountAction.OnMonthlyMinimumBalanceError) {
-        mutableStateFlow.update { it.copy(monthlyMinimumBalanceError = action.message) }
-    }
-
     private fun handleInterestCalcChange(action: SavingsAccountAction.OnInterestCalcChange) {
         mutableStateFlow.update { it.copy(interestCalcIndex = action.index) }
     }
@@ -397,7 +429,12 @@ internal class SavingsAccountViewModel(
     }
 
     private fun handleCurrencyChange(action: SavingsAccountAction.OnCurrencyChange) {
-        mutableStateFlow.update { it.copy(currencyIndex = action.index) }
+        mutableStateFlow.update {
+            it.copy(
+                currencyIndex = action.index,
+                currencyError = null,
+            )
+        }
     }
 
     private fun handleSavingsProductTemplate(result: DataState<SavingProductsTemplate>) {
@@ -410,7 +447,7 @@ internal class SavingsAccountViewModel(
 
             is DataState.Error -> mutableStateFlow.update {
                 it.copy(
-                    dialogState = SavingsAccountState.DialogState.Error(result.message),
+                    screenState = SavingsAccountState.ScreenState.Error(result.message),
                 )
             }
 
@@ -419,15 +456,22 @@ internal class SavingsAccountViewModel(
                     dialogState = null,
                     screenState = SavingsAccountState.ScreenState.Success,
                     savingsProductTemplate = result.data,
-                    currencyIndex = result.data.currencyOptions?.indexOf(result.data.currency) ?: -1,
+                    currencyIndex = result.data.currencyOptions?.indexOf(result.data.currency)
+                        ?: -1,
                     decimalPlaces = result.data.currency?.decimalPlaces?.toInt().toString(),
-                    interestPostingPeriodIndex = result.data.interestPostingPeriodTypeOptions?.indexOf(result.data.interestPostingPeriodType)
+                    interestPostingPeriodIndex = result.data.interestPostingPeriodTypeOptions?.indexOf(
+                        result.data.interestPostingPeriodType,
+                    )
                         ?: -1,
                     interestCalcIndex = result.data.interestCalculationTypeOptions?.indexOf(result.data.interestCalculationType)
                         ?: -1,
-                    interestCompPeriodIndex = result.data.interestCompoundingPeriodTypeOptions?.indexOf(result.data.interestCompoundingPeriodType)
+                    interestCompPeriodIndex = result.data.interestCompoundingPeriodTypeOptions?.indexOf(
+                        result.data.interestCompoundingPeriodType,
+                    )
                         ?: -1,
-                    daysInYearIndex = result.data.interestCalculationDaysInYearTypeOptions?.indexOf(result.data.interestCalculationDaysInYearType)
+                    daysInYearIndex = result.data.interestCalculationDaysInYearTypeOptions?.indexOf(
+                        result.data.interestCalculationDaysInYearType,
+                    )
                         ?: -1,
                 )
             }
@@ -459,11 +503,21 @@ internal class SavingsAccountViewModel(
     }
 
     private fun handleDecimalPlacesChange(action: SavingsAccountAction.OnDecimalPlacesChange) {
-        mutableStateFlow.update { it.copy(decimalPlaces = action.value) }
+        mutableStateFlow.update {
+            it.copy(
+                decimalPlaces = action.value,
+                decimalPlacesError = null,
+            )
+        }
     }
 
     private fun handleFieldOfficerChange(action: SavingsAccountAction.OnFieldOfficerChange) {
-        mutableStateFlow.update { it.copy(fieldOfficerIndex = action.index) }
+        mutableStateFlow.update {
+            it.copy(
+                fieldOfficerIndex = action.index,
+                fieldOfficerError = null,
+            )
+        }
     }
 
     private fun handleClientTemplateResponse(result: DataState<ClientsTemplateEntity>) {
@@ -476,7 +530,7 @@ internal class SavingsAccountViewModel(
 
             is DataState.Error -> mutableStateFlow.update {
                 it.copy(
-                    dialogState = SavingsAccountState.DialogState.Error(result.message),
+                    screenState = SavingsAccountState.ScreenState.Error(result.message),
                 )
             }
 
@@ -492,7 +546,12 @@ internal class SavingsAccountViewModel(
     }
 
     private fun handleOnProductNameChange(action: SavingsAccountAction.OnProductNameChange) {
-        mutableStateFlow.update { it.copy(savingsProductSelected = action.index) }
+        mutableStateFlow.update {
+            it.copy(
+                savingsProductSelected = action.index,
+                savingProductError = null,
+            )
+        }
     }
 
     private fun handleExternalIdChange(action: SavingsAccountAction.OnExternalIdChange) {
@@ -511,21 +570,6 @@ internal class SavingsAccountViewModel(
         mutableStateFlow.update { it.copy(submissionDate = action.date) }
     }
 
-    private fun handleOnDetailsSubmit() {
-        mutableStateFlow.update {
-            it.copy(
-                externalIdError = null,
-            )
-        }
-        val externalIdError = TextFieldsValidator.optionalStringValidator(state.externalId)
-        if (externalIdError != null) {
-            mutableStateFlow.update { it.copy(externalIdError = externalIdError) }
-            return
-        } else {
-            moveToNextStep()
-        }
-    }
-
     private fun loadClientTemplate() = viewModelScope.launch {
         val online = networkMonitor.isOnline.first()
         if (online) {
@@ -535,7 +579,7 @@ internal class SavingsAccountViewModel(
         } else {
             mutableStateFlow.update {
                 it.copy(
-                    screenState = SavingsAccountState.ScreenState.NetworkError,
+                    screenState = SavingsAccountState.ScreenState.Error(getString(Res.string.feature_savings_error_not_connected_internet)),
                 )
             }
         }
@@ -550,7 +594,7 @@ internal class SavingsAccountViewModel(
         } else {
             mutableStateFlow.update {
                 it.copy(
-                    screenState = SavingsAccountState.ScreenState.NetworkError,
+                    screenState = SavingsAccountState.ScreenState.Error(getString(Res.string.feature_savings_error_not_connected_internet)),
                 )
             }
         }
@@ -599,18 +643,16 @@ constructor(
     val totalSteps: Int = 4,
     val dialogState: DialogState? = null,
     val externalId: String = "",
-    val externalIdError: StringResource? = null,
     val screenState: ScreenState = ScreenState.Loading,
-    val submissionDate: String = DateHelper.getDateAsStringFromLong(Clock.System.now().toEpochMilliseconds()),
+    val submissionDate: String = DateHelper.getDateAsStringFromLong(
+        Clock.System.now().toEpochMilliseconds(),
+    ),
     val showSubmissionDatePick: Boolean = false,
     val decimalPlaces: String = "",
     val decimalPlacesError: String? = null,
     val minimumOpeningBalance: String = "",
-    val minimumOpeningBalanceError: String? = null,
     val frequency: String = "",
-    val frequencyError: String? = null,
     val monthlyMinimumBalance: String = "",
-    val monthlyMinimumBalanceError: String? = null,
     val isCheckedApplyWithdrawalFee: Boolean = false,
     val isCheckedOverdraftAllowed: Boolean = false,
     val isCheckedMinimumBalance: Boolean = false,
@@ -618,45 +660,37 @@ constructor(
     val currencyIndex: Int = -1,
     val currencyError: String? = null,
     val interestCompPeriodIndex: Int = -1,
-    val interestCompPeriodError: String? = null,
     val interestPostingPeriodIndex: Int = -1,
-    val interestPostingPeriodError: String? = null,
     val interestCalcIndex: Int = -1,
-    val interestCalcError: String? = null,
     val daysInYearIndex: Int = -1,
-    val daysInYearError: String? = null,
     val freqTypeIndex: Int = -1,
-    val freqTypeError: String? = null,
 
     val chooseChargeIndex: Int = -1,
     val addedCharges: List<CreatedCharges> = emptyList(),
-    val chargeDate: String = DateHelper.getDateAsStringFromLong(Clock.System.now().toEpochMilliseconds()),
+    val chargeDate: String = DateHelper.getDateAsStringFromLong(
+        Clock.System.now().toEpochMilliseconds(),
+    ),
     val showChargesDatePick: Boolean = false,
     val chargeAmount: String = "",
     val chargeAmountError: StringResource? = null,
+
+    val launchEffectKey: Int? = null,
+
+    val savingProductError: String? = null,
+    val fieldOfficerError: String? = null,
 ) {
     sealed interface DialogState {
-        data class Error(val message: String) : DialogState
         data object ShowCharges : DialogState
         data class AddNewCharge(val edit: Boolean, val index: Int = -1) : DialogState
+        data class SuccessResponseStatus(val successStatus: Boolean, val msg: String = "") :
+            DialogState
     }
 
     sealed interface ScreenState {
         data object Loading : ScreenState
         data object Success : ScreenState
-        data object NetworkError : ScreenState
-        data class ShowStatusDialog(val status: ResultStatus, val msg: String = "") : ScreenState
+        data class Error(val message: String) : ScreenState
     }
-
-    val isDetailsNextEnabled = submissionDate.isNotEmpty() &&
-        savingsProductSelected != -1 &&
-        fieldOfficerIndex != -1
-
-    val isTermsNextEnabled = isDetailsNextEnabled &&
-        currencyIndex != -1 &&
-        interestCalcIndex != -1 &&
-        interestPostingPeriodIndex != -1 &&
-        interestCompPeriodIndex != -1
 }
 
 sealed interface SavingsAccountEvent {
@@ -691,24 +725,11 @@ sealed interface SavingsAccountAction {
     data class OnDaysInYearChange(val index: Int) : SavingsAccountAction
     data class OnFreqTypeChange(val index: Int) : SavingsAccountAction
     data object Retry : SavingsAccountAction
-
-    data class SetCurrencyError(val message: String?) : SavingsAccountAction
-    data class SetDecimalPlacesError(val message: String?) : SavingsAccountAction
-    data class SetInterestCompPeriodError(val message: String?) : SavingsAccountAction
-    data class SetInterestPostingPeriodError(val message: String?) : SavingsAccountAction
-    data class SetInterestCalcError(val message: String?) : SavingsAccountAction
-    data class SetDaysInYearError(val message: String?) : SavingsAccountAction
-    data class OnMinimumOpeningBalanceError(val message: String?) : SavingsAccountAction
-    data class SetFrequencyError(val message: String?) : SavingsAccountAction
-    data class SetFreqTypeError(val message: String?) : SavingsAccountAction
-    data class OnMonthlyMinimumBalanceError(val message: String?) : SavingsAccountAction
     data object ShowAddChargeDialog : SavingsAccountAction
     data object ShowCharges : SavingsAccountAction
     data class EditCharge(val index: Int) : SavingsAccountAction
-
     data class OnChooseChargeIndexChange(val index: Int) : SavingsAccountAction
     data object DismissDialog : SavingsAccountAction
-
     data class OnChargesDatePick(val state: Boolean) : SavingsAccountAction
     data class OnChargesDateChange(val date: String) : SavingsAccountAction
     data class OnChargesAmountChange(val amount: String) : SavingsAccountAction
@@ -716,9 +737,12 @@ sealed interface SavingsAccountAction {
     data object AddChargeToList : SavingsAccountAction
     data class DeleteChargeFromSelectedCharges(val index: Int) : SavingsAccountAction
     data class EditChargeDialog(val index: Int) : SavingsAccountAction
+    data object OnTermSubmit : SavingsAccountAction
 
     sealed interface Internal : SavingsAccountAction {
-        data class OnReceivingClientTemplate(val clientTemplate: DataState<ClientsTemplateEntity>) : Internal
+        data class OnReceivingClientTemplate(val clientTemplate: DataState<ClientsTemplateEntity>) :
+            Internal
+
         data class OnReceivingSavingsProductTemplate(val savingsProductTemplate: DataState<SavingProductsTemplate>) :
             Internal
     }

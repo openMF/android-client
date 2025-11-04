@@ -24,9 +24,7 @@ import com.mifos.core.common.utils.DataState
 import com.mifos.core.common.utils.DateHelper
 import com.mifos.core.data.repository.ClientDetailsRepository
 import com.mifos.core.data.repository.SyncClientsDialogRepository
-import com.mifos.core.data.util.Error
 import com.mifos.core.data.util.NetworkMonitor
-import com.mifos.core.data.util.extractErrorMessage
 import com.mifos.core.domain.useCases.CreateLoanAccountUseCase
 import com.mifos.core.domain.useCases.GetAllLoanUseCase
 import com.mifos.core.domain.useCases.GetLoansAccountTemplateUseCase
@@ -277,11 +275,24 @@ internal class NewLoanAccountViewModel(
             loanUseCase(payload).collect { dataState ->
                 when (dataState) {
                     is DataState.Error -> {
-                        mutableStateFlow.update {
-                            it.copy(
-                                screenState = NewLoanAccountState.ScreenState.Error(dataState.message),
-                                isOverLayLoadingActive = false,
-                            )
+                        if (dataState.exception is IllegalStateException) {
+                            mutableStateFlow.update {
+                                it.copy(
+                                    dialogState = NewLoanAccountState.DialogState.SuccessResponseStatus(
+                                        successStatus = false,
+                                        msg = dataState.message,
+                                    ),
+                                    launchEffectKey = Random.nextInt(),
+                                    isOverLayLoadingActive = false,
+                                )
+                            }
+                        } else {
+                            mutableStateFlow.update {
+                                it.copy(
+                                    screenState = NewLoanAccountState.ScreenState.Error(dataState.message),
+                                    isOverLayLoadingActive = false,
+                                )
+                            }
                         }
                     }
 
@@ -294,25 +305,15 @@ internal class NewLoanAccountViewModel(
                     }
 
                     is DataState.Success -> {
-                        val error = extractErrorMessage(dataState.data)
-
-                        // Successful create lona account if response error not found
-                        if (error == Error.MSG_NOT_FOUND) {
-                            mutableStateFlow.update {
-                                it.copy(
-                                    responseErrorMsg = getString(Res.string.feature_loan_account_created_successfully),
-                                    launchEffectKey = Random.nextInt(),
-                                    isOverLayLoadingActive = false,
-                                )
-                            }
-                        } else {
-                            mutableStateFlow.update {
-                                it.copy(
-                                    isOverLayLoadingActive = false,
-                                    responseErrorMsg = error,
-                                    launchEffectKey = Random.nextInt(),
-                                )
-                            }
+                        mutableStateFlow.update {
+                            it.copy(
+                                isOverLayLoadingActive = false,
+                                launchEffectKey = Random.nextInt(),
+                                dialogState = NewLoanAccountState.DialogState.SuccessResponseStatus(
+                                    successStatus = true,
+                                    msg = getString(Res.string.feature_loan_account_created_successfully),
+                                ),
+                            )
                         }
                     }
                 }
@@ -937,7 +938,6 @@ internal class NewLoanAccountViewModel(
 data class NewLoanAccountState
 @OptIn(ExperimentalTime::class)
 constructor(
-    val responseErrorMsg: String? = null,
     val launchEffectKey: Int? = null,
     val networkConnection: Boolean = false,
     val clientId: Int,
@@ -1020,6 +1020,8 @@ constructor(
         data object ShowCollaterals : DialogState
         data object ShowCharges : DialogState
         data object ShowOverDueCharges : DialogState
+        data class SuccessResponseStatus(val successStatus: Boolean, val msg: String = "") :
+            DialogState
     }
 
     sealed interface ScreenState {
