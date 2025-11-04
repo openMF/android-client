@@ -22,4 +22,40 @@ data class ShareTemplate(
 
     @SerialName("productOptions")
     val productOptions: List<ProductOption> = emptyList(),
+
+    @SerialName("savingsAccountOptions")
+    val savingsAccountOptions: List<SavingsAccountOption>? = emptyList(),
+
+    @SerialName("lockinPeriodFrequencyTypeOptions")
+    val lockinPeriodFrequencyTypeOptions: List<FrequencyTypeOption>? = emptyList(),
+
+    @SerialName("minimumActivePeriodFrequencyTypeOptions")
+    val minimumActivePeriodFrequencyTypeOptions: List<FrequencyTypeOption>? = emptyList(),
+)
+
+@Serializable
+data class SavingsAccountOption(
+    @SerialName("id")
+    val id: Int,
+
+    @SerialName("accountNo")
+    val accountNo: String,
+
+    @SerialName("productName")
+    val productName: String? = null,
+
+    @SerialName("productId")
+    val productId: Int? = null,
+)
+
+@Serializable
+data class FrequencyTypeOption(
+    @SerialName("id")
+    val id: Int,
+
+    @SerialName("code")
+    val code: String,
+
+    @SerialName("value")
+    val value: String,
 )

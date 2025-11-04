@@ -369,6 +369,7 @@ fun MifosDatePickerTextField(
         .clip(DesignToken.shapes.medium),
     label: String? = null,
     openDatePicker: () -> Unit,
+    errorMessage: String? = null,
 ) {
     OutlinedTextField(
         enabled = enabled,
@@ -396,6 +397,16 @@ fun MifosDatePickerTextField(
         trailingIcon = {
             IconButton(onClick = { openDatePicker() }) {
                 Icon(imageVector = Icons.Default.CalendarMonth, null)
+            }
+        },
+        isError = errorMessage != null,
+        supportingText = errorMessage?.let {
+            {
+                Text(
+                    text = it,
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.error,
+                )
             }
         },
     )

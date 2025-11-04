@@ -18,7 +18,9 @@ import com.mifos.core.common.utils.DataState
 import com.mifos.core.common.utils.DateHelper
 import com.mifos.core.data.repository.ShareAccountRepository
 import com.mifos.core.data.util.NetworkMonitor
+import com.mifos.core.network.model.share.FrequencyTypeOption
 import com.mifos.core.network.model.share.ProductOption
+import com.mifos.core.network.model.share.SavingsAccountOption
 import com.mifos.core.ui.util.BaseViewModel
 import com.mifos.core.ui.util.TextFieldsValidator
 import kotlinx.coroutines.flow.first
@@ -70,6 +72,9 @@ class CreateShareAccountViewModel(
                                 it.copy(
                                     screenState = ShareAccountState.ScreenState.Success,
                                     productOption = dataState.data.productOptions,
+                                    savingsAccountOptions = dataState.data.savingsAccountOptions.orEmpty(),
+                                    lockinPeriodFrequencyTypeOptions = dataState.data.lockinPeriodFrequencyTypeOptions.orEmpty(),
+                                    minimumActivePeriodFrequencyTypeOptions = dataState.data.minimumActivePeriodFrequencyTypeOptions.orEmpty(),
                                 )
                             }
                         }
@@ -113,6 +118,60 @@ class CreateShareAccountViewModel(
                 )
             }
         } else {
+            moveToNextStep()
+        }
+    }
+
+    private fun handleOnTermsNext() {
+        var hasError = false
+        var newState = state
+
+        // Validate Total Number of Shares
+        if (state.totalShares.isBlank()) {
+            newState = newState.copy(totalSharesError = TextFieldsValidator.stringValidator(""))
+            hasError = true
+        } else {
+            val shares = state.totalShares.toIntOrNull()
+            if (shares == null || shares < 1) {
+                newState = newState.copy(totalSharesError = TextFieldsValidator.stringValidator("Must be at least 1"))
+                hasError = true
+            }
+        }
+
+        // Validate Default Savings Account
+        if (state.savingsAccountIdx == null) {
+            newState = newState.copy(savingsAccountError = TextFieldsValidator.stringValidator(""))
+            hasError = true
+        }
+
+        // Validate Application Date (not in future)
+        val applicationDateMillis = DateHelper.getDateAsLongFromString(state.applicationDate)
+        if (applicationDateMillis > Clock.System.now().toEpochMilliseconds()) {
+            newState = newState.copy(applicationDateError = TextFieldsValidator.stringValidator("Cannot be in the future"))
+            hasError = true
+        }
+
+        // Validate Minimum Active Period if filled
+        if (state.minActivePeriodFreq.isNotBlank()) {
+            val freq = state.minActivePeriodFreq.toIntOrNull()
+            if (freq == null || freq < 0) {
+                newState = newState.copy(minActivePeriodFreqError = TextFieldsValidator.stringValidator("Must be a valid number"))
+                hasError = true
+            }
+        }
+
+        // Validate Lock-in Period if filled
+        if (state.lockInPeriodFreq.isNotBlank()) {
+            val freq = state.lockInPeriodFreq.toIntOrNull()
+            if (freq == null || freq < 0) {
+                newState = newState.copy(lockInPeriodFreqError = TextFieldsValidator.stringValidator("Must be a valid number"))
+                hasError = true
+            }
+        }
+
+        mutableStateFlow.update { newState }
+
+        if (!hasError) {
             moveToNextStep()
         }
     }
@@ -214,6 +273,7 @@ class CreateShareAccountViewModel(
                 mutableStateFlow.update {
                     it.copy(
                         totalShares = action.value.toString(),
+                        totalSharesError = null,
                     )
                 }
             }
@@ -222,6 +282,7 @@ class CreateShareAccountViewModel(
                 mutableStateFlow.update {
                     it.copy(
                         minActivePeriodFreq = action.value.toString(),
+                        minActivePeriodFreqError = null,
                     )
                 }
             }
@@ -230,6 +291,7 @@ class CreateShareAccountViewModel(
                 mutableStateFlow.update {
                     it.copy(
                         lockInPeriodFreq = action.value.toString(),
+                        lockInPeriodFreqError = null,
                     )
                 }
             }
@@ -248,6 +310,10 @@ class CreateShareAccountViewModel(
 
             ShareAccountAction.OnDetailNext -> {
                 handleOnDetailNext()
+            }
+
+            ShareAccountAction.OnTermsNext -> {
+                handleOnTermsNext()
             }
 
             ShareAccountAction.PreviousStep -> {
@@ -271,24 +337,33 @@ constructor(
     ),
     val showSubmissionDatePicker: Boolean = false,
     val productOption: List<ProductOption> = emptyList(),
-    val currency: String? = "USD",
-    val currentPrice: String = "2",
+    val savingsAccountOptions: List<SavingsAccountOption> = emptyList(),
+    val lockinPeriodFrequencyTypeOptions: List<FrequencyTypeOption> = emptyList(),
+    val minimumActivePeriodFrequencyTypeOptions: List<FrequencyTypeOption> = emptyList(),
+    val currency: String? = null,
+    val currentPrice: String? = null,
     val totalShares: String = "",
+    val totalSharesError: StringResource? = null,
     val savingsAccountIdx: Int? = null,
     val savingsAccountError: StringResource? = null,
     val applicationDate: String = DateHelper.getDateAsStringFromLong(
         Clock.System.now().toEpochMilliseconds(),
     ),
+    val applicationDateError: StringResource? = null,
     val showApplicationDatePicker: Boolean = false,
     val isDividendAllowed: Boolean = false,
     val minActivePeriodFreq: String = "",
+    val minActivePeriodFreqError: StringResource? = null,
     val minActivePeriodFreqTypeIdx: Int? = null,
     val minActivePeriodFreqTypeError: StringResource? = null,
     val lockInPeriodFreq: String = "",
+    val lockInPeriodFreqError: StringResource? = null,
     val lockInPeriodFreqTypeIdx: Int? = null,
     val lockInPeriodFreqTypeError: StringResource? = null,
     val screenState: ScreenState = ScreenState.Loading,
 ) {
+    val selectedProduct: ProductOption? get() = shareProductIndex?.let { productOption.getOrNull(it) }
+    
     interface ScreenState {
         object Loading : ScreenState
         object Success : ScreenState
@@ -316,6 +391,7 @@ sealed interface ShareAccountAction {
     data class OnLockInFreqTypeChange(val index: Int?) : ShareAccountAction
     data object OnIsDividendAllowedClicked : ShareAccountAction
     object OnDetailNext : ShareAccountAction
+    object OnTermsNext : ShareAccountAction
     object Retry : ShareAccountAction
 }
 

@@ -25,4 +25,31 @@ data class ProductOption(
 
     @SerialName("totalShares")
     val totalShares: Int,
+
+    @SerialName("currency")
+    val currency: ProductCurrency? = null,
+
+    @SerialName("unitPrice")
+    val unitPrice: Double? = null,
+)
+
+@Serializable
+data class ProductCurrency(
+    @SerialName("code")
+    val code: String,
+
+    @SerialName("name")
+    val name: String,
+
+    @SerialName("decimalPlaces")
+    val decimalPlaces: Int? = null,
+
+    @SerialName("displaySymbol")
+    val displaySymbol: String? = null,
+
+    @SerialName("nameCode")
+    val nameCode: String? = null,
+
+    @SerialName("displayLabel")
+    val displayLabel: String? = null,
 )
