@@ -237,7 +237,7 @@ class CreateShareAccountViewModel(
             is ShareAccountAction.OnIsDividendAllowedClicked -> {
                 mutableStateFlow.update {
                     it.copy(
-                        isDividendAllowed = !it.isDividendAllowed
+                        isDividendAllowed = !it.isDividendAllowed,
                     )
                 }
             }
@@ -253,7 +253,6 @@ class CreateShareAccountViewModel(
             ShareAccountAction.PreviousStep -> {
                 moveToPreviousStep()
             }
-
         }
     }
 }

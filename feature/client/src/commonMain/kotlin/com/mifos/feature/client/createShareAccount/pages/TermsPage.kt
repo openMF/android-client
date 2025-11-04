@@ -31,7 +31,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.DatePicker
@@ -120,24 +119,22 @@ fun TermsPage(
                 value = state.currency.orEmpty(),
                 onValueChanged = {},
                 onOptionSelected = { index, value ->
-//                    onAction(ShareAccountAction.OnShareProductChange(index))
                 },
                 options = state.productOption.map {
                     it.name
                 },
                 label = stringResource(Res.string.share_account_terms_currency),
                 errorMessage = state.shareProductError?.let { stringResource(it) },
-                enabled = false
+                enabled = false,
             )
             MifosOutlinedTextField(
                 value = state.currentPrice,
                 onValueChange = {
-//                    onAction(ShareAccountAction.OnExternalIdChange(it))
                 },
                 label = stringResource(Res.string.share_account_terms_current_price),
                 config = MifosTextFieldConfig(
-                    enabled = false
-                )
+                    enabled = false,
+                ),
             )
             Spacer(Modifier.height(DesignToken.padding.large))
             MifosOutlinedTextField(
@@ -148,9 +145,9 @@ fun TermsPage(
                 label = stringResource(Res.string.share_account_terms_total_shares),
                 config = MifosTextFieldConfig(
                     keyboardOptions = KeyboardOptions(
-                        keyboardType = KeyboardType.Number
-                    )
-                )
+                        keyboardType = KeyboardType.Number,
+                    ),
+                ),
             )
             Spacer(Modifier.height(DesignToken.padding.large))
 
@@ -202,10 +199,10 @@ fun TermsPage(
                 label = stringResource(Res.string.share_account_terms_frequency),
                 config = MifosTextFieldConfig(
                     keyboardOptions = KeyboardOptions(
-                        keyboardType = KeyboardType.Number
+                        keyboardType = KeyboardType.Number,
                     ),
-                    enabled = state.isDividendAllowed
-                )
+                    enabled = state.isDividendAllowed,
+                ),
             )
             Spacer(Modifier.height(DesignToken.padding.large))
 
@@ -241,9 +238,9 @@ fun TermsPage(
                 label = stringResource(Res.string.share_account_terms_frequency),
                 config = MifosTextFieldConfig(
                     keyboardOptions = KeyboardOptions(
-                        keyboardType = KeyboardType.Number
-                    )
-                )
+                        keyboardType = KeyboardType.Number,
+                    ),
+                ),
             )
             Spacer(Modifier.height(DesignToken.padding.large))
 
@@ -263,7 +260,6 @@ fun TermsPage(
                 label = stringResource(Res.string.share_account_terms_type),
                 errorMessage = state.lockInPeriodFreqTypeError?.let { stringResource(it) },
             )
-
         }
         MifosTwoButtonRow(
             firstBtnText = stringResource(Res.string.share_account_back),
