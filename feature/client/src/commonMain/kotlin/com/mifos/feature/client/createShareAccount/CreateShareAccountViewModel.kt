@@ -26,7 +26,6 @@ import com.mifos.core.ui.util.TextFieldsValidator
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import kotlinx.datetime.atStartOfDayIn
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.getString
 import kotlin.time.Clock
@@ -37,7 +36,7 @@ class CreateShareAccountViewModel(
     private val networkMonitor: NetworkMonitor,
     val savedStateHandle: SavedStateHandle,
 
-    ) : BaseViewModel<ShareAccountState, ShareAccountEvent, ShareAccountAction>
+) : BaseViewModel<ShareAccountState, ShareAccountEvent, ShareAccountAction>
     (ShareAccountState()) {
 
     val route = savedStateHandle.toRoute<CreateShareAccountRoute>()
@@ -91,7 +90,6 @@ class CreateShareAccountViewModel(
             }
         }
     }
-
 
     private fun loadShareTemplate(client: Int) {
         viewModelScope.launch {
@@ -272,7 +270,7 @@ class CreateShareAccountViewModel(
                 mutableStateFlow.update {
                     it.copy(
                         applicationDate = action.date,
-                        applicationDateError = null
+                        applicationDateError = null,
                     )
                 }
             }

@@ -143,7 +143,7 @@ fun TermsPage(
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.Number,
                     ),
-                    errorText = state.totalSharesError?.let { stringResource(it) }
+                    errorText = state.totalSharesError?.let { stringResource(it) },
                 ),
             )
             Spacer(Modifier.height(DesignToken.padding.large))
@@ -199,7 +199,7 @@ fun TermsPage(
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.Number,
                     ),
-                    errorText = state.minActivePeriodFreqError?.let { stringResource(it) }
+                    errorText = state.minActivePeriodFreqError?.let { stringResource(it) },
                 ),
             )
             Spacer(Modifier.height(DesignToken.padding.large))
@@ -237,7 +237,7 @@ fun TermsPage(
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.Number,
                     ),
-                    errorText = state.lockInPeriodFreqError?.let { stringResource(it) }
+                    errorText = state.lockInPeriodFreqError?.let { stringResource(it) },
                 ),
             )
             Spacer(Modifier.height(DesignToken.padding.large))
