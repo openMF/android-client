@@ -21,6 +21,7 @@ import com.mifos.core.network.datamanager.DataManagerDataTable
 import com.mifos.core.network.datamanager.DataManagerDocument
 import com.mifos.core.network.datamanager.DataManagerGroups
 import com.mifos.core.network.datamanager.DataManagerIdentifiers
+import com.mifos.core.network.datamanager.DataManagerFixedDeposit
 import com.mifos.core.network.datamanager.DataManagerLoan
 import com.mifos.core.network.datamanager.DataManagerNote
 import com.mifos.core.network.datamanager.DataManagerOffices
@@ -51,4 +52,5 @@ val DataManagerModule = module {
     single { DataManagerStaff(get(), get(), get()) }
     single { DataManagerSurveys(get(), get(), get()) }
     single { DataManagerIdentifiers(get()) }
+    single { DataManagerFixedDeposit(get()) }
 }

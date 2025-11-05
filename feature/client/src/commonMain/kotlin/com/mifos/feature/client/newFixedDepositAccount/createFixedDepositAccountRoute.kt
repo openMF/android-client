@@ -15,18 +15,24 @@ import androidx.navigation.compose.composable
 import kotlinx.serialization.Serializable
 
 @Serializable
-data object FixedDepositRoute
 
-fun NavGraphBuilder.fixedAccountDestination() {
-    composable<FixedDepositRoute> {
-        FixedDepositAccountScreen(
-            onNavigateBack = {},
+data class createFixedDepositAccountRoute(
+    val clientId: Int,
+)
+
+
+
+fun NavGraphBuilder.createFixedDepositAccountDestination(navController: NavController) {
+    composable<createFixedDepositAccountRoute> {
+        CreateFixedDepositAccountScreen(
+            onNavigateBack = navController::popBackStack,
             onFinish = {},
+            navController = navController,
         )
     }
 }
-fun NavController.navigateToNewFixedDepositRoute() {
+fun NavController.navigateToCreateFixedDepositRoute(clientId: Int) {
     this.navigate(
-        FixedDepositRoute,
+        createFixedDepositAccountRoute(clientId=clientId)
     )
 }

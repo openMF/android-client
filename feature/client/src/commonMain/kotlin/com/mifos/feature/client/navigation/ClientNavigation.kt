@@ -75,8 +75,9 @@ import com.mifos.feature.client.documentPreviewScreen.createDocumentPreviewRoute
 import com.mifos.feature.client.documentPreviewScreen.navigateToDocumentPreviewRoute
 import com.mifos.feature.client.fixedDepositAccount.clientFixedDepositAccountDestination
 import com.mifos.feature.client.fixedDepositAccount.navigateToFixedDepositAccountRoute
-import com.mifos.feature.client.newFixedDepositAccount.fixedAccountDestination
-import com.mifos.feature.client.newFixedDepositAccount.navigateToNewFixedDepositRoute
+import com.mifos.feature.client.newFixedDepositAccount.createFixedDepositAccountRoute
+import com.mifos.feature.client.newFixedDepositAccount.createFixedDepositAccountDestination
+import com.mifos.feature.client.newFixedDepositAccount.navigateToCreateFixedDepositRoute
 import com.mifos.feature.client.recurringDepositAccount.clientRecurringDepositAccountDestination
 import com.mifos.feature.client.recurringDepositAccount.navigateToRecurringDepositAccountRoute
 import com.mifos.feature.client.savingsAccounts.navigateToClientSavingsAccountsRoute
@@ -312,7 +313,7 @@ fun NavGraphBuilder.clientNavGraph(
             onNavigateApplyLoanAccount = navController::navigateToNewLoanAccountRoute,
             onNavigateApplySavingsAccount = navController::navigateToSavingsAccountRoute,
             onNavigateApplyRecurringAccount = navController::navigateToRecurringAccountRoute,
-            onNavigateApplyFixedAccount = navController::navigateToNewFixedDepositRoute,
+            onNavigateApplyFixedAccount = navController::navigateToCreateFixedDepositRoute,
             navController = navController,
         )
         clientUpcomingChargesDestination(
@@ -343,7 +344,7 @@ fun NavGraphBuilder.clientNavGraph(
 
         shareAccountDestination()
         recurringAccountDestination()
-        fixedAccountDestination()
+        createFixedDepositAccountDestination(navController = navController)
     }
 }
 

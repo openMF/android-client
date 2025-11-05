@@ -25,7 +25,7 @@ fun NavGraphBuilder.clientApplyNewApplicationRoute(
     onNavigateApplySavingsAccount: (Int) -> Unit,
     onNavigateApplyShareAccount: () -> Unit,
     onNavigateApplyRecurringAccount: () -> Unit,
-    onNavigateApplyFixedAccount: () -> Unit,
+    onNavigateApplyFixedAccount: (Int) -> Unit,
     navController: NavController,
 ) {
     composable<ClientApplyNewApplicationRoute> {
