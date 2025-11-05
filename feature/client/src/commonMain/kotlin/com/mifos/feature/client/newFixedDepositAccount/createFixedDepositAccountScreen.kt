@@ -22,6 +22,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.ui.components.MifosStepper
 import com.mifos.core.ui.components.Step
@@ -34,11 +35,12 @@ import com.mifos.feature.client.newFixedDepositAccount.pages.TermsPage
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
-internal fun FixedDepositAccountScreen(
+internal fun CreateFixedDepositAccountScreen(
     onNavigateBack: () -> Unit,
+    navController: NavController,
     onFinish: () -> Unit,
     modifier: Modifier = Modifier,
-    viewModel: NewFixedDepositAccountViewmodel = viewModel(),
+    viewModel: CreateFixedDepositAccountViewmodel = viewModel(),
 ) {
     val state by viewModel.stateFlow.collectAsStateWithLifecycle()
     EventsEffect(viewModel.eventFlow) { event ->
@@ -64,7 +66,8 @@ private fun FixedDepositAccountScaffold(
         listOf(
             Step(stringResource(Res.string.step_details)) {
                 DetailsPage(
-                    onNext = { onAction(NewFixedDepositAccountAction.NextStep) },
+                    state = state,
+                    onAction = onAction,
                 )
             },
             Step(name = stringResource(Res.string.step_terms)) {

@@ -537,6 +537,12 @@
     <string name="client_update_document_title">Update Document</string>
     <!-- Screen Title -->
     <string name="title_new_fixed_deposit_account">New Fixed Deposit Account</string>
+    <string name="title_new_recurring_deposit_account">New Recurring Deposit Account</string>
+    <!-- New Fixed Deposit Account -->
+    <string name="one_year_fixed_deposit">1 Year Fixed Deposit</string>
+    <string name="submission_on">Submission On</string>
+    <string name="Field_officer">Field Officer</string>
+
 
     <!-- Create Share Account -->
     <string name="feature_share_account_details">Details</string>

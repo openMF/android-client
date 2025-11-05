@@ -41,4 +41,6 @@ object APIEndPoint {
     const val NOTES = "notes"
     const val MAKER_CHECKER = "makercheckers"
     const val SHARE = "share"
+
+    const val FIXED_DEPOSIT ="fixeddepositaccounts"
 }
