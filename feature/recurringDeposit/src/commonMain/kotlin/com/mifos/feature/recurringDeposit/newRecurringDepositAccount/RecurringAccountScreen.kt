@@ -16,14 +16,18 @@ import androidclient.feature.recurringdeposit.generated.resources.feature_recurr
 import androidclient.feature.recurringdeposit.generated.resources.feature_recurringDeposit_step_interest
 import androidclient.feature.recurringdeposit.generated.resources.feature_recurringDeposit_step_settings
 import androidclient.feature.recurringdeposit.generated.resources.feature_recurringDeposit_step_terms
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavController
 import com.mifos.core.designsystem.component.MifosScaffold
-import com.mifos.core.ui.components.MifosErrorComponent
+import com.mifos.core.designsystem.component.MifosSweetError
+import com.mifos.core.ui.components.MifosBreadcrumbNavBar
 import com.mifos.core.ui.components.MifosProgressIndicator
 import com.mifos.core.ui.components.MifosStepper
 import com.mifos.core.ui.components.Step
@@ -38,6 +42,7 @@ import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 internal fun RecurringAccountScreen(
+    navController: NavController,
     onNavigateBack: () -> Unit,
     onFinish: () -> Unit,
     modifier: Modifier = Modifier,
@@ -55,6 +60,7 @@ internal fun RecurringAccountScreen(
     RecurringDepositAccountDialogBox(state = state)
 
     RecurringAccountScaffold(
+        navController = navController,
         modifier = modifier,
         state = state,
         onAction = { viewModel.trySendAction(it) },
@@ -63,6 +69,7 @@ internal fun RecurringAccountScreen(
 
 @Composable
 private fun RecurringAccountScaffold(
+    navController: NavController,
     state: RecurringAccountState,
     modifier: Modifier = Modifier,
     onAction: (RecurringAccountAction) -> Unit,
@@ -101,17 +108,24 @@ private fun RecurringAccountScaffold(
         onBackPressed = { onAction(RecurringAccountAction.NavigateBack) },
         modifier = modifier,
     ) { paddingValues ->
-        if (state.screenState == null) {
-            MifosStepper(
-                steps = steps,
-                currentIndex = state.currentStep,
-                onStepChange = { newIndex ->
-                    onAction(RecurringAccountAction.OnStepChange(newIndex))
-                },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(paddingValues),
-            )
+        Column(
+            modifier = Modifier.padding(paddingValues)
+                .fillMaxSize(),
+        ) {
+            MifosBreadcrumbNavBar(navController)
+
+            if (state.screenState == null) {
+                MifosStepper(
+                    steps = steps,
+                    currentIndex = state.currentStep,
+                    onStepChange = { newIndex ->
+                        onAction(RecurringAccountAction.OnStepChange(newIndex))
+                    },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(paddingValues),
+                )
+            }
         }
     }
 }
@@ -122,12 +136,9 @@ fun RecurringDepositAccountDialogBox(
 ) {
     when (state.screenState) {
         is RecurringAccountState.ScreenState.Error -> {
-            MifosErrorComponent(
+            MifosSweetError(
                 message = state.screenState.message,
                 isRetryEnabled = true,
-                onRetry = {
-                    // Retry action can be handled here
-                },
             )
         }
         RecurringAccountState.ScreenState.Loading -> {

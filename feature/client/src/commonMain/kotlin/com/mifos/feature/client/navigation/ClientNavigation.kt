@@ -345,7 +345,9 @@ fun NavGraphBuilder.clientNavGraph(
         createShareAccountDestination(
             navController = navController,
         )
-        recurringAccountDestination()
+        recurringAccountDestination(
+            navController = navController,
+        )
         fixedAccountDestination()
     }
 }
