@@ -167,6 +167,8 @@ private fun PreviewMifosActionsSavingsListingComponent() {
                     else -> println("Action not Handled")
                 }
             },
+            isExpanded = true,
+            onExpandToggle = {},
         )
     }
 }

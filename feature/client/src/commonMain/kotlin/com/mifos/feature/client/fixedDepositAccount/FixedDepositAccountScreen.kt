@@ -30,7 +30,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -38,7 +38,10 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
@@ -130,6 +133,8 @@ fun FixedDepositAccountScaffold(
     modifier: Modifier = Modifier,
     onAction: (FixedDepositAccountAction) -> Unit,
 ) {
+    var expandedIndex by rememberSaveable { mutableStateOf(-1) }
+
     MifosScaffold(
         onBackPressed = {
             onAction(FixedDepositAccountAction.NavigateBack)
@@ -187,7 +192,7 @@ fun FixedDepositAccountScaffold(
                             MifosEmptyCard(msg = stringResource(Res.string.client_empty_card_message))
                         } else {
                             LazyColumn {
-                                items(state.fixedDepositAccount) { fixedDepositAccount ->
+                                itemsIndexed(state.fixedDepositAccount) { index, fixedDepositAccount ->
                                     MifosActionsSavingsListingComponent(
                                         accountNo = fixedDepositAccount.accountNo ?: notAvailableText,
                                         savingsProduct = stringResource(Res.string.client_product_fixed_deposit_account),
@@ -204,6 +209,10 @@ fun FixedDepositAccountScaffold(
                                             "${fixedDepositAccount.currency?.displaySymbol ?: ""} ${fixedDepositAccount.accountBalance}"
                                         } else {
                                             notAvailableText
+                                        },
+                                        isExpanded = expandedIndex == index,
+                                        onExpandToggle = {
+                                            expandedIndex = if (expandedIndex == index) -1 else index
                                         },
                                         menuList = if (fixedDepositAccount.status?.submittedAndPendingApproval == true) {
                                             listOf(

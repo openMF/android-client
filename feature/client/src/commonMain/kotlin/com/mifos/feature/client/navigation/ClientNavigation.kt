@@ -95,6 +95,7 @@ import com.mifos.feature.note.notes.navigateToNoteScreen
 import com.mifos.feature.recurringDeposit.newRecurringDepositAccount.navigateToRecurringAccountRoute
 import com.mifos.feature.recurringDeposit.newRecurringDepositAccount.recurringAccountDestination
 import com.mifos.feature.savings.navigation.navigateToAddSavingsAccount
+import com.mifos.feature.savings.navigation.navigateToSavingsAccountApproval
 import com.mifos.feature.savings.navigation.navigateToSavingsAccountSummaryScreen
 import com.mifos.feature.savings.navigation.savingsDestination
 import com.mifos.feature.savings.savingsAccountv2.navigateToSavingsAccountRoute
@@ -298,8 +299,10 @@ fun NavGraphBuilder.clientNavGraph(
         )
         savingsAccountsDestination(
             navigateBack = navController::popBackStack,
-            navigateToViewAccount = { },
+            navigateToViewAccount = navController::navigateToSavingsAccountSummaryScreen,
             navController = navController,
+            navigateToApproveAccount = navController::navigateToSavingsAccountApproval,
+
         )
         clientCollateralDestination(
             onNavigateBack = navController::popBackStack,
