@@ -144,11 +144,11 @@
     <string name="feature_savings_continue">Continue</string>
     <string name="feature_savings_success">Success</string>
     <string name="feature_savings_failed">Failed</string>
-
-    <string name="feature_savings_new_savings_account_submitted_success">New Savings Account Application Submitted Successfully</string>
-    <string name="feature_savings_new_savings_account_submitted_failed">Failed to apply for new savings account with the provided details</string>
-
+    <string name="feature_savings_new_savings_account_created_successfully">Savings Account Created Successfully</string>
     <string name="feature_savings_charges_active_count">%1$d active charges</string>
+
+    <!-- Handle Error-->
+    <string name="field_empty_msg">This field cannot be empty</string>
 
 </resources>
 

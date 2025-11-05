@@ -45,7 +45,6 @@ import com.mifos.feature.client.clientEditProfile.clientEditProfileDestination
 import com.mifos.feature.client.clientEditProfile.navigateToClientProfileEditProfileRoute
 import com.mifos.feature.client.clientGeneral.clientProfileGeneralDestination
 import com.mifos.feature.client.clientGeneral.navigateToClientProfileGeneralRoute
-import com.mifos.feature.client.clientGeneral.navigateToClientProfileGeneralRouteOnStatus
 import com.mifos.feature.client.clientIdentifiersAddUpdate.clientIdentifiersAddUpdateDestination
 import com.mifos.feature.client.clientIdentifiersAddUpdate.onNavigateToClientIdentifiersAddUpdateScreen
 import com.mifos.feature.client.clientIdentifiersList.clientIdentifiersListDestination
@@ -340,7 +339,7 @@ fun NavGraphBuilder.clientNavGraph(
             onBackPressed = navController::popBackStack,
             loadMoreSavingsAccountInfo = navController::navigateToDataTable,
             loadDocuments = navController::navigateToDocumentListScreen,
-            onFinish = navController::navigateToClientProfileGeneralRouteOnStatus,
+            onFinish = navController::popBackStack,
         )
 
         createShareAccountDestination(

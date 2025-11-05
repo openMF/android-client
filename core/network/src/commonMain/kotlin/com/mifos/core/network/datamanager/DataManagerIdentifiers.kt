@@ -9,12 +9,14 @@
  */
 package com.mifos.core.network.datamanager
 
+import com.mifos.core.common.utils.extractErrorMessage
 import com.mifos.core.model.objects.noncoreobjects.Identifier
 import com.mifos.core.model.objects.noncoreobjects.IdentifierPayload
 import com.mifos.core.model.objects.noncoreobjects.IdentifierTemplate
 import com.mifos.core.network.BaseApiManager
 import com.mifos.core.network.GenericResponse
 import io.ktor.client.statement.HttpResponse
+import io.ktor.http.isSuccess
 import kotlinx.coroutines.flow.Flow
 
 /**
@@ -92,7 +94,14 @@ class DataManagerIdentifiers(
         clientId: Long,
         identifierPayload: IdentifierPayload,
     ): HttpResponse {
-        return mBaseApiManager.clientIdentifiersApi.createClientIdentifier(clientId, identifierPayload)
+        val response =
+            mBaseApiManager.clientIdentifiersApi.createClientIdentifier(clientId, identifierPayload)
+
+        if (!response.status.isSuccess()) {
+            throw IllegalStateException(extractErrorMessage(response))
+        }
+
+        return response
     }
 
     /**
@@ -111,6 +120,10 @@ class DataManagerIdentifiers(
         identifierId: Long,
         identifierPayload: IdentifierPayload,
     ): GenericResponse {
-        return mBaseApiManager.clientIdentifiersApi.updateClientIdentifier(clientId, identifierId, identifierPayload)
+        return mBaseApiManager.clientIdentifiersApi.updateClientIdentifier(
+            clientId,
+            identifierId,
+            identifierPayload,
+        )
     }
 }

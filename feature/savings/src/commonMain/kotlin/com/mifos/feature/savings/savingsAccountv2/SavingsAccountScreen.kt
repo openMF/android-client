@@ -12,12 +12,7 @@ package com.mifos.feature.savings.savingsAccountv2
 import androidclient.feature.savings.generated.resources.Res
 import androidclient.feature.savings.generated.resources.feature_savings_back
 import androidclient.feature.savings.generated.resources.feature_savings_cancel
-import androidclient.feature.savings.generated.resources.feature_savings_continue
 import androidclient.feature.savings.generated.resources.feature_savings_create_savings_account
-import androidclient.feature.savings.generated.resources.feature_savings_error_not_connected_internet
-import androidclient.feature.savings.generated.resources.feature_savings_failed
-import androidclient.feature.savings.generated.resources.feature_savings_retry
-import androidclient.feature.savings.generated.resources.feature_savings_success
 import androidclient.feature.savings.generated.resources.step_charges
 import androidclient.feature.savings.generated.resources.step_charges_add
 import androidclient.feature.savings.generated.resources.step_charges_add_new
@@ -34,10 +29,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -54,10 +51,8 @@ import com.mifos.core.ui.components.MifosActionsChargeListingComponent
 import com.mifos.core.ui.components.MifosBreadcrumbNavBar
 import com.mifos.core.ui.components.MifosProgressIndicator
 import com.mifos.core.ui.components.MifosProgressIndicatorOverlay
-import com.mifos.core.ui.components.MifosStatusDialog
 import com.mifos.core.ui.components.MifosStepper
 import com.mifos.core.ui.components.MifosTwoButtonRow
-import com.mifos.core.ui.components.ResultStatus
 import com.mifos.core.ui.components.Step
 import com.mifos.core.ui.util.EventsEffect
 import com.mifos.core.ui.util.TextFieldsValidator.doubleNumberValidator
@@ -65,6 +60,7 @@ import com.mifos.feature.savings.savingsAccountv2.pages.ChargesPage
 import com.mifos.feature.savings.savingsAccountv2.pages.DetailsPage
 import com.mifos.feature.savings.savingsAccountv2.pages.PreviewPage
 import com.mifos.feature.savings.savingsAccountv2.pages.TermsPage
+import kotlinx.coroutines.delay
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 import kotlin.time.Clock
@@ -74,7 +70,7 @@ import kotlin.time.ExperimentalTime
 internal fun SavingsAccountScreen(
     navController: NavController,
     onNavigateBack: () -> Unit,
-    onFinish: (id: Int) -> Unit,
+    onFinish: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: SavingsAccountViewModel = koinViewModel(),
 ) {
@@ -83,13 +79,16 @@ internal fun SavingsAccountScreen(
     EventsEffect(viewModel.eventFlow) { event ->
         when (event) {
             SavingsAccountEvent.NavigateBack -> onNavigateBack()
-            SavingsAccountEvent.Finish -> onFinish(state.clientId)
+            SavingsAccountEvent.Finish -> onFinish()
         }
     }
+
+    val snackbarHostState = remember { SnackbarHostState() }
 
     NewSavingsAccountDialog(
         state = state,
         onAction = { viewModel.trySendAction(it) },
+        snackbarHostState = snackbarHostState,
     )
 
     SavingsAccountScaffold(
@@ -97,6 +96,7 @@ internal fun SavingsAccountScreen(
         state = state,
         onAction = { viewModel.trySendAction(it) },
         navController = navController,
+        snackbarHostState = snackbarHostState,
     )
 }
 
@@ -106,6 +106,7 @@ private fun SavingsAccountScaffold(
     state: SavingsAccountState,
     modifier: Modifier = Modifier,
     onAction: (SavingsAccountAction) -> Unit,
+    snackbarHostState: SnackbarHostState,
 ) {
     val steps = listOf(
         Step(stringResource(Res.string.step_details)) {
@@ -138,6 +139,7 @@ private fun SavingsAccountScaffold(
         title = stringResource(Res.string.feature_savings_create_savings_account),
         onBackPressed = { onAction(SavingsAccountAction.NavigateBack) },
         modifier = modifier,
+        snackbarHostState = snackbarHostState,
     ) { paddingValues ->
         when (state.screenState) {
             is SavingsAccountState.ScreenState.Loading -> MifosProgressIndicator()
@@ -160,26 +162,14 @@ private fun SavingsAccountScaffold(
                 }
             }
 
-            is SavingsAccountState.ScreenState.NetworkError -> {
+            is SavingsAccountState.ScreenState.Error -> {
                 MifosSweetError(
-                    message = stringResource(Res.string.feature_savings_error_not_connected_internet),
+                    message = state.screenState.message,
                     onclick = { onAction(SavingsAccountAction.Retry) },
                 )
             }
-
-            is SavingsAccountState.ScreenState.ShowStatusDialog -> {
-                MifosStatusDialog(
-                    status = state.screenState.status,
-                    btnText = if (state.screenState.status == ResultStatus.SUCCESS) stringResource(Res.string.feature_savings_continue) else stringResource(Res.string.feature_savings_retry),
-                    onConfirm = { if (state.screenState.status == ResultStatus.SUCCESS) onAction(SavingsAccountAction.Finish) else onAction(SavingsAccountAction.Retry) },
-                    successTitle = stringResource(Res.string.feature_savings_success),
-                    successMessage = state.screenState.msg,
-                    failureTitle = stringResource(Res.string.feature_savings_failed),
-                    failureMessage = state.screenState.msg,
-                    modifier = Modifier.fillMaxSize(),
-                )
-            }
         }
+
         if (state.isOverLayLoadingActive) {
             MifosProgressIndicatorOverlay()
         }
@@ -190,15 +180,9 @@ private fun SavingsAccountScaffold(
 private fun NewSavingsAccountDialog(
     state: SavingsAccountState,
     onAction: (SavingsAccountAction) -> Unit,
+    snackbarHostState: SnackbarHostState,
 ) {
     when (state.dialogState) {
-        is SavingsAccountState.DialogState.Error -> {
-            MifosSweetError(
-                message = state.dialogState.message,
-                onclick = { onAction(SavingsAccountAction.Retry) },
-            )
-        }
-
         is SavingsAccountState.DialogState.AddNewCharge -> AddNewChargeDialog(
             isEdit = state.dialogState.edit,
             state = state,
@@ -210,6 +194,19 @@ private fun NewSavingsAccountDialog(
             state = state,
             onAction = onAction,
         )
+
+        is SavingsAccountState.DialogState.SuccessResponseStatus -> {
+            LaunchedEffect(state.launchEffectKey) {
+                snackbarHostState.showSnackbar(
+                    message = state.dialogState.msg,
+                )
+
+                if (state.dialogState.successStatus) {
+                    delay(1000)
+                    onAction(SavingsAccountAction.Finish)
+                }
+            }
+        }
 
         null -> Unit
     }
@@ -250,7 +247,8 @@ private fun AddNewChargeDialog(
         selectedChargeName = if (state.chooseChargeIndex == -1) {
             ""
         } else {
-            state.savingsProductTemplate?.chargeOptions?.getOrNull(state.chooseChargeIndex)?.name ?: ""
+            state.savingsProductTemplate?.chargeOptions?.getOrNull(state.chooseChargeIndex)?.name
+                ?: ""
         },
         selectedDate = state.chargeDate,
         chargeAmount = state.chargeAmount,
@@ -263,9 +261,11 @@ private fun AddNewChargeDialog(
         chargeCollectedOn = if (state.chooseChargeIndex == -1) {
             ""
         } else {
-            state.savingsProductTemplate?.chargeOptions?.getOrNull(state.chooseChargeIndex)?.chargeTimeType?.value ?: ""
+            state.savingsProductTemplate?.chargeOptions?.getOrNull(state.chooseChargeIndex)?.chargeTimeType?.value
+                ?: ""
         },
-        chargeOptions = state.savingsProductTemplate?.chargeOptions?.map { it.name ?: "" } ?: emptyList(),
+        chargeOptions = state.savingsProductTemplate?.chargeOptions?.map { it.name ?: "" }
+            ?: emptyList(),
         onConfirm = {
             if (isEdit) {
                 onAction(SavingsAccountAction.EditCharge(index))
@@ -282,7 +282,13 @@ private fun AddNewChargeDialog(
         },
         onDateChange = { newDate ->
             if (isSelectableDate(newDate)) {
-                onAction(SavingsAccountAction.OnChargesDateChange(DateHelper.getDateAsStringFromLong(newDate)))
+                onAction(
+                    SavingsAccountAction.OnChargesDateChange(
+                        DateHelper.getDateAsStringFromLong(
+                            newDate,
+                        ),
+                    ),
+                )
             }
         },
         amountError = if (state.chargeAmountError != null) stringResource(state.chargeAmountError) else null,
@@ -308,7 +314,9 @@ private fun ShowChargesDialog(
             ) {
                 item {
                     Text(
-                        text = stringResource(Res.string.step_charges_view) + " " + stringResource(Res.string.step_charges),
+                        text = stringResource(Res.string.step_charges_view) + " " + stringResource(
+                            Res.string.step_charges,
+                        ),
                         style = MifosTypography.titleMediumEmphasized,
                     )
                 }
@@ -322,7 +330,11 @@ private fun ShowChargesDialog(
                         onActionClicked = { action ->
                             when (action) {
                                 is Actions.Delete -> {
-                                    onAction(SavingsAccountAction.DeleteChargeFromSelectedCharges(index))
+                                    onAction(
+                                        SavingsAccountAction.DeleteChargeFromSelectedCharges(
+                                            index,
+                                        ),
+                                    )
                                 }
 
                                 is Actions.Edit -> {

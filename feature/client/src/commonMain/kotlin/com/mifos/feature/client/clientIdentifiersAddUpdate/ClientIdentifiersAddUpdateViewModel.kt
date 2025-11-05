@@ -17,9 +17,7 @@ import com.mifos.core.common.utils.DataState
 import com.mifos.core.common.utils.FileKitUtil
 import com.mifos.core.data.repository.ClientIdentifiersRepository
 import com.mifos.core.data.repository.DocumentCreateUpdateRepository
-import com.mifos.core.data.util.Error
 import com.mifos.core.data.util.NetworkMonitor
-import com.mifos.core.data.util.extractErrorMessage
 import com.mifos.core.domain.useCases.CreateClientIdentifierUseCase
 import com.mifos.core.domain.useCases.DownloadDocumentUseCase
 import com.mifos.core.domain.useCases.GetDocumentsListUseCase
@@ -88,12 +86,26 @@ class ClientIdentifiersAddUpdateViewModel(
             .collect { dataState ->
                 when (dataState) {
                     is DataState.Error -> {
-                        mutableStateFlow.update {
-                            it.copy(
-                                dialogState = ClientIdentifiersAddUpdateState.DialogState.Error(
-                                    dataState.message,
-                                ),
-                            )
+                        if (dataState.exception is IllegalStateException) {
+                            mutableStateFlow.update {
+                                it.copy(
+                                    dialogState = ClientIdentifiersAddUpdateState.DialogState.Error(
+                                        dataState.message.replace("unique", "document")
+                                            .replace("under", " under"),
+                                    ),
+                                    handleServerResponse = true,
+                                    isOverlayLoading = false,
+                                )
+                            }
+                        } else {
+                            mutableStateFlow.update {
+                                it.copy(
+                                    dialogState = ClientIdentifiersAddUpdateState.DialogState.Error(
+                                        dataState.message,
+                                    ),
+                                    isOverlayLoading = false,
+                                )
+                            }
                         }
                     }
 
@@ -107,25 +119,12 @@ class ClientIdentifiersAddUpdateViewModel(
                     }
 
                     is DataState.Success -> {
-                        val error = extractErrorMessage(dataState.data)
-
-                        if (error == Error.MSG_NOT_FOUND) {
-                            mutableStateFlow.update {
-                                it.copy(
-                                    dialogState = null,
-                                    isOverlayLoading = false,
-                                    feature = Feature.ADD_UPDATE_DOCUMENT,
-                                )
-                            }
-                        } else {
-                            mutableStateFlow.update {
-                                it.copy(
-                                    dialogState = ClientIdentifiersAddUpdateState.DialogState.Error(
-                                        error.replace("unique", "document").replace("under", " under"),
-                                    ),
-                                    handleServerResponse = true,
-                                )
-                            }
+                        mutableStateFlow.update {
+                            it.copy(
+                                dialogState = null,
+                                isOverlayLoading = false,
+                                feature = Feature.ADD_UPDATE_DOCUMENT,
+                            )
                         }
                     }
                 }
@@ -271,7 +270,11 @@ class ClientIdentifiersAddUpdateViewModel(
             }
     }
 
-    private suspend fun createDocument(file: PlatformFile, name: String?, uniqueKeyForHandleDocument: String) {
+    private suspend fun createDocument(
+        file: PlatformFile,
+        name: String?,
+        uniqueKeyForHandleDocument: String,
+    ) {
         repository.createDocument(
             Constants.ENTITY_TYPE_CLIENT_IDENTIFIERS,
             route.clientId,
@@ -313,7 +316,11 @@ class ClientIdentifiersAddUpdateViewModel(
         }
     }
 
-    private suspend fun updateDocument(file: PlatformFile, name: String?, uniqueKeyForHandleDocument: String?) {
+    private suspend fun updateDocument(
+        file: PlatformFile,
+        name: String?,
+        uniqueKeyForHandleDocument: String?,
+    ) {
         state.documentId?.let { documentId ->
             repository.updateDocument(
                 entityType = Constants.CLIENTS,
@@ -538,7 +545,8 @@ class ClientIdentifiersAddUpdateViewModel(
                         createDocument(
                             file = file,
                             name = state.documentName,
-                            uniqueKeyForHandleDocument = route.uniqueKeyForHandleDocument ?: uniqueKey,
+                            uniqueKeyForHandleDocument = route.uniqueKeyForHandleDocument
+                                ?: uniqueKey,
                         )
                     } else {
                         updateDocument(
