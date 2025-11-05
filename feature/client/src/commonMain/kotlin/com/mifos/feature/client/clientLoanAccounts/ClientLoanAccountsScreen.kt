@@ -73,14 +73,14 @@ internal fun ClientLoanAccountsScreenRoute(
         }
     }
 
-    ClientLoanAccountsDialog(
-        state = state,
-        onAction = remember(viewModel) { { viewModel.trySendAction(it) } },
-    )
-
     ClientLoanAccountsScreen(
         state = state,
         navController = navController,
+        onAction = remember(viewModel) { { viewModel.trySendAction(it) } },
+    )
+
+    ClientLoanAccountsDialog(
+        state = state,
         onAction = remember(viewModel) { { viewModel.trySendAction(it) } },
     )
 }
