@@ -43,7 +43,7 @@ import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
@@ -59,7 +59,10 @@ import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -206,6 +209,8 @@ fun ShowChargeBottomSheet(
     state: ChargesState,
     onAction: (ChargesAction) -> Unit,
 ) {
+    var expandedIndex by rememberSaveable { mutableStateOf(-1) }
+
     MifosBottomSheet(
         onDismiss = {
             onAction(ChargesAction.DismissDialog)
@@ -230,7 +235,7 @@ fun ShowChargeBottomSheet(
                         modifier = Modifier.weight(1f),
                         verticalArrangement = Arrangement.spacedBy(DesignToken.padding.medium),
                     ) {
-                        items(state.chargesList) {
+                        itemsIndexed(state.chargesList) { index, it ->
                             MifosActionsChargeListingComponent(
                                 chargeTitle = it.name.toString(),
                                 type = it.chargeCalculationType?.value.toString(),
@@ -250,7 +255,10 @@ fun ShowChargeBottomSheet(
                                         else -> {}
                                     }
                                 },
-                                isExpandable = true,
+                                isExpanded = expandedIndex == index,
+                                onExpandToggle = {
+                                    expandedIndex = if (expandedIndex == index) -1 else index
+                                },
                             )
                         }
                     }

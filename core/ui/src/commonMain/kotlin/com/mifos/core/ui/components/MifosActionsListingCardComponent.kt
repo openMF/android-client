@@ -607,20 +607,18 @@ fun MifosActionsChargeListingComponent(
         Actions.Delete(),
     ),
     onActionClicked: (Actions) -> Unit,
-    isExpandable: Boolean = true,
+    isExpanded: Boolean,
+    onExpandToggle: () -> Unit,
 ) {
-    var isActive by rememberSaveable { mutableStateOf(false) }
-
     Column(
         Modifier.fillMaxWidth(),
     ) {
         MifosActionsListingComponentOutline(
-            isExpanded = isActive,
+            isExpanded = isExpanded,
         ) {
             Row(
                 modifier = Modifier.fillMaxWidth().clickable(
-                    enabled = isExpandable,
-                    onClick = { isActive = !isActive },
+                    onClick = { onExpandToggle() },
                 ).padding(
                     horizontal = DesignToken.padding.large,
                     vertical = DesignToken.padding.medium,
@@ -673,7 +671,7 @@ fun MifosActionsChargeListingComponent(
                         modifier = Modifier
                             .size(DesignToken.sizes.iconSmall)
                             .padding(horizontal = DesignToken.padding.extraSmall),
-                        imageVector = if (isActive) {
+                        imageVector = if (isExpanded) {
                             MifosIcons.ChevronUp
                         } else {
                             MifosIcons.ChevronDown
@@ -683,7 +681,7 @@ fun MifosActionsChargeListingComponent(
                 }
             }
         }
-        if (isActive) {
+        AnimatedVisibility(isExpanded) {
             Surface(
                 modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(
@@ -1204,7 +1202,8 @@ private fun MifosActionsChargeListingComponentPreview() {
             collectedOn = "06-09-2025",
             amount = "1500 UGX",
             onActionClicked = { },
-            isExpandable = true,
+            isExpanded = true,
+            onExpandToggle = {},
         )
     }
 }

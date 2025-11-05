@@ -19,9 +19,13 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.paging.LoadState
 import androidx.paging.PagingData
@@ -45,6 +49,8 @@ actual fun ShowClientCharge(
     onAction: (ChargesAction) -> Unit,
 ) {
     val chargesPagingList = pagingFlow.collectAsLazyPagingItems()
+
+    var expandedIndex by rememberSaveable { mutableStateOf(-1) }
 
     when (chargesPagingList.loadState.refresh) {
         is LoadState.Error -> {
@@ -76,7 +82,7 @@ actual fun ShowClientCharge(
                         LazyColumn(
                             verticalArrangement = Arrangement.spacedBy(DesignToken.padding.medium),
                         ) {
-                            items(chargesList) {
+                            itemsIndexed(chargesList) { index, it ->
                                 MifosActionsChargeListingComponent(
                                     chargeTitle = it.name.toString(),
                                     type = it.chargeCalculationType?.value.toString(),
@@ -96,7 +102,10 @@ actual fun ShowClientCharge(
                                             else -> {}
                                         }
                                     },
-                                    isExpandable = true,
+                                    isExpanded = expandedIndex == index,
+                                    onExpandToggle = {
+                                        expandedIndex = if (expandedIndex == index) -1 else index
+                                    },
                                 )
                             }
                         }
