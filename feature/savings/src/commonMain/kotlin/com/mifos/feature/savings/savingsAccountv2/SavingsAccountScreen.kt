@@ -13,6 +13,10 @@ import androidclient.feature.savings.generated.resources.Res
 import androidclient.feature.savings.generated.resources.feature_savings_back
 import androidclient.feature.savings.generated.resources.feature_savings_cancel
 import androidclient.feature.savings.generated.resources.feature_savings_create_savings_account
+import androidclient.feature.savings.generated.resources.feature_savings_error_not_connected_internet
+import androidclient.feature.savings.generated.resources.feature_savings_failed
+import androidclient.feature.savings.generated.resources.feature_savings_retry
+import androidclient.feature.savings.generated.resources.feature_savings_success
 import androidclient.feature.savings.generated.resources.step_charges
 import androidclient.feature.savings.generated.resources.step_charges_add
 import androidclient.feature.savings.generated.resources.step_charges_add_new
