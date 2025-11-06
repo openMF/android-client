@@ -58,7 +58,7 @@ fun DetailsPage(
         initialSelectedDateMillis = Clock.System.now().toEpochMilliseconds(),
         selectableDates = object : SelectableDates {
             override fun isSelectableDate(utcTimeMillis: Long): Boolean {
-                return utcTimeMillis >= Clock.System.now().toEpochMilliseconds().minus(86_400_000L)
+                return utcTimeMillis <= Clock.System.now().toEpochMilliseconds()
             }
         },
     )
@@ -127,7 +127,7 @@ fun DetailsPage(
                     onAction(ShareAccountAction.OnOpenSubmissionDatePicker(true))
                 },
             )
-
+            Spacer(Modifier.height(DesignToken.padding.large))
             MifosOutlinedTextField(
                 value = state.externalId ?: "",
                 onValueChange = {

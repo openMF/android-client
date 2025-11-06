@@ -69,7 +69,7 @@ fun TermsPage(
         initialSelectedDateMillis = Clock.System.now().toEpochMilliseconds(),
         selectableDates = object : SelectableDates {
             override fun isSelectableDate(utcTimeMillis: Long): Boolean {
-                return utcTimeMillis <= Clock.System.now().toEpochMilliseconds().plus(86_400_000L)
+                return utcTimeMillis <= Clock.System.now().toEpochMilliseconds()
             }
         },
     )
@@ -143,6 +143,7 @@ fun TermsPage(
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.Number,
                     ),
+                    isError = state.totalSharesError != null,
                     errorText = state.totalSharesError?.let { stringResource(it) },
                 ),
             )
@@ -152,14 +153,14 @@ fun TermsPage(
                 value = if (state.savingsAccountIdx == null) {
                     ""
                 } else {
-                    state.savingsAccountOptions[state.savingsAccountIdx].accountNo
+                    state.savingsAccountOptions.getOrNull(state.savingsAccountIdx)?.accountNo.orEmpty()
                 },
                 onValueChanged = {},
                 onOptionSelected = { index, value ->
                     onAction(ShareAccountAction.OnSavingsAccountChange(index))
                 },
                 options = state.savingsAccountOptions.map {
-                    it.accountNo + (it.savingsProductName?.let { name -> " - $name" } ?: "")
+                    it.accountNo + (it.savingsProductName?.let { name -> " - $name" })
                 },
                 label = stringResource(Res.string.share_account_terms_default_savings_account),
                 errorMessage = state.savingsAccountError?.let { stringResource(it) },
@@ -199,6 +200,7 @@ fun TermsPage(
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.Number,
                     ),
+                    isError = state.minActivePeriodFreqError != null,
                     errorText = state.minActivePeriodFreqError?.let { stringResource(it) },
                 ),
             )
@@ -208,7 +210,7 @@ fun TermsPage(
                 value = if (state.minActivePeriodFreqTypeIdx == null) {
                     ""
                 } else {
-                    state.minimumActivePeriodFrequencyTypeOptions[state.minActivePeriodFreqTypeIdx].value
+                    state.minimumActivePeriodFrequencyTypeOptions.getOrNull(state.minActivePeriodFreqTypeIdx)?.value.orEmpty()
                 },
                 onValueChanged = {},
                 onOptionSelected = { index, value ->
@@ -217,6 +219,7 @@ fun TermsPage(
                 options = state.minimumActivePeriodFrequencyTypeOptions.map {
                     it.value
                 },
+                enabled = state.minActivePeriodFreq.isNotBlank(),
                 label = stringResource(Res.string.share_account_terms_type),
                 errorMessage = state.minActivePeriodFreqTypeError?.let { stringResource(it) },
             )
@@ -237,6 +240,7 @@ fun TermsPage(
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.Number,
                     ),
+                    isError = state.lockInPeriodFreqError != null,
                     errorText = state.lockInPeriodFreqError?.let { stringResource(it) },
                 ),
             )
@@ -246,7 +250,7 @@ fun TermsPage(
                 value = if (state.lockInPeriodFreqTypeIdx == null) {
                     ""
                 } else {
-                    state.lockInPeriodFrequencyTypeOptions[state.lockInPeriodFreqTypeIdx].value
+                    state.lockInPeriodFrequencyTypeOptions.getOrNull(state.lockInPeriodFreqTypeIdx)?.value.orEmpty()
                 },
                 onValueChanged = {},
                 onOptionSelected = { index, value ->
@@ -255,6 +259,7 @@ fun TermsPage(
                 options = state.lockInPeriodFrequencyTypeOptions.map {
                     it.value
                 },
+                enabled = state.lockInPeriodFreq.isNotBlank(),
                 label = stringResource(Res.string.share_account_terms_type),
                 errorMessage = state.lockInPeriodFreqTypeError?.let { stringResource(it) },
             )

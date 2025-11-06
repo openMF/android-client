@@ -161,72 +161,46 @@ class CreateShareAccountViewModel(
                 )
             }
         } else {
-            println(state)
-            println(state.selectedProduct)
             state.selectedProduct?.id?.let { productId ->
                 loadShareTemplateFromProduct(client = route.clientId, productId = productId)
             }
-            println(state)
             moveToNextStep()
         }
     }
 
-    @OptIn(ExperimentalTime::class)
     private fun handleOnTermsNext() {
         var hasError = false
         var newState = state
 
-        // Validate Total Number of Shares
         val totalSharesError = TextFieldsValidator.numberValidator(state.totalShares)
         if (totalSharesError != null) {
             newState = newState.copy(totalSharesError = totalSharesError)
             hasError = true
         }
 
-        // Validate Default Savings Account
         if (state.savingsAccountIdx == null) {
             newState = newState.copy(savingsAccountError = TextFieldsValidator.stringValidator(""))
             hasError = true
         }
 
-//        // Validate Application Date (not in future)
-//        try {
-//            val dateList = DateHelper.getDateAsList(state.applicationDate)
-//            val localDate = kotlinx.datetime.LocalDate(dateList[0], dateList[1], dateList[2])
-//            val applicationDateMillis = localDate.atStartOfDayIn(kotlinx.datetime.TimeZone.UTC).toEpochMilliseconds()
-//
-//            if (applicationDateMillis >= Clock.System.now().toEpochMilliseconds()) {
-//                newState = newState.copy(applicationDateError = TextFieldsValidator.stringValidator(""))
-//                hasError = true
-//            }
-//        } catch (e: Exception) {
-//            // If date parsing fails, assume invalid date
-//            newState = newState.copy(applicationDateError = TextFieldsValidator.stringValidator(""))
-//            hasError = true
-//        }
-
-        // Validate Minimum Active Period if filled
         if (state.minActivePeriodFreq.isNotBlank()) {
             val freqError = TextFieldsValidator.numberValidator(state.minActivePeriodFreq)
             if (freqError != null) {
                 newState = newState.copy(minActivePeriodFreqError = freqError)
                 hasError = true
             }
-            // If frequency is provided, type must also be selected
             if (state.minActivePeriodFreqTypeIdx == null) {
                 newState = newState.copy(minActivePeriodFreqTypeError = TextFieldsValidator.stringValidator(""))
                 hasError = true
             }
         }
 
-        // Validate Lock-in Period if filled
         if (state.lockInPeriodFreq.isNotBlank()) {
             val freqError = TextFieldsValidator.numberValidator(state.lockInPeriodFreq)
             if (freqError != null) {
                 newState = newState.copy(lockInPeriodFreqError = freqError)
                 hasError = true
             }
-            // If frequency is provided, type must also be selected
             if (state.lockInPeriodFreqTypeIdx == null) {
                 newState = newState.copy(lockInPeriodFreqTypeError = TextFieldsValidator.stringValidator(""))
                 hasError = true
