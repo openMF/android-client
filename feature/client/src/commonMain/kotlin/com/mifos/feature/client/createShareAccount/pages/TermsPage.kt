@@ -160,7 +160,7 @@ fun TermsPage(
                     onAction(ShareAccountAction.OnSavingsAccountChange(index))
                 },
                 options = state.savingsAccountOptions.map {
-                    it.accountNo + (it.savingsProductName?.let { name -> " - $name" })
+                    it.accountNo + (it.savingsProductName?.let { name -> " - $name" }.orEmpty())
                 },
                 label = stringResource(Res.string.share_account_terms_default_savings_account),
                 errorMessage = state.savingsAccountError?.let { stringResource(it) },
