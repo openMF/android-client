@@ -19,6 +19,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -104,14 +105,25 @@ fun InterestPage(onNext: () -> Unit) {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp)
+            .padding(horizontal = 12.dp)
             .verticalScroll(rememberScrollState()),
-        verticalArrangement = Arrangement.spacedBy(16.dp),
+        verticalArrangement = Arrangement.spacedBy(12.dp),
     ) {
-        // Chart Information Section
-        ChartInformationCard(
+        Spacer(modifier = Modifier.height(8.dp))
+
+        // CARD 1: Interest Details
+        InterestDetailsCard(
             chartInfo = chartInfo,
+            modifier = Modifier.fillMaxWidth()
+        )
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        // CARD 2: View Interest Rate Chart (Inline Preview - NO Modal on main page)
+        ViewInterestRateChartCard(
+            rateChartItems = rateChartItems,
             onViewClick = { showRateChartModal = true },
+            modifier = Modifier.fillMaxWidth()
         )
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -138,9 +150,11 @@ fun InterestPage(onNext: () -> Unit) {
                 Text("Next")
             }
         }
+
+        Spacer(modifier = Modifier.height(8.dp))
     }
 
-    // Rate Chart Modal
+    // Rate Chart Modal (Full View - Opens on "View" button click)
     if (showRateChartModal) {
         RateChartModal(
             rateChartItems = rateChartItems,
@@ -152,7 +166,6 @@ fun InterestPage(onNext: () -> Unit) {
             },
             onDownload = {
                 // Handle download functionality
-                // In real implementation, this would export chart data
             },
         )
     }
@@ -211,6 +224,126 @@ fun InterestPage(onNext: () -> Unit) {
     }
 }
 
+// CARD 1: Interest Details Card
+@Composable
+private fun InterestDetailsCard(
+    chartInfo: ChartInformation,
+    modifier: Modifier = Modifier,
+) {
+    Card(
+        modifier = modifier,
+        shape = RoundedCornerShape(12.dp),
+        border = BorderStroke(1.dp, Color(0xFFE0E0E0)),
+        colors = CardDefaults.cardColors(
+            containerColor = Color.White,
+        ),
+        elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(12.dp),
+        ) {
+            Text(
+                text = "Interest Details",
+                style = MaterialTheme.typography.titleMedium,
+                fontWeight = FontWeight.SemiBold,
+                fontSize = 16.sp,
+                color = Color(0xFF212121),
+            )
+
+            InfoRow(label = "Name:", value = chartInfo.name)
+            InfoRow(label = "Valid from Date:", value = chartInfo.validFromDate)
+            InfoRow(label = "End Date:", value = chartInfo.endDate)
+            InfoRow(label = "Description:", value = chartInfo.description)
+            InfoRow(
+                label = "Grouping by Amount:",
+                value = if (chartInfo.groupingByAmount) "Yes" else "No",
+            )
+        }
+    }
+}
+
+// CARD 2: View Interest Rate Chart - Header with bordered View button
+@Composable
+private fun ViewInterestRateChartCard(
+    rateChartItems: List<RateChartItem>,
+    onViewClick: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    Card(
+        modifier = modifier,
+        shape = RoundedCornerShape(12.dp),
+        border = BorderStroke(1.dp, Color(0xFFE0E0E0)),
+        colors = CardDefaults.cardColors(
+            containerColor = Color.White,
+        ),
+        elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Text(
+                text = "INTEREST RATE CHART",
+                style = MaterialTheme.typography.labelLarge,
+                fontWeight = FontWeight.SemiBold,
+                fontSize = 13.sp,
+                color = Color(0xFF212121),
+            )
+
+            // View button with border (like Figma)
+            OutlinedButton(
+                onClick = onViewClick,
+                shape = RoundedCornerShape(4.dp),
+                border = BorderStroke(1.dp, Color(0xFFE0E0E0)),
+                modifier = Modifier.height(32.dp),
+            ) {
+                Text(
+                    text = "View",
+                    color = MaterialTheme.colorScheme.primary,
+                    fontSize = 13.sp,
+                    fontWeight = FontWeight.Medium,
+                )
+            }
+        }
+    }
+}
+
+// Pre-built component: Info Row
+@Composable
+private fun InfoRow(label: String, value: String) {
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.Top,
+    ) {
+        Text(
+            text = label,
+            style = MaterialTheme.typography.bodyMedium,
+            fontSize = 14.sp,
+            color = Color(0xFF757575),
+            modifier = Modifier.weight(1f),
+            textAlign = TextAlign.Start,
+        )
+
+        Text(
+            text = value,
+            style = MaterialTheme.typography.bodyMedium,
+            fontWeight = FontWeight.Normal,
+            fontSize = 14.sp,
+            color = Color(0xFF212121),
+            modifier = Modifier.weight(1f),
+            textAlign = TextAlign.End,
+        )
+    }
+}
+
+// Pre-built component: Rate Chart Header Card (for modal)
 @Composable
 private fun RateChartHeaderCard() {
     Card(
@@ -225,7 +358,7 @@ private fun RateChartHeaderCard() {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 16.dp, vertical = 14.dp),
+                .padding(horizontal = 14.dp, vertical = 12.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.Top,
         ) {
@@ -282,94 +415,6 @@ private fun RateChartHeaderCard() {
     }
 }
 
-@Composable
-private fun ChartInformationCard(
-    chartInfo: ChartInformation,
-    onViewClick: () -> Unit,
-) {
-    Card(
-        modifier = Modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(12.dp),
-        border = BorderStroke(1.dp, Color(0xFFE0E0E0)),
-        colors = CardDefaults.cardColors(
-            containerColor = Color.White,
-        ),
-        elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
-    ) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp),
-        ) {
-            InfoRow(label = "Name:", value = chartInfo.name)
-            InfoRow(label = "Valid from Date:", value = chartInfo.validFromDate)
-            InfoRow(label = "End Date:", value = chartInfo.endDate)
-            InfoRow(label = "Description:", value = chartInfo.description)
-            InfoRow(
-                label = "Grouping by Amount:",
-                value = if (chartInfo.groupingByAmount) "Yes" else "No",
-            )
-
-            Spacer(modifier = Modifier.height(4.dp))
-
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically,
-            ) {
-                Text(
-                    text = "INTEREST RATE CHART",
-                    style = MaterialTheme.typography.labelLarge,
-                    fontWeight = FontWeight.SemiBold,
-                    fontSize = 13.sp,
-                    color = Color(0xFF212121),
-                )
-
-                TextButton(
-                    onClick = onViewClick,
-                    shape = RoundedCornerShape(4.dp),
-                ) {
-                    Text(
-                        text = "View",
-                        color = MaterialTheme.colorScheme.primary,
-                        fontSize = 14.sp,
-                        fontWeight = FontWeight.Medium,
-                    )
-                }
-            }
-        }
-    }
-}
-
-@Composable
-private fun InfoRow(label: String, value: String) {
-    Row(
-        modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.Top,
-    ) {
-        Text(
-            text = label,
-            style = MaterialTheme.typography.bodyMedium,
-            fontSize = 14.sp,
-            color = Color(0xFF757575),
-            modifier = Modifier.weight(1f),
-            textAlign = TextAlign.Start,
-        )
-
-        Text(
-            text = value,
-            style = MaterialTheme.typography.bodyMedium,
-            fontWeight = FontWeight.Normal,
-            fontSize = 14.sp,
-            color = Color(0xFF212121),
-            modifier = Modifier.weight(1f),
-            textAlign = TextAlign.End,
-        )
-    }
-}
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun RateChartModal(
@@ -384,15 +429,15 @@ private fun RateChartModal(
     ) {
         Surface(
             modifier = Modifier
-                .fillMaxWidth(0.92f)
-                .padding(horizontal = 16.dp),
+                .fillMaxWidth(0.92f)  // Standardized width for all modals
+                .padding(horizontal = 16.dp),  // Consistent padding
             shape = RoundedCornerShape(20.dp),
             color = Color.White,
         ) {
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(24.dp),
+                    .padding(20.dp),
             ) {
                 // Header
                 Text(
@@ -401,18 +446,18 @@ private fun RateChartModal(
                     fontWeight = FontWeight.Bold,
                     fontSize = 22.sp,
                     color = Color(0xFF212121),
-                    modifier = Modifier.padding(bottom = 20.dp),
+                    modifier = Modifier.padding(bottom = 16.dp),
                 )
 
                 // Amount Range Header Card
                 RateChartHeaderCard()
 
-                Spacer(modifier = Modifier.height(16.dp))
+                Spacer(modifier = Modifier.height(12.dp))
 
                 // Rate Chart Items List
                 Column(
                     modifier = Modifier.weight(1f, fill = false),
-                    verticalArrangement = Arrangement.spacedBy(12.dp),
+                    verticalArrangement = Arrangement.spacedBy(10.dp),
                 ) {
                     rateChartItems.forEachIndexed { index, item ->
                         RateChartItemCard(
@@ -422,7 +467,7 @@ private fun RateChartModal(
                     }
                 }
 
-                Spacer(modifier = Modifier.height(20.dp))
+                Spacer(modifier = Modifier.height(16.dp))
 
                 // Action Buttons
                 Row(
@@ -463,6 +508,7 @@ private fun RateChartModal(
     }
 }
 
+// Pre-built component: Rate Chart Item Card
 @Composable
 private fun RateChartItemCard(
     item: RateChartItem,
@@ -482,7 +528,7 @@ private fun RateChartItemCard(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 16.dp, vertical = 14.dp),
+                .padding(horizontal = 14.dp, vertical = 12.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.Top,
         ) {
@@ -555,16 +601,16 @@ private fun ActionModal(
     ) {
         Surface(
             modifier = Modifier
-                .fillMaxWidth(0.92f)
-                .padding(horizontal = 16.dp),
+                .fillMaxWidth(0.92f)  // Same standardized width as RateChartModal
+                .padding(horizontal = 16.dp),  // Consistent padding
             shape = RoundedCornerShape(20.dp),
             color = Color.White,
         ) {
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(24.dp),
-                verticalArrangement = Arrangement.spacedBy(16.dp),
+                    .padding(20.dp),
+                verticalArrangement = Arrangement.spacedBy(14.dp),
             ) {
                 // Header
                 Text(
@@ -579,74 +625,10 @@ private fun ActionModal(
                 RateChartHeaderCard()
 
                 // Item Details Card
-                Card(
-                    modifier = Modifier.fillMaxWidth(),
-                    shape = RoundedCornerShape(8.dp),
-                    border = BorderStroke(1.dp, Color(0xFFE0E0E0)),
-                    colors = CardDefaults.cardColors(
-                        containerColor = Color.White,
-                    ),
-                    elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
-                ) {
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 16.dp, vertical = 14.dp),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.Top,
-                    ) {
-                        Column(
-                            modifier = Modifier.weight(1f),
-                            verticalArrangement = Arrangement.spacedBy(4.dp),
-                        ) {
-                            Text(
-                                text = item.amountRange,
-                                style = MaterialTheme.typography.titleMedium,
-                                fontWeight = FontWeight.SemiBold,
-                                fontSize = 16.sp,
-                                color = Color(0xFF212121),
-                                textAlign = TextAlign.Start,
-                            )
-
-                            Text(
-                                text = item.description,
-                                style = MaterialTheme.typography.bodySmall,
-                                fontSize = 13.sp,
-                                color = Color(0xFF757575),
-                                textAlign = TextAlign.Start,
-                            )
-
-                            Text(
-                                text = item.period,
-                                style = MaterialTheme.typography.bodySmall,
-                                fontSize = 13.sp,
-                                color = Color(0xFF757575),
-                                textAlign = TextAlign.Start,
-                            )
-                        }
-
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.spacedBy(6.dp),
-                        ) {
-                            Text(
-                                text = item.interestRate,
-                                style = MaterialTheme.typography.titleMedium,
-                                fontWeight = FontWeight.Bold,
-                                fontSize = 17.sp,
-                                color = Color(0xFF4CAF50),
-                                textAlign = TextAlign.End,
-                            )
-
-                            Text(
-                                text = "›",
-                                fontSize = 24.sp,
-                                color = Color(0xFF9E9E9E),
-                                modifier = Modifier.padding(start = 2.dp),
-                            )
-                        }
-                    }
-                }
+                RateChartItemCard(
+                    item = item,
+                    onClick = { },
+                )
 
                 // Action Options
                 Column(
@@ -654,78 +636,18 @@ private fun ActionModal(
                     verticalArrangement = Arrangement.spacedBy(8.dp),
                 ) {
                     // Edit Option
-                    Card(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .clickable(onClick = onEditClick),
-                        shape = RoundedCornerShape(8.dp),
-                        border = BorderStroke(0.dp, Color.Transparent),
-                        colors = CardDefaults.cardColors(
-                            containerColor = Color(0xFFFAFAFA),
-                        ),
-                        elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
-                    ) {
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(horizontal = 16.dp, vertical = 14.dp),
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.Start,
-                        ) {
-                            Icon(
-                                imageVector = Icons.Default.Edit,
-                                contentDescription = "Edit",
-                                tint = Color(0xFF757575),
-                                modifier = Modifier.padding(end = 12.dp),
-                            )
-
-                            Text(
-                                text = "Edit",
-                                style = MaterialTheme.typography.bodyLarge,
-                                fontWeight = FontWeight.Normal,
-                                fontSize = 15.sp,
-                                color = Color(0xFF212121),
-                                textAlign = TextAlign.Start,
-                            )
-                        }
-                    }
+                    ActionOptionCard(
+                        icon = Icons.Default.Edit,
+                        label = "Edit",
+                        onClick = onEditClick
+                    )
 
                     // Delete Option
-                    Card(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .clickable(onClick = onDeleteClick),
-                        shape = RoundedCornerShape(8.dp),
-                        border = BorderStroke(0.dp, Color.Transparent),
-                        colors = CardDefaults.cardColors(
-                            containerColor = Color(0xFFFAFAFA),
-                        ),
-                        elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
-                    ) {
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(horizontal = 16.dp, vertical = 14.dp),
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.Start,
-                        ) {
-                            Icon(
-                                imageVector = Icons.Default.Delete,
-                                contentDescription = "Delete",
-                                tint = Color(0xFF757575),
-                                modifier = Modifier.padding(end = 12.dp),
-                            )
-
-                            Text(
-                                text = "Delete",
-                                style = MaterialTheme.typography.bodyLarge,
-                                fontWeight = FontWeight.Normal,
-                                fontSize = 15.sp,
-                                color = Color(0xFF212121),
-                                textAlign = TextAlign.Start,
-                            )
-                        }
-                    }
+                    ActionOptionCard(
+                        icon = Icons.Default.Delete,
+                        label = "Delete",
+                        onClick = onDeleteClick
+                    )
                 }
 
                 Spacer(modifier = Modifier.height(4.dp))
@@ -769,6 +691,50 @@ private fun ActionModal(
     }
 }
 
+// Pre-built component: Action Option Card
+@Composable
+private fun ActionOptionCard(
+    icon: androidx.compose.ui.graphics.vector.ImageVector,
+    label: String,
+    onClick: () -> Unit,
+) {
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable(onClick = onClick),
+        shape = RoundedCornerShape(8.dp),
+        border = BorderStroke(0.dp, Color.Transparent),
+        colors = CardDefaults.cardColors(
+            containerColor = Color(0xFFFAFAFA),
+        ),
+        elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 14.dp, vertical = 12.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Start,
+        ) {
+            Icon(
+                imageVector = icon,
+                contentDescription = label,
+                tint = Color(0xFF757575),
+                modifier = Modifier.padding(end = 12.dp),
+            )
+
+            Text(
+                text = label,
+                style = MaterialTheme.typography.bodyLarge,
+                fontWeight = FontWeight.Normal,
+                fontSize = 15.sp,
+                color = Color(0xFF212121),
+                textAlign = TextAlign.Start,
+            )
+        }
+    }
+}
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun EditRateChartDialog(
@@ -800,7 +766,7 @@ private fun EditRateChartDialog(
                 modifier = Modifier
                     .fillMaxWidth()
                     .verticalScroll(rememberScrollState()),
-                verticalArrangement = Arrangement.spacedBy(16.dp),
+                verticalArrangement = Arrangement.spacedBy(14.dp),
             ) {
                 OutlinedTextField(
                     value = amountRange,
