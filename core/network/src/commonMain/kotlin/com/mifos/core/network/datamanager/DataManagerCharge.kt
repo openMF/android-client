@@ -9,6 +9,7 @@
  */
 package com.mifos.core.network.datamanager
 
+import com.mifos.core.common.utils.extractErrorMessage
 import com.mifos.core.datastore.UserPreferencesRepository
 import com.mifos.core.model.objects.clients.ChargeCreationResponse
 import com.mifos.core.model.objects.clients.Page
@@ -17,11 +18,14 @@ import com.mifos.core.model.objects.template.client.ChargeTemplate
 import com.mifos.core.network.BaseApiManager
 import com.mifos.room.entities.client.ChargesEntity
 import com.mifos.room.helper.ChargeDaoHelper
+import io.ktor.client.statement.bodyAsText
+import io.ktor.http.isSuccess
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.onEach
+import kotlinx.serialization.json.Json
 
 /**
  * This DataManager is for Managing Charge API, In which Request is going to Server
@@ -84,7 +88,16 @@ class DataManagerCharge(
         resourceType: String,
         payload: ChargesPayload,
     ): ChargeCreationResponse {
-        return mBaseApiManager.chargeService.createCharges(resourceType, resourceId, payload)
+        val response =
+            mBaseApiManager.chargeService.createCharges(resourceType, resourceId, payload)
+
+        if (!response.status.isSuccess()) {
+            val errorMsg = extractErrorMessage(response)
+
+            throw IllegalStateException(errorMsg)
+        }
+
+        return Json.decodeFromString<ChargeCreationResponse>(response.bodyAsText())
     }
 
     suspend fun deleteCharge(

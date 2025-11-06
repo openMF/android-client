@@ -51,6 +51,7 @@ class ChargesViewModel(
         observeNetwork()
     }
 
+    @OptIn(ExperimentalTime::class)
     override fun handleAction(action: ChargesAction) {
         when (action) {
             ChargesAction.NavigateBack -> sendEvent(ChargesEvent.NavigateBack)
@@ -88,13 +89,25 @@ class ChargesViewModel(
             }
 
             ChargesAction.CloseChargeAddFields -> {
-                mutableStateFlow.update {
-                    it.copy(
-                        showChargeAddFields = false,
-                        amount = null,
-                        chargeTitle = null,
-                        chargeNameTouched = false,
-                    )
+                if (state.isUpdate) {
+                    mutableStateFlow.update {
+                        it.copy(
+                            chargeOptionIndex = null,
+                            amount = null,
+                            isUpdate = false,
+                            dueDate = DateHelper.getDateAsStringFromLong(
+                                Clock.System.now().toEpochMilliseconds(),
+                            ),
+                        )
+                    }
+                } else {
+                    mutableStateFlow.update {
+                        it.copy(
+                            chargeOptionIndex = null,
+                            showChargeAddFields = false,
+                            amount = null,
+                        )
+                    }
                 }
             }
 
@@ -103,7 +116,6 @@ class ChargesViewModel(
                     it.copy(
                         chargeOptionIndex = action.index,
                         chargeOptionId = state.chargeTemplate?.chargeOptions[action.index]?.id,
-                        chargeTitle = state.chargeTemplate?.chargeOptions[action.index]?.name,
                         chargeOptionError = null,
                     )
                 }
@@ -122,22 +134,10 @@ class ChargesViewModel(
                 }
             }
 
-            is ChargesAction.OnCollectedOnDateChange -> {
-                mutableStateFlow.update { it.copy(collectedOn = action.collectedOn) }
-            }
-
             is ChargesAction.OnShowAddCharge -> {
                 mutableStateFlow.update {
                     it.copy(
                         showChargeAddFields = true,
-                    )
-                }
-            }
-
-            ChargesAction.OnAmountTouched -> {
-                mutableStateFlow.update {
-                    it.copy(
-                        amountTouched = true,
                     )
                 }
             }
@@ -235,8 +235,8 @@ class ChargesViewModel(
                         mutableStateFlow.update {
                             it.copy(
                                 chargesList = dataState.data.pageItems,
-                                dialogState = if (showBottomSheet) ChargesState.DialogState.ShowChargeBottomSheet else null,
                                 totalCharges = dataState.data.totalFilteredRecords,
+                                dialogState = if (showBottomSheet && dataState.data.pageItems.isNotEmpty()) ChargesState.DialogState.ShowChargeBottomSheet else null,
                             )
                         }
                     }
@@ -273,7 +273,7 @@ class ChargesViewModel(
                         mutableStateFlow.update {
                             it.copy(
                                 chargesList = dataState.data,
-                                dialogState = if (showBottomSheet) ChargesState.DialogState.ShowChargeBottomSheet else null,
+                                dialogState = if (showBottomSheet && dataState.data.isNotEmpty()) ChargesState.DialogState.ShowChargeBottomSheet else null,
                                 totalCharges = dataState.data.size,
                             )
                         }
@@ -515,28 +515,17 @@ data class ChargesState
 constructor(
     val chargesList: List<ChargesEntity> = emptyList(),
     val isOverlayLoading: Boolean = false,
-    val isRefreshing: Boolean = false,
-    val error: String? = null,
-    val showSuccessSnackbar: Boolean = false,
     val showChargeAddFields: Boolean = false,
     val dialogState: DialogState? = null,
     val showDueDatePicker: Boolean = false,
     val showCollectedOnDatePicker: Boolean = false,
-    val chargeTitle: String? = null,
-    val chargeTitleTouched: Boolean = false,
     val chargeTemplate: ChargeTemplate? = null,
 
     val amount: String? = null,
-    val amountTouched: Boolean = false,
     val isUpdate: Boolean = false,
-    val chargeName: String? = "",
-    val chargeNameTouched: Boolean = false,
     val chargeId: Int? = null,
 
     val dueDate: String = DateHelper.getDateAsStringFromLong(
-        Clock.System.now().toEpochMilliseconds(),
-    ),
-    val collectedOn: String = DateHelper.getDateAsStringFromLong(
         Clock.System.now().toEpochMilliseconds(),
     ),
 
@@ -566,14 +555,12 @@ sealed interface ChargesAction {
     data object CreateCharge : ChargesAction
     data object CloseChargeAddFields : ChargesAction
     data class OnChargeOptionChange(val index: Int) : ChargesAction
-    data class OnCollectedOnDateChange(val collectedOn: String) : ChargesAction
     data class OnDueDateChange(val dueDate: String) : ChargesAction
     data class OnCollectedOnDatePick(val collectedOnPick: Boolean) : ChargesAction
     data class OnDueDatePick(val dueDatePick: Boolean) : ChargesAction
     data object OnShowAddCharge : ChargesAction
     data object OnShowChargeBottomSheet : ChargesAction
     data class OnAmountChange(val amount: String) : ChargesAction
-    data object OnAmountTouched : ChargesAction
     data class DeleteCharge(val chargeId: Int) : ChargesAction
     data class FetchEditChargeData(val chargeId: Int) : ChargesAction
 }

@@ -24,7 +24,6 @@ import androidclient.feature.client.generated.resources.feature_client_charge_ca
 import androidclient.feature.client.generated.resources.feature_client_charge_select
 import androidclient.feature.client.generated.resources.feature_client_charges
 import androidclient.feature.client.generated.resources.feature_client_choose_charge
-import androidclient.feature.client.generated.resources.feature_client_collected_on_date
 import androidclient.feature.client.generated.resources.feature_client_created_charge_failure_title
 import androidclient.feature.client.generated.resources.feature_client_created_charge_success_message
 import androidclient.feature.client.generated.resources.feature_client_created_charge_success_title
@@ -43,7 +42,7 @@ import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
@@ -149,7 +148,7 @@ fun ChargesContent(
                     },
                     btnText = stringResource(Res.string.action_view),
                     text = state.totalCharges.toString() + " " + stringResource(Res.string.feature_client_charges),
-                    btnEnabled = state.chargesList.isNotEmpty() && state.totalCharges != 0,
+                    btnEnabled = state.totalCharges != 0,
                 )
             }
         }
@@ -209,7 +208,7 @@ fun ShowChargeBottomSheet(
     state: ChargesState,
     onAction: (ChargesAction) -> Unit,
 ) {
-    var expandedIndex by rememberSaveable { mutableStateOf(-1) }
+    var expandedIndex: Int by rememberSaveable { mutableStateOf(-1) }
 
     MifosBottomSheet(
         onDismiss = {
@@ -218,12 +217,10 @@ fun ShowChargeBottomSheet(
         content = {
             Box(
                 modifier = Modifier
-                    .fillMaxWidth()
                     .heightIn(max = DesignToken.spacing.half),
             ) {
                 Column(
-                    modifier = Modifier.padding(DesignToken.padding.large)
-                        .heightIn(max = DesignToken.spacing.half),
+                    modifier = Modifier.padding(DesignToken.padding.large),
                     verticalArrangement = Arrangement.spacedBy(DesignToken.padding.largeIncreased),
                 ) {
                     Text(
@@ -232,10 +229,9 @@ fun ShowChargeBottomSheet(
                     )
 
                     LazyColumn(
-                        modifier = Modifier.weight(1f),
                         verticalArrangement = Arrangement.spacedBy(DesignToken.padding.medium),
                     ) {
-                        itemsIndexed(state.chargesList) { index, it ->
+                        items(state.chargesList) {
                             MifosActionsChargeListingComponent(
                                 chargeTitle = it.name.toString(),
                                 type = it.chargeCalculationType?.value.toString(),
@@ -255,9 +251,9 @@ fun ShowChargeBottomSheet(
                                         else -> {}
                                     }
                                 },
-                                isExpanded = expandedIndex == index,
+                                isExpanded = expandedIndex == it.id,
                                 onExpandToggle = {
-                                    expandedIndex = if (expandedIndex == index) -1 else index
+                                    expandedIndex = if (expandedIndex == it.id) -1 else it.id
                                 },
                             )
                         }
@@ -274,7 +270,12 @@ fun ShowChargeBottomSheet(
                         },
                     )
                 }
-                if (state.isOverlayLoading) MifosProgressIndicatorOverlay()
+                if (state.isOverlayLoading) {
+                    MifosProgressIndicatorOverlay(
+                        modifier = Modifier
+                            .matchParentSize(),
+                    )
+                }
             }
         },
     )
@@ -287,17 +288,6 @@ private fun ChargeAddFields(
     onAction: (ChargesAction) -> Unit,
 ) {
     val dueDatePickerState = key(state.dueDate) {
-        rememberDatePickerState(
-            initialSelectedDateMillis = Clock.System.now().toEpochMilliseconds(),
-            selectableDates = object : SelectableDates {
-                override fun isSelectableDate(utcTimeMillis: Long): Boolean {
-                    return utcTimeMillis >= Clock.System.now().toEpochMilliseconds()
-                }
-            },
-        )
-    }
-
-    val collectedOnDatePickerState = key(state.collectedOn) {
         rememberDatePickerState(
             initialSelectedDateMillis = Clock.System.now().toEpochMilliseconds(),
             selectableDates = object : SelectableDates {
@@ -338,39 +328,6 @@ private fun ChargeAddFields(
             },
         ) {
             DatePicker(state = dueDatePickerState)
-        }
-    }
-
-    if (state.showCollectedOnDatePicker) {
-        DatePickerDialog(
-            onDismissRequest = {
-                onAction(ChargesAction.OnCollectedOnDatePick(false))
-            },
-            confirmButton = {
-                TextButton(
-                    onClick = {
-                        onAction(ChargesAction.OnCollectedOnDatePick(false))
-                        collectedOnDatePickerState.selectedDateMillis?.let {
-                            onAction(
-                                ChargesAction.OnCollectedOnDateChange(
-                                    DateHelper.getDateAsStringFromLong(
-                                        it,
-                                    ),
-                                ),
-                            )
-                        }
-                    },
-                ) { Text(stringResource(Res.string.feature_client_charge_select)) }
-            },
-            dismissButton = {
-                TextButton(
-                    onClick = {
-                        onAction(ChargesAction.OnCollectedOnDatePick(false))
-                    },
-                ) { Text(stringResource(Res.string.feature_client_charge_cancel)) }
-            },
-        ) {
-            DatePicker(state = collectedOnDatePickerState)
         }
     }
 
@@ -419,16 +376,6 @@ private fun ChargeAddFields(
                             keyboardType = KeyboardType.Number,
                         ),
                     ),
-                )
-
-                Spacer(modifier = Modifier.height(DesignToken.padding.medium))
-
-                MifosDatePickerTextField(
-                    value = state.collectedOn,
-                    label = stringResource(Res.string.feature_client_collected_on_date),
-                    openDatePicker = {
-                        onAction(ChargesAction.OnCollectedOnDatePick(true))
-                    },
                 )
 
                 Spacer(modifier = Modifier.height(DesignToken.padding.medium))

@@ -19,7 +19,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -82,7 +82,7 @@ actual fun ShowClientCharge(
                         LazyColumn(
                             verticalArrangement = Arrangement.spacedBy(DesignToken.padding.medium),
                         ) {
-                            itemsIndexed(chargesList) { index, it ->
+                            items(chargesList) {
                                 MifosActionsChargeListingComponent(
                                     chargeTitle = it.name.toString(),
                                     type = it.chargeCalculationType?.value.toString(),
@@ -102,9 +102,9 @@ actual fun ShowClientCharge(
                                             else -> {}
                                         }
                                     },
-                                    isExpanded = expandedIndex == index,
+                                    isExpanded = expandedIndex == it.id,
                                     onExpandToggle = {
-                                        expandedIndex = if (expandedIndex == index) -1 else index
+                                        expandedIndex = if (expandedIndex == it.id) -1 else it.id
                                     },
                                 )
                             }

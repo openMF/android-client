@@ -450,7 +450,7 @@ private fun ShowChargesDialog(
     state: NewLoanAccountState,
     onAction: (NewLoanAccountAction) -> Unit,
 ) {
-    var expandedIndex by rememberSaveable { mutableStateOf(-1) }
+    var expandedIndex: Int? by rememberSaveable { mutableStateOf(-1) }
 
     MifosBottomSheet(
         onDismiss = {
@@ -474,9 +474,9 @@ private fun ShowChargesDialog(
                             collectedOn = it.chargeTimeType?.value.toString(),
                             amount = it.amount.toString(),
                             onActionClicked = {},
-                            isExpanded = expandedIndex == index,
+                            isExpanded = expandedIndex == it.id,
                             onExpandToggle = {
-                                expandedIndex = if (expandedIndex == index) -1 else index
+                                expandedIndex = if (expandedIndex == it.id) -1 else it.id
                             },
                         )
                     }
@@ -505,9 +505,9 @@ private fun ShowChargesDialog(
                                     else -> {}
                                 }
                             },
-                            isExpanded = expandedIndex == index,
+                            isExpanded = expandedIndex == it.id,
                             onExpandToggle = {
-                                expandedIndex = if (expandedIndex == index) -1 else index
+                                expandedIndex = if (expandedIndex == it.id) -1 else it.id
                             },
                         )
                     }

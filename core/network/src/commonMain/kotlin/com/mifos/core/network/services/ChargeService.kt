@@ -144,7 +144,7 @@ interface ChargeService {
         @Path("resourceType") resourceType: String,
         @Path("resourceId") resourceId: Int,
         @Body chargesPayload: ChargesPayload,
-    ): ChargeCreationResponse
+    ): HttpResponse
 
     /**
      * Deletes an existing charge.

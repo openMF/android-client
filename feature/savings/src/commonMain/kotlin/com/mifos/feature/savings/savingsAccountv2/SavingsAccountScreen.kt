@@ -13,10 +13,6 @@ import androidclient.feature.savings.generated.resources.Res
 import androidclient.feature.savings.generated.resources.feature_savings_back
 import androidclient.feature.savings.generated.resources.feature_savings_cancel
 import androidclient.feature.savings.generated.resources.feature_savings_create_savings_account
-import androidclient.feature.savings.generated.resources.feature_savings_error_not_connected_internet
-import androidclient.feature.savings.generated.resources.feature_savings_failed
-import androidclient.feature.savings.generated.resources.feature_savings_retry
-import androidclient.feature.savings.generated.resources.feature_savings_success
 import androidclient.feature.savings.generated.resources.step_charges
 import androidclient.feature.savings.generated.resources.step_charges_add
 import androidclient.feature.savings.generated.resources.step_charges_add_new
@@ -38,8 +34,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -310,7 +306,7 @@ private fun ShowChargesDialog(
     state: SavingsAccountState,
     onAction: (SavingsAccountAction) -> Unit,
 ) {
-    var expandedIndex by rememberSaveable { mutableStateOf(-1) }
+    var expandedIndex: Int? by rememberSaveable { mutableStateOf(-1) }
 
     MifosBottomSheet(
         onDismiss = {
@@ -353,9 +349,9 @@ private fun ShowChargesDialog(
                                 else -> {}
                             }
                         },
-                        isExpanded = expandedIndex == index,
+                        isExpanded = expandedIndex == it.id,
                         onExpandToggle = {
-                            expandedIndex = if (expandedIndex == index) -1 else index
+                            expandedIndex = if (expandedIndex == it.id) -1 else it.id
                         },
                     )
                 }
