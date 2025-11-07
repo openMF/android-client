@@ -78,7 +78,7 @@ internal class SavingsAccountsViewModel(
     private fun getSavingsAccount() {
         viewModelScope.launch {
             mutableStateFlow.update {
-                it.copy(dialogState = SavingsAccountState.DialogState.Loading)
+                it.copy(isLoading = true)
             }
             try {
                 // Todo modify search accordingly
@@ -94,6 +94,7 @@ internal class SavingsAccountsViewModel(
                     it.copy(
                         savingsAccounts = savingsAccounts,
                         dialogState = null,
+                        isLoading = false,
                     )
                 }
             } catch (e: Exception) {
@@ -102,6 +103,7 @@ internal class SavingsAccountsViewModel(
                         dialogState = SavingsAccountState.DialogState.Error(
                             e.message ?: "Unknown error",
                         ),
+                        isLoading = false,
                     )
                 }
             }
@@ -116,10 +118,10 @@ data class SavingsAccountState(
     val savingsAccounts: List<SavingsAccountEntity> = emptyList(),
     val isFilterDialogOpen: Boolean = false,
     val dialogState: DialogState? = null,
+    val isLoading: Boolean = false,
 ) {
     sealed interface DialogState {
         data class Error(val message: String) : DialogState
-        data object Loading : DialogState
     }
 }
 

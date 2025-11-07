@@ -33,6 +33,7 @@ import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.ui.components.Actions
 import com.mifos.core.ui.components.MifosActionsClientFeeListingComponent
+import com.mifos.core.ui.components.MifosEmptyCard
 import com.mifos.core.ui.components.MifosPagingAppendProgress
 import com.mifos.core.ui.components.MifosProgressIndicator
 import com.mifos.room.entities.client.ChargesEntity
@@ -62,6 +63,10 @@ actual fun ChargesListContent(
 
     LaunchedEffect(chargesPagingList) {
         setCount.invoke(chargesPagingList.itemCount)
+    }
+
+    if (chargesPagingList.loadState.refresh is LoadState.NotLoading && chargesPagingList.itemCount == 0) {
+        MifosEmptyCard()
     }
 
     LazyColumn {
