@@ -10,14 +10,14 @@
 package com.mifos.feature.client.createShareAccount.pages
 
 import androidclient.feature.client.generated.resources.Res
-import androidclient.feature.client.generated.resources.share_account_back
-import androidclient.feature.client.generated.resources.share_account_detail_date_cancel
-import androidclient.feature.client.generated.resources.share_account_detail_date_select
-import androidclient.feature.client.generated.resources.share_account_detail_external_id
-import androidclient.feature.client.generated.resources.share_account_detail_product_name
-import androidclient.feature.client.generated.resources.share_account_detail_submission_date
-import androidclient.feature.client.generated.resources.share_account_details
-import androidclient.feature.client.generated.resources.share_account_next
+import androidclient.feature.client.generated.resources.feature_share_account_back
+import androidclient.feature.client.generated.resources.feature_share_account_detail_date_cancel
+import androidclient.feature.client.generated.resources.feature_share_account_detail_date_select
+import androidclient.feature.client.generated.resources.feature_share_account_detail_external_id
+import androidclient.feature.client.generated.resources.feature_share_account_detail_product_name
+import androidclient.feature.client.generated.resources.feature_share_account_detail_submission_date
+import androidclient.feature.client.generated.resources.feature_share_account_details
+import androidclient.feature.client.generated.resources.feature_share_account_next
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -80,14 +80,14 @@ fun DetailsPage(
                             )
                         }
                     },
-                ) { Text(stringResource(Res.string.share_account_detail_date_select)) }
+                ) { Text(stringResource(Res.string.feature_share_account_detail_date_select)) }
             },
             dismissButton = {
                 TextButton(
                     onClick = {
                         onAction(ShareAccountAction.OnOpenSubmissionDatePicker(state = false))
                     },
-                ) { Text(stringResource(Res.string.share_account_detail_date_cancel)) }
+                ) { Text(stringResource(Res.string.feature_share_account_detail_date_cancel)) }
             },
         ) {
             DatePicker(state = submissionDatePickerState)
@@ -99,7 +99,7 @@ fun DetailsPage(
             modifier = modifier.weight(1f).verticalScroll(rememberScrollState()),
         ) {
             Text(
-                text = stringResource(Res.string.share_account_details),
+                text = stringResource(Res.string.feature_share_account_details),
                 style = MifosTypography.labelLargeEmphasized,
             )
             Spacer(Modifier.height(DesignToken.padding.large))
@@ -117,12 +117,12 @@ fun DetailsPage(
                 options = state.productOption.map {
                     it.name
                 },
-                label = stringResource(Res.string.share_account_detail_product_name),
+                label = stringResource(Res.string.feature_share_account_detail_product_name),
                 errorMessage = state.shareProductError?.let { stringResource(it) },
             )
             MifosDatePickerTextField(
                 value = state.submissionDate,
-                label = stringResource(Res.string.share_account_detail_submission_date),
+                label = stringResource(Res.string.feature_share_account_detail_submission_date),
                 openDatePicker = {
                     onAction(ShareAccountAction.OnOpenSubmissionDatePicker(true))
                 },
@@ -133,13 +133,13 @@ fun DetailsPage(
                 onValueChange = {
                     onAction(ShareAccountAction.OnExternalIdChange(it))
                 },
-                label = stringResource(Res.string.share_account_detail_external_id),
+                label = stringResource(Res.string.feature_share_account_detail_external_id),
             )
             Spacer(Modifier.height(DesignToken.padding.large))
         }
         MifosTwoButtonRow(
-            firstBtnText = stringResource(Res.string.share_account_back),
-            secondBtnText = stringResource(Res.string.share_account_next),
+            firstBtnText = stringResource(Res.string.feature_share_account_back),
+            secondBtnText = stringResource(Res.string.feature_share_account_next),
             onFirstBtnClick = {
                 onAction(ShareAccountAction.NavigateBack)
             },

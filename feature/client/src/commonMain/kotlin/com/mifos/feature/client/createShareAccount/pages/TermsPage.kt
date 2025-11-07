@@ -10,21 +10,21 @@
 package com.mifos.feature.client.createShareAccount.pages
 
 import androidclient.feature.client.generated.resources.Res
-import androidclient.feature.client.generated.resources.share_account_back
-import androidclient.feature.client.generated.resources.share_account_detail_date_cancel
-import androidclient.feature.client.generated.resources.share_account_detail_date_select
-import androidclient.feature.client.generated.resources.share_account_next
-import androidclient.feature.client.generated.resources.share_account_terms
-import androidclient.feature.client.generated.resources.share_account_terms_allow_dividends
-import androidclient.feature.client.generated.resources.share_account_terms_application_date
-import androidclient.feature.client.generated.resources.share_account_terms_currency
-import androidclient.feature.client.generated.resources.share_account_terms_current_price
-import androidclient.feature.client.generated.resources.share_account_terms_default_savings_account
-import androidclient.feature.client.generated.resources.share_account_terms_frequency
-import androidclient.feature.client.generated.resources.share_account_terms_lock_in_period
-import androidclient.feature.client.generated.resources.share_account_terms_min_active_period
-import androidclient.feature.client.generated.resources.share_account_terms_total_shares
-import androidclient.feature.client.generated.resources.share_account_terms_type
+import androidclient.feature.client.generated.resources.feature_share_account_back
+import androidclient.feature.client.generated.resources.feature_share_account_detail_date_cancel
+import androidclient.feature.client.generated.resources.feature_share_account_detail_date_select
+import androidclient.feature.client.generated.resources.feature_share_account_next
+import androidclient.feature.client.generated.resources.feature_share_account_terms
+import androidclient.feature.client.generated.resources.feature_share_account_terms_allow_dividends
+import androidclient.feature.client.generated.resources.feature_share_account_terms_application_date
+import androidclient.feature.client.generated.resources.feature_share_account_terms_currency
+import androidclient.feature.client.generated.resources.feature_share_account_terms_current_price
+import androidclient.feature.client.generated.resources.feature_share_account_terms_default_savings_account
+import androidclient.feature.client.generated.resources.feature_share_account_terms_frequency
+import androidclient.feature.client.generated.resources.feature_share_account_terms_lock_in_period
+import androidclient.feature.client.generated.resources.feature_share_account_terms_min_active_period
+import androidclient.feature.client.generated.resources.feature_share_account_terms_total_shares
+import androidclient.feature.client.generated.resources.feature_share_account_terms_type
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -91,14 +91,14 @@ fun TermsPage(
                             )
                         }
                     },
-                ) { Text(stringResource(Res.string.share_account_detail_date_select)) }
+                ) { Text(stringResource(Res.string.feature_share_account_detail_date_select)) }
             },
             dismissButton = {
                 TextButton(
                     onClick = {
                         onAction(ShareAccountAction.OnOpenApplicationDatePicker(state = false))
                     },
-                ) { Text(stringResource(Res.string.share_account_detail_date_cancel)) }
+                ) { Text(stringResource(Res.string.feature_share_account_detail_date_cancel)) }
             },
         ) {
             DatePicker(state = applicationDatePickerState)
@@ -110,7 +110,7 @@ fun TermsPage(
             modifier = modifier.weight(1f).verticalScroll(rememberScrollState()),
         ) {
             Text(
-                text = stringResource(Res.string.share_account_terms),
+                text = stringResource(Res.string.feature_share_account_terms),
                 style = MifosTypography.labelLargeEmphasized,
             )
             Spacer(Modifier.height(DesignToken.padding.large))
@@ -120,13 +120,13 @@ fun TermsPage(
                 onValueChanged = {},
                 onOptionSelected = { _, _ -> },
                 options = emptyList(),
-                label = stringResource(Res.string.share_account_terms_currency),
+                label = stringResource(Res.string.feature_share_account_terms_currency),
                 enabled = false,
             )
             MifosOutlinedTextField(
                 value = state.currentPrice.orEmpty(),
                 onValueChange = {},
-                label = stringResource(Res.string.share_account_terms_current_price),
+                label = stringResource(Res.string.feature_share_account_terms_current_price),
                 config = MifosTextFieldConfig(
                     enabled = false,
                 ),
@@ -138,7 +138,7 @@ fun TermsPage(
                 onValueChange = {
                     onAction(ShareAccountAction.OnTotalSharesChange(it))
                 },
-                label = stringResource(Res.string.share_account_terms_total_shares),
+                label = stringResource(Res.string.feature_share_account_terms_total_shares),
                 config = MifosTextFieldConfig(
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.Number,
@@ -162,13 +162,13 @@ fun TermsPage(
                 options = state.savingsAccountOptions.map {
                     it.accountNo + (it.savingsProductName?.let { name -> " - $name" }.orEmpty())
                 },
-                label = stringResource(Res.string.share_account_terms_default_savings_account),
+                label = stringResource(Res.string.feature_share_account_terms_default_savings_account),
                 errorMessage = state.savingsAccountError?.let { stringResource(it) },
             )
 
             MifosDatePickerTextField(
                 value = state.applicationDate,
-                label = stringResource(Res.string.share_account_terms_application_date),
+                label = stringResource(Res.string.feature_share_account_terms_application_date),
                 openDatePicker = {
                     onAction(ShareAccountAction.OnOpenApplicationDatePicker(true))
                 },
@@ -176,7 +176,7 @@ fun TermsPage(
             )
 
             MifosCheckBox(
-                text = stringResource(Res.string.share_account_terms_allow_dividends),
+                text = stringResource(Res.string.feature_share_account_terms_allow_dividends),
                 checked = state.isDividendAllowed,
                 onCheckChanged = {
                     onAction(ShareAccountAction.OnIsDividendAllowedClicked)
@@ -185,7 +185,7 @@ fun TermsPage(
             Spacer(Modifier.height(DesignToken.padding.large))
 
             Text(
-                text = stringResource(Res.string.share_account_terms_min_active_period),
+                text = stringResource(Res.string.feature_share_account_terms_min_active_period),
                 style = MifosTypography.labelLargeEmphasized,
             )
             Spacer(Modifier.height(DesignToken.padding.large))
@@ -195,7 +195,7 @@ fun TermsPage(
                 onValueChange = {
                     onAction(ShareAccountAction.OnMinActiveFreqChange(it))
                 },
-                label = stringResource(Res.string.share_account_terms_frequency),
+                label = stringResource(Res.string.feature_share_account_terms_frequency),
                 config = MifosTextFieldConfig(
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.Number,
@@ -220,12 +220,12 @@ fun TermsPage(
                     it.value
                 },
                 enabled = state.minActivePeriodFreq.isNotBlank(),
-                label = stringResource(Res.string.share_account_terms_type),
+                label = stringResource(Res.string.feature_share_account_terms_type),
                 errorMessage = state.minActivePeriodFreqTypeError?.let { stringResource(it) },
             )
 
             Text(
-                text = stringResource(Res.string.share_account_terms_lock_in_period),
+                text = stringResource(Res.string.feature_share_account_terms_lock_in_period),
                 style = MifosTypography.labelLargeEmphasized,
             )
             Spacer(Modifier.height(DesignToken.padding.large))
@@ -235,7 +235,7 @@ fun TermsPage(
                 onValueChange = {
                     onAction(ShareAccountAction.OnLockInFreqChange(it))
                 },
-                label = stringResource(Res.string.share_account_terms_frequency),
+                label = stringResource(Res.string.feature_share_account_terms_frequency),
                 config = MifosTextFieldConfig(
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.Number,
@@ -260,13 +260,13 @@ fun TermsPage(
                     it.value
                 },
                 enabled = state.lockInPeriodFreq.isNotBlank(),
-                label = stringResource(Res.string.share_account_terms_type),
+                label = stringResource(Res.string.feature_share_account_terms_type),
                 errorMessage = state.lockInPeriodFreqTypeError?.let { stringResource(it) },
             )
         }
         MifosTwoButtonRow(
-            firstBtnText = stringResource(Res.string.share_account_back),
-            secondBtnText = stringResource(Res.string.share_account_next),
+            firstBtnText = stringResource(Res.string.feature_share_account_back),
+            secondBtnText = stringResource(Res.string.feature_share_account_next),
             onFirstBtnClick = {
                 onAction(ShareAccountAction.PreviousStep)
             },

@@ -15,54 +15,40 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class ShareTemplate(
-    @SerialName("clientId")
     val clientId: Int,
 
-    @SerialName(value = "clientName")
     val clientName: String,
 
-    @SerialName("currency")
     val currency: Currency? = null,
 
-    @SerialName("currentMarketPrice")
     val currentMarketPrice: Double? = null,
 
-    @SerialName("productOptions")
     val productOptions: List<ProductOption> = emptyList(),
 
     @SerialName("clientSavingsAccounts")
     val savingsAccountOptions: List<SavingsAccountOption>? = emptyList(),
 
-    @SerialName("lockinPeriodFrequencyTypeOptions")
     val lockinPeriodFrequencyTypeOptions: List<FrequencyTypeOption>? = emptyList(),
 
-    @SerialName("minimumActivePeriodFrequencyTypeOptions")
     val minimumActivePeriodFrequencyTypeOptions: List<FrequencyTypeOption>? = emptyList(),
 )
 
 @Serializable
 data class SavingsAccountOption(
-    @SerialName("id")
     val id: Int,
 
-    @SerialName("accountNo")
     val accountNo: String,
 
-    @SerialName("savingsProductName")
     val savingsProductName: String? = null,
 
-    @SerialName("savingsProductId")
     val savingsProductId: Int? = null,
 )
 
 @Serializable
 data class FrequencyTypeOption(
-    @SerialName("id")
     val id: Int,
 
-    @SerialName("code")
     val code: String,
 
-    @SerialName("value")
     val value: String,
 )

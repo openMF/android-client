@@ -49,7 +49,7 @@ class CreateShareAccountViewModel(
         viewModelScope.launch {
             val online = networkMonitor.isOnline.first()
             if (online) {
-                repository.getShareTemplateFromProduct(client, productId).collect { dataState ->
+                repository.getShareTemplate(client, productId).collect { dataState ->
                     when (dataState) {
                         is DataState.Error -> {
                             mutableStateFlow.update {
@@ -95,7 +95,7 @@ class CreateShareAccountViewModel(
         viewModelScope.launch {
             val online = networkMonitor.isOnline.first()
             if (online) {
-                repository.getShareTemplate(client).collect { dataState ->
+                repository.getShareTemplate(client, null).collect { dataState ->
                     when (dataState) {
                         is DataState.Error -> {
                             mutableStateFlow.update {
