@@ -15,7 +15,9 @@ import androidx.navigation.compose.composable
 import kotlinx.serialization.Serializable
 
 @Serializable
-data object RecurringAccountRoute
+data class RecurringAccountRoute(
+    val clientId: Int = -1,
+)
 
 fun NavGraphBuilder.recurringAccountDestination() {
     composable<RecurringAccountRoute> {
@@ -26,8 +28,8 @@ fun NavGraphBuilder.recurringAccountDestination() {
     }
 }
 
-fun NavController.navigateToRecurringAccountRoute() {
+fun NavController.navigateToRecurringAccountRoute(clientId: Int) {
     this.navigate(
-        RecurringAccountRoute,
+        RecurringAccountRoute(clientId = clientId),
     )
 }

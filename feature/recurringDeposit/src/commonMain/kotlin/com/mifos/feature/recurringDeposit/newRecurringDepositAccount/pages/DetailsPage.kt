@@ -12,20 +12,149 @@ package com.mifos.feature.recurringDeposit.newRecurringDepositAccount.pages
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
-import androidx.compose.material3.Button
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.DatePicker
+import androidx.compose.material3.DatePickerDialog
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.SelectableDates
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
+import androidx.compose.ui.text.input.KeyboardType
+import com.mifos.core.common.utils.DateHelper
+import com.mifos.core.designsystem.component.MifosDatePickerTextField
+import com.mifos.core.designsystem.component.MifosOutlinedTextField
+import com.mifos.core.designsystem.component.MifosTextFieldConfig
+import com.mifos.core.designsystem.component.MifosTextFieldDropdown
+import com.mifos.core.designsystem.theme.DesignToken
+import com.mifos.core.ui.components.MifosProgressIndicatorMini
+import com.mifos.core.ui.components.MifosTwoButtonRow
+import com.mifos.feature.recurringDeposit.newRecurringDepositAccount.RecurringAccountAction
+import com.mifos.feature.recurringDeposit.newRecurringDepositAccount.RecurringAccountState
+import org.jetbrains.compose.resources.stringResource
+import kotlin.time.Clock
+import kotlin.time.ExperimentalTime
 
+@OptIn(ExperimentalTime::class, ExperimentalMaterial3Api::class)
 @Composable
-fun DetailsPage(onNext: () -> Unit) {
-    Column(horizontalAlignment = Alignment.CenterHorizontally) {
-        Text("Details Page")
-        Spacer(Modifier.height(8.dp))
-        Button(onClick = onNext) {
-            Text("Next Button")
+fun DetailsPage(
+    state: RecurringAccountState,
+    onAction: (RecurringAccountAction) -> Unit,
+) {
+    val submissionDatePickerState = rememberDatePickerState(
+        initialSelectedDateMillis = Clock.System.now().toEpochMilliseconds(),
+        selectableDates = object : SelectableDates {
+            override fun isSelectableDate(utcTimeMillis: Long): Boolean {
+                return utcTimeMillis >= Clock.System.now().toEpochMilliseconds().minus(86_400_000L)
+            }
+        },
+    )
+
+    if (state.showSubmissionDatePick) {
+        DatePickerDialog(
+            onDismissRequest = {
+                onAction(RecurringAccountAction.OnSubmissionDatePick(state = false))
+            },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        onAction(RecurringAccountAction.OnSubmissionDatePick(state = false))
+                        submissionDatePickerState.selectedDateMillis?.let {
+                            onAction(
+                                RecurringAccountAction.OnSubmissionDateChange(
+                                    DateHelper.getDateAsStringFromLong(it),
+                                ),
+                            )
+                        }
+                    },
+                ) { Text("Select") }
+            },
+            dismissButton = {
+                TextButton(
+                    onClick = {
+                        onAction(RecurringAccountAction.OnSubmissionDatePick(state = false))
+                    },
+                ) { Text("Cancel") }
+            },
+        ) {
+            DatePicker(state = submissionDatePickerState)
         }
+    }
+
+    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+        MifosTextFieldDropdown(
+            value = if (state.loanProductSelected == -1) {
+                ""
+            } else {
+                state.template?.productOptions?.get(state.loanProductSelected)?.name ?: ""
+            },
+            onValueChanged = {},
+            onOptionSelected = { index, value ->
+                onAction(RecurringAccountAction.OnProductNameChange(index))
+            },
+            options = state.template?.productOptions?.map {
+                it.name ?: ""
+            } ?: emptyList(),
+            label = "Product Name",
+        )
+
+        if (!state.template?.fieldOfficerOptions.isNullOrEmpty()) {
+            MifosDatePickerTextField(
+                value = state.submissionDate,
+                label = "Submitted On",
+                openDatePicker = {
+                    onAction(RecurringAccountAction.OnSubmissionDatePick(true))
+                },
+            )
+
+            Spacer(Modifier.height(DesignToken.padding.large))
+            MifosTextFieldDropdown(
+                value = if (state.fieldOfficerIndex == -1) {
+                    ""
+                } else {
+                    state.fieldOfficerOptions?.get(state.fieldOfficerIndex)?.displayName ?: ""
+                },
+                onValueChanged = {},
+                onOptionSelected = { index, value ->
+                    onAction(RecurringAccountAction.OnFieldOfficerChange(index))
+                },
+                options = state.fieldOfficerOptions?.mapNotNull {
+                    it.displayName
+                } ?: emptyList(),
+                label = "Field Officer",
+                errorMessage = if (state.fieldOfficerError != null)stringResource(state.fieldOfficerError) else null,
+            )
+
+            MifosOutlinedTextField(
+                value = state.externalId,
+                onValueChange = {
+                    onAction(RecurringAccountAction.OnExternalIdChange(it))
+                },
+                label = "External Id",
+                config = MifosTextFieldConfig(
+                    keyboardOptions = KeyboardOptions(
+                        keyboardType = KeyboardType.Decimal,
+                    ),
+                ),
+            )
+            Spacer(Modifier.height(DesignToken.padding.large))
+        }
+
+        if (state.isMiniLoaderActive) {
+            MifosProgressIndicatorMini()
+        }
+
+        MifosTwoButtonRow(
+            firstBtnText = "Back",
+            secondBtnText = "Next",
+            onFirstBtnClick = { onAction(RecurringAccountAction.NavigateBack) },
+            onSecondBtnClick = { onAction(RecurringAccountAction.NextStep) },
+            isSecondButtonEnabled = state.isDetailButtonEnabled,
+            modifier = Modifier.padding(top = DesignToken.padding.small),
+        )
     }
 }
