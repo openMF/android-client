@@ -119,8 +119,6 @@ internal fun RecurringDepositAccountDialog(
             )
         }
 
-        RecurringDepositAccountState.DialogState.Loading -> MifosProgressIndicator()
-
         else -> null
     }
 }
@@ -146,92 +144,100 @@ internal fun RecurringDepositAccountScaffold(
                 .fillMaxSize(),
         ) {
             MifosBreadcrumbNavBar(navController)
-            Column(
-                Modifier.fillMaxSize()
-                    .padding(
-                        horizontal = DesignToken.padding.large,
-                    ),
-            ) {
-                val notAvailableText = stringResource(Res.string.client_savings_not_avilable)
-                RecurringDepositAccountHeader(
-                    state.recurringDepositAccounts.size.toString(),
-                    onToggleSearch = {
-                        onAction(RecurringDepositAccountAction.ToggleSearch)
-                    },
-                    onToggleFilter = {
-                        onAction(RecurringDepositAccountAction.ToggleFilter)
-                    },
-                )
 
-                // todo implement search bar functionality
-                if (state.isSearchBarActive) {
-                    MifosSearchBar(
-                        query = state.searchText,
-                        onQueryChange = {
-                            onAction(RecurringDepositAccountAction.UpdateSearch(it))
-                        },
-                        onSearchClick = {
-                            onAction(RecurringDepositAccountAction.Search)
-                        },
-                        onBackClick = {
-                            onAction(RecurringDepositAccountAction.ToggleSearch)
-                        },
-                    )
-                }
+            when (state.isLoading) {
+                true -> MifosProgressIndicator()
+                false -> {
+                    Column(
+                        Modifier.fillMaxSize()
+                            .padding(
+                                horizontal = DesignToken.padding.large,
+                            ),
+                    ) {
+                        val notAvailableText = stringResource(Res.string.client_savings_not_avilable)
+                        RecurringDepositAccountHeader(
+                            state.recurringDepositAccounts.size.toString(),
+                            onToggleSearch = {
+                                onAction(RecurringDepositAccountAction.ToggleSearch)
+                            },
+                            onToggleFilter = {
+                                onAction(RecurringDepositAccountAction.ToggleFilter)
+                            },
+                        )
 
-                Spacer(modifier = Modifier.height(DesignToken.padding.largeIncreasedExtra))
+                        // todo implement search bar functionality
+                        if (state.isSearchBarActive) {
+                            MifosSearchBar(
+                                query = state.searchText,
+                                onQueryChange = {
+                                    onAction(RecurringDepositAccountAction.UpdateSearch(it))
+                                },
+                                onSearchClick = {
+                                    onAction(RecurringDepositAccountAction.Search)
+                                },
+                                onBackClick = {
+                                    onAction(RecurringDepositAccountAction.ToggleSearch)
+                                },
+                            )
+                        }
 
-                if (state.recurringDepositAccounts.isEmpty()) {
-                    MifosEmptyCard(msg = stringResource(Res.string.client_empty_card_message))
-                } else {
-                    LazyColumn {
-                        items(state.recurringDepositAccounts) { recurringDeposit ->
-                            MifosActionsSavingsListingComponent(
-                                accountNo = recurringDeposit.accountNo ?: notAvailableText,
-                                savingsProduct = stringResource(Res.string.client_product_recurring_deposit_account),
-                                savingsProductName = recurringDeposit.shortProductName ?: notAvailableText,
-                                lastActive = if (recurringDeposit.status?.submittedAndPendingApproval == true) {
-                                    stringResource(Res.string.client_savings_pending_approval)
-                                } else if (recurringDeposit.lastActiveTransactionDate != null) {
-                                    DateHelper.getDateAsString(recurringDeposit.lastActiveTransactionDate!!)
-                                } else {
-                                    notAvailableText
-                                },
-                                balance =
-                                if (recurringDeposit.accountBalance != null) {
-                                    "${recurringDeposit.currency?.displaySymbol ?: ""} ${recurringDeposit.accountBalance}"
-                                } else {
-                                    notAvailableText
-                                },
-                                menuList = if (recurringDeposit.status?.submittedAndPendingApproval == true) {
-                                    listOf(
-                                        Actions.ViewAccount(MifosIcons.Calendar),
-                                        Actions.ApproveAccount(),
-                                    )
-                                } else {
-                                    listOf(
-                                        Actions.ViewAccount(MifosIcons.Calendar),
-                                    )
-                                },
-                            ) { actions ->
-                                when (actions) {
-                                    is Actions.ViewAccount -> {
-                                        onAction(
-                                            RecurringDepositAccountAction.ViewAccount(
-                                                recurringDeposit.accountNo ?: "",
-                                            ),
-                                        )
+                        Spacer(modifier = Modifier.height(DesignToken.padding.largeIncreasedExtra))
+
+                        if (state.recurringDepositAccounts.isEmpty()) {
+                            MifosEmptyCard(msg = stringResource(Res.string.client_empty_card_message))
+                        } else {
+                            LazyColumn {
+                                items(state.recurringDepositAccounts) { recurringDeposit ->
+                                    MifosActionsSavingsListingComponent(
+                                        accountNo = recurringDeposit.accountNo ?: notAvailableText,
+                                        savingsProduct = stringResource(Res.string.client_product_recurring_deposit_account),
+                                        savingsProductName = recurringDeposit.shortProductName ?: notAvailableText,
+                                        lastActive = if (recurringDeposit.status?.submittedAndPendingApproval == true) {
+                                            stringResource(Res.string.client_savings_pending_approval)
+                                        } else if (recurringDeposit.lastActiveTransactionDate != null) {
+                                            DateHelper.getDateAsString(recurringDeposit.lastActiveTransactionDate!!)
+                                        } else {
+                                            notAvailableText
+                                        },
+                                        balance =
+                                        if (recurringDeposit.accountBalance != null) {
+                                            "${recurringDeposit.currency?.displaySymbol ?: ""} ${recurringDeposit.accountBalance}"
+                                        } else {
+                                            notAvailableText
+                                        },
+                                        menuList = if (recurringDeposit.status?.submittedAndPendingApproval == true) {
+                                            listOf(
+                                                Actions.ViewAccount(MifosIcons.Calendar),
+                                                Actions.ApproveAccount(),
+                                            )
+                                        } else {
+                                            listOf(
+                                                Actions.ViewAccount(MifosIcons.Calendar),
+                                            )
+                                        },
+                                    ) { actions ->
+                                        when (actions) {
+                                            is Actions.ViewAccount -> {
+                                                onAction(
+                                                    RecurringDepositAccountAction.ViewAccount(
+                                                        recurringDeposit.accountNo ?: "",
+                                                    ),
+                                                )
+                                            }
+                                            is Actions.ApproveAccount -> {
+                                                onAction(
+                                                    RecurringDepositAccountAction.ApproveAccount(
+                                                        recurringDeposit.accountNo ?: "",
+                                                    ),
+                                                )
+                                            }
+                                            else -> null
+                                        }
                                     }
-                                    is Actions.ApproveAccount -> {
-                                        RecurringDepositAccountAction.ApproveAccount(
-                                            recurringDeposit.accountNo ?: "",
-                                        )
-                                    }
-                                    else -> null
+
+                                    Spacer(modifier = Modifier.height(DesignToken.spacing.small))
                                 }
                             }
-
-                            Spacer(modifier = Modifier.height(DesignToken.spacing.small))
                         }
                     }
                 }
