@@ -104,7 +104,6 @@ fun ChargesPage(
             onSecondBtnClick = {
                 onAction(SavingsAccountAction.NextStep)
             },
-            isSecondButtonEnabled = state.isTermsNextEnabled,
             modifier = Modifier.padding(top = DesignToken.padding.small),
         )
     }

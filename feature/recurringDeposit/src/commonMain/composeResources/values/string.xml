@@ -15,4 +15,14 @@
     <string name="step_interest">Interest</string>
     <string name="step_charges">Charges</string>
     <string name="create_recurring_deposit_account">Create Recurring Deposit Account</string>
+    
+    <!-- Details Page Strings -->
+    <string name="select">Select</string>
+    <string name="cancel">Cancel</string>
+    <string name="product_name">Product Name</string>
+    <string name="submitted_on">Submitted On</string>
+    <string name="field_officer">Field Officer</string>
+    <string name="external_id">External Id</string>
+    <string name="back">Back</string>
+    <string name="next">Next</string>
 </resources>

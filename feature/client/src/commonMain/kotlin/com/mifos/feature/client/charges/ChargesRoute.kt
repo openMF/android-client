@@ -7,7 +7,7 @@
  *
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
-package com.mifos.feature.recurringDeposit.newRecurringDepositAccount
+package com.mifos.feature.client.charges
 
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
@@ -15,24 +15,31 @@ import androidx.navigation.compose.composable
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class RecurringAccountRoute(
-    val clientId: Int = -1,
+data class ChargesRoute(
+    val resourceId: Int = -1,
+    val resourceType: String = "",
 )
 
-fun NavGraphBuilder.recurringAccountDestination(
+fun NavGraphBuilder.chargesDestination(
+    onNavigateBack: () -> Unit,
     navController: NavController,
 ) {
-    composable<RecurringAccountRoute> {
-        RecurringAccountScreen(
-            onNavigateBack = {},
-            onFinish = {},
+    composable<ChargesRoute> {
+        ChargesScreen(
+            navigateBack = onNavigateBack,
             navController = navController,
         )
     }
 }
 
-fun NavController.navigateToRecurringAccountRoute(clientId: Int) {
+fun NavController.navigateToChargesRoute(
+    resourceId: Int,
+    resourceType: String,
+) {
     this.navigate(
-        RecurringAccountRoute(clientId = clientId),
+        ChargesRoute(
+            resourceId = resourceId,
+            resourceType = resourceType,
+        ),
     )
 }

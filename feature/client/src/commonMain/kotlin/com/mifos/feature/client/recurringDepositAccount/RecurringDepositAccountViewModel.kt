@@ -118,13 +118,17 @@ class RecurringDepositAccountViewModel(
                                 dialogState = RecurringDepositAccountState.DialogState.Error(
                                     result.message,
                                 ),
+                                isLoading = false,
                             )
                         }
                     }
 
                     is DataState.Loading -> {
                         mutableStateFlow.update {
-                            it.copy(dialogState = RecurringDepositAccountState.DialogState.Loading)
+                            it.copy(
+                                isLoading = true,
+                                dialogState = null,
+                            )
                         }
                     }
 
@@ -143,6 +147,7 @@ class RecurringDepositAccountViewModel(
                                 dialogState = null,
                                 clientId = route.clientId,
                                 recurringDepositAccounts = recurringDepositAccount,
+                                isLoading = false,
                             )
                         }
                     }
@@ -159,10 +164,10 @@ data class RecurringDepositAccountState(
     val dialogState: DialogState? = null,
     val isSearchBarActive: Boolean = false,
     val isFilterDialogOpen: Boolean = false,
+    val isLoading: Boolean = false,
 ) {
     sealed interface DialogState {
         data class Error(val message: String) : DialogState
-        data object Loading : DialogState
     }
 }
 

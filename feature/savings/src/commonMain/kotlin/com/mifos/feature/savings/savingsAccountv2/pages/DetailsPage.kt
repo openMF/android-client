@@ -25,6 +25,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
@@ -35,6 +36,7 @@ import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.input.KeyboardType
 import com.mifos.core.common.utils.DateHelper
 import com.mifos.core.designsystem.component.MifosDatePickerTextField
 import com.mifos.core.designsystem.component.MifosOutlinedTextField
@@ -120,6 +122,7 @@ fun DetailsPage(
                     it.name
                 },
                 label = stringResource(Res.string.feature_savings_product_name),
+                errorMessage = state.savingProductError,
             )
             MifosDatePickerTextField(
                 value = state.submissionDate,
@@ -144,6 +147,7 @@ fun DetailsPage(
                     it.displayName
                 },
                 label = stringResource(Res.string.feature_savings_field_officer),
+                errorMessage = state.fieldOfficerError,
             )
 
             MifosOutlinedTextField(
@@ -153,8 +157,9 @@ fun DetailsPage(
                 },
                 label = stringResource(Res.string.feature_savings_external_id),
                 config = MifosTextFieldConfig(
-                    isError = state.externalIdError != null,
-                    errorText = if (state.externalIdError != null) stringResource(state.externalIdError) else null,
+                    keyboardOptions = KeyboardOptions(
+                        keyboardType = KeyboardType.Decimal,
+                    ),
                 ),
             )
             Spacer(Modifier.height(DesignToken.padding.large))
@@ -164,7 +169,7 @@ fun DetailsPage(
             secondBtnText = stringResource(Res.string.feature_savings_next),
             onFirstBtnClick = { onAction(SavingsAccountAction.NavigateBack) },
             onSecondBtnClick = { onAction(SavingsAccountAction.OnDetailsSubmit) },
-            isSecondButtonEnabled = state.isDetailsNextEnabled,
+            isSecondButtonEnabled = state.submissionDate.isNotEmpty(),
             modifier = Modifier.padding(top = DesignToken.padding.small),
         )
     }

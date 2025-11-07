@@ -24,6 +24,7 @@ import com.mifos.core.network.datamanager.DataManagerIdentifiers
 import com.mifos.core.network.datamanager.DataManagerLoan
 import com.mifos.core.network.datamanager.DataManagerNote
 import com.mifos.core.network.datamanager.DataManagerOffices
+import com.mifos.core.network.datamanager.DataManagerRecurringAccount
 import com.mifos.core.network.datamanager.DataManagerRunReport
 import com.mifos.core.network.datamanager.DataManagerSavings
 import com.mifos.core.network.datamanager.DataManagerSearch
@@ -52,5 +53,6 @@ val DataManagerModule = module {
     single { DataManagerStaff(get(), get(), get()) }
     single { DataManagerSurveys(get(), get(), get()) }
     single { DataManagerIdentifiers(get()) }
+    single { DataManagerRecurringAccount(get()) }
     single { DataManagerShare(get()) }
 }

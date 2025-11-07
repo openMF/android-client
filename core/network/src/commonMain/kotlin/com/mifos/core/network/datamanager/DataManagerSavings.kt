@@ -9,10 +9,10 @@
  */
 package com.mifos.core.network.datamanager
 
+import com.mifos.core.common.utils.extractErrorMessage
 import com.mifos.core.datastore.UserPreferencesRepository
 import com.mifos.core.model.objects.account.loan.SavingsApproval
 import com.mifos.core.model.objects.account.saving.SavingsAccountTransactionResponse
-import com.mifos.core.model.objects.error.MifosError
 import com.mifos.core.model.objects.organisations.ProductSavings
 import com.mifos.core.model.objects.payloads.SavingsPayload
 import com.mifos.core.network.BaseApiManager
@@ -290,22 +290,16 @@ class DataManagerSavings(
 
     fun createSavingsAccount(savingsPayload: SavingsPayload?): Flow<Savings> {
         return mBaseApiManager.savingsService.createSavingsAccount(savingsPayload).map { response ->
-            val responseText = response.bodyAsText()
+
             val json = Json { ignoreUnknownKeys = true }
 
             if (!response.status.isSuccess()) {
-                val errorMessage = try {
-                    val errorResponse = json.decodeFromString<MifosError>(responseText)
-                    errorResponse.errors.firstOrNull()?.defaultUserMessage
-                        ?: errorResponse.defaultUserMessage
-                        ?: "HTTP ${response.status.value} ${response.status.description}"
-                } catch (e: Exception) {
-                    "HTTP ${response.status.value} ${response.status.description}"
-                }
+                val errorMessage = extractErrorMessage(response)
+
                 throw IllegalStateException(errorMessage)
             }
 
-            json.decodeFromString<Savings>(responseText)
+            json.decodeFromString<Savings>(response.bodyAsText())
         }
     }
 

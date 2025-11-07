@@ -30,6 +30,7 @@ fun NavGraphBuilder.clientProfileDestination(
     navigateToClientDetailsScreen: (Int) -> Unit,
     viewAddress: (Int) -> Unit,
     viewAssociatedAccounts: (Int) -> Unit,
+    navigateToAddCharge: (Int) -> Unit,
 ) {
     composable<ClientProfileRoute> {
         ClientProfileScreen(

@@ -933,7 +933,8 @@ private fun MifosActionsChargeListingComponentPreview() {
             collectedOn = "06-09-2025",
             amount = "1500 UGX",
             onActionClicked = { },
-            isExpandable = true,
+            isExpanded = true,
+            onExpandToggle = {},
         )
     }
 }
