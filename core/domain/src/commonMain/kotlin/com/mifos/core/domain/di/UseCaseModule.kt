@@ -35,11 +35,11 @@ import com.mifos.core.domain.useCases.FetchCenterDetailsUseCase
 import com.mifos.core.domain.useCases.FetchCollectionSheetUseCase
 import com.mifos.core.domain.useCases.FetchGroupsAssociatedWithCenterUseCase
 import com.mifos.core.domain.useCases.FetchProductiveCollectionSheetUseCase
-import com.mifos.core.domain.useCases.GetAllChargesV2UseCase
 import com.mifos.core.domain.useCases.GetAllChargesV3UseCase
 import com.mifos.core.domain.useCases.GetAllLoanUseCase
 import com.mifos.core.domain.useCases.GetCenterDetailsUseCase
 import com.mifos.core.domain.useCases.GetCentersInOfficeUseCase
+import com.mifos.core.domain.useCases.GetChargesTemplateUseCase
 import com.mifos.core.domain.useCases.GetCheckerInboxBadgesUseCase
 import com.mifos.core.domain.useCases.GetCheckerTasksUseCase
 import com.mifos.core.domain.useCases.GetClientDetailsUseCase
@@ -117,7 +117,7 @@ val UseCaseModule = module {
     factoryOf(::FetchCollectionSheetUseCase)
     factoryOf(::FetchGroupsAssociatedWithCenterUseCase)
     factoryOf(::FetchProductiveCollectionSheetUseCase)
-    factoryOf(::GetAllChargesV2UseCase)
+    factoryOf(::GetChargesTemplateUseCase)
     factoryOf(::GetAllChargesV3UseCase)
     factoryOf(::GetAllLoanUseCase)
     factoryOf(::GetCenterDetailsUseCase)

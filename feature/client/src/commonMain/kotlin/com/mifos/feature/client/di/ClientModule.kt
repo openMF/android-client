@@ -11,10 +11,10 @@ package com.mifos.feature.client.di
 
 import com.mifos.feature.client.DocumentSelectAndUploadRepository
 import com.mifos.feature.client.DocumentSelectAndUploadRepositoryImpl
+import com.mifos.feature.client.charges.ChargesViewModel
 import com.mifos.feature.client.clientAddDocuments.ClientAddDocumentScreenViewmodel
 import com.mifos.feature.client.clientAddress.ClientAddressViewModel
 import com.mifos.feature.client.clientApplyNewApplications.ClientApplyNewApplicationsViewModel
-import com.mifos.feature.client.clientCharges.ClientChargesViewModel
 import com.mifos.feature.client.clientClosure.ClientClosureViewModel
 import com.mifos.feature.client.clientCollateral.ClientCollateralViewModel
 import com.mifos.feature.client.clientDetails.ClientDetailsViewModel
@@ -50,7 +50,7 @@ import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.module
 
 val ClientModule = module {
-    viewModelOf(::ClientChargesViewModel)
+    viewModelOf(::ChargesViewModel)
     viewModelOf(::ClientDetailsViewModel)
     viewModelOf(::ClientAddressViewModel)
     viewModelOf(::ClientListViewModel)
