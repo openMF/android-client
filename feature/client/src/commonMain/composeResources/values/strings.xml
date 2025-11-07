@@ -60,9 +60,12 @@
     <string name="feature_client_identifier_deleted_successfully">Identifier Deleted Successfully</string>
     <string name="feature_client_failed_to_load_client_charges">Failed To Load Client Charges</string>
     <string name="feature_client_charge_id">Charge Id</string>
+    <string name="feature_client_choose_charge">Choose Charge</string>
+    <string name="feature_client_charge_title">Charge Title</string>
     <string name="feature_client_charge_name">Charge Name</string>
     <string name="feature_client_charge_amount">Amount</string>
     <string name="feature_client_due_date">Due Date</string>
+    <string name="feature_client_collected_on_date">Collected On</string>
     <string name="feature_client_charge_invalid_amount_format">Invalid amount format</string>
     <string name="feature_client_no_more_charges_available">No More Charges Available!</string>
     <string name="feature_client_failed_to_load_more_charges">Failed to load more Charges</string>
@@ -93,6 +96,9 @@
     <string name="feature_client_charge_locale">Locale</string>
     <string name="feature_client_failed_to_load_charges">Failed To Load Charges</string>
     <string name="feature_client_failed_to_create_charge">Failed To Create Charge</string>
+    <string name="feature_client_created_charge_success_title">Charge Added Successfully</string>
+    <string name="feature_client_created_charge_failure_title">Charge Creation Failed</string>
+    <string name="feature_client_created_charge_success_message">Client Charge created successfully. Please continue to go back to Profile Details</string>
     <string name="feature_client_no_charges_found">No Charges Found</string>
 
     <string name="feature_client_failed_to_add_signature">Failed To Add Signature</string>
@@ -548,5 +554,10 @@
 
     <!-- Handle Error-->
     <string name="field_empty">This field cannot be empty</string>
+
+    <!-- Charges -->
+    <string name="charges_update">Update</string>
+    <string name="charges_view_charges">View Charges</string>
+    <string name="charges_client_update_not_support_error_msg">Updating client charges is not supported. Please delete the existing charge and create a new one.</string>
 
 </resources>

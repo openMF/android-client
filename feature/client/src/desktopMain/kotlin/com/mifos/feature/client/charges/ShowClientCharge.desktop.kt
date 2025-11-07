@@ -7,7 +7,7 @@
  *
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
-package com.mifos.feature.client.clientCharges
+package com.mifos.feature.client.charges
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -20,9 +20,9 @@ import com.mifos.room.entities.client.ChargesEntity
 import kotlinx.coroutines.flow.Flow
 
 @Composable
-actual fun ClientChargeContent(
+actual fun ShowClientCharge(
     pagingFlow: Flow<PagingData<ChargesEntity>>,
-    onRetry: () -> Unit,
+    onAction: (ChargesAction) -> Unit,
 ) {
     Box(
         modifier = Modifier.fillMaxSize(),

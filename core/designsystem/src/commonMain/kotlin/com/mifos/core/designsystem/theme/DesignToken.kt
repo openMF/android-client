@@ -93,6 +93,7 @@ data class AppSpacing(
     val extraLarge: Dp = 28.dp,
     val extraLargeIncreased: Dp = 32.dp,
     val extraExtraLarge: Dp = 48.dp,
+    val half: Dp = 500.dp,
     val full: Dp = 1000.dp,
 )
 

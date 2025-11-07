@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Mifos Initiative
+ * Copyright 2025 Mifos Initiative
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -7,16 +7,16 @@
  *
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
-package com.mifos.core.data.repository
+package com.mifos.feature.client.charges
 
+import androidx.compose.runtime.Composable
 import androidx.paging.PagingData
+import com.mifos.core.model.objects.clients.Page
 import com.mifos.room.entities.client.ChargesEntity
 import kotlinx.coroutines.flow.Flow
 
-/**
- * Created by Aditya Gupta on 08/08/23.
- */
-interface ClientChargeRepository {
-
-    fun getClientCharges(clientId: Int): Flow<PagingData<ChargesEntity>>
-}
+@Composable
+expect fun ShowClientCharge(
+    pagingFlow: Flow<PagingData<Page<ChargesEntity>>>,
+    onAction: (ChargesAction) -> Unit,
+)
