@@ -9,6 +9,15 @@
  */
 package com.mifos.feature.recurringDeposit.newRecurringDepositAccount.pages
 
+import androidclient.feature.recurringdeposit.generated.resources.Res
+import androidclient.feature.recurringdeposit.generated.resources.back
+import androidclient.feature.recurringdeposit.generated.resources.cancel
+import androidclient.feature.recurringdeposit.generated.resources.external_id
+import androidclient.feature.recurringdeposit.generated.resources.field_officer
+import androidclient.feature.recurringdeposit.generated.resources.next
+import androidclient.feature.recurringdeposit.generated.resources.product_name
+import androidclient.feature.recurringdeposit.generated.resources.select
+import androidclient.feature.recurringdeposit.generated.resources.submitted_on
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
@@ -71,14 +80,14 @@ fun DetailsPage(
                             )
                         }
                     },
-                ) { Text("Select") }
+                ) { Text(stringResource(Res.string.select)) }
             },
             dismissButton = {
                 TextButton(
                     onClick = {
                         onAction(RecurringAccountAction.OnSubmissionDatePick(state = false))
                     },
-                ) { Text("Cancel") }
+                ) { Text(stringResource(Res.string.cancel)) }
             },
         ) {
             DatePicker(state = submissionDatePickerState)
@@ -99,13 +108,13 @@ fun DetailsPage(
             options = state.template?.productOptions?.map {
                 it.name ?: ""
             } ?: emptyList(),
-            label = "Product Name",
+            label = stringResource(Res.string.product_name),
         )
 
         if (!state.template?.fieldOfficerOptions.isNullOrEmpty()) {
             MifosDatePickerTextField(
                 value = state.submissionDate,
-                label = "Submitted On",
+                label = stringResource(Res.string.submitted_on),
                 openDatePicker = {
                     onAction(RecurringAccountAction.OnSubmissionDatePick(true))
                 },
@@ -125,8 +134,7 @@ fun DetailsPage(
                 options = state.fieldOfficerOptions?.mapNotNull {
                     it.displayName
                 } ?: emptyList(),
-                label = "Field Officer",
-                errorMessage = if (state.fieldOfficerError != null)stringResource(state.fieldOfficerError) else null,
+                label = stringResource(Res.string.field_officer),
             )
 
             MifosOutlinedTextField(
@@ -134,7 +142,7 @@ fun DetailsPage(
                 onValueChange = {
                     onAction(RecurringAccountAction.OnExternalIdChange(it))
                 },
-                label = "External Id",
+                label = stringResource(Res.string.external_id),
                 config = MifosTextFieldConfig(
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.Decimal,
@@ -149,8 +157,8 @@ fun DetailsPage(
         }
 
         MifosTwoButtonRow(
-            firstBtnText = "Back",
-            secondBtnText = "Next",
+            firstBtnText = stringResource(Res.string.back),
+            secondBtnText = stringResource(Res.string.next),
             onFirstBtnClick = { onAction(RecurringAccountAction.NavigateBack) },
             onSecondBtnClick = { onAction(RecurringAccountAction.NextStep) },
             isSecondButtonEnabled = state.isDetailButtonEnabled,
