@@ -225,8 +225,10 @@ internal fun RecurringDepositAccountScaffold(
                                                 )
                                             }
                                             is Actions.ApproveAccount -> {
-                                                RecurringDepositAccountAction.ApproveAccount(
-                                                    recurringDeposit.accountNo ?: "",
+                                                onAction(
+                                                    RecurringDepositAccountAction.ApproveAccount(
+                                                        recurringDeposit.accountNo ?: "",
+                                                    ),
                                                 )
                                             }
                                             else -> null

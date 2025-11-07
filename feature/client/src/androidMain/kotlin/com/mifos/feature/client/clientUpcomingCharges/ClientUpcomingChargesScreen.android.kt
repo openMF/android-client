@@ -64,7 +64,7 @@ actual fun ChargesListContent(
         setCount.invoke(chargesPagingList.itemCount)
     }
 
-    if (chargesPagingList.itemCount == 0) {
+    if (chargesPagingList.loadState.refresh is LoadState.NotLoading && chargesPagingList.itemCount == 0) {
         MifosEmptyCard()
     }
 

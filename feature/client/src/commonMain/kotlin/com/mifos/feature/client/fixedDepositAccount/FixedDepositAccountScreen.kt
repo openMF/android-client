@@ -226,8 +226,10 @@ fun FixedDepositAccountScaffold(
                                             }
 
                                             is Actions.ApproveAccount -> {
-                                                FixedDepositAccountAction.ApproveAccount(
-                                                    fixedDepositAccount.accountNo ?: "",
+                                                onAction(
+                                                    FixedDepositAccountAction.ApproveAccount(
+                                                        fixedDepositAccount.accountNo ?: "",
+                                                    ),
                                                 )
                                             }
 

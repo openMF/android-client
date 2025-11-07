@@ -130,7 +130,10 @@ class FixedDepositAccountViewModel(
 
                     is DataState.Loading -> {
                         mutableStateFlow.update {
-                            it.copy(isLoading = true)
+                            it.copy(
+                                isLoading = true,
+                                dialogState = null,
+                            )
                         }
                     }
 
