@@ -16,6 +16,7 @@ import androidclient.feature.recurringdeposit.generated.resources.step_details
 import androidclient.feature.recurringdeposit.generated.resources.step_interest
 import androidclient.feature.recurringdeposit.generated.resources.step_settings
 import androidclient.feature.recurringdeposit.generated.resources.step_terms
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
@@ -23,7 +24,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import com.mifos.core.designsystem.component.MifosScaffold
+import com.mifos.core.ui.components.MifosBreadcrumbNavBar
 import com.mifos.core.ui.components.MifosErrorComponent
 import com.mifos.core.ui.components.MifosProgressIndicator
 import com.mifos.core.ui.components.MifosStepper
@@ -39,6 +42,7 @@ import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 internal fun RecurringAccountScreen(
+    navController: NavController,
     onNavigateBack: () -> Unit,
     onFinish: () -> Unit,
     modifier: Modifier = Modifier,
@@ -57,12 +61,14 @@ internal fun RecurringAccountScreen(
         modifier = modifier,
         state = state,
         onAction = { viewModel.trySendAction(it) },
+        navController = navController,
     )
 }
 
 @Composable
 private fun RecurringAccountScaffold(
     state: RecurringAccountState,
+    navController: NavController,
     modifier: Modifier = Modifier,
     onAction: (RecurringAccountAction) -> Unit,
 ) {
@@ -100,30 +106,37 @@ private fun RecurringAccountScaffold(
         onBackPressed = { onAction(RecurringAccountAction.NavigateBack) },
         modifier = modifier,
     ) { paddingValues ->
-        when (state.state) {
-            is RecurringAccountState.State.Error -> {
-                MifosErrorComponent(
-                    message = state.state.message,
-                ) {
-                    onAction(RecurringAccountAction.Retry)
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(paddingValues),
+        ) {
+            MifosBreadcrumbNavBar(navController)
+            when (state.state) {
+                is RecurringAccountState.State.Error -> {
+                    MifosErrorComponent(
+                        message = state.state.message,
+                        isRetryEnabled = true,
+                    ) {
+                        onAction(RecurringAccountAction.Retry)
+                    }
                 }
-            }
 
-            is RecurringAccountState.State.Loading -> {
-                MifosProgressIndicator()
-            }
+                is RecurringAccountState.State.Loading -> {
+                    MifosProgressIndicator()
+                }
 
-            is RecurringAccountState.State.Success -> {
-                MifosStepper(
-                    steps = steps,
-                    currentIndex = state.currentStep,
-                    onStepChange = { newIndex ->
-                        onAction(RecurringAccountAction.OnStepChange(newIndex))
-                    },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(paddingValues),
-                )
+                is RecurringAccountState.State.Success -> {
+                    MifosStepper(
+                        steps = steps,
+                        currentIndex = state.currentStep,
+                        onStepChange = { newIndex ->
+                            onAction(RecurringAccountAction.OnStepChange(newIndex))
+                        },
+                        modifier = Modifier
+                            .fillMaxWidth(),
+                    )
+                }
             }
         }
     }

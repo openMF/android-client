@@ -145,7 +145,7 @@ fun DetailsPage(
                 label = stringResource(Res.string.external_id),
                 config = MifosTextFieldConfig(
                     keyboardOptions = KeyboardOptions(
-                        keyboardType = KeyboardType.Decimal,
+                        keyboardType = KeyboardType.Text,
                     ),
                 ),
             )
