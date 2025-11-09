@@ -125,14 +125,15 @@ fun DetailsPage(
                 value = if (state.recurringDepositAccountDetail.fieldOfficerIndex == -1) {
                     ""
                 } else {
-                    state.recurringDepositAccountDetail.fieldOfficerOptions?.get(state.recurringDepositAccountDetail.fieldOfficerIndex)?.displayName ?: ""
+                    state.template.fieldOfficerOptions?.
+                    get(state.recurringDepositAccountDetail.fieldOfficerIndex)?.displayName ?: ""
                 },
                 onValueChanged = {},
                 onOptionSelected = { index, value ->
                     onAction(RecurringAccountAction.RecurringAccountDetailsAction.OnFieldOfficerChange(index))
                 },
-                options = state.recurringDepositAccountDetail.fieldOfficerOptions?.mapNotNull {
-                    it.displayName
+                options = state.template.fieldOfficerOptions?.map {
+                    it.displayName ?: ""
                 } ?: emptyList(),
                 label = stringResource(Res.string.feature_recurring_deposit_field_officer),
             )

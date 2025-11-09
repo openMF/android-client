@@ -58,7 +58,6 @@ internal fun RecurringAccountScreen(
         }
     }
 
-    RecurringDepositAccountDialogBox(state = state)
 
     RecurringAccountScaffold(
         navController = navController,
@@ -141,27 +140,9 @@ private fun RecurringAccountScaffold(
                             .fillMaxWidth(),
                     )
                 }
-
-                null -> {}
             }
         }
     }
 }
 
-@Composable
-fun RecurringDepositAccountDialogBox(
-    state: RecurringAccountState,
-) {
-    when (state.screenState) {
-        is RecurringAccountState.ScreenState.Error -> {
-            MifosSweetError(
-                message = state.screenState.message,
-                isRetryEnabled = true,
-            )
-        }
-        RecurringAccountState.ScreenState.Loading -> {
-            MifosProgressIndicator()
-        }
-        else -> {}
-    }
-}
+

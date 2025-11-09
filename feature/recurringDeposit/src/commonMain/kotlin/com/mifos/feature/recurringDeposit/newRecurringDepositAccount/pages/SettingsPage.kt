@@ -33,9 +33,11 @@ import androidclient.feature.recurringdeposit.generated.resources.feature_recurr
 import androidclient.feature.recurringdeposit.generated.resources.feature_recurring_deposit_type
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
@@ -144,10 +146,8 @@ fun SettingPage(
                     keyboardType = KeyboardType.Number,
                     imeAction = ImeAction.Next,
                 ),
-                leadingIcon = {
-                    Text(
-                        text = state.template.currency?.displaySymbol?: ""
-                    )
+                prefix = {
+                    Text(state.template.currency?.displaySymbol ?: "")
                 }
             ),
             modifier = Modifier.fillMaxWidth(),
@@ -309,7 +309,8 @@ fun SettingPage(
                 )
                 MifosTextFieldDropdown(
                     value = if (settingsState.preMatureClosure.interestPeriodIndex != -1) {
-                        state.template.preClosurePenalInterestOnTypeOptions?.get(settingsState.preMatureClosure.interestPeriodIndex)?.value ?: ""
+                        state.template.preClosurePenalInterestOnTypeOptions?.
+                        get(settingsState.preMatureClosure.interestPeriodIndex)?.value ?: ""
                     } else {
                         ""
                     },
@@ -332,10 +333,8 @@ fun SettingPage(
                             keyboardType = KeyboardType.Number,
                             imeAction = ImeAction.Next,
                         ),
-                        leadingIcon = {
-                            Text(
-                                text = state.template.currency?.displaySymbol?: ""
-                            )
+                        prefix = {
+                            Text(state.template.currency?.displaySymbol ?: "")
                         }
                     ),
                     modifier = Modifier.fillMaxWidth(),

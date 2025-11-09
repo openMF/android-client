@@ -59,6 +59,11 @@ class RecurringAccountViewModel(
             )
         }
     }
+    private fun setSuccessState() {
+        mutableStateFlow.update {
+            it.copy(screenState = ScreenState.Success,)
+        }
+    }
 
     private fun setErrorState(message: String) {
         mutableStateFlow.update {
@@ -144,9 +149,7 @@ class RecurringAccountViewModel(
                         }
 
                         is DataState.Success -> {
-                            mutableStateFlow.update {
-                                it.copy(screenState = null)
-                            }
+                            setSuccessState()
                         }
                     }
                 }
@@ -174,7 +177,7 @@ class RecurringAccountViewModel(
                 isOnline = false,
                 clientId = -1,
                 currentStep = 0,
-                screenState = null,
+                screenState = ScreenState.Loading,
                 recurringDepositAccountDetail = RecurringAccountDetailsState(),
                 template = RecurringDepositAccountTemplate(),
                 recurringDepositAccountSettings = RecurringAccountSettingsState(),
@@ -230,27 +233,21 @@ class RecurringAccountViewModel(
         recurringAccountRepo.getRecurringAccountTemplate().collect { state ->
             when (state) {
                 is DataState.Success -> {
+                    setSuccessState()
                     mutableStateFlow.update {
                         it.copy(
-                            screenState = ScreenState.Success,
+                            template = state.data,
+                            isOnline = true,
                         )
                     }
                 }
 
                 is DataState.Error -> {
-                    mutableStateFlow.update {
-                        it.copy(
-                            screenState = ScreenState.Error(state.message),
-                        )
-                    }
+                    setErrorState(state.message,)
                 }
 
                 DataState.Loading -> {
-                    mutableStateFlow.update {
-                        it.copy(
-                            screenState = ScreenState.Loading,
-                        )
-                    }
+                    setLoadingState()
                 }
             }
         }
@@ -266,8 +263,8 @@ class RecurringAccountViewModel(
                     mutableStateFlow.update {
                         it.copy(
                             screenState = ScreenState.Success,
+                            template = state.data,
                             recurringDepositAccountDetail = it.recurringDepositAccountDetail.copy(
-                                fieldOfficerOptions = state.data.fieldOfficerOptions,
                                 isMiniLoaderActive = false,
                             ),
                         )
@@ -275,9 +272,9 @@ class RecurringAccountViewModel(
                 }
 
                 is DataState.Error -> {
+                    setErrorState(state.message)
                     mutableStateFlow.update {
                         it.copy(
-                            screenState = ScreenState.Error(state.message),
                             recurringDepositAccountDetail = it.recurringDepositAccountDetail.copy(
                                 isMiniLoaderActive = false,
                             ),
@@ -286,13 +283,7 @@ class RecurringAccountViewModel(
                 }
 
                 DataState.Loading -> {
-                    mutableStateFlow.update {
-                        it.copy(
-                            recurringDepositAccountDetail = it.recurringDepositAccountDetail.copy(
-                                isMiniLoaderActive = true,
-                            ),
-                        )
-                    }
+                    setLoadingState()
                 }
             }
         }
@@ -324,7 +315,9 @@ class RecurringAccountViewModel(
                             state.copy(
                                 recurringDepositAccountSettings = state.recurringDepositAccountSettings.copy(
                                     depositPeriod = state.recurringDepositAccountSettings.depositPeriod.copy(
-                                        periodType = action.periodType,
+                                        periodType = state.template.periodFrequencyTypeOptions?.get(
+                                            action.periodType
+                                        )?.id?:-1,
                                     ),
                                 ),
                             )
@@ -348,7 +341,9 @@ class RecurringAccountViewModel(
                             state.copy(
                                 recurringDepositAccountSettings = state.recurringDepositAccountSettings.copy(
                                     lockInPeriod = state.recurringDepositAccountSettings.lockInPeriod.copy(
-                                        frequencyTypeIndex = action.frequencyTypeIndex,
+                                        frequencyTypeIndex = state.template.lockinPeriodFrequencyTypeOptions?.get(
+                                            action.frequencyTypeIndex
+                                        )?.id ?: -1,
                                     ),
                                 ),
                             )
@@ -372,7 +367,9 @@ class RecurringAccountViewModel(
                             state.copy(
                                 recurringDepositAccountSettings = state.recurringDepositAccountSettings.copy(
                                     minimumDepositTerm = state.recurringDepositAccountSettings.minimumDepositTerm.copy(
-                                        frequencyTypeIndex = action.frequencyTypeIndex,
+                                        frequencyTypeIndex = state.template.periodFrequencyTypeOptions?.get(
+                                            action.frequencyTypeIndex
+                                        )?.id ?: -1,
                                     ),
                                 ),
                             )
@@ -396,7 +393,9 @@ class RecurringAccountViewModel(
                             state.copy(
                                 recurringDepositAccountSettings = state.recurringDepositAccountSettings.copy(
                                     minimumDepositTerm = state.recurringDepositAccountSettings.minimumDepositTerm.copy(
-                                        frequencyTypeIndexAfterInMultiplesOf = action.frequencyTypeIndexAfterInMultiplesOf,
+                                        frequencyTypeIndexAfterInMultiplesOf = state.template.periodFrequencyTypeOptions?.get(
+                                            action.frequencyTypeIndexAfterInMultiplesOf
+                                        )?.id ?:-1,
                                     ),
                                 ),
                             )
@@ -408,7 +407,7 @@ class RecurringAccountViewModel(
                             state.copy(
                                 recurringDepositAccountSettings = state.recurringDepositAccountSettings.copy(
                                     maxDepositTerm = state.recurringDepositAccountSettings.maxDepositTerm.copy(
-                                        frequency = action.frequency,
+                                        frequency = action.frequency
                                     ),
                                 ),
                             )
@@ -420,7 +419,9 @@ class RecurringAccountViewModel(
                             state.copy(
                                 recurringDepositAccountSettings = state.recurringDepositAccountSettings.copy(
                                     maxDepositTerm = state.recurringDepositAccountSettings.maxDepositTerm.copy(
-                                        frequencyTypeIndex = action.frequencyTypeIndex,
+                                        frequencyTypeIndex = state.template.periodFrequencyTypeOptions?.get(
+                                            action.frequencyTypeIndex
+                                        )?.id ?: -1,
                                     ),
                                 ),
                             )
@@ -432,7 +433,9 @@ class RecurringAccountViewModel(
                             state.copy(
                                 recurringDepositAccountSettings = state.recurringDepositAccountSettings.copy(
                                     preMatureClosure = state.recurringDepositAccountSettings.preMatureClosure.copy(
-                                        interestPeriodIndex = action.interestPeriodIndex,
+                                        interestPeriodIndex = state.template.preClosurePenalInterestOnTypeOptions?.get(
+                                            action.interestPeriodIndex
+                                        )?.id ?: -1,
                                     ),
                                 ),
                             )
@@ -551,19 +554,6 @@ class RecurringAccountViewModel(
                     is RecurringAccountAction.RecurringAccountDetailsAction.OnExternalIdChange -> {
                         handleExternalIdChange(action)
                     }
-                    is RecurringAccountAction.RecurringAccountDetailsAction.SetProductId -> {
-                        mutableStateFlow.update {
-                            it.copy(
-                                recurringDepositAccountDetail = it.recurringDepositAccountDetail.copy(
-                                    productId = action.productId,
-                                ),
-                            )
-                        }
-                        loadRecurringAccountTemplateWithProduct(
-                            state.clientId,
-                            action.productId
-                        )
-                    }
                 }
             }
 
@@ -604,7 +594,7 @@ data class RecurringAccountState(
     val clientId: Int = -1,
     val currentStep: Int = 0,
     val totalSteps: Int = TOTAL_STEPS,
-    val screenState: ScreenState? = null,
+    val screenState: ScreenState = ScreenState.Loading,
     val recurringDepositAccountDetail: RecurringAccountDetailsState = RecurringAccountDetailsState(),
     val template: RecurringDepositAccountTemplate = RecurringDepositAccountTemplate(),
     val recurringDepositAccountSettings: RecurringAccountSettingsState = RecurringAccountSettingsState(),
@@ -702,7 +692,7 @@ sealed class RecurringAccountAction {
         data class OnSubmissionDatePick(val state: Boolean) : RecurringAccountDetailsAction()
         data class OnFieldOfficerChange(val index: Int) : RecurringAccountDetailsAction()
         data class OnExternalIdChange(val value: String) : RecurringAccountDetailsAction()
-        data class SetProductId(val productId: Int) : RecurringAccountDetailsAction()
+//        data class SetProductId(val productId: Int) : RecurringAccountDetailsAction()
     }
 
     sealed class RecurringAccountSettingsAction : RecurringAccountAction() {

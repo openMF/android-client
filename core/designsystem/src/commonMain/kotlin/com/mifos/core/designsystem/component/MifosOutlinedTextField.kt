@@ -13,6 +13,7 @@ import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsFocusedAsState
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardActions
@@ -443,6 +444,7 @@ fun MifosOutlinedTextField(
         interactionSource = interactionSource,
         singleLine = config.singleLine,
         maxLines = config.maxLines,
+        prefix = config.prefix,
         minLines = config.minLines,
         leadingIcon = config.leadingIcon,
         isError = config.isError,
@@ -489,6 +491,7 @@ data class MifosTextFieldConfig(
     val keyboardOptions: KeyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
     val trailingIcon: @Composable (() -> Unit)? = null,
     val leadingIcon: @Composable (() -> Unit)? = null,
+    val prefix: @Composable (() -> Unit)? = null,
 )
 
 @Preview
