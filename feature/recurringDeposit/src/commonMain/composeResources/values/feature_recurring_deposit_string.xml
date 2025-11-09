@@ -36,4 +36,17 @@
     <string name="feature_recurring_deposit_back">Back</string>
     <string name="feature_recurring_deposit_next">Next</string>
     <string name="feature_recurring_deposit_no_internet_connection">No Internet Connection</string>
+    <string name="feature_recurring_deposit_select">Select</string>
+    <string name="feature_recurring_deposit_cancel">Cancel</string>
+    <string name="feature_recurring_deposit_product_name">Product Name</string>
+    <string name="feature_recurring_deposit_submitted_on">Submitted On</string>
+    <string name="feature_recurring_deposit_field_officer">Field Officer</string>
+    <string name="feature_recurring_deposit_external_id">External Id</string>
+    <string name="feature_recurring_deposit_deposit_amount_is_required">Deposit amount is required</string>
+    <string name="feature_recurring_deposit_lock_in_period_frequency_is_required">Lock-in period frequency is required</string>
+    <string name="feature_recurring_deposit_recurring_frequency_is_required">Recurring frequency is required</string>
+    <string name="feature_recurring_deposit_terms_page">Terms Page</string>
+    <string name="feature_recurring_deposit_next_button">Next Button</string>
+    <string name="feature_recurring_deposit_interest_page">Interest Page</string>
+    <string name="feature_recurring_deposit_charges_page">Charges Page</string>
 </resources>

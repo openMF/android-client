@@ -57,7 +57,6 @@ import com.mifos.core.ui.components.MifosCheckBox
 import com.mifos.core.ui.components.MifosTwoButtonRow
 import com.mifos.feature.recurringDeposit.newRecurringDepositAccount.RecurringAccountAction
 import com.mifos.feature.recurringDeposit.newRecurringDepositAccount.RecurringAccountState
-import io.ktor.websocket.Frame
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
@@ -65,7 +64,7 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 @Composable
 fun SettingPage(
     state: RecurringAccountState,
-    onAction: (RecurringAccountAction.RecurringAccountSettingsAction) -> Unit,
+    onAction: (RecurringAccountAction) -> Unit,
 ) {
     val settingsState = state.recurringDepositAccountSettings
 
@@ -119,11 +118,12 @@ fun SettingPage(
         )
         MifosTextFieldDropdown(
             value = if (settingsState.lockInPeriod.frequencyTypeIndex != -1) {
-                state.recurringDepositAccountTemplate.lockinPeriodFrequencyTypeOptions?.get(settingsState.lockInPeriod.frequencyTypeIndex)?.value ?: ""
+                state.template.lockinPeriodFrequencyTypeOptions?.
+                get(settingsState.lockInPeriod.frequencyTypeIndex)?.value ?: ""
             } else {
                 ""
             },
-            options = state.recurringDepositAccountTemplate.lockinPeriodFrequencyTypeOptions?.map {
+            options = state.template.lockinPeriodFrequencyTypeOptions?.map {
                 it.value ?: ""
             } ?: emptyList(),
             onValueChanged = {},
@@ -146,7 +146,7 @@ fun SettingPage(
                 ),
                 leadingIcon = {
                     Text(
-                        text = state.recurringDepositAccountTemplate.currency?.displaySymbol?: ""
+                        text = state.template.currency?.displaySymbol?: ""
                     )
                 }
             ),
@@ -167,11 +167,12 @@ fun SettingPage(
         )
         MifosTextFieldDropdown(
             value = if (settingsState.depositPeriod.periodType != -1) {
-                state.recurringDepositAccountTemplate.periodFrequencyTypeOptions?.get(settingsState.depositPeriod.periodType)?.value ?: ""
+                state.template.periodFrequencyTypeOptions?.
+                get(settingsState.depositPeriod.periodType)?.value ?: ""
             } else {
                 ""
             },
-            options = state.recurringDepositAccountTemplate.periodFrequencyTypeOptions?.map {
+            options = state.template.periodFrequencyTypeOptions?.map {
                 it.value ?: ""
             } ?: emptyList(),
             onValueChanged = {},
@@ -185,12 +186,14 @@ fun SettingPage(
             MifosCheckBox(
                 text = stringResource(Res.string.feature_recurring_deposit_deposit_frequency_same_as_meeting),
                 checked = settingsState.depositPeriod.depositFrequencySameAsGroupCenterMeeting,
-                onCheckChanged = { onAction(RecurringAccountAction.RecurringAccountSettingsAction.ToggleDepositFrequencySameAsGroupCenterMeeting) },
+                onCheckChanged = {
+                    onAction(RecurringAccountAction.RecurringAccountSettingsAction.ToggleDepositFrequencySameAsGroupCenterMeeting)
+                },
             )
         }
         Text(stringResource(Res.string.feature_recurring_deposit_minimum_deposit_term), fontWeight = FontWeight.Bold)
         MifosOutlinedTextField(
-            value = settingsState.minDepositTerm.frequency,
+            value = settingsState.minimumDepositTerm.frequency,
             onValueChange = {
                 onAction(RecurringAccountAction.RecurringAccountSettingsAction.SetMinDepositTermFreq(it))
             },
@@ -204,12 +207,12 @@ fun SettingPage(
             modifier = Modifier.fillMaxWidth(),
         )
         MifosTextFieldDropdown(
-            value = if (settingsState.minDepositTerm.frequencyTypeIndex != -1) {
-                state.recurringDepositAccountTemplate.periodFrequencyTypeOptions?.get(settingsState.minDepositTerm.frequencyTypeIndex)?.value ?: ""
+            value = if (settingsState.minimumDepositTerm.frequencyTypeIndex != -1) {
+                state.template.periodFrequencyTypeOptions?.get(settingsState.minimumDepositTerm.frequencyTypeIndex)?.value ?: ""
             } else {
                 ""
             },
-            options = state.recurringDepositAccountTemplate.periodFrequencyTypeOptions?.map {
+            options = state.template.periodFrequencyTypeOptions?.map {
                 it.value ?: ""
             } ?: emptyList(),
             onValueChanged = {},
@@ -221,7 +224,7 @@ fun SettingPage(
         )
         Text(stringResource(Res.string.feature_recurring_deposit_in_multiples_of), fontWeight = FontWeight.Bold)
         MifosOutlinedTextField(
-            value = settingsState.minDepositTerm.frequencyAfterInMultiplesOf,
+            value = settingsState.minimumDepositTerm.frequencyAfterInMultiplesOf,
             onValueChange = { onAction(RecurringAccountAction.RecurringAccountSettingsAction.SetMinDepositTermFreqAfterInMultiOf(it)) },
             label = stringResource(Res.string.feature_recurring_deposit_frequency),
             config = MifosTextFieldConfig(
@@ -233,12 +236,12 @@ fun SettingPage(
             modifier = Modifier.fillMaxWidth(),
         )
         MifosTextFieldDropdown(
-            value = if (settingsState.minDepositTerm.frequencyTypeIndexAfterInMultiplesOf != -1) {
-                state.recurringDepositAccountTemplate.periodFrequencyTypeOptions?.get(settingsState.minDepositTerm.frequencyTypeIndexAfterInMultiplesOf)?.value ?: ""
+            value = if (settingsState.minimumDepositTerm.frequencyTypeIndexAfterInMultiplesOf != -1) {
+                state.template.periodFrequencyTypeOptions?.get(settingsState.minimumDepositTerm.frequencyTypeIndexAfterInMultiplesOf)?.value ?: ""
             } else {
                 ""
             },
-            options = state.recurringDepositAccountTemplate.periodFrequencyTypeOptions?.map {
+            options = state.template.periodFrequencyTypeOptions?.map {
                 it.value ?: ""
             } ?: emptyList(),
             onValueChanged = {},
@@ -263,11 +266,11 @@ fun SettingPage(
         )
         MifosTextFieldDropdown(
             value = if (settingsState.maxDepositTerm.frequencyTypeIndex != -1) {
-                state.recurringDepositAccountTemplate.periodFrequencyTypeOptions?.get(settingsState.maxDepositTerm.frequencyTypeIndex)?.value ?: ""
+                state.template.periodFrequencyTypeOptions?.get(settingsState.maxDepositTerm.frequencyTypeIndex)?.value ?: ""
             } else {
                 ""
             },
-            options = state.recurringDepositAccountTemplate.periodFrequencyTypeOptions?.map {
+            options = state.template.periodFrequencyTypeOptions?.map {
                 it.value ?: ""
             } ?: emptyList(),
             onValueChanged = {},
@@ -306,11 +309,11 @@ fun SettingPage(
                 )
                 MifosTextFieldDropdown(
                     value = if (settingsState.preMatureClosure.interestPeriodIndex != -1) {
-                        state.recurringDepositAccountTemplate.preClosurePenalInterestOnTypeOptions?.get(settingsState.preMatureClosure.interestPeriodIndex)?.value ?: ""
+                        state.template.preClosurePenalInterestOnTypeOptions?.get(settingsState.preMatureClosure.interestPeriodIndex)?.value ?: ""
                     } else {
                         ""
                     },
-                    options = state.recurringDepositAccountTemplate.preClosurePenalInterestOnTypeOptions?.map {
+                    options = state.template.preClosurePenalInterestOnTypeOptions?.map {
                         it.value ?: ""
                     } ?: emptyList(),
                     onValueChanged = {},
@@ -331,7 +334,7 @@ fun SettingPage(
                         ),
                         leadingIcon = {
                             Text(
-                                text = state.recurringDepositAccountTemplate.currency?.displaySymbol?: ""
+                                text = state.template.currency?.displaySymbol?: ""
                             )
                         }
                     ),
@@ -345,15 +348,15 @@ fun SettingPage(
             settingsState.recurringDepositDetails.depositAmount.isNotBlank() &&
             settingsState.depositPeriod.period.isNotBlank() &&
             settingsState.lockInPeriod.frequency.isNotBlank() &&
-            settingsState.minDepositTerm.frequency.isNotBlank() &&
-            settingsState.minDepositTerm.frequencyAfterInMultiplesOf.isNotBlank() &&
+            settingsState.minimumDepositTerm.frequency.isNotBlank() &&
+            settingsState.minimumDepositTerm.frequencyAfterInMultiplesOf.isNotBlank() &&
             settingsState.maxDepositTerm.frequency.isNotBlank()
 
         MifosTwoButtonRow(
             firstBtnText = stringResource(Res.string.feature_recurring_deposit_back),
             secondBtnText = stringResource(Res.string.feature_recurring_deposit_next),
-            onFirstBtnClick = { onAction(RecurringAccountAction.RecurringAccountSettingsAction.OnBackPress) },
-            onSecondBtnClick = { onAction(RecurringAccountAction.RecurringAccountSettingsAction.OnNextPress) },
+            onFirstBtnClick = { onAction(RecurringAccountAction.OnBackPress) },
+            onSecondBtnClick = { onAction(RecurringAccountAction.OnNextPress) },
             isButtonIconVisible = true,
             isSecondButtonEnabled = isNextButtonActive,
         )

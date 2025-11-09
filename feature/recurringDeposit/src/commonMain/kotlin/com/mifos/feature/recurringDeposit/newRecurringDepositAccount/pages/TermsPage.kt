@@ -9,6 +9,10 @@
  */
 package com.mifos.feature.recurringDeposit.newRecurringDepositAccount.pages
 
+import androidclient.feature.recurringdeposit.generated.resources.Res
+import androidclient.feature.recurringdeposit.generated.resources.feature_recurring_deposit_next_button
+import androidclient.feature.recurringdeposit.generated.resources.feature_recurring_deposit_terms_page
+import org.jetbrains.compose.resources.stringResource
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
@@ -22,10 +26,10 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun TermsPage(onNext: () -> Unit) {
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
-        Text("Terms Page")
+        Text(stringResource(Res.string.feature_recurring_deposit_terms_page))
         Spacer(Modifier.height(8.dp))
         Button(onClick = onNext) {
-            Text("Next Button")
+            Text(stringResource(Res.string.feature_recurring_deposit_next_button))
         }
     }
 }

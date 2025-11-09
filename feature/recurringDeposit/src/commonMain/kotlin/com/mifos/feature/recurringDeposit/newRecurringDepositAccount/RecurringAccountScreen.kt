@@ -17,22 +17,22 @@ import androidclient.feature.recurringdeposit.generated.resources.feature_recurr
 import androidclient.feature.recurringdeposit.generated.resources.feature_recurring_deposit_step_terms
 import androidclient.feature.recurringdeposit.generated.resources.feature_recurring_deposit_step_details
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.ui.components.MifosBreadcrumbNavBar
+import com.mifos.core.ui.components.MifosErrorComponent
 import com.mifos.core.ui.components.MifosProgressIndicator
 import com.mifos.core.ui.components.MifosStepper
 import com.mifos.core.ui.components.Step
 import com.mifos.core.ui.util.EventsEffect
+import com.mifos.feature.recurringDeposit.newRecurringDepositAccount.RecurringAccountAction.NavigateToStep
 import com.mifos.feature.recurringDeposit.newRecurringDepositAccount.pages.ChargesPage
 import com.mifos.feature.recurringDeposit.newRecurringDepositAccount.pages.DetailsPage
 import com.mifos.feature.recurringDeposit.newRecurringDepositAccount.pages.InterestPage
@@ -84,7 +84,7 @@ private fun RecurringAccountScaffold(
         },
         Step(name = stringResource(Res.string.feature_recurring_deposit_step_terms)) {
             TermsPage(
-                onNext = { onAction(RecurringAccountAction.NextStep) },
+                onNext = { onAction(RecurringAccountAction.OnNextPress) },
             )
         },
         Step(name = stringResource(Res.string.feature_recurring_deposit_step_settings)) {
@@ -95,12 +95,12 @@ private fun RecurringAccountScaffold(
         },
         Step(name = stringResource(Res.string.feature_recurring_deposit_step_interest)) {
             InterestPage(
-                onNext = { onAction(RecurringAccountAction.NextStep) },
+                onNext = { onAction(RecurringAccountAction.OnNextPress) },
             )
         },
         Step(name = stringResource(Res.string.feature_recurring_deposit_step_charges)) {
             ChargesPage(
-                onNext = { onAction(RecurringAccountAction.NextStep) },
+                onNext = { onAction(RecurringAccountAction.OnNextPress) },
             )
         },
     )
@@ -116,31 +116,33 @@ private fun RecurringAccountScaffold(
                 .padding(paddingValues),
         ) {
             MifosBreadcrumbNavBar(navController)
-            when (state.state) {
-                is RecurringAccountState.State.Error -> {
+            when (state.screenState) {
+                is RecurringAccountState.ScreenState.Error -> {
                     MifosErrorComponent(
-                        message = state.state.message,
+                        message = state.screenState.message,
                         isRetryEnabled = true,
                     ) {
                         onAction(RecurringAccountAction.Retry)
                     }
                 }
 
-                is RecurringAccountState.State.Loading -> {
+                is RecurringAccountState.ScreenState.Loading -> {
                     MifosProgressIndicator()
                 }
 
-                is RecurringAccountState.State.Success -> {
+                is RecurringAccountState.ScreenState.Success -> {
                     MifosStepper(
                         steps = steps,
                         currentIndex = state.currentStep,
                         onStepChange = { newIndex ->
-                            onAction(RecurringAccountAction.OnStepChange(newIndex))
+                            onAction(NavigateToStep(newIndex))
                         },
                         modifier = Modifier
                             .fillMaxWidth(),
                     )
                 }
+
+                null -> {}
             }
         }
     }
@@ -160,6 +162,6 @@ fun RecurringDepositAccountDialogBox(
         RecurringAccountState.ScreenState.Loading -> {
             MifosProgressIndicator()
         }
-        null -> {}
+        else -> {}
     }
 }
