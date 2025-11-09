@@ -9,6 +9,12 @@
  */
 package com.mifos.feature.recurringDeposit.newRecurringDepositAccount
 
+import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.viewModelScope
+import androidx.navigation.toRoute
+import com.mifos.core.common.utils.DataState
+import com.mifos.core.data.repository.RecurringAccountRepository
+import com.mifos.core.model.objects.template.recurring.FieldOfficerOption
 import androidclient.feature.recurringdeposit.generated.resources.Res
 import androidclient.feature.recurringdeposit.generated.resources.feature_recurring_deposit_no_internet_connection
 import androidx.lifecycle.SavedStateHandle
@@ -23,10 +29,17 @@ import com.mifos.core.ui.util.BaseViewModel
 import com.mifos.feature.recurringDeposit.newRecurringDepositAccount.RecurringAccountState.ScreenState
 import com.mifos.room.entities.templates.recurringDeposit.RecurringDepositAccountTemplate
 import kotlinx.coroutines.flow.first
+import com.mifos.room.entities.templates.recurringDeposit.RecurringDepositAccountTemplate
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
+import org.jetbrains.compose.resources.StringResource
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.getString
 
+class RecurringAccountViewModel(
+    private val recurringAccountRepo: RecurringAccountRepository,
+    private val savedStateHandle: SavedStateHandle,
+) : BaseViewModel<
 class RecurringAccountViewModel(
     savedStateHandle: SavedStateHandle,
     private val networkMonitor: NetworkMonitor,
@@ -35,7 +48,16 @@ class RecurringAccountViewModel(
     RecurringAccountState,
     RecurringAccountEvent,
     RecurringAccountAction,
-    >(RecurringAccountState()) {
+    >(
+    run {
+        RecurringAccountState(
+            clientId = savedStateHandle.toRoute<RecurringAccountRoute>().clientId,
+        )
+    },
+) {
+    init {
+        loadRecurringAccountTemplate()
+    }
 
     init {
         checkInitialConnectivity()
@@ -269,6 +291,129 @@ class RecurringAccountViewModel(
             RecurringAccountAction.Finish -> {
                 sendEvent(RecurringAccountEvent.Finish)
             }
+
+
+            is RecurringAccountAction.OnProductNameChange -> handleProductNameChange(action)
+
+            is RecurringAccountAction.OnSubmissionDateChange -> handleSubmissionDateChange(action)
+
+            is RecurringAccountAction.OnSubmissionDatePick -> handleSubmissionDatePick(action)
+
+            is RecurringAccountAction.OnFieldOfficerChange -> handleFieldOfficerChange(action)
+
+            is RecurringAccountAction.OnExternalIdChange -> handleExternalIdChange(action)
+
+            RecurringAccountAction.Retry -> resetForRetry()
+        }
+    }
+
+    private fun handleProductNameChange(action: RecurringAccountAction.OnProductNameChange) {
+        mutableStateFlow.update {
+            it.copy(
+                loanProductSelected = action.index,
+            )
+        }
+        loadRecurringAccountTemplateWithProduct(state.clientId, state.template?.productOptions?.get(state.loanProductSelected)?.id ?: -1)
+    }
+
+    private fun resetForRetry() {
+        mutableStateFlow.update {
+            it.copy(
+                currentStep = 0,
+                template = null,
+                state = RecurringAccountState.State.Loading,
+                fieldOfficerOptions = emptyList(),
+            )
+        }
+        loadRecurringAccountTemplate()
+    }
+
+    private fun handleFieldOfficerChange(action: RecurringAccountAction.OnFieldOfficerChange) {
+        mutableStateFlow.update {
+            it.copy(
+                fieldOfficerIndex = action.index,
+                fieldOfficerError = null,
+            )
+        }
+    }
+
+    private fun handleSubmissionDatePick(action: RecurringAccountAction.OnSubmissionDatePick) {
+        mutableStateFlow.update { it.copy(showSubmissionDatePick = action.state) }
+    }
+
+    private fun handleSubmissionDateChange(action: RecurringAccountAction.OnSubmissionDateChange) {
+        mutableStateFlow.update { it.copy(submissionDate = action.date) }
+    }
+
+    private fun handleExternalIdChange(action: RecurringAccountAction.OnExternalIdChange) {
+        mutableStateFlow.update { it.copy(externalId = action.value) }
+    }
+
+    private fun loadRecurringAccountTemplate() = viewModelScope.launch {
+        recurringAccountRepo.getRecuttingAccountRepository().collect { state ->
+            when (state) {
+                is DataState.Success -> {
+                    mutableStateFlow.update {
+                        it.copy(
+                            state = RecurringAccountState.State.Success,
+                            template = state.data,
+                        )
+                    }
+                }
+                is DataState.Error -> {
+                    mutableStateFlow.update {
+                        it.copy(
+                            state = RecurringAccountState.State.Error(state.message),
+                        )
+                    }
+                }
+
+                DataState.Loading -> {
+                    mutableStateFlow.update {
+                        it.copy(
+                            state = RecurringAccountState.State.Loading,
+                        )
+                    }
+                }
+            }
+        }
+    }
+
+    private fun loadRecurringAccountTemplateWithProduct(
+        clientId: Int,
+        productId: Int,
+    ) = viewModelScope.launch {
+        recurringAccountRepo.getRecuttingAccountRepositoryBtProduct(clientId, productId).collect { state ->
+            when (state) {
+                is DataState.Success -> {
+                    mutableStateFlow.update {
+                        it.copy(
+                            state = RecurringAccountState.State.Success,
+                            template = state.data,
+                            fieldOfficerOptions = state.data.fieldOfficerOptions,
+                            isMiniLoaderActive = false,
+                        )
+                    }
+                }
+                is DataState.Error -> {
+                    mutableStateFlow.update {
+                        it.copy(
+                            state = RecurringAccountState.State.Error(state.message),
+                            isMiniLoaderActive = false,
+                        )
+                    }
+                }
+
+                DataState.Loading -> {
+                    mutableStateFlow.update {
+                        it.copy(
+                            isMiniLoaderActive = true,
+                        )
+                    }
+                }
+            }
+        }
+    }
 
             RecurringAccountAction.Retry -> {
                 handleRetry()
@@ -515,17 +660,25 @@ class RecurringAccountViewModel(
 
 data class RecurringAccountState(
     val isOnline: Boolean = false,
+    val clientId: Int,
     val currentStep: Int = 0,
     val totalSteps: Int = 4,
     val screenState: ScreenState? = null,
     val recurringDepositAccountDetail: RecurringAccountDetailsState = RecurringAccountDetailsState(),
     val recurringDepositAccountTemplate: RecurringDepositAccountTemplate = RecurringDepositAccountTemplate(),
+    val currencyIndex: Int = -1,
+    val currencyError: String? = null,
+    val loanProductSelected: Int = -1,
+    val template: RecurringDepositAccountTemplate? = null,
+    val fieldOfficerOptions: List<FieldOfficerOption>? = null,
     val recurringDepositAccountSettings: RecurringAccountSettingsState = RecurringAccountSettingsState(),
 ) {
     sealed interface ScreenState {
         data class Error(val message: String) : ScreenState
         data object Loading : ScreenState
     }
+    val isDetailButtonEnabled = fieldOfficerIndex != -1 && submissionDate.isNotEmpty()
+
 }
 
 data class RecurringAccountDetailsState(
@@ -552,7 +705,8 @@ data class RecurringAccountSettingsState(
 ) {
     data class LockInPeriod(
         val frequency: String = "",
-        val frequencyTypeIndex: Int = 0,
+        val frequencyTypeIndex: Int = -1,
+        val freqTypeError: String? = null,
     )
 
     data class RecurringDepositDetails(
@@ -561,16 +715,18 @@ data class RecurringAccountSettingsState(
 
     data class DepositPeriod(
         val period: String = "",
-        val periodType: Int = 0,
+        val periodType: Int = -1,
+        val periodTypeError: String? = null,
         val depositFrequencySameAsGroupCenterMeeting: Boolean = false,
     )
 
-    data class MinDepositTerm(
+    data class MinimumDepositTerm(
         val frequency: String = "",
-        val frequencyTypeIndex: Int = 0,
-        val frequencyTypeError: String? = null,
+        val frequencyTypeIndex: Int = -1,
+        val freqTypeError: String? = null,
         val frequencyAfterInMultiplesOf: String = "",
-        val frequencyTypeIndexAfterInMultiplesOf: Int = 0,
+        val frequencyTypeIndexAfterInMultiplesOf: Int = -1,
+        val freqTypeAfterInMultiplesOfError: String? = null,
     )
 
     data class MaxDepositTerm(
@@ -583,6 +739,7 @@ data class RecurringAccountSettingsState(
         val applyPenalInterest: Boolean = false,
         val penalInterest: String = "",
         val interestPeriodIndex: Int = -1,
+        val interestPeriodIndexError: String? = null,
         val minimumBalanceForInterestCalculation: String = "",
     )
 }
@@ -593,6 +750,16 @@ sealed class RecurringAccountAction {
     object NavigateBack : RecurringAccountAction()
     object Finish : RecurringAccountAction()
     data object Retry : RecurringAccountAction()
+
+    /*
+        data class OnProductNameChange(val index: Int) : RecurringAccountAction
+    data class OnSubmissionDateChange(val date: String) : RecurringAccountAction
+    data class OnSubmissionDatePick(val state: Boolean) : RecurringAccountAction
+    data class OnFieldOfficerChange(val index: Int) : RecurringAccountAction
+    data class OnExternalIdChange(val value: String) : RecurringAccountAction
+}
+     */
+
     sealed class RecurringAccountDetailsAction : RecurringAccountAction() {
         data class SetProductId(val productId: Int) : RecurringAccountDetailsAction()
     }

@@ -13,10 +13,9 @@ import com.mifos.core.common.network.MifosDispatchers
 import com.mifos.core.data.repository.ActivateRepository
 import com.mifos.core.data.repository.CenterDetailsRepository
 import com.mifos.core.data.repository.CenterListRepository
-import com.mifos.core.data.repository.ChargeDialogRepository
+import com.mifos.core.data.repository.ChargeRepository
 import com.mifos.core.data.repository.CheckerInboxRepository
 import com.mifos.core.data.repository.CheckerInboxTasksRepository
-import com.mifos.core.data.repository.ClientChargeRepository
 import com.mifos.core.data.repository.ClientDetailsEditRepository
 import com.mifos.core.data.repository.ClientDetailsRepository
 import com.mifos.core.data.repository.ClientIdentifiersRepository
@@ -76,10 +75,9 @@ import com.mifos.core.data.repository.SyncSavingsAccountTransactionRepository
 import com.mifos.core.data.repositoryImp.ActivateRepositoryImp
 import com.mifos.core.data.repositoryImp.CenterDetailsRepositoryImp
 import com.mifos.core.data.repositoryImp.CenterListRepositoryImp
-import com.mifos.core.data.repositoryImp.ChargeDialogRepositoryImp
+import com.mifos.core.data.repositoryImp.ChargeRepositoryImp
 import com.mifos.core.data.repositoryImp.CheckerInboxRepositoryImp
 import com.mifos.core.data.repositoryImp.CheckerInboxTasksRepositoryImp
-import com.mifos.core.data.repositoryImp.ClientChargeRepositoryImp
 import com.mifos.core.data.repositoryImp.ClientDetailsEditRepositoryImpl
 import com.mifos.core.data.repositoryImp.ClientDetailsRepositoryImp
 import com.mifos.core.data.repositoryImp.ClientIdentifiersRepositoryImp
@@ -152,7 +150,7 @@ val RepositoryModule = module {
     // Client
     singleOf(::ClientDetailsRepositoryImp) bind ClientDetailsRepository::class
     singleOf(::ClientListRepositoryImp) bind ClientListRepository::class
-    singleOf(::ClientChargeRepositoryImp) bind ClientChargeRepository::class
+    singleOf(::ChargeRepositoryImp) bind ChargeRepository::class
     singleOf(::ClientIdentifiersRepositoryImp) bind ClientIdentifiersRepository::class
     singleOf(::CreateNewClientRepositoryImp) bind CreateNewClientRepository::class
     singleOf(::ClientDetailsEditRepositoryImpl) bind ClientDetailsEditRepository::class
@@ -201,7 +199,6 @@ val RepositoryModule = module {
 
     // Others
     singleOf(::ActivateRepositoryImp) bind ActivateRepository::class
-    singleOf(::ChargeDialogRepositoryImp) bind ChargeDialogRepository::class
     singleOf(::CheckerInboxRepositoryImp) bind CheckerInboxRepository::class
     singleOf(::CheckerInboxTasksRepositoryImp) bind CheckerInboxTasksRepository::class
     singleOf(::DataTableDataRepositoryImp) bind DataTableDataRepository::class

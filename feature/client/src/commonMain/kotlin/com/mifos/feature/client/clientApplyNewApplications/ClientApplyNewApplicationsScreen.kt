@@ -75,9 +75,17 @@ internal fun ClientApplyNewApplicationsScreen(
             is ClientApplyNewApplicationsEvent.OnActionClick -> {
                 when (event.action) {
                     ClientApplyNewApplicationsItem.NewFixedAccount -> onNavigateApplyFixedAccount()
-                    ClientApplyNewApplicationsItem.NewLoanAccount -> onNavigateApplyLoanAccount(state.clientId)
-                    ClientApplyNewApplicationsItem.NewRecurringAccount -> onNavigateApplyRecurringAccount(state.clientId)
-                    ClientApplyNewApplicationsItem.NewSavingsAccount -> onNavigateApplySavingsAccount(state.clientId)
+                    ClientApplyNewApplicationsItem.NewLoanAccount -> onNavigateApplyLoanAccount(
+                        state.clientId,
+                    )
+
+                    ClientApplyNewApplicationsItem.NewRecurringAccount -> onNavigateApplyRecurringAccount(
+                        state.clientId,
+                    )
+                    ClientApplyNewApplicationsItem.NewSavingsAccount -> onNavigateApplySavingsAccount(
+                        state.clientId,
+                    )
+
                     ClientApplyNewApplicationsItem.NewShareAccount -> onNavigateApplyShareAccount(state.clientId)
                 }
             }

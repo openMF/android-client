@@ -104,80 +104,86 @@ fun SavingsAccountsScreen(
                 .padding(paddingValues),
         ) {
             MifosBreadcrumbNavBar(navController)
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(horizontal = DesignToken.padding.large),
-            ) {
-                SavingsAccountsHeader(
-                    totalItem = state.savingsAccounts.size.toString(),
-                    onAction = onAction,
-                )
 
-                // todo implement search bar functionality
-                if (state.isSearchBarActive) {
-                    MifosSearchBar(
-                        query = state.searchText,
-                        onQueryChange = { onAction.invoke(SavingsAccountAction.UpdateSearchValue(it)) },
-                        onSearchClick = { onAction.invoke(SavingsAccountAction.OnSearchClick) },
-                        onBackClick = { onAction.invoke(SavingsAccountAction.ToggleSearch) },
-                    )
-                }
+            when (state.isLoading) {
+                true -> MifosProgressIndicator()
+                false -> {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(horizontal = DesignToken.padding.large),
+                    ) {
+                        SavingsAccountsHeader(
+                            totalItem = state.savingsAccounts.size.toString(),
+                            onAction = onAction,
+                        )
 
-                Spacer(modifier = Modifier.height(16.dp))
-
-                if (state.savingsAccounts.isEmpty()) {
-                    EmptySavingsCard()
-                } else {
-                    LazyColumn {
-                        items(state.savingsAccounts) { savings ->
-                            MifosActionsSavingsListingComponent(
-                                accountNo = savings.accountNo.toString(),
-                                savingsProduct = stringResource(Res.string.client_product_saving_account),
-                                savingsProductName = savings.productName.toString(),
-                                // todo modify with currency symbol when not getting null from api, currently getting null
-                                balance = if (savings.accountBalance != null) {
-                                    "${savings.currency?.displaySymbol ?: ""} ${savings.accountBalance}"
-                                } else {
-                                    stringResource(Res.string.client_savings_not_avilable)
-                                },
-                                menuList = if (savings.status?.submittedAndPendingApproval == true) {
-                                    listOf(
-                                        Actions.ViewAccount(),
-                                        Actions.ApproveAccount(),
-                                    )
-                                } else {
-                                    listOf(
-                                        Actions.ViewAccount(),
-                                    )
-                                },
-                                onActionClicked = { actions ->
-                                    when (actions) {
-                                        is Actions.ViewAccount -> onAction.invoke(
-                                            SavingsAccountAction.ViewAccount(
-                                                state.clientId,
-                                            ),
-                                        )
-
-                                        is Actions.ApproveAccount -> onAction.invoke(
-                                            SavingsAccountAction.ApproveAccount(
-                                                state.clientId,
-                                            ),
-                                        )
-
-                                        else -> null
-                                    }
-                                },
-                                lastActive = if (savings.lastActiveTransactionDate != null) {
-                                    DateHelper.getDateAsString(savings.lastActiveTransactionDate!!)
-                                } else if (savings.status?.submittedAndPendingApproval == true) {
-                                    stringResource(Res.string.client_savings_pending_approval)
-                                } else {
-                                    stringResource(Res.string.client_savings_not_avilable)
-                                },
+                        // todo implement search bar functionality
+                        if (state.isSearchBarActive) {
+                            MifosSearchBar(
+                                query = state.searchText,
+                                onQueryChange = { onAction.invoke(SavingsAccountAction.UpdateSearchValue(it)) },
+                                onSearchClick = { onAction.invoke(SavingsAccountAction.OnSearchClick) },
+                                onBackClick = { onAction.invoke(SavingsAccountAction.ToggleSearch) },
                             )
+                        }
 
-                            Spacer(modifier = Modifier.height(DesignToken.spacing.small))
+                        Spacer(modifier = Modifier.height(16.dp))
+
+                        if (state.savingsAccounts.isEmpty()) {
+                            EmptySavingsCard()
+                        } else {
+                            LazyColumn {
+                                items(state.savingsAccounts) { savings ->
+                                    MifosActionsSavingsListingComponent(
+                                        accountNo = savings.accountNo.toString(),
+                                        savingsProduct = stringResource(Res.string.client_product_saving_account),
+                                        savingsProductName = savings.productName.toString(),
+                                        // todo modify with currency symbol when not getting null from api, currently getting null
+                                        balance = if (savings.accountBalance != null) {
+                                            "${savings.currency?.displaySymbol ?: ""} ${savings.accountBalance}"
+                                        } else {
+                                            stringResource(Res.string.client_savings_not_avilable)
+                                        },
+                                        menuList = if (savings.status?.submittedAndPendingApproval == true) {
+                                            listOf(
+                                                Actions.ViewAccount(),
+                                                Actions.ApproveAccount(),
+                                            )
+                                        } else {
+                                            listOf(
+                                                Actions.ViewAccount(),
+                                            )
+                                        },
+                                        onActionClicked = { actions ->
+                                            when (actions) {
+                                                is Actions.ViewAccount -> onAction.invoke(
+                                                    SavingsAccountAction.ViewAccount(
+                                                        state.clientId,
+                                                    ),
+                                                )
+
+                                                is Actions.ApproveAccount -> onAction.invoke(
+                                                    SavingsAccountAction.ApproveAccount(
+                                                        state.clientId,
+                                                    ),
+                                                )
+
+                                                else -> null
+                                            }
+                                        },
+                                        lastActive = if (savings.lastActiveTransactionDate != null) {
+                                            DateHelper.getDateAsString(savings.lastActiveTransactionDate!!)
+                                        } else if (savings.status?.submittedAndPendingApproval == true) {
+                                            stringResource(Res.string.client_savings_pending_approval)
+                                        } else {
+                                            stringResource(Res.string.client_savings_not_avilable)
+                                        },
+                                    )
+
+                                    Spacer(modifier = Modifier.height(DesignToken.spacing.small))
+                                }
+                            }
                         }
                     }
                 }
@@ -279,8 +285,6 @@ private fun SavingsAccountsDialog(
                 onDismissRequest = {},
             )
         }
-
-        SavingsAccountState.DialogState.Loading -> MifosProgressIndicator()
 
         else -> null
     }

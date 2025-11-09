@@ -24,6 +24,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
@@ -77,7 +78,8 @@ private fun RecurringAccountScaffold(
     val steps = listOf(
         Step(name = stringResource(Res.string.feature_recurring_deposit_step_details)) {
             DetailsPage(
-                onNext = { onAction(RecurringAccountAction.NextStep) },
+                state = state,
+                onAction = onAction,
             )
         },
         Step(name = stringResource(Res.string.feature_recurring_deposit_step_terms)) {
@@ -109,22 +111,36 @@ private fun RecurringAccountScaffold(
         modifier = modifier,
     ) { paddingValues ->
         Column(
-            modifier = Modifier.padding(paddingValues)
-                .fillMaxSize(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(paddingValues),
         ) {
             MifosBreadcrumbNavBar(navController)
+            when (state.state) {
+                is RecurringAccountState.State.Error -> {
+                    MifosErrorComponent(
+                        message = state.state.message,
+                        isRetryEnabled = true,
+                    ) {
+                        onAction(RecurringAccountAction.Retry)
+                    }
+                }
 
-            if (state.screenState == null) {
-                MifosStepper(
-                    steps = steps,
-                    currentIndex = state.currentStep,
-                    onStepChange = { newIndex ->
-                        onAction(RecurringAccountAction.OnStepChange(newIndex))
-                    },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(paddingValues),
-                )
+                is RecurringAccountState.State.Loading -> {
+                    MifosProgressIndicator()
+                }
+
+                is RecurringAccountState.State.Success -> {
+                    MifosStepper(
+                        steps = steps,
+                        currentIndex = state.currentStep,
+                        onStepChange = { newIndex ->
+                            onAction(RecurringAccountAction.OnStepChange(newIndex))
+                        },
+                        modifier = Modifier
+                            .fillMaxWidth(),
+                    )
+                }
             }
         }
     }

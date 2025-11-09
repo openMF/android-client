@@ -34,7 +34,10 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -303,6 +306,8 @@ private fun ShowChargesDialog(
     state: SavingsAccountState,
     onAction: (SavingsAccountAction) -> Unit,
 ) {
+    var expandedIndex: Int? by rememberSaveable { mutableStateOf(-1) }
+
     MifosBottomSheet(
         onDismiss = {
             onAction(SavingsAccountAction.DismissDialog)
@@ -344,7 +349,10 @@ private fun ShowChargesDialog(
                                 else -> {}
                             }
                         },
-                        isExpandable = true,
+                        isExpanded = expandedIndex == it.id,
+                        onExpandToggle = {
+                            expandedIndex = if (expandedIndex == it.id) -1 else it.id
+                        },
                     )
                 }
                 item {

@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -32,6 +33,7 @@ import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.ui.components.Actions
 import com.mifos.core.ui.components.MifosActionsClientFeeListingComponent
+import com.mifos.core.ui.components.MifosEmptyCard
 import com.mifos.core.ui.components.MifosPagingAppendProgress
 import com.mifos.core.ui.components.MifosProgressIndicator
 import com.mifos.room.entities.client.ChargesEntity
@@ -61,6 +63,10 @@ actual fun ChargesListContent(
 
     LaunchedEffect(chargesPagingList) {
         setCount.invoke(chargesPagingList.itemCount)
+    }
+
+    if (chargesPagingList.loadState.refresh is LoadState.NotLoading && chargesPagingList.itemCount == 0) {
+        MifosEmptyCard()
     }
 
     LazyColumn {

@@ -31,9 +31,7 @@ fun NavGraphBuilder.recurringAccountDestination(
     }
 }
 
-fun NavController.navigateToRecurringAccountRoute(
-    clientId: Int,
-) {
+fun NavController.navigateToRecurringAccountRoute(clientId: Int) {
     this.navigate(
         RecurringAccountRoute(clientId = clientId),
     )

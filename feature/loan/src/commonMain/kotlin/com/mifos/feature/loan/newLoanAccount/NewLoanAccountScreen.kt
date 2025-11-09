@@ -41,7 +41,10 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -447,6 +450,8 @@ private fun ShowChargesDialog(
     state: NewLoanAccountState,
     onAction: (NewLoanAccountAction) -> Unit,
 ) {
+    var expandedIndex: Int? by rememberSaveable { mutableStateOf(-1) }
+
     MifosBottomSheet(
         onDismiss = {
             onAction(NewLoanAccountAction.DismissDialog)
@@ -469,7 +474,10 @@ private fun ShowChargesDialog(
                             collectedOn = it.chargeTimeType?.value.toString(),
                             amount = it.amount.toString(),
                             onActionClicked = {},
-                            isExpandable = false,
+                            isExpanded = expandedIndex == it.id,
+                            onExpandToggle = {
+                                expandedIndex = if (expandedIndex == it.id) -1 else it.id
+                            },
                         )
                     }
                 } else {
@@ -497,7 +505,10 @@ private fun ShowChargesDialog(
                                     else -> {}
                                 }
                             },
-                            isExpandable = true,
+                            isExpanded = expandedIndex == it.id,
+                            onExpandToggle = {
+                                expandedIndex = if (expandedIndex == it.id) -1 else it.id
+                            },
                         )
                     }
                 }
