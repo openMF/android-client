@@ -10,7 +10,7 @@
 package com.mifos.feature.recurringDeposit.newRecurringDepositAccount
 
 import androidclient.feature.recurringdeposit.generated.resources.Res
-import androidclient.feature.recurringdeposit.generated.resources.feature_recurringDeposit_no_internet_connection
+import androidclient.feature.recurringdeposit.generated.resources.feature_recurring_deposit_no_internet_connection
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
@@ -71,7 +71,7 @@ class RecurringAccountViewModel(
                 loadTemplateByProduct()
             } else {
                 setErrorState(
-                    getString(Res.string.feature_recurringDeposit_no_internet_connection),
+                    getString(Res.string.feature_recurring_deposit_no_internet_connection),
                 )
             }
         }
@@ -102,7 +102,7 @@ class RecurringAccountViewModel(
         viewModelScope.launch {
             val online = networkMonitor.isOnline.first()
             if (!online) {
-                setErrorState(getString(Res.string.feature_recurringDeposit_no_internet_connection))
+                setErrorState(getString(Res.string.feature_recurring_deposit_no_internet_connection))
                 return@launch
             }
             recurringAccountRepository.getRecurringAccountTemplate().collect { templateState ->
@@ -129,7 +129,7 @@ class RecurringAccountViewModel(
         viewModelScope.launch {
             val online = networkMonitor.isOnline.first()
             if (!online) {
-                setErrorState(getString(Res.string.feature_recurringDeposit_no_internet_connection))
+                setErrorState(getString(Res.string.feature_recurring_deposit_no_internet_connection))
                 return@launch
             }
             recurringAccountRepository.getRecurringAccountTemplateByProduct(
@@ -157,44 +157,26 @@ class RecurringAccountViewModel(
     }
 
     private fun formattedAmount(amount: String): String {
-        val currencySymbol = state.recurringDepositAccountTemplate.currency?.displaySymbol ?: ""
-        if (amount.isEmpty()) return ""
+        // Remove any non-numeric characters except dot, and remove minus signs to prevent negative amounts
+        val cleaned = amount.replace("[^0-9.]".toRegex(), "").replace("-", "")
 
-        val cleaned = amount.replace("[^0-9.-]".toRegex(), "")
+        if (cleaned.isEmpty()) return "$"
 
-        if (cleaned.isEmpty()) return ""
-        if (cleaned == "-") return "-"
-        if (cleaned == ".") return "." // Allows user to type just '.'
+        // Format the number
+        val parts = cleaned.split('.', limit = 2)
+        val intPart = parts[0].trimStart('0').ifEmpty { "0" }
+        val decimalPart = if (parts.size > 1) {
+            val dec = parts[1].take(2)
+            if (dec.isNotEmpty()) ".$dec" else ""
+        } else ""
 
-        val negative = cleaned.startsWith("-")
-        val magnitude = if (negative) cleaned.substring(1) else cleaned
-
-        val parts = magnitude.split('.', limit = 2)
-        var intPart = parts[0].trimStart('0').ifEmpty { "0" } // Clean up leading zeros
-
-        var decimalPart = ""
-        if (parts.size > 1) {
-            decimalPart = parts[1].take(2)
-            if (decimalPart.isNotEmpty() || parts[1].isEmpty()) {
-                decimalPart = ".$decimalPart"
-            }
+        val numericPart = if (intPart == "0" && cleaned.startsWith('.') && decimalPart.isNotEmpty()) {
+            decimalPart
+        } else {
+            "$intPart$decimalPart"
         }
 
-        if (intPart == "0" && magnitude.startsWith('.') && decimalPart.isNotEmpty()) {
-            intPart = ""
-        }
-
-        val numericPart = when {
-            amount.startsWith('.') && decimalPart.isNotEmpty() -> decimalPart
-            amount.startsWith("-.") && decimalPart.isNotEmpty() -> decimalPart
-            else -> "$intPart$decimalPart"
-        }
-
-        val signedNumericPart = if (negative && numericPart.isNotEmpty()) "-$numericPart" else numericPart
-
-        if (amount == "." && signedNumericPart.isEmpty()) return "."
-
-        return "$currencySymbol$signedNumericPart"
+        return "$$numericPart"
     }
 
     private fun createRecurringDepositAccount() {
@@ -204,7 +186,7 @@ class RecurringAccountViewModel(
 
             val online = networkMonitor.isOnline.first()
             if (!online) {
-                setErrorState(getString(Res.string.feature_recurringDeposit_no_internet_connection))
+                setErrorState(getString(Res.string.feature_recurring_deposit_no_internet_connection))
                 return@launch
             }
 
@@ -434,7 +416,7 @@ class RecurringAccountViewModel(
                             state.copy(
                                 recurringDepositAccountSettings = state.recurringDepositAccountSettings.copy(
                                     preMatureClosure = state.recurringDepositAccountSettings.preMatureClosure.copy(
-                                        minimumBalanceForInterestCalculation = formattedAmount(action.minimumBalanceForInterestCalculation),
+                                        minimumBalanceForInterestCalculation = action.minimumBalanceForInterestCalculation,
                                     ),
                                 ),
                             )
@@ -457,7 +439,7 @@ class RecurringAccountViewModel(
                                 recurringDepositAccountSettings = state.recurringDepositAccountSettings.copy(
                                     recurringDepositDetails = state.recurringDepositAccountSettings
                                         .recurringDepositDetails.copy(
-                                            depositAmount = formattedAmount(action.depositAmount),
+                                            depositAmount = action.depositAmount,
                                         ),
                                 ),
                             )

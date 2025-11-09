@@ -425,7 +425,13 @@ fun MifosOutlinedTextField(
         shape = shape,
         colors = colors,
         value = value,
-        label = { Text(text = label) },
+        label = {
+            Text(
+                text = label,
+                maxLines = 1,
+                softWrap = true
+            )
+        },
         onValueChange = onValueChange,
         textStyle = textStyle,
         modifier = modifier.fillMaxWidth(),
