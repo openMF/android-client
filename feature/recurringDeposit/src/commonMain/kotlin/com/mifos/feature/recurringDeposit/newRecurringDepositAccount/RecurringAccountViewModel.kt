@@ -229,7 +229,7 @@ class RecurringAccountViewModel(
     }
 
     private fun loadRecurringAccountTemplate() = viewModelScope.launch {
-        recurringAccountRepo.getRecurringAccountTemplate().collect { state ->
+        recurringAccountRepo.getRecurringAccountTemplate(clientId = state.clientId).collect { state ->
             when (state) {
                 is DataState.Success -> {
                     setSuccessState()

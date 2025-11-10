@@ -23,7 +23,7 @@ class RecurringAccountRepositoryImp(
 ) : RecurringAccountRepository {
 
     override fun getRecurringAccountTemplate(
-        clientId: Int?,
+        clientId: Int,
         productId: Int?,
     ): Flow<DataState<RecurringDepositAccountTemplate>> {
         return dataManagerRecurringAccount.getRecurringDepositAccountTemplate(

@@ -28,7 +28,7 @@ interface RecurringAccountService {
 
     @GET(APIEndPoint.CREATE_RECURRING_DEPOSIT_ACCOUNTS + "/template")
     fun getRecurringDepositAccountTemplate(
-        @Query("clientId") clientId: Int?,
+        @Query("clientId") clientId: Int,
         @Query("productId") productId: Int?,
     ): Flow<RecurringDepositAccountTemplate>
 }

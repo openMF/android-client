@@ -27,7 +27,7 @@ class DataManagerRecurringAccount(
     }
 
     fun getRecurringDepositAccountTemplate(
-        clientId: Int?,
+        clientId: Int,
         productId: Int?,
     ): Flow<RecurringDepositAccountTemplate> {
         return mBaseApiManager.recurringSavingsAccountService.getRecurringDepositAccountTemplate(
