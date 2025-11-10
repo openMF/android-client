@@ -119,12 +119,12 @@ fun SettingPage(
         MifosTextFieldDropdown(
             value = if (settingsState.lockInPeriod.frequencyTypeIndex != -1) {
                 state.template.lockinPeriodFrequencyTypeOptions
-                    ?.get(settingsState.lockInPeriod.frequencyTypeIndex)?.value ?: ""
+                    ?.getOrNull(settingsState.lockInPeriod.frequencyTypeIndex)?.value.orEmpty()
             } else {
                 ""
             },
             options = state.template.lockinPeriodFrequencyTypeOptions?.map {
-                it.value ?: ""
+                it.value.orEmpty()
             } ?: emptyList(),
             onValueChanged = {},
             onOptionSelected = { id, name ->
@@ -145,7 +145,7 @@ fun SettingPage(
                     imeAction = ImeAction.Next,
                 ),
                 prefix = {
-                    Text(state.template.currency?.displaySymbol ?: "")
+                    Text(state.template.currency?.displaySymbol.orEmpty())
                 },
             ),
             modifier = Modifier.fillMaxWidth(),
@@ -166,12 +166,12 @@ fun SettingPage(
         MifosTextFieldDropdown(
             value = if (settingsState.depositPeriod.periodType != -1) {
                 state.template.periodFrequencyTypeOptions
-                    ?.get(settingsState.depositPeriod.periodType)?.value ?: ""
+                    ?.getOrNull(settingsState.depositPeriod.periodType)?.value.orEmpty()
             } else {
                 ""
             },
             options = state.template.periodFrequencyTypeOptions?.map {
-                it.value ?: ""
+                it.value.orEmpty()
             } ?: emptyList(),
             onValueChanged = {},
             onOptionSelected = { id, name ->
@@ -206,12 +206,12 @@ fun SettingPage(
         )
         MifosTextFieldDropdown(
             value = if (settingsState.minimumDepositTerm.frequencyTypeIndex != -1) {
-                state.template.periodFrequencyTypeOptions?.get(settingsState.minimumDepositTerm.frequencyTypeIndex)?.value ?: ""
+                state.template.periodFrequencyTypeOptions?.getOrNull(settingsState.minimumDepositTerm.frequencyTypeIndex)?.value.orEmpty()
             } else {
                 ""
             },
             options = state.template.periodFrequencyTypeOptions?.map {
-                it.value ?: ""
+                it.value.orEmpty()
             } ?: emptyList(),
             onValueChanged = {},
             onOptionSelected = { id, name ->
@@ -235,12 +235,12 @@ fun SettingPage(
         )
         MifosTextFieldDropdown(
             value = if (settingsState.minimumDepositTerm.frequencyTypeIndexAfterInMultiplesOf != -1) {
-                state.template.periodFrequencyTypeOptions?.get(settingsState.minimumDepositTerm.frequencyTypeIndexAfterInMultiplesOf)?.value ?: ""
+                state.template.periodFrequencyTypeOptions?.getOrNull(settingsState.minimumDepositTerm.frequencyTypeIndexAfterInMultiplesOf)?.value.orEmpty()
             } else {
                 ""
             },
             options = state.template.periodFrequencyTypeOptions?.map {
-                it.value ?: ""
+                it.value.orEmpty()
             } ?: emptyList(),
             onValueChanged = {},
             onOptionSelected = { id, name ->
@@ -264,12 +264,12 @@ fun SettingPage(
         )
         MifosTextFieldDropdown(
             value = if (settingsState.maxDepositTerm.frequencyTypeIndex != -1) {
-                state.template.periodFrequencyTypeOptions?.get(settingsState.maxDepositTerm.frequencyTypeIndex)?.value ?: ""
+                state.template.periodFrequencyTypeOptions?.getOrNull(settingsState.maxDepositTerm.frequencyTypeIndex)?.value.orEmpty()
             } else {
                 ""
             },
             options = state.template.periodFrequencyTypeOptions?.map {
-                it.value ?: ""
+                it.value.orEmpty()
             } ?: emptyList(),
             onValueChanged = {},
             onOptionSelected = { id, name ->
@@ -308,12 +308,12 @@ fun SettingPage(
                 MifosTextFieldDropdown(
                     value = if (settingsState.preMatureClosure.interestPeriodIndex != -1) {
                         state.template.preClosurePenalInterestOnTypeOptions
-                            ?.get(settingsState.preMatureClosure.interestPeriodIndex)?.value ?: ""
+                            ?.getOrNull(settingsState.preMatureClosure.interestPeriodIndex)?.value.orEmpty()
                     } else {
                         ""
                     },
                     options = state.template.preClosurePenalInterestOnTypeOptions?.map {
-                        it.value ?: ""
+                        it.value.orEmpty()
                     } ?: emptyList(),
                     onValueChanged = {},
                     onOptionSelected = { id, name ->
@@ -332,7 +332,7 @@ fun SettingPage(
                             imeAction = ImeAction.Next,
                         ),
                         prefix = {
-                            Text(state.template.currency?.displaySymbol ?: "")
+                            Text(state.template.currency?.displaySymbol.orEmpty())
                         },
                     ),
                     modifier = Modifier.fillMaxWidth(),
@@ -340,22 +340,13 @@ fun SettingPage(
             }
         }
 
-        val isNextButtonActive = settingsState.preMatureClosure.penalInterest.isNotBlank() &&
-            settingsState.preMatureClosure.minimumBalanceForInterestCalculation.isNotBlank() &&
-            settingsState.recurringDepositDetails.depositAmount.isNotBlank() &&
-            settingsState.depositPeriod.period.isNotBlank() &&
-            settingsState.lockInPeriod.frequency.isNotBlank() &&
-            settingsState.minimumDepositTerm.frequency.isNotBlank() &&
-            settingsState.minimumDepositTerm.frequencyAfterInMultiplesOf.isNotBlank() &&
-            settingsState.maxDepositTerm.frequency.isNotBlank()
-
         MifosTwoButtonRow(
             firstBtnText = stringResource(Res.string.feature_recurring_deposit_back),
             secondBtnText = stringResource(Res.string.feature_recurring_deposit_next),
             onFirstBtnClick = { onAction(RecurringAccountAction.OnBackPress) },
             onSecondBtnClick = { onAction(RecurringAccountAction.OnNextPress) },
             isButtonIconVisible = true,
-            isSecondButtonEnabled = isNextButtonActive,
+            isSecondButtonEnabled = settingsState.isSettingsNextEnabled,
         )
     }
 }

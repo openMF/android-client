@@ -94,7 +94,7 @@ class RecurringAccountViewModel(
                 setErrorState(getString(Res.string.feature_recurring_deposit_no_internet_connection))
                 return@launch
             }
-            val lockinFreq = settings.lockInPeriod.frequency.toIntOrNull()
+            val lockInFreq = settings.lockInPeriod.frequency.toIntOrNull()
             val depositAmountInt = settings.recurringDepositDetails.depositAmount
                 .filter(Char::isDigit)
                 .toIntOrNull()
@@ -117,7 +117,7 @@ class RecurringAccountViewModel(
                 isCalendarInherited = null,
                 isMandatoryDeposit = settings.isMandatory,
                 locale = "en",
-                lockinPeriodFrequency = lockinFreq,
+                lockinPeriodFrequency = lockInFreq,
                 lockinPeriodFrequencyType = settings.lockInPeriod.frequencyTypeIndex,
                 mandatoryRecommendedDepositAmount = depositAmountInt,
                 monthDayFormat = "dd MMMM",
@@ -134,7 +134,7 @@ class RecurringAccountViewModel(
                         is DataState.Error -> {
                             if (depositAmountInt == null) {
                                 setErrorState(getString(Res.string.feature_recurring_deposit_deposit_amount_is_required))
-                            } else if (lockinFreq == null) {
+                            } else if (lockInFreq == null) {
                                 setErrorState(getString(Res.string.feature_recurring_deposit_lock_in_period_frequency_is_required))
                             } else if (recurringFreq == null) {
                                 setErrorState(getString(Res.string.feature_recurring_deposit_recurring_frequency_is_required))
@@ -628,6 +628,7 @@ data class RecurringAccountSettingsState(
     val maxDepositTerm: MaxDepositTerm = MaxDepositTerm(),
     val preMatureClosure: PreMatureClosure = PreMatureClosure(),
 ) {
+
     data class LockInPeriod(
         val frequency: String = "",
         val frequencyTypeIndex: Int = -1,
@@ -667,6 +668,15 @@ data class RecurringAccountSettingsState(
         val interestPeriodIndexError: String? = null,
         val minimumBalanceForInterestCalculation: String = "",
     )
+
+    val isSettingsNextEnabled = preMatureClosure.penalInterest.isNotBlank() &&
+        preMatureClosure.minimumBalanceForInterestCalculation.isNotBlank() &&
+        recurringDepositDetails.depositAmount.isNotBlank() &&
+        depositPeriod.period.isNotBlank() &&
+        lockInPeriod.frequency.isNotBlank() &&
+        minimumDepositTerm.frequency.isNotBlank() &&
+        minimumDepositTerm.frequencyAfterInMultiplesOf.isNotBlank() &&
+        maxDepositTerm.frequency.isNotBlank()
 }
 
 sealed class RecurringAccountAction {
@@ -682,7 +692,6 @@ sealed class RecurringAccountAction {
         data class OnSubmissionDatePick(val state: Boolean) : RecurringAccountDetailsAction()
         data class OnFieldOfficerChange(val index: Int) : RecurringAccountDetailsAction()
         data class OnExternalIdChange(val value: String) : RecurringAccountDetailsAction()
-//        data class SetProductId(val productId: Int) : RecurringAccountDetailsAction()
     }
 
     sealed class RecurringAccountSettingsAction : RecurringAccountAction() {
