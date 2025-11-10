@@ -21,16 +21,12 @@ import kotlinx.coroutines.flow.Flow
 class RecurringAccountRepositoryImp(
     val dataManagerRecurringAccount: DataManagerRecurringAccount,
 ) : RecurringAccountRepository {
-    override fun getRecurringAccountTemplate(): Flow<DataState<RecurringDepositAccountTemplate>> {
-        return dataManagerRecurringAccount.getRecurringDepositAccountTemplate
-            .asDataStateFlow()
-    }
 
-    override fun getRecurringAccountTemplateByProduct(
-        clientId: Int,
-        productId: Int,
+    override fun getRecurringAccountTemplate(
+        clientId: Int?,
+        productId: Int?,
     ): Flow<DataState<RecurringDepositAccountTemplate>> {
-        return dataManagerRecurringAccount.getRecurringDepositAccountTemplateByProduct(
+        return dataManagerRecurringAccount.getRecurringDepositAccountTemplate(
             clientId,
             productId,
         ).asDataStateFlow()

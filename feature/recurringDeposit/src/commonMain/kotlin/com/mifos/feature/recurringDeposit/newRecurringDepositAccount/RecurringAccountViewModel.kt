@@ -256,7 +256,7 @@ class RecurringAccountViewModel(
         clientId: Int,
         productId: Int,
     ) = viewModelScope.launch {
-        recurringAccountRepo.getRecurringAccountTemplateByProduct(clientId, productId).collect { state ->
+        recurringAccountRepo.getRecurringAccountTemplate(clientId, productId).collect { state ->
             when (state) {
                 is DataState.Success -> {
                     mutableStateFlow.update {

@@ -17,11 +17,9 @@ import kotlinx.coroutines.flow.Flow
 
 interface RecurringAccountRepository {
 
-    fun getRecurringAccountTemplate(): Flow<DataState<RecurringDepositAccountTemplate>>
-
-    fun getRecurringAccountTemplateByProduct(
-        clientId: Int,
-        productId: Int,
+    fun getRecurringAccountTemplate(
+        clientId: Int? = null,
+        productId: Int? = null,
     ): Flow<DataState<RecurringDepositAccountTemplate>>
 
     fun createRecurringDepositAccount(
