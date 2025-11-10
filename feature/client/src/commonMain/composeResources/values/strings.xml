@@ -539,21 +539,33 @@
     <string name="title_new_fixed_deposit_account">New Fixed Deposit Account</string>
 
     <!-- Create Share Account -->
-    <string name="share_account_details">Details</string>
-    <string name="share_account_terms">Terms</string>
-    <string name="share_account_charges">Charges</string>
-    <string name="share_account_preview">Preview</string>
-    <string name="share_account_back">Back</string>
-    <string name="share_account_next">Next</string>
+    <string name="feature_share_account_details">Details</string>
+    <string name="feature_share_account_terms">Terms</string>
+    <string name="feature_share_account_charges">Charges</string>
+    <string name="feature_share_account_preview">Preview</string>
+    <string name="feature_share_account_back">Back</string>
+    <string name="feature_share_account_next">Next</string>
 
-    <string name="share_account_detail_product_name">Product Name*</string>
-    <string name="share_account_detail_submission_date">Submission Date*</string>
-    <string name="share_account_detail_external_id">External Id</string>
-    <string name="share_account_detail_date_select">Select</string>
-    <string name="share_account_detail_date_cancel">Cancel</string>
+    <string name="feature_share_account_detail_product_name">Product Name*</string>
+    <string name="feature_share_account_detail_submission_date">Submission Date*</string>
+    <string name="feature_share_account_detail_external_id">External Id</string>
+    <string name="feature_share_account_detail_date_select">Select</string>
+    <string name="feature_share_account_detail_date_cancel">Cancel</string>
+
+    <string name="feature_share_account_terms_currency">Currency</string>
+    <string name="feature_share_account_terms_current_price">Current Price</string>
+    <string name="feature_share_account_terms_total_shares">Total Number of Shares</string>
+    <string name="feature_share_account_terms_default_savings_account">Default Savings Account</string>
+    <string name="feature_share_account_terms_application_date">Application Date</string>
+    <string name="feature_share_account_terms_allow_dividends">Allow dividends for inactive clients</string>
+    <string name="feature_share_account_terms_min_active_period">Minimum Active Period</string>
+    <string name="feature_share_account_terms_frequency">Frequency</string>
+    <string name="feature_share_account_terms_type">Type</string>
+    <string name="feature_share_account_terms_lock_in_period">Lock-in Period</string>
+
 
     <!-- Handle Error-->
-    <string name="field_empty">This field cannot be empty</string>
+    <string name="feature_share_account_field_empty">This field cannot be empty</string>
 
     <!-- Charges -->
     <string name="charges_update">Update</string>

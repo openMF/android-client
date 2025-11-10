@@ -9,20 +9,34 @@
  */
 package com.mifos.core.network.model.share
 
-import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
 data class ProductOption(
-    @SerialName("id")
     val id: Int,
 
-    @SerialName("name")
     val name: String,
 
-    @SerialName("shortName")
     val shortName: String,
 
-    @SerialName("totalShares")
     val totalShares: Int,
+
+    val currency: ProductCurrency? = null,
+
+    val unitPrice: Double? = null,
+)
+
+@Serializable
+data class ProductCurrency(
+    val code: String,
+
+    val name: String,
+
+    val decimalPlaces: Int? = null,
+
+    val displaySymbol: String? = null,
+
+    val nameCode: String? = null,
+
+    val displayLabel: String? = null,
 )

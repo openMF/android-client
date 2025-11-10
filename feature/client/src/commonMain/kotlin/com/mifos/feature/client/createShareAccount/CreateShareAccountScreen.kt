@@ -10,10 +10,10 @@
 package com.mifos.feature.client.createShareAccount
 
 import androidclient.feature.client.generated.resources.Res
-import androidclient.feature.client.generated.resources.share_account_charges
-import androidclient.feature.client.generated.resources.share_account_details
-import androidclient.feature.client.generated.resources.share_account_preview
-import androidclient.feature.client.generated.resources.share_account_terms
+import androidclient.feature.client.generated.resources.feature_share_account_charges
+import androidclient.feature.client.generated.resources.feature_share_account_details
+import androidclient.feature.client.generated.resources.feature_share_account_preview
+import androidclient.feature.client.generated.resources.feature_share_account_terms
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -71,23 +71,24 @@ private fun CreateShareAccountContent(
     navController: NavController,
 ) {
     val steps = listOf(
-        Step(name = stringResource(Res.string.share_account_details)) {
+        Step(name = stringResource(Res.string.feature_share_account_details)) {
             DetailsPage(
                 state = state,
                 onAction = onAction,
             )
         },
-        Step(name = stringResource(Res.string.share_account_terms)) {
+        Step(name = stringResource(Res.string.feature_share_account_terms)) {
             TermsPage(
-                onNext = { onAction(ShareAccountAction.NextStep) },
+                state = state,
+                onAction = onAction,
             )
         },
-        Step(name = stringResource(Res.string.share_account_charges)) {
+        Step(name = stringResource(Res.string.feature_share_account_charges)) {
             ChargesPage(
                 onNext = { onAction(ShareAccountAction.NextStep) },
             )
         },
-        Step(name = stringResource(Res.string.share_account_preview)) {
+        Step(name = stringResource(Res.string.feature_share_account_preview)) {
             PreviewPage(
                 onNext = { onAction(ShareAccountAction.Finish) },
             )
