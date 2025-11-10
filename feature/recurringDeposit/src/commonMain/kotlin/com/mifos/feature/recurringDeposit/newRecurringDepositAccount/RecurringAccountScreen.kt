@@ -12,10 +12,10 @@ package com.mifos.feature.recurringDeposit.newRecurringDepositAccount
 import androidclient.feature.recurringdeposit.generated.resources.Res
 import androidclient.feature.recurringdeposit.generated.resources.feature_recurring_deposit_create_recurring_deposit_account
 import androidclient.feature.recurringdeposit.generated.resources.feature_recurring_deposit_step_charges
+import androidclient.feature.recurringdeposit.generated.resources.feature_recurring_deposit_step_details
 import androidclient.feature.recurringdeposit.generated.resources.feature_recurring_deposit_step_interest
 import androidclient.feature.recurringdeposit.generated.resources.feature_recurring_deposit_step_settings
 import androidclient.feature.recurringdeposit.generated.resources.feature_recurring_deposit_step_terms
-import androidclient.feature.recurringdeposit.generated.resources.feature_recurring_deposit_step_details
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -25,7 +25,6 @@ import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.mifos.core.designsystem.component.MifosScaffold
-import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.ui.components.MifosBreadcrumbNavBar
 import com.mifos.core.ui.components.MifosErrorComponent
 import com.mifos.core.ui.components.MifosProgressIndicator
@@ -57,7 +56,6 @@ internal fun RecurringAccountScreen(
             RecurringAccountEvent.Finish -> onFinish()
         }
     }
-
 
     RecurringAccountScaffold(
         navController = navController,
@@ -144,5 +142,3 @@ private fun RecurringAccountScaffold(
         }
     }
 }
-
-

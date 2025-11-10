@@ -33,11 +33,9 @@ import androidclient.feature.recurringdeposit.generated.resources.feature_recurr
 import androidclient.feature.recurringdeposit.generated.resources.feature_recurring_deposit_type
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
@@ -120,8 +118,8 @@ fun SettingPage(
         )
         MifosTextFieldDropdown(
             value = if (settingsState.lockInPeriod.frequencyTypeIndex != -1) {
-                state.template.lockinPeriodFrequencyTypeOptions?.
-                get(settingsState.lockInPeriod.frequencyTypeIndex)?.value ?: ""
+                state.template.lockinPeriodFrequencyTypeOptions
+                    ?.get(settingsState.lockInPeriod.frequencyTypeIndex)?.value ?: ""
             } else {
                 ""
             },
@@ -148,7 +146,7 @@ fun SettingPage(
                 ),
                 prefix = {
                     Text(state.template.currency?.displaySymbol ?: "")
-                }
+                },
             ),
             modifier = Modifier.fillMaxWidth(),
         )
@@ -167,8 +165,8 @@ fun SettingPage(
         )
         MifosTextFieldDropdown(
             value = if (settingsState.depositPeriod.periodType != -1) {
-                state.template.periodFrequencyTypeOptions?.
-                get(settingsState.depositPeriod.periodType)?.value ?: ""
+                state.template.periodFrequencyTypeOptions
+                    ?.get(settingsState.depositPeriod.periodType)?.value ?: ""
             } else {
                 ""
             },
@@ -309,8 +307,8 @@ fun SettingPage(
                 )
                 MifosTextFieldDropdown(
                     value = if (settingsState.preMatureClosure.interestPeriodIndex != -1) {
-                        state.template.preClosurePenalInterestOnTypeOptions?.
-                        get(settingsState.preMatureClosure.interestPeriodIndex)?.value ?: ""
+                        state.template.preClosurePenalInterestOnTypeOptions
+                            ?.get(settingsState.preMatureClosure.interestPeriodIndex)?.value ?: ""
                     } else {
                         ""
                     },
@@ -335,7 +333,7 @@ fun SettingPage(
                         ),
                         prefix = {
                             Text(state.template.currency?.displaySymbol ?: "")
-                        }
+                        },
                     ),
                     modifier = Modifier.fillMaxWidth(),
                 )

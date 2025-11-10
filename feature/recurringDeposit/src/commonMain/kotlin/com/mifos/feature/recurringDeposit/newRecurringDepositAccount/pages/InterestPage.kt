@@ -12,7 +12,6 @@ package com.mifos.feature.recurringDeposit.newRecurringDepositAccount.pages
 import androidclient.feature.recurringdeposit.generated.resources.Res
 import androidclient.feature.recurringdeposit.generated.resources.feature_recurring_deposit_interest_page
 import androidclient.feature.recurringdeposit.generated.resources.feature_recurring_deposit_next_button
-import org.jetbrains.compose.resources.stringResource
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
@@ -22,6 +21,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun InterestPage(onNext: () -> Unit) {

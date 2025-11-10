@@ -125,8 +125,8 @@ fun DetailsPage(
                 value = if (state.recurringDepositAccountDetail.fieldOfficerIndex == -1) {
                     ""
                 } else {
-                    state.template.fieldOfficerOptions?.
-                    get(state.recurringDepositAccountDetail.fieldOfficerIndex)?.displayName ?: ""
+                    state.template.fieldOfficerOptions
+                        ?.get(state.recurringDepositAccountDetail.fieldOfficerIndex)?.displayName ?: ""
                 },
                 onValueChanged = {},
                 onOptionSelected = { index, value ->
