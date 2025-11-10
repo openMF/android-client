@@ -25,7 +25,7 @@ fun NavGraphBuilder.clientApplyNewApplicationRoute(
     onNavigateApplyLoanAccount: (Int) -> Unit,
     onNavigateApplySavingsAccount: (Int) -> Unit,
     onNavigateApplyShareAccount: (Int) -> Unit,
-    onNavigateApplyRecurringAccount: () -> Unit,
+    onNavigateApplyRecurringAccount: (Int) -> Unit,
     onNavigateApplyFixedAccount: () -> Unit,
     navController: NavController,
 ) {

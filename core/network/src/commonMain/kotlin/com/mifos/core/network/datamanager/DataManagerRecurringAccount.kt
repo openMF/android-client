@@ -9,7 +9,6 @@
  */
 package com.mifos.core.network.datamanager
 
-import com.mifos.core.datastore.UserPreferencesRepository
 import com.mifos.core.model.objects.payloads.RecurringDepositAccountPayload
 import com.mifos.core.network.BaseApiManager
 import com.mifos.room.entities.accounts.recurring.RecurringDeposit
@@ -18,7 +17,6 @@ import kotlinx.coroutines.flow.Flow
 
 class DataManagerRecurringAccount(
     val mBaseApiManager: BaseApiManager,
-    private val prefManager: UserPreferencesRepository,
 ) {
 
     fun createRecurringDepositAccount(

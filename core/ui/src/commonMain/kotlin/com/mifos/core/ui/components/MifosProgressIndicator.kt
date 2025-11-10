@@ -119,11 +119,45 @@ fun MifosPagingAppendProgress(modifier: Modifier = Modifier) {
     }
 }
 
+@Composable
+fun MifosProgressIndicatorMini(
+    modifier: Modifier = Modifier,
+) {
+    val composition by rememberLottieComposition {
+        LottieCompositionSpec.JsonString(
+            Res.readBytes(LottieConstants.LOADING_ANIMATION).decodeToString(),
+        )
+    }
+    val progress by animateLottieCompositionAsState(composition)
+
+    Box(
+        modifier = modifier.fillMaxWidth(),
+        contentAlignment = Alignment.Center,
+    ) {
+        Image(
+            painter = rememberLottiePainter(
+                composition = composition,
+                progress = { progress },
+            ),
+            contentDescription = "Lottie animation",
+            modifier = Modifier.height(100.dp),
+        )
+    }
+}
+
 @Preview
 @Composable
 private fun Loading_Preview() {
     MifosTheme {
         MifosProgressIndicator()
+    }
+}
+
+@Preview
+@Composable
+private fun MifosProgressIndicatorMini() {
+    MifosTheme {
+        MifosProgressIndicatorMini()
     }
 }
 
