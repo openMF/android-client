@@ -13,9 +13,9 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class RecurringDepositAccountPayload(
+    //    val charges: List<Any>? = null,
     val adjustAdvanceTowardsFuturePayments: Boolean? = null,
     val allowWithdrawal: Boolean? = null,
-//    val charges: List<Any>? = null,
     val clientId: Int? = null,
     val dateFormat: String? = null,
     val depositPeriod: Int? = null,

@@ -10,14 +10,14 @@
 package com.mifos.feature.recurringDeposit.newRecurringDepositAccount.pages
 
 import androidclient.feature.recurringdeposit.generated.resources.Res
-import androidclient.feature.recurringdeposit.generated.resources.back
-import androidclient.feature.recurringdeposit.generated.resources.cancel
-import androidclient.feature.recurringdeposit.generated.resources.external_id
-import androidclient.feature.recurringdeposit.generated.resources.field_officer
-import androidclient.feature.recurringdeposit.generated.resources.next
-import androidclient.feature.recurringdeposit.generated.resources.product_name
-import androidclient.feature.recurringdeposit.generated.resources.select
-import androidclient.feature.recurringdeposit.generated.resources.submitted_on
+import androidclient.feature.recurringdeposit.generated.resources.feature_recurring_deposit_back
+import androidclient.feature.recurringdeposit.generated.resources.feature_recurring_deposit_cancel
+import androidclient.feature.recurringdeposit.generated.resources.feature_recurring_deposit_external_id
+import androidclient.feature.recurringdeposit.generated.resources.feature_recurring_deposit_field_officer
+import androidclient.feature.recurringdeposit.generated.resources.feature_recurring_deposit_next
+import androidclient.feature.recurringdeposit.generated.resources.feature_recurring_deposit_product_name
+import androidclient.feature.recurringdeposit.generated.resources.feature_recurring_deposit_select
+import androidclient.feature.recurringdeposit.generated.resources.feature_recurring_deposit_submitted_on
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
@@ -63,31 +63,31 @@ fun DetailsPage(
         },
     )
 
-    if (state.showSubmissionDatePick) {
+    if (state.recurringDepositAccountDetail.showSubmissionDatePick) {
         DatePickerDialog(
             onDismissRequest = {
-                onAction(RecurringAccountAction.OnSubmissionDatePick(state = false))
+                onAction(RecurringAccountAction.RecurringAccountDetailsAction.OnSubmissionDatePick(state = false))
             },
             confirmButton = {
                 TextButton(
                     onClick = {
-                        onAction(RecurringAccountAction.OnSubmissionDatePick(state = false))
+                        onAction(RecurringAccountAction.RecurringAccountDetailsAction.OnSubmissionDatePick(state = false))
                         submissionDatePickerState.selectedDateMillis?.let {
                             onAction(
-                                RecurringAccountAction.OnSubmissionDateChange(
+                                RecurringAccountAction.RecurringAccountDetailsAction.OnSubmissionDateChange(
                                     DateHelper.getDateAsStringFromLong(it),
                                 ),
                             )
                         }
                     },
-                ) { Text(stringResource(Res.string.select)) }
+                ) { Text(stringResource(Res.string.feature_recurring_deposit_select)) }
             },
             dismissButton = {
                 TextButton(
                     onClick = {
-                        onAction(RecurringAccountAction.OnSubmissionDatePick(state = false))
+                        onAction(RecurringAccountAction.RecurringAccountDetailsAction.OnSubmissionDatePick(state = false))
                     },
-                ) { Text(stringResource(Res.string.cancel)) }
+                ) { Text(stringResource(Res.string.feature_recurring_deposit_cancel)) }
             },
         ) {
             DatePicker(state = submissionDatePickerState)
@@ -96,53 +96,54 @@ fun DetailsPage(
 
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
         MifosTextFieldDropdown(
-            value = if (state.loanProductSelected == -1) {
+            value = if (state.recurringDepositAccountDetail.loanProductSelected == -1) {
                 ""
             } else {
-                state.template?.productOptions?.get(state.loanProductSelected)?.name ?: ""
+                state.template.productOptions?.get(state.recurringDepositAccountDetail.loanProductSelected)?.name ?: ""
             },
             onValueChanged = {},
             onOptionSelected = { index, value ->
-                onAction(RecurringAccountAction.OnProductNameChange(index))
+                onAction(RecurringAccountAction.RecurringAccountDetailsAction.OnProductNameChange(index))
             },
-            options = state.template?.productOptions?.map {
+            options = state.template.productOptions?.map {
                 it.name ?: ""
             } ?: emptyList(),
-            label = stringResource(Res.string.product_name),
+            label = stringResource(Res.string.feature_recurring_deposit_product_name),
         )
 
-        if (!state.template?.fieldOfficerOptions.isNullOrEmpty()) {
+        if (!state.template.fieldOfficerOptions.isNullOrEmpty()) {
             MifosDatePickerTextField(
-                value = state.submissionDate,
-                label = stringResource(Res.string.submitted_on),
+                value = state.recurringDepositAccountDetail.submissionDate,
+                label = stringResource(Res.string.feature_recurring_deposit_submitted_on),
                 openDatePicker = {
-                    onAction(RecurringAccountAction.OnSubmissionDatePick(true))
+                    onAction(RecurringAccountAction.RecurringAccountDetailsAction.OnSubmissionDatePick(true))
                 },
             )
 
             Spacer(Modifier.height(DesignToken.padding.large))
             MifosTextFieldDropdown(
-                value = if (state.fieldOfficerIndex == -1) {
+                value = if (state.recurringDepositAccountDetail.fieldOfficerIndex == -1) {
                     ""
                 } else {
-                    state.fieldOfficerOptions?.get(state.fieldOfficerIndex)?.displayName ?: ""
+                    state.template.fieldOfficerOptions
+                        ?.get(state.recurringDepositAccountDetail.fieldOfficerIndex)?.displayName ?: ""
                 },
                 onValueChanged = {},
                 onOptionSelected = { index, value ->
-                    onAction(RecurringAccountAction.OnFieldOfficerChange(index))
+                    onAction(RecurringAccountAction.RecurringAccountDetailsAction.OnFieldOfficerChange(index))
                 },
-                options = state.fieldOfficerOptions?.mapNotNull {
-                    it.displayName
+                options = state.template.fieldOfficerOptions?.map {
+                    it.displayName ?: ""
                 } ?: emptyList(),
-                label = stringResource(Res.string.field_officer),
+                label = stringResource(Res.string.feature_recurring_deposit_field_officer),
             )
 
             MifosOutlinedTextField(
-                value = state.externalId,
+                value = state.recurringDepositAccountDetail.externalId,
                 onValueChange = {
-                    onAction(RecurringAccountAction.OnExternalIdChange(it))
+                    onAction(RecurringAccountAction.RecurringAccountDetailsAction.OnExternalIdChange(it))
                 },
-                label = stringResource(Res.string.external_id),
+                label = stringResource(Res.string.feature_recurring_deposit_external_id),
                 config = MifosTextFieldConfig(
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.Text,
@@ -152,16 +153,16 @@ fun DetailsPage(
             Spacer(Modifier.height(DesignToken.padding.large))
         }
 
-        if (state.isMiniLoaderActive) {
+        if (state.recurringDepositAccountDetail.isMiniLoaderActive) {
             MifosProgressIndicatorMini()
         }
 
         MifosTwoButtonRow(
-            firstBtnText = stringResource(Res.string.back),
-            secondBtnText = stringResource(Res.string.next),
+            firstBtnText = stringResource(Res.string.feature_recurring_deposit_back),
+            secondBtnText = stringResource(Res.string.feature_recurring_deposit_next),
             onFirstBtnClick = { onAction(RecurringAccountAction.NavigateBack) },
-            onSecondBtnClick = { onAction(RecurringAccountAction.NextStep) },
-            isSecondButtonEnabled = state.isDetailButtonEnabled,
+            onSecondBtnClick = { onAction(RecurringAccountAction.OnNextPress) },
+            isSecondButtonEnabled = state.recurringDepositAccountDetail.isDetailButtonEnabled,
             modifier = Modifier.padding(top = DesignToken.padding.small),
         )
     }

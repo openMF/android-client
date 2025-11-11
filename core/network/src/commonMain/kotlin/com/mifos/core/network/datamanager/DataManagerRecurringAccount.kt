@@ -18,7 +18,6 @@ import kotlinx.coroutines.flow.Flow
 class DataManagerRecurringAccount(
     val mBaseApiManager: BaseApiManager,
 ) {
-
     fun createRecurringDepositAccount(
         recurringDepositAccountPayload: RecurringDepositAccountPayload?,
     ): Flow<RecurringDeposit> {
@@ -27,14 +26,11 @@ class DataManagerRecurringAccount(
         )
     }
 
-    val getRecurringDepositAccountTemplate: Flow<RecurringDepositAccountTemplate>
-        get() = mBaseApiManager.recurringSavingsAccountService.getRecurringDepositAccountTemplate()
-
-    fun getRecurringDepositAccountTemplateByProduct(
+    fun getRecurringDepositAccountTemplate(
         clientId: Int,
-        productId: Int,
+        productId: Int?,
     ): Flow<RecurringDepositAccountTemplate> {
-        return mBaseApiManager.recurringSavingsAccountService.getRecurringDepositAccountTemplateByProduct(
+        return mBaseApiManager.recurringSavingsAccountService.getRecurringDepositAccountTemplate(
             clientId,
             productId,
         )

@@ -24,9 +24,9 @@ fun NavGraphBuilder.recurringAccountDestination(
 ) {
     composable<RecurringAccountRoute> {
         RecurringAccountScreen(
+            navController = navController,
             onNavigateBack = {},
             onFinish = {},
-            navController = navController,
         )
     }
 }
