@@ -10,6 +10,7 @@
 package com.mifos.feature.search.components
 
 import androidclient.feature.search.generated.resources.Res
+import androidclient.feature.search.generated.resources.feature_search_all
 import androidclient.feature.search.generated.resources.feature_search_apply
 import androidclient.feature.search.generated.resources.feature_search_close
 import androidclient.feature.search.generated.resources.feature_search_filter
@@ -65,7 +66,7 @@ internal fun FilterDialog(
             ) {
                 HorizontalDivider()
                 FilterOption(
-                    text = "All",
+                    text = stringResource(Res.string.feature_search_all),
                     selected = selectedFilter == null,
                     onSelected = {
                         selectedFilter = null
