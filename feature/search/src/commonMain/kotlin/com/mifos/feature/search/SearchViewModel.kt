@@ -93,6 +93,7 @@ class SearchViewModel(
         searchJob?.cancel()
 
         if (state.value.searchText.isNotEmpty()) {
+            state.value = state.value.copy(showEmptyError = false)
             searchJob = searchRepository.searchResources(
                 query = state.value.searchText,
                 resources = state.value.selectedFilter?.value,
@@ -124,6 +125,10 @@ class SearchViewModel(
                 }
                 .launchIn(viewModelScope)
         }
+        else{
+            state.value = state.value.copy(showEmptyError = true)
+            searchResultState.update { SearchResultState.Empty() }
+        }
     }
 }
 
@@ -138,6 +143,7 @@ data class SearchScreenState(
     val searchText: String = "",
     val selectedFilter: FilterOption? = null,
     val exactMatch: Boolean? = null,
+    val showEmptyError: Boolean = false,
 )
 
 sealed interface SearchScreenEvent {

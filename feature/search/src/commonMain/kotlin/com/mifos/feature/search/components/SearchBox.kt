@@ -117,6 +117,8 @@ internal fun SearchBox(
                     onEvent(SearchScreenEvent.ClearSearchText)
                 },
                 maxLines = 1,
+                isError = state.showEmptyError,
+                errorText = "Please enter Name or Account Number or External ID to search"
             )
 
             // Search Button
@@ -181,6 +183,7 @@ internal fun SearchBox(
         )
     }
 }
+
 
 @DevicePreview
 @Composable
