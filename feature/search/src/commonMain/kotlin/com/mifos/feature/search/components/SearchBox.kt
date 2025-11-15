@@ -119,7 +119,7 @@ internal fun SearchBox(
                 },
                 maxLines = 1,
                 isError = state.showEmptyError,
-                errorText = if(state.showEmptyError) stringResource(Res.string.feature_search_empty_input_field) else null
+                errorText = if (state.showEmptyError) stringResource(Res.string.feature_search_empty_input_field) else null,
             )
 
             // Search Button
@@ -184,7 +184,6 @@ internal fun SearchBox(
         )
     }
 }
-
 
 @DevicePreview
 @Composable

@@ -124,8 +124,7 @@ class SearchViewModel(
                     }
                 }
                 .launchIn(viewModelScope)
-        }
-        else{
+        } else {
             state.value = state.value.copy(showEmptyError = true)
             searchResultState.update { SearchResultState.Empty() }
         }
