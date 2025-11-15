@@ -10,6 +10,7 @@
 package com.mifos.feature.search.components
 
 import androidclient.feature.search.generated.resources.Res
+import androidclient.feature.search.generated.resources.feature_search_empty_input_field
 import androidclient.feature.search.generated.resources.feature_search_exact_match
 import androidclient.feature.search.generated.resources.feature_search_search_hint
 import androidclient.feature.search.generated.resources.feature_search_title
@@ -118,7 +119,7 @@ internal fun SearchBox(
                 },
                 maxLines = 1,
                 isError = state.showEmptyError,
-                errorText = "Please enter Name or Account Number or External ID to search"
+                errorText = if(state.showEmptyError) stringResource(Res.string.feature_search_empty_input_field) else null
             )
 
             // Search Button
