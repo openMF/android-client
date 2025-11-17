@@ -6,7 +6,7 @@ import kotlinx.coroutines.flow.Flow
 
 class DataManagerFixedDeposit (private val baseApiManager: BaseApiManager){
 
-    fun getFixedDepositTemplate(clientId:Int): Flow<FixedDepositTemplate> =
-        baseApiManager.fixedDepositService.fixedDepositProductTemplate(clientId)
+    fun getFixedDepositTemplate(clientId:Int,productId: Int?): Flow<FixedDepositTemplate> =
+        baseApiManager.fixedDepositService.fixedDepositProductTemplate(clientId,productId)
 
 }

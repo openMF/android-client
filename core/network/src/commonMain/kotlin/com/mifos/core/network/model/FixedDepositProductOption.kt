@@ -7,14 +7,11 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class FixedDepositProductOption(
     @SerialName("id")
-    val id: Int,
+    val id: Int? = null,
 
     @SerialName("name")
-    val name: String,
+    val name: String? = null,
 
-    @SerialName("shortName")
-    val shortName: String,
-
-    @SerialName("totalShares")
-    val totalShares: Int,
+    @SerialName("withHoldTax")
+    val withHoldTax: Boolean? = null,
 )

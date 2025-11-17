@@ -10,8 +10,8 @@ import kotlinx.coroutines.flow.Flow
 
 class FixedDepositRepositoryImpl (private val dataManagerFixedDeposit: DataManagerFixedDeposit): FixedDepositRepository{
 
-    override fun getFixedDepositTemplate(clientId: Int): Flow<DataState<FixedDepositTemplate>> {
-        return dataManagerFixedDeposit.getFixedDepositTemplate(clientId).asDataStateFlow()
+    override fun getFixedDepositTemplate(clientId: Int,productId: Int?): Flow<DataState<FixedDepositTemplate>> {
+        return dataManagerFixedDeposit.getFixedDepositTemplate(clientId,productId).asDataStateFlow()
     }
 
 

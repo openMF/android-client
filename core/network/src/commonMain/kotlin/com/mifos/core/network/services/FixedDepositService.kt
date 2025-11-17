@@ -16,6 +16,7 @@ interface FixedDepositService {
     @GET( APIEndPoint.FIXED_DEPOSIT + "/template")
     fun fixedDepositProductTemplate(
         @Query("clientId") clientId: Int,
+        @Query("productId") productId: Int?,
     ): Flow<FixedDepositTemplate>
 }
 

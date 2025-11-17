@@ -5,7 +5,10 @@ import com.mifos.core.network.model.FixedDepositTemplate
 import kotlinx.coroutines.flow.Flow
 
 interface FixedDepositRepository {
-    fun getFixedDepositTemplate(clientId: Int): Flow<DataState<FixedDepositTemplate>>
+    fun getFixedDepositTemplate(
+        clientId: Int,
+        productId: Int?
+    ): Flow<DataState<FixedDepositTemplate>>
 
 
 }

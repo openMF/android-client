@@ -16,6 +16,7 @@ import androidclient.feature.client.generated.resources.step_interest
 import androidclient.feature.client.generated.resources.step_settings
 import androidclient.feature.client.generated.resources.step_terms
 import androidclient.feature.client.generated.resources.title_new_fixed_deposit_account
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -24,6 +25,9 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.mifos.core.designsystem.component.MifosScaffold
+import com.mifos.core.ui.components.MifosBreadcrumbNavBar
+import com.mifos.core.ui.components.MifosErrorComponent
+import com.mifos.core.ui.components.MifosProgressIndicator
 import com.mifos.core.ui.components.MifosStepper
 import com.mifos.core.ui.components.Step
 import com.mifos.core.ui.util.EventsEffect
@@ -33,6 +37,7 @@ import com.mifos.feature.client.newFixedDepositAccount.pages.InterestPage
 import com.mifos.feature.client.newFixedDepositAccount.pages.SettingPage
 import com.mifos.feature.client.newFixedDepositAccount.pages.TermsPage
 import org.jetbrains.compose.resources.stringResource
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 internal fun CreateFixedDepositAccountScreen(
@@ -40,7 +45,7 @@ internal fun CreateFixedDepositAccountScreen(
     navController: NavController,
     onFinish: () -> Unit,
     modifier: Modifier = Modifier,
-    viewModel: CreateFixedDepositAccountViewmodel = viewModel(),
+    viewModel: CreateFixedDepositAccountViewmodel = koinViewModel(),
 ) {
     val state by viewModel.stateFlow.collectAsStateWithLifecycle()
     EventsEffect(viewModel.eventFlow) { event ->
@@ -50,7 +55,8 @@ internal fun CreateFixedDepositAccountScreen(
         }
     }
     FixedDepositAccountScaffold(
-        state = state,
+        navController = navController,
+        newFixedDepositAccountState = state,
         onAction = { viewModel.trySendAction(it) },
         modifier = modifier,
     )
@@ -58,7 +64,8 @@ internal fun CreateFixedDepositAccountScreen(
 
 @Composable
 private fun FixedDepositAccountScaffold(
-    state: NewFixedDepositAccountState,
+    navController: NavController,
+    newFixedDepositAccountState: NewFixedDepositAccountState,
     onAction: (NewFixedDepositAccountAction) -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -66,29 +73,29 @@ private fun FixedDepositAccountScaffold(
         listOf(
             Step(stringResource(Res.string.step_details)) {
                 DetailsPage(
-                    state = state,
+                    state = newFixedDepositAccountState,
                     onAction = onAction,
                 )
             },
             Step(name = stringResource(Res.string.step_terms)) {
                 TermsPage(
-                    onNext = { onAction(NewFixedDepositAccountAction.NextStep) },
+                    onNext = { onAction(NewFixedDepositAccountAction.OnNextPress) },
                 )
             },
 
             Step(name = stringResource(Res.string.step_settings)) {
                 SettingPage(
-                    onNext = { onAction(NewFixedDepositAccountAction.NextStep) },
+                    onNext = { onAction(NewFixedDepositAccountAction.OnNextPress) },
                 )
             },
             Step(name = stringResource(Res.string.step_interest)) {
                 InterestPage(
-                    onNext = { onAction(NewFixedDepositAccountAction.NextStep) },
+                    onNext = { onAction(NewFixedDepositAccountAction.OnNextPress) },
                 )
             },
             Step(stringResource(Res.string.step_charges)) {
                 ChargesPage(
-                    onNext = { onAction(NewFixedDepositAccountAction.NextStep) },
+                    onNext = { onAction(NewFixedDepositAccountAction.OnNextPress) },
                 )
             },
         )
@@ -99,17 +106,36 @@ private fun FixedDepositAccountScaffold(
         modifier = modifier,
 
     ) { paddingValues ->
-        if (state.dialogState == null) {
-            MifosStepper(
-                steps = steps,
-                currentIndex = state.currentStep,
-                onStepChange = { newIndex ->
-                    onAction(NewFixedDepositAccountAction.OnStepChange(newIndex))
-                },
-                modifier = Modifier
-                    .fillMaxWidth(),
+        Column {
+            MifosBreadcrumbNavBar(navController)
+            when (newFixedDepositAccountState.screenState) {
+                is NewFixedDepositAccountState.ScreenState.Error -> {
+                    MifosErrorComponent(
+                        message = newFixedDepositAccountState.screenState.message,
+                        isRetryEnabled = true,
+                    ) {
+                        onAction(NewFixedDepositAccountAction.Retry)
+                    }
+                }
 
-            )
+                is NewFixedDepositAccountState.ScreenState.Loading -> {
+                    MifosProgressIndicator()
+                }
+
+                is NewFixedDepositAccountState.ScreenState.Success -> {
+                    MifosStepper(
+                        steps = steps,
+                        currentIndex = newFixedDepositAccountState.currentStep,
+                        onStepChange = { newIndex ->
+                            onAction(NewFixedDepositAccountAction.OnStepChange(newIndex))
+                        },
+                        modifier = Modifier
+                            .fillMaxWidth(),
+
+                        )
+                }
+            }
         }
+
     }
 }

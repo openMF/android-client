@@ -12,6 +12,9 @@ package com.mifos.feature.client.newFixedDepositAccount.pages
 import androidclient.feature.client.generated.resources.Field_officer
 import androidclient.feature.client.generated.resources.Res
 import androidclient.feature.client.generated.resources.btn_back
+import androidclient.feature.client.generated.resources.feature_client_charge_cancel
+import androidclient.feature.client.generated.resources.feature_client_charge_select
+import androidclient.feature.client.generated.resources.feature_client_external_id
 
 import androidclient.feature.client.generated.resources.feature_client_next
 import androidclient.feature.client.generated.resources.step_charges
@@ -53,7 +56,7 @@ import kotlin.time.ExperimentalTime
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalTime::class)
 @Composable
 fun DetailsPage(
-    state : NewFixedDepositAccountState,
+    state: NewFixedDepositAccountState,
     onAction: (NewFixedDepositAccountAction) -> Unit,
     modifier: Modifier = Modifier,
 
@@ -64,10 +67,10 @@ fun DetailsPage(
             override fun isSelectableDate(utcTimeMillis: Long): Boolean {
                 return utcTimeMillis >= Clock.System.now().toEpochMilliseconds().minus(86_400_000L)
             }
-        }
+        },
 
-    )
-    if (state.showSubmissionDatePick) {
+        )
+    if (state.fixedDepositAccountDetail.showSubmissionDatePick) {
         DatePickerDialog(
             onDismissRequest = {
                 onAction(NewFixedDepositAccountAction.OnSubmissionDatePick(state = false))
@@ -84,45 +87,46 @@ fun DetailsPage(
                             )
                         }
                     },
-                ) { Text("Hello World") }
+                ) { Text(stringResource(Res.string.feature_client_charge_select)) }
             },
             dismissButton = {
                 TextButton(
                     onClick = {
                         onAction(NewFixedDepositAccountAction.OnSubmissionDatePick(state = false))
                     },
-                ) { Text("jljks") }
+                ) { Text(stringResource(Res.string.feature_client_charge_cancel)) }
             },
         ) {
             DatePicker(state = submissionDatePickerState)
         }
 
     }
-    Column (modifier = modifier.fillMaxSize()){
-        Column(
-            modifier = modifier.weight(1f).verticalScroll(rememberScrollState()),
-        ) {
+    Column(
+        modifier = modifier.fillMaxSize()
+            .verticalScroll(rememberScrollState()),
+    ) {
 
-            MifosTextFieldDropdown(
-                value = if (state.fixedDepositProductSelected == -1) {
-                    ""
-                } else {
-                    state.fixedDepositProductOptions[state.fixedDepositProductSelected].name
-                },
-                label = stringResource(Res.string.one_year_fixed_deposit),
-                onValueChanged = {},
-                onOptionSelected = { index, value ->
-                    onAction(NewFixedDepositAccountAction.OnProductNameChange(index))
-                },
-                options = state.fixedDepositProductOptions.map {
-                    it.name
-                },
-
+        MifosTextFieldDropdown(
+            value = if (state.fixedDepositAccountDetail.productSelected == -1) {
+                ""
+            } else {
+                state.template.productOptions?.get(state.fixedDepositAccountDetail.productSelected)?.name ?: ""
+            },
+            label = stringResource(Res.string.one_year_fixed_deposit),
+            onValueChanged = {},
+            onOptionSelected = { index, value ->
+                onAction(NewFixedDepositAccountAction.OnProductNameChange(index))
+            },
+            options = state.template.productOptions?.map {
+                it.name ?: ""
+            } ?: emptyList(),
 
 
             )
+
+        if (!state.template.fieldOfficerOptions.isNullOrEmpty()) {
             MifosDatePickerTextField(
-                value = state.submissionDate,
+                value = state.fixedDepositAccountDetail.submissionDate,
                 label = stringResource(Res.string.submission_on),
                 openDatePicker = {
                     onAction(NewFixedDepositAccountAction.OnSubmissionDatePick(true))
@@ -130,30 +134,31 @@ fun DetailsPage(
             )
             Spacer(Modifier.height(DesignToken.padding.large))
             MifosTextFieldDropdown(
-                value = if (state.fieldOfficerIndex == -1) {
+                value = if (state.fixedDepositAccountDetail.fieldOfficerIndex == -1) {
                     ""
                 } else {
-                    state.fieldOfficerOptions[state.fieldOfficerIndex].displayName
+                    state.template.fieldOfficerOptions?.get(state.fixedDepositAccountDetail.fieldOfficerIndex)?.displayName
+                        ?: ""
                 },
                 label = stringResource(Res.string.Field_officer),
                 onValueChanged = {},
                 onOptionSelected = { index, value ->
                     onAction(NewFixedDepositAccountAction.OnFieldOfficerChange(index))
                 },
-                options = state.fieldOfficerOptions.map {
-                    it.displayName
-                }
+                options = state.template.fieldOfficerOptions?.map {
+                    it.displayName ?: ""
+                } ?: emptyList(),
 
-            )
+                )
             MifosOutlinedTextField(
-                value = state.externalId,
+                value = state.fixedDepositAccountDetail.externalId,
                 onValueChange = {
                     onAction(NewFixedDepositAccountAction.OnExternalIdChange(it))
                 },
-                label = stringResource(Res.string.step_details),
+                label = stringResource(Res.string.feature_client_external_id),
                 config = MifosTextFieldConfig(
-                    isError = state.externalIdError != null,
-                    errorText = if (state.externalIdError != null) stringResource(state.externalIdError) else null,
+                    isError = state.fixedDepositAccountDetail.externalIdError != null,
+                    errorText = if (state.fixedDepositAccountDetail.externalIdError != null) stringResource(state.fixedDepositAccountDetail.externalIdError) else null,
                 ),
             )
             Spacer(Modifier.height(DesignToken.padding.large))
@@ -162,11 +167,10 @@ fun DetailsPage(
             firstBtnText = stringResource(Res.string.btn_back),
             secondBtnText = stringResource(Res.string.feature_client_next),
             onFirstBtnClick = { onAction(NewFixedDepositAccountAction.NavigateBack) },
-            onSecondBtnClick = { onAction(NewFixedDepositAccountAction.OnDetailsSubmit) },
-            isSecondButtonEnabled = state.isDetailsNextEnabled,
+            onSecondBtnClick = { onAction(NewFixedDepositAccountAction.OnNextPress) },
+            isSecondButtonEnabled = state.fixedDepositAccountDetail.isDetailsNextEnabled,
             modifier = Modifier.padding(top = DesignToken.padding.small),
         )
-
     }
 
 }
