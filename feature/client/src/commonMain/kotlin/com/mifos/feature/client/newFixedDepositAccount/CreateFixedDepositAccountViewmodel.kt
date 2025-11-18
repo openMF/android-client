@@ -30,15 +30,14 @@ class CreateFixedDepositAccountViewmodel(
     private val fixedDepositRepository: FixedDepositRepository,
 ) :
     BaseViewModel<
-            NewFixedDepositAccountState,
-            NewFixedDepositAccountEvent,
-            NewFixedDepositAccountAction,
-            >(
+        NewFixedDepositAccountState,
+        NewFixedDepositAccountEvent,
+        NewFixedDepositAccountAction,
+        >(
         NewFixedDepositAccountState(
             clientId = savedStateHandle.toRoute<FixedDepositAccountRoute>().clientId,
         ),
     ) {
-
 
     init {
         loadFixedDepositAccountTemplate()
@@ -67,13 +66,11 @@ class CreateFixedDepositAccountViewmodel(
         }
     }
 
-    private fun handleRetry(){
+    private fun handleRetry() {
         loadFixedDepositAccountTemplate()
     }
 
-
     private fun loadFixedDepositAccountTemplate() = viewModelScope.launch {
-
         fixedDepositRepository.getFixedDepositTemplate(
             clientId = state.clientId,
             productId = state.template.productOptions?.get(state.fixedDepositAccountDetail.productSelected)?.id,
@@ -124,8 +121,8 @@ class CreateFixedDepositAccountViewmodel(
         mutableStateFlow.update {
             it.copy(
                 fixedDepositAccountDetail = it.fixedDepositAccountDetail.copy(
-                    submissionDate = action.date
-                )
+                    submissionDate = action.date,
+                ),
             )
         }
     }
@@ -188,8 +185,8 @@ class CreateFixedDepositAccountViewmodel(
         mutableStateFlow.update {
             it.copy(
                 fixedDepositAccountTerms = it.fixedDepositAccountTerms.copy(
-                    depositAmount = action.depositAmount
-                )
+                    depositAmount = action.depositAmount,
+                ),
             )
         }
     }
@@ -198,8 +195,8 @@ class CreateFixedDepositAccountViewmodel(
         mutableStateFlow.update {
             it.copy(
                 fixedDepositAccountTerms = it.fixedDepositAccountTerms.copy(
-                    depositPeriod = action.period
-                )
+                    depositPeriod = action.period,
+                ),
             )
         }
     }
@@ -208,10 +205,8 @@ class CreateFixedDepositAccountViewmodel(
         mutableStateFlow.update {
             it.copy(
                 fixedDepositAccountTerms = it.fixedDepositAccountTerms.copy(
-                    depositPeriodType = state.template.periodFrequencyTypeOptions?.get(
-                        action.depositPeriodType,
-                    )?.id ?: -1
-                )
+                    depositPeriodTypeIndex = action.depositPeriodTypeIndex,
+                ),
             )
         }
     }
@@ -220,10 +215,8 @@ class CreateFixedDepositAccountViewmodel(
         mutableStateFlow.update {
             it.copy(
                 fixedDepositAccountTerms = it.fixedDepositAccountTerms.copy(
-                    interestCompoundingPeriodType = state.template.interestCompoundingPeriodTypeOptions?.get(
-                        action.interestCompoundingPeriodType,
-                    )?.id ?: -1
-                )
+                    interestCompoundingPeriodTypeIndex = action.interestCompoundingPeriodTypeIndex,
+                ),
             )
         }
     }
@@ -232,10 +225,8 @@ class CreateFixedDepositAccountViewmodel(
         mutableStateFlow.update {
             it.copy(
                 fixedDepositAccountTerms = it.fixedDepositAccountTerms.copy(
-                    interestCalculationType = state.template.interestCalculationTypeOptions?.get(
-                        action.interestCalculationPeriodType,
-                    )?.id ?: -1
-                )
+                    interestCalculationTypeIndex = action.interestCalculationPeriodTypeIndex,
+                ),
             )
         }
     }
@@ -244,10 +235,8 @@ class CreateFixedDepositAccountViewmodel(
         mutableStateFlow.update {
             it.copy(
                 fixedDepositAccountTerms = it.fixedDepositAccountTerms.copy(
-                    interestPostingPeriodType = state.template.interestPostingPeriodTypeOptions?.get(
-                        action.interestPostingPeriodType,
-                    )?.id ?: -1
-                )
+                    interestPostingPeriodTypeIndex = action.interestPostingPeriodTypeIndex,
+                ),
             )
         }
     }
@@ -256,10 +245,8 @@ class CreateFixedDepositAccountViewmodel(
         mutableStateFlow.update {
             it.copy(
                 fixedDepositAccountTerms = it.fixedDepositAccountTerms.copy(
-                    interestCalculationDaysInYearType = state.template.interestCalculationTypeOptions?.get(
-                        action.periodType,
-                    )?.id ?: -1
-                )
+                    interestCalculationDaysInYearTypeIndex = action.periodTypeIndex,
+                ),
             )
         }
     }
@@ -276,11 +263,9 @@ class CreateFixedDepositAccountViewmodel(
             sendEvent(NewFixedDepositAccountEvent.Finish)
         }
     }
-
-
 }
 
-data class NewFixedDepositAccountState (
+data class NewFixedDepositAccountState(
     val clientId: Int = -1,
     val currentStep: Int = 0,
     val dialogState: Any? = null,
@@ -288,7 +273,7 @@ data class NewFixedDepositAccountState (
     val screenState: ScreenState = ScreenState.Loading,
     val fixedDepositAccountDetail: FixedDepositAccountDetailsState = FixedDepositAccountDetailsState(),
     val fixedDepositAccountTerms: FixedDepositAccountTermsState = FixedDepositAccountTermsState(),
-    val template: FixedDepositTemplate = FixedDepositTemplate()
+    val template: FixedDepositTemplate = FixedDepositTemplate(),
 ) {
     sealed interface ScreenState {
         data class Error(val message: String) : ScreenState
@@ -300,16 +285,18 @@ data class NewFixedDepositAccountState (
 data class FixedDepositAccountTermsState(
     val depositAmount: String = "",
     val depositPeriod: String = "",
-    val depositPeriodType: Int = -1,
-    val interestCompoundingPeriodType: Int = -1,
-    val interestPostingPeriodType: Int = -1,
-    val interestCalculationType: Int = -1,
-    val interestCalculationDaysInYearType: Int = -1,
-){
-    val isTermsNextEnabled = depositAmount.isNotEmpty() && depositPeriod.isNotEmpty()
-            && depositPeriodType!=-1 && interestCompoundingPeriodType!=-1 && interestCalculationType!=-1 && interestCalculationDaysInYearType!=-1
+    val depositPeriodTypeIndex: Int = -1,
+    val interestCompoundingPeriodTypeIndex: Int = -1,
+    val interestPostingPeriodTypeIndex: Int = -1,
+    val interestCalculationTypeIndex: Int = -1,
+    val interestCalculationDaysInYearTypeIndex: Int = -1,
+) {
+    val isTermsNextEnabled = depositAmount.isNotEmpty() && depositPeriod.isNotEmpty() &&
+        depositPeriodTypeIndex != -1 && interestCompoundingPeriodTypeIndex != -1 && interestCalculationTypeIndex != -1 && interestCalculationDaysInYearTypeIndex != -1
 }
-data class FixedDepositAccountDetailsState @OptIn(ExperimentalTime::class) constructor(
+data class FixedDepositAccountDetailsState
+@OptIn(ExperimentalTime::class)
+constructor(
     val submittedOnDate: String = "",
     val fieldOfficer: FieldOfficerOption? = null,
     val showSubmissionDatePick: Boolean = false,
@@ -327,31 +314,29 @@ data class FixedDepositAccountDetailsState @OptIn(ExperimentalTime::class) const
     val isDetailsNextEnabled = submissionDate.isNotEmpty() && fieldOfficerIndex != -1
 }
 
-sealed class NewFixedDepositAccountAction() {
-    object OnNextPress : NewFixedDepositAccountAction()
+sealed class NewFixedDepositAccountAction {
+    data object OnNextPress : NewFixedDepositAccountAction()
     data class OnStepChange(val newIndex: Int) : NewFixedDepositAccountAction()
 
-    object NavigateBack : NewFixedDepositAccountAction()
+    data object NavigateBack : NewFixedDepositAccountAction()
     data class OnSubmissionDatePick(val state: Boolean) : NewFixedDepositAccountAction()
     data class OnSubmissionDateChange(val date: String) : NewFixedDepositAccountAction()
     data class OnProductNameChange(val index: Int) : NewFixedDepositAccountAction()
-    object Finish : NewFixedDepositAccountAction()
+    data object Finish : NewFixedDepositAccountAction()
     data class OnFieldOfficerChange(val index: Int) : NewFixedDepositAccountAction()
     data class OnExternalIdChange(val value: String) : NewFixedDepositAccountAction()
     data object OnDetailsSubmit : NewFixedDepositAccountAction()
 
     data object Retry : NewFixedDepositAccountAction()
 
-
     sealed class NewFixedDepositAccountTermsAction : NewFixedDepositAccountAction() {
         data class SetFixedDepositAmount(val depositAmount: String) : NewFixedDepositAccountAction()
         data class SetFixedDepositPeriod(val period: String) : NewFixedDepositAccountAction()
-        data class SetFixedDepositPeriodType(val depositPeriodType: Int) : NewFixedDepositAccountAction()
-        data class SetInterestCompoundingPeriod(val interestCompoundingPeriodType: Int) : NewFixedDepositAccountAction()
-        data class SetInterestPostingPeriod(val interestPostingPeriodType: Int) : NewFixedDepositAccountAction()
-        data class SetInterestCalculationType(val interestCalculationPeriodType: Int) : NewFixedDepositAccountAction()
-        data class SetInterestCalculationDaysInYearType(val periodType: Int) : NewFixedDepositAccountAction()
-
+        data class SetFixedDepositPeriodType(val depositPeriodTypeIndex: Int) : NewFixedDepositAccountAction()
+        data class SetInterestCompoundingPeriod(val interestCompoundingPeriodTypeIndex: Int) : NewFixedDepositAccountAction()
+        data class SetInterestPostingPeriod(val interestPostingPeriodTypeIndex: Int) : NewFixedDepositAccountAction()
+        data class SetInterestCalculationType(val interestCalculationPeriodTypeIndex: Int) : NewFixedDepositAccountAction()
+        data class SetInterestCalculationDaysInYearType(val periodTypeIndex: Int) : NewFixedDepositAccountAction()
     }
 }
 

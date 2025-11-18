@@ -1,3 +1,12 @@
+/*
+ * Copyright 2025 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ */
 package com.mifos.core.network.model
 
 import com.mifos.core.model.objects.account.saving.FieldOfficerOptions
@@ -7,11 +16,8 @@ import com.mifos.core.model.objects.template.recurring.interest.InterestCalculat
 import com.mifos.core.model.objects.template.recurring.interest.InterestCompoundingPeriodTypeOption
 import com.mifos.core.model.objects.template.recurring.interest.InterestPostingPeriodTypeOption
 import com.mifos.core.model.objects.template.recurring.period.PeriodFrequencyTypeOption
-import com.mifos.core.model.utils.IgnoredOnParcel
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-
-
 
 @Serializable
 data class FixedDepositTemplate(
@@ -46,4 +52,4 @@ data class FixedDepositTemplate(
     @SerialName("interestCalculationTypeOptions")
     val interestCalculationTypeOptions: List<InterestCalculationTypeOption>? = null,
 
-    )
+)

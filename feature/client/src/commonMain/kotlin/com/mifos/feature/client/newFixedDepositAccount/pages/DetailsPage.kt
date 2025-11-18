@@ -15,15 +15,9 @@ import androidclient.feature.client.generated.resources.btn_back
 import androidclient.feature.client.generated.resources.feature_client_charge_cancel
 import androidclient.feature.client.generated.resources.feature_client_charge_select
 import androidclient.feature.client.generated.resources.feature_client_external_id
-
 import androidclient.feature.client.generated.resources.feature_client_next
-import androidclient.feature.client.generated.resources.step_charges
-import androidclient.feature.client.generated.resources.step_details
-import androidclient.feature.client.generated.resources.step_interest
 import androidclient.feature.client.generated.resources.one_year_fixed_deposit
 import androidclient.feature.client.generated.resources.submission_on
-
-
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -59,8 +53,7 @@ fun DetailsPage(
     state: NewFixedDepositAccountState,
     onAction: (NewFixedDepositAccountAction) -> Unit,
     modifier: Modifier = Modifier,
-
-    ) {
+) {
     val submissionDatePickerState = rememberDatePickerState(
         initialSelectedDateMillis = Clock.System.now().toEpochMilliseconds(),
         selectableDates = object : SelectableDates {
@@ -69,7 +62,7 @@ fun DetailsPage(
             }
         },
 
-        )
+    )
     if (state.fixedDepositAccountDetail.showSubmissionDatePick) {
         DatePickerDialog(
             onDismissRequest = {
@@ -99,13 +92,11 @@ fun DetailsPage(
         ) {
             DatePicker(state = submissionDatePickerState)
         }
-
     }
     Column(
         modifier = modifier.fillMaxSize()
             .verticalScroll(rememberScrollState()),
     ) {
-
         MifosTextFieldDropdown(
             value = if (state.fixedDepositAccountDetail.productSelected == -1) {
                 ""
@@ -121,8 +112,7 @@ fun DetailsPage(
                 it.name ?: ""
             } ?: emptyList(),
 
-
-            )
+        )
 
         if (!state.template.fieldOfficerOptions.isNullOrEmpty()) {
             MifosDatePickerTextField(
@@ -149,7 +139,7 @@ fun DetailsPage(
                     it.displayName ?: ""
                 } ?: emptyList(),
 
-                )
+            )
             MifosOutlinedTextField(
                 value = state.fixedDepositAccountDetail.externalId,
                 onValueChange = {
@@ -172,5 +162,4 @@ fun DetailsPage(
             modifier = Modifier.padding(top = DesignToken.padding.small),
         )
     }
-
 }

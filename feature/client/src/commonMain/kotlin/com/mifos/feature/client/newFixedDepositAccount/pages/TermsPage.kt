@@ -25,6 +25,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
@@ -32,13 +33,13 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.mifos.core.designsystem.component.MifosOutlinedTextField
 import com.mifos.core.designsystem.component.MifosTextFieldConfig
 import com.mifos.core.designsystem.component.MifosTextFieldDropdown
+import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.designsystem.theme.MifosTypography
 import com.mifos.core.ui.components.MifosTwoButtonRow
 import com.mifos.feature.client.newFixedDepositAccount.NewFixedDepositAccountAction
@@ -54,7 +55,7 @@ fun TermsPage(
         modifier = Modifier
             .fillMaxWidth()
             .verticalScroll(rememberScrollState()),
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Text(
             modifier = Modifier.align(Alignment.Start),
@@ -90,8 +91,8 @@ fun TermsPage(
             modifier = Modifier.fillMaxWidth(),
         )
         MifosTextFieldDropdown(
-            value = if (state.fixedDepositAccountTerms.depositPeriodType != -1) {
-                state.template.periodFrequencyTypeOptions?.getOrNull(state.fixedDepositAccountTerms.depositPeriodType)?.value.orEmpty()
+            value = if (state.fixedDepositAccountTerms.depositPeriodTypeIndex != -1) {
+                state.template.periodFrequencyTypeOptions?.getOrNull(state.fixedDepositAccountTerms.depositPeriodTypeIndex)?.value.orEmpty()
             } else {
                 ""
             },
@@ -106,13 +107,15 @@ fun TermsPage(
             modifier = Modifier.fillMaxWidth(),
         )
         Text(
-            modifier = Modifier.align(Alignment.Start),
+            modifier = Modifier
+                .align(Alignment.Start),
             text = stringResource(Res.string.feature_fixed_interest_compounding),
-            style = MifosTypography.labelLargeEmphasized
+            style = MifosTypography.labelLargeEmphasized,
         )
+        Spacer(modifier = Modifier.height(DesignToken.padding.extraSmall))
         MifosTextFieldDropdown(
-            value = if (state.fixedDepositAccountTerms.interestCompoundingPeriodType != -1) {
-                state.template.interestCompoundingPeriodTypeOptions?.getOrNull(state.fixedDepositAccountTerms.interestCompoundingPeriodType)?.value.orEmpty()
+            value = if (state.fixedDepositAccountTerms.interestCompoundingPeriodTypeIndex != -1) {
+                state.template.interestCompoundingPeriodTypeOptions?.getOrNull(state.fixedDepositAccountTerms.interestCompoundingPeriodTypeIndex)?.value.orEmpty()
             } else {
                 ""
             },
@@ -127,8 +130,8 @@ fun TermsPage(
             modifier = Modifier.fillMaxWidth(),
         )
         MifosTextFieldDropdown(
-            value = if (state.fixedDepositAccountTerms.interestPostingPeriodType != -1) {
-                state.template.interestPostingPeriodTypeOptions?.getOrNull(state.fixedDepositAccountTerms.interestPostingPeriodType)?.value.orEmpty()
+            value = if (state.fixedDepositAccountTerms.interestPostingPeriodTypeIndex != -1) {
+                state.template.interestPostingPeriodTypeOptions?.getOrNull(state.fixedDepositAccountTerms.interestPostingPeriodTypeIndex)?.value.orEmpty()
             } else {
                 ""
             },
@@ -143,8 +146,8 @@ fun TermsPage(
             modifier = Modifier.fillMaxWidth(),
         )
         MifosTextFieldDropdown(
-            value = if (state.fixedDepositAccountTerms.interestCalculationType != -1) {
-                state.template.interestCalculationTypeOptions?.getOrNull(state.fixedDepositAccountTerms.interestCalculationType)?.value.orEmpty()
+            value = if (state.fixedDepositAccountTerms.interestCalculationTypeIndex != -1) {
+                state.template.interestCalculationTypeOptions?.getOrNull(state.fixedDepositAccountTerms.interestCalculationTypeIndex)?.value.orEmpty()
             } else {
                 ""
             },
@@ -159,8 +162,8 @@ fun TermsPage(
             modifier = Modifier.fillMaxWidth(),
         )
         MifosTextFieldDropdown(
-            value = if (state.fixedDepositAccountTerms.interestCalculationDaysInYearType != -1) {
-                state.template.interestCalculationDaysInYearTypeOptions?.getOrNull(state.fixedDepositAccountTerms.interestCalculationDaysInYearType)?.value.orEmpty()
+            value = if (state.fixedDepositAccountTerms.interestCalculationDaysInYearTypeIndex != -1) {
+                state.template.interestCalculationDaysInYearTypeOptions?.getOrNull(state.fixedDepositAccountTerms.interestCalculationDaysInYearTypeIndex)?.value.orEmpty()
             } else {
                 ""
             },
@@ -184,4 +187,3 @@ fun TermsPage(
         )
     }
 }
-

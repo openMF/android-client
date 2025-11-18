@@ -33,6 +33,7 @@ import com.mifos.core.network.services.ClientService
 import com.mifos.core.network.services.CollectionSheetService
 import com.mifos.core.network.services.DataTableService
 import com.mifos.core.network.services.DocumentService
+import com.mifos.core.network.services.FixedDepositService
 import com.mifos.core.network.services.GroupService
 import com.mifos.core.network.services.LoanService
 import com.mifos.core.network.services.NoteService
@@ -44,7 +45,6 @@ import com.mifos.core.network.services.SearchService
 import com.mifos.core.network.services.ShareAccountService
 import com.mifos.core.network.services.StaffService
 import com.mifos.core.network.services.SurveyService
-import com.mifos.core.network.services.FixedDepositService
 import com.mifos.core.network.services.createCenterService
 import com.mifos.core.network.services.createChargeService
 import com.mifos.core.network.services.createCheckerInboxService
@@ -53,6 +53,7 @@ import com.mifos.core.network.services.createClientService
 import com.mifos.core.network.services.createCollectionSheetService
 import com.mifos.core.network.services.createDataTableService
 import com.mifos.core.network.services.createDocumentService
+import com.mifos.core.network.services.createFixedDepositService
 import com.mifos.core.network.services.createGroupService
 import com.mifos.core.network.services.createLoanService
 import com.mifos.core.network.services.createNoteService
@@ -60,7 +61,6 @@ import com.mifos.core.network.services.createOfficeService
 import com.mifos.core.network.services.createRecurringAccountService
 import com.mifos.core.network.services.createRunReportsService
 import com.mifos.core.network.services.createSavingsAccountService
-import com.mifos.core.network.services.createFixedDepositService
 import com.mifos.core.network.services.createSearchService
 import com.mifos.core.network.services.createShareAccountService
 import com.mifos.core.network.services.createStaffService

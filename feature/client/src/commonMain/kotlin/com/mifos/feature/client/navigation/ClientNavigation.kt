@@ -76,7 +76,6 @@ import com.mifos.feature.client.documentPreviewScreen.createDocumentPreviewRoute
 import com.mifos.feature.client.documentPreviewScreen.navigateToDocumentPreviewRoute
 import com.mifos.feature.client.fixedDepositAccount.clientFixedDepositAccountDestination
 import com.mifos.feature.client.fixedDepositAccount.navigateToFixedDepositAccountRoute
-import com.mifos.feature.client.newFixedDepositAccount.createFixedDepositAccountRoute
 import com.mifos.feature.client.newFixedDepositAccount.createFixedDepositAccountDestination
 import com.mifos.feature.client.newFixedDepositAccount.navigateToCreateFixedDepositRoute
 import com.mifos.feature.client.recurringDepositAccount.clientRecurringDepositAccountDestination
