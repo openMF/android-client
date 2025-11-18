@@ -79,7 +79,8 @@ private fun FixedDepositAccountScaffold(
             },
             Step(name = stringResource(Res.string.step_terms)) {
                 TermsPage(
-                    onNext = { onAction(NewFixedDepositAccountAction.OnNextPress) },
+                    state = newFixedDepositAccountState,
+                    onAction = onAction,
                 )
             },
 

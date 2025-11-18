@@ -578,4 +578,14 @@
     <string name="charges_view_charges">View Charges</string>
     <string name="charges_client_update_not_support_error_msg">Updating client charges is not supported. Please delete the existing charge and create a new one.</string>
 
+    <string name="feature_fixed_deposit_deposit_amount">Deposit Amount</string>
+    <string name="feature_fixed_deposit_deposit_period_type">Deposit Period Type</string>
+    <string name="feature_fixed_interest_compounding">Interest Compounding</string>
+    <string name="feature_fixed_interest_compounding_period">Interest Compounding Period</string>
+    <string name="feature_fixed_interest_posting_period">Interest Posting Period</string>
+    <string name="feature_fixed_interest_calculated_using">Interest Calculated Using</string>
+    <string name="feature_fixed_days_in_year">Days in year</string>
+    <string name="feature_fixed_deposit_terms_page">Terms</string>
+    <string name="feature_fixed_deposit_deposit_period">Deposit Period</string>
+
 </resources>
