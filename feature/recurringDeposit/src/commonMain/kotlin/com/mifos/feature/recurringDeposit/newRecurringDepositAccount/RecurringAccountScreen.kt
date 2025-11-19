@@ -10,12 +10,12 @@
 package com.mifos.feature.recurringDeposit.newRecurringDepositAccount
 
 import androidclient.feature.recurringdeposit.generated.resources.Res
-import androidclient.feature.recurringdeposit.generated.resources.create_recurring_deposit_account
-import androidclient.feature.recurringdeposit.generated.resources.step_charges
-import androidclient.feature.recurringdeposit.generated.resources.step_details
-import androidclient.feature.recurringdeposit.generated.resources.step_interest
-import androidclient.feature.recurringdeposit.generated.resources.step_settings
-import androidclient.feature.recurringdeposit.generated.resources.step_terms
+import androidclient.feature.recurringdeposit.generated.resources.feature_recurring_deposit_create_recurring_deposit_account
+import androidclient.feature.recurringdeposit.generated.resources.feature_recurring_deposit_step_charges
+import androidclient.feature.recurringdeposit.generated.resources.feature_recurring_deposit_step_details
+import androidclient.feature.recurringdeposit.generated.resources.feature_recurring_deposit_step_interest
+import androidclient.feature.recurringdeposit.generated.resources.feature_recurring_deposit_step_settings
+import androidclient.feature.recurringdeposit.generated.resources.feature_recurring_deposit_step_terms
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -23,7 +23,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.ui.components.MifosBreadcrumbNavBar
@@ -32,6 +31,7 @@ import com.mifos.core.ui.components.MifosProgressIndicator
 import com.mifos.core.ui.components.MifosStepper
 import com.mifos.core.ui.components.Step
 import com.mifos.core.ui.util.EventsEffect
+import com.mifos.feature.recurringDeposit.newRecurringDepositAccount.RecurringAccountAction.NavigateToStep
 import com.mifos.feature.recurringDeposit.newRecurringDepositAccount.pages.ChargesPage
 import com.mifos.feature.recurringDeposit.newRecurringDepositAccount.pages.DetailsPage
 import com.mifos.feature.recurringDeposit.newRecurringDepositAccount.pages.InterestPage
@@ -58,51 +58,52 @@ internal fun RecurringAccountScreen(
     }
 
     RecurringAccountScaffold(
+        navController = navController,
         modifier = modifier,
         state = state,
         onAction = { viewModel.trySendAction(it) },
-        navController = navController,
     )
 }
 
 @Composable
 private fun RecurringAccountScaffold(
-    state: RecurringAccountState,
     navController: NavController,
+    state: RecurringAccountState,
     modifier: Modifier = Modifier,
     onAction: (RecurringAccountAction) -> Unit,
 ) {
     val steps = listOf(
-        Step(name = stringResource(Res.string.step_details)) {
+        Step(name = stringResource(Res.string.feature_recurring_deposit_step_details)) {
             DetailsPage(
                 state = state,
                 onAction = onAction,
             )
         },
-        Step(name = stringResource(Res.string.step_terms)) {
+        Step(name = stringResource(Res.string.feature_recurring_deposit_step_terms)) {
             TermsPage(
-                onNext = { onAction(RecurringAccountAction.NextStep) },
+                onNext = { onAction(RecurringAccountAction.OnNextPress) },
             )
         },
-        Step(name = stringResource(Res.string.step_settings)) {
+        Step(name = stringResource(Res.string.feature_recurring_deposit_step_settings)) {
             SettingPage(
-                onNext = { onAction(RecurringAccountAction.NextStep) },
+                state = state,
+                onAction = onAction,
             )
         },
-        Step(name = stringResource(Res.string.step_interest)) {
+        Step(name = stringResource(Res.string.feature_recurring_deposit_step_interest)) {
             InterestPage(
-                onNext = { onAction(RecurringAccountAction.NextStep) },
+                onNext = { onAction(RecurringAccountAction.OnNextPress) },
             )
         },
-        Step(name = stringResource(Res.string.step_charges)) {
+        Step(name = stringResource(Res.string.feature_recurring_deposit_step_charges)) {
             ChargesPage(
-                onNext = { onAction(RecurringAccountAction.NextStep) },
+                onNext = { onAction(RecurringAccountAction.OnNextPress) },
             )
         },
     )
 
     MifosScaffold(
-        title = stringResource(Res.string.create_recurring_deposit_account),
+        title = stringResource(Res.string.feature_recurring_deposit_create_recurring_deposit_account),
         onBackPressed = { onAction(RecurringAccountAction.NavigateBack) },
         modifier = modifier,
     ) { paddingValues ->
@@ -112,26 +113,26 @@ private fun RecurringAccountScaffold(
                 .padding(paddingValues),
         ) {
             MifosBreadcrumbNavBar(navController)
-            when (state.state) {
-                is RecurringAccountState.State.Error -> {
+            when (state.screenState) {
+                is RecurringAccountState.ScreenState.Error -> {
                     MifosErrorComponent(
-                        message = state.state.message,
+                        message = state.screenState.message,
                         isRetryEnabled = true,
                     ) {
                         onAction(RecurringAccountAction.Retry)
                     }
                 }
 
-                is RecurringAccountState.State.Loading -> {
+                is RecurringAccountState.ScreenState.Loading -> {
                     MifosProgressIndicator()
                 }
 
-                is RecurringAccountState.State.Success -> {
+                is RecurringAccountState.ScreenState.Success -> {
                     MifosStepper(
                         steps = steps,
                         currentIndex = state.currentStep,
                         onStepChange = { newIndex ->
-                            onAction(RecurringAccountAction.OnStepChange(newIndex))
+                            onAction(NavigateToStep(newIndex))
                         },
                         modifier = Modifier
                             .fillMaxWidth(),

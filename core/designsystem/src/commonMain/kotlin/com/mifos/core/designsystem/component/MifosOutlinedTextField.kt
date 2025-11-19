@@ -368,6 +368,7 @@ fun MifosDatePickerTextField(
         .fillMaxWidth()
         .clip(DesignToken.shapes.medium),
     label: String? = null,
+    errorMessage: String? = null,
     openDatePicker: () -> Unit,
 ) {
     OutlinedTextField(
@@ -398,6 +399,16 @@ fun MifosDatePickerTextField(
                 Icon(imageVector = Icons.Default.CalendarMonth, null)
             }
         },
+        isError = errorMessage != null,
+        supportingText = errorMessage?.let {
+            {
+                Text(
+                    text = it,
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.error,
+                )
+            }
+        },
     )
 }
 
@@ -425,7 +436,13 @@ fun MifosOutlinedTextField(
         shape = shape,
         colors = colors,
         value = value,
-        label = { Text(text = label) },
+        label = {
+            Text(
+                text = label,
+                maxLines = 1,
+                softWrap = true,
+            )
+        },
         onValueChange = onValueChange,
         textStyle = textStyle,
         modifier = modifier.fillMaxWidth(),
@@ -437,6 +454,7 @@ fun MifosOutlinedTextField(
         interactionSource = interactionSource,
         singleLine = config.singleLine,
         maxLines = config.maxLines,
+        prefix = config.prefix,
         minLines = config.minLines,
         leadingIcon = config.leadingIcon,
         isError = config.isError,
@@ -483,6 +501,7 @@ data class MifosTextFieldConfig(
     val keyboardOptions: KeyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
     val trailingIcon: @Composable (() -> Unit)? = null,
     val leadingIcon: @Composable (() -> Unit)? = null,
+    val prefix: @Composable (() -> Unit)? = null,
 )
 
 @Preview

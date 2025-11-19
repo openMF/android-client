@@ -17,6 +17,6 @@ class DataManagerShare(
     private val baseApiManager: BaseApiManager,
 ) {
 
-    fun getShareTemplate(clientId: Int): Flow<ShareTemplate> =
-        baseApiManager.shareAccountService.shareProductTemplate(clientId)
+    fun getShareTemplate(clientId: Int, productId: Int?): Flow<ShareTemplate> =
+        baseApiManager.shareAccountService.shareProductTemplate(clientId, productId)
 }
