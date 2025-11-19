@@ -15,5 +15,5 @@ import kotlinx.coroutines.flow.Flow
 
 interface ShareAccountRepository {
 
-    fun getShareTemplate(clientId: Int): Flow<DataState<ShareTemplate>>
+    fun getShareTemplate(clientId: Int, productId: Int?): Flow<DataState<ShareTemplate>>
 }

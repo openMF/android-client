@@ -29,16 +29,16 @@ class ChargeDaoHelper(
     private val ioDispatcher: CoroutineDispatcher,
 ) {
     /**
-     * This Method save the All Client Charges in Database and save the Charge Due date in the
-     * ClientDate as reference with Charge Id.
+     * This Method save the All Resource Charges in Database and save the Charge Due date in the
+     * ResourceDate as reference with Charge Id.
      *
      * @param chargesPage
-     * @param clientId
+     * @param resourceId
      * @return null
      */
     suspend fun saveClientCharges(
         chargesPage: Page<ChargesEntity>,
-        clientId: Int,
+        resourceId: Int,
     ) {
         val updatedCharges = chargesPage.pageItems.map { charges ->
             val dateParts = charges.dueDate.orEmpty()
@@ -57,7 +57,7 @@ class ChargeDaoHelper(
                 null
             }
 
-            charges.copy(clientId = clientId, chargeDueDate = clientDate)
+            charges.copy(clientId = resourceId, chargeDueDate = clientDate)
         }
 
         chargeDao.insertAllCharges(updatedCharges)

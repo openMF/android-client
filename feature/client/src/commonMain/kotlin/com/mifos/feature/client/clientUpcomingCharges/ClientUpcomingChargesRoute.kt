@@ -16,7 +16,8 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class ClientUpcomingChargesRoute(
-    val clientId: Int = -1,
+    val resourceId: Int = -1,
+    val resourceType: String = "",
 )
 
 fun NavGraphBuilder.clientUpcomingChargesDestination(
@@ -32,7 +33,8 @@ fun NavGraphBuilder.clientUpcomingChargesDestination(
 }
 
 fun NavController.navigateToClientUpcomingChargesRoute(
-    clientId: Int,
+    resourceId: Int,
+    resourceType: String,
 ) {
-    this.navigate(ClientUpcomingChargesRoute(clientId = clientId))
+    this.navigate(ClientUpcomingChargesRoute(resourceId = resourceId, resourceType = resourceType))
 }

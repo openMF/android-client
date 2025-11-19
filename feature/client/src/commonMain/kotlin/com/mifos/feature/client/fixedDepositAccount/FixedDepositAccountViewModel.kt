@@ -123,13 +123,17 @@ class FixedDepositAccountViewModel(
                                 dialogState = FixedDepositAccountState.DialogState.Error(
                                     result.message,
                                 ),
+                                isLoading = false,
                             )
                         }
                     }
 
                     is DataState.Loading -> {
                         mutableStateFlow.update {
-                            it.copy(dialogState = FixedDepositAccountState.DialogState.Loading)
+                            it.copy(
+                                isLoading = true,
+                                dialogState = null,
+                            )
                         }
                     }
 
@@ -150,6 +154,7 @@ class FixedDepositAccountViewModel(
                                 dialogState = null,
                                 clientId = route.clientId,
                                 fixedDepositAccount = fixedDepositAccount,
+                                isLoading = false,
                             )
                         }
                     }
@@ -166,10 +171,10 @@ data class FixedDepositAccountState(
     val dialogState: DialogState? = null,
     val isSearchBarActive: Boolean = false,
     val isFilterDialogOpen: Boolean = false,
+    val isLoading: Boolean = false,
 ) {
     sealed interface DialogState {
         data class Error(val message: String) : DialogState
-        data object Loading : DialogState
     }
 }
 

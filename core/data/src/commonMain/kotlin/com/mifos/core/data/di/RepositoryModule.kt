@@ -13,10 +13,9 @@ import com.mifos.core.common.network.MifosDispatchers
 import com.mifos.core.data.repository.ActivateRepository
 import com.mifos.core.data.repository.CenterDetailsRepository
 import com.mifos.core.data.repository.CenterListRepository
-import com.mifos.core.data.repository.ChargeDialogRepository
+import com.mifos.core.data.repository.ChargeRepository
 import com.mifos.core.data.repository.CheckerInboxRepository
 import com.mifos.core.data.repository.CheckerInboxTasksRepository
-import com.mifos.core.data.repository.ClientChargeRepository
 import com.mifos.core.data.repository.ClientDetailsEditRepository
 import com.mifos.core.data.repository.ClientDetailsRepository
 import com.mifos.core.data.repository.ClientIdentifiersRepository
@@ -30,6 +29,7 @@ import com.mifos.core.data.repository.DataTableRepository
 import com.mifos.core.data.repository.DataTableRowDialogRepository
 import com.mifos.core.data.repository.DocumentCreateUpdateRepository
 import com.mifos.core.data.repository.DocumentListRepository
+import com.mifos.core.data.repository.FixedDepositRepository
 import com.mifos.core.data.repository.GenerateCollectionSheetRepository
 import com.mifos.core.data.repository.GroupDetailsRepository
 import com.mifos.core.data.repository.GroupListRepository
@@ -76,10 +76,9 @@ import com.mifos.core.data.repository.SyncSavingsAccountTransactionRepository
 import com.mifos.core.data.repositoryImp.ActivateRepositoryImp
 import com.mifos.core.data.repositoryImp.CenterDetailsRepositoryImp
 import com.mifos.core.data.repositoryImp.CenterListRepositoryImp
-import com.mifos.core.data.repositoryImp.ChargeDialogRepositoryImp
+import com.mifos.core.data.repositoryImp.ChargeRepositoryImp
 import com.mifos.core.data.repositoryImp.CheckerInboxRepositoryImp
 import com.mifos.core.data.repositoryImp.CheckerInboxTasksRepositoryImp
-import com.mifos.core.data.repositoryImp.ClientChargeRepositoryImp
 import com.mifos.core.data.repositoryImp.ClientDetailsEditRepositoryImpl
 import com.mifos.core.data.repositoryImp.ClientDetailsRepositoryImp
 import com.mifos.core.data.repositoryImp.ClientIdentifiersRepositoryImp
@@ -93,6 +92,7 @@ import com.mifos.core.data.repositoryImp.DataTableRepositoryImp
 import com.mifos.core.data.repositoryImp.DataTableRowDialogRepositoryImp
 import com.mifos.core.data.repositoryImp.DocumentCreateUpdateRepositoryImp
 import com.mifos.core.data.repositoryImp.DocumentListRepositoryImp
+import com.mifos.core.data.repositoryImp.FixedDepositRepositoryImpl
 import com.mifos.core.data.repositoryImp.GenerateCollectionSheetRepositoryImp
 import com.mifos.core.data.repositoryImp.GroupDetailsRepositoryImp
 import com.mifos.core.data.repositoryImp.GroupListRepositoryImp
@@ -152,7 +152,7 @@ val RepositoryModule = module {
     // Client
     singleOf(::ClientDetailsRepositoryImp) bind ClientDetailsRepository::class
     singleOf(::ClientListRepositoryImp) bind ClientListRepository::class
-    singleOf(::ClientChargeRepositoryImp) bind ClientChargeRepository::class
+    singleOf(::ChargeRepositoryImp) bind ChargeRepository::class
     singleOf(::ClientIdentifiersRepositoryImp) bind ClientIdentifiersRepository::class
     singleOf(::CreateNewClientRepositoryImp) bind CreateNewClientRepository::class
     singleOf(::ClientDetailsEditRepositoryImpl) bind ClientDetailsEditRepository::class
@@ -201,7 +201,6 @@ val RepositoryModule = module {
 
     // Others
     singleOf(::ActivateRepositoryImp) bind ActivateRepository::class
-    singleOf(::ChargeDialogRepositoryImp) bind ChargeDialogRepository::class
     singleOf(::CheckerInboxRepositoryImp) bind CheckerInboxRepository::class
     singleOf(::CheckerInboxTasksRepositoryImp) bind CheckerInboxTasksRepository::class
     singleOf(::DataTableDataRepositoryImp) bind DataTableDataRepository::class
@@ -226,6 +225,7 @@ val RepositoryModule = module {
 
     singleOf(::RecurringAccountRepositoryImp) bind RecurringAccountRepository::class
     singleOf(::ShareAccountRepositoryImpl) bind ShareAccountRepository::class
+    singleOf(::FixedDepositRepositoryImpl) bind FixedDepositRepository::class
 
     includes(platformModule)
     single<PlatformDependentDataModule> { getPlatformDataModule }

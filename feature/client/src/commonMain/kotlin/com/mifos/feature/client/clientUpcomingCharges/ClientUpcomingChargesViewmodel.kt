@@ -15,7 +15,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import androidx.paging.PagingData
-import com.mifos.core.data.repository.ClientChargeRepository
+import com.mifos.core.data.repository.ChargeRepository
 import com.mifos.core.data.util.NetworkMonitor
 import com.mifos.core.ui.util.BaseViewModel
 import com.mifos.room.entities.client.ChargesEntity
@@ -28,7 +28,7 @@ import org.jetbrains.compose.resources.getString
 class ClientUpcomingChargesViewmodel(
     private val networkMonitor: NetworkMonitor,
     savedStateHandle: SavedStateHandle,
-    private val repository: ClientChargeRepository,
+    private val repository: ChargeRepository,
 ) : BaseViewModel<ClientUpcomingChargesState, ClientUpcomingChargesEvent, ClientUpcomingChargesAction>(
     initialState = ClientUpcomingChargesState(),
 ) {
@@ -93,7 +93,7 @@ class ClientUpcomingChargesViewmodel(
         }
 
         runCatching {
-            repository.getClientCharges(route.clientId)
+            repository.getListOfPagingCharges(route.resourceType, route.resourceId)
         }.onSuccess { result ->
             mutableStateFlow.update {
                 it.copy(

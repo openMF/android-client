@@ -104,89 +104,94 @@ private fun ClientLoanAccountsScreen(
         ) {
             MifosBreadcrumbNavBar(navController)
 
-            Column(
-                modifier = Modifier.fillMaxSize()
-                    .padding(horizontal = DesignToken.padding.large),
-            ) {
-                ClientsAccountHeader(
-                    totalItem = state.loanAccounts.size.toString(),
-                    onAction = onAction,
-                )
+            when (state.isLoading) {
+                true -> MifosProgressIndicator()
+                false -> {
+                    Column(
+                        modifier = Modifier.fillMaxSize()
+                            .padding(horizontal = DesignToken.padding.large),
+                    ) {
+                        ClientsAccountHeader(
+                            totalItem = state.loanAccounts.size.toString(),
+                            onAction = onAction,
+                        )
 
-                if (state.isSearchBarActive) {
-                    MifosSearchBar(
-                        query = state.searchText,
-                        onQueryChange = {
-                            onAction.invoke(
-                                ClientLoanAccountsAction.UpdateSearchValue(
-                                    it,
-                                ),
-                            )
-                        },
-                        onSearchClick = { onAction.invoke(ClientLoanAccountsAction.OnSearchClick) },
-                        onBackClick = { onAction.invoke(ClientLoanAccountsAction.ToggleSearch) },
-                    )
-                }
-
-                Spacer(modifier = Modifier.height(DesignToken.padding.large))
-
-                if (state.loanAccounts.isEmpty()) {
-                    MifosEmptyCard()
-                } else {
-                    LazyColumn {
-                        items(state.loanAccounts) { loan ->
-                            val symbol = loan.currency?.displaySymbol ?: ""
-                            MifosActionsLoanListingComponent(
-                                accountNo = (loan.accountNo ?: "Not Available"),
-                                loanProduct = loan.productName ?: "Not Available",
-                                originalLoan = symbol + (
-                                    (loan.originalLoan ?: "Not Available").toString()
-                                    ),
-                                amountPaid = symbol + (
-                                    (
-                                        loan.amountPaid
-                                            ?: "Not Available"
-                                        ).toString()
-                                    ),
-                                loanBalance = symbol + (
-                                    (loan.amountPaid ?: "Not Available").toString()
-                                    ),
-                                type = loan.loanType?.value ?: "Not Available",
-                                // TODO check if we need to add other options as well, such as disburse and all
-                                // currently didn't add it cuz its not in the UI design
-                                menuList = when {
-                                    loan.status?.active == true -> {
-                                        listOf(
-                                            Actions.ViewAccount(
-                                                vectorResource(Res.drawable.wallet),
-                                            ),
-                                            Actions.MakeRepayment(
-                                                vectorResource(Res.drawable.cash_bundel),
-                                            ),
-                                        )
-                                    }
-
-                                    else -> {
-                                        listOf(
-                                            Actions.ViewAccount(
-                                                vectorResource(Res.drawable.wallet),
-                                            ),
-                                        )
-                                    }
+                        if (state.isSearchBarActive) {
+                            MifosSearchBar(
+                                query = state.searchText,
+                                onQueryChange = {
+                                    onAction.invoke(
+                                        ClientLoanAccountsAction.UpdateSearchValue(
+                                            it,
+                                        ),
+                                    )
                                 },
-                                onActionClicked = { actions ->
-                                    when (actions) {
-                                        is Actions.ViewAccount -> onAction(ClientLoanAccountsAction.ViewAccount)
-                                        is Actions.MakeRepayment -> onAction(
-                                            ClientLoanAccountsAction.MakeRepayment,
-                                        )
-
-                                        else -> null
-                                    }
-                                },
+                                onSearchClick = { onAction.invoke(ClientLoanAccountsAction.OnSearchClick) },
+                                onBackClick = { onAction.invoke(ClientLoanAccountsAction.ToggleSearch) },
                             )
+                        }
 
-                            Spacer(modifier = Modifier.height(8.dp))
+                        Spacer(modifier = Modifier.height(DesignToken.padding.large))
+
+                        if (state.loanAccounts.isEmpty()) {
+                            MifosEmptyCard()
+                        } else {
+                            LazyColumn {
+                                items(state.loanAccounts) { loan ->
+                                    val symbol = loan.currency?.displaySymbol ?: ""
+                                    MifosActionsLoanListingComponent(
+                                        accountNo = (loan.accountNo ?: "Not Available"),
+                                        loanProduct = loan.productName ?: "Not Available",
+                                        originalLoan = symbol + (
+                                            (loan.originalLoan ?: "Not Available").toString()
+                                            ),
+                                        amountPaid = symbol + (
+                                            (
+                                                loan.amountPaid
+                                                    ?: "Not Available"
+                                                ).toString()
+                                            ),
+                                        loanBalance = symbol + (
+                                            (loan.amountPaid ?: "Not Available").toString()
+                                            ),
+                                        type = loan.loanType?.value ?: "Not Available",
+                                        // TODO check if we need to add other options as well, such as disburse and all
+                                        // currently didn't add it cuz its not in the UI design
+                                        menuList = when {
+                                            loan.status?.active == true -> {
+                                                listOf(
+                                                    Actions.ViewAccount(
+                                                        vectorResource(Res.drawable.wallet),
+                                                    ),
+                                                    Actions.MakeRepayment(
+                                                        vectorResource(Res.drawable.cash_bundel),
+                                                    ),
+                                                )
+                                            }
+
+                                            else -> {
+                                                listOf(
+                                                    Actions.ViewAccount(
+                                                        vectorResource(Res.drawable.wallet),
+                                                    ),
+                                                )
+                                            }
+                                        },
+                                        onActionClicked = { actions ->
+                                            when (actions) {
+                                                is Actions.ViewAccount -> onAction(ClientLoanAccountsAction.ViewAccount)
+                                                is Actions.MakeRepayment -> onAction(
+                                                    ClientLoanAccountsAction.MakeRepayment,
+                                                )
+
+                                                else -> null
+                                            }
+                                        },
+                                    )
+
+                                    Spacer(modifier = Modifier.height(8.dp))
+                                }
+                            }
                         }
                     }
                 }
@@ -259,8 +264,6 @@ private fun ClientLoanAccountsDialog(
                 onDismissRequest = {},
             )
         }
-
-        ClientLoanAccountsState.DialogState.Loading -> MifosProgressIndicator()
 
         else -> null
     }
