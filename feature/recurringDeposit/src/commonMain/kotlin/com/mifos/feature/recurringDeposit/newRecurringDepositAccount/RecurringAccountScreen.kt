@@ -92,7 +92,8 @@ private fun RecurringAccountScaffold(
         },
         Step(name = stringResource(Res.string.feature_recurring_deposit_step_interest)) {
             InterestPage(
-                onNext = { onAction(RecurringAccountAction.OnNextPress) },
+                state = state,
+                onAction = onAction,
             )
         },
         Step(name = stringResource(Res.string.feature_recurring_deposit_step_charges)) {

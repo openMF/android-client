@@ -170,6 +170,44 @@ class RecurringAccountViewModel(
         )
     }
 
+    private fun handleInterestCalculationDaysInYearType(action: RecurringAccountAction.RecurringAccountInterestChartAction.OnInterestCalculationDaysInYearType) {
+        mutableStateFlow.update {
+            it.copy(
+                recurringDepositAccountInterestChart = it.recurringDepositAccountInterestChart.copy(
+                    interestCalculationDaysInYearType = action.interestCalculationTypeDaysInYear,
+                ),
+
+            )
+        }
+    }
+    private fun handleInterestCalculationType(action: RecurringAccountAction.RecurringAccountInterestChartAction.OnInterestCalculationType) {
+        mutableStateFlow.update {
+            it.copy(
+                recurringDepositAccountInterestChart = it.recurringDepositAccountInterestChart.copy(
+                    interestCalculationType = action.interestCalculationType,
+                ),
+            )
+        }
+    }
+    private fun handleInterestCompoundingPeriodType(action: RecurringAccountAction.RecurringAccountInterestChartAction.OnInterestCompoundingPeriodType) {
+        mutableStateFlow.update {
+            it.copy(
+                recurringDepositAccountInterestChart = it.recurringDepositAccountInterestChart.copy(
+                    interestCompoundingPeriodType = action.interestCompoundingPeriodType,
+                ),
+            )
+        }
+    }
+    private fun handleInterestPostingPeriodType(action: RecurringAccountAction.RecurringAccountInterestChartAction.OnInterestPostingPeriodType) {
+        mutableStateFlow.update {
+            it.copy(
+                recurringDepositAccountInterestChart = it.recurringDepositAccountInterestChart.copy(
+                    interestPostingPeriodType = action.interestPostingPeriodType,
+                ),
+            )
+        }
+    }
+
     private fun resetForRetry() {
         mutableStateFlow.update {
             it.copy(
@@ -577,6 +615,19 @@ class RecurringAccountViewModel(
             RecurringAccountAction.OnNextPress -> {
                 moveToNextStep()
             }
+
+            is RecurringAccountAction.RecurringAccountInterestChartAction.OnInterestCalculationDaysInYearType -> {
+                handleInterestCalculationDaysInYearType(action)
+            }
+            is RecurringAccountAction.RecurringAccountInterestChartAction.OnInterestCalculationType -> {
+                handleInterestCalculationType(action)
+            }
+            is RecurringAccountAction.RecurringAccountInterestChartAction.OnInterestCompoundingPeriodType -> {
+                handleInterestCompoundingPeriodType(action)
+            }
+            is RecurringAccountAction.RecurringAccountInterestChartAction.OnInterestPostingPeriodType -> {
+                handleInterestPostingPeriodType(action)
+            }
         }
     }
 }
@@ -590,6 +641,7 @@ data class RecurringAccountState(
     val recurringDepositAccountDetail: RecurringAccountDetailsState = RecurringAccountDetailsState(),
     val template: RecurringDepositAccountTemplate = RecurringDepositAccountTemplate(),
     val recurringDepositAccountSettings: RecurringAccountSettingsState = RecurringAccountSettingsState(),
+    val recurringDepositAccountInterestChart: RecurringAccountInterestChartState = RecurringAccountInterestChartState(),
     val currencyIndex: Int = -1,
     val currencyError: String? = null,
 ) {
@@ -615,6 +667,12 @@ data class RecurringAccountDetailsState(
 ) {
     val isDetailButtonEnabled = fieldOfficerIndex != -1 && submissionDate.isNotEmpty()
 }
+data class RecurringAccountInterestChartState(
+    val interestCalculationDaysInYearType: Int? = null,
+    val interestCalculationType: Int? = null,
+    val interestCompoundingPeriodType: Int? = null,
+    val interestPostingPeriodType: Int? = null,
+)
 
 data class RecurringAccountSettingsState(
     val canDoNext: Boolean = false,
@@ -716,6 +774,12 @@ sealed class RecurringAccountAction {
         data class SetPreMatureClosurePenalInterest(val penalInterest: String) : RecurringAccountSettingsAction()
         data class SetPreMatureClosureInterestPeriodIndex(val interestPeriodIndex: Int) : RecurringAccountSettingsAction()
         data class SetPreMatureClosureMinimumBalanceForInterestCalculation(val minimumBalanceForInterestCalculation: String) : RecurringAccountSettingsAction()
+    }
+    sealed class RecurringAccountInterestChartAction : RecurringAccountAction() {
+        data class OnInterestCalculationDaysInYearType(val interestCalculationTypeDaysInYear: Int) : RecurringAccountInterestChartAction()
+        data class OnInterestCompoundingPeriodType(val interestCompoundingPeriodType: Int) : RecurringAccountInterestChartAction()
+        data class OnInterestCalculationType(val interestCalculationType: Int) : RecurringAccountInterestChartAction()
+        data class OnInterestPostingPeriodType(val interestPostingPeriodType: Int) : RecurringAccountInterestChartAction()
     }
 }
 
