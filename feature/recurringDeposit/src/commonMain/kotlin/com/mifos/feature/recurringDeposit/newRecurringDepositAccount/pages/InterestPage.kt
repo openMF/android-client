@@ -23,7 +23,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import org.jetbrains.compose.resources.stringResource
 
-
 @Composable
 fun InterestPage(onNext: () -> Unit) {
     Column(horizontalAlignment = Alignment.CenterHorizontally) {

@@ -52,5 +52,5 @@
     <string name="feature_recurring_deposit_interest_compounding_period">Interest Compounding Period</string>
     <string name="feature_recurring_deposit_interest_posting_period">Interest Posting Period</string>
     <string name="feature_recurring_deposit_interest_calculation">Interest Calculated Using</string>
-    <string name="feature_recurring_deposit_Calculation_Days_In_Year">Days In Year </string>
+    <string name="feature_recurring_deposit_calculation_days_in_year">Days In Year </string>
 </resources>

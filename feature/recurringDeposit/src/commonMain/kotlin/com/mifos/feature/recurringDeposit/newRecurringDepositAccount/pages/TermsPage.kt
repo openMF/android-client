@@ -10,7 +10,7 @@
 package com.mifos.feature.recurringDeposit.newRecurringDepositAccount.pages
 
 import androidclient.feature.recurringdeposit.generated.resources.Res
-import androidclient.feature.recurringdeposit.generated.resources.feature_recurring_deposit_Calculation_Days_In_Year
+import androidclient.feature.recurringdeposit.generated.resources.feature_recurring_deposit_calculation_days_in_year
 import androidclient.feature.recurringdeposit.generated.resources.feature_recurring_deposit_interest_calculation
 import androidclient.feature.recurringdeposit.generated.resources.feature_recurring_deposit_interest_compounding_period
 import androidclient.feature.recurringdeposit.generated.resources.feature_recurring_deposit_interest_posting_period
@@ -26,7 +26,6 @@ import com.mifos.feature.recurringDeposit.newRecurringDepositAccount.RecurringAc
 import com.mifos.feature.recurringDeposit.newRecurringDepositAccount.RecurringAccountState
 import org.jetbrains.compose.resources.stringResource
 
-
 @Composable
 fun TermsPage(
     state: RecurringAccountState,
@@ -37,7 +36,7 @@ fun TermsPage(
             value = if (state.recurringDepositAccountInterestChart.interestCompoundingPeriodType == null) {
                 " "
             } else {
-                state.template.interestCalculationDaysInYearTypeOptions?.get(state.recurringDepositAccountInterestChart.interestCompoundingPeriodType)?.value
+                state.template.interestCompoundingPeriodTypeOptions?.get(state.recurringDepositAccountInterestChart.interestCompoundingPeriodType)?.value
                     ?: ""
             },
             onValueChanged = { },
@@ -114,8 +113,7 @@ fun TermsPage(
             options = state.template.interestCalculationDaysInYearTypeOptions?.map {
                 it.value ?: ""
             } ?: emptyList(),
-            label = stringResource(Res.string.feature_recurring_deposit_Calculation_Days_In_Year),
+            label = stringResource(Res.string.feature_recurring_deposit_calculation_days_in_year),
         )
     }
 }
-
