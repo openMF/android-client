@@ -10,26 +10,112 @@
 package com.mifos.feature.recurringDeposit.newRecurringDepositAccount.pages
 
 import androidclient.feature.recurringdeposit.generated.resources.Res
-import androidclient.feature.recurringdeposit.generated.resources.feature_recurring_deposit_next_button
-import androidclient.feature.recurringdeposit.generated.resources.feature_recurring_deposit_terms_page
+import androidclient.feature.recurringdeposit.generated.resources.feature_recurring_deposit_Calculation_Days_In_Year
+import androidclient.feature.recurringdeposit.generated.resources.feature_recurring_deposit_interest_calculation
+import androidclient.feature.recurringdeposit.generated.resources.feature_recurring_deposit_interest_compounding_period
+import androidclient.feature.recurringdeposit.generated.resources.feature_recurring_deposit_interest_posting_period
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
-import androidx.compose.material3.Button
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
+import com.mifos.core.designsystem.component.MifosTextFieldDropdown
+import com.mifos.core.designsystem.theme.DesignToken
+import com.mifos.feature.recurringDeposit.newRecurringDepositAccount.RecurringAccountAction
+import com.mifos.feature.recurringDeposit.newRecurringDepositAccount.RecurringAccountState
 import org.jetbrains.compose.resources.stringResource
 
+
 @Composable
-fun TermsPage(onNext: () -> Unit) {
+fun TermsPage(
+    state: RecurringAccountState,
+    onAction: (RecurringAccountAction) -> Unit,
+) {
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
-        Text(stringResource(Res.string.feature_recurring_deposit_terms_page))
-        Spacer(Modifier.height(8.dp))
-        Button(onClick = onNext) {
-            Text(stringResource(Res.string.feature_recurring_deposit_next_button))
-        }
+        MifosTextFieldDropdown(
+            value = if (state.recurringDepositAccountInterestChart.interestCompoundingPeriodType == null) {
+                " "
+            } else {
+                state.template.interestCalculationDaysInYearTypeOptions?.get(state.recurringDepositAccountInterestChart.interestCompoundingPeriodType)?.value
+                    ?: ""
+            },
+            onValueChanged = { },
+            onOptionSelected = { index, value ->
+                onAction(
+                    RecurringAccountAction.RecurringAccountInterestChartAction.OnInterestCompoundingPeriodType(
+                        index,
+                    ),
+                )
+            },
+            options = state.template.interestCompoundingPeriodTypeOptions?.map {
+                it.value ?: ""
+            } ?: emptyList(),
+            label = stringResource(Res.string.feature_recurring_deposit_interest_compounding_period),
+        )
+        Spacer(modifier = Modifier.height(DesignToken.padding.large))
+        MifosTextFieldDropdown(
+            value = if (state.recurringDepositAccountInterestChart.interestPostingPeriodType == null) {
+                " "
+            } else {
+                state.template.interestPostingPeriodTypeOptions?.get(state.recurringDepositAccountInterestChart.interestPostingPeriodType)?.value
+                    ?: ""
+            },
+            onValueChanged = { },
+            onOptionSelected = { index, value ->
+                onAction(
+                    RecurringAccountAction.RecurringAccountInterestChartAction.OnInterestPostingPeriodType(
+                        index,
+                    ),
+                )
+            },
+            options = state.template.interestPostingPeriodTypeOptions?.map {
+                it.value ?: ""
+            } ?: emptyList(),
+            label = stringResource(Res.string.feature_recurring_deposit_interest_posting_period),
+        )
+        Spacer(modifier = Modifier.height(DesignToken.padding.large))
+        MifosTextFieldDropdown(
+            value = if (state.recurringDepositAccountInterestChart.interestCalculationType == null) {
+                " "
+            } else {
+                state.template.interestCalculationTypeOptions?.get(state.recurringDepositAccountInterestChart.interestCalculationType)?.value
+                    ?: ""
+            },
+            onValueChanged = { },
+            onOptionSelected = { index, value ->
+                onAction(
+                    RecurringAccountAction.RecurringAccountInterestChartAction.OnInterestCalculationType(
+                        index,
+                    ),
+                )
+            },
+            options = state.template.interestCalculationTypeOptions?.map {
+                it.value ?: ""
+            } ?: emptyList(),
+            label = stringResource(Res.string.feature_recurring_deposit_interest_calculation),
+        )
+        Spacer(modifier = Modifier.height(DesignToken.padding.large))
+        MifosTextFieldDropdown(
+            value = if (state.recurringDepositAccountInterestChart.interestCalculationDaysInYearType == null) {
+                " "
+            } else {
+                state.template.interestCalculationDaysInYearTypeOptions?.get(state.recurringDepositAccountInterestChart.interestCalculationDaysInYearType)?.value
+                    ?: ""
+            },
+            onValueChanged = { },
+            onOptionSelected = { index, value ->
+                onAction(
+                    RecurringAccountAction.RecurringAccountInterestChartAction.OnInterestCalculationDaysInYearType(
+                        index,
+                    ),
+                )
+            },
+            options = state.template.interestCalculationDaysInYearTypeOptions?.map {
+                it.value ?: ""
+            } ?: emptyList(),
+            label = stringResource(Res.string.feature_recurring_deposit_Calculation_Days_In_Year),
+        )
     }
 }
+
