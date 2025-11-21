@@ -17,7 +17,6 @@ import com.mifos.core.data.repository.ClientDetailsRepository
 import com.mifos.core.data.util.NetworkMonitor
 import com.mifos.core.network.model.CollateralItemResult
 import com.mifos.core.ui.util.BaseViewModel
-import com.mifos.feature.client.clientCollateral.ClientCollateralRoute
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch

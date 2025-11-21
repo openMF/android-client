@@ -50,6 +50,7 @@ internal fun ClientCollateralDetailScreen(
         state = state,
         navController = navController,
         onAction = remember(viewModel) { { viewModel.trySendAction(it) } },
+        modifier = modifier,
     )
 }
 
@@ -75,7 +76,7 @@ internal fun ClientCollateralDetailScreenContent(
 
             when (state.state) {
                 ClientCollateralDetailsState.State.Empty -> {
-                    MifosEmptyCard()
+                    MifosEmptyCard(modifier = Modifier.padding(horizontal = DesignToken.padding.large))
                 }
 
                 is ClientCollateralDetailsState.State.Error -> {
