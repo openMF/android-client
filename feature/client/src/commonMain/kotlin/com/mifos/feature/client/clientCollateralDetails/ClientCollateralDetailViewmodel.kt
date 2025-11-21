@@ -28,7 +28,7 @@ internal class ClientCollateralDetailViewmodel(
     private val networkMonitor: NetworkMonitor,
 ) : BaseViewModel<ClientCollateralDetailsState, ClientCollateralDetailsEvent, ClientCollateralDetailsAction>(
     initialState = run {
-        ClientCollateralDetailsState(savedStateHandle.toRoute<ClientCollateralRoute>().clientId)
+        ClientCollateralDetailsState(savedStateHandle.toRoute<ClientCollateralDetailRoute>().clientId)
     },
 ) {
 

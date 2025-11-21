@@ -23,6 +23,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
@@ -48,6 +49,7 @@ internal fun ClientCollateralDetailScreen(
     ClientCollateralDetailScreenContent(
         state = state,
         navController = navController,
+        onAction = remember(viewModel) { { viewModel.trySendAction(it) } },
     )
 }
 
@@ -56,7 +58,7 @@ internal fun ClientCollateralDetailScreenContent(
     state: ClientCollateralDetailsState,
     navController: NavController,
     modifier: Modifier = Modifier,
-    onAction: (ClientCollateralDetailsAction) -> Unit = {},
+    onAction: (ClientCollateralDetailsAction) -> Unit,
 ) {
     MifosScaffold(
         title = "",
