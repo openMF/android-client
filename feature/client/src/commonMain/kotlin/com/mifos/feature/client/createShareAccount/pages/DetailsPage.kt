@@ -41,8 +41,8 @@ import com.mifos.core.designsystem.component.MifosTextFieldDropdown
 import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.designsystem.theme.MifosTypography
 import com.mifos.core.ui.components.MifosTwoButtonRow
-import com.mifos.feature.client.createShareAccount.ShareAccountAction
-import com.mifos.feature.client.createShareAccount.ShareAccountState
+import com.mifos.feature.client.createShareAccount.CreateShareAccountAction
+import com.mifos.feature.client.createShareAccount.CreateShareAccountState
 import org.jetbrains.compose.resources.stringResource
 import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
@@ -50,8 +50,8 @@ import kotlin.time.ExperimentalTime
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalTime::class)
 @Composable
 fun DetailsPage(
-    state: ShareAccountState,
-    onAction: (ShareAccountAction) -> Unit,
+    state: CreateShareAccountState,
+    onAction: (CreateShareAccountAction) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val submissionDatePickerState = rememberDatePickerState(
@@ -66,15 +66,15 @@ fun DetailsPage(
     if (state.showSubmissionDatePicker) {
         DatePickerDialog(
             onDismissRequest = {
-                onAction(ShareAccountAction.OnOpenSubmissionDatePicker(state = false))
+                onAction(CreateShareAccountAction.OnOpenSubmissionDatePicker(state = false))
             },
             confirmButton = {
                 TextButton(
                     onClick = {
-                        onAction(ShareAccountAction.OnOpenSubmissionDatePicker(state = false))
+                        onAction(CreateShareAccountAction.OnOpenSubmissionDatePicker(state = false))
                         submissionDatePickerState.selectedDateMillis?.let {
                             onAction(
-                                ShareAccountAction.OnSubmissionDateChange(
+                                CreateShareAccountAction.OnSubmissionDateChange(
                                     DateHelper.getDateAsStringFromLong(it),
                                 ),
                             )
@@ -85,7 +85,7 @@ fun DetailsPage(
             dismissButton = {
                 TextButton(
                     onClick = {
-                        onAction(ShareAccountAction.OnOpenSubmissionDatePicker(state = false))
+                        onAction(CreateShareAccountAction.OnOpenSubmissionDatePicker(state = false))
                     },
                 ) { Text(stringResource(Res.string.feature_share_account_detail_date_cancel)) }
             },
@@ -112,7 +112,7 @@ fun DetailsPage(
                 },
                 onValueChanged = {},
                 onOptionSelected = { index, value ->
-                    onAction(ShareAccountAction.OnShareProductChange(index))
+                    onAction(CreateShareAccountAction.OnShareProductChange(index))
                 },
                 options = state.productOption.map {
                     it.name
@@ -124,14 +124,14 @@ fun DetailsPage(
                 value = state.submissionDate,
                 label = stringResource(Res.string.feature_share_account_detail_submission_date),
                 openDatePicker = {
-                    onAction(ShareAccountAction.OnOpenSubmissionDatePicker(true))
+                    onAction(CreateShareAccountAction.OnOpenSubmissionDatePicker(true))
                 },
             )
             Spacer(Modifier.height(DesignToken.padding.large))
             MifosOutlinedTextField(
                 value = state.externalId ?: "",
                 onValueChange = {
-                    onAction(ShareAccountAction.OnExternalIdChange(it))
+                    onAction(CreateShareAccountAction.OnExternalIdChange(it))
                 },
                 label = stringResource(Res.string.feature_share_account_detail_external_id),
             )
@@ -141,10 +141,10 @@ fun DetailsPage(
             firstBtnText = stringResource(Res.string.feature_share_account_back),
             secondBtnText = stringResource(Res.string.feature_share_account_next),
             onFirstBtnClick = {
-                onAction(ShareAccountAction.NavigateBack)
+                onAction(CreateShareAccountAction.NavigateBack)
             },
             onSecondBtnClick = {
-                onAction(ShareAccountAction.OnDetailNext)
+                onAction(CreateShareAccountAction.OnDetailNext)
             },
             modifier = Modifier.padding(top = DesignToken.padding.small),
         )

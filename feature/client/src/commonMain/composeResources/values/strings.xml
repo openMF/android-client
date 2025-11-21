@@ -569,6 +569,19 @@
     <string name="feature_share_account_terms_type">Type</string>
     <string name="feature_share_account_terms_lock_in_period">Lock-in Period</string>
 
+    <string name="feature_share_account_charge">Charge</string>
+    <string name="feature_share_account_charge_add_new">Add New</string>
+    <string name="feature_share_account_charge_view">View</string>
+    <string name="feature_share_account_charge_active_charge">Active Charge</string>
+    <string name="feature_share_account_charge_add_new_charge">Add New Charge</string>
+    <string name="feature_share_account_charge_date">Date</string>
+    <string name="feature_share_account_charge_type">Type</string>
+    <string name="feature_share_account_charge_collected_on">Collected On</string>
+    <string name="feature_share_account_charge_view_charges">View Charges</string>
+    <string name="feature_share_account_charge_edit_charge">Edit Charge</string>
+    <string name="feature_share_account_charge_add">Add</string>
+    <string name="feature_share_account_charge_btn_add_new">Add</string>
+
 
     <!-- Handle Error-->
     <string name="feature_share_account_field_empty">This field cannot be empty</string>

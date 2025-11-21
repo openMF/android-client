@@ -599,7 +599,7 @@ fun MifosActionsShareListingComponent(
 fun MifosActionsChargeListingComponent(
     chargeTitle: String,
     type: String,
-    date: String,
+    date: String? = null,
     collectedOn: String,
     amount: String,
     menuList: List<Actions> = listOf<Actions>(
@@ -642,11 +642,15 @@ fun MifosActionsChargeListingComponent(
                             text = type,
                         ),
                     )
-                    PrintTextUtil(
-                        TextUtil(
-                            text = date,
-                        ),
-                    )
+                    if (
+                        date != null
+                    ) {
+                        PrintTextUtil(
+                            TextUtil(
+                                text = date,
+                            ),
+                        )
+                    }
                 }
                 Row(
                     verticalAlignment = Alignment.CenterVertically,

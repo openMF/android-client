@@ -474,9 +474,9 @@ private fun ShowChargesDialog(
                             collectedOn = it.chargeTimeType?.value.toString(),
                             amount = it.amount.toString(),
                             onActionClicked = {},
-                            isExpanded = expandedIndex == it.id,
+                            isExpanded = expandedIndex == index,
                             onExpandToggle = {
-                                expandedIndex = if (expandedIndex == it.id) -1 else it.id
+                                expandedIndex = if (expandedIndex == index) -1 else index
                             },
                         )
                     }
@@ -505,9 +505,9 @@ private fun ShowChargesDialog(
                                     else -> {}
                                 }
                             },
-                            isExpanded = expandedIndex == it.id,
+                            isExpanded = expandedIndex == index,
                             onExpandToggle = {
-                                expandedIndex = if (expandedIndex == it.id) -1 else it.id
+                                expandedIndex = if (expandedIndex == index) -1 else index
                             },
                         )
                     }

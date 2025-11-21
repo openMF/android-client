@@ -147,7 +147,6 @@ fun DetailsPage(
                     it.displayName
                 },
                 label = stringResource(Res.string.feature_savings_field_officer),
-                errorMessage = state.fieldOfficerError,
             )
 
             MifosOutlinedTextField(

@@ -52,8 +52,8 @@ import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.designsystem.theme.MifosTypography
 import com.mifos.core.ui.components.MifosCheckBox
 import com.mifos.core.ui.components.MifosTwoButtonRow
-import com.mifos.feature.client.createShareAccount.ShareAccountAction
-import com.mifos.feature.client.createShareAccount.ShareAccountState
+import com.mifos.feature.client.createShareAccount.CreateShareAccountAction
+import com.mifos.feature.client.createShareAccount.CreateShareAccountState
 import org.jetbrains.compose.resources.stringResource
 import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
@@ -61,8 +61,8 @@ import kotlin.time.ExperimentalTime
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalTime::class)
 @Composable
 fun TermsPage(
-    state: ShareAccountState,
-    onAction: (ShareAccountAction) -> Unit,
+    state: CreateShareAccountState,
+    onAction: (CreateShareAccountAction) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val applicationDatePickerState = rememberDatePickerState(
@@ -77,15 +77,15 @@ fun TermsPage(
     if (state.showApplicationDatePicker) {
         DatePickerDialog(
             onDismissRequest = {
-                onAction(ShareAccountAction.OnOpenApplicationDatePicker(state = false))
+                onAction(CreateShareAccountAction.OnOpenApplicationDatePicker(state = false))
             },
             confirmButton = {
                 TextButton(
                     onClick = {
-                        onAction(ShareAccountAction.OnOpenApplicationDatePicker(state = false))
+                        onAction(CreateShareAccountAction.OnOpenApplicationDatePicker(state = false))
                         applicationDatePickerState.selectedDateMillis?.let {
                             onAction(
-                                ShareAccountAction.OnApplicationDateChange(
+                                CreateShareAccountAction.OnApplicationDateChange(
                                     DateHelper.getDateAsStringFromLong(it),
                                 ),
                             )
@@ -96,7 +96,7 @@ fun TermsPage(
             dismissButton = {
                 TextButton(
                     onClick = {
-                        onAction(ShareAccountAction.OnOpenApplicationDatePicker(state = false))
+                        onAction(CreateShareAccountAction.OnOpenApplicationDatePicker(state = false))
                     },
                 ) { Text(stringResource(Res.string.feature_share_account_detail_date_cancel)) }
             },
@@ -136,7 +136,7 @@ fun TermsPage(
             MifosOutlinedTextField(
                 value = state.totalShares,
                 onValueChange = {
-                    onAction(ShareAccountAction.OnTotalSharesChange(it))
+                    onAction(CreateShareAccountAction.OnTotalSharesChange(it))
                 },
                 label = stringResource(Res.string.feature_share_account_terms_total_shares),
                 config = MifosTextFieldConfig(
@@ -157,7 +157,7 @@ fun TermsPage(
                 },
                 onValueChanged = {},
                 onOptionSelected = { index, value ->
-                    onAction(ShareAccountAction.OnSavingsAccountChange(index))
+                    onAction(CreateShareAccountAction.OnSavingsAccountChange(index))
                 },
                 options = state.savingsAccountOptions.map {
                     it.accountNo + (it.savingsProductName?.let { name -> " - $name" }.orEmpty())
@@ -170,7 +170,7 @@ fun TermsPage(
                 value = state.applicationDate,
                 label = stringResource(Res.string.feature_share_account_terms_application_date),
                 openDatePicker = {
-                    onAction(ShareAccountAction.OnOpenApplicationDatePicker(true))
+                    onAction(CreateShareAccountAction.OnOpenApplicationDatePicker(true))
                 },
                 errorMessage = state.applicationDateError?.let { stringResource(it) },
             )
@@ -179,7 +179,7 @@ fun TermsPage(
                 text = stringResource(Res.string.feature_share_account_terms_allow_dividends),
                 checked = state.isDividendAllowed,
                 onCheckChanged = {
-                    onAction(ShareAccountAction.OnIsDividendAllowedClicked)
+                    onAction(CreateShareAccountAction.OnIsDividendAllowedClicked)
                 },
             )
             Spacer(Modifier.height(DesignToken.padding.large))
@@ -193,7 +193,7 @@ fun TermsPage(
             MifosOutlinedTextField(
                 value = state.minActivePeriodFreq,
                 onValueChange = {
-                    onAction(ShareAccountAction.OnMinActiveFreqChange(it))
+                    onAction(CreateShareAccountAction.OnMinActiveFreqChange(it))
                 },
                 label = stringResource(Res.string.feature_share_account_terms_frequency),
                 config = MifosTextFieldConfig(
@@ -214,7 +214,7 @@ fun TermsPage(
                 },
                 onValueChanged = {},
                 onOptionSelected = { index, value ->
-                    onAction(ShareAccountAction.OnMinActiveFreqTypeChange(index))
+                    onAction(CreateShareAccountAction.OnMinActiveFreqTypeChange(index))
                 },
                 options = state.minimumActivePeriodFrequencyTypeOptions.map {
                     it.value
@@ -233,7 +233,7 @@ fun TermsPage(
             MifosOutlinedTextField(
                 value = state.lockInPeriodFreq,
                 onValueChange = {
-                    onAction(ShareAccountAction.OnLockInFreqChange(it))
+                    onAction(CreateShareAccountAction.OnLockInFreqChange(it))
                 },
                 label = stringResource(Res.string.feature_share_account_terms_frequency),
                 config = MifosTextFieldConfig(
@@ -254,7 +254,7 @@ fun TermsPage(
                 },
                 onValueChanged = {},
                 onOptionSelected = { index, value ->
-                    onAction(ShareAccountAction.OnLockInFreqTypeChange(index))
+                    onAction(CreateShareAccountAction.OnLockInFreqTypeChange(index))
                 },
                 options = state.lockInPeriodFrequencyTypeOptions.map {
                     it.value
@@ -268,10 +268,10 @@ fun TermsPage(
             firstBtnText = stringResource(Res.string.feature_share_account_back),
             secondBtnText = stringResource(Res.string.feature_share_account_next),
             onFirstBtnClick = {
-                onAction(ShareAccountAction.PreviousStep)
+                onAction(CreateShareAccountAction.PreviousStep)
             },
             onSecondBtnClick = {
-                onAction(ShareAccountAction.OnTermsNext)
+                onAction(CreateShareAccountAction.OnTermsNext)
             },
             modifier = Modifier.padding(top = DesignToken.padding.small),
         )
