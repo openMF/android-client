@@ -28,7 +28,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -38,7 +38,10 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -54,6 +57,7 @@ import com.mifos.core.ui.components.MifosBreadcrumbNavBar
 import com.mifos.core.ui.components.MifosProgressIndicator
 import com.mifos.core.ui.components.MifosSearchBar
 import com.mifos.core.ui.util.EventsEffect
+import com.mifos.room.entities.accounts.savings.SavingAccountDepositTypeEntity
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
@@ -63,27 +67,32 @@ internal fun SavingsAccountsScreenRoute(
     navigateBack: () -> Unit,
     navController: NavController,
     viewModel: SavingsAccountsViewModel = koinViewModel(),
-    navigateToViewAccount: (Int) -> Unit,
+    navigateToViewAccount: (Int, SavingAccountDepositTypeEntity) -> Unit,
+    navigateToApproveAccount: (Int) -> Unit,
 ) {
     val state by viewModel.stateFlow.collectAsStateWithLifecycle()
 
     EventsEffect(viewModel.eventFlow) { event ->
         when (event) {
             SavingsAccountEvent.NavigateBack -> navigateBack()
-            is SavingsAccountEvent.ViewAccount -> navigateToViewAccount(2)
-            SavingsAccountEvent.ApproveAccount -> {}
+            is SavingsAccountEvent.ViewAccount -> navigateToViewAccount(
+                event.accountId,
+                event.accountType,
+            )
+
+            is SavingsAccountEvent.ApproveAccount -> navigateToApproveAccount(event.accountId)
         }
     }
-
-    SavingsAccountsDialog(
-        state = state,
-        onAction = remember(viewModel) { { viewModel.trySendAction(it) } },
-    )
 
     SavingsAccountsScreen(
         state = state,
         onAction = remember(viewModel) { { viewModel.trySendAction(it) } },
         navController = navController,
+    )
+
+    SavingsAccountsDialog(
+        state = state,
+        onAction = remember(viewModel) { { viewModel.trySendAction(it) } },
     )
 }
 
@@ -93,6 +102,8 @@ fun SavingsAccountsScreen(
     state: SavingsAccountState,
     navController: NavController,
 ) {
+    var expandedIndex by rememberSaveable { mutableStateOf(-1) }
+
     MifosScaffold(
         title = stringResource(Res.string.update_default_account_title),
         onBackPressed = { onAction(SavingsAccountAction.NavigateBack) },
@@ -122,7 +133,13 @@ fun SavingsAccountsScreen(
                         if (state.isSearchBarActive) {
                             MifosSearchBar(
                                 query = state.searchText,
-                                onQueryChange = { onAction.invoke(SavingsAccountAction.UpdateSearchValue(it)) },
+                                onQueryChange = {
+                                    onAction.invoke(
+                                        SavingsAccountAction.UpdateSearchValue(
+                                            it,
+                                        ),
+                                    )
+                                },
                                 onSearchClick = { onAction.invoke(SavingsAccountAction.OnSearchClick) },
                                 onBackClick = { onAction.invoke(SavingsAccountAction.ToggleSearch) },
                             )
@@ -134,7 +151,7 @@ fun SavingsAccountsScreen(
                             EmptySavingsCard()
                         } else {
                             LazyColumn {
-                                items(state.savingsAccounts) { savings ->
+                                itemsIndexed(state.savingsAccounts) { index, savings ->
                                     MifosActionsSavingsListingComponent(
                                         accountNo = savings.accountNo.toString(),
                                         savingsProduct = stringResource(Res.string.client_product_saving_account),
@@ -159,7 +176,9 @@ fun SavingsAccountsScreen(
                                             when (actions) {
                                                 is Actions.ViewAccount -> onAction.invoke(
                                                     SavingsAccountAction.ViewAccount(
-                                                        state.clientId,
+                                                        savings.id ?: 0,
+                                                        savings.depositType
+                                                            ?: SavingAccountDepositTypeEntity(),
                                                     ),
                                                 )
 
@@ -178,6 +197,11 @@ fun SavingsAccountsScreen(
                                             stringResource(Res.string.client_savings_pending_approval)
                                         } else {
                                             stringResource(Res.string.client_savings_not_avilable)
+                                        },
+                                        isExpanded = expandedIndex == index,
+                                        onExpandToggle = {
+                                            expandedIndex =
+                                                if (expandedIndex == index) -1 else index
                                         },
                                     )
 
