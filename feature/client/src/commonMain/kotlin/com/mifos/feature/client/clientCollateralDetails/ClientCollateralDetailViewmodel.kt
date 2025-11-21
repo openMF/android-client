@@ -1,3 +1,12 @@
+/*
+ * Copyright 2025 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ */
 package com.mifos.feature.client.clientCollateralDetails
 
 import androidx.lifecycle.SavedStateHandle
@@ -6,19 +15,12 @@ import androidx.navigation.toRoute
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.repository.ClientDetailsRepository
 import com.mifos.core.data.util.NetworkMonitor
-import com.mifos.core.network.model.CollateralItem
 import com.mifos.core.network.model.CollateralItemResult
-import com.mifos.core.ui.components.ResultStatus
 import com.mifos.core.ui.util.BaseViewModel
-import com.mifos.feature.client.clientCollateral.ClientCollateralAction
-import com.mifos.feature.client.clientCollateral.ClientCollateralEvent
 import com.mifos.feature.client.clientCollateral.ClientCollateralRoute
-import com.mifos.feature.client.clientCollateral.ClientCollateralState
-import com.mifos.feature.client.clientCollateral.ClientCollateralState.DialogState
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-
 
 internal class ClientCollateralDetailViewmodel(
     savedStateHandle: SavedStateHandle,
@@ -91,7 +93,6 @@ internal class ClientCollateralDetailViewmodel(
             ClientCollateralDetailsAction.OnRetry -> getCollaterals()
         }
     }
-
 }
 
 data class ClientCollateralDetailsState(

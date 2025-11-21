@@ -1,43 +1,40 @@
+/*
+ * Copyright 2025 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ */
 package com.mifos.feature.client.clientCollateralDetails
 
 import androidclient.feature.client.generated.resources.Res
-import androidclient.feature.client.generated.resources.client_collateral_title
-import androidclient.feature.client.generated.resources.client_product_shares_account
 import androidclient.feature.client.generated.resources.client_profile_general_action_title_collateral_data
 import androidclient.feature.client.generated.resources.client_savings_item
-import androidclient.feature.client.generated.resources.filter
-import androidclient.feature.client.generated.resources.search
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material3.Icon
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.mifos.core.designsystem.component.MifosScaffold
-import com.mifos.core.designsystem.theme.MifosTypography
-import com.mifos.core.designsystem.utils.onClick
-import com.mifos.core.ui.components.MifosBreadcrumbNavBar
-import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.MaterialTheme
 import com.mifos.core.designsystem.theme.DesignToken
+import com.mifos.core.designsystem.theme.MifosTypography
 import com.mifos.core.network.model.CollateralItemResult
 import com.mifos.core.ui.components.MifosActionsCollateralDataListingComponent
+import com.mifos.core.ui.components.MifosBreadcrumbNavBar
 import com.mifos.core.ui.components.MifosEmptyCard
 import com.mifos.core.ui.components.MifosErrorComponent
 import com.mifos.core.ui.components.MifosProgressIndicator
-import com.mifos.feature.client.clientCollateral.ClientCollateralAction
-import com.mifos.feature.client.shareAccounts.ShareAccountsAction
-import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -47,13 +44,11 @@ internal fun ClientCollateralDetailScreen(
     modifier: Modifier = Modifier,
     viewModel: ClientCollateralDetailViewmodel = koinViewModel(),
 ) {
-
     val state by viewModel.stateFlow.collectAsStateWithLifecycle()
     ClientCollateralDetailScreenContent(
         state = state,
         navController = navController,
     )
-
 }
 
 @Composable
@@ -63,7 +58,6 @@ internal fun ClientCollateralDetailScreenContent(
     modifier: Modifier = Modifier,
     onAction: (ClientCollateralDetailsAction) -> Unit = {},
 ) {
-
     MifosScaffold(
         title = "",
         onBackPressed = { },

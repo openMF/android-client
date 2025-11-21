@@ -539,16 +539,16 @@ fun MifosActionsShareListingComponent(
                     MifosListingRowItem(
                         key = stringResource(Res.string.client_share_accounts_pending_for_approval_shares),
                         value = (
-                                pendingForApprovalShares
-                                    ?: stringResource(Res.string.listing_component_identifier_not_available)
-                                ).toString(),
+                            pendingForApprovalShares
+                                ?: stringResource(Res.string.listing_component_identifier_not_available)
+                            ).toString(),
                     )
                     MifosListingRowItem(
                         key = stringResource(Res.string.client_share_accounts_approved_shares),
                         value = (
-                                approvedShares
-                                    ?: stringResource(Res.string.listing_component_identifier_not_available)
-                                ).toString(),
+                            approvedShares
+                                ?: stringResource(Res.string.listing_component_identifier_not_available)
+                            ).toString(),
                     )
                 }
             }
@@ -629,7 +629,7 @@ fun MifosActionsChargeListingComponent(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween,
 
-                ) {
+            ) {
                 Column(
                     modifier = Modifier.weight(1f),
                     verticalArrangement = Arrangement.spacedBy(DesignToken.padding.extraExtraSmall),
@@ -805,7 +805,7 @@ fun MifosActionsSavingsListingComponent(
                                 imageVector = menuItem.icon,
                                 contentDescription = "",
 
-                                )
+                            )
 
                             Text(
                                 modifier = Modifier.fillMaxWidth(),

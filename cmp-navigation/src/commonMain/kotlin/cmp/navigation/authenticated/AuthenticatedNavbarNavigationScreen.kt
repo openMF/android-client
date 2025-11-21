@@ -347,7 +347,7 @@ internal fun AuthenticatedNavbarNavigationScreenContent(
                     onCreateCenter = navController::navigateCreateCenterScreenRoute,
                     onCreateGroup = navController::navigateToCreateNewGroupScreen,
                     onCenter = navController::navigateCenterDetailsScreenRoute,
-                    onClient =navController::navigateToClientProfileRoute,
+                    onClient = navController::navigateToClientProfileRoute,
                     onGroup = navController::navigateToGroupDetailsScreen,
                     onLoan = navController::navigateToLoanAccountSummaryScreen,
                     onSavings = navController::navigateClientDetailsScreen,

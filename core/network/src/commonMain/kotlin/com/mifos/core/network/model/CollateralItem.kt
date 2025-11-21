@@ -28,5 +28,5 @@ data class CollateralItemResult(
     val collateralId: Int,
     val basePrice: Double,
     val pctToBase: Double,
-    val quantity: Double
+    val quantity: Double,
 )

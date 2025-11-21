@@ -242,7 +242,7 @@ fun NavGraphBuilder.clientNavGraph(
         )
 
         clientCollateralDetailDestination(
-            navController = navController
+            navController = navController,
         )
 
         clientRecurringDepositAccountDestination(
