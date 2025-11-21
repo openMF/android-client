@@ -732,17 +732,19 @@ fun MifosActionsSavingsListingComponent(
     savingsProductName: String,
     lastActive: String,
     balance: String,
+    isExpanded: Boolean,
+    onExpandToggle: () -> Unit,
     menuList: List<Actions>,
     onActionClicked: (Actions) -> Unit,
 ) {
-    var isExpanded by rememberSaveable { mutableStateOf(false) }
-
     Column {
         MifosActionsListingComponentOutline(
             isExpanded = isExpanded,
         ) {
             Column(
-                modifier = Modifier.padding(DesignToken.padding.large),
+                modifier = Modifier.padding(DesignToken.padding.large).onClick {
+                    onExpandToggle()
+                },
             ) {
                 MifosListingRowItemHeader(
                     text = accountNo,
@@ -771,7 +773,7 @@ fun MifosActionsSavingsListingComponent(
             }
         }
 
-        if (isExpanded) {
+        AnimatedVisibility(isExpanded) {
             Surface(
                 modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(
@@ -1137,6 +1139,8 @@ private fun PreviewMifosActionsSavingsListingComponent() {
                     else -> println("Action not Handled")
                 }
             },
+            isExpanded = true,
+            onExpandToggle = {},
         )
     }
 }

@@ -29,6 +29,7 @@ import com.mifos.core.data.repository.DataTableRepository
 import com.mifos.core.data.repository.DataTableRowDialogRepository
 import com.mifos.core.data.repository.DocumentCreateUpdateRepository
 import com.mifos.core.data.repository.DocumentListRepository
+import com.mifos.core.data.repository.FixedDepositRepository
 import com.mifos.core.data.repository.GenerateCollectionSheetRepository
 import com.mifos.core.data.repository.GroupDetailsRepository
 import com.mifos.core.data.repository.GroupListRepository
@@ -91,6 +92,7 @@ import com.mifos.core.data.repositoryImp.DataTableRepositoryImp
 import com.mifos.core.data.repositoryImp.DataTableRowDialogRepositoryImp
 import com.mifos.core.data.repositoryImp.DocumentCreateUpdateRepositoryImp
 import com.mifos.core.data.repositoryImp.DocumentListRepositoryImp
+import com.mifos.core.data.repositoryImp.FixedDepositRepositoryImpl
 import com.mifos.core.data.repositoryImp.GenerateCollectionSheetRepositoryImp
 import com.mifos.core.data.repositoryImp.GroupDetailsRepositoryImp
 import com.mifos.core.data.repositoryImp.GroupListRepositoryImp
@@ -223,6 +225,7 @@ val RepositoryModule = module {
 
     singleOf(::RecurringAccountRepositoryImp) bind RecurringAccountRepository::class
     singleOf(::ShareAccountRepositoryImpl) bind ShareAccountRepository::class
+    singleOf(::FixedDepositRepositoryImpl) bind FixedDepositRepository::class
 
     includes(platformModule)
     single<PlatformDependentDataModule> { getPlatformDataModule }
