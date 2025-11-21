@@ -10,18 +10,22 @@
 package com.mifos.feature.recurringDeposit.newRecurringDepositAccount.pages
 
 import androidclient.feature.recurringdeposit.generated.resources.Res
+import androidclient.feature.recurringdeposit.generated.resources.feature_recurring_deposit_back
 import androidclient.feature.recurringdeposit.generated.resources.feature_recurring_deposit_calculation_days_in_year
 import androidclient.feature.recurringdeposit.generated.resources.feature_recurring_deposit_interest_calculation
 import androidclient.feature.recurringdeposit.generated.resources.feature_recurring_deposit_interest_compounding_period
 import androidclient.feature.recurringdeposit.generated.resources.feature_recurring_deposit_interest_posting_period
+import androidclient.feature.recurringdeposit.generated.resources.feature_recurring_deposit_next
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import com.mifos.core.designsystem.component.MifosTextFieldDropdown
 import com.mifos.core.designsystem.theme.DesignToken
+import com.mifos.core.ui.components.MifosTwoButtonRow
 import com.mifos.feature.recurringDeposit.newRecurringDepositAccount.RecurringAccountAction
 import com.mifos.feature.recurringDeposit.newRecurringDepositAccount.RecurringAccountState
 import org.jetbrains.compose.resources.stringResource
@@ -31,12 +35,13 @@ fun TermsPage(
     state: RecurringAccountState,
     onAction: (RecurringAccountAction) -> Unit,
 ) {
+
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
         MifosTextFieldDropdown(
             value = if (state.recurringDepositAccountInterestChart.interestCompoundingPeriodType == null) {
                 " "
             } else {
-                state.template.interestCompoundingPeriodTypeOptions?.get(state.recurringDepositAccountInterestChart.interestCompoundingPeriodType)?.value
+                state.template.interestCompoundingPeriodTypeOptions?.getOrNull(state.recurringDepositAccountInterestChart.interestCompoundingPeriodType)?.value
                     ?: ""
             },
             onValueChanged = { },
@@ -57,7 +62,7 @@ fun TermsPage(
             value = if (state.recurringDepositAccountInterestChart.interestPostingPeriodType == null) {
                 " "
             } else {
-                state.template.interestPostingPeriodTypeOptions?.get(state.recurringDepositAccountInterestChart.interestPostingPeriodType)?.value
+                state.template.interestPostingPeriodTypeOptions?.getOrNull(state.recurringDepositAccountInterestChart.interestPostingPeriodType)?.value
                     ?: ""
             },
             onValueChanged = { },
@@ -78,7 +83,7 @@ fun TermsPage(
             value = if (state.recurringDepositAccountInterestChart.interestCalculationType == null) {
                 " "
             } else {
-                state.template.interestCalculationTypeOptions?.get(state.recurringDepositAccountInterestChart.interestCalculationType)?.value
+                state.template.interestCalculationTypeOptions?.getOrNull(state.recurringDepositAccountInterestChart.interestCalculationType)?.value
                     ?: ""
             },
             onValueChanged = { },
@@ -99,7 +104,7 @@ fun TermsPage(
             value = if (state.recurringDepositAccountInterestChart.interestCalculationDaysInYearType == null) {
                 " "
             } else {
-                state.template.interestCalculationDaysInYearTypeOptions?.get(state.recurringDepositAccountInterestChart.interestCalculationDaysInYearType)?.value
+                state.template.interestCalculationDaysInYearTypeOptions?.getOrNull(state.recurringDepositAccountInterestChart.interestCalculationDaysInYearType)?.value
                     ?: ""
             },
             onValueChanged = { },
@@ -114,6 +119,15 @@ fun TermsPage(
                 it.value ?: ""
             } ?: emptyList(),
             label = stringResource(Res.string.feature_recurring_deposit_calculation_days_in_year),
+        )
+
+        MifosTwoButtonRow(
+            firstBtnText = stringResource(Res.string.feature_recurring_deposit_back),
+            secondBtnText = stringResource(Res.string.feature_recurring_deposit_next),
+            onFirstBtnClick = { onAction(RecurringAccountAction.OnBackPress) },
+            onSecondBtnClick = { onAction(RecurringAccountAction.OnNextPress) },
+            isButtonIconVisible = true,
+
         )
     }
 }
