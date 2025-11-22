@@ -9,13 +9,13 @@
  */
 package com.mifos.feature.client.newFixedDepositAccount.pages
 
-import androidclient.feature.client.generated.resources.Field_officer
 import androidclient.feature.client.generated.resources.Res
 import androidclient.feature.client.generated.resources.btn_back
 import androidclient.feature.client.generated.resources.feature_client_charge_cancel
 import androidclient.feature.client.generated.resources.feature_client_charge_select
 import androidclient.feature.client.generated.resources.feature_client_external_id
 import androidclient.feature.client.generated.resources.feature_client_next
+import androidclient.feature.client.generated.resources.field_officer
 import androidclient.feature.client.generated.resources.one_year_fixed_deposit
 import androidclient.feature.client.generated.resources.submission_on
 import androidx.compose.foundation.layout.Column
@@ -130,7 +130,7 @@ fun DetailsPage(
                     state.template.fieldOfficerOptions?.get(state.fixedDepositAccountDetail.fieldOfficerIndex)?.displayName
                         ?: ""
                 },
-                label = stringResource(Res.string.Field_officer),
+                label = stringResource(Res.string.field_officer),
                 onValueChanged = {},
                 onOptionSelected = { index, value ->
                     onAction(NewFixedDepositAccountAction.OnFieldOfficerChange(index))

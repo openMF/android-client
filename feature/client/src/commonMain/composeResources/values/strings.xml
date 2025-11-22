@@ -541,7 +541,7 @@
     <!-- New Fixed Deposit Account -->
     <string name="one_year_fixed_deposit">1 Year Fixed Deposit</string>
     <string name="submission_on">Submission On</string>
-    <string name="Field_officer">Field Officer</string>
+    <string name="field_officer">Field Officer</string>
 
 
     <!-- Create Share Account -->

@@ -672,7 +672,13 @@ data class RecurringAccountInterestChartState(
     val interestCalculationType: Int? = null,
     val interestCompoundingPeriodType: Int? = null,
     val interestPostingPeriodType: Int? = null,
-)
+
+
+){
+    val isTermsButtonEnabled = interestCalculationDaysInYearType != -1 && interestPostingPeriodType != -1
+            && interestCompoundingPeriodType != -1 && interestCalculationType != -1
+
+}
 
 data class RecurringAccountSettingsState(
     val canDoNext: Boolean = false,
@@ -685,6 +691,7 @@ data class RecurringAccountSettingsState(
     val minimumDepositTerm: MinimumDepositTerm = MinimumDepositTerm(),
     val maxDepositTerm: MaxDepositTerm = MaxDepositTerm(),
     val preMatureClosure: PreMatureClosure = PreMatureClosure(),
+
 ) {
 
     data class LockInPeriod(
@@ -735,6 +742,8 @@ data class RecurringAccountSettingsState(
         minimumDepositTerm.frequency.isNotBlank() &&
         minimumDepositTerm.frequencyAfterInMultiplesOf.isNotBlank() &&
         maxDepositTerm.frequency.isNotBlank()
+
+
 }
 
 sealed class RecurringAccountAction {

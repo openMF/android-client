@@ -25,6 +25,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import com.mifos.core.designsystem.component.MifosTextFieldDropdown
 import com.mifos.core.designsystem.theme.DesignToken
+import com.mifos.core.ui.components.MifosProgressIndicatorMini
 import com.mifos.core.ui.components.MifosTwoButtonRow
 import com.mifos.feature.recurringDeposit.newRecurringDepositAccount.RecurringAccountAction
 import com.mifos.feature.recurringDeposit.newRecurringDepositAccount.RecurringAccountState
@@ -35,7 +36,6 @@ fun TermsPage(
     state: RecurringAccountState,
     onAction: (RecurringAccountAction) -> Unit,
 ) {
-
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
         MifosTextFieldDropdown(
             value = if (state.recurringDepositAccountInterestChart.interestCompoundingPeriodType == null) {
@@ -120,12 +120,16 @@ fun TermsPage(
             } ?: emptyList(),
             label = stringResource(Res.string.feature_recurring_deposit_calculation_days_in_year),
         )
+        if (state.recurringDepositAccountDetail.isMiniLoaderActive) {
+            MifosProgressIndicatorMini()
+        }
 
         MifosTwoButtonRow(
             firstBtnText = stringResource(Res.string.feature_recurring_deposit_back),
             secondBtnText = stringResource(Res.string.feature_recurring_deposit_next),
             onFirstBtnClick = { onAction(RecurringAccountAction.OnBackPress) },
             onSecondBtnClick = { onAction(RecurringAccountAction.OnNextPress) },
+            isSecondButtonEnabled = state.recurringDepositAccountInterestChart.isTermsButtonEnabled,
             isButtonIconVisible = true,
 
         )
