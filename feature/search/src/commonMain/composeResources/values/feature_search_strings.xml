@@ -18,6 +18,9 @@
 
     <string name="feature_search_search_options_clients_label">Clients</string>
     <string name="feature_search_search_options_clients_value">clients</string>
+    <string name="feature_search_apply">Apply</string>
+    <string name="feature_search_close">Close</string>
+    <string name="feature_search_all">All</string>
 
     <string-array name="feature_search_filter_options">
         <item>Clients</item>

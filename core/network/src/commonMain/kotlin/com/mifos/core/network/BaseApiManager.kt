@@ -33,6 +33,7 @@ import com.mifos.core.network.services.ClientService
 import com.mifos.core.network.services.CollectionSheetService
 import com.mifos.core.network.services.DataTableService
 import com.mifos.core.network.services.DocumentService
+import com.mifos.core.network.services.FixedDepositService
 import com.mifos.core.network.services.GroupService
 import com.mifos.core.network.services.LoanService
 import com.mifos.core.network.services.NoteService
@@ -52,6 +53,7 @@ import com.mifos.core.network.services.createClientService
 import com.mifos.core.network.services.createCollectionSheetService
 import com.mifos.core.network.services.createDataTableService
 import com.mifos.core.network.services.createDocumentService
+import com.mifos.core.network.services.createFixedDepositService
 import com.mifos.core.network.services.createGroupService
 import com.mifos.core.network.services.createLoanService
 import com.mifos.core.network.services.createNoteService
@@ -76,6 +78,7 @@ class BaseApiManager(
     val dataTableService: DataTableService = ktorfit.createDataTableService()
     val loanService: LoanService = ktorfit.createLoanService()
     val savingsService: SavingsAccountService = ktorfit.createSavingsAccountService()
+    val fixedDepositService: FixedDepositService = ktorfit.createFixedDepositService()
 
     val recurringSavingsAccountService: RecurringAccountService = ktorfit.createRecurringAccountService()
     val searchService: SearchService = ktorfit.createSearchService()

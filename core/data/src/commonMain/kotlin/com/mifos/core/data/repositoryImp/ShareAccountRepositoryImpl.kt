@@ -20,7 +20,7 @@ class ShareAccountRepositoryImpl(
     private val dataManagerShare: DataManagerShare,
 ) : ShareAccountRepository {
 
-    override fun getShareTemplate(clientId: Int): Flow<DataState<ShareTemplate>> {
-        return dataManagerShare.getShareTemplate(clientId).asDataStateFlow()
+    override fun getShareTemplate(clientId: Int, productId: Int?): Flow<DataState<ShareTemplate>> {
+        return dataManagerShare.getShareTemplate(clientId, productId).asDataStateFlow()
     }
 }
