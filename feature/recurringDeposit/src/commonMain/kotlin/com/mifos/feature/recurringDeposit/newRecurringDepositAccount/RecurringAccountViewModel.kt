@@ -673,11 +673,9 @@ data class RecurringAccountInterestChartState(
     val interestCompoundingPeriodType: Int? = null,
     val interestPostingPeriodType: Int? = null,
 
-
-){
-    val isTermsButtonEnabled = interestCalculationDaysInYearType != -1 && interestPostingPeriodType != -1
-            && interestCompoundingPeriodType != -1 && interestCalculationType != -1
-
+) {
+    val isTermsButtonEnabled = interestCalculationDaysInYearType != -1 && interestPostingPeriodType != -1 &&
+        interestCompoundingPeriodType != -1 && interestCalculationType != -1
 }
 
 data class RecurringAccountSettingsState(
@@ -742,8 +740,6 @@ data class RecurringAccountSettingsState(
         minimumDepositTerm.frequency.isNotBlank() &&
         minimumDepositTerm.frequencyAfterInMultiplesOf.isNotBlank() &&
         maxDepositTerm.frequency.isNotBlank()
-
-
 }
 
 sealed class RecurringAccountAction {

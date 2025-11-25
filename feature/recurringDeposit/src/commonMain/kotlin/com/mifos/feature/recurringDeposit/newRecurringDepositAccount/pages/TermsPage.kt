@@ -39,7 +39,7 @@ fun TermsPage(
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
         MifosTextFieldDropdown(
             value = if (state.recurringDepositAccountInterestChart.interestCompoundingPeriodType == null) {
-                " "
+                ""
             } else {
                 state.template.interestCompoundingPeriodTypeOptions?.getOrNull(state.recurringDepositAccountInterestChart.interestCompoundingPeriodType)?.value
                     ?: ""
@@ -60,7 +60,7 @@ fun TermsPage(
         Spacer(modifier = Modifier.height(DesignToken.padding.large))
         MifosTextFieldDropdown(
             value = if (state.recurringDepositAccountInterestChart.interestPostingPeriodType == null) {
-                " "
+                ""
             } else {
                 state.template.interestPostingPeriodTypeOptions?.getOrNull(state.recurringDepositAccountInterestChart.interestPostingPeriodType)?.value
                     ?: ""
@@ -81,7 +81,7 @@ fun TermsPage(
         Spacer(modifier = Modifier.height(DesignToken.padding.large))
         MifosTextFieldDropdown(
             value = if (state.recurringDepositAccountInterestChart.interestCalculationType == null) {
-                " "
+                ""
             } else {
                 state.template.interestCalculationTypeOptions?.getOrNull(state.recurringDepositAccountInterestChart.interestCalculationType)?.value
                     ?: ""
@@ -102,7 +102,7 @@ fun TermsPage(
         Spacer(modifier = Modifier.height(DesignToken.padding.large))
         MifosTextFieldDropdown(
             value = if (state.recurringDepositAccountInterestChart.interestCalculationDaysInYearType == null) {
-                " "
+                ""
             } else {
                 state.template.interestCalculationDaysInYearTypeOptions?.getOrNull(state.recurringDepositAccountInterestChart.interestCalculationDaysInYearType)?.value
                     ?: ""
