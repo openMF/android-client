@@ -40,6 +40,7 @@ import androidclient.core.ui.generated.resources.core_ui_total_value
 import androidclient.core.ui.generated.resources.core_ui_type
 import androidclient.core.ui.generated.resources.core_ui_waived
 import androidclient.core.ui.generated.resources.listing_component_identifier_not_available
+import androidclient.core.ui.generated.resources.name
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.spring
@@ -231,13 +232,13 @@ fun MifosActionsCollateralDataListingComponent(
     menuList: List<Actions>,
     onActionClicked: (Actions) -> Unit,
 ) {
-    MifosActionsListingComponentOutline {
+    MifosActionsListingComponentOutline(isExpanded = false) {
         Column {
             Column(
                 modifier = Modifier.padding(DesignToken.padding.large),
             ) {
                 MifosListingRowItem(
-                    key = "Name",
+                    key = stringResource(Res.string.name),
                     value = name,
                     keyStyle = MifosTypography.titleSmallEmphasized,
                     valueStyle = MifosTypography.titleSmall,
@@ -263,40 +264,42 @@ fun MifosActionsCollateralDataListingComponent(
                 )
             }
 
-            Surface(
-                modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(
-                    bottomStart = DesignToken.padding.medium,
-                    bottomEnd = DesignToken.padding.medium,
-                ),
-            ) {
-                Column(
-                    modifier = Modifier.padding(
-                        vertical = DesignToken.padding.small,
+            if (menuList.isNotEmpty()) {
+                Surface(
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(
+                        bottomStart = DesignToken.padding.medium,
+                        bottomEnd = DesignToken.padding.medium,
                     ),
                 ) {
-                    menuList.map { menuItem ->
-                        Row(
-                            modifier = Modifier.fillMaxWidth()
-                                .height(DesignToken.sizes.avatarMedium)
-                                .clickable {
-                                    onActionClicked(menuItem)
-                                },
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.Start,
-                        ) {
-                            Icon(
-                                modifier = Modifier.padding(horizontal = DesignToken.padding.large),
-                                imageVector = menuItem.icon,
-                                contentDescription = "",
-                            )
+                    Column(
+                        modifier = Modifier.padding(
+                            vertical = DesignToken.padding.small,
+                        ),
+                    ) {
+                        menuList.map { menuItem ->
+                            Row(
+                                modifier = Modifier.fillMaxWidth()
+                                    .height(DesignToken.sizes.avatarMedium)
+                                    .clickable {
+                                        onActionClicked(menuItem)
+                                    },
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.Start,
+                            ) {
+                                Icon(
+                                    modifier = Modifier.padding(horizontal = DesignToken.padding.large),
+                                    imageVector = menuItem.icon,
+                                    contentDescription = "",
+                                )
 
-                            Text(
-                                modifier = Modifier.fillMaxWidth(),
-                                text = menuItem::class.simpleName ?: "",
-                                color = MaterialTheme.colorScheme.onSurface,
-                                fontSize = MaterialTheme.typography.bodyLarge.fontSize,
-                            )
+                                Text(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    text = menuItem::class.simpleName ?: "",
+                                    color = MaterialTheme.colorScheme.onSurface,
+                                    fontSize = MaterialTheme.typography.bodyLarge.fontSize,
+                                )
+                            }
                         }
                     }
                 }

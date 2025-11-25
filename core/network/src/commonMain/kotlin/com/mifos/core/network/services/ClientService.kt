@@ -22,6 +22,7 @@ import com.mifos.core.model.objects.clients.UpdateSavingsAccountRequest
 import com.mifos.core.network.GenericResponse
 import com.mifos.core.network.model.ClientCloseTemplateResponse
 import com.mifos.core.network.model.CollateralItem
+import com.mifos.core.network.model.CollateralItemResult
 import com.mifos.core.network.model.GetClientsPageItemsResponse
 import com.mifos.core.network.model.PinpointLocationActionResponse
 import com.mifos.core.network.model.PostAuthenticationRequest
@@ -221,6 +222,9 @@ interface ClientService {
 
     @GET("collateral-management")
     suspend fun getCollateralItems(): List<CollateralItem>
+
+    @GET("clients/{clientId}/collaterals/template")
+    suspend fun getClientCollateralItems(@Path("clientId") clientId: Int): List<CollateralItemResult>
 
     @POST("clients/{clientId}?command=assignStaff")
     suspend fun assignStaff(

@@ -33,6 +33,8 @@ import com.mifos.feature.client.clientClosure.clientClosureDestination
 import com.mifos.feature.client.clientClosure.navigateToClientClosureRoute
 import com.mifos.feature.client.clientCollateral.clientCollateralDestination
 import com.mifos.feature.client.clientCollateral.navigateToClientCollateralRoute
+import com.mifos.feature.client.clientCollateralDetails.clientCollateralDetailDestination
+import com.mifos.feature.client.clientCollateralDetails.navigateToClientCollateralDetailRoute
 import com.mifos.feature.client.clientDetails.ClientDetailsScreen
 import com.mifos.feature.client.clientDetailsProfile.clientProfileDetailsDestination
 import com.mifos.feature.client.clientDetailsProfile.navigateToClientDetailsProfileRoute
@@ -231,12 +233,16 @@ fun NavGraphBuilder.clientNavGraph(
             savingAccounts = navController::navigateToClientSavingsAccountsRoute,
             loanAccounts = navController::navigateToClientLoanAccountsRoute,
             recurringDepositAccounts = navController::navigateToRecurringDepositAccountRoute,
-            collateralData = {},
+            collateralData = navController::navigateToClientCollateralDetailRoute,
             sharesAccounts = navController::navigateToShareAccountsScreen,
             fixedDepositAccounts = navController::navigateToFixedDepositAccountRoute,
             upcomingCharges = {
                 navController.navigateToClientUpcomingChargesRoute(it, Constants.ENTITY_TYPE_CLIENTS)
             },
+        )
+
+        clientCollateralDetailDestination(
+            navController = navController,
         )
 
         clientRecurringDepositAccountDestination(
