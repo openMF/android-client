@@ -49,4 +49,11 @@
     <string name="feature_recurring_deposit_next_button">Next Button</string>
     <string name="feature_recurring_deposit_interest_page">Interest Page</string>
     <string name="feature_recurring_deposit_charges_page">Charges Page</string>
+    <string name="recurring_step_charges_edit_charge">Edit Charge</string>
+    <string name="recurring_step_charges_add_new">Add New</string>
+    <string name="recurring_step_charges_add">Add</string>
+    <string name="recurring_step_charges_view">View</string>
+    <string name="recurring_step_charges_active">Active</string>
+    <string name="recurring_step_charges_submit">Submit</string>
+
 </resources>

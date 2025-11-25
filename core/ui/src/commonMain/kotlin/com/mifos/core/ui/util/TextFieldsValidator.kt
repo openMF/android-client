@@ -45,12 +45,13 @@ object TextFieldsValidator {
     }
 
     fun doubleNumberValidator(input: String): StringResource? {
+        val trimmedInput = input.trim()
         return when {
-            input.isBlank() -> Res.string.error_field_empty
-            input.count { it == '.' } > 1 -> Res.string.error_invalid_number
-            input.any { !it.isDigit() && it != '.' } -> Res.string.error_digits_only
-            input.toDoubleOrNull() == null -> Res.string.error_invalid_number
-            input == "0" || input == "0.0" || input.toDoubleOrNull() == 0.0 -> Res.string.error_number_zero
+            trimmedInput.isBlank() -> Res.string.error_field_empty
+            trimmedInput.count { it == '.' } > 1 -> Res.string.error_invalid_number
+            trimmedInput.any { !it.isDigit() && it != '.' } -> Res.string.error_digits_only
+            trimmedInput.toDoubleOrNull() == null -> Res.string.error_invalid_number
+            trimmedInput == "0" || trimmedInput == "0.0" || trimmedInput.toDoubleOrNull() == 0.0 -> Res.string.error_number_zero
             else -> null
         }
     }
