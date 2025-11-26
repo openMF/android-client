@@ -668,10 +668,10 @@ data class RecurringAccountDetailsState(
     val isDetailButtonEnabled = fieldOfficerIndex != -1 && submissionDate.isNotEmpty()
 }
 data class RecurringAccountInterestChartState(
-    val interestCalculationDaysInYearType: Int? = null,
-    val interestCalculationType: Int? = null,
-    val interestCompoundingPeriodType: Int? = null,
-    val interestPostingPeriodType: Int? = null,
+    val interestCalculationDaysInYearType: Int? = -1,
+    val interestCalculationType: Int? = -1,
+    val interestCompoundingPeriodType: Int? = -1,
+    val interestPostingPeriodType: Int? = -1,
 
 ) {
     val isTermsButtonEnabled = interestCalculationDaysInYearType != -1 && interestPostingPeriodType != -1 &&
