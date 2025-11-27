@@ -192,7 +192,6 @@ fun PreviewPage(
             onSecondBtnClick = {
                 onAction(SavingsAccountAction.SubmitSavingsApplication)
             },
-            isSecondButtonEnabled = state.isTermsNextEnabled,
             modifier = Modifier.padding(top = DesignToken.padding.small),
         )
     }

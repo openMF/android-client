@@ -20,5 +20,6 @@ interface ShareAccountService {
     @GET("accounts/" + APIEndPoint.SHARE + "/template")
     fun shareProductTemplate(
         @Query("clientId") clientId: Int,
+        @Query("productId") productId: Int?,
     ): Flow<ShareTemplate>
 }

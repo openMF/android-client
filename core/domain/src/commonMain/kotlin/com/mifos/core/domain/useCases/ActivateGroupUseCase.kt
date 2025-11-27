@@ -10,8 +10,8 @@
 package com.mifos.core.domain.useCases
 
 import com.mifos.core.common.utils.DataState
+import com.mifos.core.common.utils.extractErrorMessage
 import com.mifos.core.data.repository.ActivateRepository
-import com.mifos.core.data.util.extractErrorMessage
 import com.mifos.core.model.objects.clients.ActivatePayload
 
 class ActivateGroupUseCase(

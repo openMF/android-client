@@ -28,7 +28,7 @@ import kotlinx.serialization.Serializable
 fun NavGraphBuilder.savingsDestination(
     navController: NavController,
     onBackPressed: () -> Unit,
-    onFinish: (id: Int) -> Unit,
+    onFinish: () -> Unit,
     loadMoreSavingsAccountInfo: (String, Int) -> Unit,
     loadDocuments: (Int, String) -> Unit,
 ) {

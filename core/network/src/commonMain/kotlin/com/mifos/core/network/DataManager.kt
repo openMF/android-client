@@ -16,7 +16,6 @@ import com.mifos.core.model.objects.databaseobjects.OfflineCenter
 import com.mifos.core.model.objects.payloads.ChargesPayload
 import com.mifos.core.model.objects.payloads.GroupLoanPayload
 import com.mifos.core.model.objects.responses.SaveResponse
-import com.mifos.core.model.objects.template.client.ChargeTemplate
 import com.mifos.core.model.objects.template.loan.GroupLoanTemplate
 import com.mifos.core.network.model.CollectionSheetPayload
 import com.mifos.core.network.model.Payload
@@ -87,25 +86,6 @@ class DataManager : KoinComponent {
             officeId,
             staffId,
         )
-    }
-
-    /**
-     * Charges API
-     */
-    // TODO Remove this Method After fixing the Charge Test
-    fun getClientCharges(clientId: Int, offset: Int, limit: Int): Flow<Page<ChargesEntity>> {
-        return mBaseApiManager.chargeService.getListOfCharges(clientId, offset, limit)
-    }
-
-    suspend fun getAllChargesV2(clientId: Int): ChargeTemplate {
-        return mBaseApiManager.chargeService.getAllChargesS(clientId)
-    }
-
-    suspend fun createCharges(
-        clientId: Int,
-        payload: ChargesPayload,
-    ): ChargeCreationResponse {
-        return mBaseApiManager.chargeService.createCharges(clientId, payload)
     }
 
     suspend fun getAllChargesV3(loanId: Int): HttpResponse {

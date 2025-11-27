@@ -60,9 +60,12 @@
     <string name="feature_client_identifier_deleted_successfully">Identifier Deleted Successfully</string>
     <string name="feature_client_failed_to_load_client_charges">Failed To Load Client Charges</string>
     <string name="feature_client_charge_id">Charge Id</string>
+    <string name="feature_client_choose_charge">Choose Charge</string>
+    <string name="feature_client_charge_title">Charge Title</string>
     <string name="feature_client_charge_name">Charge Name</string>
     <string name="feature_client_charge_amount">Amount</string>
     <string name="feature_client_due_date">Due Date</string>
+    <string name="feature_client_collected_on_date">Collected On</string>
     <string name="feature_client_charge_invalid_amount_format">Invalid amount format</string>
     <string name="feature_client_no_more_charges_available">No More Charges Available!</string>
     <string name="feature_client_failed_to_load_more_charges">Failed to load more Charges</string>
@@ -93,6 +96,9 @@
     <string name="feature_client_charge_locale">Locale</string>
     <string name="feature_client_failed_to_load_charges">Failed To Load Charges</string>
     <string name="feature_client_failed_to_create_charge">Failed To Create Charge</string>
+    <string name="feature_client_created_charge_success_title">Charge Added Successfully</string>
+    <string name="feature_client_created_charge_failure_title">Charge Creation Failed</string>
+    <string name="feature_client_created_charge_success_message">Client Charge created successfully. Please continue to go back to Profile Details</string>
     <string name="feature_client_no_charges_found">No Charges Found</string>
 
     <string name="feature_client_failed_to_add_signature">Failed To Add Signature</string>
@@ -536,22 +542,55 @@
     <string name="client_update_document_title">Update Document</string>
     <!-- Screen Title -->
     <string name="title_new_fixed_deposit_account">New Fixed Deposit Account</string>
+    <string name="title_new_recurring_deposit_account">New Recurring Deposit Account</string>
+    <!-- New Fixed Deposit Account -->
+    <string name="one_year_fixed_deposit">1 Year Fixed Deposit</string>
+    <string name="submission_on">Submission On</string>
+    <string name="Field_officer">Field Officer</string>
+
 
     <!-- Create Share Account -->
-    <string name="share_account_details">Details</string>
-    <string name="share_account_terms">Terms</string>
-    <string name="share_account_charges">Charges</string>
-    <string name="share_account_preview">Preview</string>
-    <string name="share_account_back">Back</string>
-    <string name="share_account_next">Next</string>
+    <string name="feature_share_account_details">Details</string>
+    <string name="feature_share_account_terms">Terms</string>
+    <string name="feature_share_account_charges">Charges</string>
+    <string name="feature_share_account_preview">Preview</string>
+    <string name="feature_share_account_back">Back</string>
+    <string name="feature_share_account_next">Next</string>
 
-    <string name="share_account_detail_product_name">Product Name*</string>
-    <string name="share_account_detail_submission_date">Submission Date*</string>
-    <string name="share_account_detail_external_id">External Id</string>
-    <string name="share_account_detail_date_select">Select</string>
-    <string name="share_account_detail_date_cancel">Cancel</string>
+    <string name="feature_share_account_detail_product_name">Product Name*</string>
+    <string name="feature_share_account_detail_submission_date">Submission Date*</string>
+    <string name="feature_share_account_detail_external_id">External Id</string>
+    <string name="feature_share_account_detail_date_select">Select</string>
+    <string name="feature_share_account_detail_date_cancel">Cancel</string>
+
+    <string name="feature_share_account_terms_currency">Currency</string>
+    <string name="feature_share_account_terms_current_price">Current Price</string>
+    <string name="feature_share_account_terms_total_shares">Total Number of Shares</string>
+    <string name="feature_share_account_terms_default_savings_account">Default Savings Account</string>
+    <string name="feature_share_account_terms_application_date">Application Date</string>
+    <string name="feature_share_account_terms_allow_dividends">Allow dividends for inactive clients</string>
+    <string name="feature_share_account_terms_min_active_period">Minimum Active Period</string>
+    <string name="feature_share_account_terms_frequency">Frequency</string>
+    <string name="feature_share_account_terms_type">Type</string>
+    <string name="feature_share_account_terms_lock_in_period">Lock-in Period</string>
+
 
     <!-- Handle Error-->
-    <string name="field_empty">This field cannot be empty</string>
+    <string name="feature_share_account_field_empty">This field cannot be empty</string>
+
+    <!-- Charges -->
+    <string name="charges_update">Update</string>
+    <string name="charges_view_charges">View Charges</string>
+    <string name="charges_client_update_not_support_error_msg">Updating client charges is not supported. Please delete the existing charge and create a new one.</string>
+
+    <string name="feature_fixed_deposit_deposit_amount">Deposit Amount</string>
+    <string name="feature_fixed_deposit_deposit_period_type">Deposit Period Type</string>
+    <string name="feature_fixed_interest_compounding">Interest Compounding</string>
+    <string name="feature_fixed_interest_compounding_period">Interest Compounding Period</string>
+    <string name="feature_fixed_interest_posting_period">Interest Posting Period</string>
+    <string name="feature_fixed_interest_calculated_using">Interest Calculated Using</string>
+    <string name="feature_fixed_days_in_year">Days in year</string>
+    <string name="feature_fixed_deposit_terms_page">Terms</string>
+    <string name="feature_fixed_deposit_deposit_period">Deposit Period</string>
 
 </resources>

@@ -17,7 +17,6 @@ import androidclient.feature.loan.generated.resources.add_new_collateral
 import androidclient.feature.loan.generated.resources.back
 import androidclient.feature.loan.generated.resources.collateral
 import androidclient.feature.loan.generated.resources.edit_charge
-import androidclient.feature.loan.generated.resources.feature_loan_account_created_successfully
 import androidclient.feature.loan.generated.resources.feature_loan_cancel
 import androidclient.feature.loan.generated.resources.quantity
 import androidclient.feature.loan.generated.resources.step_charges
@@ -42,7 +41,10 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -75,7 +77,6 @@ import com.mifos.feature.loan.newLoanAccount.pages.PreviewPage
 import com.mifos.feature.loan.newLoanAccount.pages.SchedulePage
 import com.mifos.feature.loan.newLoanAccount.pages.TermsPage
 import kotlinx.coroutines.delay
-import org.jetbrains.compose.resources.getString
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 import kotlin.time.ExperimentalTime
@@ -97,9 +98,12 @@ internal fun NewLoanAccountScreen(
         }
     }
 
+    val snackbarHostState = remember { SnackbarHostState() }
+
     NewLoanAccountDialogs(
         state = state,
         onAction = remember(viewModel) { { viewModel.trySendAction(it) } },
+        snackbarHostState = snackbarHostState,
     )
 
     NewLoanAccountScaffold(
@@ -107,6 +111,7 @@ internal fun NewLoanAccountScreen(
         state = state,
         onAction = remember(viewModel) { { viewModel.trySendAction(it) } },
         navController = navController,
+        snackbarHostState = snackbarHostState,
     )
 }
 
@@ -118,9 +123,8 @@ private fun NewLoanAccountScaffold(
     state: NewLoanAccountState,
     modifier: Modifier = Modifier,
     onAction: (NewLoanAccountAction) -> Unit,
+    snackbarHostState: SnackbarHostState,
 ) {
-    val snackbarHostState = remember { SnackbarHostState() }
-
     val steps = listOf(
         Step(stringResource(Res.string.step_details)) {
             DetailsPage(
@@ -193,19 +197,6 @@ private fun NewLoanAccountScaffold(
         if (state.isOverLayLoadingActive) {
             MifosProgressIndicatorOverlay()
         }
-
-        if (state.responseErrorMsg != null) {
-            LaunchedEffect(state.launchEffectKey) {
-                snackbarHostState.showSnackbar(
-                    message = state.responseErrorMsg,
-                )
-
-                if (state.responseErrorMsg == getString(Res.string.feature_loan_account_created_successfully)) {
-                    delay(1000)
-                    onAction(NewLoanAccountAction.Finish)
-                }
-            }
-        }
     }
 }
 
@@ -213,6 +204,7 @@ private fun NewLoanAccountScaffold(
 private fun NewLoanAccountDialogs(
     state: NewLoanAccountState,
     onAction: (NewLoanAccountAction) -> Unit,
+    snackbarHostState: SnackbarHostState,
 ) {
     when (state.dialogState) {
         NewLoanAccountState.DialogState.AddNewCollateral -> AddNewCollateralDialog(
@@ -242,6 +234,19 @@ private fun NewLoanAccountDialogs(
             onAction = onAction,
             isOverDue = true,
         )
+
+        is NewLoanAccountState.DialogState.SuccessResponseStatus -> {
+            LaunchedEffect(state.launchEffectKey) {
+                snackbarHostState.showSnackbar(
+                    message = state.dialogState.msg,
+                )
+
+                if (state.dialogState.successStatus) {
+                    delay(1000)
+                    onAction(NewLoanAccountAction.Finish)
+                }
+            }
+        }
 
         null -> Unit
     }
@@ -445,6 +450,8 @@ private fun ShowChargesDialog(
     state: NewLoanAccountState,
     onAction: (NewLoanAccountAction) -> Unit,
 ) {
+    var expandedIndex: Int? by rememberSaveable { mutableStateOf(-1) }
+
     MifosBottomSheet(
         onDismiss = {
             onAction(NewLoanAccountAction.DismissDialog)
@@ -467,7 +474,10 @@ private fun ShowChargesDialog(
                             collectedOn = it.chargeTimeType?.value.toString(),
                             amount = it.amount.toString(),
                             onActionClicked = {},
-                            isExpandable = false,
+                            isExpanded = expandedIndex == it.id,
+                            onExpandToggle = {
+                                expandedIndex = if (expandedIndex == it.id) -1 else it.id
+                            },
                         )
                     }
                 } else {
@@ -495,7 +505,10 @@ private fun ShowChargesDialog(
                                     else -> {}
                                 }
                             },
-                            isExpandable = true,
+                            isExpanded = expandedIndex == it.id,
+                            onExpandToggle = {
+                                expandedIndex = if (expandedIndex == it.id) -1 else it.id
+                            },
                         )
                     }
                 }

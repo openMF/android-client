@@ -17,6 +17,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import androidx.navigation.navArgument
 import com.mifos.core.common.utils.Constants
+import com.mifos.feature.client.charges.chargesDestination
+import com.mifos.feature.client.charges.navigateToChargesRoute
 import com.mifos.feature.client.clientAddDocuments.AddDocumentRoute
 import com.mifos.feature.client.clientAddDocuments.clientAddDocumentGraphRoute
 import com.mifos.feature.client.clientAddDocuments.navigateToClientAddDocumentRoute
@@ -27,11 +29,12 @@ import com.mifos.feature.client.clientAddress.navigateToClientAddressRoute
 import com.mifos.feature.client.clientAddress.navigateToClientAddressRouteOnStatus
 import com.mifos.feature.client.clientApplyNewApplications.clientApplyNewApplicationRoute
 import com.mifos.feature.client.clientApplyNewApplications.navigateToClientApplyNewApplicationScreen
-import com.mifos.feature.client.clientCharges.ClientChargesScreen
 import com.mifos.feature.client.clientClosure.clientClosureDestination
 import com.mifos.feature.client.clientClosure.navigateToClientClosureRoute
 import com.mifos.feature.client.clientCollateral.clientCollateralDestination
 import com.mifos.feature.client.clientCollateral.navigateToClientCollateralRoute
+import com.mifos.feature.client.clientCollateralDetails.clientCollateralDetailDestination
+import com.mifos.feature.client.clientCollateralDetails.navigateToClientCollateralDetailRoute
 import com.mifos.feature.client.clientDetails.ClientDetailsScreen
 import com.mifos.feature.client.clientDetailsProfile.clientProfileDetailsDestination
 import com.mifos.feature.client.clientDetailsProfile.navigateToClientDetailsProfileRoute
@@ -45,7 +48,6 @@ import com.mifos.feature.client.clientEditProfile.clientEditProfileDestination
 import com.mifos.feature.client.clientEditProfile.navigateToClientProfileEditProfileRoute
 import com.mifos.feature.client.clientGeneral.clientProfileGeneralDestination
 import com.mifos.feature.client.clientGeneral.navigateToClientProfileGeneralRoute
-import com.mifos.feature.client.clientGeneral.navigateToClientProfileGeneralRouteOnStatus
 import com.mifos.feature.client.clientIdentifiersAddUpdate.clientIdentifiersAddUpdateDestination
 import com.mifos.feature.client.clientIdentifiersAddUpdate.onNavigateToClientIdentifiersAddUpdateScreen
 import com.mifos.feature.client.clientIdentifiersList.clientIdentifiersListDestination
@@ -76,8 +78,8 @@ import com.mifos.feature.client.documentPreviewScreen.createDocumentPreviewRoute
 import com.mifos.feature.client.documentPreviewScreen.navigateToDocumentPreviewRoute
 import com.mifos.feature.client.fixedDepositAccount.clientFixedDepositAccountDestination
 import com.mifos.feature.client.fixedDepositAccount.navigateToFixedDepositAccountRoute
-import com.mifos.feature.client.newFixedDepositAccount.fixedAccountDestination
-import com.mifos.feature.client.newFixedDepositAccount.navigateToNewFixedDepositRoute
+import com.mifos.feature.client.newFixedDepositAccount.createFixedDepositAccountDestination
+import com.mifos.feature.client.newFixedDepositAccount.navigateToCreateFixedDepositRoute
 import com.mifos.feature.client.recurringDepositAccount.clientRecurringDepositAccountDestination
 import com.mifos.feature.client.recurringDepositAccount.navigateToRecurringDepositAccountRoute
 import com.mifos.feature.client.savingsAccounts.navigateToClientSavingsAccountsRoute
@@ -95,6 +97,7 @@ import com.mifos.feature.note.notes.navigateToNoteScreen
 import com.mifos.feature.recurringDeposit.newRecurringDepositAccount.navigateToRecurringAccountRoute
 import com.mifos.feature.recurringDeposit.newRecurringDepositAccount.recurringAccountDestination
 import com.mifos.feature.savings.navigation.navigateToAddSavingsAccount
+import com.mifos.feature.savings.navigation.navigateToSavingsAccountApproval
 import com.mifos.feature.savings.navigation.navigateToSavingsAccountSummaryScreen
 import com.mifos.feature.savings.navigation.savingsDestination
 import com.mifos.feature.savings.savingsAccountv2.navigateToSavingsAccountRoute
@@ -127,7 +130,9 @@ fun NavGraphBuilder.clientNavGraph(
             addSavingsAccount = { clientId ->
                 navController.navigateToAddSavingsAccount(0, clientId, false)
             },
-            charges = navController::navigateClientChargesScreen,
+            charges = {
+                navController.navigateToChargesRoute(it, Constants.ENTITY_TYPE_CLIENTS)
+            },
             documents = {
                 navController.navigateToDocumentListScreen(it, Constants.ENTITY_TYPE_CLIENTS)
             },
@@ -143,8 +148,9 @@ fun NavGraphBuilder.clientNavGraph(
             savingsAccountSelected = navController::navigateToSavingsAccountSummaryScreen,
             activateClient = activateClient,
         )
-        clientChargesRoute(
-            onBackPressed = navController::popBackStack,
+        chargesDestination(
+            navController = navController,
+            onNavigateBack = navController::popBackStack,
         )
         clientIdentifiersAddUpdateDestination(
             onBackPressed = navController::popBackStack,
@@ -182,6 +188,9 @@ fun NavGraphBuilder.clientNavGraph(
             viewAddress = navController::navigateToClientAddressRoute,
             viewAssociatedAccounts = navController::navigateToClientProfileGeneralRoute,
             navController = navController,
+            navigateToAddCharge = {
+                navController.navigateToChargesRoute(it, Constants.ENTITY_TYPE_CLIENTS)
+            },
         )
 
         clientAddressNavigation(
@@ -224,10 +233,16 @@ fun NavGraphBuilder.clientNavGraph(
             savingAccounts = navController::navigateToClientSavingsAccountsRoute,
             loanAccounts = navController::navigateToClientLoanAccountsRoute,
             recurringDepositAccounts = navController::navigateToRecurringDepositAccountRoute,
-            collateralData = {},
+            collateralData = navController::navigateToClientCollateralDetailRoute,
             sharesAccounts = navController::navigateToShareAccountsScreen,
             fixedDepositAccounts = navController::navigateToFixedDepositAccountRoute,
-            upcomingCharges = navController::navigateToClientUpcomingChargesRoute,
+            upcomingCharges = {
+                navController.navigateToClientUpcomingChargesRoute(it, Constants.ENTITY_TYPE_CLIENTS)
+            },
+        )
+
+        clientCollateralDetailDestination(
+            navController = navController,
         )
 
         clientRecurringDepositAccountDestination(
@@ -255,7 +270,9 @@ fun NavGraphBuilder.clientNavGraph(
             navigateToCollateral = navController::navigateToClientCollateralRoute,
             navigateToApplyNewApplication = navController::navigateToClientApplyNewApplicationScreen,
             navigateToUpdateSignature = navController::navigateToClientSignatureScreen,
-
+            navigateToAddCharge = {
+                navController.navigateToChargesRoute(it, Constants.ENTITY_TYPE_CLIENTS)
+            },
         )
         clientEditProfileDestination(
             onNavigateBack = navController::popBackStack,
@@ -288,8 +305,10 @@ fun NavGraphBuilder.clientNavGraph(
         )
         savingsAccountsDestination(
             navigateBack = navController::popBackStack,
-            navigateToViewAccount = { },
+            navigateToViewAccount = navController::navigateToSavingsAccountSummaryScreen,
             navController = navController,
+            navigateToApproveAccount = navController::navigateToSavingsAccountApproval,
+
         )
         clientCollateralDestination(
             onNavigateBack = navController::popBackStack,
@@ -298,7 +317,7 @@ fun NavGraphBuilder.clientNavGraph(
         )
         clientLoanAccountsDestination(
             navigateBack = navController::popBackStack,
-            navigateToViewAccount = {},
+            navigateToViewAccount = navController::navigateToLoanAccountSummaryScreen,
             navigateToMakeRepayment = {},
             navController = navController,
         )
@@ -313,7 +332,7 @@ fun NavGraphBuilder.clientNavGraph(
             onNavigateApplyLoanAccount = navController::navigateToNewLoanAccountRoute,
             onNavigateApplySavingsAccount = navController::navigateToSavingsAccountRoute,
             onNavigateApplyRecurringAccount = navController::navigateToRecurringAccountRoute,
-            onNavigateApplyFixedAccount = navController::navigateToNewFixedDepositRoute,
+            onNavigateApplyFixedAccount = navController::navigateToCreateFixedDepositRoute,
             navController = navController,
         )
         clientUpcomingChargesDestination(
@@ -340,14 +359,14 @@ fun NavGraphBuilder.clientNavGraph(
             onBackPressed = navController::popBackStack,
             loadMoreSavingsAccountInfo = navController::navigateToDataTable,
             loadDocuments = navController::navigateToDocumentListScreen,
-            onFinish = navController::navigateToClientProfileGeneralRouteOnStatus,
+            onFinish = navController::popBackStack,
         )
 
         createShareAccountDestination(
             navController = navController,
         )
-        recurringAccountDestination()
-        fixedAccountDestination()
+        recurringAccountDestination(navController)
+        createFixedDepositAccountDestination(navController = navController)
     }
 }
 
@@ -402,18 +421,18 @@ fun NavGraphBuilder.clientDetailRoute(
     }
 }
 
-fun NavGraphBuilder.clientChargesRoute(
-    onBackPressed: () -> Unit,
-) {
-    composable(
-        route = ClientScreens.ClientChargesScreen.route,
-        arguments = listOf(navArgument(Constants.CLIENT_ID, builder = { type = NavType.IntType })),
-    ) {
-        ClientChargesScreen(
-            onBackPressed = onBackPressed,
-        )
-    }
-}
+// fun NavGraphBuilder.clientChargesRoute(
+//    onBackPressed: () -> Unit,
+// ) {
+//    composable(
+//        route = ClientScreens.ClientChargesScreen.route,
+//        arguments = listOf(navArgument(Constants.CLIENT_ID, builder = { type = NavType.IntType })),
+//    ) {
+//        ClientChargesScreen(
+//            onBackPressed = onBackPressed,
+//        )
+//    }
+// }
 
 fun NavGraphBuilder.clientPinPointRoute(
     onBackPressed: () -> Unit,
