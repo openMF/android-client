@@ -24,10 +24,10 @@ import androidclient.feature.client.generated.resources.feature_client_Image_Upl
 import androidclient.feature.client.generated.resources.feature_client_error
 import androidclient.feature.client.generated.resources.from_camera
 import androidclient.feature.client.generated.resources.from_gallery
-import androidclient.feature.client.generated.resources.profile_update_error_message
+//import androidclient.feature.client.generated.resources.profile_update_error_message
 import androidclient.feature.client.generated.resources.remove
 import androidclient.feature.client.generated.resources.update_profile_photo_message
-import androidclient.feature.client.generated.resources.update_success_message
+//import androidclient.feature.client.generated.resources.update_success_message
 import androidclient.feature.client.generated.resources.upload_new_photo
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
