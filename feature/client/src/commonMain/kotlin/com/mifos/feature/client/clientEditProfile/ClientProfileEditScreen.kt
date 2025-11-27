@@ -21,6 +21,7 @@ import androidclient.feature.client.generated.resources.dialog_continue
 import androidclient.feature.client.generated.resources.edit_profile_title
 import androidclient.feature.client.generated.resources.feature_client_Image_Upload_Failed
 import androidclient.feature.client.generated.resources.feature_client_Image_Upload_Successful
+import androidclient.feature.client.generated.resources.feature_client_error
 import androidclient.feature.client.generated.resources.from_camera
 import androidclient.feature.client.generated.resources.from_gallery
 import androidclient.feature.client.generated.resources.profile_update_error_message
@@ -198,7 +199,7 @@ private fun ClientProfileEditDialogs(
         is ClientProfileEditState.DialogState.Error -> {
             MifosStatusDialog(
                 status = MifosDialogStatus.FAILURE,
-                message = stringResource(Res.string.profile_update_error_message),
+                message = stringResource(Res.string.feature_client_error),
                 onDismissRequest = { onAction(ClientProfileEditAction.DismissModalBottomSheet) }
             )
         }
@@ -206,7 +207,7 @@ private fun ClientProfileEditDialogs(
         is ClientProfileEditState.DialogState.Success -> {
             MifosStatusDialog(
                 status = MifosDialogStatus.SUCCESS,
-                message = stringResource(Res.string.update_success_message),
+                message = stringResource(Res.string.feature_client_Image_Upload_Successful),
                 onDismissRequest = { onAction(ClientProfileEditAction.DismissModalBottomSheet) }
             )
         }
