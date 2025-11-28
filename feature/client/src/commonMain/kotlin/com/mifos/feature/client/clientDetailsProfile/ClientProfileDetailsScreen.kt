@@ -19,7 +19,6 @@ import androidclient.feature.client.generated.resources.dialog_continue
 import androidclient.feature.client.generated.resources.dialog_unassign_message
 import androidclient.feature.client.generated.resources.dismiss_text
 import androidclient.feature.client.generated.resources.pen_icon
-import androidclient.feature.client.generated.resources.profile_should_refresh
 import androidclient.feature.client.generated.resources.scroll_for_more_options
 import androidclient.feature.client.generated.resources.staff_unassign_failure_title
 import androidclient.feature.client.generated.resources.staff_unassign_success_message
@@ -66,11 +65,11 @@ import com.mifos.core.ui.components.MifosProgressIndicator
 import com.mifos.core.ui.components.MifosRowCard
 import com.mifos.core.ui.components.MifosStatusDialog
 import com.mifos.core.ui.util.EventsEffect
+import com.mifos.core.ui.util.PROFILE_SHOULD_REFRESH_KEY
 import com.mifos.core.ui.util.TextUtil
 import com.mifos.feature.client.clientDetailsProfile.components.ClientDetailsProfile
 import com.mifos.feature.client.clientDetailsProfile.components.ClientProfileDetailsActionItem
 import com.mifos.feature.client.clientDetailsProfile.components.clientsDetailsActionItems
-import com.mifos.feature.client.utils.PROFILE_SHOULD_REFRESH_KEY
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel

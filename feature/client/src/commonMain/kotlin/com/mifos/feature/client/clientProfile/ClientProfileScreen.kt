@@ -42,11 +42,11 @@ import com.mifos.core.ui.components.MifosErrorComponent
 import com.mifos.core.ui.components.MifosProgressIndicator
 import com.mifos.core.ui.components.MifosRowCard
 import com.mifos.core.ui.util.EventsEffect
+import com.mifos.core.ui.util.PROFILE_SHOULD_REFRESH_KEY
 import com.mifos.core.ui.util.TextUtil
 import com.mifos.feature.client.clientProfile.components.ClientProfileActionItem
 import com.mifos.feature.client.clientProfile.components.ProfileCard
 import com.mifos.feature.client.clientProfile.components.clientsActionItems
-import com.mifos.feature.client.utils.PROFILE_SHOULD_REFRESH_KEY
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
