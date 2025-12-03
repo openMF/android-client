@@ -16,6 +16,7 @@ import com.mifos.core.model.objects.account.share.ShareAccounts
 import com.mifos.core.network.datamanager.DataManagerClient
 import com.mifos.core.network.model.ClientCloseTemplateResponse
 import com.mifos.core.network.model.CollateralItem
+import com.mifos.core.network.model.CollateralItemResult
 import com.mifos.core.network.model.SavingAccountOption
 import com.mifos.core.network.model.StaffOption
 import com.mifos.room.entities.accounts.ClientAccounts
@@ -66,6 +67,15 @@ class ClientDetailsRepositoryImp(
     override suspend fun getCollateralItems(): DataState<List<CollateralItem>> {
         return try {
             val res = dataManagerClient.getCollateralItems()
+            return DataState.Success(res)
+        } catch (e: Exception) {
+            DataState.Error(e)
+        }
+    }
+
+    override suspend fun getClientCollaterals(clientId: Int): DataState<List<CollateralItemResult>> {
+        return try {
+            val res = dataManagerClient.getClientCollateralItems(clientId)
             return DataState.Success(res)
         } catch (e: Exception) {
             DataState.Error(e)

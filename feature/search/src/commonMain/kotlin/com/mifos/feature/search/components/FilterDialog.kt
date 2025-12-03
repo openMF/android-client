@@ -10,6 +10,9 @@
 package com.mifos.feature.search.components
 
 import androidclient.feature.search.generated.resources.Res
+import androidclient.feature.search.generated.resources.feature_search_all
+import androidclient.feature.search.generated.resources.feature_search_apply
+import androidclient.feature.search.generated.resources.feature_search_close
 import androidclient.feature.search.generated.resources.feature_search_filter
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -22,6 +25,10 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.sp
@@ -38,12 +45,17 @@ internal fun FilterDialog(
     onDismiss: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    var selectedFilter by remember { mutableStateOf(selected) }
+
     MifosDialogBox(
         title = stringResource(Res.string.feature_search_filter),
         showDialogState = true,
-        confirmButtonText = "",
-        dismissButtonText = "Close",
-        onConfirm = {},
+        confirmButtonText = stringResource(Res.string.feature_search_apply),
+        dismissButtonText = stringResource(Res.string.feature_search_close),
+        onConfirm = {
+            onEvent(SearchScreenEvent.UpdateSelectedFilter(selectedFilter))
+            onDismiss()
+        },
         onDismiss = onDismiss,
         modifier = modifier,
         message = {
@@ -54,21 +66,19 @@ internal fun FilterDialog(
             ) {
                 HorizontalDivider()
                 FilterOption(
-                    text = "All",
-                    selected = selected == null,
+                    text = stringResource(Res.string.feature_search_all),
+                    selected = selectedFilter == null,
                     onSelected = {
-                        onEvent(SearchScreenEvent.UpdateSelectedFilter(null))
-                        onDismiss()
+                        selectedFilter = null
                     },
                 )
                 HorizontalDivider()
                 FilterOption.values.forEachIndexed { index, option ->
                     FilterOption(
                         text = option.label,
-                        selected = option == selected,
+                        selected = option == selectedFilter,
                         onSelected = {
-                            onEvent(SearchScreenEvent.UpdateSelectedFilter(option))
-                            onDismiss()
+                            selectedFilter = option
                         },
                     )
                     if (index != FilterOption.values.size - 1) {

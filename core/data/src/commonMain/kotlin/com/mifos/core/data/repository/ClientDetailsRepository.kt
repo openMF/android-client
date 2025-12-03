@@ -13,6 +13,7 @@ import com.mifos.core.common.utils.DataState
 import com.mifos.core.model.objects.account.share.ShareAccounts
 import com.mifos.core.network.model.ClientCloseTemplateResponse
 import com.mifos.core.network.model.CollateralItem
+import com.mifos.core.network.model.CollateralItemResult
 import com.mifos.core.network.model.SavingAccountOption
 import com.mifos.core.network.model.StaffOption
 import com.mifos.room.entities.accounts.ClientAccounts
@@ -40,6 +41,8 @@ interface ClientDetailsRepository {
     suspend fun getClientCloseTemplate(): DataState<ClientCloseTemplateResponse>
 
     suspend fun getCollateralItems(): DataState<List<CollateralItem>>
+
+    suspend fun getClientCollaterals(clientId: Int): DataState<List<CollateralItemResult>>
 
     suspend fun getClient(clientId: Int): ClientEntity
 

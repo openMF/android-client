@@ -21,3 +21,12 @@ data class CollateralItem(
     val name: String,
     val id: Int,
 )
+
+@Serializable
+data class CollateralItemResult(
+    val name: String,
+    val collateralId: Int,
+    val basePrice: Double,
+    val pctToBase: Double,
+    val quantity: Double,
+)
