@@ -25,16 +25,20 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
+import co.touchlab.kermit.Logger
 import com.mifos.core.designsystem.component.MifosBottomSheet
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
@@ -54,6 +58,7 @@ import com.mifos.feature.client.createShareAccount.pages.ChargesPage
 import com.mifos.feature.client.createShareAccount.pages.DetailsPage
 import com.mifos.feature.client.createShareAccount.pages.PreviewPage
 import com.mifos.feature.client.createShareAccount.pages.TermsPage
+import kotlinx.coroutines.delay
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -67,6 +72,8 @@ internal fun CreateShareAccountScreen(
 ) {
     val state by viewModel.stateFlow.collectAsStateWithLifecycle()
 
+    val snackbarHostState = remember { SnackbarHostState() }
+
     EventsEffect(viewModel.eventFlow) { event ->
         when (event) {
             CreateShareAccountEvent.NavigateBack -> onNavigateBack()
@@ -74,16 +81,18 @@ internal fun CreateShareAccountScreen(
         }
     }
 
+    CreateShareAccountDialog(
+        state = state,
+        onAction = { viewModel.trySendAction(it) },
+        snackbarHostState = snackbarHostState,
+    )
+
     CreateShareAccountContent(
         modifier = modifier,
         state = state,
         onAction = { viewModel.trySendAction(it) },
         navController = navController,
-    )
-
-    CreateShareAccountDialog(
-        state = state,
-        onAction = { viewModel.trySendAction(it) },
+        snackbarHostState = snackbarHostState,
     )
 }
 
@@ -91,6 +100,7 @@ internal fun CreateShareAccountScreen(
 fun CreateShareAccountDialog(
     state: CreateShareAccountState,
     onAction: (CreateShareAccountAction) -> Unit,
+    snackbarHostState: SnackbarHostState,
 ) {
     when (state.dialogState) {
         is CreateShareAccountState.DialogState.AddNewCharge -> {
@@ -108,7 +118,20 @@ fun CreateShareAccountDialog(
                 onAction = onAction,
             )
         }
+        is CreateShareAccountState.DialogState.SuccessResponseStatus -> {
+            LaunchedEffect(state.launchEffectKey) {
+                snackbarHostState.showSnackbar(
+                    message = state.dialogState.msg,
+                )
 
+                Logger.d("SuccessResponseStatus")
+
+                if (state.dialogState.successStatus) {
+                    delay(1000)
+                    onAction(CreateShareAccountAction.NavigateBack)
+                }
+            }
+        }
         null -> Unit
     }
 }
@@ -119,6 +142,7 @@ private fun CreateShareAccountContent(
     modifier: Modifier = Modifier,
     onAction: (CreateShareAccountAction) -> Unit,
     navController: NavController,
+    snackbarHostState: SnackbarHostState,
 ) {
     val steps = listOf(
         Step(name = stringResource(Res.string.feature_share_account_details)) {
@@ -141,13 +165,15 @@ private fun CreateShareAccountContent(
         },
         Step(name = stringResource(Res.string.feature_share_account_preview)) {
             PreviewPage(
-                onNext = { onAction(CreateShareAccountAction.Finish) },
+                state = state,
+                onAction = onAction,
             )
         },
     )
 
     MifosScaffold(
         modifier = modifier,
+        snackbarHostState = snackbarHostState,
     ) { paddingValues ->
         when (state.screenState) {
             is CreateShareAccountState.ScreenState.Loading -> MifosProgressIndicator()

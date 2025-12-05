@@ -117,12 +117,12 @@ fun DetailsPage(
                 options = state.productOption.map {
                     it.name
                 },
-                label = stringResource(Res.string.feature_share_account_detail_product_name),
+                label = stringResource(Res.string.feature_share_account_detail_product_name) + "*",
                 errorMessage = state.shareProductError?.let { stringResource(it) },
             )
             MifosDatePickerTextField(
                 value = state.submissionDate,
-                label = stringResource(Res.string.feature_share_account_detail_submission_date),
+                label = stringResource(Res.string.feature_share_account_detail_submission_date) + "*",
                 openDatePicker = {
                     onAction(CreateShareAccountAction.OnOpenSubmissionDatePicker(true))
                 },
