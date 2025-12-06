@@ -11,25 +11,29 @@ package com.mifos.feature.client.createShareAccount
 
 import androidclient.feature.client.generated.resources.Res
 import androidclient.feature.client.generated.resources.feature_client_error_network_not_available
+import androidclient.feature.client.generated.resources.feature_share_account_created_successfully
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
+import com.mifos.core.common.utils.Constants
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.common.utils.DateHelper
 import com.mifos.core.data.repository.ShareAccountRepository
 import com.mifos.core.data.util.NetworkMonitor
+import com.mifos.core.network.model.share.ChargeItem
 import com.mifos.core.network.model.share.ChargeOptions
 import com.mifos.core.network.model.share.FrequencyTypeOption
 import com.mifos.core.network.model.share.ProductOption
 import com.mifos.core.network.model.share.SavingsAccountOption
+import com.mifos.core.network.model.share.ShareAccountPayload
 import com.mifos.core.ui.util.BaseViewModel
 import com.mifos.core.ui.util.TextFieldsValidator
-import com.mifos.feature.loan.newLoanAccount.NewLoanAccountState.DialogState
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.getString
+import kotlin.random.Random
 import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
 
@@ -45,6 +49,85 @@ class CreateShareAccountViewModel(
 
     init {
         loadShareTemplate(route.clientId)
+    }
+
+    private fun createShareAccount() {
+        val shareAccountPayload = ShareAccountPayload(
+            clientId = route.clientId,
+            productId = state.productOption[state.shareProductIndex!!].id,
+            requestedShares = state.totalShares.toInt(),
+            externalId = state.externalId,
+            submittedDate = state.submissionDate,
+            dateFormat = DateHelper.SHORT_MONTH,
+            minimumActivePeriod = state.minActivePeriodFreq.toIntOrNull(),
+            minimumActivePeriodFrequencyType = if (state.minActivePeriodFreqTypeIdx != null) state.minimumActivePeriodFrequencyTypeOptions[state.minActivePeriodFreqTypeIdx!!].id else null,
+            lockinPeriodFrequency = state.lockInPeriodFreq.toIntOrNull(),
+            lockinPeriodFrequencyType = if (state.lockInPeriodFreqTypeIdx != null) state.lockInPeriodFrequencyTypeOptions[state.lockInPeriodFreqTypeIdx!!].id else null,
+            applicationDate = state.applicationDate,
+            allowDividendCalculationForInactiveClients = state.isDividendAllowed,
+            charges = state.addedCharges,
+            locale = Constants.LOCALE_EN,
+            savingsAccountId = state.savingsAccountOptions[state.savingsAccountIdx!!].id,
+        )
+        viewModelScope.launch {
+            val online = networkMonitor.isOnline.first()
+            if (online) {
+                repository.createShareAccount(shareAccountPayload).collect { dataState ->
+                    when (dataState) {
+                        is DataState.Error -> {
+                            if (dataState.exception is IllegalStateException) {
+                                mutableStateFlow.update {
+                                    it.copy(
+                                        dialogState = CreateShareAccountState.DialogState.SuccessResponseStatus(
+                                            successStatus = false,
+                                            msg = dataState.message,
+                                        ),
+                                        launchEffectKey = Random.nextInt(),
+                                        isOverLayLoadingActive = false,
+                                    )
+                                }
+                            } else {
+                                mutableStateFlow.update {
+                                    it.copy(
+                                        screenState = CreateShareAccountState.ScreenState.Error(
+                                            dataState.message,
+                                        ),
+                                        isOverLayLoadingActive = false,
+                                    )
+                                }
+                            }
+                        }
+
+                        DataState.Loading -> {
+                            mutableStateFlow.update {
+                                it.copy(
+                                    isOverLayLoadingActive = true,
+                                )
+                            }
+                        }
+
+                        is DataState.Success -> {
+                            mutableStateFlow.update {
+                                it.copy(
+                                    isOverLayLoadingActive = false,
+                                    launchEffectKey = Random.nextInt(),
+                                    dialogState = CreateShareAccountState.DialogState.SuccessResponseStatus(
+                                        successStatus = true,
+                                        msg = getString(Res.string.feature_share_account_created_successfully),
+                                    ),
+                                )
+                            }
+                        }
+                    }
+                }
+            } else {
+                mutableStateFlow.update {
+                    it.copy(
+                        screenState = CreateShareAccountState.ScreenState.Error(getString(Res.string.feature_client_error_network_not_available)),
+                    )
+                }
+            }
+        }
     }
 
     private fun loadShareTemplateFromProduct(client: Int, productId: Int?) {
@@ -381,7 +464,7 @@ class CreateShareAccountViewModel(
             }
 
             is CreateShareAccountAction.AddChargeToList -> {
-                val createdData = CreatedCharges(
+                val createdData = ChargeItem(
                     chargeId = state.chargeOptions[state.chooseChargeIndex!!].id,
                     amount = state.chargeAmount.toDoubleOrNull(),
                 )
@@ -397,7 +480,7 @@ class CreateShareAccountViewModel(
             }
 
             is CreateShareAccountAction.EditCharge -> {
-                val createdData = CreatedCharges(
+                val createdData = ChargeItem(
                     chargeId = state.chargeOptions[action.index].id,
                     amount = state.chargeAmount.toDoubleOrNull(),
                 )
@@ -471,6 +554,10 @@ class CreateShareAccountViewModel(
                     )
                 }
             }
+
+            CreateShareAccountAction.SubmitShareAccount -> {
+                createShareAccount()
+            }
         }
     }
 }
@@ -518,7 +605,8 @@ constructor(
     val lockInPeriodFreqTypeError: StringResource? = null,
     val screenState: ScreenState = ScreenState.Loading,
     val isOverLayLoadingActive: Boolean = false,
-    val addedCharges: List<CreatedCharges> = emptyList(),
+    val addedCharges: List<ChargeItem> = emptyList(),
+    val launchEffectKey: Int? = null,
 ) {
 
     interface ScreenState {
@@ -530,6 +618,8 @@ constructor(
     sealed interface DialogState {
         data class AddNewCharge(val edit: Boolean, val index: Int = -1) : DialogState
         data object ShowCharges : DialogState
+        data class SuccessResponseStatus(val successStatus: Boolean, val msg: String = "") :
+            DialogState
     }
 }
 
@@ -564,14 +654,10 @@ sealed interface CreateShareAccountAction {
     data class OnChargeAmountChange(val amount: String) : CreateShareAccountAction
     data class DeleteChargeFromSelectedCharges(val index: Int) : CreateShareAccountAction
     data class EditChargeDialog(val index: Int) : CreateShareAccountAction
+    object SubmitShareAccount : CreateShareAccountAction
 }
 
 sealed interface CreateShareAccountEvent {
     object NavigateBack : CreateShareAccountEvent
     object Finish : CreateShareAccountEvent
 }
-
-data class CreatedCharges(
-    val chargeId: Int? = null,
-    val amount: Double? = null,
-)

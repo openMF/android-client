@@ -12,9 +12,12 @@ package com.mifos.core.data.repositoryImp
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.common.utils.asDataStateFlow
 import com.mifos.core.data.repository.ShareAccountRepository
+import com.mifos.core.network.GenericResponse
 import com.mifos.core.network.datamanager.DataManagerShare
+import com.mifos.core.network.model.share.ShareAccountPayload
 import com.mifos.core.network.model.share.ShareTemplate
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 
 class ShareAccountRepositoryImpl(
     private val dataManagerShare: DataManagerShare,
@@ -22,5 +25,13 @@ class ShareAccountRepositoryImpl(
 
     override fun getShareTemplate(clientId: Int, productId: Int?): Flow<DataState<ShareTemplate>> {
         return dataManagerShare.getShareTemplate(clientId, productId).asDataStateFlow()
+    }
+
+    override suspend fun createShareAccount(
+        shareAccountPayload: ShareAccountPayload,
+    ): Flow<DataState<GenericResponse>> {
+        return flow {
+            emit(dataManagerShare.createShareAccount(shareAccountPayload))
+        }.asDataStateFlow()
     }
 }

@@ -90,29 +90,29 @@ class CreateFixedDepositAccountViewmodel(
                 }
 
                 DataState.Loading -> {
-                    setLoadingState()
+                    mutableStateFlow.update {
+                        it.copy(
+                            isOverlayLoading = true,
+                        )
+                    }
                 }
             }
         }
     }
 
-    private fun setLoadingState() {
-        mutableStateFlow.update {
-            it.copy(
-                screenState = NewFixedDepositAccountState.ScreenState.Loading,
-            )
-        }
-    }
-
     private fun setSuccessState() {
         mutableStateFlow.update {
-            it.copy(screenState = NewFixedDepositAccountState.ScreenState.Success)
+            it.copy(
+                screenState = NewFixedDepositAccountState.ScreenState.Success,
+                isOverlayLoading = false,
+            )
         }
     }
     private fun setErrorState(message: String) {
         mutableStateFlow.update {
             it.copy(
                 screenState = NewFixedDepositAccountState.ScreenState.Error(message),
+                isOverlayLoading = false,
             )
         }
     }
@@ -274,6 +274,7 @@ data class NewFixedDepositAccountState(
     val fixedDepositAccountDetail: FixedDepositAccountDetailsState = FixedDepositAccountDetailsState(),
     val fixedDepositAccountTerms: FixedDepositAccountTermsState = FixedDepositAccountTermsState(),
     val template: FixedDepositTemplate = FixedDepositTemplate(),
+    val isOverlayLoading: Boolean = false,
 ) {
     sealed interface ScreenState {
         data class Error(val message: String) : ScreenState

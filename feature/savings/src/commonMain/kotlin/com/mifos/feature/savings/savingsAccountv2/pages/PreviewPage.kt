@@ -129,7 +129,7 @@ fun PreviewPage(
 
     )
 
-    Column(modifier = Modifier.fillMaxSize()) {
+    Column(modifier = Modifier.fillMaxSize().padding(bottom = DesignToken.padding.large)) {
         LazyColumn(modifier = modifier.weight(1f)) {
             item {
                 Text(

@@ -10,7 +10,6 @@
 package com.mifos.feature.recurringDeposit.newRecurringDepositAccount
 
 import androidclient.feature.recurringdeposit.generated.resources.Res
-import androidclient.feature.recurringdeposit.generated.resources.feature_recurring_deposit_create_recurring_deposit_account
 import androidclient.feature.recurringdeposit.generated.resources.feature_recurring_deposit_step_charges
 import androidclient.feature.recurringdeposit.generated.resources.feature_recurring_deposit_step_details
 import androidclient.feature.recurringdeposit.generated.resources.feature_recurring_deposit_step_interest
@@ -28,6 +27,7 @@ import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.ui.components.MifosBreadcrumbNavBar
 import com.mifos.core.ui.components.MifosErrorComponent
 import com.mifos.core.ui.components.MifosProgressIndicator
+import com.mifos.core.ui.components.MifosProgressIndicatorOverlay
 import com.mifos.core.ui.components.MifosStepper
 import com.mifos.core.ui.components.Step
 import com.mifos.core.ui.util.EventsEffect
@@ -104,8 +104,6 @@ private fun RecurringAccountScaffold(
     )
 
     MifosScaffold(
-        title = stringResource(Res.string.feature_recurring_deposit_create_recurring_deposit_account),
-        onBackPressed = { onAction(RecurringAccountAction.NavigateBack) },
         modifier = modifier,
     ) { paddingValues ->
         Column(
@@ -140,6 +138,9 @@ private fun RecurringAccountScaffold(
                     )
                 }
             }
+        }
+        if (state.isOverlayLoading) {
+            MifosProgressIndicatorOverlay()
         }
     }
 }

@@ -58,7 +58,10 @@ fun MifosButton(
     contentPadding: PaddingValues = ButtonDefaults.ContentPadding,
     elevation: ButtonElevation? = ButtonDefaults.buttonElevation(),
     colors: ButtonColors = ButtonDefaults.buttonColors(
-        containerColor = MaterialTheme.colorScheme.background,
+        containerColor = MaterialTheme.colorScheme.primary,
+        contentColor = MaterialTheme.colorScheme.onPrimary,
+        disabledContainerColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.12f),
+        disabledContentColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f),
     ),
     content: @Composable RowScope.() -> Unit = {},
 ) {
