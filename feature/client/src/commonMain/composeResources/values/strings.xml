@@ -593,6 +593,7 @@
     <string name="charges_view_charges">View Charges</string>
     <string name="charges_client_update_not_support_error_msg">Updating client charges is not supported. Please delete the existing charge and create a new one.</string>
 
+    <!--Fixed Deposit Account -->
     <string name="feature_fixed_deposit_deposit_amount">Deposit Amount</string>
     <string name="feature_fixed_deposit_deposit_period_type">Deposit Period Type</string>
     <string name="feature_fixed_interest_compounding">Interest Compounding</string>
