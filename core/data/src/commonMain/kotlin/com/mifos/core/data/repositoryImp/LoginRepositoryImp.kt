@@ -22,6 +22,7 @@ class LoginRepositoryImp(
 ) : LoginRepository {
 
     override suspend fun login(username: String, password: String): PostAuthenticationResponse {
-        return dataManagerAuth.login(username, password)
+
+        return dataManagerAuth.login(username.trim(), password.trim())
     }
 }
