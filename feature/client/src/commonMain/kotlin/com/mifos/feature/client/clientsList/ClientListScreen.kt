@@ -24,15 +24,26 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.Checkbox
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.RadioButton
+import androidx.compose.material3.SheetState
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.BiasAbsoluteAlignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.PagingData
 import com.mifos.core.designsystem.component.BasicDialogState
@@ -40,6 +51,7 @@ import com.mifos.core.designsystem.component.MifosBasicDialog
 import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.designsystem.theme.AppColors
 import com.mifos.core.designsystem.theme.DesignToken
+import com.mifos.core.designsystem.theme.MifosTheme
 import com.mifos.core.designsystem.theme.MifosTypography
 import com.mifos.core.ui.components.MifosEmptyCard
 import com.mifos.core.ui.components.MifosProgressIndicator
@@ -51,6 +63,7 @@ import kotlinx.coroutines.flow.Flow
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun ClientListScreen(
     createNewClient: () -> Unit,
@@ -58,7 +71,25 @@ internal fun ClientListScreen(
     modifier: Modifier = Modifier,
     viewModel: ClientListViewModel = koinViewModel(),
 ) {
+    val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     val state by viewModel.stateFlow.collectAsStateWithLifecycle()
+
+    if (state.isFilterVisible) {
+        FilterBottomSheet(
+            onDismissRequest = { viewModel.trySendAction(ClientListAction.ToggleFilterVisibility) },
+            sheetState = sheetState,
+            removeStatus = { viewModel.trySendAction(ClientListAction.RemoveStatus(it)) },
+            addStatus = { viewModel.trySendAction(ClientListAction.AddStatus(it)) },
+            selectedStatuses = state.selectedStatus,
+            selectedSort = state.sort,
+            handleSortClick = { viewModel.trySendAction(ClientListAction.HandleSortClick(it)) },
+            officeNames = state.officeNames,
+            selectedOffices = state.selectedOffices,
+            addOffice = { viewModel.trySendAction(ClientListAction.AddOffice(it)) },
+            removeOffice = { viewModel.trySendAction(ClientListAction.RemoveOffice(it)) },
+            clearFilters = { viewModel.trySendAction(ClientListAction.ClearFilters) }
+        )
+    }
 
     EventsEffect(viewModel.eventFlow) { event ->
         when (event) {
@@ -71,6 +102,8 @@ internal fun ClientListScreen(
         modifier = modifier,
         state = state,
         onAction = remember(viewModel) { { viewModel.trySendAction(it) } },
+        toggleFilterVisibility = { viewModel.trySendAction(ClientListAction.ToggleFilterVisibility) },
+        onUpdateOffices = { viewModel.trySendAction(ClientListAction.OnUpdateOffice(it)) }
     )
 
     ClientListDialogs(
@@ -86,6 +119,7 @@ private fun ClientActions(
     state: ClientListState,
     onAction: (ClientListAction) -> Unit,
     modifier: Modifier = Modifier,
+    toggleFilterVisibility: () -> Unit
 ) {
     Row(
         modifier = modifier.fillMaxWidth().padding(DesignToken.padding.large),
@@ -143,14 +177,15 @@ private fun ClientActions(
 //            }
         }
         Spacer(Modifier.width(DesignToken.padding.largeIncreased))
-//        Icon(
-//            imageVector = MifosIcons.Filter,
-//            contentDescription = null,
-//            modifier = Modifier
-//                .size(DesignToken.sizes.iconAverage)
-//                .clickable {
-//                },
-//        )
+        Icon(
+            imageVector = MifosIcons.Filter,
+            contentDescription = null,
+            modifier = Modifier
+                .size(DesignToken.sizes.iconAverage)
+                .clickable {
+                    toggleFilterVisibility()
+                },
+        )
     }
 }
 
@@ -159,47 +194,55 @@ private fun ClientListContentScreen(
     state: ClientListState,
     modifier: Modifier = Modifier,
     onAction: (ClientListAction) -> Unit,
+    toggleFilterVisibility: () -> Unit,
+    onUpdateOffices: (List<String?>) -> Unit
 ) {
-    if (state.isEmpty) {
-        MifosEmptyCard("No clients found")
-    }
-    if (state.clients.isNotEmpty()) {
-        ClientListContent(
-            clientsList = state.clients,
-            onClientClick = { clientId ->
-                onAction(ClientListAction.OnClientClick(clientId))
-            },
-            modifier = modifier.padding(DesignToken.padding.large),
-            fetchImage = {
-                onAction(ClientListAction.FetchImage(it))
-            },
-            images = state.clientImages,
-        )
-    }
-    if (state.clientsFlow != null) {
-        Column(
-            Modifier.fillMaxSize(),
-        ) {
-            if (state.dialogState == null) {
-                ClientActions(
-                    state = state,
-                    onAction = onAction,
+    Column(
+        modifier = Modifier.fillMaxSize()
+    ){
+        if (!state.isEmpty) {
+            ClientActions(
+                state = state,
+                onAction = onAction,
+                toggleFilterVisibility = toggleFilterVisibility,
+            )
+        }
+
+        when  {
+            state.clients.isNotEmpty() -> {
+                ClientListContent(
+                    clientsList = state.clients,
+                    onClientClick = { clientId ->
+                        onAction(ClientListAction.OnClientClick(clientId))
+                    },
+                    modifier = modifier.padding(DesignToken.padding.large),
+                    fetchImage = {
+                        onAction(ClientListAction.FetchImage(it))
+                    },
+                    images = state.clientImages,
                 )
             }
-            LazyColumnForClientListApi(
-                pagingFlow = state.clientsFlow,
-                onRefresh = {
-                    onAction(ClientListAction.RefreshClients)
-                },
-                onClientSelect = {
-                    onAction(ClientListAction.OnClientClick(it))
-                },
-                modifier = Modifier,
-                fetchImage = {
-                    onAction(ClientListAction.FetchImage(it))
-                },
-                images = state.clientImages,
-            )
+            state.clientsFlow != null -> {
+                LazyColumnForClientListApi(
+                    pagingFlow = state.clientsFlow,
+                    onRefresh = {
+                        onAction(ClientListAction.RefreshClients)
+                    },
+                    onClientSelect = {
+                        onAction(ClientListAction.OnClientClick(it))
+                    },
+                    modifier = Modifier,
+                    fetchImage = {
+                        onAction(ClientListAction.FetchImage(it))
+                    },
+                    images = state.clientImages,
+                    sort = state.sort,
+                    onUpdateOffices = onUpdateOffices
+                )
+            }
+            else -> {
+                MifosEmptyCard("No clients found")
+            }
         }
     }
 }
@@ -310,4 +353,155 @@ internal expect fun LazyColumnForClientListApi(
     fetchImage: (Int) -> Unit,
     images: Map<Int, ByteArray?>,
     modifier: Modifier = Modifier,
+    sort: String?,
+    onUpdateOffices: (List<String?>) -> Unit
 )
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun FilterBottomSheet(
+    onDismissRequest: () -> Unit,
+    sheetState: SheetState,
+    removeStatus: (String) -> Unit,
+    addStatus: (String) -> Unit,
+    selectedStatuses: List<String>,
+    selectedSort: String?,
+    handleSortClick: (String) -> Unit,
+    officeNames: List<String?>,
+    selectedOffices: List<String>,
+    addOffice: (String) -> Unit,
+    removeOffice: (String) -> Unit,
+    clearFilters: () -> Unit
+) {
+    ModalBottomSheet(
+        onDismissRequest = onDismissRequest,
+        sheetState = sheetState,
+        dragHandle = null,
+        containerColor = MaterialTheme.colorScheme.background
+    ) {
+        val sortTypes = listOf("Name", "Account Number", "External ID")
+        val statusTypes = listOf("Active", "Pending", "Closed")
+
+        Column(
+            modifier = Modifier.padding(15.dp)
+        ) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween,
+                modifier = Modifier.fillMaxWidth()
+                    .padding(10.dp)
+            ) {
+                Text(
+                    text = "Filters",
+                    style = MifosTypography.titleLargeEmphasized,
+                    color = MaterialTheme.colorScheme.primary,
+                )
+                Row{
+                    IconButton(
+                        onClick = {
+                            clearFilters()
+                            onDismissRequest()
+                        },
+                    ) {
+                        Icon(
+                            imageVector = MifosIcons.Redo,
+                            contentDescription = "Clear",
+                        )
+                    }
+                    IconButton(
+                        onClick = onDismissRequest,
+                    ) {
+                        Icon(
+                            imageVector = MifosIcons.Check,
+                            contentDescription = "Apply",
+                        )
+                    }
+                }
+            }
+            HorizontalDivider(Modifier.fillMaxWidth(), thickness = 1.5.dp)
+            Column(
+                modifier = Modifier.padding(10.dp)
+            ){
+                Text(
+                    text = "Sort by",
+                    style = MifosTypography.titleMediumEmphasized,
+                )
+                sortTypes.forEach { sort ->
+                    val isSelected = (sort == selectedSort)
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        Spacer(modifier = Modifier.width(10.dp))
+                        RadioButton(
+                            selected = isSelected,
+                            onClick = {
+                                handleSortClick(sort)
+                            },
+                        )
+                        Text(text = sort)
+                    }
+                }
+            }
+            HorizontalDivider(Modifier.fillMaxWidth(), thickness = 1.5.dp)
+            Column(
+                modifier = Modifier.padding(10.dp),
+            ){
+                Text(
+                    text = "Account Status",
+                    style = MifosTypography.titleMediumEmphasized,
+                )
+                statusTypes.forEach { status ->
+                    val isChecked = selectedStatuses.contains(status)
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        Spacer(modifier = Modifier.width(10.dp))
+                        Checkbox(
+                            checked = isChecked,
+                            onCheckedChange = {
+                                if (it) {
+                                    addStatus(status)
+                                } else {
+                                    removeStatus(status)
+                                }
+                            },
+                        )
+                        Text(text = status)
+                    }
+                }
+            }
+            HorizontalDivider(Modifier.fillMaxWidth(), thickness = 1.5.dp)
+
+            Column(
+                modifier = Modifier.padding(10.dp)
+            ){
+                Text(
+                    "Office Name",
+                    style = MifosTypography.titleMediumEmphasized
+                )
+                officeNames.forEach { name ->
+                    val isChecked = selectedOffices.contains(name)
+                    if (name != null) {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Spacer(modifier = Modifier.width(10.dp))
+                            Checkbox(
+                                checked = isChecked,
+                                onCheckedChange = {
+                                    if (it) {
+                                        addOffice(name)
+                                    } else {
+                                        removeOffice(name)
+                                    }
+                                },
+                            )
+                            Text(text = name)
+                        }
+                    }
+                }
+            }
+            HorizontalDivider(Modifier.fillMaxWidth(), thickness = 1.5.dp)
+        }
+    }
+}

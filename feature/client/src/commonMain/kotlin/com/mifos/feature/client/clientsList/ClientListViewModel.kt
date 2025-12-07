@@ -13,6 +13,7 @@ import androidclient.feature.client.generated.resources.Res
 import androidclient.feature.client.generated.resources.feature_client_failed_to_load_client
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
+import androidx.paging.filter
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.common.utils.Page
 import com.mifos.core.data.repository.ClientDetailsRepository
@@ -21,8 +22,11 @@ import com.mifos.core.datastore.UserPreferencesRepository
 import com.mifos.core.ui.util.BaseViewModel
 import com.mifos.core.ui.util.imageToByteArray
 import com.mifos.room.entities.client.ClientEntity
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
@@ -36,6 +40,7 @@ internal class ClientListViewModel(
         clients = emptyList(),
         isOnline = false,
         clientsFlow = null,
+        unfilteredClients = emptyList()
     ),
 ) {
 
@@ -74,6 +79,15 @@ internal class ClientListViewModel(
                     )
                 }
             }
+
+            ClientListAction.ToggleFilterVisibility -> toggleFilterVisibility()
+            is ClientListAction.AddStatus -> addStatus(action.status)
+            is ClientListAction.RemoveStatus -> removeStatus(action.status)
+            is ClientListAction.AddOffice -> addOffice(action.office)
+            is ClientListAction.RemoveOffice -> removeOffice(action.office)
+            is ClientListAction.HandleSortClick -> handleSortClick(action.sort)
+            is ClientListAction.OnUpdateOffice -> onUpdateOffice(action.offices)
+            ClientListAction.ClearFilters -> clearFilters()
         }
     }
 
@@ -144,7 +158,7 @@ internal class ClientListViewModel(
                 if (data.isEmpty()) {
                     it.copy(isEmpty = true, dialogState = null)
                 } else {
-                    it.copy(clients = data, dialogState = null)
+                    it.copy(clients = data, dialogState = null, unfilteredClients = data)
                 }
             }
         }
@@ -155,6 +169,7 @@ internal class ClientListViewModel(
             state.copy(
                 clientsFlow = result,
                 dialogState = null,
+                unfilteredClientsFlow = result
             )
         }
     }
@@ -177,6 +192,117 @@ internal class ClientListViewModel(
             }
         }
     }
+
+    private fun addStatus(status: String) {
+        updateState {
+            val newSelectedStatus = it.selectedStatus + status
+            it.copy(
+                selectedStatus = newSelectedStatus,
+            )
+        }
+        applyFilters()
+    }
+
+    private fun removeStatus(status: String) {
+        updateState {
+            val newSelectedStatus = it.selectedStatus - status
+            it.copy(
+                selectedStatus = newSelectedStatus
+            )
+        }
+        applyFilters()
+    }
+
+    private fun handleSortClick(sort: String?) {
+        updateState {
+            val sortedList = when (sort) {
+                "Name" -> it.clients.sortedBy{ it.displayName?.lowercase() }
+                "Account Number" -> it.clients.sortedBy { it.accountNo }
+                "External ID" -> it.clients.sortedBy { it.externalId}
+                else -> it.clients
+            }
+
+            it.copy(
+                sort = sort,
+                clients = sortedList
+            )
+        }
+    }
+
+
+    private fun toggleFilterVisibility() {
+        updateState {
+            it.copy(
+                isFilterVisible = !it.isFilterVisible
+            )
+        }
+    }
+
+    private fun onUpdateOffice(offices: List<String?>) {
+        updateState {
+            it.copy(
+                officeNames = (offices + it.officeNames).distinct().sortedBy { it }
+            )
+        }
+    }
+
+    private fun addOffice(office: String) {
+        updateState {
+            val newSelectedOffices = it.selectedOffices + office
+            it.copy(
+                selectedOffices = newSelectedOffices
+            )
+        }
+        applyFilters()
+    }
+
+    private fun removeOffice(office: String) {
+        updateState {
+            val newSelectedOffices = it.selectedOffices - office
+            it.copy(
+                selectedOffices = newSelectedOffices,
+            )
+        }
+        applyFilters()
+    }
+
+    private fun applyFilters() {
+
+        fun keep(client: ClientEntity): Boolean {
+            val statusMatch = state.selectedStatus.isEmpty() || client.status?.value in state.selectedStatus
+            val officeMatch = state.selectedOffices.isEmpty() || (client.officeName?: "Null") in state.selectedOffices
+
+            return statusMatch && officeMatch
+        }
+        val filteredList = state.unfilteredClients.filter { client ->
+            keep(client)
+        }
+
+        val filteredFlow = state.unfilteredClientsFlow?.map { clients ->
+            clients.filter { client->
+                keep(client)
+            }
+        }
+
+        updateState {
+            it.copy(
+                clients = filteredList,
+                clientsFlow = filteredFlow
+            )
+        }
+    }
+
+    private fun clearFilters() {
+        updateState {
+            it.copy(
+                clients = it.unfilteredClients,
+                clientsFlow = it.unfilteredClientsFlow,
+                sort = null,
+                selectedStatus = emptyList(),
+                selectedOffices = emptyList()
+            )
+        }
+    }
 }
 
 /**
@@ -184,13 +310,20 @@ internal class ClientListViewModel(
  */
 data class ClientListState(
     val clients: List<ClientEntity>,
+    val unfilteredClients: List<ClientEntity>,
     val clientsFlow: Flow<PagingData<ClientEntity>>?,
+    val unfilteredClientsFlow: Flow<PagingData<ClientEntity>>? = null,
     val isOnline: Boolean,
     val isEmpty: Boolean = false,
     val isSearchActive: Boolean = false,
     val dialogState: DialogState? = null,
     val searchQuery: String = "",
     val clientImages: Map<Int, ByteArray?> = emptyMap(),
+    val sort: String? = null,
+    val selectedStatus: List<String> = emptyList(),
+    val isFilterVisible: Boolean = false,
+    val officeNames: List<String?> = emptyList(),
+    val selectedOffices: List<String> = emptyList()
 ) {
     sealed interface DialogState {
         data class Error(val message: String) : DialogState
@@ -218,6 +351,15 @@ sealed interface ClientListAction {
     data object DismissSearch : ClientListAction
     data object NavigateToCreateClient : ClientListAction
     data class OnQueryChange(val query: String) : ClientListAction
+    data object ToggleFilterVisibility : ClientListAction
+    data class AddStatus(val status: String) : ClientListAction
+    data class RemoveStatus(val status: String) : ClientListAction
+    data class AddOffice(val office: String) : ClientListAction
+    data class RemoveOffice(val office: String) : ClientListAction
+    data class HandleSortClick(val sort: String) : ClientListAction
+    data class OnUpdateOffice(val offices: List<String?>) : ClientListAction
+    data object ClearFilters : ClientListAction
+
 
     sealed class Internal : ClientListAction {
         data class ReceiveClientResult(val result: Flow<PagingData<ClientEntity>>) : Internal()
