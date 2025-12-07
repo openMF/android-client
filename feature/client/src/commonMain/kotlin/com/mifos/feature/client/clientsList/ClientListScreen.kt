@@ -12,6 +12,7 @@ package com.mifos.feature.client.clientsList
 import androidclient.feature.client.generated.resources.Res
 import androidclient.feature.client.generated.resources.account_number_prefix
 import androidclient.feature.client.generated.resources.string_not_available
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -38,7 +39,9 @@ import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.BiasAbsoluteAlignment
 import androidx.compose.ui.Modifier
@@ -422,23 +425,49 @@ fun FilterBottomSheet(
             Column(
                 modifier = Modifier.padding(10.dp)
             ){
-                Text(
-                    text = "Sort by",
-                    style = MifosTypography.titleMediumEmphasized,
-                )
-                sortTypes.forEach { sort ->
-                    val isSelected = (sort == selectedSort)
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                    ) {
-                        Spacer(modifier = Modifier.width(10.dp))
-                        RadioButton(
-                            selected = isSelected,
-                            onClick = {
-                                handleSortClick(sort)
-                            },
+                var isExpanded by remember { mutableStateOf(false) }
+                Row(
+                    modifier = Modifier.fillMaxWidth()
+                        .clickable(onClick = {
+                            isExpanded = !isExpanded
+                        }),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ){
+                    Text(
+                        text = "Sort by",
+                        style = MifosTypography.titleMediumEmphasized,
+                    )
+                    if (isExpanded) {
+                        Icon(
+                            imageVector = MifosIcons.ArrowDropUp,
+                            contentDescription = ""
                         )
-                        Text(text = sort)
+                    } else {
+                        Icon(
+                            imageVector = MifosIcons.ArrowDropDown,
+                            contentDescription = ""
+                        )
+                    }
+                }
+                AnimatedVisibility(
+                    visible = isExpanded
+                ){
+                    Column {
+                        sortTypes.forEach { sort ->
+                            val isSelected = (sort == selectedSort)
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                            ) {
+                                Spacer(modifier = Modifier.width(10.dp))
+                                RadioButton(
+                                    selected = isSelected,
+                                    onClick = {
+                                        handleSortClick(sort)
+                                    },
+                                )
+                                Text(text = sort)
+                            }
+                        }
                     }
                 }
             }
@@ -446,27 +475,53 @@ fun FilterBottomSheet(
             Column(
                 modifier = Modifier.padding(10.dp),
             ){
-                Text(
-                    text = "Account Status",
-                    style = MifosTypography.titleMediumEmphasized,
-                )
-                statusTypes.forEach { status ->
-                    val isChecked = selectedStatuses.contains(status)
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                    ) {
-                        Spacer(modifier = Modifier.width(10.dp))
-                        Checkbox(
-                            checked = isChecked,
-                            onCheckedChange = {
-                                if (it) {
-                                    addStatus(status)
-                                } else {
-                                    removeStatus(status)
-                                }
-                            },
+                var isExpanded by remember { mutableStateOf(false) }
+                Row(
+                    modifier = Modifier.fillMaxWidth()
+                        .clickable(onClick = {
+                            isExpanded = !isExpanded
+                        }),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ){
+                    Text(
+                        text = "Account Status",
+                        style = MifosTypography.titleMediumEmphasized,
+                    )
+                    if (isExpanded) {
+                        Icon(
+                            imageVector = MifosIcons.ArrowDropUp,
+                            contentDescription = ""
                         )
-                        Text(text = status)
+                    } else {
+                        Icon(
+                            imageVector = MifosIcons.ArrowDropDown,
+                            contentDescription = ""
+                        )
+                    }
+                }
+                AnimatedVisibility(
+                    visible = isExpanded
+                ){
+                    Column {
+                        statusTypes.forEach { status ->
+                            val isChecked = selectedStatuses.contains(status)
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                            ) {
+                                Spacer(modifier = Modifier.width(10.dp))
+                                Checkbox(
+                                    checked = isChecked,
+                                    onCheckedChange = {
+                                        if (it) {
+                                            addStatus(status)
+                                        } else {
+                                            removeStatus(status)
+                                        }
+                                    },
+                                )
+                                Text(text = status)
+                            }
+                        }
                     }
                 }
             }
@@ -475,28 +530,55 @@ fun FilterBottomSheet(
             Column(
                 modifier = Modifier.padding(10.dp)
             ){
-                Text(
-                    "Office Name",
-                    style = MifosTypography.titleMediumEmphasized
-                )
-                officeNames.forEach { name ->
-                    val isChecked = selectedOffices.contains(name)
-                    if (name != null) {
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Spacer(modifier = Modifier.width(10.dp))
-                            Checkbox(
-                                checked = isChecked,
-                                onCheckedChange = {
-                                    if (it) {
-                                        addOffice(name)
-                                    } else {
-                                        removeOffice(name)
-                                    }
-                                },
-                            )
-                            Text(text = name)
+                var isExpanded by remember { mutableStateOf(false) }
+                Row(
+                    modifier = Modifier.fillMaxWidth()
+                        .clickable(onClick = {
+                            isExpanded = !isExpanded
+                        }),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ){
+                    Text(
+                        "Office Name",
+                        style = MifosTypography.titleMediumEmphasized
+                    )
+                    if (isExpanded) {
+                        Icon(
+                            imageVector = MifosIcons.ArrowDropUp,
+                            contentDescription = ""
+                        )
+                    } else {
+                        Icon(
+                            imageVector = MifosIcons.ArrowDropDown,
+                            contentDescription = ""
+                        )
+                    }
+                }
+
+                AnimatedVisibility(
+                    visible = isExpanded
+                ){
+                    Column {
+                        officeNames.forEach { name ->
+                            val isChecked = selectedOffices.contains(name)
+                            if (name != null) {
+                                Row(
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                    Spacer(modifier = Modifier.width(10.dp))
+                                    Checkbox(
+                                        checked = isChecked,
+                                        onCheckedChange = {
+                                            if (it) {
+                                                addOffice(name)
+                                            } else {
+                                                removeOffice(name)
+                                            }
+                                        },
+                                    )
+                                    Text(text = name)
+                                }
+                            }
                         }
                     }
                 }
