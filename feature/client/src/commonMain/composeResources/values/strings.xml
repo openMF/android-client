@@ -551,9 +551,11 @@
     <string name="feature_share_account_preview">Preview</string>
     <string name="feature_share_account_back">Back</string>
     <string name="feature_share_account_next">Next</string>
+    <string name="feature_share_account_submit">Submit</string>
+    <string name="feature_share_account_created_successfully">Share account created successfully</string>
 
-    <string name="feature_share_account_detail_product_name">Product Name*</string>
-    <string name="feature_share_account_detail_submission_date">Submission Date*</string>
+    <string name="feature_share_account_detail_product_name">Product Name</string>
+    <string name="feature_share_account_detail_submission_date">Submission Date</string>
     <string name="feature_share_account_detail_external_id">External Id</string>
     <string name="feature_share_account_detail_date_select">Select</string>
     <string name="feature_share_account_detail_date_cancel">Cancel</string>
@@ -591,6 +593,7 @@
     <string name="charges_view_charges">View Charges</string>
     <string name="charges_client_update_not_support_error_msg">Updating client charges is not supported. Please delete the existing charge and create a new one.</string>
 
+    <!--Fixed Deposit Account -->
     <string name="feature_fixed_deposit_deposit_amount">Deposit Amount</string>
     <string name="feature_fixed_deposit_deposit_period_type">Deposit Period Type</string>
     <string name="feature_fixed_interest_compounding">Interest Compounding</string>
