@@ -604,7 +604,7 @@ fun MifosActionsChargeListingComponent(
     type: String,
     date: String? = null,
     collectedOn: String,
-    amount: String,
+    amount: String? = null,
     menuList: List<Actions> = listOf<Actions>(
         Actions.Edit(),
         Actions.Delete(),
@@ -668,11 +668,13 @@ fun MifosActionsChargeListingComponent(
                             style = MifosTypography.bodySmall,
                             textAlign = TextAlign.End,
                         )
-                        Text(
-                            text = amount,
-                            style = MifosTypography.labelMedium,
-                            textAlign = TextAlign.End,
-                        )
+                        if (amount != null) {
+                            Text(
+                                text = amount,
+                                style = MifosTypography.labelMedium,
+                                textAlign = TextAlign.End,
+                            )
+                        }
                     }
                     Icon(
                         modifier = Modifier

@@ -162,7 +162,7 @@ class RecurringAccountViewModel(
         )
     }
 
-    private fun handleInterestCalculationDaysInYearType(action: RecurringAccountAction.RecurringAccountInterestChartAction.OnInterestCalculationDaysInYearType) {
+    private fun handleInterestCalculationDaysInYearType(action: RecurringAccountAction.RecurringAccountTermAction.OnInterestCalculationDaysInYearType) {
         mutableStateFlow.update {
             it.copy(
                 recurringDepositAccountInterestChart = it.recurringDepositAccountInterestChart.copy(
@@ -173,7 +173,7 @@ class RecurringAccountViewModel(
         }
     }
 
-    private fun handleInterestCalculationType(action: RecurringAccountAction.RecurringAccountInterestChartAction.OnInterestCalculationType) {
+    private fun handleInterestCalculationType(action: RecurringAccountAction.RecurringAccountTermAction.OnInterestCalculationType) {
         mutableStateFlow.update {
             it.copy(
                 recurringDepositAccountInterestChart = it.recurringDepositAccountInterestChart.copy(
@@ -183,7 +183,7 @@ class RecurringAccountViewModel(
         }
     }
 
-    private fun handleInterestCompoundingPeriodType(action: RecurringAccountAction.RecurringAccountInterestChartAction.OnInterestCompoundingPeriodType) {
+    private fun handleInterestCompoundingPeriodType(action: RecurringAccountAction.RecurringAccountTermAction.OnInterestCompoundingPeriodType) {
         mutableStateFlow.update {
             it.copy(
                 recurringDepositAccountInterestChart = it.recurringDepositAccountInterestChart.copy(
@@ -193,7 +193,7 @@ class RecurringAccountViewModel(
         }
     }
 
-    private fun handleInterestPostingPeriodType(action: RecurringAccountAction.RecurringAccountInterestChartAction.OnInterestPostingPeriodType) {
+    private fun handleInterestPostingPeriodType(action: RecurringAccountAction.RecurringAccountTermAction.OnInterestPostingPeriodType) {
         mutableStateFlow.update {
             it.copy(
                 recurringDepositAccountInterestChart = it.recurringDepositAccountInterestChart.copy(
@@ -670,20 +670,35 @@ class RecurringAccountViewModel(
                 moveToNextStep()
             }
 
-            is RecurringAccountAction.RecurringAccountInterestChartAction.OnInterestCalculationDaysInYearType -> {
+            is RecurringAccountAction.RecurringAccountTermAction.OnInterestCalculationDaysInYearType -> {
                 handleInterestCalculationDaysInYearType(action)
             }
 
-            is RecurringAccountAction.RecurringAccountInterestChartAction.OnInterestCalculationType -> {
+            is RecurringAccountAction.RecurringAccountTermAction.OnInterestCalculationType -> {
                 handleInterestCalculationType(action)
             }
 
-            is RecurringAccountAction.RecurringAccountInterestChartAction.OnInterestCompoundingPeriodType -> {
+            is RecurringAccountAction.RecurringAccountTermAction.OnInterestCompoundingPeriodType -> {
                 handleInterestCompoundingPeriodType(action)
             }
 
-            is RecurringAccountAction.RecurringAccountInterestChartAction.OnInterestPostingPeriodType -> {
+            is RecurringAccountAction.RecurringAccountTermAction.OnInterestPostingPeriodType -> {
                 handleInterestPostingPeriodType(action)
+            }
+
+            RecurringAccountAction.OnDismissDialog -> {
+                mutableStateFlow.update {
+                    it.copy(
+                        dialogState = null,
+                    )
+                }
+            }
+            RecurringAccountAction.OnShowRateChartDialog -> {
+                mutableStateFlow.update {
+                    it.copy(
+                        dialogState = RecurringAccountState.DialogState.RateChartDialog,
+                    )
+                }
             }
         }
     }
@@ -702,12 +717,18 @@ data class RecurringAccountState(
     val currencyIndex: Int = -1,
     val currencyError: String? = null,
     val isOverlayLoading: Boolean = false,
+    val dialogState: DialogState? = null,
 ) {
     sealed interface ScreenState {
         data class Error(val message: String) : ScreenState
         data object Loading : ScreenState
         data object Success : ScreenState
     }
+    sealed interface DialogState {
+        data object RateChartDialog : DialogState
+    }
+
+    val isRateChartEmpty = !template.accountChart?.chartSlabs.isNullOrEmpty()
 }
 
 data class RecurringAccountDetailsState
@@ -798,6 +819,8 @@ sealed class RecurringAccountAction {
     object OnBackPress : RecurringAccountAction()
     object OnNextPress : RecurringAccountAction()
     data object Retry : RecurringAccountAction()
+    object OnShowRateChartDialog : RecurringAccountAction()
+    object OnDismissDialog : RecurringAccountAction()
 
     sealed class RecurringAccountDetailsAction : RecurringAccountAction() {
         data class OnProductNameChange(val index: Int) : RecurringAccountDetailsAction()
@@ -851,18 +874,18 @@ sealed class RecurringAccountAction {
         object OnSettingNext : RecurringAccountSettingsAction()
     }
 
-    sealed class RecurringAccountInterestChartAction : RecurringAccountAction() {
+    sealed class RecurringAccountTermAction : RecurringAccountAction() {
         data class OnInterestCalculationDaysInYearType(val interestCalculationTypeDaysInYear: Int) :
-            RecurringAccountInterestChartAction()
+            RecurringAccountTermAction()
 
         data class OnInterestCompoundingPeriodType(val interestCompoundingPeriodType: Int) :
-            RecurringAccountInterestChartAction()
+            RecurringAccountTermAction()
 
         data class OnInterestCalculationType(val interestCalculationType: Int) :
-            RecurringAccountInterestChartAction()
+            RecurringAccountTermAction()
 
         data class OnInterestPostingPeriodType(val interestPostingPeriodType: Int) :
-            RecurringAccountInterestChartAction()
+            RecurringAccountTermAction()
     }
 }
 

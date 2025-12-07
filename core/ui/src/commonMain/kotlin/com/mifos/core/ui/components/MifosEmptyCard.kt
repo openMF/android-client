@@ -27,20 +27,23 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
 fun MifosEmptyCard(
-    msg: String = stringResource(Res.string.core_ui_click_here_to_view_filled_state),
+    msg: String? = stringResource(Res.string.core_ui_click_here_to_view_filled_state),
+    title: String = stringResource(Res.string.core_ui_no_item_found),
     modifier: Modifier = Modifier,
 ) {
     MifosListingComponentOutline {
         Column(modifier.fillMaxWidth()) {
             Text(
-                text = stringResource(Res.string.core_ui_no_item_found),
+                text = title,
                 style = MifosTypography.titleSmallEmphasized,
             )
-            Spacer(Modifier.height((DesignToken.padding.medium)))
-            Text(
-                text = msg,
-                style = MifosTypography.bodySmall,
-            )
+            if (msg != null) {
+                Spacer(Modifier.height((DesignToken.padding.medium)))
+                Text(
+                    text = msg,
+                    style = MifosTypography.bodySmall,
+                )
+            }
         }
     }
 }

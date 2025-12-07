@@ -53,4 +53,13 @@
     <string name="feature_recurring_deposit_interest_posting_period">Interest Posting Period</string>
     <string name="feature_recurring_deposit_interest_calculation">Interest Calculated Using</string>
     <string name="feature_recurring_deposit_calculation_days_in_year">Days In Year </string>
+    <string name="feature_recurring_deposit_valid_from_date">Valid from Date</string>
+    <string name="feature_recurring_deposit_grouping_by_amount">Grouping by Amount</string>
+    <string name="feature_recurring_deposit_interest_rate_chart">INTEREST RATE CHART</string>
+    <string name="feature_recurring_deposit_no_interest_chart">No Interest Rate Chart available</string>
+    <string name="feature_recurring_deposit_view">View</string>
+    <string name="feature_recurring_deposit_rate_chart">Rate Chart</string>
+    <string name="feature_recurring_deposit_yes">Yes</string>
+    <string name="feature_recurring_deposit_no">No</string>
+    <string name="feature_recurring_deposit_empty_date">Empty Date</string>
 </resources>

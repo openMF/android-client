@@ -35,6 +35,7 @@ import com.mifos.feature.recurringDeposit.newRecurringDepositAccount.RecurringAc
 import com.mifos.feature.recurringDeposit.newRecurringDepositAccount.pages.ChargesPage
 import com.mifos.feature.recurringDeposit.newRecurringDepositAccount.pages.DetailsPage
 import com.mifos.feature.recurringDeposit.newRecurringDepositAccount.pages.InterestPage
+import com.mifos.feature.recurringDeposit.newRecurringDepositAccount.pages.RateChart
 import com.mifos.feature.recurringDeposit.newRecurringDepositAccount.pages.SettingPage
 import com.mifos.feature.recurringDeposit.newRecurringDepositAccount.pages.TermsPage
 import org.jetbrains.compose.resources.stringResource
@@ -57,12 +58,33 @@ internal fun RecurringAccountScreen(
         }
     }
 
+    RecurringAccountDialog(
+        state = state,
+        onAction = { viewModel.trySendAction(it) },
+    )
+
     RecurringAccountScaffold(
         navController = navController,
         modifier = modifier,
         state = state,
         onAction = { viewModel.trySendAction(it) },
     )
+}
+
+@Composable
+fun RecurringAccountDialog(
+    state: RecurringAccountState,
+    onAction: (RecurringAccountAction) -> Unit,
+) {
+    when (state.dialogState) {
+        RecurringAccountState.DialogState.RateChartDialog -> {
+            RateChart(
+                state = state,
+                onAction = onAction,
+            )
+        }
+        null -> Unit
+    }
 }
 
 @Composable
@@ -93,7 +115,8 @@ private fun RecurringAccountScaffold(
         },
         Step(name = stringResource(Res.string.feature_recurring_deposit_step_interest)) {
             InterestPage(
-                onNext = { onAction(RecurringAccountAction.OnNextPress) },
+                state = state,
+                onAction = onAction,
             )
         },
         Step(name = stringResource(Res.string.feature_recurring_deposit_step_charges)) {

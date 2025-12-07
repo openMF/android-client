@@ -59,7 +59,7 @@ fun TermsPage(
                 onValueChanged = { },
                 onOptionSelected = { index, value ->
                     onAction(
-                        RecurringAccountAction.RecurringAccountInterestChartAction.OnInterestCompoundingPeriodType(
+                        RecurringAccountAction.RecurringAccountTermAction.OnInterestCompoundingPeriodType(
                             index,
                         ),
                     )
@@ -79,7 +79,7 @@ fun TermsPage(
                 onValueChanged = { },
                 onOptionSelected = { index, value ->
                     onAction(
-                        RecurringAccountAction.RecurringAccountInterestChartAction.OnInterestPostingPeriodType(
+                        RecurringAccountAction.RecurringAccountTermAction.OnInterestPostingPeriodType(
                             index,
                         ),
                     )
@@ -99,7 +99,7 @@ fun TermsPage(
                 onValueChanged = { },
                 onOptionSelected = { index, value ->
                     onAction(
-                        RecurringAccountAction.RecurringAccountInterestChartAction.OnInterestCalculationType(
+                        RecurringAccountAction.RecurringAccountTermAction.OnInterestCalculationType(
                             index,
                         ),
                     )
@@ -119,7 +119,7 @@ fun TermsPage(
                 onValueChanged = { },
                 onOptionSelected = { index, value ->
                     onAction(
-                        RecurringAccountAction.RecurringAccountInterestChartAction.OnInterestCalculationDaysInYearType(
+                        RecurringAccountAction.RecurringAccountTermAction.OnInterestCalculationDaysInYearType(
                             index,
                         ),
                     )
