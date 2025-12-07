@@ -15,6 +15,7 @@ import androidclient.feature.loan.generated.resources.add_new
 import androidclient.feature.loan.generated.resources.add_new_charge
 import androidclient.feature.loan.generated.resources.add_new_collateral
 import androidclient.feature.loan.generated.resources.back
+import androidclient.feature.loan.generated.resources.click_on_add_new
 import androidclient.feature.loan.generated.resources.collateral
 import androidclient.feature.loan.generated.resources.edit_charge
 import androidclient.feature.loan.generated.resources.feature_loan_cancel
@@ -63,6 +64,7 @@ import com.mifos.core.ui.components.Actions
 import com.mifos.core.ui.components.AddChargeBottomSheet
 import com.mifos.core.ui.components.MifosActionsChargeListingComponent
 import com.mifos.core.ui.components.MifosBreadcrumbNavBar
+import com.mifos.core.ui.components.MifosEmptyCard
 import com.mifos.core.ui.components.MifosListingComponentOutline
 import com.mifos.core.ui.components.MifosListingRowItem
 import com.mifos.core.ui.components.MifosProgressIndicator
@@ -393,7 +395,7 @@ private fun AddNewChargeDialog(
         } else {
             stringResource(Res.string.add)
         },
-        dismissText = stringResource(Res.string.feature_loan_cancel),
+        dismissText = stringResource(Res.string.back),
         showDatePicker = state.showChargesDatePick,
         selectedChargeName = if (state.chooseChargeIndex == -1) {
             ""
@@ -481,34 +483,41 @@ private fun ShowChargesDialog(
                         )
                     }
                 } else {
-                    state.addedCharges.forEachIndexed { index, it ->
-                        MifosActionsChargeListingComponent(
-                            chargeTitle = it.name.toString(),
-                            type = it.type.toString(),
-                            date = it.date,
-                            collectedOn = it.collectedOn,
-                            amount = it.amount.toString(),
-                            onActionClicked = { action ->
-                                when (action) {
-                                    is Actions.Delete -> {
-                                        onAction(
-                                            NewLoanAccountAction.DeleteChargeFromSelectedCharges(
-                                                index,
-                                            ),
-                                        )
-                                    }
+                    if (state.addedCharges.isNotEmpty()) {
+                        state.addedCharges.forEachIndexed { index, it ->
+                            MifosActionsChargeListingComponent(
+                                chargeTitle = it.name.toString(),
+                                type = it.type.toString(),
+                                date = it.date,
+                                collectedOn = it.collectedOn,
+                                amount = it.amount.toString(),
+                                onActionClicked = { action ->
+                                    when (action) {
+                                        is Actions.Delete -> {
+                                            expandedIndex = -1
+                                            onAction(
+                                                NewLoanAccountAction.DeleteChargeFromSelectedCharges(
+                                                    index,
+                                                ),
+                                            )
+                                        }
 
-                                    is Actions.Edit -> {
-                                        onAction(NewLoanAccountAction.EditChargeDialog(index))
-                                    }
+                                        is Actions.Edit -> {
+                                            onAction(NewLoanAccountAction.EditChargeDialog(index))
+                                        }
 
-                                    else -> {}
-                                }
-                            },
-                            isExpanded = expandedIndex == index,
-                            onExpandToggle = {
-                                expandedIndex = if (expandedIndex == index) -1 else index
-                            },
+                                        else -> {}
+                                    }
+                                },
+                                isExpanded = expandedIndex == index,
+                                onExpandToggle = {
+                                    expandedIndex = if (expandedIndex == index) -1 else index
+                                },
+                            )
+                        }
+                    } else {
+                        MifosEmptyCard(
+                            msg = stringResource(Res.string.click_on_add_new),
                         )
                     }
                 }

@@ -49,7 +49,7 @@ fun ChargesPage(
     modifier: Modifier = Modifier,
     onAction: (CreateShareAccountAction) -> Unit,
 ) {
-    Column(modifier = Modifier.fillMaxSize()) {
+    Column(modifier = Modifier.fillMaxSize().padding(bottom = DesignToken.padding.large)) {
         Column(
             modifier = modifier.weight(1f).verticalScroll(rememberScrollState()),
         ) {

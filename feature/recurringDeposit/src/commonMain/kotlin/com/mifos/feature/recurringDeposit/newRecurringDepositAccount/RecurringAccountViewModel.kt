@@ -18,6 +18,7 @@ import com.mifos.core.common.utils.DataState
 import com.mifos.core.common.utils.DateHelper
 import com.mifos.core.data.repository.RecurringAccountRepository
 import com.mifos.core.data.util.NetworkMonitor
+import com.mifos.core.model.objects.payloads.ChargeItem
 import com.mifos.core.model.objects.payloads.RecurringDepositAccountPayload
 import com.mifos.core.model.objects.template.recurring.FieldOfficerOption
 import com.mifos.core.ui.util.BaseViewModel
@@ -94,6 +95,7 @@ class RecurringAccountViewModel(
             val recurringFreq = settings.minimumDepositTerm.frequency.toIntOrNull()
 
             val payload = RecurringDepositAccountPayload(
+                charges = state.addedCharges,
                 adjustAdvanceTowardsFuturePayments = settings.adjustAdvancePayments,
                 allowWithdrawal = settings.allowWithdrawals,
                 clientId = state.clientId,
@@ -700,6 +702,92 @@ class RecurringAccountViewModel(
                     )
                 }
             }
+
+            is RecurringAccountAction.DeleteChargeFromSelectedCharges -> {
+                val newCharges = state.addedCharges.toMutableList().apply {
+                    removeAt(action.index)
+                }
+                mutableStateFlow.update {
+                    it.copy(addedCharges = newCharges)
+                }
+            }
+            is RecurringAccountAction.EditCharge -> {
+                val createdData = ChargeItem(
+                    chargeId = state.template.chargeOptions?.get(action.index)?.id,
+                    amount = state.chargeAmount.toDoubleOrNull(),
+                )
+
+                val currentAddedCharges = state.addedCharges.toMutableList()
+                currentAddedCharges[action.index] = createdData
+                mutableStateFlow.update {
+                    it.copy(
+                        addedCharges = currentAddedCharges,
+                        chooseChargeIndex = null,
+                        dialogState = RecurringAccountState.DialogState.ShowCharges,
+                        chargeAmount = "",
+                    )
+                }
+            }
+            is RecurringAccountAction.EditChargeDialog -> {
+                val selectedEditCharge = state.addedCharges[action.index]
+                val chooseChargeIndex = state.template.chargeOptions
+                    ?.indexOfFirst { it.id == selectedEditCharge.chargeId }
+
+                mutableStateFlow.update {
+                    it.copy(
+                        chargeAmount = selectedEditCharge.amount.toString(),
+                        chooseChargeIndex = chooseChargeIndex,
+                        dialogState = RecurringAccountState.DialogState.AddNewCharge(
+                            true,
+                            action.index,
+                        ),
+                    )
+                }
+            }
+            is RecurringAccountAction.OnChargeAmountChange -> {
+                mutableStateFlow.update {
+                    it.copy(
+                        chargeAmount = action.amount,
+                    )
+                }
+            }
+            is RecurringAccountAction.OnChooseChargeIndexChange -> {
+                mutableStateFlow.update {
+                    it.copy(
+                        chooseChargeIndex = action.index,
+                    )
+                }
+            }
+            RecurringAccountAction.ShowAddChargeDialog -> {
+                mutableStateFlow.update {
+                    it.copy(
+                        dialogState = RecurringAccountState.DialogState.AddNewCharge(false),
+                    )
+                }
+            }
+            RecurringAccountAction.ShowListOfChargesDialog -> {
+                mutableStateFlow.update {
+                    it.copy(
+                        dialogState = RecurringAccountState.DialogState.ShowCharges,
+                    )
+                }
+            }
+
+            RecurringAccountAction.AddChargeToList -> {
+                val createdData = ChargeItem(
+                    chargeId = state.template.chargeOptions?.get(state.chooseChargeIndex!!)?.id,
+                    amount = state.chargeAmount.toDoubleOrNull(),
+                )
+
+                mutableStateFlow.update {
+                    it.copy(
+                        addedCharges = it.addedCharges + createdData,
+                        chooseChargeIndex = null,
+                        dialogState = null,
+                        chargeAmount = "",
+                    )
+                }
+            }
         }
     }
 }
@@ -718,6 +806,9 @@ data class RecurringAccountState(
     val currencyError: String? = null,
     val isOverlayLoading: Boolean = false,
     val dialogState: DialogState? = null,
+    val addedCharges: List<ChargeItem> = emptyList(),
+    val chargeAmount: String = "",
+    val chooseChargeIndex: Int? = null,
 ) {
     sealed interface ScreenState {
         data class Error(val message: String) : ScreenState
@@ -726,6 +817,8 @@ data class RecurringAccountState(
     }
     sealed interface DialogState {
         data object RateChartDialog : DialogState
+        data class AddNewCharge(val edit: Boolean, val index: Int = -1) : DialogState
+        data object ShowCharges : DialogState
     }
 
     val isRateChartEmpty = !template.accountChart?.chartSlabs.isNullOrEmpty()
@@ -821,6 +914,14 @@ sealed class RecurringAccountAction {
     data object Retry : RecurringAccountAction()
     object OnShowRateChartDialog : RecurringAccountAction()
     object OnDismissDialog : RecurringAccountAction()
+    object ShowAddChargeDialog : RecurringAccountAction()
+    object ShowListOfChargesDialog : RecurringAccountAction()
+    data class EditCharge(val index: Int) : RecurringAccountAction()
+    data class OnChooseChargeIndexChange(val index: Int) : RecurringAccountAction()
+    data class OnChargeAmountChange(val amount: String) : RecurringAccountAction()
+    data class DeleteChargeFromSelectedCharges(val index: Int) : RecurringAccountAction()
+    data class EditChargeDialog(val index: Int) : RecurringAccountAction()
+    data object AddChargeToList : RecurringAccountAction()
 
     sealed class RecurringAccountDetailsAction : RecurringAccountAction() {
         data class OnProductNameChange(val index: Int) : RecurringAccountDetailsAction()

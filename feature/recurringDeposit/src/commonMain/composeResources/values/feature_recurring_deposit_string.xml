@@ -62,4 +62,13 @@
     <string name="feature_recurring_deposit_yes">Yes</string>
     <string name="feature_recurring_deposit_no">No</string>
     <string name="feature_recurring_deposit_empty_date">Empty Date</string>
+    <string name="feature_recurring_deposit_add_new_charge">Add New Charge</string>
+    <string name="feature_recurring_deposit_active_charge">Active Charge</string>
+    <string name="feature_recurring_deposit_btn_add_new">Add New</string>
+    <string name="feature_recurring_deposit_amount">Amount</string>
+    <string name="feature_recurring_deposit_collected_on">Collected On</string>
+    <string name="feature_recurring_deposit_btn_add">Add</string>
+    <string name="feature_recurring_deposit_edit_charge">Edit Charge</string>
+    <string name="feature_recurring_deposit_view_charge">View Charges</string>
+    <string name="feature_recurring_deposit_click_on_add_new">Click on Add New to Add Charge</string>
 </resources>

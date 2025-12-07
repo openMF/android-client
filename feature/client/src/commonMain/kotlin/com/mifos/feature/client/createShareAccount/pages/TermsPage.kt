@@ -138,7 +138,7 @@ fun TermsPage(
                 onValueChange = {
                     onAction(CreateShareAccountAction.OnTotalSharesChange(it))
                 },
-                label = stringResource(Res.string.feature_share_account_terms_total_shares),
+                label = stringResource(Res.string.feature_share_account_terms_total_shares) + "*",
                 config = MifosTextFieldConfig(
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.Number,
@@ -162,7 +162,7 @@ fun TermsPage(
                 options = state.savingsAccountOptions.map {
                     it.accountNo + (it.savingsProductName?.let { name -> " - $name" }.orEmpty())
                 },
-                label = stringResource(Res.string.feature_share_account_terms_default_savings_account),
+                label = stringResource(Res.string.feature_share_account_terms_default_savings_account) + "*",
                 errorMessage = state.savingsAccountError?.let { stringResource(it) },
             )
 

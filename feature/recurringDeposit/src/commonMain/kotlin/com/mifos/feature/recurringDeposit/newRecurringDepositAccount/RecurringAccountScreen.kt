@@ -32,11 +32,13 @@ import com.mifos.core.ui.components.MifosStepper
 import com.mifos.core.ui.components.Step
 import com.mifos.core.ui.util.EventsEffect
 import com.mifos.feature.recurringDeposit.newRecurringDepositAccount.RecurringAccountAction.NavigateToStep
+import com.mifos.feature.recurringDeposit.newRecurringDepositAccount.pages.AddNewChargeDialog
 import com.mifos.feature.recurringDeposit.newRecurringDepositAccount.pages.ChargesPage
 import com.mifos.feature.recurringDeposit.newRecurringDepositAccount.pages.DetailsPage
 import com.mifos.feature.recurringDeposit.newRecurringDepositAccount.pages.InterestPage
 import com.mifos.feature.recurringDeposit.newRecurringDepositAccount.pages.RateChart
 import com.mifos.feature.recurringDeposit.newRecurringDepositAccount.pages.SettingPage
+import com.mifos.feature.recurringDeposit.newRecurringDepositAccount.pages.ShowChargesDialog
 import com.mifos.feature.recurringDeposit.newRecurringDepositAccount.pages.TermsPage
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
@@ -83,6 +85,21 @@ fun RecurringAccountDialog(
                 onAction = onAction,
             )
         }
+        is RecurringAccountState.DialogState.AddNewCharge -> {
+            AddNewChargeDialog(
+                state = state,
+                isEdit = state.dialogState.edit,
+                onAction = onAction,
+                index = state.dialogState.index,
+            )
+        }
+
+        RecurringAccountState.DialogState.ShowCharges -> {
+            ShowChargesDialog(
+                state = state,
+                onAction = onAction,
+            )
+        }
         null -> Unit
     }
 }
@@ -121,7 +138,8 @@ private fun RecurringAccountScaffold(
         },
         Step(name = stringResource(Res.string.feature_recurring_deposit_step_charges)) {
             ChargesPage(
-                onNext = { onAction(RecurringAccountAction.OnNextPress) },
+                state = state,
+                onAction = onAction,
             )
         },
     )

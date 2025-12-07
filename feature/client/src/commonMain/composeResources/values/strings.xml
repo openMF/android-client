@@ -583,6 +583,7 @@
     <string name="feature_share_account_charge_edit_charge">Edit Charge</string>
     <string name="feature_share_account_charge_add">Add</string>
     <string name="feature_share_account_charge_btn_add_new">Add</string>
+    <string name="feature_share_account_charge_click_on_add_new">Click on Add New to Add Charge</string>
 
 
     <!-- Handle Error-->

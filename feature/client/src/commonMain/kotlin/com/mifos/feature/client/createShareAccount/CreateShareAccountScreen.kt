@@ -14,6 +14,7 @@ import androidclient.feature.client.generated.resources.feature_share_account_ba
 import androidclient.feature.client.generated.resources.feature_share_account_charge_add
 import androidclient.feature.client.generated.resources.feature_share_account_charge_add_new_charge
 import androidclient.feature.client.generated.resources.feature_share_account_charge_btn_add_new
+import androidclient.feature.client.generated.resources.feature_share_account_charge_click_on_add_new
 import androidclient.feature.client.generated.resources.feature_share_account_charge_edit_charge
 import androidclient.feature.client.generated.resources.feature_share_account_charge_view_charges
 import androidclient.feature.client.generated.resources.feature_share_account_charges
@@ -48,6 +49,7 @@ import com.mifos.core.ui.components.Actions
 import com.mifos.core.ui.components.AddChargeBottomSheet
 import com.mifos.core.ui.components.MifosActionsChargeListingComponent
 import com.mifos.core.ui.components.MifosBreadcrumbNavBar
+import com.mifos.core.ui.components.MifosEmptyCard
 import com.mifos.core.ui.components.MifosProgressIndicator
 import com.mifos.core.ui.components.MifosProgressIndicatorOverlay
 import com.mifos.core.ui.components.MifosStepper
@@ -118,6 +120,7 @@ fun CreateShareAccountDialog(
                 onAction = onAction,
             )
         }
+
         is CreateShareAccountState.DialogState.SuccessResponseStatus -> {
             LaunchedEffect(state.launchEffectKey) {
                 snackbarHostState.showSnackbar(
@@ -132,6 +135,7 @@ fun CreateShareAccountDialog(
                 }
             }
         }
+
         null -> Unit
     }
 }
@@ -287,35 +291,42 @@ private fun ShowChargesDialog(
                     text = stringResource(Res.string.feature_share_account_charge_view_charges),
                     style = MifosTypography.titleMediumEmphasized,
                 )
-                state.addedCharges.forEachIndexed { index, charge ->
-                    val chargesValue = state.chargeOptions
-                        .firstOrNull { it.id == charge.chargeId }
-                    MifosActionsChargeListingComponent(
-                        chargeTitle = chargesValue?.name ?: "",
-                        type = chargesValue?.chargeCalculationType?.value ?: "",
-                        collectedOn = chargesValue?.chargeTimeType?.value ?: "",
-                        amount = charge.amount.toString(),
-                        onActionClicked = { action ->
-                            when (action) {
-                                is Actions.Delete -> {
-                                    onAction(
-                                        CreateShareAccountAction.DeleteChargeFromSelectedCharges(
-                                            index,
-                                        ),
-                                    )
-                                }
+                if (state.addedCharges.isNotEmpty()) {
+                    state.addedCharges.forEachIndexed { index, charge ->
+                        val chargesValue = state.chargeOptions
+                            .firstOrNull { it.id == charge.chargeId }
+                        MifosActionsChargeListingComponent(
+                            chargeTitle = chargesValue?.name ?: "",
+                            type = chargesValue?.chargeCalculationType?.value ?: "",
+                            collectedOn = chargesValue?.chargeTimeType?.value ?: "",
+                            amount = charge.amount.toString(),
+                            onActionClicked = { action ->
+                                when (action) {
+                                    is Actions.Delete -> {
+                                        expandedIndex = -1
+                                        onAction(
+                                            CreateShareAccountAction.DeleteChargeFromSelectedCharges(
+                                                index,
+                                            ),
+                                        )
+                                    }
 
-                                is Actions.Edit -> {
-                                    onAction(CreateShareAccountAction.EditChargeDialog(index))
-                                }
+                                    is Actions.Edit -> {
+                                        onAction(CreateShareAccountAction.EditChargeDialog(index))
+                                    }
 
-                                else -> {}
-                            }
-                        },
-                        isExpanded = expandedIndex == index,
-                        onExpandToggle = {
-                            expandedIndex = if (expandedIndex == index) -1 else index
-                        },
+                                    else -> {}
+                                }
+                            },
+                            isExpanded = expandedIndex == index,
+                            onExpandToggle = {
+                                expandedIndex = if (expandedIndex == index) -1 else index
+                            },
+                        )
+                    }
+                } else {
+                    MifosEmptyCard(
+                        msg = stringResource(Res.string.feature_share_account_charge_click_on_add_new),
                     )
                 }
             }

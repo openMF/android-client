@@ -104,7 +104,6 @@ fun ChargesPage(
             onSecondBtnClick = {
                 onAction(SavingsAccountAction.NextStep)
             },
-            modifier = Modifier.padding(top = DesignToken.padding.small),
         )
     }
 }

@@ -221,6 +221,8 @@
     <string name="amount">Amount</string>
     <string name="type">Type</string>
     <string name="collected_on">Collected On</string>
+    <string name="click_on_add_new">Click on Add New to Add Charge</string>
+
 
     <!-- Repayment Schedule -->
     <string name="repayment_schedule">Repayment Schedule</string>
