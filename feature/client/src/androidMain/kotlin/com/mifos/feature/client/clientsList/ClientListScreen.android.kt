@@ -43,17 +43,16 @@ internal actual fun LazyColumnForClientListApi(
     images: Map<Int, ByteArray?>,
     modifier: Modifier,
     sort: String?,
-    onUpdateOffices: (List<String?>) -> Unit
+    onUpdateOffices: (List<String?>) -> Unit,
 ) {
     val clientPagingList = pagingFlow.collectAsLazyPagingItems()
 
     val items = clientPagingList.itemSnapshotList.items
     if (items.isNotEmpty()) {
-        val offices = items.map{ it.officeName }
+        val offices = items.map { it.officeName }
             .distinct()
         onUpdateOffices(offices)
     }
-
 
     when (clientPagingList.loadState.refresh) {
         is LoadState.Error -> {
@@ -67,23 +66,28 @@ internal actual fun LazyColumnForClientListApi(
         is LoadState.NotLoading -> Unit
     }
 
-    if (sort!=null) {
+    if (sort != null) {
         val currentItems = clientPagingList.itemSnapshotList.items
 
         val sortedItems = when (sort) {
-            "Name" -> { currentItems.sortedBy { it.displayName?.lowercase() } }
-            "Account Number" -> { currentItems.sortedBy { it.accountNo } }
-            "External ID" -> { currentItems.sortedBy { it.externalId } }
+            "Name" -> {
+                currentItems.sortedBy { it.displayName?.lowercase() }
+            }
+            "Account Number" -> {
+                currentItems.sortedBy { it.accountNo }
+            }
+            "External ID" -> {
+                currentItems.sortedBy { it.externalId }
+            }
             else -> currentItems
         }
-
 
         LazyColumn(
             modifier = modifier,
         ) {
             items(
                 items = sortedItems,
-                key = { client-> client.id }
+                key = { client -> client.id },
             ) { client ->
                 LaunchedEffect(client.id) {
                     fetchImage(client.id)
@@ -91,7 +95,7 @@ internal actual fun LazyColumnForClientListApi(
                 ClientItem(
                     client = client,
                     byteArray = images[client.id],
-                    onClientClick = onClientSelect
+                    onClientClick = onClientSelect,
                 )
             }
         }

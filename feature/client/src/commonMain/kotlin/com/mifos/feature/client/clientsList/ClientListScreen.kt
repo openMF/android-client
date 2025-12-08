@@ -43,10 +43,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.BiasAbsoluteAlignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.PagingData
 import com.mifos.core.designsystem.component.BasicDialogState
@@ -54,7 +52,6 @@ import com.mifos.core.designsystem.component.MifosBasicDialog
 import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.designsystem.theme.AppColors
 import com.mifos.core.designsystem.theme.DesignToken
-import com.mifos.core.designsystem.theme.MifosTheme
 import com.mifos.core.designsystem.theme.MifosTypography
 import com.mifos.core.ui.components.MifosEmptyCard
 import com.mifos.core.ui.components.MifosProgressIndicator
@@ -90,7 +87,7 @@ internal fun ClientListScreen(
             selectedOffices = state.selectedOffices,
             addOffice = { viewModel.trySendAction(ClientListAction.AddOffice(it)) },
             removeOffice = { viewModel.trySendAction(ClientListAction.RemoveOffice(it)) },
-            clearFilters = { viewModel.trySendAction(ClientListAction.ClearFilters) }
+            clearFilters = { viewModel.trySendAction(ClientListAction.ClearFilters) },
         )
     }
 
@@ -106,7 +103,7 @@ internal fun ClientListScreen(
         state = state,
         onAction = remember(viewModel) { { viewModel.trySendAction(it) } },
         toggleFilterVisibility = { viewModel.trySendAction(ClientListAction.ToggleFilterVisibility) },
-        onUpdateOffices = { viewModel.trySendAction(ClientListAction.OnUpdateOffice(it)) }
+        onUpdateOffices = { viewModel.trySendAction(ClientListAction.OnUpdateOffice(it)) },
     )
 
     ClientListDialogs(
@@ -122,7 +119,7 @@ private fun ClientActions(
     state: ClientListState,
     onAction: (ClientListAction) -> Unit,
     modifier: Modifier = Modifier,
-    toggleFilterVisibility: () -> Unit
+    toggleFilterVisibility: () -> Unit,
 ) {
     Row(
         modifier = modifier.fillMaxWidth().padding(DesignToken.padding.large),
@@ -198,11 +195,11 @@ private fun ClientListContentScreen(
     modifier: Modifier = Modifier,
     onAction: (ClientListAction) -> Unit,
     toggleFilterVisibility: () -> Unit,
-    onUpdateOffices: (List<String?>) -> Unit
+    onUpdateOffices: (List<String?>) -> Unit,
 ) {
     Column(
-        modifier = Modifier.fillMaxSize()
-    ){
+        modifier = Modifier.fillMaxSize(),
+    ) {
         if (!state.isEmpty) {
             ClientActions(
                 state = state,
@@ -211,7 +208,7 @@ private fun ClientListContentScreen(
             )
         }
 
-        when  {
+        when {
             state.clients.isNotEmpty() -> {
                 ClientListContent(
                     clientsList = state.clients,
@@ -240,7 +237,7 @@ private fun ClientListContentScreen(
                     },
                     images = state.clientImages,
                     sort = state.sort,
-                    onUpdateOffices = onUpdateOffices
+                    onUpdateOffices = onUpdateOffices,
                 )
             }
             else -> {
@@ -357,7 +354,7 @@ internal expect fun LazyColumnForClientListApi(
     images: Map<Int, ByteArray?>,
     modifier: Modifier = Modifier,
     sort: String?,
-    onUpdateOffices: (List<String?>) -> Unit
+    onUpdateOffices: (List<String?>) -> Unit,
 )
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -374,32 +371,32 @@ fun FilterBottomSheet(
     selectedOffices: List<String>,
     addOffice: (String) -> Unit,
     removeOffice: (String) -> Unit,
-    clearFilters: () -> Unit
+    clearFilters: () -> Unit,
 ) {
     ModalBottomSheet(
         onDismissRequest = onDismissRequest,
         sheetState = sheetState,
         dragHandle = null,
-        containerColor = MaterialTheme.colorScheme.background
+        containerColor = MaterialTheme.colorScheme.background,
     ) {
         val sortTypes = listOf("Name", "Account Number", "External ID")
         val statusTypes = listOf("Active", "Pending", "Closed")
 
         Column(
-            modifier = Modifier.padding(15.dp)
+            modifier = Modifier.padding(15.dp),
         ) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween,
                 modifier = Modifier.fillMaxWidth()
-                    .padding(10.dp)
+                    .padding(10.dp),
             ) {
                 Text(
                     text = "Filters",
                     style = MifosTypography.titleLargeEmphasized,
                     color = MaterialTheme.colorScheme.primary,
                 )
-                Row{
+                Row {
                     IconButton(
                         onClick = {
                             clearFilters()
@@ -423,16 +420,16 @@ fun FilterBottomSheet(
             }
             HorizontalDivider(Modifier.fillMaxWidth(), thickness = 1.5.dp)
             Column(
-                modifier = Modifier.padding(10.dp)
-            ){
+                modifier = Modifier.padding(10.dp),
+            ) {
                 var isExpanded by remember { mutableStateOf(false) }
                 Row(
                     modifier = Modifier.fillMaxWidth()
                         .clickable(onClick = {
                             isExpanded = !isExpanded
                         }),
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ){
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                ) {
                     Text(
                         text = "Sort by",
                         style = MifosTypography.titleMediumEmphasized,
@@ -440,18 +437,18 @@ fun FilterBottomSheet(
                     if (isExpanded) {
                         Icon(
                             imageVector = MifosIcons.ArrowDropUp,
-                            contentDescription = ""
+                            contentDescription = "",
                         )
                     } else {
                         Icon(
                             imageVector = MifosIcons.ArrowDropDown,
-                            contentDescription = ""
+                            contentDescription = "",
                         )
                     }
                 }
                 AnimatedVisibility(
-                    visible = isExpanded
-                ){
+                    visible = isExpanded,
+                ) {
                     Column {
                         sortTypes.forEach { sort ->
                             val isSelected = (sort == selectedSort)
@@ -474,15 +471,15 @@ fun FilterBottomSheet(
             HorizontalDivider(Modifier.fillMaxWidth(), thickness = 1.5.dp)
             Column(
                 modifier = Modifier.padding(10.dp),
-            ){
+            ) {
                 var isExpanded by remember { mutableStateOf(false) }
                 Row(
                     modifier = Modifier.fillMaxWidth()
                         .clickable(onClick = {
                             isExpanded = !isExpanded
                         }),
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ){
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                ) {
                     Text(
                         text = "Account Status",
                         style = MifosTypography.titleMediumEmphasized,
@@ -490,18 +487,18 @@ fun FilterBottomSheet(
                     if (isExpanded) {
                         Icon(
                             imageVector = MifosIcons.ArrowDropUp,
-                            contentDescription = ""
+                            contentDescription = "",
                         )
                     } else {
                         Icon(
                             imageVector = MifosIcons.ArrowDropDown,
-                            contentDescription = ""
+                            contentDescription = "",
                         )
                     }
                 }
                 AnimatedVisibility(
-                    visible = isExpanded
-                ){
+                    visible = isExpanded,
+                ) {
                     Column {
                         statusTypes.forEach { status ->
                             val isChecked = selectedStatuses.contains(status)
@@ -528,42 +525,42 @@ fun FilterBottomSheet(
             HorizontalDivider(Modifier.fillMaxWidth(), thickness = 1.5.dp)
 
             Column(
-                modifier = Modifier.padding(10.dp)
-            ){
+                modifier = Modifier.padding(10.dp),
+            ) {
                 var isExpanded by remember { mutableStateOf(false) }
                 Row(
                     modifier = Modifier.fillMaxWidth()
                         .clickable(onClick = {
                             isExpanded = !isExpanded
                         }),
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ){
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                ) {
                     Text(
                         "Office Name",
-                        style = MifosTypography.titleMediumEmphasized
+                        style = MifosTypography.titleMediumEmphasized,
                     )
                     if (isExpanded) {
                         Icon(
                             imageVector = MifosIcons.ArrowDropUp,
-                            contentDescription = ""
+                            contentDescription = "",
                         )
                     } else {
                         Icon(
                             imageVector = MifosIcons.ArrowDropDown,
-                            contentDescription = ""
+                            contentDescription = "",
                         )
                     }
                 }
 
                 AnimatedVisibility(
-                    visible = isExpanded
-                ){
+                    visible = isExpanded,
+                ) {
                     Column {
                         officeNames.forEach { name ->
                             val isChecked = selectedOffices.contains(name)
                             if (name != null) {
                                 Row(
-                                    verticalAlignment = Alignment.CenterVertically
+                                    verticalAlignment = Alignment.CenterVertically,
                                 ) {
                                     Spacer(modifier = Modifier.width(10.dp))
                                     Checkbox(
