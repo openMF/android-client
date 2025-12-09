@@ -94,6 +94,7 @@ fun ChargesPage(
                 text = state.addedCharges.size.toString() + " " + stringResource(Res.string.step_charges_active) + " " + stringResource(Res.string.step_charges),
                 btnEnabled = state.addedCharges.isNotEmpty(),
             )
+            Spacer(Modifier.height(DesignToken.padding.large))
         }
         MifosTwoButtonRow(
             firstBtnText = stringResource(Res.string.feature_savings_back),

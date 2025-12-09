@@ -153,15 +153,19 @@ class RecurringAccountViewModel(
                 recurringDepositAccountDetail = it.recurringDepositAccountDetail.copy(
                     loanProductSelected = action.index,
                     productError = null,
-                    fieldOfficerError = null,
                 ),
             )
         }
-        loadRecurringAccountTemplateWithProduct(
-            state.clientId,
-            state.template.productOptions?.get(state.recurringDepositAccountDetail.loanProductSelected)?.id
-                ?: -1,
-        )
+
+        if (
+            state.template.fieldOfficerOptions == null
+        ) {
+            loadRecurringAccountTemplateWithProduct(
+                state.clientId,
+                state.template.productOptions?.get(state.recurringDepositAccountDetail.loanProductSelected)?.id
+                    ?: -1,
+            )
+        }
     }
 
     private fun handleInterestCalculationDaysInYearType(action: RecurringAccountAction.RecurringAccountTermAction.OnInterestCalculationDaysInYearType) {
@@ -227,7 +231,6 @@ class RecurringAccountViewModel(
             it.copy(
                 recurringDepositAccountDetail = it.recurringDepositAccountDetail.copy(
                     fieldOfficerIndex = action.index,
-                    fieldOfficerError = null,
                 ),
             )
         }
@@ -629,16 +632,11 @@ class RecurringAccountViewModel(
                             state.recurringDepositAccountDetail.loanProductSelected == -1,
                         )
 
-                        val fieldOfficerError = TextFieldsValidator.dropDownEmptyValidator(
-                            state.recurringDepositAccountDetail.fieldOfficerIndex == -1,
-                        )
-
-                        if (fieldOfficerError != null || productError != null) {
+                        if (productError != null) {
                             mutableStateFlow.update {
                                 it.copy(
                                     recurringDepositAccountDetail = it.recurringDepositAccountDetail.copy(
                                         productError = productError,
-                                        fieldOfficerError = fieldOfficerError,
                                     ),
                                 )
                             }
@@ -695,6 +693,7 @@ class RecurringAccountViewModel(
                     )
                 }
             }
+
             RecurringAccountAction.OnShowRateChartDialog -> {
                 mutableStateFlow.update {
                     it.copy(
@@ -711,6 +710,7 @@ class RecurringAccountViewModel(
                     it.copy(addedCharges = newCharges)
                 }
             }
+
             is RecurringAccountAction.EditCharge -> {
                 val createdData = ChargeItem(
                     chargeId = state.template.chargeOptions?.get(action.index)?.id,
@@ -728,6 +728,7 @@ class RecurringAccountViewModel(
                     )
                 }
             }
+
             is RecurringAccountAction.EditChargeDialog -> {
                 val selectedEditCharge = state.addedCharges[action.index]
                 val chooseChargeIndex = state.template.chargeOptions
@@ -744,6 +745,7 @@ class RecurringAccountViewModel(
                     )
                 }
             }
+
             is RecurringAccountAction.OnChargeAmountChange -> {
                 mutableStateFlow.update {
                     it.copy(
@@ -751,6 +753,7 @@ class RecurringAccountViewModel(
                     )
                 }
             }
+
             is RecurringAccountAction.OnChooseChargeIndexChange -> {
                 mutableStateFlow.update {
                     it.copy(
@@ -758,6 +761,7 @@ class RecurringAccountViewModel(
                     )
                 }
             }
+
             RecurringAccountAction.ShowAddChargeDialog -> {
                 mutableStateFlow.update {
                     it.copy(
@@ -765,6 +769,7 @@ class RecurringAccountViewModel(
                     )
                 }
             }
+
             RecurringAccountAction.ShowListOfChargesDialog -> {
                 mutableStateFlow.update {
                     it.copy(
@@ -815,6 +820,7 @@ data class RecurringAccountState(
         data object Loading : ScreenState
         data object Success : ScreenState
     }
+
     sealed interface DialogState {
         data object RateChartDialog : DialogState
         data class AddNewCharge(val edit: Boolean, val index: Int = -1) : DialogState
@@ -839,7 +845,6 @@ constructor(
     val fieldOfficerOptions: List<FieldOfficerOption>? = null,
 
     val productError: StringResource? = null,
-    val fieldOfficerError: StringResource? = null,
 )
 
 data class RecurringAccountInterestChartState(

@@ -23,6 +23,7 @@ import androidclient.feature.client.generated.resources.feature_fixed_interest_c
 import androidclient.feature.client.generated.resources.feature_fixed_interest_posting_period
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -31,11 +32,9 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.unit.dp
 import com.mifos.core.designsystem.component.MifosOutlinedTextField
 import com.mifos.core.designsystem.component.MifosTextFieldConfig
 import com.mifos.core.designsystem.component.MifosTextFieldDropdown
@@ -50,140 +49,173 @@ import org.jetbrains.compose.resources.stringResource
 fun TermsPage(
     state: NewFixedDepositAccountState,
     onAction: (NewFixedDepositAccountAction) -> Unit,
+    modifier: Modifier = Modifier,
 ) {
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .verticalScroll(rememberScrollState()),
-        horizontalAlignment = Alignment.CenterHorizontally,
-    ) {
-        Text(
-            modifier = Modifier.align(Alignment.Start),
-            text = stringResource(Res.string.feature_fixed_deposit_terms_page),
-            style = MifosTypography.labelLargeEmphasized,
-        )
-        Spacer(Modifier.height(8.dp))
-        MifosOutlinedTextField(
-            value = state.fixedDepositAccountTerms.depositAmount,
-            onValueChange = { onAction(NewFixedDepositAccountAction.NewFixedDepositAccountTermsAction.SetFixedDepositAmount(it)) },
-            label = stringResource(Res.string.feature_fixed_deposit_deposit_amount),
-            config = MifosTextFieldConfig(
-                keyboardOptions = KeyboardOptions(
-                    keyboardType = KeyboardType.Number,
-                    imeAction = ImeAction.Next,
-                ),
-                prefix = {
-                    Text(state.template.currency?.displaySymbol.orEmpty())
+    Column(modifier = Modifier.fillMaxSize().padding(bottom = DesignToken.padding.large)) {
+        Column(
+            modifier = modifier.weight(1f).verticalScroll(rememberScrollState()),
+        ) {
+            Text(
+                text = stringResource(Res.string.feature_fixed_deposit_terms_page),
+                style = MifosTypography.labelLargeEmphasized,
+            )
+            Spacer(Modifier.height(DesignToken.padding.large))
+            MifosOutlinedTextField(
+                value = state.fixedDepositAccountTerms.depositAmount,
+                onValueChange = {
+                    onAction(
+                        NewFixedDepositAccountAction.NewFixedDepositAccountTermsAction.SetFixedDepositAmount(
+                            it,
+                        ),
+                    )
                 },
-            ),
-            modifier = Modifier.fillMaxWidth(),
-        )
-        MifosOutlinedTextField(
-            value = state.fixedDepositAccountTerms.depositPeriod,
-            onValueChange = { onAction(NewFixedDepositAccountAction.NewFixedDepositAccountTermsAction.SetFixedDepositPeriod(it)) },
-            label = stringResource(Res.string.feature_fixed_deposit_deposit_period),
-            config = MifosTextFieldConfig(
-                keyboardOptions = KeyboardOptions(
-                    keyboardType = KeyboardType.Number,
-                    imeAction = ImeAction.Next,
+                label = stringResource(Res.string.feature_fixed_deposit_deposit_amount) + "*",
+                config = MifosTextFieldConfig(
+                    keyboardOptions = KeyboardOptions(
+                        keyboardType = KeyboardType.Number,
+                        imeAction = ImeAction.Next,
+                    ),
+                    prefix = {
+                        Text(state.template.currency?.displaySymbol.orEmpty())
+                    },
+                    isError = state.fixedDepositAccountTerms.depositAmountError != null,
+                    errorText = state.fixedDepositAccountTerms.depositAmountError?.let {
+                        stringResource(
+                            it,
+                        )
+                    },
                 ),
-            ),
-            modifier = Modifier.fillMaxWidth(),
-        )
-        MifosTextFieldDropdown(
-            value = if (state.fixedDepositAccountTerms.depositPeriodTypeIndex != -1) {
-                state.template.periodFrequencyTypeOptions?.getOrNull(state.fixedDepositAccountTerms.depositPeriodTypeIndex)?.value.orEmpty()
-            } else {
-                ""
-            },
-            options = state.template.periodFrequencyTypeOptions?.map {
-                it.value.orEmpty()
-            } ?: emptyList(),
-            onValueChanged = {},
-            onOptionSelected = { id, name ->
-                onAction(NewFixedDepositAccountAction.NewFixedDepositAccountTermsAction.SetFixedDepositPeriodType(id))
-            },
-            label = stringResource(Res.string.feature_fixed_deposit_deposit_period_type),
-            modifier = Modifier.fillMaxWidth(),
-        )
-        Text(
-            modifier = Modifier
-                .align(Alignment.Start),
-            text = stringResource(Res.string.feature_fixed_interest_compounding),
-            style = MifosTypography.labelLargeEmphasized,
-        )
-        Spacer(modifier = Modifier.height(DesignToken.padding.extraSmall))
-        MifosTextFieldDropdown(
-            value = if (state.fixedDepositAccountTerms.interestCompoundingPeriodTypeIndex != -1) {
-                state.template.interestCompoundingPeriodTypeOptions?.getOrNull(state.fixedDepositAccountTerms.interestCompoundingPeriodTypeIndex)?.value.orEmpty()
-            } else {
-                ""
-            },
-            options = state.template.interestCompoundingPeriodTypeOptions?.map {
-                it.value.orEmpty()
-            } ?: emptyList(),
-            onValueChanged = {},
-            onOptionSelected = { id, name ->
-                onAction(NewFixedDepositAccountAction.NewFixedDepositAccountTermsAction.SetInterestCompoundingPeriod(id))
-            },
-            label = stringResource(Res.string.feature_fixed_interest_compounding_period),
-            modifier = Modifier.fillMaxWidth(),
-        )
-        MifosTextFieldDropdown(
-            value = if (state.fixedDepositAccountTerms.interestPostingPeriodTypeIndex != -1) {
-                state.template.interestPostingPeriodTypeOptions?.getOrNull(state.fixedDepositAccountTerms.interestPostingPeriodTypeIndex)?.value.orEmpty()
-            } else {
-                ""
-            },
-            options = state.template.interestPostingPeriodTypeOptions?.map {
-                it.value.orEmpty()
-            } ?: emptyList(),
-            onValueChanged = {},
-            onOptionSelected = { id, name ->
-                onAction(NewFixedDepositAccountAction.NewFixedDepositAccountTermsAction.SetInterestPostingPeriod(id))
-            },
-            label = stringResource(Res.string.feature_fixed_interest_posting_period),
-            modifier = Modifier.fillMaxWidth(),
-        )
-        MifosTextFieldDropdown(
-            value = if (state.fixedDepositAccountTerms.interestCalculationTypeIndex != -1) {
-                state.template.interestCalculationTypeOptions?.getOrNull(state.fixedDepositAccountTerms.interestCalculationTypeIndex)?.value.orEmpty()
-            } else {
-                ""
-            },
-            options = state.template.interestCalculationTypeOptions?.map {
-                it.value.orEmpty()
-            } ?: emptyList(),
-            onValueChanged = {},
-            onOptionSelected = { id, name ->
-                onAction(NewFixedDepositAccountAction.NewFixedDepositAccountTermsAction.SetInterestCalculationType(id))
-            },
-            label = stringResource(Res.string.feature_fixed_interest_calculated_using),
-            modifier = Modifier.fillMaxWidth(),
-        )
-        MifosTextFieldDropdown(
-            value = if (state.fixedDepositAccountTerms.interestCalculationDaysInYearTypeIndex != -1) {
-                state.template.interestCalculationDaysInYearTypeOptions?.getOrNull(state.fixedDepositAccountTerms.interestCalculationDaysInYearTypeIndex)?.value.orEmpty()
-            } else {
-                ""
-            },
-            options = state.template.interestCalculationDaysInYearTypeOptions?.map {
-                it.value.orEmpty()
-            } ?: emptyList(),
-            onValueChanged = {},
-            onOptionSelected = { id, name ->
-                onAction(NewFixedDepositAccountAction.NewFixedDepositAccountTermsAction.SetInterestCalculationDaysInYearType(id))
-            },
-            label = stringResource(Res.string.feature_fixed_days_in_year),
-            modifier = Modifier.fillMaxWidth(),
-        )
+            )
+            Spacer(Modifier.height(DesignToken.padding.large))
+            MifosOutlinedTextField(
+                value = state.fixedDepositAccountTerms.depositPeriod,
+                onValueChange = {
+                    onAction(
+                        NewFixedDepositAccountAction.NewFixedDepositAccountTermsAction.SetFixedDepositPeriod(
+                            it,
+                        ),
+                    )
+                },
+                label = stringResource(Res.string.feature_fixed_deposit_deposit_period) + "*",
+                config = MifosTextFieldConfig(
+                    keyboardOptions = KeyboardOptions(
+                        keyboardType = KeyboardType.Number,
+                        imeAction = ImeAction.Next,
+                    ),
+                    isError = state.fixedDepositAccountTerms.depositPeriodError != null,
+                    errorText = state.fixedDepositAccountTerms.depositPeriodError?.let { stringResource(it) },
+                ),
+            )
+            Spacer(Modifier.height(DesignToken.padding.large))
+            MifosTextFieldDropdown(
+                value = if (state.fixedDepositAccountTerms.depositPeriodTypeIndex != -1) {
+                    state.template.periodFrequencyTypeOptions?.getOrNull(state.fixedDepositAccountTerms.depositPeriodTypeIndex)?.value.orEmpty()
+                } else {
+                    ""
+                },
+                options = state.template.periodFrequencyTypeOptions?.map {
+                    it.value.orEmpty()
+                } ?: emptyList(),
+                onValueChanged = {},
+                onOptionSelected = { id, name ->
+                    onAction(
+                        NewFixedDepositAccountAction.NewFixedDepositAccountTermsAction.SetFixedDepositPeriodType(
+                            id,
+                        ),
+                    )
+                },
+                label = stringResource(Res.string.feature_fixed_deposit_deposit_period_type) + "*",
+                errorMessage = state.fixedDepositAccountTerms.depositPeriodTypeError?.let { stringResource(it) },
+            )
+            Spacer(Modifier.height(DesignToken.padding.small))
+            Text(
+                text = stringResource(Res.string.feature_fixed_interest_compounding),
+                style = MifosTypography.labelLargeEmphasized,
+            )
+            Spacer(modifier = Modifier.height(DesignToken.padding.large))
+            MifosTextFieldDropdown(
+                value = if (state.fixedDepositAccountTerms.interestCompoundingPeriodTypeIndex != -1) {
+                    state.template.interestCompoundingPeriodTypeOptions?.getOrNull(state.fixedDepositAccountTerms.interestCompoundingPeriodTypeIndex)?.value.orEmpty()
+                } else {
+                    ""
+                },
+                options = state.template.interestCompoundingPeriodTypeOptions?.map {
+                    it.value.orEmpty()
+                } ?: emptyList(),
+                onValueChanged = {},
+                onOptionSelected = { id, name ->
+                    onAction(
+                        NewFixedDepositAccountAction.NewFixedDepositAccountTermsAction.SetInterestCompoundingPeriod(
+                            id,
+                        ),
+                    )
+                },
+                label = stringResource(Res.string.feature_fixed_interest_compounding_period),
+            )
+            MifosTextFieldDropdown(
+                value = if (state.fixedDepositAccountTerms.interestPostingPeriodTypeIndex != -1) {
+                    state.template.interestPostingPeriodTypeOptions?.getOrNull(state.fixedDepositAccountTerms.interestPostingPeriodTypeIndex)?.value.orEmpty()
+                } else {
+                    ""
+                },
+                options = state.template.interestPostingPeriodTypeOptions?.map {
+                    it.value.orEmpty()
+                } ?: emptyList(),
+                onValueChanged = {},
+                onOptionSelected = { id, name ->
+                    onAction(
+                        NewFixedDepositAccountAction.NewFixedDepositAccountTermsAction.SetInterestPostingPeriod(
+                            id,
+                        ),
+                    )
+                },
+                label = stringResource(Res.string.feature_fixed_interest_posting_period),
+            )
+            MifosTextFieldDropdown(
+                value = if (state.fixedDepositAccountTerms.interestCalculationTypeIndex != -1) {
+                    state.template.interestCalculationTypeOptions?.getOrNull(state.fixedDepositAccountTerms.interestCalculationTypeIndex)?.value.orEmpty()
+                } else {
+                    ""
+                },
+                options = state.template.interestCalculationTypeOptions?.map {
+                    it.value.orEmpty()
+                } ?: emptyList(),
+                onValueChanged = {},
+                onOptionSelected = { id, name ->
+                    onAction(
+                        NewFixedDepositAccountAction.NewFixedDepositAccountTermsAction.SetInterestCalculationType(
+                            id,
+                        ),
+                    )
+                },
+                label = stringResource(Res.string.feature_fixed_interest_calculated_using),
+                modifier = Modifier.fillMaxWidth(),
+            )
+            MifosTextFieldDropdown(
+                value = if (state.fixedDepositAccountTerms.interestCalculationDaysInYearTypeIndex != -1) {
+                    state.template.interestCalculationDaysInYearTypeOptions?.getOrNull(state.fixedDepositAccountTerms.interestCalculationDaysInYearTypeIndex)?.value.orEmpty()
+                } else {
+                    ""
+                },
+                options = state.template.interestCalculationDaysInYearTypeOptions?.map {
+                    it.value.orEmpty()
+                } ?: emptyList(),
+                onValueChanged = {},
+                onOptionSelected = { id, name ->
+                    onAction(
+                        NewFixedDepositAccountAction.NewFixedDepositAccountTermsAction.SetInterestCalculationDaysInYearType(
+                            id,
+                        ),
+                    )
+                },
+                label = stringResource(Res.string.feature_fixed_days_in_year),
+            )
+        }
         MifosTwoButtonRow(
             firstBtnText = stringResource(Res.string.btn_back),
             secondBtnText = stringResource(Res.string.feature_client_next),
-            onFirstBtnClick = { onAction(NewFixedDepositAccountAction.NavigateBack) },
-            onSecondBtnClick = { onAction(NewFixedDepositAccountAction.OnNextPress) },
-            isButtonIconVisible = true,
-            isSecondButtonEnabled = state.fixedDepositAccountTerms.isTermsNextEnabled,
+            onFirstBtnClick = { onAction(NewFixedDepositAccountAction.PreviousStep) },
+            onSecondBtnClick = { onAction(NewFixedDepositAccountAction.OnTermNext) },
         )
     }
 }

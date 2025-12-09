@@ -11,10 +11,12 @@ package com.mifos.core.network.model
 
 import com.mifos.core.model.objects.account.saving.FieldOfficerOptions
 import com.mifos.core.model.objects.template.recurring.Currency
+import com.mifos.core.model.objects.template.recurring.MaturityInstructionOption
 import com.mifos.core.model.objects.template.recurring.interest.InterestCalculationDaysInYearTypeOption
 import com.mifos.core.model.objects.template.recurring.interest.InterestCalculationTypeOption
 import com.mifos.core.model.objects.template.recurring.interest.InterestCompoundingPeriodTypeOption
 import com.mifos.core.model.objects.template.recurring.interest.InterestPostingPeriodTypeOption
+import com.mifos.core.model.objects.template.recurring.period.LockinPeriodFrequencyTypeOption
 import com.mifos.core.model.objects.template.recurring.period.PeriodFrequencyTypeOption
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -52,4 +54,6 @@ data class FixedDepositTemplate(
     @SerialName("interestCalculationTypeOptions")
     val interestCalculationTypeOptions: List<InterestCalculationTypeOption>? = null,
 
+    val lockinPeriodFrequencyTypeOptions: List<LockinPeriodFrequencyTypeOption>? = null,
+    val maturityInstructionOptions: List<MaturityInstructionOption>? = null,
 )

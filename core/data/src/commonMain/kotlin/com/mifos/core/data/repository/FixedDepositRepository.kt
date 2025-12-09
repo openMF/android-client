@@ -16,6 +16,6 @@ import kotlinx.coroutines.flow.Flow
 interface FixedDepositRepository {
     fun getFixedDepositTemplate(
         clientId: Int,
-        productId: Int?,
+        productId: Int? = null,
     ): Flow<DataState<FixedDepositTemplate>>
 }

@@ -17,6 +17,7 @@ import androidclient.feature.client.generated.resources.feature_client_external_
 import androidclient.feature.client.generated.resources.feature_client_next
 import androidclient.feature.client.generated.resources.field_officer
 import androidclient.feature.client.generated.resources.one_year_fixed_deposit
+import androidclient.feature.client.generated.resources.step_details
 import androidclient.feature.client.generated.resources.submission_on
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -40,6 +41,7 @@ import com.mifos.core.designsystem.component.MifosOutlinedTextField
 import com.mifos.core.designsystem.component.MifosTextFieldConfig
 import com.mifos.core.designsystem.component.MifosTextFieldDropdown
 import com.mifos.core.designsystem.theme.DesignToken
+import com.mifos.core.designsystem.theme.MifosTypography
 import com.mifos.core.ui.components.MifosTwoButtonRow
 import com.mifos.feature.client.newFixedDepositAccount.NewFixedDepositAccountAction
 import com.mifos.feature.client.newFixedDepositAccount.NewFixedDepositAccountState
@@ -93,72 +95,84 @@ fun DetailsPage(
             DatePicker(state = submissionDatePickerState)
         }
     }
-    Column(
-        modifier = modifier.fillMaxSize()
-            .verticalScroll(rememberScrollState()),
-    ) {
-        MifosTextFieldDropdown(
-            value = if (state.fixedDepositAccountDetail.productSelected == -1) {
-                ""
-            } else {
-                state.template.productOptions?.get(state.fixedDepositAccountDetail.productSelected)?.name ?: ""
-            },
-            label = stringResource(Res.string.one_year_fixed_deposit),
-            onValueChanged = {},
-            onOptionSelected = { index, value ->
-                onAction(NewFixedDepositAccountAction.OnProductNameChange(index))
-            },
-            options = state.template.productOptions?.map {
-                it.name ?: ""
-            } ?: emptyList(),
-
-        )
-
-        if (!state.template.fieldOfficerOptions.isNullOrEmpty()) {
-            MifosDatePickerTextField(
-                value = state.fixedDepositAccountDetail.submissionDate,
-                label = stringResource(Res.string.submission_on),
-                openDatePicker = {
-                    onAction(NewFixedDepositAccountAction.OnSubmissionDatePick(true))
-                },
+    Column(modifier = Modifier.fillMaxSize().padding(bottom = DesignToken.padding.large)) {
+        Column(
+            modifier = modifier.weight(1f).verticalScroll(rememberScrollState()),
+        ) {
+            Text(
+                text = stringResource(Res.string.step_details),
+                style = MifosTypography.labelLargeEmphasized,
             )
             Spacer(Modifier.height(DesignToken.padding.large))
             MifosTextFieldDropdown(
-                value = if (state.fixedDepositAccountDetail.fieldOfficerIndex == -1) {
+                value = if (state.fixedDepositAccountDetail.productSelected == -1) {
                     ""
                 } else {
-                    state.template.fieldOfficerOptions?.get(state.fixedDepositAccountDetail.fieldOfficerIndex)?.displayName
+                    state.template.productOptions?.get(state.fixedDepositAccountDetail.productSelected)?.name
                         ?: ""
                 },
-                label = stringResource(Res.string.field_officer),
+                label = stringResource(Res.string.one_year_fixed_deposit) + "*",
                 onValueChanged = {},
                 onOptionSelected = { index, value ->
-                    onAction(NewFixedDepositAccountAction.OnFieldOfficerChange(index))
+                    onAction(NewFixedDepositAccountAction.OnProductNameChange(index))
                 },
-                options = state.template.fieldOfficerOptions?.map {
-                    it.displayName ?: ""
+                options = state.template.productOptions?.map {
+                    it.name ?: ""
                 } ?: emptyList(),
+                errorMessage = state.fixedDepositAccountDetail.productError?.let { stringResource(it) },
+            )
 
-            )
-            MifosOutlinedTextField(
-                value = state.fixedDepositAccountDetail.externalId,
-                onValueChange = {
-                    onAction(NewFixedDepositAccountAction.OnExternalIdChange(it))
-                },
-                label = stringResource(Res.string.feature_client_external_id),
-                config = MifosTextFieldConfig(
-                    isError = state.fixedDepositAccountDetail.externalIdError != null,
-                    errorText = if (state.fixedDepositAccountDetail.externalIdError != null) stringResource(state.fixedDepositAccountDetail.externalIdError) else null,
-                ),
-            )
-            Spacer(Modifier.height(DesignToken.padding.large))
+            if (!state.template.fieldOfficerOptions.isNullOrEmpty()) {
+                MifosDatePickerTextField(
+                    value = state.fixedDepositAccountDetail.submissionDate,
+                    label = stringResource(Res.string.submission_on) + "*",
+                    openDatePicker = {
+                        onAction(NewFixedDepositAccountAction.OnSubmissionDatePick(true))
+                    },
+                )
+                Spacer(Modifier.height(DesignToken.padding.large))
+                MifosTextFieldDropdown(
+                    value = if (state.fixedDepositAccountDetail.fieldOfficerIndex == -1) {
+                        ""
+                    } else {
+                        state.template.fieldOfficerOptions?.get(state.fixedDepositAccountDetail.fieldOfficerIndex)?.displayName
+                            ?: ""
+                    },
+                    label = stringResource(Res.string.field_officer),
+                    onValueChanged = {},
+                    onOptionSelected = { index, value ->
+                        onAction(NewFixedDepositAccountAction.OnFieldOfficerChange(index))
+                    },
+                    options = state.template.fieldOfficerOptions?.map {
+                        it.displayName ?: ""
+                    } ?: emptyList(),
+
+                )
+                MifosOutlinedTextField(
+                    value = state.fixedDepositAccountDetail.externalId,
+                    onValueChange = {
+                        onAction(NewFixedDepositAccountAction.OnExternalIdChange(it))
+                    },
+                    label = stringResource(Res.string.feature_client_external_id),
+                    config = MifosTextFieldConfig(
+                        isError = state.fixedDepositAccountDetail.externalIdError != null,
+                        errorText = if (state.fixedDepositAccountDetail.externalIdError != null) {
+                            stringResource(
+                                state.fixedDepositAccountDetail.externalIdError,
+                            )
+                        } else {
+                            null
+                        },
+                    ),
+                )
+                Spacer(Modifier.height(DesignToken.padding.large))
+            }
         }
         MifosTwoButtonRow(
             firstBtnText = stringResource(Res.string.btn_back),
             secondBtnText = stringResource(Res.string.feature_client_next),
             onFirstBtnClick = { onAction(NewFixedDepositAccountAction.NavigateBack) },
-            onSecondBtnClick = { onAction(NewFixedDepositAccountAction.OnNextPress) },
-            isSecondButtonEnabled = state.fixedDepositAccountDetail.isDetailsNextEnabled,
+            onSecondBtnClick = { onAction(NewFixedDepositAccountAction.OnDetailNext) },
             modifier = Modifier.padding(top = DesignToken.padding.small),
         )
     }

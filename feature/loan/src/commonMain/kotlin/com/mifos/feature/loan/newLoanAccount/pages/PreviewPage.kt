@@ -51,8 +51,10 @@ import androidclient.feature.loan.generated.resources.terms
 import androidclient.feature.loan.generated.resources.yes
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -189,9 +191,9 @@ fun PreviewPage(
                 btnText = stringResource(Res.string.loan_new_loan_view),
                 modifier = Modifier.fillMaxWidth(),
             )
+            Spacer(Modifier.height(DesignToken.padding.large))
         }
         MifosTwoButtonRow(
-            modifier = Modifier.padding(top = DesignToken.padding.small),
             firstBtnText = stringResource(Res.string.back),
             secondBtnText = stringResource(Res.string.feature_loan_charge_submit),
             onFirstBtnClick = { onAction(NewLoanAccountAction.PreviousStep) },

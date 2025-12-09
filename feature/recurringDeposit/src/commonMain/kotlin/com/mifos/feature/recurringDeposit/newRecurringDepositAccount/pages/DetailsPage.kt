@@ -173,8 +173,7 @@ fun DetailsPage(
                     options = state.template.fieldOfficerOptions?.map {
                         it.displayName ?: ""
                     } ?: emptyList(),
-                    label = stringResource(Res.string.feature_recurring_deposit_field_officer) + "*",
-                    errorMessage = state.recurringDepositAccountDetail.fieldOfficerError?.let { stringResource(it) },
+                    label = stringResource(Res.string.feature_recurring_deposit_field_officer),
                 )
 
                 MifosOutlinedTextField(

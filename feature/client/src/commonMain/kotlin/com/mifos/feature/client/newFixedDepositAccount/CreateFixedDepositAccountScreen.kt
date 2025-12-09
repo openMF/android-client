@@ -15,7 +15,6 @@ import androidclient.feature.client.generated.resources.step_details
 import androidclient.feature.client.generated.resources.step_interest
 import androidclient.feature.client.generated.resources.step_settings
 import androidclient.feature.client.generated.resources.step_terms
-import androidclient.feature.client.generated.resources.title_new_fixed_deposit_account
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
@@ -27,6 +26,7 @@ import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.ui.components.MifosBreadcrumbNavBar
 import com.mifos.core.ui.components.MifosErrorComponent
 import com.mifos.core.ui.components.MifosProgressIndicator
+import com.mifos.core.ui.components.MifosProgressIndicatorOverlay
 import com.mifos.core.ui.components.MifosStepper
 import com.mifos.core.ui.components.Step
 import com.mifos.core.ui.util.EventsEffect
@@ -55,7 +55,7 @@ internal fun CreateFixedDepositAccountScreen(
     }
     FixedDepositAccountScaffold(
         navController = navController,
-        newFixedDepositAccountState = state,
+        state = state,
         onAction = { viewModel.trySendAction(it) },
         modifier = modifier,
     )
@@ -64,7 +64,7 @@ internal fun CreateFixedDepositAccountScreen(
 @Composable
 private fun FixedDepositAccountScaffold(
     navController: NavController,
-    newFixedDepositAccountState: NewFixedDepositAccountState,
+    state: NewFixedDepositAccountState,
     onAction: (NewFixedDepositAccountAction) -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -72,20 +72,21 @@ private fun FixedDepositAccountScaffold(
         listOf(
             Step(stringResource(Res.string.step_details)) {
                 DetailsPage(
-                    state = newFixedDepositAccountState,
+                    state = state,
                     onAction = onAction,
                 )
             },
             Step(name = stringResource(Res.string.step_terms)) {
                 TermsPage(
-                    state = newFixedDepositAccountState,
+                    state = state,
                     onAction = onAction,
                 )
             },
 
             Step(name = stringResource(Res.string.step_settings)) {
                 SettingPage(
-                    onNext = { onAction(NewFixedDepositAccountAction.OnNextPress) },
+                    state = state,
+                    onAction = onAction,
                 )
             },
             Step(name = stringResource(Res.string.step_interest)) {
@@ -101,17 +102,14 @@ private fun FixedDepositAccountScaffold(
         )
 
     MifosScaffold(
-        title = stringResource(Res.string.title_new_fixed_deposit_account),
-        onBackPressed = { onAction(NewFixedDepositAccountAction.NavigateBack) },
         modifier = modifier,
-
     ) { paddingValues ->
         Column {
             MifosBreadcrumbNavBar(navController)
-            when (newFixedDepositAccountState.screenState) {
+            when (state.screenState) {
                 is NewFixedDepositAccountState.ScreenState.Error -> {
                     MifosErrorComponent(
-                        message = newFixedDepositAccountState.screenState.message,
+                        message = state.screenState.message,
                         isRetryEnabled = true,
                     ) {
                         onAction(NewFixedDepositAccountAction.Retry)
@@ -125,7 +123,7 @@ private fun FixedDepositAccountScaffold(
                 is NewFixedDepositAccountState.ScreenState.Success -> {
                     MifosStepper(
                         steps = steps,
-                        currentIndex = newFixedDepositAccountState.currentStep,
+                        currentIndex = state.currentStep,
                         onStepChange = { newIndex ->
                             onAction(NewFixedDepositAccountAction.OnStepChange(newIndex))
                         },
@@ -135,6 +133,9 @@ private fun FixedDepositAccountScaffold(
                     )
                 }
             }
+        }
+        if (state.isOverlayLoading) {
+            MifosProgressIndicatorOverlay()
         }
     }
 }

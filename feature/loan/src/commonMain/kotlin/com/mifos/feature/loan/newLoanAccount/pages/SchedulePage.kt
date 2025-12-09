@@ -71,6 +71,7 @@ fun SchedulePage(
                 currencyCode = state.loanWithAssociationsEntity.currency.code,
                 maxDigits = state.loanWithAssociationsEntity.currency.decimalPlaces,
             )
+            Spacer(Modifier.height(DesignToken.padding.large))
         }
 
         MifosTwoButtonRow(
@@ -82,7 +83,6 @@ fun SchedulePage(
             onSecondBtnClick = {
                 onAction(NewLoanAccountAction.NextStep)
             },
-            modifier = Modifier.padding(top = DesignToken.padding.small),
         )
     }
 }

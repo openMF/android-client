@@ -98,6 +98,7 @@ fun InterestPage(
                 },
                 btnEnabled = state.isRateChartEmpty,
             )
+            Spacer(Modifier.height(DesignToken.padding.large))
         }
 
         MifosTwoButtonRow(
@@ -105,7 +106,6 @@ fun InterestPage(
             secondBtnText = stringResource(Res.string.feature_recurring_deposit_next),
             onFirstBtnClick = { onAction(RecurringAccountAction.OnBackPress) },
             onSecondBtnClick = { onAction(RecurringAccountAction.OnNextPress) },
-            modifier = Modifier.padding(top = DesignToken.padding.small),
         )
     }
 }

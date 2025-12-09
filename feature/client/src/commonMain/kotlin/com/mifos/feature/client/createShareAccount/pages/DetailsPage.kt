@@ -146,7 +146,6 @@ fun DetailsPage(
             onSecondBtnClick = {
                 onAction(CreateShareAccountAction.OnDetailNext)
             },
-            modifier = Modifier.padding(top = DesignToken.padding.small),
         )
     }
 }

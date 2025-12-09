@@ -224,6 +224,8 @@ fun TermsPage(
                 errorMessage = state.minActivePeriodFreqTypeError?.let { stringResource(it) },
             )
 
+            Spacer(Modifier.height(DesignToken.padding.small))
+
             Text(
                 text = stringResource(Res.string.feature_share_account_terms_lock_in_period),
                 style = MifosTypography.labelLargeEmphasized,
@@ -263,6 +265,7 @@ fun TermsPage(
                 label = stringResource(Res.string.feature_share_account_terms_type),
                 errorMessage = state.lockInPeriodFreqTypeError?.let { stringResource(it) },
             )
+            Spacer(Modifier.height(DesignToken.padding.large))
         }
         MifosTwoButtonRow(
             firstBtnText = stringResource(Res.string.feature_share_account_back),
@@ -273,7 +276,6 @@ fun TermsPage(
             onSecondBtnClick = {
                 onAction(CreateShareAccountAction.OnTermsNext)
             },
-            modifier = Modifier.padding(top = DesignToken.padding.small),
         )
     }
 }

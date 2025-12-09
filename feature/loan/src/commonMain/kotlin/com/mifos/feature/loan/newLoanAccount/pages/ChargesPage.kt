@@ -108,6 +108,7 @@ fun ChargesPage(
                     btnEnabled = state.addedCharges.isNotEmpty(),
                 )
             }
+            Spacer(Modifier.height(DesignToken.padding.large))
         }
 
         MifosTwoButtonRow(

@@ -30,7 +30,9 @@ import androidclient.feature.client.generated.resources.feature_share_account_te
 import androidclient.feature.client.generated.resources.feature_share_account_terms_total_shares
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -87,6 +89,7 @@ fun PreviewPage(
                 text = state.addedCharges.size.toString() + " " + stringResource(Res.string.feature_share_account_charge_active_charge),
                 btnEnabled = state.addedCharges.isNotEmpty(),
             )
+            Spacer(Modifier.height(DesignToken.padding.large))
         }
         MifosTwoButtonRow(
             firstBtnText = stringResource(Res.string.feature_share_account_back),
@@ -97,7 +100,6 @@ fun PreviewPage(
             onSecondBtnClick = {
                 onAction(CreateShareAccountAction.SubmitShareAccount)
             },
-            modifier = Modifier.padding(top = DesignToken.padding.small),
         )
     }
 }

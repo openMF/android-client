@@ -605,4 +605,19 @@
     <string name="feature_fixed_deposit_terms_page">Terms</string>
     <string name="feature_fixed_deposit_deposit_period">Deposit Period</string>
 
+    <string name="feature_fixed_deposit_setting_lock_in_period">Lock-in-Period</string>
+    <string name="feature_fixed_deposit_setting_frequency">Frequency</string>
+    <string name="feature_fixed_deposit_setting_type">Type</string>
+    <string name="feature_fixed_deposit_setting_minimum_deposit_term">Minimum Deposit Term</string>
+    <string name="feature_fixed_deposit_setting_thereafter_in_multiples">And thereafter, in Multiples of</string>
+    <string name="feature_fixed_deposit_setting_maximum_deposit_term">Maximum Deposit Term</string>
+    <string name="feature_fixed_deposit_setting_interest_transfer">Interest Transfer</string>
+    <string name="feature_fixed_deposit_setting_linked_saving_account">Transfer Interest to Linked Savings Account?</string>
+    <string name="feature_fixed_deposit_setting_maturity_instructions">Maturity Instructions</string>
+    <string name="feature_fixed_deposit_setting_investing_account">Investing Account</string>
+    <string name="feature_fixed_deposit_setting_pre_mature_closure">For Pre-mature closure</string>
+    <string name="feature_fixed_deposit_setting_apply_penal_interest">Apply Penal Interest (less)</string>
+    <string name="feature_fixed_deposit_setting_penal_interest">Penal Interest (%%)</string>
+    <string name="feature_fixed_deposit_setting_period">Period</string>
+
 </resources>

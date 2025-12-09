@@ -169,7 +169,6 @@ fun DetailsPage(
             onFirstBtnClick = { onAction(SavingsAccountAction.NavigateBack) },
             onSecondBtnClick = { onAction(SavingsAccountAction.OnDetailsSubmit) },
             isSecondButtonEnabled = state.submissionDate.isNotEmpty(),
-            modifier = Modifier.padding(top = DesignToken.padding.small),
         )
     }
 }

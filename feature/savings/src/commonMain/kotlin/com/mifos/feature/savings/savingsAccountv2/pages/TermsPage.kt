@@ -304,7 +304,6 @@ fun TermsPage(
             onSecondBtnClick = {
                 onAction(SavingsAccountAction.OnTermSubmit)
             },
-            modifier = Modifier.padding(top = DesignToken.padding.small),
         )
     }
 }

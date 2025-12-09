@@ -181,6 +181,7 @@ fun PreviewPage(
                     ),
                     btnEnabled = state.addedCharges.isNotEmpty(),
                 )
+                Spacer(Modifier.height(DesignToken.padding.large))
             }
         }
         MifosTwoButtonRow(
@@ -192,7 +193,6 @@ fun PreviewPage(
             onSecondBtnClick = {
                 onAction(SavingsAccountAction.SubmitSavingsApplication)
             },
-            modifier = Modifier.padding(top = DesignToken.padding.small),
         )
     }
 }

@@ -111,6 +111,7 @@ fun ChargesPage(
                 text = state.addedCharges.size.toString() + " " + stringResource(Res.string.feature_recurring_deposit_active_charge),
                 btnEnabled = state.addedCharges.isNotEmpty(),
             )
+            Spacer(Modifier.height(DesignToken.padding.large))
         }
         MifosTwoButtonRow(
             firstBtnText = stringResource(Res.string.feature_recurring_deposit_back),
