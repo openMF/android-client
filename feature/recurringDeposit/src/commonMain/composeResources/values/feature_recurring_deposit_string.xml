@@ -61,7 +61,7 @@
     <string name="feature_recurring_deposit_rate_chart">Rate Chart</string>
     <string name="feature_recurring_deposit_yes">Yes</string>
     <string name="feature_recurring_deposit_no">No</string>
-    <string name="feature_recurring_deposit_empty_date">Empty Date</string>
+    <string name="feature_recurring_deposit_empty_date">Date Not Found</string>
     <string name="feature_recurring_deposit_add_new_charge">Add New Charge</string>
     <string name="feature_recurring_deposit_active_charge">Active Charge</string>
     <string name="feature_recurring_deposit_btn_add_new">Add New</string>

@@ -55,6 +55,7 @@ import kotlin.time.ExperimentalTime
 @Composable
 fun DetailsPage(
     state: RecurringAccountState,
+    modifier: Modifier = Modifier,
     onAction: (RecurringAccountAction) -> Unit,
 ) {
     val submissionDatePickerState = rememberDatePickerState(
@@ -111,7 +112,7 @@ fun DetailsPage(
 
     Column(Modifier.fillMaxSize().padding(bottom = DesignToken.padding.large)) {
         Column(
-            modifier = Modifier.weight(1f).verticalScroll(rememberScrollState()),
+            modifier = modifier.weight(1f).verticalScroll(rememberScrollState()),
         ) {
             Text(
                 text = stringResource(Res.string.feature_recurring_deposit_step_details),

@@ -60,11 +60,12 @@ import org.jetbrains.compose.resources.stringResource
 @Composable
 fun ChargesPage(
     state: RecurringAccountState,
+    modifier: Modifier = Modifier,
     onAction: (RecurringAccountAction) -> Unit,
 ) {
     Column(modifier = Modifier.fillMaxSize().padding(bottom = DesignToken.padding.large)) {
         Column(
-            modifier = Modifier.weight(1f).verticalScroll(rememberScrollState()),
+            modifier = modifier.weight(1f).verticalScroll(rememberScrollState()),
         ) {
             Text(
                 stringResource(Res.string.feature_recurring_deposit_step_charges),

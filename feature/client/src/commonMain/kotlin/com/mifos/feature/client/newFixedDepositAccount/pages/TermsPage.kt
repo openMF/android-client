@@ -48,8 +48,8 @@ import org.jetbrains.compose.resources.stringResource
 @Composable
 fun TermsPage(
     state: NewFixedDepositAccountState,
-    onAction: (NewFixedDepositAccountAction) -> Unit,
     modifier: Modifier = Modifier,
+    onAction: (NewFixedDepositAccountAction) -> Unit,
 ) {
     Column(modifier = Modifier.fillMaxSize().padding(bottom = DesignToken.padding.large)) {
         Column(

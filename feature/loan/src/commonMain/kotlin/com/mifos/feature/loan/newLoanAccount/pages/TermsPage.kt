@@ -102,8 +102,8 @@ import kotlin.time.ExperimentalTime
 @Composable
 fun TermsPage(
     state: NewLoanAccountState,
-    onAction: (NewLoanAccountAction) -> Unit,
     modifier: Modifier = Modifier,
+    onAction: (NewLoanAccountAction) -> Unit,
 ) {
     val firstRepaymentOnDatePickerState = rememberDatePickerState(
         initialSelectedDateMillis = Clock.System.now().toEpochMilliseconds(),

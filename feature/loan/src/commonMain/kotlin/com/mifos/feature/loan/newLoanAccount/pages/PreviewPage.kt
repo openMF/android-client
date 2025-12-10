@@ -75,13 +75,14 @@ import org.jetbrains.compose.resources.stringResource
 @Composable
 fun PreviewPage(
     state: NewLoanAccountState,
+    modifier: Modifier = Modifier,
     onAction: (NewLoanAccountAction) -> Unit,
 ) {
     Column(
         Modifier.fillMaxSize().padding(bottom = DesignToken.padding.large),
     ) {
         Column(
-            modifier = Modifier.weight(1f)
+            modifier = modifier.weight(1f)
                 .verticalScroll(rememberScrollState()),
             verticalArrangement = Arrangement.spacedBy(20.dp),
         ) {

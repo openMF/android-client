@@ -63,13 +63,14 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 @Composable
 fun SettingPage(
     state: RecurringAccountState,
+    modifier: Modifier = Modifier,
     onAction: (RecurringAccountAction) -> Unit,
 ) {
     val settingsState = state.recurringDepositAccountSettings
 
     Column(Modifier.fillMaxSize().padding(bottom = DesignToken.padding.large)) {
         Column(
-            modifier = Modifier.weight(1f).verticalScroll(rememberScrollState()),
+            modifier = modifier.weight(1f).verticalScroll(rememberScrollState()),
         ) {
             Text(
                 text = stringResource(Res.string.feature_recurring_deposit_step_settings),

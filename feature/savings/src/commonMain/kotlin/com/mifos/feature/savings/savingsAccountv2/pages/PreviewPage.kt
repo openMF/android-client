@@ -56,8 +56,8 @@ import kotlin.collections.mapOf
 @Composable
 fun PreviewPage(
     state: SavingsAccountState,
-    onAction: (SavingsAccountAction) -> Unit,
     modifier: Modifier = Modifier,
+    onAction: (SavingsAccountAction) -> Unit,
 ) {
     val previewDetailsMap = mapOf(
         stringResource(Res.string.feature_savings_product_name) to

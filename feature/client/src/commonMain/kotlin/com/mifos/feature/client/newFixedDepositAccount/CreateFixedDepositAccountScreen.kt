@@ -32,6 +32,7 @@ import com.mifos.core.ui.components.Step
 import com.mifos.core.ui.util.EventsEffect
 import com.mifos.feature.client.newFixedDepositAccount.pages.ChargesPage
 import com.mifos.feature.client.newFixedDepositAccount.pages.DetailsPage
+import com.mifos.feature.client.newFixedDepositAccount.pages.FixedDepositRateChart
 import com.mifos.feature.client.newFixedDepositAccount.pages.InterestPage
 import com.mifos.feature.client.newFixedDepositAccount.pages.SettingPage
 import com.mifos.feature.client.newFixedDepositAccount.pages.TermsPage
@@ -53,53 +54,74 @@ internal fun CreateFixedDepositAccountScreen(
             NewFixedDepositAccountEvent.Finish -> onFinish()
         }
     }
-    FixedDepositAccountScaffold(
+    CreateFixedDepositAccountScaffold(
         navController = navController,
         state = state,
         onAction = { viewModel.trySendAction(it) },
         modifier = modifier,
     )
+    CreateFixedDepositAccountDialog(
+        state = state,
+        onAction = { viewModel.trySendAction(it) },
+    )
 }
 
 @Composable
-private fun FixedDepositAccountScaffold(
+internal fun CreateFixedDepositAccountDialog(
+    state: NewFixedDepositAccountState,
+    onAction: (NewFixedDepositAccountAction) -> Unit,
+) {
+    when (state.dialogState) {
+        NewFixedDepositAccountState.DialogState.RateChartDialog -> {
+            FixedDepositRateChart(
+                state = state,
+                onAction = onAction,
+            )
+        }
+
+        null -> Unit
+    }
+}
+
+@Composable
+private fun CreateFixedDepositAccountScaffold(
     navController: NavController,
     state: NewFixedDepositAccountState,
     onAction: (NewFixedDepositAccountAction) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val steps =
-        listOf(
-            Step(stringResource(Res.string.step_details)) {
-                DetailsPage(
-                    state = state,
-                    onAction = onAction,
-                )
-            },
-            Step(name = stringResource(Res.string.step_terms)) {
-                TermsPage(
-                    state = state,
-                    onAction = onAction,
-                )
-            },
+    val steps = listOf(
+        Step(stringResource(Res.string.step_details)) {
+            DetailsPage(
+                state = state,
+                onAction = onAction,
+            )
+        },
+        Step(name = stringResource(Res.string.step_terms)) {
+            TermsPage(
+                state = state,
+                onAction = onAction,
+            )
+        },
 
-            Step(name = stringResource(Res.string.step_settings)) {
-                SettingPage(
-                    state = state,
-                    onAction = onAction,
-                )
-            },
-            Step(name = stringResource(Res.string.step_interest)) {
-                InterestPage(
-                    onNext = { onAction(NewFixedDepositAccountAction.OnNextPress) },
-                )
-            },
-            Step(stringResource(Res.string.step_charges)) {
-                ChargesPage(
-                    onNext = { onAction(NewFixedDepositAccountAction.OnNextPress) },
-                )
-            },
-        )
+        Step(name = stringResource(Res.string.step_settings)) {
+            SettingPage(
+                state = state,
+                onAction = onAction,
+            )
+        },
+        Step(name = stringResource(Res.string.step_interest)) {
+            InterestPage(
+                state = state,
+                onAction = onAction,
+            )
+        },
+        Step(stringResource(Res.string.step_charges)) {
+            ChargesPage(
+                onNext = { onAction(NewFixedDepositAccountAction.OnNextPress) },
+            )
+        },
+    )
 
     MifosScaffold(
         modifier = modifier,
@@ -127,8 +149,7 @@ private fun FixedDepositAccountScaffold(
                         onStepChange = { newIndex ->
                             onAction(NewFixedDepositAccountAction.OnStepChange(newIndex))
                         },
-                        modifier = Modifier
-                            .fillMaxWidth(),
+                        modifier = Modifier.fillMaxWidth(),
 
                     )
                 }

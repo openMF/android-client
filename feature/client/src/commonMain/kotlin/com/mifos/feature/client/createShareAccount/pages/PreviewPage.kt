@@ -52,13 +52,14 @@ import org.jetbrains.compose.resources.stringResource
 @Composable
 fun PreviewPage(
     state: CreateShareAccountState,
+    modifier: Modifier = Modifier,
     onAction: (CreateShareAccountAction) -> Unit,
 ) {
     Column(
         Modifier.fillMaxSize().padding(bottom = DesignToken.padding.large),
     ) {
         Column(
-            modifier = Modifier.weight(1f).verticalScroll(rememberScrollState()),
+            modifier = modifier.weight(1f).verticalScroll(rememberScrollState()),
             verticalArrangement = Arrangement.spacedBy(20.dp),
         ) {
             Text(

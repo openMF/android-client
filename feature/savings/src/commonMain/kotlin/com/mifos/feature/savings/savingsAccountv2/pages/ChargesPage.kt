@@ -46,8 +46,8 @@ import org.jetbrains.compose.resources.stringResource
 @Composable
 fun ChargesPage(
     state: SavingsAccountState,
-    onAction: (SavingsAccountAction) -> Unit,
     modifier: Modifier = Modifier,
+    onAction: (SavingsAccountAction) -> Unit,
 ) {
     Column(modifier = Modifier.fillMaxSize().padding(bottom = DesignToken.padding.large)) {
         Column(

@@ -54,11 +54,12 @@ import org.jetbrains.compose.resources.stringResource
 @Composable
 fun SettingPage(
     state: NewFixedDepositAccountState,
+    modifier: Modifier = Modifier,
     onAction: (NewFixedDepositAccountAction) -> Unit,
 ) {
     Column(Modifier.fillMaxSize().padding(bottom = DesignToken.padding.large)) {
         Column(
-            modifier = Modifier.weight(1f).verticalScroll(rememberScrollState()),
+            modifier = modifier.weight(1f).verticalScroll(rememberScrollState()),
         ) {
             Text(
                 stringResource(Res.string.feature_fixed_deposit_setting_lock_in_period),
@@ -310,8 +311,6 @@ fun SettingPage(
                         },
                         label = stringResource(Res.string.feature_fixed_deposit_setting_period),
                     )
-
-                    Spacer(Modifier.height(DesignToken.padding.large))
                 }
             }
         }

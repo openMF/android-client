@@ -55,8 +55,8 @@ import kotlin.time.ExperimentalTime
 @Composable
 fun DetailsPage(
     state: SavingsAccountState,
-    onAction: (SavingsAccountAction) -> Unit,
     modifier: Modifier = Modifier,
+    onAction: (SavingsAccountAction) -> Unit,
 ) {
     val submissionDatePickerState = rememberDatePickerState(
         initialSelectedDateMillis = Clock.System.now().toEpochMilliseconds(),

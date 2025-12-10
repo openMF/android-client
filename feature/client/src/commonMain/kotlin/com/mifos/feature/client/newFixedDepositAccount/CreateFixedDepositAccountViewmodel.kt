@@ -143,6 +143,7 @@ class CreateFixedDepositAccountViewmodel(
                     )
                 }
             }
+
             is NewFixedDepositAccountAction.OnLockInPeriodFrequencyChange -> {
                 mutableStateFlow.update {
                     it.copy(
@@ -150,6 +151,7 @@ class CreateFixedDepositAccountViewmodel(
                     )
                 }
             }
+
             is NewFixedDepositAccountAction.OnLockInPeriodTypeIndexChange -> {
                 mutableStateFlow.update {
                     it.copy(
@@ -157,6 +159,7 @@ class CreateFixedDepositAccountViewmodel(
                     )
                 }
             }
+
             is NewFixedDepositAccountAction.OnMaturityInstructionIndexChange -> {
                 mutableStateFlow.update {
                     it.copy(
@@ -164,6 +167,7 @@ class CreateFixedDepositAccountViewmodel(
                     )
                 }
             }
+
             is NewFixedDepositAccountAction.OnMaximumDepositFrequencyChange -> {
                 mutableStateFlow.update {
                     it.copy(
@@ -171,6 +175,7 @@ class CreateFixedDepositAccountViewmodel(
                     )
                 }
             }
+
             is NewFixedDepositAccountAction.OnMaximumDepositTypeIndexChange -> {
                 mutableStateFlow.update {
                     it.copy(
@@ -178,6 +183,7 @@ class CreateFixedDepositAccountViewmodel(
                     )
                 }
             }
+
             is NewFixedDepositAccountAction.OnMinimumDepositTermFrequencyChange -> {
                 mutableStateFlow.update {
                     it.copy(
@@ -185,6 +191,7 @@ class CreateFixedDepositAccountViewmodel(
                     )
                 }
             }
+
             is NewFixedDepositAccountAction.OnMinimumDepositTermTypeIndexChange -> {
                 mutableStateFlow.update {
                     it.copy(
@@ -192,6 +199,7 @@ class CreateFixedDepositAccountViewmodel(
                     )
                 }
             }
+
             is NewFixedDepositAccountAction.OnMultiplesFrequencyChange -> {
                 mutableStateFlow.update {
                     it.copy(
@@ -199,6 +207,7 @@ class CreateFixedDepositAccountViewmodel(
                     )
                 }
             }
+
             is NewFixedDepositAccountAction.OnMultiplesTypeIndexChange -> {
                 mutableStateFlow.update {
                     it.copy(
@@ -206,6 +215,7 @@ class CreateFixedDepositAccountViewmodel(
                     )
                 }
             }
+
             is NewFixedDepositAccountAction.OnPenalInterestChange -> {
                 mutableStateFlow.update {
                     it.copy(
@@ -213,6 +223,7 @@ class CreateFixedDepositAccountViewmodel(
                     )
                 }
             }
+
             is NewFixedDepositAccountAction.OnPeriodIndexChange -> {
                 mutableStateFlow.update {
                     it.copy(
@@ -220,10 +231,26 @@ class CreateFixedDepositAccountViewmodel(
                     )
                 }
             }
+
             is NewFixedDepositAccountAction.OnTransferLinkedSavingsAccountInterestChange -> {
                 mutableStateFlow.update {
                     it.copy(
                         transferLinkedSavingAccountInterest = action.checked,
+                    )
+                }
+            }
+
+            NewFixedDepositAccountAction.OnDismissDialog -> {
+                mutableStateFlow.update {
+                    it.copy(
+                        dialogState = null,
+                    )
+                }
+            }
+            NewFixedDepositAccountAction.OnShowRateChart -> {
+                mutableStateFlow.update {
+                    it.copy(
+                        dialogState = NewFixedDepositAccountState.DialogState.RateChartDialog,
                     )
                 }
             }
@@ -353,9 +380,7 @@ class CreateFixedDepositAccountViewmodel(
                 ),
             )
         }
-        if (state.template.fieldOfficerOptions == null) {
-            loadRecurringAccountTemplateWithProduct()
-        }
+        loadRecurringAccountTemplateWithProduct()
     }
 
     private fun handleFieldOfficerChange(action: NewFixedDepositAccountAction.OnFieldOfficerChange) {
@@ -466,6 +491,7 @@ class CreateFixedDepositAccountViewmodel(
             mutableStateFlow.update {
                 it.copy(
                     currentStep = current + 1,
+                    dialogState = null,
                 )
             }
         } else {
@@ -477,7 +503,7 @@ class CreateFixedDepositAccountViewmodel(
 data class NewFixedDepositAccountState(
     val clientId: Int = -1,
     val currentStep: Int = 0,
-    val dialogState: Any? = null,
+    val dialogState: DialogState? = null,
     val totalSteps: Int = 4,
     val screenState: ScreenState = ScreenState.Loading,
     val fixedDepositAccountDetail: FixedDepositAccountDetailsState = FixedDepositAccountDetailsState(),
@@ -500,13 +526,18 @@ data class NewFixedDepositAccountState(
     val penalInterest: String = "",
 
     val transferLinkedSavingAccountInterest: Boolean = false,
-
 ) {
     sealed interface ScreenState {
         data class Error(val message: String) : ScreenState
         data object Loading : ScreenState
         data object Success : ScreenState
     }
+
+    sealed interface DialogState {
+        data object RateChartDialog : DialogState
+    }
+
+    val isRateChartEmpty = !template.accountChart?.chartSlabs.isNullOrEmpty()
 }
 
 data class FixedDepositAccountTermsState(
@@ -544,6 +575,7 @@ sealed class NewFixedDepositAccountAction {
     data object OnNextPress : NewFixedDepositAccountAction()
     data object OnDetailNext : NewFixedDepositAccountAction()
     data object OnTermNext : NewFixedDepositAccountAction()
+    data object OnDismissDialog : NewFixedDepositAccountAction()
     data class OnStepChange(val newIndex: Int) : NewFixedDepositAccountAction()
     data object PreviousStep : NewFixedDepositAccountAction()
     data object NavigateBack : NewFixedDepositAccountAction()
@@ -554,6 +586,7 @@ sealed class NewFixedDepositAccountAction {
     data class OnFieldOfficerChange(val index: Int) : NewFixedDepositAccountAction()
     data class OnExternalIdChange(val value: String) : NewFixedDepositAccountAction()
     data object Retry : NewFixedDepositAccountAction()
+    data object OnShowRateChart : NewFixedDepositAccountAction()
     data class OnLockInPeriodFrequencyChange(val value: String) : NewFixedDepositAccountAction()
     data class OnLockInPeriodTypeIndexChange(val index: Int) : NewFixedDepositAccountAction()
     data class OnMinimumDepositTermFrequencyChange(val value: String) :

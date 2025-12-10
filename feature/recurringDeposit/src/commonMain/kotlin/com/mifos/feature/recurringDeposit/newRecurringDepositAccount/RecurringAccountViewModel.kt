@@ -67,6 +67,7 @@ class RecurringAccountViewModel(
             mutableStateFlow.update {
                 it.copy(
                     currentStep = state.currentStep + 1,
+                    dialogState = null,
                 )
             }
         } else {
@@ -156,16 +157,11 @@ class RecurringAccountViewModel(
                 ),
             )
         }
-
-        if (
-            state.template.fieldOfficerOptions == null
-        ) {
-            loadRecurringAccountTemplateWithProduct(
-                state.clientId,
-                state.template.productOptions?.get(state.recurringDepositAccountDetail.loanProductSelected)?.id
-                    ?: -1,
-            )
-        }
+        loadRecurringAccountTemplateWithProduct(
+            state.clientId,
+            state.template.productOptions?.get(state.recurringDepositAccountDetail.loanProductSelected)?.id
+                ?: -1,
+        )
     }
 
     private fun handleInterestCalculationDaysInYearType(action: RecurringAccountAction.RecurringAccountTermAction.OnInterestCalculationDaysInYearType) {

@@ -10,6 +10,7 @@
 package com.mifos.core.network.model
 
 import com.mifos.core.model.objects.account.saving.FieldOfficerOptions
+import com.mifos.core.model.objects.template.recurring.AccountChart
 import com.mifos.core.model.objects.template.recurring.Currency
 import com.mifos.core.model.objects.template.recurring.MaturityInstructionOption
 import com.mifos.core.model.objects.template.recurring.interest.InterestCalculationDaysInYearTypeOption
@@ -56,4 +57,5 @@ data class FixedDepositTemplate(
 
     val lockinPeriodFrequencyTypeOptions: List<LockinPeriodFrequencyTypeOption>? = null,
     val maturityInstructionOptions: List<MaturityInstructionOption>? = null,
+    val accountChart: AccountChart? = null,
 )

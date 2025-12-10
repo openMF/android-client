@@ -620,4 +620,17 @@
     <string name="feature_fixed_deposit_setting_penal_interest">Penal Interest (%%)</string>
     <string name="feature_fixed_deposit_setting_period">Period</string>
 
+    <string name="feature_fixed_deposit_interest_name">Name</string>
+    <string name="feature_fixed_deposit_interest_valid_from_date">Valid From Date</string>
+    <string name="feature_fixed_deposit_interest_end_date">End Date</string>
+    <string name="feature_fixed_deposit_interest_description">Description</string>
+    <string name="feature_fixed_deposit_interest_grouping_by_amount">Grouping By Amount</string>
+    <string name="feature_fixed_deposit_interest_interest_rate_chart">INTEREST RATE CHART</string>
+    <string name="feature_fixed_deposit_interest_rate_chart">Rate Chart</string>
+    <string name="feature_fixed_deposit_interest_no_interest_chart">No Interest Rate Chart available</string>
+    <string name="feature_fixed_deposit_interest_yes">Yes</string>
+    <string name="feature_fixed_deposit_interest_no">No</string>
+    <string name="feature_fixed_deposit_interest_empty_date">Date Not Found</string>
+
+
 </resources>
