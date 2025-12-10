@@ -78,15 +78,14 @@ internal fun ClientListScreen(
         FilterBottomSheet(
             onDismissRequest = { viewModel.trySendAction(ClientListAction.ToggleFilterVisibility) },
             sheetState = sheetState,
-            removeStatus = { viewModel.trySendAction(ClientListAction.RemoveStatus(it)) },
-            addStatus = { viewModel.trySendAction(ClientListAction.AddStatus(it)) },
+            handleFilterClick = { value, filterType ->
+                viewModel.trySendAction(ClientListAction.HandleFilterClick(value, filterType))
+            },
             selectedStatuses = state.selectedStatus,
             selectedSort = state.sort,
             handleSortClick = { viewModel.trySendAction(ClientListAction.HandleSortClick(it)) },
             officeNames = state.officeNames,
             selectedOffices = state.selectedOffices,
-            addOffice = { viewModel.trySendAction(ClientListAction.AddOffice(it)) },
-            removeOffice = { viewModel.trySendAction(ClientListAction.RemoveOffice(it)) },
             clearFilters = { viewModel.trySendAction(ClientListAction.ClearFilters) },
         )
     }
@@ -353,7 +352,7 @@ internal expect fun LazyColumnForClientListApi(
     fetchImage: (Int) -> Unit,
     images: Map<Int, ByteArray?>,
     modifier: Modifier = Modifier,
-    sort: String?,
+    sort: SortTypes?,
     onUpdateOffices: (List<String?>) -> Unit,
 )
 
@@ -362,15 +361,12 @@ internal expect fun LazyColumnForClientListApi(
 fun FilterBottomSheet(
     onDismissRequest: () -> Unit,
     sheetState: SheetState,
-    removeStatus: (String) -> Unit,
-    addStatus: (String) -> Unit,
+    handleFilterClick: (String, FilterType) -> Unit,
     selectedStatuses: List<String>,
-    selectedSort: String?,
-    handleSortClick: (String) -> Unit,
+    selectedSort: SortTypes?,
+    handleSortClick: (SortTypes) -> Unit,
     officeNames: List<String?>,
     selectedOffices: List<String>,
-    addOffice: (String) -> Unit,
-    removeOffice: (String) -> Unit,
     clearFilters: () -> Unit,
 ) {
     ModalBottomSheet(
@@ -379,7 +375,7 @@ fun FilterBottomSheet(
         dragHandle = null,
         containerColor = MaterialTheme.colorScheme.background,
     ) {
-        val sortTypes = listOf("Name", "Account Number", "External ID")
+        val sortTypes = listOf(SortTypes.NAME, SortTypes.ACCOUNT_NUMBER, SortTypes.EXTERNAL_ID)
         val statusTypes = listOf("Active", "Pending", "Closed")
 
         Column(
@@ -462,7 +458,7 @@ fun FilterBottomSheet(
                                         handleSortClick(sort)
                                     },
                                 )
-                                Text(text = sort)
+                                Text(text = sort.value)
                             }
                         }
                     }
@@ -508,13 +504,7 @@ fun FilterBottomSheet(
                                 Spacer(modifier = Modifier.width(10.dp))
                                 Checkbox(
                                     checked = isChecked,
-                                    onCheckedChange = {
-                                        if (it) {
-                                            addStatus(status)
-                                        } else {
-                                            removeStatus(status)
-                                        }
-                                    },
+                                    onCheckedChange = { handleFilterClick(status, FilterType.STATUS) },
                                 )
                                 Text(text = status)
                             }
@@ -565,13 +555,7 @@ fun FilterBottomSheet(
                                     Spacer(modifier = Modifier.width(10.dp))
                                     Checkbox(
                                         checked = isChecked,
-                                        onCheckedChange = {
-                                            if (it) {
-                                                addOffice(name)
-                                            } else {
-                                                removeOffice(name)
-                                            }
-                                        },
+                                        onCheckedChange = { handleFilterClick(name, FilterType.OFFICE) },
                                     )
                                     Text(text = name)
                                 }

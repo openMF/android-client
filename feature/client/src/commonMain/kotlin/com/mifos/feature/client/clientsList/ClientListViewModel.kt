@@ -80,12 +80,9 @@ internal class ClientListViewModel(
             }
 
             ClientListAction.ToggleFilterVisibility -> toggleFilterVisibility()
-            is ClientListAction.AddStatus -> addStatus(action.status)
-            is ClientListAction.RemoveStatus -> removeStatus(action.status)
-            is ClientListAction.AddOffice -> addOffice(action.office)
-            is ClientListAction.RemoveOffice -> removeOffice(action.office)
             is ClientListAction.HandleSortClick -> handleSortClick(action.sort)
             is ClientListAction.OnUpdateOffice -> onUpdateOffice(action.offices)
+            is ClientListAction.HandleFilterClick -> handleFilterClick(action.filter, action.filterType)
             ClientListAction.ClearFilters -> clearFilters()
         }
     }
@@ -192,32 +189,12 @@ internal class ClientListViewModel(
         }
     }
 
-    private fun addStatus(status: String) {
-        updateState {
-            val newSelectedStatus = it.selectedStatus + status
-            it.copy(
-                selectedStatus = newSelectedStatus,
-            )
-        }
-        applyFilters()
-    }
-
-    private fun removeStatus(status: String) {
-        updateState {
-            val newSelectedStatus = it.selectedStatus - status
-            it.copy(
-                selectedStatus = newSelectedStatus,
-            )
-        }
-        applyFilters()
-    }
-
-    private fun handleSortClick(sort: String?) {
+    private fun handleSortClick(sort: SortTypes?) {
         updateState {
             val sortedList = when (sort) {
-                "Name" -> it.clients.sortedBy { it.displayName?.lowercase() }
-                "Account Number" -> it.clients.sortedBy { it.accountNo }
-                "External ID" -> it.clients.sortedBy { it.externalId }
+                SortTypes.NAME -> it.clients.sortedBy { it.displayName?.lowercase() }
+                SortTypes.ACCOUNT_NUMBER -> it.clients.sortedBy { it.accountNo }
+                SortTypes.EXTERNAL_ID -> it.clients.sortedBy { it.externalId }
                 else -> it.clients
             }
 
@@ -244,45 +221,45 @@ internal class ClientListViewModel(
         }
     }
 
-    private fun addOffice(office: String) {
+    private fun handleFilterClick(filter: String, filterType: FilterType) {
         updateState {
-            val newSelectedOffices = it.selectedOffices + office
-            it.copy(
-                selectedOffices = newSelectedOffices,
-            )
-        }
-        applyFilters()
-    }
+            val newSelectedStatus = if (filterType == FilterType.STATUS) {
+                if (filter in it.selectedStatus) {
+                    it.selectedStatus - filter
+                } else {
+                    it.selectedStatus + filter
+                }
+            } else {
+                it.selectedStatus
+            }
+            val newSelectedOffices = if (filterType == FilterType.OFFICE) {
+                if (filter in it.selectedOffices) {
+                    it.selectedOffices - filter
+                } else {
+                    it.selectedOffices + filter
+                }
+            } else {
+                it.selectedOffices
+            }
 
-    private fun removeOffice(office: String) {
-        updateState {
-            val newSelectedOffices = it.selectedOffices - office
-            it.copy(
-                selectedOffices = newSelectedOffices,
-            )
-        }
-        applyFilters()
-    }
+            fun keep(client: ClientEntity): Boolean {
+                val statusMatch = newSelectedStatus.isEmpty() || client.status?.value in newSelectedStatus
+                val officeMatch = newSelectedOffices.isEmpty() || (client.officeName ?: "Null") in newSelectedOffices
 
-    private fun applyFilters() {
-        fun keep(client: ClientEntity): Boolean {
-            val statusMatch = state.selectedStatus.isEmpty() || client.status?.value in state.selectedStatus
-            val officeMatch = state.selectedOffices.isEmpty() || (client.officeName ?: "Null") in state.selectedOffices
-
-            return statusMatch && officeMatch
-        }
-        val filteredList = state.unfilteredClients.filter { client ->
-            keep(client)
-        }
-
-        val filteredFlow = state.unfilteredClientsFlow?.map { clients ->
-            clients.filter { client ->
+                return statusMatch && officeMatch
+            }
+            val filteredList = it.unfilteredClients.filter { client ->
                 keep(client)
             }
-        }
 
-        updateState {
+            val filteredFlow = it.unfilteredClientsFlow?.map { clients ->
+                clients.filter { client ->
+                    keep(client)
+                }
+            }
             it.copy(
+                selectedStatus = newSelectedStatus,
+                selectedOffices = newSelectedOffices,
                 clients = filteredList,
                 clientsFlow = filteredFlow,
             )
@@ -316,7 +293,7 @@ data class ClientListState(
     val dialogState: DialogState? = null,
     val searchQuery: String = "",
     val clientImages: Map<Int, ByteArray?> = emptyMap(),
-    val sort: String? = null,
+    val sort: SortTypes? = null,
     val selectedStatus: List<String> = emptyList(),
     val isFilterVisible: Boolean = false,
     val officeNames: List<String?> = emptyList(),
@@ -326,6 +303,17 @@ data class ClientListState(
         data class Error(val message: String) : DialogState
         data object Loading : DialogState
     }
+}
+
+enum class SortTypes(val value: String) {
+    NAME("Name"),
+    ACCOUNT_NUMBER("Account Number"),
+    EXTERNAL_ID("External ID"),
+}
+
+enum class FilterType(val value: String) {
+    STATUS("Status"),
+    OFFICE("Office"),
 }
 
 /**
@@ -349,11 +337,8 @@ sealed interface ClientListAction {
     data object NavigateToCreateClient : ClientListAction
     data class OnQueryChange(val query: String) : ClientListAction
     data object ToggleFilterVisibility : ClientListAction
-    data class AddStatus(val status: String) : ClientListAction
-    data class RemoveStatus(val status: String) : ClientListAction
-    data class AddOffice(val office: String) : ClientListAction
-    data class RemoveOffice(val office: String) : ClientListAction
-    data class HandleSortClick(val sort: String) : ClientListAction
+    data class HandleFilterClick(val filter: String, val filterType: FilterType) : ClientListAction
+    data class HandleSortClick(val sort: SortTypes) : ClientListAction
     data class OnUpdateOffice(val offices: List<String?>) : ClientListAction
     data object ClearFilters : ClientListAction
 

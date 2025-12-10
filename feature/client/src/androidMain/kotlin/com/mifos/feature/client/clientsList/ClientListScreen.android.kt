@@ -42,7 +42,7 @@ internal actual fun LazyColumnForClientListApi(
     fetchImage: (Int) -> Unit,
     images: Map<Int, ByteArray?>,
     modifier: Modifier,
-    sort: String?,
+    sort: SortTypes?,
     onUpdateOffices: (List<String?>) -> Unit,
 ) {
     val clientPagingList = pagingFlow.collectAsLazyPagingItems()
@@ -70,13 +70,13 @@ internal actual fun LazyColumnForClientListApi(
         val currentItems = clientPagingList.itemSnapshotList.items
 
         val sortedItems = when (sort) {
-            "Name" -> {
+            SortTypes.NAME -> {
                 currentItems.sortedBy { it.displayName?.lowercase() }
             }
-            "Account Number" -> {
+            SortTypes.ACCOUNT_NUMBER -> {
                 currentItems.sortedBy { it.accountNo }
             }
-            "External ID" -> {
+            SortTypes.EXTERNAL_ID -> {
                 currentItems.sortedBy { it.externalId }
             }
             else -> currentItems
