@@ -149,7 +149,8 @@ private fun CreateFixedDepositAccountScaffold(
                         onStepChange = { newIndex ->
                             onAction(NewFixedDepositAccountAction.OnStepChange(newIndex))
                         },
-                        modifier = Modifier.fillMaxWidth(),
+                        modifier = Modifier
+                            .fillMaxWidth(),
 
                     )
                 }
