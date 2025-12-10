@@ -625,26 +625,19 @@ class CreateFixedDepositAccountViewmodel(
 
     private fun handleAddCharge() {
         val chargesState = state.fixedDepositAccountCharges
-        if (chargesState.selectedChargeIndex != -1) {
-            val chargeOptions = getSampleChargeOptions()
-            val selectedCharge = chargeOptions.getOrNull(chargesState.selectedChargeIndex)
+        if (chargesState.selectedChargeIndex != null) {
+            val selectedCharge = state.template.chargeOptions?.getOrNull(chargesState.selectedChargeIndex)
 
             if (selectedCharge != null) {
                 val newCharge = ChargeData(
-                    id = chargesState.selectedChargeIndex,
-                    name = selectedCharge.name,
-                    type = selectedCharge.type,
-                    collectedOn = selectedCharge.collectedOn,
+                    id = selectedCharge.id ?: -1,
+                    name = selectedCharge.name ?: "",
+                    type = selectedCharge.chargeCalculationType?.value ?: "",
+                    collectedOn = selectedCharge.chargeTimeType?.value ?: "",
                     amount = chargesState.chargeAmount.toDoubleOrNull() ?: 0.0,
                 )
 
-                val updatedCharges = if (chargesState.editingChargeIndex != -1) {
-                    chargesState.addedCharges.toMutableList().apply {
-                        this[chargesState.editingChargeIndex] = newCharge
-                    }
-                } else {
-                    chargesState.addedCharges + newCharge
-                }
+                val updatedCharges = chargesState.addedCharges + newCharge
 
                 mutableStateFlow.update {
                     it.copy(
@@ -652,7 +645,7 @@ class CreateFixedDepositAccountViewmodel(
                             addedCharges = updatedCharges,
                             showAddChargeDialog = false,
                             chargeAmount = "",
-                            editingChargeIndex = -1,
+                            selectedChargeIndex = null,
                         ),
                     )
                 }
@@ -663,16 +656,49 @@ class CreateFixedDepositAccountViewmodel(
     private fun handleEditCharge(action: NewFixedDepositAccountAction.NewFixedDepositAccountChargesAction.OnEditCharge) {
         val charge = state.fixedDepositAccountCharges.addedCharges.getOrNull(action.chargeIndex)
         if (charge != null) {
-            mutableStateFlow.update {
-                it.copy(
-                    fixedDepositAccountCharges = it.fixedDepositAccountCharges.copy(
-                        selectedChargeIndex = charge.id,
-                        chargeAmount = charge.amount.toString(),
-                        editingChargeIndex = action.chargeIndex,
-                        showViewChargesDialog = false,
-                        showAddChargeDialog = true,
-                    ),
+            // Find the index of this charge in template options
+            val chargeIndex = state.template.chargeOptions?.indexOfFirst { it.id == charge.id }
+
+            // Update the charge with new values if selectedChargeIndex is set
+            val selectedIndex = state.fixedDepositAccountCharges.selectedChargeIndex
+            if (selectedIndex != null) {
+                val updatedCharge = ChargeData(
+                    id = state.template.chargeOptions?.get(selectedIndex)?.id ?: charge.id,
+                    name = state.template.chargeOptions?.get(selectedIndex)?.name ?: charge.name,
+                    type = state.template.chargeOptions?.get(selectedIndex)?.chargeCalculationType?.value ?: charge.type,
+                    collectedOn = state.template.chargeOptions?.get(selectedIndex)?.chargeTimeType?.value ?: charge.collectedOn,
+                    amount = state.fixedDepositAccountCharges.chargeAmount.toDoubleOrNull() ?: charge.amount,
                 )
+
+                val updatedCharges = state.fixedDepositAccountCharges.addedCharges.toMutableList().apply {
+                    this[action.chargeIndex] = updatedCharge
+                }
+
+                mutableStateFlow.update {
+                    it.copy(
+                        fixedDepositAccountCharges = it.fixedDepositAccountCharges.copy(
+                            addedCharges = updatedCharges,
+                            showViewChargesDialog = true,
+                            showAddChargeDialog = false,
+                            chargeAmount = "",
+                            selectedChargeIndex = null,
+                            editingChargeIndex = -1,
+                        ),
+                    )
+                }
+            } else {
+                // Just open the edit dialog with current charge data
+                mutableStateFlow.update {
+                    it.copy(
+                        fixedDepositAccountCharges = it.fixedDepositAccountCharges.copy(
+                            selectedChargeIndex = chargeIndex,
+                            chargeAmount = charge.amount.toString(),
+                            editingChargeIndex = action.chargeIndex,
+                            showViewChargesDialog = false,
+                            showAddChargeDialog = true,
+                        ),
+                    )
+                }
             }
         }
     }
@@ -689,25 +715,6 @@ class CreateFixedDepositAccountViewmodel(
         }
     }
 
-    private fun getSampleChargeOptions(): List<ChargeOption> {
-        return listOf(
-            ChargeOption(
-                name = "Account Administration Fees",
-                type = "Flat",
-                collectedOn = "Specified due date",
-            ),
-            ChargeOption(
-                name = "Service Charge",
-                type = "Percentage",
-                collectedOn = "On activation",
-            ),
-            ChargeOption(
-                name = "Penalty Fee",
-                type = "Flat",
-                collectedOn = "On closure",
-            ),
-        )
-    }
 
     private fun moveToNextStep() {
         val current = state.currentStep
@@ -797,7 +804,7 @@ constructor(
 )
 
 data class FixedDepositAccountChargesState(
-    val selectedChargeIndex: Int = -1,
+    val selectedChargeIndex: Int? = null,
     val showAddChargeDialog: Boolean = false,
     val showViewChargesDialog: Boolean = false,
     val chargeAmount: String = "",
@@ -818,11 +825,6 @@ data class ChargeData(
     val amount: Double,
 )
 
-data class ChargeOption(
-    val name: String,
-    val type: String,
-    val collectedOn: String,
-)
 
 sealed class NewFixedDepositAccountAction {
     data object OnNextPress : NewFixedDepositAccountAction()

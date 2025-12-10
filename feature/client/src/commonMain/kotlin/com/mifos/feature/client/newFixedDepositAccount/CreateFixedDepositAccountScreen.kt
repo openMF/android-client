@@ -118,7 +118,8 @@ private fun CreateFixedDepositAccountScaffold(
         },
         Step(stringResource(Res.string.step_charges)) {
             ChargesPage(
-                onNext = { onAction(NewFixedDepositAccountAction.OnNextPress) },
+                state = state,
+                onAction = onAction,
             )
         },
     )

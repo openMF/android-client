@@ -40,13 +40,11 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import com.mifos.core.designsystem.component.MifosBottomSheet
-import com.mifos.core.designsystem.component.MifosTextFieldDropdown
 import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.designsystem.theme.MifosTypography
@@ -57,7 +55,6 @@ import com.mifos.core.ui.components.MifosEmptyCard
 import com.mifos.core.ui.components.MifosRowWithTextAndButton
 import com.mifos.core.ui.components.MifosTwoButtonRow
 import com.mifos.feature.client.newFixedDepositAccount.ChargeData
-import com.mifos.feature.client.newFixedDepositAccount.ChargeOption
 import com.mifos.feature.client.newFixedDepositAccount.NewFixedDepositAccountAction
 import com.mifos.feature.client.newFixedDepositAccount.NewFixedDepositAccountState
 import org.jetbrains.compose.resources.stringResource
@@ -70,10 +67,6 @@ fun ChargesPage(
 ) {
     val chargesState = state.fixedDepositAccountCharges
 
-    // Cache charge options to prevent recomputation on every recomposition
-    val chargeOptions = remember { getSampleChargeOptions() }
-    val chargeOptionNames = remember(chargeOptions) { chargeOptions.map { it.name } }
-
     Column(modifier = Modifier.fillMaxSize().padding(bottom = DesignToken.padding.large)) {
         Column(
             modifier = Modifier.weight(1f).verticalScroll(rememberScrollState())
@@ -85,23 +78,6 @@ fun ChargesPage(
             )
             Spacer(Modifier.height(DesignToken.padding.large))
 
-            // Choose Charge Dropdown
-            MifosTextFieldDropdown(
-                value = if (chargesState.selectedChargeIndex != -1) {
-                    chargeOptions.getOrNull(chargesState.selectedChargeIndex)?.name.orEmpty()
-                } else {
-                    ""
-                },
-                options = chargeOptionNames,
-                onValueChanged = {},
-                onOptionSelected = { index, _ ->
-                    onAction(NewFixedDepositAccountAction.NewFixedDepositAccountChargesAction.OnChargeSelected(index))
-                },
-                label = stringResource(Res.string.feature_client_choose_charge),
-            )
-
-            Spacer(Modifier.height(DesignToken.padding.medium))
-
             // Add New Button
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -110,30 +86,20 @@ fun ChargesPage(
             ) {
                 Row(
                     modifier = Modifier.clickable {
-                        if (chargesState.selectedChargeIndex != -1) {
-                            onAction(NewFixedDepositAccountAction.NewFixedDepositAccountChargesAction.OnShowAddChargeDialog(true))
-                        }
+                        onAction(NewFixedDepositAccountAction.NewFixedDepositAccountChargesAction.OnShowAddChargeDialog(true))
                     },
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
                     Icon(
                         imageVector = MifosIcons.Add,
                         contentDescription = null,
-                        tint = if (chargesState.selectedChargeIndex != -1) {
-                            MaterialTheme.colorScheme.primary
-                        } else {
-                            MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f)
-                        },
+                        tint = MaterialTheme.colorScheme.primary,
                         modifier = Modifier.size(DesignToken.sizes.iconSmall),
                     )
 
                     Text(
                         text = stringResource(Res.string.feature_share_account_charge_add_new),
-                        color = if (chargesState.selectedChargeIndex != -1) {
-                            MaterialTheme.colorScheme.primary
-                        } else {
-                            MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f)
-                        },
+                        color = MaterialTheme.colorScheme.primary,
                         style = MifosTypography.labelLargeEmphasized,
                     )
                 }
@@ -169,11 +135,6 @@ fun ChargesPage(
     // Add/Edit Charge Dialog
     if (chargesState.showAddChargeDialog) {
         val isEdit = chargesState.editingChargeIndex != -1
-        val selectedCharge = if (chargesState.selectedChargeIndex != -1) {
-            chargeOptions.getOrNull(chargesState.selectedChargeIndex)
-        } else {
-            null
-        }
 
         AddChargeBottomSheet(
             title = if (isEdit) {
@@ -187,13 +148,29 @@ fun ChargesPage(
                 stringResource(Res.string.feature_share_account_charge_btn_add_new)
             },
             dismissText = stringResource(Res.string.btn_back),
-            selectedChargeName = selectedCharge?.name ?: "",
+            selectedChargeName = if (chargesState.selectedChargeIndex == null) {
+                ""
+            } else {
+                state.template.chargeOptions?.get(chargesState.selectedChargeIndex)?.name ?: ""
+            },
             chargeAmount = chargesState.chargeAmount,
-            chargeType = selectedCharge?.type ?: "",
-            chargeCollectedOn = selectedCharge?.collectedOn ?: "",
-            chargeOptions = chargeOptionNames,
+            chargeType = if (chargesState.selectedChargeIndex == null) {
+                ""
+            } else {
+                state.template.chargeOptions?.get(chargesState.selectedChargeIndex)?.chargeCalculationType?.value ?: ""
+            },
+            chargeCollectedOn = if (chargesState.selectedChargeIndex == null) {
+                ""
+            } else {
+                state.template.chargeOptions?.get(chargesState.selectedChargeIndex)?.chargeTimeType?.value ?: ""
+            },
+            chargeOptions = state.template.chargeOptions?.map { it.name ?: "" } ?: emptyList(),
             onConfirm = {
-                onAction(NewFixedDepositAccountAction.NewFixedDepositAccountChargesAction.OnAddCharge)
+                if (isEdit) {
+                    onAction(NewFixedDepositAccountAction.NewFixedDepositAccountChargesAction.OnEditCharge(chargesState.editingChargeIndex))
+                } else {
+                    onAction(NewFixedDepositAccountAction.NewFixedDepositAccountChargesAction.OnAddCharge)
+                }
             },
             onDismiss = {
                 onAction(NewFixedDepositAccountAction.NewFixedDepositAccountChargesAction.OnShowAddChargeDialog(false))
@@ -298,23 +275,3 @@ internal fun ShowChargesDialog(
     )
 }
 
-// Sample charge options - will be replaced with actual data from template
-private fun getSampleChargeOptions(): List<ChargeOption> {
-    return listOf(
-        ChargeOption(
-            name = "Account Administration Fees",
-            type = "Flat",
-            collectedOn = "Specified due date",
-        ),
-        ChargeOption(
-            name = "Service Charge",
-            type = "Percentage",
-            collectedOn = "On activation",
-        ),
-        ChargeOption(
-            name = "Penalty Fee",
-            type = "Flat",
-            collectedOn = "On closure",
-        ),
-    )
-}
