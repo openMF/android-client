@@ -32,12 +32,15 @@ data class RecurringDepositAccountPayload(
     val locale: String? = null,
     val lockinPeriodFrequency: Int? = null,
     val lockinPeriodFrequencyType: Int? = null,
-    val mandatoryRecommendedDepositAmount: Int? = null,
+    val mandatoryRecommendedDepositAmount: Double? = null,
     val monthDayFormat: String? = null,
     val productId: Int? = null,
     val recurringFrequency: Int? = null,
     val recurringFrequencyType: Int? = null,
     val submittedOnDate: String? = null,
+    val preClosurePenalApplicable: Boolean? = null,
+    val preClosurePenalInterest: Double? = null,
+    val preClosurePenalInterestOnTypeId: Int? = null,
 )
 
 @Serializable

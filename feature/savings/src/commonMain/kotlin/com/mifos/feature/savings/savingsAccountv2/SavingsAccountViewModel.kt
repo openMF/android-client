@@ -45,16 +45,28 @@ internal class SavingsAccountViewModel(
     private val getSavingsProductTemplateUseCase: GetSavingsProductTemplateUseCase,
     private val createSavingsAccountUseCase: CreateSavingsAccountUseCase,
     val savedStateHandle: SavedStateHandle,
-) :
-    BaseViewModel<SavingsAccountState, SavingsAccountEvent, SavingsAccountAction>(
-        initialState = run {
-            SavingsAccountState(clientId = savedStateHandle.toRoute<SavingsAccountRoute>().clientId)
-        },
-    ) {
+) : BaseViewModel<SavingsAccountState, SavingsAccountEvent, SavingsAccountAction>(
+    initialState = run {
+        SavingsAccountState(clientId = savedStateHandle.toRoute<SavingsAccountRoute>().clientId)
+    },
+) {
 
     init {
-        loadClientTemplate()
         loadSavingsProductTemplate()
+    }
+
+    suspend fun isOnline(
+        content: suspend () -> Unit,
+    ) {
+        if (networkMonitor.isOnline.first()) {
+            content()
+        } else {
+            mutableStateFlow.update {
+                it.copy(
+                    screenState = SavingsAccountState.ScreenState.Error(getString(Res.string.feature_savings_error_not_connected_internet)),
+                )
+            }
+        }
     }
 
     override fun handleAction(action: SavingsAccountAction) {
@@ -146,9 +158,7 @@ internal class SavingsAccountViewModel(
             minRequiredBalance = state.monthlyMinimumBalance
             lockinPeriodFrequency = state.frequency.toIntOrNull()
             lockinPeriodFrequencyType =
-                state.savingsProductTemplate?.lockinPeriodFrequencyTypeOptions
-                    ?.getOrNull(state.freqTypeIndex)?.id
-                    .takeIf { state.frequency.toIntOrNull() != null }
+                state.savingsProductTemplate?.lockinPeriodFrequencyTypeOptions?.getOrNull(state.freqTypeIndex)?.id.takeIf { state.frequency.toIntOrNull() != null }
             charges = state.addedCharges.map { charges ->
                 ChargesPayload(
                     chargeId = charges.id,
@@ -168,8 +178,7 @@ internal class SavingsAccountViewModel(
         }
 
         viewModelScope.launch {
-            val online = networkMonitor.isOnline.first()
-            if (online) {
+            isOnline {
                 createSavingsAccountUseCase(savingsPayload).collect { result ->
                     when (result) {
                         is DataState.Loading -> {
@@ -215,12 +224,6 @@ internal class SavingsAccountViewModel(
                             }
                         }
                     }
-                }
-            } else {
-                mutableStateFlow.update {
-                    it.copy(
-                        screenState = SavingsAccountState.ScreenState.Error(getString(Res.string.feature_savings_error_not_connected_internet)),
-                    )
                 }
             }
         }
@@ -284,9 +287,9 @@ internal class SavingsAccountViewModel(
 
     private fun handleEditChargeDialog(index: Int) {
         val selectedEditCharge = state.addedCharges[index]
-        val chooseChargeIndex = state.savingsProductTemplate
-            ?.chargeOptions
-            ?.indexOfFirst { it.id == selectedEditCharge.id } ?: -1
+        val chooseChargeIndex =
+            state.savingsProductTemplate?.chargeOptions?.indexOfFirst { it.id == selectedEditCharge.id }
+                ?: -1
         mutableStateFlow.update {
             it.copy(
                 chargeAmount = selectedEditCharge.amount.toString(),
@@ -458,18 +461,15 @@ internal class SavingsAccountViewModel(
                     decimalPlaces = result.data.currency?.decimalPlaces?.toInt().toString(),
                     interestPostingPeriodIndex = result.data.interestPostingPeriodTypeOptions?.indexOf(
                         result.data.interestPostingPeriodType,
-                    )
-                        ?: -1,
+                    ) ?: -1,
                     interestCalcIndex = result.data.interestCalculationTypeOptions?.indexOf(result.data.interestCalculationType)
                         ?: -1,
                     interestCompPeriodIndex = result.data.interestCompoundingPeriodTypeOptions?.indexOf(
                         result.data.interestCompoundingPeriodType,
-                    )
-                        ?: -1,
+                    ) ?: -1,
                     daysInYearIndex = result.data.interestCalculationDaysInYearTypeOptions?.indexOf(
                         result.data.interestCalculationDaysInYearType,
-                    )
-                        ?: -1,
+                    ) ?: -1,
                 )
             }
         }
@@ -567,42 +567,24 @@ internal class SavingsAccountViewModel(
     }
 
     private fun loadClientTemplate() = viewModelScope.launch {
-        val online = networkMonitor.isOnline.first()
-        if (online) {
+        isOnline {
             getClientTemplateUseCase().collect { result ->
                 sendAction(SavingsAccountAction.Internal.OnReceivingClientTemplate(result))
-            }
-        } else {
-            mutableStateFlow.update {
-                it.copy(
-                    screenState = SavingsAccountState.ScreenState.Error(getString(Res.string.feature_savings_error_not_connected_internet)),
-                )
             }
         }
     }
 
     private fun loadSavingsProductTemplate() = viewModelScope.launch {
-        val online = networkMonitor.isOnline.first()
-        if (online) {
+        isOnline {
             getSavingsProductTemplateUseCase().collect { result ->
                 sendAction(SavingsAccountAction.Internal.OnReceivingSavingsProductTemplate(result))
             }
-        } else {
-            mutableStateFlow.update {
-                it.copy(
-                    screenState = SavingsAccountState.ScreenState.Error(getString(Res.string.feature_savings_error_not_connected_internet)),
-                )
-            }
+            loadClientTemplate()
         }
     }
 
     private fun handleRetry() {
-        mutableStateFlow.update {
-            it.copy(
-                dialogState = null,
-            )
-        }
-        loadClientTemplate()
+        loadSavingsProductTemplate()
     }
 
     private fun moveToPreviousStep() {

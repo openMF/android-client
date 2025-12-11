@@ -10,10 +10,12 @@
 package com.mifos.feature.recurringDeposit.newRecurringDepositAccount
 
 import androidclient.feature.recurringdeposit.generated.resources.Res
-import androidclient.feature.recurringdeposit.generated.resources.feature_recurring_deposit_no_internet_connection
+import androidclient.feature.recurringdeposit.generated.resources.feature_error_network_not_available
+import androidclient.feature.recurringdeposit.generated.resources.feature_recurring_account_created_successfully
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
+import com.mifos.core.common.utils.Constants
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.common.utils.DateHelper
 import com.mifos.core.data.repository.RecurringAccountRepository
@@ -30,10 +32,11 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.getString
+import kotlin.random.Random
 import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
 
-const val TOTAL_STEPS = 4
+const val TOTAL_STEPS = 6
 
 class RecurringAccountViewModel(
     savedStateHandle: SavedStateHandle,
@@ -54,14 +57,6 @@ class RecurringAccountViewModel(
         loadRecurringAccountTemplate()
     }
 
-    private fun setLoadingState() {
-        mutableStateFlow.update {
-            it.copy(
-                screenState = ScreenState.Loading,
-            )
-        }
-    }
-
     private fun moveToNextStep() {
         if (state.currentStep < state.totalSteps) {
             mutableStateFlow.update {
@@ -76,69 +71,137 @@ class RecurringAccountViewModel(
     }
 
     private fun createRecurringDepositAccount() {
-        viewModelScope.launch {
-            val s = state
-            val settings = s.recurringDepositAccountSettings
+        val s = state
+        val settings = s.recurringDepositAccountSettings
 
-            val online = networkMonitor.isOnline.first()
-            if (!online) {
-                mutableStateFlow.update {
-                    it.copy(
-                        screenState = ScreenState.Error(getString(Res.string.feature_recurring_deposit_no_internet_connection)),
+        val payload = RecurringDepositAccountPayload(
+            charges = state.addedCharges,
+            adjustAdvanceTowardsFuturePayments = settings.adjustAdvancePayments,
+            allowWithdrawal = settings.allowWithdrawals,
+            clientId = state.clientId,
+            dateFormat = DateHelper.SHORT_MONTH,
+            depositPeriod = settings.depositPeriod.period.toIntOrNull(),
+            depositPeriodFrequencyId = (
+                state.template.periodFrequencyTypeOptions?.getOrNull(
+                    state.recurringDepositAccountSettings.depositPeriod.periodType,
+                )?.id
+                ),
+            expectedFirstDepositOnDate = null,
+            externalId = s.recurringDepositAccountDetail.externalId,
+            fieldOfficerId = if (state.recurringDepositAccountDetail.fieldOfficerIndex != -1) {
+                (
+                    state.template.fieldOfficerOptions?.get(
+                        state.recurringDepositAccountDetail.fieldOfficerIndex,
+                    )?.id
                     )
-                }
-                return@launch
-            }
-            val lockInFreq = settings.lockInPeriod.frequency.toIntOrNull()
-            val depositAmountInt = settings.recurringDepositDetails.depositAmount
-                .filter(Char::isDigit)
-                .toIntOrNull()
-            val recurringFreq = settings.minimumDepositTerm.frequency.toIntOrNull()
+            } else {
+                null
+            },
+            interestCalculationDaysInYearType = if (state.recurringDepositAccountInterestChart.interestCalculationDaysInYearType != -1) {
+                state.template.interestCalculationDaysInYearTypeOptions?.get(
+                    state.recurringDepositAccountInterestChart.interestCalculationDaysInYearType,
+                )?.id
+            } else {
+                null
+            },
+            interestCalculationType = if (state.recurringDepositAccountInterestChart.interestCalculationType != -1) {
+                state.template.interestCalculationTypeOptions?.get(
+                    state.recurringDepositAccountInterestChart.interestCalculationType,
+                )?.id
+            } else {
+                null
+            },
+            interestCompoundingPeriodType = if (state.recurringDepositAccountInterestChart.interestCompoundingPeriodType != -1) {
+                (
+                    state.template.interestCompoundingPeriodTypeOptions?.get(
+                        state.recurringDepositAccountInterestChart.interestCompoundingPeriodType,
+                    )?.id
+                    )
+            } else {
+                null
+            },
+            interestPostingPeriodType = if (state.recurringDepositAccountInterestChart.interestPostingPeriodType != -1) {
+                state.template.interestPostingPeriodTypeOptions?.get(
+                    state.recurringDepositAccountInterestChart.interestPostingPeriodType,
+                )?.id
+            } else {
+                null
+            },
+            isCalendarInherited = settings.depositPeriod.depositFrequencySameAsGroupCenterMeeting,
+            isMandatoryDeposit = settings.isMandatory,
+            locale = Constants.LOCALE_EN,
+            lockinPeriodFrequency = settings.lockInPeriod.frequency.toIntOrNull(),
+            lockinPeriodFrequencyType = if (state.recurringDepositAccountSettings.lockInPeriod.frequencyTypeIndex != -1) {
+                (
+                    state.template.lockinPeriodFrequencyTypeOptions?.getOrNull(
+                        state.recurringDepositAccountSettings.lockInPeriod.frequencyTypeIndex,
+                    )?.id
+                    )
+            } else {
+                null
+            },
+            mandatoryRecommendedDepositAmount = settings.recurringDepositDetails.depositAmount.toDoubleOrNull(),
+            productId = state.template.productOptions?.get(state.recurringDepositAccountDetail.loanProductSelected)?.id,
+            recurringFrequency = settings.recurringFrequency.toIntOrNull(),
+            recurringFrequencyType = state.template.periodFrequencyTypeOptions
+                ?.getOrNull(settings.recurringFrequencyTypeIndex)?.id,
+            submittedOnDate = s.recurringDepositAccountDetail.submissionDate,
+            preClosurePenalApplicable = settings.preMatureClosure.applyPenalInterest,
+            preClosurePenalInterest = settings.preMatureClosure.penalInterest.toDoubleOrNull(),
+            preClosurePenalInterestOnTypeId = if (state.recurringDepositAccountSettings.preMatureClosure.interestPeriodIndex != -1) {
+                state.template.preClosurePenalInterestOnTypeOptions?.getOrNull(
+                    state.recurringDepositAccountSettings.preMatureClosure.interestPeriodIndex,
+                )?.id
+            } else {
+                null
+            },
+        )
 
-            val payload = RecurringDepositAccountPayload(
-                charges = state.addedCharges,
-                adjustAdvanceTowardsFuturePayments = settings.adjustAdvancePayments,
-                allowWithdrawal = settings.allowWithdrawals,
-                clientId = state.clientId,
-                dateFormat = "dd MMMM yyyy",
-                depositPeriod = settings.depositPeriod.period.toIntOrNull(),
-                depositPeriodFrequencyId = settings.depositPeriod.periodType,
-                expectedFirstDepositOnDate = null,
-                externalId = s.recurringDepositAccountDetail.externalId,
-                fieldOfficerId = s.recurringDepositAccountDetail.fieldOfficer?.id,
-                interestCalculationDaysInYearType = null,
-                interestCalculationType = null,
-                interestCompoundingPeriodType = null,
-                interestPostingPeriodType = null,
-                isCalendarInherited = null,
-                isMandatoryDeposit = settings.isMandatory,
-                locale = "en",
-                lockinPeriodFrequency = lockInFreq,
-                lockinPeriodFrequencyType = settings.lockInPeriod.frequencyTypeIndex,
-                mandatoryRecommendedDepositAmount = depositAmountInt,
-                monthDayFormat = "dd MMMM",
-                productId = s.recurringDepositAccountDetail.productId,
-                recurringFrequency = recurringFreq,
-                recurringFrequencyType = settings.minimumDepositTerm.frequencyTypeIndex,
-                // date in dd MM yyyy format.
-                submittedOnDate = s.recurringDepositAccountDetail.submissionDate,
-            )
-
-            if (state.isOnline) {
+        viewModelScope.launch {
+            isOnline {
                 recurringAccountRepo.createRecurringDepositAccount(payload).collect { dataState ->
                     when (dataState) {
                         is DataState.Error -> {
-                            // it will implement latter
+                            if (dataState.exception is IllegalStateException) {
+                                mutableStateFlow.update {
+                                    it.copy(
+                                        dialogState = RecurringAccountState.DialogState.SuccessResponseStatus(
+                                            successStatus = false,
+                                            msg = dataState.message,
+                                        ),
+                                        launchEffectKey = Random.nextInt(),
+                                        isOverlayLoadingActive = false,
+                                    )
+                                }
+                            } else {
+                                mutableStateFlow.update {
+                                    it.copy(
+                                        screenState = RecurringAccountState.ScreenState.Error(
+                                            dataState.message,
+                                        ),
+                                        isOverlayLoadingActive = false,
+                                    )
+                                }
+                            }
                         }
 
                         is DataState.Loading -> {
-                            setLoadingState()
+                            mutableStateFlow.update {
+                                it.copy(
+                                    isOverlayLoadingActive = true,
+                                )
+                            }
                         }
 
                         is DataState.Success -> {
                             mutableStateFlow.update {
                                 it.copy(
-                                    screenState = ScreenState.Success,
+                                    isOverlayLoadingActive = false,
+                                    launchEffectKey = Random.nextInt(),
+                                    dialogState = RecurringAccountState.DialogState.SuccessResponseStatus(
+                                        successStatus = true,
+                                        msg = getString(Res.string.feature_recurring_account_created_successfully),
+                                    ),
                                 )
                             }
                         }
@@ -205,20 +268,7 @@ class RecurringAccountViewModel(
         }
     }
 
-    private fun resetForRetry() {
-        mutableStateFlow.update {
-            it.copy(
-                isOnline = false,
-                clientId = -1,
-                currentStep = 0,
-                screenState = ScreenState.Loading,
-                recurringDepositAccountDetail = RecurringAccountDetailsState(),
-                template = RecurringDepositAccountTemplate(),
-                recurringDepositAccountSettings = RecurringAccountSettingsState(),
-                currencyIndex = -1,
-                currencyError = null,
-            )
-        }
+    private fun retry() {
         loadRecurringAccountTemplate()
     }
 
@@ -263,15 +313,52 @@ class RecurringAccountViewModel(
     }
 
     private fun loadRecurringAccountTemplate() = viewModelScope.launch {
-        recurringAccountRepo.getRecurringAccountTemplate(clientId = state.clientId)
-            .collect { dataState ->
-                when (dataState) {
+        isOnline {
+            recurringAccountRepo.getRecurringAccountTemplate(clientId = state.clientId)
+                .collect { dataState ->
+                    when (dataState) {
+                        is DataState.Success -> {
+                            mutableStateFlow.update {
+                                it.copy(
+                                    template = dataState.data,
+                                    screenState = ScreenState.Success,
+                                )
+                            }
+                        }
+
+                        is DataState.Error -> {
+                            mutableStateFlow.update {
+                                it.copy(
+                                    screenState = ScreenState.Error(dataState.message),
+                                )
+                            }
+                        }
+
+                        DataState.Loading -> {
+                            mutableStateFlow.update {
+                                it.copy(
+                                    screenState = ScreenState.Loading,
+                                )
+                            }
+                        }
+                    }
+                }
+        }
+    }
+
+    private fun loadRecurringAccountTemplateWithProduct(
+        clientId: Int,
+        productId: Int,
+    ) = viewModelScope.launch {
+        isOnline {
+            recurringAccountRepo.getRecurringAccountTemplate(clientId, productId).collect { state ->
+                when (state) {
                     is DataState.Success -> {
                         mutableStateFlow.update {
                             it.copy(
-                                template = dataState.data,
-                                isOnline = true,
                                 screenState = ScreenState.Success,
+                                template = state.data,
+                                isOverlayLoadingActive = false,
                             )
                         }
                     }
@@ -279,50 +366,34 @@ class RecurringAccountViewModel(
                     is DataState.Error -> {
                         mutableStateFlow.update {
                             it.copy(
-                                screenState = ScreenState.Error(dataState.message),
+                                screenState = ScreenState.Error(state.message),
+                                isOverlayLoadingActive = false,
                             )
                         }
                     }
 
                     DataState.Loading -> {
-                        setLoadingState()
+                        mutableStateFlow.update {
+                            it.copy(
+                                isOverlayLoadingActive = true,
+                            )
+                        }
                     }
                 }
             }
+        }
     }
 
-    private fun loadRecurringAccountTemplateWithProduct(
-        clientId: Int,
-        productId: Int,
-    ) = viewModelScope.launch {
-        recurringAccountRepo.getRecurringAccountTemplate(clientId, productId).collect { state ->
-            when (state) {
-                is DataState.Success -> {
-                    mutableStateFlow.update {
-                        it.copy(
-                            screenState = ScreenState.Success,
-                            template = state.data,
-                            isOverlayLoading = false,
-                        )
-                    }
-                }
-
-                is DataState.Error -> {
-                    mutableStateFlow.update {
-                        it.copy(
-                            screenState = ScreenState.Error(state.message),
-                            isOverlayLoading = false,
-                        )
-                    }
-                }
-
-                DataState.Loading -> {
-                    mutableStateFlow.update {
-                        it.copy(
-                            isOverlayLoading = true,
-                        )
-                    }
-                }
+    suspend fun isOnline(
+        content: suspend () -> Unit,
+    ) {
+        if (networkMonitor.isOnline.first()) {
+            content()
+        } else {
+            mutableStateFlow.update {
+                it.copy(
+                    screenState = ScreenState.Error(getString(Res.string.feature_error_network_not_available)),
+                )
             }
         }
     }
@@ -330,7 +401,7 @@ class RecurringAccountViewModel(
     override fun handleAction(action: RecurringAccountAction) {
         when (action) {
             RecurringAccountAction.Retry -> {
-                resetForRetry()
+                retry()
             }
 
             is RecurringAccountAction.RecurringAccountSettingsAction -> {
@@ -509,10 +580,9 @@ class RecurringAccountViewModel(
                         mutableStateFlow.update {
                             state.copy(
                                 recurringDepositAccountSettings = state.recurringDepositAccountSettings.copy(
-                                    recurringDepositDetails = state.recurringDepositAccountSettings
-                                        .recurringDepositDetails.copy(
-                                            depositAmount = action.depositAmount,
-                                        ),
+                                    recurringDepositDetails = state.recurringDepositAccountSettings.recurringDepositDetails.copy(
+                                        depositAmount = action.depositAmount,
+                                    ),
                                     depositAmountError = null,
                                 ),
                             )
@@ -544,9 +614,12 @@ class RecurringAccountViewModel(
                             state.copy(
                                 recurringDepositAccountSettings = state.recurringDepositAccountSettings.copy(
                                     depositPeriod = state.recurringDepositAccountSettings.depositPeriod.copy(
-                                        depositFrequencySameAsGroupCenterMeeting = !state.recurringDepositAccountSettings
-                                            .depositPeriod.depositFrequencySameAsGroupCenterMeeting,
+                                        depositFrequencySameAsGroupCenterMeeting = !state.recurringDepositAccountSettings.depositPeriod.depositFrequencySameAsGroupCenterMeeting,
                                     ),
+                                    recurringFrequencyTypeError = null,
+                                    recurringFrequencyError = null,
+                                    recurringFrequency = "",
+                                    recurringFrequencyTypeIndex = -1,
                                 ),
                             )
                         }
@@ -567,8 +640,7 @@ class RecurringAccountViewModel(
                             state.copy(
                                 recurringDepositAccountSettings = state.recurringDepositAccountSettings.copy(
                                     preMatureClosure = state.recurringDepositAccountSettings.preMatureClosure.copy(
-                                        applyPenalInterest = !state.recurringDepositAccountSettings
-                                            .preMatureClosure.applyPenalInterest,
+                                        applyPenalInterest = !state.recurringDepositAccountSettings.preMatureClosure.applyPenalInterest,
                                     ),
                                 ),
                             )
@@ -577,25 +649,57 @@ class RecurringAccountViewModel(
 
                     RecurringAccountAction.RecurringAccountSettingsAction.OnSettingNext -> {
                         val depositAmountError =
-                            TextFieldsValidator.stringValidator(state.recurringDepositAccountSettings.recurringDepositDetails.depositAmount)
+                            TextFieldsValidator.doubleNumberValidator(state.recurringDepositAccountSettings.recurringDepositDetails.depositAmount)
                         val depositPeriodTypeError = TextFieldsValidator.dropDownEmptyValidator(
                             state.recurringDepositAccountSettings.depositPeriod.periodType == -1,
                         )
                         val depositPeriodError =
-                            TextFieldsValidator.stringValidator(state.recurringDepositAccountSettings.depositPeriod.period)
+                            TextFieldsValidator.numberValidator(state.recurringDepositAccountSettings.depositPeriod.period)
 
-                        if (depositAmountError != null || depositPeriodTypeError != null || depositPeriodError != null) {
+                        val recurringFrequencyError =
+                            TextFieldsValidator.numberValidator(state.recurringDepositAccountSettings.recurringFrequency)
+                        val recurringFrequencyTypeError =
+                            TextFieldsValidator.dropDownEmptyValidator(state.recurringDepositAccountSettings.recurringFrequencyTypeIndex == -1)
+
+                        val recurringErrorHandle =
+                            (recurringFrequencyError != null || recurringFrequencyTypeError != null) && !state.recurringDepositAccountSettings.depositPeriod.depositFrequencySameAsGroupCenterMeeting
+
+                        if (depositAmountError != null || depositPeriodTypeError != null || depositPeriodError != null || recurringErrorHandle) {
                             mutableStateFlow.update {
                                 it.copy(
                                     recurringDepositAccountSettings = it.recurringDepositAccountSettings.copy(
                                         depositPeriodError = depositPeriodError,
                                         depositAmountError = depositAmountError,
                                         depositPeriodTypeError = depositPeriodTypeError,
+                                        recurringFrequencyError = if (state.recurringDepositAccountSettings.depositPeriod.depositFrequencySameAsGroupCenterMeeting) null else recurringFrequencyError,
+                                        recurringFrequencyTypeError = if (state.recurringDepositAccountSettings.depositPeriod.depositFrequencySameAsGroupCenterMeeting) null else recurringFrequencyTypeError,
                                     ),
                                 )
                             }
                         } else {
                             moveToNextStep()
+                        }
+                    }
+
+                    is RecurringAccountAction.RecurringAccountSettingsAction.OnRecurringFrequencyChange -> {
+                        mutableStateFlow.update {
+                            it.copy(
+                                recurringDepositAccountSettings = it.recurringDepositAccountSettings.copy(
+                                    recurringFrequency = action.value,
+                                    recurringFrequencyError = null,
+                                ),
+                            )
+                        }
+                    }
+
+                    is RecurringAccountAction.RecurringAccountSettingsAction.OnRecurringFrequencyTypeIndexChange -> {
+                        mutableStateFlow.update {
+                            it.copy(
+                                recurringDepositAccountSettings = it.recurringDepositAccountSettings.copy(
+                                    recurringFrequencyTypeIndex = action.index,
+                                    recurringFrequencyTypeError = null,
+                                ),
+                            )
                         }
                     }
                 }
@@ -657,8 +761,11 @@ class RecurringAccountViewModel(
             }
 
             RecurringAccountAction.OnBackPress -> {
+                val current = state.currentStep
                 mutableStateFlow.update {
-                    it.copy(currentStep = 3)
+                    it.copy(
+                        currentStep = current - 1,
+                    )
                 }
             }
 
@@ -727,8 +834,8 @@ class RecurringAccountViewModel(
 
             is RecurringAccountAction.EditChargeDialog -> {
                 val selectedEditCharge = state.addedCharges[action.index]
-                val chooseChargeIndex = state.template.chargeOptions
-                    ?.indexOfFirst { it.id == selectedEditCharge.chargeId }
+                val chooseChargeIndex =
+                    state.template.chargeOptions?.indexOfFirst { it.id == selectedEditCharge.chargeId }
 
                 mutableStateFlow.update {
                     it.copy(
@@ -789,12 +896,15 @@ class RecurringAccountViewModel(
                     )
                 }
             }
+
+            RecurringAccountAction.OnSubmitRecurringAccount -> {
+                createRecurringDepositAccount()
+            }
         }
     }
 }
 
 data class RecurringAccountState(
-    val isOnline: Boolean = false,
     val clientId: Int = -1,
     val currentStep: Int = 0,
     val totalSteps: Int = TOTAL_STEPS,
@@ -805,11 +915,12 @@ data class RecurringAccountState(
     val recurringDepositAccountInterestChart: RecurringAccountInterestChartState = RecurringAccountInterestChartState(),
     val currencyIndex: Int = -1,
     val currencyError: String? = null,
-    val isOverlayLoading: Boolean = false,
+    val isOverlayLoadingActive: Boolean = false,
     val dialogState: DialogState? = null,
     val addedCharges: List<ChargeItem> = emptyList(),
     val chargeAmount: String = "",
     val chooseChargeIndex: Int? = null,
+    val launchEffectKey: Int? = null,
 ) {
     sealed interface ScreenState {
         data class Error(val message: String) : ScreenState
@@ -821,6 +932,8 @@ data class RecurringAccountState(
         data object RateChartDialog : DialogState
         data class AddNewCharge(val edit: Boolean, val index: Int = -1) : DialogState
         data object ShowCharges : DialogState
+        data class SuccessResponseStatus(val successStatus: Boolean, val msg: String = "") :
+            DialogState
     }
 
     val isRateChartEmpty = !template.accountChart?.chartSlabs.isNullOrEmpty()
@@ -829,8 +942,6 @@ data class RecurringAccountState(
 data class RecurringAccountDetailsState
 @OptIn(ExperimentalTime::class)
 constructor(
-    val productId: Int = -1,
-    val fieldOfficer: FieldOfficerOption? = null,
     val showSubmissionDatePick: Boolean = false,
     val loanProductSelected: Int = -1,
     val submissionDate: String = DateHelper.getDateAsStringFromLong(
@@ -865,6 +976,12 @@ data class RecurringAccountSettingsState(
     val depositAmountError: StringResource? = null,
     val depositPeriodTypeError: StringResource? = null,
     val depositPeriodError: StringResource? = null,
+
+    val recurringFrequency: String = "",
+    val recurringFrequencyTypeIndex: Int = -1,
+
+    val recurringFrequencyError: StringResource? = null,
+    val recurringFrequencyTypeError: StringResource? = null,
 ) {
 
     data class LockInPeriod(
@@ -917,6 +1034,7 @@ sealed class RecurringAccountAction {
     object OnDismissDialog : RecurringAccountAction()
     object ShowAddChargeDialog : RecurringAccountAction()
     object ShowListOfChargesDialog : RecurringAccountAction()
+    object OnSubmitRecurringAccount : RecurringAccountAction()
     data class EditCharge(val index: Int) : RecurringAccountAction()
     data class OnChooseChargeIndexChange(val index: Int) : RecurringAccountAction()
     data class OnChargeAmountChange(val amount: String) : RecurringAccountAction()
@@ -974,6 +1092,9 @@ sealed class RecurringAccountAction {
             RecurringAccountSettingsAction()
 
         object OnSettingNext : RecurringAccountSettingsAction()
+        data class OnRecurringFrequencyChange(val value: String) : RecurringAccountSettingsAction()
+        data class OnRecurringFrequencyTypeIndexChange(val index: Int) :
+            RecurringAccountSettingsAction()
     }
 
     sealed class RecurringAccountTermAction : RecurringAccountAction() {
