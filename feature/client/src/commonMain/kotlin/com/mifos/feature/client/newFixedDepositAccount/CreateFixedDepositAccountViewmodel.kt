@@ -663,10 +663,10 @@ class CreateFixedDepositAccountViewmodel(
             val selectedIndex = state.fixedDepositAccountCharges.selectedChargeIndex
             if (selectedIndex != null) {
                 val updatedCharge = ChargeData(
-                    id = state.template.chargeOptions?.get(selectedIndex)?.id ?: charge.id,
-                    name = state.template.chargeOptions?.get(selectedIndex)?.name ?: charge.name,
-                    type = state.template.chargeOptions?.get(selectedIndex)?.chargeCalculationType?.value ?: charge.type,
-                    collectedOn = state.template.chargeOptions?.get(selectedIndex)?.chargeTimeType?.value ?: charge.collectedOn,
+                    id = state.template.chargeOptions?.getOrNull(selectedIndex)?.id ?: charge.id,
+                    name = state.template.chargeOptions?.getOrNull(selectedIndex)?.name ?: charge.name,
+                    type = state.template.chargeOptions?.getOrNull(selectedIndex)?.chargeCalculationType?.value ?: charge.type,
+                    collectedOn = state.template.chargeOptions?.getOrNull(selectedIndex)?.chargeTimeType?.value ?: charge.collectedOn,
                     amount = state.fixedDepositAccountCharges.chargeAmount.toDoubleOrNull() ?: charge.amount,
                 )
 
@@ -708,13 +708,14 @@ class CreateFixedDepositAccountViewmodel(
             it.copy(
                 fixedDepositAccountCharges = it.fixedDepositAccountCharges.copy(
                     addedCharges = it.fixedDepositAccountCharges.addedCharges.toMutableList().apply {
-                        removeAt(action.chargeIndex)
+                        if (action.chargeIndex in 0 until size) {
+                            removeAt(action.chargeIndex)
+                        }
                     },
                 ),
             )
         }
     }
-
 
     private fun moveToNextStep() {
         val current = state.currentStep
@@ -824,7 +825,6 @@ data class ChargeData(
     val collectedOn: String,
     val amount: Double,
 )
-
 
 sealed class NewFixedDepositAccountAction {
     data object OnNextPress : NewFixedDepositAccountAction()

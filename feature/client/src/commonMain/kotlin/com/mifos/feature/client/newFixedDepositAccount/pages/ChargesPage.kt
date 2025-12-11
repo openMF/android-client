@@ -13,7 +13,6 @@ import androidclient.feature.client.generated.resources.Res
 import androidclient.feature.client.generated.resources.btn_back
 import androidclient.feature.client.generated.resources.client_identifier_btn_next
 import androidclient.feature.client.generated.resources.client_identifier_btn_view
-import androidclient.feature.client.generated.resources.feature_client_choose_charge
 import androidclient.feature.client.generated.resources.feature_share_account_charge_active_charge
 import androidclient.feature.client.generated.resources.feature_share_account_charge_add_new
 import androidclient.feature.client.generated.resources.feature_share_account_charge_add_new_charge
@@ -151,18 +150,18 @@ fun ChargesPage(
             selectedChargeName = if (chargesState.selectedChargeIndex == null) {
                 ""
             } else {
-                state.template.chargeOptions?.get(chargesState.selectedChargeIndex)?.name ?: ""
+                state.template.chargeOptions?.getOrNull(chargesState.selectedChargeIndex)?.name ?: ""
             },
             chargeAmount = chargesState.chargeAmount,
             chargeType = if (chargesState.selectedChargeIndex == null) {
                 ""
             } else {
-                state.template.chargeOptions?.get(chargesState.selectedChargeIndex)?.chargeCalculationType?.value ?: ""
+                state.template.chargeOptions?.getOrNull(chargesState.selectedChargeIndex)?.chargeCalculationType?.value ?: ""
             },
             chargeCollectedOn = if (chargesState.selectedChargeIndex == null) {
                 ""
             } else {
-                state.template.chargeOptions?.get(chargesState.selectedChargeIndex)?.chargeTimeType?.value ?: ""
+                state.template.chargeOptions?.getOrNull(chargesState.selectedChargeIndex)?.chargeTimeType?.value ?: ""
             },
             chargeOptions = state.template.chargeOptions?.map { it.name ?: "" } ?: emptyList(),
             onConfirm = {
@@ -195,9 +194,7 @@ fun ChargesPage(
             },
             onAddNew = {
                 onAction(NewFixedDepositAccountAction.NewFixedDepositAccountChargesAction.OnShowViewChargesDialog(false))
-                if (chargesState.selectedChargeIndex != -1) {
-                    onAction(NewFixedDepositAccountAction.NewFixedDepositAccountChargesAction.OnShowAddChargeDialog(true))
-                }
+                onAction(NewFixedDepositAccountAction.NewFixedDepositAccountChargesAction.OnShowAddChargeDialog(true))
             },
             onEdit = { index ->
                 onAction(NewFixedDepositAccountAction.NewFixedDepositAccountChargesAction.OnEditCharge(index))
@@ -274,4 +271,3 @@ internal fun ShowChargesDialog(
         },
     )
 }
-
