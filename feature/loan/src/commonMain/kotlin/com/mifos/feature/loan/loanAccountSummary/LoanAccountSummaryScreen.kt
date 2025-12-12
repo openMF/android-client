@@ -266,14 +266,14 @@ private fun LoanAccountSummaryContent(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(horizontal = 24.dp)
+            .padding(horizontal = 16.dp)
             .verticalScroll(scrollState),
     ) {
         Text(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = 8.dp, bottom = 8.dp),
-            text = loanWithAssociations.clientName,
+                .padding(vertical = 12.dp),
+                    text = loanWithAssociations.clientName,
             style = MaterialTheme.typography.bodyLarge,
         )
 
@@ -286,8 +286,8 @@ private fun LoanAccountSummaryContent(
             Canvas(
                 modifier = Modifier
                     .size(22.dp)
-                    .padding(top = 4.dp, end = 4.dp),
-                contentDescription = "",
+                    .padding(top = 8.dp, end = 8.dp),
+                        contentDescription = "",
                 onDraw = {
                     drawRect(
                         color = when {
@@ -320,7 +320,7 @@ private fun LoanAccountSummaryContent(
         HorizontalDivider(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = 2.dp),
+                .padding(top = 8.dp),
         )
 
         LoanSummaryFarApartTextItem(
@@ -337,7 +337,6 @@ private fun LoanAccountSummaryContent(
             title = stringResource(Res.string.feature_loan_disbursed_date),
             value = if (inflateLoanSummary) getActualDisbursementDateInStringFormat() else "",
         )
-
         LoanSummaryFarApartTextItem(
             title = stringResource(Res.string.feature_loan_loan_in_arrears),
             value = if (inflateLoanSummary) {
@@ -353,21 +352,21 @@ private fun LoanAccountSummaryContent(
             value = loanWithAssociations.loanOfficerName,
         )
 
-        Spacer(modifier = Modifier.height(8.dp))
+        Spacer(modifier = Modifier.height(12.dp))
 
         LoanSummaryDataTable(
             loanSummary = loanWithAssociations.summary,
             inflateLoanSummary = inflateLoanSummary,
         )
 
-        Spacer(modifier = Modifier.height(4.dp))
+        Spacer(modifier = Modifier.height(12.dp))
 
         Button(
             enabled = getButtonActiveStatus(loanWithAssociations.status),
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 8.dp)
-                .height(45.dp),
+                .padding(horizontal = 16.dp)
+                .height(48.dp),
             onClick = when {
                 loanWithAssociations.status.active == true -> {
                     { makeRepayment.invoke() }
