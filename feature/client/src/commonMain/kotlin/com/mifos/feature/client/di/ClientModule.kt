@@ -17,6 +17,7 @@ import com.mifos.feature.client.clientAddress.ClientAddressViewModel
 import com.mifos.feature.client.clientApplyNewApplications.ClientApplyNewApplicationsViewModel
 import com.mifos.feature.client.clientClosure.ClientClosureViewModel
 import com.mifos.feature.client.clientCollateral.ClientCollateralViewModel
+import com.mifos.feature.client.clientCollateralDetails.ClientCollateralDetailViewmodel
 import com.mifos.feature.client.clientDetails.ClientDetailsViewModel
 import com.mifos.feature.client.clientDetailsProfile.ClientProfileDetailsViewModel
 import com.mifos.feature.client.clientDocuments.ClientDocumentsViewModel
@@ -40,6 +41,7 @@ import com.mifos.feature.client.createNewClient.CreateNewClientViewModel
 import com.mifos.feature.client.createShareAccount.CreateShareAccountViewModel
 import com.mifos.feature.client.documentPreviewScreen.DocumentPreviewScreenViewModel
 import com.mifos.feature.client.fixedDepositAccount.FixedDepositAccountViewModel
+import com.mifos.feature.client.newFixedDepositAccount.CreateFixedDepositAccountViewmodel
 import com.mifos.feature.client.recurringDepositAccount.RecurringDepositAccountViewModel
 import com.mifos.feature.client.savingsAccounts.SavingsAccountsViewModel
 import com.mifos.feature.client.shareAccounts.ShareAccountsViewModel
@@ -83,6 +85,8 @@ val ClientModule = module {
     viewModelOf(::ClientIdentifiersListViewModel)
     viewModelOf(::ClientIdentifiersAddUpdateViewModel)
     viewModelOf(::CreateShareAccountViewModel)
+    viewModelOf(::CreateFixedDepositAccountViewmodel)
+    viewModelOf(::ClientCollateralDetailViewmodel)
 
     singleOf(::DocumentSelectAndUploadRepositoryImpl) {
         bind<DocumentSelectAndUploadRepository>()

@@ -56,8 +56,8 @@ import kotlin.collections.mapOf
 @Composable
 fun PreviewPage(
     state: SavingsAccountState,
-    onAction: (SavingsAccountAction) -> Unit,
     modifier: Modifier = Modifier,
+    onAction: (SavingsAccountAction) -> Unit,
 ) {
     val previewDetailsMap = mapOf(
         stringResource(Res.string.feature_savings_product_name) to
@@ -129,7 +129,7 @@ fun PreviewPage(
 
     )
 
-    Column(modifier = Modifier.fillMaxSize()) {
+    Column(modifier = Modifier.fillMaxSize().padding(bottom = DesignToken.padding.large)) {
         LazyColumn(modifier = modifier.weight(1f)) {
             item {
                 Text(
@@ -181,6 +181,7 @@ fun PreviewPage(
                     ),
                     btnEnabled = state.addedCharges.isNotEmpty(),
                 )
+                Spacer(Modifier.height(DesignToken.padding.large))
             }
         }
         MifosTwoButtonRow(
@@ -192,7 +193,6 @@ fun PreviewPage(
             onSecondBtnClick = {
                 onAction(SavingsAccountAction.SubmitSavingsApplication)
             },
-            modifier = Modifier.padding(top = DesignToken.padding.small),
         )
     }
 }

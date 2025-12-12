@@ -75,6 +75,7 @@ import com.mifos.feature.center.navigation.centerNavGraph
 import com.mifos.feature.center.navigation.navigateCenterDetailsScreenRoute
 import com.mifos.feature.center.navigation.navigateCreateCenterScreenRoute
 import com.mifos.feature.center.navigation.navigateToCenterListScreenRoute
+import com.mifos.feature.client.clientProfile.navigateToClientProfileRoute
 import com.mifos.feature.client.navigation.clientNavGraph
 import com.mifos.feature.client.navigation.navigateClientDetailsScreen
 import com.mifos.feature.client.navigation.navigateCreateClientScreen
@@ -346,7 +347,7 @@ internal fun AuthenticatedNavbarNavigationScreenContent(
                     onCreateCenter = navController::navigateCreateCenterScreenRoute,
                     onCreateGroup = navController::navigateToCreateNewGroupScreen,
                     onCenter = navController::navigateCenterDetailsScreenRoute,
-                    onClient = navController::navigateClientDetailsScreen,
+                    onClient = navController::navigateToClientProfileRoute,
                     onGroup = navController::navigateToGroupDetailsScreen,
                     onLoan = navController::navigateToLoanAccountSummaryScreen,
                     onSavings = navController::navigateClientDetailsScreen,

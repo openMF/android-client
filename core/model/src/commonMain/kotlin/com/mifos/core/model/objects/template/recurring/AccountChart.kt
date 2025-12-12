@@ -31,5 +31,6 @@ data class AccountChart(
     @IgnoredOnParcel val incentiveTypeOptions: List<IncentiveTypeOption>? = null,
     val isPrimaryGroupingByAmount: Boolean? = null,
     val name: String? = null,
+    val description: String? = null,
     @IgnoredOnParcel val periodTypes: List<PeriodType>? = null,
 ) : Parcelable

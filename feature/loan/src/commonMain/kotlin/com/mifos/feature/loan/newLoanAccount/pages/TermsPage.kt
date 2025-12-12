@@ -102,8 +102,8 @@ import kotlin.time.ExperimentalTime
 @Composable
 fun TermsPage(
     state: NewLoanAccountState,
-    onAction: (NewLoanAccountAction) -> Unit,
     modifier: Modifier = Modifier,
+    onAction: (NewLoanAccountAction) -> Unit,
 ) {
     val firstRepaymentOnDatePickerState = rememberDatePickerState(
         initialSelectedDateMillis = Clock.System.now().toEpochMilliseconds(),
@@ -684,6 +684,7 @@ fun TermsPage(
                 text = stringResource(Res.string.collateral_count, state.addedCollaterals.size),
                 btnEnabled = state.addedCollaterals.isNotEmpty(),
             )
+            Spacer(Modifier.height(DesignToken.padding.large))
         }
         MifosTwoButtonRow(
             firstBtnText = stringResource(Res.string.back),
@@ -695,7 +696,6 @@ fun TermsPage(
                 onAction(NewLoanAccountAction.NextStep)
             },
             isSecondButtonEnabled = state.isDetailsNextEnabled,
-            modifier = Modifier.padding(top = DesignToken.padding.small),
         )
     }
 }

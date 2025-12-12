@@ -27,6 +27,7 @@ import com.mifos.core.network.mappers.clients.GetClientResponseMapper
 import com.mifos.core.network.mappers.clients.GetClientsClientIdAccountMapper
 import com.mifos.core.network.model.ClientCloseTemplateResponse
 import com.mifos.core.network.model.CollateralItem
+import com.mifos.core.network.model.CollateralItemResult
 import com.mifos.core.network.model.PinpointLocationActionResponse
 import com.mifos.core.network.model.PostClientAddressRequest
 import com.mifos.core.network.model.PostClientAddressResponse
@@ -183,6 +184,10 @@ class DataManagerClient(
 
     suspend fun getCollateralItems(): List<CollateralItem> {
         return mBaseApiManager.clientService.getCollateralItems()
+    }
+
+    suspend fun getClientCollateralItems(clientId: Int): List<CollateralItemResult> {
+        return mBaseApiManager.clientService.getClientCollateralItems(clientId)
     }
 
     /**

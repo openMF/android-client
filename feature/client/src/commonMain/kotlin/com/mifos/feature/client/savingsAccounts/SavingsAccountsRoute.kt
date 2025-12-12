@@ -12,6 +12,7 @@ package com.mifos.feature.client.savingsAccounts
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
+import com.mifos.room.entities.accounts.savings.SavingAccountDepositTypeEntity
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -22,12 +23,14 @@ data class SavingsAccountsRoute(
 fun NavGraphBuilder.savingsAccountsDestination(
     navigateBack: () -> Unit,
     navController: NavController,
-    navigateToViewAccount: (Int) -> Unit,
+    navigateToViewAccount: (Int, SavingAccountDepositTypeEntity) -> Unit,
+    navigateToApproveAccount: (Int) -> Unit,
 ) {
     composable<SavingsAccountsRoute> {
         SavingsAccountsScreenRoute(
             navigateBack = navigateBack,
             navigateToViewAccount = navigateToViewAccount,
+            navigateToApproveAccount = navigateToApproveAccount,
             navController = navController,
         )
     }

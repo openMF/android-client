@@ -46,10 +46,10 @@ import org.jetbrains.compose.resources.stringResource
 @Composable
 fun ChargesPage(
     state: SavingsAccountState,
-    onAction: (SavingsAccountAction) -> Unit,
     modifier: Modifier = Modifier,
+    onAction: (SavingsAccountAction) -> Unit,
 ) {
-    Column(modifier = Modifier.fillMaxSize()) {
+    Column(modifier = Modifier.fillMaxSize().padding(bottom = DesignToken.padding.large)) {
         Column(
             modifier = modifier.weight(1f).verticalScroll(rememberScrollState()),
         ) {
@@ -94,6 +94,7 @@ fun ChargesPage(
                 text = state.addedCharges.size.toString() + " " + stringResource(Res.string.step_charges_active) + " " + stringResource(Res.string.step_charges),
                 btnEnabled = state.addedCharges.isNotEmpty(),
             )
+            Spacer(Modifier.height(DesignToken.padding.large))
         }
         MifosTwoButtonRow(
             firstBtnText = stringResource(Res.string.feature_savings_back),
@@ -104,7 +105,6 @@ fun ChargesPage(
             onSecondBtnClick = {
                 onAction(SavingsAccountAction.NextStep)
             },
-            modifier = Modifier.padding(top = DesignToken.padding.small),
         )
     }
 }

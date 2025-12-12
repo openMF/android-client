@@ -7,12 +7,13 @@
  *
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
-package com.mifos.feature.recurringDeposit.newRecurringDepositAccount.di
+package com.mifos.core.model.objects.template.recurring
 
-import com.mifos.feature.recurringDeposit.newRecurringDepositAccount.RecurringAccountViewModel
-import org.koin.core.module.dsl.viewModelOf
-import org.koin.dsl.module
+import kotlinx.serialization.Serializable
 
-val RecurringDepositModule = module {
-    viewModelOf(::RecurringAccountViewModel)
-}
+@Serializable
+data class MaturityInstructionOption(
+    val code: String? = null,
+    val id: Int? = null,
+    val value: String? = null,
+)

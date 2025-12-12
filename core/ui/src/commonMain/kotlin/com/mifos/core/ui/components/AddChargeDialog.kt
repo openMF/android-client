@@ -50,9 +50,9 @@ fun AddChargeBottomSheet(
     title: String,
     confirmText: String,
     dismissText: String,
-    showDatePicker: Boolean,
+    showDatePicker: Boolean = false,
     selectedChargeName: String,
-    selectedDate: String,
+    selectedDate: String? = null,
     chargeAmount: String,
     chargeType: String,
     chargeCollectedOn: String,
@@ -109,13 +109,15 @@ fun AddChargeBottomSheet(
                     label = stringResource(Res.string.name),
                 )
 
-                MifosDatePickerTextField(
-                    value = selectedDate,
-                    label = stringResource(Res.string.date),
-                    openDatePicker = { onDatePick(true) },
-                )
+                if (selectedDate != null) {
+                    MifosDatePickerTextField(
+                        value = selectedDate,
+                        label = stringResource(Res.string.date),
+                        openDatePicker = { onDatePick(true) },
+                    )
 
-                Spacer(Modifier.height(DesignToken.padding.large))
+                    Spacer(Modifier.height(DesignToken.padding.large))
+                }
 
                 MifosOutlinedTextField(
                     value = chargeAmount,
@@ -161,7 +163,7 @@ fun AddChargeBottomSheet(
                     secondBtnText = confirmText,
                     onFirstBtnClick = onDismiss,
                     onSecondBtnClick = onConfirm,
-                    isSecondButtonEnabled = chargeAmount.isNotEmpty() && chargeType.isNotEmpty() && amountError.isNullOrEmpty(),
+                    isSecondButtonEnabled = chargeAmount.isNotEmpty() && amountError.isNullOrEmpty(),
                 )
             }
         },

@@ -29,7 +29,11 @@ internal class SavingsAccountsViewModel(
 
     override fun handleAction(action: SavingsAccountAction) {
         when (action) {
-            is SavingsAccountAction.ApproveAccount -> sendEvent(SavingsAccountEvent.ApproveAccount)
+            is SavingsAccountAction.ApproveAccount -> sendEvent(
+                SavingsAccountEvent.ApproveAccount(
+                    action.accountId,
+                ),
+            )
 
             SavingsAccountAction.ToggleFilter -> {
                 mutableStateFlow.update {
@@ -44,7 +48,7 @@ internal class SavingsAccountsViewModel(
             }
 
             is SavingsAccountAction.ViewAccount -> {
-                sendEvent(SavingsAccountEvent.ViewAccount(state.clientId))
+                sendEvent(SavingsAccountEvent.ViewAccount(action.accountId, action.accountType))
             }
 
             SavingsAccountAction.Refresh -> {
@@ -127,8 +131,9 @@ data class SavingsAccountState(
 
 sealed interface SavingsAccountEvent {
     data object NavigateBack : SavingsAccountEvent
-    data object ApproveAccount : SavingsAccountEvent
-    data class ViewAccount(val id: Int) : SavingsAccountEvent
+    data class ApproveAccount(val accountId: Int) : SavingsAccountEvent
+    data class ViewAccount(val accountId: Int, val accountType: SavingAccountDepositTypeEntity) :
+        SavingsAccountEvent
 }
 
 sealed interface SavingsAccountAction {
@@ -137,7 +142,9 @@ sealed interface SavingsAccountAction {
     data object ToggleFilter : SavingsAccountAction
     data object Refresh : SavingsAccountAction
     data class ApproveAccount(val accountId: Int) : SavingsAccountAction
-    data class ViewAccount(val accountId: Int) : SavingsAccountAction
+    data class ViewAccount(val accountId: Int, val accountType: SavingAccountDepositTypeEntity) :
+        SavingsAccountAction
+
     data class UpdateSearchValue(val query: String) : SavingsAccountAction
     data object OnSearchClick : SavingsAccountAction
     data object CloseDialog : SavingsAccountAction

@@ -256,20 +256,17 @@ internal class SavingsAccountViewModel(
             val msg = getString(Res.string.field_empty_msg)
 
             val isSavingProductInvalid = state.savingsProductSelected == -1
-            val isFieldOfficerInvalid = state.fieldOfficerIndex == -1
 
-            if (isSavingProductInvalid || isFieldOfficerInvalid) {
+            if (isSavingProductInvalid) {
                 mutableStateFlow.update {
                     it.copy(
-                        savingProductError = if (isSavingProductInvalid) msg else null,
-                        fieldOfficerError = if (isFieldOfficerInvalid) msg else null,
+                        savingProductError = msg,
                     )
                 }
             } else {
                 mutableStateFlow.update {
                     it.copy(
                         savingProductError = null,
-                        fieldOfficerError = null,
                     )
                 }
                 moveToNextStep()
@@ -515,7 +512,6 @@ internal class SavingsAccountViewModel(
         mutableStateFlow.update {
             it.copy(
                 fieldOfficerIndex = action.index,
-                fieldOfficerError = null,
             )
         }
     }
@@ -677,7 +673,6 @@ constructor(
     val launchEffectKey: Int? = null,
 
     val savingProductError: String? = null,
-    val fieldOfficerError: String? = null,
 ) {
     sealed interface DialogState {
         data object ShowCharges : DialogState

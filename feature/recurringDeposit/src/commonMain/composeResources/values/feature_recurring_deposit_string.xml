@@ -49,4 +49,26 @@
     <string name="feature_recurring_deposit_next_button">Next Button</string>
     <string name="feature_recurring_deposit_interest_page">Interest Page</string>
     <string name="feature_recurring_deposit_charges_page">Charges Page</string>
+    <string name="feature_recurring_deposit_interest_compounding_period">Interest Compounding Period</string>
+    <string name="feature_recurring_deposit_interest_posting_period">Interest Posting Period</string>
+    <string name="feature_recurring_deposit_interest_calculation">Interest Calculated Using</string>
+    <string name="feature_recurring_deposit_calculation_days_in_year">Days In Year </string>
+    <string name="feature_recurring_deposit_valid_from_date">Valid from Date</string>
+    <string name="feature_recurring_deposit_grouping_by_amount">Grouping by Amount</string>
+    <string name="feature_recurring_deposit_interest_rate_chart">INTEREST RATE CHART</string>
+    <string name="feature_recurring_deposit_no_interest_chart">No Interest Rate Chart available</string>
+    <string name="feature_recurring_deposit_view">View</string>
+    <string name="feature_recurring_deposit_rate_chart">Rate Chart</string>
+    <string name="feature_recurring_deposit_yes">Yes</string>
+    <string name="feature_recurring_deposit_no">No</string>
+    <string name="feature_recurring_deposit_empty_date">Date Not Found</string>
+    <string name="feature_recurring_deposit_add_new_charge">Add New Charge</string>
+    <string name="feature_recurring_deposit_active_charge">Active Charge</string>
+    <string name="feature_recurring_deposit_btn_add_new">Add New</string>
+    <string name="feature_recurring_deposit_amount">Amount</string>
+    <string name="feature_recurring_deposit_collected_on">Collected On</string>
+    <string name="feature_recurring_deposit_btn_add">Add</string>
+    <string name="feature_recurring_deposit_edit_charge">Edit Charge</string>
+    <string name="feature_recurring_deposit_view_charge">View Charges</string>
+    <string name="feature_recurring_deposit_click_on_add_new">Click on Add New to Add Charge</string>
 </resources>
