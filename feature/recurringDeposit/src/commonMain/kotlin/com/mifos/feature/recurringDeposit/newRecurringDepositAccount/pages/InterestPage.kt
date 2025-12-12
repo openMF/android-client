@@ -11,12 +11,15 @@ package com.mifos.feature.recurringDeposit.newRecurringDepositAccount.pages
 
 import androidclient.feature.recurringdeposit.generated.resources.Res
 import androidclient.feature.recurringdeposit.generated.resources.feature_recurring_deposit_back
+import androidclient.feature.recurringdeposit.generated.resources.feature_recurring_deposit_description
 import androidclient.feature.recurringdeposit.generated.resources.feature_recurring_deposit_empty_date
+import androidclient.feature.recurringdeposit.generated.resources.feature_recurring_deposit_end_date
 import androidclient.feature.recurringdeposit.generated.resources.feature_recurring_deposit_grouping_by_amount
 import androidclient.feature.recurringdeposit.generated.resources.feature_recurring_deposit_interest_rate_chart
+import androidclient.feature.recurringdeposit.generated.resources.feature_recurring_deposit_name
 import androidclient.feature.recurringdeposit.generated.resources.feature_recurring_deposit_next
 import androidclient.feature.recurringdeposit.generated.resources.feature_recurring_deposit_no
-import androidclient.feature.recurringdeposit.generated.resources.feature_recurring_deposit_no_internet_connection
+import androidclient.feature.recurringdeposit.generated.resources.feature_recurring_deposit_no_interest_chart
 import androidclient.feature.recurringdeposit.generated.resources.feature_recurring_deposit_rate_chart
 import androidclient.feature.recurringdeposit.generated.resources.feature_recurring_deposit_step_interest
 import androidclient.feature.recurringdeposit.generated.resources.feature_recurring_deposit_valid_from_date
@@ -67,11 +70,18 @@ fun InterestPage(
 
             MifosDefaultListingComponentFromStringResources(
                 data = mapOf(
+                    Res.string.feature_recurring_deposit_name to state.template.accountChart?.name.orEmpty(),
                     Res.string.feature_recurring_deposit_valid_from_date to (
                         state.template.accountChart?.fromDate
                             ?.let { DateHelper.getDateAsString(it) }
                             ?: stringResource(Res.string.feature_recurring_deposit_empty_date)
                         ),
+                    Res.string.feature_recurring_deposit_end_date to (
+                        state.template.accountChart?.endDate
+                            ?.let { DateHelper.getDateAsString(it) }
+                            ?: stringResource(Res.string.feature_recurring_deposit_empty_date)
+                        ),
+                    Res.string.feature_recurring_deposit_description to state.template.accountChart?.description.orEmpty(),
                     Res.string.feature_recurring_deposit_grouping_by_amount to if (state.template.accountChart?.isPrimaryGroupingByAmount == true) {
                         stringResource(
                             Res.string.feature_recurring_deposit_yes,
@@ -94,7 +104,7 @@ fun InterestPage(
                     stringResource(Res.string.feature_recurring_deposit_interest_rate_chart)
                 } else {
                     stringResource(
-                        Res.string.feature_recurring_deposit_no_internet_connection,
+                        Res.string.feature_recurring_deposit_no_interest_chart,
                     )
                 },
                 btnEnabled = state.isRateChartEmpty,

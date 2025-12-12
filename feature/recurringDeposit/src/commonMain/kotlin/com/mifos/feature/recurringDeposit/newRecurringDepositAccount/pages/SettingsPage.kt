@@ -10,6 +10,7 @@
 package com.mifos.feature.recurringDeposit.newRecurringDepositAccount.pages
 
 import androidclient.feature.recurringdeposit.generated.resources.Res
+import androidclient.feature.recurringdeposit.generated.resources.feature_recurring_account_deposit_frequency
 import androidclient.feature.recurringdeposit.generated.resources.feature_recurring_deposit_adjust_advance_payments
 import androidclient.feature.recurringdeposit.generated.resources.feature_recurring_deposit_allow_withdrawals
 import androidclient.feature.recurringdeposit.generated.resources.feature_recurring_deposit_apply_penal_interest
@@ -57,7 +58,6 @@ import com.mifos.core.ui.components.MifosTwoButtonRow
 import com.mifos.feature.recurringDeposit.newRecurringDepositAccount.RecurringAccountAction
 import com.mifos.feature.recurringDeposit.newRecurringDepositAccount.RecurringAccountState
 import org.jetbrains.compose.resources.stringResource
-import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -172,7 +172,11 @@ fun SettingPage(
                         Text(state.template.currency?.displaySymbol.orEmpty())
                     },
                     isError = state.recurringDepositAccountSettings.depositAmountError != null,
-                    errorText = state.recurringDepositAccountSettings.depositAmountError?.let { stringResource(it) },
+                    errorText = state.recurringDepositAccountSettings.depositAmountError?.let {
+                        stringResource(
+                            it,
+                        )
+                    },
                 ),
                 modifier = Modifier.fillMaxWidth(),
             )
@@ -198,7 +202,11 @@ fun SettingPage(
                         imeAction = ImeAction.Next,
                     ),
                     isError = state.recurringDepositAccountSettings.depositPeriodError != null,
-                    errorText = state.recurringDepositAccountSettings.depositPeriodError?.let { stringResource(it) },
+                    errorText = state.recurringDepositAccountSettings.depositPeriodError?.let {
+                        stringResource(
+                            it,
+                        )
+                    },
                 ),
                 modifier = Modifier.fillMaxWidth(),
             )
@@ -223,8 +231,19 @@ fun SettingPage(
                 },
                 label = stringResource(Res.string.feature_recurring_deposit_type) + "*",
                 modifier = Modifier.fillMaxWidth(),
-                errorMessage = state.recurringDepositAccountSettings.depositPeriodTypeError?.let { stringResource(it) },
+                errorMessage = state.recurringDepositAccountSettings.depositPeriodTypeError?.let {
+                    stringResource(
+                        it,
+                    )
+                },
             )
+            Spacer(Modifier.height(DesignToken.padding.small))
+
+            Text(
+                stringResource(Res.string.feature_recurring_account_deposit_frequency),
+                style = MifosTypography.labelLargeEmphasized,
+            )
+            Spacer(Modifier.height(DesignToken.padding.small))
             MifosCheckBox(
                 text = stringResource(Res.string.feature_recurring_deposit_deposit_frequency_same_as_meeting),
                 checked = settingsState.depositPeriod.depositFrequencySameAsGroupCenterMeeting,
@@ -232,6 +251,63 @@ fun SettingPage(
                     onAction(RecurringAccountAction.RecurringAccountSettingsAction.ToggleDepositFrequencySameAsGroupCenterMeeting)
                 },
             )
+            AnimatedVisibility(
+                visible = !settingsState.depositPeriod.depositFrequencySameAsGroupCenterMeeting,
+            ) {
+                Column {
+                    MifosOutlinedTextField(
+                        value = settingsState.recurringFrequency,
+                        onValueChange = {
+                            onAction(
+                                RecurringAccountAction.RecurringAccountSettingsAction.OnRecurringFrequencyChange(
+                                    it,
+                                ),
+                            )
+                        },
+                        label = stringResource(Res.string.feature_recurring_deposit_frequency) + "*",
+                        config = MifosTextFieldConfig(
+                            keyboardOptions = KeyboardOptions(
+                                keyboardType = KeyboardType.Number,
+                                imeAction = ImeAction.Next,
+                            ),
+                            isError = settingsState.recurringFrequencyError != null,
+                            errorText = settingsState.recurringFrequencyError?.let {
+                                stringResource(
+                                    it,
+                                )
+                            },
+                        ),
+                    )
+
+                    Spacer(Modifier.height(DesignToken.padding.large))
+
+                    MifosTextFieldDropdown(
+                        value = if (settingsState.recurringFrequencyTypeIndex != -1) {
+                            state.template.periodFrequencyTypeOptions
+                                ?.getOrNull(settingsState.recurringFrequencyTypeIndex)?.value.orEmpty()
+                        } else {
+                            ""
+                        },
+                        options = state.template.periodFrequencyTypeOptions?.map {
+                            it.value.orEmpty()
+                        } ?: emptyList(),
+                        onValueChanged = {},
+                        onOptionSelected = { index, name ->
+                            onAction(
+                                RecurringAccountAction.RecurringAccountSettingsAction.OnRecurringFrequencyTypeIndexChange(
+                                    index,
+                                ),
+                            )
+                        },
+                        errorMessage = settingsState.recurringFrequencyTypeError?.let {
+                            stringResource(
+                                it,
+                            )
+                        },
+                        label = stringResource(Res.string.feature_recurring_deposit_type) + "*",
+                    )
+                }
+            }
             Spacer(Modifier.height(DesignToken.padding.large))
             Text(
                 stringResource(Res.string.feature_recurring_deposit_minimum_deposit_term),
@@ -447,7 +523,6 @@ fun SettingPage(
                 }
             }
         }
-
         MifosTwoButtonRow(
             firstBtnText = stringResource(Res.string.feature_recurring_deposit_back),
             secondBtnText = stringResource(Res.string.feature_recurring_deposit_next),
@@ -455,13 +530,4 @@ fun SettingPage(
             onSecondBtnClick = { onAction(RecurringAccountAction.RecurringAccountSettingsAction.OnSettingNext) },
         )
     }
-}
-
-@Preview
-@Composable
-private fun SettingPagePreview() {
-    SettingPage(
-        state = RecurringAccountState(),
-        onAction = {},
-    )
 }

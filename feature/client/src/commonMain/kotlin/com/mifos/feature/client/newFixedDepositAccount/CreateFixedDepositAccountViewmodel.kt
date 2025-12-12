@@ -50,6 +50,20 @@ class CreateFixedDepositAccountViewmodel(
         loadFixedDepositTemplate()
     }
 
+    suspend fun isOnline(
+        content: suspend () -> Unit,
+    ) {
+        if (networkMonitor.isOnline.first()) {
+            content()
+        } else {
+            mutableStateFlow.update {
+                it.copy(
+                    screenState = NewFixedDepositAccountState.ScreenState.Error(getString(Res.string.feature_client_error_network_not_available)),
+                )
+            }
+        }
+    }
+
     override fun handleAction(action: NewFixedDepositAccountAction) {
         when (action) {
             is NewFixedDepositAccountAction.OnNextPress -> moveToNextStep()
@@ -293,6 +307,7 @@ class CreateFixedDepositAccountViewmodel(
                     )
                 }
             }
+
             NewFixedDepositAccountAction.OnShowRateChart -> {
                 mutableStateFlow.update {
                     it.copy(
@@ -308,7 +323,7 @@ class CreateFixedDepositAccountViewmodel(
     }
 
     private fun loadFixedDepositTemplate() = viewModelScope.launch {
-        if (networkMonitor.isOnline.first()) {
+        isOnline {
             fixedDepositRepository.getFixedDepositTemplate(
                 clientId = state.clientId,
             ).collect { state ->
@@ -340,17 +355,11 @@ class CreateFixedDepositAccountViewmodel(
                     }
                 }
             }
-        } else {
-            mutableStateFlow.update {
-                it.copy(
-                    screenState = NewFixedDepositAccountState.ScreenState.Error(getString(Res.string.feature_client_error_network_not_available)),
-                )
-            }
         }
     }
 
     private fun loadRecurringAccountTemplateWithProduct() = viewModelScope.launch {
-        if (networkMonitor.isOnline.first()) {
+        isOnline {
             fixedDepositRepository.getFixedDepositTemplate(
                 clientId = state.clientId,
                 productId = state.template.productOptions?.get(state.fixedDepositAccountDetail.productSelected)?.id,
@@ -383,12 +392,6 @@ class CreateFixedDepositAccountViewmodel(
                         }
                     }
                 }
-            }
-        } else {
-            mutableStateFlow.update {
-                it.copy(
-                    screenState = NewFixedDepositAccountState.ScreenState.Error(getString(Res.string.feature_client_error_network_not_available)),
-                )
             }
         }
     }

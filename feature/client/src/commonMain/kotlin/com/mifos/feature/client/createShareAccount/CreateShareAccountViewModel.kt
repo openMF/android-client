@@ -51,6 +51,20 @@ class CreateShareAccountViewModel(
         loadShareTemplate(route.clientId)
     }
 
+    suspend fun isOnline(
+        content: suspend () -> Unit,
+    ) {
+        if (networkMonitor.isOnline.first()) {
+            content()
+        } else {
+            mutableStateFlow.update {
+                it.copy(
+                    screenState = CreateShareAccountState.ScreenState.Error(getString(Res.string.feature_client_error_network_not_available)),
+                )
+            }
+        }
+    }
+
     private fun createShareAccount() {
         val shareAccountPayload = ShareAccountPayload(
             clientId = route.clientId,
@@ -70,8 +84,7 @@ class CreateShareAccountViewModel(
             savingsAccountId = state.savingsAccountOptions[state.savingsAccountIdx!!].id,
         )
         viewModelScope.launch {
-            val online = networkMonitor.isOnline.first()
-            if (online) {
+            isOnline {
                 repository.createShareAccount(shareAccountPayload).collect { dataState ->
                     when (dataState) {
                         is DataState.Error -> {
@@ -120,20 +133,13 @@ class CreateShareAccountViewModel(
                         }
                     }
                 }
-            } else {
-                mutableStateFlow.update {
-                    it.copy(
-                        screenState = CreateShareAccountState.ScreenState.Error(getString(Res.string.feature_client_error_network_not_available)),
-                    )
-                }
             }
         }
     }
 
     private fun loadShareTemplateFromProduct(client: Int, productId: Int?) {
         viewModelScope.launch {
-            val online = networkMonitor.isOnline.first()
-            if (online) {
+            isOnline {
                 repository.getShareTemplate(client, productId).collect { dataState ->
                     when (dataState) {
                         is DataState.Error -> {
@@ -170,20 +176,13 @@ class CreateShareAccountViewModel(
                         }
                     }
                 }
-            } else {
-                mutableStateFlow.update {
-                    it.copy(
-                        screenState = CreateShareAccountState.ScreenState.Error(getString(Res.string.feature_client_error_network_not_available)),
-                    )
-                }
             }
         }
     }
 
     private fun loadShareTemplate(client: Int) {
         viewModelScope.launch {
-            val online = networkMonitor.isOnline.first()
-            if (online) {
+            isOnline {
                 repository.getShareTemplate(client, null).collect { dataState ->
                     when (dataState) {
                         is DataState.Error -> {
@@ -214,12 +213,6 @@ class CreateShareAccountViewModel(
                             }
                         }
                     }
-                }
-            } else {
-                mutableStateFlow.update {
-                    it.copy(
-                        screenState = CreateShareAccountState.ScreenState.Error(getString(Res.string.feature_client_error_network_not_available)),
-                    )
                 }
             }
         }
