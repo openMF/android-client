@@ -14,6 +14,7 @@
     <string name="feature_recurring_deposit_step_settings">Settings</string>
     <string name="feature_recurring_deposit_step_interest">Interest</string>
     <string name="feature_recurring_deposit_step_charges">Charges</string>
+    <string name="feature_recurring_deposit_step_preview">Preview</string>
     <string name="feature_recurring_deposit_create_recurring_deposit_account">Create Recurring Deposit Account</string>
     <string name="feature_recurring_deposit_is_mandatory_deposit">Is Mandatory Deposit?</string>
     <string name="feature_recurring_deposit_adjust_advance_payments">Adjust advance payments toward future installments?</string>
@@ -35,7 +36,6 @@
     <string name="feature_recurring_deposit_minimum_balance_for_interest">Minimum Balance For Interest Calculation</string>
     <string name="feature_recurring_deposit_back">Back</string>
     <string name="feature_recurring_deposit_next">Next</string>
-    <string name="feature_recurring_deposit_no_internet_connection">No Internet Connection</string>
     <string name="feature_recurring_deposit_select">Select</string>
     <string name="feature_recurring_deposit_cancel">Cancel</string>
     <string name="feature_recurring_deposit_product_name">Product Name</string>
@@ -71,4 +71,12 @@
     <string name="feature_recurring_deposit_edit_charge">Edit Charge</string>
     <string name="feature_recurring_deposit_view_charge">View Charges</string>
     <string name="feature_recurring_deposit_click_on_add_new">Click on Add New to Add Charge</string>
+    <string name="feature_recurring_deposit_name">Name</string>
+    <string name="feature_recurring_deposit_end_date">End Date</string>
+    <string name="feature_recurring_deposit_description">Description</string>
+    <string name="feature_recurring_account_created_successfully">Recurring deposits account created successfully</string>
+    <string name="feature_error_network_not_available">Network is not Available</string>
+    <string name="feature_recurring_account_deposit_frequency">Recurring Deposit Frequency</string>
+
+
 </resources>

@@ -50,6 +50,20 @@ class CreateFixedDepositAccountViewmodel(
         loadFixedDepositTemplate()
     }
 
+    suspend fun isOnline(
+        content: suspend () -> Unit,
+    ) {
+        if (networkMonitor.isOnline.first()) {
+            content()
+        } else {
+            mutableStateFlow.update {
+                it.copy(
+                    screenState = NewFixedDepositAccountState.ScreenState.Error(getString(Res.string.feature_client_error_network_not_available)),
+                )
+            }
+        }
+    }
+
     override fun handleAction(action: NewFixedDepositAccountAction) {
         when (action) {
             is NewFixedDepositAccountAction.OnNextPress -> moveToNextStep()
@@ -240,6 +254,52 @@ class CreateFixedDepositAccountViewmodel(
                 }
             }
 
+            is NewFixedDepositAccountAction.NewFixedDepositAccountChargesAction.OnChargeSelected -> handleChargeSelected(
+                action,
+            )
+
+            is NewFixedDepositAccountAction.NewFixedDepositAccountChargesAction.OnShowAddChargeDialog -> handleShowAddChargeDialog(
+                action,
+            )
+
+            is NewFixedDepositAccountAction.NewFixedDepositAccountChargesAction.OnShowViewChargesDialog -> handleShowViewChargesDialog(
+                action,
+            )
+
+            is NewFixedDepositAccountAction.NewFixedDepositAccountChargesAction.OnChargeAmountChange -> handleChargeAmountChange(
+                action,
+            )
+
+            is NewFixedDepositAccountAction.NewFixedDepositAccountChargesAction.OnChargeTypeSelected -> handleChargeTypeSelected(
+                action,
+            )
+
+            is NewFixedDepositAccountAction.NewFixedDepositAccountChargesAction.OnCollectedOnDatePick -> handleCollectedOnDatePick(
+                action,
+            )
+
+            is NewFixedDepositAccountAction.NewFixedDepositAccountChargesAction.OnCollectedOnDateChange -> handleCollectedOnDateChange(
+                action,
+            )
+
+            is NewFixedDepositAccountAction.NewFixedDepositAccountChargesAction.OnChargeDatePick -> handleChargeDatePick(
+                action,
+            )
+
+            is NewFixedDepositAccountAction.NewFixedDepositAccountChargesAction.OnChargeDateChange -> handleChargeDateChange(
+                action,
+            )
+
+            is NewFixedDepositAccountAction.NewFixedDepositAccountChargesAction.OnAddCharge -> handleAddCharge()
+
+            is NewFixedDepositAccountAction.NewFixedDepositAccountChargesAction.OnEditCharge -> handleEditCharge(
+                action,
+            )
+
+            is NewFixedDepositAccountAction.NewFixedDepositAccountChargesAction.OnDeleteCharge -> handleDeleteCharge(
+                action,
+            )
+
             NewFixedDepositAccountAction.OnDismissDialog -> {
                 mutableStateFlow.update {
                     it.copy(
@@ -247,6 +307,7 @@ class CreateFixedDepositAccountViewmodel(
                     )
                 }
             }
+
             NewFixedDepositAccountAction.OnShowRateChart -> {
                 mutableStateFlow.update {
                     it.copy(
@@ -262,7 +323,7 @@ class CreateFixedDepositAccountViewmodel(
     }
 
     private fun loadFixedDepositTemplate() = viewModelScope.launch {
-        if (networkMonitor.isOnline.first()) {
+        isOnline {
             fixedDepositRepository.getFixedDepositTemplate(
                 clientId = state.clientId,
             ).collect { state ->
@@ -294,17 +355,11 @@ class CreateFixedDepositAccountViewmodel(
                     }
                 }
             }
-        } else {
-            mutableStateFlow.update {
-                it.copy(
-                    screenState = NewFixedDepositAccountState.ScreenState.Error(getString(Res.string.feature_client_error_network_not_available)),
-                )
-            }
         }
     }
 
     private fun loadRecurringAccountTemplateWithProduct() = viewModelScope.launch {
-        if (networkMonitor.isOnline.first()) {
+        isOnline {
             fixedDepositRepository.getFixedDepositTemplate(
                 clientId = state.clientId,
                 productId = state.template.productOptions?.get(state.fixedDepositAccountDetail.productSelected)?.id,
@@ -337,12 +392,6 @@ class CreateFixedDepositAccountViewmodel(
                         }
                     }
                 }
-            }
-        } else {
-            mutableStateFlow.update {
-                it.copy(
-                    screenState = NewFixedDepositAccountState.ScreenState.Error(getString(Res.string.feature_client_error_network_not_available)),
-                )
             }
         }
     }
@@ -485,6 +534,192 @@ class CreateFixedDepositAccountViewmodel(
         }
     }
 
+    private fun handleChargeSelected(action: NewFixedDepositAccountAction.NewFixedDepositAccountChargesAction.OnChargeSelected) {
+        mutableStateFlow.update {
+            it.copy(
+                fixedDepositAccountCharges = it.fixedDepositAccountCharges.copy(
+                    selectedChargeIndex = action.chargeIndex,
+                ),
+            )
+        }
+    }
+
+    private fun handleShowAddChargeDialog(action: NewFixedDepositAccountAction.NewFixedDepositAccountChargesAction.OnShowAddChargeDialog) {
+        mutableStateFlow.update {
+            it.copy(
+                fixedDepositAccountCharges = it.fixedDepositAccountCharges.copy(
+                    showAddChargeDialog = action.show,
+                    editingChargeIndex = if (action.show) it.fixedDepositAccountCharges.editingChargeIndex else -1,
+                    chargeAmount = if (!action.show) "" else it.fixedDepositAccountCharges.chargeAmount,
+                ),
+            )
+        }
+    }
+
+    private fun handleShowViewChargesDialog(action: NewFixedDepositAccountAction.NewFixedDepositAccountChargesAction.OnShowViewChargesDialog) {
+        mutableStateFlow.update {
+            it.copy(
+                fixedDepositAccountCharges = it.fixedDepositAccountCharges.copy(
+                    showViewChargesDialog = action.show,
+                ),
+            )
+        }
+    }
+
+    private fun handleChargeAmountChange(action: NewFixedDepositAccountAction.NewFixedDepositAccountChargesAction.OnChargeAmountChange) {
+        mutableStateFlow.update {
+            it.copy(
+                fixedDepositAccountCharges = it.fixedDepositAccountCharges.copy(
+                    chargeAmount = action.amount,
+                ),
+            )
+        }
+    }
+
+    private fun handleChargeTypeSelected(action: NewFixedDepositAccountAction.NewFixedDepositAccountChargesAction.OnChargeTypeSelected) {
+        mutableStateFlow.update {
+            it.copy(
+                fixedDepositAccountCharges = it.fixedDepositAccountCharges.copy(
+                    chargeTypeIndex = action.typeIndex,
+                ),
+            )
+        }
+    }
+
+    private fun handleCollectedOnDatePick(action: NewFixedDepositAccountAction.NewFixedDepositAccountChargesAction.OnCollectedOnDatePick) {
+        mutableStateFlow.update {
+            it.copy(
+                fixedDepositAccountCharges = it.fixedDepositAccountCharges.copy(
+                    showCollectedOnDatePicker = action.state,
+                ),
+            )
+        }
+    }
+
+    private fun handleCollectedOnDateChange(action: NewFixedDepositAccountAction.NewFixedDepositAccountChargesAction.OnCollectedOnDateChange) {
+        mutableStateFlow.update {
+            it.copy(
+                fixedDepositAccountCharges = it.fixedDepositAccountCharges.copy(
+                    collectedOnDate = action.date,
+                ),
+            )
+        }
+    }
+
+    private fun handleChargeDatePick(action: NewFixedDepositAccountAction.NewFixedDepositAccountChargesAction.OnChargeDatePick) {
+        mutableStateFlow.update {
+            it.copy(
+                fixedDepositAccountCharges = it.fixedDepositAccountCharges.copy(
+                    showChargeDatePicker = action.state,
+                ),
+            )
+        }
+    }
+
+    private fun handleChargeDateChange(action: NewFixedDepositAccountAction.NewFixedDepositAccountChargesAction.OnChargeDateChange) {
+        mutableStateFlow.update {
+            it.copy(
+                fixedDepositAccountCharges = it.fixedDepositAccountCharges.copy(
+                    chargeDate = action.date,
+                ),
+            )
+        }
+    }
+
+    private fun handleAddCharge() {
+        val chargesState = state.fixedDepositAccountCharges
+        if (chargesState.selectedChargeIndex != null) {
+            val selectedCharge = state.template.chargeOptions?.getOrNull(chargesState.selectedChargeIndex)
+
+            if (selectedCharge != null) {
+                val newCharge = ChargeData(
+                    id = selectedCharge.id ?: -1,
+                    name = selectedCharge.name ?: "",
+                    type = selectedCharge.chargeCalculationType?.value ?: "",
+                    collectedOn = selectedCharge.chargeTimeType?.value ?: "",
+                    amount = chargesState.chargeAmount.toDoubleOrNull() ?: 0.0,
+                )
+
+                val updatedCharges = chargesState.addedCharges + newCharge
+
+                mutableStateFlow.update {
+                    it.copy(
+                        fixedDepositAccountCharges = it.fixedDepositAccountCharges.copy(
+                            addedCharges = updatedCharges,
+                            showAddChargeDialog = false,
+                            chargeAmount = "",
+                            selectedChargeIndex = null,
+                        ),
+                    )
+                }
+            }
+        }
+    }
+
+    private fun handleEditCharge(action: NewFixedDepositAccountAction.NewFixedDepositAccountChargesAction.OnEditCharge) {
+        val charge = state.fixedDepositAccountCharges.addedCharges.getOrNull(action.chargeIndex)
+        if (charge != null) {
+            // Find the index of this charge in template options
+            val chargeIndex = state.template.chargeOptions?.indexOfFirst { it.id == charge.id }
+
+            // Update the charge with new values if selectedChargeIndex is set
+            val selectedIndex = state.fixedDepositAccountCharges.selectedChargeIndex
+            if (selectedIndex != null) {
+                val updatedCharge = ChargeData(
+                    id = state.template.chargeOptions?.getOrNull(selectedIndex)?.id ?: charge.id,
+                    name = state.template.chargeOptions?.getOrNull(selectedIndex)?.name ?: charge.name,
+                    type = state.template.chargeOptions?.getOrNull(selectedIndex)?.chargeCalculationType?.value ?: charge.type,
+                    collectedOn = state.template.chargeOptions?.getOrNull(selectedIndex)?.chargeTimeType?.value ?: charge.collectedOn,
+                    amount = state.fixedDepositAccountCharges.chargeAmount.toDoubleOrNull() ?: charge.amount,
+                )
+
+                val updatedCharges = state.fixedDepositAccountCharges.addedCharges.toMutableList().apply {
+                    this[action.chargeIndex] = updatedCharge
+                }
+
+                mutableStateFlow.update {
+                    it.copy(
+                        fixedDepositAccountCharges = it.fixedDepositAccountCharges.copy(
+                            addedCharges = updatedCharges,
+                            showViewChargesDialog = true,
+                            showAddChargeDialog = false,
+                            chargeAmount = "",
+                            selectedChargeIndex = null,
+                            editingChargeIndex = -1,
+                        ),
+                    )
+                }
+            } else {
+                // Just open the edit dialog with current charge data
+                mutableStateFlow.update {
+                    it.copy(
+                        fixedDepositAccountCharges = it.fixedDepositAccountCharges.copy(
+                            selectedChargeIndex = chargeIndex,
+                            chargeAmount = charge.amount.toString(),
+                            editingChargeIndex = action.chargeIndex,
+                            showViewChargesDialog = false,
+                            showAddChargeDialog = true,
+                        ),
+                    )
+                }
+            }
+        }
+    }
+
+    private fun handleDeleteCharge(action: NewFixedDepositAccountAction.NewFixedDepositAccountChargesAction.OnDeleteCharge) {
+        mutableStateFlow.update {
+            it.copy(
+                fixedDepositAccountCharges = it.fixedDepositAccountCharges.copy(
+                    addedCharges = it.fixedDepositAccountCharges.addedCharges.toMutableList().apply {
+                        if (action.chargeIndex in 0 until size) {
+                            removeAt(action.chargeIndex)
+                        }
+                    },
+                ),
+            )
+        }
+    }
+
     private fun moveToNextStep() {
         val current = state.currentStep
         if (current < state.totalSteps) {
@@ -508,6 +743,7 @@ data class NewFixedDepositAccountState(
     val screenState: ScreenState = ScreenState.Loading,
     val fixedDepositAccountDetail: FixedDepositAccountDetailsState = FixedDepositAccountDetailsState(),
     val fixedDepositAccountTerms: FixedDepositAccountTermsState = FixedDepositAccountTermsState(),
+    val fixedDepositAccountCharges: FixedDepositAccountChargesState = FixedDepositAccountChargesState(),
     val template: FixedDepositTemplate = FixedDepositTemplate(),
     val isOverlayLoading: Boolean = false,
 
@@ -571,6 +807,28 @@ constructor(
     val fieldOfficerOptions: List<FieldOfficerOption>? = null,
 )
 
+data class FixedDepositAccountChargesState(
+    val selectedChargeIndex: Int? = null,
+    val showAddChargeDialog: Boolean = false,
+    val showViewChargesDialog: Boolean = false,
+    val chargeAmount: String = "",
+    val chargeTypeIndex: Int = -1,
+    val collectedOnDate: String = "",
+    val showCollectedOnDatePicker: Boolean = false,
+    val chargeDate: String = "",
+    val showChargeDatePicker: Boolean = false,
+    val addedCharges: List<ChargeData> = emptyList(),
+    val editingChargeIndex: Int = -1,
+)
+
+data class ChargeData(
+    val id: Int,
+    val name: String,
+    val type: String,
+    val collectedOn: String,
+    val amount: Double,
+)
+
 sealed class NewFixedDepositAccountAction {
     data object OnNextPress : NewFixedDepositAccountAction()
     data object OnDetailNext : NewFixedDepositAccountAction()
@@ -621,6 +879,21 @@ sealed class NewFixedDepositAccountAction {
 
         data class SetInterestCalculationDaysInYearType(val periodTypeIndex: Int) :
             NewFixedDepositAccountAction()
+    }
+
+    sealed class NewFixedDepositAccountChargesAction : NewFixedDepositAccountAction() {
+        data class OnChargeSelected(val chargeIndex: Int) : NewFixedDepositAccountAction()
+        data class OnShowAddChargeDialog(val show: Boolean) : NewFixedDepositAccountAction()
+        data class OnShowViewChargesDialog(val show: Boolean) : NewFixedDepositAccountAction()
+        data class OnChargeAmountChange(val amount: String) : NewFixedDepositAccountAction()
+        data class OnChargeTypeSelected(val typeIndex: Int) : NewFixedDepositAccountAction()
+        data class OnCollectedOnDatePick(val state: Boolean) : NewFixedDepositAccountAction()
+        data class OnCollectedOnDateChange(val date: String) : NewFixedDepositAccountAction()
+        data class OnChargeDatePick(val state: Boolean) : NewFixedDepositAccountAction()
+        data class OnChargeDateChange(val date: String) : NewFixedDepositAccountAction()
+        data object OnAddCharge : NewFixedDepositAccountAction()
+        data class OnEditCharge(val chargeIndex: Int) : NewFixedDepositAccountAction()
+        data class OnDeleteCharge(val chargeIndex: Int) : NewFixedDepositAccountAction()
     }
 }
 

@@ -10,25 +10,264 @@
 package com.mifos.feature.client.newFixedDepositAccount.pages
 
 import androidclient.feature.client.generated.resources.Res
+import androidclient.feature.client.generated.resources.btn_back
+import androidclient.feature.client.generated.resources.client_identifier_btn_next
+import androidclient.feature.client.generated.resources.client_identifier_btn_view
+import androidclient.feature.client.generated.resources.feature_share_account_charge_active_charge
+import androidclient.feature.client.generated.resources.feature_share_account_charge_add_new
+import androidclient.feature.client.generated.resources.feature_share_account_charge_add_new_charge
+import androidclient.feature.client.generated.resources.feature_share_account_charge_btn_add_new
+import androidclient.feature.client.generated.resources.feature_share_account_charge_click_on_add_new
+import androidclient.feature.client.generated.resources.feature_share_account_charge_edit_charge
+import androidclient.feature.client.generated.resources.feature_share_account_charge_view_charges
 import androidclient.feature.client.generated.resources.step_charges
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.material3.Button
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
+import com.mifos.core.designsystem.component.MifosBottomSheet
+import com.mifos.core.designsystem.icon.MifosIcons
+import com.mifos.core.designsystem.theme.DesignToken
+import com.mifos.core.designsystem.theme.MifosTypography
+import com.mifos.core.ui.components.Actions
+import com.mifos.core.ui.components.AddChargeBottomSheet
+import com.mifos.core.ui.components.MifosActionsChargeListingComponent
+import com.mifos.core.ui.components.MifosEmptyCard
+import com.mifos.core.ui.components.MifosRowWithTextAndButton
+import com.mifos.core.ui.components.MifosTwoButtonRow
+import com.mifos.feature.client.newFixedDepositAccount.ChargeData
+import com.mifos.feature.client.newFixedDepositAccount.NewFixedDepositAccountAction
+import com.mifos.feature.client.newFixedDepositAccount.NewFixedDepositAccountState
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
-fun ChargesPage(onNext: () -> Unit) {
-    Column(horizontalAlignment = Alignment.CenterHorizontally) {
-        Text(stringResource(Res.string.step_charges))
-        Spacer(Modifier.height(8.dp))
-        Button(onClick = onNext) {
-            Text("Next Button")
+fun ChargesPage(
+    state: NewFixedDepositAccountState,
+    onAction: (NewFixedDepositAccountAction) -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    val chargesState = state.fixedDepositAccountCharges
+
+    Column(modifier = Modifier.fillMaxSize().padding(bottom = DesignToken.padding.large)) {
+        Column(
+            modifier = Modifier.weight(1f).verticalScroll(rememberScrollState())
+                .padding(horizontal = DesignToken.padding.large),
+        ) {
+            Text(
+                stringResource(Res.string.step_charges),
+                style = MifosTypography.labelLargeEmphasized,
+            )
+            Spacer(Modifier.height(DesignToken.padding.large))
+
+            // Add New Button
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.End,
+            ) {
+                Row(
+                    modifier = Modifier.clickable {
+                        onAction(NewFixedDepositAccountAction.NewFixedDepositAccountChargesAction.OnShowAddChargeDialog(true))
+                    },
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Icon(
+                        imageVector = MifosIcons.Add,
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.primary,
+                        modifier = Modifier.size(DesignToken.sizes.iconSmall),
+                    )
+
+                    Text(
+                        text = stringResource(Res.string.feature_share_account_charge_add_new),
+                        color = MaterialTheme.colorScheme.primary,
+                        style = MifosTypography.labelLargeEmphasized,
+                    )
+                }
+            }
+
+            Spacer(Modifier.height(DesignToken.padding.large))
+
+            // Active Charges Row
+            MifosRowWithTextAndButton(
+                onBtnClick = {
+                    onAction(NewFixedDepositAccountAction.NewFixedDepositAccountChargesAction.OnShowViewChargesDialog(true))
+                },
+                btnText = stringResource(Res.string.client_identifier_btn_view),
+                text = "${chargesState.addedCharges.size} ${stringResource(Res.string.feature_share_account_charge_active_charge)}",
+                btnEnabled = chargesState.addedCharges.isNotEmpty(),
+            )
+            Spacer(Modifier.height(DesignToken.padding.large))
         }
+
+        // Back and Next Buttons
+        MifosTwoButtonRow(
+            firstBtnText = stringResource(Res.string.btn_back),
+            secondBtnText = stringResource(Res.string.client_identifier_btn_next),
+            onFirstBtnClick = {
+                onAction(NewFixedDepositAccountAction.PreviousStep)
+            },
+            onSecondBtnClick = {
+                onAction(NewFixedDepositAccountAction.OnNextPress)
+            },
+        )
     }
+
+    // Add/Edit Charge Dialog
+    if (chargesState.showAddChargeDialog) {
+        val isEdit = chargesState.editingChargeIndex != -1
+
+        AddChargeBottomSheet(
+            title = if (isEdit) {
+                stringResource(Res.string.feature_share_account_charge_edit_charge)
+            } else {
+                stringResource(Res.string.feature_share_account_charge_add_new_charge)
+            },
+            confirmText = if (isEdit) {
+                stringResource(Res.string.feature_share_account_charge_edit_charge)
+            } else {
+                stringResource(Res.string.feature_share_account_charge_btn_add_new)
+            },
+            dismissText = stringResource(Res.string.btn_back),
+            selectedChargeName = if (chargesState.selectedChargeIndex == null) {
+                ""
+            } else {
+                state.template.chargeOptions?.getOrNull(chargesState.selectedChargeIndex)?.name ?: ""
+            },
+            chargeAmount = chargesState.chargeAmount,
+            chargeType = if (chargesState.selectedChargeIndex == null) {
+                ""
+            } else {
+                state.template.chargeOptions?.getOrNull(chargesState.selectedChargeIndex)?.chargeCalculationType?.value ?: ""
+            },
+            chargeCollectedOn = if (chargesState.selectedChargeIndex == null) {
+                ""
+            } else {
+                state.template.chargeOptions?.getOrNull(chargesState.selectedChargeIndex)?.chargeTimeType?.value ?: ""
+            },
+            chargeOptions = state.template.chargeOptions?.map { it.name ?: "" } ?: emptyList(),
+            onConfirm = {
+                if (isEdit) {
+                    onAction(NewFixedDepositAccountAction.NewFixedDepositAccountChargesAction.OnEditCharge(chargesState.editingChargeIndex))
+                } else {
+                    onAction(NewFixedDepositAccountAction.NewFixedDepositAccountChargesAction.OnAddCharge)
+                }
+            },
+            onDismiss = {
+                onAction(NewFixedDepositAccountAction.NewFixedDepositAccountChargesAction.OnShowAddChargeDialog(false))
+            },
+            onChargeSelected = { index, _ ->
+                onAction(NewFixedDepositAccountAction.NewFixedDepositAccountChargesAction.OnChargeSelected(index))
+            },
+            onDatePick = {},
+            onDateChange = {},
+            onAmountChange = { amount ->
+                onAction(NewFixedDepositAccountAction.NewFixedDepositAccountChargesAction.OnChargeAmountChange(amount))
+            },
+        )
+    }
+
+    // View Charges Dialog
+    if (chargesState.showViewChargesDialog) {
+        ShowChargesDialog(
+            addedCharges = chargesState.addedCharges,
+            onDismiss = {
+                onAction(NewFixedDepositAccountAction.NewFixedDepositAccountChargesAction.OnShowViewChargesDialog(false))
+            },
+            onAddNew = {
+                onAction(NewFixedDepositAccountAction.NewFixedDepositAccountChargesAction.OnShowViewChargesDialog(false))
+                onAction(NewFixedDepositAccountAction.NewFixedDepositAccountChargesAction.OnShowAddChargeDialog(true))
+            },
+            onEdit = { index ->
+                onAction(NewFixedDepositAccountAction.NewFixedDepositAccountChargesAction.OnEditCharge(index))
+            },
+            onDelete = { index ->
+                onAction(NewFixedDepositAccountAction.NewFixedDepositAccountChargesAction.OnDeleteCharge(index))
+            },
+        )
+    }
+}
+
+@Composable
+internal fun ShowChargesDialog(
+    addedCharges: List<ChargeData>,
+    onDismiss: () -> Unit,
+    onAddNew: () -> Unit,
+    onEdit: (Int) -> Unit,
+    onDelete: (Int) -> Unit,
+) {
+    var expandedIndex: Int? by rememberSaveable { mutableStateOf(-1) }
+
+    MifosBottomSheet(
+        onDismiss = onDismiss,
+        content = {
+            Column(
+                modifier = Modifier.fillMaxWidth().padding(DesignToken.padding.large),
+                verticalArrangement = Arrangement.spacedBy(DesignToken.padding.largeIncreased),
+            ) {
+                Text(
+                    text = stringResource(Res.string.feature_share_account_charge_view_charges),
+                    style = MifosTypography.titleMediumEmphasized,
+                )
+
+                if (addedCharges.isNotEmpty()) {
+                    addedCharges.forEachIndexed { index, charge ->
+                        MifosActionsChargeListingComponent(
+                            chargeTitle = charge.name,
+                            type = charge.type,
+                            collectedOn = charge.collectedOn,
+                            amount = charge.amount.toString(),
+                            onActionClicked = { action ->
+                                when (action) {
+                                    is Actions.Delete -> {
+                                        expandedIndex = -1
+                                        onDelete(index)
+                                    }
+
+                                    is Actions.Edit -> {
+                                        onEdit(index)
+                                    }
+
+                                    else -> {}
+                                }
+                            },
+                            isExpanded = expandedIndex == index,
+                            onExpandToggle = {
+                                expandedIndex = if (expandedIndex == index) -1 else index
+                            },
+                        )
+                    }
+                } else {
+                    MifosEmptyCard(
+                        msg = stringResource(Res.string.feature_share_account_charge_click_on_add_new),
+                    )
+                }
+
+                MifosTwoButtonRow(
+                    firstBtnText = stringResource(Res.string.btn_back),
+                    secondBtnText = stringResource(Res.string.feature_share_account_charge_add_new),
+                    onFirstBtnClick = onDismiss,
+                    onSecondBtnClick = onAddNew,
+                )
+            }
+        },
+    )
 }

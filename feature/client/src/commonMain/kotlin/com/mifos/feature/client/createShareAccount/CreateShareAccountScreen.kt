@@ -39,7 +39,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
-import co.touchlab.kermit.Logger
 import com.mifos.core.designsystem.component.MifosBottomSheet
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
@@ -126,8 +125,6 @@ fun CreateShareAccountDialog(
                 snackbarHostState.showSnackbar(
                     message = state.dialogState.msg,
                 )
-
-                Logger.d("SuccessResponseStatus")
 
                 if (state.dialogState.successStatus) {
                     delay(1000)

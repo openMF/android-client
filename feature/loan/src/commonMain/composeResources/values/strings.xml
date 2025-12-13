@@ -11,6 +11,8 @@
 <resources>
     <string name="feature_loan_application">Loan Application</string>
     <string name="feature_loan_account_created_successfully">Loan account created successfully</string>
+    <string name="feature_error_network_not_available">Network is not Available</string>
+
 
     <string name="feature_loan_product">Loan Product</string>
     <string name="feature_loan_purpose">Loan Purpose</string>
