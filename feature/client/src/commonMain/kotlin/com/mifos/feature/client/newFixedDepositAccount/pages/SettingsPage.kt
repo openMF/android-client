@@ -15,7 +15,9 @@ import androidclient.feature.client.generated.resources.feature_client_next
 import androidclient.feature.client.generated.resources.feature_fixed_deposit_setting_apply_penal_interest
 import androidclient.feature.client.generated.resources.feature_fixed_deposit_setting_frequency
 import androidclient.feature.client.generated.resources.feature_fixed_deposit_setting_interest_transfer
+import androidclient.feature.client.generated.resources.feature_fixed_deposit_setting_investing_account
 import androidclient.feature.client.generated.resources.feature_fixed_deposit_setting_linked_saving_account
+import androidclient.feature.client.generated.resources.feature_fixed_deposit_setting_linked_saving_account_field
 import androidclient.feature.client.generated.resources.feature_fixed_deposit_setting_lock_in_period
 import androidclient.feature.client.generated.resources.feature_fixed_deposit_setting_maturity_instructions
 import androidclient.feature.client.generated.resources.feature_fixed_deposit_setting_maximum_deposit_term
@@ -230,6 +232,26 @@ fun SettingPage(
                     )
                 },
             )
+            AnimatedVisibility(state.transferLinkedSavingAccountInterest) {
+                MifosTextFieldDropdown(
+                    value = if (state.linkedSavingAccountIndex != -1) {
+                        state.template.savingsAccounts?.get(state.linkedSavingAccountIndex)?.accountNo.orEmpty()
+                    } else {
+                        ""
+                    },
+                    options = state.template.savingsAccounts?.map {
+                        it.accountNo
+                    } ?: emptyList(),
+                    onValueChanged = {},
+                    onOptionSelected = { index, name ->
+                        onAction(
+                            NewFixedDepositAccountAction.OnLinkedSavingAccount(index),
+                        )
+                    },
+                    label = stringResource(Res.string.feature_fixed_deposit_setting_linked_saving_account_field),
+                    errorMessage = state.linkedSavingAccountError?.let { stringResource(it) },
+                )
+            }
             Spacer(Modifier.height(DesignToken.padding.small))
 
             Text(
@@ -253,6 +275,25 @@ fun SettingPage(
                     )
                 },
                 label = stringResource(Res.string.feature_fixed_deposit_setting_maturity_instructions),
+            )
+
+            MifosTextFieldDropdown(
+                value = if (state.investingAccountIndex != -1) {
+                    state.template.savingsAccounts?.get(state.investingAccountIndex)?.accountNo.orEmpty()
+                } else {
+                    ""
+                },
+                options = state.template.savingsAccounts?.map {
+                    it.accountNo
+                } ?: emptyList(),
+                onValueChanged = {},
+                onOptionSelected = { index, name ->
+                    onAction(
+                        NewFixedDepositAccountAction.OnInvestingAccountChange(index),
+                    )
+                },
+                label = stringResource(Res.string.feature_fixed_deposit_setting_investing_account),
+                errorMessage = state.investingAccountError?.let { stringResource(it) },
             )
 
             Spacer(Modifier.height(DesignToken.padding.small))
@@ -319,7 +360,7 @@ fun SettingPage(
             firstBtnText = stringResource(Res.string.btn_back),
             secondBtnText = stringResource(Res.string.feature_client_next),
             onFirstBtnClick = { onAction(NewFixedDepositAccountAction.PreviousStep) },
-            onSecondBtnClick = { onAction(NewFixedDepositAccountAction.OnNextPress) },
+            onSecondBtnClick = { onAction(NewFixedDepositAccountAction.OnSettingNext) },
         )
     }
 }

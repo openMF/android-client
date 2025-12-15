@@ -620,6 +620,7 @@
     <string name="feature_fixed_deposit_setting_apply_penal_interest">Apply Penal Interest (less)</string>
     <string name="feature_fixed_deposit_setting_penal_interest">Penal Interest (%)</string>
     <string name="feature_fixed_deposit_setting_period">Period</string>
+    <string name="feature_fixed_deposit_setting_linked_saving_account_field">Linked Saving Account</string>
 
     <string name="feature_fixed_deposit_interest_name">Name</string>
     <string name="feature_fixed_deposit_interest_valid_from_date">Valid From Date</string>

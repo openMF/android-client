@@ -20,6 +20,7 @@ import com.mifos.core.model.objects.template.recurring.interest.InterestCompound
 import com.mifos.core.model.objects.template.recurring.interest.InterestPostingPeriodTypeOption
 import com.mifos.core.model.objects.template.recurring.period.LockinPeriodFrequencyTypeOption
 import com.mifos.core.model.objects.template.recurring.period.PeriodFrequencyTypeOption
+import com.mifos.core.network.model.share.SavingsAccountOption
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -61,4 +62,5 @@ data class FixedDepositTemplate(
     val accountChart: AccountChart? = null,
 
     val chargeOptions: List<ChargeOption>? = null,
+    val savingsAccounts: List<SavingsAccountOption>? = null,
 )

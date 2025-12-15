@@ -24,6 +24,8 @@ data class FixedDepositPayload(
 
     val accountNo: String? = null,
     val externalId: String? = null,
+    val transferToSavingsId: Int? = null,
+    val linkAccountId: Int? = null,
 
     val interestCompoundingPeriodType: Int? = null,
     val interestPostingPeriodType: Int? = null,

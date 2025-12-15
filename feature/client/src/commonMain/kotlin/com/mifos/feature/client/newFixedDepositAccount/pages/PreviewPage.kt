@@ -28,6 +28,8 @@ import androidclient.feature.client.generated.resources.feature_fixed_deposit_in
 import androidclient.feature.client.generated.resources.feature_fixed_deposit_interest_yes
 import androidclient.feature.client.generated.resources.feature_fixed_deposit_setting_apply_penal_interest
 import androidclient.feature.client.generated.resources.feature_fixed_deposit_setting_interest_transfer
+import androidclient.feature.client.generated.resources.feature_fixed_deposit_setting_investing_account
+import androidclient.feature.client.generated.resources.feature_fixed_deposit_setting_linked_saving_account_field
 import androidclient.feature.client.generated.resources.feature_fixed_deposit_setting_lock_in_period
 import androidclient.feature.client.generated.resources.feature_fixed_deposit_setting_maturity_instructions
 import androidclient.feature.client.generated.resources.feature_fixed_deposit_setting_maximum_deposit_term
@@ -228,8 +230,18 @@ fun SettingCard(state: NewFixedDepositAccountState) {
             } else {
                 stringResource(Res.string.feature_fixed_deposit_interest_no)
             },
+            Res.string.feature_fixed_deposit_setting_linked_saving_account_field to if (state.linkedSavingAccountIndex != -1) {
+                state.template.savingsAccounts?.get(state.linkedSavingAccountIndex)?.accountNo.orEmpty()
+            } else {
+                ""
+            },
             Res.string.feature_fixed_deposit_setting_maturity_instructions to if (state.maturityInstructionsIndex != -1) {
                 state.template.maturityInstructionOptions?.get(state.maturityInstructionsIndex)?.value.orEmpty()
+            } else {
+                ""
+            },
+            Res.string.feature_fixed_deposit_setting_investing_account to if (state.investingAccountIndex != -1) {
+                state.template.savingsAccounts?.get(state.investingAccountIndex)?.accountNo.orEmpty()
             } else {
                 ""
             },

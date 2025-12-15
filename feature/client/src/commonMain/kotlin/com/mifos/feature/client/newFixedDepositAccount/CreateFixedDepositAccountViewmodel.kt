@@ -181,6 +181,8 @@ class CreateFixedDepositAccountViewmodel(
                 mutableStateFlow.update {
                     it.copy(
                         maturityInstructionsIndex = action.index,
+                        investingAccountError = null,
+                        investingAccountIndex = -1,
                     )
                 }
             }
@@ -253,6 +255,7 @@ class CreateFixedDepositAccountViewmodel(
                 mutableStateFlow.update {
                     it.copy(
                         transferLinkedSavingAccountInterest = action.checked,
+                        linkedSavingAccountIndex = -1,
                     )
                 }
             }
@@ -372,6 +375,54 @@ class CreateFixedDepositAccountViewmodel(
                     )
                 }
             }
+
+            is NewFixedDepositAccountAction.OnInvestingAccountChange -> {
+                mutableStateFlow.update {
+                    it.copy(
+                        investingAccountIndex = action.index,
+                        investingAccountError = null,
+                    )
+                }
+            }
+
+            NewFixedDepositAccountAction.OnSettingNext -> {
+                val investingAccountError =
+                    if (state.maturityInstructionsIndex != 0 && state.maturityInstructionsIndex != -1) {
+                        TextFieldsValidator.dropDownEmptyValidator(
+                            state.investingAccountIndex == -1,
+                        )
+                    } else {
+                        null
+                    }
+
+                val linkedSavingAccountError = if (state.transferLinkedSavingAccountInterest) {
+                    TextFieldsValidator.dropDownEmptyValidator(
+                        state.linkedSavingAccountIndex == -1,
+                    )
+                } else {
+                    null
+                }
+
+                if (investingAccountError != null || linkedSavingAccountError != null) {
+                    mutableStateFlow.update {
+                        it.copy(
+                            investingAccountError = investingAccountError,
+                            linkedSavingAccountError = linkedSavingAccountError,
+                        )
+                    }
+                } else {
+                    moveToNextStep()
+                }
+            }
+
+            is NewFixedDepositAccountAction.OnLinkedSavingAccount -> {
+                mutableStateFlow.update {
+                    it.copy(
+                        linkedSavingAccountIndex = action.index,
+                        linkedSavingAccountError = null,
+                    )
+                }
+            }
         }
     }
 
@@ -402,7 +453,9 @@ class CreateFixedDepositAccountViewmodel(
                 state.fixedDepositAccountTerms.interestCalculationDaysInYearTypeIndex,
             )?.id,
             lockinPeriodFrequency = state.lockInPeriodFrequency.toIntOrNull(),
-            lockinPeriodFrequencyType = state.template.lockinPeriodFrequencyTypeOptions?.getOrNull(state.lockInPeriodTypeIndex)?.id,
+            lockinPeriodFrequencyType = state.template.lockinPeriodFrequencyTypeOptions?.getOrNull(
+                state.lockInPeriodTypeIndex,
+            )?.id,
             locale = Constants.LOCALE_EN,
             dateFormat = DateHelper.SHORT_MONTH,
             charges = state.fixedDepositAccountCharges.addedCharges,
@@ -413,6 +466,8 @@ class CreateFixedDepositAccountViewmodel(
                 state.periodIndex,
             )?.id,
             maturityInstructionId = state.template.maturityInstructionOptions?.getOrNull(state.maturityInstructionsIndex)?.id,
+            transferToSavingsId = state.template.savingsAccounts?.getOrNull(state.investingAccountIndex)?.id,
+            linkAccountId = state.template.savingsAccounts?.getOrNull(state.linkedSavingAccountIndex)?.id,
         )
         viewModelScope.launch {
             isOnline {
@@ -735,12 +790,16 @@ data class NewFixedDepositAccountState(
     val multiplesTypeIndex: Int = -1,
 
     val maturityInstructionsIndex: Int = -1,
+    val investingAccountIndex: Int = -1,
+    val investingAccountError: StringResource? = null,
     val periodIndex: Int = -1,
     val applyPenalInterest: Boolean = false,
     val penalInterest: String = "",
     val launchEffectKey: Int? = null,
 
     val transferLinkedSavingAccountInterest: Boolean = false,
+    val linkedSavingAccountIndex: Int = -1,
+    val linkedSavingAccountError: StringResource? = null,
 ) {
     sealed interface ScreenState {
         data class Error(val message: String) : ScreenState
@@ -805,6 +864,7 @@ sealed class NewFixedDepositAccountAction {
     data object OnNextPress : NewFixedDepositAccountAction()
     data object OnDetailNext : NewFixedDepositAccountAction()
     data object OnTermNext : NewFixedDepositAccountAction()
+    data object OnSettingNext : NewFixedDepositAccountAction()
     data object OnDismissDialog : NewFixedDepositAccountAction()
     data class OnStepChange(val newIndex: Int) : NewFixedDepositAccountAction()
     data object PreviousStep : NewFixedDepositAccountAction()
@@ -828,6 +888,8 @@ sealed class NewFixedDepositAccountAction {
     data class OnMultiplesFrequencyChange(val value: String) : NewFixedDepositAccountAction()
     data class OnMultiplesTypeIndexChange(val index: Int) : NewFixedDepositAccountAction()
     data class OnMaturityInstructionIndexChange(val index: Int) : NewFixedDepositAccountAction()
+    data class OnInvestingAccountChange(val index: Int) : NewFixedDepositAccountAction()
+    data class OnLinkedSavingAccount(val index: Int) : NewFixedDepositAccountAction()
     data class OnPeriodIndexChange(val index: Int) : NewFixedDepositAccountAction()
     data class OnApplyPenalInterestChange(val checked: Boolean) : NewFixedDepositAccountAction()
     data class OnPenalInterestChange(val value: String) : NewFixedDepositAccountAction()
