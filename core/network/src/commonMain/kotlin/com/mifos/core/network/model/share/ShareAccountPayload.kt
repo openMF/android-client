@@ -9,6 +9,7 @@
  */
 package com.mifos.core.network.model.share
 
+import com.mifos.core.model.objects.payloads.ChargeItem
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -42,11 +43,4 @@ data class ShareAccountPayload(
     val charges: List<ChargeItem> = emptyList(),
 
     val savingsAccountId: Int,
-)
-
-@Serializable
-data class ChargeItem(
-    val chargeId: Int? = null,
-
-    val amount: Double? = null,
 )

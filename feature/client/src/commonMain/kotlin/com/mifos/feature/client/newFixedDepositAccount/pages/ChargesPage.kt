@@ -53,7 +53,6 @@ import com.mifos.core.ui.components.MifosActionsChargeListingComponent
 import com.mifos.core.ui.components.MifosEmptyCard
 import com.mifos.core.ui.components.MifosRowWithTextAndButton
 import com.mifos.core.ui.components.MifosTwoButtonRow
-import com.mifos.feature.client.newFixedDepositAccount.ChargeData
 import com.mifos.feature.client.newFixedDepositAccount.NewFixedDepositAccountAction
 import com.mifos.feature.client.newFixedDepositAccount.NewFixedDepositAccountState
 import org.jetbrains.compose.resources.stringResource
@@ -68,8 +67,7 @@ fun ChargesPage(
 
     Column(modifier = Modifier.fillMaxSize().padding(bottom = DesignToken.padding.large)) {
         Column(
-            modifier = Modifier.weight(1f).verticalScroll(rememberScrollState())
-                .padding(horizontal = DesignToken.padding.large),
+            modifier = modifier.weight(1f).verticalScroll(rememberScrollState()),
         ) {
             Text(
                 stringResource(Res.string.step_charges),
@@ -85,7 +83,9 @@ fun ChargesPage(
             ) {
                 Row(
                     modifier = Modifier.clickable {
-                        onAction(NewFixedDepositAccountAction.NewFixedDepositAccountChargesAction.OnShowAddChargeDialog(true))
+                        onAction(
+                            NewFixedDepositAccountAction.NewFixedDepositAccountChargesAction.OnShowAddChargeDialog,
+                        )
                     },
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
@@ -109,7 +109,9 @@ fun ChargesPage(
             // Active Charges Row
             MifosRowWithTextAndButton(
                 onBtnClick = {
-                    onAction(NewFixedDepositAccountAction.NewFixedDepositAccountChargesAction.OnShowViewChargesDialog(true))
+                    onAction(
+                        NewFixedDepositAccountAction.NewFixedDepositAccountChargesAction.ShowListOfChargesDialog,
+                    )
                 },
                 btnText = stringResource(Res.string.client_identifier_btn_view),
                 text = "${chargesState.addedCharges.size} ${stringResource(Res.string.feature_share_account_charge_active_charge)}",
@@ -130,94 +132,93 @@ fun ChargesPage(
             },
         )
     }
+}
 
-    // Add/Edit Charge Dialog
-    if (chargesState.showAddChargeDialog) {
-        val isEdit = chargesState.editingChargeIndex != -1
-
-        AddChargeBottomSheet(
-            title = if (isEdit) {
-                stringResource(Res.string.feature_share_account_charge_edit_charge)
+@Composable
+internal fun AddNewChargeDialog(
+    isEdit: Boolean,
+    index: Int = -1,
+    state: NewFixedDepositAccountState,
+    onAction: (NewFixedDepositAccountAction) -> Unit,
+) {
+    AddChargeBottomSheet(
+        title = if (isEdit) {
+            stringResource(Res.string.feature_share_account_charge_edit_charge)
+        } else {
+            stringResource(Res.string.feature_share_account_charge_add_new_charge)
+        },
+        confirmText = if (isEdit) {
+            stringResource(Res.string.feature_share_account_charge_edit_charge)
+        } else {
+            stringResource(Res.string.feature_share_account_charge_btn_add_new)
+        },
+        dismissText = stringResource(Res.string.btn_back),
+        selectedChargeName = if (state.fixedDepositAccountCharges.selectedChargeIndex == null) {
+            ""
+        } else {
+            state.template.chargeOptions?.getOrNull(state.fixedDepositAccountCharges.selectedChargeIndex)?.name
+                ?: ""
+        },
+        chargeAmount = state.fixedDepositAccountCharges.chargeAmount,
+        chargeType = if (state.fixedDepositAccountCharges.selectedChargeIndex == null) {
+            ""
+        } else {
+            state.template.chargeOptions?.getOrNull(state.fixedDepositAccountCharges.selectedChargeIndex)?.chargeCalculationType?.value
+                ?: ""
+        },
+        chargeCollectedOn = if (state.fixedDepositAccountCharges.selectedChargeIndex == null) {
+            ""
+        } else {
+            state.template.chargeOptions?.getOrNull(state.fixedDepositAccountCharges.selectedChargeIndex)?.chargeTimeType?.value
+                ?: ""
+        },
+        chargeOptions = state.template.chargeOptions?.map { it.name ?: "" } ?: emptyList(),
+        onConfirm = {
+            if (isEdit) {
+                onAction(
+                    NewFixedDepositAccountAction.NewFixedDepositAccountChargesAction.OnEditCharge(
+                        index,
+                    ),
+                )
             } else {
-                stringResource(Res.string.feature_share_account_charge_add_new_charge)
-            },
-            confirmText = if (isEdit) {
-                stringResource(Res.string.feature_share_account_charge_edit_charge)
-            } else {
-                stringResource(Res.string.feature_share_account_charge_btn_add_new)
-            },
-            dismissText = stringResource(Res.string.btn_back),
-            selectedChargeName = if (chargesState.selectedChargeIndex == null) {
-                ""
-            } else {
-                state.template.chargeOptions?.getOrNull(chargesState.selectedChargeIndex)?.name ?: ""
-            },
-            chargeAmount = chargesState.chargeAmount,
-            chargeType = if (chargesState.selectedChargeIndex == null) {
-                ""
-            } else {
-                state.template.chargeOptions?.getOrNull(chargesState.selectedChargeIndex)?.chargeCalculationType?.value ?: ""
-            },
-            chargeCollectedOn = if (chargesState.selectedChargeIndex == null) {
-                ""
-            } else {
-                state.template.chargeOptions?.getOrNull(chargesState.selectedChargeIndex)?.chargeTimeType?.value ?: ""
-            },
-            chargeOptions = state.template.chargeOptions?.map { it.name ?: "" } ?: emptyList(),
-            onConfirm = {
-                if (isEdit) {
-                    onAction(NewFixedDepositAccountAction.NewFixedDepositAccountChargesAction.OnEditCharge(chargesState.editingChargeIndex))
-                } else {
-                    onAction(NewFixedDepositAccountAction.NewFixedDepositAccountChargesAction.OnAddCharge)
-                }
-            },
-            onDismiss = {
-                onAction(NewFixedDepositAccountAction.NewFixedDepositAccountChargesAction.OnShowAddChargeDialog(false))
-            },
-            onChargeSelected = { index, _ ->
-                onAction(NewFixedDepositAccountAction.NewFixedDepositAccountChargesAction.OnChargeSelected(index))
-            },
-            onDatePick = {},
-            onDateChange = {},
-            onAmountChange = { amount ->
-                onAction(NewFixedDepositAccountAction.NewFixedDepositAccountChargesAction.OnChargeAmountChange(amount))
-            },
-        )
-    }
-
-    // View Charges Dialog
-    if (chargesState.showViewChargesDialog) {
-        ShowChargesDialog(
-            addedCharges = chargesState.addedCharges,
-            onDismiss = {
-                onAction(NewFixedDepositAccountAction.NewFixedDepositAccountChargesAction.OnShowViewChargesDialog(false))
-            },
-            onAddNew = {
-                onAction(NewFixedDepositAccountAction.NewFixedDepositAccountChargesAction.OnShowViewChargesDialog(false))
-                onAction(NewFixedDepositAccountAction.NewFixedDepositAccountChargesAction.OnShowAddChargeDialog(true))
-            },
-            onEdit = { index ->
-                onAction(NewFixedDepositAccountAction.NewFixedDepositAccountChargesAction.OnEditCharge(index))
-            },
-            onDelete = { index ->
-                onAction(NewFixedDepositAccountAction.NewFixedDepositAccountChargesAction.OnDeleteCharge(index))
-            },
-        )
-    }
+                onAction(NewFixedDepositAccountAction.NewFixedDepositAccountChargesAction.AddChargeToList)
+            }
+        },
+        onDismiss = {
+            onAction(
+                NewFixedDepositAccountAction.OnDismissDialog,
+            )
+        },
+        onChargeSelected = { index, _ ->
+            onAction(
+                NewFixedDepositAccountAction.NewFixedDepositAccountChargesAction.OnChargeSelected(
+                    index,
+                ),
+            )
+        },
+        onDatePick = {},
+        onDateChange = {},
+        onAmountChange = { amount ->
+            onAction(
+                NewFixedDepositAccountAction.NewFixedDepositAccountChargesAction.OnChargeAmountChange(
+                    amount,
+                ),
+            )
+        },
+    )
 }
 
 @Composable
 internal fun ShowChargesDialog(
-    addedCharges: List<ChargeData>,
-    onDismiss: () -> Unit,
-    onAddNew: () -> Unit,
-    onEdit: (Int) -> Unit,
-    onDelete: (Int) -> Unit,
+    state: NewFixedDepositAccountState,
+    onAction: (NewFixedDepositAccountAction) -> Unit,
 ) {
     var expandedIndex: Int? by rememberSaveable { mutableStateOf(-1) }
 
     MifosBottomSheet(
-        onDismiss = onDismiss,
+        onDismiss = {
+            onAction(NewFixedDepositAccountAction.OnDismissDialog)
+        },
         content = {
             Column(
                 modifier = Modifier.fillMaxWidth().padding(DesignToken.padding.large),
@@ -228,22 +229,32 @@ internal fun ShowChargesDialog(
                     style = MifosTypography.titleMediumEmphasized,
                 )
 
-                if (addedCharges.isNotEmpty()) {
-                    addedCharges.forEachIndexed { index, charge ->
+                if (state.fixedDepositAccountCharges.addedCharges.isNotEmpty()) {
+                    state.fixedDepositAccountCharges.addedCharges.forEachIndexed { index, charge ->
+                        val chargesValue =
+                            state.template.chargeOptions?.firstOrNull { it.id == charge.chargeId }
                         MifosActionsChargeListingComponent(
-                            chargeTitle = charge.name,
-                            type = charge.type,
-                            collectedOn = charge.collectedOn,
+                            chargeTitle = chargesValue?.name ?: "",
+                            type = chargesValue?.chargeCalculationType?.value ?: "",
+                            collectedOn = chargesValue?.chargeTimeType?.value ?: "",
                             amount = charge.amount.toString(),
                             onActionClicked = { action ->
                                 when (action) {
                                     is Actions.Delete -> {
                                         expandedIndex = -1
-                                        onDelete(index)
+                                        onAction(
+                                            NewFixedDepositAccountAction.NewFixedDepositAccountChargesAction.DeleteChargeFromSelectedCharges(
+                                                index,
+                                            ),
+                                        )
                                     }
 
                                     is Actions.Edit -> {
-                                        onEdit(index)
+                                        onAction(
+                                            NewFixedDepositAccountAction.NewFixedDepositAccountChargesAction.EditChargeDialog(
+                                                index,
+                                            ),
+                                        )
                                     }
 
                                     else -> {}
@@ -264,8 +275,8 @@ internal fun ShowChargesDialog(
                 MifosTwoButtonRow(
                     firstBtnText = stringResource(Res.string.btn_back),
                     secondBtnText = stringResource(Res.string.feature_share_account_charge_add_new),
-                    onFirstBtnClick = onDismiss,
-                    onSecondBtnClick = onAddNew,
+                    onFirstBtnClick = { onAction(NewFixedDepositAccountAction.OnDismissDialog) },
+                    onSecondBtnClick = { onAction(NewFixedDepositAccountAction.NewFixedDepositAccountChargesAction.OnShowAddChargeDialog) },
                 )
             }
         },

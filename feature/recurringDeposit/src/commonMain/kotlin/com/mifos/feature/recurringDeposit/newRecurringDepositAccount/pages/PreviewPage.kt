@@ -228,7 +228,7 @@ fun SettingCard(state: RecurringAccountState) {
                 ""
             },
 
-            Res.string.feature_recurring_deposit_recurring_deposit_amount to state.recurringDepositAccountSettings.recurringDepositDetails.depositAmount,
+            Res.string.feature_recurring_deposit_recurring_deposit_amount to state.template.currency?.displaySymbol.orEmpty() + " " + state.recurringDepositAccountSettings.recurringDepositDetails.depositAmount,
 
             Res.string.feature_recurring_deposit_deposit_period to state.recurringDepositAccountSettings.depositPeriod.period + " " + (
                 state.template.periodFrequencyTypeOptions?.getOrNull(
@@ -297,8 +297,7 @@ fun SettingCard(state: RecurringAccountState) {
             } else {
                 ""
             },
-
-            Res.string.feature_recurring_deposit_period to state.recurringDepositAccountSettings.preMatureClosure.minimumBalanceForInterestCalculation,
+            Res.string.feature_recurring_deposit_period to state.template.currency?.displaySymbol.orEmpty() + " " + state.recurringDepositAccountSettings.preMatureClosure.minimumBalanceForInterestCalculation,
         ),
         verticalArrangement = Arrangement.spacedBy(DesignToken.padding.small),
     )

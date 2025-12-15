@@ -10,7 +10,8 @@
 package com.mifos.core.data.repository
 
 import com.mifos.core.common.utils.DataState
-import com.mifos.core.network.model.FixedDepositTemplate
+import com.mifos.core.network.model.fixedDeposit.FixedDepositPayload
+import com.mifos.core.network.model.fixedDeposit.FixedDepositTemplate
 import kotlinx.coroutines.flow.Flow
 
 interface FixedDepositRepository {
@@ -18,4 +19,8 @@ interface FixedDepositRepository {
         clientId: Int,
         productId: Int? = null,
     ): Flow<DataState<FixedDepositTemplate>>
+
+    fun createFixedDepositAccount(
+        fixedDepositPayload: FixedDepositPayload,
+    ): Flow<DataState<Unit>>
 }

@@ -18,5 +18,5 @@ import kotlinx.coroutines.flow.Flow
 interface ShareAccountRepository {
 
     fun getShareTemplate(clientId: Int, productId: Int?): Flow<DataState<ShareTemplate>>
-    suspend fun createShareAccount(shareAccountPayload: ShareAccountPayload): Flow<DataState<GenericResponse>>
+    fun createShareAccount(shareAccountPayload: ShareAccountPayload): Flow<DataState<GenericResponse>>
 }

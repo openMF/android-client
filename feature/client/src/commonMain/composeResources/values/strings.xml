@@ -493,6 +493,7 @@
     <string name="step_settings">Settings</string>
     <string name="step_interest">Interest</string>
     <string name="step_charges">Charges</string>
+    <string name="step_preview">Preview</string>
     <string name="create_recurring_deposit_account">Create Recurring Deposit Account</string>
 
 
@@ -617,7 +618,7 @@
     <string name="feature_fixed_deposit_setting_investing_account">Investing Account</string>
     <string name="feature_fixed_deposit_setting_pre_mature_closure">For Pre-mature closure</string>
     <string name="feature_fixed_deposit_setting_apply_penal_interest">Apply Penal Interest (less)</string>
-    <string name="feature_fixed_deposit_setting_penal_interest">Penal Interest (%%)</string>
+    <string name="feature_fixed_deposit_setting_penal_interest">Penal Interest (%)</string>
     <string name="feature_fixed_deposit_setting_period">Period</string>
 
     <string name="feature_fixed_deposit_interest_name">Name</string>
@@ -631,6 +632,8 @@
     <string name="feature_fixed_deposit_interest_yes">Yes</string>
     <string name="feature_fixed_deposit_interest_no">No</string>
     <string name="feature_fixed_deposit_interest_empty_date">Date Not Found</string>
+    <string name="feature_fixed_account_created_successfully">Share account created successfully</string>
+
 
 
 </resources>

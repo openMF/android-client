@@ -27,7 +27,7 @@ class ShareAccountRepositoryImpl(
         return dataManagerShare.getShareTemplate(clientId, productId).asDataStateFlow()
     }
 
-    override suspend fun createShareAccount(
+    override fun createShareAccount(
         shareAccountPayload: ShareAccountPayload,
     ): Flow<DataState<GenericResponse>> {
         return flow {

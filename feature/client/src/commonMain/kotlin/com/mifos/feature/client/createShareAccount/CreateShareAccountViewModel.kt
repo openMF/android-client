@@ -20,7 +20,7 @@ import com.mifos.core.common.utils.DataState
 import com.mifos.core.common.utils.DateHelper
 import com.mifos.core.data.repository.ShareAccountRepository
 import com.mifos.core.data.util.NetworkMonitor
-import com.mifos.core.network.model.share.ChargeItem
+import com.mifos.core.model.objects.payloads.ChargeItem
 import com.mifos.core.network.model.share.ChargeOptions
 import com.mifos.core.network.model.share.FrequencyTypeOption
 import com.mifos.core.network.model.share.ProductOption
