@@ -89,7 +89,7 @@ internal actual fun PinpointLocationItem(
     val cameraPositionState = rememberCameraPositionState {
         pinpointLocation.latitude?.let { latitude ->
             pinpointLocation.longitude?.let { longitude ->
-                position = CameraPosition.fromLatLngZoom(LatLng(latitude, longitude), 100f)
+                position = CameraPosition.fromLatLngZoom(LatLng(latitude, longitude), 15f)
             }
         }
     }
