@@ -22,8 +22,11 @@ import androidclient.feature.client.generated.resources.client_profile_identifie
 import androidclient.feature.client.generated.resources.client_profile_identifiers_title
 import androidclient.feature.client.generated.resources.client_profile_notes_subtitle
 import androidclient.feature.client.generated.resources.client_profile_notes_title
+import androidclient.feature.client.generated.resources.client_profile_pinpoint_location_subtitle
+import androidclient.feature.client.generated.resources.client_profile_pinpoint_location_title
 import androidclient.feature.client.generated.resources.contact_emergency
 import androidclient.feature.client.generated.resources.design_services
+import androidclient.feature.client.generated.resources.directions
 import androidclient.feature.client.generated.resources.note_add
 import androidclient.feature.client.generated.resources.note_alt
 import androidclient.feature.client.generated.resources.people
@@ -69,6 +72,11 @@ sealed class ClientProfileActionItem(
         subTitle = Res.string.client_profile_notes_subtitle,
         icon = Res.drawable.note_alt,
     )
+    data object PinpointLocation : ClientProfileActionItem(
+        title = Res.string.client_profile_pinpoint_location_title,
+        subTitle = Res.string.client_profile_pinpoint_location_subtitle,
+        icon = Res.drawable.directions,
+    )
 }
 
 internal val clientsActionItems: ImmutableList<ClientProfileActionItem> = persistentListOf(
@@ -77,4 +85,5 @@ internal val clientsActionItems: ImmutableList<ClientProfileActionItem> = persis
     ClientProfileActionItem.Identifiers,
     ClientProfileActionItem.Documents,
     ClientProfileActionItem.Notes,
+    ClientProfileActionItem.PinpointLocation,
 )

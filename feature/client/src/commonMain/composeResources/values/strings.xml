@@ -236,6 +236,8 @@
     <string name="client_profile_documents_subtitle">Check or upload documents</string>
     <string name="client_profile_notes_title">Notes</string>
     <string name="client_profile_notes_subtitle">Check or update note accounts</string>
+    <string name="client_profile_pinpoint_location_title">Pinpoint Location</string>
+    <string name="client_profile_pinpoint_location_subtitle">Check or update client's location</string>
 
     <string name="client_empty_card_message">Click Here To View Filled State.</string>
 

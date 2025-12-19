@@ -187,6 +187,7 @@ fun NavGraphBuilder.clientNavGraph(
             navigateToClientDetailsScreen = navController::navigateToClientDetailsProfileRoute,
             viewAddress = navController::navigateToClientAddressRoute,
             viewAssociatedAccounts = navController::navigateToClientProfileGeneralRoute,
+            pinpointLocation = navController::navigateClientPinPointScreen,
             navController = navController,
             navigateToAddCharge = {
                 navController.navigateToChargesRoute(it, Constants.ENTITY_TYPE_CLIENTS)
