@@ -240,6 +240,7 @@ internal fun PinpointClientScreen(
                             },
                             onClickAddLocation = {
                                 updateMode = false
+                                addressToUpdate = null
                                 showPermissionDialog = true
                             },
                             onDeleteAddress = onDeleteAddress,
