@@ -417,7 +417,7 @@ moko-permissions-compose = {group ="dev.icerock.moko", name="permissions-compose
 moko-permissions-location = {group ="dev.icerock.moko", name="permissions-location", version.ref = "mokoPermissions"}
 moko-permissions-camera = {group ="dev.icerock.moko", name="permissions-camera", version.ref = "mokoPermissions"}
 moko-permissions-contacts = {group ="dev.icerock.moko", name="permissions-contacts", version.ref = "mokoPermissions"}
-moko-permissions-gallary = {group ="dev.icerock.moko", name="permissions-gallary", version.ref = "mokoPermissions"}
+moko-permissions-gallary = {group ="dev.icerock.moko", name="permissions-gallery", version.ref = "mokoPermissions"}
 moko-permissions-microphone = {group ="dev.icerock.moko", name="permissions-microphone", version.ref = "mokoPermissions"}
 moko-permissions-motion = {group ="dev.icerock.moko", name="permissions-motion", version.ref = "mokoPermissions"}
 moko-permissions-notification = {group ="dev.icerock.moko", name="permissions-notification", version.ref = "mokoPermissions"}

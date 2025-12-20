@@ -82,10 +82,13 @@
     <string name="feature_client_pinpoint_location_deleted">Pinpoint Location Deleted Successfully</string>
     <string name="feature_client_pinpoint_location_updated">Pinpoint Location Updated Successfully</string>
     <string name="feature_client_pinpoint_client">Pinpoint Client</string>
+    <string name="feature_client_client_locations">Client Locations</string>
+    <string name="feature_client_add_location">Add location</string>
 
     <string name="feature_client_update_client_address">Update Address</string>
     <string name="feature_client_delete_client_address">Delete Address</string>
     <string name="feature_client_no_pinpoint_found">No Pinpoint Found</string>
+    <string name="feature_client_no_location_data_found">No location data found</string>
 
     <string name="feature_client_charge_select">Select</string>
     <string name="feature_client_charge_cancel">Cancel</string>

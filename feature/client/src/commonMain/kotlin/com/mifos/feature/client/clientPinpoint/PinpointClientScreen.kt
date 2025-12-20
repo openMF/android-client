@@ -12,10 +12,13 @@
 package com.mifos.feature.client.clientPinpoint
 
 import androidclient.feature.client.generated.resources.Res
+import androidclient.feature.client.generated.resources.feature_client_add_location
 import androidclient.feature.client.generated.resources.feature_client_approve_permission_description_location
+import androidclient.feature.client.generated.resources.feature_client_client_locations
 import androidclient.feature.client.generated.resources.feature_client_delete_client_address
 import androidclient.feature.client.generated.resources.feature_client_dismiss
 import androidclient.feature.client.generated.resources.feature_client_failed_to_load_pinpoint
+import androidclient.feature.client.generated.resources.feature_client_no_location_data_found
 import androidclient.feature.client.generated.resources.feature_client_permission_required
 import androidclient.feature.client.generated.resources.feature_client_pinpoint_client
 import androidclient.feature.client.generated.resources.feature_client_pinpoint_location_added
@@ -213,7 +216,7 @@ internal fun PinpointClientScreen(
             }) {
                 Icon(
                     imageVector = MifosIcons.AddLocation,
-                    contentDescription = null,
+                    contentDescription = stringResource(Res.string.feature_client_add_location),
                 )
             }
         },
@@ -279,14 +282,14 @@ private fun PinPointClientContent(
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Text(
-                text = "Client Locations",
+                text = stringResource(Res.string.feature_client_client_locations),
                 style = MifosTypography.titleMediumEmphasized,
                 color = MaterialTheme.colorScheme.onSurface,
             )
 
             Icon(
                 imageVector = MifosIcons.Add,
-                contentDescription = null,
+                contentDescription = stringResource(Res.string.feature_client_add_location),
                 modifier = Modifier.clickable {
                     onClickAddLocation()
                 }.size(DesignToken.sizes.iconAverage),
@@ -297,7 +300,7 @@ private fun PinPointClientContent(
 
         if (pinpointLocations.isEmpty()) {
             MifosEmptyCard(
-                msg = "No location data found",
+                msg = stringResource(Res.string.feature_client_no_location_data_found),
             )
         } else {
             LazyColumn {
