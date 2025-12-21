@@ -31,7 +31,6 @@ import androidclient.feature.loan.generated.resources.feature_loan_make_Repaymen
 import androidclient.feature.loan.generated.resources.feature_loan_repayment_schedule
 import androidclient.feature.loan.generated.resources.feature_loan_staff
 import androidclient.feature.loan.generated.resources.feature_loan_summary
-import androidclient.feature.loan.generated.resources.feature_loan_total
 import androidclient.feature.loan.generated.resources.feature_loan_transactions
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
@@ -45,9 +44,13 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -65,7 +68,10 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalClipboardManager
+import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -77,6 +83,8 @@ import com.mifos.core.designsystem.component.MifosMenuDropDownItem
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.icon.MifosIcons
+import com.mifos.core.designsystem.theme.MifosTypography
+import com.mifos.core.designsystem.theme.colorScheme
 import com.mifos.core.ui.components.MifosProgressIndicator
 import com.mifos.room.entities.accounts.loans.LoanStatusEntity
 import com.mifos.room.entities.accounts.loans.LoanWithAssociationsEntity
@@ -207,7 +215,8 @@ internal fun LoanAccountSummaryScreen(
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(it),
+                .padding(it)
+                .background(Color(0xFFF3F4F6)),
         ) {
             when (uiState) {
                 is LoanAccountSummaryUiState.ShowFetchingError -> {
@@ -245,8 +254,10 @@ private fun LoanAccountSummaryContent(
     snackbarHostState: SnackbarHostState,
 ) {
     val inflateLoanSummary = getInflateLoanSummaryValue(status = loanWithAssociations.status)
+    val summary = if (inflateLoanSummary) loanWithAssociations.summary else null
     val scrollState = rememberScrollState()
     val scope = rememberCoroutineScope()
+    val clipboardManager = LocalClipboardManager.current
     val message = stringResource(Res.string.feature_loan_loan_rejected_message)
     fun getActualDisbursementDateInStringFormat(): String {
         try {
@@ -266,108 +277,206 @@ private fun LoanAccountSummaryContent(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(horizontal = 24.dp)
+            .padding(24.dp)
             .verticalScroll(scrollState),
+        verticalArrangement = Arrangement.spacedBy(12.dp),
     ) {
-        Text(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 8.dp, bottom = 8.dp),
-            text = loanWithAssociations.clientName,
-            style = MaterialTheme.typography.bodyLarge,
-        )
-
-        HorizontalDivider(modifier = Modifier.fillMaxWidth())
-
-        Row(
+        Card(
             modifier = Modifier.fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically,
+            colors = CardDefaults.cardColors(Color.White),
+            elevation = CardDefaults.cardElevation(1.dp),
         ) {
-            Canvas(
-                modifier = Modifier
-                    .size(22.dp)
-                    .padding(top = 4.dp, end = 4.dp),
-                contentDescription = "",
-                onDraw = {
-                    drawRect(
-                        color = when {
-                            loanWithAssociations.status.active == true -> {
-                                Color.Green
-                            }
+            Column(
+                modifier = Modifier.padding(15.dp),
+                verticalArrangement = Arrangement.spacedBy(6.dp),
+            ) {
+                Text(
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    text = loanWithAssociations.clientName,
+                    style = MaterialTheme.typography.headlineSmall,
+                    fontWeight = FontWeight.Bold,
+                )
 
-                            loanWithAssociations.status.pendingApproval == true -> {
-                                Color.Yellow
-                            }
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Canvas(
+                        modifier = Modifier
+                            .size(22.dp),
+                        contentDescription = "",
+                        onDraw = {
+                            drawRect(
+                                color = when {
+                                    loanWithAssociations.status.active == true -> {
+                                        Color.Green
+                                    }
 
-                            loanWithAssociations.status.waitingForDisbursal == true -> {
-                                Color.Blue
-                            }
+                                    loanWithAssociations.status.pendingApproval == true -> {
+                                        Color.Yellow
+                                    }
 
-                            else -> {
-                                Color.Black
-                            }
+                                    loanWithAssociations.status.waitingForDisbursal == true -> {
+                                        Color.Blue
+                                    }
+
+                                    else -> {
+                                        Color.Black
+                                    }
+                                },
+                            )
                         },
                     )
-                },
-            )
+                    Spacer(modifier = Modifier.width(6.dp))
+                    Text(
+                        text = loanWithAssociations.loanProductName,
+                        style = MifosTypography.bodyLarge,
+                    )
+                }
 
-            LoanSummaryFarApartTextItem(
-                title = loanWithAssociations.loanProductName,
-                value = "#" + loanWithAssociations.accountNo,
-            )
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Text(
+                        text = "Loan ID: #" + loanWithAssociations.accountNo,
+                        color = MaterialTheme.colorScheme.secondary,
+                        style = MifosTypography.bodyMedium,
+                    )
+                    Spacer(modifier = Modifier.width(3.dp))
+                    IconButton(
+                        onClick = {
+                            clipboardManager.setText(AnnotatedString(loanWithAssociations.accountNo))
+                            scope.launch {
+                                snackbarHostState.showSnackbar(
+                                    message = "Copied to clipboard",
+                                )
+                            }
+                        },
+                        modifier = Modifier.size(15.dp),
+                    ) {
+                        Icon(
+                            imageVector = MifosIcons.Share,
+                            contentDescription = "Copy",
+                            modifier = Modifier.size(15.dp),
+                            tint = MaterialTheme.colorScheme.secondary,
+                        )
+                    }
+                }
+            }
         }
 
-        HorizontalDivider(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 2.dp),
+        Row {
+            InfoCard(
+                titleText = "Total Loan",
+                infoText = summary?.totalExpectedRepayment.toString(),
+                modifier = Modifier.fillMaxWidth(0.5f),
+            )
+            Spacer(modifier = Modifier.width(12.dp))
+            InfoCard(
+                titleText = "Amount Paid",
+                infoText = summary?.totalRepayment.toString(),
+                modifier = Modifier.fillMaxWidth(),
+            )
+        }
+        InfoCard(
+            titleText = "Outstanding Balance",
+            infoText = summary?.totalOutstanding.toString(),
+            modifier = Modifier.fillMaxWidth(),
         )
 
-        LoanSummaryFarApartTextItem(
-            title = stringResource(Res.string.feature_loan_loan_amount_disbursed),
-            value = if (inflateLoanSummary) {
-                loanWithAssociations.summary.principalDisbursed?.toString()
-                    ?: ""
-            } else {
-                ""
-            },
-        )
+        Card(
+            colors = CardDefaults.cardColors(Color.White),
+            elevation = CardDefaults.cardElevation(1.dp),
+        ) {
+            Column(
+                modifier = Modifier.padding(15.dp),
+            ) {
+                Text(
+                    text = "Loan Overview",
+                    style = MifosTypography.bodyLarge,
+                    fontWeight = FontWeight.Bold,
+                )
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Icon(
+                        imageVector = MifosIcons.Info,
+                        contentDescription = "Info",
+                        modifier = Modifier.size(20.dp),
+                    )
+                    LoanSummaryFarApartTextItem(
+                        title = stringResource(Res.string.feature_loan_loan_amount_disbursed),
+                        value = if (inflateLoanSummary) {
+                            loanWithAssociations.summary.principalDisbursed?.toString()
+                                ?: ""
+                        } else {
+                            ""
+                        },
+                    )
+                }
 
-        LoanSummaryFarApartTextItem(
-            title = stringResource(Res.string.feature_loan_disbursed_date),
-            value = if (inflateLoanSummary) getActualDisbursementDateInStringFormat() else "",
-        )
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Icon(
+                        imageVector = MifosIcons.Calendar,
+                        contentDescription = "Date",
+                        modifier = Modifier.size(20.dp),
+                    )
+                    LoanSummaryFarApartTextItem(
+                        title = stringResource(Res.string.feature_loan_disbursed_date),
+                        value = if (inflateLoanSummary) getActualDisbursementDateInStringFormat() else "",
+                    )
+                }
 
-        LoanSummaryFarApartTextItem(
-            title = stringResource(Res.string.feature_loan_loan_in_arrears),
-            value = if (inflateLoanSummary) {
-                loanWithAssociations.summary.totalOverdue?.toString()
-                    ?: ""
-            } else {
-                ""
-            },
-        )
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Icon(
+                        imageVector = MifosIcons.KeyboardArrowDown,
+                        contentDescription = "Arrears",
+                        modifier = Modifier.size(20.dp),
+                    )
+                    LoanSummaryFarApartTextItem(
+                        title = stringResource(Res.string.feature_loan_loan_in_arrears),
+                        value = if (inflateLoanSummary) {
+                            loanWithAssociations.summary.totalOverdue?.toString()
+                                ?: ""
+                        } else {
+                            ""
+                        },
+                    )
+                }
 
-        LoanSummaryFarApartTextItem(
-            title = stringResource(Res.string.feature_loan_staff),
-            value = loanWithAssociations.loanOfficerName,
-        )
-
-        Spacer(modifier = Modifier.height(8.dp))
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Icon(
+                        imageVector = MifosIcons.Person,
+                        contentDescription = "Info",
+                        modifier = Modifier.size(20.dp),
+                    )
+                    LoanSummaryFarApartTextItem(
+                        title = stringResource(Res.string.feature_loan_staff),
+                        value = loanWithAssociations.loanOfficerName,
+                    )
+                }
+            }
+        }
 
         LoanSummaryDataTable(
             loanSummary = loanWithAssociations.summary,
             inflateLoanSummary = inflateLoanSummary,
         )
 
-        Spacer(modifier = Modifier.height(4.dp))
-
         Button(
             enabled = getButtonActiveStatus(loanWithAssociations.status),
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 8.dp)
                 .height(45.dp),
+            shape = RoundedCornerShape(9.dp),
             onClick = when {
                 loanWithAssociations.status.active == true -> {
                     { makeRepayment.invoke() }
@@ -402,7 +511,12 @@ private fun LoanAccountSummaryContent(
 private fun LoanSummaryDataTable(loanSummary: LoansAccountSummaryEntity, inflateLoanSummary: Boolean) {
     // dataTable should be empty if [inflateLoanSummary] is false
     val summary = if (inflateLoanSummary) loanSummary else null
-    Column {
+    Card(
+        modifier = Modifier
+            .clip(RoundedCornerShape(9.dp)),
+        colors = CardDefaults.cardColors(Color.White),
+        elevation = CardDefaults.cardElevation(1.dp),
+    ) {
         DataTableRow(
             summaryColumnTitle = stringResource(Res.string.feature_loan_summary),
             loanColumnValue = stringResource(Res.string.feature_loan),
@@ -419,13 +533,16 @@ private fun LoanSummaryDataTable(loanSummary: LoansAccountSummaryEntity, inflate
             balanceColumnValue = summary?.principalOutstanding?.toString() ?: "",
         )
 
+        HorizontalDivider(thickness = 0.5.dp)
+
         DataTableRow(
             summaryColumnTitle = stringResource(Res.string.feature_loan_loan_interest),
             loanColumnValue = summary?.interestCharged?.toString() ?: "",
             amountColumnValue = summary?.interestPaid?.toString() ?: "",
             balanceColumnValue = summary?.interestOutstanding?.toString() ?: "",
-            color = Color.Blue.copy(alpha = .3f),
         )
+
+        HorizontalDivider(thickness = 0.5.dp)
 
         DataTableRow(
             summaryColumnTitle = stringResource(Res.string.feature_loan_loan_fees),
@@ -434,19 +551,13 @@ private fun LoanSummaryDataTable(loanSummary: LoansAccountSummaryEntity, inflate
             balanceColumnValue = summary?.feeChargesOutstanding?.toString() ?: "",
         )
 
+        HorizontalDivider(thickness = 0.5.dp)
+
         DataTableRow(
             summaryColumnTitle = stringResource(Res.string.feature_loan_loan_penalty),
             loanColumnValue = summary?.penaltyChargesCharged?.toString() ?: "",
             amountColumnValue = summary?.penaltyChargesPaid?.toString() ?: "",
             balanceColumnValue = summary?.penaltyChargesOutstanding?.toString() ?: "",
-            color = Color.Blue.copy(alpha = .3f),
-        )
-
-        DataTableRow(
-            summaryColumnTitle = stringResource(Res.string.feature_loan_total),
-            loanColumnValue = summary?.totalExpectedRepayment?.toString() ?: "",
-            amountColumnValue = summary?.totalRepayment?.toString() ?: "",
-            balanceColumnValue = summary?.totalOutstanding?.toString() ?: "",
         )
     }
 }
@@ -456,20 +567,50 @@ private fun LoanSummaryFarApartTextItem(title: String, value: String) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(top = 6.dp),
-        horizontalArrangement = Arrangement.SpaceBetween,
+            .padding(6.dp),
     ) {
         Text(
             style = MaterialTheme.typography.bodyLarge,
-            text = title,
+            fontWeight = FontWeight.Bold,
+            text = title + ":",
             color = Color.Black,
         )
+
+        Spacer(modifier = Modifier.width(4.dp))
 
         Text(
             style = MaterialTheme.typography.bodyLarge,
             text = value,
             color = Color.DarkGray,
         )
+    }
+}
+
+@Composable
+private fun InfoCard(
+    titleText: String,
+    infoText: String,
+    modifier: Modifier,
+) {
+    Card(
+        modifier = modifier.height(80.dp),
+        colors = CardDefaults.cardColors(Color.White),
+        elevation = CardDefaults.cardElevation(1.dp),
+    ) {
+        Column(
+            modifier = Modifier.padding(15.dp),
+        ) {
+            Text(
+                text = titleText,
+                style = MifosTypography.bodyLarge,
+                fontWeight = FontWeight.Bold,
+            )
+            Spacer(modifier = Modifier.height(4.dp))
+            Text(
+                text = infoText,
+                style = MifosTypography.headlineSmall,
+            )
+        }
     }
 }
 
@@ -486,13 +627,14 @@ private fun DataTableRow(
         modifier = Modifier
             .fillMaxWidth()
             .background(color),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.Center,
     ) {
         Text(
             text = summaryColumnTitle,
             modifier = Modifier
-                .weight(2.5f)
-                .padding(vertical = 6.dp)
-                .padding(start = 2.dp),
+                .weight(1f)
+                .padding(6.dp),
             style = MaterialTheme.typography.bodyLarge,
             fontWeight = if (isHeader) FontWeight.Bold else FontWeight.Normal,
         )
@@ -500,8 +642,8 @@ private fun DataTableRow(
         Text(
             text = loanColumnValue,
             modifier = Modifier
-                .weight(2.8f)
-                .padding(horizontal = 6.dp, vertical = 6.dp),
+                .weight(1f)
+                .padding(9.dp),
             style = MaterialTheme.typography.bodyLarge,
             fontWeight = if (isHeader) FontWeight.Bold else FontWeight.Normal,
             textAlign = TextAlign.End,
@@ -510,7 +652,7 @@ private fun DataTableRow(
         Text(
             text = amountColumnValue,
             modifier = Modifier
-                .weight(2.7f)
+                .weight(1f)
                 .padding(end = 6.dp, top = 6.dp, bottom = 6.dp),
             style = MaterialTheme.typography.bodyLarge,
             fontWeight = if (isHeader) FontWeight.Bold else FontWeight.Normal,
@@ -520,9 +662,9 @@ private fun DataTableRow(
         Text(
             text = balanceColumnValue,
             modifier = Modifier
-                .weight(2f)
+                .weight(1f)
                 .padding(vertical = 6.dp)
-                .padding(end = 2.dp),
+                .padding(end = 6.dp),
             style = MaterialTheme.typography.bodyLarge,
             fontWeight = if (isHeader) FontWeight.Bold else FontWeight.Normal,
             textAlign = TextAlign.End,
