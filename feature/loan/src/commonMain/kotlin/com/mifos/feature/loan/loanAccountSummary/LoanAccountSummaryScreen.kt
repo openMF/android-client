@@ -334,7 +334,7 @@ private fun LoanAccountSummaryContent(
                     Text(
                         text = loanWithAssociations.loanProductName,
                         style = MifosTypography.bodyLarge,
-                        color = MaterialTheme.colorScheme.onSurface
+                        color = MaterialTheme.colorScheme.onSurface,
                     )
                 }
 
@@ -400,7 +400,7 @@ private fun LoanAccountSummaryContent(
                     text = "Loan Overview",
                     style = MifosTypography.bodyLarge,
                     fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.onSurface
+                    color = MaterialTheme.colorScheme.onSurface,
                 )
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
@@ -502,7 +502,7 @@ private fun LoanAccountSummaryContent(
                     { Logger.e("LoanAccountSummary") { "TRANSACTION ACTION NOT SET" } }
                 }
             },
-            colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
+            colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
         ) {
             Text(
                 color = MaterialTheme.colorScheme.background,
@@ -530,8 +530,8 @@ private fun LoanSummaryDataTable(loanSummary: LoansAccountSummaryEntity, inflate
             balanceColumnValue = stringResource(Res.string.feature_loan_balance),
             isHeader = true,
             color = MaterialTheme.colorScheme.primary.copy(
-                alpha = 0.3f
-            )
+                alpha = 0.3f,
+            ),
         )
 
         DataTableRow(
@@ -581,7 +581,7 @@ private fun LoanSummaryFarApartTextItem(title: String, value: String) {
             style = MaterialTheme.typography.bodyLarge,
             fontWeight = FontWeight.Bold,
             text = title + ":",
-            color = MaterialTheme.colorScheme.onSurface
+            color = MaterialTheme.colorScheme.onSurface,
         )
 
         Spacer(modifier = Modifier.width(4.dp))
@@ -589,7 +589,7 @@ private fun LoanSummaryFarApartTextItem(title: String, value: String) {
         Text(
             style = MaterialTheme.typography.bodyLarge,
             text = value,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
         )
     }
 }
@@ -612,13 +612,13 @@ private fun InfoCard(
                 text = titleText,
                 style = MifosTypography.bodyLarge,
                 fontWeight = FontWeight.Bold,
-                color = MaterialTheme.colorScheme.onSurface
+                color = MaterialTheme.colorScheme.onSurface,
             )
             Spacer(modifier = Modifier.height(4.dp))
             Text(
                 text = infoText,
                 style = MifosTypography.headlineSmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
         }
     }
@@ -647,7 +647,7 @@ private fun DataTableRow(
                 .padding(6.dp),
             style = MaterialTheme.typography.bodyLarge,
             fontWeight = if (isHeader) FontWeight.Bold else FontWeight.Normal,
-            color = MaterialTheme.colorScheme.onSurface
+            color = MaterialTheme.colorScheme.onSurface,
         )
 
         Text(
@@ -658,7 +658,7 @@ private fun DataTableRow(
             style = MaterialTheme.typography.bodyLarge,
             fontWeight = if (isHeader) FontWeight.Bold else FontWeight.Normal,
             textAlign = TextAlign.End,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
         )
 
         Text(
@@ -669,7 +669,7 @@ private fun DataTableRow(
             style = MaterialTheme.typography.bodyLarge,
             fontWeight = if (isHeader) FontWeight.Bold else FontWeight.Normal,
             textAlign = TextAlign.End,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
         )
 
         Text(
@@ -681,7 +681,7 @@ private fun DataTableRow(
             style = MaterialTheme.typography.bodyLarge,
             fontWeight = if (isHeader) FontWeight.Bold else FontWeight.Normal,
             textAlign = TextAlign.End,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
         )
     }
 }
