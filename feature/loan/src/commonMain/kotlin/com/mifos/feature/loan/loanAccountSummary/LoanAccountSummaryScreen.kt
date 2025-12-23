@@ -77,6 +77,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import co.touchlab.kermit.Logger
 import com.mifos.core.common.utils.Constants
 import com.mifos.core.common.utils.DateHelper
@@ -86,6 +88,7 @@ import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.designsystem.theme.MifosTypography
 import com.mifos.core.designsystem.theme.colorScheme
+import com.mifos.core.ui.components.MifosBreadcrumbNavBar
 import com.mifos.core.ui.components.MifosProgressIndicator
 import com.mifos.room.entities.accounts.loans.LoanStatusEntity
 import com.mifos.room.entities.accounts.loans.LoanWithAssociationsEntity
@@ -108,6 +111,7 @@ internal fun LoanAccountSummaryScreen(
     approveLoan: (loadId: Int, loanWithAssociations: LoanWithAssociationsEntity) -> Unit,
     disburseLoan: (loanId: Int) -> Unit,
     onRepaymentClick: (loanWithAssociations: LoanWithAssociationsEntity) -> Unit,
+    navController: NavController,
     viewModel: LoanAccountSummaryViewModel = koinViewModel(),
 ) {
     val uiState by viewModel.loanAccountSummaryUiState.collectAsStateWithLifecycle()
@@ -134,6 +138,7 @@ internal fun LoanAccountSummaryScreen(
         approveLoan = { approveLoan(loanAccountNumber, it) },
         disburseLoan = { disburseLoan(loanAccountNumber) },
         makeRepayment = onRepaymentClick,
+        navController = navController,
     )
 }
 
@@ -150,6 +155,7 @@ internal fun LoanAccountSummaryScreen(
     approveLoan: (loanWithAssociations: LoanWithAssociationsEntity) -> Unit,
     disburseLoan: () -> Unit,
     makeRepayment: (loanWithAssociations: LoanWithAssociationsEntity) -> Unit,
+    navController: NavController,
 ) {
     val snackbarHostState = remember {
         SnackbarHostState()
@@ -213,33 +219,40 @@ internal fun LoanAccountSummaryScreen(
             }
         },
     ) {
-        Box(
+        Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(it)
-                .background(Color(0xFFF3F4F6)),
+                .background(MaterialTheme.colorScheme.background),
         ) {
-            when (uiState) {
-                is LoanAccountSummaryUiState.ShowFetchingError -> {
-                    MifosSweetError(
-                        message = uiState.message,
-                        onclick = onRetry,
-                    )
-                }
+            MifosBreadcrumbNavBar(navController)
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(it),
+            ) {
+                when (uiState) {
+                    is LoanAccountSummaryUiState.ShowFetchingError -> {
+                        MifosSweetError(
+                            message = uiState.message,
+                            onclick = onRetry,
+                        )
+                    }
 
-                is LoanAccountSummaryUiState.ShowLoanById -> {
-                    val loanWithAssociations = uiState.loanWithAssociations
-                    LoanAccountSummaryContent(
-                        loanWithAssociations = loanWithAssociations,
-                        makeRepayment = { makeRepayment.invoke(loanWithAssociations) },
-                        approveLoan = { approveLoan.invoke(loanWithAssociations) },
-                        disburseLoan = disburseLoan,
-                        snackbarHostState = snackbarHostState,
-                    )
-                }
+                    is LoanAccountSummaryUiState.ShowLoanById -> {
+                        val loanWithAssociations = uiState.loanWithAssociations
+                        LoanAccountSummaryContent(
+                            loanWithAssociations = loanWithAssociations,
+                            makeRepayment = { makeRepayment.invoke(loanWithAssociations) },
+                            approveLoan = { approveLoan.invoke(loanWithAssociations) },
+                            disburseLoan = disburseLoan,
+                            snackbarHostState = snackbarHostState,
+                            navController = navController,
+                        )
+                    }
 
-                LoanAccountSummaryUiState.ShowProgressbar -> {
-                    MifosProgressIndicator()
+                    LoanAccountSummaryUiState.ShowProgressbar -> {
+                        MifosProgressIndicator()
+                    }
                 }
             }
         }
@@ -253,6 +266,7 @@ private fun LoanAccountSummaryContent(
     approveLoan: () -> Unit,
     disburseLoan: () -> Unit,
     snackbarHostState: SnackbarHostState,
+    navController: NavController,
 ) {
     val inflateLoanSummary = getInflateLoanSummaryValue(status = loanWithAssociations.status)
     val summary = if (inflateLoanSummary) loanWithAssociations.summary else null
@@ -282,7 +296,6 @@ private fun LoanAccountSummaryContent(
             .verticalScroll(scrollState),
         verticalArrangement = Arrangement.spacedBy(12.dp),
     ) {
-        Spacer(modifier = Modifier.height(12.dp))
         Card(
             modifier = Modifier.fillMaxWidth(),
             colors = CardDefaults.cardColors(MaterialTheme.colorScheme.surface),
@@ -522,6 +535,9 @@ private fun LoanSummaryDataTable(loanSummary: LoansAccountSummaryEntity, inflate
             .clip(RoundedCornerShape(9.dp)),
         colors = CardDefaults.cardColors(MaterialTheme.colorScheme.surface),
         elevation = CardDefaults.cardElevation(1.dp),
+        border = CardDefaults.outlinedCardBorder().copy(
+            width = 0.5.dp,
+        ),
     ) {
         DataTableRow(
             summaryColumnTitle = stringResource(Res.string.feature_loan_summary),
@@ -807,5 +823,6 @@ private fun PreviewLoanAccountSummary(
         approveLoan = { },
         disburseLoan = { },
         makeRepayment = { },
+        navController = rememberNavController(),
     )
 }
