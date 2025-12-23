@@ -49,6 +49,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.DropdownMenu
@@ -277,13 +278,14 @@ private fun LoanAccountSummaryContent(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(24.dp)
+            .padding(horizontal = 24.dp)
             .verticalScroll(scrollState),
         verticalArrangement = Arrangement.spacedBy(12.dp),
     ) {
+        Spacer(modifier = Modifier.height(12.dp))
         Card(
             modifier = Modifier.fillMaxWidth(),
-            colors = CardDefaults.cardColors(Color.White),
+            colors = CardDefaults.cardColors(MaterialTheme.colorScheme.surface),
             elevation = CardDefaults.cardElevation(1.dp),
         ) {
             Column(
@@ -332,6 +334,7 @@ private fun LoanAccountSummaryContent(
                     Text(
                         text = loanWithAssociations.loanProductName,
                         style = MifosTypography.bodyLarge,
+                        color = MaterialTheme.colorScheme.onSurface
                     )
                 }
 
@@ -341,7 +344,7 @@ private fun LoanAccountSummaryContent(
                 ) {
                     Text(
                         text = "Loan ID: #" + loanWithAssociations.accountNo,
-                        color = MaterialTheme.colorScheme.secondary,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
                         style = MifosTypography.bodyMedium,
                     )
                     Spacer(modifier = Modifier.width(3.dp))
@@ -360,7 +363,7 @@ private fun LoanAccountSummaryContent(
                             imageVector = MifosIcons.Share,
                             contentDescription = "Copy",
                             modifier = Modifier.size(15.dp),
-                            tint = MaterialTheme.colorScheme.secondary,
+                            tint = MaterialTheme.colorScheme.onSurfaceVariant,
                         )
                     }
                 }
@@ -387,7 +390,7 @@ private fun LoanAccountSummaryContent(
         )
 
         Card(
-            colors = CardDefaults.cardColors(Color.White),
+            colors = CardDefaults.cardColors(MaterialTheme.colorScheme.surface),
             elevation = CardDefaults.cardElevation(1.dp),
         ) {
             Column(
@@ -397,6 +400,7 @@ private fun LoanAccountSummaryContent(
                     text = "Loan Overview",
                     style = MifosTypography.bodyLarge,
                     fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.onSurface
                 )
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
@@ -498,12 +502,14 @@ private fun LoanAccountSummaryContent(
                     { Logger.e("LoanAccountSummary") { "TRANSACTION ACTION NOT SET" } }
                 }
             },
+            colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
         ) {
             Text(
                 color = MaterialTheme.colorScheme.background,
                 text = getButtonText(loanWithAssociations.status),
             )
         }
+        Spacer(modifier = Modifier.height(12.dp))
     }
 }
 
@@ -514,7 +520,7 @@ private fun LoanSummaryDataTable(loanSummary: LoansAccountSummaryEntity, inflate
     Card(
         modifier = Modifier
             .clip(RoundedCornerShape(9.dp)),
-        colors = CardDefaults.cardColors(Color.White),
+        colors = CardDefaults.cardColors(MaterialTheme.colorScheme.surface),
         elevation = CardDefaults.cardElevation(1.dp),
     ) {
         DataTableRow(
@@ -523,7 +529,9 @@ private fun LoanSummaryDataTable(loanSummary: LoansAccountSummaryEntity, inflate
             amountColumnValue = stringResource(Res.string.feature_loan_amount_paid),
             balanceColumnValue = stringResource(Res.string.feature_loan_balance),
             isHeader = true,
-            color = Color.Blue.copy(alpha = .3f),
+            color = MaterialTheme.colorScheme.primary.copy(
+                alpha = 0.3f
+            )
         )
 
         DataTableRow(
@@ -573,7 +581,7 @@ private fun LoanSummaryFarApartTextItem(title: String, value: String) {
             style = MaterialTheme.typography.bodyLarge,
             fontWeight = FontWeight.Bold,
             text = title + ":",
-            color = Color.Black,
+            color = MaterialTheme.colorScheme.onSurface
         )
 
         Spacer(modifier = Modifier.width(4.dp))
@@ -581,7 +589,7 @@ private fun LoanSummaryFarApartTextItem(title: String, value: String) {
         Text(
             style = MaterialTheme.typography.bodyLarge,
             text = value,
-            color = Color.DarkGray,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
         )
     }
 }
@@ -594,7 +602,7 @@ private fun InfoCard(
 ) {
     Card(
         modifier = modifier.height(80.dp),
-        colors = CardDefaults.cardColors(Color.White),
+        colors = CardDefaults.cardColors(MaterialTheme.colorScheme.surface),
         elevation = CardDefaults.cardElevation(1.dp),
     ) {
         Column(
@@ -604,11 +612,13 @@ private fun InfoCard(
                 text = titleText,
                 style = MifosTypography.bodyLarge,
                 fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.onSurface
             )
             Spacer(modifier = Modifier.height(4.dp))
             Text(
                 text = infoText,
                 style = MifosTypography.headlineSmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
             )
         }
     }
@@ -621,7 +631,7 @@ private fun DataTableRow(
     amountColumnValue: String,
     balanceColumnValue: String,
     isHeader: Boolean = false,
-    color: Color = Color.White,
+    color: Color = MaterialTheme.colorScheme.surface,
 ) {
     Row(
         modifier = Modifier
@@ -637,6 +647,7 @@ private fun DataTableRow(
                 .padding(6.dp),
             style = MaterialTheme.typography.bodyLarge,
             fontWeight = if (isHeader) FontWeight.Bold else FontWeight.Normal,
+            color = MaterialTheme.colorScheme.onSurface
         )
 
         Text(
@@ -647,6 +658,7 @@ private fun DataTableRow(
             style = MaterialTheme.typography.bodyLarge,
             fontWeight = if (isHeader) FontWeight.Bold else FontWeight.Normal,
             textAlign = TextAlign.End,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
         )
 
         Text(
@@ -657,6 +669,7 @@ private fun DataTableRow(
             style = MaterialTheme.typography.bodyLarge,
             fontWeight = if (isHeader) FontWeight.Bold else FontWeight.Normal,
             textAlign = TextAlign.End,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
         )
 
         Text(
@@ -668,6 +681,7 @@ private fun DataTableRow(
             style = MaterialTheme.typography.bodyLarge,
             fontWeight = if (isHeader) FontWeight.Bold else FontWeight.Normal,
             textAlign = TextAlign.End,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
         )
     }
 }
