@@ -273,7 +273,7 @@ private fun LoanAccountSummaryContent(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(vertical = 12.dp),
-                    text = loanWithAssociations.clientName,
+            text = loanWithAssociations.clientName,
             style = MaterialTheme.typography.bodyLarge,
         )
 
@@ -287,7 +287,7 @@ private fun LoanAccountSummaryContent(
                 modifier = Modifier
                     .size(22.dp)
                     .padding(top = 8.dp, end = 8.dp),
-                        contentDescription = "",
+                contentDescription = "",
                 onDraw = {
                     drawRect(
                         color = when {
