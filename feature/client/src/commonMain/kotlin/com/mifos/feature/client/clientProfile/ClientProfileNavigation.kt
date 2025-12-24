@@ -31,6 +31,7 @@ fun NavGraphBuilder.clientProfileDestination(
     viewAddress: (Int) -> Unit,
     viewAssociatedAccounts: (Int) -> Unit,
     navigateToAddCharge: (Int) -> Unit,
+    pinpointLocation: (Int) -> Unit,
 ) {
     composable<ClientProfileRoute> {
         ClientProfileScreen(
@@ -41,6 +42,7 @@ fun NavGraphBuilder.clientProfileDestination(
             navigateToClientDetailsScreen = navigateToClientDetailsScreen,
             viewAddress = viewAddress,
             viewAssociatedAccounts = viewAssociatedAccounts,
+            pinpointLocation = pinpointLocation,
             navController = navController,
         )
     }

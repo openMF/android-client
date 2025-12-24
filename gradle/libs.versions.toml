@@ -165,6 +165,8 @@ androidPackageNamespace = "org.mifos.client"
 androidPackageVersion = "1.0.0"
 uiAndroidVersion = "1.7.8"
 
+mokoPermissions = "0.20.1"
+
 [libraries]
 androidx-activity-ktx = { group = "androidx.activity", name = "activity-ktx", version.ref = "androidxActivity" }
 androidx-lifecycle-process = { group = "androidx.lifecycle", name = "lifecycle-process", version.ref = "androidxLifecycle" }
@@ -409,6 +411,17 @@ compottie-resources = { module = "io.github.alexzhirkevich:compottie-resources",
 
 pdfbox = { module = "org.apache.pdfbox:pdfbox", version.ref = "pdfbox" }
 
+#Moko permissions
+moko-permissions = {group ="dev.icerock.moko", name="permissions", version.ref = "mokoPermissions"}
+moko-permissions-compose = {group ="dev.icerock.moko", name="permissions-compose", version.ref = "mokoPermissions"}
+moko-permissions-location = {group ="dev.icerock.moko", name="permissions-location", version.ref = "mokoPermissions"}
+moko-permissions-camera = {group ="dev.icerock.moko", name="permissions-camera", version.ref = "mokoPermissions"}
+moko-permissions-contacts = {group ="dev.icerock.moko", name="permissions-contacts", version.ref = "mokoPermissions"}
+moko-permissions-gallary = {group ="dev.icerock.moko", name="permissions-gallery", version.ref = "mokoPermissions"}
+moko-permissions-microphone = {group ="dev.icerock.moko", name="permissions-microphone", version.ref = "mokoPermissions"}
+moko-permissions-motion = {group ="dev.icerock.moko", name="permissions-motion", version.ref = "mokoPermissions"}
+moko-permissions-notification = {group ="dev.icerock.moko", name="permissions-notification", version.ref = "mokoPermissions"}
+moko-permissions-storage = {group ="dev.icerock.moko", name="permissions-storage", version.ref = "mokoPermissions"}
 
 [plugins]
 

@@ -82,10 +82,13 @@
     <string name="feature_client_pinpoint_location_deleted">Pinpoint Location Deleted Successfully</string>
     <string name="feature_client_pinpoint_location_updated">Pinpoint Location Updated Successfully</string>
     <string name="feature_client_pinpoint_client">Pinpoint Client</string>
+    <string name="feature_client_client_locations">Client Locations</string>
+    <string name="feature_client_add_location">Add location</string>
 
     <string name="feature_client_update_client_address">Update Address</string>
     <string name="feature_client_delete_client_address">Delete Address</string>
     <string name="feature_client_no_pinpoint_found">No Pinpoint Found</string>
+    <string name="feature_client_no_location_data_found">No location data found</string>
 
     <string name="feature_client_charge_select">Select</string>
     <string name="feature_client_charge_cancel">Cancel</string>
@@ -236,6 +239,8 @@
     <string name="client_profile_documents_subtitle">Check or upload documents</string>
     <string name="client_profile_notes_title">Notes</string>
     <string name="client_profile_notes_subtitle">Check or update note accounts</string>
+    <string name="client_profile_pinpoint_location_title">Pinpoint Location</string>
+    <string name="client_profile_pinpoint_location_subtitle">Check or update client's location</string>
 
     <string name="client_empty_card_message">Click Here To View Filled State.</string>
 

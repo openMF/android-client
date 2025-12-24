@@ -13,6 +13,7 @@ import androidclient.feature.client.generated.resources.Res
 import androidclient.feature.client.generated.resources.feature_client_failed_to_load_client
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
+import androidx.paging.filter
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.common.utils.Page
 import com.mifos.core.data.repository.ClientDetailsRepository
@@ -22,7 +23,9 @@ import com.mifos.core.ui.util.BaseViewModel
 import com.mifos.core.ui.util.imageToByteArray
 import com.mifos.room.entities.client.ClientEntity
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
@@ -36,6 +39,7 @@ internal class ClientListViewModel(
         clients = emptyList(),
         isOnline = false,
         clientsFlow = null,
+        unfilteredClients = emptyList(),
     ),
 ) {
 
@@ -74,6 +78,12 @@ internal class ClientListViewModel(
                     )
                 }
             }
+
+            ClientListAction.ToggleFilterVisibility -> toggleFilterVisibility()
+            is ClientListAction.HandleSortClick -> handleSortClick(action.sort)
+            is ClientListAction.OnUpdateOffice -> onUpdateOffice(action.offices)
+            is ClientListAction.HandleFilterClick -> handleFilterClick(action.filter, action.filterType)
+            ClientListAction.ClearFilters -> clearFilters()
         }
     }
 
@@ -144,7 +154,7 @@ internal class ClientListViewModel(
                 if (data.isEmpty()) {
                     it.copy(isEmpty = true, dialogState = null)
                 } else {
-                    it.copy(clients = data, dialogState = null)
+                    it.copy(clients = data, dialogState = null, unfilteredClients = data)
                 }
             }
         }
@@ -155,6 +165,7 @@ internal class ClientListViewModel(
             state.copy(
                 clientsFlow = result,
                 dialogState = null,
+                unfilteredClientsFlow = result,
             )
         }
     }
@@ -177,6 +188,95 @@ internal class ClientListViewModel(
             }
         }
     }
+
+    private fun handleSortClick(sort: SortTypes?) {
+        updateState {
+            val sortedList = when (sort) {
+                SortTypes.NAME -> it.clients.sortedBy { it.displayName?.lowercase() }
+                SortTypes.ACCOUNT_NUMBER -> it.clients.sortedBy { it.accountNo }
+                SortTypes.EXTERNAL_ID -> it.clients.sortedBy { it.externalId }
+                else -> it.clients
+            }
+
+            it.copy(
+                sort = sort,
+                clients = sortedList,
+            )
+        }
+    }
+
+    private fun toggleFilterVisibility() {
+        updateState {
+            it.copy(
+                isFilterVisible = !it.isFilterVisible,
+            )
+        }
+    }
+
+    private fun onUpdateOffice(offices: List<String?>) {
+        updateState {
+            it.copy(
+                officeNames = (offices + it.officeNames).distinct().sortedBy { it },
+            )
+        }
+    }
+
+    private fun handleFilterClick(filter: String, filterType: FilterType) {
+        updateState {
+            val newSelectedStatus = if (filterType == FilterType.STATUS) {
+                if (filter in it.selectedStatus) {
+                    it.selectedStatus - filter
+                } else {
+                    it.selectedStatus + filter
+                }
+            } else {
+                it.selectedStatus
+            }
+            val newSelectedOffices = if (filterType == FilterType.OFFICE) {
+                if (filter in it.selectedOffices) {
+                    it.selectedOffices - filter
+                } else {
+                    it.selectedOffices + filter
+                }
+            } else {
+                it.selectedOffices
+            }
+
+            fun keep(client: ClientEntity): Boolean {
+                val statusMatch = newSelectedStatus.isEmpty() || client.status?.value in newSelectedStatus
+                val officeMatch = newSelectedOffices.isEmpty() || (client.officeName ?: "Null") in newSelectedOffices
+
+                return statusMatch && officeMatch
+            }
+            val filteredList = it.unfilteredClients.filter { client ->
+                keep(client)
+            }
+
+            val filteredFlow = it.unfilteredClientsFlow?.map { clients ->
+                clients.filter { client ->
+                    keep(client)
+                }
+            }
+            it.copy(
+                selectedStatus = newSelectedStatus,
+                selectedOffices = newSelectedOffices,
+                clients = filteredList,
+                clientsFlow = filteredFlow,
+            )
+        }
+    }
+
+    private fun clearFilters() {
+        updateState {
+            it.copy(
+                clients = it.unfilteredClients,
+                clientsFlow = it.unfilteredClientsFlow,
+                sort = null,
+                selectedStatus = emptyList(),
+                selectedOffices = emptyList(),
+            )
+        }
+    }
 }
 
 /**
@@ -184,18 +284,36 @@ internal class ClientListViewModel(
  */
 data class ClientListState(
     val clients: List<ClientEntity>,
+    val unfilteredClients: List<ClientEntity>,
     val clientsFlow: Flow<PagingData<ClientEntity>>?,
+    val unfilteredClientsFlow: Flow<PagingData<ClientEntity>>? = null,
     val isOnline: Boolean,
     val isEmpty: Boolean = false,
     val isSearchActive: Boolean = false,
     val dialogState: DialogState? = null,
     val searchQuery: String = "",
     val clientImages: Map<Int, ByteArray?> = emptyMap(),
+    val sort: SortTypes? = null,
+    val selectedStatus: List<String> = emptyList(),
+    val isFilterVisible: Boolean = false,
+    val officeNames: List<String?> = emptyList(),
+    val selectedOffices: List<String> = emptyList(),
 ) {
     sealed interface DialogState {
         data class Error(val message: String) : DialogState
         data object Loading : DialogState
     }
+}
+
+enum class SortTypes(val value: String) {
+    NAME("Name"),
+    ACCOUNT_NUMBER("Account Number"),
+    EXTERNAL_ID("External ID"),
+}
+
+enum class FilterType(val value: String) {
+    STATUS("Status"),
+    OFFICE("Office"),
 }
 
 /**
@@ -218,6 +336,11 @@ sealed interface ClientListAction {
     data object DismissSearch : ClientListAction
     data object NavigateToCreateClient : ClientListAction
     data class OnQueryChange(val query: String) : ClientListAction
+    data object ToggleFilterVisibility : ClientListAction
+    data class HandleFilterClick(val filter: String, val filterType: FilterType) : ClientListAction
+    data class HandleSortClick(val sort: SortTypes) : ClientListAction
+    data class OnUpdateOffice(val offices: List<String?>) : ClientListAction
+    data object ClearFilters : ClientListAction
 
     sealed class Internal : ClientListAction {
         data class ReceiveClientResult(val result: Flow<PagingData<ClientEntity>>) : Internal()
