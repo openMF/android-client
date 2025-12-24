@@ -86,6 +86,8 @@ import com.mifos.core.designsystem.component.MifosMenuDropDownItem
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.icon.MifosIcons
+import com.mifos.core.designsystem.theme.DesignToken
+import com.mifos.core.designsystem.theme.MifosTheme
 import com.mifos.core.designsystem.theme.MifosTypography
 import com.mifos.core.designsystem.theme.colorScheme
 import com.mifos.core.ui.components.MifosBreadcrumbNavBar
@@ -246,7 +248,6 @@ internal fun LoanAccountSummaryScreen(
                             approveLoan = { approveLoan.invoke(loanWithAssociations) },
                             disburseLoan = disburseLoan,
                             snackbarHostState = snackbarHostState,
-                            navController = navController,
                         )
                     }
 
@@ -266,7 +267,6 @@ private fun LoanAccountSummaryContent(
     approveLoan: () -> Unit,
     disburseLoan: () -> Unit,
     snackbarHostState: SnackbarHostState,
-    navController: NavController,
 ) {
     val inflateLoanSummary = getInflateLoanSummaryValue(status = loanWithAssociations.status)
     val summary = if (inflateLoanSummary) loanWithAssociations.summary else null
@@ -292,7 +292,7 @@ private fun LoanAccountSummaryContent(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(horizontal = 24.dp)
+            .padding(horizontal = DesignToken.padding.large)
             .verticalScroll(scrollState),
         verticalArrangement = Arrangement.spacedBy(12.dp),
     ) {
@@ -322,7 +322,7 @@ private fun LoanAccountSummaryContent(
                             .size(22.dp),
                         contentDescription = "",
                         onDraw = {
-                            drawRect(
+                            drawCircle(
                                 color = when {
                                     loanWithAssociations.status.active == true -> {
                                         Color.Green
@@ -811,18 +811,20 @@ private class LoanAccountSummaryPreviewProvider :
 private fun PreviewLoanAccountSummary(
     @PreviewParameter(LoanAccountSummaryPreviewProvider::class) loanAccountSummaryUiState: LoanAccountSummaryUiState,
 ) {
-    LoanAccountSummaryScreen(
-        uiState = loanAccountSummaryUiState,
-        navigateBack = { },
-        onRetry = { },
-        onMoreInfoClicked = { },
-        onTransactionsClicked = { },
-        onRepaymentScheduleClicked = { },
-        onDocumentsClicked = { },
-        onChargesClicked = { },
-        approveLoan = { },
-        disburseLoan = { },
-        makeRepayment = { },
-        navController = rememberNavController(),
-    )
+    MifosTheme {
+        LoanAccountSummaryScreen(
+            uiState = loanAccountSummaryUiState,
+            navigateBack = { },
+            onRetry = { },
+            onMoreInfoClicked = { },
+            onTransactionsClicked = { },
+            onRepaymentScheduleClicked = { },
+            onDocumentsClicked = { },
+            onChargesClicked = { },
+            approveLoan = { },
+            disburseLoan = { },
+            makeRepayment = { },
+            navController = rememberNavController(),
+        )
+    }
 }
