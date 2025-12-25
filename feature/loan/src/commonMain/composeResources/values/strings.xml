@@ -106,6 +106,7 @@
     <string name="feature_loan_total">Total</string>
     <string name="feature_loan_make_Repayment">Make Repayment</string>
     <string name="feature_loan_closed">Loan Closed</string>
+    <string name="feature_loan_total_loan">Total Loan</string>
 
     <string name="feature_loan_failed_to_load_loan_repayment">Failed to load loan repayment</string>
     <string name="feature_loan_repayment_make_sure_every_field_has_a_value">Make sure every field has a value</string>
@@ -132,6 +133,14 @@
     <string name="feature_loan_id">Id</string>
     <string name="feature_loan_office">Office</string>
     <string name="feature_loan_break_down">Break Down</string>
+    <string name="feature_loan_outstanding_balance">Outstanding Balance</string>
+    <string name="feature_loan_loan_overview">Loan Overview</string>
+    <string name="feature_loan_loan_id">Loan ID: #</string>
+    <string name="feature_loan_loan_id_copied">Copied to clipboard</string>
+    <string name="feature_loan_copy">Copy</string>
+    <string name="feature_loan_info">Info</string>
+    <string name="feature_loan_arrears">Arrears</string>
+
 
     <string name="feature_loan_unknown_error_occured">An Unknown Error Occured</string>
     <string name="feature_loan_payment_success_message">Payment Successful, Transaction ID = </string>

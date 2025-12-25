@@ -13,24 +13,33 @@ import androidclient.feature.loan.generated.resources.Res
 import androidclient.feature.loan.generated.resources.feature_loan
 import androidclient.feature.loan.generated.resources.feature_loan_amount_paid
 import androidclient.feature.loan.generated.resources.feature_loan_approve_loan
+import androidclient.feature.loan.generated.resources.feature_loan_arrears
 import androidclient.feature.loan.generated.resources.feature_loan_balance
 import androidclient.feature.loan.generated.resources.feature_loan_closed
+import androidclient.feature.loan.generated.resources.feature_loan_copy
+import androidclient.feature.loan.generated.resources.feature_loan_date
 import androidclient.feature.loan.generated.resources.feature_loan_disburse_loan
 import androidclient.feature.loan.generated.resources.feature_loan_disbursed_date
 import androidclient.feature.loan.generated.resources.feature_loan_documents
+import androidclient.feature.loan.generated.resources.feature_loan_info
 import androidclient.feature.loan.generated.resources.feature_loan_loan_account_summary
 import androidclient.feature.loan.generated.resources.feature_loan_loan_amount_disbursed
 import androidclient.feature.loan.generated.resources.feature_loan_loan_charges
 import androidclient.feature.loan.generated.resources.feature_loan_loan_fees
+import androidclient.feature.loan.generated.resources.feature_loan_loan_id
+import androidclient.feature.loan.generated.resources.feature_loan_loan_id_copied
 import androidclient.feature.loan.generated.resources.feature_loan_loan_in_arrears
 import androidclient.feature.loan.generated.resources.feature_loan_loan_interest
+import androidclient.feature.loan.generated.resources.feature_loan_loan_overview
 import androidclient.feature.loan.generated.resources.feature_loan_loan_penalty
 import androidclient.feature.loan.generated.resources.feature_loan_loan_principal
 import androidclient.feature.loan.generated.resources.feature_loan_loan_rejected_message
 import androidclient.feature.loan.generated.resources.feature_loan_make_Repayment
+import androidclient.feature.loan.generated.resources.feature_loan_outstanding_balance
 import androidclient.feature.loan.generated.resources.feature_loan_repayment_schedule
 import androidclient.feature.loan.generated.resources.feature_loan_staff
 import androidclient.feature.loan.generated.resources.feature_loan_summary
+import androidclient.feature.loan.generated.resources.feature_loan_total_loan
 import androidclient.feature.loan.generated.resources.feature_loan_transactions
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
@@ -46,12 +55,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -69,7 +75,6 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.text.AnnotatedString
@@ -82,6 +87,7 @@ import androidx.navigation.compose.rememberNavController
 import co.touchlab.kermit.Logger
 import com.mifos.core.common.utils.Constants
 import com.mifos.core.common.utils.DateHelper
+import com.mifos.core.designsystem.component.MifosCard
 import com.mifos.core.designsystem.component.MifosMenuDropDownItem
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
@@ -89,7 +95,6 @@ import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.designsystem.theme.MifosTheme
 import com.mifos.core.designsystem.theme.MifosTypography
-import com.mifos.core.designsystem.theme.colorScheme
 import com.mifos.core.ui.components.MifosBreadcrumbNavBar
 import com.mifos.core.ui.components.MifosProgressIndicator
 import com.mifos.room.entities.accounts.loans.LoanStatusEntity
@@ -274,6 +279,7 @@ private fun LoanAccountSummaryContent(
     val scope = rememberCoroutineScope()
     val clipboardManager = LocalClipboardManager.current
     val message = stringResource(Res.string.feature_loan_loan_rejected_message)
+    val loanIdCopiedMessage = stringResource(Res.string.feature_loan_loan_id_copied)
     fun getActualDisbursementDateInStringFormat(): String {
         try {
             return loanWithAssociations.timeline.actualDisbursementDate?.let {
@@ -294,16 +300,14 @@ private fun LoanAccountSummaryContent(
             .fillMaxSize()
             .padding(horizontal = DesignToken.padding.large)
             .verticalScroll(scrollState),
-        verticalArrangement = Arrangement.spacedBy(12.dp),
+        verticalArrangement = Arrangement.spacedBy(DesignToken.padding.medium),
     ) {
-        Card(
+        MifosCard(
             modifier = Modifier.fillMaxWidth(),
-            colors = CardDefaults.cardColors(MaterialTheme.colorScheme.surface),
-            elevation = CardDefaults.cardElevation(1.dp),
         ) {
             Column(
-                modifier = Modifier.padding(15.dp),
-                verticalArrangement = Arrangement.spacedBy(6.dp),
+                modifier = Modifier.padding(DesignToken.padding.large),
+                verticalArrangement = Arrangement.spacedBy(DesignToken.spacing.mediumSmall),
             ) {
                 Text(
                     modifier = Modifier
@@ -319,7 +323,7 @@ private fun LoanAccountSummaryContent(
                 ) {
                     Canvas(
                         modifier = Modifier
-                            .size(22.dp),
+                            .size(DesignToken.sizes.iconMedium),
                         contentDescription = "",
                         onDraw = {
                             drawCircle(
@@ -343,7 +347,7 @@ private fun LoanAccountSummaryContent(
                             )
                         },
                     )
-                    Spacer(modifier = Modifier.width(6.dp))
+                    Spacer(modifier = Modifier.width(DesignToken.spacing.mediumSmall))
                     Text(
                         text = loanWithAssociations.loanProductName,
                         style = MifosTypography.bodyLarge,
@@ -356,26 +360,26 @@ private fun LoanAccountSummaryContent(
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
                     Text(
-                        text = "Loan ID: #" + loanWithAssociations.accountNo,
+                        text = stringResource(Res.string.feature_loan_loan_id) + loanWithAssociations.accountNo,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                         style = MifosTypography.bodyMedium,
                     )
-                    Spacer(modifier = Modifier.width(3.dp))
+                    Spacer(modifier = Modifier.width(DesignToken.spacing.extraSmall))
                     IconButton(
                         onClick = {
                             clipboardManager.setText(AnnotatedString(loanWithAssociations.accountNo))
                             scope.launch {
                                 snackbarHostState.showSnackbar(
-                                    message = "Copied to clipboard",
+                                    message = loanIdCopiedMessage,
                                 )
                             }
                         },
-                        modifier = Modifier.size(15.dp),
+                        modifier = Modifier.size(DesignToken.sizes.iconSmall),
                     ) {
                         Icon(
-                            imageVector = MifosIcons.Share,
-                            contentDescription = "Copy",
-                            modifier = Modifier.size(15.dp),
+                            imageVector = MifosIcons.Copy,
+                            contentDescription = stringResource(Res.string.feature_loan_copy),
+                            modifier = Modifier.size(DesignToken.sizes.iconSmall),
                             tint = MaterialTheme.colorScheme.onSurfaceVariant,
                         )
                     }
@@ -385,43 +389,41 @@ private fun LoanAccountSummaryContent(
 
         Row {
             InfoCard(
-                titleText = "Total Loan",
+                titleText = stringResource(Res.string.feature_loan_total_loan),
                 infoText = summary?.totalExpectedRepayment.toString(),
                 modifier = Modifier.fillMaxWidth(0.5f),
             )
-            Spacer(modifier = Modifier.width(12.dp))
+            Spacer(modifier = Modifier.width(DesignToken.spacing.medium))
             InfoCard(
-                titleText = "Amount Paid",
+                titleText = stringResource(Res.string.feature_loan_amount_paid),
                 infoText = summary?.totalRepayment.toString(),
                 modifier = Modifier.fillMaxWidth(),
             )
         }
         InfoCard(
-            titleText = "Outstanding Balance",
+            titleText = stringResource(Res.string.feature_loan_outstanding_balance),
             infoText = summary?.totalOutstanding.toString(),
             modifier = Modifier.fillMaxWidth(),
         )
 
-        Card(
-            colors = CardDefaults.cardColors(MaterialTheme.colorScheme.surface),
-            elevation = CardDefaults.cardElevation(1.dp),
-        ) {
+        MifosCard() {
             Column(
-                modifier = Modifier.padding(15.dp),
+                modifier = Modifier.padding(DesignToken.padding.large),
             ) {
                 Text(
-                    text = "Loan Overview",
+                    text = stringResource(Res.string.feature_loan_loan_overview),
                     style = MifosTypography.bodyLarge,
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.onSurface,
                 )
+                Spacer(modifier = Modifier.height(DesignToken.spacing.small))
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
                     Icon(
                         imageVector = MifosIcons.Info,
-                        contentDescription = "Info",
-                        modifier = Modifier.size(20.dp),
+                        contentDescription = stringResource(Res.string.feature_loan_info),
+                        modifier = Modifier.size(DesignToken.sizes.iconAverage),
                     )
                     LoanSummaryFarApartTextItem(
                         title = stringResource(Res.string.feature_loan_loan_amount_disbursed),
@@ -439,8 +441,8 @@ private fun LoanAccountSummaryContent(
                 ) {
                     Icon(
                         imageVector = MifosIcons.Calendar,
-                        contentDescription = "Date",
-                        modifier = Modifier.size(20.dp),
+                        contentDescription = stringResource(Res.string.feature_loan_date),
+                        modifier = Modifier.size(DesignToken.sizes.iconAverage),
                     )
                     LoanSummaryFarApartTextItem(
                         title = stringResource(Res.string.feature_loan_disbursed_date),
@@ -453,8 +455,8 @@ private fun LoanAccountSummaryContent(
                 ) {
                     Icon(
                         imageVector = MifosIcons.KeyboardArrowDown,
-                        contentDescription = "Arrears",
-                        modifier = Modifier.size(20.dp),
+                        contentDescription = stringResource(Res.string.feature_loan_arrears),
+                        modifier = Modifier.size(DesignToken.sizes.iconAverage),
                     )
                     LoanSummaryFarApartTextItem(
                         title = stringResource(Res.string.feature_loan_loan_in_arrears),
@@ -472,8 +474,8 @@ private fun LoanAccountSummaryContent(
                 ) {
                     Icon(
                         imageVector = MifosIcons.Person,
-                        contentDescription = "Info",
-                        modifier = Modifier.size(20.dp),
+                        contentDescription = stringResource(Res.string.feature_loan_info),
+                        modifier = Modifier.size(DesignToken.sizes.iconAverage),
                     )
                     LoanSummaryFarApartTextItem(
                         title = stringResource(Res.string.feature_loan_staff),
@@ -492,8 +494,8 @@ private fun LoanAccountSummaryContent(
             enabled = getButtonActiveStatus(loanWithAssociations.status),
             modifier = Modifier
                 .fillMaxWidth()
-                .height(45.dp),
-            shape = RoundedCornerShape(9.dp),
+                .height(DesignToken.sizes.buttonHeightMedium),
+            shape = DesignToken.shapes.small,
             onClick = when {
                 loanWithAssociations.status.active == true -> {
                     { makeRepayment.invoke() }
@@ -522,7 +524,7 @@ private fun LoanAccountSummaryContent(
                 text = getButtonText(loanWithAssociations.status),
             )
         }
-        Spacer(modifier = Modifier.height(12.dp))
+        Spacer(modifier = Modifier.height(DesignToken.spacing.medium))
     }
 }
 
@@ -530,15 +532,7 @@ private fun LoanAccountSummaryContent(
 private fun LoanSummaryDataTable(loanSummary: LoansAccountSummaryEntity, inflateLoanSummary: Boolean) {
     // dataTable should be empty if [inflateLoanSummary] is false
     val summary = if (inflateLoanSummary) loanSummary else null
-    Card(
-        modifier = Modifier
-            .clip(RoundedCornerShape(9.dp)),
-        colors = CardDefaults.cardColors(MaterialTheme.colorScheme.surface),
-        elevation = CardDefaults.cardElevation(1.dp),
-        border = CardDefaults.outlinedCardBorder().copy(
-            width = 0.5.dp,
-        ),
-    ) {
+    MifosCard {
         DataTableRow(
             summaryColumnTitle = stringResource(Res.string.feature_loan_summary),
             loanColumnValue = stringResource(Res.string.feature_loan),
@@ -591,16 +585,16 @@ private fun LoanSummaryFarApartTextItem(title: String, value: String) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(6.dp),
+            .padding(DesignToken.padding.small),
     ) {
         Text(
             style = MaterialTheme.typography.bodyLarge,
             fontWeight = FontWeight.Bold,
-            text = title + ":",
+            text = "$title:",
             color = MaterialTheme.colorScheme.onSurface,
         )
 
-        Spacer(modifier = Modifier.width(4.dp))
+        Spacer(modifier = Modifier.width(DesignToken.spacing.extraSmall))
 
         Text(
             style = MaterialTheme.typography.bodyLarge,
@@ -616,24 +610,21 @@ private fun InfoCard(
     infoText: String,
     modifier: Modifier,
 ) {
-    Card(
-        modifier = modifier.height(80.dp),
-        colors = CardDefaults.cardColors(MaterialTheme.colorScheme.surface),
-        elevation = CardDefaults.cardElevation(1.dp),
+    MifosCard(
+        modifier = modifier.height(DesignToken.sizes.topAppBarHeight),
     ) {
         Column(
-            modifier = Modifier.padding(15.dp),
+            modifier = Modifier.padding(DesignToken.padding.large),
         ) {
             Text(
                 text = titleText,
                 style = MifosTypography.bodyLarge,
-                fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.onSurface,
             )
-            Spacer(modifier = Modifier.height(4.dp))
+            Spacer(modifier = Modifier.height(DesignToken.spacing.small))
             Text(
                 text = infoText,
-                style = MifosTypography.headlineSmall,
+                style = MifosTypography.headlineSmallEmphasized,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
         }
@@ -660,8 +651,8 @@ private fun DataTableRow(
             text = summaryColumnTitle,
             modifier = Modifier
                 .weight(1f)
-                .padding(6.dp),
-            style = MaterialTheme.typography.bodyLarge,
+                .padding(DesignToken.padding.small),
+            style = MaterialTheme.typography.bodyMedium,
             fontWeight = if (isHeader) FontWeight.Bold else FontWeight.Normal,
             color = MaterialTheme.colorScheme.onSurface,
         )
@@ -670,8 +661,8 @@ private fun DataTableRow(
             text = loanColumnValue,
             modifier = Modifier
                 .weight(1f)
-                .padding(9.dp),
-            style = MaterialTheme.typography.bodyLarge,
+                .padding(DesignToken.padding.small),
+            style = MaterialTheme.typography.bodyMedium,
             fontWeight = if (isHeader) FontWeight.Bold else FontWeight.Normal,
             textAlign = TextAlign.End,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -681,8 +672,8 @@ private fun DataTableRow(
             text = amountColumnValue,
             modifier = Modifier
                 .weight(1f)
-                .padding(end = 6.dp, top = 6.dp, bottom = 6.dp),
-            style = MaterialTheme.typography.bodyLarge,
+                .padding(DesignToken.padding.small),
+            style = MaterialTheme.typography.bodyMedium,
             fontWeight = if (isHeader) FontWeight.Bold else FontWeight.Normal,
             textAlign = TextAlign.End,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -692,9 +683,8 @@ private fun DataTableRow(
             text = balanceColumnValue,
             modifier = Modifier
                 .weight(1f)
-                .padding(vertical = 6.dp)
-                .padding(end = 6.dp),
-            style = MaterialTheme.typography.bodyLarge,
+                .padding(DesignToken.padding.small),
+            style = MaterialTheme.typography.bodyMedium,
             fontWeight = if (isHeader) FontWeight.Bold else FontWeight.Normal,
             textAlign = TextAlign.End,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
