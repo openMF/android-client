@@ -406,7 +406,7 @@ private fun LoanAccountSummaryContent(
             modifier = Modifier.fillMaxWidth(),
         )
 
-        MifosCard() {
+        MifosCard {
             Column(
                 modifier = Modifier.padding(DesignToken.padding.large),
             ) {

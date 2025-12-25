@@ -61,9 +61,7 @@ import androidx.compose.material.icons.outlined.DeleteOutline
 import androidx.compose.material.icons.outlined.DocumentScanner
 import androidx.compose.material.icons.outlined.Draw
 import androidx.compose.material.icons.outlined.EventRepeat
-import androidx.compose.material.icons.outlined.FileCopy
 import androidx.compose.material.icons.outlined.FileUpload
-import androidx.compose.material.icons.outlined.FolderCopy
 import androidx.compose.material.icons.outlined.Group
 import androidx.compose.material.icons.outlined.Groups
 import androidx.compose.material.icons.outlined.Home
