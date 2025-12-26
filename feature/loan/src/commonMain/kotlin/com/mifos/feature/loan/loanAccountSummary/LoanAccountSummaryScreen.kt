@@ -92,6 +92,7 @@ import com.mifos.core.designsystem.component.MifosMenuDropDownItem
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.icon.MifosIcons
+import com.mifos.core.designsystem.theme.AppColors
 import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.designsystem.theme.MifosTheme
 import com.mifos.core.designsystem.theme.MifosTypography
@@ -298,7 +299,7 @@ private fun LoanAccountSummaryContent(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(horizontal = DesignToken.padding.large)
+            .padding(horizontal = DesignToken.padding.medium)
             .verticalScroll(scrollState),
         verticalArrangement = Arrangement.spacedBy(DesignToken.padding.medium),
     ) {
@@ -329,19 +330,19 @@ private fun LoanAccountSummaryContent(
                             drawCircle(
                                 color = when {
                                     loanWithAssociations.status.active == true -> {
-                                        Color.Green
+                                        AppColors.loanIndicatorActive
                                     }
 
                                     loanWithAssociations.status.pendingApproval == true -> {
-                                        Color.Yellow
+                                        AppColors.loanIndicatorPending
                                     }
 
                                     loanWithAssociations.status.waitingForDisbursal == true -> {
-                                        Color.Blue
+                                        AppColors.loanIndicatorWaitingForDisbursal
                                     }
 
                                     else -> {
-                                        Color.Black
+                                        AppColors.loanIndicatorOther
                                     }
                                 },
                             )
@@ -416,12 +417,12 @@ private fun LoanAccountSummaryContent(
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.onSurface,
                 )
-                Spacer(modifier = Modifier.height(DesignToken.spacing.small))
+                Spacer(modifier = Modifier.height(DesignToken.spacing.medium))
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
                     Icon(
-                        imageVector = MifosIcons.Info,
+                        imageVector = MifosIcons.Currency,
                         contentDescription = stringResource(Res.string.feature_loan_info),
                         modifier = Modifier.size(DesignToken.sizes.iconAverage),
                     )
@@ -588,7 +589,7 @@ private fun LoanSummaryFarApartTextItem(title: String, value: String) {
             .padding(DesignToken.padding.small),
     ) {
         Text(
-            style = MaterialTheme.typography.bodyLarge,
+            style = MaterialTheme.typography.bodyMedium,
             fontWeight = FontWeight.Bold,
             text = "$title:",
             color = MaterialTheme.colorScheme.onSurface,
@@ -597,7 +598,7 @@ private fun LoanSummaryFarApartTextItem(title: String, value: String) {
         Spacer(modifier = Modifier.width(DesignToken.spacing.extraSmall))
 
         Text(
-            style = MaterialTheme.typography.bodyLarge,
+            style = MaterialTheme.typography.bodyMedium,
             text = value,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
         )
@@ -611,7 +612,7 @@ private fun InfoCard(
     modifier: Modifier,
 ) {
     MifosCard(
-        modifier = modifier.height(DesignToken.sizes.topAppBarHeight),
+        modifier = modifier,
     ) {
         Column(
             modifier = Modifier.padding(DesignToken.padding.large),
@@ -621,7 +622,7 @@ private fun InfoCard(
                 style = MifosTypography.bodyLarge,
                 color = MaterialTheme.colorScheme.onSurface,
             )
-            Spacer(modifier = Modifier.height(DesignToken.spacing.small))
+            Spacer(modifier = Modifier.height(DesignToken.spacing.medium))
             Text(
                 text = infoText,
                 style = MifosTypography.headlineSmallEmphasized,
