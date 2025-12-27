@@ -9,6 +9,10 @@
  */
 package com.mifos.core.network.model.share
 
+import com.mifos.core.model.objects.template.client.ChargeAppliesTo
+import com.mifos.core.model.objects.template.client.ChargeCalculationType
+import com.mifos.core.model.objects.template.client.ChargePaymentMode
+import com.mifos.core.model.objects.template.client.ChargeTimeType
 import com.mifos.core.model.objects.template.client.Currency
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -24,6 +28,8 @@ data class ShareTemplate(
     val currentMarketPrice: Double? = null,
 
     val productOptions: List<ProductOption> = emptyList(),
+
+    val chargeOptions: List<ChargeOptions> = emptyList(),
 
     @SerialName("clientSavingsAccounts")
     val savingsAccountOptions: List<SavingsAccountOption>? = emptyList(),
@@ -51,4 +57,18 @@ data class FrequencyTypeOption(
     val code: String,
 
     val value: String,
+)
+
+@Serializable
+data class ChargeOptions(
+    val id: Int? = null,
+    val name: String? = null,
+    val active: Boolean? = null,
+    val penalty: Boolean? = null,
+    val currency: Currency? = null,
+    val amount: Double? = null,
+    val chargeTimeType: ChargeTimeType? = null,
+    val chargeAppliesTo: ChargeAppliesTo? = null,
+    val chargeCalculationType: ChargeCalculationType? = null,
+    val chargePaymentMode: ChargePaymentMode? = null,
 )

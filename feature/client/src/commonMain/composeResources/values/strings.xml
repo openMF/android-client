@@ -82,10 +82,13 @@
     <string name="feature_client_pinpoint_location_deleted">Pinpoint Location Deleted Successfully</string>
     <string name="feature_client_pinpoint_location_updated">Pinpoint Location Updated Successfully</string>
     <string name="feature_client_pinpoint_client">Pinpoint Client</string>
+    <string name="feature_client_client_locations">Client Locations</string>
+    <string name="feature_client_add_location">Add location</string>
 
     <string name="feature_client_update_client_address">Update Address</string>
     <string name="feature_client_delete_client_address">Delete Address</string>
     <string name="feature_client_no_pinpoint_found">No Pinpoint Found</string>
+    <string name="feature_client_no_location_data_found">No location data found</string>
 
     <string name="feature_client_charge_select">Select</string>
     <string name="feature_client_charge_cancel">Cancel</string>
@@ -236,6 +239,8 @@
     <string name="client_profile_documents_subtitle">Check or upload documents</string>
     <string name="client_profile_notes_title">Notes</string>
     <string name="client_profile_notes_subtitle">Check or update note accounts</string>
+    <string name="client_profile_pinpoint_location_title">Pinpoint Location</string>
+    <string name="client_profile_pinpoint_location_subtitle">Check or update client's location</string>
 
     <string name="client_empty_card_message">Click Here To View Filled State.</string>
 
@@ -493,6 +498,7 @@
     <string name="step_settings">Settings</string>
     <string name="step_interest">Interest</string>
     <string name="step_charges">Charges</string>
+    <string name="step_preview">Preview</string>
     <string name="create_recurring_deposit_account">Create Recurring Deposit Account</string>
 
 
@@ -541,7 +547,7 @@
     <!-- New Fixed Deposit Account -->
     <string name="one_year_fixed_deposit">1 Year Fixed Deposit</string>
     <string name="submission_on">Submission On</string>
-    <string name="Field_officer">Field Officer</string>
+    <string name="field_officer">Field Officer</string>
 
 
     <!-- Create Share Account -->
@@ -551,9 +557,11 @@
     <string name="feature_share_account_preview">Preview</string>
     <string name="feature_share_account_back">Back</string>
     <string name="feature_share_account_next">Next</string>
+    <string name="feature_share_account_submit">Submit</string>
+    <string name="feature_share_account_created_successfully">Share account created successfully</string>
 
-    <string name="feature_share_account_detail_product_name">Product Name*</string>
-    <string name="feature_share_account_detail_submission_date">Submission Date*</string>
+    <string name="feature_share_account_detail_product_name">Product Name</string>
+    <string name="feature_share_account_detail_submission_date">Submission Date</string>
     <string name="feature_share_account_detail_external_id">External Id</string>
     <string name="feature_share_account_detail_date_select">Select</string>
     <string name="feature_share_account_detail_date_cancel">Cancel</string>
@@ -569,6 +577,20 @@
     <string name="feature_share_account_terms_type">Type</string>
     <string name="feature_share_account_terms_lock_in_period">Lock-in Period</string>
 
+    <string name="feature_share_account_charge">Charge</string>
+    <string name="feature_share_account_charge_add_new">Add New</string>
+    <string name="feature_share_account_charge_view">View</string>
+    <string name="feature_share_account_charge_active_charge">Active Charge</string>
+    <string name="feature_share_account_charge_add_new_charge">Add New Charge</string>
+    <string name="feature_share_account_charge_date">Date</string>
+    <string name="feature_share_account_charge_type">Type</string>
+    <string name="feature_share_account_charge_collected_on">Collected On</string>
+    <string name="feature_share_account_charge_view_charges">View Charges</string>
+    <string name="feature_share_account_charge_edit_charge">Edit Charge</string>
+    <string name="feature_share_account_charge_add">Add</string>
+    <string name="feature_share_account_charge_btn_add_new">Add</string>
+    <string name="feature_share_account_charge_click_on_add_new">Click on Add New to Add Charge</string>
+
 
     <!-- Handle Error-->
     <string name="feature_share_account_field_empty">This field cannot be empty</string>
@@ -578,6 +600,7 @@
     <string name="charges_view_charges">View Charges</string>
     <string name="charges_client_update_not_support_error_msg">Updating client charges is not supported. Please delete the existing charge and create a new one.</string>
 
+    <!--Fixed Deposit Account -->
     <string name="feature_fixed_deposit_deposit_amount">Deposit Amount</string>
     <string name="feature_fixed_deposit_deposit_period_type">Deposit Period Type</string>
     <string name="feature_fixed_interest_compounding">Interest Compounding</string>
@@ -587,5 +610,36 @@
     <string name="feature_fixed_days_in_year">Days in year</string>
     <string name="feature_fixed_deposit_terms_page">Terms</string>
     <string name="feature_fixed_deposit_deposit_period">Deposit Period</string>
+
+    <string name="feature_fixed_deposit_setting_lock_in_period">Lock-in-Period</string>
+    <string name="feature_fixed_deposit_setting_frequency">Frequency</string>
+    <string name="feature_fixed_deposit_setting_type">Type</string>
+    <string name="feature_fixed_deposit_setting_minimum_deposit_term">Minimum Deposit Term</string>
+    <string name="feature_fixed_deposit_setting_thereafter_in_multiples">And thereafter, in Multiples of</string>
+    <string name="feature_fixed_deposit_setting_maximum_deposit_term">Maximum Deposit Term</string>
+    <string name="feature_fixed_deposit_setting_interest_transfer">Interest Transfer</string>
+    <string name="feature_fixed_deposit_setting_linked_saving_account">Transfer Interest to Linked Savings Account?</string>
+    <string name="feature_fixed_deposit_setting_maturity_instructions">Maturity Instructions</string>
+    <string name="feature_fixed_deposit_setting_investing_account">Investing Account</string>
+    <string name="feature_fixed_deposit_setting_pre_mature_closure">For Pre-mature closure</string>
+    <string name="feature_fixed_deposit_setting_apply_penal_interest">Apply Penal Interest (less)</string>
+    <string name="feature_fixed_deposit_setting_penal_interest">Penal Interest (%)</string>
+    <string name="feature_fixed_deposit_setting_period">Period</string>
+    <string name="feature_fixed_deposit_setting_linked_saving_account_field">Linked Saving Account</string>
+
+    <string name="feature_fixed_deposit_interest_name">Name</string>
+    <string name="feature_fixed_deposit_interest_valid_from_date">Valid From Date</string>
+    <string name="feature_fixed_deposit_interest_end_date">End Date</string>
+    <string name="feature_fixed_deposit_interest_description">Description</string>
+    <string name="feature_fixed_deposit_interest_grouping_by_amount">Grouping By Amount</string>
+    <string name="feature_fixed_deposit_interest_interest_rate_chart">INTEREST RATE CHART</string>
+    <string name="feature_fixed_deposit_interest_rate_chart">Rate Chart</string>
+    <string name="feature_fixed_deposit_interest_no_interest_chart">No Interest Rate Chart available</string>
+    <string name="feature_fixed_deposit_interest_yes">Yes</string>
+    <string name="feature_fixed_deposit_interest_no">No</string>
+    <string name="feature_fixed_deposit_interest_empty_date">Date Not Found</string>
+    <string name="feature_fixed_account_created_successfully">Share account created successfully</string>
+
+
 
 </resources>

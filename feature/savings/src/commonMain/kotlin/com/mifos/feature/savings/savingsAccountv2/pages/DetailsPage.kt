@@ -55,8 +55,8 @@ import kotlin.time.ExperimentalTime
 @Composable
 fun DetailsPage(
     state: SavingsAccountState,
-    onAction: (SavingsAccountAction) -> Unit,
     modifier: Modifier = Modifier,
+    onAction: (SavingsAccountAction) -> Unit,
 ) {
     val submissionDatePickerState = rememberDatePickerState(
         initialSelectedDateMillis = Clock.System.now().toEpochMilliseconds(),
@@ -98,7 +98,7 @@ fun DetailsPage(
         }
     }
 
-    Column(modifier = Modifier.fillMaxSize()) {
+    Column(modifier = Modifier.fillMaxSize().padding(bottom = DesignToken.padding.large)) {
         Column(
             modifier = modifier.weight(1f).verticalScroll(rememberScrollState()),
         ) {
@@ -147,7 +147,6 @@ fun DetailsPage(
                     it.displayName
                 },
                 label = stringResource(Res.string.feature_savings_field_officer),
-                errorMessage = state.fieldOfficerError,
             )
 
             MifosOutlinedTextField(
@@ -170,7 +169,6 @@ fun DetailsPage(
             onFirstBtnClick = { onAction(SavingsAccountAction.NavigateBack) },
             onSecondBtnClick = { onAction(SavingsAccountAction.OnDetailsSubmit) },
             isSecondButtonEnabled = state.submissionDate.isNotEmpty(),
-            modifier = Modifier.padding(top = DesignToken.padding.small),
         )
     }
 }
