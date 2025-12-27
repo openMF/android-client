@@ -31,8 +31,11 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
@@ -40,11 +43,13 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
+import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.ui.components.MifosProgressIndicator
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
@@ -72,13 +77,29 @@ internal fun CheckerInboxTasksScreen(
     LaunchedEffect(key1 = true) {
         checkerInboxTasksViewModel.loadCheckerTasksBadges()
     }
-
     MifosScaffold(
-        title = stringResource(Res.string.feature_checker_inbox_task_checker_Inbox),
-        onBackPressed = onBackPressed,
+        topBar = {
+            TopAppBar(
+                navigationIcon = {
+                    IconButton(onClick = onBackPressed) {
+                        Icon(
+                            imageVector = MifosIcons.ArrowBack,
+                            contentDescription = null,
+                        )
+                    }
+                },
+                title = {
+                    Text(
+                        text = stringResource(
+                            Res.string.feature_checker_inbox_task_checker_Inbox
+                        )
+                    )
+                },
+            )
+        }
     ) { padding ->
 
-        PullToRefreshBox(
+    PullToRefreshBox(
             state = pullRefreshState,
             onRefresh = onRefresh,
             isRefreshing = isRefreshing,
@@ -146,6 +167,9 @@ private fun TaskOptions(
         onClick = {
             onClick()
         },
+        colors = CardDefaults.cardColors(
+            containerColor = Color.Transparent
+        ),
     ) {
         Row(
             modifier = Modifier

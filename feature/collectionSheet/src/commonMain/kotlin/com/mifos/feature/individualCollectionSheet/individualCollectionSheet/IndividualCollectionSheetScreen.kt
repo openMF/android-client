@@ -18,12 +18,19 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosTabRow
+import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.designsystem.utility.TabContent
 import com.mifos.core.ui.util.DevicePreview
 import com.mifos.feature.individualCollectionSheet.newIndividualCollectionSheet.NewIndividualCollectionSheetScreen
@@ -52,9 +59,30 @@ internal fun IndividualCollectionSheetScreen(
     )
 
     MifosScaffold(
-        title = stringResource(Res.string.feature_collection_sheet_individual_collection_sheet),
-        onBackPressed = onBackPressed,
         snackbarHostState = snackbarHostState,
+        topBar = {
+            TopAppBar(
+                title = {
+                    Text(
+                        text = stringResource(Res.string.feature_collection_sheet_individual_collection_sheet),
+                        style = MaterialTheme.typography.titleLarge
+                    )
+                },
+                navigationIcon = {
+                    IconButton(onClick = onBackPressed) {
+                        Icon(
+                            imageVector = MifosIcons.ArrowBack,
+                            contentDescription = "Navigate back"
+                        )
+                    }
+                },
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.surface,
+                    titleContentColor = MaterialTheme.colorScheme.onSurface,
+                    navigationIconContentColor = MaterialTheme.colorScheme.onSurface
+                )
+            )
+        }
     ) { paddingValues ->
         Column(
             modifier = Modifier.padding(paddingValues),

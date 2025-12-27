@@ -64,7 +64,6 @@ import com.mifos.core.common.utils.DateHelper
 import com.mifos.core.designsystem.component.MifosBottomSheet
 import com.mifos.core.designsystem.component.MifosButton
 import com.mifos.core.designsystem.component.MifosDatePickerTextField
-import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosTextFieldDropdown
 import com.mifos.core.network.model.RequestCollectionSheetPayload
 import com.mifos.core.ui.components.MifosProgressIndicator
@@ -149,13 +148,11 @@ internal fun NewIndividualCollectionSheetScreen(
             showCollectionSheetDialog = true
         }
     }
-
-    MifosScaffold(
-        modifier = modifier,
-        // TODO check old code and see why it was here and implement if necessary
-//        isAppBarPresent = false,
-        snackbarHostState = snackbarHostState,
-    ) { paddingValues ->
+    Column(
+        modifier = modifier
+            .fillMaxSize()
+            .verticalScroll(rememberScrollState()),
+    ) {
         if (showDatePicker) {
             DatePickerDialog(
                 onDismissRequest = {
@@ -213,7 +210,6 @@ internal fun NewIndividualCollectionSheetScreen(
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(paddingValues)
                     .verticalScroll(rememberScrollState()),
             ) {
                 Text(

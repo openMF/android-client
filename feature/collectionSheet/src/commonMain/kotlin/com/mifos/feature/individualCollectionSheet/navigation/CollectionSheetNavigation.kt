@@ -25,7 +25,6 @@ import com.mifos.feature.individualCollectionSheet.individualCollectionSheetDeta
 import com.mifos.feature.individualCollectionSheet.paymentDetails.PaymentDetailsScreenRoute
 import com.mifos.room.entities.collectionsheet.IndividualCollectionSheet
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
 @Serializable
@@ -51,7 +50,7 @@ fun NavGraphBuilder.individualCollectionSheetNavGraph(
             submit = navController::navigateToPaymentDetailsScreen,
         )
 
-        paymentDetailsScreen()
+        paymentDetailsScreen( onBackPressed = onBackPressed)
     }
 }
 
@@ -102,7 +101,9 @@ fun NavGraphBuilder.generateCollectionSheetScreen(
 }
 
 // TODO:change while implementing screens because this is not primitive
-fun NavGraphBuilder.paymentDetailsScreen() {
+fun NavGraphBuilder.paymentDetailsScreen(
+    onBackPressed: () -> Unit
+) {
     composable(
         route = CollectionSheetScreens.PaymentDetailsScreen.route,
         arguments = listOf(
@@ -111,7 +112,7 @@ fun NavGraphBuilder.paymentDetailsScreen() {
             },
         ),
     ) {
-        PaymentDetailsScreenRoute()
+        PaymentDetailsScreenRoute( onBackPressed = onBackPressed)
     }
 }
 

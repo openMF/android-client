@@ -29,6 +29,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
@@ -99,25 +101,65 @@ fun PathTrackingScreen(
 
     MifosScaffold(
         modifier = modifier,
-        title = stringResource(Res.string.feature_path_tracking_track_my_path),
-        onBackPressed = onBackPressed,
-        actions = {
-            IconButton(
-                onClick = {
-                    if (userStatus) {
-                        updateUserStatus(false)
-                    } else {
-                        checkPermission = true
+//        title = stringResource(Res.string.feature_path_tracking_track_my_path),
+//        onBackPressed = onBackPressed,
+//        actions = {
+//            IconButton(
+//                onClick = {
+//                    if (userStatus) {
+//                        updateUserStatus(false)
+//                    } else {
+//                        checkPermission = true
+//                    }
+//                },
+//            ) {
+//                Icon(
+//                    imageVector = if (userStatus) MifosIcons.Stop else MifosIcons.MyLocation,
+//                    contentDescription = null,
+//                )
+//            }
+//        },
+        snackbarHostState = snackbarHostState,
+        topBar = {
+            TopAppBar(
+                title = {
+                    Text(
+                        text = stringResource(Res.string.feature_path_tracking_track_my_path),
+                        style = MaterialTheme.typography.titleLarge
+                    )
+                },
+                navigationIcon = {
+                    IconButton(onClick = onBackPressed) {
+                        Icon(
+                            imageVector = MifosIcons.ArrowBack,
+                            contentDescription = "Navigate back"
+                        )
                     }
                 },
-            ) {
-                Icon(
-                    imageVector = if (userStatus) MifosIcons.Stop else MifosIcons.MyLocation,
-                    contentDescription = null,
+                actions = {
+                    IconButton(
+                        onClick = {
+                            if (userStatus) {
+                                updateUserStatus(false)
+                            } else {
+                                checkPermission = true
+                            }
+                        },
+                    ) {
+                        Icon(
+                            imageVector = if (userStatus) MifosIcons.Stop else MifosIcons.MyLocation,
+                            contentDescription = null,
+                        )
+                    }
+                },
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.surface,
+                    titleContentColor = MaterialTheme.colorScheme.onSurface,
+                    navigationIconContentColor = MaterialTheme.colorScheme.onSurface,
+                    actionIconContentColor = MaterialTheme.colorScheme.onSurface
                 )
-            }
-        },
-        snackbarHostState = snackbarHostState,
+            )
+        }
     ) { paddingValues ->
         Column(modifier = Modifier.padding(paddingValues)) {
             PullToRefreshBox(

@@ -16,26 +16,31 @@ import androidclient.feature.client.generated.resources.feature_client_ic_done_a
 import androidclient.feature.client.generated.resources.feature_client_ic_dp_placeholder
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
@@ -57,7 +62,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.backhandler.BackHandler
-import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.PagingData
@@ -141,11 +149,6 @@ internal fun ClientListScreen(
                         }
                     },
                 )
-//                SelectionModeTopAppBar(
-//                    currentSelectedItems = selectedItems.selectedItems.value,
-//                    syncClicked = { sync.value = true },
-//                    resetSelectionMode = resetSelectionMode,
-//                )
             }
         },
         floatingActionButton = {
@@ -159,7 +162,7 @@ internal fun ClientListScreen(
                 )
             }
         },
-        containerColor = MaterialTheme.colorScheme.surfaceContainer,
+        containerColor = MaterialTheme.colorScheme.surface,
         snackbarHostState = snackbarHostState,
     ) { padding ->
         Column(
@@ -313,55 +316,75 @@ internal expect fun LazyColumnForClientListApi(
 
 @Composable
 private fun LazyColumnForClientListDb(clientList: List<ClientEntity>) {
-    LazyColumn {
+    LazyColumn(
+        contentPadding = PaddingValues(top = 8.dp, bottom = 80.dp)
+    ) {
         items(clientList) { client ->
 
-            OutlinedCard(
-                modifier = Modifier.padding(6.dp),
-                colors = CardDefaults.cardColors(
+            ElevatedCard(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp, vertical = 6.dp),
+                elevation = CardDefaults.elevatedCardElevation(defaultElevation = 2.dp),
+                colors = CardDefaults.elevatedCardColors(
                     containerColor = MaterialTheme.colorScheme.surface,
                 ),
+                shape = RoundedCornerShape(12.dp)
             ) {
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(
-                            start = 16.dp,
-                            end = 16.dp,
-                            top = 24.dp,
-                            bottom = 24.dp,
-                        ),
+                        .padding(16.dp),
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
-                    Image(
-                        painter = painterResource(Res.drawable.feature_client_ic_dp_placeholder),
-                        contentDescription = null,
-                        modifier = Modifier
-                            .size(40.dp)
-                            .clip(CircleShape)
-                            .border(1.dp, MaterialTheme.colorScheme.outline, CircleShape),
-                    )
+                    Surface(
+                        shape = CircleShape,
+                        color = MaterialTheme.colorScheme.primaryContainer,
+                        modifier = Modifier.size(48.dp)
+                    ) {
+                        Box(contentAlignment = Alignment.Center) {
+                            Image(
+                                painter = painterResource(Res.drawable.feature_client_ic_dp_placeholder),
+                                contentDescription = null,
+                                modifier = Modifier
+                                    .size(28.dp)
+                                    .fillMaxSize(),
+                                contentScale = ContentScale.Fit,
+                                colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onPrimaryContainer)
+                            )
+                        }
+                    }
+
                     Column(
                         modifier = Modifier
                             .weight(1f)
-                            .padding(start = 16.dp),
+                            .padding(horizontal = 16.dp),
+                        verticalArrangement = Arrangement.Center
                     ) {
                         client.displayName?.let {
                             Text(
                                 text = it,
-                                style = MaterialTheme.typography.bodyLarge,
+                                style = MaterialTheme.typography.titleMedium,
+                                fontWeight = FontWeight.SemiBold,
+                                maxLines = 1,
+                                overflow = TextOverflow.Ellipsis
                             )
                         }
+                        Spacer(modifier = Modifier.height(4.dp))
                         Text(
-                            text = client.accountNo.toString(),
+                            text = "Account: ${client.accountNo}",
                             style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis
                         )
                     }
                     if (client.sync) {
-                        Image(
+                        Icon(
                             painter = painterResource(Res.drawable.feature_client_ic_done_all_black_24dp),
-                            contentDescription = null,
-                            modifier = Modifier.size(20.dp),
+                            contentDescription = "Synced",
+                            modifier = Modifier.size(24.dp),
+                            tint = MaterialTheme.colorScheme.primary
                         )
                     }
                 }
@@ -392,17 +415,19 @@ private fun LazyColumnForClientListDbPreview() {
         ),
         ClientEntity(
             id = 2,
-            displayName = "oreo",
+            displayName = "Oreo Biscuit",
             accountNo = "9876543210",
             sync = false,
         ),
         ClientEntity(
-            id = 2,
-            displayName = "biscuit",
+            id = 3,
+            displayName = "John Doe",
             accountNo = "98765983210",
-            sync = false,
+            sync = true,
         ),
     )
 
-    LazyColumnForClientListDb(clientList = clientList)
+    Column {
+        LazyColumnForClientListDb(clientList = clientList)
+    }
 }
