@@ -9,12 +9,25 @@
  */
 package com.mifos.core.network.datamanager
 
+import com.mifos.core.common.utils.extractErrorMessage
 import com.mifos.core.network.BaseApiManager
-import com.mifos.core.network.model.FixedDepositTemplate
+import com.mifos.core.network.model.fixedDeposit.FixedDepositPayload
+import com.mifos.core.network.model.fixedDeposit.FixedDepositTemplate
+import io.ktor.http.isSuccess
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 
 class DataManagerFixedDeposit(private val baseApiManager: BaseApiManager) {
 
     fun getFixedDepositTemplate(clientId: Int, productId: Int?): Flow<FixedDepositTemplate> =
         baseApiManager.fixedDepositService.fixedDepositProductTemplate(clientId, productId)
+
+    fun createFixedDepositAccount(fixedDepositPayload: FixedDepositPayload): Flow<Unit> =
+        baseApiManager.fixedDepositService.createFixedDepositAccount(fixedDepositPayload).map { response ->
+            if (!response.status.isSuccess()) {
+                val error = extractErrorMessage(response)
+
+                throw IllegalStateException(error)
+            }
+        }
 }

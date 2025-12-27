@@ -159,6 +159,7 @@ fun NavGraphBuilder.clientNavGraph(
         )
         clientPinPointRoute(
             onBackPressed = navController::popBackStack,
+            navController = navController,
         )
         clientSignatureDestination(
             onNavigateBack = navController::popBackStack,
@@ -187,6 +188,7 @@ fun NavGraphBuilder.clientNavGraph(
             navigateToClientDetailsScreen = navController::navigateToClientDetailsProfileRoute,
             viewAddress = navController::navigateToClientAddressRoute,
             viewAssociatedAccounts = navController::navigateToClientProfileGeneralRoute,
+            pinpointLocation = navController::navigateClientPinPointScreen,
             navController = navController,
             navigateToAddCharge = {
                 navController.navigateToChargesRoute(it, Constants.ENTITY_TYPE_CLIENTS)
@@ -436,6 +438,7 @@ fun NavGraphBuilder.clientDetailRoute(
 
 fun NavGraphBuilder.clientPinPointRoute(
     onBackPressed: () -> Unit,
+    navController: NavController,
 ) {
     composable(
         route = ClientScreens.ClientPinPointScreen.route,
@@ -443,6 +446,7 @@ fun NavGraphBuilder.clientPinPointRoute(
     ) {
         PinpointClientScreen(
             onBackPressed = onBackPressed,
+            navController = navController,
         )
     }
 }

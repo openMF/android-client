@@ -14,7 +14,6 @@ import androidclient.feature.client.generated.resources.feature_client_failed_to
 import androidclient.feature.client.generated.resources.feature_client_failed_to_delete_pinpoint
 import androidclient.feature.client.generated.resources.feature_client_failed_to_load_pinpoint
 import androidclient.feature.client.generated.resources.feature_client_failed_to_update_pinpoint
-import androidclient.feature.client.generated.resources.feature_client_no_pinpoint_found
 import androidclient.feature.client.generated.resources.feature_client_pinpoint_location_added
 import androidclient.feature.client.generated.resources.feature_client_pinpoint_location_deleted
 import androidclient.feature.client.generated.resources.feature_client_pinpoint_location_updated
@@ -39,7 +38,7 @@ class PinPointClientViewModel(
     private val addClientPinpointLocationUseCase: AddClientPinpointLocationUseCase,
     private val deleteClientAddressPinpointUseCase: DeleteClientAddressPinpointUseCase,
     private val updateClientPinpointUseCase: UpdateClientPinpointUseCase,
-    private val stateHandle: SavedStateHandle,
+    stateHandle: SavedStateHandle,
 ) : ViewModel() {
 
     val clientId = stateHandle.getStateFlow(key = "clientId", initialValue = 0)
@@ -73,11 +72,7 @@ class PinPointClientViewModel(
 
                 is DataState.Success ->
                     _pinPointClientUiState.value =
-                        if (result.data.isEmpty()) {
-                            PinPointClientUiState.Error(Res.string.feature_client_no_pinpoint_found)
-                        } else {
-                            PinPointClientUiState.ClientPinpointLocations(result.data)
-                        }
+                        PinPointClientUiState.ClientPinpointLocations(result.data)
             }
         }
     }

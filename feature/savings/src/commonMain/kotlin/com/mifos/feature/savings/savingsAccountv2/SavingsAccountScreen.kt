@@ -11,7 +11,7 @@ package com.mifos.feature.savings.savingsAccountv2
 
 import androidclient.feature.savings.generated.resources.Res
 import androidclient.feature.savings.generated.resources.feature_savings_back
-import androidclient.feature.savings.generated.resources.feature_savings_cancel
+import androidclient.feature.savings.generated.resources.feature_savings_charges_click_on_add_new
 import androidclient.feature.savings.generated.resources.feature_savings_create_savings_account
 import androidclient.feature.savings.generated.resources.step_charges
 import androidclient.feature.savings.generated.resources.step_charges_add
@@ -26,8 +26,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
@@ -52,6 +50,7 @@ import com.mifos.core.ui.components.Actions
 import com.mifos.core.ui.components.AddChargeBottomSheet
 import com.mifos.core.ui.components.MifosActionsChargeListingComponent
 import com.mifos.core.ui.components.MifosBreadcrumbNavBar
+import com.mifos.core.ui.components.MifosEmptyCard
 import com.mifos.core.ui.components.MifosProgressIndicator
 import com.mifos.core.ui.components.MifosProgressIndicatorOverlay
 import com.mifos.core.ui.components.MifosStepper
@@ -245,7 +244,7 @@ private fun AddNewChargeDialog(
         } else {
             stringResource(Res.string.step_charges_add)
         },
-        dismissText = stringResource(Res.string.feature_savings_cancel),
+        dismissText = stringResource(Res.string.feature_savings_back),
         showDatePicker = state.showChargesDatePick,
         selectedChargeName = if (state.chooseChargeIndex == -1) {
             ""
@@ -313,60 +312,64 @@ private fun ShowChargesDialog(
             onAction(SavingsAccountAction.DismissDialog)
         },
         content = {
-            LazyColumn(
+            Column(
                 modifier = Modifier.fillMaxWidth().padding(DesignToken.padding.large),
                 verticalArrangement = Arrangement.spacedBy(DesignToken.padding.largeIncreased),
             ) {
-                item {
-                    Text(
-                        text = stringResource(Res.string.step_charges_view) + " " + stringResource(
-                            Res.string.step_charges,
-                        ),
-                        style = MifosTypography.titleMediumEmphasized,
-                    )
-                }
-                itemsIndexed(items = state.addedCharges) { index, it ->
-                    MifosActionsChargeListingComponent(
-                        chargeTitle = it.name.toString(),
-                        type = it.type.toString(),
-                        date = it.date,
-                        collectedOn = it.collectedOn,
-                        amount = it.amount.toString(),
-                        onActionClicked = { action ->
-                            when (action) {
-                                is Actions.Delete -> {
-                                    onAction(
-                                        SavingsAccountAction.DeleteChargeFromSelectedCharges(
-                                            index,
-                                        ),
-                                    )
-                                }
+                Text(
+                    text = stringResource(Res.string.step_charges_view) + " " + stringResource(
+                        Res.string.step_charges,
+                    ),
+                    style = MifosTypography.titleMediumEmphasized,
+                )
 
-                                is Actions.Edit -> {
-                                    onAction(SavingsAccountAction.EditChargeDialog(index))
-                                }
+                if (state.addedCharges.isNotEmpty()) {
+                    state.addedCharges.forEachIndexed { index, it ->
+                        MifosActionsChargeListingComponent(
+                            chargeTitle = it.name.toString(),
+                            type = it.type.toString(),
+                            date = it.date,
+                            collectedOn = it.collectedOn,
+                            amount = it.amount.toString(),
+                            onActionClicked = { action ->
+                                when (action) {
+                                    is Actions.Delete -> {
+                                        expandedIndex = -1
+                                        onAction(
+                                            SavingsAccountAction.DeleteChargeFromSelectedCharges(
+                                                index,
+                                            ),
+                                        )
+                                    }
 
-                                else -> {}
-                            }
-                        },
-                        isExpanded = expandedIndex == it.id,
-                        onExpandToggle = {
-                            expandedIndex = if (expandedIndex == it.id) -1 else it.id
-                        },
+                                    is Actions.Edit -> {
+                                        onAction(SavingsAccountAction.EditChargeDialog(index))
+                                    }
+
+                                    else -> {}
+                                }
+                            },
+                            isExpanded = expandedIndex == it.id,
+                            onExpandToggle = {
+                                expandedIndex = if (expandedIndex == it.id) -1 else it.id
+                            },
+                        )
+                    }
+                } else {
+                    MifosEmptyCard(
+                        msg = stringResource(Res.string.feature_savings_charges_click_on_add_new),
                     )
                 }
-                item {
-                    MifosTwoButtonRow(
-                        firstBtnText = stringResource(Res.string.feature_savings_back),
-                        secondBtnText = stringResource(Res.string.step_charges_add_new),
-                        onFirstBtnClick = {
-                            onAction(SavingsAccountAction.DismissDialog)
-                        },
-                        onSecondBtnClick = {
-                            onAction(SavingsAccountAction.ShowAddChargeDialog)
-                        },
-                    )
-                }
+                MifosTwoButtonRow(
+                    firstBtnText = stringResource(Res.string.feature_savings_back),
+                    secondBtnText = stringResource(Res.string.step_charges_add_new),
+                    onFirstBtnClick = {
+                        onAction(SavingsAccountAction.DismissDialog)
+                    },
+                    onSecondBtnClick = {
+                        onAction(SavingsAccountAction.ShowAddChargeDialog)
+                    },
+                )
             }
         },
     )

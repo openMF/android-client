@@ -21,6 +21,6 @@ actual object CurrencyFormatter {
         val balanceFormatter = NumberFormat.getCurrencyInstance()
         balanceFormatter.maximumFractionDigits = maximumFractionDigits ?: 0
         balanceFormatter.currency = Currency.getInstance(currencyCode)
-        return balanceFormatter.format(balance)
+        return balanceFormatter.format(balance ?: 0)
     }
 }

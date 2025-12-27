@@ -60,10 +60,10 @@ import org.jetbrains.compose.resources.stringResource
 @Composable
 fun TermsPage(
     state: SavingsAccountState,
-    onAction: (SavingsAccountAction) -> Unit,
     modifier: Modifier = Modifier,
+    onAction: (SavingsAccountAction) -> Unit,
 ) {
-    Column(modifier = Modifier.fillMaxSize()) {
+    Column(modifier = Modifier.fillMaxSize().padding(bottom = DesignToken.padding.large)) {
         Column(
             modifier = modifier.weight(1f).verticalScroll(rememberScrollState()),
         ) {
@@ -304,7 +304,6 @@ fun TermsPage(
             onSecondBtnClick = {
                 onAction(SavingsAccountAction.OnTermSubmit)
             },
-            modifier = Modifier.padding(top = DesignToken.padding.small),
         )
     }
 }
