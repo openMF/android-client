@@ -138,7 +138,8 @@ internal fun RunReportScreen(
                         )
                     }
                 },
-                title = {
+                title = {},
+                actions =  {
                     Row(
                         modifier = Modifier.clickable {
                             showMenu = showMenu.not()
@@ -223,7 +224,6 @@ internal fun RunReportScreen(
                         )
                     }
                 },
-                actions = {},
             )
         },
         snackbarHost = { SnackbarHost(hostState = snackbarHostState) },

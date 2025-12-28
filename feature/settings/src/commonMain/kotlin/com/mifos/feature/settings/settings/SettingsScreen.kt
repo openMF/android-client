@@ -26,10 +26,13 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -43,14 +46,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import co.touchlab.kermit.Logger
 import com.mifos.core.common.enums.MifosAppLanguage
 import com.mifos.core.datastore.model.AppTheme
 import com.mifos.core.designsystem.component.MifosRadioButtonDialog
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.UpdateEndpointDialogScreen
-import com.mifos.core.ui.util.DevicePreview
+import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.feature.settings.syncSurvey.SyncSurveysDialog
 import kotlinx.coroutines.delay
 import org.jetbrains.compose.resources.StringResource
@@ -109,9 +111,30 @@ internal fun SettingsScreen(
     val snackbarHostState = remember { SnackbarHostState() }
 
     MifosScaffold(
-        onBackPressed = onBackPressed,
         snackbarHostState = snackbarHostState,
-        title = stringResource(resource = Res.string.feature_settings),
+        topBar = {
+            TopAppBar(
+                title = {
+                    Text(
+                        text = stringResource(resource = Res.string.feature_settings),
+                        style = MaterialTheme.typography.titleLarge
+                    )
+                },
+                navigationIcon = {
+                    IconButton(onClick = onBackPressed) {
+                        Icon(
+                            imageVector = MifosIcons.ArrowBack,
+                            contentDescription = "Navigate back"
+                        )
+                    }
+                },
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.surface,
+                    titleContentColor = MaterialTheme.colorScheme.onSurface,
+                    navigationIconContentColor = MaterialTheme.colorScheme.onSurface
+                )
+            )
+        }
     ) { paddingValues ->
         Column(
             Modifier.padding(paddingValues),
@@ -120,15 +143,10 @@ internal fun SettingsScreen(
                 settingsCardClicked = { item ->
                     when (item) {
                         SettingsCardItem.SYNC_SURVEY -> showSyncSurveyDialog = true
-
                         SettingsCardItem.LANGUAGE -> showLanguageUpdateDialog = true
-
                         SettingsCardItem.THEME -> showThemeUpdateDialog = true
-
                         SettingsCardItem.PASSCODE -> changePasscode()
-
                         SettingsCardItem.ENDPOINT -> showEndpointUpdateDialog = true
-
                         SettingsCardItem.SERVER_CONFIG -> onClickUpdateConfig()
                     }
                 },
@@ -242,16 +260,6 @@ private fun SettingsCardItem(
 
 private fun updateLanguageLocale(language: String, isSystemLanguage: Boolean) {
     Logger.d { "updateLanguageLocale: $language" }
-//    if (isSystemLanguage) {
-//        LanguageHelper.setLocale(context, language)
-//    } else {
-//        val systemLanguageCode = Locale.getDefault().language
-//        if (MifosAppLanguage.entries.find { it.code == systemLanguageCode } == null) {
-//            LanguageHelper.setLocale(context, MifosAppLanguage.ENGLISH.code)
-//        } else {
-//            LanguageHelper.setLocale(context, language)
-//        }
-//    }
 }
 
 @Composable
@@ -272,18 +280,4 @@ fun RestartCountdownSnackbar(
             secondsRemaining--
         }
     }
-}
-
-@Composable
-@DevicePreview
-private fun PreviewSettingsScreen() {
-    SettingsScreen(
-        onBackPressed = {},
-        state = SettingsUiState.DEFAULT,
-        handleEndpointUpdate = { _, _ -> },
-        updateLanguage = {},
-        updateTheme = {},
-        changePasscode = {},
-        onClickUpdateConfig = {},
-    )
 }

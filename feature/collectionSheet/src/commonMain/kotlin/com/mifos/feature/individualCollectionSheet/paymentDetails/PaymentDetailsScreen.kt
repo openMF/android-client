@@ -7,6 +7,8 @@
  *
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
+@file:OptIn(ExperimentalMaterial3Api::class)
+
 package com.mifos.feature.individualCollectionSheet.paymentDetails
 
 import androidclient.feature.collectionsheet.generated.resources.Res
@@ -34,13 +36,20 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedCard
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -52,7 +61,9 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mifos.core.designsystem.component.MifosButton
 import com.mifos.core.designsystem.component.MifosOutlinedTextField
+import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosTextFieldDropdown
+import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.model.objects.account.loan.PaymentTypeOptions
 import com.mifos.core.model.objects.collectionsheets.LoanAndClientName
 import com.mifos.core.network.model.IndividualCollectionSheetPayload
@@ -64,6 +75,7 @@ import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 internal fun PaymentDetailsScreenRoute(
+    onBackPressed: () -> Unit,
     viewModel: PaymentDetailsViewModel = koinViewModel(),
 ) {
     val profileImage = viewModel.profileImage.collectAsStateWithLifecycle()
@@ -76,6 +88,7 @@ internal fun PaymentDetailsScreenRoute(
         paymentTypeOptionList = viewModel.paymentTypeOptionsName,
         paymentTypeOptions = viewModel.paymentTypeOptions,
         getClientImage = profileImage.value,
+        onBackPressed = onBackPressed
     )
 }
 
@@ -89,9 +102,11 @@ internal fun PaymentsDetailsScreen(
     paymentTypeOptions: List<PaymentTypeOptions>,
     modifier: Modifier = Modifier,
     getClientImage: ByteArray?,
+    onBackPressed: () -> Unit,
 ) {
     val loanCollectionSheetItem = loanAndClientNameItem.loan
     val scrollState = rememberScrollState()
+    val snackbarHostState = remember { SnackbarHostState() }
 
     val bulkRepaymentTransactions by rememberSaveable { mutableStateOf(BulkRepaymentTransactions()) }
     var totalDues: String by rememberSaveable {
@@ -118,7 +133,7 @@ internal fun PaymentsDetailsScreen(
         payload.bulkRepaymentTransactions[position] = transaction
     }
 
-    fun cancelAdditional() { // done
+    fun cancelAdditional() {
         val charge1: Double =
             if (totalCharges.isNotEmpty()) totalCharges.toDoubleOrNull() ?: 0.0 else 0.0
         val charge2: Double = if (totalDues.isNotEmpty()) totalDues.toDoubleOrNull() ?: 0.0 else 0.0
@@ -193,157 +208,181 @@ internal fun PaymentsDetailsScreen(
         onShowSheetMandatoryItem(defaultBulkRepaymentTransaction, position)
     }
 
-    Column(
-        modifier = modifier
-            .fillMaxSize()
-            .verticalScroll(scrollState),
-    ) {
-        OutlinedCard(
+    MifosScaffold(
+        modifier = modifier,
+        snackbarHostState = snackbarHostState,
+        topBar = {
+            TopAppBar(
+                title = { Text(text = "Payment Details") },
+                navigationIcon = {
+                    IconButton(onClick = onBackPressed) {
+                        Icon(
+                            imageVector = MifosIcons.ArrowBack,
+                            contentDescription = "Navigate back"
+                        )
+                    }
+                },
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.surface,
+                    titleContentColor = MaterialTheme.colorScheme.onSurface,
+                    navigationIconContentColor = MaterialTheme.colorScheme.onSurface
+                )
+            )
+        }
+    ) { paddingValues ->
+        Column(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
+                .fillMaxSize()
+                .padding(paddingValues)
+                .verticalScroll(scrollState),
         ) {
-            Row(
+            OutlinedCard(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(16.dp),
-                verticalAlignment = Alignment.CenterVertically,
-
             ) {
-                Column(
+                Row(
                     modifier = Modifier
-                        .weight(1f)
-                        .padding(end = 16.dp),
-                ) {
-                    Text(
-                        text = loanAndClientNameItem.clientName ?: "This is Tv name",
-                        style = MaterialTheme.typography.titleLarge,
-                    )
+                        .fillMaxWidth()
+                        .padding(16.dp),
+                    verticalAlignment = Alignment.CenterVertically,
 
-                    Spacer(modifier = Modifier.height(16.dp))
+                    ) {
+                    Column(
+                        modifier = Modifier
+                            .weight(1f)
+                            .padding(end = 16.dp),
+                    ) {
+                        Text(
+                            text = loanAndClientNameItem.clientName ?: "Client Name",
+                            style = MaterialTheme.typography.titleLarge,
+                        )
 
-                    Text(
-                        text = "${loanCollectionSheetItem?.productShortName} (#${loanCollectionSheetItem?.accountId})",
-                        color = Color.DarkGray.copy(alpha = .7f),
-                        style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
-                    )
+                        Spacer(modifier = Modifier.height(16.dp))
 
-                    Spacer(modifier = Modifier.height(16.dp))
+                        Text(
+                            text = "${loanCollectionSheetItem?.productShortName} (#${loanCollectionSheetItem?.accountId})",
+                            color = Color.DarkGray.copy(alpha = .7f),
+                            style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
+                        )
 
-                    MifosOutlinedTextField(
-                        modifier = Modifier.fillMaxWidth(),
-                        value = totalDues,
-                        onValueChange = { totalDues = it },
-                        label = stringResource(Res.string.feature_collection_sheet_total_due),
-                        error = null,
-                        keyboardType = KeyboardType.Number,
-                    )
+                        Spacer(modifier = Modifier.height(16.dp))
 
-                    Spacer(modifier = Modifier.height(16.dp))
+                        MifosOutlinedTextField(
+                            modifier = Modifier.fillMaxWidth(),
+                            value = totalDues,
+                            onValueChange = { totalDues = it },
+                            label = stringResource(Res.string.feature_collection_sheet_total_due),
+                            error = null,
+                            keyboardType = KeyboardType.Number,
+                        )
 
-                    Text(
-                        text = stringResource(Res.string.feature_collection_sheet_total_charges) + " : " + loanCollectionSheetItem?.chargesDue,
-                        style = MaterialTheme.typography.bodyLarge,
-                        fontWeight = FontWeight.Bold,
-                    )
-                }
-                Column(
-                    modifier = Modifier
-                        .weight(.3f)
-                        .fillMaxWidth(),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                ) {
-                    MifosUserImage(
-                        bitmap = getClientImage,
-                        modifier = Modifier.size(100.dp),
-                    )
+                        Spacer(modifier = Modifier.height(16.dp))
+
+                        Text(
+                            text = stringResource(Res.string.feature_collection_sheet_total_charges) + " : " + loanCollectionSheetItem?.chargesDue,
+                            style = MaterialTheme.typography.bodyLarge,
+                            fontWeight = FontWeight.Bold,
+                        )
+                    }
+                    Column(
+                        modifier = Modifier
+                            .weight(.3f)
+                            .fillMaxWidth(),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                    ) {
+                        MifosUserImage(
+                            bitmap = getClientImage,
+                            modifier = Modifier.size(100.dp),
+                        )
+                    }
                 }
             }
-        }
 
-        MifosButton(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp)
-                .height(50.dp),
-            onClick = {
-                showAdditionalDetails = !showAdditionalDetails
-            },
-        ) {
-            Text(text = stringResource(Res.string.feature_collection_sheet_add_payment_detail))
-        }
-
-        if (noPaymentVisibility) {
-            Text(
-                text = stringResource(Res.string.feature_collection_sheet_no_payment_added),
-                style = MaterialTheme.typography.bodyMedium,
+            MifosButton(
                 modifier = Modifier
-                    .align(Alignment.CenterHorizontally)
-                    .padding(vertical = 16.dp),
-                color = Color.Gray,
-            )
-        }
-
-        if (showAdditionalDetails) {
-            OutlinedCard(
-                modifier = Modifier.padding(horizontal = 16.dp),
-                colors = CardDefaults.cardColors(
-                    containerColor = Color.White,
-                ),
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp)
+                    .height(50.dp),
+                onClick = {
+                    showAdditionalDetails = !showAdditionalDetails
+                },
             ) {
-                Column(
-                    modifier = Modifier.padding(vertical = 16.dp),
-                    verticalArrangement = Arrangement.spacedBy(16.dp),
+                Text(text = stringResource(Res.string.feature_collection_sheet_add_payment_detail))
+            }
+
+            if (noPaymentVisibility) {
+                Text(
+                    text = stringResource(Res.string.feature_collection_sheet_no_payment_added),
+                    style = MaterialTheme.typography.bodyMedium,
+                    modifier = Modifier
+                        .align(Alignment.CenterHorizontally)
+                        .padding(vertical = 16.dp),
+                    color = Color.Gray,
+                )
+            }
+
+            if (showAdditionalDetails) {
+                OutlinedCard(
+                    modifier = Modifier.padding(horizontal = 16.dp),
+                    colors = CardDefaults.cardColors(
+                        containerColor = Color.White,
+                    ),
                 ) {
-                    MifosTextFieldDropdown(
-                        label = stringResource(Res.string.feature_collection_sheet_payment_type),
-                        value = paymentType,
-                        onValueChanged = { paymentType = it },
-                        onOptionSelected = { index, value ->
-                            paymentType = value
-                            bulkRepaymentTransactions.paymentTypeId = paymentTypeOptions[index].id
-                        },
-                        options = paymentTypeOptionList ?: emptyList(),
-                        readOnly = true,
-                    )
+                    Column(
+                        modifier = Modifier.padding(vertical = 16.dp),
+                        verticalArrangement = Arrangement.spacedBy(16.dp),
+                    ) {
+                        MifosTextFieldDropdown(
+                            label = stringResource(Res.string.feature_collection_sheet_payment_type),
+                            value = paymentType,
+                            onValueChanged = { paymentType = it },
+                            onOptionSelected = { index, value ->
+                                paymentType = value
+                                bulkRepaymentTransactions.paymentTypeId = paymentTypeOptions[index].id
+                            },
+                            options = paymentTypeOptionList ?: emptyList(),
+                            readOnly = true,
+                        )
 
-                    MifosOutlinedTextField(
-                        value = accountNumber,
-                        onValueChange = { accountNumber = it },
-                        label = stringResource(Res.string.feature_collection_sheet_account_number),
-                        error = null,
-                    )
+                        MifosOutlinedTextField(
+                            value = accountNumber,
+                            onValueChange = { accountNumber = it },
+                            label = stringResource(Res.string.feature_collection_sheet_account_number),
+                            error = null,
+                        )
 
-                    MifosOutlinedTextField(
-                        value = chequeNumber,
-                        onValueChange = { chequeNumber = it },
-                        label = stringResource(Res.string.feature_collection_sheet_cheque_number),
-                        error = null,
-                    )
+                        MifosOutlinedTextField(
+                            value = chequeNumber,
+                            onValueChange = { chequeNumber = it },
+                            label = stringResource(Res.string.feature_collection_sheet_cheque_number),
+                            error = null,
+                        )
 
-                    MifosOutlinedTextField(
-                        value = routingCode,
-                        onValueChange = { routingCode = it },
-                        label = stringResource(Res.string.feature_collection_sheet_routing_code),
-                        error = null,
-                    )
+                        MifosOutlinedTextField(
+                            value = routingCode,
+                            onValueChange = { routingCode = it },
+                            label = stringResource(Res.string.feature_collection_sheet_routing_code),
+                            error = null,
+                        )
 
-                    MifosOutlinedTextField(
-                        value = receiptNumber,
-                        onValueChange = { receiptNumber = it },
-                        label = stringResource(Res.string.feature_collection_sheet_receipt_number),
-                        error = null,
-                    )
+                        MifosOutlinedTextField(
+                            value = receiptNumber,
+                            onValueChange = { receiptNumber = it },
+                            label = stringResource(Res.string.feature_collection_sheet_receipt_number),
+                            error = null,
+                        )
 
-                    MifosOutlinedTextField(
-                        value = bankNumber,
-                        onValueChange = { bankNumber = it },
-                        label = stringResource(Res.string.feature_collection_sheet_bank_number),
-                        error = null,
-                    )
+                        MifosOutlinedTextField(
+                            value = bankNumber,
+                            onValueChange = { bankNumber = it },
+                            label = stringResource(Res.string.feature_collection_sheet_bank_number),
+                            error = null,
+                        )
 
-                    MifosButtonRow(cancelAdditional = { cancelAdditional() }) {
-                        saveAdditional()
+                        MifosButtonRow(cancelAdditional = { cancelAdditional() }) {
+                            saveAdditional()
+                        }
                     }
                 }
             }
@@ -390,5 +429,6 @@ private fun PreviewPaymentDetails(modifier: Modifier = Modifier) {
         paymentTypeOptionList = emptyList(),
         paymentTypeOptions = emptyList(),
         getClientImage = null,
+        onBackPressed = {}
     )
 }
