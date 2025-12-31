@@ -87,7 +87,7 @@ internal fun NavGraphBuilder.authenticatedGraph(
             },
         )
         serverConfigGraph(
-            navigateBack = navController::popBackStack
+            navigateBack = navController::popBackStack,
         )
 
         individualCollectionSheetNavGraph(

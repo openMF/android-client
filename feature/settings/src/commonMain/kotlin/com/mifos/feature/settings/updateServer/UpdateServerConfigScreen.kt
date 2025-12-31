@@ -524,9 +524,9 @@ internal fun UpdateServerConfigScreenContent(
                 ) {
                     Text(
                         "  " +
-                                stringResource(
-                                    Res.string.feature_settings_update_config_btn_text,
-                                ).uppercase(),
+                            stringResource(
+                                Res.string.feature_settings_update_config_btn_text,
+                            ).uppercase(),
                         fontFamily = FontFamily.SansSerif,
                     )
                 }
