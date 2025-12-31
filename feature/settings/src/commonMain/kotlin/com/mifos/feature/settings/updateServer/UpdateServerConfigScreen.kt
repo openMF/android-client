@@ -11,6 +11,7 @@ package com.mifos.feature.settings.updateServer
 
 import androidclient.feature.settings.generated.resources.Res
 import androidclient.feature.settings.generated.resources.feature_settings_api_path_placeholder
+import androidclient.feature.settings.generated.resources.feature_settings_configuration_saved
 import androidclient.feature.settings.generated.resources.feature_settings_hostname_placeholder
 import androidclient.feature.settings.generated.resources.feature_settings_label_api_path
 import androidclient.feature.settings.generated.resources.feature_settings_label_hostname
@@ -19,12 +20,14 @@ import androidclient.feature.settings.generated.resources.feature_settings_label
 import androidclient.feature.settings.generated.resources.feature_settings_label_tenant
 import androidclient.feature.settings.generated.resources.feature_settings_note_text
 import androidclient.feature.settings.generated.resources.feature_settings_protocol_placeholder
-import androidclient.feature.settings.generated.resources.feature_settings_restart
+import androidclient.feature.settings.generated.resources.feature_settings_restart_application
 import androidclient.feature.settings.generated.resources.feature_settings_title
 import androidclient.feature.settings.generated.resources.feature_settings_update_config_btn_text
 import androidx.annotation.VisibleForTesting
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -35,16 +38,21 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextFieldDefaults
-import androidx.compose.material3.Snackbar
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -74,7 +82,6 @@ import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.ui.util.DevicePreview
 import com.mifos.core.ui.util.ShareUtils
 import kotlinx.coroutines.delay
-import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -114,14 +121,24 @@ internal fun UpdateServerConfigScreenRoute(
         )
 
         if (showCountdown) {
-            SimpleCountdownSnackbar(
-                message = Res.string.feature_settings_restart,
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(Color.Black.copy(alpha = 0.6f))
+                    .clickable(
+                        interactionSource = remember { MutableInteractionSource() },
+                        indication = null,
+                    ) {},
+            )
+            RestartCountdownDialog(
                 durationSeconds = 5,
                 onDismiss = {
                     showCountdown = false
                     ShareUtils.restartApplication()
                 },
-                modifier = Modifier.align(Alignment.BottomCenter),
+                modifier = Modifier
+                    .align(Alignment.Center)
+                    .padding(24.dp),
             )
         }
     }
@@ -161,8 +178,8 @@ internal fun UpdateServerConfigScreenContent(
                 .fillMaxSize()
                 .padding(it)
                 .background(Color(0xfff8f9fa).copy(alpha = .1f)),
-            contentPadding = PaddingValues(4.dp),
-            verticalArrangement = Arrangement.spacedBy(4.dp),
+            contentPadding = PaddingValues(6.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp),
             state = lazyListState,
         ) {
             item {
@@ -204,7 +221,7 @@ internal fun UpdateServerConfigScreenContent(
                             horizontalAlignment = Alignment.CenterHorizontally,
                         ) {
                             Text(
-                                "\uD83C\uDFE0 Local",
+                                "Local",
                                 style = MaterialTheme.typography.bodyMedium,
                                 fontFamily = FontFamily.SansSerif,
                             )
@@ -241,7 +258,7 @@ internal fun UpdateServerConfigScreenContent(
                             horizontalAlignment = Alignment.CenterHorizontally,
                         ) {
                             Text(
-                                "\uD83C\uDF10 Demo",
+                                "Demo",
                                 style = MaterialTheme.typography.bodyMedium,
                                 fontFamily = FontFamily.SansSerif,
                             )
@@ -506,10 +523,10 @@ internal fun UpdateServerConfigScreenContent(
                     ),
                 ) {
                     Text(
-                        "⬇\uFE0F  " +
-                            stringResource(
-                                Res.string.feature_settings_update_config_btn_text,
-                            ).uppercase(),
+                        "  " +
+                                stringResource(
+                                    Res.string.feature_settings_update_config_btn_text,
+                                ).uppercase(),
                         fontFamily = FontFamily.SansSerif,
                     )
                 }
@@ -519,46 +536,102 @@ internal fun UpdateServerConfigScreenContent(
 }
 
 @Composable
-private fun SimpleCountdownSnackbar(
-    message: StringResource,
+private fun RestartCountdownDialog(
     durationSeconds: Int = 5,
-    dismissText: String? = null,
     onDismiss: () -> Unit,
     modifier: Modifier = Modifier,
-    onAboutToEnd: () -> Unit = {},
 ) {
     var countdown by rememberSaveable { mutableStateOf(durationSeconds) }
+
+    val progress = countdown.toFloat() / durationSeconds.toFloat()
 
     LaunchedEffect(countdown) {
         if (countdown > 0) {
             delay(1000L)
             countdown--
-
-            if (countdown == 1) {
-                onAboutToEnd()
-            }
         } else {
             onDismiss()
         }
     }
 
-    Snackbar(
-        modifier = modifier.padding(16.dp),
-        action = {
-            if (dismissText != null) {
-                TextButton(onClick = onDismiss) {
-                    Text(dismissText)
-                }
-            }
-        },
+    Card(
+        modifier = modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(24.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surface,
+        ),
+        elevation = CardDefaults.cardElevation(defaultElevation = 10.dp),
     ) {
-        Text(
-            text = stringResource(message, countdown),
-            style = MaterialTheme.typography.bodyMedium,
-            fontWeight = FontWeight.SemiBold,
-            textAlign = TextAlign.Center,
-            modifier = Modifier.fillMaxWidth(),
-        )
+        Column(
+            modifier = Modifier.padding(32.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center,
+        ) {
+            Box(
+                modifier = Modifier
+                    .size(56.dp)
+                    .background(Color(0xFFE8F5E9), CircleShape),
+                contentAlignment = Alignment.Center,
+            ) {
+                Icon(
+                    imageVector = MifosIcons.Check,
+                    contentDescription = null,
+                    tint = Color(0xFF2E7D32),
+                    modifier = Modifier.size(32.dp),
+                )
+            }
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            Text(
+                text = stringResource(Res.string.feature_settings_configuration_saved),
+                style = MaterialTheme.typography.titleLarge.copy(
+                    fontWeight = FontWeight.Bold,
+                ),
+                textAlign = TextAlign.Center,
+            )
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            Text(
+                text = stringResource(Res.string.feature_settings_restart_application),
+                style = MaterialTheme.typography.bodyMedium,
+                color = Color.Gray,
+                textAlign = TextAlign.Center,
+            )
+
+            Spacer(modifier = Modifier.height(24.dp))
+
+            Box(contentAlignment = Alignment.Center) {
+                CircularProgressIndicator(
+                    progress = { progress },
+                    modifier = Modifier.size(88.dp),
+                    color = MaterialTheme.colorScheme.primary,
+                    trackColor = MaterialTheme.colorScheme.primaryContainer,
+                    strokeWidth = 6.dp,
+                )
+                Text(
+                    text = "$countdown",
+                    style = MaterialTheme.typography.headlineLarge.copy(
+                        fontWeight = FontWeight.ExtraBold,
+                        color = MaterialTheme.colorScheme.primary,
+                    ),
+                )
+            }
+
+            Spacer(modifier = Modifier.height(32.dp))
+
+            TextButton(
+                onClick = onDismiss,
+                shape = RoundedCornerShape(50),
+                modifier = Modifier.fillMaxWidth().height(48.dp),
+                colors = ButtonDefaults.textButtonColors(
+                    contentColor = MaterialTheme.colorScheme.primary,
+                ),
+            ) {
+                Text("Restart Now")
+            }
+        }
     }
 }
 

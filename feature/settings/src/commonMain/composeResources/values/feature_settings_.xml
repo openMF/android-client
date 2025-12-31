@@ -25,4 +25,7 @@
 
     <string name="feature_settings_label_tenant">Tenant ID</string>
     <string name="feature_settings_tenant_placeholder">Enter server tenant</string>
+
+    <string name="feature_settings_configuration_saved">Configuration Saved</string>
+    <string name="feature_settings_restart_application">Restarting application to apply changes.</string>
 </resources>
