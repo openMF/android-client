@@ -12,15 +12,22 @@ package com.mifos.feature.settings.updateServer
 import androidclient.feature.settings.generated.resources.Res
 import androidclient.feature.settings.generated.resources.feature_settings_api_path_placeholder
 import androidclient.feature.settings.generated.resources.feature_settings_configuration_saved
+import androidclient.feature.settings.generated.resources.feature_settings_demo
+import androidclient.feature.settings.generated.resources.feature_settings_development
+import androidclient.feature.settings.generated.resources.feature_settings_environment
 import androidclient.feature.settings.generated.resources.feature_settings_hostname_placeholder
 import androidclient.feature.settings.generated.resources.feature_settings_label_api_path
 import androidclient.feature.settings.generated.resources.feature_settings_label_hostname
 import androidclient.feature.settings.generated.resources.feature_settings_label_port
 import androidclient.feature.settings.generated.resources.feature_settings_label_protocol
 import androidclient.feature.settings.generated.resources.feature_settings_label_tenant
+import androidclient.feature.settings.generated.resources.feature_settings_local
 import androidclient.feature.settings.generated.resources.feature_settings_note_text
+import androidclient.feature.settings.generated.resources.feature_settings_or
 import androidclient.feature.settings.generated.resources.feature_settings_protocol_placeholder
+import androidclient.feature.settings.generated.resources.feature_settings_quick_setup
 import androidclient.feature.settings.generated.resources.feature_settings_restart_application
+import androidclient.feature.settings.generated.resources.feature_settings_restart_now
 import androidclient.feature.settings.generated.resources.feature_settings_title
 import androidclient.feature.settings.generated.resources.feature_settings_update_config_btn_text
 import androidx.annotation.VisibleForTesting
@@ -42,8 +49,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -73,12 +78,13 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mifos.core.common.utils.ServerConfig
 import com.mifos.core.designsystem.component.MifosOutlinedTextField
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.icon.MifosIcons
+import com.mifos.core.designsystem.theme.AppColors
+import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.ui.util.DevicePreview
 import com.mifos.core.ui.util.ShareUtils
 import kotlinx.coroutines.delay
@@ -138,7 +144,7 @@ internal fun UpdateServerConfigScreenRoute(
                 },
                 modifier = Modifier
                     .align(Alignment.Center)
-                    .padding(24.dp),
+                    .padding(DesignToken.padding.largeIncreasedExtra),
             )
         }
     }
@@ -177,15 +183,15 @@ internal fun UpdateServerConfigScreenContent(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(it)
-                .background(Color(0xfff8f9fa).copy(alpha = .1f)),
-            contentPadding = PaddingValues(6.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp),
+                .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = .1f)),
+            contentPadding = PaddingValues(DesignToken.padding.small),
+            verticalArrangement = Arrangement.spacedBy(DesignToken.spacing.small),
             state = lazyListState,
         ) {
             item {
                 Text(
-                    "Quick Setup",
-                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 4.dp),
+                    text = stringResource(Res.string.feature_settings_quick_setup),
+                    modifier = Modifier.padding(horizontal = DesignToken.padding.large, vertical = DesignToken.padding.extraSmall),
                     fontWeight = FontWeight.SemiBold,
                     style = MaterialTheme.typography.titleMedium,
                     fontFamily = FontFamily.SansSerif,
@@ -194,7 +200,7 @@ internal fun UpdateServerConfigScreenContent(
 
             item {
                 Row(
-                    modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 12.dp),
+                    modifier = Modifier.fillMaxWidth().padding(horizontal = DesignToken.padding.large, vertical = DesignToken.padding.medium),
                     horizontalArrangement = Arrangement.Center,
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
@@ -205,15 +211,15 @@ internal fun UpdateServerConfigScreenContent(
                             onEvent(UpdateServerConfigEvent.UpdatePort(ServerConfig.LOCALHOST.port))
                         },
                         modifier = Modifier
-                            .height(72.dp)
+                            .height(DesignToken.sizes.profile)
                             .weight(1f),
                         enabled = !hasAnyError,
-                        shape = RoundedCornerShape(20),
+                        shape = DesignToken.shapes.largeIncreased,
                         colors = ButtonDefaults.buttonColors(
-                            containerColor = Color(0xff007AFF),
-                            disabledContainerColor = Color.White,
-                            disabledContentColor = Color(0xff007AFF),
-                            contentColor = Color.White,
+                            containerColor = MaterialTheme.colorScheme.primary,
+                            disabledContainerColor = MaterialTheme.colorScheme.surface,
+                            disabledContentColor = MaterialTheme.colorScheme.primary,
+                            contentColor = MaterialTheme.colorScheme.onPrimary,
                         ),
                     ) {
                         Column(
@@ -221,12 +227,12 @@ internal fun UpdateServerConfigScreenContent(
                             horizontalAlignment = Alignment.CenterHorizontally,
                         ) {
                             Text(
-                                "Local",
+                                text = stringResource(Res.string.feature_settings_local),
                                 style = MaterialTheme.typography.bodyMedium,
                                 fontFamily = FontFamily.SansSerif,
                             )
                             Text(
-                                "Development",
+                                text = stringResource(Res.string.feature_settings_development),
                                 style = MaterialTheme.typography.bodyMedium,
                                 fontFamily = FontFamily.SansSerif,
                             )
@@ -234,7 +240,7 @@ internal fun UpdateServerConfigScreenContent(
                     }
 
                     Spacer(
-                        modifier = Modifier.width(12.dp),
+                        modifier = Modifier.width(DesignToken.spacing.medium),
                     )
 
                     ElevatedButton(
@@ -242,15 +248,15 @@ internal fun UpdateServerConfigScreenContent(
                             onEvent(UpdateServerConfigEvent.UseDefaultConfig)
                         },
                         modifier = Modifier
-                            .height(72.dp)
+                            .height(DesignToken.sizes.profile)
                             .weight(1f),
                         enabled = !hasAnyError,
-                        shape = RoundedCornerShape(20),
+                        shape = DesignToken.shapes.largeIncreased,
                         colors = ButtonDefaults.buttonColors(
-                            containerColor = Color(0xff007AFF),
-                            disabledContainerColor = Color.White,
-                            disabledContentColor = Color(0xff007AFF),
-                            contentColor = Color.White,
+                            containerColor = MaterialTheme.colorScheme.primary,
+                            disabledContainerColor = MaterialTheme.colorScheme.surface,
+                            disabledContentColor = MaterialTheme.colorScheme.primary,
+                            contentColor = MaterialTheme.colorScheme.onPrimary,
                         ),
                     ) {
                         Column(
@@ -258,12 +264,12 @@ internal fun UpdateServerConfigScreenContent(
                             horizontalAlignment = Alignment.CenterHorizontally,
                         ) {
                             Text(
-                                "Demo",
+                                text = stringResource(Res.string.feature_settings_demo),
                                 style = MaterialTheme.typography.bodyMedium,
                                 fontFamily = FontFamily.SansSerif,
                             )
                             Text(
-                                "Environment",
+                                text = stringResource(Res.string.feature_settings_environment),
                                 style = MaterialTheme.typography.bodyMedium,
                                 fontFamily = FontFamily.SansSerif,
                             )
@@ -284,9 +290,9 @@ internal fun UpdateServerConfigScreenContent(
                     )
 
                     Text(
-                        "OR",
+                        text = stringResource(Res.string.feature_settings_or),
                         modifier = Modifier
-                            .padding(horizontal = 8.dp),
+                            .padding(horizontal = DesignToken.padding.small),
                         fontFamily = FontFamily.SansSerif,
                     )
 
@@ -301,7 +307,7 @@ internal fun UpdateServerConfigScreenContent(
                 Text(
                     stringResource(Res.string.feature_settings_label_protocol),
                     style = MaterialTheme.typography.labelMedium,
-                    modifier = Modifier.padding(start = 16.dp),
+                    modifier = Modifier.padding(start = DesignToken.padding.large),
                     fontFamily = FontFamily.SansSerif,
                 )
                 MifosOutlinedTextField(
@@ -314,14 +320,14 @@ internal fun UpdateServerConfigScreenContent(
                     onValueChange = {
                         onEvent(UpdateServerConfigEvent.UpdateProtocol(it))
                     },
-                    shape = RoundedCornerShape(16),
+                    shape = DesignToken.shapes.large,
                     colors = OutlinedTextFieldDefaults.colors(
-                        focusedBorderColor = Color(0xffdddddd),
-                        unfocusedBorderColor = Color(0xffdddddd),
-                        focusedContainerColor = Color.White,
-                        unfocusedContainerColor = Color.White,
+                        focusedBorderColor = MaterialTheme.colorScheme.primary,
+                        unfocusedBorderColor = MaterialTheme.colorScheme.outlineVariant,
+                        focusedContainerColor = MaterialTheme.colorScheme.surface,
+                        unfocusedContainerColor = MaterialTheme.colorScheme.surface,
                     ),
-                    modifier = Modifier.fillMaxWidth().padding(start = 16.dp, end = 16.dp),
+                    modifier = Modifier.fillMaxWidth().padding(horizontal = DesignToken.padding.large),
                     label = "",
                     textStyle = TextStyle(
                         fontFamily = FontFamily.SansSerif,
@@ -335,7 +341,7 @@ internal fun UpdateServerConfigScreenContent(
                 Text(
                     stringResource(Res.string.feature_settings_label_hostname),
                     style = MaterialTheme.typography.labelMedium,
-                    modifier = Modifier.padding(start = 16.dp),
+                    modifier = Modifier.padding(start = DesignToken.padding.large),
                     fontFamily = FontFamily.SansSerif,
                 )
                 MifosOutlinedTextField(
@@ -348,14 +354,14 @@ internal fun UpdateServerConfigScreenContent(
                     onValueChange = {
                         onEvent(UpdateServerConfigEvent.UpdateEndPoint(it))
                     },
-                    shape = RoundedCornerShape(16),
+                    shape = DesignToken.shapes.large,
                     colors = OutlinedTextFieldDefaults.colors(
-                        focusedBorderColor = Color(0xffdddddd),
-                        unfocusedBorderColor = Color(0xffdddddd),
-                        focusedContainerColor = Color.White,
-                        unfocusedContainerColor = Color.White,
+                        focusedBorderColor = MaterialTheme.colorScheme.primary,
+                        unfocusedBorderColor = MaterialTheme.colorScheme.outlineVariant,
+                        focusedContainerColor = MaterialTheme.colorScheme.surface,
+                        unfocusedContainerColor = MaterialTheme.colorScheme.surface,
                     ),
-                    modifier = Modifier.fillMaxWidth().padding(start = 16.dp, end = 16.dp),
+                    modifier = Modifier.fillMaxWidth().padding(horizontal = DesignToken.padding.large),
                     textStyle = TextStyle(
                         fontFamily = FontFamily.SansSerif,
                         fontSize = MaterialTheme.typography.bodyLarge.fontSize,
@@ -368,7 +374,7 @@ internal fun UpdateServerConfigScreenContent(
                 Text(
                     stringResource(Res.string.feature_settings_label_api_path),
                     style = MaterialTheme.typography.labelMedium,
-                    modifier = Modifier.padding(start = 16.dp),
+                    modifier = Modifier.padding(start = DesignToken.padding.large),
                     fontFamily = FontFamily.SansSerif,
                 )
 
@@ -383,14 +389,14 @@ internal fun UpdateServerConfigScreenContent(
                     onValueChange = {
                         onEvent(UpdateServerConfigEvent.UpdateApiPath(it))
                     },
-                    shape = RoundedCornerShape(16),
+                    shape = DesignToken.shapes.large,
                     colors = OutlinedTextFieldDefaults.colors(
-                        focusedBorderColor = Color(0xffdddddd),
-                        unfocusedBorderColor = Color(0xffdddddd),
-                        focusedContainerColor = Color.White,
-                        unfocusedContainerColor = Color.White,
+                        focusedBorderColor = MaterialTheme.colorScheme.primary,
+                        unfocusedBorderColor = MaterialTheme.colorScheme.outlineVariant,
+                        focusedContainerColor = MaterialTheme.colorScheme.surface,
+                        unfocusedContainerColor = MaterialTheme.colorScheme.surface,
                     ),
-                    modifier = Modifier.fillMaxWidth().padding(start = 16.dp, end = 16.dp),
+                    modifier = Modifier.fillMaxWidth().padding(horizontal = DesignToken.padding.large),
                     label = "",
                     textStyle = TextStyle(
                         fontFamily = FontFamily.SansSerif,
@@ -404,7 +410,7 @@ internal fun UpdateServerConfigScreenContent(
                 Text(
                     stringResource(Res.string.feature_settings_label_port),
                     style = MaterialTheme.typography.labelMedium,
-                    modifier = Modifier.padding(start = 16.dp),
+                    modifier = Modifier.padding(start = DesignToken.padding.large),
                     fontFamily = FontFamily.SansSerif,
                 )
                 MifosOutlinedTextField(
@@ -417,14 +423,14 @@ internal fun UpdateServerConfigScreenContent(
                     onValueChange = {
                         onEvent(UpdateServerConfigEvent.UpdatePort(it))
                     },
-                    shape = RoundedCornerShape(16),
+                    shape = DesignToken.shapes.large,
                     colors = OutlinedTextFieldDefaults.colors(
-                        focusedBorderColor = Color(0xffdddddd),
-                        unfocusedBorderColor = Color(0xffdddddd),
-                        focusedContainerColor = Color.White,
-                        unfocusedContainerColor = Color.White,
+                        focusedBorderColor = MaterialTheme.colorScheme.primary,
+                        unfocusedBorderColor = MaterialTheme.colorScheme.outlineVariant,
+                        focusedContainerColor = MaterialTheme.colorScheme.surface,
+                        unfocusedContainerColor = MaterialTheme.colorScheme.surface,
                     ),
-                    modifier = Modifier.fillMaxWidth().padding(start = 16.dp, end = 16.dp),
+                    modifier = Modifier.fillMaxWidth().padding(horizontal = DesignToken.padding.large),
                     label = "",
                     textStyle = TextStyle(
                         fontFamily = FontFamily.SansSerif,
@@ -438,7 +444,7 @@ internal fun UpdateServerConfigScreenContent(
                 Text(
                     stringResource(Res.string.feature_settings_label_tenant),
                     style = MaterialTheme.typography.labelMedium,
-                    modifier = Modifier.padding(start = 16.dp),
+                    modifier = Modifier.padding(start = DesignToken.padding.large),
                     fontFamily = FontFamily.SansSerif,
                 )
                 MifosOutlinedTextField(
@@ -451,14 +457,16 @@ internal fun UpdateServerConfigScreenContent(
                     onValueChange = {
                         onEvent(UpdateServerConfigEvent.UpdateTenant(it))
                     },
-                    shape = RoundedCornerShape(16),
+                    shape = DesignToken.shapes.large,
                     colors = OutlinedTextFieldDefaults.colors(
-                        focusedBorderColor = Color(0xffdddddd),
-                        unfocusedBorderColor = Color(0xffdddddd),
-                        focusedContainerColor = Color.White,
-                        unfocusedContainerColor = Color.White,
+                        focusedBorderColor = MaterialTheme.colorScheme.primary,
+                        unfocusedBorderColor = MaterialTheme.colorScheme.outlineVariant,
+                        focusedContainerColor = MaterialTheme.colorScheme.surface,
+                        unfocusedContainerColor = MaterialTheme.colorScheme.surface,
                     ),
-                    modifier = Modifier.fillMaxWidth().padding(start = 16.dp, end = 16.dp),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = DesignToken.padding.large),
                     label = "",
                     textStyle = TextStyle(
                         fontFamily = FontFamily.SansSerif,
@@ -473,35 +481,34 @@ internal fun UpdateServerConfigScreenContent(
                     contentAlignment = Alignment.CenterStart,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(68.dp)
-                        .padding(horizontal = 16.dp)
-                        .clip(RoundedCornerShape(16))
+                        .height(DesignToken.sizes.profile)
+                        .padding(horizontal = DesignToken.padding.large)
+                        .clip(DesignToken.shapes.large)
                         .border(
-                            1.dp,
-                            Color(0xffffeaa7),
-                            RoundedCornerShape(16),
+                            DesignToken.padding.none,
+                            AppColors.customYellow,
+                            DesignToken.shapes.large,
                         )
-                        .background(Color(0xfffff3cd)),
+                        .background(AppColors.customYellow.copy(alpha = 0.1f)),
                 ) {
                     Row(
-                        modifier = Modifier.padding(horizontal = 8.dp),
+                        modifier = Modifier.padding(horizontal = DesignToken.padding.small),
                         horizontalArrangement = Arrangement.Center,
                     ) {
                         Text(
                             "⚠\uFE0F",
-                            modifier = Modifier.padding(horizontal = 8.dp),
+                            modifier = Modifier.padding(horizontal = DesignToken.padding.small),
                         )
                         Text(
                             text = stringResource(Res.string.feature_settings_note_text),
                             style = MaterialTheme.typography.titleSmall,
-                            color = Color(0xff856404),
+                            color = AppColors.customYellow,
                             overflow = TextOverflow.Ellipsis,
                             fontFamily = FontFamily.SansSerif,
                         )
                     }
                 }
-
-                Spacer(Modifier.height(8.dp))
+                Spacer(Modifier.height(DesignToken.spacing.small))
             }
 
             item {
@@ -511,15 +518,15 @@ internal fun UpdateServerConfigScreenContent(
                     },
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(56.dp)
-                        .padding(horizontal = 16.dp),
+                        .height(DesignToken.sizes.buttonHeight)
+                        .padding(horizontal = DesignToken.padding.large),
                     enabled = !hasAnyError,
-                    shape = RoundedCornerShape(16),
+                    shape = DesignToken.shapes.large,
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = Color(0xff007AFF),
-                        disabledContainerColor = Color.White,
-                        disabledContentColor = Color(0xff007AFF),
-                        contentColor = Color.White,
+                        containerColor = MaterialTheme.colorScheme.primary,
+                        disabledContainerColor = MaterialTheme.colorScheme.surface,
+                        disabledContentColor = MaterialTheme.colorScheme.primary,
+                        contentColor = MaterialTheme.colorScheme.onPrimary,
                     ),
                 ) {
                     Text(
@@ -556,32 +563,32 @@ private fun RestartCountdownDialog(
 
     Card(
         modifier = modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(24.dp),
+        shape = DesignToken.shapes.extraLarge,
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surface,
         ),
-        elevation = CardDefaults.cardElevation(defaultElevation = 10.dp),
+        elevation = CardDefaults.cardElevation(defaultElevation = DesignToken.elevation.appBar),
     ) {
         Column(
-            modifier = Modifier.padding(32.dp),
+            modifier = Modifier.padding(DesignToken.padding.extraLargeIncreased),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center,
         ) {
             Box(
                 modifier = Modifier
-                    .size(56.dp)
-                    .background(Color(0xFFE8F5E9), CircleShape),
+                    .size(DesignToken.sizes.buttonHeight)
+                    .background(AppColors.customEnable.copy(alpha = 0.1f), DesignToken.shapes.circle),
                 contentAlignment = Alignment.Center,
             ) {
                 Icon(
                     imageVector = MifosIcons.Check,
                     contentDescription = null,
-                    tint = Color(0xFF2E7D32),
-                    modifier = Modifier.size(32.dp),
+                    tint = AppColors.customEnable,
+                    modifier = Modifier.size(DesignToken.sizes.avatarSmall),
                 )
             }
 
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(DesignToken.spacing.large))
 
             Text(
                 text = stringResource(Res.string.feature_settings_configuration_saved),
@@ -590,9 +597,7 @@ private fun RestartCountdownDialog(
                 ),
                 textAlign = TextAlign.Center,
             )
-
-            Spacer(modifier = Modifier.height(8.dp))
-
+            Spacer(modifier = Modifier.height(DesignToken.spacing.small))
             Text(
                 text = stringResource(Res.string.feature_settings_restart_application),
                 style = MaterialTheme.typography.bodyMedium,
@@ -600,15 +605,15 @@ private fun RestartCountdownDialog(
                 textAlign = TextAlign.Center,
             )
 
-            Spacer(modifier = Modifier.height(24.dp))
+            Spacer(modifier = Modifier.height(DesignToken.spacing.largeMediumIncreased))
 
             Box(contentAlignment = Alignment.Center) {
                 CircularProgressIndicator(
                     progress = { progress },
-                    modifier = Modifier.size(88.dp),
+                    modifier = Modifier.size(DesignToken.sizes.topAppBarHeight),
                     color = MaterialTheme.colorScheme.primary,
                     trackColor = MaterialTheme.colorScheme.primaryContainer,
-                    strokeWidth = 6.dp,
+                    strokeWidth = DesignToken.padding.small,
                 )
                 Text(
                     text = "$countdown",
@@ -619,17 +624,17 @@ private fun RestartCountdownDialog(
                 )
             }
 
-            Spacer(modifier = Modifier.height(32.dp))
+            Spacer(modifier = Modifier.height(DesignToken.spacing.extraLargeIncreased))
 
             TextButton(
                 onClick = onDismiss,
-                shape = RoundedCornerShape(50),
-                modifier = Modifier.fillMaxWidth().height(48.dp),
+                shape = DesignToken.shapes.circle,
+                modifier = Modifier.fillMaxWidth().height(DesignToken.sizes.buttonHeight),
                 colors = ButtonDefaults.textButtonColors(
                     contentColor = MaterialTheme.colorScheme.primary,
                 ),
             ) {
-                Text("Restart Now")
+                Text(stringResource(Res.string.feature_settings_restart_now))
             }
         }
     }
