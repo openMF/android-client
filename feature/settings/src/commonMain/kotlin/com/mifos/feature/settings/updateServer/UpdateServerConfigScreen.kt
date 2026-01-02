@@ -32,7 +32,6 @@ import androidclient.feature.settings.generated.resources.feature_settings_title
 import androidclient.feature.settings.generated.resources.feature_settings_update_config_btn_text
 import androidx.annotation.VisibleForTesting
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
@@ -484,11 +483,6 @@ internal fun UpdateServerConfigScreenContent(
                         .height(DesignToken.sizes.profile)
                         .padding(horizontal = DesignToken.padding.large)
                         .clip(DesignToken.shapes.large)
-                        .border(
-                            DesignToken.padding.none,
-                            AppColors.customYellow,
-                            DesignToken.shapes.large,
-                        )
                         .background(AppColors.customYellow.copy(alpha = 0.1f)),
                 ) {
                     Row(
