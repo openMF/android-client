@@ -62,6 +62,15 @@ internal class ClientProfileDetailsViewModel(
 
     init {
         getClientAndObserveNetwork()
+        observeGlobalUpdates()
+    }
+
+    private fun observeGlobalUpdates() {
+        viewModelScope.launch {
+            clientDetailsRepo.clientUpdateEvents.collect {
+                loadClientDetailsAndImage(route.id)
+            }
+        }
     }
 
     private fun getClientAndObserveNetwork() {

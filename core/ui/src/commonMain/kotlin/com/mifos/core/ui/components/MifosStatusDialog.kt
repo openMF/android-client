@@ -13,14 +13,12 @@ import androidclient.core.ui.generated.resources.Res
 import androidclient.core.ui.generated.resources.ic_icon_error
 import androidclient.core.ui.generated.resources.ic_icon_success
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -57,48 +55,46 @@ fun MifosStatusDialog(
         )
     }
 
-    Box(
-        modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center,
+    Column(
+        modifier = modifier
+            .fillMaxWidth()
+            .wrapContentHeight()
+            .padding(DesignToken.padding.largeIncreasedExtra),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(DesignToken.spacing.large),
     ) {
+        Image(
+            painter = icon,
+            contentDescription = null,
+            modifier = Modifier.size(DesignToken.sizes.profile),
+        )
         Column(
-            Modifier.fillMaxWidth().padding(horizontal = DesignToken.padding.large),
             horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(DesignToken.spacing.small),
         ) {
-            Image(
-                painter = icon,
-                contentDescription = null,
-                modifier = Modifier.size(DesignToken.sizes.avatarLargeLarge),
-            )
-            Spacer(Modifier.height(DesignToken.padding.largeIncreasedExtra))
-
             Text(
                 text = title,
                 style = MifosTypography.titleLargeEmphasized,
                 textAlign = TextAlign.Center,
             )
-
-            Spacer(Modifier.height(DesignToken.padding.small))
-
             Text(
                 text = message,
-                style = MifosTypography.bodySmall,
+                style = MifosTypography.bodyMedium,
                 textAlign = TextAlign.Center,
             )
-
-            Spacer(Modifier.height(DesignToken.padding.extraLargeIncreased))
-
-            MifosButton(
-                onClick = onConfirm,
-                text = {
-                    Text(
-                        text = btnText,
-                        style = MifosTypography.labelLarge,
-                    )
-                },
-                modifier = Modifier.fillMaxWidth(),
-            )
         }
+        MifosButton(
+            onClick = onConfirm,
+            text = {
+                Text(
+                    text = btnText,
+                    style = MifosTypography.labelLarge,
+                )
+            },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = DesignToken.padding.small),
+        )
     }
 }
 
@@ -114,25 +110,9 @@ private fun MifosSuccessStatusDialogPreview() {
         MifosStatusDialog(
             status = ResultStatus.SUCCESS,
             onConfirm = {},
-            btnText = "OK",
+            btnText = "Continue",
             successTitle = "Success",
-            successMessage = "Operation Successful",
-            failureTitle = "Failure",
-            failureMessage = "Operation Failed",
-        )
-    }
-}
-
-@Composable
-@Preview
-private fun MifosFailureStatusDialogPreview() {
-    MifosTheme {
-        MifosStatusDialog(
-            status = ResultStatus.FAILURE,
-            onConfirm = {},
-            btnText = "OK",
-            successTitle = "Success",
-            successMessage = "Operation Successful",
+            successMessage = "Profile photo updated successfully",
             failureTitle = "Failure",
             failureMessage = "Operation Failed",
         )

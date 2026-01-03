@@ -17,6 +17,7 @@ import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.repository.ClientDetailsRepository
 import com.mifos.core.data.util.NetworkMonitor
 import com.mifos.core.domain.useCases.UploadClientImageUseCase
+import com.mifos.core.ui.components.ResultStatus
 import com.mifos.core.ui.util.BaseViewModel
 import com.mifos.core.ui.util.imageToByteArray
 import com.mifos.core.ui.util.multipartRequestBody
@@ -87,6 +88,7 @@ internal class ClientProfileEditViewModel(
             is ClientProfileEditAction.OnImageSelected -> {
                 uploadImage(state.id, action.image)
             }
+            ClientProfileEditAction.OnNext -> sendEvent(ClientProfileEditEvent.NavigateBack)
         }
     }
 
@@ -95,15 +97,30 @@ internal class ClientProfileEditViewModel(
             clientDetailsRepo.getImage(clientId).collect { result ->
                 when (result) {
                     is DataState.Success -> mutableStateFlow.update {
-                        it.copy(
+                        val newDialogState = if (state.dialogState is ClientProfileEditState.DialogState.ShowStatusDialog) {
+                            state.dialogState
+                        } else {
+                            null
+                        }
+                        state.copy(
                             profileImage = imageToByteArray(result.data),
-                            dialogState = null,
+                            dialogState = newDialogState,
                         )
                     }
                     is DataState.Loading -> mutableStateFlow.update {
-                        it.copy(dialogState = ClientProfileEditState.DialogState.Loading)
+                        if (it.dialogState !is ClientProfileEditState.DialogState.ShowStatusDialog) {
+                            it.copy(dialogState = ClientProfileEditState.DialogState.Loading)
+                        } else {
+                            it
+                        }
                     }
-                    else -> Unit
+                    is DataState.Error -> mutableStateFlow.update {
+                        if (it.dialogState is ClientProfileEditState.DialogState.ShowStatusDialog) {
+                            it
+                        } else {
+                            it.copy(dialogState = null)
+                        }
+                    }
                 }
             }
         }
@@ -138,7 +155,17 @@ internal class ClientProfileEditViewModel(
                             openImagePicker = false,
                         )
                     }
+                    clientDetailsRepo.triggerClientUpdate()
                     loadImage(route.id)
+                    mutableStateFlow.update {
+                        it.copy(
+                            openImagePicker = false,
+                            dialogState = ClientProfileEditState.DialogState.ShowStatusDialog(
+                                status = ResultStatus.SUCCESS,
+                                msg = "Profile photo updated successfully",
+                            ),
+                        )
+                    }
                 }
             }
         }
@@ -148,6 +175,7 @@ internal class ClientProfileEditViewModel(
         viewModelScope.launch {
             try {
                 clientDetailsRepo.deleteClientImage(state.id)
+                clientDetailsRepo.triggerClientUpdate()
                 mutableStateFlow.update {
                     it.copy(
                         profileImage = null,
@@ -181,6 +209,7 @@ data class ClientProfileEditState(
         data object Loading : DialogState
         data object ShowDeleteDialog : DialogState
         data object ShowUploadOptions : DialogState
+        data class ShowStatusDialog(val status: ResultStatus, val msg: String = "") : DialogState
     }
 }
 
@@ -201,4 +230,5 @@ sealed interface ClientProfileEditAction {
     data object DismissModalBottomSheet : ClientProfileEditAction
     data class UpdateImagePicker(val status: Boolean) : ClientProfileEditAction
     data class OnImageSelected(val image: ImageBitmap) : ClientProfileEditAction
+    data object OnNext : ClientProfileEditAction
 }
