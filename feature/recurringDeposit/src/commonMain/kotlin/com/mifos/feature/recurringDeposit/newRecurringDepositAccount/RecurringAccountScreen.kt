@@ -10,17 +10,20 @@
 package com.mifos.feature.recurringDeposit.newRecurringDepositAccount
 
 import androidclient.feature.recurringdeposit.generated.resources.Res
-import androidclient.feature.recurringdeposit.generated.resources.feature_recurring_deposit_create_recurring_deposit_account
 import androidclient.feature.recurringdeposit.generated.resources.feature_recurring_deposit_step_charges
 import androidclient.feature.recurringdeposit.generated.resources.feature_recurring_deposit_step_details
 import androidclient.feature.recurringdeposit.generated.resources.feature_recurring_deposit_step_interest
+import androidclient.feature.recurringdeposit.generated.resources.feature_recurring_deposit_step_preview
 import androidclient.feature.recurringdeposit.generated.resources.feature_recurring_deposit_step_settings
 import androidclient.feature.recurringdeposit.generated.resources.feature_recurring_deposit_step_terms
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
@@ -28,15 +31,21 @@ import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.ui.components.MifosBreadcrumbNavBar
 import com.mifos.core.ui.components.MifosErrorComponent
 import com.mifos.core.ui.components.MifosProgressIndicator
+import com.mifos.core.ui.components.MifosProgressIndicatorOverlay
 import com.mifos.core.ui.components.MifosStepper
 import com.mifos.core.ui.components.Step
 import com.mifos.core.ui.util.EventsEffect
 import com.mifos.feature.recurringDeposit.newRecurringDepositAccount.RecurringAccountAction.NavigateToStep
+import com.mifos.feature.recurringDeposit.newRecurringDepositAccount.pages.AddNewChargeDialog
 import com.mifos.feature.recurringDeposit.newRecurringDepositAccount.pages.ChargesPage
 import com.mifos.feature.recurringDeposit.newRecurringDepositAccount.pages.DetailsPage
 import com.mifos.feature.recurringDeposit.newRecurringDepositAccount.pages.InterestPage
+import com.mifos.feature.recurringDeposit.newRecurringDepositAccount.pages.PreviewPage
+import com.mifos.feature.recurringDeposit.newRecurringDepositAccount.pages.RateChart
 import com.mifos.feature.recurringDeposit.newRecurringDepositAccount.pages.SettingPage
+import com.mifos.feature.recurringDeposit.newRecurringDepositAccount.pages.ShowChargesDialog
 import com.mifos.feature.recurringDeposit.newRecurringDepositAccount.pages.TermsPage
+import kotlinx.coroutines.delay
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -50,6 +59,8 @@ internal fun RecurringAccountScreen(
 ) {
     val state by viewModel.stateFlow.collectAsStateWithLifecycle()
 
+    val snackbarHostState = remember { SnackbarHostState() }
+
     EventsEffect(viewModel.eventFlow) { event ->
         when (event) {
             RecurringAccountEvent.NavigateBack -> onNavigateBack()
@@ -57,12 +68,65 @@ internal fun RecurringAccountScreen(
         }
     }
 
+    RecurringAccountDialog(
+        state = state,
+        onAction = { viewModel.trySendAction(it) },
+        snackbarHostState = snackbarHostState,
+    )
+
     RecurringAccountScaffold(
         navController = navController,
         modifier = modifier,
         state = state,
+        snackbarHostState = snackbarHostState,
         onAction = { viewModel.trySendAction(it) },
     )
+}
+
+@Composable
+fun RecurringAccountDialog(
+    state: RecurringAccountState,
+    onAction: (RecurringAccountAction) -> Unit,
+    snackbarHostState: SnackbarHostState,
+) {
+    when (state.dialogState) {
+        RecurringAccountState.DialogState.RateChartDialog -> {
+            RateChart(
+                state = state,
+                onAction = onAction,
+            )
+        }
+
+        is RecurringAccountState.DialogState.AddNewCharge -> {
+            AddNewChargeDialog(
+                state = state,
+                isEdit = state.dialogState.edit,
+                onAction = onAction,
+                index = state.dialogState.index,
+            )
+        }
+
+        RecurringAccountState.DialogState.ShowCharges -> {
+            ShowChargesDialog(
+                state = state,
+                onAction = onAction,
+            )
+        }
+
+        null -> Unit
+        is RecurringAccountState.DialogState.SuccessResponseStatus -> {
+            LaunchedEffect(state.launchEffectKey) {
+                snackbarHostState.showSnackbar(
+                    message = state.dialogState.msg,
+                )
+
+                if (state.dialogState.successStatus) {
+                    delay(1000)
+                    onAction(RecurringAccountAction.NavigateBack)
+                }
+            }
+        }
+    }
 }
 
 @Composable
@@ -71,6 +135,7 @@ private fun RecurringAccountScaffold(
     state: RecurringAccountState,
     modifier: Modifier = Modifier,
     onAction: (RecurringAccountAction) -> Unit,
+    snackbarHostState: SnackbarHostState,
 ) {
     val steps = listOf(
         Step(name = stringResource(Res.string.feature_recurring_deposit_step_details)) {
@@ -81,7 +146,8 @@ private fun RecurringAccountScaffold(
         },
         Step(name = stringResource(Res.string.feature_recurring_deposit_step_terms)) {
             TermsPage(
-                onNext = { onAction(RecurringAccountAction.OnNextPress) },
+                state = state,
+                onAction = onAction,
             )
         },
         Step(name = stringResource(Res.string.feature_recurring_deposit_step_settings)) {
@@ -92,20 +158,27 @@ private fun RecurringAccountScaffold(
         },
         Step(name = stringResource(Res.string.feature_recurring_deposit_step_interest)) {
             InterestPage(
-                onNext = { onAction(RecurringAccountAction.OnNextPress) },
+                state = state,
+                onAction = onAction,
             )
         },
         Step(name = stringResource(Res.string.feature_recurring_deposit_step_charges)) {
             ChargesPage(
-                onNext = { onAction(RecurringAccountAction.OnNextPress) },
+                state = state,
+                onAction = onAction,
+            )
+        },
+        Step(name = stringResource(Res.string.feature_recurring_deposit_step_preview)) {
+            PreviewPage(
+                state = state,
+                onAction = onAction,
             )
         },
     )
 
     MifosScaffold(
-        title = stringResource(Res.string.feature_recurring_deposit_create_recurring_deposit_account),
-        onBackPressed = { onAction(RecurringAccountAction.NavigateBack) },
         modifier = modifier,
+        snackbarHostState = snackbarHostState,
     ) { paddingValues ->
         Column(
             modifier = Modifier
@@ -139,6 +212,9 @@ private fun RecurringAccountScaffold(
                     )
                 }
             }
+        }
+        if (state.isOverlayLoadingActive) {
+            MifosProgressIndicatorOverlay()
         }
     }
 }

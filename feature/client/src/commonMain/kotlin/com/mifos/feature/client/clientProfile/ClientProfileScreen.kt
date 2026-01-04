@@ -62,6 +62,7 @@ internal fun ClientProfileScreen(
     viewAddress: (Int) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: ClientProfileViewModel = koinViewModel(),
+    pinpointLocation: (Int) -> Unit,
 ) {
     val state by viewModel.stateFlow.collectAsStateWithLifecycle()
     val currentBackStackEntry = navController.currentBackStackEntry
@@ -107,6 +108,10 @@ internal fun ClientProfileScreen(
                     ClientProfileActionItem.General -> viewAssociatedAccounts(
                         state.client?.id ?: -1,
                     )
+
+                    ClientProfileActionItem.PinpointLocation -> {
+                        pinpointLocation(state.client?.id ?: -1)
+                    }
                 }
             }
 

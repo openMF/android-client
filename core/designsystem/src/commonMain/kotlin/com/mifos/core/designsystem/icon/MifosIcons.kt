@@ -55,6 +55,8 @@ import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material.icons.filled.WifiOff
 import androidx.compose.material.icons.outlined.AccountCircle
 import androidx.compose.material.icons.outlined.CheckCircle
+import androidx.compose.material.icons.outlined.ContentCopy
+import androidx.compose.material.icons.outlined.CurrencyExchange
 import androidx.compose.material.icons.outlined.DateRange
 import androidx.compose.material.icons.outlined.DeleteOutline
 import androidx.compose.material.icons.outlined.DocumentScanner
@@ -242,4 +244,6 @@ object MifosIcons {
     val Refresh = Icons.Outlined.Refresh
     val Undo = Icons.AutoMirrored.Outlined.Undo
     val Redo = Icons.AutoMirrored.Outlined.Redo
+    val Copy = Icons.Outlined.ContentCopy
+    val Currency = Icons.Outlined.CurrencyExchange
 }

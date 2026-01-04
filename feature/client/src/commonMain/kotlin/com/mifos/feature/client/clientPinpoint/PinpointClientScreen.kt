@@ -12,10 +12,13 @@
 package com.mifos.feature.client.clientPinpoint
 
 import androidclient.feature.client.generated.resources.Res
+import androidclient.feature.client.generated.resources.feature_client_add_location
 import androidclient.feature.client.generated.resources.feature_client_approve_permission_description_location
+import androidclient.feature.client.generated.resources.feature_client_client_locations
 import androidclient.feature.client.generated.resources.feature_client_delete_client_address
 import androidclient.feature.client.generated.resources.feature_client_dismiss
 import androidclient.feature.client.generated.resources.feature_client_failed_to_load_pinpoint
+import androidclient.feature.client.generated.resources.feature_client_no_location_data_found
 import androidclient.feature.client.generated.resources.feature_client_permission_required
 import androidclient.feature.client.generated.resources.feature_client_pinpoint_client
 import androidclient.feature.client.generated.resources.feature_client_pinpoint_location_added
@@ -23,12 +26,15 @@ import androidclient.feature.client.generated.resources.feature_client_please_se
 import androidclient.feature.client.generated.resources.feature_client_proceed
 import androidclient.feature.client.generated.resources.feature_client_update_client_address
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -56,13 +62,19 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.component.PermissionBox
 import com.mifos.core.designsystem.component.getRequiredPermissionsForLocation
 import com.mifos.core.designsystem.icon.MifosIcons
+import com.mifos.core.designsystem.theme.DesignToken
+import com.mifos.core.designsystem.theme.MifosTypography
 import com.mifos.core.model.objects.clients.ClientAddressRequest
 import com.mifos.core.model.objects.clients.ClientAddressResponse
+import com.mifos.core.ui.components.MifosBreadcrumbNavBar
+import com.mifos.core.ui.components.MifosEmptyCard
 import com.mifos.core.ui.components.MifosProgressIndicator
 import com.mifos.core.ui.util.DevicePreview
 import kotlinx.coroutines.launch
@@ -75,6 +87,7 @@ import org.koin.compose.viewmodel.koinViewModel
 @Composable
 internal fun PinpointClientScreen(
     onBackPressed: () -> Unit,
+    navController: NavController,
     viewModel: PinPointClientViewModel = koinViewModel(),
 ) {
     val clientId by viewModel.clientId.collectAsStateWithLifecycle()
@@ -83,6 +96,7 @@ internal fun PinpointClientScreen(
 
     PinpointClientScreen(
         state = state,
+        navController = navController,
         onBackPressed = onBackPressed,
         onRefresh = {
             viewModel.refreshPinpointLocations(clientId)
@@ -119,6 +133,7 @@ internal fun PinpointClientScreen(
 @Composable
 internal fun PinpointClientScreen(
     state: PinPointClientUiState,
+    navController: NavController,
     onBackPressed: () -> Unit,
     onRefresh: () -> Unit,
     refreshState: Boolean,
@@ -201,13 +216,14 @@ internal fun PinpointClientScreen(
             }) {
                 Icon(
                     imageVector = MifosIcons.AddLocation,
-                    contentDescription = null,
+                    contentDescription = stringResource(Res.string.feature_client_add_location),
                 )
             }
         },
         snackbarHostState = snackbarHostState,
     ) { paddingValues ->
         Column(modifier = Modifier.padding(paddingValues)) {
+            MifosBreadcrumbNavBar(navController)
             PullToRefreshBox(
                 state = pullRefreshState,
                 onRefresh = onRefresh,
@@ -220,7 +236,12 @@ internal fun PinpointClientScreen(
                             onStartUpdateAddress = { address ->
                                 updateMode = true
                                 addressToUpdate = address
-                                showMapDialogScreen = true
+                                showPermissionDialog = true
+                            },
+                            onClickAddLocation = {
+                                updateMode = false
+                                addressToUpdate = null
+                                showPermissionDialog = true
                             },
                             onDeleteAddress = onDeleteAddress,
                         )
@@ -250,15 +271,48 @@ internal fun PinpointClientScreen(
 private fun PinPointClientContent(
     pinpointLocations: List<ClientAddressResponse>,
     onStartUpdateAddress: (ClientAddressResponse) -> Unit,
+    onClickAddLocation: () -> Unit,
     onDeleteAddress: (Int, Int) -> Unit,
 ) {
-    LazyColumn {
-        items(pinpointLocations) { pinpointLocation ->
-            PinpointLocationItem(
-                pinpointLocation = pinpointLocation,
-                onStartUpdateAddress = onStartUpdateAddress,
-                onDeleteAddress = onDeleteAddress,
+    Column(
+        modifier = Modifier.padding(horizontal = DesignToken.spacing.large),
+    ) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Text(
+                text = stringResource(Res.string.feature_client_client_locations),
+                style = MifosTypography.titleMediumEmphasized,
+                color = MaterialTheme.colorScheme.onSurface,
             )
+
+            Icon(
+                imageVector = MifosIcons.Add,
+                contentDescription = stringResource(Res.string.feature_client_add_location),
+                modifier = Modifier.clickable {
+                    onClickAddLocation()
+                }.size(DesignToken.sizes.iconAverage),
+            )
+        }
+
+        Spacer(modifier = Modifier.height(DesignToken.spacing.large))
+
+        if (pinpointLocations.isEmpty()) {
+            MifosEmptyCard(
+                msg = stringResource(Res.string.feature_client_no_location_data_found),
+            )
+        } else {
+            LazyColumn {
+                items(pinpointLocations) { pinpointLocation ->
+                    PinpointLocationItem(
+                        pinpointLocation = pinpointLocation,
+                        onStartUpdateAddress = onStartUpdateAddress,
+                        onDeleteAddress = onDeleteAddress,
+                    )
+                }
+            }
         }
     }
 }
@@ -362,6 +416,7 @@ private fun PinpointClientScreenPreview(
         onUpdateAddress = { _, _, _ -> },
         onDeleteAddress = { _, _ -> },
         onAddressesChanged = {},
+        navController = rememberNavController(),
     )
 }
 

@@ -237,16 +237,18 @@ private fun CreateNewCenterContent(
             value = centerName,
             onValueChange = { centerName = it },
             label = stringResource(Res.string.feature_center_center_name),
-            error = null,
+            error = centerNameValidator,
         )
 
         MifosTextFieldDropdown(
             value = selectedOffice,
             onValueChanged = {
                 selectedOffice = it
+                selectedOfficeValidator = null
             },
             onOptionSelected = { index, value ->
                 selectedOffice = value
+                selectedOfficeValidator = null
                 offices[index].id.let {
                     officeId = it
                 }
@@ -299,6 +301,7 @@ private fun CreateNewCenterContent(
                     )
                 }
             },
+            enabled = validateAllFields(),
             modifier = Modifier
                 .fillMaxWidth()
                 .heightIn(44.dp)

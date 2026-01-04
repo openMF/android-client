@@ -16,6 +16,7 @@ import androidclient.feature.client.generated.resources.feature_client_no_more_c
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -41,8 +42,18 @@ internal actual fun LazyColumnForClientListApi(
     fetchImage: (Int) -> Unit,
     images: Map<Int, ByteArray?>,
     modifier: Modifier,
+    sort: SortTypes?,
+    onUpdateOffices: (List<String?>) -> Unit,
 ) {
     val clientPagingList = pagingFlow.collectAsLazyPagingItems()
+
+    val items = clientPagingList.itemSnapshotList.items
+    if (items.isNotEmpty()) {
+        val offices = items.map { it.officeName }
+            .distinct()
+        onUpdateOffices(offices)
+    }
+
     when (clientPagingList.loadState.refresh) {
         is LoadState.Error -> {
             MifosSweetError(message = stringResource(Res.string.feature_client_failed_to_fetch_clients)) {
@@ -55,14 +66,29 @@ internal actual fun LazyColumnForClientListApi(
         is LoadState.NotLoading -> Unit
     }
 
-    LazyColumn(
-        modifier = modifier,
-    ) {
-        items(
-            count = clientPagingList.itemCount,
-            key = { index -> clientPagingList[index]?.id ?: index },
-        ) { index ->
-            clientPagingList[index]?.let { client ->
+    if (sort != null) {
+        val currentItems = clientPagingList.itemSnapshotList.items
+
+        val sortedItems = when (sort) {
+            SortTypes.NAME -> {
+                currentItems.sortedBy { it.displayName?.lowercase() }
+            }
+            SortTypes.ACCOUNT_NUMBER -> {
+                currentItems.sortedBy { it.accountNo }
+            }
+            SortTypes.EXTERNAL_ID -> {
+                currentItems.sortedBy { it.externalId }
+            }
+            else -> currentItems
+        }
+
+        LazyColumn(
+            modifier = modifier,
+        ) {
+            items(
+                items = sortedItems,
+                key = { client -> client.id },
+            ) { client ->
                 LaunchedEffect(client.id) {
                     fetchImage(client.id)
                 }
@@ -73,36 +99,56 @@ internal actual fun LazyColumnForClientListApi(
                 )
             }
         }
+    } else {
+        LazyColumn(
+            modifier = modifier,
+        ) {
+            items(
+                count = clientPagingList.itemCount,
+                key = { index -> clientPagingList[index]?.id ?: index },
+            ) { index ->
+                clientPagingList[index]?.let { client ->
+                    LaunchedEffect(client.id) {
+                        fetchImage(client.id)
+                    }
+                    ClientItem(
+                        client = client,
+                        byteArray = images[client.id],
+                        onClientClick = onClientSelect,
+                    )
+                }
+            }
 
-        when (clientPagingList.loadState.append) {
-            is LoadState.Error -> {
-                item {
-                    MifosSweetError(message = stringResource(Res.string.feature_client_failed_to_more_clients)) {
-                        onRefresh()
+            when (clientPagingList.loadState.append) {
+                is LoadState.Error -> {
+                    item {
+                        MifosSweetError(message = stringResource(Res.string.feature_client_failed_to_more_clients)) {
+                            onRefresh()
+                        }
                     }
                 }
-            }
 
-            is LoadState.Loading -> {
-                item {
-                    MifosPagingAppendProgress()
-                }
-            }
-
-            is LoadState.NotLoading -> {
-                if (clientPagingList.loadState.append.endOfPaginationReached &&
-                    clientPagingList.itemCount > 0
-                ) {
+                is LoadState.Loading -> {
                     item {
-                        Text(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(bottom = DesignToken.padding.extraExtraLarge)
-                                .padding(bottom = DesignToken.padding.extraExtraLarge),
-                            text = stringResource(Res.string.feature_client_no_more_clients_available),
-                            style = MifosTypography.bodyMedium,
-                            textAlign = TextAlign.Center,
-                        )
+                        MifosPagingAppendProgress()
+                    }
+                }
+
+                is LoadState.NotLoading -> {
+                    if (clientPagingList.loadState.append.endOfPaginationReached &&
+                        clientPagingList.itemCount > 0
+                    ) {
+                        item {
+                            Text(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(bottom = DesignToken.padding.extraExtraLarge)
+                                    .padding(bottom = DesignToken.padding.extraExtraLarge),
+                                text = stringResource(Res.string.feature_client_no_more_clients_available),
+                                style = MifosTypography.bodyMedium,
+                                textAlign = TextAlign.Center,
+                            )
+                        }
                     }
                 }
             }
