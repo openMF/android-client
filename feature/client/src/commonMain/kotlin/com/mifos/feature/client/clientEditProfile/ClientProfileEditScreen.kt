@@ -268,12 +268,12 @@ private fun ClientProfileEditDialogs(
         }
 
         is ClientProfileEditState.DialogState.ShowStatusDialog -> {
-            androidx.compose.ui.window.Dialog(
+            Dialog(
                 onDismissRequest = { onAction(ClientProfileEditAction.OnNext) },
             ) {
-                androidx.compose.material3.Surface(
+                Surface(
                     shape = DesignToken.shapes.extraLarge,
-                    color = androidx.compose.material3.MaterialTheme.colorScheme.surface,
+                    color = MaterialTheme.colorScheme.surface,
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(DesignToken.padding.large),

@@ -9,6 +9,9 @@
  */
 package com.mifos.feature.client.clientEditProfile
 
+import androidclient.feature.client.generated.resources.Res
+import androidclient.feature.client.generated.resources.client_profile_photo_updated_failure
+import androidclient.feature.client.generated.resources.client_profile_photo_updated_success
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
@@ -24,6 +27,7 @@ import com.mifos.core.ui.util.multipartRequestBody
 import com.mifos.feature.client.utils.toPlatformFile
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import org.jetbrains.compose.resources.getString
 
 internal class ClientProfileEditViewModel(
     savedStateHandle: SavedStateHandle,
@@ -162,7 +166,7 @@ internal class ClientProfileEditViewModel(
                             openImagePicker = false,
                             dialogState = ClientProfileEditState.DialogState.ShowStatusDialog(
                                 status = ResultStatus.SUCCESS,
-                                msg = "Profile photo updated successfully",
+                                msg = getString(Res.string.client_profile_photo_updated_success),
                             ),
                         )
                     }
@@ -186,7 +190,7 @@ internal class ClientProfileEditViewModel(
                 mutableStateFlow.update {
                     it.copy(
                         dialogState = ClientProfileEditState.DialogState.Error(
-                            e.message ?: "Unknown Error",
+                            e.message ?: getString(Res.string.client_profile_photo_updated_failure),
                         ),
                     )
                 }

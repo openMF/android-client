@@ -22,6 +22,7 @@ import com.mifos.core.network.model.StaffOption
 import com.mifos.room.entities.accounts.ClientAccounts
 import com.mifos.room.entities.client.ClientEntity
 import io.ktor.client.request.forms.MultiPartFormDataContent
+import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
@@ -33,7 +34,7 @@ class ClientDetailsRepositoryImp(
     private val dataManagerClient: DataManagerClient,
 ) : ClientDetailsRepository {
 
-    private val _clientUpdateEvents = MutableSharedFlow<Unit>(replay = 0)
+    private val _clientUpdateEvents = MutableSharedFlow<Unit>(replay = 0, extraBufferCapacity = 1, onBufferOverflow = BufferOverflow.DROP_OLDEST)
 
     override val clientUpdateEvents: Flow<Unit> = _clientUpdateEvents.asSharedFlow()
 
