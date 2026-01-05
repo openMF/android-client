@@ -29,6 +29,7 @@ import com.mifos.room.entities.organisation.OfficeEntity
 import com.mifos.room.entities.organisation.StaffEntity
 import com.mifos.room.entities.templates.clients.ClientsTemplateEntity
 import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.getString
@@ -44,7 +45,17 @@ internal class ClientEditDetailsViewModel(
     val route = savedStateHandle.toRoute<ClientEditDetailsRoute>()
 
     init {
-        loadClientDetails(route.id)
+        observeClientUpdates()
+    }
+
+    private fun observeClientUpdates() {
+        viewModelScope.launch {
+            repository.clientDataUpdated
+                .filter { updatedClientId -> updatedClientId == route.id }
+                .collect {
+                    loadClientDetails(route.id)
+                }
+        }
     }
 
     fun loadClientDetails(clientId: Int = route.id) {

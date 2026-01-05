@@ -35,6 +35,7 @@ import com.mifos.core.ui.util.imageToByteArray
 import com.mifos.core.ui.util.toDateString
 import com.mifos.feature.client.clientDetailsProfile.components.ClientProfileDetailsActionItem
 import com.mifos.room.entities.client.ClientEntity
+import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.StringResource
@@ -62,11 +63,23 @@ internal class ClientProfileDetailsViewModel(
 
     init {
         getClientAndObserveNetwork()
+        observeClientUpdates()
     }
 
     private fun getClientAndObserveNetwork() {
         observeNetwork()
+        observeClientUpdates()
         loadClientDetailsAndImage(route.id)
+    }
+
+    private fun observeClientUpdates() {
+        viewModelScope.launch {
+            clientDetailsRepo.clientDataUpdated
+                .filter { updatedClientId -> updatedClientId == route.id }
+                .collect {
+                    loadClientDetailsAndImage(route.id)
+                }
+        }
     }
 
     /**

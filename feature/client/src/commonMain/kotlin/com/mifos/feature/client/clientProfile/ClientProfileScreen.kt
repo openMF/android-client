@@ -42,7 +42,6 @@ import com.mifos.core.ui.components.MifosErrorComponent
 import com.mifos.core.ui.components.MifosProgressIndicator
 import com.mifos.core.ui.components.MifosRowCard
 import com.mifos.core.ui.util.EventsEffect
-import com.mifos.core.ui.util.PROFILE_SHOULD_REFRESH_KEY
 import com.mifos.core.ui.util.TextUtil
 import com.mifos.feature.client.clientProfile.components.ClientProfileActionItem
 import com.mifos.feature.client.clientProfile.components.ProfileCard

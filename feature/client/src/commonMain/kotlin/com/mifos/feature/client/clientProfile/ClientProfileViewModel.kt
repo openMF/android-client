@@ -47,16 +47,15 @@ internal class ClientProfileViewModel(
 
     init {
         getClientAndObserveNetwork()
-        observeClientUpdates() // Add this
+        observeClientUpdates()
     }
 
-    // Add this method to observe repository updates
+
     private fun observeClientUpdates() {
         viewModelScope.launch {
             clientDetailsRepo.clientDataUpdated
                 .filter { updatedClientId -> updatedClientId == route.id }
                 .collect {
-                    // Automatically refresh when this client's data is updated
                     loadClientDetailsAndImage(route.id)
                 }
         }

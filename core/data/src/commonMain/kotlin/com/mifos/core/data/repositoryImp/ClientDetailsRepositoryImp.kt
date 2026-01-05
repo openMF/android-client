@@ -34,14 +34,11 @@ class ClientDetailsRepositoryImp(
     private val dataManagerClient: DataManagerClient,
 ) : ClientDetailsRepository {
 
-
-    // Add this: MutableSharedFlow for internal emissions
     private val _clientDataUpdated = MutableSharedFlow<Int>(
         replay = 0,
         extraBufferCapacity = 1
     )
 
-    // Expose as read-only SharedFlow
     override val clientDataUpdated: SharedFlow<Int> = _clientDataUpdated.asSharedFlow()
 
     override suspend fun uploadClientImage(clientId: Int, image: MultiPartFormDataContent) {

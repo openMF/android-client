@@ -12,10 +12,23 @@ package com.mifos.core.data.repositoryImp
 import com.mifos.core.data.repository.ClientDetailsEditRepository
 import com.mifos.core.network.datamanager.DataManagerClient
 import com.mifos.room.entities.client.ClientPayloadEntity
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
 
 class ClientDetailsEditRepositoryImpl(
     private val dataManagerClient: DataManagerClient,
 ) : ClientDetailsEditRepository {
+
+
+    private val _clientDataUpdated = MutableSharedFlow<Int>(
+        replay = 0,
+        extraBufferCapacity = 1
+    )
+
+    override val clientDataUpdated: SharedFlow<Int> = _clientDataUpdated.asSharedFlow()
+
+
     override suspend fun updateClient(clientId: Int, clientPayload: ClientPayloadEntity): Int? {
         return dataManagerClient.updateClient(clientId, clientPayload)
     }

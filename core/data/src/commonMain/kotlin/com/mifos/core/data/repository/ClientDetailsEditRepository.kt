@@ -10,7 +10,10 @@
 package com.mifos.core.data.repository
 
 import com.mifos.room.entities.client.ClientPayloadEntity
+import kotlinx.coroutines.flow.SharedFlow
 
 interface ClientDetailsEditRepository {
+
+    val clientDataUpdated: SharedFlow<Int>
     suspend fun updateClient(clientId: Int, clientPayload: ClientPayloadEntity): Int?
 }

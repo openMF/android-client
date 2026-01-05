@@ -65,7 +65,6 @@ import com.mifos.core.ui.components.MifosProgressIndicator
 import com.mifos.core.ui.components.MifosRowCard
 import com.mifos.core.ui.components.MifosStatusDialog
 import com.mifos.core.ui.util.EventsEffect
-import com.mifos.core.ui.util.PROFILE_SHOULD_REFRESH_KEY
 import com.mifos.core.ui.util.TextUtil
 import com.mifos.feature.client.clientDetailsProfile.components.ClientDetailsProfile
 import com.mifos.feature.client.clientDetailsProfile.components.ClientProfileDetailsActionItem
@@ -92,20 +91,6 @@ internal fun ClientProfileDetailsScreen(
     navigateToAddCharge: (Int) -> Unit,
 ) {
     val state by viewModel.stateFlow.collectAsStateWithLifecycle()
-    val currentBackStackEntry = navController.currentBackStackEntry
-    val savedStateHandle = currentBackStackEntry?.savedStateHandle
-
-    val profileUpdated by savedStateHandle
-        ?.getStateFlow(PROFILE_SHOULD_REFRESH_KEY, false)
-        ?.collectAsStateWithLifecycle(initialValue = false)
-        ?: remember { mutableStateOf(false) }
-
-    LaunchedEffect(profileUpdated) {
-        if (profileUpdated) {
-            viewModel.trySendAction(ClientProfileDetailsAction.OnRetry)
-            savedStateHandle?.set(PROFILE_SHOULD_REFRESH_KEY, false)
-        }
-    }
 
     EventsEffect(viewModel.eventFlow) { event ->
         when (event) {
