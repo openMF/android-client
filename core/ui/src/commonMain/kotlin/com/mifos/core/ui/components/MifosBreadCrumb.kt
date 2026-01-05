@@ -93,10 +93,10 @@ fun MifosBreadcrumbNavBar(
             }
         }
 
-
-        IconButton(onClick = {
-            navController.popBackStack()
-        }) {
+        IconButton(
+            onClick = { navController.popBackStack() },
+            modifier = Modifier.size(DesignToken.sizes.iconMedium),
+        ) {
             Icon(
                 painter = painterResource(Res.drawable.bread_crumb_back_icon),
                 contentDescription = "Back",
