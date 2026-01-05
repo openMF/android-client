@@ -45,8 +45,8 @@ import org.jetbrains.compose.resources.stringResource
 @Composable
 fun ChargesPage(
     state: NewLoanAccountState,
-    onAction: (NewLoanAccountAction) -> Unit,
     modifier: Modifier = Modifier,
+    onAction: (NewLoanAccountAction) -> Unit,
 ) {
     Column(Modifier.fillMaxSize().padding(bottom = DesignToken.padding.large)) {
         Column(
@@ -108,6 +108,7 @@ fun ChargesPage(
                     btnEnabled = state.addedCharges.isNotEmpty(),
                 )
             }
+            Spacer(Modifier.height(DesignToken.padding.large))
         }
 
         MifosTwoButtonRow(

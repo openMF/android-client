@@ -179,7 +179,9 @@ private fun ClientLoanAccountsScreen(
                                         },
                                         onActionClicked = { actions ->
                                             when (actions) {
-                                                is Actions.ViewAccount -> onAction(ClientLoanAccountsAction.ViewAccount)
+                                                is Actions.ViewAccount -> onAction(
+                                                    ClientLoanAccountsAction.ViewAccount(loan.id ?: 0),
+                                                )
                                                 is Actions.MakeRepayment -> onAction(
                                                     ClientLoanAccountsAction.MakeRepayment,
                                                 )

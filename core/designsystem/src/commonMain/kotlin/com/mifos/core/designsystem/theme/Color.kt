@@ -249,4 +249,8 @@ object AppColors {
     val lightPurple = Color(0xFF706EFF)
     val stepperColor = Color(0xFF9ECAFC)
     val titleColorTopAbbBar = Color(0xFF0773BB)
+    val loanIndicatorActive = Color.Green
+    val loanIndicatorPending = Color.Yellow
+    val loanIndicatorWaitingForDisbursal = Color.Blue
+    val loanIndicatorOther = Color.Black
 }

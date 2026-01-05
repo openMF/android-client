@@ -23,7 +23,6 @@ fun NavGraphBuilder.createFixedDepositAccountDestination(navController: NavContr
     composable<CreateFixedDepositAccountRoute> {
         CreateFixedDepositAccountScreen(
             onNavigateBack = navController::popBackStack,
-            onFinish = {},
             navController = navController,
         )
     }

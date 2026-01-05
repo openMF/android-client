@@ -54,4 +54,11 @@ object TextFieldsValidator {
             else -> null
         }
     }
+
+    fun dropDownEmptyValidator(input: Boolean): StringResource? {
+        return when {
+            input -> Res.string.error_field_empty
+            else -> null
+        }
+    }
 }

@@ -602,9 +602,9 @@ fun MifosActionsShareListingComponent(
 fun MifosActionsChargeListingComponent(
     chargeTitle: String,
     type: String,
-    date: String,
+    date: String? = null,
     collectedOn: String,
-    amount: String,
+    amount: String? = null,
     menuList: List<Actions> = listOf<Actions>(
         Actions.Edit(),
         Actions.Delete(),
@@ -645,11 +645,15 @@ fun MifosActionsChargeListingComponent(
                             text = type,
                         ),
                     )
-                    PrintTextUtil(
-                        TextUtil(
-                            text = date,
-                        ),
-                    )
+                    if (
+                        date != null
+                    ) {
+                        PrintTextUtil(
+                            TextUtil(
+                                text = date,
+                            ),
+                        )
+                    }
                 }
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
@@ -664,11 +668,13 @@ fun MifosActionsChargeListingComponent(
                             style = MifosTypography.bodySmall,
                             textAlign = TextAlign.End,
                         )
-                        Text(
-                            text = amount,
-                            style = MifosTypography.labelMedium,
-                            textAlign = TextAlign.End,
-                        )
+                        if (amount != null) {
+                            Text(
+                                text = amount,
+                                style = MifosTypography.labelMedium,
+                                textAlign = TextAlign.End,
+                            )
+                        }
                     }
                     Icon(
                         modifier = Modifier

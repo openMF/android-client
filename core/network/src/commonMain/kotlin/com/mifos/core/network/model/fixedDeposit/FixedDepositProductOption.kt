@@ -7,7 +7,7 @@
  *
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
-package com.mifos.core.network.model
+package com.mifos.core.network.model.fixedDeposit
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable

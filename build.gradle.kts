@@ -24,7 +24,6 @@ plugins {
     alias(libs.plugins.ktorfit) apply false
 }
 
-
 object DynamicVersion {
     fun setDynamicVersion(file: File, version: String) {
         val cleanedVersion = version.split('+')[0]

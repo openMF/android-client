@@ -27,6 +27,8 @@ import com.mifos.feature.loan.loanAccount.addLoanAccountScreen
 import com.mifos.feature.offline.navigation.offlineNavGraph
 import com.mifos.feature.path.tracking.navigation.pathTrackingRoute
 import com.mifos.feature.report.navigation.reportNavGraph
+import com.mifos.feature.settings.navigation.navigateToServerConfigGraph
+import com.mifos.feature.settings.navigation.serverConfigGraph
 import com.mifos.feature.settings.navigation.settingsScreen
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.InternalSerializationApi
@@ -80,7 +82,12 @@ internal fun NavGraphBuilder.authenticatedGraph(
             navigateBack = navController::popBackStack,
             navigateToLoginScreen = {},
             changePasscode = {},
-            onClickUpdateConfig = {},
+            onClickUpdateConfig = {
+                navController.navigateToServerConfigGraph()
+            },
+        )
+        serverConfigGraph(
+            navigateBack = navController::popBackStack,
         )
 
         individualCollectionSheetNavGraph(
