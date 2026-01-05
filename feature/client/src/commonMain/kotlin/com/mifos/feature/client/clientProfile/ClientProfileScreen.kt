@@ -64,20 +64,7 @@ internal fun ClientProfileScreen(
     viewModel: ClientProfileViewModel = koinViewModel(),
 ) {
     val state by viewModel.stateFlow.collectAsStateWithLifecycle()
-    val currentBackStackEntry = navController.currentBackStackEntry
-    val savedStateHandle = currentBackStackEntry?.savedStateHandle
 
-    val profileUpdated by savedStateHandle
-        ?.getStateFlow(PROFILE_SHOULD_REFRESH_KEY, false)
-        ?.collectAsStateWithLifecycle(initialValue = false)
-        ?: remember { mutableStateOf(false) }
-
-    LaunchedEffect(profileUpdated) {
-        if (profileUpdated) {
-            viewModel.trySendAction(ClientProfileAction.OnRetry)
-            savedStateHandle?.set(PROFILE_SHOULD_REFRESH_KEY, false) // reset after refresh
-        }
-    }
 
     EventsEffect(viewModel.eventFlow) { event ->
         when (event) {

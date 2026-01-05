@@ -20,6 +20,7 @@ import com.mifos.core.ui.util.BaseViewModel
 import com.mifos.core.ui.util.imageToByteArray
 import com.mifos.feature.client.clientProfile.components.ClientProfileActionItem
 import com.mifos.room.entities.client.ClientEntity
+import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.StringResource
@@ -46,6 +47,19 @@ internal class ClientProfileViewModel(
 
     init {
         getClientAndObserveNetwork()
+        observeClientUpdates() // Add this
+    }
+
+    // Add this method to observe repository updates
+    private fun observeClientUpdates() {
+        viewModelScope.launch {
+            clientDetailsRepo.clientDataUpdated
+                .filter { updatedClientId -> updatedClientId == route.id }
+                .collect {
+                    // Automatically refresh when this client's data is updated
+                    loadClientDetailsAndImage(route.id)
+                }
+        }
     }
 
     private fun getClientAndObserveNetwork() {

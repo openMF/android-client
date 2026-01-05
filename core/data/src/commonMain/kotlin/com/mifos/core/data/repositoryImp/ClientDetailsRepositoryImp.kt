@@ -23,6 +23,9 @@ import com.mifos.room.entities.accounts.ClientAccounts
 import com.mifos.room.entities.client.ClientEntity
 import io.ktor.client.request.forms.MultiPartFormDataContent
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
 
 /**
  * Created by Aditya Gupta on 06/08/23.
@@ -31,12 +34,26 @@ class ClientDetailsRepositoryImp(
     private val dataManagerClient: DataManagerClient,
 ) : ClientDetailsRepository {
 
+
+    // Add this: MutableSharedFlow for internal emissions
+    private val _clientDataUpdated = MutableSharedFlow<Int>(
+        replay = 0,
+        extraBufferCapacity = 1
+    )
+
+    // Expose as read-only SharedFlow
+    override val clientDataUpdated: SharedFlow<Int> = _clientDataUpdated.asSharedFlow()
+
     override suspend fun uploadClientImage(clientId: Int, image: MultiPartFormDataContent) {
         dataManagerClient.uploadClientImage(clientId, image)
+        // Emit update signal after successful upload
+        _clientDataUpdated.tryEmit(clientId)
     }
 
     override suspend fun deleteClientImage(clientId: Int) {
         dataManagerClient.deleteClientImage(clientId)
+        // Emit update signal after successful delete
+        _clientDataUpdated.tryEmit(clientId)
     }
 
     override suspend fun getClientAccounts(clientId: Int): ClientAccounts {

@@ -20,12 +20,14 @@ import com.mifos.room.entities.accounts.ClientAccounts
 import com.mifos.room.entities.client.ClientEntity
 import io.ktor.client.request.forms.MultiPartFormDataContent
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.SharedFlow
 
 /**
  * Created by Aditya Gupta on 06/08/23.
  */
 interface ClientDetailsRepository {
 
+    val clientDataUpdated: SharedFlow<Int> // Emits clientId when updated
     suspend fun uploadClientImage(clientId: Int, image: MultiPartFormDataContent)
 
     suspend fun deleteClientImage(clientId: Int)
