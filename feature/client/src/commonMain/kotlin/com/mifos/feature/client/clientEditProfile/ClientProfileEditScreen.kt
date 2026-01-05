@@ -43,7 +43,9 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
@@ -83,6 +85,25 @@ internal fun ClientProfileEditScreen(
     viewModel: ClientProfileEditViewModel = koinViewModel(),
 ) {
     val state by viewModel.stateFlow.collectAsStateWithLifecycle()
+
+    var hasShownSuccess by remember { mutableStateOf(false) }
+
+    LaunchedEffect(state.dialogState) {
+        when (state.dialogState) {
+            is ClientProfileEditState.DialogState.Success -> {
+                hasShownSuccess = true
+            }
+            null -> {
+                if (hasShownSuccess) {
+                    hasShownSuccess = false
+                    onNavigateBack()
+                }
+            }
+            else -> {
+                hasShownSuccess = false
+            }
+        }
+    }
 
     ClientProfileEditScaffold(
         modifier = modifier,

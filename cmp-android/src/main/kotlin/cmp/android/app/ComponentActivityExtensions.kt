@@ -40,7 +40,7 @@ private val SCRIM_COLOR: Int = Color.TRANSPARENT
  */
 @Suppress("MaxLineLength")
 fun ComponentActivity.setupEdgeToEdge(
-    appThemeFlow: Flow<DarkThemeConfig>
+    appThemeFlow: Flow<DarkThemeConfig>,
 ) {
     lifecycleScope.launch {
         lifecycle.repeatOnLifecycle(state = Lifecycle.State.STARTED) {
@@ -56,11 +56,11 @@ fun ComponentActivity.setupEdgeToEdge(
                     // scrim for system bars and switching between "light" and "dark" based on the
                     // system and internal app theme settings.
                     val style = SystemBarStyle.auto(
-                            darkScrim = SCRIM_COLOR,
-                            lightScrim = SCRIM_COLOR,
-                            // Disabling Dark Mode for this app
-                            detectDarkMode = { false },
-                        )
+                        darkScrim = SCRIM_COLOR,
+                        lightScrim = SCRIM_COLOR,
+                        // Disabling Dark Mode for this app
+                        detectDarkMode = { false },
+                    )
                     enableEdgeToEdge(statusBarStyle = style, navigationBarStyle = style)
                 }
         }
@@ -76,8 +76,8 @@ private fun ComponentActivity.isSystemInDarkModeFlow(): Flow<Boolean> =
     callbackFlow {
         channel.trySend(element = resources.configuration.isSystemInDarkMode)
         val listener = Consumer<Configuration> {
-                channel.trySend(element = it.isSystemInDarkMode)
-            }
+            channel.trySend(element = it.isSystemInDarkMode)
+        }
         addOnConfigurationChangedListener(listener = listener)
         awaitClose { removeOnConfigurationChangedListener(listener = listener) }
     }

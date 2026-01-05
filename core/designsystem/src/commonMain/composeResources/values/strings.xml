@@ -19,7 +19,7 @@
     <string name="core_designsystem_dialog_success">Success</string>
     <string name="core_designsystem_dialog_failure">Failure</string>
     <string name="core_designsystem_dialog_continue">Continue</string>
-    <string name="core_designsystem_mifosStatusDialog">MifosStatusDialog</string>
+    <string name="core_designsystem_mifosStatusDialog" translatable="false">MifosStatusDialog</string>
 
     <string name="core_designsystem_app_title">Mifos</string>
 

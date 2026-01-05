@@ -44,20 +44,6 @@ internal class ClientEditDetailsViewModel(
 ) {
     val route = savedStateHandle.toRoute<ClientEditDetailsRoute>()
 
-    init {
-        observeClientUpdates()
-    }
-
-    private fun observeClientUpdates() {
-        viewModelScope.launch {
-            repository.clientDataUpdated
-                .filter { updatedClientId -> updatedClientId == route.id }
-                .collect {
-                    loadClientDetails(route.id)
-                }
-        }
-    }
-
     fun loadClientDetails(clientId: Int = route.id) {
         viewModelScope.launch {
             getClientDetailsUseCase(clientId).collect { result ->

@@ -68,7 +68,6 @@ internal class ClientProfileDetailsViewModel(
 
     private fun getClientAndObserveNetwork() {
         observeNetwork()
-        observeClientUpdates()
         loadClientDetailsAndImage(route.id)
     }
 
