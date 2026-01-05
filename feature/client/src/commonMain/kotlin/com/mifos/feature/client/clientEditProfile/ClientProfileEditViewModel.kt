@@ -9,6 +9,8 @@
  */
 package com.mifos.feature.client.clientEditProfile
 
+import androidclient.feature.client.generated.resources.Res
+import androidclient.feature.client.generated.resources.unknown_error
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
@@ -145,6 +147,13 @@ internal class ClientProfileEditViewModel(
                                 }
                                 is DataState.Loading -> mutableStateFlow.update {
                                     it.copy(dialogState = ClientProfileEditState.DialogState.Loading)
+                                }
+                                is DataState.Error -> mutableStateFlow.update {
+                                    it.copy(
+                                        dialogState = ClientProfileEditState.DialogState.Error(
+                                            result.message,
+                                        ),
+                                    )
                                 }
                                 else -> Unit
                             }
