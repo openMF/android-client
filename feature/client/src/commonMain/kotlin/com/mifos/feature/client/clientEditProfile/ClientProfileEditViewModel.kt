@@ -23,7 +23,6 @@ import com.mifos.core.ui.util.BaseViewModel
 import com.mifos.core.ui.util.imageToByteArray
 import com.mifos.core.ui.util.multipartRequestBody
 import com.mifos.feature.client.utils.toPlatformFile
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
