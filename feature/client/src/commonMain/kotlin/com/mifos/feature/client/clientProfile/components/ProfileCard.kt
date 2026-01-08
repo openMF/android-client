@@ -9,12 +9,18 @@
  */
 package com.mifos.feature.client.clientProfile.components
 
+import androidclient.feature.client.generated.resources.Res
+import androidclient.feature.client.generated.resources.group_label
+import androidclient.feature.client.generated.resources.group_na
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -25,6 +31,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.text.font.FontWeight
 import com.mifos.core.designsystem.component.MifosCard
 import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.designsystem.theme.AppColors
@@ -32,6 +40,7 @@ import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.designsystem.theme.MifosTheme
 import com.mifos.core.designsystem.theme.MifosTypography
 import com.mifos.core.ui.components.MifosUserImage
+import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
@@ -40,12 +49,12 @@ fun ProfileCard(
     name: String,
     accountNo: String,
     office: String,
+    groupName: String? = null,
+    onGroupClick: () -> Unit = {},
     onClick: () -> Unit,
 ) {
     MifosCard(
-        modifier = Modifier.clickable {
-            onClick()
-        },
+        modifier = Modifier.clickable { onClick() },
         colors = CardColors(
             containerColor = MaterialTheme.colorScheme.primary,
             contentColor = AppColors.customWhite,
@@ -54,7 +63,8 @@ fun ProfileCard(
         ),
     ) {
         Row(
-            Modifier.fillMaxWidth()
+            modifier = Modifier
+                .fillMaxWidth()
                 .padding(DesignToken.padding.largeIncreasedExtra),
             verticalAlignment = Alignment.CenterVertically,
         ) {
@@ -64,7 +74,7 @@ fun ProfileCard(
             )
             Spacer(Modifier.width(DesignToken.padding.medium))
             Column(
-                Modifier.weight(1f),
+                modifier = Modifier.weight(1f),
                 verticalArrangement = Arrangement.spacedBy(DesignToken.padding.extraExtraSmall),
             ) {
                 Text(
@@ -75,12 +85,24 @@ fun ProfileCard(
                 Text(
                     text = "Acc. No. $accountNo",
                     style = MifosTypography.bodySmall,
-                    color = MaterialTheme.colorScheme.secondaryContainer,
+                    color = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.8f),
                 )
                 Text(
                     text = office,
                     style = MifosTypography.bodySmall,
-                    color = MaterialTheme.colorScheme.secondaryContainer,
+                    color = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.8f),
+                )
+
+                Spacer(Modifier.height(DesignToken.padding.small))
+
+                val displayGroupName = groupName ?: stringResource(Res.string.group_na)
+                val isClickable = !groupName.isNullOrBlank() && groupName != stringResource(Res.string.group_na)
+                val groupLabel = stringResource(Res.string.group_label)
+
+                GroupChip(
+                    text = "$groupLabel $displayGroupName",
+                    isClickable = isClickable,
+                    onClick = onGroupClick,
                 )
             }
             Spacer(Modifier.width(DesignToken.padding.medium))
@@ -88,6 +110,39 @@ fun ProfileCard(
                 imageVector = MifosIcons.ChevronRight,
                 contentDescription = null,
                 modifier = Modifier.size(DesignToken.sizes.iconSmall),
+                tint = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.6f),
+            )
+        }
+    }
+}
+
+@Composable
+private fun GroupChip(
+    text: String,
+    isClickable: Boolean,
+    onClick: () -> Unit,
+) {
+    Box(
+        modifier = Modifier
+            .clip(DesignToken.shapes.small)
+            .background(
+                color = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.15f),
+            )
+            .clickable(enabled = isClickable, onClick = onClick)
+            .padding(horizontal = DesignToken.padding.small, vertical = DesignToken.padding.extraSmall),
+    ) {
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Icon(
+                imageVector = MifosIcons.Group,
+                contentDescription = null,
+                modifier = Modifier.size(DesignToken.sizes.iconSmall),
+                tint = MaterialTheme.colorScheme.onPrimary,
+            )
+            Spacer(modifier = Modifier.width(DesignToken.padding.extraSmall))
+            Text(
+                text = text,
+                style = MifosTypography.bodySmall.copy(fontWeight = FontWeight.Medium),
+                color = MaterialTheme.colorScheme.onPrimary,
             )
         }
     }
@@ -102,6 +157,7 @@ fun ProfileCardPreview() {
             name = "John",
             accountNo = "2344",
             office = "Head Office",
+            groupName = "Finance",
             onClick = {},
         )
     }

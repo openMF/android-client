@@ -388,6 +388,8 @@
     <string name="mobile_na">Mobile: N/A</string>
     <string name="email_na">Email: N/A</string>
     <string name="office_na">Office: N/A</string>
+    <string name="group_na">N/A</string>
+    <string name="group_label">Group:</string>
 
     <!-- Titles -->
     <string name="title_client_assign_staff">Client Assign Staff</string>
