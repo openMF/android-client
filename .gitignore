@@ -73,7 +73,6 @@ firebaseAppDistributionServiceCredentialsFile.json
 playStorePublishServiceCredentialsFile.json
 
 # Secrets and Configuration
-secrets.env
 secrets/
 /secrets.properties
 !secrets/.gitkeep
