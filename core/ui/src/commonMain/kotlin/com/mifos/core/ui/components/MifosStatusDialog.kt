@@ -15,19 +15,24 @@ import androidclient.core.ui.generated.resources.ic_icon_success
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.text.style.TextAlign
 import com.mifos.core.designsystem.component.MifosButton
 import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.designsystem.theme.MifosTheme
 import com.mifos.core.designsystem.theme.MifosTypography
+import kotlinx.coroutines.delay
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
@@ -53,6 +58,13 @@ fun MifosStatusDialog(
             failureMessage,
             painterResource(Res.drawable.ic_icon_error),
         )
+    }
+
+    if (status == ResultStatus.SUCCESS) {
+        LaunchedEffect(Unit) {
+            delay(1500)
+            onConfirm()
+        }
     }
 
     Column(
@@ -83,18 +95,23 @@ fun MifosStatusDialog(
                 textAlign = TextAlign.Center,
             )
         }
-        MifosButton(
-            onClick = onConfirm,
-            text = {
-                Text(
-                    text = btnText,
-                    style = MifosTypography.labelLarge,
-                )
-            },
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = DesignToken.padding.small),
-        )
+
+        if (status == ResultStatus.FAILURE) {
+            MifosButton(
+                onClick = onConfirm,
+                text = {
+                    Text(
+                        text = btnText,
+                        style = MifosTypography.labelLarge,
+                    )
+                },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = DesignToken.padding.small),
+            )
+        } else {
+            Spacer(modifier = Modifier.height(DesignToken.spacing.large))
+        }
     }
 }
 
