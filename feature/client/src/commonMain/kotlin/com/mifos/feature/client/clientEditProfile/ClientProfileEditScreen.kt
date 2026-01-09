@@ -41,6 +41,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -64,7 +65,9 @@ import com.mifos.core.ui.components.MifosErrorComponent
 import com.mifos.core.ui.components.MifosProgressIndicator
 import com.mifos.core.ui.components.MifosStatusDialog
 import com.mifos.core.ui.components.MifosUserImage
+import com.mifos.core.ui.components.ResultStatus
 import com.mifos.core.ui.util.EventsEffect
+import kotlinx.coroutines.delay
 import network.chaintech.cmpimagepickncrop.CMPImagePickNCropDialog
 import network.chaintech.cmpimagepickncrop.imagecropper.ImageAspectRatio
 import network.chaintech.cmpimagepickncrop.imagecropper.rememberImageCropper
@@ -268,6 +271,12 @@ private fun ClientProfileEditDialogs(
         }
 
         is ClientProfileEditState.DialogState.ShowStatusDialog -> {
+            if (state.dialogState.status == ResultStatus.SUCCESS) {
+                LaunchedEffect(Unit) {
+                    delay(1500)
+                    onAction(ClientProfileEditAction.OnNext)
+                }
+            }
             Dialog(
                 onDismissRequest = { onAction(ClientProfileEditAction.OnNext) },
             ) {
@@ -288,6 +297,7 @@ private fun ClientProfileEditDialogs(
                         successMessage = state.dialogState.msg,
                         failureTitle = stringResource(Res.string.client_identifiers_error_text),
                         failureMessage = state.dialogState.msg,
+                        showButton = state.dialogState.status == ResultStatus.FAILURE
                     )
                 }
             }

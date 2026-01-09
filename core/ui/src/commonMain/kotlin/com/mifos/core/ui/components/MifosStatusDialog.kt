@@ -44,6 +44,7 @@ fun MifosStatusDialog(
     successMessage: String,
     failureTitle: String,
     failureMessage: String,
+    showButton: Boolean = true,
     modifier: Modifier = Modifier,
 ) {
     val (title, message, icon) = when (status) {
@@ -57,13 +58,6 @@ fun MifosStatusDialog(
             failureMessage,
             painterResource(Res.drawable.ic_icon_error),
         )
-    }
-
-    if (status == ResultStatus.SUCCESS) {
-        LaunchedEffect(Unit) {
-            delay(1500)
-            onConfirm()
-        }
     }
 
     Column(
@@ -95,7 +89,7 @@ fun MifosStatusDialog(
             )
         }
 
-        if (status == ResultStatus.FAILURE) {
+        if (showButton) {
             MifosButton(
                 onClick = onConfirm,
                 text = {
