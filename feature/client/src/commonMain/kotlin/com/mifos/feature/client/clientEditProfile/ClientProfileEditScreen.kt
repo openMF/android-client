@@ -50,6 +50,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.mifos.core.designsystem.component.BasicDialogState
@@ -278,7 +279,11 @@ private fun ClientProfileEditDialogs(
                 }
             }
             Dialog(
-                onDismissRequest = { onAction(ClientProfileEditAction.OnNext) },
+                onDismissRequest = {},
+                properties = DialogProperties(
+                    dismissOnBackPress = false,
+                    dismissOnClickOutside = false,
+                ),
             ) {
                 Surface(
                     shape = DesignToken.shapes.extraLarge,
