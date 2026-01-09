@@ -297,7 +297,7 @@ private fun ClientProfileEditDialogs(
                         successMessage = state.dialogState.msg,
                         failureTitle = stringResource(Res.string.client_identifiers_error_text),
                         failureMessage = state.dialogState.msg,
-                        showButton = state.dialogState.status == ResultStatus.FAILURE
+                        showButton = state.dialogState.status == ResultStatus.FAILURE,
                     )
                 }
             }
