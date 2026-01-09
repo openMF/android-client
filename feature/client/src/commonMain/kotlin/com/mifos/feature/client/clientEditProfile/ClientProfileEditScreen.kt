@@ -14,8 +14,8 @@ import androidclient.feature.client.generated.resources.account_number_prefix
 import androidclient.feature.client.generated.resources.arrow_up
 import androidclient.feature.client.generated.resources.cancel
 import androidclient.feature.client.generated.resources.choose_from_option
-import androidclient.feature.client.generated.resources.client_identifiers_error_text
-import androidclient.feature.client.generated.resources.client_identifiers_identities_success_text
+import androidclient.feature.client.generated.resources.client_profile_edit_failure_title
+import androidclient.feature.client.generated.resources.client_profile_edit_success_title
 import androidclient.feature.client.generated.resources.delete_dialog_message
 import androidclient.feature.client.generated.resources.delete_dialog_title
 import androidclient.feature.client.generated.resources.delete_photo
@@ -45,7 +45,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
@@ -272,8 +271,8 @@ private fun ClientProfileEditDialogs(
         }
 
         is ClientProfileEditState.DialogState.ShowStatusDialog -> {
-            if (state.dialogState.status == ResultStatus.SUCCESS) {
-                LaunchedEffect(Unit) {
+            LaunchedEffect(state.dialogState.status) {
+                if (state.dialogState.status == ResultStatus.SUCCESS) {
                     delay(1500)
                     onAction(ClientProfileEditAction.OnNext)
                 }
@@ -298,9 +297,9 @@ private fun ClientProfileEditDialogs(
                             onAction(ClientProfileEditAction.OnNext)
                         },
                         btnText = stringResource(Res.string.dialog_continue),
-                        successTitle = stringResource(Res.string.client_identifiers_identities_success_text),
+                        successTitle = stringResource(Res.string.client_profile_edit_success_title),
                         successMessage = state.dialogState.msg,
-                        failureTitle = stringResource(Res.string.client_identifiers_error_text),
+                        failureTitle = stringResource(Res.string.client_profile_edit_failure_title),
                         failureMessage = state.dialogState.msg,
                         showButton = state.dialogState.status == ResultStatus.FAILURE,
                     )
