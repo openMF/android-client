@@ -85,8 +85,6 @@ class ClientDetailsRepositoryImp(
     override suspend fun getClient(clientId: Int): ClientEntity {
         val client = dataManagerClient.getClient(clientId)
 
-        // The API returns a list of groups but the UI requires a single Group Name.
-        // we default to using the first group in the list as the primary identifier.
         if (client.groupName.isNullOrBlank() && !client.groups.isNullOrEmpty()) {
             client.groups?.firstOrNull()?.let { firstGroup ->
                 return client.copy(

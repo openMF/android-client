@@ -194,9 +194,7 @@ fun NavGraphBuilder.clientNavGraph(
             navigateToAddCharge = {
                 navController.navigateToChargesRoute(it, Constants.ENTITY_TYPE_CLIENTS)
             },
-            navigateToGroupDetails = { groupId ->
-                navController.navigateToGroupDetailsScreen(groupId)
-            },
+            navigateToGroupDetails = navController::navigateToGroupDetailsScreen,
         )
 
         clientAddressNavigation(
