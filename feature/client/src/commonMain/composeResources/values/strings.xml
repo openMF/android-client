@@ -470,6 +470,10 @@
     <string name="client_profile_select_account_type">Select Account Type</string>
     <string name="client_profile_savings_account">Savings Account</string>
     <string name="client_profile_loan_account">Loan Account</string>
+    <string name="client_profile_photo_updated_success">Profile photo updated successfully</string>
+    <string name="client_profile_photo_updated_failure">Unknown Error</string>
+    <string name="client_profile_edit_success_title">Success</string>
+    <string name="client_profile_edit_failure_title">Error</string>
 
     <string name="client_identifiers_click_on_plus_button_to_add_an_item">Click on “+” Button to add an item.</string>
     <string name="client_identifiers_not_available">Not available</string>
