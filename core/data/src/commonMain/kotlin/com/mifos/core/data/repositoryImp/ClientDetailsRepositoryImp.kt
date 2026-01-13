@@ -22,7 +22,10 @@ import com.mifos.core.network.model.StaffOption
 import com.mifos.room.entities.accounts.ClientAccounts
 import com.mifos.room.entities.client.ClientEntity
 import io.ktor.client.request.forms.MultiPartFormDataContent
+import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
 
 /**
  * Created by Aditya Gupta on 06/08/23.
@@ -30,6 +33,14 @@ import kotlinx.coroutines.flow.Flow
 class ClientDetailsRepositoryImp(
     private val dataManagerClient: DataManagerClient,
 ) : ClientDetailsRepository {
+
+    private val _clientUpdateEvents = MutableSharedFlow<Unit>(replay = 0, extraBufferCapacity = 1, onBufferOverflow = BufferOverflow.DROP_OLDEST)
+
+    override val clientUpdateEvents: Flow<Unit> = _clientUpdateEvents.asSharedFlow()
+
+    override suspend fun triggerClientUpdate() {
+        _clientUpdateEvents.emit(Unit)
+    }
 
     override suspend fun uploadClientImage(clientId: Int, image: MultiPartFormDataContent) {
         dataManagerClient.uploadClientImage(clientId, image)
