@@ -14,9 +14,12 @@ import androidclient.feature.client.generated.resources.account_number_prefix
 import androidclient.feature.client.generated.resources.arrow_up
 import androidclient.feature.client.generated.resources.cancel
 import androidclient.feature.client.generated.resources.choose_from_option
+import androidclient.feature.client.generated.resources.client_profile_edit_failure_title
+import androidclient.feature.client.generated.resources.client_profile_edit_success_title
 import androidclient.feature.client.generated.resources.delete_dialog_message
 import androidclient.feature.client.generated.resources.delete_dialog_title
 import androidclient.feature.client.generated.resources.delete_photo
+import androidclient.feature.client.generated.resources.dialog_continue
 import androidclient.feature.client.generated.resources.edit_profile_title
 import androidclient.feature.client.generated.resources.from_camera
 import androidclient.feature.client.generated.resources.from_gallery
@@ -35,15 +38,18 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.mifos.core.designsystem.component.BasicDialogState
@@ -57,8 +63,11 @@ import com.mifos.core.designsystem.theme.MifosTypography
 import com.mifos.core.ui.components.MifosBreadcrumbNavBar
 import com.mifos.core.ui.components.MifosErrorComponent
 import com.mifos.core.ui.components.MifosProgressIndicator
+import com.mifos.core.ui.components.MifosStatusDialog
 import com.mifos.core.ui.components.MifosUserImage
+import com.mifos.core.ui.components.ResultStatus
 import com.mifos.core.ui.util.EventsEffect
+import kotlinx.coroutines.delay
 import network.chaintech.cmpimagepickncrop.CMPImagePickNCropDialog
 import network.chaintech.cmpimagepickncrop.imagecropper.ImageAspectRatio
 import network.chaintech.cmpimagepickncrop.imagecropper.rememberImageCropper
@@ -259,6 +268,43 @@ private fun ClientProfileEditDialogs(
                 },
                 selectedImageFileCallback = {},
             )
+        }
+
+        is ClientProfileEditState.DialogState.ShowStatusDialog -> {
+            LaunchedEffect(state.dialogState.status) {
+                if (state.dialogState.status == ResultStatus.SUCCESS) {
+                    delay(1500)
+                    onAction(ClientProfileEditAction.OnNext)
+                }
+            }
+            Dialog(
+                onDismissRequest = {},
+                properties = DialogProperties(
+                    dismissOnBackPress = false,
+                    dismissOnClickOutside = false,
+                ),
+            ) {
+                Surface(
+                    shape = DesignToken.shapes.extraLarge,
+                    color = MaterialTheme.colorScheme.surface,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(DesignToken.padding.large),
+                ) {
+                    MifosStatusDialog(
+                        status = state.dialogState.status,
+                        onConfirm = {
+                            onAction(ClientProfileEditAction.OnNext)
+                        },
+                        btnText = stringResource(Res.string.dialog_continue),
+                        successTitle = stringResource(Res.string.client_profile_edit_success_title),
+                        successMessage = state.dialogState.msg,
+                        failureTitle = stringResource(Res.string.client_profile_edit_failure_title),
+                        failureMessage = state.dialogState.msg,
+                        showButton = state.dialogState.status == ResultStatus.FAILURE,
+                    )
+                }
+            }
         }
     }
 }

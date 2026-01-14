@@ -28,6 +28,8 @@ object ClientMapper : AbstractMapper<GetClientsPageItemsResponse, ClientEntity>(
             displayName = entity.displayName,
             officeId = entity.officeId!!.toInt(),
             officeName = entity.officeName,
+            groupId = entity.groupId,
+            groupName = entity.groupName,
             active = entity.active!!,
             status = ClientStatusEntity(
                 id = entity.status?.id!!.toInt(),
@@ -53,6 +55,8 @@ object ClientMapper : AbstractMapper<GetClientsPageItemsResponse, ClientEntity>(
             displayName = domainModel.displayName,
             officeId = domainModel.officeId.toLong(),
             officeName = domainModel.officeName,
+            groupId = domainModel.groupId,
+            groupName = domainModel.groupName,
             active = domainModel.active,
             status = GetClientStatus(
                 id = domainModel.status?.id?.toLong(),

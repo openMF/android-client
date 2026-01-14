@@ -45,6 +45,10 @@ data class GetClientsPageItemsResponse(
 
     val officeName: String? = null,
 
+    val groupId: Int? = null,
+
+    val groupName: String? = null,
+
     val status: GetClientStatus? = null,
 
     val externalId: String? = null,

@@ -28,6 +28,8 @@ iosApp/iosApp.xcworkspace/*
 iosApp/iosApp.xcodeproj/*
 !iosApp/iosApp.xcodeproj/project.pbxproj
 cmp-shared/mifospay-shared.podspec
+cmp-ios/Pods/*
+cmp-ios/Podfile.lock
 
 # Eclipse project files
 .classpath
@@ -60,19 +62,32 @@ app/manifest-merger-release-report.txt
 cmp-android/src/prod/google-services.json
 
 #*.keystore
+keystores/*.keystore
+keystores/*.jks
+*.keystore
+*.jks
 
 version.txt
 fastlane/report.xml
 firebaseAppDistributionServiceCredentialsFile.json
 playStorePublishServiceCredentialsFile.json
 
+# Secrets and Configuration
+secrets/
+/secrets.properties
+!secrets/.gitkeep
+PROJECT_SETUP_INFO.txt
+
 # Ruby stuff we don't care about
 .bundle/
 vendor/
-secrets/
 
 # Sync Log File
 *.log
+/build-logic/convention/secrets-backup/
+
+# Backup files created by scripts
+*.bak
 
 .idea/
 
@@ -82,6 +97,5 @@ mifosng-android/src/main/assets/crashlytics-build.properties
 android-client.iml
 mifosng-android/mifosng-android.iml
 *.hprof
-/secrets.properties
 .kotlin/
 build-logic/convention/bin/
