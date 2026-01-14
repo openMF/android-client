@@ -158,4 +158,3 @@ sealed interface UpdateDefaultAccountAction {
     data object OnSave : UpdateDefaultAccountAction
     data object Dismiss : UpdateDefaultAccountAction
 }
-
