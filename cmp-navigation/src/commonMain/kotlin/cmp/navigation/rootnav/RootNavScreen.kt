@@ -36,6 +36,7 @@ import com.mifos.core.ui.RootTransitionProviders
 import com.mifos.feature.auth.navigation.LoginRoute
 import com.mifos.feature.auth.navigation.authNavGraph
 import com.mifos.feature.auth.navigation.navigateToLogin
+import com.mifos.feature.settings.navigation.navigateToServerConfigGraph
 import org.koin.compose.viewmodel.koinViewModel
 
 @Suppress("LongMethod", "CyclomaticComplexMethod")
@@ -68,7 +69,7 @@ fun RootNavScreen(
         authNavGraph(
             navigateHome = navController::navigateToAuthenticatedGraph,
             navigatePasscode = {},
-            updateServerConfig = {},
+            updateServerConfig = navController::navigateToServerConfigGraph,
         )
     }
 
