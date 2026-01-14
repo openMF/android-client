@@ -159,7 +159,7 @@ private fun LoanRepaymentScheduleContent(
                     .toString(),
                 modifier = Modifier
                     .align(Alignment.BottomStart)
-                    .background(color = Color.LightGray),
+                    .background(color = MaterialTheme.colorScheme.surfaceVariant),
             )
         }
     }
