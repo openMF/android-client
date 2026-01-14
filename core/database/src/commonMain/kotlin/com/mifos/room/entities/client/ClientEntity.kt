@@ -58,6 +58,8 @@ data class ClientEntity(
 
     val groupId: Int? = 0,
 
+    val groupName: String? = null,
+
     val accountNo: String? = null,
 
     val clientId: Int? = null,

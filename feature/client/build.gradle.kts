@@ -30,6 +30,7 @@ kotlin {
             implementation(projects.feature.loan)
             implementation(projects.feature.document)
             implementation(projects.feature.recurringDeposit)
+            implementation(projects.feature.groups)
 
             implementation(compose.ui)
             implementation(compose.material3)

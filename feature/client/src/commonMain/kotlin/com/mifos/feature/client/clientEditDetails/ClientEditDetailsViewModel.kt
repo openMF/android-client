@@ -19,6 +19,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.repository.ClientDetailsEditRepository
+import com.mifos.core.data.repository.ClientDetailsRepository
 import com.mifos.core.data.repository.CreateNewClientRepository
 import com.mifos.core.domain.useCases.GetClientDetailsUseCase
 import com.mifos.core.ui.components.ResultStatus
@@ -38,6 +39,7 @@ internal class ClientEditDetailsViewModel(
     private val repository: ClientDetailsEditRepository,
     private val newClientRepository: CreateNewClientRepository,
     private val getClientDetailsUseCase: GetClientDetailsUseCase,
+    private val clientDetailsRepo: ClientDetailsRepository,
 ) : BaseViewModel<ClientEditDetailsState, ClientEditDetailsEvent, ClientEditDetailsAction>(
     initialState = ClientEditDetailsState(),
 ) {
@@ -154,6 +156,7 @@ internal class ClientEditDetailsViewModel(
             }
             try {
                 val clientId = repository.updateClient(clientId = route.id, clientPayload = clientPayload)
+                clientDetailsRepo.triggerClientUpdate()
                 mutableStateFlow.update {
                     it.copy(
                         id = clientId ?: -1,

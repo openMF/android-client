@@ -72,4 +72,7 @@ interface ClientDetailsRepository {
         collateralId: Int,
         quantity: String,
     ): DataState<Unit>
+
+    val clientUpdateEvents: Flow<Unit>
+    suspend fun triggerClientUpdate()
 }
