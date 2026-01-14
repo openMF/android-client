@@ -57,6 +57,7 @@ internal class UpdateDefaultAccountViewModel(
                     dialogState = null,
                 )
             }
+            getClientSavingsAccountId()
         } catch (e: Exception) {
             mutableStateFlow.update {
                 it.copy(
@@ -89,6 +90,17 @@ internal class UpdateDefaultAccountViewModel(
                 }
             }
             else -> Unit
+        }
+    }
+    private suspend fun getClientSavingsAccountId() {
+        val client = repo.getClient(route.clientId)
+        val index = state.accounts.indexOfFirst {
+            it.id == client.savingsAccountId
+        }
+        if (index != -1) {
+            mutableStateFlow.update {
+                it.copy(currentSelectedIndex = index)
+            }
         }
     }
 
@@ -146,3 +158,4 @@ sealed interface UpdateDefaultAccountAction {
     data object OnSave : UpdateDefaultAccountAction
     data object Dismiss : UpdateDefaultAccountAction
 }
+
