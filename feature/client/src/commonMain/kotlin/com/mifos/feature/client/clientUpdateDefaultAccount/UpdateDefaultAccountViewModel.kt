@@ -57,7 +57,17 @@ internal class UpdateDefaultAccountViewModel(
                     dialogState = null,
                 )
             }
-            getClientSavingsAccountId()
+            try {
+                getClientSavingsAccountId()
+            } catch (e: Exception) {
+                mutableStateFlow.update {
+                    it.copy(
+                        dialogState = UpdateDefaultAccountState.DialogState.Error(
+                            e.message ?: "Unknown error",
+                        ),
+                    )
+                }
+            }
         } catch (e: Exception) {
             mutableStateFlow.update {
                 it.copy(
