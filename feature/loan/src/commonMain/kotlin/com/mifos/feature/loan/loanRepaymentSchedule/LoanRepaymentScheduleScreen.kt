@@ -197,7 +197,7 @@ private fun LoanRepaymentRowItem(
                 modifier = Modifier.weight(3f),
                 text = date ?: "",
                 style = MaterialTheme.typography.bodyLarge,
-                color = Color.Black,
+                color = MaterialTheme.colorScheme.onBackground,
                 textAlign = TextAlign.End,
             )
 
@@ -205,7 +205,7 @@ private fun LoanRepaymentRowItem(
                 modifier = Modifier.weight(3f),
                 text = amountDue,
                 style = MaterialTheme.typography.bodyLarge,
-                color = Color.Black,
+                color = MaterialTheme.colorScheme.onBackground,
                 textAlign = TextAlign.End,
             )
 
@@ -213,7 +213,7 @@ private fun LoanRepaymentRowItem(
                 modifier = Modifier.weight(3f),
                 text = amountPaid,
                 style = MaterialTheme.typography.bodyLarge,
-                color = Color.Black,
+                color = MaterialTheme.colorScheme.onBackground,
                 textAlign = TextAlign.End,
             )
         }
@@ -226,7 +226,7 @@ private fun LoanRepaymentRowItem(
 private fun HeaderLoanRepaymentSchedule() {
     Box(
         modifier = Modifier
-            .background(Color.Red.copy(alpha = .5f))
+            .background(MaterialTheme.colorScheme.surfaceVariant)
             .fillMaxWidth(),
     ) {
         Row(
@@ -239,7 +239,7 @@ private fun HeaderLoanRepaymentSchedule() {
                 modifier = Modifier.weight(2f),
                 text = stringResource(Res.string.feature_loan_status),
                 style = MaterialTheme.typography.bodyLarge,
-                color = Color.Black,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
                 textAlign = TextAlign.Start,
             )
 
@@ -247,7 +247,7 @@ private fun HeaderLoanRepaymentSchedule() {
                 modifier = Modifier.weight(2f),
                 text = stringResource(Res.string.feature_loan_date),
                 style = MaterialTheme.typography.bodyLarge,
-                color = Color.Black,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
                 textAlign = TextAlign.Center,
             )
 
@@ -255,7 +255,7 @@ private fun HeaderLoanRepaymentSchedule() {
                 modifier = Modifier.weight(3f),
                 text = stringResource(Res.string.feature_loan_loan_amount_due),
                 style = MaterialTheme.typography.bodyLarge,
-                color = Color.Black,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
                 textAlign = TextAlign.Center,
             )
 
@@ -263,7 +263,7 @@ private fun HeaderLoanRepaymentSchedule() {
                 modifier = Modifier.weight(3f),
                 text = stringResource(Res.string.feature_loan_amount_paid),
                 style = MaterialTheme.typography.bodyLarge,
-                color = Color.Black,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
                 textAlign = TextAlign.End,
             )
         }
