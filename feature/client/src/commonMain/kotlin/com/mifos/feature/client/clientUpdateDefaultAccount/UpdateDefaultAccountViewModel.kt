@@ -12,6 +12,7 @@ package com.mifos.feature.client.clientUpdateDefaultAccount
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
+import co.touchlab.kermit.Logger
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.repository.ClientDetailsRepository
 import com.mifos.core.data.util.NetworkMonitor
@@ -60,13 +61,7 @@ internal class UpdateDefaultAccountViewModel(
             try {
                 getClientSavingsAccountId()
             } catch (e: Exception) {
-                mutableStateFlow.update {
-                    it.copy(
-                        dialogState = UpdateDefaultAccountState.DialogState.Error(
-                            e.message ?: "Unknown error",
-                        ),
-                    )
-                }
+                Logger.e(e.message ?: "Unable to fetch Default savings account.")
             }
         } catch (e: Exception) {
             mutableStateFlow.update {
