@@ -161,7 +161,7 @@ material3Android = "1.3.1"
 
 # Android Version
 androidPackageName = "AndroidApp"
-androidPackageNamespace = "org.mifos.client"
+androidPackageNamespace = "com.mifos.mifosxdroid"
 androidPackageVersion = "1.0.0"
 uiAndroidVersion = "1.7.8"
 
