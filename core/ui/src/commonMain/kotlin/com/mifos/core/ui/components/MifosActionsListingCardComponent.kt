@@ -115,7 +115,7 @@ private fun ActionMenuRow(
         Icon(
             modifier = Modifier.padding(horizontal = DesignToken.padding.large),
             imageVector = menuItem.icon,
-            contentDescription = "",
+            contentDescription = null,
         )
         Text(
             modifier = Modifier.fillMaxWidth(),

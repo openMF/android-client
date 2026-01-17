@@ -170,7 +170,10 @@ internal fun ClientIdentifiersListScreen(
                                             )
 
                                             is Actions.DeleteDocument -> {
-                                                itemToDelete = (item.id ?: -1) to uniqueKeyForHandleDocument
+                                                val id = item.id
+                                                if (id != null) {
+                                                    itemToDelete = id to uniqueKeyForHandleDocument
+                                                }
                                             }
                                             else -> {}
                                         }
