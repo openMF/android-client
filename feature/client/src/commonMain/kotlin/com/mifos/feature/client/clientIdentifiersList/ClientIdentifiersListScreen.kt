@@ -11,6 +11,7 @@ package com.mifos.feature.client.clientIdentifiersList
 
 import androidclient.feature.client.generated.resources.Res
 import androidclient.feature.client.generated.resources.add_icon
+import androidclient.feature.client.generated.resources.cancel
 import androidclient.feature.client.generated.resources.client_identifiers_click_on_plus_button_to_add_an_item
 import androidclient.feature.client.generated.resources.client_identifiers_error_text
 import androidclient.feature.client.generated.resources.client_identifiers_identities_client_identifier_deletion_success
@@ -18,8 +19,11 @@ import androidclient.feature.client.generated.resources.client_identifiers_ident
 import androidclient.feature.client.generated.resources.client_identifiers_not_available
 import androidclient.feature.client.generated.resources.client_identifiers_retry
 import androidclient.feature.client.generated.resources.client_savings_item
+import androidclient.feature.client.generated.resources.delete_dialog_title
+import androidclient.feature.client.generated.resources.document_delete_dialog_message
 import androidclient.feature.client.generated.resources.feature_client_error_not_connected_internet
 import androidclient.feature.client.generated.resources.feature_client_identifiers
+import androidclient.feature.client.generated.resources.remove
 import androidclient.feature.client.generated.resources.search
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -35,7 +39,9 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
@@ -92,6 +98,7 @@ internal fun ClientIdentifiersListScreen(
     onAction: (ClientIdentifiersListAction) -> Unit,
 ) {
     val emptyMessage = stringResource(Res.string.client_identifiers_not_available)
+    var itemToDelete by remember { mutableStateOf<Pair<Int, String>?>(null) }
 
     MifosScaffold(
         onBackPressed = {
@@ -149,8 +156,8 @@ internal fun ClientIdentifiersListScreen(
                                     identifyDocuments = item.documentType?.name ?: emptyMessage,
                                     menuList = listOf(
                                         Actions.ViewDocument(),
-                                        Actions.DeleteDocument(),
                                         Actions.UploadAgain(),
+                                        Actions.DeleteDocument(),
                                     ),
                                     onActionClicked = { actions ->
                                         when (actions) {
@@ -162,13 +169,9 @@ internal fun ClientIdentifiersListScreen(
                                                 ClientIdentifiersListAction.UploadAgain(uniqueKeyForHandleDocument),
                                             )
 
-                                            is Actions.DeleteDocument -> onAction.invoke(
-                                                ClientIdentifiersListAction.DeleteDocument(
-                                                    item.id ?: -1,
-                                                    uniqueKeyForHandleDocument,
-                                                ),
-                                            )
-
+                                            is Actions.DeleteDocument -> {
+                                                itemToDelete = (item.id ?: -1) to uniqueKeyForHandleDocument
+                                            }
                                             else -> {}
                                         }
                                     },
@@ -189,6 +192,26 @@ internal fun ClientIdentifiersListScreen(
                 }
             }
         }
+    }
+    if (itemToDelete != null) {
+        MifosAlertDialog(
+            dialogTitle = stringResource(Res.string.delete_dialog_title),
+            dialogText = stringResource(Res.string.document_delete_dialog_message),
+            onDismissRequest = {
+                itemToDelete = null
+            },
+            onConfirmation = {
+                onAction.invoke(
+                    ClientIdentifiersListAction.DeleteDocument(
+                        itemToDelete!!.first,
+                        itemToDelete!!.second,
+                    ),
+                )
+                itemToDelete = null
+            },
+            confirmationText = stringResource(Res.string.remove),
+            dismissText = stringResource(Res.string.cancel),
+        )
     }
 }
 
