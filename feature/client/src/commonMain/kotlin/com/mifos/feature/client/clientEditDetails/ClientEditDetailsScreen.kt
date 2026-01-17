@@ -336,6 +336,12 @@ private fun UpdateClientDetailsContent(
             staff = client.staffName ?: ""
             selectedStaffId = client.staffId
             emailAddress = client.emailAddress ?: ""
+            genderId = client.gender?.id ?: 0
+            gender = client.gender?.name ?: ""
+            selectedClientTypeId = client.clientType?.id ?: 0
+            clientType = client.clientType?.name ?: ""
+            selectedClientClassificationId = client.clientClassification?.id ?: 0
+            clientClassification = client.clientClassification?.name ?: ""
 
             client.dateOfBirth.let { dateOfBirth = dateListToTimestamp(it) }
             client.activationDate.let { activationDate = dateListToTimestamp(it) }
