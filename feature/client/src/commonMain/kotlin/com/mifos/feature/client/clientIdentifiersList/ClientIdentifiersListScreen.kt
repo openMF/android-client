@@ -39,9 +39,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
@@ -98,7 +96,6 @@ internal fun ClientIdentifiersListScreen(
     onAction: (ClientIdentifiersListAction) -> Unit,
 ) {
     val emptyMessage = stringResource(Res.string.client_identifiers_not_available)
-    var itemToDelete by remember { mutableStateOf<Pair<Int, String>?>(null) }
 
     MifosScaffold(
         onBackPressed = {
@@ -172,7 +169,9 @@ internal fun ClientIdentifiersListScreen(
                                             is Actions.DeleteDocument -> {
                                                 val id = item.id
                                                 if (id != null) {
-                                                    itemToDelete = id to uniqueKeyForHandleDocument
+                                                    onAction.invoke(
+                                                        ClientIdentifiersListAction.ShowDeleteConfirmation(id, uniqueKeyForHandleDocument),
+                                                    )
                                                 }
                                             }
                                             else -> {}
@@ -195,26 +194,6 @@ internal fun ClientIdentifiersListScreen(
                 }
             }
         }
-    }
-    if (itemToDelete != null) {
-        MifosAlertDialog(
-            dialogTitle = stringResource(Res.string.delete_dialog_title),
-            dialogText = stringResource(Res.string.document_delete_dialog_message),
-            onDismissRequest = {
-                itemToDelete = null
-            },
-            onConfirmation = {
-                onAction.invoke(
-                    ClientIdentifiersListAction.DeleteDocument(
-                        itemToDelete!!.first,
-                        itemToDelete!!.second,
-                    ),
-                )
-                itemToDelete = null
-            },
-            confirmationText = stringResource(Res.string.remove),
-            dismissText = stringResource(Res.string.cancel),
-        )
     }
 }
 
@@ -266,11 +245,11 @@ private fun ClientIdentifiersDialog(
     state: ClientIdentifiersListState,
     onAction: (ClientIdentifiersListAction) -> Unit,
 ) {
-    when (state.dialogState) {
+    when (val dialogState = state.dialogState) {
         is ClientIdentifiersListState.DialogState.Error -> {
             MifosAlertDialog(
                 dialogTitle = stringResource(Res.string.client_identifiers_error_text),
-                dialogText = state.dialogState.message,
+                dialogText = dialogState.message,
                 onDismissRequest = { onAction.invoke(ClientIdentifiersListAction.CloseDialog) },
                 onConfirmation = { onAction.invoke(ClientIdentifiersListAction.CloseDialog) },
             )
@@ -288,9 +267,29 @@ private fun ClientIdentifiersDialog(
             MifosAlertDialog(
                 dialogTitle = stringResource(Res.string.client_identifiers_identities_success_text),
                 dialogText = stringResource(Res.string.client_identifiers_identities_client_identifier_deletion_success) +
-                    " " + state.dialogState.id,
+                    " " + dialogState.id,
                 onDismissRequest = { onAction.invoke(ClientIdentifiersListAction.CloseDialog) },
                 onConfirmation = { onAction.invoke(ClientIdentifiersListAction.CloseDialog) },
+            )
+        }
+
+        is ClientIdentifiersListState.DialogState.DeleteConfirmation -> {
+            MifosAlertDialog(
+                dialogTitle = stringResource(Res.string.delete_dialog_title),
+                dialogText = stringResource(Res.string.document_delete_dialog_message),
+                onDismissRequest = {
+                    onAction.invoke(ClientIdentifiersListAction.CloseDialog)
+                },
+                onConfirmation = {
+                    onAction.invoke(
+                        ClientIdentifiersListAction.DeleteDocument(
+                            dialogState.id,
+                            dialogState.uniqueKey,
+                        ),
+                    )
+                },
+                confirmationText = stringResource(Res.string.remove),
+                dismissText = stringResource(Res.string.cancel),
             )
         }
 

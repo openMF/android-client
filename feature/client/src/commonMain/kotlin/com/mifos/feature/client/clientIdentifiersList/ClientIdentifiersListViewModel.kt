@@ -80,6 +80,17 @@ class ClientIdentifiersListViewModel(
                 deleteClientIdentity(route.clientId, action.identifier, action.uniqueKeyForHandleDocument)
             }
 
+            is ClientIdentifiersListAction.ShowDeleteConfirmation -> {
+                mutableStateFlow.update {
+                    it.copy(
+                        dialogState = ClientIdentifiersListState.DialogState.DeleteConfirmation(
+                            id = action.identifier,
+                            uniqueKey = action.uniqueKeyForHandleDocument,
+                        ),
+                    )
+                }
+            }
+
             ClientIdentifiersListAction.ToggleSearch -> {
                 mutableStateFlow.update {
                     it.copy(isSearchBarActive = !it.isSearchBarActive)
@@ -296,6 +307,7 @@ data class ClientIdentifiersListState(
         data object Loading : DialogState
         data object NoInternet : DialogState
         data class DeletedSuccessfully(val id: Int) : DialogState
+        data class DeleteConfirmation(val id: Int, val uniqueKey: String?) : DialogState
     }
 }
 
@@ -315,9 +327,9 @@ sealed interface ClientIdentifiersListAction {
     data class ToggleShowMenu(val index: Int) : ClientIdentifiersListAction
     data class ViewDocument(val uniqueKeyForHandleDocument: String?) : ClientIdentifiersListAction
     data class DeleteDocument(val identifier: Int, val uniqueKeyForHandleDocument: String?) : ClientIdentifiersListAction
+    data class ShowDeleteConfirmation(val identifier: Int, val uniqueKeyForHandleDocument: String?) : ClientIdentifiersListAction
     data class UploadAgain(val uniqueKeyForHandleDocument: String?) : ClientIdentifiersListAction
     data object CloseDialog : ClientIdentifiersListAction
     data object NavigateBack : ClientIdentifiersListAction
-
     data object Refresh : ClientIdentifiersListAction
 }
