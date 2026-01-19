@@ -224,23 +224,26 @@ internal fun RecurringDepositAccountScaffold(
                                                 Actions.ViewAccount(MifosIcons.Calendar),
                                             )
                                         },
-                                    ) { actions ->
-                                        when (actions) {
-                                            is Actions.ViewAccount -> {
-                                                onAction(
-                                                    RecurringDepositAccountAction.ViewAccount(
-                                                        recurringDeposit.accountNo ?: "",
-                                                    ),
-                                                )
+                                        onActionClicked = { actions ->  // ✅ Use named parameter instead of trailing lambda
+                                            when (actions) {
+                                                is Actions.ViewAccount -> {
+                                                    onAction(
+                                                        RecurringDepositAccountAction.ViewAccount(
+                                                            recurringDeposit.accountNo ?: "",
+                                                        )
+                                                    )
+                                                }
+                                                is Actions.ApproveAccount -> {
+                                                    onAction(
+                                                        RecurringDepositAccountAction.ApproveAccount(
+                                                            recurringDeposit.accountNo ?: "",
+                                                        )
+                                                    )
+                                                }
+                                                else -> Unit
                                             }
-                                            is Actions.ApproveAccount -> {
-                                                RecurringDepositAccountAction.ApproveAccount(
-                                                    recurringDeposit.accountNo ?: "",
-                                                )
-                                            }
-                                            else -> null
                                         }
-                                    }
+                                    )
 
                                     Spacer(modifier = Modifier.height(DesignToken.spacing.small))
                                 }
