@@ -19,8 +19,8 @@ import androidclient.feature.client.generated.resources.client_identifiers_ident
 import androidclient.feature.client.generated.resources.client_identifiers_not_available
 import androidclient.feature.client.generated.resources.client_identifiers_retry
 import androidclient.feature.client.generated.resources.client_savings_item
+import androidclient.feature.client.generated.resources.delete_dialog_identifier_message
 import androidclient.feature.client.generated.resources.delete_dialog_title
-import androidclient.feature.client.generated.resources.document_delete_dialog_message
 import androidclient.feature.client.generated.resources.feature_client_error_not_connected_internet
 import androidclient.feature.client.generated.resources.feature_client_identifiers
 import androidclient.feature.client.generated.resources.remove
@@ -276,7 +276,7 @@ private fun ClientIdentifiersDialog(
         is ClientIdentifiersListState.DialogState.DeleteConfirmation -> {
             MifosAlertDialog(
                 dialogTitle = stringResource(Res.string.delete_dialog_title),
-                dialogText = stringResource(Res.string.document_delete_dialog_message),
+                dialogText = stringResource(Res.string.delete_dialog_identifier_message, dialogState.id.toString()),
                 onDismissRequest = {
                     onAction.invoke(ClientIdentifiersListAction.CloseDialog)
                 },
