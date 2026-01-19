@@ -97,6 +97,8 @@ import com.mifos.feature.note.navigation.noteDestination
 import com.mifos.feature.note.notes.navigateToNoteScreen
 import com.mifos.feature.recurringDeposit.newRecurringDepositAccount.navigateToRecurringAccountRoute
 import com.mifos.feature.recurringDeposit.newRecurringDepositAccount.recurringAccountDestination
+import com.mifos.feature.recurringDeposit.recurringAccountApproval.navigateToRecurringDepositAccountApproval
+import com.mifos.feature.recurringDeposit.recurringAccountApproval.recurringDepositAccountApprovalDestination
 import com.mifos.feature.savings.navigation.navigateToAddSavingsAccount
 import com.mifos.feature.savings.navigation.navigateToSavingsAccountApproval
 import com.mifos.feature.savings.navigation.navigateToSavingsAccountSummaryScreen
@@ -249,12 +251,29 @@ fun NavGraphBuilder.clientNavGraph(
             navController = navController,
         )
 
+        /*clientRecurringDepositAccountDestination(
+            navController = navController,
+            navigateBack = navController::popBackStack,
+            onApproveAccount = {},
+            onViewAccount = {},
+        )*/
+
         clientRecurringDepositAccountDestination(
             navController = navController,
             navigateBack = navController::popBackStack,
-            {},
-            {},
+            onApproveAccount = { accountNumber ->
+                navController.navigateToRecurringDepositAccountApproval(accountNumber)
+            },
+            onViewAccount = { accountNumber ->
+                // TODO: Implement view account navigation
+                // navController.navigateToRecurringDepositAccountDetails(accountNumber)
+            },
         )
+
+        recurringDepositAccountApprovalDestination(
+                navigateBack = navController::popBackStack,
+        )
+
         clientFixedDepositAccountDestination(
             navController = navController,
             navigateBack = navController::popBackStack,
