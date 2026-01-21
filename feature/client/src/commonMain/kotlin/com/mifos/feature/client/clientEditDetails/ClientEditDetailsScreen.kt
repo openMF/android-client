@@ -490,7 +490,7 @@ private fun UpdateClientDetailsContent(
             Spacer(modifier = Modifier.height(DesignToken.spacing.small))
             clientTemplate.genderOptions?.let { list ->
                 MifosTextFieldDropdown(
-                    enabled = list.isNotEmpty(),
+                    enabled = gender.isNotEmpty(),
                     value = gender,
                     onValueChanged = { gender = it },
                     onOptionSelected = { index, value ->
@@ -498,7 +498,7 @@ private fun UpdateClientDetailsContent(
                         genderId = list[index].id
                     },
                     label = stringResource(Res.string.feature_client_gender),
-                    options = list.sortedBy { it.id }.map { it.name },
+                    options = list.map { it.name },
                     readOnly = true,
                 )
             }
@@ -628,7 +628,7 @@ private fun UpdateClientDetailsContent(
                         selectedClientTypeId = list[index].id
                     },
                     label = stringResource(Res.string.feature_client_client),
-                    options = list.sortedBy { it.id }.map { it.name },
+                    options = list.map { it.name },
                     readOnly = true,
                 )
             }
@@ -643,7 +643,7 @@ private fun UpdateClientDetailsContent(
                         selectedClientClassificationId = list[index].id
                     },
                     label = stringResource(Res.string.feature_client_client_classification),
-                    options = list.sortedBy { it.id }.map { it.name },
+                    options = list.map { it.name },
                     readOnly = true,
                 )
             }
