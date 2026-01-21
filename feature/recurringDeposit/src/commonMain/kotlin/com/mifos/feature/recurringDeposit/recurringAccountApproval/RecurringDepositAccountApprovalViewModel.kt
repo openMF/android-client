@@ -5,13 +5,13 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import com.mifos.core.common.utils.DataState
-import com.mifos.core.common.utils.asDataStateFlow
+import com.mifos.core.data.repository.RecurringAccountRepository
+import com.mifos.core.model.objects.template.recurring.approval.RecurringDepositApprovall
 import com.mifos.core.network.GenericResponse
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
 
 class RecurringDepositAccountApprovalViewModel(
@@ -28,7 +28,7 @@ class RecurringDepositAccountApprovalViewModel(
     val recurringDepositAccountApprovalUiState: StateFlow<RecurringDepositAccountApprovalUiState> =
         _recurringDepositAccountApprovalUiState.asStateFlow()
 
-    fun approveRecurringDepositApplication(recurringDepositApproval: RecurringDepositApproval) {
+    fun approveRecurringDepositApplication(recurringDepositApproval: RecurringDepositApprovall) {
         _recurringDepositAccountApprovalUiState.value =
             RecurringDepositAccountApprovalUiState.ShowProgressbar
 
@@ -61,7 +61,7 @@ class RecurringDepositAccountApprovalViewModel(
 }
 
 // Use Case
-class ApproveRecurringDepositUseCase(
+/*class ApproveRecurringDepositUseCase(
     private val repository: RecurringDepositRepository,
 ) {
     operator fun invoke(
@@ -70,6 +70,16 @@ class ApproveRecurringDepositUseCase(
     ): Flow<DataState<GenericResponse>> = flow {
         emit(repository.approveRecurringDepositAccount(accountId, approval))
     }.asDataStateFlow()
+}*/
+class ApproveRecurringDepositUseCase(
+    private val repository: RecurringAccountRepository, // ✅ Change from RecurringDepositRepository to RecurringAccountRepository
+) {
+    operator fun invoke(
+        accountId: String,
+        approval: RecurringDepositApprovall
+    ): Flow<DataState<GenericResponse>> {
+        return repository.approveRecurringDepositAccount(accountId, approval)
+    }
 }
 
 // Repository interface (add this method to your existing repository)

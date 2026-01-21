@@ -11,6 +11,7 @@ package com.mifos.core.network.datamanager
 
 import com.mifos.core.common.utils.extractErrorMessage
 import com.mifos.core.model.objects.payloads.RecurringDepositAccountPayload
+import com.mifos.core.model.objects.template.recurring.approval.RecurringDepositApprovall
 import com.mifos.core.network.BaseApiManager
 import com.mifos.core.network.GenericResponse
 import com.mifos.room.entities.templates.recurringDeposit.RecurringDepositAccountTemplate
@@ -50,5 +51,23 @@ class DataManagerRecurringAccount(
             clientId,
             productId,
         )
+    }
+
+    fun approveRecurringDepositAccount(
+        accountId: String,
+        approval: RecurringDepositApprovall
+    ): Flow<GenericResponse> {
+        return mBaseApiManager.recurringSavingsAccountService.approveRecurringDepositAccount(
+            accountId,
+            approval,
+        ).map { response ->
+            if (!response.status.isSuccess()) {
+                val errorMessage = extractErrorMessage(response)
+                throw IllegalStateException(errorMessage)
+            }
+
+            val json = Json { ignoreUnknownKeys = true }
+            json.decodeFromString<GenericResponse>(response.bodyAsText())
+        }
     }
 }

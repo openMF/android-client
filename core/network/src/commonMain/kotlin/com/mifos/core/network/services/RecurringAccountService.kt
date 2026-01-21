@@ -10,11 +10,13 @@
 package com.mifos.core.network.services
 
 import com.mifos.core.model.objects.payloads.RecurringDepositAccountPayload
+import com.mifos.core.model.objects.template.recurring.approval.RecurringDepositApprovall
 import com.mifos.room.basemodel.APIEndPoint
 import com.mifos.room.entities.templates.recurringDeposit.RecurringDepositAccountTemplate
 import de.jensklingenberg.ktorfit.http.Body
 import de.jensklingenberg.ktorfit.http.GET
 import de.jensklingenberg.ktorfit.http.POST
+import de.jensklingenberg.ktorfit.http.Path
 import de.jensklingenberg.ktorfit.http.Query
 import io.ktor.client.statement.HttpResponse
 import kotlinx.coroutines.flow.Flow
@@ -31,4 +33,11 @@ interface RecurringAccountService {
         @Query("clientId") clientId: Int,
         @Query("productId") productId: Int?,
     ): Flow<RecurringDepositAccountTemplate>
+
+    @POST("recurringdepositaccounts/{accountId}")
+    fun approveRecurringDepositAccount(
+        @Path("accountId") accountId: String,
+        @Body approval: RecurringDepositApprovall,
+        @Query("command") command: String = "approve"
+    ): Flow<HttpResponse>
 }
