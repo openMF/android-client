@@ -82,6 +82,9 @@
     <string name="core_ui_view_document">View Document</string>
     <string name="core_ui_upload_again">Upload Again</string>
     <string name="core_ui_delete_document">Delete Document</string>
+    <string name="core_ui_pay_outstanding_amount">Pay Outstanding Amount</string>
+    <string name="core_ui_edit">Edit</string>
+    <string name="core_ui_delete">Delete</string>
 
     <!-- Mifos Note -->
     <string name="core_ui_note_createdBy">Created By:</string>
