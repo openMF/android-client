@@ -40,12 +40,18 @@ object DateHelper {
 
     const val MONTH_FORMAT = "dd MMMM"
 
+    private const val API_DATE_FORMAT = "dd MMMM yyyy"
+
     private val fullMonthFormat = LocalDateTime.Format {
         byUnicodePattern(FULL_MONTH)
     }
 
     private val shortMonthFormat = LocalDateTime.Format {
         byUnicodePattern(SHORT_MONTH)
+    }
+
+    private val apiDateFormat = LocalDateTime.Format {
+        byUnicodePattern(API_DATE_FORMAT)
     }
 
     /**
@@ -450,5 +456,13 @@ object DateHelper {
         } catch (e: Exception) {
             null
         }
+    }
+
+    @OptIn(ExperimentalTime::class)
+    fun getDateAsStringForApproval(timeInMillis: Long): String {
+        val instant = Instant.fromEpochMilliseconds(timeInMillis)
+            .toLocalDateTime(TimeZone.currentSystemDefault())
+
+        return instant.format(apiDateFormat) // Returns "21 January 2026"
     }
 }

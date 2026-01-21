@@ -222,9 +222,12 @@ private fun RecurringDepositAccountApprovalContent(
             onClick = {
                 approveAccount.invoke(
                     RecurringDepositApprovall(
-                        approvedOnDate = approvalDate.toString(),
-                        note = reasonForApproval,
-                    ),
+                        locale = "en",
+                        dateFormat = "dd MMMM yyyy",
+                        approvedOnDate = DateHelper.getDateAsStringForApproval(approvalDate), // Format: "21 January 2026"
+                        note = reasonForApproval
+                    )
+
                 )
             },
         ) {
