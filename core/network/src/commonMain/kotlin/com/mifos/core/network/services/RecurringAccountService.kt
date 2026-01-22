@@ -34,10 +34,9 @@ interface RecurringAccountService {
         @Query("productId") productId: Int?,
     ): Flow<RecurringDepositAccountTemplate>
 
-    @POST("recurringdepositaccounts/{accountId}")
+    @POST("recurringdepositaccounts/{accountId}?command=approve")
     fun approveRecurringDepositAccount(
         @Path("accountId") accountId: String,
         @Body approval: RecurringDepositApprovall,
-        @Query("command") command: String = "approve"
     ): Flow<HttpResponse>
 }

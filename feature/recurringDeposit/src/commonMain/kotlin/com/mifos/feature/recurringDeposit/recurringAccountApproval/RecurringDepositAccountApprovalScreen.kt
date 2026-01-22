@@ -227,7 +227,6 @@ private fun RecurringDepositAccountApprovalContent(
                         approvedOnDate = DateHelper.getDateAsStringForApproval(approvalDate), // Format: "21 January 2026"
                         note = reasonForApproval
                     )
-
                 )
             },
         ) {
