@@ -72,7 +72,7 @@ class RecurringDepositAccountApprovalViewModel(
     }.asDataStateFlow()
 }*/
 class ApproveRecurringDepositUseCase(
-    private val repository: RecurringAccountRepository, // ✅ Change from RecurringDepositRepository to RecurringAccountRepository
+    private val repository: RecurringAccountRepository,
 ) {
     operator fun invoke(
         accountId: String,

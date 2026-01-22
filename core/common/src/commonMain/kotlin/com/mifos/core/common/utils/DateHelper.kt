@@ -14,10 +14,11 @@ import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.Month
 import kotlinx.datetime.TimeZone
-import kotlinx.datetime.atStartOfDayIn
 import kotlinx.datetime.format
 import kotlinx.datetime.format.FormatStringsInDatetimeFormats
+import kotlinx.datetime.format.MonthNames
 import kotlinx.datetime.format.byUnicodePattern
+import kotlinx.datetime.format.char
 import kotlinx.datetime.number
 import kotlinx.datetime.toLocalDateTime
 import kotlin.time.Clock
@@ -40,7 +41,13 @@ object DateHelper {
 
     const val MONTH_FORMAT = "dd MMMM"
 
-    private const val API_DATE_FORMAT = "dd MMMM yyyy"
+    private val apiDateFormat = LocalDateTime.Format {
+        dayOfMonth()
+        char(' ')
+        monthName(MonthNames.ENGLISH_FULL) // "January", "February", etc.
+        char(' ')
+        year()
+    }
 
     private val fullMonthFormat = LocalDateTime.Format {
         byUnicodePattern(FULL_MONTH)
@@ -48,10 +55,6 @@ object DateHelper {
 
     private val shortMonthFormat = LocalDateTime.Format {
         byUnicodePattern(SHORT_MONTH)
-    }
-
-    private val apiDateFormat = LocalDateTime.Format {
-        byUnicodePattern(API_DATE_FORMAT)
     }
 
     /**
@@ -443,19 +446,6 @@ object DateHelper {
         val year = localDate.year
 
         return "$day $monthName $year"
-    }
-
-    @OptIn(ExperimentalTime::class)
-    fun getDateAsLongFromList(integersOfDate: List<Int>?): Long? {
-        if (integersOfDate == null) return null
-        val dateStr = getDateAsString(integersOfDate)
-        return try {
-            val dateList = getDateAsList(dateStr)
-            val localDate = LocalDate(dateList[0], dateList[1], dateList[2])
-            localDate.atStartOfDayIn(TimeZone.UTC).toEpochMilliseconds()
-        } catch (e: Exception) {
-            null
-        }
     }
 
     @OptIn(ExperimentalTime::class)
