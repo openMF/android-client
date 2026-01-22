@@ -11,6 +11,7 @@ package com.mifos.feature.client.clientIdentifiersList
 
 import androidclient.feature.client.generated.resources.Res
 import androidclient.feature.client.generated.resources.add_icon
+import androidclient.feature.client.generated.resources.cancel
 import androidclient.feature.client.generated.resources.client_identifiers_click_on_plus_button_to_add_an_item
 import androidclient.feature.client.generated.resources.client_identifiers_error_text
 import androidclient.feature.client.generated.resources.client_identifiers_identities_client_identifier_deletion_success
@@ -18,8 +19,11 @@ import androidclient.feature.client.generated.resources.client_identifiers_ident
 import androidclient.feature.client.generated.resources.client_identifiers_not_available
 import androidclient.feature.client.generated.resources.client_identifiers_retry
 import androidclient.feature.client.generated.resources.client_savings_item
+import androidclient.feature.client.generated.resources.delete_dialog_identifier_message
+import androidclient.feature.client.generated.resources.delete_dialog_title
 import androidclient.feature.client.generated.resources.feature_client_error_not_connected_internet
 import androidclient.feature.client.generated.resources.feature_client_identifiers
+import androidclient.feature.client.generated.resources.remove
 import androidclient.feature.client.generated.resources.search
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -149,8 +153,8 @@ internal fun ClientIdentifiersListScreen(
                                     identifyDocuments = item.documentType?.name ?: emptyMessage,
                                     menuList = listOf(
                                         Actions.ViewDocument(),
-                                        Actions.DeleteDocument(),
                                         Actions.UploadAgain(),
+                                        Actions.DeleteDocument(),
                                     ),
                                     onActionClicked = { actions ->
                                         when (actions) {
@@ -162,13 +166,14 @@ internal fun ClientIdentifiersListScreen(
                                                 ClientIdentifiersListAction.UploadAgain(uniqueKeyForHandleDocument),
                                             )
 
-                                            is Actions.DeleteDocument -> onAction.invoke(
-                                                ClientIdentifiersListAction.DeleteDocument(
-                                                    item.id ?: -1,
-                                                    uniqueKeyForHandleDocument,
-                                                ),
-                                            )
-
+                                            is Actions.DeleteDocument -> {
+                                                val id = item.id
+                                                if (id != null) {
+                                                    onAction.invoke(
+                                                        ClientIdentifiersListAction.ShowDeleteConfirmation(id, uniqueKeyForHandleDocument),
+                                                    )
+                                                }
+                                            }
                                             else -> {}
                                         }
                                     },
@@ -240,11 +245,11 @@ private fun ClientIdentifiersDialog(
     state: ClientIdentifiersListState,
     onAction: (ClientIdentifiersListAction) -> Unit,
 ) {
-    when (state.dialogState) {
+    when (val dialogState = state.dialogState) {
         is ClientIdentifiersListState.DialogState.Error -> {
             MifosAlertDialog(
                 dialogTitle = stringResource(Res.string.client_identifiers_error_text),
-                dialogText = state.dialogState.message,
+                dialogText = dialogState.message,
                 onDismissRequest = { onAction.invoke(ClientIdentifiersListAction.CloseDialog) },
                 onConfirmation = { onAction.invoke(ClientIdentifiersListAction.CloseDialog) },
             )
@@ -262,9 +267,29 @@ private fun ClientIdentifiersDialog(
             MifosAlertDialog(
                 dialogTitle = stringResource(Res.string.client_identifiers_identities_success_text),
                 dialogText = stringResource(Res.string.client_identifiers_identities_client_identifier_deletion_success) +
-                    " " + state.dialogState.id,
+                    " " + dialogState.id,
                 onDismissRequest = { onAction.invoke(ClientIdentifiersListAction.CloseDialog) },
                 onConfirmation = { onAction.invoke(ClientIdentifiersListAction.CloseDialog) },
+            )
+        }
+
+        is ClientIdentifiersListState.DialogState.DeleteConfirmation -> {
+            MifosAlertDialog(
+                dialogTitle = stringResource(Res.string.delete_dialog_title),
+                dialogText = stringResource(Res.string.delete_dialog_identifier_message, dialogState.id.toString()),
+                onDismissRequest = {
+                    onAction.invoke(ClientIdentifiersListAction.CloseDialog)
+                },
+                onConfirmation = {
+                    onAction.invoke(
+                        ClientIdentifiersListAction.DeleteDocument(
+                            dialogState.id,
+                            dialogState.uniqueKey,
+                        ),
+                    )
+                },
+                confirmationText = stringResource(Res.string.remove),
+                dismissText = stringResource(Res.string.cancel),
             )
         }
 
