@@ -42,9 +42,9 @@ object DateHelper {
     const val MONTH_FORMAT = "dd MMMM"
 
     private val apiDateFormat = LocalDateTime.Format {
-        dayOfMonth()
+        day()
         char(' ')
-        monthName(MonthNames.ENGLISH_FULL) // "January", "February", etc.
+        monthName(MonthNames.ENGLISH_FULL)
         char(' ')
         year()
     }

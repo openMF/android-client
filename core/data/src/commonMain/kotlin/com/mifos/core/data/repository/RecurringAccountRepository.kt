@@ -11,7 +11,7 @@ package com.mifos.core.data.repository
 
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.model.objects.payloads.RecurringDepositAccountPayload
-import com.mifos.core.model.objects.template.recurring.approval.RecurringDepositApprovall
+import com.mifos.core.model.objects.template.recurring.approval.RecurringDepositApproval
 import com.mifos.core.network.GenericResponse
 import com.mifos.room.entities.templates.recurringDeposit.RecurringDepositAccountTemplate
 import kotlinx.coroutines.flow.Flow
@@ -29,6 +29,6 @@ interface RecurringAccountRepository {
 
     fun approveRecurringDepositAccount(
         accountId: String,
-        approval: RecurringDepositApprovall
+        approval: RecurringDepositApproval,
     ): Flow<DataState<GenericResponse>>
 }

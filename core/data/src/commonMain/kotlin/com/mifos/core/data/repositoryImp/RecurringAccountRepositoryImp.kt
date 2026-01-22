@@ -13,7 +13,7 @@ import com.mifos.core.common.utils.DataState
 import com.mifos.core.common.utils.asDataStateFlow
 import com.mifos.core.data.repository.RecurringAccountRepository
 import com.mifos.core.model.objects.payloads.RecurringDepositAccountPayload
-import com.mifos.core.model.objects.template.recurring.approval.RecurringDepositApprovall
+import com.mifos.core.model.objects.template.recurring.approval.RecurringDepositApproval
 import com.mifos.core.network.GenericResponse
 import com.mifos.core.network.datamanager.DataManagerRecurringAccount
 import com.mifos.room.entities.templates.recurringDeposit.RecurringDepositAccountTemplate
@@ -43,11 +43,11 @@ class RecurringAccountRepositoryImp(
 
     override fun approveRecurringDepositAccount(
         accountId: String,
-        approval:RecurringDepositApprovall
+        approval: RecurringDepositApproval,
     ): Flow<DataState<GenericResponse>> {
         return dataManagerRecurringAccount.approveRecurringDepositAccount(
             accountId,
-            approval
+            approval,
         ).asDataStateFlow()
     }
 }

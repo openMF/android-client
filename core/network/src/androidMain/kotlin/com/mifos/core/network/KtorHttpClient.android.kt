@@ -29,13 +29,15 @@ actual val KtorHttpClient: HttpClient
         }
 
         install(ContentNegotiation) {
-            json(Json {
-                ignoreUnknownKeys = true
-                encodeDefaults = true
-                isLenient = true
-                prettyPrint = true
-                explicitNulls = false
-            })
+            json(
+                Json {
+                    ignoreUnknownKeys = true
+                    encodeDefaults = true
+                    isLenient = true
+                    prettyPrint = true
+                    explicitNulls = false
+                },
+            )
         }
 
         install(Logging) {

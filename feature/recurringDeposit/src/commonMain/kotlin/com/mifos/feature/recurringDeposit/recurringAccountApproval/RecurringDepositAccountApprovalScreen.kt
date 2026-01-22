@@ -45,7 +45,7 @@ import com.mifos.core.designsystem.component.MifosDatePickerTextField
 import com.mifos.core.designsystem.component.MifosOutlinedTextField
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
-import com.mifos.core.model.objects.template.recurring.approval.RecurringDepositApprovall
+import com.mifos.core.model.objects.template.recurring.approval.RecurringDepositApproval
 import com.mifos.core.network.GenericResponse
 import com.mifos.core.ui.components.MifosAlertDialog
 import com.mifos.core.ui.components.MifosProgressIndicator
@@ -80,7 +80,7 @@ internal fun RecurringDepositAccountApprovalScreen(
     uiState: RecurringDepositAccountApprovalUiState,
     navigateBack: () -> Unit,
     modifier: Modifier = Modifier,
-    approveAccount: (RecurringDepositApprovall) -> Unit,
+    approveAccount: (RecurringDepositApproval) -> Unit,
 ) {
     val snackbarHostState = remember {
         SnackbarHostState()
@@ -131,7 +131,7 @@ internal fun RecurringDepositAccountApprovalScreen(
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalTime::class)
 @Composable
 private fun RecurringDepositAccountApprovalContent(
-    approveAccount: (recurringDepositApproval: RecurringDepositApprovall) -> Unit,
+    approveAccount: (recurringDepositApproval: RecurringDepositApproval) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val scrollState = rememberScrollState()
@@ -221,7 +221,7 @@ private fun RecurringDepositAccountApprovalContent(
                 .heightIn(44.dp),
             onClick = {
                 approveAccount.invoke(
-                    RecurringDepositApprovall(
+                    RecurringDepositApproval(
                         locale = "en",
                         dateFormat = "dd MMMM yyyy",
                         approvedOnDate = DateHelper.getDateAsStringForApproval(approvalDate), // Format: "21 January 2026"
