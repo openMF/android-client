@@ -175,7 +175,7 @@ internal fun RecurringDepositAccountScaffold(
                             },
                         )
 
-                        // todo implement search bar functionality
+                        // todo clientimplement search bar functionality
                         if (state.isSearchBarActive) {
                             MifosSearchBar(
                                 query = state.searchText,
@@ -229,7 +229,7 @@ internal fun RecurringDepositAccountScaffold(
                                                 Actions.ViewAccount(MifosIcons.Calendar),
                                             )
                                         },
-                                        onActionClicked = { actions ->  // ✅ Use named parameter instead of trailing lambda
+                                        onActionClicked = { actions ->
                                             when (actions) {
                                                 is Actions.ViewAccount -> {
                                                     onAction(

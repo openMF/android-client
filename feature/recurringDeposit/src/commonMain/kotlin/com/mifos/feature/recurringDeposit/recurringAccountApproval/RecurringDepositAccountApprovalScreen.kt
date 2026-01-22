@@ -58,9 +58,6 @@ import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
 
 
-/**
- * Recurring Deposit Account Approval Screen
- */
 @Composable
 internal fun RecurringDepositAccountApprovalScreen(
     navigateBack: () -> Unit,
@@ -224,7 +221,7 @@ private fun RecurringDepositAccountApprovalContent(
                     RecurringDepositApproval(
                         locale = "en",
                         dateFormat = "dd MMMM yyyy",
-                        approvedOnDate = DateHelper.getDateAsStringForApproval(approvalDate), // Format: "21 January 2026"
+                        approvedOnDate = DateHelper.getDateAsStringForApproval(approvalDate),
                         note = reasonForApproval
                     )
                 )
@@ -244,12 +241,6 @@ sealed class RecurringDepositAccountApprovalUiState {
     data class ShowRecurringDepositAccountApprovedSuccessfully(val response: GenericResponse) : RecurringDepositAccountApprovalUiState()
     data class ShowError(val message: String) : RecurringDepositAccountApprovalUiState()
 }
-
-// Data class for approval
-data class RecurringDepositApproval(
-    val approvedOnDate: String,
-    val note: String,
-)
 
 class RecurringDepositAccountApprovalScreenPreviewProvider :
     PreviewParameterProvider<RecurringDepositAccountApprovalUiState> {
