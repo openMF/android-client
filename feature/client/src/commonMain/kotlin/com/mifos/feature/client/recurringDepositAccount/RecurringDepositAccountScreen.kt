@@ -37,6 +37,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -71,6 +72,10 @@ fun RecurringDepositAccountScreen(
     viewModel: RecurringDepositAccountViewModel = koinViewModel(),
 ) {
     val state by viewModel.stateFlow.collectAsStateWithLifecycle()
+
+    LaunchedEffect(navController.currentBackStackEntry) {
+        viewModel.trySendAction(RecurringDepositAccountAction.Refresh)
+    }
 
     EventsEffect(viewModel.eventFlow) { event ->
         when (event) {
