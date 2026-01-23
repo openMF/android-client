@@ -336,6 +336,12 @@ private fun UpdateClientDetailsContent(
             staff = client.staffName ?: ""
             selectedStaffId = client.staffId
             emailAddress = client.emailAddress ?: ""
+            genderId = client.gender?.id ?: 0
+            gender = client.gender?.name ?: ""
+            selectedClientTypeId = client.clientType?.id ?: 0
+            clientType = client.clientType?.name ?: ""
+            selectedClientClassificationId = client.clientClassification?.id ?: 0
+            clientClassification = client.clientClassification?.name ?: ""
 
             client.dateOfBirth.let { dateOfBirth = dateListToTimestamp(it) }
             client.activationDate.let { activationDate = dateListToTimestamp(it) }
@@ -492,7 +498,7 @@ private fun UpdateClientDetailsContent(
                         genderId = list[index].id
                     },
                     label = stringResource(Res.string.feature_client_gender),
-                    options = list.sortedBy { it.id }.map { it.name },
+                    options = list.map { it.name },
                     readOnly = true,
                 )
             }
@@ -614,7 +620,7 @@ private fun UpdateClientDetailsContent(
 
             clientTemplate.clientTypeOptions?.let { list ->
                 MifosTextFieldDropdown(
-                    enabled = clientType.isNotEmpty(),
+                    enabled = list.isNotEmpty(),
                     value = clientType,
                     onValueChanged = { clientType = it },
                     onOptionSelected = { index, value ->
@@ -622,14 +628,14 @@ private fun UpdateClientDetailsContent(
                         selectedClientTypeId = list[index].id
                     },
                     label = stringResource(Res.string.feature_client_client),
-                    options = list.sortedBy { it.id }.map { it.name },
+                    options = list.map { it.name },
                     readOnly = true,
                 )
             }
 
             clientTemplate.clientClassificationOptions?.let { list ->
                 MifosTextFieldDropdown(
-                    enabled = clientClassification.isNotEmpty(),
+                    enabled = list.isNotEmpty(),
                     value = clientClassification,
                     onValueChanged = { clientClassification = it },
                     onOptionSelected = { index, value ->
@@ -637,7 +643,7 @@ private fun UpdateClientDetailsContent(
                         selectedClientClassificationId = list[index].id
                     },
                     label = stringResource(Res.string.feature_client_client_classification),
-                    options = list.sortedBy { it.id }.map { it.name },
+                    options = list.map { it.name },
                     readOnly = true,
                 )
             }
