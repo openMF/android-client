@@ -20,6 +20,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.paging.LoadState
@@ -66,92 +67,89 @@ internal actual fun LazyColumnForClientListApi(
         is LoadState.NotLoading -> Unit
     }
 
-    if (sort != null) {
+    val displayList = remember(clientPagingList.itemSnapshotList, sort) {
         val currentItems = clientPagingList.itemSnapshotList.items
 
-        val sortedItems = when (sort) {
-            SortTypes.NAME -> {
-                currentItems.sortedBy { it.displayName?.lowercase() }
-            }
-            SortTypes.ACCOUNT_NUMBER -> {
-                currentItems.sortedBy { it.accountNo }
-            }
-            SortTypes.EXTERNAL_ID -> {
-                currentItems.sortedBy { it.externalId }
-            }
-            else -> currentItems
+        when (sort) {
+            SortTypes.NAME -> currentItems.sortedBy { it.displayName?.lowercase() }
+            SortTypes.ACCOUNT_NUMBER -> currentItems.sortedBy { it.accountNo }
+            SortTypes.EXTERNAL_ID -> currentItems.sortedBy { it.externalId }
+            else -> currentItems.sortedBy { getStatusOrder(it.status?.value) }
         }
+    }
 
-        LazyColumn(
-            modifier = modifier,
-        ) {
-            items(
-                items = sortedItems,
-                key = { client -> client.id },
-            ) { client ->
-                LaunchedEffect(client.id) {
-                    fetchImage(client.id)
-                }
-                ClientItem(
-                    client = client,
-                    byteArray = images[client.id],
-                    onClientClick = onClientSelect,
-                )
+    if (clientPagingList.itemCount > 0) {
+        LaunchedEffect(clientPagingList.itemCount, displayList.size) {
+            val lastRawIndex = clientPagingList.itemCount - 1
+            if ((displayList.isEmpty() || displayList.size < 10) && lastRawIndex >= 0) {
+                clientPagingList[lastRawIndex]
             }
         }
-    } else {
-        LazyColumn(
-            modifier = modifier,
-        ) {
-            items(
-                count = clientPagingList.itemCount,
-                key = { index -> clientPagingList[index]?.id ?: index },
-            ) { index ->
-                clientPagingList[index]?.let { client ->
-                    LaunchedEffect(client.id) {
-                        fetchImage(client.id)
+    }
+
+    LazyColumn(modifier = modifier) {
+        items(
+            items = displayList,
+            key = { client -> client.id },
+        ) { client ->
+            LaunchedEffect(client.id) { fetchImage(client.id) }
+
+            if (client == displayList.last()) {
+                LaunchedEffect(Unit) {
+                    val lastIndex = clientPagingList.itemCount - 1
+                    if (lastIndex >= 0) {
+                        clientPagingList[lastIndex]
                     }
-                    ClientItem(
-                        client = client,
-                        byteArray = images[client.id],
-                        onClientClick = onClientSelect,
-                    )
                 }
             }
 
-            when (clientPagingList.loadState.append) {
-                is LoadState.Error -> {
+            ClientItem(
+                client = client,
+                byteArray = images[client.id],
+                onClientClick = onClientSelect,
+            )
+        }
+
+        when (clientPagingList.loadState.append) {
+            is LoadState.Error -> {
+                item {
+                    MifosSweetError(message = stringResource(Res.string.feature_client_failed_to_more_clients)) {
+                        onRefresh()
+                    }
+                }
+            }
+
+            is LoadState.Loading -> {
+                item {
+                    MifosPagingAppendProgress()
+                }
+            }
+
+            is LoadState.NotLoading -> {
+                if (clientPagingList.loadState.append.endOfPaginationReached &&
+                    clientPagingList.itemCount > 0
+                ) {
                     item {
-                        MifosSweetError(message = stringResource(Res.string.feature_client_failed_to_more_clients)) {
-                            onRefresh()
-                        }
-                    }
-                }
-
-                is LoadState.Loading -> {
-                    item {
-                        MifosPagingAppendProgress()
-                    }
-                }
-
-                is LoadState.NotLoading -> {
-                    if (clientPagingList.loadState.append.endOfPaginationReached &&
-                        clientPagingList.itemCount > 0
-                    ) {
-                        item {
-                            Text(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(bottom = DesignToken.padding.extraExtraLarge)
-                                    .padding(bottom = DesignToken.padding.extraExtraLarge),
-                                text = stringResource(Res.string.feature_client_no_more_clients_available),
-                                style = MifosTypography.bodyMedium,
-                                textAlign = TextAlign.Center,
-                            )
-                        }
+                        Text(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(bottom = DesignToken.padding.extraExtraLarge)
+                                .padding(bottom = DesignToken.padding.extraExtraLarge),
+                            text = stringResource(Res.string.feature_client_no_more_clients_available),
+                            style = MifosTypography.bodyMedium,
+                            textAlign = TextAlign.Center,
+                        )
                     }
                 }
             }
         }
+    }
+}
+fun getStatusOrder(status: String?): Int {
+    return when (status?.lowercase()) {
+        "active" -> 1
+        "pending" -> 2
+        "closed" -> 3
+        else -> 4
     }
 }

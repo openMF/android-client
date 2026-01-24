@@ -23,7 +23,6 @@ import com.mifos.core.ui.util.BaseViewModel
 import com.mifos.core.ui.util.imageToByteArray
 import com.mifos.room.entities.client.ClientEntity
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
@@ -149,23 +148,56 @@ internal class ClientListViewModel(
                 )
             }
 
-            is DataState.Success -> updateState {
-                val data = result.data.pageItems
-                if (data.isEmpty()) {
-                    it.copy(isEmpty = true, dialogState = null)
-                } else {
-                    it.copy(clients = data, dialogState = null, unfilteredClients = data)
+            is DataState.Success -> {
+                updateState { state ->
+                    val data = result.data.pageItems
+                    if (data.isEmpty()) {
+                        state.copy(isEmpty = true, dialogState = null)
+                    } else {
+                        val filteredData = data.filter { client ->
+                            val statusMatch = state.selectedStatus.isEmpty() || client.status?.value in state.selectedStatus
+                            val officeMatch = state.selectedOffices.isEmpty() || (client.officeName ?: "Null") in state.selectedOffices
+                            statusMatch && officeMatch
+                        }
+                        fun getStatusOrder(status: String?): Int {
+                            return when (status?.lowercase()) {
+                                "active" -> 1
+                                "pending" -> 2
+                                "closed" -> 3
+                                else -> 4
+                            }
+                        }
+                        val sortedList = when (state.sort) {
+                            SortTypes.NAME -> filteredData.sortedBy { it.displayName?.lowercase() }
+                            SortTypes.ACCOUNT_NUMBER -> filteredData.sortedBy { it.accountNo }
+                            SortTypes.EXTERNAL_ID -> filteredData.sortedBy { it.externalId }
+                            else -> filteredData.sortedBy { getStatusOrder(it.status?.value) }
+                        }
+                        state.copy(
+                            clients = sortedList,
+                            unfilteredClients = data,
+                            dialogState = null,
+                        )
+                    }
                 }
             }
         }
     }
 
     private fun handleClientResult(result: Flow<PagingData<ClientEntity>>) {
-        updateState {
+        updateState { state ->
+            val filteredFlow = result.map { pagingData ->
+                pagingData.filter { client ->
+                    val statusMatch = state.selectedStatus.isEmpty() || client.status?.value in state.selectedStatus
+                    val officeMatch = state.selectedOffices.isEmpty() || (client.officeName ?: "Null") in state.selectedOffices
+                    statusMatch && officeMatch
+                }
+            }
+
             state.copy(
-                clientsFlow = result,
-                dialogState = null,
+                clientsFlow = filteredFlow,
                 unfilteredClientsFlow = result,
+                dialogState = null,
             )
         }
     }
