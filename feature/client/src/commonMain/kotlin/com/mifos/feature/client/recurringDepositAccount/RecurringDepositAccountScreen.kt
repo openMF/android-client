@@ -10,6 +10,7 @@
 package com.mifos.feature.client.recurringDepositAccount
 
 import androidclient.feature.client.generated.resources.Res
+import androidclient.feature.client.generated.resources.add_icon
 import androidclient.feature.client.generated.resources.client_empty_card_message
 import androidclient.feature.client.generated.resources.client_product_recurring_deposit_account
 import androidclient.feature.client.generated.resources.client_profile_recurring_deposit_account_title
@@ -42,6 +43,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
@@ -68,6 +70,7 @@ fun RecurringDepositAccountScreen(
     onApproveAccount: (String) -> Unit,
     onViewAccount: (String) -> Unit,
     modifier: Modifier = Modifier,
+    createAccount: () -> Unit,
     viewModel: RecurringDepositAccountViewModel = koinViewModel(),
 ) {
     val state by viewModel.stateFlow.collectAsStateWithLifecycle()
@@ -82,6 +85,8 @@ fun RecurringDepositAccountScreen(
             is RecurringDepositAccountEvent.OnViewAccount -> {
                 onViewAccount(event.accountNumber)
             }
+
+            RecurringDepositAccountEvent.AddAccount -> createAccount()
         }
     }
 
@@ -141,23 +146,26 @@ internal fun RecurringDepositAccountContent(
     ) {
         MifosBreadcrumbNavBar(navController)
 
-        when (state.isLoading) {
-            true -> MifosProgressIndicator()
-            false -> {
-                Column(
-                    Modifier.fillMaxSize()
-                        .padding(horizontal = KptTheme.spacing.md),
-                ) {
-                    val notAvailableText = stringResource(Res.string.client_savings_not_available)
-                    RecurringDepositAccountHeader(
-                        state.recurringDepositAccounts.size.toString(),
-                        onToggleSearch = {
-                            onAction(RecurringDepositAccountAction.ToggleSearch)
-                        },
-                        onToggleFilter = {
-                            onAction(RecurringDepositAccountAction.ToggleFilter)
-                        },
-                    )
+            when (state.isLoading) {
+                true -> MifosProgressIndicator()
+                false -> {
+                    Column(
+                        Modifier.fillMaxSize()
+                            .padding(horizontal = KptTheme.spacing.md),
+                    ) {
+                        val notAvailableText = stringResource(Res.string.client_savings_not_available)
+                        RecurringDepositAccountHeader(
+                            state.recurringDepositAccounts.size.toString(),
+                            onToggleSearch = {
+                                onAction(RecurringDepositAccountAction.ToggleSearch)
+                            },
+                            onToggleFilter = {
+                                onAction(RecurringDepositAccountAction.ToggleFilter)
+                            },
+                            addAccount = {
+                                onAction(RecurringDepositAccountAction.AddAccount)
+                            }
+                        )
 
                     // todo implement search bar functionality
                     if (state.isSearchBarActive) {
@@ -250,10 +258,12 @@ private fun RecurringDepositAccountHeader(
     onToggleFilter: () -> Unit,
     modifier: Modifier = Modifier,
     onToggleSearch: () -> Unit,
+    addAccount: () -> Unit
 ) {
     Row(
         modifier = modifier.fillMaxWidth()
             .wrapContentHeight(),
+        verticalAlignment = Alignment.CenterVertically
     ) {
         Column {
             Text(
@@ -275,6 +285,16 @@ private fun RecurringDepositAccountHeader(
             modifier = Modifier.clickable {
                 onToggleSearch.invoke()
             },
+        )
+
+        Spacer(modifier = Modifier.width(DesignToken.spacing.largeIncreased))
+
+        Icon(
+            painter = painterResource(Res.drawable.add_icon),
+            contentDescription = null,
+            modifier = Modifier.clickable {
+                addAccount.invoke()
+            }
         )
 
         Spacer(modifier = Modifier.width(DesignToken.spacing.largeIncreased))

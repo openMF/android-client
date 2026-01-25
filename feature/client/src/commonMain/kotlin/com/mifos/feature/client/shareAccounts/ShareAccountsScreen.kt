@@ -10,6 +10,7 @@
 package com.mifos.feature.client.shareAccounts
 
 import androidclient.feature.client.generated.resources.Res
+import androidclient.feature.client.generated.resources.add_icon
 import androidclient.feature.client.generated.resources.client_product_shares_account
 import androidclient.feature.client.generated.resources.client_savings_item
 import androidclient.feature.client.generated.resources.filter
@@ -22,12 +23,14 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
@@ -49,6 +52,7 @@ import template.core.base.designsystem.theme.KptTheme
 internal fun ShareAccountsScreen(
     navController: NavController,
     viewAccount: (Int) -> Unit,
+    createAccount: () -> Unit,
     viewModel: ShareAccountsViewModel = koinViewModel(),
 ) {
     val state by viewModel.stateFlow.collectAsStateWithLifecycle()
@@ -56,6 +60,7 @@ internal fun ShareAccountsScreen(
     EventsEffect(viewModel.eventFlow) { event ->
         when (event) {
             is ShareAccountsEvent.ViewAccount -> viewAccount(event.accountId)
+            ShareAccountsEvent.AddAccount -> createAccount()
         }
     }
 
@@ -154,6 +159,7 @@ private fun ShareAccountHeader(
 ) {
     Row(
         modifier = Modifier.fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically
     ) {
         Column {
             Text(
@@ -175,7 +181,13 @@ private fun ShareAccountHeader(
             painter = painterResource(Res.drawable.search),
             contentDescription = null,
         )
-
+        Spacer(modifier = Modifier.width(DesignToken.spacing.largeIncreased))
+        Icon(
+            modifier = Modifier.onClick { onAction.invoke(ShareAccountsAction.AddAccount) },
+            painter = painterResource(Res.drawable.add_icon),
+            contentDescription = null,
+        )
+        Spacer(modifier = Modifier.width(DesignToken.spacing.largeIncreased))
         Icon(
             modifier = Modifier.onClick { onAction.invoke(ShareAccountsAction.ToggleFiler) },
             painter = painterResource(Res.drawable.filter),

@@ -10,6 +10,7 @@
 package com.mifos.feature.client.fixedDepositAccount
 
 import androidclient.feature.client.generated.resources.Res
+import androidclient.feature.client.generated.resources.add_icon
 import androidclient.feature.client.generated.resources.client_empty_card_message
 import androidclient.feature.client.generated.resources.client_product_fixed_deposit_account
 import androidclient.feature.client.generated.resources.client_profile_fixed_deposit_account_title
@@ -68,6 +69,7 @@ fun FixedDepositAccountScreen(
     onApproveAccount: (String) -> Unit,
     onViewAccount: (String) -> Unit,
     modifier: Modifier = Modifier,
+    createAccount: () -> Unit,
     viewModel: FixedDepositAccountViewModel = koinViewModel(),
 ) {
     val state by viewModel.stateFlow.collectAsStateWithLifecycle()
@@ -82,6 +84,8 @@ fun FixedDepositAccountScreen(
             is FixedDepositAccountEvent.OnViewAccount -> {
                 onViewAccount(event.accountNumber)
             }
+
+            FixedDepositAccountEvent.AddAccount -> createAccount()
         }
     }
 
@@ -150,15 +154,18 @@ fun FixedDepositAccountContent(
                 ) {
                     val notAvailableText = stringResource(Res.string.client_savings_not_available)
 
-                    FixedDepositAccountHeader(
-                        state.fixedDepositAccount.size.toString(),
-                        onToggleSearch = {
-                            onAction(FixedDepositAccountAction.ToggleSearch)
-                        },
-                        onToggleFilter = {
-                            onAction(FixedDepositAccountAction.ToggleFilter)
-                        },
-                    )
+                        FixedDepositAccountHeader(
+                            state.fixedDepositAccount.size.toString(),
+                            onToggleSearch = {
+                                onAction(FixedDepositAccountAction.ToggleSearch)
+                            },
+                            onToggleFilter = {
+                                onAction(FixedDepositAccountAction.ToggleFilter)
+                            },
+                            addAccount = {
+                                onAction(FixedDepositAccountAction.AddAccount)
+                            }
+                        )
 
                     // todo implement search bar functionality
                     if (state.isSearchBarActive) {
@@ -249,6 +256,7 @@ fun FixedDepositAccountHeader(
     totalItem: String,
     onToggleFilter: () -> Unit,
     modifier: Modifier = Modifier,
+    addAccount: () -> Unit,
     onToggleSearch: () -> Unit,
 ) {
     Row(
@@ -275,6 +283,16 @@ fun FixedDepositAccountHeader(
             modifier = Modifier.clickable {
                 onToggleSearch.invoke()
             },
+        )
+
+        Spacer(modifier = Modifier.width(DesignToken.spacing.largeIncreased))
+
+        Icon(
+            painter = painterResource(Res.drawable.add_icon),
+            contentDescription = null,
+            modifier = Modifier.clickable {
+                addAccount.invoke()
+            }
         )
 
         Spacer(modifier = Modifier.width(DesignToken.spacing.largeIncreased))

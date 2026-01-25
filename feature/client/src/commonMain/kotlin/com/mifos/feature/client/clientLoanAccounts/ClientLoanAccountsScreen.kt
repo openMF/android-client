@@ -10,6 +10,7 @@
 package com.mifos.feature.client.clientLoanAccounts
 
 import androidclient.feature.client.generated.resources.Res
+import androidclient.feature.client.generated.resources.add_icon
 import androidclient.feature.client.generated.resources.cash_bundel
 import androidclient.feature.client.generated.resources.client_loan_accounts_not_available
 import androidclient.feature.client.generated.resources.client_savings_item
@@ -83,6 +84,7 @@ internal fun ClientLoanAccountsScreenRoute(
     makeRepayment: (Int) -> Unit,
     viewAccount: (Int) -> Unit,
     navController: NavController,
+    createAccount: () -> Unit,
     viewModel: ClientLoanAccountsViewModel = koinViewModel(),
 ) {
     val state by viewModel.stateFlow.collectAsStateWithLifecycle()
@@ -93,6 +95,7 @@ internal fun ClientLoanAccountsScreenRoute(
             is ClientLoanAccountsEvent.MakeRepayment -> makeRepayment(event.id)
             ClientLoanAccountsEvent.NavigateBack -> navigateBack()
             is ClientLoanAccountsEvent.ViewAccount -> viewAccount(event.id)
+            ClientLoanAccountsEvent.AddAccount -> createAccount()
         }
     }
 
@@ -258,6 +261,7 @@ private fun ClientsAccountHeader(
 ) {
     Row(
         modifier = Modifier.fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically
     ) {
         Column {
             Text(
@@ -280,6 +284,15 @@ private fun ClientsAccountHeader(
             Icon(
                 painter = painterResource(Res.drawable.search),
                 contentDescription = null,
+            )
+        }
+
+        IconButton(
+            onClick = { onAction.invoke(ClientLoanAccountsAction.AddAccount) },
+        ) {
+            Icon(
+                painter = painterResource(Res.drawable.add_icon),
+                contentDescription = null
             )
         }
 

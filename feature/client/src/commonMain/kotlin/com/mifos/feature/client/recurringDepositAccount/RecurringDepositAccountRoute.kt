@@ -12,6 +12,9 @@ package com.mifos.feature.client.recurringDepositAccount
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
+import androidx.navigation.toRoute
+import com.mifos.feature.client.clientLoanAccounts.ClientLoanAccountsRoute
+import com.mifos.feature.recurringDeposit.newRecurringDepositAccount.navigateToRecurringAccountRoute
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -25,7 +28,8 @@ fun NavGraphBuilder.clientRecurringDepositAccountDestination(
     onApproveAccount: (String) -> Unit,
     onViewAccount: (String) -> Unit,
 ) {
-    composable<RecurringDepositAccountRoute> {
+    composable<RecurringDepositAccountRoute> { backStackEntry ->
+        val route = backStackEntry.toRoute<RecurringDepositAccountRoute>()
         RecurringDepositAccountScreen(
             navController = navController,
             navigateBack = navigateBack,
@@ -35,6 +39,9 @@ fun NavGraphBuilder.clientRecurringDepositAccountDestination(
             onViewAccount = {
                 onViewAccount(it)
             },
+            createAccount = {
+                navController.navigateToRecurringAccountRoute(route.clientId)
+            }
         )
     }
 }

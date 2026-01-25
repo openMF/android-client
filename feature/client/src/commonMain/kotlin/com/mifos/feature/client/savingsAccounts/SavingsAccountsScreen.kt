@@ -10,6 +10,7 @@
 package com.mifos.feature.client.savingsAccounts
 
 import androidclient.feature.client.generated.resources.Res
+import androidclient.feature.client.generated.resources.add_icon
 import androidclient.feature.client.generated.resources.client_product_saving_account
 import androidclient.feature.client.generated.resources.client_savings_item
 import androidclient.feature.client.generated.resources.client_savings_not_available
@@ -42,6 +43,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
@@ -68,6 +70,7 @@ internal fun SavingsAccountsScreen(
     viewModel: SavingsAccountsViewModel = koinViewModel(),
     navigateToViewAccount: (Int, SavingAccountDepositTypeEntity) -> Unit,
     navigateToApproveAccount: (Int) -> Unit,
+    createAccount : () -> Unit
 ) {
     val state by viewModel.stateFlow.collectAsStateWithLifecycle()
 
@@ -78,7 +81,7 @@ internal fun SavingsAccountsScreen(
                 event.accountId,
                 event.accountType,
             )
-
+            SavingsAccountEvent.AddAccount -> createAccount()
             is SavingsAccountEvent.ApproveAccount -> navigateToApproveAccount(event.accountId)
         }
     }
@@ -216,6 +219,7 @@ fun SavingsAccountsHeader(
 ) {
     Row(
         modifier = Modifier.fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically
     ) {
         Column {
             Text(
@@ -241,6 +245,16 @@ fun SavingsAccountsHeader(
             )
         }
         Spacer(modifier = Modifier.width(KptTheme.spacing.md))
+        IconButton(
+            onClick = {onAction.invoke(SavingsAccountAction.AddAccount)}
+        ) {
+            Icon(
+                painter = painterResource(Res.drawable.add_icon),
+                contentDescription = null
+            )
+        }
+
+        DesignToken.padding
 
         IconButton(
             onClick = { onAction.invoke(SavingsAccountAction.ToggleFilter) },

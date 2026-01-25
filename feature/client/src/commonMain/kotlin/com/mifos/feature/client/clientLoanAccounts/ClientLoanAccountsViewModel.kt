@@ -80,6 +80,10 @@ class ClientLoanAccountsViewModel(
             ClientLoanAccountsAction.NavigateBack -> {
                 sendEvent(ClientLoanAccountsEvent.NavigateBack)
             }
+
+            ClientLoanAccountsAction.AddAccount -> {
+                sendEvent(ClientLoanAccountsEvent.AddAccount)
+            }
         }
     }
 
@@ -207,12 +211,14 @@ data class ClientLoanAccountsState(
 
 sealed interface ClientLoanAccountsEvent {
     data object NavigateBack : ClientLoanAccountsEvent
+    data object AddAccount : ClientLoanAccountsEvent
     data class MakeRepayment(val id: Int) : ClientLoanAccountsEvent
     data class ViewAccount(val id: Int) : ClientLoanAccountsEvent
 }
 
 sealed interface ClientLoanAccountsAction {
     data object ToggleSearch : ClientLoanAccountsAction
+    data object AddAccount : ClientLoanAccountsAction
 
     data object NavigateBack : ClientLoanAccountsAction
     data object ToggleFilter : ClientLoanAccountsAction

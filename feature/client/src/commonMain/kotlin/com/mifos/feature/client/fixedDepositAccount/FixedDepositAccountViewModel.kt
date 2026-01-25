@@ -49,6 +49,10 @@ class FixedDepositAccountViewModel(
                 }
             }
 
+            FixedDepositAccountAction.AddAccount -> {
+                sendEvent(FixedDepositAccountEvent.AddAccount)
+            }
+
             is FixedDepositAccountAction.NavigateBack -> {
                 sendEvent(FixedDepositAccountEvent.OnNavigateBack)
             }
@@ -186,12 +190,14 @@ sealed class FixedDepositAccountAction {
     data object ToggleFilter : FixedDepositAccountAction()
     data object ToggleSearch : FixedDepositAccountAction()
     data object Search : FixedDepositAccountAction()
+    data object AddAccount : FixedDepositAccountAction()
     data class UpdateSearch(val query: String) : FixedDepositAccountAction()
     data object CloseDialog : FixedDepositAccountAction()
 }
 
 sealed class FixedDepositAccountEvent {
     data object OnNavigateBack : FixedDepositAccountEvent()
+    data object AddAccount : FixedDepositAccountEvent()
     data class OnViewAccount(val accountNumber: String) : FixedDepositAccountEvent()
     data class OnApproveAccount(val accountNumber: String) : FixedDepositAccountEvent()
 }

@@ -12,6 +12,7 @@ package com.mifos.feature.client.clientLoanAccounts
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
+import androidx.navigation.toRoute
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -24,13 +25,16 @@ fun NavGraphBuilder.clientLoanAccountsDestination(
     navController: NavController,
     navigateToViewAccount: (Int) -> Unit,
     navigateToMakeRepayment: (Int) -> Unit,
+    createAccount: (Int) -> Unit,
 ) {
-    composable<ClientLoanAccountsRoute> {
+    composable<ClientLoanAccountsRoute> { backStackEntry ->
+        val route = backStackEntry.toRoute<ClientLoanAccountsRoute>()
         ClientLoanAccountsScreenRoute(
             navigateBack = navigateBack,
             viewAccount = navigateToViewAccount,
             makeRepayment = navigateToMakeRepayment,
             navController = navController,
+            createAccount = { createAccount(route.clientId) }
         )
     }
 }
