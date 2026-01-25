@@ -26,7 +26,7 @@ fun NavGraphBuilder.savingsAccountsDestination(
     navController: NavController,
     navigateToViewAccount: (Int, SavingAccountDepositTypeEntity) -> Unit,
     navigateToApproveAccount: (Int) -> Unit,
-    createAccount: (Int) -> Unit
+    createAccount: (Int) -> Unit,
 ) {
     composable<SavingsAccountsRoute> { backStackEntry ->
         val route = backStackEntry.toRoute<SavingsAccountsRoute>()

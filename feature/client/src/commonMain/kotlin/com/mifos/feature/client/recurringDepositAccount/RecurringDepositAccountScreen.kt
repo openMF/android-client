@@ -164,7 +164,7 @@ internal fun RecurringDepositAccountContent(
                             },
                             addAccount = {
                                 onAction(RecurringDepositAccountAction.AddAccount)
-                            }
+                            },
                         )
 
                     // todo implement search bar functionality
@@ -258,12 +258,12 @@ private fun RecurringDepositAccountHeader(
     onToggleFilter: () -> Unit,
     modifier: Modifier = Modifier,
     onToggleSearch: () -> Unit,
-    addAccount: () -> Unit
+    addAccount: () -> Unit,
 ) {
     Row(
         modifier = modifier.fillMaxWidth()
             .wrapContentHeight(),
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = Alignment.CenterVertically,
     ) {
         Column {
             Text(
@@ -294,7 +294,7 @@ private fun RecurringDepositAccountHeader(
             contentDescription = null,
             modifier = Modifier.clickable {
                 addAccount.invoke()
-            }
+            },
         )
 
         Spacer(modifier = Modifier.width(DesignToken.spacing.largeIncreased))

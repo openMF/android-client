@@ -261,7 +261,7 @@ private fun ClientsAccountHeader(
 ) {
     Row(
         modifier = Modifier.fillMaxWidth(),
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = Alignment.CenterVertically,
     ) {
         Column {
             Text(
@@ -292,7 +292,7 @@ private fun ClientsAccountHeader(
         ) {
             Icon(
                 painter = painterResource(Res.drawable.add_icon),
-                contentDescription = null
+                contentDescription = null,
             )
         }
 

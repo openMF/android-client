@@ -32,7 +32,7 @@ fun NavGraphBuilder.shareAccountsDestination(
             viewAccount = navigateToViewAccount,
             createAccount = {
                 navController.navigateToCreateShareAccountRoute(route.clientId)
-            }
+            },
         )
     }
 }

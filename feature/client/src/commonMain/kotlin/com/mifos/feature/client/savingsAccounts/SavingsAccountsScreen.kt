@@ -70,7 +70,7 @@ internal fun SavingsAccountsScreen(
     viewModel: SavingsAccountsViewModel = koinViewModel(),
     navigateToViewAccount: (Int, SavingAccountDepositTypeEntity) -> Unit,
     navigateToApproveAccount: (Int) -> Unit,
-    createAccount : () -> Unit
+    createAccount: () -> Unit,
 ) {
     val state by viewModel.stateFlow.collectAsStateWithLifecycle()
 
@@ -219,7 +219,7 @@ fun SavingsAccountsHeader(
 ) {
     Row(
         modifier = Modifier.fillMaxWidth(),
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = Alignment.CenterVertically,
     ) {
         Column {
             Text(
@@ -246,11 +246,11 @@ fun SavingsAccountsHeader(
         }
         Spacer(modifier = Modifier.width(KptTheme.spacing.md))
         IconButton(
-            onClick = {onAction.invoke(SavingsAccountAction.AddAccount)}
+            onClick = { onAction.invoke(SavingsAccountAction.AddAccount) },
         ) {
             Icon(
                 painter = painterResource(Res.drawable.add_icon),
-                contentDescription = null
+                contentDescription = null,
             )
         }
 

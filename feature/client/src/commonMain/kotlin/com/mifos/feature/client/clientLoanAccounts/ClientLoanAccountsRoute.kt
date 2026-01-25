@@ -34,7 +34,7 @@ fun NavGraphBuilder.clientLoanAccountsDestination(
             viewAccount = navigateToViewAccount,
             makeRepayment = navigateToMakeRepayment,
             navController = navController,
-            createAccount = { createAccount(route.clientId) }
+            createAccount = { createAccount(route.clientId) },
         )
     }
 }

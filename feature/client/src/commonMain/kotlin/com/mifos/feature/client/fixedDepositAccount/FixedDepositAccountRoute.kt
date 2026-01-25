@@ -34,7 +34,7 @@ fun NavGraphBuilder.clientFixedDepositAccountDestination(
             navigateBack = navigateBack,
             onApproveAccount = onApproveAccount,
             onViewAccount = onViewAccount,
-            createAccount = {navController.navigateToCreateFixedDepositRoute(route.clientId)}
+            createAccount = { navController.navigateToCreateFixedDepositRoute(route.clientId) },
         )
     }
 }

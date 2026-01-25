@@ -164,7 +164,7 @@ fun FixedDepositAccountContent(
                             },
                             addAccount = {
                                 onAction(FixedDepositAccountAction.AddAccount)
-                            }
+                            },
                         )
 
                     // todo implement search bar functionality
@@ -292,7 +292,7 @@ fun FixedDepositAccountHeader(
             contentDescription = null,
             modifier = Modifier.clickable {
                 addAccount.invoke()
-            }
+            },
         )
 
         Spacer(modifier = Modifier.width(DesignToken.spacing.largeIncreased))
