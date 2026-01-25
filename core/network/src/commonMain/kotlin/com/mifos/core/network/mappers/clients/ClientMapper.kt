@@ -10,10 +10,16 @@
 package com.mifos.core.network.mappers.clients
 
 import com.mifos.core.network.data.AbstractMapper
+import com.mifos.core.network.model.GetClientClassificationOptions
 import com.mifos.core.network.model.GetClientStatus
+import com.mifos.core.network.model.GetClientTypeOptions
 import com.mifos.core.network.model.GetClientsPageItemsResponse
+import com.mifos.core.network.model.GetGenderOptions
+import com.mifos.room.entities.client.ClientClassificationEntity
 import com.mifos.room.entities.client.ClientEntity
+import com.mifos.room.entities.client.ClientGenderEntity
 import com.mifos.room.entities.client.ClientStatusEntity
+import com.mifos.room.entities.client.ClientTypeEntity
 
 object ClientMapper : AbstractMapper<GetClientsPageItemsResponse, ClientEntity>() {
 
@@ -44,6 +50,24 @@ object ClientMapper : AbstractMapper<GetClientsPageItemsResponse, ClientEntity>(
                 value = entity.legalForm?.value,
             ),
             dateOfBirth = entity.dateOfBirth ?: emptyList(),
+            gender = entity.gender?.let {
+                ClientGenderEntity(
+                    id = it.id?.toInt() ?: -1,
+                    name = it.name,
+                )
+            },
+            clientType = entity.clientType?.let {
+                ClientTypeEntity(
+                    id = it.id?.toInt() ?: -1,
+                    name = it.name,
+                )
+            },
+            clientClassification = entity.clientClassification?.let {
+                ClientClassificationEntity(
+                    id = it.id?.toInt() ?: -1,
+                    name = it.name,
+                )
+            },
         )
     }
 
@@ -71,6 +95,24 @@ object ClientMapper : AbstractMapper<GetClientsPageItemsResponse, ClientEntity>(
                 value = domainModel.legalForm?.value,
             ),
             dateOfBirth = domainModel.dateOfBirth,
+            gender = domainModel.gender?.let {
+                GetGenderOptions(
+                    id = it.id?.toLong(),
+                    name = it.name,
+                )
+            },
+            clientType = domainModel.clientType?.let {
+                GetClientTypeOptions(
+                    id = it.id?.toLong(),
+                    name = it.name,
+                )
+            },
+            clientClassification = domainModel.clientClassification?.let {
+                GetClientClassificationOptions(
+                    id = it.id?.toLong(),
+                    name = it.name,
+                )
+            },
         )
     }
 }

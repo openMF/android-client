@@ -62,4 +62,11 @@ data class GetClientsPageItemsResponse(
     val savingAccountOptions: List<SavingAccountOption> = emptyList(),
 
     val shareAccounts: List<ShareAccounts> = emptyList(),
+
+    val gender: GetGenderOptions? = null,
+
+    val clientType: GetClientTypeOptions? = null,
+
+    val clientClassification: GetClientClassificationOptions? = null,
+
 )
