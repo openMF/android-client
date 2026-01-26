@@ -70,7 +70,7 @@ fun RecurringDepositAccountScreen(
     onApproveAccount: (String) -> Unit,
     onViewAccount: (String) -> Unit,
     modifier: Modifier = Modifier,
-    createAccount: () -> Unit,
+    createAccount: (Int) -> Unit,
     viewModel: RecurringDepositAccountViewModel = koinViewModel(),
 ) {
     val state by viewModel.stateFlow.collectAsStateWithLifecycle()
@@ -86,7 +86,7 @@ fun RecurringDepositAccountScreen(
                 onViewAccount(event.accountNumber)
             }
 
-            RecurringDepositAccountEvent.AddAccount -> createAccount()
+            is RecurringDepositAccountEvent.AddAccount -> createAccount(event.clientId)
         }
     }
 

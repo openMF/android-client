@@ -49,8 +49,8 @@ class FixedDepositAccountViewModel(
                 }
             }
 
-            FixedDepositAccountAction.AddAccount -> {
-                sendEvent(FixedDepositAccountEvent.AddAccount)
+            is FixedDepositAccountAction.AddAccount -> {
+                sendEvent(FixedDepositAccountEvent.AddAccount(route.clientId))
             }
 
             is FixedDepositAccountAction.NavigateBack -> {
@@ -197,7 +197,7 @@ sealed class FixedDepositAccountAction {
 
 sealed class FixedDepositAccountEvent {
     data object OnNavigateBack : FixedDepositAccountEvent()
-    data object AddAccount : FixedDepositAccountEvent()
+    data class AddAccount(val clientId: Int) : FixedDepositAccountEvent()
     data class OnViewAccount(val accountNumber: String) : FixedDepositAccountEvent()
     data class OnApproveAccount(val accountNumber: String) : FixedDepositAccountEvent()
 }

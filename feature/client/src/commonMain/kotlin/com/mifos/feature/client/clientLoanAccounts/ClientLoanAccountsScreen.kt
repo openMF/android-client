@@ -84,7 +84,7 @@ internal fun ClientLoanAccountsScreenRoute(
     makeRepayment: (Int) -> Unit,
     viewAccount: (Int) -> Unit,
     navController: NavController,
-    createAccount: () -> Unit,
+    createAccount: (Int) -> Unit,
     viewModel: ClientLoanAccountsViewModel = koinViewModel(),
 ) {
     val state by viewModel.stateFlow.collectAsStateWithLifecycle()
@@ -95,7 +95,7 @@ internal fun ClientLoanAccountsScreenRoute(
             is ClientLoanAccountsEvent.MakeRepayment -> makeRepayment(event.id)
             ClientLoanAccountsEvent.NavigateBack -> navigateBack()
             is ClientLoanAccountsEvent.ViewAccount -> viewAccount(event.id)
-            ClientLoanAccountsEvent.AddAccount -> createAccount()
+            is ClientLoanAccountsEvent.AddAccount -> createAccount(event.clientId)
         }
     }
 

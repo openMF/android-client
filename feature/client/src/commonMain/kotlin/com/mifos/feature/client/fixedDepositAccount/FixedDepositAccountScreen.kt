@@ -69,7 +69,7 @@ fun FixedDepositAccountScreen(
     onApproveAccount: (String) -> Unit,
     onViewAccount: (String) -> Unit,
     modifier: Modifier = Modifier,
-    createAccount: () -> Unit,
+    createAccount: (Int) -> Unit,
     viewModel: FixedDepositAccountViewModel = koinViewModel(),
 ) {
     val state by viewModel.stateFlow.collectAsStateWithLifecycle()
@@ -85,7 +85,7 @@ fun FixedDepositAccountScreen(
                 onViewAccount(event.accountNumber)
             }
 
-            FixedDepositAccountEvent.AddAccount -> createAccount()
+            is FixedDepositAccountEvent.AddAccount -> createAccount(event.clientId)
         }
     }
 

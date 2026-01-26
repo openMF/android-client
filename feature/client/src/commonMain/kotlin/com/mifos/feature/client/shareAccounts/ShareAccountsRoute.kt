@@ -12,7 +12,6 @@ package com.mifos.feature.client.shareAccounts
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
-import androidx.navigation.toRoute
 import com.mifos.feature.client.createShareAccount.navigateToCreateShareAccountRoute
 import kotlinx.serialization.Serializable
 
@@ -25,13 +24,12 @@ fun NavGraphBuilder.shareAccountsDestination(
     navController: NavController,
     navigateToViewAccount: (Int) -> Unit,
 ) {
-    composable<ShareAccountsRoute> { backStackEntry ->
-        val route = backStackEntry.toRoute<ShareAccountsRoute>()
+    composable<ShareAccountsRoute> {
         ShareAccountsScreenRoute(
             navController = navController,
             viewAccount = navigateToViewAccount,
-            createAccount = {
-                navController.navigateToCreateShareAccountRoute(route.clientId)
+            createAccount = { clientId ->
+                navController.navigateToCreateShareAccountRoute(clientId = clientId)
             },
         )
     }

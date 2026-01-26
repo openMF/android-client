@@ -82,7 +82,7 @@ class ClientLoanAccountsViewModel(
             }
 
             ClientLoanAccountsAction.AddAccount -> {
-                sendEvent(ClientLoanAccountsEvent.AddAccount)
+                sendEvent(ClientLoanAccountsEvent.AddAccount(route.clientId))
             }
         }
     }
@@ -211,7 +211,7 @@ data class ClientLoanAccountsState(
 
 sealed interface ClientLoanAccountsEvent {
     data object NavigateBack : ClientLoanAccountsEvent
-    data object AddAccount : ClientLoanAccountsEvent
+    data class AddAccount(val clientId: Int) : ClientLoanAccountsEvent
     data class MakeRepayment(val id: Int) : ClientLoanAccountsEvent
     data class ViewAccount(val id: Int) : ClientLoanAccountsEvent
 }

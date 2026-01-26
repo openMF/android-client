@@ -33,7 +33,7 @@ class ShareAccountsViewModel(
             ShareAccountsAction.ToggleSearchBar -> toggleSearchBar()
             is ShareAccountsAction.ViewAccount -> sendEvent(ShareAccountsEvent.ViewAccount(action.accountId))
             ShareAccountsAction.Refresh -> fetchAllShareAccounts()
-            ShareAccountsAction.AddAccount -> sendEvent(ShareAccountsEvent.AddAccount)
+            is ShareAccountsAction.AddAccount -> sendEvent(ShareAccountsEvent.AddAccount(route.clientId))
         }
     }
 
@@ -112,7 +112,7 @@ data class ShareAccountsUiState(
 
 sealed interface ShareAccountsEvent {
     data class ViewAccount(val accountId: Int) : ShareAccountsEvent
-    data object AddAccount : ShareAccountsEvent
+    data class AddAccount(val clientId: Int) : ShareAccountsEvent
 }
 
 sealed interface ShareAccountsAction {

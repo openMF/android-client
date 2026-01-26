@@ -52,7 +52,7 @@ import template.core.base.designsystem.theme.KptTheme
 internal fun ShareAccountsScreen(
     navController: NavController,
     viewAccount: (Int) -> Unit,
-    createAccount: () -> Unit,
+    createAccount: (Int) -> Unit,
     viewModel: ShareAccountsViewModel = koinViewModel(),
 ) {
     val state by viewModel.stateFlow.collectAsStateWithLifecycle()
@@ -60,7 +60,7 @@ internal fun ShareAccountsScreen(
     EventsEffect(viewModel.eventFlow) { event ->
         when (event) {
             is ShareAccountsEvent.ViewAccount -> viewAccount(event.accountId)
-            ShareAccountsEvent.AddAccount -> createAccount()
+            is ShareAccountsEvent.AddAccount -> createAccount(event.clientId)
         }
     }
 

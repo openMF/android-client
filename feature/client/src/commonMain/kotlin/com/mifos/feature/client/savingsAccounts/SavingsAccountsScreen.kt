@@ -70,7 +70,7 @@ internal fun SavingsAccountsScreen(
     viewModel: SavingsAccountsViewModel = koinViewModel(),
     navigateToViewAccount: (Int, SavingAccountDepositTypeEntity) -> Unit,
     navigateToApproveAccount: (Int) -> Unit,
-    createAccount: () -> Unit,
+    createAccount: (Int) -> Unit,
 ) {
     val state by viewModel.stateFlow.collectAsStateWithLifecycle()
 
@@ -81,7 +81,7 @@ internal fun SavingsAccountsScreen(
                 event.accountId,
                 event.accountType,
             )
-            SavingsAccountEvent.AddAccount -> createAccount()
+            is SavingsAccountEvent.AddAccount -> createAccount(event.clientId)
             is SavingsAccountEvent.ApproveAccount -> navigateToApproveAccount(event.accountId)
         }
     }

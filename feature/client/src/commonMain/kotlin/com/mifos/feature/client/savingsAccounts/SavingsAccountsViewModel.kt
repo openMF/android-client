@@ -74,7 +74,7 @@ internal class SavingsAccountsViewModel(
             }
 
             SavingsAccountAction.AddAccount -> {
-                sendEvent(SavingsAccountEvent.AddAccount)
+                sendEvent(SavingsAccountEvent.AddAccount(route.clientId))
             }
         }
     }
@@ -138,7 +138,7 @@ sealed interface SavingsAccountEvent {
     data class ApproveAccount(val accountId: Int) : SavingsAccountEvent
     data class ViewAccount(val accountId: Int, val accountType: SavingAccountDepositTypeEntity) :
         SavingsAccountEvent
-    data object AddAccount : SavingsAccountEvent
+    data class AddAccount(val clientId: Int) : SavingsAccountEvent
 }
 
 sealed interface SavingsAccountAction {
