@@ -22,7 +22,7 @@ class AndroidApplicationConventionPlugin : Plugin<Project> {
                 apply("mifos.ktlint.plugin")
                 apply("mifos.git.hooks")
                 apply("org.convention.android.application.lint")
-//                apply("org.convention.android.application.firebase")
+                apply("org.convention.android.application.firebase")
             }
 
             extensions.configure<ApplicationExtension> {
