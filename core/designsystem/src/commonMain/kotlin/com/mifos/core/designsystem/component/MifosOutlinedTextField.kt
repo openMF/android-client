@@ -208,7 +208,7 @@ fun MifosOutlinedTextField(
         prefix = prefix,
         suffix = suffix,
         supportingText = {
-            if (errorText != null) {
+            if (errorText != null && isError) {
                 Text(
                     modifier = Modifier.testTag(errorTextTag),
                     text = errorText,
