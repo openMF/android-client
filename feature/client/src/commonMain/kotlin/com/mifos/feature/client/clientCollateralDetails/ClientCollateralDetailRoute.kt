@@ -23,7 +23,10 @@ fun NavGraphBuilder.clientCollateralDetailDestination(
     navController: NavController,
 ) {
     composable<ClientCollateralDetailRoute> {
-        ClientCollateralDetailScreen(navController)
+        ClientCollateralDetailScreen(
+            navController = navController,
+            onNavigateBack = { navController.navigateUp() },
+        )
     }
 }
 

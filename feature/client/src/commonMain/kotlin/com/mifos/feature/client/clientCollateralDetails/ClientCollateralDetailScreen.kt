@@ -42,6 +42,7 @@ import org.koin.compose.viewmodel.koinViewModel
 @Composable
 internal fun ClientCollateralDetailScreen(
     navController: NavController,
+    onNavigateBack: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: ClientCollateralDetailViewmodel = koinViewModel(),
 ) {
@@ -49,6 +50,7 @@ internal fun ClientCollateralDetailScreen(
     ClientCollateralDetailScreenContent(
         state = state,
         navController = navController,
+        onNavigateBack = onNavigateBack,
         onAction = remember(viewModel) { { viewModel.trySendAction(it) } },
         modifier = modifier,
     )
@@ -58,12 +60,13 @@ internal fun ClientCollateralDetailScreen(
 internal fun ClientCollateralDetailScreenContent(
     state: ClientCollateralDetailsState,
     navController: NavController,
+    onNavigateBack: () -> Unit,
     modifier: Modifier = Modifier,
     onAction: (ClientCollateralDetailsAction) -> Unit,
 ) {
     MifosScaffold(
         title = "",
-        onBackPressed = { },
+        onBackPressed = onNavigateBack,
         modifier = modifier,
     ) { paddingValues ->
 
