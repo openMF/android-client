@@ -46,6 +46,14 @@ internal class ClientProfileViewModel(
 
     init {
         getClientAndObserveNetwork()
+        observeGlobalUpdates()
+    }
+    private fun observeGlobalUpdates() {
+        viewModelScope.launch {
+            clientDetailsRepo.clientUpdateEvents.collect {
+                loadClientDetailsAndImage(route.id)
+            }
+        }
     }
 
     private fun getClientAndObserveNetwork() {
@@ -133,6 +141,10 @@ internal class ClientProfileViewModel(
             ClientProfileAction.NavigateToClientDetailsScreen -> sendEvent(
                 ClientProfileEvent.NavigateToClientDetailsScreen,
             )
+
+            is ClientProfileAction.OnGroupClick -> sendEvent(
+                ClientProfileEvent.NavigateToGroupDetails(action.groupId),
+            )
         }
     }
 }
@@ -168,6 +180,8 @@ sealed interface ClientProfileEvent {
     data class OnActionClick(val action: ClientProfileActionItem) : ClientProfileEvent
 
     data object NavigateToClientDetailsScreen : ClientProfileEvent
+
+    data class NavigateToGroupDetails(val groupId: Int) : ClientProfileEvent
 }
 
 /**
@@ -184,4 +198,6 @@ sealed interface ClientProfileAction {
     data object OnRetry : ClientProfileAction
 
     data object NavigateToClientDetailsScreen : ClientProfileAction
+
+    data class OnGroupClick(val groupId: Int) : ClientProfileAction
 }

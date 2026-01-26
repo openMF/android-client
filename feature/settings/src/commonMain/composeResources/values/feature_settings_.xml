@@ -10,6 +10,13 @@
 -->
 <resources>
     <string name="feature_settings_title">Update Server Configuration</string>
+    <string name="feature_settings_restart_now">Restart Now</string>
+    <string name="feature_settings_local">Local</string>
+    <string name="feature_settings_development">Development</string>
+    <string name="feature_settings_demo">Demo</string>
+    <string name="feature_settings_or">OR</string>
+    <string name="feature_settings_environment">Environment</string>
+    <string name="feature_settings_quick_setup">Quick Setup</string>
 
     <string name="feature_settings_label_protocol">Protocol</string>
     <string name="feature_settings_protocol_placeholder">Enter server protocol.</string>
@@ -25,4 +32,7 @@
 
     <string name="feature_settings_label_tenant">Tenant ID</string>
     <string name="feature_settings_tenant_placeholder">Enter server tenant</string>
+
+    <string name="feature_settings_configuration_saved">Configuration Saved</string>
+    <string name="feature_settings_restart_application">Restarting application to apply changes.</string>
 </resources>

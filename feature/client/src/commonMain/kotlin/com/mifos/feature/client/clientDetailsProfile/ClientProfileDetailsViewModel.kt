@@ -62,6 +62,15 @@ internal class ClientProfileDetailsViewModel(
 
     init {
         getClientAndObserveNetwork()
+        observeClientUpdates()
+    }
+
+    private fun observeClientUpdates() {
+        viewModelScope.launch {
+            clientDetailsRepo.clientUpdateEvents.collect {
+                loadClientDetailsAndImage(route.id)
+            }
+        }
     }
 
     private fun getClientAndObserveNetwork() {
@@ -138,7 +147,11 @@ internal class ClientProfileDetailsViewModel(
         if (client == null) return emptyList()
 
         val personalInfo = mapOf(
-            Res.string.gender to getString(Res.string.string_not_available),
+            Res.string.gender to (
+                client.gender?.name?.takeIf { it.isNotBlank() }
+                    ?: getString(Res.string.string_not_available)
+                ),
+
             Res.string.date_of_birth to
                 (
                     client.dateOfBirth.toDateString().takeIf { it.isNotBlank() }
@@ -166,8 +179,14 @@ internal class ClientProfileDetailsViewModel(
                 client.legalForm?.value?.takeIf { it.isNotBlank() }
                     ?: getString(Res.string.string_not_available)
                 ),
-            Res.string.client_type to getString(Res.string.string_not_available),
-            Res.string.client_classification to getString(Res.string.string_not_available),
+            Res.string.client_type to (
+                client.clientType?.name?.takeIf { it.isNotBlank() }
+                    ?: getString(Res.string.string_not_available)
+                ),
+            Res.string.client_classification to (
+                client.clientClassification?.name?.takeIf { it.isNotBlank() }
+                    ?: getString(Res.string.string_not_available)
+                ),
             Res.string.submission_date to (
                 client.timeline?.submittedOnDate?.toDateString()?.takeIf { it.isNotBlank() }
                     ?: getString(Res.string.string_not_available)

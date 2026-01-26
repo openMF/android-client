@@ -44,7 +44,6 @@ data class RecurringDepositAccountTemplate(
     val adjustAdvanceTowardsFuturePayments: Boolean? = null,
     val allowWithdrawal: Boolean? = null,
     @IgnoredOnParcel val chargeOptions: List<ChargeOption>? = null,
-//    val charges: List<Any?>? = null,
     val clientId: Int? = null,
     val clientName: String? = null,
     @IgnoredOnParcel val currency: Currency? = null,

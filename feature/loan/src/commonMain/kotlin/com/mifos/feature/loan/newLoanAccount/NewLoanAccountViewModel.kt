@@ -12,6 +12,7 @@ package com.mifos.feature.loan.newLoanAccount
 import androidclient.feature.loan.generated.resources.Res
 import androidclient.feature.loan.generated.resources.account_number
 import androidclient.feature.loan.generated.resources.disbursement_date
+import androidclient.feature.loan.generated.resources.feature_error_network_not_available
 import androidclient.feature.loan.generated.resources.feature_loan_account_created_successfully
 import androidclient.feature.loan.generated.resources.installment_paid
 import androidclient.feature.loan.generated.resources.principle_paid_off
@@ -35,6 +36,7 @@ import com.mifos.core.ui.util.BaseViewModel
 import com.mifos.feature.loan.newLoanAccount.NewLoanAccountState.DialogState
 import com.mifos.room.entities.accounts.loans.LoanWithAssociationsEntity
 import com.mifos.room.entities.templates.loans.LoanTemplate
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.StringResource
@@ -51,15 +53,35 @@ internal class NewLoanAccountViewModel(
     private val networkMonitor: NetworkMonitor,
     private val loanUseCase: CreateLoanAccountUseCase,
     val savedStateHandle: SavedStateHandle,
-) :
-    BaseViewModel<NewLoanAccountState, NewLoanAccountEvent, NewLoanAccountAction>(
-        initialState = run {
-            NewLoanAccountState(clientId = savedStateHandle.toRoute<NewLoanAccountRoute>().clientId)
-        },
-    ) {
+) : BaseViewModel<NewLoanAccountState, NewLoanAccountEvent, NewLoanAccountAction>(
+    initialState = run {
+        NewLoanAccountState(clientId = savedStateHandle.toRoute<NewLoanAccountRoute>().clientId)
+    },
+) {
 
     init {
-        observeNetwork()
+        viewModelScope.launch {
+            loadAllLoans()
+            loadCollaterals()
+        }
+    }
+
+    suspend fun isOnline(
+        content: suspend () -> Unit,
+    ) {
+        if (networkMonitor.isOnline.first()) {
+            content()
+        } else {
+            mutableStateFlow.update {
+                it.copy(
+                    screenState = NewLoanAccountState.ScreenState.Error(
+                        getString(
+                            Res.string.feature_error_network_not_available,
+                        ),
+                    ),
+                )
+            }
+        }
     }
 
     override fun handleAction(action: NewLoanAccountAction) {
@@ -374,9 +396,8 @@ internal class NewLoanAccountViewModel(
 
     private fun handleEditChargeDialog(index: Int) {
         val selectedEditCharge = state.addedCharges[index]
-        val chooseChargeIndex = state.loanTemplate
-            ?.chargeOptions
-            ?.indexOfFirst { it.id == selectedEditCharge.id } ?: -1
+        val chooseChargeIndex =
+            state.loanTemplate?.chargeOptions?.indexOfFirst { it.id == selectedEditCharge.id } ?: -1
 
         mutableStateFlow.update {
             it.copy(
@@ -660,13 +681,10 @@ internal class NewLoanAccountViewModel(
     }
 
     private fun handleRetry() {
-        mutableStateFlow.update {
-            it.copy(
-                dialogState = null,
-                loanTemplate = null,
-            )
+        viewModelScope.launch {
+            loadAllLoans()
+            loadCollaterals()
         }
-        observeNetwork()
     }
 
     private fun handleNavigateBack() {
@@ -772,60 +790,44 @@ internal class NewLoanAccountViewModel(
         }
     }
 
-    private fun observeNetwork() {
-        viewModelScope.launch {
-            networkMonitor.isOnline.collect { isConnected ->
-                mutableStateFlow.update {
-                    it.copy(networkConnection = isConnected)
-                }
-                if (isConnected) {
-                    loadAllLoans()
-                    loadCollaterals()
-                } else {
+    private suspend fun loadCollaterals() {
+        isOnline {
+            val result = repo.getCollateralItems()
+            when (result) {
+                is DataState.Error -> {}
+                is DataState.Success -> {
                     mutableStateFlow.update {
                         it.copy(
-                            screenState = NewLoanAccountState.ScreenState.Error("Network Error"),
+                            collaterals = result.data,
                         )
                     }
                 }
+
+                else -> Unit
             }
         }
     }
 
-    private suspend fun loadCollaterals() {
-        val result = repo.getCollateralItems()
-        when (result) {
-            is DataState.Error -> {}
-            is DataState.Success -> {
-                mutableStateFlow.update {
-                    it.copy(
-                        collaterals = result.data,
-                    )
-                }
-            }
+    private suspend fun loadAllLoans() {
+        isOnline {
+            getAllLoanUseCase().collect { result ->
+                when (result) {
+                    is DataState.Error -> mutableStateFlow.update {
+                        it.copy(
+                            screenState = NewLoanAccountState.ScreenState.Error(result.message),
+                        )
+                    }
 
-            else -> Unit
-        }
-    }
+                    is DataState.Loading -> mutableStateFlow.update {
+                        it.copy(screenState = NewLoanAccountState.ScreenState.Loading)
+                    }
 
-    private fun loadAllLoans() = viewModelScope.launch {
-        getAllLoanUseCase().collect { result ->
-            when (result) {
-                is DataState.Error -> mutableStateFlow.update {
-                    it.copy(
-                        screenState = NewLoanAccountState.ScreenState.Error(result.message),
-                    )
-                }
-
-                is DataState.Loading -> mutableStateFlow.update {
-                    it.copy(screenState = NewLoanAccountState.ScreenState.Loading)
-                }
-
-                is DataState.Success -> mutableStateFlow.update {
-                    it.copy(
-                        screenState = NewLoanAccountState.ScreenState.Success,
-                        productLoans = result.data,
-                    )
+                    is DataState.Success -> mutableStateFlow.update {
+                        it.copy(
+                            screenState = NewLoanAccountState.ScreenState.Success,
+                            productLoans = result.data,
+                        )
+                    }
                 }
             }
         }
@@ -835,45 +837,50 @@ internal class NewLoanAccountViewModel(
         mutableStateFlow.update {
             it.copy(productId = productId)
         }
-        getLoansAccountTemplateUseCase(state.clientId, productId).collect { result ->
-            when (result) {
-                is DataState.Error -> mutableStateFlow.update {
-                    it.copy(
-                        screenState = NewLoanAccountState.ScreenState.Error(result.message),
-                        isOverLayLoadingActive = false,
-                    )
-                }
+        isOnline {
+            getLoansAccountTemplateUseCase(state.clientId, productId).collect { result ->
+                when (result) {
+                    is DataState.Error -> mutableStateFlow.update {
+                        it.copy(
+                            screenState = NewLoanAccountState.ScreenState.Error(result.message),
+                            isOverLayLoadingActive = false,
+                        )
+                    }
 
-                is DataState.Loading -> mutableStateFlow.update {
-                    it.copy(
-                        isOverLayLoadingActive = true,
-                    )
-                }
+                    is DataState.Loading -> mutableStateFlow.update {
+                        it.copy(
+                            isOverLayLoadingActive = true,
+                        )
+                    }
 
-                is DataState.Success -> mutableStateFlow.update {
-                    it.copy(
-                        screenState = NewLoanAccountState.ScreenState.Success,
-                        isOverLayLoadingActive = false,
-                        loanTemplate = result.data,
-                        principalAmount = (result.data.principal ?: 0).toString(),
-                        noOfRepayments = result.data.numberOfRepayments ?: 0,
-                        repaidEvery = result.data.repaymentEvery ?: 0,
-                        nominalInterestRate = (result.data.interestRatePerPeriod ?: 0).toString(),
-                        nominalAmortizationIndex = result.data.amortizationTypeOptions.indexOfFirst { item -> item.value == result.data.amortizationType?.value },
-                        termFrequencyIndex = result.data.termFrequencyTypeOptions.indexOfFirst { item -> item.value == result.data.termPeriodFrequencyType?.value },
-                        nominalFrequencyIndex = result.data.interestRateFrequencyTypeOptions.indexOfFirst { item -> item.value == result.data.interestRateFrequencyType?.value },
-                        nominalInterestMethodIndex = result.data.interestTypeOptions.indexOfFirst { item -> item.value == result.data.interestType?.value },
-                        repaymentStrategyIndex = result.data.transactionProcessingStrategyOptions.indexOfFirst { item -> item.code == result.data.transactionProcessingStrategyCode },
-                        interestCalculationPeriodIndex = result.data.interestCalculationPeriodTypeOptions.indexOfFirst { item -> item.value == result.data.interestCalculationPeriodType?.value },
-                    )
+                    is DataState.Success -> mutableStateFlow.update {
+                        it.copy(
+                            screenState = NewLoanAccountState.ScreenState.Success,
+                            isOverLayLoadingActive = false,
+                            loanTemplate = result.data,
+                            principalAmount = (result.data.principal ?: 0).toString(),
+                            noOfRepayments = result.data.numberOfRepayments ?: 0,
+                            repaidEvery = result.data.repaymentEvery ?: 0,
+                            nominalInterestRate = (
+                                result.data.interestRatePerPeriod
+                                    ?: 0
+                                ).toString(),
+                            nominalAmortizationIndex = result.data.amortizationTypeOptions.indexOfFirst { item -> item.value == result.data.amortizationType?.value },
+                            termFrequencyIndex = result.data.termFrequencyTypeOptions.indexOfFirst { item -> item.value == result.data.termPeriodFrequencyType?.value },
+                            nominalFrequencyIndex = result.data.interestRateFrequencyTypeOptions.indexOfFirst { item -> item.value == result.data.interestRateFrequencyType?.value },
+                            nominalInterestMethodIndex = result.data.interestTypeOptions.indexOfFirst { item -> item.value == result.data.interestType?.value },
+                            repaymentStrategyIndex = result.data.transactionProcessingStrategyOptions.indexOfFirst { item -> item.code == result.data.transactionProcessingStrategyCode },
+                            interestCalculationPeriodIndex = result.data.interestCalculationPeriodTypeOptions.indexOfFirst { item -> item.value == result.data.interestCalculationPeriodType?.value },
+                        )
+                    }
                 }
             }
         }
     }
 
     private suspend fun repaymentScheduler() {
-        getLoanWithAssociations.syncLoanById(state.clientId)
-            .collect { dataState ->
+        isOnline {
+            getLoanWithAssociations.syncLoanById(state.clientId).collect { dataState ->
                 when (dataState) {
                     is DataState.Error -> {
                         mutableStateFlow.update {
@@ -907,16 +914,12 @@ internal class NewLoanAccountViewModel(
                                 maximumFractionDigits = dataState.data.currency.decimalPlaces ?: 0,
                             ),
                             Res.string.installment_paid to (
-                                dataState.data.repaymentSchedule.periods
-                                    ?.count { it.complete == true }
-                                    ?.toString()
-                                    ?: "N/A"
+                                dataState.data.repaymentSchedule.periods?.count { it.complete == true }
+                                    ?.toString() ?: "N/A"
                                 ),
                             Res.string.installment_paid to (
-                                dataState.data.repaymentSchedule.periods
-                                    ?.count { it.complete == false }
-                                    ?.toString()
-                                    ?: "N/A"
+                                dataState.data.repaymentSchedule.periods?.count { it.complete == false }
+                                    ?.toString() ?: "N/A"
                                 ),
                             Res.string.total_installments to dataState.data.termFrequency.toString(),
                         )
@@ -932,6 +935,7 @@ internal class NewLoanAccountViewModel(
                     }
                 }
             }
+        }
     }
 }
 
@@ -939,7 +943,6 @@ data class NewLoanAccountState
 @OptIn(ExperimentalTime::class)
 constructor(
     val launchEffectKey: Int? = null,
-    val networkConnection: Boolean = false,
     val clientId: Int,
     val productId: Int? = null,
     val productLoans: List<LoanProducts> = emptyList(),
@@ -1068,8 +1071,7 @@ sealed interface NewLoanAccountAction {
     data class OnRepaidEveryChange(val number: Int) : NewLoanAccountAction
     data class OnSelectedOnIndexChange(val index: Int) : NewLoanAccountAction
     data class OnSelectedDayIndexChange(val index: Int) : NewLoanAccountAction
-    data class OnNominalInterestRateChange(val rate: String) :
-        NewLoanAccountAction
+    data class OnNominalInterestRateChange(val rate: String) : NewLoanAccountAction
 
     data class OnNominalFrequencyIndexChange(val index: Int) : NewLoanAccountAction
     data class OnNominalMethodIndexChange(val index: Int) : NewLoanAccountAction

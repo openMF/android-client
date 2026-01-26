@@ -13,7 +13,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class RecurringDepositAccountPayload(
-    //    val charges: List<Any>? = null,
+    val charges: List<ChargeItem>? = null,
     val adjustAdvanceTowardsFuturePayments: Boolean? = null,
     val allowWithdrawal: Boolean? = null,
     val clientId: Int? = null,
@@ -32,10 +32,19 @@ data class RecurringDepositAccountPayload(
     val locale: String? = null,
     val lockinPeriodFrequency: Int? = null,
     val lockinPeriodFrequencyType: Int? = null,
-    val mandatoryRecommendedDepositAmount: Int? = null,
+    val mandatoryRecommendedDepositAmount: Double? = null,
     val monthDayFormat: String? = null,
     val productId: Int? = null,
     val recurringFrequency: Int? = null,
     val recurringFrequencyType: Int? = null,
     val submittedOnDate: String? = null,
+    val preClosurePenalApplicable: Boolean? = null,
+    val preClosurePenalInterest: Double? = null,
+    val preClosurePenalInterestOnTypeId: Int? = null,
+)
+
+@Serializable
+data class ChargeItem(
+    val chargeId: Int? = null,
+    val amount: Double? = null,
 )

@@ -12,7 +12,7 @@ package com.mifos.feature.client.clientProfile
 import androidclient.feature.client.generated.resources.Res
 import androidclient.feature.client.generated.resources.client_profile_actions
 import androidclient.feature.client.generated.resources.client_profile_profile
-import androidclient.feature.client.generated.resources.client_profile_title
+import androidclient.feature.client.generated.resources.group_na
 import androidclient.feature.client.generated.resources.name_na
 import androidclient.feature.client.generated.resources.office_na
 import androidclient.feature.client.generated.resources.string_not_available
@@ -56,9 +56,11 @@ internal fun ClientProfileScreen(
     identifiers: (Int) -> Unit,
     onNavigateBack: () -> Unit,
     navigateToClientDetailsScreen: (Int) -> Unit,
+    navigateToGroupDetails: (Int) -> Unit,
     viewAddress: (Int) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: ClientProfileViewModel = koinViewModel(),
+    pinpointLocation: (Int) -> Unit,
 ) {
     val state by viewModel.stateFlow.collectAsStateWithLifecycle()
 
@@ -90,11 +92,19 @@ internal fun ClientProfileScreen(
                     ClientProfileActionItem.General -> viewAssociatedAccounts(
                         state.client?.id ?: -1,
                     )
+
+                    ClientProfileActionItem.PinpointLocation -> {
+                        pinpointLocation(state.client?.id ?: -1)
+                    }
                 }
             }
 
             ClientProfileEvent.NavigateToClientDetailsScreen -> {
                 navigateToClientDetailsScreen(state.client?.id ?: -1)
+            }
+
+            is ClientProfileEvent.NavigateToGroupDetails -> {
+                navigateToGroupDetails(event.groupId)
             }
         }
     }
@@ -124,8 +134,6 @@ private fun ClientProfileScaffold(
     onAction: (ClientProfileAction) -> Unit,
 ) {
     MifosScaffold(
-        title = stringResource(Res.string.client_profile_title),
-        onBackPressed = { onAction(ClientProfileAction.NavigateBack) },
         modifier = modifier,
     ) { paddingValues ->
         if (state.dialogState == null) {
@@ -154,6 +162,12 @@ private fun ClientProfileScaffold(
                         accountNo = state.client?.accountNo
                             ?: stringResource(Res.string.string_not_available),
                         office = state.client?.officeName ?: stringResource(Res.string.office_na),
+                        groupName = state.client?.groupName ?: stringResource(Res.string.group_na),
+                        onGroupClick = {
+                            state.client?.groupId?.let { groupId ->
+                                onAction(ClientProfileAction.OnGroupClick(groupId))
+                            }
+                        },
                         onClick = {
                             onAction(
                                 ClientProfileAction.NavigateToClientDetailsScreen,

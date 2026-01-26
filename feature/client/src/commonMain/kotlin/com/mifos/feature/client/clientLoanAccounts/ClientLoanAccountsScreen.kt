@@ -73,14 +73,14 @@ internal fun ClientLoanAccountsScreenRoute(
         }
     }
 
-    ClientLoanAccountsDialog(
-        state = state,
-        onAction = remember(viewModel) { { viewModel.trySendAction(it) } },
-    )
-
     ClientLoanAccountsScreen(
         state = state,
         navController = navController,
+        onAction = remember(viewModel) { { viewModel.trySendAction(it) } },
+    )
+
+    ClientLoanAccountsDialog(
+        state = state,
         onAction = remember(viewModel) { { viewModel.trySendAction(it) } },
     )
 }
@@ -179,7 +179,9 @@ private fun ClientLoanAccountsScreen(
                                         },
                                         onActionClicked = { actions ->
                                             when (actions) {
-                                                is Actions.ViewAccount -> onAction(ClientLoanAccountsAction.ViewAccount)
+                                                is Actions.ViewAccount -> onAction(
+                                                    ClientLoanAccountsAction.ViewAccount(loan.id ?: 0),
+                                                )
                                                 is Actions.MakeRepayment -> onAction(
                                                     ClientLoanAccountsAction.MakeRepayment,
                                                 )

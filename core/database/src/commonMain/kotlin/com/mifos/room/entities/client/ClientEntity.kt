@@ -58,6 +58,8 @@ data class ClientEntity(
 
     val groupId: Int? = 0,
 
+    val groupName: String? = null,
+
     val accountNo: String? = null,
 
     val clientId: Int? = null,
@@ -98,6 +100,8 @@ data class ClientEntity(
 
     val fullname: String? = null,
 
+    val savingsAccountId: Long? = null,
+
     val imageId: Int = 0,
 
     val imagePresent: Boolean = false,
@@ -107,4 +111,10 @@ data class ClientEntity(
     val emailAddress: String? = null,
 
     val legalForm: ClientStatusEntity? = null,
+
+    val gender: ClientGenderEntity? = null,
+
+    val clientType: ClientTypeEntity? = null,
+
+    val clientClassification: ClientClassificationEntity? = null,
 ) : Parcelable

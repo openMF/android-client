@@ -69,7 +69,7 @@ class ClientLoanAccountsViewModel(
 
             is ClientLoanAccountsAction.ViewAccount -> sendEvent(
                 ClientLoanAccountsEvent.ViewAccount(
-                    state.clientId,
+                    action.loanId,
                 ),
             )
 
@@ -158,7 +158,7 @@ sealed interface ClientLoanAccountsAction {
     data object ToggleFilter : ClientLoanAccountsAction
     data object Refresh : ClientLoanAccountsAction
     data object MakeRepayment : ClientLoanAccountsAction
-    data object ViewAccount : ClientLoanAccountsAction
+    data class ViewAccount(val loanId: Int) : ClientLoanAccountsAction
     data class UpdateSearchValue(val query: String) : ClientLoanAccountsAction
     data object OnSearchClick : ClientLoanAccountsAction
     data object CloseDialog : ClientLoanAccountsAction

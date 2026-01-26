@@ -20,11 +20,16 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FabPosition
 import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.ScaffoldDefaults
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.pulltorefresh.PullToRefreshDefaults
 import androidx.compose.material3.pulltorefresh.pullToRefresh
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
@@ -33,6 +38,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.style.TextOverflow
+import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.designsystem.theme.AppColors
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -49,7 +56,15 @@ fun MifosScaffold(
     content: @Composable (PaddingValues) -> Unit = {},
 ) {
     Scaffold(
-        topBar = {},
+        topBar = {
+            if (title != null) {
+                MifosDetailTopBar(
+                    title = title,
+                    onBackPressed = onBackPressed,
+                    actions = actions,
+                )
+            }
+        },
         bottomBar = {},
         floatingActionButton = {
             floatingActionButtonContent?.let { content ->
@@ -143,6 +158,40 @@ fun MifosScaffold(
                 )
             }
         },
+    )
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun MifosDetailTopBar(
+    title: String,
+    onBackPressed: (() -> Unit)?,
+    actions: @Composable RowScope.() -> Unit,
+) {
+    TopAppBar(
+        title = {
+            Text(
+                text = title,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+                style = MaterialTheme.typography.titleMedium,
+            )
+        },
+        navigationIcon = {
+            IconButton(onClick = { onBackPressed?.invoke() }) {
+                Icon(
+                    imageVector = MifosIcons.ArrowBack,
+                    contentDescription = "Navigate back",
+                )
+            }
+        },
+        actions = actions,
+        colors = TopAppBarDefaults.topAppBarColors(
+            containerColor = AppColors.customWhite,
+            titleContentColor = MaterialTheme.colorScheme.onSurface,
+            navigationIconContentColor = MaterialTheme.colorScheme.onSurface,
+            actionIconContentColor = MaterialTheme.colorScheme.onSurface,
+        ),
     )
 }
 

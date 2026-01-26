@@ -45,6 +45,10 @@ data class GetClientsPageItemsResponse(
 
     val officeName: String? = null,
 
+    val groupId: Int? = null,
+
+    val groupName: String? = null,
+
     val status: GetClientStatus? = null,
 
     val externalId: String? = null,
@@ -58,4 +62,11 @@ data class GetClientsPageItemsResponse(
     val savingAccountOptions: List<SavingAccountOption> = emptyList(),
 
     val shareAccounts: List<ShareAccounts> = emptyList(),
+
+    val gender: GetGenderOptions? = null,
+
+    val clientType: GetClientTypeOptions? = null,
+
+    val clientClassification: GetClientClassificationOptions? = null,
+
 )
