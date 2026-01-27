@@ -18,8 +18,11 @@ import com.mifos.core.data.util.NetworkMonitor
 import com.mifos.core.network.model.CollateralItem
 import com.mifos.core.ui.components.ResultStatus
 import com.mifos.core.ui.util.BaseViewModel
+import com.mifos.core.ui.util.TextFieldsValidator
+import com.mifos.feature.client.clientCollateral.ClientCollateralState.DialogState.ShowStatusDialog
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import org.jetbrains.compose.resources.StringResource
 
 internal class ClientCollateralViewModel(
     savedStateHandle: SavedStateHandle,
@@ -44,8 +47,7 @@ internal class ClientCollateralViewModel(
 
     private suspend fun loadCollaterals() {
         mutableStateFlow.update { it.copy(dialogState = ClientCollateralState.DialogState.Loading) }
-        val result = repo.getCollateralItems()
-        when (result) {
+        when (val result = repo.getCollateralItems()) {
             is DataState.Error -> {
                 mutableStateFlow.update {
                     it.copy(
@@ -68,29 +70,34 @@ internal class ClientCollateralViewModel(
     }
 
     private suspend fun saveCollateral() {
-        mutableStateFlow.update { it.copy(dialogState = ClientCollateralState.DialogState.Loading) }
+        mutableStateFlow.update {
+            it.copy(
+                isOverlayLoading = true,
+            )
+        }
         val collateralId = state.collaterals[state.currentSelectedIndex].id
         val result = repo.createCollateral(
             state.id,
             collateralId = collateralId,
-            quantity = state.quantity.toString(),
+            quantity = state.quantity,
         )
         when (result) {
             is DataState.Success -> {
                 mutableStateFlow.update {
                     it.copy(
-                        dialogState = ClientCollateralState
-                            .DialogState.ShowStatusDialog(ResultStatus.SUCCESS),
+                        dialogState = ShowStatusDialog(ResultStatus.SUCCESS),
+                        isOverlayLoading = false,
                     )
                 }
             }
             is DataState.Error -> {
                 mutableStateFlow.update {
                     it.copy(
-                        dialogState = ClientCollateralState.DialogState.ShowStatusDialog(
+                        dialogState = ShowStatusDialog(
                             ResultStatus.FAILURE,
                             result.message,
                         ),
+                        isOverlayLoading = false,
                     )
                 }
             }
@@ -115,20 +122,30 @@ internal class ClientCollateralViewModel(
                 mutableStateFlow.update { it.copy(currentSelectedIndex = action.index) }
             }
             ClientCollateralAction.OnSave -> {
-                viewModelScope.launch { saveCollateral() }
+                val quantityError = TextFieldsValidator.numberValidator(state.quantity)
+                if (quantityError != null) {
+                    mutableStateFlow.update {
+                        it.copy(
+                            quantityError = quantityError,
+                        )
+                    }
+                } else {
+                    viewModelScope.launch { saveCollateral() }
+                }
             }
 
             is ClientCollateralAction.OnQuantityChange -> {
                 mutableStateFlow.update { state ->
                     val currentCollateral = state.collaterals[state.currentSelectedIndex]
 
-                    val total = currentCollateral.basePrice * action.quantity
+                    val total = currentCollateral.basePrice * action.quantity.toInt()
                     val totalCollateral = (total * currentCollateral.pctToBase) / 100
 
                     state.copy(
                         quantity = action.quantity,
-                        total = if (action.quantity == -1)0.0 else total,
-                        totalCollateral = if (action.quantity == -1)0.0 else totalCollateral,
+                        quantityError = null,
+                        total = if (action.quantity.isEmpty())0.0 else total,
+                        totalCollateral = if (action.quantity.isEmpty())0.0 else totalCollateral,
                     )
                 }
             }
@@ -139,19 +156,20 @@ internal class ClientCollateralViewModel(
 data class ClientCollateralState(
     val id: Int = -1,
     val collaterals: List<CollateralItem> = emptyList(),
-    val quantity: Int = -1,
+    val quantity: String = "",
+    val quantityError: StringResource? = null,
     val total: Double = 0.0,
     val totalCollateral: Double = 0.0,
     val currentSelectedIndex: Int = 0,
     val dialogState: DialogState? = null,
     val networkConnection: Boolean = false,
+    val isOverlayLoading: Boolean = false,
 ) {
     sealed interface DialogState {
         data class Error(val message: String) : DialogState
         data object Loading : DialogState
         data class ShowStatusDialog(val status: ResultStatus, val msg: String = "") : DialogState
     }
-    val isEnabled = quantity != -1
 }
 
 sealed interface ClientCollateralEvent {
@@ -165,5 +183,5 @@ sealed interface ClientCollateralAction {
     data object OnNext : ClientCollateralAction
     data class OptionChanged(val index: Int) : ClientCollateralAction
     data object OnSave : ClientCollateralAction
-    data class OnQuantityChange(val quantity: Int) : ClientCollateralAction
+    data class OnQuantityChange(val quantity: String) : ClientCollateralAction
 }
