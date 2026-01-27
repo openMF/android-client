@@ -74,7 +74,7 @@ internal fun ClientCollateralScreen(
         }
     }
 
-    ClientCollateralScaffold(
+    ClientCollateralContent(
         state = state,
         onAction = remember(viewModel) { { viewModel.trySendAction(it) } },
         modifier = modifier,
@@ -87,7 +87,7 @@ internal fun ClientCollateralScreen(
 }
 
 @Composable
-private fun ClientCollateralScaffold(
+private fun ClientCollateralContent(
     navController: NavController,
     state: ClientCollateralState,
     onAction: (ClientCollateralAction) -> Unit,
