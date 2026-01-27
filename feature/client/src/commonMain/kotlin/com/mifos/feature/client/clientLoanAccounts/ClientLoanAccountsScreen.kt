@@ -18,6 +18,7 @@ import androidclient.feature.client.generated.resources.feature_client_account_s
 import androidclient.feature.client.generated.resources.feature_client_dialog_action_ok
 import androidclient.feature.client.generated.resources.feature_client_filters
 import androidclient.feature.client.generated.resources.feature_client_loan_account
+import androidclient.feature.client.generated.resources.feature_loan_account_empty_list_message
 import androidclient.feature.client.generated.resources.feature_client_status_active
 import androidclient.feature.client.generated.resources.feature_client_status_closed
 import androidclient.feature.client.generated.resources.feature_client_status_overpaid
@@ -135,18 +136,19 @@ private fun ClientLoanAccountsScreen(
     ) {
         MifosBreadcrumbNavBar(navController)
 
-        when (state.isLoading) {
-            true -> MifosProgressIndicator()
-            false -> {
-                Column(
-                    modifier = Modifier.fillMaxSize()
-                        .padding(horizontal = KptTheme.spacing.md),
-                ) {
-                    ClientsAccountHeader(
-                        totalItem = state.loanAccounts.size.toString(),
-                        onAction = onAction,
-                        isFilterActive = state.selectedStatus.isNotEmpty(),
-                    )
+            when (state.isLoading) {
+                true -> MifosProgressIndicator()
+                false -> {
+                    Column(
+                        modifier = Modifier.fillMaxSize()
+                            .padding(horizontal = KptTheme.spacing.md),
+                    ) {
+                        ClientsAccountHeader(
+                            totalItem = state.loanAccounts.size.toString(),
+                            onAction = onAction,
+                            isLoanScreenEmpty = state.loanAccounts.isEmpty(),
+                            isFilterActive = state.selectedStatus.isNotEmpty(),
+                        )
 
                     if (state.isSearchBarActive) {
                         MifosSearchBar(
@@ -165,61 +167,64 @@ private fun ClientLoanAccountsScreen(
 
                     Spacer(modifier = Modifier.height(KptTheme.spacing.md))
 
-                    if (state.loanAccounts.isEmpty()) {
-                        MifosEmptyCard()
-                    } else {
-                        LazyColumn {
-                            items(state.loanAccounts) { loan ->
-                                val symbol = loan.currency?.displaySymbol ?: ""
-                                MifosActionsLoanListingComponent(
-                                    accountNo = (
-                                        loan.accountNo ?: stringResource(
-                                            Res.string.client_loan_accounts_not_available,
-                                        )
-                                        ),
-                                    loanProduct = loan.productName ?: stringResource(Res.string.client_loan_accounts_not_available),
-                                    originalLoan = symbol + (
-                                        (loan.originalLoan ?: stringResource(Res.string.client_loan_accounts_not_available)).toString()
-                                        ),
-                                    amountPaid = symbol + (
-                                        (
-                                            if (loan.status?.pendingApproval == true) {
-                                                stringResource(Res.string.client_loan_accounts_not_available)
-                                            } else {
-                                                (
-                                                    loan.amountPaid
-                                                        ?: 0.0
-                                                    ).toString()
-                                            }
-                                            )
-                                        ),
-                                    loanBalance = symbol + (
-                                        (
-                                            if (loan.status?.pendingApproval == true) {
-                                                stringResource(Res.string.client_loan_accounts_not_available)
-                                            } else {
-                                                (
-                                                    loan.loanBalance
-                                                        ?: 0.0
-                                                    ).toString()
-                                            }
-                                            )
-                                        ),
-                                    type = loan.loanType?.value ?: stringResource(Res.string.client_loan_accounts_not_available),
-                                    status = loan.status?.value ?: stringResource(Res.string.client_loan_accounts_not_available),
-                                    // TODO check if we need to add other options as well, such as disburse and all
-                                    // currently didn't add it cuz its not in the UI design
-                                    menuList = when {
-                                        loan.status?.active == true -> {
-                                            listOf(
-                                                Actions.ViewAccount(
-                                                    vectorResource(Res.drawable.wallet),
+                        if (state.loanAccounts.isEmpty()) {
+                            MifosEmptyCard(
+                                msg = stringResource(Res.string.feature_loan_account_empty_list_message),
+                                isButtonPresent = true,
+                                onClick = { onAction.invoke(ClientLoanAccountsAction.AddAccount) },
+                            )
+                        } else {
+                            LazyColumn {
+                                items(state.loanAccounts) { loan ->
+                                    val symbol = loan.currency?.displaySymbol ?: ""
+                                    MifosActionsLoanListingComponent(
+                                        accountNo = (
+                                                loan.accountNo ?: stringResource(
+                                                    Res.string.client_loan_accounts_not_available,
+                                                )
                                                 ),
-                                                Actions.MakeRepayment(
-                                                    vectorResource(Res.drawable.cash_bundel),
+                                        loanProduct = loan.productName ?: stringResource(Res.string.client_loan_accounts_not_available),
+                                        originalLoan = symbol + (
+                                                (loan.originalLoan ?: stringResource(Res.string.client_loan_accounts_not_available)).toString()
                                                 ),
-                                            )
-                                        }
+                                        amountPaid = symbol + (
+                                                (
+                                                        if (loan.status?.pendingApproval == true) {
+                                                            stringResource(Res.string.client_loan_accounts_not_available)
+                                                        } else {
+                                                            (
+                                                                    loan.amountPaid
+                                                                        ?: 0.0
+                                                                    ).toString()
+                                                        }
+                                                        )
+                                                ),
+                                        loanBalance = symbol + (
+                                                (
+                                                        if (loan.status?.pendingApproval == true) {
+                                                            stringResource(Res.string.client_loan_accounts_not_available)
+                                                        } else {
+                                                            (
+                                                                    loan.loanBalance
+                                                                        ?: 0.0
+                                                                    ).toString()
+                                                        }
+                                                        )
+                                                ),
+                                        type = loan.loanType?.value ?: stringResource(Res.string.client_loan_accounts_not_available),
+                                        // TODO check if we need to add other options as well, such as disburse and all
+                                        // currently didn't add it cuz its not in the UI design
+                                        menuList = when {
+                                            loan.status?.active == true -> {
+                                                listOf(
+                                                    Actions.ViewAccount(
+                                                        vectorResource(Res.drawable.wallet),
+                                                    ),
+                                                    Actions.MakeRepayment(
+                                                        vectorResource(Res.drawable.cash_bundel),
+                                                    ),
+                                                )
+                                            }
 
                                         else -> {
                                             listOf(
@@ -258,6 +263,7 @@ private fun ClientsAccountHeader(
     totalItem: String,
     isFilterActive: Boolean,
     onAction: (ClientLoanAccountsAction) -> Unit,
+    isLoanScreenEmpty: Boolean,
 ) {
     Row(
         modifier = Modifier.fillMaxWidth(),
@@ -287,13 +293,15 @@ private fun ClientsAccountHeader(
             )
         }
 
-        IconButton(
-            onClick = { onAction.invoke(ClientLoanAccountsAction.AddAccount) },
-        ) {
-            Icon(
-                painter = painterResource(Res.drawable.add_icon),
-                contentDescription = null,
-            )
+        if (!isLoanScreenEmpty) {
+            IconButton(
+                onClick = { onAction.invoke(ClientLoanAccountsAction.AddAccount) },
+            ) {
+                Icon(
+                    painter = painterResource(Res.drawable.add_icon),
+                    contentDescription = null,
+                )
+            }
         }
 
         Box(

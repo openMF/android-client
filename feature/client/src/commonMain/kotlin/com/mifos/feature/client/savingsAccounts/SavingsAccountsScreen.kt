@@ -17,8 +17,10 @@ import androidclient.feature.client.generated.resources.client_savings_not_avail
 import androidclient.feature.client.generated.resources.client_savings_pending_approval
 import androidclient.feature.client.generated.resources.client_savings_savings_accounts
 import androidclient.feature.client.generated.resources.feature_client_dialog_action_ok
+import androidclient.feature.client.generated.resources.feature_savings_account_empty_list_message
 import androidclient.feature.client.generated.resources.filter
 import androidclient.feature.client.generated.resources.search
+import androidclient.feature.client.generated.resources.update_default_account_title
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -34,7 +36,6 @@ import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -48,12 +49,14 @@ import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.mifos.core.common.utils.DateHelper
+import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.theme.AppColors
 import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.designsystem.theme.MifosTypography
 import com.mifos.core.ui.components.Actions
 import com.mifos.core.ui.components.MifosActionsSavingsListingComponent
 import com.mifos.core.ui.components.MifosBreadcrumbNavBar
+import com.mifos.core.ui.components.MifosEmptyCard
 import com.mifos.core.ui.components.MifosProgressIndicator
 import com.mifos.core.ui.components.MifosSearchBar
 import com.mifos.core.ui.util.EventsEffect
@@ -113,18 +116,19 @@ fun SavingsAccountsContent(
     ) {
         MifosBreadcrumbNavBar(navController)
 
-        when (state.isLoading) {
-            true -> MifosProgressIndicator()
-            false -> {
-                Column(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(horizontal = KptTheme.spacing.md),
-                ) {
-                    SavingsAccountsHeader(
-                        totalItem = state.savingsAccounts.size.toString(),
-                        onAction = onAction,
-                    )
+            when (state.isLoading) {
+                true -> MifosProgressIndicator()
+                false -> {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(horizontal = KptTheme.spacing.md),
+                    ) {
+                        SavingsAccountsHeader(
+                            totalItem = state.savingsAccounts.size.toString(),
+                            onAction = onAction,
+                            isSavingsScreenEmpty = state.savingsAccounts.isEmpty(),
+                        )
 
                     // todo implement search bar functionality
                     if (state.isSearchBarActive) {
@@ -144,40 +148,44 @@ fun SavingsAccountsContent(
 
                     Spacer(modifier = Modifier.height(KptTheme.spacing.md))
 
-                    if (state.savingsAccounts.isEmpty()) {
-                        EmptySavingsCard()
-                    } else {
-                        LazyColumn {
-                            itemsIndexed(state.savingsAccounts) { index, savings ->
-                                MifosActionsSavingsListingComponent(
-                                    accountNo = savings.accountNo.toString(),
-                                    savingsProduct = stringResource(Res.string.client_product_saving_account),
-                                    savingsProductName = savings.productName.toString(),
-                                    // todo modify with currency symbol when not getting null from api, currently getting null
-                                    balance = if (savings.accountBalance != null) {
-                                        "${savings.currency?.displaySymbol ?: ""} ${savings.accountBalance}"
-                                    } else {
-                                        stringResource(Res.string.client_savings_not_available)
-                                    },
-                                    menuList = if (savings.status?.submittedAndPendingApproval == true) {
-                                        listOf(
-                                            Actions.ViewAccount(),
-                                            Actions.ApproveAccount(),
-                                        )
-                                    } else {
-                                        listOf(
-                                            Actions.ViewAccount(),
-                                        )
-                                    },
-                                    onActionClicked = { actions ->
-                                        when (actions) {
-                                            is Actions.ViewAccount -> onAction.invoke(
-                                                SavingsAccountAction.ViewAccount(
-                                                    savings.id ?: 0,
-                                                    savings.depositType
-                                                        ?: SavingAccountDepositTypeEntity(),
-                                                ),
+                        if (state.savingsAccounts.isEmpty()) {
+                            MifosEmptyCard(
+                                msg = stringResource(Res.string.feature_savings_account_empty_list_message),
+                                isButtonPresent = true,
+                                onClick = { onAction.invoke(SavingsAccountAction.AddAccount) },
+                            )
+                        } else {
+                            LazyColumn {
+                                itemsIndexed(state.savingsAccounts) { index, savings ->
+                                    MifosActionsSavingsListingComponent(
+                                        accountNo = savings.accountNo.toString(),
+                                        savingsProduct = stringResource(Res.string.client_product_saving_account),
+                                        savingsProductName = savings.productName.toString(),
+                                        // todo modify with currency symbol when not getting null from api, currently getting null
+                                        balance = if (savings.accountBalance != null) {
+                                            "${savings.currency?.displaySymbol ?: ""} ${savings.accountBalance}"
+                                        } else {
+                                            stringResource(Res.string.client_savings_not_avilable)
+                                        },
+                                        menuList = if (savings.status?.submittedAndPendingApproval == true) {
+                                            listOf(
+                                                Actions.ViewAccount(),
+                                                Actions.ApproveAccount(),
                                             )
+                                        } else {
+                                            listOf(
+                                                Actions.ViewAccount(),
+                                            )
+                                        },
+                                        onActionClicked = { actions ->
+                                            when (actions) {
+                                                is Actions.ViewAccount -> onAction.invoke(
+                                                    SavingsAccountAction.ViewAccount(
+                                                        savings.id ?: 0,
+                                                        savings.depositType
+                                                            ?: SavingAccountDepositTypeEntity(),
+                                                    ),
+                                                )
 
                                             is Actions.ApproveAccount -> onAction.invoke(
                                                 SavingsAccountAction.ApproveAccount(
@@ -216,6 +224,7 @@ fun SavingsAccountsContent(
 fun SavingsAccountsHeader(
     totalItem: String,
     onAction: (SavingsAccountAction) -> Unit,
+    isSavingsScreenEmpty: Boolean,
 ) {
     Row(
         modifier = Modifier.fillMaxWidth(),
@@ -245,13 +254,15 @@ fun SavingsAccountsHeader(
             )
         }
         Spacer(modifier = Modifier.width(KptTheme.spacing.md))
-        IconButton(
-            onClick = { onAction.invoke(SavingsAccountAction.AddAccount) },
-        ) {
-            Icon(
-                painter = painterResource(Res.drawable.add_icon),
-                contentDescription = null,
-            )
+        if (!isSavingsScreenEmpty) {
+            IconButton(
+                onClick = { onAction.invoke(SavingsAccountAction.AddAccount) },
+            ) {
+                Icon(
+                    painter = painterResource(Res.drawable.add_icon),
+                    contentDescription = null,
+                )
+            }
         }
 
         DesignToken.padding
@@ -262,33 +273,6 @@ fun SavingsAccountsHeader(
             Icon(
                 painter = painterResource(Res.drawable.filter),
                 contentDescription = null,
-            )
-        }
-    }
-}
-
-@Composable
-private fun EmptySavingsCard() {
-    OutlinedCard(
-        modifier = Modifier.fillMaxWidth(),
-        border = BorderStroke(
-            width = DesignToken.strokes.thin,
-            color = AppColors.cardBorders,
-        ),
-    ) {
-        Column(
-            modifier = Modifier.padding(KptTheme.spacing.md),
-        ) {
-            Text(
-                text = "No Item Found",
-                style = MifosTypography.titleSmallEmphasized,
-            )
-
-            Spacer(modifier = Modifier.height(DesignToken.spacing.medium))
-
-            Text(
-                text = "Click Here To View Filled State. ",
-                style = MifosTypography.bodySmall,
             )
         }
     }

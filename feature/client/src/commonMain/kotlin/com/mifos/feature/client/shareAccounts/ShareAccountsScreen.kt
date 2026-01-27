@@ -13,6 +13,7 @@ import androidclient.feature.client.generated.resources.Res
 import androidclient.feature.client.generated.resources.add_icon
 import androidclient.feature.client.generated.resources.client_product_shares_account
 import androidclient.feature.client.generated.resources.client_savings_item
+import androidclient.feature.client.generated.resources.feature_share_account_empty_list_message
 import androidclient.feature.client.generated.resources.filter
 import androidclient.feature.client.generated.resources.search
 import androidclient.feature.client.generated.resources.string_not_available
@@ -94,16 +95,18 @@ internal fun ShareAccountsContent(
         when (state.isLoading) {
             true -> MifosProgressIndicator()
 
-            false -> {
-                Column(
-                    modifier = Modifier.fillMaxSize()
-                        .padding(horizontal = KptTheme.spacing.md),
-                ) {
-                    ShareAccountHeader(
-                        totalItem = state.accounts.size.toString(),
-                        onAction = onAction,
-                    )
-                    Spacer(modifier = Modifier.height(KptTheme.spacing.md))
+                false -> {
+                    Column(
+                        modifier = Modifier.fillMaxSize()
+                            .padding(horizontal = KptTheme.spacing.md),
+                    ) {
+                        ShareAccountHeader(
+                            totalItem = state.accounts.size.toString(),
+                            onAction = onAction,
+                            isShareAccountsEmpty = state.accounts.isEmpty(),
+                        )
+
+                        Spacer(modifier = Modifier.height(KptTheme.spacing.md))
 
                     if (state.accounts.isNotEmpty()) {
                         val emptyText = stringResource(Res.string.string_not_available)
@@ -139,23 +142,30 @@ internal fun ShareAccountsContent(
                                             )
                                         },
                                     )
-                                    Spacer(Modifier.height(KptTheme.spacing.sm))
+
+                                        Spacer(Modifier.height(KptTheme.spacing.sm))
+                                    }
                                 }
                             }
+                        } else {
+                            MifosEmptyCard(
+                                msg = stringResource(Res.string.feature_share_account_empty_list_message),
+                                isButtonPresent = true,
+                                onClick = { onAction.invoke(ShareAccountsAction.AddAccount) },
+                            )
                         }
-                    } else {
-                        MifosEmptyCard()
                     }
                 }
             }
         }
     }
-}
+
 
 @Composable
 private fun ShareAccountHeader(
     totalItem: String,
     onAction: (ShareAccountsAction) -> Unit,
+    isShareAccountsEmpty: Boolean,
 ) {
     Row(
         modifier = Modifier.fillMaxWidth(),
@@ -182,11 +192,13 @@ private fun ShareAccountHeader(
             contentDescription = null,
         )
         Spacer(modifier = Modifier.width(DesignToken.spacing.largeIncreased))
-        Icon(
-            modifier = Modifier.onClick { onAction.invoke(ShareAccountsAction.AddAccount) },
-            painter = painterResource(Res.drawable.add_icon),
-            contentDescription = null,
-        )
+        if (!isShareAccountsEmpty) {
+            Icon(
+                modifier = Modifier.onClick { onAction.invoke(ShareAccountsAction.AddAccount) },
+                painter = painterResource(Res.drawable.add_icon),
+                contentDescription = null,
+            )
+        }
         Spacer(modifier = Modifier.width(DesignToken.spacing.largeIncreased))
         Icon(
             modifier = Modifier.onClick { onAction.invoke(ShareAccountsAction.ToggleFiler) },
