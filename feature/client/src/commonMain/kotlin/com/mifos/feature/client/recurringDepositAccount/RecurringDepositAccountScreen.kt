@@ -41,6 +41,7 @@ import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
@@ -76,12 +77,11 @@ fun RecurringDepositAccountScreen(
 ) {
     val state by viewModel.stateFlow.collectAsStateWithLifecycle()
     val lifecycleOwner = LocalLifecycleOwner.current
+    val currentAccounts by rememberUpdatedState(state.recurringDepositAccounts.isNotEmpty())
 
     DisposableEffect(lifecycleOwner) {
         val observer = LifecycleEventObserver { _, event ->
-            if (event == Lifecycle.Event.ON_RESUME &&
-                state.recurringDepositAccounts.isNotEmpty()
-            ) {
+            if (event == Lifecycle.Event.ON_RESUME && currentAccounts) {
                 viewModel.trySendAction(RecurringDepositAccountAction.Refresh)
             }
         }
