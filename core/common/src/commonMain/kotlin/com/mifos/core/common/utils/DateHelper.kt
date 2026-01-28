@@ -17,6 +17,7 @@ import kotlinx.datetime.TimeZone
 import kotlinx.datetime.format
 import kotlinx.datetime.format.FormatStringsInDatetimeFormats
 import kotlinx.datetime.format.MonthNames
+import kotlinx.datetime.format.Padding
 import kotlinx.datetime.format.byUnicodePattern
 import kotlinx.datetime.format.char
 import kotlinx.datetime.number
@@ -42,7 +43,7 @@ object DateHelper {
     const val MONTH_FORMAT = "dd MMMM"
 
     private val apiDateFormat = LocalDateTime.Format {
-        day()
+        dayOfMonth(Padding.ZERO)
         char(' ')
         monthName(MonthNames.ENGLISH_FULL)
         char(' ')

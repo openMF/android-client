@@ -254,8 +254,8 @@ fun NavGraphBuilder.clientNavGraph(
         clientRecurringDepositAccountDestination(
             navController = navController,
             navigateBack = navController::popBackStack,
-            onApproveAccount = { accountNumber ->
-                navController.navigateToRecurringDepositAccountApproval(accountNumber)
+            onApproveAccount = { accountId ->
+                navController.navigateToRecurringDepositAccountApproval(accountId)
             },
             onViewAccount = {},
         )

@@ -8,6 +8,7 @@ import androidclient.feature.recurringdeposit.generated.resources.feature_recurr
 import androidclient.feature.recurringdeposit.generated.resources.feature_recurring_deposit_approve_account
 import androidclient.feature.recurringdeposit.generated.resources.feature_recurring_deposit_approved_on
 import androidclient.feature.recurringdeposit.generated.resources.feature_recurring_deposit_cancel
+import androidclient.feature.recurringdeposit.generated.resources.feature_recurring_deposit_ok
 import androidclient.feature.recurringdeposit.generated.resources.feature_recurring_deposit_save
 import androidclient.feature.recurringdeposit.generated.resources.feature_recurring_deposit_select_date
 import androidx.compose.foundation.layout.Box
@@ -112,7 +113,7 @@ internal fun RecurringDepositAccountApprovalScreen(
 
                 is RecurringDepositAccountApprovalUiState.ShowRecurringDepositAccountApprovedSuccessfully ->
                     MifosAlertDialog(
-                        dialogTitle = "OK",
+                        dialogTitle = stringResource(Res.string.feature_recurring_deposit_ok),
                         dialogText = stringResource(Res.string.feature_recurring_deposit_account),
                         dismissText = null,
                         onConfirmation = {
@@ -231,8 +232,6 @@ private fun RecurringDepositAccountApprovalContent(
         }
     }
 }
-
-fun rememberDatePickerState(initialSelectedDateMillis: Long, selectableDates: Any) {}
 
 // UI State
 sealed class RecurringDepositAccountApprovalUiState {

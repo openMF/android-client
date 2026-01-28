@@ -28,18 +28,6 @@ actual val KtorHttpClient: HttpClient
             requestTimeoutMillis = 60_000
         }
 
-        install(ContentNegotiation) {
-            json(
-                Json {
-                    ignoreUnknownKeys = true
-                    encodeDefaults = true
-                    isLenient = true
-                    prettyPrint = true
-                    explicitNulls = false
-                },
-            )
-        }
-
         install(Logging) {
             logger = Logger.DEFAULT
             level = LogLevel.ALL
@@ -53,6 +41,7 @@ actual val KtorHttpClient: HttpClient
         install(ContentNegotiation) {
             json(
                 Json {
+                    encodeDefaults = true
                     prettyPrint = true
                     isLenient = true
                     ignoreUnknownKeys = true

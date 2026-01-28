@@ -175,7 +175,7 @@ internal fun RecurringDepositAccountScaffold(
                             },
                         )
 
-                        // todo clientimplement search bar functionality
+                        // todo implement search bar functionality
                         if (state.isSearchBarActive) {
                             MifosSearchBar(
                                 query = state.searchText,

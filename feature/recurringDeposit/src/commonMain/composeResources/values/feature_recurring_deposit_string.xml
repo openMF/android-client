@@ -84,6 +84,7 @@
     <string name="feature_recurring_deposit_approval_date">Select Approval Date:</string>
     <string name="feature_recurring_deposit_approval_reason">Reason for Approval</string>
     <string name="feature_recurring_deposit_save">Save</string>
+    <string name="feature_recurring_deposit_ok">OK</string>
 
 
 </resources>
