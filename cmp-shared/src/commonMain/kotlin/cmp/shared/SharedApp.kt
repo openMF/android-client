@@ -15,15 +15,23 @@ import cmp.navigation.ComposeApp
 
 @Composable
 fun SharedApp(
+    updateScreenCapture: (isScreenCaptureAllowed: Boolean) -> Unit,
+    handleRecreate: () -> Unit,
     handleThemeMode: (osValue: Int) -> Unit,
     handleAppLocale: (locale: String?) -> Unit,
     onSplashScreenRemoved: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    ComposeApp(
-        handleThemeMode = handleThemeMode,
-        handleAppLocale = handleAppLocale,
-        onSplashScreenRemoved = onSplashScreenRemoved,
-        modifier = modifier,
-    )
+    LocalManagerProvider(LocalContext.current) {
+        LocalImageLoaderProvider(getDefaultImageLoader(LocalPlatformContext.current)) {
+            ComposeApp(
+                updateScreenCapture = updateScreenCapture,
+                handleRecreate = handleRecreate,
+                handleThemeMode = handleThemeMode,
+                handleAppLocale = handleAppLocale,
+                onSplashScreenRemoved = onSplashScreenRemoved,
+                modifier = modifier,
+            )
+        }
+    }
 }

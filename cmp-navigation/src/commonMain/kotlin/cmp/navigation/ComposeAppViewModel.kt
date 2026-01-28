@@ -10,6 +10,7 @@
 package cmp.navigation
 
 import androidx.lifecycle.viewModelScope
+import cmp.navigation.AppAction.Internal.ScreenCaptureUpdate
 import com.mifos.core.data.util.NetworkMonitor
 import com.mifos.core.datastore.UserPreferencesRepository
 import com.mifos.core.datastore.model.DarkThemeConfig
@@ -31,6 +32,7 @@ class ComposeAppViewModel(
         darkThemeConfig = DarkThemeConfig.FOLLOW_SYSTEM,
         isAndroidTheme = false,
         isDynamicColorsEnabled = false,
+        isScreenCaptureAllowed = false,
     ),
 ) {
     val networkStatus = networkMonitor.isOnline
@@ -52,9 +54,15 @@ class ComposeAppViewModel(
         when (action) {
             is AppAction.AppSpecificLanguageUpdate -> handleAppSpecificLanguageUpdate(action)
 
+            is ScreenCaptureUpdate -> handleScreenCaptureUpdate(action)
+
             is AppAction.Internal.ThemeUpdate -> handleAppThemeUpdated(action)
 
             is AppAction.Internal.DynamicColorsUpdate -> handleDynamicColorsUpdate(action)
+
+            is AppAction.Internal.CurrentUserStateChange -> handleCurrentUserStateChange()
+
+            is AppAction.Internal.UserUnlockStateChange -> handleUserUnlockStateChange()
         }
     }
 
@@ -62,6 +70,10 @@ class ComposeAppViewModel(
         viewModelScope.launch {
 //            userPreferencesRepository.setLanguage(action.appLanguage)
         }
+    }
+
+    private fun handleScreenCaptureUpdate(action: ScreenCaptureUpdate) {
+        mutableStateFlow.update { it.copy(isScreenCaptureAllowed = action.isScreenCaptureEnabled) }
     }
 
     private fun handleAppThemeUpdated(action: AppAction.Internal.ThemeUpdate) {
@@ -74,15 +86,31 @@ class ComposeAppViewModel(
     private fun handleDynamicColorsUpdate(action: AppAction.Internal.DynamicColorsUpdate) {
         mutableStateFlow.update { it.copy(isDynamicColorsEnabled = action.isDynamicColorsEnabled) }
     }
+
+    private fun handleUserUnlockStateChange() {
+        recreateUiAndGarbageCollect()
+    }
+
+    private fun handleCurrentUserStateChange() {
+        recreateUiAndGarbageCollect()
+    }
+
+    private fun recreateUiAndGarbageCollect() {
+        sendEvent(AppEvent.Recreate)
+        garbageCollectionManager.tryCollect()
+    }
 }
 
 data class AppState(
     val darkThemeConfig: DarkThemeConfig,
     val isAndroidTheme: Boolean,
     val isDynamicColorsEnabled: Boolean,
+    val isScreenCaptureAllowed: Boolean,
 )
 
 sealed interface AppEvent {
+    data object Recreate : AppEvent
+
     data class ShowToast(val message: String) : AppEvent
 
     data class UpdateAppLocale(
@@ -99,9 +127,17 @@ sealed interface AppAction {
 
     sealed class Internal : AppAction {
 
+        data object CurrentUserStateChange : Internal()
+
+        data class ScreenCaptureUpdate(
+            val isScreenCaptureEnabled: Boolean,
+        ) : Internal()
+
         data class ThemeUpdate(
             val theme: DarkThemeConfig,
         ) : Internal()
+
+        data object UserUnlockStateChange : Internal()
 
         data class DynamicColorsUpdate(
             val isDynamicColorsEnabled: Boolean,

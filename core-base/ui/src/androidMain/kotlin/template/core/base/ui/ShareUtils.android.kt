@@ -171,4 +171,18 @@ actual object ShareUtils {
         val clip = android.content.ClipData.newPlainText("Copied Text", text)
         clipboardManager.setPrimaryClip(clip)
     }
+
+    actual suspend fun shareApp(storeLink: String, message: String) {
+        val shareContent = if (message.isNotEmpty()) {
+            "$message\n$storeLink"
+        } else {
+            storeLink
+        }
+        val intent = Intent(Intent.ACTION_SEND).apply {
+            type = "text/plain"
+            putExtra(Intent.EXTRA_TEXT, shareContent)
+        }
+        val intentChooser = Intent.createChooser(intent, null)
+        activityProvider.invoke().startActivity(intentChooser)
+    }
 }

@@ -108,4 +108,15 @@ actual object ShareUtils {
             println("Error copying to clipboard: ${e.message}")
         }
     }
+
+    actual suspend fun shareApp(storeLink: String, message: String) {
+        val shareContent = if (message.isNotEmpty()) {
+            "$message\n$storeLink"
+        } else {
+            storeLink
+        }
+        // On Desktop, we copy to clipboard and open the URL
+        copyText(shareContent)
+        openUrl(storeLink)
+    }
 }

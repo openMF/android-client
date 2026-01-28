@@ -30,6 +30,9 @@ kotlin {
             implementation(projects.core.database)
             implementation(projects.core.network)
 
+            implementation(projects.coreBase.common)
+            implementation(projects.coreBase.platform)
+
             implementation(projects.feature.about)
             implementation(projects.feature.activate)
             implementation(projects.feature.auth)

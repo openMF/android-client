@@ -60,4 +60,16 @@ actual object ShareUtils {
 
     actual fun copyText(text: String) {
     }
+
+    actual suspend fun shareApp(storeLink: String, message: String) {
+        val shareContent = if (message.isNotEmpty()) {
+            "$message\n$storeLink"
+        } else {
+            storeLink
+        }
+        FileKit.download(
+            bytes = shareContent.encodeToByteArray(),
+            fileName = "share_app.txt",
+        )
+    }
 }
