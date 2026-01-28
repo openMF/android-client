@@ -176,7 +176,7 @@ private fun CreateFixedDepositAccountScaffold(
         snackbarHostState = snackbarHostState,
     ) { paddingValues ->
         Column(
-            modifier.padding(paddingValues),
+            Modifier.padding(paddingValues),
         ) {
             MifosBreadcrumbNavBar(navController)
             when (state.screenState) {
