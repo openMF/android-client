@@ -37,13 +37,16 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.mifos.core.common.utils.DateHelper
@@ -72,9 +75,21 @@ fun RecurringDepositAccountScreen(
     viewModel: RecurringDepositAccountViewModel = koinViewModel(),
 ) {
     val state by viewModel.stateFlow.collectAsStateWithLifecycle()
+    val lifecycleOwner = LocalLifecycleOwner.current
 
-    LaunchedEffect(navController.currentBackStackEntry) {
-        viewModel.trySendAction(RecurringDepositAccountAction.Refresh)
+    DisposableEffect(lifecycleOwner) {
+        val observer = LifecycleEventObserver { _, event ->
+            if (event == Lifecycle.Event.ON_RESUME &&
+                state.recurringDepositAccounts.isNotEmpty()
+            ) {
+                viewModel.trySendAction(RecurringDepositAccountAction.Refresh)
+            }
+        }
+        lifecycleOwner.lifecycle.addObserver(observer)
+
+        onDispose {
+            lifecycleOwner.lifecycle.removeObserver(observer)
+        }
     }
 
     EventsEffect(viewModel.eventFlow) { event ->
@@ -230,22 +245,26 @@ internal fun RecurringDepositAccountScaffold(
                                             )
                                         },
                                         onActionClicked = { actions ->
-                                            when (actions) {
-                                                is Actions.ViewAccount -> {
-                                                    onAction(
-                                                        RecurringDepositAccountAction.ViewAccount(
-                                                            recurringDeposit.accountNo ?: "",
+                                            recurringDeposit.accountNo?.let { accountNo ->
+                                                when (actions) {
+                                                    is Actions.ViewAccount -> {
+                                                        onAction(
+                                                            RecurringDepositAccountAction.ViewAccount(
+                                                                accountNo,
+                                                            )
                                                         )
-                                                    )
-                                                }
-                                                is Actions.ApproveAccount -> {
-                                                    onAction(
-                                                        RecurringDepositAccountAction.ApproveAccount(
-                                                            recurringDeposit.accountNo ?: "",
+                                                    }
+
+                                                    is Actions.ApproveAccount -> {
+                                                        onAction(
+                                                            RecurringDepositAccountAction.ApproveAccount(
+                                                                accountNo,
+                                                            )
                                                         )
-                                                    )
+                                                    }
+
+                                                    else -> Unit
                                                 }
-                                                else -> Unit
                                             }
                                         }
                                     )

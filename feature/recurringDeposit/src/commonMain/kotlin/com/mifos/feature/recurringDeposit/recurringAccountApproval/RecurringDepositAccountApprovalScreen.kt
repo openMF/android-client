@@ -144,7 +144,7 @@ private fun RecurringDepositAccountApprovalContent(
         initialSelectedDateMillis = approvalDate,
         selectableDates = object : SelectableDates {
             override fun isSelectableDate(utcTimeMillis: Long): Boolean {
-                return utcTimeMillis >= Clock.System.now().toEpochMilliseconds()
+                return utcTimeMillis <= Clock.System.now().toEpochMilliseconds()
             }
         },
     )
