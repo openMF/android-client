@@ -44,8 +44,11 @@ import com.mifos.room.entities.accounts.savings.SavingsTransactionTypeEntity
 import com.mifos.room.entities.client.ChargeCalculationTypeEntity
 import com.mifos.room.entities.client.ChargeTimeTypeEntity
 import com.mifos.room.entities.client.ClientChargeCurrencyEntity
+import com.mifos.room.entities.client.ClientClassificationEntity
 import com.mifos.room.entities.client.ClientDateEntity
+import com.mifos.room.entities.client.ClientGenderEntity
 import com.mifos.room.entities.client.ClientStatusEntity
+import com.mifos.room.entities.client.ClientTypeEntity
 import com.mifos.room.entities.group.CenterDateEntity
 import com.mifos.room.entities.group.CenterEntity
 import com.mifos.room.entities.group.GroupDateEntity
@@ -179,6 +182,36 @@ class CustomTypeConverters {
     @TypeConverter
     fun toClientStatus(json: String?): ClientStatusEntity? {
         return json?.let { Json.decodeFromString(it) }
+    }
+
+    @TypeConverter
+    fun fromClientGenderEntity(gender: ClientGenderEntity?): String? {
+        return gender?.let { Json.encodeToString(it) }
+    }
+
+    @TypeConverter
+    fun toClientGenderEntity(json: String?): ClientGenderEntity? {
+        return json?.let { Json.decodeFromString<ClientGenderEntity>(it) }
+    }
+
+    @TypeConverter
+    fun fromClientTypeEntity(clientType: ClientTypeEntity?): String? {
+        return clientType?.let { Json.encodeToString(it) }
+    }
+
+    @TypeConverter
+    fun toClientTypeEntity(json: String?): ClientTypeEntity? {
+        return json?.let { Json.decodeFromString<ClientTypeEntity>(it) }
+    }
+
+    @TypeConverter
+    fun fromClientClassificationEntity(clientClassification: ClientClassificationEntity?): String? {
+        return clientClassification?.let { Json.encodeToString(it) }
+    }
+
+    @TypeConverter
+    fun toClientClassificationEntity(json: String?): ClientClassificationEntity? {
+        return json?.let { Json.decodeFromString<ClientClassificationEntity>(it) }
     }
 
     @TypeConverter
