@@ -68,6 +68,7 @@ import cmp.navigation.navigation.HomeDestinationsScreen
 import cmp.navigation.ui.rememberMifosNavController
 import com.mifos.core.common.utils.Constants
 import com.mifos.core.designsystem.theme.DesignToken
+import com.mifos.core.model.objects.searchrecord.RecordType
 import com.mifos.core.ui.RootTransitionProviders
 import com.mifos.core.ui.util.EventsEffect
 import com.mifos.feature.activate.navigateToActivateRoute
@@ -381,11 +382,11 @@ internal fun AuthenticatedNavbarNavigationScreenContent(
 
                         if (clientId != null) {
                             when {
-                                record.type.equals("Address", ignoreCase = true) -> {
+                                record.type.equals(RecordType.ADDRESS.displayName, ignoreCase = true) -> {
                                     navController.navigateToClientAddressRoute(id = clientId)
                                 }
 
-                                record.type.equals("Identifiers", ignoreCase = true) -> {
+                                record.type.equals(RecordType.IDENTIFIER.displayName, ignoreCase = true) -> {
                                     navController.navigateToClientIdentifiersListScreen(clientId = clientId)
                                 }
                             }

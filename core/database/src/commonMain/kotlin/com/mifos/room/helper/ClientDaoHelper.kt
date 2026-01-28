@@ -349,6 +349,10 @@ class ClientDaoHelper(
             .flowOn(ioDispatcher)
     }
 
+    suspend fun deleteAddressesByClientId(clientId: Int) {
+        clientDao.deleteAddressesByClientId(clientId)
+    }
+
     suspend fun insertAddresses(addresses: List<ClientAddressEntity>) {
         clientDao.insertAddresses(addresses)
     }

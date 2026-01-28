@@ -47,7 +47,9 @@ class ClientIdentifiersRepositoryImp(
                             status = identifier.status ?: "",
                         )
                     }
-                    clientDaoHelper.insertIdentifiers(entities)
+                    try {
+                        clientDaoHelper.insertIdentifiers(entities)
+                    } catch (_: Throwable) { }
                 }
             }
     }

@@ -9,6 +9,8 @@
  */
 package com.mifos.feature.searchrecord
 
+import androidclient.feature.search_record.generated.resources.Res
+import androidclient.feature.search_record.generated.resources.error_searching_records
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

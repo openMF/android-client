@@ -154,6 +154,9 @@ interface ClientDao {
     @Query("SELECT * FROM ClientAddress WHERE addressId = :addressId LIMIT 1")
     fun getAddressById(addressId: Int): Flow<ClientAddressEntity?>
 
+    @Query("DELETE FROM ClientAddress WHERE clientID = :clientId")
+    suspend fun deleteAddressesByClientId(clientId: Int)
+
     @Query(
         """
     SELECT * FROM ClientAddress 

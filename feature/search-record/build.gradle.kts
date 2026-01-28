@@ -16,13 +16,6 @@ android {
     namespace = "com.mifos.feature.searchrecord"
 }
 
-compose {
-    resources {
-        packageOfResClass = "com.mifos.feature.searchrecord"
-        generateResClass = always
-    }
-}
-
 kotlin {
     sourceSets {
         commonMain.dependencies {

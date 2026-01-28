@@ -27,6 +27,7 @@ import com.mifos.room.entities.templates.clients.ClientsTemplateEntity
 import com.mifos.room.helper.ClientDaoHelper
 import io.ktor.client.request.forms.MultiPartFormDataContent
 import kotlinx.coroutines.flow.Flow
+import kotlin.coroutines.cancellation.CancellationException
 import com.mifos.room.entities.client.ClientAddressEntity as RoomAddressEntity
 
 /**
@@ -73,8 +74,10 @@ class CreateNewClientRepositoryImp(
     override suspend fun getAddresses(clientId: Int): List<ClientAddressEntity> {
         val addresses = dataManagerClient.getClientAddresses(clientId = clientId)
 
-        if (addresses.isNotEmpty()) {
-            try {
+        try {
+            clientDaoHelper.deleteAddressesByClientId(clientId)
+
+            if (addresses.isNotEmpty()) {
                 val roomEntities = addresses.map { item ->
                     RoomAddressEntity(
                         clientID = item.clientID ?: clientId,
@@ -93,11 +96,12 @@ class CreateNewClientRepositoryImp(
                     )
                 }
                 clientDaoHelper.insertAddresses(roomEntities)
-            } catch (e: Exception) {
-                e.printStackTrace()
             }
+        } catch (e: CancellationException) {
+            throw e
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
-
         return addresses
     }
 

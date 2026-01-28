@@ -9,6 +9,22 @@
  */
 package com.mifos.feature.searchrecord
 
+import androidclient.feature.search_record.generated.resources.Res
+import androidclient.feature.search_record.generated.resources.search_record_address_line_1
+import androidclient.feature.search_record.generated.resources.search_record_address_line_2
+import androidclient.feature.search_record.generated.resources.search_record_address_line_3
+import androidclient.feature.search_record.generated.resources.search_record_city
+import androidclient.feature.search_record.generated.resources.search_record_clear_icon_desc
+import androidclient.feature.search_record.generated.resources.search_record_country
+import androidclient.feature.search_record.generated.resources.search_record_empty_state
+import androidclient.feature.search_record.generated.resources.search_record_error
+import androidclient.feature.search_record.generated.resources.search_record_generic_searchLabel
+import androidclient.feature.search_record.generated.resources.search_record_input_placeholder
+import androidclient.feature.search_record.generated.resources.search_record_no_results_description
+import androidclient.feature.search_record.generated.resources.search_record_no_results_title
+import androidclient.feature.search_record.generated.resources.search_record_postal_code
+import androidclient.feature.search_record.generated.resources.search_record_province
+import androidclient.feature.search_record.generated.resources.search_record_search_icon_desc
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -43,6 +59,7 @@ import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.model.objects.searchrecord.GenericSearchRecord
+import com.mifos.core.model.objects.searchrecord.RecordType
 import com.mifos.core.ui.components.MifosActionsIdentifierListingComponent
 import com.mifos.core.ui.components.MifosAddressCard
 import com.mifos.core.ui.components.MifosProgressIndicator
@@ -201,10 +218,10 @@ private fun SearchRecordItem(
     onRecordSelected: (GenericSearchRecord) -> Unit,
 ) {
     when {
-        record.type.equals(stringResource(Res.string.search_record_address), ignoreCase = true) -> {
+        record.type.equals(RecordType.ADDRESS.name, ignoreCase = true) -> {
             AddressRecordCard(record, onRecordSelected)
         }
-        record.type.equals(stringResource(Res.string.search_record_identifiers), ignoreCase = true) -> {
+        record.type.equals(RecordType.IDENTIFIER.name, ignoreCase = true) -> {
             IdentifierRecordCard(record, onRecordSelected)
         }
         else -> {
@@ -231,13 +248,13 @@ private fun AddressRecordCard(
         MifosAddressCard(
             title = record.name,
             addressList = mapOf(
-                "Address Line 1" to (record.metadata["addressLine1"] ?: ""),
-                "Address Line 2" to (record.metadata["addressLine2"] ?: ""),
-                "Address Line 3" to (record.metadata["addressLine3"] ?: ""),
-                "City" to (record.metadata["city"] ?: ""),
-                "Province" to (record.metadata["state"] ?: ""),
-                "Country" to (record.metadata["country"] ?: ""),
-                "Postal Code" to (record.metadata["postalCode"] ?: ""),
+                stringResource(Res.string.search_record_address_line_1) to (record.metadata["addressLine1"] ?: ""),
+                stringResource(Res.string.search_record_address_line_2) to (record.metadata["addressLine2"] ?: ""),
+                stringResource(Res.string.search_record_address_line_3) to (record.metadata["addressLine3"] ?: ""),
+                stringResource(Res.string.search_record_city) to (record.metadata["city"] ?: ""),
+                stringResource(Res.string.search_record_province) to (record.metadata["state"] ?: ""),
+                stringResource(Res.string.search_record_country) to (record.metadata["country"] ?: ""),
+                stringResource(Res.string.search_record_postal_code) to (record.metadata["postalCode"] ?: ""),
             ),
         )
     }
