@@ -25,7 +25,6 @@ import androidclient.feature.client.generated.resources.feature_client_client_ac
 import androidclient.feature.client.generated.resources.feature_client_client_classification
 import androidclient.feature.client.generated.resources.feature_client_client_created_successfully
 import androidclient.feature.client.generated.resources.feature_client_country
-import androidclient.feature.client.generated.resources.feature_client_create_new_client
 import androidclient.feature.client.generated.resources.feature_client_dob
 import androidclient.feature.client.generated.resources.feature_client_error_address_type_is_required
 import androidclient.feature.client.generated.resources.feature_client_error_first_name_can_not_be_empty
@@ -119,7 +118,6 @@ import com.mifos.core.common.utils.DateHelper
 import com.mifos.core.common.utils.formatDate
 import com.mifos.core.designsystem.component.MifosDatePickerTextField
 import com.mifos.core.designsystem.component.MifosOutlinedTextField
-import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.component.MifosTextFieldDropdown
 import com.mifos.core.model.objects.clients.Address
@@ -201,93 +199,87 @@ internal fun CreateNewClientScreen(
     val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
 
-    MifosScaffold(
-        title = stringResource(Res.string.feature_client_create_new_client),
-        snackbarHostState = snackbarHostState,
-        onBackPressed = navigateBack,
-    ) { paddingValues ->
-        Column(modifier = Modifier.padding(paddingValues)) {
-            when (uiState) {
-                CreateNewClientUiState.ShowProgressbar -> {
-                    MifosProgressIndicator()
-                }
+    Column {
+        when (uiState) {
+            CreateNewClientUiState.ShowProgressbar -> {
+                MifosProgressIndicator()
+            }
 
-                is CreateNewClientUiState.ShowProgress -> {
-                    MifosProgressIndicator()
-                }
+            is CreateNewClientUiState.ShowProgress -> {
+                MifosProgressIndicator()
+            }
 
-                is CreateNewClientUiState.ShowClientTemplate -> {
-                    CreateNewClientContent(
-                        scope = scope,
-                        snackbarHostState = snackbarHostState,
-                        officeList = officeList,
-                        staffInOffices = staffInOffices,
-                        clientTemplate = uiState.clientsTemplate,
-                        loadStaffInOffice = loadStaffInOffice,
-                        createClient = createClient,
-                        onHasDatatables = hasDatatables,
-                        setFileForUpload = { filePath ->
-                            filePath?.let {
-                                createClientWithImage = true
-                            }
-                        },
-                        onImageSelected = onImageSelected,
-                        addressTemplate = uiState.addressTemplate,
-                        isAddressEnabled = uiState.isAddressEnabled,
-                    )
-                }
+            is CreateNewClientUiState.ShowClientTemplate -> {
+                CreateNewClientContent(
+                    scope = scope,
+                    snackbarHostState = snackbarHostState,
+                    officeList = officeList,
+                    staffInOffices = staffInOffices,
+                    clientTemplate = uiState.clientsTemplate,
+                    loadStaffInOffice = loadStaffInOffice,
+                    createClient = createClient,
+                    onHasDatatables = hasDatatables,
+                    setFileForUpload = { filePath ->
+                        filePath?.let {
+                            createClientWithImage = true
+                        }
+                    },
+                    onImageSelected = onImageSelected,
+                    addressTemplate = uiState.addressTemplate,
+                    isAddressEnabled = uiState.isAddressEnabled,
+                )
+            }
 
-                is CreateNewClientUiState.SetClientId -> {
-                    if (createClientWithImage) {
-                        uploadImage(uiState.id)
-                    } else {
-                        navigateBack.invoke()
-                    }
-                }
-
-                is CreateNewClientUiState.ShowClientCreatedSuccessfully -> {
-                    scope.launch {
-                        snackbarHostState.showSnackbar(
-                            message = getString(Res.string.feature_client_client_created_successfully),
-                            duration = SnackbarDuration.Long,
-                        )
-                    }
-                }
-
-                is CreateNewClientUiState.OnImageUploadSuccess -> {
-                    scope.launch {
-                        snackbarHostState.showSnackbar(
-                            message = getString(Res.string.feature_client_Image_Upload_Successful),
-                            duration = SnackbarDuration.Long,
-                        )
-                    }
+            is CreateNewClientUiState.SetClientId -> {
+                if (createClientWithImage) {
+                    uploadImage(uiState.id)
+                } else {
                     navigateBack.invoke()
                 }
+            }
 
-                is CreateNewClientUiState.ShowWaitingForCheckerApproval -> {
-                    scope.launch {
-                        snackbarHostState.showSnackbar(
-                            message = getString(Res.string.feature_client_waiting_for_checker_approval),
-                            duration = SnackbarDuration.Long,
-                        )
-                    }
-                    navigateBack.invoke()
-                }
-
-                is CreateNewClientUiState.ShowError -> {
-                    MifosSweetError(
-                        message = stringResource(uiState.message),
-                        onclick = { onRetry() },
+            is CreateNewClientUiState.ShowClientCreatedSuccessfully -> {
+                scope.launch {
+                    snackbarHostState.showSnackbar(
+                        message = getString(Res.string.feature_client_client_created_successfully),
+                        duration = SnackbarDuration.Long,
                     )
                 }
+            }
 
-                is CreateNewClientUiState.ShowStringError -> {
-                    MifosSweetError(
-                        message = uiState.message,
-                        onclick = { onRetry() },
-                        buttonText = stringResource(Res.string.feature_client_go_back),
+            is CreateNewClientUiState.OnImageUploadSuccess -> {
+                scope.launch {
+                    snackbarHostState.showSnackbar(
+                        message = getString(Res.string.feature_client_Image_Upload_Successful),
+                        duration = SnackbarDuration.Long,
                     )
                 }
+                navigateBack.invoke()
+            }
+
+            is CreateNewClientUiState.ShowWaitingForCheckerApproval -> {
+                scope.launch {
+                    snackbarHostState.showSnackbar(
+                        message = getString(Res.string.feature_client_waiting_for_checker_approval),
+                        duration = SnackbarDuration.Long,
+                    )
+                }
+                navigateBack.invoke()
+            }
+
+            is CreateNewClientUiState.ShowError -> {
+                MifosSweetError(
+                    message = stringResource(uiState.message),
+                    onclick = { onRetry() },
+                )
+            }
+
+            is CreateNewClientUiState.ShowStringError -> {
+                MifosSweetError(
+                    message = uiState.message,
+                    onclick = { onRetry() },
+                    buttonText = stringResource(Res.string.feature_client_go_back),
+                )
             }
         }
     }

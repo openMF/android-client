@@ -163,8 +163,7 @@ private fun NewLoanAccountScaffold(
     MifosScaffold(
         modifier = modifier,
         snackbarHostState = snackbarHostState,
-    ) { paddingValues ->
-
+    ) {
         Column(
             modifier.fillMaxSize(),
         ) {
