@@ -282,17 +282,17 @@ private fun RecurringDepositAccountHeader(
 
         Spacer(modifier = Modifier.weight(1f))
 
-        Icon(
-            painter = painterResource(Res.drawable.search),
-            contentDescription = null,
-            modifier = Modifier.clickable {
-                onToggleSearch.invoke()
-            },
-        )
-
-        Spacer(modifier = Modifier.width(DesignToken.spacing.largeIncreased))
-
         if (!isRecurringDepositScreenEmpty) {
+            Icon(
+                painter = painterResource(Res.drawable.search),
+                contentDescription = null,
+                modifier = Modifier.clickable {
+                    onToggleSearch.invoke()
+                },
+            )
+
+            Spacer(modifier = Modifier.width(DesignToken.spacing.largeIncreased))
+
             Icon(
                 painter = painterResource(Res.drawable.add_icon),
                 contentDescription = null,
@@ -300,16 +300,16 @@ private fun RecurringDepositAccountHeader(
                     addAccount.invoke()
                 },
             )
+
+            Spacer(modifier = Modifier.width(DesignToken.spacing.largeIncreased))
+
+            Icon(
+                painter = painterResource(Res.drawable.filter),
+                contentDescription = null,
+                modifier = Modifier.clickable {
+                    onToggleFilter.invoke()
+                },
+            )
         }
-
-        Spacer(modifier = Modifier.width(DesignToken.spacing.largeIncreased))
-
-        Icon(
-            painter = painterResource(Res.drawable.filter),
-            contentDescription = null,
-            modifier = Modifier.clickable {
-                onToggleFilter.invoke()
-            },
-        )
     }
 }

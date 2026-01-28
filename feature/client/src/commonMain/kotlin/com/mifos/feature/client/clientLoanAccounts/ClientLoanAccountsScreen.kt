@@ -283,17 +283,16 @@ private fun ClientsAccountHeader(
 
         Spacer(modifier = Modifier.weight(1f))
 
-        IconButton(
-            onClick = { onAction.invoke(ClientLoanAccountsAction.ToggleSearch) },
-        ) {
-            // add a cross icon when its active, talk with design team
-            Icon(
-                painter = painterResource(Res.drawable.search),
-                contentDescription = null,
-            )
-        }
-
         if (!isLoanScreenEmpty) {
+            IconButton(
+                onClick = { onAction.invoke(ClientLoanAccountsAction.ToggleSearch) },
+            ) {
+                // add a cross icon when its active, talk with design team
+                Icon(
+                    painter = painterResource(Res.drawable.search),
+                    contentDescription = null,
+                )
+            }
             IconButton(
                 onClick = { onAction.invoke(ClientLoanAccountsAction.AddAccount) },
             ) {
@@ -302,32 +301,33 @@ private fun ClientsAccountHeader(
                     contentDescription = null,
                 )
             }
-        }
-
-        Box(
-            modifier = Modifier.wrapContentSize(),
-            contentAlignment = Alignment.Center,
-        ) {
-            IconButton(
-                onClick = { onAction.invoke(ClientLoanAccountsAction.ToggleFilter) },
+            Box(
+                modifier = Modifier.wrapContentSize(),
+                contentAlignment = Alignment.Center,
             ) {
-                Icon(
-                    painter = painterResource(Res.drawable.filter),
-                    contentDescription = null,
-                )
-            }
+                IconButton(
+                    onClick = { onAction.invoke(ClientLoanAccountsAction.ToggleFilter) },
+                ) {
+                    Icon(
+                        painter = painterResource(Res.drawable.filter),
+                        contentDescription = null,
+                    )
+                }
 
-            if (isFilterActive) {
-                Box(
-                    modifier = Modifier
-                        .align(Alignment.TopEnd)
-                        .padding(top = DesignToken.padding.medium, end = KptTheme.spacing.md)
-                        .size(DesignToken.sizes.iconMinyMiny)
-                        .clip(CircleShape)
-                        .background(KptTheme.colorScheme.error),
-                )
+                if (isFilterActive) {
+                    Box(
+                        modifier = Modifier
+                            .align(Alignment.TopEnd)
+                            .padding(top = DesignToken.padding.medium, end = KptTheme.spacing.md)
+                            .size(DesignToken.sizes.iconMinyMiny)
+                            .clip(CircleShape)
+                            .background(KptTheme.colorScheme.error),
+                    )
+                }
             }
         }
+
+
     }
 }
 

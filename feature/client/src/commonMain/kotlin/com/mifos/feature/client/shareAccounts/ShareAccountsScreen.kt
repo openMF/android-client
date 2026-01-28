@@ -186,25 +186,26 @@ private fun ShareAccountHeader(
         Spacer(modifier = Modifier.weight(1f))
 
         // add a cross icon when its active, talk with design team
-        Icon(
-            modifier = Modifier.onClick { onAction.invoke(ShareAccountsAction.ToggleSearchBar) },
-            painter = painterResource(Res.drawable.search),
-            contentDescription = null,
-        )
-        Spacer(modifier = Modifier.width(DesignToken.spacing.largeIncreased))
+
         if (!isShareAccountsEmpty) {
+            Icon(
+                modifier = Modifier.onClick { onAction.invoke(ShareAccountsAction.ToggleSearchBar) },
+                painter = painterResource(Res.drawable.search),
+                contentDescription = null,
+            )
+            Spacer(modifier = Modifier.width(DesignToken.spacing.largeIncreased))
             Icon(
                 modifier = Modifier.onClick { onAction.invoke(ShareAccountsAction.AddAccount) },
                 painter = painterResource(Res.drawable.add_icon),
                 contentDescription = null,
             )
+            Spacer(modifier = Modifier.width(DesignToken.spacing.largeIncreased))
+            Icon(
+                modifier = Modifier.onClick { onAction.invoke(ShareAccountsAction.ToggleFiler) },
+                painter = painterResource(Res.drawable.filter),
+                contentDescription = null,
+            )
         }
-        Spacer(modifier = Modifier.width(DesignToken.spacing.largeIncreased))
-        Icon(
-            modifier = Modifier.onClick { onAction.invoke(ShareAccountsAction.ToggleFiler) },
-            painter = painterResource(Res.drawable.filter),
-            contentDescription = null,
-        )
     }
 }
 

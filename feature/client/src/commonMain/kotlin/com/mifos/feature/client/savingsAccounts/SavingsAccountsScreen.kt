@@ -244,17 +244,17 @@ fun SavingsAccountsHeader(
 
         Spacer(modifier = Modifier.weight(1f))
 
-        IconButton(
-            onClick = { onAction.invoke(SavingsAccountAction.ToggleSearch) },
-        ) {
-            // add a cross icon when its active, talk with design team
-            Icon(
-                painter = painterResource(Res.drawable.search),
-                contentDescription = null,
-            )
-        }
-        Spacer(modifier = Modifier.width(KptTheme.spacing.md))
         if (!isSavingsScreenEmpty) {
+            IconButton(
+                onClick = { onAction.invoke(SavingsAccountAction.ToggleSearch) },
+            ) {
+                // add a cross icon when its active, talk with design team
+                Icon(
+                    painter = painterResource(Res.drawable.search),
+                    contentDescription = null,
+                )
+            }
+            Spacer(modifier = Modifier.width(KptTheme.spacing.md))
             IconButton(
                 onClick = { onAction.invoke(SavingsAccountAction.AddAccount) },
             ) {
@@ -263,17 +263,16 @@ fun SavingsAccountsHeader(
                     contentDescription = null,
                 )
             }
-        }
+            Spacer(modifier = Modifier.width(KptTheme.spacing.md))
 
-        DesignToken.padding
-
-        IconButton(
-            onClick = { onAction.invoke(SavingsAccountAction.ToggleFilter) },
-        ) {
-            Icon(
-                painter = painterResource(Res.drawable.filter),
-                contentDescription = null,
-            )
+            IconButton(
+                onClick = { onAction.invoke(SavingsAccountAction.ToggleFilter) },
+            ) {
+                Icon(
+                    painter = painterResource(Res.drawable.filter),
+                    contentDescription = null,
+                )
+            }
         }
     }
 }
