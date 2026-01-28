@@ -251,7 +251,7 @@ internal fun RecurringDepositAccountScaffold(
                                                         onAction(
                                                             RecurringDepositAccountAction.ViewAccount(
                                                                 accountNo,
-                                                            )
+                                                            ),
                                                         )
                                                     }
 
@@ -259,14 +259,14 @@ internal fun RecurringDepositAccountScaffold(
                                                         onAction(
                                                             RecurringDepositAccountAction.ApproveAccount(
                                                                 accountNo,
-                                                            )
+                                                            ),
                                                         )
                                                     }
 
                                                     else -> Unit
                                                 }
                                             }
-                                        }
+                                        },
                                     )
 
                                     Spacer(modifier = Modifier.height(DesignToken.spacing.small))

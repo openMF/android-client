@@ -22,13 +22,13 @@ val RecurringDepositModule = module {
     viewModel {
         RecurringDepositAccountApprovalViewModel(
             savedStateHandle = get(),
-            approveRecurringDepositUseCase = get()
+            approveRecurringDepositUseCase = get(),
         )
     }
 
     factory {
         ApproveRecurringDepositUseCase(
-            repository = get()
+            repository = get(),
         )
     }
 }

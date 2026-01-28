@@ -1,3 +1,12 @@
+/*
+ * Copyright 2026 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ */
 package com.mifos.feature.recurringDeposit.recurringAccountApproval
 
 import androidx.lifecycle.SavedStateHandle
@@ -23,7 +32,7 @@ class RecurringDepositAccountApprovalViewModel(
 
     private val _recurringDepositAccountApprovalUiState =
         MutableStateFlow<RecurringDepositAccountApprovalUiState>(
-            RecurringDepositAccountApprovalUiState.Initial
+            RecurringDepositAccountApprovalUiState.Initial,
         )
     val recurringDepositAccountApprovalUiState: StateFlow<RecurringDepositAccountApprovalUiState> =
         _recurringDepositAccountApprovalUiState.asStateFlow()
@@ -35,7 +44,7 @@ class RecurringDepositAccountApprovalViewModel(
         viewModelScope.launch {
             approveRecurringDepositUseCase.invoke(
                 accountId = route.accountId,
-                approval = recurringDepositApproval
+                approval = recurringDepositApproval,
             ).collect { result ->
                 when (result) {
                     is DataState.Error -> {
@@ -51,7 +60,7 @@ class RecurringDepositAccountApprovalViewModel(
                     is DataState.Success -> {
                         _recurringDepositAccountApprovalUiState.value =
                             RecurringDepositAccountApprovalUiState.ShowRecurringDepositAccountApprovedSuccessfully(
-                                result.data
+                                result.data,
                             )
                     }
                 }
@@ -60,15 +69,13 @@ class RecurringDepositAccountApprovalViewModel(
     }
 }
 
-
 class ApproveRecurringDepositUseCase(
     private val repository: RecurringAccountRepository,
 ) {
     operator fun invoke(
         accountId: String,
-        approval: RecurringDepositApproval
+        approval: RecurringDepositApproval,
     ): Flow<DataState<GenericResponse>> {
         return repository.approveRecurringDepositAccount(accountId, approval)
     }
 }
-

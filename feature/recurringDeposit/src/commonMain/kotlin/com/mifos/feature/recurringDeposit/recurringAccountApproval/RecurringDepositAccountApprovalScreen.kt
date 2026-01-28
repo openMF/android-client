@@ -1,5 +1,13 @@
+/*
+ * Copyright 2026 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ */
 package com.mifos.feature.recurringDeposit.recurringAccountApproval
-
 
 import androidclient.feature.recurringdeposit.generated.resources.Res
 import androidclient.feature.recurringdeposit.generated.resources.feature_recurring_deposit_account
@@ -57,7 +65,6 @@ import org.jetbrains.compose.ui.tooling.preview.PreviewParameterProvider
 import org.koin.compose.viewmodel.koinViewModel
 import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
-
 
 @Composable
 internal fun RecurringDepositAccountApprovalScreen(
@@ -223,8 +230,8 @@ private fun RecurringDepositAccountApprovalContent(
                         locale = "en",
                         dateFormat = "dd MMMM yyyy",
                         approvedOnDate = DateHelper.getDateAsStringForApproval(approvalDate),
-                        note = reasonForApproval
-                    )
+                        note = reasonForApproval,
+                    ),
                 )
             },
         ) {
