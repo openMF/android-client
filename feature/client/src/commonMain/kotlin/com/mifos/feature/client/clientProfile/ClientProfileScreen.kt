@@ -12,7 +12,6 @@ package com.mifos.feature.client.clientProfile
 import androidclient.feature.client.generated.resources.Res
 import androidclient.feature.client.generated.resources.client_profile_actions
 import androidclient.feature.client.generated.resources.client_profile_profile
-import androidclient.feature.client.generated.resources.client_profile_title
 import androidclient.feature.client.generated.resources.group_na
 import androidclient.feature.client.generated.resources.name_na
 import androidclient.feature.client.generated.resources.office_na
@@ -135,8 +134,6 @@ private fun ClientProfileScaffold(
     onAction: (ClientProfileAction) -> Unit,
 ) {
     MifosScaffold(
-        title = stringResource(Res.string.client_profile_title),
-        onBackPressed = { onAction(ClientProfileAction.NavigateBack) },
         modifier = modifier,
     ) { paddingValues ->
         if (state.dialogState == null) {
