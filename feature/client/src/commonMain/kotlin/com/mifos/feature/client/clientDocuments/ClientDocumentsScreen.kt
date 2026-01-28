@@ -149,7 +149,7 @@ private fun ClientDocumentsContent(
     modifier: Modifier = Modifier,
 ) {
     Column(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxSize(),
     ) {
         MifosBreadcrumbNavBar(navController)
@@ -166,7 +166,7 @@ private fun ClientDocumentsContent(
                 )
             } else {
                 Column(
-                    modifier.fillMaxSize()
+                    Modifier.fillMaxSize()
                         .padding(
                             horizontal = DesignToken.padding.large,
                         ),

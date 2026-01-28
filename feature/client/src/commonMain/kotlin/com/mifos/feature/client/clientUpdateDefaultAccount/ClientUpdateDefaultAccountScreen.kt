@@ -13,6 +13,7 @@ import androidclient.feature.client.generated.resources.Res
 import androidclient.feature.client.generated.resources.btn_back
 import androidclient.feature.client.generated.resources.btn_submit
 import androidclient.feature.client.generated.resources.dialog_continue
+import androidclient.feature.client.generated.resources.feature_client_no_savings_found
 import androidclient.feature.client.generated.resources.update_default_account_choose
 import androidclient.feature.client.generated.resources.update_default_account_failure_title
 import androidclient.feature.client.generated.resources.update_default_account_success_message
@@ -90,12 +91,12 @@ private fun UpdateDefaultAccountContent(
         state.dialogState !is UpdateDefaultAccountState.DialogState.ShowStatusDialog
     ) {
         Column(
-            modifier = Modifier
+            modifier = modifier
                 .fillMaxSize(),
         ) {
             MifosBreadcrumbNavBar(navController)
             Column(
-                modifier = modifier
+                modifier = Modifier
                     .fillMaxSize()
                     .padding(horizontal = DesignToken.padding.large),
             ) {
@@ -159,7 +160,7 @@ private fun UpdateDefaultAccountContent(
                         )
                     }
                 } else {
-                    Text("No Savings Accounts found for this client")
+                    Text(stringResource(Res.string.feature_client_no_savings_found))
                 }
             }
         }

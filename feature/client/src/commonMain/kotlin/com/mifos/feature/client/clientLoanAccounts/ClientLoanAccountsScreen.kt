@@ -86,11 +86,12 @@ internal fun ClientLoanAccountsScreenRoute(
 @Composable
 private fun ClientLoanAccountsScreen(
     state: ClientLoanAccountsState,
+    modifier: Modifier = Modifier,
     navController: NavController,
     onAction: (ClientLoanAccountsAction) -> Unit,
 ) {
     Column(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxSize(),
     ) {
         MifosBreadcrumbNavBar(navController)

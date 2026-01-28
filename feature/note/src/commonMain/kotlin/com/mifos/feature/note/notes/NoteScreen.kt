@@ -188,7 +188,7 @@ private fun NoteContent(
     modifier: Modifier = Modifier,
 ) {
     Column(
-        modifier = Modifier
+        modifier = modifier
             .padding(horizontal = DesignToken.spacing.large)
             .padding(bottom = DesignToken.spacing.large),
     ) {
@@ -214,7 +214,7 @@ private fun NoteContent(
             Icon(
                 imageVector = MifosIcons.Add,
                 contentDescription = null,
-                modifier.clickable {
+                Modifier.clickable {
                     onAction(NoteAction.OnClickAddScreen)
                 }.size(DesignToken.sizes.iconAverage),
             )

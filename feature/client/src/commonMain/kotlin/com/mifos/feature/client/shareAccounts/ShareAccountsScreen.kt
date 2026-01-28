@@ -79,7 +79,7 @@ internal fun ShareAccountsContent(
     onAction: (ShareAccountsAction) -> Unit,
 ) {
     Column(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxSize(),
     ) {
         MifosBreadcrumbNavBar(
@@ -91,7 +91,7 @@ internal fun ShareAccountsContent(
 
             false -> {
                 Column(
-                    modifier = modifier.fillMaxSize()
+                    modifier = Modifier.fillMaxSize()
                         .padding(horizontal = DesignToken.padding.large),
                 ) {
                     ShareAccountHeader(

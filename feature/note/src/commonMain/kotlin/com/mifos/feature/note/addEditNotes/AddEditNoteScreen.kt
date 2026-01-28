@@ -118,11 +118,12 @@ fun AddEditNoteScreenDialog(
 @Composable
 internal fun AddEditNoteScreenContent(
     onAction: (AddEditNoteAction) -> Unit,
+    modifier: Modifier = Modifier,
     state: AddEditNoteState,
     navController: NavController,
 ) {
     Column(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxSize(),
     ) {
         if (

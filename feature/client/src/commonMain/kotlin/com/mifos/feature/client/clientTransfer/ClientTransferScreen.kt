@@ -116,12 +116,12 @@ private fun ClientTransferContent(
         state.dialogState !is ClientTransferState.DialogState.ShowStatusDialog
     ) {
         Column(
-            modifier = Modifier
+            modifier = modifier
                 .fillMaxSize(),
         ) {
             MifosBreadcrumbNavBar(navController)
             Column(
-                modifier = modifier
+                modifier = Modifier
                     .fillMaxSize()
                     .padding(horizontal = DesignToken.padding.large),
             ) {

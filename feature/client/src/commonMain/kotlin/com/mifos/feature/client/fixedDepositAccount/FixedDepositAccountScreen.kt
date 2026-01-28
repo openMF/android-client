@@ -135,7 +135,7 @@ fun FixedDepositAccountContent(
     var expandedIndex by rememberSaveable { mutableStateOf(-1) }
 
     Column(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxSize(),
     ) {
         MifosBreadcrumbNavBar(navController)
@@ -144,7 +144,7 @@ fun FixedDepositAccountContent(
             true -> MifosProgressIndicator()
             false -> {
                 Column(
-                    modifier.fillMaxSize()
+                    Modifier.fillMaxSize()
                         .padding(
                             horizontal = DesignToken.padding.large,
                         ),

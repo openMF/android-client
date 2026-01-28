@@ -184,14 +184,14 @@ internal fun ClientIdentifiersAddUpdateContent(
     onAction: (ClientIdentifiersAddUpdateAction) -> Unit,
 ) {
     Column(
-        modifier = Modifier.fillMaxSize(),
+        modifier = modifier.fillMaxSize(),
     ) {
         if (state.feature != Feature.VIEW_DOCUMENT) {
             MifosBreadcrumbNavBar(navController)
         }
 
         Column(
-            modifier = modifier.fillMaxSize().padding(
+            modifier = Modifier.fillMaxSize().padding(
                 horizontal = DesignToken.padding.large,
             ),
         ) {

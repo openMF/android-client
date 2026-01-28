@@ -182,14 +182,14 @@ private fun ClientProfileDetailsContent(
         state.dialogState !is ClientProfileDetailsState.DialogState.ShowStatusDialog
     ) {
         Column(
-            modifier = Modifier
+            modifier = modifier
                 .fillMaxSize(),
         ) {
             MifosBreadcrumbNavBar(
                 navController,
             )
             Column(
-                modifier = modifier
+                modifier = Modifier
                     .fillMaxSize()
                     .verticalScroll(rememberScrollState())
                     .padding(

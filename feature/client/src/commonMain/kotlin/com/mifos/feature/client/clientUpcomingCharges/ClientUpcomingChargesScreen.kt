@@ -78,12 +78,15 @@ fun ClientUpcomingChargesScreenRoute(
 @Composable
 fun ClientUpcomingChargesScreen(
     state: ClientUpcomingChargesState,
+    modifier: Modifier = Modifier,
     navController: NavController,
     onAction: (ClientUpcomingChargesAction) -> Unit,
 ) {
     var itemCount by rememberSaveable { mutableStateOf(0) }
 
-    Column {
+    Column(
+        modifier = modifier,
+    ) {
         MifosBreadcrumbNavBar(navController)
 
         when (state.isLoading) {

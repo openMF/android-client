@@ -163,9 +163,9 @@ private fun NewLoanAccountScaffold(
     MifosScaffold(
         modifier = modifier,
         snackbarHostState = snackbarHostState,
-    ) {
+    ) { paddingValues ->
         Column(
-            modifier.fillMaxSize(),
+            modifier = Modifier.fillMaxSize().padding(paddingValues),
         ) {
             MifosBreadcrumbNavBar(
                 navController,

@@ -139,12 +139,12 @@ private fun SavingsAccountScaffold(
     MifosScaffold(
         modifier = modifier,
         snackbarHostState = snackbarHostState,
-    ) {
+    ) { paddingValues ->
         when (state.screenState) {
             is SavingsAccountState.ScreenState.Loading -> MifosProgressIndicator()
             is SavingsAccountState.ScreenState.Success -> {
                 Column(
-                    Modifier.fillMaxSize(),
+                    Modifier.fillMaxSize().padding(paddingValues),
                 ) {
                     MifosBreadcrumbNavBar(
                         navController,

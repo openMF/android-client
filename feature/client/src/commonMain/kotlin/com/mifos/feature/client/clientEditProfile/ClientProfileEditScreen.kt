@@ -114,10 +114,10 @@ private fun ClientProfileEditContent(
     onAction: (ClientProfileEditAction) -> Unit,
 ) {
     if (state.dialogState != ClientProfileEditState.DialogState.Loading) {
-        Column(Modifier.fillMaxSize()) {
+        Column(modifier.fillMaxSize()) {
             MifosBreadcrumbNavBar(navController)
             Column(
-                modifier = modifier
+                modifier = Modifier
                     .fillMaxSize()
                     .verticalScroll(rememberScrollState())
                     .padding(

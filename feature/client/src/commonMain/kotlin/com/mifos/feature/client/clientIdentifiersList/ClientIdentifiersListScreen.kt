@@ -96,13 +96,14 @@ internal fun ClientIdentifiersListScreen(
 @Composable
 internal fun ClientIdentifiersListScreen(
     state: ClientIdentifiersListState,
+    modifier: Modifier = Modifier,
     navController: NavController,
     onAction: (ClientIdentifiersListAction) -> Unit,
 ) {
     val emptyMessage = stringResource(Res.string.client_identifiers_not_available)
 
     Column(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxSize(),
     ) {
         MifosBreadcrumbNavBar(navController)

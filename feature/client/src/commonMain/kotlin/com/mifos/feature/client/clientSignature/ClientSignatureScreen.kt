@@ -173,10 +173,10 @@ internal fun ClientSignatureContent(
     if (state.dialogState !is ClientSignatureState.DialogState.Loading &&
         state.dialogState !is ClientSignatureState.DialogState.Error
     ) {
-        Column(Modifier.fillMaxSize()) {
+        Column(modifier.fillMaxSize()) {
             MifosBreadcrumbNavBar(navController)
             Column(
-                modifier = modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(
+                modifier = Modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(
                     horizontal = DesignToken.padding.large,
                 ),
                 horizontalAlignment = Alignment.CenterHorizontally,

@@ -83,7 +83,7 @@ internal fun ClientAddressScreen(
         onAction = { viewModel.trySendAction(it) },
     )
 
-    ClientAddressScaffold(
+    ClientAddressContent(
         state = state,
         navController = navController,
         onAction = { viewModel.trySendAction(it) },
@@ -108,16 +108,17 @@ fun ClientAddressDialogs(
 }
 
 @Composable
-private fun ClientAddressScaffold(
+private fun ClientAddressContent(
     state: ClientAddressState,
     navController: NavController,
+    modifier: Modifier = Modifier,
     onAction: (ClientAddressAction) -> Unit,
 ) {
     when (state.addressListScreenState) {
         is ClientAddressState.AddressListScreenState.Loading -> MifosProgressIndicator()
         is ClientAddressState.AddressListScreenState.ShowAddressList -> {
             Column(
-                modifier = Modifier
+                modifier = modifier
                     .fillMaxSize(),
             ) {
                 MifosBreadcrumbNavBar(navController)

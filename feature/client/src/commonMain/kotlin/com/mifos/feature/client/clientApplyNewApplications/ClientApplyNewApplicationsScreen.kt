@@ -107,11 +107,12 @@ internal fun ClientApplyNewApplicationsScreen(
 @Composable
 private fun ClientApplyNewApplicationsContent(
     state: ClientApplyNewApplicationsState,
+    modifier: Modifier = Modifier,
     navController: NavController,
     onAction: (ClientApplyNewApplicationsAction) -> Unit,
 ) {
     Column(
-        modifier = Modifier.fillMaxSize(),
+        modifier = modifier.fillMaxSize(),
     ) {
         MifosBreadcrumbNavBar(navController)
         if (state.status == ClientStatusEntity.STATUS_ACTIVE) {

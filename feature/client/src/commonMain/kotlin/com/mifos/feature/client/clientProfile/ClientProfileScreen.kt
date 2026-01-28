@@ -135,12 +135,12 @@ private fun ClientProfileContent(
 ) {
     if (state.dialogState == null) {
         Column(
-            modifier = Modifier
+            modifier = modifier
                 .fillMaxSize(),
         ) {
             MifosBreadcrumbNavBar(navController)
             Column(
-                modifier = modifier
+                modifier = Modifier
                     .fillMaxSize()
                     .verticalScroll(rememberScrollState())
                     .padding(

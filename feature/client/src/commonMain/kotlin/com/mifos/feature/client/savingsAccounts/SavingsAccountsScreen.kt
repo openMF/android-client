@@ -104,7 +104,7 @@ fun SavingsAccountsContent(
     var expandedIndex by rememberSaveable { mutableStateOf(-1) }
 
     Column(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxSize(),
     ) {
         MifosBreadcrumbNavBar(navController)
@@ -113,7 +113,7 @@ fun SavingsAccountsContent(
             true -> MifosProgressIndicator()
             false -> {
                 Column(
-                    modifier = modifier
+                    modifier = Modifier
                         .fillMaxSize()
                         .padding(horizontal = DesignToken.padding.large),
                 ) {
