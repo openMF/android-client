@@ -27,4 +27,5 @@
     <string name="search_record_province">Province/State</string>
     <string name="search_record_country">Country</string>
     <string name="search_record_postal_code">Postal Code</string>
+    <string name="search_record_label_format">Search %1$s</string>
 </resources>

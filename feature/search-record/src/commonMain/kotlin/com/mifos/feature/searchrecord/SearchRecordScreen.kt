@@ -20,6 +20,7 @@ import androidclient.feature.search_record.generated.resources.search_record_emp
 import androidclient.feature.search_record.generated.resources.search_record_error
 import androidclient.feature.search_record.generated.resources.search_record_generic_searchLabel
 import androidclient.feature.search_record.generated.resources.search_record_input_placeholder
+import androidclient.feature.search_record.generated.resources.search_record_label_format
 import androidclient.feature.search_record.generated.resources.search_record_no_results_description
 import androidclient.feature.search_record.generated.resources.search_record_no_results_title
 import androidclient.feature.search_record.generated.resources.search_record_postal_code
@@ -77,10 +78,15 @@ internal fun SearchRecordScreen(
     val searchQuery by viewModel.searchQuery.collectAsStateWithLifecycle()
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
+    val searchLabel = stringResource(
+        Res.string.search_record_label_format,
+        viewModel.recordType.displayName,
+    )
+
     SearchRecordScreen(
         modifier = modifier,
         searchQuery = searchQuery,
-        searchLabel = viewModel.searchLabel,
+        searchLabel = searchLabel,
         uiState = uiState,
         onSearchQueryChanged = viewModel::onSearchQueryChanged,
         onClearSearch = viewModel::clearSearch,
@@ -201,7 +207,10 @@ private fun SearchRecordResultsList(
         LazyColumn(
             modifier = Modifier.fillMaxSize(),
         ) {
-            items(records, key = { it.id }) { record ->
+            items(
+                items = records,
+                key = { record -> "${record.type}-${record.id}" },
+            ) { record ->
                 SearchRecordItem(
                     record = record,
                     onRecordSelected = onRecordSelected,

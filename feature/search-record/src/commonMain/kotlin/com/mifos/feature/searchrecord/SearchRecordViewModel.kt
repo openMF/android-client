@@ -34,13 +34,12 @@ class SearchRecordViewModel(
 
     private val route = savedStateHandle.toRoute<SearchRecordRoute>()
 
-    private val recordType: RecordType = try {
+    val recordType: RecordType = try {
         RecordType.valueOf(route.recordType.uppercase())
     } catch (e: IllegalArgumentException) {
         RecordType.ADDRESS
     }
 
-    val searchLabel: String = "Search ${recordType.displayName}"
     private val _searchQuery = MutableStateFlow("")
     val searchQuery: StateFlow<String> = _searchQuery.asStateFlow()
 

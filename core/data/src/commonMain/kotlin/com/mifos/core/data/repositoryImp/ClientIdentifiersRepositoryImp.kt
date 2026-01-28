@@ -22,6 +22,7 @@ import com.mifos.room.helper.ClientDaoHelper
 import io.ktor.client.statement.HttpResponse
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.onEach
+import kotlin.coroutines.cancellation.CancellationException
 
 /**
  * Created by Arin Yadav on 12/09/2025.
@@ -49,7 +50,11 @@ class ClientIdentifiersRepositoryImp(
                     }
                     try {
                         clientDaoHelper.insertIdentifiers(entities)
-                    } catch (_: Throwable) { }
+                    } catch (e: CancellationException) {
+                        throw e
+                    } catch (e: Throwable) {
+                        // TODO: log/report, but don't fail upstream flow
+                    }
                 }
             }
     }
