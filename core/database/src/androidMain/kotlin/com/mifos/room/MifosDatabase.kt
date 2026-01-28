@@ -46,9 +46,11 @@ import com.mifos.room.entities.center.CenterPayloadEntity
 import com.mifos.room.entities.client.ChargeCalculationTypeEntity
 import com.mifos.room.entities.client.ChargeTimeTypeEntity
 import com.mifos.room.entities.client.ChargesEntity
+import com.mifos.room.entities.client.ClientAddressEntity
 import com.mifos.room.entities.client.ClientChargeCurrencyEntity
 import com.mifos.room.entities.client.ClientDateEntity
 import com.mifos.room.entities.client.ClientEntity
+import com.mifos.room.entities.client.ClientIdentifierEntity
 import com.mifos.room.entities.client.ClientPayloadEntity
 import com.mifos.room.entities.client.ClientStatusEntity
 import com.mifos.room.entities.group.CenterDateEntity
@@ -114,6 +116,8 @@ import com.mifos.room.typeconverters.CustomTypeConverters
         ClientChargeCurrencyEntity::class,
         ClientDateEntity::class,
         ClientStatusEntity::class,
+        ClientAddressEntity::class,
+        ClientIdentifierEntity::class,
         // group package
         CenterEntity::class,
         CenterDateEntity::class,

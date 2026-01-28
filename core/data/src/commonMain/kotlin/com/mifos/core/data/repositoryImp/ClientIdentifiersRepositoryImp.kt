@@ -17,18 +17,39 @@ import com.mifos.core.model.objects.noncoreobjects.IdentifierPayload
 import com.mifos.core.model.objects.noncoreobjects.IdentifierTemplate
 import com.mifos.core.network.GenericResponse
 import com.mifos.core.network.datamanager.DataManagerIdentifiers
+import com.mifos.room.entities.client.ClientIdentifierEntity
+import com.mifos.room.helper.ClientDaoHelper
 import io.ktor.client.statement.HttpResponse
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.onEach
 
 /**
  * Created by Arin Yadav on 12/09/2025.
  */
 class ClientIdentifiersRepositoryImp(
     private val dataManagerIdentifiers: DataManagerIdentifiers,
+    private val clientDaoHelper: ClientDaoHelper,
 ) : ClientIdentifiersRepository {
 
     override fun getClientListIdentifiers(clientId: Long): Flow<DataState<List<Identifier>>> {
-        return dataManagerIdentifiers.getClientListIdentifiers(clientId).asDataStateFlow()
+        return dataManagerIdentifiers.getClientListIdentifiers(clientId)
+            .asDataStateFlow()
+            .onEach { dataState ->
+                if (dataState is DataState.Success) {
+                    val entities = dataState.data.map { identifier ->
+                        ClientIdentifierEntity(
+                            id = identifier.id ?: -1,
+                            clientId = identifier.clientId ?: clientId.toInt(),
+                            documentKey = identifier.documentKey ?: "",
+                            documentTypeName = identifier.documentType?.name ?: "",
+                            documentTypeId = identifier.documentType?.id ?: -1,
+                            description = identifier.description ?: "",
+                            status = identifier.status ?: "",
+                        )
+                    }
+                    clientDaoHelper.insertIdentifiers(entities)
+                }
+            }
     }
 
     override fun getClientIdentifiers(clientId: Long, identifierId: Long): Flow<DataState<Identifier>> {

@@ -62,6 +62,7 @@ internal fun ClientAddressScreen(
     onNavigateBack: () -> Unit,
     navigateToAddAddressForm: (Int) -> Unit,
     navController: NavController,
+    onNavigateToSearch: () -> Unit,
     viewModel: ClientAddressViewModel = koinViewModel(),
 ) {
     val state by viewModel.stateFlow.collectAsStateWithLifecycle()
@@ -74,6 +75,7 @@ internal fun ClientAddressScreen(
         when (event) {
             ClientAddressEvent.NavigateBack -> onNavigateBack.invoke()
             ClientAddressEvent.ShowAddressForm -> navigateToAddAddressForm(state.id)
+            ClientAddressEvent.NavigateToSearch -> onNavigateToSearch()
             else -> Unit
         }
     }
@@ -196,7 +198,7 @@ fun ClientAddressHeader(
 
         IconButton(
             onClick = {
-                // ToDo: Implement Search Address Functionality
+                onAction(ClientAddressAction.NavigateToSearch)
             },
         ) {
             Icon(

@@ -16,8 +16,10 @@ import com.mifos.room.dao.ClientDao
 import com.mifos.room.entities.accounts.ClientAccounts
 import com.mifos.room.entities.accounts.loans.LoanAccountEntity
 import com.mifos.room.entities.accounts.savings.SavingsAccountEntity
+import com.mifos.room.entities.client.ClientAddressEntity
 import com.mifos.room.entities.client.ClientDateEntity
 import com.mifos.room.entities.client.ClientEntity
+import com.mifos.room.entities.client.ClientIdentifierEntity
 import com.mifos.room.entities.client.ClientPayloadEntity
 import com.mifos.room.entities.group.GroupWithAssociations
 import com.mifos.room.entities.noncore.ColumnHeader
@@ -335,6 +337,37 @@ class ClientDaoHelper(
      */
     suspend fun updateDatabaseClientPayload(clientPayload: ClientPayloadEntity) {
         clientDao.updateDatabaseClientPayload(clientPayload)
+    }
+
+    fun searchAddressesByQuery(query: String): Flow<List<ClientAddressEntity>> {
+        return clientDao.searchAddressesByQuery(query)
+            .flowOn(ioDispatcher)
+    }
+
+    fun getAddressesByClientId(clientId: Int): Flow<List<ClientAddressEntity>> {
+        return clientDao.getAddressesByClientId(clientId)
+            .flowOn(ioDispatcher)
+    }
+
+    suspend fun insertAddresses(addresses: List<ClientAddressEntity>) {
+        clientDao.insertAddresses(addresses)
+    }
+
+    fun searchIdentifiersByQuery(query: String): Flow<List<ClientIdentifierEntity>> {
+        return clientDao.searchIdentifiersByQuery(query)
+            .flowOn(ioDispatcher)
+    }
+
+    fun getIdentifiersByClientId(clientId: Int): Flow<List<ClientIdentifierEntity>> {
+        return clientDao.getIdentifiersByClientId(clientId)
+            .flowOn(ioDispatcher)
+    }
+
+    suspend fun insertIdentifiers(identifiers: List<com.mifos.room.entities.client.ClientIdentifierEntity>) {
+        if (identifiers.isNotEmpty()) {
+            clientDao.deleteIdentifiersByClientId(identifiers.first().clientId)
+        }
+        clientDao.insertIdentifiers(identifiers)
     }
 
     companion object {

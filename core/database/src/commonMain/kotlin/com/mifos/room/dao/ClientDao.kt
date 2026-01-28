@@ -11,7 +11,9 @@ package com.mifos.room.dao
 
 import com.mifos.room.entities.accounts.loans.LoanAccountEntity
 import com.mifos.room.entities.accounts.savings.SavingsAccountEntity
+import com.mifos.room.entities.client.ClientAddressEntity
 import com.mifos.room.entities.client.ClientEntity
+import com.mifos.room.entities.client.ClientIdentifierEntity
 import com.mifos.room.entities.client.ClientPayloadEntity
 import com.mifos.room.entities.noncore.ColumnHeader
 import com.mifos.room.entities.noncore.ColumnValue
@@ -139,6 +141,56 @@ interface ClientDao {
 
     @Update(ClientPayloadEntity::class)
     suspend fun updateDatabaseClientPayload(clientPayload: ClientPayloadEntity)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE, entity = ClientAddressEntity::class)
+    suspend fun insertAddress(address: ClientAddressEntity)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE, entity = ClientAddressEntity::class)
+    suspend fun insertAddresses(addresses: List<ClientAddressEntity>)
+
+    @Query("SELECT * FROM ClientAddress WHERE clientID = :clientId")
+    fun getAddressesByClientId(clientId: Int): Flow<List<ClientAddressEntity>>
+
+    @Query("SELECT * FROM ClientAddress WHERE addressId = :addressId LIMIT 1")
+    fun getAddressById(addressId: Int): Flow<ClientAddressEntity?>
+
+    @Query(
+        """
+    SELECT * FROM ClientAddress 
+    WHERE addressLine1 LIKE :query
+       OR addressLine2 LIKE :query
+       OR addressLine3 LIKE :query
+       OR city LIKE :query
+       OR stateName LIKE :query
+       OR countryName LIKE :query
+       OR postalCode LIKE :query
+    ORDER BY city
+    LIMIT 50
+    """,
+    )
+    fun searchAddressesByQuery(query: String): Flow<List<ClientAddressEntity>>
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE, entity = ClientIdentifierEntity::class)
+    suspend fun insertIdentifiers(identifiers: List<ClientIdentifierEntity>)
+
+    @Query("SELECT * FROM ClientIdentifier WHERE clientId = :clientId")
+    fun getIdentifiersByClientId(clientId: Int): Flow<List<ClientIdentifierEntity>>
+
+    @Query("DELETE FROM ClientIdentifier WHERE clientId = :clientId")
+    suspend fun deleteIdentifiersByClientId(clientId: Int)
+
+    @Query(
+        """
+    SELECT * FROM ClientIdentifier 
+    WHERE CAST(id AS TEXT) LIKE :query  -- Added this line to search by numeric ID
+       OR documentKey LIKE :query 
+       OR description LIKE :query 
+       OR documentTypeName LIKE :query
+    ORDER BY documentKey
+    LIMIT 50
+    """,
+    )
+    fun searchIdentifiersByQuery(query: String): Flow<List<ClientIdentifierEntity>>
 
     companion object {
         const val GENDER_OPTIONS = "genderOptions"

@@ -121,6 +121,7 @@ fun NavGraphBuilder.clientNavGraph(
     onMoreInfoClicked: (String, Int) -> Unit,
     activateClient: (Int) -> Unit,
     hasDatatables: KFunction4<List<DataTableEntity>, Any?, Int, MutableList<List<FormWidgetDTO>>, Unit>,
+    onNavigateToSearch: (String) -> Unit,
 ) {
     navigation<ClientNavGraph>(
         startDestination = ClientListScreenRoute,
@@ -205,6 +206,9 @@ fun NavGraphBuilder.clientNavGraph(
             onNavigateBack = navController::popBackStack,
             navigateToAddAddressForm = navController::navigateToClientAddAddressRoute,
             navController = navController,
+            onNavigateToSearch = {
+                onNavigateToSearch("Address")
+            },
         )
 
         clientAddAddressRoute(
@@ -319,7 +323,6 @@ fun NavGraphBuilder.clientNavGraph(
             navigateToViewAccount = navController::navigateToSavingsAccountSummaryScreen,
             navController = navController,
             navigateToApproveAccount = navController::navigateToSavingsAccountApproval,
-
         )
         clientCollateralDestination(
             onNavigateBack = navController::popBackStack,
@@ -336,6 +339,9 @@ fun NavGraphBuilder.clientNavGraph(
             addNewClientIdentity = navController::onNavigateToClientIdentifiersAddUpdateScreen,
             onBackPress = navController::popBackStack,
             navController = navController,
+            onNavigateToSearch = {
+                onNavigateToSearch("Identifier")
+            },
         )
         clientApplyNewApplicationRoute(
             onNavigateBack = navController::popBackStack,

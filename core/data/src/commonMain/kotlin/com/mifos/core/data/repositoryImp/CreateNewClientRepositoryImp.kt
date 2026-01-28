@@ -24,8 +24,10 @@ import com.mifos.room.entities.client.ClientPayloadEntity
 import com.mifos.room.entities.organisation.OfficeEntity
 import com.mifos.room.entities.organisation.StaffEntity
 import com.mifos.room.entities.templates.clients.ClientsTemplateEntity
+import com.mifos.room.helper.ClientDaoHelper
 import io.ktor.client.request.forms.MultiPartFormDataContent
 import kotlinx.coroutines.flow.Flow
+import com.mifos.room.entities.client.ClientAddressEntity as RoomAddressEntity
 
 /**
  * Created by Aditya Gupta on 10/08/23.
@@ -34,6 +36,7 @@ class CreateNewClientRepositoryImp(
     private val dataManagerClient: DataManagerClient,
     private val dataManagerOffices: DataManagerOffices,
     private val dataManagerStaff: DataManagerStaff,
+    private val clientDaoHelper: ClientDaoHelper,
 ) : CreateNewClientRepository {
 
     override fun clientTemplate(): Flow<DataState<ClientsTemplateEntity>> {
@@ -68,7 +71,34 @@ class CreateNewClientRepositoryImp(
     }
 
     override suspend fun getAddresses(clientId: Int): List<ClientAddressEntity> {
-        return dataManagerClient.getClientAddresses(clientId = clientId)
+        val addresses = dataManagerClient.getClientAddresses(clientId = clientId)
+
+        if (addresses.isNotEmpty()) {
+            try {
+                val roomEntities = addresses.map { item ->
+                    RoomAddressEntity(
+                        clientID = item.clientID ?: clientId,
+                        addressId = item.addressId ?: 0,
+                        addressType = item.addressType ?: "",
+                        addressLine1 = item.addressLine1 ?: "",
+                        addressLine2 = item.addressLine2 ?: "",
+                        addressLine3 = item.addressLine3 ?: "",
+                        city = item.city ?: "",
+                        stateProvinceId = item.stateProvinceId ?: -1,
+                        countryName = item.countryName ?: "",
+                        stateName = item.stateName ?: "",
+                        countryId = item.countryId ?: -1,
+                        postalCode = item.postalCode ?: "",
+                        isActive = item.isActive ?: false,
+                    )
+                }
+                clientDaoHelper.insertAddresses(roomEntities)
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+
+        return addresses
     }
 
     override suspend fun createClientAddress(
