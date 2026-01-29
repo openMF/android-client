@@ -368,8 +368,8 @@ class ClientDaoHelper(
     }
 
     suspend fun insertIdentifiers(identifiers: List<com.mifos.room.entities.client.ClientIdentifierEntity>) {
-        if (identifiers.isNotEmpty()) {
-            clientDao.deleteIdentifiersByClientId(identifiers.first().clientId)
+        identifiers.map { it.clientId }.distinct().forEach { clientId ->
+            clientDao.deleteIdentifiersByClientId(clientId)
         }
         clientDao.insertIdentifiers(identifiers)
     }
