@@ -114,6 +114,7 @@ internal fun AuthenticatedNavbarNavigationScreen(
     navController: NavHostController = rememberMifosNavController(
         name = "AuthenticatedNavbarScreen",
     ),
+    onMoreInfoClicked: (String, Int) -> Unit,
     viewModel: AuthenticatedNavbarNavigationViewModel = koinViewModel(),
 ) {
     val scope = rememberCoroutineScope()
@@ -173,6 +174,7 @@ internal fun AuthenticatedNavbarNavigationScreen(
         },
         onDrawerItemClick = onDrawerItemClick,
         navigateToDocumentScreen = navigateToDocumentScreen,
+        onMoreInfoClicked = onMoreInfoClicked,
     )
 }
 
@@ -184,6 +186,7 @@ internal fun AuthenticatedNavbarNavigationScreenContent(
     navigateToDocumentScreen: (Int, String) -> Unit,
     modifier: Modifier = Modifier,
     snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
+    onMoreInfoClicked: (String, Int) -> Unit,
     onAction: (AuthenticatedNavBarAction) -> Unit,
 ) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
@@ -382,6 +385,7 @@ internal fun AuthenticatedNavbarNavigationScreenContent(
                             clientId,
                         )
                     },
+                    onMoreInfoClicked = onMoreInfoClicked,
                     activateClient = { clientId ->
                         navController.navigateToActivateRoute(
                             clientId,
