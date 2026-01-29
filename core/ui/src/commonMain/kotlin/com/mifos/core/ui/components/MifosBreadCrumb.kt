@@ -62,8 +62,7 @@ fun MifosBreadcrumbNavBar(
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = modifier.fillMaxWidth()
-            .padding(horizontal = DesignToken.padding.large)
-            .padding(vertical = DesignToken.padding.large),
+            .padding(DesignToken.padding.large),
     ) {
         val routes = if (backStack.size <= 3) {
             backStack
