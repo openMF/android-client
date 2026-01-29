@@ -43,7 +43,11 @@ fun main() {
             title = "Android Client",
         ) {
             // Sets the content of the window.
-            SharedApp()
+            SharedApp(
+                handleThemeMode = {},
+                handleAppLocale = {},
+                onSplashScreenRemoved = {},
+            )
         }
     }
 }

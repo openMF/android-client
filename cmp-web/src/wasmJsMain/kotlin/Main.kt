@@ -45,9 +45,7 @@ fun main() {
          * Invokes the root composable of the application.
          * This function is responsible for setting up the entire UI structure of the app.
          */
-        SharedApp(
-            updateScreenCapture = {},
-            handleRecreate = {},
+        SharedApp(                                                              `
             handleThemeMode = {},
             handleAppLocale = {},
             onSplashScreenRemoved = {},
