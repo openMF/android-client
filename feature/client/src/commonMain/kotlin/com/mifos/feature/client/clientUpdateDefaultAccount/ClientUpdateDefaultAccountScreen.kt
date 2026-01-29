@@ -13,7 +13,7 @@ import androidclient.feature.client.generated.resources.Res
 import androidclient.feature.client.generated.resources.btn_back
 import androidclient.feature.client.generated.resources.btn_submit
 import androidclient.feature.client.generated.resources.dialog_continue
-import androidclient.feature.client.generated.resources.feature_client_no_savings_found
+import androidclient.feature.client.generated.resources.feature_client_no_savings_accounts_found
 import androidclient.feature.client.generated.resources.update_default_account_choose
 import androidclient.feature.client.generated.resources.update_default_account_failure_title
 import androidclient.feature.client.generated.resources.update_default_account_success_message
@@ -160,7 +160,7 @@ private fun UpdateDefaultAccountContent(
                         )
                     }
                 } else {
-                    Text(stringResource(Res.string.feature_client_no_savings_found))
+                    Text(stringResource(Res.string.feature_client_no_savings_accounts_found))
                 }
             }
         }
