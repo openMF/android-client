@@ -12,49 +12,92 @@ package com.mifos.feature.loan.loanAccountSummary
 import androidclient.feature.loan.generated.resources.Res
 import androidclient.feature.loan.generated.resources.feature_loan_unknown_error_occured
 import androidx.lifecycle.SavedStateHandle
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.repository.LoanAccountSummaryRepository
-import com.mifos.room.entities.accounts.loans.LoanWithAssociationsEntity
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
+import com.mifos.core.ui.util.BaseViewModel
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.getString
 
-class LoanAccountSummaryViewModel(
+internal class LoanAccountSummaryViewModel(
     savedStateHandle: SavedStateHandle,
     private val repository: LoanAccountSummaryRepository,
-) : ViewModel() {
-
-    val loanAccountNumber =
+) : BaseViewModel<LoanAccountSummaryState, LoanAccountSummaryEvent, LoanAccountSummaryAction>(
+    initialState = LoanAccountSummaryState(),
+) {
+    private val loanAccountNumber =
         savedStateHandle.toRoute<LoanAccountSummaryScreenRoute>().loanAccountNumber
-
-    private val _loanAccountSummaryUiState =
-        MutableStateFlow<LoanAccountSummaryUiState>(LoanAccountSummaryUiState.ShowProgressbar)
-
-    val loanAccountSummaryUiState: StateFlow<LoanAccountSummaryUiState>
-        get() = _loanAccountSummaryUiState
-
-    fun loadLoanById() {
+    init {
+        loadLoanById()
+    }
+    override fun handleAction(action: LoanAccountSummaryAction) {
+        when (action) {
+            LoanAccountSummaryAction.OnRetry -> loadLoanById()
+            LoanAccountSummaryAction.NavigateBack -> sendEvent(LoanAccountSummaryEvent.NavigateBack)
+            is LoanAccountSummaryAction.OnMoreInfoClick -> {
+                sendEvent(LoanAccountSummaryEvent.NavigateToMoreInfo(loanAccountNumber))
+            }
+            is LoanAccountSummaryAction.OnTransactionsClick -> {
+                sendEvent(LoanAccountSummaryEvent.NavigateToTransactions(loanAccountNumber))
+            }
+            is LoanAccountSummaryAction.OnRepaymentScheduleClick -> {
+                sendEvent(LoanAccountSummaryEvent.NavigateToRepaymentSchedule(loanAccountNumber))
+            }
+            is LoanAccountSummaryAction.OnDocumentsClick -> {
+                sendEvent(LoanAccountSummaryEvent.NavigateToDocuments(loanAccountNumber))
+            }
+            is LoanAccountSummaryAction.OnChargesClick -> {
+                sendEvent(LoanAccountSummaryEvent.NavigateToCharges(loanAccountNumber))
+            }
+            is LoanAccountSummaryAction.OnApproveLoan -> {
+                sendEvent(
+                    LoanAccountSummaryEvent.NavigateToApproveLoan(
+                        loanAccountNumber,
+                        action.loanWithAssociations,
+                    ),
+                )
+            }
+            is LoanAccountSummaryAction.OnDisburseLoan -> {
+                sendEvent(LoanAccountSummaryEvent.NavigateToDisburseLoan(loanAccountNumber))
+            }
+            is LoanAccountSummaryAction.OnMakeRepayment -> {
+                sendEvent(LoanAccountSummaryEvent.NavigateToMakeRepayment(action.loanWithAssociations))
+            }
+            LoanAccountSummaryAction.OnLoanIdCopied -> {
+                mutableStateFlow.update { it.copy(showLoanIdCopiedMessage = true) }
+            }
+            LoanAccountSummaryAction.OnMessageShown -> {
+                mutableStateFlow.update { it.copy(showLoanIdCopiedMessage = false) }
+            }
+        }
+    }
+    private fun loadLoanById() {
         viewModelScope.launch {
+            mutableStateFlow.update { it.copy(dialogState = LoanAccountSummaryState.DialogState.Loading) }
+
             repository.getLoanById(loanAccountNumber).collect { dataState ->
                 when (dataState) {
                     is DataState.Loading -> {
-                        _loanAccountSummaryUiState.value = LoanAccountSummaryUiState.ShowProgressbar
+                        mutableStateFlow.update { it.copy(dialogState = LoanAccountSummaryState.DialogState.Loading) }
                     }
-
                     is DataState.Success -> {
-                        _loanAccountSummaryUiState.value = LoanAccountSummaryUiState.ShowLoanById(
-                            dataState.data ?: LoanWithAssociationsEntity(),
-                        )
+                        mutableStateFlow.update {
+                            it.copy(
+                                loanWithAssociations = dataState.data,
+                                dialogState = null,
+                            )
+                        }
                     }
-
                     is DataState.Error -> {
-                        _loanAccountSummaryUiState.value = LoanAccountSummaryUiState.ShowFetchingError(
-                            getString(Res.string.feature_loan_unknown_error_occured),
-                        )
+                        mutableStateFlow.update {
+                            it.copy(
+                                dialogState = LoanAccountSummaryState.DialogState.Error(
+                                    getString(Res.string.feature_loan_unknown_error_occured),
+                                ),
+                            )
+                        }
                     }
                 }
             }

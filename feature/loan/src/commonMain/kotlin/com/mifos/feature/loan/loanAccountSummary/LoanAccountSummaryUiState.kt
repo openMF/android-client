@@ -11,11 +11,41 @@ package com.mifos.feature.loan.loanAccountSummary
 
 import com.mifos.room.entities.accounts.loans.LoanWithAssociationsEntity
 
-sealed class LoanAccountSummaryUiState {
-
-    data object ShowProgressbar : LoanAccountSummaryUiState()
-
-    data class ShowFetchingError(val message: String) : LoanAccountSummaryUiState()
-
-    data class ShowLoanById(val loanWithAssociations: LoanWithAssociationsEntity) : LoanAccountSummaryUiState()
+data class LoanAccountSummaryState(
+    val loanWithAssociations: LoanWithAssociationsEntity? = null,
+    val dialogState: DialogState? = null,
+    val showLoanIdCopiedMessage: Boolean = false,
+) {
+    sealed interface DialogState {
+        data object Loading : DialogState
+        data class Error(val message: String) : DialogState
+    }
+}
+sealed interface LoanAccountSummaryEvent {
+    data object NavigateBack : LoanAccountSummaryEvent
+    data class NavigateToMoreInfo(val loanId: Int) : LoanAccountSummaryEvent
+    data class NavigateToTransactions(val loanId: Int) : LoanAccountSummaryEvent
+    data class NavigateToRepaymentSchedule(val loanId: Int) : LoanAccountSummaryEvent
+    data class NavigateToDocuments(val loanId: Int) : LoanAccountSummaryEvent
+    data class NavigateToCharges(val loanId: Int) : LoanAccountSummaryEvent
+    data class NavigateToApproveLoan(
+        val loanId: Int,
+        val loanWithAssociations: LoanWithAssociationsEntity,
+    ) : LoanAccountSummaryEvent
+    data class NavigateToDisburseLoan(val loanId: Int) : LoanAccountSummaryEvent
+    data class NavigateToMakeRepayment(val loanWithAssociations: LoanWithAssociationsEntity) : LoanAccountSummaryEvent
+}
+sealed interface LoanAccountSummaryAction {
+    data object OnRetry : LoanAccountSummaryAction
+    data object NavigateBack : LoanAccountSummaryAction
+    data object OnMoreInfoClick : LoanAccountSummaryAction
+    data object OnTransactionsClick : LoanAccountSummaryAction
+    data object OnRepaymentScheduleClick : LoanAccountSummaryAction
+    data object OnDocumentsClick : LoanAccountSummaryAction
+    data object OnChargesClick : LoanAccountSummaryAction
+    data class OnApproveLoan(val loanWithAssociations: LoanWithAssociationsEntity) : LoanAccountSummaryAction
+    data object OnDisburseLoan : LoanAccountSummaryAction
+    data class OnMakeRepayment(val loanWithAssociations: LoanWithAssociationsEntity) : LoanAccountSummaryAction
+    data object OnLoanIdCopied : LoanAccountSummaryAction
+    data object OnMessageShown : LoanAccountSummaryAction
 }
