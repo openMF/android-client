@@ -34,10 +34,14 @@ fun viewController() = ComposeUIViewController(
             UIApplication.sharedApplication.keyWindow?.overrideUserInterfaceStyle = style
         },
         handleAppLocale = { languageTag ->
-            languageTag?.let {
-                NSUserDefaults.standardUserDefaults.setObject(listOf(it), forKey = "AppleLanguages")
-                NSUserDefaults.standardUserDefaults.synchronize()
+            if (languageTag != null) {
+                // Set specific language
+                NSUserDefaults.standardUserDefaults.setObject(listOf(languageTag), forKey = "AppleLanguages")
+            } else {
+                // System Default: remove app-specific language setting
+                NSUserDefaults.standardUserDefaults.removeObjectForKey("AppleLanguages")
             }
+            NSUserDefaults.standardUserDefaults.synchronize()
         },
         onSplashScreenRemoved = {},
     )
