@@ -16,7 +16,6 @@ import androidclient.feature.client.generated.resources.client_performance_histo
 import androidclient.feature.client.generated.resources.client_performance_history_loan_cycle_count_label
 import androidclient.feature.client.generated.resources.client_performance_history_total_savings_label
 import androidclient.feature.client.generated.resources.client_profile_general_header_actions
-import androidclient.feature.client.generated.resources.client_profile_general_header_linked_accounts
 import androidclient.feature.client.generated.resources.client_profile_general_header_performance_history
 import androidclient.feature.client.generated.resources.client_savings_not_avilable
 import androidx.compose.foundation.background
@@ -45,7 +44,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.TextStyle
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
-import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.theme.AppColors
 import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.designsystem.theme.MifosTypography
@@ -114,7 +112,7 @@ internal fun ClientProfileGeneralScreen(
         }
     }
 
-    ClientProfileGeneralScaffold(
+    ClientProfileGeneralContent(
         state = state,
         modifier = modifier,
         onAction = remember(viewModel) { { viewModel.trySendAction(it) } },
@@ -149,80 +147,75 @@ private fun ClientProfileGeneralDialogs(
                 },
             )
         }
+
         null -> Unit
     }
 }
 
 @Composable
-internal fun ClientProfileGeneralScaffold(
+internal fun ClientProfileGeneralContent(
     state: ClientProfileGeneralState,
     navController: NavController,
     onAction: (ClientProfileGeneralAction) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    MifosScaffold(
-        title = stringResource(Res.string.client_profile_general_header_linked_accounts),
-        onBackPressed = { onAction(ClientProfileGeneralAction.NavigateBack) },
-        modifier = modifier,
-    ) { paddingValues ->
-        if (state.dialogState == null) {
-            Column(Modifier.fillMaxSize().padding(paddingValues)) {
-                MifosBreadcrumbNavBar(navController)
-                Column(
-                    modifier = Modifier.fillMaxSize()
-                        .verticalScroll(rememberScrollState()).padding(
-                            horizontal = DesignToken.padding.large,
+    if (state.dialogState == null) {
+        Column(modifier.fillMaxSize()) {
+            MifosBreadcrumbNavBar(navController)
+            Column(
+                modifier = Modifier.fillMaxSize()
+                    .verticalScroll(rememberScrollState()).padding(
+                        horizontal = DesignToken.padding.large,
+                    ),
+            ) {
+                Text(
+                    stringResource(Res.string.client_profile_general_header_performance_history),
+                    style = MaterialTheme.typography.labelLarge,
+                )
+
+                Spacer(Modifier.height(DesignToken.spacing.medium))
+
+                PerformanceHistoryCard(
+                    state = state,
+                )
+
+                Spacer(Modifier.height(DesignToken.spacing.largeIncreased))
+
+                Text(
+                    stringResource(Res.string.client_profile_general_header_actions),
+                    style = MaterialTheme.typography.labelLarge,
+                )
+
+                Spacer(Modifier.height(DesignToken.spacing.small))
+
+                clientProfileGeneralActions.forEach {
+                    MifosRowCard(
+                        title = stringResource(it.title),
+                        imageVector = it.icon,
+                        leftValues = listOf(
+                            TextUtil(
+                                text = stringResource(it.subTitle),
+                                style = MifosTypography.bodySmall,
+                                color = MaterialTheme.colorScheme.secondary,
+                            ),
                         ),
-                ) {
-                    Text(
-                        stringResource(Res.string.client_profile_general_header_performance_history),
-                        style = MaterialTheme.typography.labelLarge,
-                    )
-
-                    Spacer(Modifier.height(DesignToken.spacing.medium))
-
-                    PerformanceHistoryCard(
-                        state = state,
-                    )
-
-                    Spacer(Modifier.height(DesignToken.spacing.largeIncreased))
-
-                    Text(
-                        stringResource(Res.string.client_profile_general_header_actions),
-                        style = MaterialTheme.typography.labelLarge,
-                    )
-
-                    Spacer(Modifier.height(DesignToken.spacing.small))
-
-                    clientProfileGeneralActions.forEach {
-                        MifosRowCard(
-                            title = stringResource(it.title),
-                            imageVector = it.icon,
-                            leftValues = listOf(
-                                TextUtil(
-                                    text = stringResource(it.subTitle),
-                                    style = MifosTypography.bodySmall,
-                                    color = MaterialTheme.colorScheme.secondary,
-                                ),
-                            ),
-                            rightValues = listOf(
-                                TextUtil(
-                                    // TODO: The count values for each action has to derived from api.
-                                    // Placeholder values.
+                        rightValues = listOf(
+                            TextUtil(
+                                // TODO: The count values for each action has to derived from api.
+                                // Placeholder values.
 //                                text = "12",
-                                    text = "",
-                                    style = MifosTypography.bodySmall,
-                                    color = AppColors.customEnable,
-                                ),
+                                text = "",
+                                style = MifosTypography.bodySmall,
+                                color = AppColors.customEnable,
                             ),
-                            modifier = Modifier.padding(vertical = DesignToken.padding.medium)
-                                .clickable {
-                                    onAction(
-                                        ClientProfileGeneralAction.OnActionClick(it),
-                                    )
-                                },
-                        )
-                    }
+                        ),
+                        modifier = Modifier.padding(vertical = DesignToken.padding.medium)
+                            .clickable {
+                                onAction(
+                                    ClientProfileGeneralAction.OnActionClick(it),
+                                )
+                            },
+                    )
                 }
             }
         }

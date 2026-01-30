@@ -43,7 +43,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
-import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.designsystem.theme.MifosTypography
 import com.mifos.core.designsystem.utils.onClick
@@ -72,7 +71,12 @@ internal fun ClientIdentifiersListScreen(
 
     EventsEffect(viewModel.eventFlow) { event ->
         when (event) {
-            is ClientIdentifiersListEvent.AddNewClientIdentity -> addNewClientIdentity(event.id, event.feature, event.uniqueKeyForHandleDocument)
+            is ClientIdentifiersListEvent.AddNewClientIdentity -> addNewClientIdentity(
+                event.id,
+                event.feature,
+                event.uniqueKeyForHandleDocument,
+            )
+
             ClientIdentifiersListEvent.NavigateBack -> onBackPress()
         }
     }
@@ -92,103 +96,105 @@ internal fun ClientIdentifiersListScreen(
 @Composable
 internal fun ClientIdentifiersListScreen(
     state: ClientIdentifiersListState,
+    modifier: Modifier = Modifier,
     navController: NavController,
     onAction: (ClientIdentifiersListAction) -> Unit,
 ) {
     val emptyMessage = stringResource(Res.string.client_identifiers_not_available)
 
-    MifosScaffold(
-        onBackPressed = {
-            onAction(ClientIdentifiersListAction.NavigateBack)
-        },
-        title = "Client Identities",
-    ) { paddingValues ->
+    Column(
+        modifier = modifier
+            .fillMaxSize(),
+    ) {
+        MifosBreadcrumbNavBar(navController)
         Column(
             modifier = Modifier
-                .padding(paddingValues)
-                .fillMaxSize(),
+                .fillMaxSize()
+                .padding(horizontal = DesignToken.padding.large),
         ) {
-            MifosBreadcrumbNavBar(navController)
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(horizontal = DesignToken.padding.large),
-            ) {
-                ClientIdentifiersHeader(
-                    totalItem = state.clientIdentitiesList.size.toString(),
-                    onAction = onAction,
-                )
+            ClientIdentifiersHeader(
+                totalItem = state.clientIdentitiesList.size.toString(),
+                onAction = onAction,
+            )
 
-                Spacer(modifier = Modifier.height(DesignToken.padding.largeIncreasedExtra))
+            Spacer(modifier = Modifier.height(DesignToken.padding.largeIncreasedExtra))
 
-                if (state.clientIdentitiesList.isEmpty()) {
-                    MifosEmptyCard(stringResource(Res.string.client_identifiers_click_on_plus_button_to_add_an_item))
-                } else {
-                    LazyColumn {
-                        item {
-                            state.clientIdentitiesList.reversed().forEachIndexed { index, item ->
+            if (state.clientIdentitiesList.isEmpty()) {
+                MifosEmptyCard(stringResource(Res.string.client_identifiers_click_on_plus_button_to_add_an_item))
+            } else {
+                LazyColumn {
+                    item {
+                        state.clientIdentitiesList.reversed().forEachIndexed { index, item ->
 
-                                val status = getClientIdentifierStatus(item.status)
+                            val status = getClientIdentifierStatus(item.status)
 
-                                /**
-                                 * A unique key generated for document operations (update/delete).
-                                 *
-                                 * This key is built by concatenating:
-                                 * - the document type name
-                                 * - the document key
-                                 * - the current status
-                                 *
-                                 * It ensures each document can be uniquely identified and handled
-                                 * even if multiple documents share the same type or key.
-                                 */
-                                val uniqueKeyForHandleDocument = item.documentType?.name + item.documentKey + status
+                            /**
+                             * A unique key generated for document operations (update/delete).
+                             *
+                             * This key is built by concatenating:
+                             * - the document type name
+                             * - the document key
+                             * - the current status
+                             *
+                             * It ensures each document can be uniquely identified and handled
+                             * even if multiple documents share the same type or key.
+                             */
+                            val uniqueKeyForHandleDocument =
+                                item.documentType?.name + item.documentKey + status
 
-                                MifosActionsIdentifierListingComponent(
-                                    type = item.documentType?.name ?: emptyMessage,
-                                    id = if (item.id != null) item.id.toString() else emptyMessage,
-                                    key = item.documentKey ?: emptyMessage,
-                                    status = status,
-                                    description = item.description ?: emptyMessage,
-                                    // TODO check what is identifyDocuments, couldnot find in the api
-                                    identifyDocuments = item.documentType?.name ?: emptyMessage,
-                                    menuList = listOf(
-                                        Actions.ViewDocument(),
-                                        Actions.UploadAgain(),
-                                        Actions.DeleteDocument(),
-                                    ),
-                                    onActionClicked = { actions ->
-                                        when (actions) {
-                                            is Actions.ViewDocument -> onAction.invoke(
-                                                ClientIdentifiersListAction.ViewDocument(uniqueKeyForHandleDocument),
-                                            )
-
-                                            is Actions.UploadAgain -> onAction.invoke(
-                                                ClientIdentifiersListAction.UploadAgain(uniqueKeyForHandleDocument),
-                                            )
-
-                                            is Actions.DeleteDocument -> {
-                                                val id = item.id
-                                                if (id != null) {
-                                                    onAction.invoke(
-                                                        ClientIdentifiersListAction.ShowDeleteConfirmation(id, uniqueKeyForHandleDocument),
-                                                    )
-                                                }
-                                            }
-                                            else -> {}
-                                        }
-                                    },
-                                    onClick = {
-                                        onAction.invoke(
-                                            ClientIdentifiersListAction.ToggleShowMenu(
-                                                index,
+                            MifosActionsIdentifierListingComponent(
+                                type = item.documentType?.name ?: emptyMessage,
+                                id = if (item.id != null) item.id.toString() else emptyMessage,
+                                key = item.documentKey ?: emptyMessage,
+                                status = status,
+                                description = item.description ?: emptyMessage,
+                                // TODO check what is identifyDocuments, couldnot find in the api
+                                identifyDocuments = item.documentType?.name ?: emptyMessage,
+                                menuList = listOf(
+                                    Actions.ViewDocument(),
+                                    Actions.UploadAgain(),
+                                    Actions.DeleteDocument(),
+                                ),
+                                onActionClicked = { actions ->
+                                    when (actions) {
+                                        is Actions.ViewDocument -> onAction.invoke(
+                                            ClientIdentifiersListAction.ViewDocument(
+                                                uniqueKeyForHandleDocument,
                                             ),
                                         )
-                                    },
-                                    isExpanded = (index == state.currentExpandedItem) && state.expandClientIdentity,
-                                )
 
-                                Spacer(Modifier.height(DesignToken.spacing.small))
-                            }
+                                        is Actions.UploadAgain -> onAction.invoke(
+                                            ClientIdentifiersListAction.UploadAgain(
+                                                uniqueKeyForHandleDocument,
+                                            ),
+                                        )
+
+                                        is Actions.DeleteDocument -> {
+                                            val id = item.id
+                                            if (id != null) {
+                                                onAction.invoke(
+                                                    ClientIdentifiersListAction.ShowDeleteConfirmation(
+                                                        id,
+                                                        uniqueKeyForHandleDocument,
+                                                    ),
+                                                )
+                                            }
+                                        }
+
+                                        else -> {}
+                                    }
+                                },
+                                onClick = {
+                                    onAction.invoke(
+                                        ClientIdentifiersListAction.ToggleShowMenu(
+                                            index,
+                                        ),
+                                    )
+                                },
+                                isExpanded = (index == state.currentExpandedItem) && state.expandClientIdentity,
+                            )
+
+                            Spacer(Modifier.height(DesignToken.spacing.small))
                         }
                     }
                 }
@@ -276,7 +282,10 @@ private fun ClientIdentifiersDialog(
         is ClientIdentifiersListState.DialogState.DeleteConfirmation -> {
             MifosAlertDialog(
                 dialogTitle = stringResource(Res.string.delete_dialog_title),
-                dialogText = stringResource(Res.string.delete_dialog_identifier_message, dialogState.id.toString()),
+                dialogText = stringResource(
+                    Res.string.delete_dialog_identifier_message,
+                    dialogState.id.toString(),
+                ),
                 onDismissRequest = {
                     onAction.invoke(ClientIdentifiersListAction.CloseDialog)
                 },
