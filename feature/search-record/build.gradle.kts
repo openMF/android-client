@@ -8,14 +8,14 @@
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
 plugins {
-    alias(libs.plugins.mifos.cmp.feature)
+    alias(libs.plugins.cmp.feature.convention)
     alias(libs.plugins.kotlin.serialization)
 }
 
 android {
     namespace = "com.mifos.feature.searchrecord"
 }
-
+ 
 kotlin {
     sourceSets {
         commonMain.dependencies {
