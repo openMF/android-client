@@ -129,12 +129,12 @@ fun ChargesContent(
 ) {
     if (state.dialogState !is ChargesState.DialogState.Error) {
         Column(
-            modifier = Modifier.fillMaxSize(),
+            modifier = modifier.fillMaxSize(),
         ) {
             MifosBreadcrumbNavBar(navController)
 
             Column(
-                modifier = modifier.fillMaxWidth().padding(DesignToken.padding.large),
+                modifier = Modifier.fillMaxWidth().padding(DesignToken.padding.large),
                 verticalArrangement = Arrangement.spacedBy(DesignToken.padding.largeIncreased),
             ) {
                 ChargeAddFields(

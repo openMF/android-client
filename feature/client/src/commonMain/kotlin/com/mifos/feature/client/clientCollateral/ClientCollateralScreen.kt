@@ -95,7 +95,7 @@ private fun ClientCollateralContent(
 ) {
     if (state.dialogState !is ClientCollateralState.DialogState.ShowStatusDialog) {
         Column(
-            modifier = Modifier
+            modifier = modifier
                 .fillMaxSize()
                 .padding(bottom = DesignToken.padding.large),
         ) {
@@ -113,7 +113,7 @@ private fun ClientCollateralContent(
 
             if (state.collaterals.isNotEmpty()) {
                 Column(
-                    modifier
+                    Modifier
                         .fillMaxWidth()
                         .weight(1f)
                         .verticalScroll(rememberScrollState())

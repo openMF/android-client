@@ -18,6 +18,7 @@ import androidclient.feature.client.generated.resources.step_settings
 import androidclient.feature.client.generated.resources.step_terms
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -174,7 +175,9 @@ private fun CreateFixedDepositAccountScaffold(
         modifier = modifier,
         snackbarHostState = snackbarHostState,
     ) { paddingValues ->
-        Column {
+        Column(
+            Modifier.padding(paddingValues),
+        ) {
             MifosBreadcrumbNavBar(navController)
             when (state.screenState) {
                 is NewFixedDepositAccountState.ScreenState.Error -> {

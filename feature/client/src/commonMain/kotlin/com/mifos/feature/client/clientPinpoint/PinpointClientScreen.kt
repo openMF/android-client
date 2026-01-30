@@ -20,7 +20,6 @@ import androidclient.feature.client.generated.resources.feature_client_dismiss
 import androidclient.feature.client.generated.resources.feature_client_failed_to_load_pinpoint
 import androidclient.feature.client.generated.resources.feature_client_no_location_data_found
 import androidclient.feature.client.generated.resources.feature_client_permission_required
-import androidclient.feature.client.generated.resources.feature_client_pinpoint_client
 import androidclient.feature.client.generated.resources.feature_client_pinpoint_location_added
 import androidclient.feature.client.generated.resources.feature_client_please_select
 import androidclient.feature.client.generated.resources.feature_client_proceed
@@ -31,6 +30,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -43,7 +43,6 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
@@ -64,7 +63,6 @@ import androidx.compose.ui.window.DialogProperties
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.component.PermissionBox
 import com.mifos.core.designsystem.component.getRequiredPermissionsForLocation
@@ -205,62 +203,44 @@ internal fun PinpointClientScreen(
         )
     }
 
-    MifosScaffold(
-        title = stringResource(Res.string.feature_client_pinpoint_client),
-        onBackPressed = onBackPressed,
-        actions = {
-            IconButton(onClick = {
-                showPermissionDialog = true
-                updateMode = false
-                addressToUpdate = null
-            }) {
-                Icon(
-                    imageVector = MifosIcons.AddLocation,
-                    contentDescription = stringResource(Res.string.feature_client_add_location),
-                )
-            }
-        },
-        snackbarHostState = snackbarHostState,
-    ) { paddingValues ->
-        Column(modifier = Modifier.padding(paddingValues)) {
-            MifosBreadcrumbNavBar(navController)
-            PullToRefreshBox(
-                state = pullRefreshState,
-                onRefresh = onRefresh,
-                isRefreshing = refreshState,
-            ) {
-                when (state) {
-                    is PinPointClientUiState.ClientPinpointLocations -> {
-                        PinPointClientContent(
-                            pinpointLocations = state.clientAddressResponses,
-                            onStartUpdateAddress = { address ->
-                                updateMode = true
-                                addressToUpdate = address
-                                showPermissionDialog = true
-                            },
-                            onClickAddLocation = {
-                                updateMode = false
-                                addressToUpdate = null
-                                showPermissionDialog = true
-                            },
-                            onDeleteAddress = onDeleteAddress,
+    Column(modifier = Modifier.fillMaxSize()) {
+        MifosBreadcrumbNavBar(navController)
+        PullToRefreshBox(
+            state = pullRefreshState,
+            onRefresh = onRefresh,
+            isRefreshing = refreshState,
+        ) {
+            when (state) {
+                is PinPointClientUiState.ClientPinpointLocations -> {
+                    PinPointClientContent(
+                        pinpointLocations = state.clientAddressResponses,
+                        onStartUpdateAddress = { address ->
+                            updateMode = true
+                            addressToUpdate = address
+                            showPermissionDialog = true
+                        },
+                        onClickAddLocation = {
+                            updateMode = false
+                            addressToUpdate = null
+                            showPermissionDialog = true
+                        },
+                        onDeleteAddress = onDeleteAddress,
+                    )
+                }
+
+                is PinPointClientUiState.Error -> MifosSweetError(message = stringResource(state.message)) {
+                    onRetry()
+                }
+
+                is PinPointClientUiState.Loading -> MifosProgressIndicator()
+
+                is PinPointClientUiState.SuccessMessage -> {
+                    scope.launch {
+                        snackbarHostState.showSnackbar(
+                            message = getString(state.message),
                         )
                     }
-
-                    is PinPointClientUiState.Error -> MifosSweetError(message = stringResource(state.message)) {
-                        onRetry()
-                    }
-
-                    is PinPointClientUiState.Loading -> MifosProgressIndicator()
-
-                    is PinPointClientUiState.SuccessMessage -> {
-                        scope.launch {
-                            snackbarHostState.showSnackbar(
-                                message = getString(state.message),
-                            )
-                        }
-                        onAddressesChanged()
-                    }
+                    onAddressesChanged()
                 }
             }
         }

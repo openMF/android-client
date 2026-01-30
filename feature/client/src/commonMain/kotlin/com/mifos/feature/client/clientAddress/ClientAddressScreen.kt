@@ -43,7 +43,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
-import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.designsystem.theme.AppColors
@@ -84,7 +83,7 @@ internal fun ClientAddressScreen(
         onAction = { viewModel.trySendAction(it) },
     )
 
-    ClientAddressScaffold(
+    ClientAddressContent(
         state = state,
         navController = navController,
         onAction = { viewModel.trySendAction(it) },
@@ -109,74 +108,66 @@ fun ClientAddressDialogs(
 }
 
 @Composable
-private fun ClientAddressScaffold(
+private fun ClientAddressContent(
     state: ClientAddressState,
     navController: NavController,
+    modifier: Modifier = Modifier,
     onAction: (ClientAddressAction) -> Unit,
 ) {
-    MifosScaffold(
-        title = "Client Address",
-        onBackPressed = { onAction(ClientAddressAction.NavigateBack) },
-    ) { paddingValues ->
-        when (state.addressListScreenState) {
-            is ClientAddressState.AddressListScreenState.Loading -> MifosProgressIndicator()
-            is ClientAddressState.AddressListScreenState.ShowAddressList -> {
+    when (state.addressListScreenState) {
+        is ClientAddressState.AddressListScreenState.Loading -> MifosProgressIndicator()
+        is ClientAddressState.AddressListScreenState.ShowAddressList -> {
+            Column(
+                modifier = modifier
+                    .fillMaxSize(),
+            ) {
+                MifosBreadcrumbNavBar(navController)
                 Column(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(
-                            top = paddingValues.calculateTopPadding(),
-                            bottom = paddingValues.calculateBottomPadding(),
-                        ),
+                    modifier = Modifier.padding(
+                        start = DesignToken.padding.large,
+                        end = DesignToken.padding.large,
+                    ),
                 ) {
-                    MifosBreadcrumbNavBar(navController)
-                    Column(
-                        modifier = Modifier.padding(
-                            start = DesignToken.padding.large,
-                            end = DesignToken.padding.large,
-                        ),
-                    ) {
-                        ClientAddressHeader(
-                            totalItem = state.address.size.toString(),
-                            onAction = onAction,
-                        )
-                        Spacer(modifier = Modifier.height(DesignToken.padding.large))
-                        if (state.address.isEmpty()) {
-                            EmptyAddressCard()
-                        } else {
-                            LazyColumn(
-                                modifier = Modifier
-                                    .fillMaxSize(),
-                            ) {
-                                items(state.address, key = ({ state.address.indexOf(it) })) { address ->
-                                    MifosAddressCard(
-                                        title = address.addressType,
-                                        addressList = mapOf(
-                                            stringResource(Res.string.feature_client_address_line_1) to address.addressLine1,
-                                            stringResource(Res.string.feature_client_address_line_2) to address.addressLine2,
-                                            stringResource(Res.string.feature_client_address_line_3) to address.addressLine3,
-                                            stringResource(Res.string.feature_client_city) to address.city,
-                                            stringResource(Res.string.feature_client_province) to address.stateName,
-                                            stringResource(Res.string.feature_client_country) to address.countryName,
-                                            stringResource(Res.string.feature_client_postal_code) to address.postalCode,
-                                        ),
-                                    )
-                                }
+                    ClientAddressHeader(
+                        totalItem = state.address.size.toString(),
+                        onAction = onAction,
+                    )
+                    Spacer(modifier = Modifier.height(DesignToken.padding.large))
+                    if (state.address.isEmpty()) {
+                        EmptyAddressCard()
+                    } else {
+                        LazyColumn(
+                            modifier = Modifier
+                                .fillMaxSize(),
+                        ) {
+                            items(state.address, key = ({ state.address.indexOf(it) })) { address ->
+                                MifosAddressCard(
+                                    title = address.addressType,
+                                    addressList = mapOf(
+                                        stringResource(Res.string.feature_client_address_line_1) to address.addressLine1,
+                                        stringResource(Res.string.feature_client_address_line_2) to address.addressLine2,
+                                        stringResource(Res.string.feature_client_address_line_3) to address.addressLine3,
+                                        stringResource(Res.string.feature_client_city) to address.city,
+                                        stringResource(Res.string.feature_client_province) to address.stateName,
+                                        stringResource(Res.string.feature_client_country) to address.countryName,
+                                        stringResource(Res.string.feature_client_postal_code) to address.postalCode,
+                                    ),
+                                )
                             }
                         }
                     }
                 }
             }
+        }
 
-            ClientAddressState.AddressListScreenState.NetworkError -> {
-                MifosErrorComponent(
-                    isNetworkConnected = state.networkConnection,
-                    isRetryEnabled = true,
-                    onRetry = {
-                        onAction(ClientAddressAction.OnRetry)
-                    },
-                )
-            }
+        ClientAddressState.AddressListScreenState.NetworkError -> {
+            MifosErrorComponent(
+                isNetworkConnected = state.networkConnection,
+                isRetryEnabled = true,
+                onRetry = {
+                    onAction(ClientAddressAction.OnRetry)
+                },
+            )
         }
     }
 }
