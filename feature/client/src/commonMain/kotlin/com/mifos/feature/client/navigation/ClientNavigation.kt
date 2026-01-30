@@ -86,7 +86,10 @@ import com.mifos.feature.client.savingsAccounts.navigateToClientSavingsAccountsR
 import com.mifos.feature.client.savingsAccounts.savingsAccountsDestination
 import com.mifos.feature.client.shareAccounts.navigateToShareAccountsScreen
 import com.mifos.feature.client.shareAccounts.shareAccountsDestination
+import com.mifos.feature.dataTable.navigation.dataTableRoute
+import com.mifos.feature.dataTable.navigation.navigateDataTableData
 import com.mifos.feature.dataTable.navigation.navigateToDataTable
+import com.mifos.feature.document.navigation.documentListScreen
 import com.mifos.feature.document.navigation.navigateToDocumentListScreen
 import com.mifos.feature.groups.navigation.navigateToGroupDetailsScreen
 import com.mifos.feature.loan.loanAccount.navigateToLoanAccountScreen
@@ -241,7 +244,10 @@ fun NavGraphBuilder.clientNavGraph(
             sharesAccounts = navController::navigateToShareAccountsScreen,
             fixedDepositAccounts = navController::navigateToFixedDepositAccountRoute,
             upcomingCharges = {
-                navController.navigateToClientUpcomingChargesRoute(it, Constants.ENTITY_TYPE_CLIENTS)
+                navController.navigateToClientUpcomingChargesRoute(
+                    it,
+                    Constants.ENTITY_TYPE_CLIENTS,
+                )
             },
         )
 
@@ -357,6 +363,13 @@ fun NavGraphBuilder.clientNavGraph(
             onMoreInfoClicked = navController::navigateToDataTable,
             onDocumentsClicked = navController::navigateToDocumentListScreen,
         )
+
+        dataTableRoute(
+            onBackPressed = navController::popBackStack,
+            onClick = navController::navigateDataTableData,
+        )
+
+        documentListScreen(onBackPressed = navController::popBackStack)
 
         savingsDestination(
             navController = navController,
