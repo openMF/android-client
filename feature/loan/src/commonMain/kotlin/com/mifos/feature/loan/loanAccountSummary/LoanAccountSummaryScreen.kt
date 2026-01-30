@@ -291,7 +291,7 @@ private fun LoanAccountSummaryContent(
         return CurrencyFormatter.format(
             balance = amount,
             currencyCode = currencyCode,
-            maximumFractionDigits = 2,
+            maximumFractionDigits = loanWithAssociations.currency.decimalPlaces,
         )
     }
 
@@ -502,6 +502,7 @@ private fun LoanAccountSummaryContent(
             loanSummary = loanWithAssociations.summary,
             inflateLoanSummary = inflateLoanSummary,
             currencyCode = loanWithAssociations.currency.code,
+            decimalPlaces = loanWithAssociations.currency.decimalPlaces,
         )
 
         Button(
@@ -547,6 +548,7 @@ private fun LoanSummaryDataTable(
     loanSummary: LoansAccountSummaryEntity,
     inflateLoanSummary: Boolean,
     currencyCode: String?,
+    decimalPlaces: Int?,
 ) {
     // dataTable should be empty if [inflateLoanSummary] is false
     val summary = if (inflateLoanSummary) loanSummary else null
@@ -558,7 +560,7 @@ private fun LoanSummaryDataTable(
         return CurrencyFormatter.format(
             balance = amount,
             currencyCode = currencyCode,
-            maximumFractionDigits = 2,
+            maximumFractionDigits = decimalPlaces,
         )
     }
 
