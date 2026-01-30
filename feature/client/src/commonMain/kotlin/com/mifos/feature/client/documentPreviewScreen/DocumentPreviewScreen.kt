@@ -15,7 +15,6 @@ import androidclient.feature.client.generated.resources.btn_back
 import androidclient.feature.client.generated.resources.btn_submit
 import androidclient.feature.client.generated.resources.btn_update_new
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -44,7 +43,6 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.compose.AsyncImage
 import com.mifos.core.designsystem.component.MifosCard
 import com.mifos.core.designsystem.component.MifosOutlinedButton
-import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.designsystem.theme.DesignToken
@@ -70,125 +68,115 @@ fun DocumentPreviewScreen(
         }
     }
 
-    ViewDocumentScaffold(
+    ViewDocumentContent(
         state = state,
         onAction = remember(viewmodel) { { viewmodel.trySendAction(it) } },
     )
 }
 
 @Composable
-private fun ViewDocumentScaffold(
+private fun ViewDocumentContent(
     state: DocumentPreviewState,
     modifier: Modifier = Modifier,
     onAction: (DocumentPreviewScreenAction) -> Unit,
 ) {
-    MifosScaffold(
-        modifier = Modifier
+    Column(
+        modifier = modifier
+            .padding(DesignToken.padding.large)
             .fillMaxSize(),
-        title = "",
-        onBackPressed = {
-            onAction(DocumentPreviewScreenAction.NavigateBack)
-        },
-    ) { paddingValues ->
-        Column(
-            modifier = modifier
-                .padding(paddingValues)
-                .padding(DesignToken.padding.large)
-                .fillMaxSize(),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally,
+    ) {
+        ViewDocumentsScreenContent(
+            state = state,
+            modifier = Modifier.weight(1f),
+            onAction = onAction,
+        )
+        Spacer(modifier = Modifier.height(DesignToken.spacing.largeIncreased))
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .wrapContentHeight(),
+            horizontalArrangement = Arrangement.SpaceBetween,
         ) {
-            ViewDocumentsScreenContent(
-                state = state,
-                modifier = Modifier.weight(1f),
-                onAction = onAction,
-            )
-            Spacer(modifier = Modifier.height(DesignToken.spacing.largeIncreased))
-            Row(
+            MifosOutlinedButton(
+                onClick = {
+                    if (state.step == EntityDocumentState.Step.PREVIEW) {
+                        onAction(DocumentPreviewScreenAction.RejectDocument)
+                    } else {
+                        onAction(DocumentPreviewScreenAction.NavigateBack)
+                    }
+                },
+                colors = ButtonDefaults.outlinedButtonColors(
+                    containerColor = MaterialTheme.colorScheme.onPrimary,
+                    contentColor = MaterialTheme.colorScheme.primary,
+                ),
+                border = BorderStroke(
+                    1.dp,
+                    MaterialTheme.colorScheme.secondaryContainer,
+                ),
+                shape = DesignToken.shapes.small,
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .wrapContentHeight(),
-                horizontalArrangement = Arrangement.SpaceBetween,
+                    .height(DesignToken.sizes.iconExtraLarge)
+                    .weight(1f),
             ) {
-                MifosOutlinedButton(
-                    onClick = {
-                        if (state.step == EntityDocumentState.Step.PREVIEW) {
-                            onAction(DocumentPreviewScreenAction.RejectDocument)
-                        } else {
-                            onAction(DocumentPreviewScreenAction.NavigateBack)
-                        }
-                    },
-                    colors = ButtonDefaults.outlinedButtonColors(
-                        containerColor = MaterialTheme.colorScheme.onPrimary,
-                        contentColor = MaterialTheme.colorScheme.primary,
-                    ),
-                    border = BorderStroke(
-                        1.dp,
-                        MaterialTheme.colorScheme.secondaryContainer,
-                    ),
-                    shape = DesignToken.shapes.small,
-                    modifier = Modifier
-                        .height(DesignToken.sizes.iconExtraLarge)
-                        .weight(1f),
-                ) {
-                    Text(
-                        stringResource(Res.string.btn_back),
-                        fontFamily = FontFamily.SansSerif,
-                        style = MaterialTheme.typography.labelLarge,
-                    )
-                }
-                Spacer(modifier = Modifier.width(8.dp))
-                MifosOutlinedButton(
-                    onClick = {
-                        if (state.step == EntityDocumentState.Step.PREVIEW) {
-                            onAction(DocumentPreviewScreenAction.SubmitClicked)
-                        } else {
-                            onAction(DocumentPreviewScreenAction.UpdateNew)
-                        }
-                    },
-                    colors = ButtonDefaults.outlinedButtonColors(
-                        containerColor = MaterialTheme.colorScheme.primary,
-                        contentColor = MaterialTheme.colorScheme.onPrimary,
-                    ),
-                    border = BorderStroke(
-                        1.dp,
-                        MaterialTheme.colorScheme.secondaryContainer,
-                    ),
-                    shape = DesignToken.shapes.small,
-                    enabled = state.step == EntityDocumentState.Step.PREVIEW ||
-                        state.step == EntityDocumentState.Step.UPDATE_PREVIEW,
-                    modifier = Modifier
-                        .height(DesignToken.sizes.iconExtraLarge)
-                        .weight(1f),
-                ) {
-                    Text(
-                        if (state.step == EntityDocumentState.Step.UPDATE_PREVIEW) {
-                            stringResource(Res.string.btn_update_new)
-                        } else {
-                            stringResource(Res.string.btn_submit)
-                        },
-                        fontFamily = FontFamily.SansSerif,
-                        style = MaterialTheme.typography.labelLarge,
-                    )
-                }
-            }
-
-            if (state.showBottomSheet) {
-                MifosFilePickerBottomSheet(
-                    onDismiss = {
-                        onAction(DocumentPreviewScreenAction.DismissBottomSheet)
-                    },
-                    onGalleryClick = {
-                        onAction(DocumentPreviewScreenAction.PickFromGallery)
-                    },
-                    onFilesClick = {
-                        onAction(DocumentPreviewScreenAction.PickFromFile)
-                    },
-                    onMoreClick = {
-                        onAction(DocumentPreviewScreenAction.UseMoreOptions)
-                    },
+                Text(
+                    stringResource(Res.string.btn_back),
+                    fontFamily = FontFamily.SansSerif,
+                    style = MaterialTheme.typography.labelLarge,
                 )
             }
+            Spacer(modifier = Modifier.width(8.dp))
+            MifosOutlinedButton(
+                onClick = {
+                    if (state.step == EntityDocumentState.Step.PREVIEW) {
+                        onAction(DocumentPreviewScreenAction.SubmitClicked)
+                    } else {
+                        onAction(DocumentPreviewScreenAction.UpdateNew)
+                    }
+                },
+                colors = ButtonDefaults.outlinedButtonColors(
+                    containerColor = MaterialTheme.colorScheme.primary,
+                    contentColor = MaterialTheme.colorScheme.onPrimary,
+                ),
+                border = BorderStroke(
+                    1.dp,
+                    MaterialTheme.colorScheme.secondaryContainer,
+                ),
+                shape = DesignToken.shapes.small,
+                enabled = state.step == EntityDocumentState.Step.PREVIEW ||
+                    state.step == EntityDocumentState.Step.UPDATE_PREVIEW,
+                modifier = Modifier
+                    .height(DesignToken.sizes.iconExtraLarge)
+                    .weight(1f),
+            ) {
+                Text(
+                    if (state.step == EntityDocumentState.Step.UPDATE_PREVIEW) {
+                        stringResource(Res.string.btn_update_new)
+                    } else {
+                        stringResource(Res.string.btn_submit)
+                    },
+                    fontFamily = FontFamily.SansSerif,
+                    style = MaterialTheme.typography.labelLarge,
+                )
+            }
+        }
+
+        if (state.showBottomSheet) {
+            MifosFilePickerBottomSheet(
+                onDismiss = {
+                    onAction(DocumentPreviewScreenAction.DismissBottomSheet)
+                },
+                onGalleryClick = {
+                    onAction(DocumentPreviewScreenAction.PickFromGallery)
+                },
+                onFilesClick = {
+                    onAction(DocumentPreviewScreenAction.PickFromFile)
+                },
+                onMoreClick = {
+                    onAction(DocumentPreviewScreenAction.UseMoreOptions)
+                },
+            )
         }
     }
 }
@@ -208,9 +196,11 @@ private fun DocumentsPreviewScreenDialog(
                 onAction(DocumentPreviewScreenAction.RejectDocument)
             }
         }
+
         DocumentPreviewState.DialogState.Loading -> {
             MifosProgressIndicator()
         }
+
         null -> {}
     }
 }
@@ -257,6 +247,7 @@ private fun ViewDocumentsScreenContent(
                                 .align(Alignment.Center),
                         )
                     }
+
                     null -> {}
                 }
             }

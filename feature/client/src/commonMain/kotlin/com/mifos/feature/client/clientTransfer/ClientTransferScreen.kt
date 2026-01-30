@@ -43,7 +43,6 @@ import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
@@ -51,7 +50,6 @@ import com.mifos.core.common.utils.DateHelper
 import com.mifos.core.designsystem.component.MifosDatePickerTextField
 import com.mifos.core.designsystem.component.MifosOutlinedButton
 import com.mifos.core.designsystem.component.MifosOutlinedTextField
-import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosTextButton
 import com.mifos.core.designsystem.component.MifosTextFieldDropdown
 import com.mifos.core.designsystem.icon.MifosIcons
@@ -85,7 +83,7 @@ internal fun ClientTransferScreen(
         }
     }
 
-    ClientTransferScaffold(
+    ClientTransferContent(
         state = state,
         onAction = remember(viewModel) { { viewModel.trySendAction(it) } },
         modifier = modifier,
@@ -99,155 +97,147 @@ internal fun ClientTransferScreen(
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalTime::class)
 @Composable
-private fun ClientTransferScaffold(
+private fun ClientTransferContent(
     state: ClientTransferState,
     onAction: (ClientTransferAction) -> Unit,
     navController: NavController,
     modifier: Modifier = Modifier,
 ) {
-    MifosScaffold(
-        title = stringResource(Res.string.client_transfer_title),
-        onBackPressed = { onAction(ClientTransferAction.NavigateBack) },
-        modifier = modifier,
-    ) { paddingValues ->
+    val datePickerState = rememberDatePickerState(
+        initialSelectedDateMillis = state.date,
+        selectableDates = object : SelectableDates {
+            override fun isSelectableDate(utcTimeMillis: Long): Boolean {
+                return utcTimeMillis <= Clock.System.now().toEpochMilliseconds()
+            }
+        },
+    )
 
-        val datePickerState = rememberDatePickerState(
-            initialSelectedDateMillis = state.date,
-            selectableDates = object : SelectableDates {
-                override fun isSelectableDate(utcTimeMillis: Long): Boolean {
-                    return utcTimeMillis <= Clock.System.now().toEpochMilliseconds()
-                }
-            },
-        )
-
-        if (state.dialogState != ClientTransferState.DialogState.Loading &&
-            state.dialogState !is ClientTransferState.DialogState.ShowStatusDialog
+    if (state.dialogState != ClientTransferState.DialogState.Loading &&
+        state.dialogState !is ClientTransferState.DialogState.ShowStatusDialog
+    ) {
+        Column(
+            modifier = modifier
+                .fillMaxSize(),
         ) {
+            MifosBreadcrumbNavBar(navController)
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(paddingValues),
+                    .padding(horizontal = DesignToken.padding.large),
             ) {
-                MifosBreadcrumbNavBar(navController)
-                Column(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(horizontal = DesignToken.padding.large),
-                ) {
-                    if (state.offices.isNotEmpty()) {
-                        Text(
-                            text = stringResource(Res.string.client_transfer_title),
-                            style = MifosTypography.labelLargeEmphasized,
-                        )
-                        Spacer(Modifier.height(DesignToken.padding.largeIncreased))
+                if (state.offices.isNotEmpty()) {
+                    Text(
+                        text = stringResource(Res.string.client_transfer_title),
+                        style = MifosTypography.labelLargeEmphasized,
+                    )
+                    Spacer(Modifier.height(DesignToken.padding.largeIncreased))
 
-                        MifosTextFieldDropdown(
-                            value = state.offices[state.currentSelectedIndex].name ?: "",
-                            onValueChanged = {},
-                            onOptionSelected = { index, value ->
-                                onAction(ClientTransferAction.OptionChanged(index))
+                    MifosTextFieldDropdown(
+                        value = state.offices[state.currentSelectedIndex].name ?: "",
+                        onValueChanged = {},
+                        onOptionSelected = { index, value ->
+                            onAction(ClientTransferAction.OptionChanged(index))
+                        },
+                        options = state.offices.map { it.name ?: "" },
+                        label = stringResource(Res.string.client_transfer_choose_office),
+                        modifier = Modifier.fillMaxWidth(),
+                    )
+
+                    Spacer(Modifier.height(DesignToken.padding.largeIncreased))
+                    MifosDatePickerTextField(
+                        value = DateHelper.getDateAsStringFromLong(state.date),
+                        modifier = Modifier.fillMaxWidth(),
+                        label = stringResource(Res.string.client_transfer_expected_date),
+                        openDatePicker = {
+                            onAction(ClientTransferAction.UpdateDatePicker(true))
+                        },
+                    )
+                    if (state.showDatePicker) {
+                        DatePickerDialog(
+                            onDismissRequest = {
+                                onAction(ClientTransferAction.UpdateDatePicker(false))
                             },
-                            options = state.offices.map { it.name ?: "" },
-                            label = stringResource(Res.string.client_transfer_choose_office),
-                            modifier = Modifier.fillMaxWidth(),
-                        )
-
-                        Spacer(Modifier.height(DesignToken.padding.largeIncreased))
-                        MifosDatePickerTextField(
-                            value = DateHelper.getDateAsStringFromLong(state.date),
-                            modifier = Modifier.fillMaxWidth(),
-                            label = stringResource(Res.string.client_transfer_expected_date),
-                            openDatePicker = {
-                                onAction(ClientTransferAction.UpdateDatePicker(true))
+                            confirmButton = {
+                                TextButton(
+                                    onClick = {
+                                        onAction(ClientTransferAction.UpdateDatePicker(false))
+                                        datePickerState.selectedDateMillis?.let {
+                                            onAction(ClientTransferAction.UpdateDate(it))
+                                        }
+                                    },
+                                ) { Text(stringResource(Res.string.feature_client_charge_select)) }
                             },
-                        )
-                        if (state.showDatePicker) {
-                            DatePickerDialog(
-                                onDismissRequest = {
-                                    onAction(ClientTransferAction.UpdateDatePicker(false))
-                                },
-                                confirmButton = {
-                                    TextButton(
-                                        onClick = {
-                                            onAction(ClientTransferAction.UpdateDatePicker(false))
-                                            datePickerState.selectedDateMillis?.let {
-                                                onAction(ClientTransferAction.UpdateDate(it))
-                                            }
-                                        },
-                                    ) { Text(stringResource(Res.string.feature_client_charge_select)) }
-                                },
-                                dismissButton = {
-                                    TextButton(
-                                        onClick = {
-                                            onAction(ClientTransferAction.UpdateDatePicker(false))
-                                        },
-                                    ) { Text(stringResource(Res.string.feature_client_charge_cancel)) }
-                                },
-                            ) {
-                                DatePicker(state = datePickerState)
-                            }
-                        }
-
-                        Spacer(Modifier.height(DesignToken.padding.largeIncreased))
-                        MifosOutlinedTextField(
-                            value = state.note,
-                            onValueChange = {
-                                onAction(ClientTransferAction.NoteChanged(it))
+                            dismissButton = {
+                                TextButton(
+                                    onClick = {
+                                        onAction(ClientTransferAction.UpdateDatePicker(false))
+                                    },
+                                ) { Text(stringResource(Res.string.feature_client_charge_cancel)) }
                             },
-                            label = stringResource(Res.string.client_transfer_add_notes),
-                            modifier = Modifier.fillMaxWidth(),
-                            singleLine = true,
-                            placeholder = stringResource(Res.string.client_transfer_add_note_here),
-                        )
-
-                        Spacer(Modifier.height(DesignToken.padding.largeIncreased))
-
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
                         ) {
-                            MifosOutlinedButton(
-                                onClick = {
-                                    onAction(ClientTransferAction.NavigateBack)
-                                },
-                                leadingIcon = {
-                                    Icon(
-                                        imageVector = MifosIcons.ChevronLeft,
-                                        contentDescription = null,
-                                        modifier = Modifier.size(DesignToken.sizes.iconAverage),
-                                        tint = MaterialTheme.colorScheme.primary,
-                                    )
-                                },
-                                text = {
-                                    Text(
-                                        text = stringResource(Res.string.btn_back),
-                                        color = MaterialTheme.colorScheme.primary,
-                                        style = MifosTypography.labelLarge,
-                                    )
-                                },
-                                modifier = Modifier.weight(1f),
-                            )
-                            Spacer(Modifier.padding(DesignToken.padding.small))
-                            MifosTextButton(
-                                onClick = {
-                                    onAction(ClientTransferAction.OnSubmit)
-                                },
-                                leadingIcon = {
-                                    Icon(
-                                        imageVector = MifosIcons.Check,
-                                        contentDescription = null,
-                                        modifier = Modifier.size(DesignToken.sizes.iconAverage),
-                                    )
-                                },
-                                text = {
-                                    Text(
-                                        text = stringResource(Res.string.btn_submit),
-                                        style = MifosTypography.labelLarge,
-                                    )
-                                },
-                                modifier = Modifier.weight(1f),
-                                enabled = state.isEnabled,
-                            )
+                            DatePicker(state = datePickerState)
                         }
+                    }
+
+                    Spacer(Modifier.height(DesignToken.padding.largeIncreased))
+                    MifosOutlinedTextField(
+                        value = state.note,
+                        onValueChange = {
+                            onAction(ClientTransferAction.NoteChanged(it))
+                        },
+                        label = stringResource(Res.string.client_transfer_add_notes),
+                        modifier = Modifier.fillMaxWidth(),
+                        singleLine = true,
+                        placeholder = stringResource(Res.string.client_transfer_add_note_here),
+                    )
+
+                    Spacer(Modifier.height(DesignToken.padding.largeIncreased))
+
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                    ) {
+                        MifosOutlinedButton(
+                            onClick = {
+                                onAction(ClientTransferAction.NavigateBack)
+                            },
+                            leadingIcon = {
+                                Icon(
+                                    imageVector = MifosIcons.ChevronLeft,
+                                    contentDescription = null,
+                                    modifier = Modifier.size(DesignToken.sizes.iconAverage),
+                                    tint = MaterialTheme.colorScheme.primary,
+                                )
+                            },
+                            text = {
+                                Text(
+                                    text = stringResource(Res.string.btn_back),
+                                    color = MaterialTheme.colorScheme.primary,
+                                    style = MifosTypography.labelLarge,
+                                )
+                            },
+                            modifier = Modifier.weight(1f),
+                        )
+                        Spacer(Modifier.padding(DesignToken.padding.small))
+                        MifosTextButton(
+                            onClick = {
+                                onAction(ClientTransferAction.OnSubmit)
+                            },
+                            leadingIcon = {
+                                Icon(
+                                    imageVector = MifosIcons.Check,
+                                    contentDescription = null,
+                                    modifier = Modifier.size(DesignToken.sizes.iconAverage),
+                                )
+                            },
+                            text = {
+                                Text(
+                                    text = stringResource(Res.string.btn_submit),
+                                    style = MifosTypography.labelLarge,
+                                )
+                            },
+                            modifier = Modifier.weight(1f),
+                            enabled = state.isEnabled,
+                        )
                     }
                 }
             }

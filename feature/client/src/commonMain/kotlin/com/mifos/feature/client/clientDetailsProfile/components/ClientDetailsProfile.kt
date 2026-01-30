@@ -42,7 +42,7 @@ fun ClientDetailsProfile(
 ) {
     Row(
         Modifier.fillMaxWidth()
-            .padding(DesignToken.padding.largeIncreasedExtra),
+            .padding(top = DesignToken.padding.largeIncreasedExtra, bottom = DesignToken.padding.medium),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         MifosUserImage(
