@@ -5,7 +5,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  *
- * See See https://github.com/openMF/kmp-project-template/blob/main/LICENSE
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
 package template.core.base.ui
 
@@ -170,5 +170,19 @@ actual object ShareUtils {
         val clipboardManager = context.getSystemService(Context.CLIPBOARD_SERVICE) as android.content.ClipboardManager
         val clip = android.content.ClipData.newPlainText("Copied Text", text)
         clipboardManager.setPrimaryClip(clip)
+    }
+
+    actual suspend fun shareApp(storeLink: String, message: String) {
+        val shareContent = if (message.isNotEmpty()) {
+            "$message\n$storeLink"
+        } else {
+            storeLink
+        }
+        val intent = Intent(Intent.ACTION_SEND).apply {
+            type = "text/plain"
+            putExtra(Intent.EXTRA_TEXT, shareContent)
+        }
+        val intentChooser = Intent.createChooser(intent, null)
+        activityProvider.invoke().startActivity(intentChooser)
     }
 }

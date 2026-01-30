@@ -42,7 +42,6 @@ import androidclient.feature.client.generated.resources.feature_client_staff
 import androidclient.feature.client.generated.resources.feature_client_submit
 import androidclient.feature.client.generated.resources.legal_form
 import androidclient.feature.client.generated.resources.submission_date
-import androidclient.feature.client.generated.resources.update_details
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectTapGestures
@@ -151,7 +150,7 @@ internal fun ClientEditDetailsScreen(
         }
     }
 
-    ClientEditDetailsScaffold(
+    ClientEditDetailsContent(
         navController = navController,
         navigateBack = navigateBack,
         state = state,
@@ -165,7 +164,7 @@ internal fun ClientEditDetailsScreen(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun ClientEditDetailsScaffold(
+private fun ClientEditDetailsContent(
     state: ClientEditDetailsState,
     navController: NavController,
     navigateBack: () -> Unit,
@@ -178,60 +177,56 @@ private fun ClientEditDetailsScaffold(
 ) {
     val scope = rememberCoroutineScope()
 
-    MifosScaffold(
-        title = stringResource(Res.string.update_details),
-        onBackPressed = { navigateBack.invoke() },
-        modifier = modifier,
-    ) { paddingValues ->
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(paddingValues),
-        ) {
-            MifosBreadcrumbNavBar(navController)
-            when (state.dialogState) {
-                is ClientEditDetailsState.DialogState.Loading -> {
-                    MifosProgressIndicator()
-                }
-                is ClientEditDetailsState.DialogState.ShowUpdateDetailsContent -> {
-                    UpdateClientDetailsContent(
-                        state = state,
-                        scope = scope,
-                        officeList = officeList,
-                        staffInOffices = staffInOffices,
-                        clientTemplate = state.clientsTemplate,
-                        loadStaffInOffice = loadStaffInOffice,
-                        updateClient = updateClient,
-                        navigateBack = navigateBack,
-                    )
-                }
-                is ClientEditDetailsState.DialogState.Error -> {
-                    MifosSweetError(
-                        message = state.dialogState.message,
-                    )
-                }
-                is ClientEditDetailsState.DialogState.ShowStatusDialog -> {
-                    MifosStatusDialog(
-                        status = state.dialogState.status,
-                        btnText = stringResource(Res.string.dialog_continue),
-                        onConfirm = { onAction(ClientEditDetailsAction.OnNext) },
-                        successTitle = stringResource(Res.string.client_details_updated),
-                        successMessage = stringResource(Res.string.client_details_updated_success_message),
-                        failureTitle = stringResource(Res.string.client_details_update_failure_title),
-                        failureMessage = state.dialogState.msg,
-                        modifier = Modifier.fillMaxSize(),
-                    )
-                }
-
-                else -> {}
+    Column(
+        modifier = modifier
+            .fillMaxSize(),
+    ) {
+        MifosBreadcrumbNavBar(navController)
+        when (state.dialogState) {
+            is ClientEditDetailsState.DialogState.Loading -> {
+                MifosProgressIndicator()
             }
+
+            is ClientEditDetailsState.DialogState.ShowUpdateDetailsContent -> {
+                UpdateClientDetailsFields(
+                    state = state,
+                    scope = scope,
+                    officeList = officeList,
+                    staffInOffices = staffInOffices,
+                    clientTemplate = state.clientsTemplate,
+                    loadStaffInOffice = loadStaffInOffice,
+                    updateClient = updateClient,
+                    navigateBack = navigateBack,
+                )
+            }
+
+            is ClientEditDetailsState.DialogState.Error -> {
+                MifosSweetError(
+                    message = state.dialogState.message,
+                )
+            }
+
+            is ClientEditDetailsState.DialogState.ShowStatusDialog -> {
+                MifosStatusDialog(
+                    status = state.dialogState.status,
+                    btnText = stringResource(Res.string.dialog_continue),
+                    onConfirm = { onAction(ClientEditDetailsAction.OnNext) },
+                    successTitle = stringResource(Res.string.client_details_updated),
+                    successMessage = stringResource(Res.string.client_details_updated_success_message),
+                    failureTitle = stringResource(Res.string.client_details_update_failure_title),
+                    failureMessage = state.dialogState.msg,
+                    modifier = Modifier.fillMaxSize(),
+                )
+            }
+
+            else -> {}
         }
     }
 }
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalTime::class)
 @Composable
-private fun UpdateClientDetailsContent(
+private fun UpdateClientDetailsFields(
     state: ClientEditDetailsState,
     scope: CoroutineScope,
     officeList: List<OfficeEntity>,
@@ -674,7 +669,8 @@ private fun UpdateClientDetailsContent(
                     selectedStaffId = staffInOffices[index].id
                 },
                 label = stringResource(Res.string.feature_client_staff),
-                options = staffInOffices.sortedBy { it.displayName }.map { it.displayName.toString() },
+                options = staffInOffices.sortedBy { it.displayName }
+                    .map { it.displayName.toString() },
                 readOnly = true,
             )
 

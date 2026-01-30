@@ -31,7 +31,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
-import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.designsystem.theme.MifosTypography
@@ -47,7 +46,7 @@ import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
-internal fun ShareAccountsScreenRoute(
+internal fun ShareAccountsScreen(
     navController: NavController,
     viewAccount: (Int) -> Unit,
     viewModel: ShareAccountsViewModel = koinViewModel(),
@@ -60,7 +59,7 @@ internal fun ShareAccountsScreenRoute(
         }
     }
 
-    ShareAccountsScreen(
+    ShareAccountsContent(
         state = state,
         navController = navController,
         onAction = remember(viewModel) { { viewModel.trySendAction(it) } },
@@ -73,80 +72,76 @@ internal fun ShareAccountsScreenRoute(
 }
 
 @Composable
-internal fun ShareAccountsScreen(
+internal fun ShareAccountsContent(
     navController: NavController,
     state: ShareAccountsUiState,
+    modifier: Modifier = Modifier,
     onAction: (ShareAccountsAction) -> Unit,
 ) {
-    MifosScaffold(
-        title = "Share Accounts",
-        onBackPressed = {},
-    ) { paddingValues ->
-        Column(
-            modifier = Modifier.padding(paddingValues)
-                .fillMaxSize(),
-        ) {
-            MifosBreadcrumbNavBar(
-                navController = navController,
-            )
+    Column(
+        modifier = modifier
+            .fillMaxSize(),
+    ) {
+        MifosBreadcrumbNavBar(
+            navController = navController,
+        )
 
-            when (state.isLoading) {
-                true -> MifosProgressIndicator()
+        when (state.isLoading) {
+            true -> MifosProgressIndicator()
 
-                false -> {
-                    Column(
-                        modifier = Modifier.fillMaxSize()
-                            .padding(horizontal = DesignToken.padding.large),
-                    ) {
-                        ShareAccountHeader(
-                            totalItem = state.accounts.size.toString(),
-                            onAction = onAction,
-                        )
+            false -> {
+                Column(
+                    modifier = Modifier.fillMaxSize()
+                        .padding(horizontal = DesignToken.padding.large),
+                ) {
+                    ShareAccountHeader(
+                        totalItem = state.accounts.size.toString(),
+                        onAction = onAction,
+                    )
 
-                        Spacer(modifier = Modifier.height(DesignToken.padding.large))
+                    Spacer(modifier = Modifier.height(DesignToken.padding.large))
 
-                        if (state.accounts.isNotEmpty()) {
-                            val emptyText = stringResource(Res.string.string_not_available)
-                            LazyColumn {
-                                item {
-                                    state.accounts.forEachIndexed { index, account ->
-                                        MifosActionsShareListingComponent(
-                                            accountNo = account.accountNo ?: emptyText,
-                                            shareProductName = account.shortProductName
-                                                ?: emptyText,
-                                            pendingForApprovalShares = account.totalPendingForApprovalShares,
-                                            approvedShares = account.totalApprovedShares,
-                                            isExpanded = state.currentlyActiveIndex == index && state.isCardActive,
-                                            menuList = (listOf(Actions.ViewAccount())),
-                                            onActionClicked = { actions ->
-                                                when (actions) {
-                                                    is Actions.ViewAccount -> {
-                                                        onAction(
-                                                            ShareAccountsAction.ViewAccount(
-                                                                account.id ?: -1,
-                                                            ),
-                                                        )
-                                                    }
-
-                                                    else -> {}
+                    if (state.accounts.isNotEmpty()) {
+                        val emptyText = stringResource(Res.string.string_not_available)
+                        LazyColumn {
+                            item {
+                                state.accounts.forEachIndexed { index, account ->
+                                    MifosActionsShareListingComponent(
+                                        accountNo = account.accountNo ?: emptyText,
+                                        shareProductName = account.shortProductName
+                                            ?: emptyText,
+                                        pendingForApprovalShares = account.totalPendingForApprovalShares,
+                                        approvedShares = account.totalApprovedShares,
+                                        isExpanded = state.currentlyActiveIndex == index && state.isCardActive,
+                                        menuList = (listOf(Actions.ViewAccount())),
+                                        onActionClicked = { actions ->
+                                            when (actions) {
+                                                is Actions.ViewAccount -> {
+                                                    onAction(
+                                                        ShareAccountsAction.ViewAccount(
+                                                            account.id ?: -1,
+                                                        ),
+                                                    )
                                                 }
-                                            },
-                                            onClick = {
-                                                onAction(
-                                                    ShareAccountsAction.CardClicked(
-                                                        index,
-                                                    ),
-                                                )
-                                            },
-                                        )
 
-                                        Spacer(Modifier.height(DesignToken.padding.small))
-                                    }
+                                                else -> {}
+                                            }
+                                        },
+                                        onClick = {
+                                            onAction(
+                                                ShareAccountsAction.CardClicked(
+                                                    index,
+                                                ),
+                                            )
+                                        },
+                                    )
+
+                                    Spacer(Modifier.height(DesignToken.padding.small))
                                 }
                             }
-                        } else {
-                            MifosEmptyCard()
                         }
+                    } else {
+                        MifosEmptyCard()
                     }
                 }
             }

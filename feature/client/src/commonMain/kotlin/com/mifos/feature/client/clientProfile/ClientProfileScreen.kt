@@ -32,7 +32,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
-import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.designsystem.theme.MifosTypography
 import com.mifos.core.ui.components.MifosBreadcrumbNavBar
@@ -75,6 +74,7 @@ internal fun ClientProfileScreen(
                     ClientProfileActionItem.Address -> {
                         viewAddress(state.client?.id ?: -1)
                     }
+
                     ClientProfileActionItem.Documents -> {
                         documents(state.client?.id ?: -1)
                     }
@@ -109,7 +109,7 @@ internal fun ClientProfileScreen(
         }
     }
 
-    ClientProfileScaffold(
+    ClientProfileContent(
         modifier = modifier,
         state = state,
         onAction = remember(viewModel) { { viewModel.trySendAction(it) } },
@@ -127,78 +127,73 @@ internal fun ClientProfileScreen(
 }
 
 @Composable
-private fun ClientProfileScaffold(
+private fun ClientProfileContent(
     state: ClientProfileState,
     navController: NavController,
     modifier: Modifier = Modifier,
     onAction: (ClientProfileAction) -> Unit,
 ) {
-    MifosScaffold(
-        modifier = modifier,
-    ) { paddingValues ->
-        if (state.dialogState == null) {
+    if (state.dialogState == null) {
+        Column(
+            modifier = modifier
+                .fillMaxSize(),
+        ) {
+            MifosBreadcrumbNavBar(navController)
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(paddingValues),
+                    .verticalScroll(rememberScrollState())
+                    .padding(
+                        horizontal = DesignToken.padding.large,
+                    ),
             ) {
-                MifosBreadcrumbNavBar(navController)
-                Column(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .verticalScroll(rememberScrollState())
-                        .padding(
-                            horizontal = DesignToken.padding.large,
-                        ),
-                ) {
-                    Text(
-                        text = stringResource(Res.string.client_profile_profile),
-                        style = MifosTypography.labelLargeEmphasized,
-                    )
-                    Spacer(Modifier.height(DesignToken.padding.medium))
-                    ProfileCard(
-                        image = state.profileImage,
-                        name = state.client?.displayName ?: stringResource(Res.string.name_na),
-                        accountNo = state.client?.accountNo
-                            ?: stringResource(Res.string.string_not_available),
-                        office = state.client?.officeName ?: stringResource(Res.string.office_na),
-                        groupName = state.client?.groupName ?: stringResource(Res.string.group_na),
-                        onGroupClick = {
-                            state.client?.groupId?.let { groupId ->
-                                onAction(ClientProfileAction.OnGroupClick(groupId))
-                            }
-                        },
-                        onClick = {
-                            onAction(
-                                ClientProfileAction.NavigateToClientDetailsScreen,
-                            )
-                        },
-                    )
-                    Spacer(Modifier.height(DesignToken.padding.large))
-                    Text(
-                        text = stringResource(Res.string.client_profile_actions),
-                        style = MifosTypography.labelLargeEmphasized,
-                    )
-                    Spacer(Modifier.height(DesignToken.padding.medium))
-                    clientsActionItems.forEach {
-                        MifosRowCard(
-                            title = stringResource(it.title),
-                            imageVector = it.icon,
-                            leftValues = listOf(
-                                TextUtil(
-                                    text = stringResource(it.subTitle),
-                                    style = MifosTypography.bodySmall,
-                                    color = MaterialTheme.colorScheme.secondary,
-                                ),
-                            ),
-                            rightValues = emptyList(),
-                            modifier = Modifier
-                                .clickable {
-                                    onAction(ClientProfileAction.OnActionClick(it))
-                                }
-                                .padding(vertical = DesignToken.padding.medium),
+                Text(
+                    text = stringResource(Res.string.client_profile_profile),
+                    style = MifosTypography.labelLargeEmphasized,
+                )
+                Spacer(Modifier.height(DesignToken.padding.medium))
+                ProfileCard(
+                    image = state.profileImage,
+                    name = state.client?.displayName ?: stringResource(Res.string.name_na),
+                    accountNo = state.client?.accountNo
+                        ?: stringResource(Res.string.string_not_available),
+                    office = state.client?.officeName ?: stringResource(Res.string.office_na),
+                    groupName = state.client?.groupName ?: stringResource(Res.string.group_na),
+                    onGroupClick = {
+                        state.client?.groupId?.let { groupId ->
+                            onAction(ClientProfileAction.OnGroupClick(groupId))
+                        }
+                    },
+                    onClick = {
+                        onAction(
+                            ClientProfileAction.NavigateToClientDetailsScreen,
                         )
-                    }
+                    },
+                )
+                Spacer(Modifier.height(DesignToken.padding.large))
+                Text(
+                    text = stringResource(Res.string.client_profile_actions),
+                    style = MifosTypography.labelLargeEmphasized,
+                )
+                Spacer(Modifier.height(DesignToken.padding.medium))
+                clientsActionItems.forEach {
+                    MifosRowCard(
+                        title = stringResource(it.title),
+                        imageVector = it.icon,
+                        leftValues = listOf(
+                            TextUtil(
+                                text = stringResource(it.subTitle),
+                                style = MifosTypography.bodySmall,
+                                color = MaterialTheme.colorScheme.secondary,
+                            ),
+                        ),
+                        rightValues = emptyList(),
+                        modifier = Modifier
+                            .clickable {
+                                onAction(ClientProfileAction.OnActionClick(it))
+                            }
+                            .padding(vertical = DesignToken.padding.medium),
+                    )
                 }
             }
         }
