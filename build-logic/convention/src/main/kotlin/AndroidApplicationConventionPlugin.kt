@@ -16,12 +16,13 @@ class AndroidApplicationConventionPlugin : Plugin<Project> {
             with(pluginManager) {
                 apply("com.android.application")
                 apply("org.jetbrains.kotlin.android")
-                apply("mifos.android.lint")
                 apply("com.dropbox.dependency-guard")
                 apply("mifos.detekt.plugin")
                 apply("mifos.spotless.plugin")
                 apply("mifos.ktlint.plugin")
-//                apply("mifos.git.hooks")
+                apply("mifos.git.hooks")
+                apply("org.convention.android.application.lint")
+                apply("org.convention.android.application.firebase")
             }
 
             extensions.configure<ApplicationExtension> {

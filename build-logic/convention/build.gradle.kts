@@ -59,7 +59,7 @@ gradlePlugin {
             implementationClass = "AndroidTestConventionPlugin"
         }
         register("androidFirebase") {
-            id = "mifos.android.application.firebase"
+            id = "org.convention.android.application.firebase"
             implementationClass = "AndroidApplicationFirebaseConventionPlugin"
         }
         register("androidFlavors") {
@@ -67,7 +67,7 @@ gradlePlugin {
             implementationClass = "AndroidApplicationFlavorsConventionPlugin"
         }
         register("androidLint") {
-            id = "mifos.android.lint"
+            id = "org.convention.android.application.lint"
             implementationClass = "AndroidLintConventionPlugin"
         }
         register("jvmLibrary") {
@@ -97,15 +97,15 @@ gradlePlugin {
 
         // KMP & CMP Plugins
         register("cmpFeature") {
-            id = "mifos.cmp.feature"
+            id = "org.convention.cmp.feature"
             implementationClass = "CMPFeatureConventionPlugin"
         }
         register("kmpKoin") {
-            id = "mifos.kmp.koin"
+            id = "org.convention.kmp.koin"
             implementationClass = "KMPKoinConventionPlugin"
         }
         register("kmpLibrary") {
-            id = "mifos.kmp.library"
+            id = "org.convention.kmp.library"
             implementationClass = "KMPLibraryConventionPlugin"
         }
 

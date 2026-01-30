@@ -544,7 +544,7 @@ EOL
     echo -e "${GREEN}secrets.env file has been updated with base64 encoded keystores${NC}"
 }
 
-# Function to update fastlane-config/android_config.rb with keystore information
+# Function to update fastlane-config/project_config.rb with keystore information
 update_fastlane_config() {
     local keystore_name=$1
     local keystore_password=$2
@@ -553,7 +553,7 @@ update_fastlane_config() {
 
     # Path to the fastlane config file
     local config_dir="fastlane-config"
-    local config_file="$config_dir/android_config.rb"
+    local config_file="$config_dir/project_config.rb"
 
     echo -e "${BLUE}Updating fastlane configuration with keystore information...${NC}"
 
@@ -567,48 +567,74 @@ update_fastlane_config() {
     if [ -f "$config_file" ]; then
         echo -e "${BLUE}Updating existing $config_file${NC}"
 
-        # Use sed to replace the values directly
-        # This keeps the file structure intact while only changing the values
-        sed -i.bak \
-            -e "s|default_store_file:.*|default_store_file: \"$keystore_name\",|" \
-            -e "s|default_store_password:.*|default_store_password: \"$keystore_password\",|" \
-            -e "s|default_key_alias:.*|default_key_alias: \"$key_alias\",|" \
-            -e "s|default_key_password:.*|default_key_password: \"$key_password\"|" \
-            "$config_file"
+        # Create a temporary file for the updated content
+        local temp_file=$(mktemp)
 
-        # Remove the backup file
-        rm -f "$config_file.bak"
+        # Use awk for cross-platform compatibility (works on both macOS and Linux)
+        # This handles the nested keystore config structure in project_config.rb
+        awk -v ks_file="$keystore_name" -v ks_pass="$keystore_password" -v k_alias="$key_alias" -v k_pass="$key_password" '
+        /keystore:.*\{/,/\}/ {
+            if (/file:/) {
+                gsub(/file: "[^"]*"/, "file: \"" ks_file "\"")
+            }
+            if (/password:/ && !/key_password/) {
+                gsub(/password: "[^"]*"/, "password: \"" ks_pass "\"")
+            }
+            if (/key_alias:/) {
+                gsub(/key_alias: "[^"]*"/, "key_alias: \"" k_alias "\"")
+            }
+            if (/key_password:/) {
+                gsub(/key_password: "[^"]*"/, "key_password: \"" k_pass "\"")
+            }
+        }
+        { print }
+        ' "$config_file" > "$temp_file"
+
+        # Replace the original file with the updated one
+        mv "$temp_file" "$config_file"
     else
-        # File doesn't exist, create it with a complete structure
+        # File doesn't exist, create it with a complete structure matching project_config.rb format
         echo -e "${BLUE}Creating new $config_file${NC}"
 
         mkdir -p "$config_dir"
 
         # Create the file with the complete structure
         cat > "$config_file" << EOL
+# ==============================================================================
+# Project Configuration - Update these values when setting up a new project
+# ==============================================================================
+
 module FastlaneConfig
-  module AndroidConfig
-    STORE_CONFIG = {
-      default_store_file: "$keystore_name",
-      default_store_password: "$keystore_password",
-      default_key_alias: "$key_alias",
-      default_key_password: "$key_password"
+  module ProjectConfig
+    PROJECT_NAME = "kmp-project-template"
+    ORGANIZATION_NAME = "Devikon Inc."
+
+    ANDROID = {
+      package_name: "cmp.android.app",
+      play_store_json_key: "secrets/playStorePublishServiceCredentialsFile.json",
+      apk_paths: {
+        prod: "cmp-android/build/outputs/apk/prod/release/cmp-android-prod-release.apk",
+        demo: "cmp-android/build/outputs/apk/demo/release/cmp-android-demo-release.apk"
+      },
+      aab_path: "cmp-android/build/outputs/bundle/prodRelease/cmp-android-prod-release.aab",
+      keystore: {
+        file: "$keystore_name",
+        password: "$keystore_password",
+        key_alias: "$key_alias",
+        key_password: "$key_password"
+      },
+      firebase: {
+        prod_app_id: "1:728434912738:android:REPLACE_ME",
+        demo_app_id: "1:728434912738:android:REPLACE_ME",
+        groups: "cmp-app-testers"
+      }
     }
 
-    FIREBASE_CONFIG = {
-      firebase_prod_app_id: "1:728433984912738:android:3902eb32kjaska3363b0938f1a1dbb",
-      firebase_demo_app_id: "1:72843493212738:android:8392hjks3298ak9032skja",
-      firebase_service_creds_file: "secrets/firebaseAppDistributionServiceCredentialsFile.json",
-      firebase_groups: "mifos-mobile-apps"
-    }
-
-    BUILD_PATHS = {
-      prod_apk_path: "cmp-android/build/outputs/apk/prod/release/cmp-android-prod-release.apk",
-      demo_apk_path: "cmp-android/build/outputs/apk/demo/release/cmp-android-demo-release.apk",
-      prod_aab_path: "cmp-android/build/outputs/bundle/prodRelease/cmp-android-prod-release.aab"
-    }
-  end
-end
+    SHARED = {
+        firebase_service_credentials: "secrets/firebaseAppDistributionServiceCredentialsFile.json"
+        }
+      end
+    end
 EOL
     fi
 
@@ -631,19 +657,36 @@ update_gradle_config() {
     if [ -f "$gradle_file" ]; then
         echo -e "${BLUE}Updating existing $gradle_file${NC}"
 
-        # Create a backup of the original file
-        cp "$gradle_file" "$gradle_file.bak"
+       # Create a temporary file for the updated content
+       local temp_file=$(mktemp)
 
-        # Use sed to update the signing configuration
-        sed -i \
-            -e "s|storeFile = file(System.getenv(\"KEYSTORE_PATH\") ?: \".*\")|storeFile = file(System.getenv(\"KEYSTORE_PATH\") ?: \"../keystores/$keystore_name\")|" \
-            -e "s|storePassword = System.getenv(\"KEYSTORE_PASSWORD\") ?: \".*\"|storePassword = System.getenv(\"KEYSTORE_PASSWORD\") ?: \"$keystore_password\"|" \
-            -e "s|keyAlias = System.getenv(\"KEYSTORE_ALIAS\") ?: \".*\"|keyAlias = System.getenv(\"KEYSTORE_ALIAS\") ?: \"$key_alias\"|" \
-            -e "s|keyPassword = System.getenv(\"KEYSTORE_ALIAS_PASSWORD\") ?: \".*\"|keyPassword = System.getenv(\"KEYSTORE_ALIAS_PASSWORD\") ?: \"$key_password\"|" \
-            "$gradle_file"
+       # Use awk for cross-platform compatibility (works on both macOS and Linux)
+       awk -v ks_name="$keystore_name" -v ks_pass="$keystore_password" -v k_alias="$key_alias" -v k_pass="$key_password" '
+       /storeFile = file\(System.getenv\("KEYSTORE_PATH"\)/ {
+           gsub(/\?\: "[^"]*"/, "?: \"../keystores/" ks_name "\"")
+           print
+           next
+       }
+       /storePassword = System.getenv\("KEYSTORE_PASSWORD"\)/ {
+           gsub(/\?\: "[^"]*"/, "?: \"" ks_pass "\"")
+           print
+           next
+       }
+       /keyAlias = System.getenv\("KEYSTORE_ALIAS"\)/ {
+           gsub(/\?\: "[^"]*"/, "?: \"" k_alias "\"")
+           print
+           next
+       }
+       /keyPassword = System.getenv\("KEYSTORE_ALIAS_PASSWORD"\)/ {
+           gsub(/\?\: "[^"]*"/, "?: \"" k_pass "\"")
+           print
+           next
+       }
+       { print }
+       ' "$gradle_file" > "$temp_file"
 
-        # Remove the backup file
-        rm -f "$gradle_file.bak"
+       # Replace the original file with the updated one
+        mv "$temp_file" "$gradle_file"
         echo -e "${GREEN}Gradle build file updated successfully${NC}"
     else
         echo -e "${YELLOW}Gradle file not found: $gradle_file${NC}"
@@ -846,7 +889,7 @@ generate_keystores() {
     if [ $ORIGINAL_RESULT -eq 0 ] && [ $UPLOAD_RESULT -eq 0 ]; then
         update_secrets_env "$ORIGINAL_KEYSTORE_NAME" "$UPLOAD_KEYSTORE_NAME"
 
-        # Update fastlane-config/android_config.rb with UPLOAD keystore information
+        # Update fastlane-config/project_config.rb with UPLOAD keystore information
         update_fastlane_config "$UPLOAD_KEYSTORE_NAME" "$UPLOAD_KEYSTORE_FILE_PASSWORD" "$UPLOAD_KEYSTORE_ALIAS" "$UPLOAD_KEYSTORE_ALIAS_PASSWORD"
 
         # Update cmp-android/build.gradle.kts with UPLOAD keystore information
@@ -881,7 +924,7 @@ generate_keystores() {
 
     if [ $ORIGINAL_RESULT -eq 0 ] && [ $UPLOAD_RESULT -eq 0 ]; then
         echo -e "${GREEN}secrets.env has been updated with base64 encoded keystores${NC}"
-        echo -e "${GREEN}fastlane-config/android_config.rb has been updated with UPLOAD keystore information${NC}"
+        echo -e "${GREEN}fastlane-config/project_config.rb has been updated with UPLOAD keystore information${NC}"
         echo -e "${GREEN}cmp-android/build.gradle.kts has been updated with UPLOAD keystore information${NC}"
         echo -e "${BLUE}Note: If you have files in secrets/ directory, they have been encoded and added to secrets.env${NC}"
         return 0
