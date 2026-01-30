@@ -5,7 +5,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  *
- * See See https://github.com/openMF/kmp-project-template/blob/main/LICENSE
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
 package template.core.base.ui
 
@@ -107,5 +107,16 @@ actual object ShareUtils {
         } catch (e: Exception) {
             println("Error copying to clipboard: ${e.message}")
         }
+    }
+
+    actual suspend fun shareApp(storeLink: String, message: String) {
+        val shareContent = if (message.isNotEmpty()) {
+            "$message\n$storeLink"
+        } else {
+            storeLink
+        }
+        // On Desktop, we copy to clipboard and open the URL
+        copyText(shareContent)
+        openUrl(storeLink)
     }
 }
