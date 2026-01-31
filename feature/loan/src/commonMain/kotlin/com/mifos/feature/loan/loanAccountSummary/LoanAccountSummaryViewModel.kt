@@ -29,9 +29,11 @@ internal class LoanAccountSummaryViewModel(
 ) {
     private val loanAccountNumber =
         savedStateHandle.toRoute<LoanAccountSummaryScreenRoute>().loanAccountNumber
+
     init {
         loadLoanById()
     }
+
     override fun handleAction(action: LoanAccountSummaryAction) {
         when (action) {
             LoanAccountSummaryAction.OnRetry -> loadLoanById()
@@ -73,6 +75,7 @@ internal class LoanAccountSummaryViewModel(
             }
         }
     }
+
     private fun loadLoanById() {
         viewModelScope.launch {
             mutableStateFlow.update { it.copy(dialogState = LoanAccountSummaryState.DialogState.Loading) }
