@@ -19,7 +19,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class SearchRecordRoute(
-    val recordType: String = RecordType.ADDRESS.name,
+    val type: RecordType,
 )
 
 fun NavGraphBuilder.searchRecordNavigation(
@@ -34,6 +34,6 @@ fun NavGraphBuilder.searchRecordNavigation(
     }
 }
 
-fun NavController.navigateToSearchRecord(recordType: String = RecordType.ADDRESS.name) {
-    navigate(SearchRecordRoute(recordType = recordType))
+fun NavController.navigateToSearchRecord(type: RecordType) {
+    navigate(SearchRecordRoute(type = type))
 }

@@ -9,7 +9,7 @@
  */
 package com.mifos.core.model.objects.searchrecord
 
-enum class RecordType(val displayName: String) {
-    ADDRESS("Address"),
-    IDENTIFIER("Identifier"),
+enum class RecordType {
+    ADDRESS,
+    IDENTIFIER,
 }

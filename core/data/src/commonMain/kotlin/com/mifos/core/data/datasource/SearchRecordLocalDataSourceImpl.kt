@@ -9,6 +9,7 @@
  */
 package com.mifos.core.data.datasource
 
+import com.mifos.core.common.utils.Constants
 import com.mifos.core.model.objects.searchrecord.GenericSearchRecord
 import com.mifos.core.model.objects.searchrecord.RecordType
 import com.mifos.room.entities.client.ClientAddressEntity
@@ -41,14 +42,16 @@ class SearchRecordLocalDataSourceImpl(
                         id = address.addressId,
                         name = address.addressType,
                         description = buildAddressDescription(address),
-                        type = RecordType.ADDRESS.displayName,
+                        type = RecordType.ADDRESS.name,
                         metadata = mapOf(
-                            "clientId" to address.clientID.toString(),
-                            "city" to address.city,
-                            "state" to address.stateName,
-                            "country" to address.countryName,
-                            "postalCode" to address.postalCode,
-                            "addressLine1" to address.addressLine1,
+                            Constants.CLIENT_ID to address.clientID.toString(),
+                            Constants.CITY to address.city,
+                            Constants.STATE to address.stateName,
+                            Constants.COUNTRY to address.countryName,
+                            Constants.POSTAL_CODE to address.postalCode,
+                            Constants.ADDRESS_LINE_1 to address.addressLine1,
+                            Constants.ADDRESS_LINE_2 to (address.addressLine2 ?: ""),
+                            Constants.ADDRESS_LINE_3 to (address.addressLine3 ?: ""),
                         ),
                     )
                 }
@@ -64,11 +67,11 @@ class SearchRecordLocalDataSourceImpl(
                         id = identifier.id,
                         name = identifier.documentTypeName,
                         description = identifier.description,
-                        type = RecordType.IDENTIFIER.displayName,
+                        type = RecordType.IDENTIFIER.name,
                         metadata = mapOf(
-                            "clientId" to identifier.clientId.toString(),
-                            "status" to identifier.status,
-                            "documentKey" to identifier.documentKey,
+                            Constants.CLIENT_ID to identifier.clientId.toString(),
+                            Constants.STATUS to identifier.status,
+                            Constants.DOCUMENT_KEY to identifier.documentKey,
                         ),
                     )
                 }

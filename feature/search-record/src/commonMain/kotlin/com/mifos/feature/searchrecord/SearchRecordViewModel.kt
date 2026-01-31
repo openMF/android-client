@@ -12,97 +12,136 @@ package com.mifos.feature.searchrecord
 import androidclient.feature.search_record.generated.resources.Res
 import androidclient.feature.search_record.generated.resources.error_searching_records
 import androidx.lifecycle.SavedStateHandle
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import com.mifos.core.data.repository.SearchRecordRepository
+import com.mifos.core.model.objects.searchrecord.GenericSearchRecord
 import com.mifos.core.model.objects.searchrecord.RecordType
+import com.mifos.core.ui.util.BaseViewModel
 import com.mifos.feature.searchrecord.navigation.SearchRecordRoute
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class SearchRecordViewModel(
     savedStateHandle: SavedStateHandle,
     private val repository: SearchRecordRepository,
-) : ViewModel() {
+) : BaseViewModel<SearchRecordState, SearchRecordEvent, SearchRecordAction>(
+    initialState = SearchRecordState(),
+) {
 
     private val route = savedStateHandle.toRoute<SearchRecordRoute>()
-
-    val recordType: RecordType = try {
-        RecordType.valueOf(route.recordType.uppercase())
-    } catch (e: IllegalArgumentException) {
-        RecordType.ADDRESS
-    }
-
-    private val _searchQuery = MutableStateFlow("")
-    val searchQuery: StateFlow<String> = _searchQuery.asStateFlow()
-
-    private val _uiState = MutableStateFlow<SearchRecordUiState>(SearchRecordUiState.Idle)
-    val uiState: StateFlow<SearchRecordUiState> = _uiState.asStateFlow()
-
+    private val recordType: RecordType = route.type
     private var searchJob: Job? = null
 
     init {
+        mutableStateFlow.update {
+            it.copy(
+                displayTitle = when (recordType) {
+                    RecordType.ADDRESS -> "Address"
+                    RecordType.IDENTIFIER -> "Identifiers"
+                },
+            )
+        }
         observeSearchQuery()
     }
 
-    private fun observeSearchQuery() {
-        viewModelScope.launch {
-            _searchQuery.collectLatest { query ->
-                if (query.isBlank()) {
-                    _uiState.update { SearchRecordUiState.EmptyQuery }
-                    searchJob?.cancel()
-                } else {
-                    searchJob?.cancel()
-                    searchJob = launch {
-                        delay(SEARCH_DEBOUNCE_DELAY_MS)
-                        performSearch(query)
-                    }
+    override fun handleAction(action: SearchRecordAction) {
+        when (action) {
+            is SearchRecordAction.SearchQueryChanged -> {
+                mutableStateFlow.update { it.copy(searchQuery = action.query) }
+            }
+
+            SearchRecordAction.ClearSearch -> {
+                mutableStateFlow.update {
+                    it.copy(
+                        searchQuery = "",
+                        uiState = SearchRecordUiState.Idle,
+                    )
                 }
+            }
+
+            SearchRecordAction.NavigateBack -> {
+                sendEvent(SearchRecordEvent.NavigateBack)
+            }
+
+            is SearchRecordAction.SelectRecord -> {
+                sendEvent(SearchRecordEvent.NavigateToRecord(action.record))
             }
         }
     }
 
-    private suspend fun performSearch(query: String) {
-        _uiState.update { SearchRecordUiState.Loading }
-
-        repository.searchRecords(recordType, query)
-            .collectLatest { result ->
-                result.onSuccess { records ->
-                    _uiState.update {
-                        if (records.isEmpty()) {
-                            SearchRecordUiState.NoResults
-                        } else {
-                            SearchRecordUiState.Success(records)
+    private fun observeSearchQuery() {
+        viewModelScope.launch {
+            mutableStateFlow
+                .map { it.searchQuery }
+                .distinctUntilChanged()
+                .collect { query ->
+                    if (query.isBlank()) {
+                        mutableStateFlow.update { it.copy(uiState = SearchRecordUiState.EmptyQuery) }
+                        searchJob?.cancel()
+                    } else {
+                        searchJob?.cancel()
+                        searchJob = launch {
+                            delay(SEARCH_DEBOUNCE_DELAY_MS)
+                            performSearch(query)
                         }
                     }
                 }
+        }
+    }
+
+    private suspend fun performSearch(query: String) {
+        mutableStateFlow.update { it.copy(uiState = SearchRecordUiState.Loading) }
+
+        repository.searchRecords(recordType, query)
+            .collect { result ->
+                result.onSuccess { records ->
+                    mutableStateFlow.update {
+                        it.copy(
+                            uiState = if (records.isEmpty()) {
+                                SearchRecordUiState.NoResults
+                            } else {
+                                SearchRecordUiState.Success(records)
+                            },
+                        )
+                    }
+                }
                 result.onFailure { exception ->
-                    _uiState.update {
-                        SearchRecordUiState.Error(
-                            message = exception.message ?: "",
-                            messageRes = Res.string.error_searching_records,
+                    mutableStateFlow.update {
+                        it.copy(
+                            uiState = SearchRecordUiState.Error(
+                                message = exception.message ?: "",
+                                messageRes = Res.string.error_searching_records,
+                            ),
                         )
                     }
                 }
             }
     }
 
-    fun onSearchQueryChanged(query: String) {
-        _searchQuery.update { query }
-    }
-
-    fun clearSearch() {
-        _searchQuery.update { "" }
-        _uiState.update { SearchRecordUiState.Idle }
-    }
     companion object {
         private const val SEARCH_DEBOUNCE_DELAY_MS = 300L
     }
+}
+
+data class SearchRecordState(
+    val searchQuery: String = "",
+    val displayTitle: String = "",
+    val uiState: SearchRecordUiState = SearchRecordUiState.Idle,
+)
+
+sealed interface SearchRecordEvent {
+    data object NavigateBack : SearchRecordEvent
+    data class NavigateToRecord(val record: GenericSearchRecord) : SearchRecordEvent
+}
+
+sealed interface SearchRecordAction {
+    data class SearchQueryChanged(val query: String) : SearchRecordAction
+    data object ClearSearch : SearchRecordAction
+    data object NavigateBack : SearchRecordAction
+    data class SelectRecord(val record: GenericSearchRecord) : SearchRecordAction
 }

@@ -378,15 +378,15 @@ internal fun AuthenticatedNavbarNavigationScreenContent(
                 searchRecordNavigation(
                     onBackClick = { navController.popBackStack() },
                     onRecordSelected = { record ->
-                        val clientId = record.metadata["clientId"]?.toIntOrNull()
+                        val clientId = record.metadata[Constants.CLIENT_ID]?.toIntOrNull()
 
                         if (clientId != null) {
                             when {
-                                record.type.equals(RecordType.ADDRESS.displayName, ignoreCase = true) -> {
+                                record.type.equals(RecordType.ADDRESS.name, ignoreCase = true) -> {
                                     navController.navigateToClientAddressRoute(id = clientId)
                                 }
 
-                                record.type.equals(RecordType.IDENTIFIER.displayName, ignoreCase = true) -> {
+                                record.type.equals(RecordType.IDENTIFIER.name, ignoreCase = true) -> {
                                     navController.navigateToClientIdentifiersListScreen(clientId = clientId)
                                 }
                             }

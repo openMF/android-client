@@ -56,6 +56,7 @@ import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.mifos.core.common.utils.Constants
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.designsystem.theme.DesignToken
@@ -64,6 +65,7 @@ import com.mifos.core.model.objects.searchrecord.RecordType
 import com.mifos.core.ui.components.MifosActionsIdentifierListingComponent
 import com.mifos.core.ui.components.MifosAddressCard
 import com.mifos.core.ui.components.MifosProgressIndicator
+import com.mifos.core.ui.util.EventsEffect
 import com.mifos.core.ui.utils.getClientIdentifierStatus
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
@@ -75,23 +77,29 @@ internal fun SearchRecordScreen(
     modifier: Modifier = Modifier,
     viewModel: SearchRecordViewModel = koinViewModel(),
 ) {
-    val searchQuery by viewModel.searchQuery.collectAsStateWithLifecycle()
-    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val state by viewModel.stateFlow.collectAsStateWithLifecycle()
+
+    EventsEffect(viewModel.eventFlow) { event ->
+        when (event) {
+            SearchRecordEvent.NavigateBack -> onBackClick()
+            is SearchRecordEvent.NavigateToRecord -> onRecordSelected(event.record)
+        }
+    }
 
     val searchLabel = stringResource(
         Res.string.search_record_label_format,
-        viewModel.recordType.displayName,
+        state.displayTitle,
     )
 
     SearchRecordScreen(
         modifier = modifier,
-        searchQuery = searchQuery,
+        searchQuery = state.searchQuery,
         searchLabel = searchLabel,
-        uiState = uiState,
-        onSearchQueryChanged = viewModel::onSearchQueryChanged,
-        onClearSearch = viewModel::clearSearch,
-        onBackClick = onBackClick,
-        onRecordSelected = onRecordSelected,
+        uiState = state.uiState,
+        onSearchQueryChanged = { viewModel.trySendAction(SearchRecordAction.SearchQueryChanged(it)) },
+        onClearSearch = { viewModel.trySendAction(SearchRecordAction.ClearSearch) },
+        onBackClick = { viewModel.trySendAction(SearchRecordAction.NavigateBack) },
+        onRecordSelected = { viewModel.trySendAction(SearchRecordAction.SelectRecord(it)) },
     )
 }
 
@@ -257,13 +265,13 @@ private fun AddressRecordCard(
         MifosAddressCard(
             title = record.name,
             addressList = mapOf(
-                stringResource(Res.string.search_record_address_line_1) to (record.metadata["addressLine1"] ?: ""),
-                stringResource(Res.string.search_record_address_line_2) to (record.metadata["addressLine2"] ?: ""),
-                stringResource(Res.string.search_record_address_line_3) to (record.metadata["addressLine3"] ?: ""),
-                stringResource(Res.string.search_record_city) to (record.metadata["city"] ?: ""),
-                stringResource(Res.string.search_record_province) to (record.metadata["state"] ?: ""),
-                stringResource(Res.string.search_record_country) to (record.metadata["country"] ?: ""),
-                stringResource(Res.string.search_record_postal_code) to (record.metadata["postalCode"] ?: ""),
+                stringResource(Res.string.search_record_address_line_1) to (record.metadata[Constants.ADDRESS_LINE_1] ?: ""),
+                stringResource(Res.string.search_record_address_line_2) to (record.metadata[Constants.ADDRESS_LINE_2] ?: ""),
+                stringResource(Res.string.search_record_address_line_3) to (record.metadata[Constants.ADDRESS_LINE_3] ?: ""),
+                stringResource(Res.string.search_record_city) to (record.metadata[Constants.CITY] ?: ""),
+                stringResource(Res.string.search_record_province) to (record.metadata[Constants.STATE] ?: ""),
+                stringResource(Res.string.search_record_country) to (record.metadata[Constants.COUNTRY] ?: ""),
+                stringResource(Res.string.search_record_postal_code) to (record.metadata[Constants.POSTAL_CODE] ?: ""),
             ),
         )
     }
@@ -274,13 +282,13 @@ private fun IdentifierRecordCard(
     record: GenericSearchRecord,
     onRecordSelected: (GenericSearchRecord) -> Unit,
 ) {
-    val rawStatus = record.metadata["status"] ?: ""
+    val rawStatus = record.metadata[Constants.STATUS] ?: ""
     val statusObject = getClientIdentifierStatus(rawStatus)
 
     MifosActionsIdentifierListingComponent(
         type = record.name,
         id = record.id.toString(),
-        key = record.metadata["documentKey"] ?: "",
+        key = record.metadata[Constants.DOCUMENT_KEY] ?: "",
         status = statusObject,
         description = record.description,
         identifyDocuments = record.name,
