@@ -9,9 +9,10 @@
  */
 package cmp.android.app
 
+import android.content.res.Resources
 import android.os.Bundle
-import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.os.LocaleListCompat
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
@@ -30,9 +31,9 @@ import kotlin.getValue
  * This class is used to set the content view of the activity.
  *
  * @constructor Create empty Main activity
- * @see ComponentActivity
+ * @see AppCompatActivity
  */
-class MainActivity : ComponentActivity() {
+class MainActivity : AppCompatActivity() {
     /**
      * Called when the activity is starting.
      * This is where most initialization should go: calling [setContentView(int)] to inflate the activity's UI,
@@ -61,12 +62,28 @@ class MainActivity : ComponentActivity() {
                 handleThemeMode = {
                     AppCompatDelegate.setDefaultNightMode(it)
                 },
-                handleAppLocale = {
-                    it?.let {
-                        AppCompatDelegate.setApplicationLocales(
-                            LocaleListCompat.forLanguageTags(it),
-                        )
-                        Locale.setDefault(Locale(it))
+                handleAppLocale = { localeTag ->
+                    val currentLocales = AppCompatDelegate.getApplicationLocales()
+                    val newLocales = if (localeTag != null) {
+                        LocaleListCompat.forLanguageTags(localeTag)
+                    } else {
+                        // System Default: clear app-specific locale
+                        LocaleListCompat.getEmptyLocaleList()
+                    }
+
+                    // Only update if the locale has actually changed
+                    if (currentLocales != newLocales) {
+                        AppCompatDelegate.setApplicationLocales(newLocales)
+                        // Update Locale.setDefault for non-UI formatting
+                        if (localeTag != null) {
+                            // Use forLanguageTag to properly parse locales like "en-GB", "pt-BR"
+                            Locale.setDefault(Locale.forLanguageTag(localeTag))
+                        } else {
+                            // Reset to true system default locale from device configuration
+                            // Use Resources.getSystem() to get device locale unaffected by app overrides
+                            val systemLocale = Resources.getSystem().configuration.locales[0]
+                            Locale.setDefault(systemLocale)
+                        }
                     }
                 },
                 onSplashScreenRemoved = {

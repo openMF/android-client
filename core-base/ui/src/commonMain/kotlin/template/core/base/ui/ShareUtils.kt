@@ -5,7 +5,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  *
- * See See https://github.com/openMF/kmp-project-template/blob/main/LICENSE
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
 package template.core.base.ui
 
@@ -85,4 +85,15 @@ expect object ShareUtils {
      * @param text The text to copy to clipboard
      */
     fun copyText(text: String)
+
+    /**
+     * Shares the app store link with a custom message.
+     *
+     * Opens the platform share sheet with the store link and message combined,
+     * allowing users to share the app with others via various apps.
+     *
+     * @param storeLink The app store URL (Play Store, App Store, etc.)
+     * @param message Optional promotional message to include with the link
+     */
+    suspend fun shareApp(storeLink: String, message: String = "")
 }
