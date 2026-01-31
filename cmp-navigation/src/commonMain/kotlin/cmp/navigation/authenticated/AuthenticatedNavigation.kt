@@ -18,6 +18,7 @@ import com.mifos.feature.activate.activateDestination
 import com.mifos.feature.checker.inbox.task.navigation.checkerInboxTaskNavGraph
 import com.mifos.feature.client.navigation.navigateClientDetailsScreen
 import com.mifos.feature.dataTable.navigation.dataTableNavGraph
+import com.mifos.feature.dataTable.navigation.navigateToDataTable
 import com.mifos.feature.document.navigation.documentListScreen
 import com.mifos.feature.document.navigation.navigateToDocumentListScreen
 import com.mifos.feature.individualCollectionSheet.navigation.generateCollectionSheetScreen
@@ -55,6 +56,7 @@ internal fun NavGraphBuilder.authenticatedGraph(
                 }
             },
             navigateToDocumentScreen = navController::navigateToDocumentListScreen,
+            onMoreInfoClicked = navController::navigateToDataTable,
         )
 
         checkerInboxTaskNavGraph(navController)

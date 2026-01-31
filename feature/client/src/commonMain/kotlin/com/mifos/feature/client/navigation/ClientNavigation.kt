@@ -115,6 +115,7 @@ data object ClientNavGraph
 fun NavGraphBuilder.clientNavGraph(
     navController: NavController,
     moreClientInfo: (Int) -> Unit,
+    onMoreInfoClicked: (String, Int) -> Unit,
     activateClient: (Int) -> Unit,
     hasDatatables: KFunction4<List<DataTableEntity>, Any?, Int, MutableList<List<FormWidgetDTO>>, Unit>,
 ) {
@@ -354,7 +355,7 @@ fun NavGraphBuilder.clientNavGraph(
 
         loanDestination(
             navController = navController,
-            onMoreInfoClicked = navController::navigateToDataTable,
+            onMoreInfoClicked = onMoreInfoClicked,
             onDocumentsClicked = navController::navigateToDocumentListScreen,
         )
 
