@@ -17,6 +17,7 @@ import androidx.navigation.toRoute
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.repository.LoanAccountSummaryRepository
 import com.mifos.core.ui.util.BaseViewModel
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.getString
@@ -29,6 +30,7 @@ internal class LoanAccountSummaryViewModel(
 ) {
     private val loanAccountNumber =
         savedStateHandle.toRoute<LoanAccountSummaryScreenRoute>().loanAccountNumber
+    private var loadJob: Job? = null
 
     init {
         loadLoanById()
@@ -77,7 +79,8 @@ internal class LoanAccountSummaryViewModel(
     }
 
     private fun loadLoanById() {
-        viewModelScope.launch {
+        loadJob?.cancel()
+        loadJob = viewModelScope.launch {
             mutableStateFlow.update { it.copy(dialogState = LoanAccountSummaryState.DialogState.Loading) }
 
             repository.getLoanById(loanAccountNumber).collect { dataState ->
@@ -94,11 +97,10 @@ internal class LoanAccountSummaryViewModel(
                         }
                     }
                     is DataState.Error -> {
+                        val errorMessage = getString(Res.string.feature_loan_unknown_error_occured)
                         mutableStateFlow.update {
                             it.copy(
-                                dialogState = LoanAccountSummaryState.DialogState.Error(
-                                    getString(Res.string.feature_loan_unknown_error_occured),
-                                ),
+                                dialogState = LoanAccountSummaryState.DialogState.Error(errorMessage),
                             )
                         }
                     }
