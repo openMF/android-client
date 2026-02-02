@@ -31,6 +31,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -89,6 +91,7 @@ internal fun ClientTransferScreen(
         modifier = modifier,
         navController = navController,
     )
+
     ClientTransferDialogs(
         state = state,
         onAction = remember(viewModel) { { viewModel.trySendAction(it) } },
@@ -107,7 +110,12 @@ private fun ClientTransferContent(
         initialSelectedDateMillis = state.date,
         selectableDates = object : SelectableDates {
             override fun isSelectableDate(utcTimeMillis: Long): Boolean {
-                return utcTimeMillis <= Clock.System.now().toEpochMilliseconds()
+                val currentTimeMillis = Clock.System.now().toEpochMilliseconds()
+
+                // normalizing both dates to start of day for fair comparison
+                val currentDayStart = currentTimeMillis - (currentTimeMillis % 86400000)
+                val selectedDayStart = utcTimeMillis - (utcTimeMillis % 86400000)
+                return selectedDayStart >= currentDayStart
             }
         },
     )
@@ -117,7 +125,8 @@ private fun ClientTransferContent(
     ) {
         Column(
             modifier = modifier
-                .fillMaxSize(),
+                .fillMaxSize()
+                .verticalScroll(rememberScrollState()),
         ) {
             MifosBreadcrumbNavBar(navController)
             Column(
@@ -144,6 +153,7 @@ private fun ClientTransferContent(
                     )
 
                     Spacer(Modifier.height(DesignToken.padding.largeIncreased))
+
                     MifosDatePickerTextField(
                         value = DateHelper.getDateAsStringFromLong(state.date),
                         modifier = Modifier.fillMaxWidth(),
