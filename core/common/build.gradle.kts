@@ -8,8 +8,8 @@
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
 plugins {
-    alias(libs.plugins.mifos.kmp.library)
-    alias(libs.plugins.mifos.kmp.koin)
+    alias(libs.plugins.kmp.library.convention)
+    alias(libs.plugins.kmp.koin.convention)
     alias(libs.plugins.secrets)
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.kotlin.parcelize)

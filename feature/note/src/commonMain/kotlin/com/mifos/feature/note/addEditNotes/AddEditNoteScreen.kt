@@ -16,14 +16,12 @@ import androidclient.feature.note.generated.resources.feature_note_dialog_warnin
 import androidclient.feature.note.generated.resources.feature_note_dialog_warning_message
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
@@ -32,18 +30,16 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
-import com.mifos.core.designsystem.component.MifosOutlinedButton
 import com.mifos.core.designsystem.component.MifosOutlinedTextField
-import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.designsystem.theme.MifosTypography
 import com.mifos.core.ui.components.MifosAlertDialog
 import com.mifos.core.ui.components.MifosBreadcrumbNavBar
 import com.mifos.core.ui.components.MifosErrorComponent
 import com.mifos.core.ui.components.MifosProgressIndicatorOverlay
+import com.mifos.core.ui.components.MifosTwoButtonRow
 import com.mifos.core.ui.util.EventsEffect
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
@@ -67,7 +63,7 @@ internal fun AddEditNoteScreen(
         }
     }
 
-    AddEditNoteScreenScaffold(
+    AddEditNoteScreenContent(
         state = state,
         onAction = remember(viewModel) { { viewModel.trySendAction(it) } },
         navController = navController,
@@ -120,31 +116,25 @@ fun AddEditNoteScreenDialog(
 }
 
 @Composable
-internal fun AddEditNoteScreenScaffold(
+internal fun AddEditNoteScreenContent(
     onAction: (AddEditNoteAction) -> Unit,
+    modifier: Modifier = Modifier,
     state: AddEditNoteState,
     navController: NavController,
 ) {
-    MifosScaffold(
-        title = "",
-        onBackPressed = { onAction(AddEditNoteAction.MisTouchBackDialog) },
-    ) { paddingValues ->
-
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(paddingValues),
+    Column(
+        modifier = modifier
+            .fillMaxSize(),
+    ) {
+        if (
+            state.dialogState !is AddEditNoteState.DialogState.Error
         ) {
-            if (
-                state.dialogState !is AddEditNoteState.DialogState.Error
-            ) {
-                MifosBreadcrumbNavBar(navController)
+            MifosBreadcrumbNavBar(navController)
 
-                AddEditNote(
-                    state = state,
-                    onAction = onAction,
-                )
-            }
+            AddEditNote(
+                state = state,
+                onAction = onAction,
+            )
         }
     }
 }
@@ -173,6 +163,7 @@ private fun AddEditNote(
 
         Column(
             modifier = Modifier
+                .weight(1f)
                 .verticalScroll(scrollState),
             verticalArrangement = Arrangement.spacedBy(DesignToken.spacing.large),
         ) {
@@ -193,52 +184,27 @@ private fun AddEditNote(
                 label = stringResource(state.label),
                 modifier = Modifier
                     .fillMaxWidth()
-                    .heightIn(min = 550.dp),
+                    .heightIn(min = DesignToken.spacing.half),
                 textStyle = MaterialTheme.typography.bodyLarge.copy(textAlign = TextAlign.Start),
                 colors = OutlinedTextFieldDefaults.colors(
                     unfocusedBorderColor = MaterialTheme.colorScheme.secondaryContainer,
                 ),
             )
-
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(DesignToken.spacing.extraSmall),
-            ) {
-                MifosOutlinedButton(
-                    modifier = Modifier.weight(1f),
-                    text = {
-                        Text(
-                            text = stringResource(Res.string.feature_note_button_back),
-                        )
-                    },
-                    colors = ButtonDefaults.outlinedButtonColors(
-                        contentColor = MaterialTheme.colorScheme.primary,
-                        containerColor = MaterialTheme.colorScheme.onPrimary,
-                    ),
-                    onClick = {
-                        onAction(AddEditNoteAction.MisTouchBackDialog)
-                    },
-                )
-
-                MifosOutlinedButton(
-                    modifier = Modifier.weight(1f),
-                    text = {
-                        Text(text = stringResource(state.addUpdateButton))
-                    },
-                    onClick = {
-                        if (state.editEnabled) {
-                            onAction(AddEditNoteAction.EditNote(state.textFieldNotesPayload))
-                        } else {
-                            onAction(AddEditNoteAction.AddNote(state.textFieldNotesPayload))
-                        }
-                    },
-                    colors = ButtonDefaults.outlinedButtonColors(
-                        contentColor = MaterialTheme.colorScheme.onPrimary,
-                        containerColor = MaterialTheme.colorScheme.primary,
-                    ),
-                    enabled = !state.textFieldNotesPayload.note.isNullOrEmpty(),
-                )
-            }
         }
+        MifosTwoButtonRow(
+            firstBtnText = stringResource(Res.string.feature_note_button_back),
+            secondBtnText = stringResource(state.addUpdateButton),
+            onFirstBtnClick = {
+                onAction(AddEditNoteAction.MisTouchBackDialog)
+            },
+            onSecondBtnClick = {
+                if (state.editEnabled) {
+                    onAction(AddEditNoteAction.EditNote(state.textFieldNotesPayload))
+                } else {
+                    onAction(AddEditNoteAction.AddNote(state.textFieldNotesPayload))
+                }
+            },
+            modifier = Modifier.padding(bottom = DesignToken.padding.large),
+        )
     }
 }

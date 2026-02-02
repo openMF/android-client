@@ -197,7 +197,7 @@ private fun ClientListContentScreen(
     onUpdateOffices: (List<String?>) -> Unit,
 ) {
     Column(
-        modifier = Modifier.fillMaxSize(),
+        modifier = modifier.fillMaxSize(),
     ) {
         if (!state.isEmpty) {
             ClientActions(
@@ -214,7 +214,7 @@ private fun ClientListContentScreen(
                     onClientClick = { clientId ->
                         onAction(ClientListAction.OnClientClick(clientId))
                     },
-                    modifier = modifier.padding(DesignToken.padding.large),
+                    modifier = Modifier.padding(DesignToken.padding.large),
                     fetchImage = {
                         onAction(ClientListAction.FetchImage(it))
                     },

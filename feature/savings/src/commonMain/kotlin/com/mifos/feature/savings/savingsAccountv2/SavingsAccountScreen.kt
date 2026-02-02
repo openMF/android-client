@@ -12,7 +12,6 @@ package com.mifos.feature.savings.savingsAccountv2
 import androidclient.feature.savings.generated.resources.Res
 import androidclient.feature.savings.generated.resources.feature_savings_back
 import androidclient.feature.savings.generated.resources.feature_savings_charges_click_on_add_new
-import androidclient.feature.savings.generated.resources.feature_savings_create_savings_account
 import androidclient.feature.savings.generated.resources.step_charges
 import androidclient.feature.savings.generated.resources.step_charges_add
 import androidclient.feature.savings.generated.resources.step_charges_add_new
@@ -138,8 +137,6 @@ private fun SavingsAccountScaffold(
     )
 
     MifosScaffold(
-        title = stringResource(Res.string.feature_savings_create_savings_account),
-        onBackPressed = { onAction(SavingsAccountAction.NavigateBack) },
         modifier = modifier,
         snackbarHostState = snackbarHostState,
     ) { paddingValues ->

@@ -24,7 +24,7 @@ fun NavGraphBuilder.shareAccountsDestination(
     navigateToViewAccount: (Int) -> Unit,
 ) {
     composable<ShareAccountsRoute> {
-        ShareAccountsScreenRoute(
+        ShareAccountsScreen(
             navController = navController,
             viewAccount = navigateToViewAccount,
         )

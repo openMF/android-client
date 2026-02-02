@@ -27,7 +27,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
-import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.designsystem.theme.MifosTypography
 import com.mifos.core.network.model.CollateralItemResult
@@ -61,58 +60,50 @@ internal fun ClientCollateralDetailScreenContent(
     modifier: Modifier = Modifier,
     onAction: (ClientCollateralDetailsAction) -> Unit,
 ) {
-    MifosScaffold(
-        title = "",
-        onBackPressed = { },
-        modifier = modifier,
-    ) { paddingValues ->
+    Column(
+        modifier = modifier
+            .fillMaxSize(),
+    ) {
+        MifosBreadcrumbNavBar(navController)
 
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(paddingValues),
-        ) {
-            MifosBreadcrumbNavBar(navController)
+        when (state.state) {
+            ClientCollateralDetailsState.State.Empty -> {
+                MifosEmptyCard(modifier = Modifier.padding(horizontal = DesignToken.padding.large))
+            }
 
-            when (state.state) {
-                ClientCollateralDetailsState.State.Empty -> {
-                    MifosEmptyCard(modifier = Modifier.padding(horizontal = DesignToken.padding.large))
-                }
+            is ClientCollateralDetailsState.State.Error -> {
+                MifosErrorComponent(
+                    isNetworkConnected = state.state.isNetworkAvailable,
+                    isRetryEnabled = true,
+                    onRetry = {
+                        onAction(ClientCollateralDetailsAction.OnRetry)
+                    },
+                    message = state.state.message,
+                )
+            }
 
-                is ClientCollateralDetailsState.State.Error -> {
-                    MifosErrorComponent(
-                        isNetworkConnected = state.state.isNetworkAvailable,
-                        isRetryEnabled = true,
-                        onRetry = {
-                            onAction(ClientCollateralDetailsAction.OnRetry)
-                        },
-                        message = state.state.message,
-                    )
-                }
+            ClientCollateralDetailsState.State.Loading -> {
+                MifosProgressIndicator()
+            }
 
-                ClientCollateralDetailsState.State.Loading -> {
-                    MifosProgressIndicator()
-                }
+            ClientCollateralDetailsState.State.Success -> {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = DesignToken.padding.large),
+                ) {
+                    CollateralDetailsScreenHeader(state.collaterals.size.toString())
 
-                ClientCollateralDetailsState.State.Success -> {
-                    Column(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = DesignToken.padding.large),
+                    LazyColumn(
+                        modifier = Modifier.fillMaxSize()
+                            .padding(top = DesignToken.padding.large),
+                        verticalArrangement = Arrangement.spacedBy(DesignToken.padding.small),
                     ) {
-                        CollateralDetailsScreenHeader(state.collaterals.size.toString())
-
-                        LazyColumn(
-                            modifier = Modifier.fillMaxSize()
-                                .padding(top = DesignToken.padding.large),
-                            verticalArrangement = Arrangement.spacedBy(DesignToken.padding.small),
-                        ) {
-                            items(
-                                items = state.collaterals,
-                                key = { it.collateralId },
-                            ) { item ->
-                                CollateralItemCard(item)
-                            }
+                        items(
+                            items = state.collaterals,
+                            key = { it.collateralId },
+                        ) { item ->
+                            CollateralItemCard(item)
                         }
                     }
                 }

@@ -111,4 +111,10 @@ data class ClientEntity(
     val emailAddress: String? = null,
 
     val legalForm: ClientStatusEntity? = null,
+
+    val gender: ClientGenderEntity? = null,
+
+    val clientType: ClientTypeEntity? = null,
+
+    val clientClassification: ClientClassificationEntity? = null,
 ) : Parcelable

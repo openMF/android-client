@@ -56,7 +56,6 @@ import androidx.navigation.NavController
 import coil3.compose.AsyncImage
 import com.mifos.core.designsystem.component.MifosCard
 import com.mifos.core.designsystem.component.MifosOutlinedTextField
-import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosTextFieldDropdown
 import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.designsystem.theme.MifosTypography
@@ -89,7 +88,7 @@ internal fun ClientIdentifiersAddUpdateScreen(
         }
     }
 
-    ClientIdentifiersAddUpdateScaffold(
+    ClientIdentifiersAddUpdateContent(
         state = state,
         navController = navController,
         onAction = remember(viewModel) { { viewModel.trySendAction(it) } },
@@ -178,67 +177,59 @@ private fun ClientIdentifiersAddUpdateDialog(
 }
 
 @Composable
-internal fun ClientIdentifiersAddUpdateScaffold(
+internal fun ClientIdentifiersAddUpdateContent(
     state: ClientIdentifiersAddUpdateState,
     navController: NavController,
     modifier: Modifier = Modifier,
     onAction: (ClientIdentifiersAddUpdateAction) -> Unit,
 ) {
-    MifosScaffold(
-        title = "",
-        onBackPressed = {
-            onAction(ClientIdentifiersAddUpdateAction.NavigateBack)
-        },
-        modifier = modifier.background(MaterialTheme.colorScheme.onPrimary),
-    ) { paddingValues ->
+    Column(
+        modifier = modifier.fillMaxSize(),
+    ) {
+        if (state.feature != Feature.VIEW_DOCUMENT) {
+            MifosBreadcrumbNavBar(navController)
+        }
+
         Column(
-            modifier = Modifier.padding(paddingValues).fillMaxSize(),
+            modifier = Modifier.fillMaxSize().padding(
+                horizontal = DesignToken.padding.large,
+            ),
         ) {
             if (state.feature != Feature.VIEW_DOCUMENT) {
-                MifosBreadcrumbNavBar(navController)
+                Text(
+                    text = when {
+                        state.feature == Feature.VIEW_DOCUMENT -> stringResource(Res.string.client_identifier_title)
+
+                        state.documentKey == null -> stringResource(Res.string.client_update_document_title)
+
+                        else -> stringResource(Res.string.add_document_title)
+                    },
+                    style = MifosTypography.titleMedium,
+                )
             }
 
-            Column(
-                modifier = modifier.fillMaxSize().padding(
-                    horizontal = DesignToken.padding.large,
-                ),
-            ) {
-                if (state.feature != Feature.VIEW_DOCUMENT) {
-                    Text(
-                        text = when {
-                            state.feature == Feature.VIEW_DOCUMENT -> stringResource(Res.string.client_identifier_title)
+            Spacer(Modifier.height(DesignToken.spacing.large))
 
-                            state.documentKey == null -> stringResource(Res.string.client_update_document_title)
-
-                            else -> stringResource(Res.string.add_document_title)
-                        },
-                        style = MifosTypography.titleMedium,
+            when (state.feature) {
+                Feature.ADD_IDENTIFIER -> {
+                    ClientIdentifiersAddIdentifier(
+                        state = state,
+                        onAction = onAction,
                     )
                 }
 
-                Spacer(Modifier.height(DesignToken.spacing.large))
+                Feature.ADD_UPDATE_DOCUMENT -> {
+                    ClientIdentifiersAddUpdateDocument(
+                        state = state,
+                        onAction = onAction,
+                    )
+                }
 
-                when (state.feature) {
-                    Feature.ADD_IDENTIFIER -> {
-                        ClientIdentifiersAddIdentifier(
-                            state = state,
-                            onAction = onAction,
-                        )
-                    }
-
-                    Feature.ADD_UPDATE_DOCUMENT -> {
-                        ClientIdentifiersAddUpdateDocument(
-                            state = state,
-                            onAction = onAction,
-                        )
-                    }
-
-                    Feature.VIEW_DOCUMENT -> {
-                        ClientIdentifiersDocumentPreview(
-                            state = state,
-                            onAction = onAction,
-                        )
-                    }
+                Feature.VIEW_DOCUMENT -> {
+                    ClientIdentifiersDocumentPreview(
+                        state = state,
+                        onAction = onAction,
+                    )
                 }
             }
         }

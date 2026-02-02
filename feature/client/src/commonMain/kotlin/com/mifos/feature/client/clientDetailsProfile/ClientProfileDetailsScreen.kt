@@ -13,7 +13,6 @@ import androidclient.feature.client.generated.resources.Res
 import androidclient.feature.client.generated.resources.arrow_downward
 import androidclient.feature.client.generated.resources.arrow_up
 import androidclient.feature.client.generated.resources.client_profile_actions
-import androidclient.feature.client.generated.resources.client_profile_details_title
 import androidclient.feature.client.generated.resources.confirm_text
 import androidclient.feature.client.generated.resources.dialog_continue
 import androidclient.feature.client.generated.resources.dialog_unassign_message
@@ -52,7 +51,6 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.mifos.core.designsystem.component.BasicDialogState
 import com.mifos.core.designsystem.component.MifosBasicDialog
-import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosTextButton
 import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.designsystem.theme.MifosTypography
@@ -101,30 +99,37 @@ internal fun ClientProfileDetailsScreen(
                     ClientProfileDetailsActionItem.AddCharge -> {
                         navigateToAddCharge(state.client?.id ?: -1)
                     }
+
                     ClientProfileDetailsActionItem.ApplyNewApplication -> {
                         navigateToApplyNewApplication(
                             state.client?.id ?: -1,
                             state.client?.status?.value ?: "",
                         )
                     }
+
                     ClientProfileDetailsActionItem.AssignStaff -> {
                         navigateToAssignStaff(state.client?.id ?: -1)
                     }
+
                     ClientProfileDetailsActionItem.ClientScreenReports -> {}
                     ClientProfileDetailsActionItem.ClosureApplication -> {
                         navigateToClientClosure(state.client?.id ?: -1)
                     }
+
                     ClientProfileDetailsActionItem.CreateCollateral -> {
                         navigateToCollateral(state.client?.id ?: -1)
                     }
+
                     ClientProfileDetailsActionItem.CreateSelfServiceUsers -> {}
                     ClientProfileDetailsActionItem.CreateStandingInstructions -> {}
                     ClientProfileDetailsActionItem.TransferClient -> {
                         navigateToClientTransfer(state.client?.id ?: -1)
                     }
+
                     ClientProfileDetailsActionItem.UpdateDefaultAccount -> {
                         navigateToUpdateDefaultAccount(state.client?.id ?: -1)
                     }
+
                     ClientProfileDetailsActionItem.ViewStandingInstructions -> {}
                 }
             }
@@ -153,175 +158,169 @@ internal fun ClientProfileDetailsScreen(
         }
     }
 
-    ClientProfileDetailsScaffold(
+    ClientProfileDetailsContent(
         navController = navController,
         modifier = modifier,
+        state = state,
+        onAction = remember(viewModel) { { viewModel.trySendAction(it) } },
+    )
+
+    ClientProfileDetailsDialogs(
         state = state,
         onAction = remember(viewModel) { { viewModel.trySendAction(it) } },
     )
 }
 
 @Composable
-private fun ClientProfileDetailsScaffold(
+private fun ClientProfileDetailsContent(
     navController: NavController,
     state: ClientProfileDetailsState,
     modifier: Modifier = Modifier,
     onAction: (ClientProfileDetailsAction) -> Unit,
 ) {
-    MifosScaffold(
-        title = stringResource(Res.string.client_profile_details_title),
-        onBackPressed = { onAction(ClientProfileDetailsAction.NavigateBack) },
-        modifier = modifier,
-    ) { paddingValues ->
-        ClientProfileDetailsDialogs(
-            state = state,
-            onAction = onAction,
-        )
-        if (state.dialogState != ClientProfileDetailsState.DialogState.Loading &&
-            state.dialogState !is ClientProfileDetailsState.DialogState.ShowStatusDialog
+    if (state.dialogState != ClientProfileDetailsState.DialogState.Loading &&
+        state.dialogState !is ClientProfileDetailsState.DialogState.ShowStatusDialog
+    ) {
+        Column(
+            modifier = modifier
+                .fillMaxSize(),
         ) {
+            MifosBreadcrumbNavBar(
+                navController,
+            )
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(paddingValues),
+                    .verticalScroll(rememberScrollState())
+                    .padding(
+                        horizontal = DesignToken.padding.large,
+                    ),
             ) {
-                MifosBreadcrumbNavBar(
-                    navController,
+                ClientDetailsProfile(
+                    image = state.profileImage,
+                    name = state.client?.displayName,
+                    mobile = state.client?.mobileNo,
+                    email = state.client?.emailAddress,
                 )
-                Column(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .verticalScroll(rememberScrollState())
-                        .padding(
-                            horizontal = DesignToken.padding.large,
-                        ),
+                Spacer(Modifier.height(DesignToken.padding.medium))
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
                 ) {
-                    ClientDetailsProfile(
-                        image = state.profileImage,
-                        name = state.client?.displayName,
-                        mobile = state.client?.mobileNo,
-                        email = state.client?.emailAddress,
-                    )
-                    Spacer(Modifier.height(DesignToken.padding.medium))
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                    ) {
-                        MifosTextButton(
-                            onClick = {
-                                onAction(ClientProfileDetailsAction.OnUpdatePhotoClick)
-                            },
-                            leadingIcon = {
-                                Icon(
-                                    painter = painterResource(Res.drawable.arrow_up),
-                                    contentDescription = null,
-                                    modifier = Modifier.size(DesignToken.sizes.iconAverage),
-                                )
-                            },
-                            text = {
-                                Text(
-                                    text = stringResource(Res.string.update_photo),
-                                    style = MifosTypography.labelMediumEmphasized,
-                                )
-                            },
-                            modifier = Modifier.weight(1f),
-                        )
-                        Spacer(Modifier.width(DesignToken.padding.small))
-                        MifosTextButton(
-                            onClick = {
-                                onAction(ClientProfileDetailsAction.OnUpdateSignatureClick)
-                            },
-                            leadingIcon = {
-                                Icon(
-                                    painter = painterResource(Res.drawable.update_signature),
-                                    contentDescription = null,
-                                    modifier = Modifier.size(DesignToken.sizes.iconAverage),
-                                )
-                            },
-                            text = {
-                                Text(
-                                    text = stringResource(Res.string.update_signature),
-                                    style = MifosTypography.labelMediumEmphasized,
-                                )
-                            },
-                            modifier = Modifier.weight(1f),
-                        )
-                    }
-
-                    Spacer(Modifier.height(DesignToken.padding.large))
-
-                    state.details.forEach { list ->
-                        MifosDefaultListingComponentFromStringResources(data = list)
-                        Spacer(Modifier.height(DesignToken.padding.large))
-                    }
-
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        verticalAlignment = Alignment.CenterVertically,
-                    ) {
-                        Row(
-                            modifier = Modifier.weight(1f),
-                            verticalAlignment = Alignment.CenterVertically,
-                        ) {
+                    MifosTextButton(
+                        onClick = {
+                            onAction(ClientProfileDetailsAction.OnUpdatePhotoClick)
+                        },
+                        leadingIcon = {
                             Icon(
-                                painterResource(Res.drawable.arrow_downward),
+                                painter = painterResource(Res.drawable.arrow_up),
                                 contentDescription = null,
                                 modifier = Modifier.size(DesignToken.sizes.iconAverage),
-                                tint = MaterialTheme.colorScheme.secondary.copy(alpha = 0.5f),
                             )
-                            Spacer(Modifier.width(DesignToken.padding.small))
+                        },
+                        text = {
                             Text(
-                                text = stringResource(Res.string.scroll_for_more_options),
-                                style = MifosTypography.tag,
-                                color = MaterialTheme.colorScheme.secondary.copy(alpha = 0.5f),
+                                text = stringResource(Res.string.update_photo),
+                                style = MifosTypography.labelMediumEmphasized,
                             )
-                        }
-                        Spacer(Modifier.width(DesignToken.padding.small))
-                        MifosTextButton(
-                            onClick = {
-                                onAction(ClientProfileDetailsAction.OnUpdateDetailsClick)
-                            },
-                            leadingIcon = {
-                                Icon(
-                                    painter = painterResource(Res.drawable.pen_icon),
-                                    contentDescription = null,
-                                    modifier = Modifier.size(DesignToken.sizes.iconAverage),
-                                )
-                            },
-                            text = {
-                                Text(
-                                    text = stringResource(Res.string.update_details),
-                                    style = MifosTypography.labelMediumEmphasized,
-                                )
-                            },
-                            modifier = Modifier.weight(1f),
-                        )
-                    }
-                    Spacer(Modifier.height(DesignToken.padding.large))
-                    Text(
-                        text = stringResource(Res.string.client_profile_actions),
-                        style = MifosTypography.labelLargeEmphasized,
+                        },
+                        modifier = Modifier.weight(1f),
                     )
+                    Spacer(Modifier.width(DesignToken.padding.small))
+                    MifosTextButton(
+                        onClick = {
+                            onAction(ClientProfileDetailsAction.OnUpdateSignatureClick)
+                        },
+                        leadingIcon = {
+                            Icon(
+                                painter = painterResource(Res.drawable.update_signature),
+                                contentDescription = null,
+                                modifier = Modifier.size(DesignToken.sizes.iconAverage),
+                            )
+                        },
+                        text = {
+                            Text(
+                                text = stringResource(Res.string.update_signature),
+                                style = MifosTypography.labelMediumEmphasized,
+                            )
+                        },
+                        modifier = Modifier.weight(1f),
+                    )
+                }
 
+                Spacer(Modifier.height(DesignToken.padding.large))
+
+                state.details.forEach { list ->
+                    MifosDefaultListingComponentFromStringResources(data = list)
                     Spacer(Modifier.height(DesignToken.padding.large))
-                    clientsDetailsActionItems.forEach {
-                        MifosRowCard(
-                            title = stringResource(it.title),
-                            imageVector = it.icon,
-                            leftValues = listOf(
-                                TextUtil(
-                                    text = stringResource(it.subTitle),
-                                    style = MifosTypography.bodySmall,
-                                    color = MaterialTheme.colorScheme.secondary,
-                                ),
-                            ),
-                            rightValues = emptyList(),
-                            modifier = Modifier
-                                .clickable {
-                                    onAction(ClientProfileDetailsAction.OnActionClick(it))
-                                }
-                                .padding(vertical = DesignToken.padding.medium),
+                }
+
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Row(
+                        modifier = Modifier.weight(1f),
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        Icon(
+                            painterResource(Res.drawable.arrow_downward),
+                            contentDescription = null,
+                            modifier = Modifier.size(DesignToken.sizes.iconAverage),
+                            tint = MaterialTheme.colorScheme.secondary.copy(alpha = 0.5f),
+                        )
+                        Spacer(Modifier.width(DesignToken.padding.small))
+                        Text(
+                            text = stringResource(Res.string.scroll_for_more_options),
+                            style = MifosTypography.tag,
+                            color = MaterialTheme.colorScheme.secondary.copy(alpha = 0.5f),
                         )
                     }
+                    Spacer(Modifier.width(DesignToken.padding.small))
+                    MifosTextButton(
+                        onClick = {
+                            onAction(ClientProfileDetailsAction.OnUpdateDetailsClick)
+                        },
+                        leadingIcon = {
+                            Icon(
+                                painter = painterResource(Res.drawable.pen_icon),
+                                contentDescription = null,
+                                modifier = Modifier.size(DesignToken.sizes.iconAverage),
+                            )
+                        },
+                        text = {
+                            Text(
+                                text = stringResource(Res.string.update_details),
+                                style = MifosTypography.labelMediumEmphasized,
+                            )
+                        },
+                        modifier = Modifier.weight(1f),
+                    )
+                }
+                Spacer(Modifier.height(DesignToken.padding.large))
+                Text(
+                    text = stringResource(Res.string.client_profile_actions),
+                    style = MifosTypography.labelLargeEmphasized,
+                )
+
+                Spacer(Modifier.height(DesignToken.padding.large))
+                clientsDetailsActionItems.forEach {
+                    MifosRowCard(
+                        title = stringResource(it.title),
+                        imageVector = it.icon,
+                        leftValues = listOf(
+                            TextUtil(
+                                text = stringResource(it.subTitle),
+                                style = MifosTypography.bodySmall,
+                                color = MaterialTheme.colorScheme.secondary,
+                            ),
+                        ),
+                        rightValues = emptyList(),
+                        modifier = Modifier
+                            .clickable {
+                                onAction(ClientProfileDetailsAction.OnActionClick(it))
+                            }
+                            .padding(vertical = DesignToken.padding.medium),
+                    )
                 }
             }
         }

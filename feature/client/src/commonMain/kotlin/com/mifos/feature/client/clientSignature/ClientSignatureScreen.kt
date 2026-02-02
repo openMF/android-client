@@ -49,7 +49,6 @@ import com.mifos.core.designsystem.component.MifosBasicDialog
 import com.mifos.core.designsystem.component.MifosBottomSheet
 import com.mifos.core.designsystem.component.MifosBottomSheetOptionItem
 import com.mifos.core.designsystem.component.MifosOutlinedButton
-import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosTextButton
 import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.designsystem.theme.DesignToken
@@ -79,7 +78,7 @@ internal fun ClientSignatureScreen(
         }
     }
 
-    ClientSignatureScaffold(
+    ClientSignatureContent(
         navController = navController,
         state = state,
         onAction = remember(viewModel) { { viewModel.trySendAction(it) } },
@@ -165,95 +164,90 @@ fun ClientSignatureDialog(
 }
 
 @Composable
-internal fun ClientSignatureScaffold(
+internal fun ClientSignatureContent(
     navController: NavController,
+    modifier: Modifier = Modifier,
     state: ClientSignatureState,
     onAction: (ClientSignatureAction) -> Unit,
 ) {
-    MifosScaffold(
-        title = "",
-        onBackPressed = {
-            onAction(ClientSignatureAction.NavigateBack)
-        },
-    ) { paddingValues ->
+    if (state.dialogState !is ClientSignatureState.DialogState.Loading &&
+        state.dialogState !is ClientSignatureState.DialogState.Error
+    ) {
+        Column(modifier.fillMaxSize()) {
+            MifosBreadcrumbNavBar(navController)
+            Column(
+                modifier = Modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(
+                    horizontal = DesignToken.padding.large,
+                ),
+                horizontalAlignment = Alignment.CenterHorizontally,
+            ) {
+                Spacer(Modifier.height(DesignToken.padding.largeIncreased))
 
-        if (state.dialogState !is ClientSignatureState.DialogState.Loading &&
-            state.dialogState !is ClientSignatureState.DialogState.Error
-        ) {
-            Column(Modifier.fillMaxSize().padding(paddingValues)) {
-                MifosBreadcrumbNavBar(navController)
-                Column(
-                    modifier = Modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(
-                        horizontal = DesignToken.padding.large,
-                    ),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                ) {
+                Text(
+                    text = state.clientName,
+                    style = MifosTypography.titleMediumEmphasized,
+                )
+                Spacer(Modifier.height(DesignToken.padding.extraExtraSmall))
+                Text(
+                    text = stringResource(Res.string.account_number_prefix, state.accountNo),
+                    style = MifosTypography.bodySmall,
+                    color = MaterialTheme.colorScheme.secondary,
+                )
+                Spacer(Modifier.height(DesignToken.padding.largeIncreased))
+
+                MifosUserSignatureImage(
+                    bitmap = state.clientSignatureImage,
+                    emptyMessage = stringResource(Res.string.client_signature_not_found),
+                )
+                if (state.signatureId == null) {
+                    Spacer(Modifier.height(DesignToken.padding.large))
                     Text(
-                        text = state.clientName,
-                        style = MifosTypography.titleMediumEmphasized,
-                    )
-                    Spacer(Modifier.height(DesignToken.padding.extraExtraSmall))
-                    Text(
-                        text = stringResource(Res.string.account_number_prefix, state.accountNo),
+                        text = stringResource(Res.string.client_signature_upload_message),
                         style = MifosTypography.bodySmall,
                         color = MaterialTheme.colorScheme.secondary,
-                    )
-                    Spacer(Modifier.height(DesignToken.padding.largeIncreased))
-
-                    MifosUserSignatureImage(
-                        bitmap = state.clientSignatureImage,
-                        emptyMessage = stringResource(Res.string.client_signature_not_found),
-                    )
-                    if (state.signatureId == null) {
-                        Spacer(Modifier.height(DesignToken.padding.large))
-                        Text(
-                            text = stringResource(Res.string.client_signature_upload_message),
-                            style = MifosTypography.bodySmall,
-                            color = MaterialTheme.colorScheme.secondary,
-                            textAlign = TextAlign.Center,
-                        )
-                    }
-                    Spacer(Modifier.height(DesignToken.padding.extraExtraLarge))
-                    MifosOutlinedButton(
-                        text = {
-                            Text(
-                                text = stringResource(Res.string.client_signature_delete),
-                                style = MifosTypography.labelLarge,
-                            )
-                        },
-                        onClick = {
-                            onAction(ClientSignatureAction.ShowDeleteDialog)
-                        },
-                        enabled = state.signatureId != null,
-                        leadingIcon = {
-                            Icon(
-                                imageVector = MifosIcons.DeleteDocument,
-                                contentDescription = null,
-                            )
-                        },
-                        modifier = Modifier.fillMaxWidth(),
-                    )
-                    Spacer(Modifier.height(DesignToken.padding.large))
-                    MifosTextButton(
-                        text = {
-                            Text(
-                                text = stringResource(Res.string.client_signature_upload),
-                                style = MifosTypography.labelLarge,
-                            )
-                        },
-                        onClick = {
-                            onAction(ClientSignatureAction.ShowUploadOptionsBottomSheet)
-                        },
-                        modifier = Modifier.fillMaxWidth(),
-                        leadingIcon = {
-                            Icon(
-                                painter = painterResource(Res.drawable.arrow_up),
-                                contentDescription = null,
-                                modifier = Modifier.size(DesignToken.sizes.iconAverage),
-                            )
-                        },
+                        textAlign = TextAlign.Center,
                     )
                 }
+                Spacer(Modifier.height(DesignToken.padding.extraExtraLarge))
+                MifosOutlinedButton(
+                    text = {
+                        Text(
+                            text = stringResource(Res.string.client_signature_delete),
+                            style = MifosTypography.labelLarge,
+                        )
+                    },
+                    onClick = {
+                        onAction(ClientSignatureAction.ShowDeleteDialog)
+                    },
+                    enabled = state.signatureId != null,
+                    leadingIcon = {
+                        Icon(
+                            imageVector = MifosIcons.DeleteDocument,
+                            contentDescription = null,
+                        )
+                    },
+                    modifier = Modifier.fillMaxWidth(),
+                )
+                Spacer(Modifier.height(DesignToken.padding.large))
+                MifosTextButton(
+                    text = {
+                        Text(
+                            text = stringResource(Res.string.client_signature_upload),
+                            style = MifosTypography.labelLarge,
+                        )
+                    },
+                    onClick = {
+                        onAction(ClientSignatureAction.ShowUploadOptionsBottomSheet)
+                    },
+                    modifier = Modifier.fillMaxWidth(),
+                    leadingIcon = {
+                        Icon(
+                            painter = painterResource(Res.drawable.arrow_up),
+                            contentDescription = null,
+                            modifier = Modifier.size(DesignToken.sizes.iconAverage),
+                        )
+                    },
+                )
             }
         }
     }
