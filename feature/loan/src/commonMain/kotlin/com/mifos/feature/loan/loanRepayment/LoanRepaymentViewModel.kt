@@ -111,7 +111,8 @@ class LoanRepaymentViewModel(
                 0.0
             }
         }
-        return setValue(fees) + setValue(amount) + setValue(additionalPayment)
+        val total = setValue(fees) + setValue(amount) + setValue(additionalPayment)
+        return round(total * 100) / 100.0
     }
 
     fun formatCurrency(amount: Double?, code: String?): String {
@@ -139,6 +140,8 @@ class LoanRepaymentViewModel(
         fees: String,
         paymentType: String,
     ): Boolean {
-        return amount.isNotEmpty() && additionalPayment.isNotEmpty() && fees.isNotEmpty() && paymentType.isNotEmpty()
+        return listOf(amount, additionalPayment, fees).all {
+            it.trim().toDoubleOrNull()?.let { n -> n >= 0 } == true
+        } && paymentType.isNotBlank()
     }
 }
