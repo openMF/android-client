@@ -123,13 +123,13 @@ class LoanRepaymentViewModel(
             currencySymbol = Constants.SYMBOL_DOLLAR
         }
 
-        val rounded = round(value * 100) / 100.0
-        val str = rounded.toString()
-        val parts = str.split(".")
-        val integerPart = parts[0]
-        val fractionalPart = if (parts.size > 1) parts[1] else "0"
-        val paddedFraction = if (fractionalPart.length < 2) fractionalPart.padEnd(2, '0') else fractionalPart.take(2)
-        val finalAmount = "$integerPart.$paddedFraction"
+        val roundedCents = round(value * 100).toLong()
+        val absCents = kotlin.math.abs(roundedCents)
+        val integerPart = absCents / 100
+        val fractionalPart = absCents % 100
+        val sign = if (roundedCents < 0) "-" else ""
+        val paddedFraction = fractionalPart.toString().padStart(2, '0')
+        val finalAmount = "$sign$integerPart.$paddedFraction"
 
         return if (currencySymbol.isNotEmpty()) "$currencySymbol $finalAmount" else finalAmount
     }
