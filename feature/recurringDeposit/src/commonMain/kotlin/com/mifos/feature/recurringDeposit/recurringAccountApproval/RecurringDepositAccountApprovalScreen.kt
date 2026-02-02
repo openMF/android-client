@@ -10,15 +10,16 @@
 package com.mifos.feature.recurringDeposit.recurringAccountApproval
 
 import androidclient.feature.recurringdeposit.generated.resources.Res
-import androidclient.feature.recurringdeposit.generated.resources.feature_recurring_deposit_account
 import androidclient.feature.recurringdeposit.generated.resources.feature_recurring_deposit_approval_date
 import androidclient.feature.recurringdeposit.generated.resources.feature_recurring_deposit_approval_reason
-import androidclient.feature.recurringdeposit.generated.resources.feature_recurring_deposit_approve_account
 import androidclient.feature.recurringdeposit.generated.resources.feature_recurring_deposit_approved_on
 import androidclient.feature.recurringdeposit.generated.resources.feature_recurring_deposit_cancel
-import androidclient.feature.recurringdeposit.generated.resources.feature_recurring_deposit_ok
+import androidclient.feature.recurringdeposit.generated.resources.feature_recurring_deposit_continue
+import androidclient.feature.recurringdeposit.generated.resources.feature_recurring_deposit_failure_title
 import androidclient.feature.recurringdeposit.generated.resources.feature_recurring_deposit_save
 import androidclient.feature.recurringdeposit.generated.resources.feature_recurring_deposit_select_date
+import androidclient.feature.recurringdeposit.generated.resources.feature_recurring_deposit_success_message
+import androidclient.feature.recurringdeposit.generated.resources.feature_recurring_deposit_success_title
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -36,6 +37,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SelectableDates
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberDatePickerState
@@ -48,32 +50,37 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavController
 import com.mifos.core.common.utils.DateHelper
 import com.mifos.core.designsystem.component.MifosDatePickerTextField
 import com.mifos.core.designsystem.component.MifosOutlinedTextField
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
+import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.model.objects.template.recurring.approval.RecurringDepositApproval
 import com.mifos.core.network.GenericResponse
-import com.mifos.core.ui.components.MifosAlertDialog
+import com.mifos.core.ui.components.MifosBreadcrumbNavBar
 import com.mifos.core.ui.components.MifosProgressIndicator
+import com.mifos.core.ui.components.MifosStatusDialog
+import com.mifos.core.ui.components.ResultStatus
 import org.jetbrains.compose.resources.stringResource
-import org.jetbrains.compose.ui.tooling.preview.Preview
-import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
-import org.jetbrains.compose.ui.tooling.preview.PreviewParameterProvider
 import org.koin.compose.viewmodel.koinViewModel
 import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
 
 @Composable
 internal fun RecurringDepositAccountApprovalScreen(
+    navController: NavController,
     navigateBack: () -> Unit,
     viewModel: RecurringDepositAccountApprovalViewModel = koinViewModel(),
 ) {
     val uiState by viewModel.recurringDepositAccountApprovalUiState.collectAsStateWithLifecycle()
 
     RecurringDepositAccountApprovalScreen(
+        navController = navController,
         uiState = uiState,
         navigateBack = navigateBack,
         approveAccount = { viewModel.approveRecurringDepositApplication(it) },
@@ -82,6 +89,7 @@ internal fun RecurringDepositAccountApprovalScreen(
 
 @Composable
 internal fun RecurringDepositAccountApprovalScreen(
+    navController: NavController,
     uiState: RecurringDepositAccountApprovalUiState,
     navigateBack: () -> Unit,
     modifier: Modifier = Modifier,
@@ -93,41 +101,66 @@ internal fun RecurringDepositAccountApprovalScreen(
     MifosScaffold(
         modifier = modifier,
         snackbarHostState = snackbarHostState,
-        title = stringResource(Res.string.feature_recurring_deposit_approve_account),
-        onBackPressed = navigateBack,
     ) {
-        Box(
+        Column(
             modifier = Modifier
-                .fillMaxSize()
-                .padding(it),
+                .padding(it)
+                .fillMaxSize(),
         ) {
-            when (uiState) {
-                RecurringDepositAccountApprovalUiState.Initial -> {
-                    RecurringDepositAccountApprovalContent(approveAccount = approveAccount)
-                }
+            MifosBreadcrumbNavBar(navController)
 
-                is RecurringDepositAccountApprovalUiState.ShowError -> {
-                    MifosSweetError(
-                        message = uiState.message,
-                        isRetryEnabled = false,
-                        onclick = {},
-                    )
-                }
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(horizontal = DesignToken.padding.large),
+            ) {
+                when (uiState) {
+                    RecurringDepositAccountApprovalUiState.Initial -> {
+                        RecurringDepositAccountApprovalContent(approveAccount = approveAccount)
+                    }
 
-                RecurringDepositAccountApprovalUiState.ShowProgressbar -> {
-                    MifosProgressIndicator()
-                }
+                    is RecurringDepositAccountApprovalUiState.ShowError -> {
+                        MifosSweetError(
+                            message = uiState.message,
+                            isRetryEnabled = false,
+                            onclick = {},
+                        )
+                    }
 
-                is RecurringDepositAccountApprovalUiState.ShowRecurringDepositAccountApprovedSuccessfully ->
-                    MifosAlertDialog(
-                        dialogTitle = stringResource(Res.string.feature_recurring_deposit_ok),
-                        dialogText = stringResource(Res.string.feature_recurring_deposit_account),
-                        dismissText = null,
-                        onConfirmation = {
-                            navigateBack.invoke()
-                        },
-                        onDismissRequest = {},
-                    )
+                    RecurringDepositAccountApprovalUiState.ShowProgressbar -> {
+                        MifosProgressIndicator()
+                    }
+
+                    is RecurringDepositAccountApprovalUiState.ShowRecurringDepositAccountApprovedSuccessfully -> {
+
+                        Dialog(
+                            onDismissRequest = {},
+                            properties = DialogProperties(
+                                dismissOnBackPress = true,
+                                dismissOnClickOutside = true,
+                            ),
+                        ) {
+                            Surface(
+                                shape = DesignToken.shapes.extraLarge,
+                                color = MaterialTheme.colorScheme.surface,
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(DesignToken.padding.large),
+                            ) {
+                                MifosStatusDialog(
+                                    status = ResultStatus.SUCCESS,
+                                    onConfirm = { navigateBack.invoke() },
+                                    btnText = stringResource(Res.string.feature_recurring_deposit_continue),
+                                    successTitle = stringResource(Res.string.feature_recurring_deposit_success_title),
+                                    successMessage = stringResource(Res.string.feature_recurring_deposit_success_message),
+                                    failureTitle = stringResource(Res.string.feature_recurring_deposit_failure_title),
+                                    failureMessage = stringResource(Res.string.feature_recurring_deposit_success_message),
+                                    showButton = true,
+                                )
+                            }
+                        }
+                    }
+                }
             }
         }
     }
@@ -191,12 +224,12 @@ private fun RecurringDepositAccountApprovalContent(
             .verticalScroll(scrollState)
             .fillMaxSize(),
     ) {
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(DesignToken.padding.small))
 
         Text(
             style = MaterialTheme.typography.bodyLarge,
             text = stringResource(Res.string.feature_recurring_deposit_approved_on),
-            modifier = Modifier.padding(start = 16.dp),
+            modifier = Modifier,
         )
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -222,7 +255,6 @@ private fun RecurringDepositAccountApprovalContent(
         Button(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 16.dp)
                 .heightIn(44.dp),
             onClick = {
                 approveAccount.invoke(
@@ -246,29 +278,4 @@ sealed class RecurringDepositAccountApprovalUiState {
     data object ShowProgressbar : RecurringDepositAccountApprovalUiState()
     data class ShowRecurringDepositAccountApprovedSuccessfully(val response: GenericResponse) : RecurringDepositAccountApprovalUiState()
     data class ShowError(val message: String) : RecurringDepositAccountApprovalUiState()
-}
-
-class RecurringDepositAccountApprovalScreenPreviewProvider :
-    PreviewParameterProvider<RecurringDepositAccountApprovalUiState> {
-
-    override val values: Sequence<RecurringDepositAccountApprovalUiState>
-        get() = sequenceOf(
-            RecurringDepositAccountApprovalUiState.Initial,
-            RecurringDepositAccountApprovalUiState.ShowProgressbar,
-            RecurringDepositAccountApprovalUiState.ShowRecurringDepositAccountApprovedSuccessfully(GenericResponse()),
-            RecurringDepositAccountApprovalUiState.ShowError("Error"),
-        )
-}
-
-@Composable
-@Preview
-private fun PreviewRecurringDepositAccountApprovalScreen(
-    @PreviewParameter(RecurringDepositAccountApprovalScreenPreviewProvider::class)
-    recurringDepositAccountApprovalUiState: RecurringDepositAccountApprovalUiState,
-) {
-    RecurringDepositAccountApprovalScreen(
-        uiState = recurringDepositAccountApprovalUiState,
-        navigateBack = { },
-    ) {
-    }
 }

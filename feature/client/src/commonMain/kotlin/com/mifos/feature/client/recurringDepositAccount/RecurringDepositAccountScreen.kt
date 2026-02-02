@@ -77,11 +77,11 @@ fun RecurringDepositAccountScreen(
 ) {
     val state by viewModel.stateFlow.collectAsStateWithLifecycle()
     val lifecycleOwner = LocalLifecycleOwner.current
-    val currentAccounts by rememberUpdatedState(state.recurringDepositAccounts.isNotEmpty())
+    val currentAccounts by rememberUpdatedState(state.recurringDepositAccounts)
 
     DisposableEffect(lifecycleOwner) {
         val observer = LifecycleEventObserver { _, event ->
-            if (event == Lifecycle.Event.ON_RESUME && currentAccounts) {
+            if (event == Lifecycle.Event.ON_RESUME && currentAccounts.isNotEmpty()) {
                 viewModel.trySendAction(RecurringDepositAccountAction.Refresh)
             }
         }
@@ -156,11 +156,7 @@ internal fun RecurringDepositAccountScaffold(
     var expandedIndex by rememberSaveable { mutableStateOf(-1) }
 
     MifosScaffold(
-        onBackPressed = {
-            onAction(RecurringDepositAccountAction.NavigateBack)
-        },
         modifier = modifier,
-        title = "",
     ) { paddingValues ->
 
         Column(
@@ -170,6 +166,7 @@ internal fun RecurringDepositAccountScaffold(
         ) {
             MifosBreadcrumbNavBar(navController)
 
+            Spacer(modifier = Modifier.height(DesignToken.spacing.small))
             when (state.isLoading) {
                 true -> MifosProgressIndicator()
                 false -> {
@@ -206,7 +203,7 @@ internal fun RecurringDepositAccountScaffold(
                             )
                         }
 
-                        Spacer(modifier = Modifier.height(DesignToken.padding.largeIncreasedExtra))
+                        Spacer(modifier = Modifier.height(DesignToken.padding.large))
 
                         if (state.recurringDepositAccounts.isEmpty()) {
                             MifosEmptyCard(msg = stringResource(Res.string.client_empty_card_message))

@@ -20,10 +20,12 @@ data class RecurringDepositAccountApprovalRoute(
 )
 
 fun NavGraphBuilder.recurringDepositAccountApprovalDestination(
+    navController: NavController,
     navigateBack: () -> Unit,
 ) {
     composable<RecurringDepositAccountApprovalRoute> {
         RecurringDepositAccountApprovalScreen(
+            navController = navController,
             navigateBack = navigateBack,
         )
     }
