@@ -229,4 +229,8 @@ object Constants {
     const val DATA_TABLE_DATA_NAV_DATA = "data_table_data_nav_data"
     const val DATA_TABLE_LIST_NAV_DATA = "data_table_list_nav_data"
     const val PAYMENT_DETAILS_ARGS = "paymentDetailsArgs"
+
+    const val CURRENCY_USD = "USD"
+    const val SYMBOL_DOLLAR = "$"
+    const val DATE_FORMAT_DD_MM_YYYY = "dd-MM-yyyy"
 }

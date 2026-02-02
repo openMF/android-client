@@ -16,6 +16,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
+import com.mifos.core.common.utils.Constants
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.repository.LoanRepaymentRepository
 import com.mifos.room.entities.accounts.loans.LoanRepaymentRequestEntity
@@ -23,6 +24,7 @@ import com.mifos.room.entities.templates.loans.LoanRepaymentTemplateEntity
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import kotlin.math.round
 
 class LoanRepaymentViewModel(
     savedStateHandle: SavedStateHandle,
@@ -57,9 +59,6 @@ class LoanRepaymentViewModel(
         }
     }
 
-    /**
-     *   app crashes on submit click
-     */
     fun submitPayment(request: LoanRepaymentRequestEntity) {
         viewModelScope.launch {
             _loanRepaymentUiState.value = LoanRepaymentUiState.ShowProgressbar
@@ -101,5 +100,45 @@ class LoanRepaymentViewModel(
                 }
             }
         }
+    }
+
+    fun calculateTotal(fees: String, amount: String, additionalPayment: String): Double {
+        fun setValue(value: String): Double {
+            if (value.isEmpty()) return 0.0
+            return try {
+                value.toDouble()
+            } catch (e: NumberFormatException) {
+                0.0
+            }
+        }
+        return setValue(fees) + setValue(amount) + setValue(additionalPayment)
+    }
+
+    fun formatCurrency(amount: Double?, code: String?): String {
+        val value = amount ?: 0.0
+        var currencySymbol = code ?: ""
+
+        if (currencySymbol.equals(Constants.CURRENCY_USD, ignoreCase = true)) {
+            currencySymbol = Constants.SYMBOL_DOLLAR
+        }
+
+        val rounded = round(value * 100) / 100.0
+        val str = rounded.toString()
+        val parts = str.split(".")
+        val integerPart = parts[0]
+        val fractionalPart = if (parts.size > 1) parts[1] else "0"
+        val paddedFraction = if (fractionalPart.length < 2) fractionalPart.padEnd(2, '0') else fractionalPart.take(2)
+        val finalAmount = "$integerPart.$paddedFraction"
+
+        return if (currencySymbol.isNotEmpty()) "$currencySymbol $finalAmount" else finalAmount
+    }
+
+    fun isAllFieldsValid(
+        amount: String,
+        additionalPayment: String,
+        fees: String,
+        paymentType: String,
+    ): Boolean {
+        return amount.isNotEmpty() && additionalPayment.isNotEmpty() && fees.isNotEmpty() && paymentType.isNotEmpty()
     }
 }
