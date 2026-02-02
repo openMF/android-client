@@ -1,12 +1,11 @@
 <component name="ProjectRunConfigurationManager">
-    <configuration default="false" name="cmp-desktop" type="GradleRunConfiguration" factoryName="Gradle">
+    <configuration default="false" factoryName="Gradle" name="cmp-web-js" type="GradleRunConfiguration">
         <ExternalSystemSettings>
-            <option name="externalProjectPath" value="$PROJECT_DIR$" />
-            <option name="externalSystemIdString" value="GRADLE" />
-            <option name="scriptParameters" value="-DmainClass=MainKt --quiet" />
+            <option name="externalProjectPath" value="$PROJECT_DIR$"/>
+            <option name="externalSystemIdString" value="GRADLE"/>
             <option name="taskNames">
                 <list>
-                    <option value=":cmp-desktop:jvmRun" />
+                    <option value=":cmp-web:jsBrowserRun"/>
                 </list>
             </option>
             <option name="vmOptions" />
