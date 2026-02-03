@@ -37,7 +37,6 @@ import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SelectableDates
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -96,12 +95,8 @@ internal fun RecurringDepositAccountApprovalScreen(
     modifier: Modifier = Modifier,
     approveAccount: (RecurringDepositApproval) -> Unit,
 ) {
-    val snackbarHostState = remember {
-        SnackbarHostState()
-    }
     MifosScaffold(
         modifier = modifier,
-        snackbarHostState = snackbarHostState,
     ) {
         Column(
             modifier = Modifier
