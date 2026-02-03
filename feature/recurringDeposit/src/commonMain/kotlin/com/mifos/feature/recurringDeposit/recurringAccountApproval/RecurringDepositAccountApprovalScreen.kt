@@ -15,6 +15,7 @@ import androidclient.feature.recurringdeposit.generated.resources.feature_recurr
 import androidclient.feature.recurringdeposit.generated.resources.feature_recurring_deposit_approved_on
 import androidclient.feature.recurringdeposit.generated.resources.feature_recurring_deposit_cancel
 import androidclient.feature.recurringdeposit.generated.resources.feature_recurring_deposit_continue
+import androidclient.feature.recurringdeposit.generated.resources.feature_recurring_deposit_failure_message
 import androidclient.feature.recurringdeposit.generated.resources.feature_recurring_deposit_failure_title
 import androidclient.feature.recurringdeposit.generated.resources.feature_recurring_deposit_save
 import androidclient.feature.recurringdeposit.generated.resources.feature_recurring_deposit_select_date
@@ -134,7 +135,7 @@ internal fun RecurringDepositAccountApprovalScreen(
                     is RecurringDepositAccountApprovalUiState.ShowRecurringDepositAccountApprovedSuccessfully -> {
 
                         Dialog(
-                            onDismissRequest = {},
+                            onDismissRequest = { navigateBack.invoke() },
                             properties = DialogProperties(
                                 dismissOnBackPress = true,
                                 dismissOnClickOutside = true,
@@ -154,7 +155,7 @@ internal fun RecurringDepositAccountApprovalScreen(
                                     successTitle = stringResource(Res.string.feature_recurring_deposit_success_title),
                                     successMessage = stringResource(Res.string.feature_recurring_deposit_success_message),
                                     failureTitle = stringResource(Res.string.feature_recurring_deposit_failure_title),
-                                    failureMessage = stringResource(Res.string.feature_recurring_deposit_success_message),
+                                    failureMessage = stringResource(Res.string.feature_recurring_deposit_failure_message),
                                     showButton = true,
                                 )
                             }
