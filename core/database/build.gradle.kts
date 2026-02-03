@@ -8,7 +8,7 @@
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
 plugins {
-    alias(libs.plugins.mifos.kmp.library)
+    alias(libs.plugins.kmp.library.convention)
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.mifos.kmp.room)
     alias(libs.plugins.kotlin.parcelize)

@@ -35,7 +35,6 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.paging.PagingData
-import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.designsystem.theme.MifosTypography
@@ -79,46 +78,43 @@ fun ClientUpcomingChargesScreenRoute(
 @Composable
 fun ClientUpcomingChargesScreen(
     state: ClientUpcomingChargesState,
+    modifier: Modifier = Modifier,
     navController: NavController,
     onAction: (ClientUpcomingChargesAction) -> Unit,
 ) {
     var itemCount by rememberSaveable { mutableStateOf(0) }
-    MifosScaffold(
-        title = "Client Upcoming Charges",
-        onBackPressed = {},
-    ) { padding ->
-        Column(
-            modifier = Modifier.padding(padding),
-        ) {
-            MifosBreadcrumbNavBar(navController)
 
-            when (state.isLoading) {
-                true -> MifosProgressIndicator()
-                false -> {
-                    Column(
-                        modifier = Modifier.fillMaxSize()
-                            .padding(horizontal = DesignToken.padding.large),
-                    ) {
-                        UpcomingChargesHeader(
-                            totalItem = itemCount.toString(),
+    Column(
+        modifier = modifier,
+    ) {
+        MifosBreadcrumbNavBar(navController)
+
+        when (state.isLoading) {
+            true -> MifosProgressIndicator()
+            false -> {
+                Column(
+                    modifier = Modifier.fillMaxSize()
+                        .padding(horizontal = DesignToken.padding.large),
+                ) {
+                    UpcomingChargesHeader(
+                        totalItem = itemCount.toString(),
+                        onAction = onAction,
+                    )
+
+                    Spacer(modifier = Modifier.height(DesignToken.padding.large))
+
+                    if (state.chargesFlow == null) {
+                        MifosEmptyCard()
+                    } else {
+                        ChargesListContent(
+                            state = state,
+                            charges = state.chargesFlow,
                             onAction = onAction,
+                            refresh = {
+                                onAction(ClientUpcomingChargesAction.OnRefresh)
+                            },
+                            setCount = { itemCount = it },
                         )
-
-                        Spacer(modifier = Modifier.height(DesignToken.padding.large))
-
-                        if (state.chargesFlow == null) {
-                            MifosEmptyCard()
-                        } else {
-                            ChargesListContent(
-                                state = state,
-                                charges = state.chargesFlow,
-                                onAction = onAction,
-                                refresh = {
-                                    onAction(ClientUpcomingChargesAction.OnRefresh)
-                                },
-                                setCount = { itemCount = it },
-                            )
-                        }
                     }
                 }
             }

@@ -8,13 +8,13 @@
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
 plugins {
-    alias(libs.plugins.mifos.kmp.library)
-    alias(libs.plugins.mifos.cmp.feature)
+    alias(libs.plugins.kmp.library.convention)
+    alias(libs.plugins.cmp.feature.convention)
+    alias(libs.plugins.kmp.koin.convention)
     alias(libs.plugins.android.library)
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.jetbrainsCompose)
     alias(libs.plugins.kotlin.parcelize)
-    alias(libs.plugins.mifos.kmp.koin)
 }
 
 android {

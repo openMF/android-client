@@ -48,7 +48,6 @@ import androidx.navigation.NavController
 import com.mifos.core.common.utils.DateHelper
 import com.mifos.core.designsystem.component.MifosDatePickerTextField
 import com.mifos.core.designsystem.component.MifosOutlinedButton
-import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosTextButton
 import com.mifos.core.designsystem.component.MifosTextFieldDropdown
 import com.mifos.core.designsystem.icon.MifosIcons
@@ -81,7 +80,7 @@ internal fun ClientClosureScreen(
         }
     }
 
-    ClientClosureScaffold(
+    ClientClosureContent(
         state = state,
         onAction = remember(viewModel) { { viewModel.trySendAction(it) } },
         modifier = modifier,
@@ -95,140 +94,133 @@ internal fun ClientClosureScreen(
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalTime::class)
 @Composable
-private fun ClientClosureScaffold(
+private fun ClientClosureContent(
     state: ClientClosureState,
     navController: NavController,
     onAction: (ClientClosureAction) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    MifosScaffold(
-        title = stringResource(Res.string.client_closure_title),
-        onBackPressed = { onAction(ClientClosureAction.NavigateBack) },
-        modifier = modifier,
-    ) { paddingValues ->
+    val datePickerState = rememberDatePickerState(
+        initialSelectedDateMillis = state.date,
+        selectableDates = object : SelectableDates {
+            override fun isSelectableDate(utcTimeMillis: Long): Boolean {
+                return utcTimeMillis <= Clock.System.now().toEpochMilliseconds()
+            }
+        },
+    )
 
-        val datePickerState = rememberDatePickerState(
-            initialSelectedDateMillis = state.date,
-            selectableDates = object : SelectableDates {
-                override fun isSelectableDate(utcTimeMillis: Long): Boolean {
-                    return utcTimeMillis <= Clock.System.now().toEpochMilliseconds()
-                }
-            },
-        )
+    if (state.dialogState != ClientClosureState.DialogState.Loading &&
+        state.dialogState !is ClientClosureState.DialogState.ShowStatusDialog
+    ) {
+        Column(modifier.fillMaxSize()) {
+            MifosBreadcrumbNavBar(navController)
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(horizontal = DesignToken.padding.large),
+            ) {
+                if (state.reasons.isNotEmpty()) {
+                    Text(
+                        text = stringResource(Res.string.client_closure_title),
+                        style = MifosTypography.labelLargeEmphasized,
+                    )
+                    Spacer(Modifier.height(DesignToken.padding.largeIncreased))
 
-        if (state.dialogState != ClientClosureState.DialogState.Loading &&
-            state.dialogState !is ClientClosureState.DialogState.ShowStatusDialog
-        ) {
-            Column(Modifier.fillMaxSize().padding(paddingValues)) {
-                MifosBreadcrumbNavBar(navController)
-                Column(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(horizontal = DesignToken.padding.large),
-                ) {
-                    if (state.reasons.isNotEmpty()) {
-                        Text(
-                            text = stringResource(Res.string.client_closure_title),
-                            style = MifosTypography.labelLargeEmphasized,
-                        )
-                        Spacer(Modifier.height(DesignToken.padding.largeIncreased))
-
-                        MifosDatePickerTextField(
-                            value = DateHelper.getDateAsStringFromLong(state.date),
-                            modifier = Modifier.fillMaxWidth(),
-                            label = stringResource(Res.string.client_closure_expected_date),
-                            openDatePicker = {
-                                onAction(ClientClosureAction.UpdateDatePicker(true))
+                    MifosDatePickerTextField(
+                        value = DateHelper.getDateAsStringFromLong(state.date),
+                        modifier = Modifier.fillMaxWidth(),
+                        label = stringResource(Res.string.client_closure_expected_date),
+                        openDatePicker = {
+                            onAction(ClientClosureAction.UpdateDatePicker(true))
+                        },
+                    )
+                    if (state.showDatePicker) {
+                        DatePickerDialog(
+                            onDismissRequest = {
+                                onAction(ClientClosureAction.UpdateDatePicker(false))
                             },
-                        )
-                        if (state.showDatePicker) {
-                            DatePickerDialog(
-                                onDismissRequest = {
-                                    onAction(ClientClosureAction.UpdateDatePicker(false))
-                                },
-                                confirmButton = {
-                                    TextButton(
-                                        onClick = {
-                                            onAction(ClientClosureAction.UpdateDatePicker(false))
-                                            datePickerState.selectedDateMillis?.let {
-                                                onAction(ClientClosureAction.UpdateDate(it))
-                                            }
-                                        },
-                                    ) { Text(stringResource(Res.string.feature_client_charge_select)) }
-                                },
-                                dismissButton = {
-                                    TextButton(
-                                        onClick = {
-                                            onAction(ClientClosureAction.UpdateDatePicker(false))
-                                        },
-                                    ) { Text(stringResource(Res.string.feature_client_charge_cancel)) }
-                                },
-                            ) {
-                                DatePicker(state = datePickerState)
-                            }
+                            confirmButton = {
+                                TextButton(
+                                    onClick = {
+                                        onAction(ClientClosureAction.UpdateDatePicker(false))
+                                        datePickerState.selectedDateMillis?.let {
+                                            onAction(ClientClosureAction.UpdateDate(it))
+                                        }
+                                    },
+                                ) { Text(stringResource(Res.string.feature_client_charge_select)) }
+                            },
+                            dismissButton = {
+                                TextButton(
+                                    onClick = {
+                                        onAction(ClientClosureAction.UpdateDatePicker(false))
+                                    },
+                                ) { Text(stringResource(Res.string.feature_client_charge_cancel)) }
+                            },
+                        ) {
+                            DatePicker(state = datePickerState)
                         }
-
-                        Spacer(Modifier.height(DesignToken.padding.largeIncreased))
-
-                        MifosTextFieldDropdown(
-                            value = state.reasons[state.currentSelectedIndex].name,
-                            onValueChanged = {},
-                            onOptionSelected = { index, _ ->
-                                onAction(ClientClosureAction.OptionChanged(index))
-                            },
-                            options = state.reasons.map {
-                                it.name
-                            },
-                            label = stringResource(Res.string.client_closure_reason),
-                            modifier = Modifier.fillMaxWidth(),
-                            readOnly = true,
-                        )
-
-                        Spacer(Modifier.height(DesignToken.padding.largeIncreased))
-
-                        Row(modifier = Modifier.fillMaxWidth()) {
-                            MifosOutlinedButton(
-                                onClick = { onAction(ClientClosureAction.NavigateBack) },
-                                leadingIcon = {
-                                    Icon(
-                                        imageVector = MifosIcons.ChevronLeft,
-                                        contentDescription = null,
-                                        modifier = Modifier.size(DesignToken.sizes.iconAverage),
-                                        tint = MaterialTheme.colorScheme.primary,
-                                    )
-                                },
-                                text = {
-                                    Text(
-                                        text = stringResource(Res.string.btn_back),
-                                        color = MaterialTheme.colorScheme.primary,
-                                        style = MifosTypography.labelLarge,
-                                    )
-                                },
-                                modifier = Modifier.weight(1f),
-                            )
-                            Spacer(Modifier.padding(DesignToken.padding.small))
-                            MifosTextButton(
-                                onClick = { onAction(ClientClosureAction.OnSubmit) },
-                                leadingIcon = {
-                                    Icon(
-                                        imageVector = MifosIcons.Check,
-                                        contentDescription = null,
-                                        modifier = Modifier.size(DesignToken.sizes.iconAverage),
-                                    )
-                                },
-                                text = {
-                                    Text(
-                                        text = stringResource(Res.string.btn_submit),
-                                        style = MifosTypography.labelLarge,
-                                    )
-                                },
-                                modifier = Modifier.weight(1f),
-                                enabled = state.isEnabled,
-                            )
-                        }
-                    } else {
-                        Text(stringResource(Res.string.client_closure_no_reasons_found))
                     }
+
+                    Spacer(Modifier.height(DesignToken.padding.largeIncreased))
+
+                    MifosTextFieldDropdown(
+                        value = state.reasons[state.currentSelectedIndex].name,
+                        onValueChanged = {},
+                        onOptionSelected = { index, _ ->
+                            onAction(ClientClosureAction.OptionChanged(index))
+                        },
+                        options = state.reasons.map {
+                            it.name
+                        },
+                        label = stringResource(Res.string.client_closure_reason),
+                        modifier = Modifier.fillMaxWidth(),
+                        readOnly = true,
+                    )
+
+                    Spacer(Modifier.height(DesignToken.padding.largeIncreased))
+
+                    Row(modifier = Modifier.fillMaxWidth()) {
+                        MifosOutlinedButton(
+                            onClick = { onAction(ClientClosureAction.NavigateBack) },
+                            leadingIcon = {
+                                Icon(
+                                    imageVector = MifosIcons.ChevronLeft,
+                                    contentDescription = null,
+                                    modifier = Modifier.size(DesignToken.sizes.iconAverage),
+                                    tint = MaterialTheme.colorScheme.primary,
+                                )
+                            },
+                            text = {
+                                Text(
+                                    text = stringResource(Res.string.btn_back),
+                                    color = MaterialTheme.colorScheme.primary,
+                                    style = MifosTypography.labelLarge,
+                                )
+                            },
+                            modifier = Modifier.weight(1f),
+                        )
+                        Spacer(Modifier.padding(DesignToken.padding.small))
+                        MifosTextButton(
+                            onClick = { onAction(ClientClosureAction.OnSubmit) },
+                            leadingIcon = {
+                                Icon(
+                                    imageVector = MifosIcons.Check,
+                                    contentDescription = null,
+                                    modifier = Modifier.size(DesignToken.sizes.iconAverage),
+                                )
+                            },
+                            text = {
+                                Text(
+                                    text = stringResource(Res.string.btn_submit),
+                                    style = MifosTypography.labelLarge,
+                                )
+                            },
+                            modifier = Modifier.weight(1f),
+                            enabled = state.isEnabled,
+                        )
+                    }
+                } else {
+                    Text(stringResource(Res.string.client_closure_no_reasons_found))
                 }
             }
         }
@@ -250,6 +242,7 @@ private fun ClientClosureDialogs(
                 onRetry = { onAction(ClientClosureAction.OnRetry) },
             )
         }
+
         is ClientClosureState.DialogState.ShowStatusDialog -> {
             MifosStatusDialog(
                 status = state.dialogState.status,
@@ -262,6 +255,7 @@ private fun ClientClosureDialogs(
                 modifier = Modifier.fillMaxSize(),
             )
         }
+
         null -> Unit
     }
 }

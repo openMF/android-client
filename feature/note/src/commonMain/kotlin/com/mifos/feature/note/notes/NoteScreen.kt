@@ -94,7 +94,7 @@ internal fun NoteScreen(
         }
     }
 
-    NoteScreenScaffold(
+    NoteScreenContent(
         state = state,
         onAction = remember(viewModel) { { viewModel.trySendAction(it) } },
         navController = navController,
@@ -144,7 +144,7 @@ private fun NoteScreenDialog(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-internal fun NoteScreenScaffold(
+internal fun NoteScreenContent(
     state: NoteState,
     navController: NavController,
     modifier: Modifier = Modifier,
@@ -154,16 +154,11 @@ internal fun NoteScreenScaffold(
     val pullRefreshState = rememberPullToRefreshState()
 
     MifosScaffold(
-        title = stringResource(Res.string.feature_note_notes),
-        onBackPressed = {
-            onAction(NoteAction.NavigateBack)
-        },
         snackbarHostState = snackBarHostState,
         modifier = modifier,
-    ) { paddingValues ->
+    ) {
         Column(
             modifier = Modifier
-                .padding(paddingValues)
                 .fillMaxSize(),
         ) {
             MifosBreadcrumbNavBar(navController)
@@ -193,7 +188,9 @@ private fun NoteContent(
     modifier: Modifier = Modifier,
 ) {
     Column(
-        modifier = Modifier.padding(horizontal = DesignToken.spacing.large),
+        modifier = modifier
+            .padding(horizontal = DesignToken.spacing.large)
+            .padding(bottom = DesignToken.spacing.large),
     ) {
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -217,7 +214,7 @@ private fun NoteContent(
             Icon(
                 imageVector = MifosIcons.Add,
                 contentDescription = null,
-                modifier.clickable {
+                Modifier.clickable {
                     onAction(NoteAction.OnClickAddScreen)
                 }.size(DesignToken.sizes.iconAverage),
             )
@@ -311,7 +308,7 @@ internal val demoNotes = listOf(
 @DevicePreview
 @Composable
 fun PreviewSuccessNoteScreen() {
-    NoteScreenScaffold(
+    NoteScreenContent(
         onAction = {},
         state = NoteState(notes = demoNotes),
         navController = rememberNavController(),
