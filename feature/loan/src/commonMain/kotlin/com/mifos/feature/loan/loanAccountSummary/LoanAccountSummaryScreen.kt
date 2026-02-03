@@ -77,6 +77,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalClipboardManager
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -99,6 +101,7 @@ import com.mifos.core.designsystem.theme.MifosTheme
 import com.mifos.core.designsystem.theme.MifosTypography
 import com.mifos.core.ui.components.MifosBreadcrumbNavBar
 import com.mifos.core.ui.components.MifosProgressIndicator
+import com.mifos.core.ui.util.EventsEffect
 import com.mifos.room.entities.accounts.loans.LoanStatusEntity
 import com.mifos.room.entities.accounts.loans.LoanWithAssociationsEntity
 import com.mifos.room.entities.accounts.loans.LoansAccountSummaryEntity
@@ -111,7 +114,7 @@ import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 internal fun LoanAccountSummaryScreen(
-    navigateBack: () -> Unit,
+    onNavigateBack: () -> Unit,
     onMoreInfoClicked: (String, loanId: Int) -> Unit,
     onTransactionsClicked: (loadId: Int) -> Unit,
     onRepaymentScheduleClicked: (loanId: Int) -> Unit,
@@ -123,65 +126,75 @@ internal fun LoanAccountSummaryScreen(
     navController: NavController,
     viewModel: LoanAccountSummaryViewModel = koinViewModel(),
 ) {
-    val uiState by viewModel.loanAccountSummaryUiState.collectAsStateWithLifecycle()
-    val loanAccountNumber = viewModel.loanAccountNumber
+    val state by viewModel.stateFlow.collectAsStateWithLifecycle()
+    val snackbarHostState = remember { SnackbarHostState() }
+    val loanIdCopiedMessage = stringResource(Res.string.feature_loan_loan_id_copied)
 
-    LaunchedEffect(key1 = Unit) {
-        viewModel.loadLoanById()
+    EventsEffect(viewModel.eventFlow) { event ->
+        when (event) {
+            LoanAccountSummaryEvent.NavigateBack -> onNavigateBack()
+            is LoanAccountSummaryEvent.NavigateToMoreInfo -> {
+                onMoreInfoClicked(Constants.DATA_TABLE_NAME_LOANS, event.loanId)
+            }
+            is LoanAccountSummaryEvent.NavigateToTransactions -> {
+                onTransactionsClicked(event.loanId)
+            }
+            is LoanAccountSummaryEvent.NavigateToRepaymentSchedule -> {
+                onRepaymentScheduleClicked(event.loanId)
+            }
+            is LoanAccountSummaryEvent.NavigateToDocuments -> {
+                onDocumentsClicked(event.loanId)
+            }
+            is LoanAccountSummaryEvent.NavigateToCharges -> {
+                onChargesClicked(event.loanId)
+            }
+            is LoanAccountSummaryEvent.NavigateToApproveLoan -> {
+                approveLoan(event.loanId, event.loanWithAssociations)
+            }
+            is LoanAccountSummaryEvent.NavigateToDisburseLoan -> {
+                disburseLoan(event.loanId)
+            }
+            is LoanAccountSummaryEvent.NavigateToMakeRepayment -> {
+                onRepaymentClick(event.loanWithAssociations)
+            }
+        }
+    }
+
+    LaunchedEffect(state.showLoanIdCopiedMessage) {
+        if (state.showLoanIdCopiedMessage) {
+            snackbarHostState.showSnackbar(message = loanIdCopiedMessage)
+            viewModel.trySendAction(LoanAccountSummaryAction.OnMessageShown)
+        }
     }
 
     LoanAccountSummaryScreen(
-        uiState = uiState,
-        navigateBack = navigateBack,
-        onRetry = { viewModel.loadLoanById() },
-        onMoreInfoClicked = {
-            onMoreInfoClicked.invoke(
-                Constants.DATA_TABLE_NAME_LOANS,
-                loanAccountNumber,
-            )
-        },
-        onTransactionsClicked = { onTransactionsClicked.invoke(loanAccountNumber) },
-        onRepaymentScheduleClicked = { onRepaymentScheduleClicked.invoke(loanAccountNumber) },
-        onDocumentsClicked = { onDocumentsClicked(loanAccountNumber) },
-        onChargesClicked = { onChargesClicked(loanAccountNumber) },
-        approveLoan = { approveLoan(loanAccountNumber, it) },
-        disburseLoan = { disburseLoan(loanAccountNumber) },
-        makeRepayment = onRepaymentClick,
+        state = state,
+        onAction = viewModel::trySendAction,
         navController = navController,
+        snackbarHostState = snackbarHostState,
     )
 }
 
 @Composable
 internal fun LoanAccountSummaryScreen(
-    uiState: LoanAccountSummaryUiState,
-    navigateBack: () -> Unit,
-    onRetry: () -> Unit,
-    onMoreInfoClicked: () -> Unit,
-    onTransactionsClicked: () -> Unit,
-    onRepaymentScheduleClicked: () -> Unit,
-    onDocumentsClicked: () -> Unit,
-    onChargesClicked: () -> Unit,
-    approveLoan: (loanWithAssociations: LoanWithAssociationsEntity) -> Unit,
-    disburseLoan: () -> Unit,
-    makeRepayment: (loanWithAssociations: LoanWithAssociationsEntity) -> Unit,
+    state: LoanAccountSummaryState,
+    onAction: (LoanAccountSummaryAction) -> Unit,
     navController: NavController,
+    snackbarHostState: SnackbarHostState,
 ) {
-    val snackbarHostState = remember {
-        SnackbarHostState()
-    }
     var openDropdown by rememberSaveable {
         mutableStateOf(false)
     }
 
     MifosScaffold(
         title = stringResource(Res.string.feature_loan_loan_account_summary),
-        onBackPressed = navigateBack,
+        onBackPressed = { onAction(LoanAccountSummaryAction.NavigateBack) },
         snackbarHostState = snackbarHostState,
         actions = {
             IconButton(onClick = { openDropdown = !openDropdown }) {
                 Icon(
                     imageVector = MifosIcons.MoreVert,
-                    contentDescription = null,
+                    contentDescription = "More options",
                 )
             }
             if (openDropdown) {
@@ -193,35 +206,35 @@ internal fun LoanAccountSummaryScreen(
                         option = Constants.DATA_TABLE_LOAN_NAME,
                         onClick = {
                             openDropdown = false
-                            onMoreInfoClicked.invoke()
+                            onAction(LoanAccountSummaryAction.OnMoreInfoClick)
                         },
                     )
                     MifosMenuDropDownItem(
                         option = stringResource(Res.string.feature_loan_transactions),
                         onClick = {
                             openDropdown = false
-                            onTransactionsClicked.invoke()
+                            onAction(LoanAccountSummaryAction.OnTransactionsClick)
                         },
                     )
                     MifosMenuDropDownItem(
                         option = stringResource(Res.string.feature_loan_repayment_schedule),
                         onClick = {
                             openDropdown = false
-                            onRepaymentScheduleClicked.invoke()
+                            onAction(LoanAccountSummaryAction.OnRepaymentScheduleClick)
                         },
                     )
                     MifosMenuDropDownItem(
                         option = stringResource(Res.string.feature_loan_documents),
                         onClick = {
                             openDropdown = false
-                            onDocumentsClicked.invoke()
+                            onAction(LoanAccountSummaryAction.OnDocumentsClick)
                         },
                     )
                     MifosMenuDropDownItem(
                         option = stringResource(Res.string.feature_loan_loan_charges),
                         onClick = {
                             openDropdown = false
-                            onChargesClicked.invoke()
+                            onAction(LoanAccountSummaryAction.OnChargesClick)
                         },
                     )
                 }
@@ -231,35 +244,35 @@ internal fun LoanAccountSummaryScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
+                .padding(it)
                 .background(MaterialTheme.colorScheme.background),
         ) {
             MifosBreadcrumbNavBar(navController)
             Box(
                 modifier = Modifier
-                    .fillMaxSize()
-                    .padding(it),
+                    .fillMaxWidth()
+                    .weight(1f),
             ) {
-                when (uiState) {
-                    is LoanAccountSummaryUiState.ShowFetchingError -> {
+                when (state.dialogState) {
+                    is LoanAccountSummaryState.DialogState.Error -> {
                         MifosSweetError(
-                            message = uiState.message,
-                            onclick = onRetry,
+                            message = state.dialogState.message,
+                            onclick = { onAction(LoanAccountSummaryAction.OnRetry) },
                         )
                     }
 
-                    is LoanAccountSummaryUiState.ShowLoanById -> {
-                        val loanWithAssociations = uiState.loanWithAssociations
-                        LoanAccountSummaryContent(
-                            loanWithAssociations = loanWithAssociations,
-                            makeRepayment = { makeRepayment.invoke(loanWithAssociations) },
-                            approveLoan = { approveLoan.invoke(loanWithAssociations) },
-                            disburseLoan = disburseLoan,
-                            snackbarHostState = snackbarHostState,
-                        )
-                    }
-
-                    LoanAccountSummaryUiState.ShowProgressbar -> {
+                    LoanAccountSummaryState.DialogState.Loading -> {
                         MifosProgressIndicator()
+                    }
+
+                    null -> {
+                        state.loanWithAssociations?.let { loanWithAssociations ->
+                            LoanAccountSummaryContent(
+                                loanWithAssociations = loanWithAssociations,
+                                onAction = onAction,
+                                snackbarHostState = snackbarHostState,
+                            )
+                        }
                     }
                 }
             }
@@ -270,9 +283,7 @@ internal fun LoanAccountSummaryScreen(
 @Composable
 private fun LoanAccountSummaryContent(
     loanWithAssociations: LoanWithAssociationsEntity,
-    makeRepayment: () -> Unit,
-    approveLoan: () -> Unit,
-    disburseLoan: () -> Unit,
+    onAction: (LoanAccountSummaryAction) -> Unit,
     snackbarHostState: SnackbarHostState,
 ) {
     val inflateLoanSummary = getInflateLoanSummaryValue(status = loanWithAssociations.status)
@@ -281,7 +292,6 @@ private fun LoanAccountSummaryContent(
     val scope = rememberCoroutineScope()
     val clipboardManager = LocalClipboardManager.current
     val message = stringResource(Res.string.feature_loan_loan_rejected_message)
-    val loanIdCopiedMessage = stringResource(Res.string.feature_loan_loan_id_copied)
 
     fun formatCurrency(amount: Double?): String {
         if (amount == null) return ""
@@ -336,10 +346,18 @@ private fun LoanAccountSummaryContent(
                     modifier = Modifier.fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
+                    val statusDescription = when {
+                        loanWithAssociations.status.active == true -> "Active"
+                        loanWithAssociations.status.pendingApproval == true -> "Pending Approval"
+                        loanWithAssociations.status.waitingForDisbursal == true -> "Waiting for Disbursal"
+                        else -> "Closed"
+                    }
                     Canvas(
                         modifier = Modifier
-                            .size(DesignToken.sizes.iconMedium),
-                        contentDescription = "",
+                            .size(DesignToken.sizes.iconMedium)
+                            .semantics {
+                                contentDescription = "Loan status: $statusDescription"
+                            },
                         onDraw = {
                             drawCircle(
                                 color = when {
@@ -383,11 +401,7 @@ private fun LoanAccountSummaryContent(
                     IconButton(
                         onClick = {
                             clipboardManager.setText(AnnotatedString(loanWithAssociations.accountNo))
-                            scope.launch {
-                                snackbarHostState.showSnackbar(
-                                    message = loanIdCopiedMessage,
-                                )
-                            }
+                            onAction(LoanAccountSummaryAction.OnLoanIdCopied)
                         },
                         modifier = Modifier.size(DesignToken.sizes.iconSmall),
                     ) {
@@ -513,15 +527,15 @@ private fun LoanAccountSummaryContent(
             shape = DesignToken.shapes.small,
             onClick = when {
                 loanWithAssociations.status.active == true -> {
-                    { makeRepayment.invoke() }
+                    { onAction(LoanAccountSummaryAction.OnMakeRepayment(loanWithAssociations)) }
                 }
 
                 loanWithAssociations.status.pendingApproval == true -> {
-                    { approveLoan.invoke() }
+                    { onAction(LoanAccountSummaryAction.OnApproveLoan(loanWithAssociations)) }
                 }
 
                 loanWithAssociations.status.waitingForDisbursal == true -> {
-                    { disburseLoan.invoke() }
+                    { onAction(LoanAccountSummaryAction.OnDisburseLoan) }
                 }
 
                 loanWithAssociations.status.closedObligationsMet == true -> {
@@ -757,7 +771,6 @@ private fun getButtonActiveStatus(status: LoanStatusEntity): Boolean {
     }
 }
 
-@Composable
 private fun getInflateLoanSummaryValue(status: LoanStatusEntity): Boolean {
     return when {
         status.active == true || status.closedObligationsMet == true -> {
@@ -775,13 +788,15 @@ private fun getInflateLoanSummaryValue(status: LoanStatusEntity): Boolean {
 }
 
 private class LoanAccountSummaryPreviewProvider :
-    PreviewParameterProvider<LoanAccountSummaryUiState> {
+    PreviewParameterProvider<LoanAccountSummaryState> {
     private val demoSummary = LoansAccountSummaryEntity(
         loanId = 12345,
         principalDisbursed = 10000.0,
+        principalPaid = 4000.0,
+        principalWrittenOff = 0.0,
         principalOutstanding = 6000.0,
         principalOverdue = 500.0,
-        interestCharged = 500.0,
+        interestCharged = 700.0,
         interestPaid = 300.0,
         interestWaived = 0.0,
         interestWrittenOff = 0.0,
@@ -809,12 +824,16 @@ private class LoanAccountSummaryPreviewProvider :
         overdueSinceDate = listOf(2024, 6, 1),
     )
 
-    override val values: Sequence<LoanAccountSummaryUiState>
+    override val values: Sequence<LoanAccountSummaryState>
         get() = sequenceOf(
-            LoanAccountSummaryUiState.ShowProgressbar,
-            LoanAccountSummaryUiState.ShowFetchingError("Could not fetch summary"),
-            LoanAccountSummaryUiState.ShowLoanById(
-                LoanWithAssociationsEntity(
+            LoanAccountSummaryState(
+                dialogState = LoanAccountSummaryState.DialogState.Loading,
+            ),
+            LoanAccountSummaryState(
+                dialogState = LoanAccountSummaryState.DialogState.Error("Could not fetch summary"),
+            ),
+            LoanAccountSummaryState(
+                loanWithAssociations = LoanWithAssociationsEntity(
                     accountNo = "90927493938",
                     status = LoanStatusEntity(
                         closedObligationsMet = true,
@@ -824,6 +843,7 @@ private class LoanAccountSummaryPreviewProvider :
                     loanProductName = "Group Loan",
                     summary = demoSummary,
                 ),
+                dialogState = null,
             ),
         )
 }
@@ -831,22 +851,14 @@ private class LoanAccountSummaryPreviewProvider :
 @Composable
 @Preview
 private fun PreviewLoanAccountSummary(
-    @PreviewParameter(LoanAccountSummaryPreviewProvider::class) loanAccountSummaryUiState: LoanAccountSummaryUiState,
+    @PreviewParameter(LoanAccountSummaryPreviewProvider::class) state: LoanAccountSummaryState,
 ) {
     MifosTheme {
         LoanAccountSummaryScreen(
-            uiState = loanAccountSummaryUiState,
-            navigateBack = { },
-            onRetry = { },
-            onMoreInfoClicked = { },
-            onTransactionsClicked = { },
-            onRepaymentScheduleClicked = { },
-            onDocumentsClicked = { },
-            onChargesClicked = { },
-            approveLoan = { },
-            disburseLoan = { },
-            makeRepayment = { },
+            state = state,
+            onAction = { },
             navController = rememberNavController(),
+            snackbarHostState = remember { SnackbarHostState() },
         )
     }
 }
