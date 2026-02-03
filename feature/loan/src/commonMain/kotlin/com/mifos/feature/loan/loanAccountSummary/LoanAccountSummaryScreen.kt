@@ -87,6 +87,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import co.touchlab.kermit.Logger
 import com.mifos.core.common.utils.Constants
+import com.mifos.core.common.utils.CurrencyFormatter
 import com.mifos.core.common.utils.DateHelper
 import com.mifos.core.designsystem.component.MifosCard
 import com.mifos.core.designsystem.component.MifosMenuDropDownItem
@@ -282,6 +283,19 @@ private fun LoanAccountSummaryContent(
     val clipboardManager = LocalClipboardManager.current
     val message = stringResource(Res.string.feature_loan_loan_rejected_message)
     val loanIdCopiedMessage = stringResource(Res.string.feature_loan_loan_id_copied)
+
+    fun formatCurrency(amount: Double?): String {
+        if (amount == null) return ""
+        val currencyCode = loanWithAssociations.currency.code
+        if (currencyCode.isNullOrBlank()) return amount.toString()
+
+        return CurrencyFormatter.format(
+            balance = amount,
+            currencyCode = currencyCode,
+            maximumFractionDigits = loanWithAssociations.currency.decimalPlaces,
+        )
+    }
+
     fun getActualDisbursementDateInStringFormat(): String {
         try {
             return loanWithAssociations.timeline.actualDisbursementDate?.let {
@@ -392,19 +406,19 @@ private fun LoanAccountSummaryContent(
         Row {
             InfoCard(
                 titleText = stringResource(Res.string.feature_loan_total_loan),
-                infoText = summary?.totalExpectedRepayment.toString(),
+                infoText = formatCurrency(summary?.totalExpectedRepayment),
                 modifier = Modifier.fillMaxWidth(0.5f),
             )
             Spacer(modifier = Modifier.width(DesignToken.spacing.medium))
             InfoCard(
                 titleText = stringResource(Res.string.feature_loan_amount_paid),
-                infoText = summary?.totalRepayment.toString(),
+                infoText = formatCurrency(summary?.totalRepayment),
                 modifier = Modifier.fillMaxWidth(),
             )
         }
         InfoCard(
             titleText = stringResource(Res.string.feature_loan_outstanding_balance),
-            infoText = summary?.totalOutstanding.toString(),
+            infoText = formatCurrency(summary?.totalOutstanding),
             modifier = Modifier.fillMaxWidth(),
         )
 
@@ -430,8 +444,7 @@ private fun LoanAccountSummaryContent(
                     LoanSummaryFarApartTextItem(
                         title = stringResource(Res.string.feature_loan_loan_amount_disbursed),
                         value = if (inflateLoanSummary) {
-                            loanWithAssociations.summary.principalDisbursed?.toString()
-                                ?: ""
+                            formatCurrency(loanWithAssociations.summary.principalDisbursed)
                         } else {
                             ""
                         },
@@ -463,8 +476,7 @@ private fun LoanAccountSummaryContent(
                     LoanSummaryFarApartTextItem(
                         title = stringResource(Res.string.feature_loan_loan_in_arrears),
                         value = if (inflateLoanSummary) {
-                            loanWithAssociations.summary.totalOverdue?.toString()
-                                ?: ""
+                            formatCurrency(loanWithAssociations.summary.totalOverdue)
                         } else {
                             ""
                         },
@@ -490,6 +502,8 @@ private fun LoanAccountSummaryContent(
         LoanSummaryDataTable(
             loanSummary = loanWithAssociations.summary,
             inflateLoanSummary = inflateLoanSummary,
+            currencyCode = loanWithAssociations.currency.code,
+            decimalPlaces = loanWithAssociations.currency.decimalPlaces,
         )
 
         Button(
@@ -531,9 +545,26 @@ private fun LoanAccountSummaryContent(
 }
 
 @Composable
-private fun LoanSummaryDataTable(loanSummary: LoansAccountSummaryEntity, inflateLoanSummary: Boolean) {
+private fun LoanSummaryDataTable(
+    loanSummary: LoansAccountSummaryEntity,
+    inflateLoanSummary: Boolean,
+    currencyCode: String?,
+    decimalPlaces: Int?,
+) {
     // dataTable should be empty if [inflateLoanSummary] is false
     val summary = if (inflateLoanSummary) loanSummary else null
+
+    fun formatAmount(amount: Double?): String {
+        if (amount == null) return ""
+        if (currencyCode.isNullOrBlank()) return amount.toString()
+
+        return CurrencyFormatter.format(
+            balance = amount,
+            currencyCode = currencyCode,
+            maximumFractionDigits = decimalPlaces,
+        )
+    }
+
     MifosCard {
         DataTableRow(
             summaryColumnTitle = stringResource(Res.string.feature_loan_summary),
@@ -548,36 +579,36 @@ private fun LoanSummaryDataTable(loanSummary: LoansAccountSummaryEntity, inflate
 
         DataTableRow(
             summaryColumnTitle = stringResource(Res.string.feature_loan_loan_principal),
-            loanColumnValue = summary?.principalDisbursed?.toString() ?: "",
-            amountColumnValue = summary?.principalPaid?.toString() ?: "",
-            balanceColumnValue = summary?.principalOutstanding?.toString() ?: "",
+            loanColumnValue = formatAmount(summary?.principalDisbursed),
+            amountColumnValue = formatAmount(summary?.principalPaid),
+            balanceColumnValue = formatAmount(summary?.principalOutstanding),
         )
 
         HorizontalDivider(thickness = 0.5.dp)
 
         DataTableRow(
             summaryColumnTitle = stringResource(Res.string.feature_loan_loan_interest),
-            loanColumnValue = summary?.interestCharged?.toString() ?: "",
-            amountColumnValue = summary?.interestPaid?.toString() ?: "",
-            balanceColumnValue = summary?.interestOutstanding?.toString() ?: "",
+            loanColumnValue = formatAmount(summary?.interestCharged),
+            amountColumnValue = formatAmount(summary?.interestPaid),
+            balanceColumnValue = formatAmount(summary?.interestOutstanding),
         )
 
         HorizontalDivider(thickness = 0.5.dp)
 
         DataTableRow(
             summaryColumnTitle = stringResource(Res.string.feature_loan_loan_fees),
-            loanColumnValue = summary?.feeChargesCharged?.toString() ?: "",
-            amountColumnValue = summary?.feeChargesPaid?.toString() ?: "",
-            balanceColumnValue = summary?.feeChargesOutstanding?.toString() ?: "",
+            loanColumnValue = formatAmount(summary?.feeChargesCharged),
+            amountColumnValue = formatAmount(summary?.feeChargesPaid),
+            balanceColumnValue = formatAmount(summary?.feeChargesOutstanding),
         )
 
         HorizontalDivider(thickness = 0.5.dp)
 
         DataTableRow(
             summaryColumnTitle = stringResource(Res.string.feature_loan_loan_penalty),
-            loanColumnValue = summary?.penaltyChargesCharged?.toString() ?: "",
-            amountColumnValue = summary?.penaltyChargesPaid?.toString() ?: "",
-            balanceColumnValue = summary?.penaltyChargesOutstanding?.toString() ?: "",
+            loanColumnValue = formatAmount(summary?.penaltyChargesCharged),
+            amountColumnValue = formatAmount(summary?.penaltyChargesPaid),
+            balanceColumnValue = formatAmount(summary?.penaltyChargesOutstanding),
         )
     }
 }
