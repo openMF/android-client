@@ -36,6 +36,7 @@ import androidclient.feature.loan.generated.resources.feature_loan_loan_principa
 import androidclient.feature.loan.generated.resources.feature_loan_loan_rejected_message
 import androidclient.feature.loan.generated.resources.feature_loan_make_Repayment
 import androidclient.feature.loan.generated.resources.feature_loan_outstanding_balance
+import androidclient.feature.loan.generated.resources.feature_loan_overpaid
 import androidclient.feature.loan.generated.resources.feature_loan_repayment_schedule
 import androidclient.feature.loan.generated.resources.feature_loan_staff
 import androidclient.feature.loan.generated.resources.feature_loan_summary
@@ -737,6 +738,10 @@ fun getButtonText(status: LoanStatusEntity): String {
 
         status.waitingForDisbursal == true -> {
             stringResource(Res.string.feature_loan_disburse_loan)
+        }
+
+        status.overpaid == true -> {
+            stringResource(Res.string.feature_loan_overpaid)
         }
 
         else -> {
