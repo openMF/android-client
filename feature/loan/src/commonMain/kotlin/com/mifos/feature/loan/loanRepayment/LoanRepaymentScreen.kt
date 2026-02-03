@@ -22,8 +22,8 @@ import androidclient.feature.loan.generated.resources.feature_loan_loan_amount_d
 import androidclient.feature.loan.generated.resources.feature_loan_loan_fees
 import androidclient.feature.loan.generated.resources.feature_loan_loan_in_arrears
 import androidclient.feature.loan.generated.resources.feature_loan_loan_repayment
-import androidclient.feature.loan.generated.resources.feature_loan_payment_success_message
 import androidclient.feature.loan.generated.resources.feature_loan_payment_success_title
+import androidclient.feature.loan.generated.resources.feature_loan_payment_success_transaction_label
 import androidclient.feature.loan.generated.resources.feature_loan_payment_type
 import androidclient.feature.loan.generated.resources.feature_loan_repayment_date
 import androidclient.feature.loan.generated.resources.feature_loan_review_payment
@@ -143,7 +143,7 @@ internal fun LoanRepaymentScreen(
     onRetry: () -> Unit,
     submitPayment: (request: LoanRepaymentRequestEntity) -> Unit,
     onLoanRepaymentDoesNotExistInDatabase: () -> Unit,
-    formatCurrency: (Double?, String?) -> String,
+    formatCurrency: (Double?, String?, Int?) -> String,
     calculateTotal: (String, String, String) -> Double,
     isAllFieldsValid: (String, String, String, String) -> Boolean,
 ) {
@@ -232,7 +232,7 @@ private fun LoanRepaymentContent(
     loanRepaymentTemplate: LoanRepaymentTemplateEntity,
     navigateBack: () -> Unit,
     submitPayment: (request: LoanRepaymentRequestEntity) -> Unit,
-    formatCurrency: (Double?, String?) -> String,
+    formatCurrency: (Double?, String?, Int?) -> String,
     calculateTotal: (String, String, String) -> Double,
     isAllFieldsValid: (String, String, String, String) -> Boolean,
 ) {
@@ -258,6 +258,7 @@ private fun LoanRepaymentContent(
     }
 
     val currencyCode = loanRepaymentTemplate.currency?.code
+    val decimalPlaces = loanRepaymentTemplate.currency?.decimalPlaces
 
     if (showConfirmationSheet) {
         ConfirmationBottomSheet(
@@ -272,6 +273,7 @@ private fun LoanRepaymentContent(
             total = calculateTotal(fees, amount, additionalPayment).toString(),
             submitPayment = submitPayment,
             currencyCode = currencyCode,
+            decimalPlaces = decimalPlaces,
             formatCurrency = formatCurrency,
         )
     }
@@ -323,11 +325,11 @@ private fun LoanRepaymentContent(
         FarApartTextItem(title = loanProductName, value = loanId.toString())
         FarApartTextItem(
             title = stringResource(Res.string.feature_loan_loan_in_arrears),
-            value = formatCurrency(amountInArrears, currencyCode),
+            value = formatCurrency(amountInArrears, currencyCode, decimalPlaces),
         )
         FarApartTextItem(
             title = stringResource(Res.string.feature_loan_loan_amount_due),
-            value = formatCurrency(loanRepaymentTemplate.amount, currencyCode),
+            value = formatCurrency(loanRepaymentTemplate.amount, currencyCode, decimalPlaces),
         )
 
         Spacer(modifier = Modifier.height(DesignToken.spacing.medium))
@@ -414,7 +416,7 @@ private fun LoanRepaymentContent(
             modifier = Modifier
                 .fillMaxWidth()
                 .heightIn(min = DesignToken.sizes.inputHeight),
-            value = formatCurrency(calculatedTotal, currencyCode),
+            value = formatCurrency(calculatedTotal, currencyCode, decimalPlaces),
             onValueChange = { },
             label = stringResource(Res.string.feature_loan_total),
             error = null,
@@ -475,7 +477,8 @@ private fun ConfirmationBottomSheet(
     total: String,
     submitPayment: (request: LoanRepaymentRequestEntity) -> Unit,
     currencyCode: String? = null,
-    formatCurrency: (Double?, String?) -> String,
+    decimalPlaces: Int? = null,
+    formatCurrency: (Double?, String?, Int?) -> String,
 ) {
     MifosBottomSheet(
         onDismiss = onDismiss,
@@ -502,15 +505,15 @@ private fun ConfirmationBottomSheet(
             HorizontalDivider(modifier = Modifier.padding(vertical = DesignToken.padding.small))
             ReviewItem(
                 stringResource(Res.string.feature_loan_amount),
-                formatCurrency(amount.toDoubleOrNull(), currencyCode),
+                formatCurrency(amount.toDoubleOrNull(), currencyCode, decimalPlaces),
             )
             ReviewItem(
                 stringResource(Res.string.feature_loan_additional_payment),
-                formatCurrency(additionalPayment.toDoubleOrNull(), currencyCode),
+                formatCurrency(additionalPayment.toDoubleOrNull(), currencyCode, decimalPlaces),
             )
             ReviewItem(
                 stringResource(Res.string.feature_loan_loan_fees),
-                formatCurrency(fees.toDoubleOrNull(), currencyCode),
+                formatCurrency(fees.toDoubleOrNull(), currencyCode, decimalPlaces),
             )
 
             HorizontalDivider(modifier = Modifier.padding(vertical = DesignToken.padding.small))
@@ -526,7 +529,7 @@ private fun ConfirmationBottomSheet(
                     fontWeight = FontWeight.Bold,
                 )
                 Text(
-                    text = formatCurrency(total.toDoubleOrNull(), currencyCode),
+                    text = formatCurrency(total.toDoubleOrNull(), currencyCode, decimalPlaces),
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.primary,
@@ -544,7 +547,7 @@ private fun ConfirmationBottomSheet(
                     val request = LoanRepaymentRequestEntity(
                         accountNumber = loanAccountNumber,
                         paymentTypeId = paymentTypeId,
-                        dateFormat = Constants.DATE_FORMAT_DD_MM_YYYY,
+                        dateFormat = DateHelper.SHORT_MONTH,
                         locale = Constants.LOCALE_EN,
                         transactionAmount = total,
                         transactionDate = DateHelper.getDateAsStringFromLong(repaymentDate),
@@ -603,7 +606,7 @@ private fun SuccessBottomSheet(
             Spacer(modifier = Modifier.height(DesignToken.spacing.small))
 
             Text(
-                text = "${stringResource(Res.string.feature_loan_payment_success_message)} ${response.resourceId}",
+                text = "${stringResource(Res.string.feature_loan_payment_success_transaction_label)} ${response.resourceId}",
                 style = MaterialTheme.typography.bodyMedium,
                 textAlign = TextAlign.Center,
                 color = DarkGray,
@@ -674,7 +677,7 @@ private fun PreviewLoanRepaymentScreen(
         onRetry = {},
         submitPayment = {},
         onLoanRepaymentDoesNotExistInDatabase = {},
-        formatCurrency = { amount, code -> "$code $amount" },
+        formatCurrency = { amount, code, _ -> "$code $amount" },
         calculateTotal = { _, _, _ -> 0.0 },
         isAllFieldsValid = { _, _, _, _ -> true },
     )

@@ -16,7 +16,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
-import com.mifos.core.common.utils.Constants
+import com.mifos.core.common.utils.CurrencyFormatter
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.repository.LoanRepaymentRepository
 import com.mifos.room.entities.accounts.loans.LoanRepaymentRequestEntity
@@ -115,23 +115,12 @@ class LoanRepaymentViewModel(
         return round(total * 100) / 100.0
     }
 
-    fun formatCurrency(amount: Double?, code: String?): String {
-        val value = amount ?: 0.0
-        var currencySymbol = code ?: ""
-
-        if (currencySymbol.equals(Constants.CURRENCY_USD, ignoreCase = true)) {
-            currencySymbol = Constants.SYMBOL_DOLLAR
-        }
-
-        val roundedCents = round(value * 100).toLong()
-        val absCents = kotlin.math.abs(roundedCents)
-        val integerPart = absCents / 100
-        val fractionalPart = absCents % 100
-        val sign = if (roundedCents < 0) "-" else ""
-        val paddedFraction = fractionalPart.toString().padStart(2, '0')
-        val finalAmount = "$sign$integerPart.$paddedFraction"
-
-        return if (currencySymbol.isNotEmpty()) "$currencySymbol $finalAmount" else finalAmount
+    fun formatCurrency(amount: Double?, code: String?, decimalPlaces: Int?): String {
+        return CurrencyFormatter.format(
+            balance = amount,
+            currencyCode = code,
+            maximumFractionDigits = decimalPlaces ?: 2,
+        )
     }
 
     fun isAllFieldsValid(
