@@ -205,11 +205,14 @@ internal fun LoanRepaymentScreen(
                 }
 
                 is LoanRepaymentUiState.ShowPaymentSubmittedSuccessfully -> {
-                    if (uiState.loanRepaymentResponse != null) {
+                    val response = uiState.loanRepaymentResponse
+                    if (response != null) {
                         SuccessBottomSheet(
-                            response = uiState.loanRepaymentResponse,
+                            response = response,
                             onDismiss = navigateBack,
                         )
+                    } else {
+                        LaunchedEffect(Unit) { navigateBack() }
                     }
                 }
 
