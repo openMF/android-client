@@ -96,6 +96,7 @@ import com.mifos.feature.groups.navigation.navigateToGroupDetailsScreen
 import com.mifos.feature.loan.loanAccount.navigateToLoanAccountScreen
 import com.mifos.feature.loan.loanAccountProfile.navigateToLoanAccountProfileScreen
 import com.mifos.feature.loan.loanAccountSummary.navigateToLoanAccountSummaryScreen
+import com.mifos.feature.loan.loanRepayment.navigateToLoanRepaymentScreen
 import com.mifos.feature.loan.navigation.loanDestination
 import com.mifos.feature.loan.newLoanAccount.navigateToNewLoanAccountRoute
 import com.mifos.feature.note.navigation.noteDestination
@@ -336,7 +337,7 @@ fun NavGraphBuilder.clientNavGraph(
         clientLoanAccountsDestination(
             navigateBack = navController::popBackStack,
             navigateToViewAccount = navController::navigateToLoanAccountProfileScreen,
-            navigateToMakeRepayment = {},
+            navigateToMakeRepayment = navController::navigateToLoanRepaymentScreen,
             navController = navController,
             createAccount = { clientId, accountNo -> navController.navigateToNewLoanAccountRoute(clientId, accountNo) },
         )
