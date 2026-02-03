@@ -269,7 +269,7 @@ fun NavGraphBuilder.clientNavGraph(
 
         recurringDepositAccountApprovalDestination(
             navigateBack = navController::popBackStack,
-            navController = navController
+            navController = navController,
         )
 
         clientFixedDepositAccountDestination(

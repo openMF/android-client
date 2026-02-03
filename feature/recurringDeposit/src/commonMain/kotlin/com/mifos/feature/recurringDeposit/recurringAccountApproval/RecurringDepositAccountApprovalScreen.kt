@@ -133,7 +133,6 @@ internal fun RecurringDepositAccountApprovalScreen(
                     }
 
                     is RecurringDepositAccountApprovalUiState.ShowRecurringDepositAccountApprovedSuccessfully -> {
-
                         Dialog(
                             onDismissRequest = { navigateBack.invoke() },
                             properties = DialogProperties(
