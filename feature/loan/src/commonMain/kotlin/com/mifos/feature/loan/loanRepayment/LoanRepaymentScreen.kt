@@ -571,7 +571,7 @@ private fun ReviewItem(label: String, value: String) {
             .padding(vertical = DesignToken.padding.extraSmall),
         horizontalArrangement = Arrangement.SpaceBetween,
     ) {
-        Text(text = label, style = MaterialTheme.typography.bodyMedium, color = DarkGray)
+        Text(text = label, style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.surfaceVariant)
         Text(text = value, style = MaterialTheme.typography.bodyMedium, fontWeight = FontWeight.SemiBold)
     }
 }
@@ -609,10 +609,10 @@ private fun SuccessBottomSheet(
             Spacer(modifier = Modifier.height(DesignToken.spacing.small))
 
             Text(
-                text = "${stringResource(Res.string.feature_loan_payment_success_transaction_label)} ${response.resourceId}",
+                text = stringResource(Res.string.feature_loan_payment_success_transaction_label, response.resourceId.toString()),
                 style = MaterialTheme.typography.bodyMedium,
                 textAlign = TextAlign.Center,
-                color = DarkGray,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
 
             Spacer(modifier = Modifier.height(DesignToken.spacing.largeMediumIncreased))
