@@ -165,6 +165,7 @@ internal fun RecurringDepositAccountApprovalScreen(
 private fun RecurringDepositAccountApprovalContent(
     approveAccount: (recurringDepositApproval: RecurringDepositApproval) -> Unit,
     modifier: Modifier = Modifier,
+    isLoading: Boolean = false,
 ) {
     val scrollState = rememberScrollState()
     var approvalDate by rememberSaveable {
@@ -250,6 +251,7 @@ private fun RecurringDepositAccountApprovalContent(
             modifier = Modifier
                 .fillMaxWidth()
                 .heightIn(44.dp),
+            enabled = !isLoading,
             onClick = {
                 approveAccount.invoke(
                     RecurringDepositApproval(

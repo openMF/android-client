@@ -221,11 +221,11 @@ internal fun RecurringDepositAccountScaffold(
                                             notAvailableText
                                         },
                                         balance =
-                                            if (recurringDeposit.accountBalance != null) {
-                                                "${recurringDeposit.currency?.displaySymbol ?: ""} ${recurringDeposit.accountBalance}"
-                                            } else {
-                                                notAvailableText
-                                            },
+                                        if (recurringDeposit.accountBalance != null) {
+                                            "${recurringDeposit.currency?.displaySymbol ?: ""} ${recurringDeposit.accountBalance}"
+                                        } else {
+                                            notAvailableText
+                                        },
                                         isExpanded = expandedIndex == index,
                                         onExpandToggle = {
                                             expandedIndex = if (expandedIndex == index) -1 else index
