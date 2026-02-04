@@ -62,6 +62,7 @@ class SearchRecordViewModel(
                         searchQuery = "",
                         searchRecords = emptyList(),
                         isNoResultsFound = false,
+                        dialogState = null,
                     )
                 }
             }
@@ -91,6 +92,7 @@ class SearchRecordViewModel(
                             it.copy(
                                 searchRecords = emptyList(),
                                 isNoResultsFound = false,
+                                dialogState = null,
                             )
                         }
                         searchJob?.cancel()
