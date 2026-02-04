@@ -367,11 +367,31 @@ class ClientDaoHelper(
             .flowOn(ioDispatcher)
     }
 
-    suspend fun insertIdentifiers(identifiers: List<com.mifos.room.entities.client.ClientIdentifierEntity>) {
-        identifiers.map { it.clientId }.distinct().forEach { clientId ->
-            clientDao.deleteIdentifiersByClientId(clientId)
+    suspend fun insertIdentifiers(identifiers: List<ClientIdentifierEntity>) {
+        if (identifiers.isEmpty()) return
+
+        val clientIds = identifiers.map { it.clientId }.distinct()
+
+        val backupIdentifiers = mutableListOf<ClientIdentifierEntity>()
+        clientIds.forEach { clientId ->
+            backupIdentifiers.addAll(clientDao.getIdentifiersByClientId(clientId).first())
         }
-        clientDao.insertIdentifiers(identifiers)
+
+        try {
+            clientIds.forEach { clientId ->
+                clientDao.deleteIdentifiersByClientId(clientId)
+            }
+            clientDao.insertIdentifiers(identifiers)
+        } catch (e: Exception) {
+            if (backupIdentifiers.isNotEmpty()) {
+                try {
+                    clientDao.insertIdentifiers(backupIdentifiers)
+                } catch (restoreException: Exception) {
+                    restoreException.printStackTrace()
+                }
+            }
+            throw e
+        }
     }
 
     companion object {

@@ -26,6 +26,7 @@ import androidclient.feature.search_record.generated.resources.search_record_no_
 import androidclient.feature.search_record.generated.resources.search_record_postal_code
 import androidclient.feature.search_record.generated.resources.search_record_province
 import androidclient.feature.search_record.generated.resources.search_record_search_icon_desc
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -37,6 +38,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -64,6 +66,7 @@ import com.mifos.core.model.objects.searchrecord.GenericSearchRecord
 import com.mifos.core.model.objects.searchrecord.RecordType
 import com.mifos.core.ui.components.MifosActionsIdentifierListingComponent
 import com.mifos.core.ui.components.MifosAddressCard
+import com.mifos.core.ui.components.MifosAlertDialog
 import com.mifos.core.ui.components.MifosProgressIndicator
 import com.mifos.core.ui.util.EventsEffect
 import com.mifos.core.ui.utils.getClientIdentifierStatus
@@ -93,52 +96,76 @@ internal fun SearchRecordScreen(
 
     SearchRecordScreen(
         modifier = modifier,
-        searchQuery = state.searchQuery,
+        state = state,
         searchLabel = searchLabel,
-        uiState = state.uiState,
         onSearchQueryChanged = { viewModel.trySendAction(SearchRecordAction.SearchQueryChanged(it)) },
         onClearSearch = { viewModel.trySendAction(SearchRecordAction.ClearSearch) },
         onBackClick = { viewModel.trySendAction(SearchRecordAction.NavigateBack) },
         onRecordSelected = { viewModel.trySendAction(SearchRecordAction.SelectRecord(it)) },
+        onCloseDialog = { viewModel.trySendAction(SearchRecordAction.CloseDialog) },
     )
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun SearchRecordScreen(
+    state: SearchRecordState,
     modifier: Modifier = Modifier,
-    searchQuery: String = "",
     searchLabel: String = stringResource(Res.string.search_record_generic_searchLabel),
-    uiState: SearchRecordUiState = SearchRecordUiState.Idle,
     onSearchQueryChanged: (String) -> Unit = {},
     onClearSearch: () -> Unit = {},
     onBackClick: () -> Unit = {},
     onRecordSelected: (GenericSearchRecord) -> Unit = {},
+    onCloseDialog: () -> Unit = {},
 ) {
     MifosScaffold(
         title = searchLabel,
         onBackPressed = onBackClick,
     ) { paddingValues ->
-        Column(
+        Box(
             modifier = modifier
                 .fillMaxSize()
                 .padding(paddingValues),
         ) {
-            SearchRecordToolbar(
-                searchQuery = searchQuery,
-                onSearchQueryChanged = onSearchQueryChanged,
-                onClearSearch = onClearSearch,
-            )
-
-            when (uiState) {
-                SearchRecordUiState.Idle -> SearchRecordEmptyState()
-                SearchRecordUiState.Loading -> MifosProgressIndicator()
-                SearchRecordUiState.EmptyQuery -> SearchRecordEmptyState()
-                SearchRecordUiState.NoResults -> SearchRecordNoResultsState(searchQuery)
-                is SearchRecordUiState.Success -> SearchRecordResultsList(
-                    records = uiState.records,
-                    onRecordSelected = onRecordSelected,
+            Column(modifier = Modifier.fillMaxSize()) {
+                SearchRecordToolbar(
+                    searchQuery = state.searchQuery,
+                    onSearchQueryChanged = onSearchQueryChanged,
+                    onClearSearch = onClearSearch,
                 )
-                is SearchRecordUiState.Error -> SearchRecordErrorState(uiState.message)
+
+                when {
+                    state.searchRecords.isNotEmpty() -> {
+                        SearchRecordResultsList(
+                            records = state.searchRecords,
+                            onRecordSelected = onRecordSelected,
+                        )
+                    }
+                    state.isNoResultsFound -> {
+                        SearchRecordNoResultsState(state.searchQuery)
+                    }
+                    else -> {
+                        SearchRecordEmptyState()
+                    }
+                }
+            }
+
+            when (val dialog = state.dialogState) {
+                SearchRecordState.DialogState.Loading -> {
+                    MifosProgressIndicator(
+                        modifier = Modifier.align(Alignment.Center),
+                    )
+                }
+
+                is SearchRecordState.DialogState.Error -> {
+                    MifosAlertDialog(
+                        dialogTitle = stringResource(Res.string.search_record_error),
+                        dialogText = dialog.message,
+                        onDismissRequest = onCloseDialog,
+                        onConfirmation = onCloseDialog,
+                    )
+                }
+                null -> { }
             }
         }
     }
@@ -359,27 +386,6 @@ private fun SearchRecordNoResultsState(query: String) {
             text = stringResource(Res.string.search_record_no_results_description, query),
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
-        )
-    }
-}
-
-@Composable
-private fun SearchRecordErrorState(message: String) {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(32.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-    ) {
-        Text(
-            text = stringResource(Res.string.search_record_error),
-            style = MaterialTheme.typography.headlineSmall,
-        )
-        Spacer(modifier = Modifier.height(8.dp))
-        Text(
-            text = message,
-            style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.error,
         )
     }
 }

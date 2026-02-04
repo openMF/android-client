@@ -59,7 +59,8 @@ class SearchRecordViewModel(
                 mutableStateFlow.update {
                     it.copy(
                         searchQuery = "",
-                        uiState = SearchRecordUiState.Idle,
+                        searchRecords = emptyList(),
+                        isNoResultsFound = false,
                     )
                 }
             }
@@ -71,6 +72,10 @@ class SearchRecordViewModel(
             is SearchRecordAction.SelectRecord -> {
                 sendEvent(SearchRecordEvent.NavigateToRecord(action.record))
             }
+
+            SearchRecordAction.CloseDialog -> {
+                mutableStateFlow.update { it.copy(dialogState = null) }
+            }
         }
     }
 
@@ -81,7 +86,12 @@ class SearchRecordViewModel(
                 .distinctUntilChanged()
                 .collect { query ->
                     if (query.isBlank()) {
-                        mutableStateFlow.update { it.copy(uiState = SearchRecordUiState.EmptyQuery) }
+                        mutableStateFlow.update {
+                            it.copy(
+                                searchRecords = emptyList(),
+                                isNoResultsFound = false,
+                            )
+                        }
                         searchJob?.cancel()
                     } else {
                         searchJob?.cancel()
@@ -95,25 +105,25 @@ class SearchRecordViewModel(
     }
 
     private suspend fun performSearch(query: String) {
-        mutableStateFlow.update { it.copy(uiState = SearchRecordUiState.Loading) }
+        mutableStateFlow.update {
+            it.copy(dialogState = SearchRecordState.DialogState.Loading)
+        }
 
         repository.searchRecords(recordType, query)
             .collect { result ->
                 result.onSuccess { records ->
                     mutableStateFlow.update {
                         it.copy(
-                            uiState = if (records.isEmpty()) {
-                                SearchRecordUiState.NoResults
-                            } else {
-                                SearchRecordUiState.Success(records)
-                            },
+                            dialogState = null,
+                            searchRecords = records,
+                            isNoResultsFound = records.isEmpty(),
                         )
                     }
                 }
                 result.onFailure { exception ->
                     mutableStateFlow.update {
                         it.copy(
-                            uiState = SearchRecordUiState.Error(
+                            dialogState = SearchRecordState.DialogState.Error(
                                 message = exception.message ?: "",
                                 messageRes = Res.string.error_searching_records,
                             ),
@@ -128,12 +138,6 @@ class SearchRecordViewModel(
     }
 }
 
-data class SearchRecordState(
-    val searchQuery: String = "",
-    val displayTitle: String = "",
-    val uiState: SearchRecordUiState = SearchRecordUiState.Idle,
-)
-
 sealed interface SearchRecordEvent {
     data object NavigateBack : SearchRecordEvent
     data class NavigateToRecord(val record: GenericSearchRecord) : SearchRecordEvent
@@ -144,4 +148,5 @@ sealed interface SearchRecordAction {
     data object ClearSearch : SearchRecordAction
     data object NavigateBack : SearchRecordAction
     data class SelectRecord(val record: GenericSearchRecord) : SearchRecordAction
+    data object CloseDialog : SearchRecordAction
 }

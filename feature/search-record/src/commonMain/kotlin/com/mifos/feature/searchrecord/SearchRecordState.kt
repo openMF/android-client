@@ -12,11 +12,15 @@ package com.mifos.feature.searchrecord
 import com.mifos.core.model.objects.searchrecord.GenericSearchRecord
 import org.jetbrains.compose.resources.StringResource
 
-sealed interface SearchRecordUiState {
-    data object Idle : SearchRecordUiState
-    data object Loading : SearchRecordUiState
-    data object EmptyQuery : SearchRecordUiState
-    data object NoResults : SearchRecordUiState
-    data class Success(val records: List<GenericSearchRecord> = emptyList()) : SearchRecordUiState
-    data class Error(val message: String, val messageRes: StringResource? = null) : SearchRecordUiState
+data class SearchRecordState(
+    val searchQuery: String = "",
+    val displayTitle: String = "",
+    val searchRecords: List<GenericSearchRecord> = emptyList(),
+    val dialogState: DialogState? = null,
+    val isNoResultsFound: Boolean = false,
+) {
+    sealed interface DialogState {
+        data object Loading : DialogState
+        data class Error(val message: String, val messageRes: StringResource? = null) : DialogState
+    }
 }

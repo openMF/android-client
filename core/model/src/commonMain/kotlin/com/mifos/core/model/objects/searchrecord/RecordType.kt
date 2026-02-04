@@ -9,6 +9,9 @@
  */
 package com.mifos.core.model.objects.searchrecord
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 enum class RecordType {
     ADDRESS,
     IDENTIFIER,

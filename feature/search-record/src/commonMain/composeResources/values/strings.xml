@@ -17,7 +17,7 @@
     <string name="search_record_identifiers">Identifiers</string>
     <string name="search_record_empty_state">Enter a query to find records</string>
     <string name="search_record_no_results_title">No results found</string>
-    <string name="search_record_no_results_description">Try a different search term for \"%1$s\"</string>
+    <string name="search_record_no_results_description">Try a different search term for "%1$s"</string>
     <string name="search_record_error">Error</string>
     <string name="error_searching_records">An error occurred while searching</string>
     <string name="search_record_address_line_1">Address Line 1</string>
