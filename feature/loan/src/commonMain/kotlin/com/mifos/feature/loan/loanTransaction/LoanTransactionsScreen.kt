@@ -11,14 +11,14 @@ package com.mifos.feature.loan.loanTransaction
 
 import androidclient.feature.loan.generated.resources.Res
 import androidclient.feature.loan.generated.resources.feature_loan_break_down
+import androidclient.feature.loan.generated.resources.feature_loan_export
+import androidclient.feature.loan.generated.resources.feature_loan_hide_accruals
+import androidclient.feature.loan.generated.resources.feature_loan_hide_reversed
 import androidclient.feature.loan.generated.resources.feature_loan_id
 import androidclient.feature.loan.generated.resources.feature_loan_loan_fees
 import androidclient.feature.loan.generated.resources.feature_loan_loan_interest
 import androidclient.feature.loan.generated.resources.feature_loan_loan_penalty
 import androidclient.feature.loan.generated.resources.feature_loan_loan_transactions
-import androidclient.feature.loan.generated.resources.feature_loan_export
-import androidclient.feature.loan.generated.resources.feature_loan_hide_accruals
-import androidclient.feature.loan.generated.resources.feature_loan_hide_reversed
 import androidclient.feature.loan.generated.resources.feature_loan_no_transactions
 import androidclient.feature.loan.generated.resources.feature_loan_office
 import androidclient.feature.loan.generated.resources.feature_loan_principal
