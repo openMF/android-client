@@ -48,6 +48,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AndroidClientTheme"
         android:requestLegacyExternalStorage="true"
+        android:localeConfig="@xml/locale_config">
         >
 
         <activity
@@ -80,6 +81,20 @@
         <property
             android:name="android.adservices.AD_SERVICES_CONFIG"
             tools:node="remove" />
+
+        <!--
+            AppCompat automatically stores app-specific locales for Android 12 and lower.
+            On Android 13+, the system handles locale storage. This service enables
+            backward compatibility by persisting locale preferences in SharedPreferences.
+        -->
+        <service
+            android:name="androidx.appcompat.app.AppLocalesMetadataHolderService"
+            android:enabled="false"
+            android:exported="false">
+            <meta-data
+                android:name="autoStoreLocales"
+                android:value="true" />
+        </service>
     </application>
 
 </manifest>

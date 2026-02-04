@@ -29,6 +29,7 @@
     <string name="feature_client_loan_account">Loan Accounts</string>
     <string name="feature_client_savings_account">Savings Accounts</string>
     <string name="feature_client_accounts">Accounts</string>
+    <string name="feature_client_no_savings_accounts_found">No Savings Accounts found for this client</string>
 
     <string name="feature_client_upload_signature">Upload Signature</string>
     <string name="feature_client_survey">Survey</string>

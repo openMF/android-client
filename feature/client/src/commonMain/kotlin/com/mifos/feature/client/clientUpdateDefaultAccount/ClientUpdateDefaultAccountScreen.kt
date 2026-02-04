@@ -13,6 +13,7 @@ import androidclient.feature.client.generated.resources.Res
 import androidclient.feature.client.generated.resources.btn_back
 import androidclient.feature.client.generated.resources.btn_submit
 import androidclient.feature.client.generated.resources.dialog_continue
+import androidclient.feature.client.generated.resources.feature_client_no_savings_accounts_found
 import androidclient.feature.client.generated.resources.update_default_account_choose
 import androidclient.feature.client.generated.resources.update_default_account_failure_title
 import androidclient.feature.client.generated.resources.update_default_account_success_message
@@ -36,7 +37,6 @@ import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.mifos.core.designsystem.component.MifosOutlinedButton
-import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosTextButton
 import com.mifos.core.designsystem.component.MifosTextFieldDropdown
 import com.mifos.core.designsystem.icon.MifosIcons
@@ -50,7 +50,6 @@ import com.mifos.core.ui.components.ResultStatus
 import com.mifos.core.ui.util.EventsEffect
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
-import kotlin.text.get
 
 @Composable
 internal fun UpdateDefaultAccountScreen(
@@ -69,7 +68,7 @@ internal fun UpdateDefaultAccountScreen(
         }
     }
 
-    UpdateDefaultAccountScaffold(
+    UpdateDefaultAccountContent(
         state = state,
         onAction = remember(viewModel) { { viewModel.trySendAction(it) } },
         modifier = modifier,
@@ -82,94 +81,86 @@ internal fun UpdateDefaultAccountScreen(
 }
 
 @Composable
-private fun UpdateDefaultAccountScaffold(
+private fun UpdateDefaultAccountContent(
     state: UpdateDefaultAccountState,
     navController: NavController,
     onAction: (UpdateDefaultAccountAction) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    MifosScaffold(
-        title = stringResource(Res.string.update_default_account_title),
-        onBackPressed = { onAction(UpdateDefaultAccountAction.NavigateBack) },
-        modifier = modifier,
-    ) { paddingValues ->
-
-        if (state.dialogState != UpdateDefaultAccountState.DialogState.Loading &&
-            state.dialogState !is UpdateDefaultAccountState.DialogState.ShowStatusDialog
+    if (state.dialogState != UpdateDefaultAccountState.DialogState.Loading &&
+        state.dialogState !is UpdateDefaultAccountState.DialogState.ShowStatusDialog
+    ) {
+        Column(
+            modifier = modifier
+                .fillMaxSize(),
         ) {
+            MifosBreadcrumbNavBar(navController)
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(paddingValues),
+                    .padding(horizontal = DesignToken.padding.large),
             ) {
-                MifosBreadcrumbNavBar(navController)
-                Column(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(horizontal = DesignToken.padding.large),
-                ) {
-                    if (state.accounts.isNotEmpty()) {
-                        Text(
-                            text = stringResource(Res.string.update_default_account_title),
-                            style = MifosTypography.labelLargeEmphasized,
-                        )
-                        Spacer(Modifier.height(DesignToken.padding.largeIncreased))
+                if (state.accounts.isNotEmpty()) {
+                    Text(
+                        text = stringResource(Res.string.update_default_account_title),
+                        style = MifosTypography.labelLargeEmphasized,
+                    )
+                    Spacer(Modifier.height(DesignToken.padding.largeIncreased))
 
-                        MifosTextFieldDropdown(
-                            value = state.accounts[state.currentSelectedIndex].accountNo,
-                            onValueChanged = {},
-                            onOptionSelected = { index, _ ->
-                                onAction(UpdateDefaultAccountAction.OptionChanged(index))
+                    MifosTextFieldDropdown(
+                        value = state.accounts[state.currentSelectedIndex].accountNo,
+                        onValueChanged = {},
+                        onOptionSelected = { index, _ ->
+                            onAction(UpdateDefaultAccountAction.OptionChanged(index))
+                        },
+                        options = state.accounts.map { it.accountNo },
+                        label = stringResource(Res.string.update_default_account_choose),
+                        modifier = Modifier.fillMaxWidth(),
+                    )
+
+                    Spacer(Modifier.height(DesignToken.padding.largeIncreased))
+
+                    Row(modifier = Modifier.fillMaxWidth()) {
+                        MifosOutlinedButton(
+                            onClick = { onAction(UpdateDefaultAccountAction.NavigateBack) },
+                            leadingIcon = {
+                                Icon(
+                                    imageVector = MifosIcons.ChevronLeft,
+                                    contentDescription = null,
+                                    modifier = Modifier.size(DesignToken.sizes.iconAverage),
+                                    tint = MaterialTheme.colorScheme.primary,
+                                )
                             },
-                            options = state.accounts.map { it.accountNo },
-                            label = stringResource(Res.string.update_default_account_choose),
-                            modifier = Modifier.fillMaxWidth(),
+                            text = {
+                                Text(
+                                    text = stringResource(Res.string.btn_back),
+                                    color = MaterialTheme.colorScheme.primary,
+                                    style = MifosTypography.labelLarge,
+                                )
+                            },
+                            modifier = Modifier.weight(1f),
                         )
-
-                        Spacer(Modifier.height(DesignToken.padding.largeIncreased))
-
-                        Row(modifier = Modifier.fillMaxWidth()) {
-                            MifosOutlinedButton(
-                                onClick = { onAction(UpdateDefaultAccountAction.NavigateBack) },
-                                leadingIcon = {
-                                    Icon(
-                                        imageVector = MifosIcons.ChevronLeft,
-                                        contentDescription = null,
-                                        modifier = Modifier.size(DesignToken.sizes.iconAverage),
-                                        tint = MaterialTheme.colorScheme.primary,
-                                    )
-                                },
-                                text = {
-                                    Text(
-                                        text = stringResource(Res.string.btn_back),
-                                        color = MaterialTheme.colorScheme.primary,
-                                        style = MifosTypography.labelLarge,
-                                    )
-                                },
-                                modifier = Modifier.weight(1f),
-                            )
-                            Spacer(Modifier.padding(DesignToken.padding.small))
-                            MifosTextButton(
-                                onClick = { onAction(UpdateDefaultAccountAction.OnSave) },
-                                leadingIcon = {
-                                    Icon(
-                                        imageVector = MifosIcons.Check,
-                                        contentDescription = null,
-                                        modifier = Modifier.size(DesignToken.sizes.iconAverage),
-                                    )
-                                },
-                                text = {
-                                    Text(
-                                        text = stringResource(Res.string.btn_submit),
-                                        style = MifosTypography.labelLarge,
-                                    )
-                                },
-                                modifier = Modifier.weight(1f),
-                            )
-                        }
-                    } else {
-                        Text("No Savings Accounts found for this client")
+                        Spacer(Modifier.padding(DesignToken.padding.small))
+                        MifosTextButton(
+                            onClick = { onAction(UpdateDefaultAccountAction.OnSave) },
+                            leadingIcon = {
+                                Icon(
+                                    imageVector = MifosIcons.Check,
+                                    contentDescription = null,
+                                    modifier = Modifier.size(DesignToken.sizes.iconAverage),
+                                )
+                            },
+                            text = {
+                                Text(
+                                    text = stringResource(Res.string.btn_submit),
+                                    style = MifosTypography.labelLarge,
+                                )
+                            },
+                            modifier = Modifier.weight(1f),
+                        )
                     }
+                } else {
+                    Text(stringResource(Res.string.feature_client_no_savings_accounts_found))
                 }
             }
         }
@@ -191,6 +182,7 @@ private fun UpdateDefaultAccountDialogs(
                 onRetry = { onAction(UpdateDefaultAccountAction.OnRetry) },
             )
         }
+
         is UpdateDefaultAccountState.DialogState.ShowStatusDialog -> {
             MifosStatusDialog(
                 status = state.dialogState.status,
@@ -200,6 +192,7 @@ private fun UpdateDefaultAccountDialogs(
                         ResultStatus.SUCCESS -> {
                             onAction(UpdateDefaultAccountAction.OnNext)
                         }
+
                         ResultStatus.FAILURE -> {
                             onAction(UpdateDefaultAccountAction.Dismiss)
                         }
@@ -212,6 +205,7 @@ private fun UpdateDefaultAccountDialogs(
                 modifier = Modifier.fillMaxSize(),
             )
         }
+
         null -> Unit
     }
 }

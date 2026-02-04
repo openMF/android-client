@@ -108,6 +108,8 @@
     <string name="feature_loan_closed">Loan Closed</string>
     <string name="feature_loan_total_loan">Total Loan</string>
 
+    <string name="feature_loan_overpaid">Overpaid</string>
+
     <string name="feature_loan_failed_to_load_loan_repayment">Failed to load loan repayment</string>
     <string name="feature_loan_repayment_make_sure_every_field_has_a_value">Make sure every field has a value</string>
     <string name="feature_loan_additional_payment">Additional Payment</string>

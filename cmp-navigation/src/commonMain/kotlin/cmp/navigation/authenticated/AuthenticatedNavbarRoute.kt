@@ -25,11 +25,13 @@ internal fun NavController.navigateToAuthenticatedNavBar(navOptions: NavOptions?
 internal fun NavGraphBuilder.authenticatedNavbarGraph(
     onDrawerItemClick: (String) -> Unit,
     navigateToDocumentScreen: (Int, String) -> Unit,
+    onMoreInfoClicked: (String, Int) -> Unit,
 ) {
     composable<AuthenticatedNavbar> {
         AuthenticatedNavbarNavigationScreen(
             onDrawerItemClick = onDrawerItemClick,
             navigateToDocumentScreen = navigateToDocumentScreen,
+            onMoreInfoClicked = onMoreInfoClicked,
         )
     }
 }

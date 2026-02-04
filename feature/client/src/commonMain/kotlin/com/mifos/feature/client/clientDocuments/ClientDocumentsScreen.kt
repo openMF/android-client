@@ -17,7 +17,6 @@ import androidclient.feature.client.generated.resources.confirm_text
 import androidclient.feature.client.generated.resources.delete_dialog_title
 import androidclient.feature.client.generated.resources.dismiss_text
 import androidclient.feature.client.generated.resources.document_delete_dialog_message
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -33,7 +32,6 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
@@ -44,9 +42,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.designsystem.theme.MifosTypography
@@ -79,7 +75,7 @@ internal fun ClientDocumentScreen(
         }
     }
 
-    ClientDocumentsScaffold(
+    ClientDocumentsContent(
         navController,
         state,
         onAction = remember(viewModel) { { viewModel.trySendAction(it) } },
@@ -96,6 +92,7 @@ private fun ClientDocumentDialog(
         ClientDocumentsScreenState.DialogState.Loading -> {
             MifosProgressIndicator()
         }
+
         is ClientDocumentsScreenState.DialogState.Error -> {
             MifosErrorComponent(
                 modifier = modifier,
@@ -106,6 +103,7 @@ private fun ClientDocumentDialog(
                 },
             )
         }
+
         is ClientDocumentsScreenState.DialogState.ConfirmDocumentDeletion -> {
             AlertDialog(
                 title = { Text(stringResource(Res.string.delete_dialog_title)) },
@@ -137,131 +135,123 @@ private fun ClientDocumentDialog(
                 onDismissRequest = { onAction(ClientDocumentsActions.CloseDialog) },
             )
         }
+
         null -> {}
     }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun ClientDocumentsScaffold(
+private fun ClientDocumentsContent(
     navController: NavController,
     state: ClientDocumentsScreenState,
     onAction: (ClientDocumentsActions) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    MifosScaffold(
+    Column(
         modifier = modifier
-            .background(MaterialTheme.colorScheme.onPrimary),
-        onBackPressed = {
-            onAction(ClientDocumentsActions.NavigateBack)
-        },
-        title = "",
-    ) { paddingValues ->
-
-        Column(
-            modifier = Modifier
-                .padding(paddingValues)
-                .fillMaxSize(),
+            .fillMaxSize(),
+    ) {
+        MifosBreadcrumbNavBar(navController)
+        PullToRefreshBox(
+            isRefreshing = state.pullDownRefresh,
+            onRefresh = {
+                onAction(ClientDocumentsActions.Refresh)
+            },
         ) {
-            MifosBreadcrumbNavBar(navController)
-            PullToRefreshBox(
-                isRefreshing = state.pullDownRefresh,
-                onRefresh = {
-                    onAction(ClientDocumentsActions.Refresh)
-                },
-            ) {
-                if (state.dialogState != null) {
-                    ClientDocumentDialog(
-                        state,
-                        onAction = onAction,
+            if (state.dialogState != null) {
+                ClientDocumentDialog(
+                    state,
+                    onAction = onAction,
+                )
+            } else {
+                Column(
+                    Modifier.fillMaxSize()
+                        .padding(
+                            horizontal = DesignToken.padding.large,
+                        ),
+                ) {
+                    ClientDocumentsHeader(
+                        totalItem = state.clientDocuments.size.toString(),
+                        onToggleSearch = {
+                            onAction(ClientDocumentsActions.ToggleSearch)
+                        },
+                        onAddDocument = {
+                            onAction(ClientDocumentsActions.AddDocument)
+                        },
                     )
-                } else {
-                    Column(
-                        Modifier.fillMaxSize()
-                            .padding(
-                                horizontal = DesignToken.padding.large,
-                            ),
-                    ) {
-                        ClientDocumentsHeader(
-                            totalItem = state.clientDocuments.size.toString(),
-                            onToggleSearch = {
+
+                    if (state.isSearchBarActive) {
+                        MifosSearchBar(
+                            query = state.searchText,
+                            onQueryChange = {
+                                onAction(ClientDocumentsActions.UpdateSearchQuery(it))
+                            },
+                            onSearchClick = {
+                                onAction(ClientDocumentsActions.SearchDocument)
+                            },
+                            onBackClick = {
                                 onAction(ClientDocumentsActions.ToggleSearch)
                             },
-                            onAddDocument = {
-                                onAction(ClientDocumentsActions.AddDocument)
-                            },
                         )
+                    }
 
-                        if (state.isSearchBarActive) {
-                            MifosSearchBar(
-                                query = state.searchText,
-                                onQueryChange = {
-                                    onAction(ClientDocumentsActions.UpdateSearchQuery(it))
-                                },
-                                onSearchClick = {
-                                    onAction(ClientDocumentsActions.SearchDocument)
-                                },
-                                onBackClick = {
-                                    onAction(ClientDocumentsActions.ToggleSearch)
-                                },
-                            )
+                    Spacer(modifier = Modifier.height(DesignToken.padding.largeIncreasedExtra))
+
+                    if (state.clientDocuments.isEmpty()) {
+                        MifosEmptyCard(msg = stringResource(Res.string.client_identifiers_click_on_plus_button_to_add_an_item))
+                    } else {
+                        var selectedDocumentID by remember {
+                            mutableStateOf(-1)
                         }
-
-                        Spacer(modifier = Modifier.height(DesignToken.padding.largeIncreasedExtra))
-
-                        if (state.clientDocuments.isEmpty()) {
-                            MifosEmptyCard(msg = stringResource(Res.string.client_identifiers_click_on_plus_button_to_add_an_item))
-                        } else {
-                            var selectedDocumentID by remember {
-                                mutableStateOf(-1)
-                            }
-                            var isAlreadyExpanded by remember {
-                                mutableStateOf(false)
-                            }
-                            LazyColumn {
-                                items(state.clientDocuments) { clientDocument ->
-                                    MifosActionsClientDocumentListingComponent(
-                                        documentName = clientDocument.name ?: "",
-                                        documentDescription = clientDocument.description ?: "",
-                                        fileName = clientDocument.fileName ?: "",
-                                        isExpanded = (selectedDocumentID == clientDocument.id) &&
-                                            isAlreadyExpanded,
-                                        onClick = {
-                                            if (selectedDocumentID == clientDocument.id) {
-                                                isAlreadyExpanded = false
-                                                selectedDocumentID = -1
-                                            } else {
-                                                selectedDocumentID = clientDocument.id
-                                                isAlreadyExpanded = true
-                                            }
-                                        },
-                                        menuList = listOf(
-                                            Actions.ViewDocument(),
-                                            Actions.DeleteDocument(),
-                                        ),
-                                    ) { actions ->
-                                        when (actions) {
-                                            is Actions.DeleteDocument -> {
-                                                onAction(
-                                                    ClientDocumentsActions.DeleteDocument(
-                                                        documentName = clientDocument.fileName ?: "",
-                                                        documentId = clientDocument.id,
-                                                    ),
-                                                )
-                                            }
-                                            is Actions.ViewDocument -> {
-                                                onAction(
-                                                    ClientDocumentsActions.ViewDocument(
-                                                        documentId = clientDocument.id,
-                                                    ),
-                                                )
-                                            }
-                                            else -> null
+                        var isAlreadyExpanded by remember {
+                            mutableStateOf(false)
+                        }
+                        LazyColumn {
+                            items(state.clientDocuments) { clientDocument ->
+                                MifosActionsClientDocumentListingComponent(
+                                    documentName = clientDocument.name ?: "",
+                                    documentDescription = clientDocument.description ?: "",
+                                    fileName = clientDocument.fileName ?: "",
+                                    isExpanded = (selectedDocumentID == clientDocument.id) &&
+                                        isAlreadyExpanded,
+                                    onClick = {
+                                        if (selectedDocumentID == clientDocument.id) {
+                                            isAlreadyExpanded = false
+                                            selectedDocumentID = -1
+                                        } else {
+                                            selectedDocumentID = clientDocument.id
+                                            isAlreadyExpanded = true
                                         }
-                                    }
+                                    },
+                                    menuList = listOf(
+                                        Actions.ViewDocument(),
+                                        Actions.DeleteDocument(),
+                                    ),
+                                ) { actions ->
+                                    when (actions) {
+                                        is Actions.DeleteDocument -> {
+                                            onAction(
+                                                ClientDocumentsActions.DeleteDocument(
+                                                    documentName = clientDocument.fileName ?: "",
+                                                    documentId = clientDocument.id,
+                                                ),
+                                            )
+                                        }
 
-                                    Spacer(modifier = Modifier.height(DesignToken.spacing.small))
+                                        is Actions.ViewDocument -> {
+                                            onAction(
+                                                ClientDocumentsActions.ViewDocument(
+                                                    documentId = clientDocument.id,
+                                                ),
+                                            )
+                                        }
+
+                                        else -> null
+                                    }
                                 }
+
+                                Spacer(modifier = Modifier.height(DesignToken.spacing.small))
                             }
                         }
                     }
