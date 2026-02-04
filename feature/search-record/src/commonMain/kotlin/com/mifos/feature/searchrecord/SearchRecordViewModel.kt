@@ -25,6 +25,7 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import org.jetbrains.compose.resources.StringResource
 
 class SearchRecordViewModel(
     savedStateHandle: SavedStateHandle,
@@ -135,6 +136,19 @@ class SearchRecordViewModel(
 
     companion object {
         private const val SEARCH_DEBOUNCE_DELAY_MS = 300L
+    }
+}
+
+data class SearchRecordState(
+    val searchQuery: String = "",
+    val displayTitle: String = "",
+    val searchRecords: List<GenericSearchRecord> = emptyList(),
+    val dialogState: DialogState? = null,
+    val isNoResultsFound: Boolean = false,
+) {
+    sealed interface DialogState {
+        data object Loading : DialogState
+        data class Error(val message: String, val messageRes: StringResource? = null) : DialogState
     }
 }
 
