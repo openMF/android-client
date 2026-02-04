@@ -27,6 +27,7 @@ import com.mifos.room.entities.accounts.savings.SavingAccountCurrencyEntity
 import com.mifos.room.entities.accounts.savings.SavingAccountDepositTypeEntity
 import com.mifos.room.entities.accounts.savings.SavingsAccountEntity
 import com.mifos.room.entities.accounts.savings.SavingsAccountStatusEntity
+import kotlin.math.max
 
 /**
  * Created by Aditya Gupta on 30/08/23.
@@ -104,10 +105,18 @@ object GetClientsClientIdAccountMapper :
                         LoanTypeEntity(
                             id = loanType.id?.toInt(),
                             code = loanType.code,
-                            value = loanType.description,
+                            value = loanType.value,
                         )
                     },
                     loanCycle = it.loanCycle,
+                    originalLoan = it.originalLoan,
+                    loanBalance = it.loanBalance,
+                    amountPaid = if (it.originalLoan != null) {
+                        val calculated = it.originalLoan - (it.loanBalance ?: 0.0)
+                        max(0.0, calculated)
+                    } else {
+                        null
+                    },
                 )
             } ?: emptyList(),
 
@@ -191,9 +200,12 @@ object GetClientsClientIdAccountMapper :
                     loanType = GetClientsLoanAccountsType(
                         id = it.loanType?.id?.toLong(),
                         code = it.loanType?.code,
-                        description = it.loanType?.value,
+                        value = it.loanType?.value,
                     ),
                     loanCycle = it.loanCycle,
+                    loanBalance = it.loanBalance,
+                    originalLoan = it.originalLoan,
+                    amountPaid = it.amountPaid,
                 )
             }.toSet(),
         )
