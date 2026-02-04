@@ -160,9 +160,10 @@ private fun LoanTransactionsContent(
     val filteredTransactions = remember(transactions, hideReversed, hideAccruals) {
         transactions.filter { transaction ->
             val typeValue = transaction.type?.value ?: ""
+            val isAccrual = transaction.type?.accrual == true
             when {
                 hideReversed && typeValue.contains("Reversed", ignoreCase = true) -> false
-                hideAccruals && typeValue.contains("Accrual", ignoreCase = true) -> false
+                hideAccruals && isAccrual -> false
                 else -> true
             }
         }
