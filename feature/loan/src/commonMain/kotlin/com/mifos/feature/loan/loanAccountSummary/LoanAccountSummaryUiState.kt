@@ -21,6 +21,15 @@ data class LoanAccountSummaryState(
         data class Error(val message: String) : DialogState
     }
 }
+
+enum class LoanPrimaryAction {
+    MAKE_REPAYMENT,
+    APPROVE_LOAN,
+    DISBURSE_LOAN,
+    OVERPAID,
+    CLOSED
+}
+
 sealed interface LoanAccountSummaryEvent {
     data object NavigateBack : LoanAccountSummaryEvent
     data class NavigateToMoreInfo(val loanId: Int) : LoanAccountSummaryEvent

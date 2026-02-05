@@ -254,29 +254,40 @@ internal fun LoanAccountSummaryScreen(
                     .fillMaxWidth()
                     .weight(1f),
             ) {
-                when (state.dialogState) {
-                    is LoanAccountSummaryState.DialogState.Error -> {
-                        MifosSweetError(
-                            message = state.dialogState.message,
-                            onclick = { onAction(LoanAccountSummaryAction.OnRetry) },
-                        )
-                    }
-
-                    LoanAccountSummaryState.DialogState.Loading -> {
-                        MifosProgressIndicator()
-                    }
-
-                    null -> {
-                        state.loanWithAssociations?.let { loanWithAssociations ->
-                            LoanAccountSummaryContent(
-                                loanWithAssociations = loanWithAssociations,
-                                onAction = onAction,
-                                snackbarHostState = snackbarHostState,
-                            )
-                        }
-                    }
+                state.loanWithAssociations?.let { loanWithAssociations ->
+                    LoanAccountSummaryContent(
+                        loanWithAssociations = loanWithAssociations,
+                        onAction = onAction,
+                        snackbarHostState = snackbarHostState,
+                    )
                 }
+
+                DialogStateHandler(
+                    dialogState = state.dialogState,
+                    onRetry = { onAction(LoanAccountSummaryAction.OnRetry) },
+                )
             }
+        }
+    }
+}
+
+@Composable
+private fun DialogStateHandler(
+    dialogState: LoanAccountSummaryState.DialogState?,
+    onRetry: () -> Unit,
+) {
+    when (dialogState) {
+        is LoanAccountSummaryState.DialogState.Error -> {
+            MifosSweetError(
+                message = dialogState.message,
+                onclick = onRetry,
+            )
+        }
+        LoanAccountSummaryState.DialogState.Loading -> {
+            MifosProgressIndicator()
+        }
+        null -> {
+            // Content is displayed, no dialog state
         }
     }
 }
@@ -286,8 +297,9 @@ private fun LoanAccountSummaryContent(
     loanWithAssociations: LoanWithAssociationsEntity,
     onAction: (LoanAccountSummaryAction) -> Unit,
     snackbarHostState: SnackbarHostState,
+    viewModel: LoanAccountSummaryViewModel = koinViewModel(),
 ) {
-    val inflateLoanSummary = getInflateLoanSummaryValue(status = loanWithAssociations.status)
+    val inflateLoanSummary = viewModel.getInflateLoanSummaryValue(status = loanWithAssociations.status)
     val summary = if (inflateLoanSummary) loanWithAssociations.summary else null
     val scrollState = rememberScrollState()
     val scope = rememberCoroutineScope()
@@ -295,29 +307,23 @@ private fun LoanAccountSummaryContent(
     val message = stringResource(Res.string.feature_loan_loan_rejected_message)
 
     fun formatCurrency(amount: Double?): String {
-        if (amount == null) return ""
-        val currencyCode = loanWithAssociations.currency.code
-        if (currencyCode.isNullOrBlank()) return amount.toString()
-
-        return CurrencyFormatter.format(
-            balance = amount,
-            currencyCode = currencyCode,
-            maximumFractionDigits = loanWithAssociations.currency.decimalPlaces,
+        return viewModel.formatCurrency(
+            amount = amount,
+            currencyCode = loanWithAssociations.currency.code,
+            decimalPlaces = loanWithAssociations.currency.decimalPlaces,
         )
     }
 
-    fun getActualDisbursementDateInStringFormat(): String {
-        try {
-            return loanWithAssociations.timeline.actualDisbursementDate?.let {
-                DateHelper.getDateAsString(it as List<Int>)
-            } ?: ""
+    var actualDisbursementDate by remember { mutableStateOf("") }
+
+    LaunchedEffect(loanWithAssociations.timeline.actualDisbursementDate) {
+        actualDisbursementDate = try {
+            viewModel.getActualDisbursementDateInStringFormat(
+                loanWithAssociations.timeline.actualDisbursementDate
+            )
         } catch (exception: IndexOutOfBoundsException) {
-            scope.launch {
-                snackbarHostState.showSnackbar(
-                    message = message,
-                )
-            }
-            return ""
+            snackbarHostState.showSnackbar(message = message)
+            ""
         }
     }
 
@@ -475,7 +481,7 @@ private fun LoanAccountSummaryContent(
                     )
                     LoanSummaryFarApartTextItem(
                         title = stringResource(Res.string.feature_loan_disbursed_date),
-                        value = if (inflateLoanSummary) getActualDisbursementDateInStringFormat() else "",
+                        value = if (inflateLoanSummary) actualDisbursementDate else "",
                     )
                 }
 
@@ -518,10 +524,28 @@ private fun LoanAccountSummaryContent(
             inflateLoanSummary = inflateLoanSummary,
             currencyCode = loanWithAssociations.currency.code,
             decimalPlaces = loanWithAssociations.currency.decimalPlaces,
+            viewModel = viewModel,
         )
 
+
+        val makeRepaymentText = stringResource(Res.string.feature_loan_make_Repayment)
+        val approveLoanText = stringResource(Res.string.feature_loan_approve_loan)
+        val disburseLoanText = stringResource(Res.string.feature_loan_disburse_loan)
+        val overpaidText = stringResource(Res.string.feature_loan_overpaid)
+        val closedText = stringResource(Res.string.feature_loan_closed)
+
+        val buttonText = remember(loanWithAssociations.status) {
+            when (viewModel.getPrimaryAction(loanWithAssociations.status)) {
+                LoanPrimaryAction.MAKE_REPAYMENT -> makeRepaymentText
+                LoanPrimaryAction.APPROVE_LOAN -> approveLoanText
+                LoanPrimaryAction.DISBURSE_LOAN -> disburseLoanText
+                LoanPrimaryAction.OVERPAID -> overpaidText
+                LoanPrimaryAction.CLOSED -> closedText
+            }
+        }
+
         Button(
-            enabled = getButtonActiveStatus(loanWithAssociations.status),
+            enabled = viewModel.getButtonActiveStatus(loanWithAssociations.status),
             modifier = Modifier
                 .fillMaxWidth()
                 .height(DesignToken.sizes.buttonHeightMedium),
@@ -551,7 +575,7 @@ private fun LoanAccountSummaryContent(
         ) {
             Text(
                 color = MaterialTheme.colorScheme.background,
-                text = getButtonText(loanWithAssociations.status),
+                text = buttonText,
             )
         }
         Spacer(modifier = Modifier.height(DesignToken.spacing.medium))
@@ -564,18 +588,16 @@ private fun LoanSummaryDataTable(
     inflateLoanSummary: Boolean,
     currencyCode: String?,
     decimalPlaces: Int?,
+    viewModel: LoanAccountSummaryViewModel = koinViewModel(),
 ) {
     // dataTable should be empty if [inflateLoanSummary] is false
     val summary = if (inflateLoanSummary) loanSummary else null
 
     fun formatAmount(amount: Double?): String {
-        if (amount == null) return ""
-        if (currencyCode.isNullOrBlank()) return amount.toString()
-
-        return CurrencyFormatter.format(
-            balance = amount,
+        return viewModel.formatAmount(
+            amount = amount,
             currencyCode = currencyCode,
-            maximumFractionDigits = decimalPlaces,
+            decimalPlaces = decimalPlaces,
         )
     }
 
@@ -739,58 +761,7 @@ private fun DataTableRow(
     }
 }
 
-@Composable
-fun getButtonText(status: LoanStatusEntity): String {
-    return when {
-        status.active == true || status.closedObligationsMet == true -> {
-            stringResource(Res.string.feature_loan_make_Repayment)
-        }
 
-        status.pendingApproval == true -> {
-            stringResource(Res.string.feature_loan_approve_loan)
-        }
-
-        status.waitingForDisbursal == true -> {
-            stringResource(Res.string.feature_loan_disburse_loan)
-        }
-
-        status.overpaid == true -> {
-            stringResource(Res.string.feature_loan_overpaid)
-        }
-
-        else -> {
-            stringResource(Res.string.feature_loan_closed)
-        }
-    }
-}
-
-private fun getButtonActiveStatus(status: LoanStatusEntity): Boolean {
-    return when {
-        status.active == true || status.pendingApproval == true || status.waitingForDisbursal == true -> {
-            true
-        }
-
-        else -> {
-            false
-        }
-    }
-}
-
-private fun getInflateLoanSummaryValue(status: LoanStatusEntity): Boolean {
-    return when {
-        status.active == true || status.closedObligationsMet == true -> {
-            true
-        }
-
-        status.pendingApproval == true || status.waitingForDisbursal == true -> {
-            false
-        }
-
-        else -> {
-            true
-        }
-    }
-}
 
 private class LoanAccountSummaryPreviewProvider :
     PreviewParameterProvider<LoanAccountSummaryState> {

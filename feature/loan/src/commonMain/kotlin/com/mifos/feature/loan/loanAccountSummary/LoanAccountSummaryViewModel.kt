@@ -17,7 +17,6 @@ import androidx.navigation.toRoute
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.repository.LoanAccountSummaryRepository
 import com.mifos.core.ui.util.BaseViewModel
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.getString
@@ -30,7 +29,6 @@ internal class LoanAccountSummaryViewModel(
 ) {
     private val loanAccountNumber =
         savedStateHandle.toRoute<LoanAccountSummaryScreenRoute>().loanAccountNumber
-    private var loadJob: Job? = null
 
     init {
         loadLoanById()
@@ -79,8 +77,7 @@ internal class LoanAccountSummaryViewModel(
     }
 
     private fun loadLoanById() {
-        loadJob?.cancel()
-        loadJob = viewModelScope.launch {
+        viewModelScope.launch {
             mutableStateFlow.update { it.copy(dialogState = LoanAccountSummaryState.DialogState.Loading) }
 
             repository.getLoanById(loanAccountNumber).collect { dataState ->
@@ -106,6 +103,87 @@ internal class LoanAccountSummaryViewModel(
                     }
                 }
             }
+        }
+    }
+
+    fun getPrimaryAction(status: com.mifos.room.entities.accounts.loans.LoanStatusEntity): LoanPrimaryAction {
+        return when {
+            status.active == true -> LoanPrimaryAction.MAKE_REPAYMENT
+            status.closedObligationsMet == true -> LoanPrimaryAction.MAKE_REPAYMENT
+            status.pendingApproval == true -> LoanPrimaryAction.APPROVE_LOAN
+            status.waitingForDisbursal == true -> LoanPrimaryAction.DISBURSE_LOAN
+            status.overpaid == true -> LoanPrimaryAction.OVERPAID
+            else -> LoanPrimaryAction.CLOSED
+        }
+    }
+
+    fun getButtonActiveStatus(status: com.mifos.room.entities.accounts.loans.LoanStatusEntity): Boolean {
+        return when {
+            status.active == true || status.pendingApproval == true || status.waitingForDisbursal == true -> {
+                true
+            }
+
+            else -> {
+                false
+            }
+        }
+    }
+
+    fun getInflateLoanSummaryValue(status: com.mifos.room.entities.accounts.loans.LoanStatusEntity): Boolean {
+        return when {
+            status.active == true || status.closedObligationsMet == true -> {
+                true
+            }
+
+            status.pendingApproval == true || status.waitingForDisbursal == true -> {
+                false
+            }
+
+            else -> {
+                true
+            }
+        }
+    }
+
+    fun formatCurrency(
+        amount: Double?,
+        currencyCode: String?,
+        decimalPlaces: Int?,
+    ): String {
+        if (amount == null) return ""
+        if (currencyCode.isNullOrBlank()) return amount.toString()
+
+        return com.mifos.core.common.utils.CurrencyFormatter.format(
+            balance = amount,
+            currencyCode = currencyCode,
+            maximumFractionDigits = decimalPlaces,
+        )
+    }
+
+    fun formatAmount(
+        amount: Double?,
+        currencyCode: String?,
+        decimalPlaces: Int?,
+    ): String {
+        if (amount == null) return ""
+        if (currencyCode.isNullOrBlank()) return amount.toString()
+
+        return com.mifos.core.common.utils.CurrencyFormatter.format(
+            balance = amount,
+            currencyCode = currencyCode,
+            maximumFractionDigits = decimalPlaces,
+        )
+    }
+
+    suspend fun getActualDisbursementDateInStringFormat(
+        actualDisbursementDate: Any?,
+    ): String {
+        return try {
+            actualDisbursementDate?.let {
+                com.mifos.core.common.utils.DateHelper.getDateAsString(it as List<Int>)
+            } ?: ""
+        } catch (exception: IndexOutOfBoundsException) {
+            ""
         }
     }
 }
