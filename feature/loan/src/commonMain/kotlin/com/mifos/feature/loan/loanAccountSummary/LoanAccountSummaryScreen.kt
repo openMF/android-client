@@ -256,6 +256,7 @@ internal fun LoanAccountSummaryScreen(
                         loanWithAssociations = loanWithAssociations,
                         onAction = onAction,
                         snackbarHostState = snackbarHostState,
+                        viewModel = viewModel,
                     )
                 }
 
@@ -294,7 +295,7 @@ private fun LoanAccountSummaryContent(
     loanWithAssociations: LoanWithAssociationsEntity,
     onAction: (LoanAccountSummaryAction) -> Unit,
     snackbarHostState: SnackbarHostState,
-    viewModel: LoanAccountSummaryViewModel = koinViewModel(),
+    viewModel: LoanAccountSummaryViewModel,
 ) {
     val inflateLoanSummary = viewModel.getInflateLoanSummaryValue(status = loanWithAssociations.status)
     val summary = if (inflateLoanSummary) loanWithAssociations.summary else null
@@ -584,7 +585,7 @@ private fun LoanSummaryDataTable(
     inflateLoanSummary: Boolean,
     currencyCode: String?,
     decimalPlaces: Int?,
-    viewModel: LoanAccountSummaryViewModel = koinViewModel(),
+    viewModel: LoanAccountSummaryViewModel,
 ) {
     // dataTable should be empty if [inflateLoanSummary] is false
     val summary = if (inflateLoanSummary) loanSummary else null

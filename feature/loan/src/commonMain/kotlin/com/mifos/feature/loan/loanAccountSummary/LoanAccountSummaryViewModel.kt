@@ -179,10 +179,14 @@ internal class LoanAccountSummaryViewModel(
         actualDisbursementDate: Any?,
     ): String {
         return try {
-            actualDisbursementDate?.let {
-                com.mifos.core.common.utils.DateHelper.getDateAsString(it as List<Int>)
+            (actualDisbursementDate as? List<*>)?.filterIsInstance<Int>()?.let { dateList ->
+                if (dateList.size >= 3) {
+                    com.mifos.core.common.utils.DateHelper.getDateAsString(dateList)
+                } else {
+                    ""
+                }
             } ?: ""
-        } catch (exception: IndexOutOfBoundsException) {
+        } catch (exception: Exception) {
             ""
         }
     }
