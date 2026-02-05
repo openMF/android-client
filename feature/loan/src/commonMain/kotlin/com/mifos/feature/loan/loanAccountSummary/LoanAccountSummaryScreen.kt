@@ -89,6 +89,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import co.touchlab.kermit.Logger
 import com.mifos.core.common.utils.Constants
+import com.mifos.core.common.utils.DateHelper
 import com.mifos.core.designsystem.component.MifosCard
 import com.mifos.core.designsystem.component.MifosMenuDropDownItem
 import com.mifos.core.designsystem.component.MifosScaffold
@@ -261,6 +262,7 @@ internal fun LoanAccountSummaryScreen(
 
                 DialogStateHandler(
                     dialogState = state.dialogState,
+                    loanWithAssociations = state.loanWithAssociations,
                     onRetry = { onAction(LoanAccountSummaryAction.OnRetry) },
                 )
             }
@@ -271,6 +273,7 @@ internal fun LoanAccountSummaryScreen(
 @Composable
 private fun DialogStateHandler(
     dialogState: LoanAccountSummaryState.DialogState?,
+    loanWithAssociations: LoanWithAssociationsEntity?,
     onRetry: () -> Unit,
 ) {
     when (dialogState) {
@@ -284,7 +287,9 @@ private fun DialogStateHandler(
             MifosProgressIndicator()
         }
         null -> {
-            // Content is displayed, no dialog state
+            if (loanWithAssociations == null){
+                MifosProgressIndicator()
+            }
         }
     }
 }
@@ -318,7 +323,7 @@ private fun LoanAccountSummaryContent(
 
     LaunchedEffect(loanWithAssociations.timeline.actualDisbursementDate) {
         actualDisbursementDate = LoanFormatUtils.formatActualDisbursementDate(
-            loanWithAssociations.timeline.actualDisbursementDate
+            loanWithAssociations.timeline.actualDisbursementDate,
         )
     }
 
@@ -527,14 +532,12 @@ private fun LoanAccountSummaryContent(
         val overpaidText = stringResource(Res.string.feature_loan_overpaid)
         val closedText = stringResource(Res.string.feature_loan_closed)
 
-        val buttonText = remember(loanWithAssociations.status) {
-            when (loanWithAssociations.status.getPrimaryAction()) {
-                LoanPrimaryAction.MAKE_REPAYMENT -> makeRepaymentText
-                LoanPrimaryAction.APPROVE_LOAN -> approveLoanText
-                LoanPrimaryAction.DISBURSE_LOAN -> disburseLoanText
-                LoanPrimaryAction.OVERPAID -> overpaidText
-                LoanPrimaryAction.CLOSED -> closedText
-            }
+        val buttonText = when (loanWithAssociations.status.getPrimaryAction()) {
+            LoanPrimaryAction.MAKE_REPAYMENT -> makeRepaymentText
+            LoanPrimaryAction.APPROVE_LOAN -> approveLoanText
+            LoanPrimaryAction.DISBURSE_LOAN -> disburseLoanText
+            LoanPrimaryAction.OVERPAID -> overpaidText
+            LoanPrimaryAction.CLOSED -> closedText
         }
 
         Button(
@@ -756,6 +759,54 @@ private fun DataTableRow(
     }
 }
 
+/**
+ * Extension function to determine if loan summary data should be displayed.
+ * Returns true for active, closed (obligations met), or overpaid loans.
+ */
+private fun LoanStatusEntity.shouldInflateLoanSummary(): Boolean {
+    return active == true || closedObligationsMet == true || overpaid == true
+}
+
+/**
+ * Extension function to determine the primary action button for a loan based on its status.
+ */
+private fun LoanStatusEntity.getPrimaryAction(): LoanPrimaryAction {
+    return when {
+        active == true -> LoanPrimaryAction.MAKE_REPAYMENT
+        pendingApproval == true -> LoanPrimaryAction.APPROVE_LOAN
+        waitingForDisbursal == true -> LoanPrimaryAction.DISBURSE_LOAN
+        overpaid == true -> LoanPrimaryAction.OVERPAID
+        closedObligationsMet == true -> LoanPrimaryAction.CLOSED
+        else -> LoanPrimaryAction.CLOSED
+    }
+}
+
+/**
+ * Extension function to determine if the primary action button should be enabled.
+ */
+private fun LoanStatusEntity.isButtonActive(): Boolean {
+    return active == true || pendingApproval == true || waitingForDisbursal == true
+}
+
+/**
+ * Utility object for loan-related formatting operations.
+ */
+private object LoanFormatUtils {
+    /**
+     * Formats the actual disbursement date from a list of integers to a readable string.
+     * @param date List of nullable integers representing [year, month, day]
+     * @return Formatted date string or empty string if date is null/empty
+     */
+    fun formatActualDisbursementDate(date: List<Int?>?): String {
+        return if (date != null && date.isNotEmpty() && date.all { it != null }) {
+            @Suppress("UNCHECKED_CAST")
+            DateHelper.getDateAsString(date as List<Int>)
+        } else {
+            ""
+        }
+    }
+}
+
 private class LoanAccountSummaryPreviewProvider :
     PreviewParameterProvider<LoanAccountSummaryState> {
     private val demoSummary = LoansAccountSummaryEntity(
@@ -817,18 +868,17 @@ private class LoanAccountSummaryPreviewProvider :
         )
 }
 
-
- @Composable
- @Preview
- private fun PreviewLoanAccountSummary(
-     @PreviewParameter(LoanAccountSummaryPreviewProvider::class) state: LoanAccountSummaryState,
- ) {
-     MifosTheme {
-         LoanAccountSummaryScreen(
-             state = state,
-             onAction = { },
-             navController = rememberNavController(),
-             snackbarHostState = remember { SnackbarHostState() },
-         )
-     }
- }
+@Composable
+@Preview
+private fun PreviewLoanAccountSummary(
+    @PreviewParameter(LoanAccountSummaryPreviewProvider::class) state: LoanAccountSummaryState,
+) {
+    MifosTheme {
+        LoanAccountSummaryScreen(
+            state = state,
+            onAction = { },
+            navController = rememberNavController(),
+            snackbarHostState = remember { SnackbarHostState() },
+        )
+    }
+}
