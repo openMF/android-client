@@ -293,6 +293,7 @@
     <string name="field_empty">This field cannot be empty</string>
 
     <!-- Loan Transactions Filters -->
+    <string name="feature_loan_filters">Filters</string>
     <string name="feature_loan_hide_reversed">Hide Reversed</string>
     <string name="feature_loan_hide_accruals">Hide Accruals</string>
     <string name="feature_loan_export">Export</string>

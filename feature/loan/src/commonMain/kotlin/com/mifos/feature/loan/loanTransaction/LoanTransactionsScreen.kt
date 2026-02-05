@@ -12,6 +12,7 @@ package com.mifos.feature.loan.loanTransaction
 import androidclient.feature.loan.generated.resources.Res
 import androidclient.feature.loan.generated.resources.feature_loan_break_down
 import androidclient.feature.loan.generated.resources.feature_loan_export
+import androidclient.feature.loan.generated.resources.feature_loan_filters
 import androidclient.feature.loan.generated.resources.feature_loan_hide_accruals
 import androidclient.feature.loan.generated.resources.feature_loan_hide_reversed
 import androidclient.feature.loan.generated.resources.feature_loan_id
@@ -22,6 +23,7 @@ import androidclient.feature.loan.generated.resources.feature_loan_loan_transact
 import androidclient.feature.loan.generated.resources.feature_loan_no_transactions
 import androidclient.feature.loan.generated.resources.feature_loan_office
 import androidclient.feature.loan.generated.resources.feature_loan_principal
+import androidclient.feature.loan.generated.resources.filter
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.fadeIn
@@ -38,22 +40,29 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -65,11 +74,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewModelScope
 import com.mifos.core.common.utils.DateHelper
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
-import com.mifos.core.designsystem.component.MifosTextButton
 import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.model.objects.account.loan.Transaction
@@ -78,48 +85,89 @@ import com.mifos.core.ui.components.MifosCheckBox
 import com.mifos.core.ui.components.MifosEmptyUi
 import com.mifos.core.ui.components.MifosProgressIndicator
 import com.mifos.room.entities.accounts.loans.LoanWithAssociationsEntity
-import kotlinx.coroutines.launch
+import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameterProvider
 import org.koin.compose.viewmodel.koinViewModel
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun LoanTransactionsScreen(
     navigateBack: () -> Unit,
     viewModel: LoanTransactionsViewModel = koinViewModel(),
 ) {
     val uiState by viewModel.loanTransactionsUiState.collectAsStateWithLifecycle()
+    val hideReversed by viewModel.hideReversed.collectAsStateWithLifecycle()
+    val hideAccruals by viewModel.hideAccruals.collectAsStateWithLifecycle()
+    var showFilterBottomSheet by rememberSaveable { mutableStateOf(false) }
 
     LaunchedEffect(key1 = Unit) {
-        viewModel.loadLoanTransaction()
+        viewModel.refresh()
     }
 
     LoanTransactionsScreen(
         uiState = uiState,
+        hideReversed = hideReversed,
+        hideAccruals = hideAccruals,
+        showFilterBottomSheet = showFilterBottomSheet,
+        onShowFilterBottomSheet = { showFilterBottomSheet = true },
+        onDismissFilterBottomSheet = { showFilterBottomSheet = false },
+        onHideReversedChange = { viewModel.setHideReversed(it) },
+        onHideAccrualsChange = { viewModel.setHideAccruals(it) },
+        onExportClick = { /* UI-only, no logic */ },
         navigateBack = navigateBack,
-        onRetry = {
-            viewModel.viewModelScope.launch {
-                viewModel.loadLoanTransaction()
-            }
-        },
+        onRetry = viewModel::refresh,
     )
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun LoanTransactionsScreen(
     uiState: LoanTransactionsUiState,
+    hideReversed: Boolean,
+    hideAccruals: Boolean,
+    showFilterBottomSheet: Boolean,
+    onShowFilterBottomSheet: () -> Unit,
+    onDismissFilterBottomSheet: () -> Unit,
+    onHideReversedChange: (Boolean) -> Unit,
+    onHideAccrualsChange: (Boolean) -> Unit,
+    onExportClick: () -> Unit,
     navigateBack: () -> Unit,
     onRetry: () -> Unit,
 ) {
-    val snackbarHostState = remember {
-        SnackbarHostState()
-    }
+    val snackbarHostState = remember { SnackbarHostState() }
+    val isFilterApplied = hideReversed || hideAccruals
+
     MifosScaffold(
         snackbarHostState = snackbarHostState,
         title = stringResource(Res.string.feature_loan_loan_transactions),
         onBackPressed = navigateBack,
+        actions = {
+            IconButton(onClick = onShowFilterBottomSheet) {
+                Icon(
+                    painter = painterResource(Res.drawable.filter),
+                    contentDescription = stringResource(Res.string.feature_loan_filters),
+                    tint = if (isFilterApplied) {
+                        MaterialTheme.colorScheme.primary
+                    } else {
+                        MaterialTheme.colorScheme.onSurface
+                    },
+                    modifier = Modifier
+                        .size(24.dp)
+                        .offset(y = 1.dp),
+                )
+            }
+            IconButton(onClick = onExportClick) {
+                Icon(
+                    imageVector = MifosIcons.Share,
+                    contentDescription = stringResource(Res.string.feature_loan_export),
+                    tint = MaterialTheme.colorScheme.onSurface,
+                    modifier = Modifier.size(24.dp),
+                )
+            }
+        },
     ) {
         Box(
             modifier = Modifier
@@ -138,7 +186,11 @@ internal fun LoanTransactionsScreen(
                     if (uiState.loanWithAssociations.transactions.isEmpty()) {
                         MifosEmptyUi(text = stringResource(Res.string.feature_loan_no_transactions))
                     } else {
-                        LoanTransactionsContent(uiState.loanWithAssociations.transactions)
+                        LoanTransactionsContent(
+                            transactions = uiState.loanWithAssociations.transactions,
+                            hideReversed = hideReversed,
+                            hideAccruals = hideAccruals,
+                        )
                     }
                 }
 
@@ -148,85 +200,103 @@ internal fun LoanTransactionsScreen(
             }
         }
     }
+
+    FilterBottomSheet(
+        showFilterBottomSheet = showFilterBottomSheet,
+        hideReversed = hideReversed,
+        hideAccruals = hideAccruals,
+        onHideReversedChange = onHideReversedChange,
+        onHideAccrualsChange = onHideAccrualsChange,
+        onDismiss = onDismissFilterBottomSheet,
+    )
 }
 
 @Composable
 private fun LoanTransactionsContent(
     transactions: List<Transaction>,
+    hideReversed: Boolean,
+    hideAccruals: Boolean,
 ) {
-    var hideReversed by rememberSaveable { mutableStateOf(false) }
-    var hideAccruals by rememberSaveable { mutableStateOf(false) }
-
     val filteredTransactions = remember(transactions, hideReversed, hideAccruals) {
         transactions.filter { transaction ->
             val typeValue = transaction.type?.value ?: ""
             val isAccrual = transaction.type?.accrual == true
             when {
-                hideReversed && typeValue.contains("Reversed", ignoreCase = true) -> false
+                hideReversed && typeValue.equals("Reversed", ignoreCase = true) -> false
                 hideAccruals && isAccrual -> false
                 else -> true
             }
         }
     }
 
-    Column(modifier = Modifier.fillMaxSize()) {
-        FilterBar(
-            hideReversed = hideReversed,
-            hideAccruals = hideAccruals,
-            onHideReversedChange = { hideReversed = it },
-            onHideAccrualsChange = { hideAccruals = it },
-            onExportClick = { /* TODO: Export functionality */ },
-        )
-
-        if (filteredTransactions.isEmpty()) {
-            MifosEmptyUi(text = stringResource(Res.string.feature_loan_no_transactions))
-        } else {
-            LazyColumn {
-                items(filteredTransactions) { transaction ->
-                    LoanTransactionsItemRow(transaction = transaction)
-                }
+    if (filteredTransactions.isEmpty()) {
+        MifosEmptyUi(text = stringResource(Res.string.feature_loan_no_transactions))
+    } else {
+        LazyColumn {
+            items(filteredTransactions) { transaction ->
+                LoanTransactionsItemRow(transaction = transaction)
             }
         }
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun FilterBar(
+private fun FilterBottomSheet(
+    showFilterBottomSheet: Boolean,
     hideReversed: Boolean,
     hideAccruals: Boolean,
     onHideReversedChange: (Boolean) -> Unit,
     onHideAccrualsChange: (Boolean) -> Unit,
-    onExportClick: () -> Unit,
+    onDismiss: () -> Unit,
 ) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = DesignToken.padding.medium, vertical = DesignToken.padding.small),
-        horizontalArrangement = Arrangement.spacedBy(DesignToken.spacing.medium),
-        verticalAlignment = Alignment.CenterVertically,
-    ) {
-        MifosCheckBox(
-            text = stringResource(Res.string.feature_loan_hide_reversed),
-            checked = hideReversed,
-            onCheckChanged = onHideReversedChange,
-        )
+    val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
+    val scope = rememberCoroutineScope()
 
-        MifosCheckBox(
-            text = stringResource(Res.string.feature_loan_hide_accruals),
-            checked = hideAccruals,
-            onCheckChanged = onHideAccrualsChange,
-        )
-
-        Spacer(modifier = Modifier.weight(1f))
-
-        MifosTextButton(
-            onClick = onExportClick,
-        ) {
-            Text(text = stringResource(Res.string.feature_loan_export))
+    LaunchedEffect(showFilterBottomSheet) {
+        if (showFilterBottomSheet) {
+            sheetState.show()
+        } else {
+            sheetState.hide()
         }
     }
 
-    HorizontalDivider()
+    if (showFilterBottomSheet) {
+        ModalBottomSheet(
+            onDismissRequest = onDismiss,
+            sheetState = sheetState,
+        ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(DesignToken.padding.medium),
+            ) {
+                Text(
+                    text = stringResource(Res.string.feature_loan_filters),
+                    style = MaterialTheme.typography.titleLarge,
+                    modifier = Modifier.padding(bottom = DesignToken.padding.medium),
+                )
+
+                MifosCheckBox(
+                    text = stringResource(Res.string.feature_loan_hide_reversed),
+                    checked = hideReversed,
+                    onCheckChanged = onHideReversedChange,
+                    modifier = Modifier.fillMaxWidth(),
+                )
+
+                Spacer(modifier = Modifier.height(DesignToken.spacing.small))
+
+                MifosCheckBox(
+                    text = stringResource(Res.string.feature_loan_hide_accruals),
+                    checked = hideAccruals,
+                    onCheckChanged = onHideAccrualsChange,
+                    modifier = Modifier.fillMaxWidth(),
+                )
+
+                Spacer(modifier = Modifier.height(DesignToken.spacing.large))
+            }
+        }
+    }
 }
 
 @Composable
@@ -275,7 +345,7 @@ private fun LoanTransactionsItemRow(transaction: Transaction) {
                         modifier = Modifier
                             .weight(3.3f)
                             .padding(start = 8.dp),
-                        text = transaction.type?.value.toString(),
+                        text = transaction.type?.value ?: "",
                         style = MaterialTheme.typography.bodyLarge,
                         color = MaterialTheme.colorScheme.onBackground,
                         textAlign = TextAlign.Center,
@@ -512,6 +582,7 @@ private class LoanTransactionsPreviewProvider : PreviewParameterProvider<LoanTra
         )
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 @Preview
 private fun PreviewLoanTransactions(
@@ -519,6 +590,63 @@ private fun PreviewLoanTransactions(
 ) {
     LoanTransactionsScreen(
         uiState = loanTransactionsUiState,
+        hideReversed = false,
+        hideAccruals = false,
+        showFilterBottomSheet = false,
+        onShowFilterBottomSheet = {},
+        onDismissFilterBottomSheet = {},
+        onHideReversedChange = {},
+        onHideAccrualsChange = {},
+        onExportClick = {},
+        navigateBack = {},
+        onRetry = {},
+    )
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+@Preview
+private fun PreviewLoanTransactionsWithFilters() {
+    LoanTransactionsScreen(
+        uiState = LoanTransactionsUiState.ShowLoanTransaction(
+            LoanWithAssociationsEntity(
+                transactions = listOf(
+                    Transaction(
+                        id = 1,
+                        officeName = "Main office",
+                        date = listOf(2024, 6, 1),
+                        principalPortion = 121.2,
+                        penaltyChargesPortion = 32323.232,
+                        overpaymentPortion = 23232.23,
+                        feeChargesPortion = 323.3,
+                        interestPortion = 232.3,
+                        type = Type(value = "Repayment"),
+                    ),
+                    Transaction(
+                        id = 2,
+                        officeName = "Branch office",
+                        date = listOf(2024, 6, 15),
+                        principalPortion = 200.0,
+                        type = Type(value = "Reversed", accrual = false),
+                    ),
+                    Transaction(
+                        id = 3,
+                        officeName = "Main office",
+                        date = listOf(2024, 7, 1),
+                        principalPortion = 150.0,
+                        type = Type(value = "Accrual", accrual = true),
+                    ),
+                ),
+            ),
+        ),
+        hideReversed = true,
+        hideAccruals = false,
+        showFilterBottomSheet = true,
+        onShowFilterBottomSheet = {},
+        onDismissFilterBottomSheet = {},
+        onHideReversedChange = {},
+        onHideAccrualsChange = {},
+        onExportClick = {},
         navigateBack = {},
         onRetry = {},
     )
