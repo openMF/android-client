@@ -287,7 +287,7 @@ private fun DialogStateHandler(
             MifosProgressIndicator()
         }
         null -> {
-            if (loanWithAssociations == null){
+            if (loanWithAssociations == null) {
                 MifosProgressIndicator()
             }
         }
