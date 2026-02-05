@@ -86,7 +86,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import co.touchlab.kermit.Logger
 import com.mifos.core.common.utils.Constants
 import com.mifos.core.designsystem.component.MifosCard
@@ -96,7 +95,6 @@ import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.designsystem.theme.AppColors
 import com.mifos.core.designsystem.theme.DesignToken
-import com.mifos.core.designsystem.theme.MifosTheme
 import com.mifos.core.designsystem.theme.MifosTypography
 import com.mifos.core.ui.components.MifosBreadcrumbNavBar
 import com.mifos.core.ui.components.MifosProgressIndicator
@@ -105,8 +103,6 @@ import com.mifos.room.entities.accounts.loans.LoanStatusEntity
 import com.mifos.room.entities.accounts.loans.LoanWithAssociationsEntity
 import com.mifos.room.entities.accounts.loans.LoansAccountSummaryEntity
 import org.jetbrains.compose.resources.stringResource
-import org.jetbrains.compose.ui.tooling.preview.Preview
-import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameterProvider
 import org.koin.compose.viewmodel.koinViewModel
 
