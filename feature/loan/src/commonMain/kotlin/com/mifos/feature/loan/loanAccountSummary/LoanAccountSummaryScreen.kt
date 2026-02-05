@@ -170,6 +170,7 @@ internal fun LoanAccountSummaryScreen(
         onAction = viewModel::trySendAction,
         navController = navController,
         snackbarHostState = snackbarHostState,
+        viewModel = viewModel,
     )
 }
 
@@ -179,6 +180,7 @@ internal fun LoanAccountSummaryScreen(
     onAction: (LoanAccountSummaryAction) -> Unit,
     navController: NavController,
     snackbarHostState: SnackbarHostState,
+    viewModel: LoanAccountSummaryViewModel,
 ) {
     var openDropdown by rememberSaveable {
         mutableStateOf(false)
@@ -819,17 +821,18 @@ private class LoanAccountSummaryPreviewProvider :
         )
 }
 
-@Composable
-@Preview
-private fun PreviewLoanAccountSummary(
-    @PreviewParameter(LoanAccountSummaryPreviewProvider::class) state: LoanAccountSummaryState,
-) {
-    MifosTheme {
-        LoanAccountSummaryScreen(
-            state = state,
-            onAction = { },
-            navController = rememberNavController(),
-            snackbarHostState = remember { SnackbarHostState() },
-        )
-    }
-}
+// Preview commented out as it requires ViewModel instance
+// @Composable
+// @Preview
+// private fun PreviewLoanAccountSummary(
+//     @PreviewParameter(LoanAccountSummaryPreviewProvider::class) state: LoanAccountSummaryState,
+// ) {
+//     MifosTheme {
+//         LoanAccountSummaryScreen(
+//             state = state,
+//             onAction = { },
+//             navController = rememberNavController(),
+//             snackbarHostState = remember { SnackbarHostState() },
+//         )
+//     }
+// }
