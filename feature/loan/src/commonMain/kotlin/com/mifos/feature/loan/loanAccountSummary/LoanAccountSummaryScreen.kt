@@ -89,8 +89,6 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import co.touchlab.kermit.Logger
 import com.mifos.core.common.utils.Constants
-import com.mifos.core.common.utils.CurrencyFormatter
-import com.mifos.core.common.utils.DateHelper
 import com.mifos.core.designsystem.component.MifosCard
 import com.mifos.core.designsystem.component.MifosMenuDropDownItem
 import com.mifos.core.designsystem.component.MifosScaffold
@@ -106,7 +104,6 @@ import com.mifos.core.ui.util.EventsEffect
 import com.mifos.room.entities.accounts.loans.LoanStatusEntity
 import com.mifos.room.entities.accounts.loans.LoanWithAssociationsEntity
 import com.mifos.room.entities.accounts.loans.LoansAccountSummaryEntity
-import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
@@ -319,7 +316,7 @@ private fun LoanAccountSummaryContent(
     LaunchedEffect(loanWithAssociations.timeline.actualDisbursementDate) {
         actualDisbursementDate = try {
             viewModel.getActualDisbursementDateInStringFormat(
-                loanWithAssociations.timeline.actualDisbursementDate
+                loanWithAssociations.timeline.actualDisbursementDate,
             )
         } catch (exception: IndexOutOfBoundsException) {
             snackbarHostState.showSnackbar(message = message)
@@ -526,7 +523,6 @@ private fun LoanAccountSummaryContent(
             decimalPlaces = loanWithAssociations.currency.decimalPlaces,
             viewModel = viewModel,
         )
-
 
         val makeRepaymentText = stringResource(Res.string.feature_loan_make_Repayment)
         val approveLoanText = stringResource(Res.string.feature_loan_approve_loan)
@@ -760,8 +756,6 @@ private fun DataTableRow(
         )
     }
 }
-
-
 
 private class LoanAccountSummaryPreviewProvider :
     PreviewParameterProvider<LoanAccountSummaryState> {

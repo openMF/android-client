@@ -27,7 +27,7 @@ enum class LoanPrimaryAction {
     APPROVE_LOAN,
     DISBURSE_LOAN,
     OVERPAID,
-    CLOSED
+    CLOSED,
 }
 
 sealed interface LoanAccountSummaryEvent {
