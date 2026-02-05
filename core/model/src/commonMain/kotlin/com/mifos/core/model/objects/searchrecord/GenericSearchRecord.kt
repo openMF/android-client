@@ -9,11 +9,8 @@
  */
 package com.mifos.core.model.objects.searchrecord
 
-import com.mifos.core.model.utils.Parcelable
-import com.mifos.core.model.utils.Parcelize
 import kotlinx.serialization.Serializable
 
-@Parcelize
 @Serializable
 data class GenericSearchRecord(
     val id: Int = -1,
@@ -21,4 +18,4 @@ data class GenericSearchRecord(
     val description: String = "",
     val type: String = "",
     val metadata: Map<String, String> = emptyMap(),
-) : Parcelable
+)

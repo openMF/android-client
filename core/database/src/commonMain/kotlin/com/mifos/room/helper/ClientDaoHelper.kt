@@ -9,6 +9,7 @@
  */
 package com.mifos.room.helper
 
+import co.touchlab.kermit.Logger
 import com.mifos.core.common.utils.Constants.DATA_TABLE_NAME_CLIENT
 import com.mifos.core.common.utils.MapDeserializer
 import com.mifos.core.common.utils.Page
@@ -370,7 +371,7 @@ class ClientDaoHelper(
     suspend fun insertIdentifiers(identifiers: List<ClientIdentifierEntity>) {
         if (identifiers.isEmpty()) return
 
-        val clientIds = identifiers.map { it.clientId }.distinct()
+        val clientIds = identifiers.mapNotNull { it.clientId }.distinct()
 
         val backupIdentifiers = mutableListOf<ClientIdentifierEntity>()
         clientIds.forEach { clientId ->
@@ -387,7 +388,7 @@ class ClientDaoHelper(
                 try {
                     clientDao.insertIdentifiers(backupIdentifiers)
                 } catch (restoreException: Exception) {
-                    restoreException.printStackTrace()
+                    Logger.e(restoreException) { "Failed to restore identifiers backup" }
                 }
             }
             throw e

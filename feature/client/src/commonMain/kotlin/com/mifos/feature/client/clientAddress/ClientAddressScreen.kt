@@ -144,15 +144,15 @@ private fun ClientAddressContent(
                         ) {
                             items(state.address, key = ({ state.address.indexOf(it) })) { address ->
                                 MifosAddressCard(
-                                    title = address.addressType,
+                                    title = address.addressType ?: "",
                                     addressList = mapOf(
-                                        stringResource(Res.string.feature_client_address_line_1) to address.addressLine1,
-                                        stringResource(Res.string.feature_client_address_line_2) to address.addressLine2,
-                                        stringResource(Res.string.feature_client_address_line_3) to address.addressLine3,
-                                        stringResource(Res.string.feature_client_city) to address.city,
-                                        stringResource(Res.string.feature_client_province) to address.stateName,
-                                        stringResource(Res.string.feature_client_country) to address.countryName,
-                                        stringResource(Res.string.feature_client_postal_code) to address.postalCode,
+                                        stringResource(Res.string.feature_client_address_line_1) to (address.addressLine1 ?: ""),
+                                        stringResource(Res.string.feature_client_address_line_2) to (address.addressLine2 ?: ""),
+                                        stringResource(Res.string.feature_client_address_line_3) to (address.addressLine3 ?: ""),
+                                        stringResource(Res.string.feature_client_city) to (address.city ?: ""),
+                                        stringResource(Res.string.feature_client_province) to (address.stateName ?: ""),
+                                        stringResource(Res.string.feature_client_country) to (address.countryName ?: ""),
+                                        stringResource(Res.string.feature_client_postal_code) to (address.postalCode ?: ""),
                                     ),
                                 )
                             }

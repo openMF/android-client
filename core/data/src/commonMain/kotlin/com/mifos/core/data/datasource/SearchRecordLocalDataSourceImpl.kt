@@ -40,16 +40,16 @@ class SearchRecordLocalDataSourceImpl(
                 addresses.map { address ->
                     GenericSearchRecord(
                         id = address.addressId,
-                        name = address.addressType,
+                        name = address.addressType ?: "",
                         description = buildAddressDescription(address),
                         type = RecordType.ADDRESS.name,
                         metadata = mapOf(
-                            Constants.CLIENT_ID to address.clientID.toString(),
-                            Constants.CITY to address.city,
-                            Constants.STATE to address.stateName,
-                            Constants.COUNTRY to address.countryName,
-                            Constants.POSTAL_CODE to address.postalCode,
-                            Constants.ADDRESS_LINE_1 to address.addressLine1,
+                            Constants.CLIENT_ID to (address.clientID?.toString() ?: ""),
+                            Constants.CITY to (address.city ?: ""),
+                            Constants.STATE to (address.stateName ?: ""),
+                            Constants.COUNTRY to (address.countryName ?: ""),
+                            Constants.POSTAL_CODE to (address.postalCode ?: ""),
+                            Constants.ADDRESS_LINE_1 to (address.addressLine1 ?: ""),
                             Constants.ADDRESS_LINE_2 to (address.addressLine2 ?: ""),
                             Constants.ADDRESS_LINE_3 to (address.addressLine3 ?: ""),
                         ),
@@ -64,14 +64,14 @@ class SearchRecordLocalDataSourceImpl(
             .map { identifiers ->
                 identifiers.map { identifier ->
                     GenericSearchRecord(
-                        id = identifier.id,
-                        name = identifier.documentTypeName,
-                        description = identifier.description,
+                        id = identifier.id ?: 0,
+                        name = identifier.documentTypeName ?: "",
+                        description = identifier.description ?: "",
                         type = RecordType.IDENTIFIER.name,
                         metadata = mapOf(
-                            Constants.CLIENT_ID to identifier.clientId.toString(),
-                            Constants.STATUS to identifier.status,
-                            Constants.DOCUMENT_KEY to identifier.documentKey,
+                            Constants.CLIENT_ID to (identifier.clientId?.toString() ?: ""),
+                            Constants.STATUS to (identifier.status ?: ""),
+                            Constants.DOCUMENT_KEY to (identifier.documentKey ?: ""),
                         ),
                     )
                 }

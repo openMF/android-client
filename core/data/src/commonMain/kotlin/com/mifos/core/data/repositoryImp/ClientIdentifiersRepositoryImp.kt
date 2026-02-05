@@ -9,6 +9,7 @@
  */
 package com.mifos.core.data.repositoryImp
 
+import co.touchlab.kermit.Logger
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.common.utils.asDataStateFlow
 import com.mifos.core.data.repository.ClientIdentifiersRepository
@@ -53,7 +54,7 @@ class ClientIdentifiersRepositoryImp(
                     } catch (e: CancellationException) {
                         throw e
                     } catch (e: Throwable) {
-                        // TODO: log/report, but don't fail upstream flow
+                        Logger.e(e) { "Failed to insert identifiers into database" }
                     }
                 }
             }

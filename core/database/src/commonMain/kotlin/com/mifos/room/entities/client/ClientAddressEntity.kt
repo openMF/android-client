@@ -9,13 +9,9 @@
  */
 package com.mifos.room.entities.client
 
-import com.mifos.core.model.utils.Parcelable
-import com.mifos.core.model.utils.Parcelize
 import com.mifos.room.utils.Entity
 import com.mifos.room.utils.PrimaryKey
-import kotlinx.serialization.Serializable
 
-@Parcelize
 @Entity(
     tableName = "ClientAddress",
     indices = [],
@@ -24,21 +20,20 @@ import kotlinx.serialization.Serializable
     foreignKeys = [],
     ignoredColumns = [],
 )
-@Serializable
 data class ClientAddressEntity(
-    val clientID: Int = -1,
-    val addressType: String = "",
     @PrimaryKey(autoGenerate = true)
     val addressId: Int = 0,
-    val addressTypeId: Int = -1,
+    val clientID: Int? = null,
+    val addressType: String? = null,
+    val addressTypeId: Int? = null,
     val isActive: Boolean = false,
-    val addressLine1: String = "",
-    val addressLine2: String = "",
-    val addressLine3: String = "",
-    val city: String = "",
-    val stateProvinceId: Int = -1,
-    val countryName: String = "",
-    val stateName: String = "",
-    val countryId: Int = -1,
-    val postalCode: String = "",
-) : Parcelable
+    val addressLine1: String? = null,
+    val addressLine2: String? = null,
+    val addressLine3: String? = null,
+    val city: String? = null,
+    val stateProvinceId: Int? = null,
+    val countryName: String? = null,
+    val stateName: String? = null,
+    val countryId: Int? = null,
+    val postalCode: String? = null,
+)

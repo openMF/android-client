@@ -11,7 +11,6 @@ package com.mifos.room.entities.client
 
 import com.mifos.room.utils.Entity
 import com.mifos.room.utils.PrimaryKey
-import kotlinx.serialization.Serializable
 
 @Entity(
     tableName = "ClientIdentifier",
@@ -21,15 +20,14 @@ import kotlinx.serialization.Serializable
     foreignKeys = [],
     ignoredColumns = [],
 )
-@Serializable
 data class ClientIdentifierEntity(
     @PrimaryKey(autoGenerate = true)
     val localId: Int = 0,
-    val id: Int = -1,
-    val clientId: Int = -1,
-    val documentKey: String = "",
-    val documentTypeName: String = "",
-    val documentTypeId: Int = -1,
-    val description: String = "",
-    val status: String = "",
+    val id: Int? = null,
+    val clientId: Int? = null,
+    val documentKey: String? = null,
+    val documentTypeName: String? = null,
+    val documentTypeId: Int? = null,
+    val description: String? = null,
+    val status: String? = null,
 )

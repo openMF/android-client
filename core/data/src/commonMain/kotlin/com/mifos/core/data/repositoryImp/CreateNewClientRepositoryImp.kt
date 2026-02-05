@@ -9,6 +9,7 @@
  */
 package com.mifos.core.data.repositoryImp
 
+import co.touchlab.kermit.Logger
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.common.utils.asDataStateFlow
 import com.mifos.core.data.repository.CreateNewClientRepository
@@ -100,7 +101,7 @@ class CreateNewClientRepositoryImp(
         } catch (e: CancellationException) {
             throw e
         } catch (e: Exception) {
-            e.printStackTrace()
+            Logger.e(e) { "Failed to update local cache for client addresses" }
         }
         return addresses
     }

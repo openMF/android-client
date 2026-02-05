@@ -26,6 +26,7 @@ import androidclient.feature.search_record.generated.resources.search_record_no_
 import androidclient.feature.search_record.generated.resources.search_record_postal_code
 import androidclient.feature.search_record.generated.resources.search_record_province
 import androidclient.feature.search_record.generated.resources.search_record_search_icon_desc
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -38,10 +39,12 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
@@ -279,11 +282,11 @@ private fun AddressRecordCard(
     record: GenericSearchRecord,
     onRecordSelected: (GenericSearchRecord) -> Unit,
 ) {
-    androidx.compose.material3.Surface(
+    Surface(
         onClick = { onRecordSelected(record) },
         modifier = Modifier.fillMaxWidth(),
         shape = DesignToken.shapes.medium,
-        border = androidx.compose.foundation.BorderStroke(
+        border = BorderStroke(
             1.dp,
             MaterialTheme.colorScheme.secondaryContainer,
         ),
@@ -331,19 +334,19 @@ private fun GenericRecordCard(
     record: GenericSearchRecord,
     onRecordSelected: (GenericSearchRecord) -> Unit,
 ) {
-    androidx.compose.material3.Card(
+    Card(
         modifier = Modifier
             .fillMaxWidth(),
         onClick = { onRecordSelected(record) },
     ) {
         Column(
-            modifier = Modifier.padding(16.dp),
+            modifier = Modifier.padding(DesignToken.padding.large),
         ) {
             Text(
                 text = record.name,
                 style = MaterialTheme.typography.titleMedium,
             )
-            Spacer(modifier = Modifier.height(4.dp))
+            Spacer(modifier = Modifier.height(DesignToken.spacing.extraSmall))
             Text(
                 text = record.description,
                 style = MaterialTheme.typography.bodySmall,
