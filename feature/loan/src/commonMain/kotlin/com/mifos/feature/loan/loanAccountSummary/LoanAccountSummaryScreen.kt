@@ -86,6 +86,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import co.touchlab.kermit.Logger
 import com.mifos.core.common.utils.Constants
 import com.mifos.core.designsystem.component.MifosCard
@@ -95,6 +96,7 @@ import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.designsystem.theme.AppColors
 import com.mifos.core.designsystem.theme.DesignToken
+import com.mifos.core.designsystem.theme.MifosTheme
 import com.mifos.core.designsystem.theme.MifosTypography
 import com.mifos.core.ui.components.MifosBreadcrumbNavBar
 import com.mifos.core.ui.components.MifosProgressIndicator
@@ -103,6 +105,8 @@ import com.mifos.room.entities.accounts.loans.LoanStatusEntity
 import com.mifos.room.entities.accounts.loans.LoanWithAssociationsEntity
 import com.mifos.room.entities.accounts.loans.LoansAccountSummaryEntity
 import org.jetbrains.compose.resources.stringResource
+import org.jetbrains.compose.ui.tooling.preview.Preview
+import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameterProvider
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -166,7 +170,6 @@ internal fun LoanAccountSummaryScreen(
         onAction = viewModel::trySendAction,
         navController = navController,
         snackbarHostState = snackbarHostState,
-        viewModel = viewModel,
     )
 }
 
@@ -176,7 +179,6 @@ internal fun LoanAccountSummaryScreen(
     onAction: (LoanAccountSummaryAction) -> Unit,
     navController: NavController,
     snackbarHostState: SnackbarHostState,
-    viewModel: LoanAccountSummaryViewModel,
 ) {
     var openDropdown by rememberSaveable {
         mutableStateOf(false)
@@ -254,7 +256,6 @@ internal fun LoanAccountSummaryScreen(
                         loanWithAssociations = loanWithAssociations,
                         onAction = onAction,
                         snackbarHostState = snackbarHostState,
-                        viewModel = viewModel,
                     )
                 }
 
@@ -293,9 +294,8 @@ private fun LoanAccountSummaryContent(
     loanWithAssociations: LoanWithAssociationsEntity,
     onAction: (LoanAccountSummaryAction) -> Unit,
     snackbarHostState: SnackbarHostState,
-    viewModel: LoanAccountSummaryViewModel,
 ) {
-    val inflateLoanSummary = viewModel.getInflateLoanSummaryValue(status = loanWithAssociations.status)
+    val inflateLoanSummary = loanWithAssociations.status.shouldInflateLoanSummary()
     val summary = if (inflateLoanSummary) loanWithAssociations.summary else null
     val scrollState = rememberScrollState()
     val scope = rememberCoroutineScope()
@@ -303,24 +303,23 @@ private fun LoanAccountSummaryContent(
     val message = stringResource(Res.string.feature_loan_loan_rejected_message)
 
     fun formatCurrency(amount: Double?): String {
-        return viewModel.formatCurrency(
-            amount = amount,
-            currencyCode = loanWithAssociations.currency.code,
-            decimalPlaces = loanWithAssociations.currency.decimalPlaces,
+        if (amount == null) return ""
+        val currencyCode = loanWithAssociations.currency.code
+        if (currencyCode.isNullOrBlank()) return amount.toString()
+
+        return com.mifos.core.common.utils.CurrencyFormatter.format(
+            balance = amount,
+            currencyCode = currencyCode,
+            maximumFractionDigits = loanWithAssociations.currency.decimalPlaces,
         )
     }
 
     var actualDisbursementDate by remember { mutableStateOf("") }
 
     LaunchedEffect(loanWithAssociations.timeline.actualDisbursementDate) {
-        actualDisbursementDate = try {
-            viewModel.getActualDisbursementDateInStringFormat(
-                loanWithAssociations.timeline.actualDisbursementDate,
-            )
-        } catch (exception: IndexOutOfBoundsException) {
-            snackbarHostState.showSnackbar(message = message)
-            ""
-        }
+        actualDisbursementDate = LoanFormatUtils.formatActualDisbursementDate(
+            loanWithAssociations.timeline.actualDisbursementDate
+        )
     }
 
     Column(
@@ -520,7 +519,6 @@ private fun LoanAccountSummaryContent(
             inflateLoanSummary = inflateLoanSummary,
             currencyCode = loanWithAssociations.currency.code,
             decimalPlaces = loanWithAssociations.currency.decimalPlaces,
-            viewModel = viewModel,
         )
 
         val makeRepaymentText = stringResource(Res.string.feature_loan_make_Repayment)
@@ -530,7 +528,7 @@ private fun LoanAccountSummaryContent(
         val closedText = stringResource(Res.string.feature_loan_closed)
 
         val buttonText = remember(loanWithAssociations.status) {
-            when (viewModel.getPrimaryAction(loanWithAssociations.status)) {
+            when (loanWithAssociations.status.getPrimaryAction()) {
                 LoanPrimaryAction.MAKE_REPAYMENT -> makeRepaymentText
                 LoanPrimaryAction.APPROVE_LOAN -> approveLoanText
                 LoanPrimaryAction.DISBURSE_LOAN -> disburseLoanText
@@ -540,7 +538,7 @@ private fun LoanAccountSummaryContent(
         }
 
         Button(
-            enabled = viewModel.getButtonActiveStatus(loanWithAssociations.status),
+            enabled = loanWithAssociations.status.isButtonActive(),
             modifier = Modifier
                 .fillMaxWidth()
                 .height(DesignToken.sizes.buttonHeightMedium),
@@ -583,16 +581,18 @@ private fun LoanSummaryDataTable(
     inflateLoanSummary: Boolean,
     currencyCode: String?,
     decimalPlaces: Int?,
-    viewModel: LoanAccountSummaryViewModel,
 ) {
     // dataTable should be empty if [inflateLoanSummary] is false
     val summary = if (inflateLoanSummary) loanSummary else null
 
     fun formatAmount(amount: Double?): String {
-        return viewModel.formatAmount(
-            amount = amount,
+        if (amount == null) return ""
+        if (currencyCode.isNullOrBlank()) return amount.toString()
+
+        return com.mifos.core.common.utils.CurrencyFormatter.format(
+            balance = amount,
             currencyCode = currencyCode,
-            decimalPlaces = decimalPlaces,
+            maximumFractionDigits = decimalPlaces,
         )
     }
 
@@ -817,18 +817,18 @@ private class LoanAccountSummaryPreviewProvider :
         )
 }
 
-// Preview commented out as it requires ViewModel instance
-// @Composable
-// @Preview
-// private fun PreviewLoanAccountSummary(
-//     @PreviewParameter(LoanAccountSummaryPreviewProvider::class) state: LoanAccountSummaryState,
-// ) {
-//     MifosTheme {
-//         LoanAccountSummaryScreen(
-//             state = state,
-//             onAction = { },
-//             navController = rememberNavController(),
-//             snackbarHostState = remember { SnackbarHostState() },
-//         )
-//     }
-// }
+
+ @Composable
+ @Preview
+ private fun PreviewLoanAccountSummary(
+     @PreviewParameter(LoanAccountSummaryPreviewProvider::class) state: LoanAccountSummaryState,
+ ) {
+     MifosTheme {
+         LoanAccountSummaryScreen(
+             state = state,
+             onAction = { },
+             navController = rememberNavController(),
+             snackbarHostState = remember { SnackbarHostState() },
+         )
+     }
+ }
