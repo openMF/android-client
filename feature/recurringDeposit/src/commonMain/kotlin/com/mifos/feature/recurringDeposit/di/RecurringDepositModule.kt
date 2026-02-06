@@ -10,25 +10,24 @@
 package com.mifos.feature.recurringDeposit.di
 
 import com.mifos.feature.recurringDeposit.newRecurringDepositAccount.RecurringAccountViewModel
-import com.mifos.feature.recurringDeposit.recurringAccountApproval.ApproveRecurringDepositUseCase
 import com.mifos.feature.recurringDeposit.recurringAccountApproval.RecurringDepositAccountApprovalViewModel
-import org.koin.core.module.dsl.viewModel
 import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.module
 
 val RecurringDepositModule = module {
     viewModelOf(::RecurringAccountViewModel)
+    viewModelOf(::RecurringDepositAccountApprovalViewModel)
 
-    viewModel {
+   /* viewModel {
         RecurringDepositAccountApprovalViewModel(
             savedStateHandle = get(),
             approveRecurringDepositUseCase = get(),
         )
-    }
+    }*/
 
-    factory {
+   /* factory {
         ApproveRecurringDepositUseCase(
             repository = get(),
         )
-    }
+    }*/
 }
