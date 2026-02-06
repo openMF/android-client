@@ -34,7 +34,7 @@ interface RecurringAccountService {
         @Query("productId") productId: Int?,
     ): Flow<RecurringDepositAccountTemplate>
 
-    @POST("recurringdepositaccounts/{accountId}?command=approve")
+    @POST(APIEndPoint.CREATE_RECURRING_DEPOSIT_ACCOUNTS + "/{accountId}?command=approve")
     suspend fun approveRecurringDepositAccount(
         @Path("accountId") accountId: String,
         @Body approval: RecurringDepositApproval,
