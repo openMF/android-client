@@ -13,10 +13,13 @@ import com.mifos.room.entities.accounts.loans.LoanWithAssociationsEntity
 
 data class LoanAccountSummaryState(
     val loanWithAssociations: LoanWithAssociationsEntity? = null,
-    val dialogState: DialogState? = null,
+    val dialogState: DialogState = DialogState.Idle,
     val showLoanIdCopiedMessage: Boolean = false,
+    val openDropdown: Boolean = false,
+    val actualDisbursementDate: String = "",
 ) {
     sealed interface DialogState {
+        data object Idle : DialogState
         data object Loading : DialogState
         data class Error(val message: String) : DialogState
     }
@@ -57,4 +60,5 @@ sealed interface LoanAccountSummaryAction {
     data class OnMakeRepayment(val loanWithAssociations: LoanWithAssociationsEntity) : LoanAccountSummaryAction
     data object OnLoanIdCopied : LoanAccountSummaryAction
     data object OnMessageShown : LoanAccountSummaryAction
+    data object ToggleDropdown : LoanAccountSummaryAction
 }

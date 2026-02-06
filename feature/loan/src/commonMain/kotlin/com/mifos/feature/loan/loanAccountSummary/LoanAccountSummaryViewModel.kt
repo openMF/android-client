@@ -14,9 +14,12 @@ import androidclient.feature.loan.generated.resources.feature_loan_unknown_error
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
+import com.mifos.core.common.utils.CurrencyFormatter
 import com.mifos.core.common.utils.DataState
+import com.mifos.core.common.utils.DateHelper
 import com.mifos.core.data.repository.LoanAccountSummaryRepository
 import com.mifos.core.ui.util.BaseViewModel
+import com.mifos.room.entities.accounts.loans.LoanStatusEntity
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.getString
@@ -73,6 +76,9 @@ internal class LoanAccountSummaryViewModel(
             LoanAccountSummaryAction.OnMessageShown -> {
                 mutableStateFlow.update { it.copy(showLoanIdCopiedMessage = false) }
             }
+            LoanAccountSummaryAction.ToggleDropdown -> {
+                mutableStateFlow.update { it.copy(openDropdown = !it.openDropdown) }
+            }
         }
     }
 
@@ -86,10 +92,14 @@ internal class LoanAccountSummaryViewModel(
                         mutableStateFlow.update { it.copy(dialogState = LoanAccountSummaryState.DialogState.Loading) }
                     }
                     is DataState.Success -> {
+                        val actualDisbursementDate = formatActualDisbursementDate(
+                            dataState.data?.timeline?.actualDisbursementDate,
+                        )
                         mutableStateFlow.update {
                             it.copy(
                                 loanWithAssociations = dataState.data,
-                                dialogState = null,
+                                actualDisbursementDate = actualDisbursementDate,
+                                dialogState = LoanAccountSummaryState.DialogState.Idle,
                             )
                         }
                     }
@@ -105,4 +115,60 @@ internal class LoanAccountSummaryViewModel(
             }
         }
     }
+
+    private fun formatActualDisbursementDate(date: List<Int?>?): String {
+        return if (date != null && date.isNotEmpty() && date.all { it != null }) {
+            @Suppress("UNCHECKED_CAST")
+            DateHelper.getDateAsString(date as List<Int>)
+        } else {
+            ""
+        }
+    }
+}
+
+/**
+ * Formats currency amount with proper currency code and decimal places.
+ */
+internal fun formatCurrency(
+    amount: Double?,
+    currencyCode: String?,
+    decimalPlaces: Int?,
+): String {
+    if (amount == null) return ""
+    if (currencyCode.isNullOrBlank()) return amount.toString()
+
+    return CurrencyFormatter.format(
+        balance = amount,
+        currencyCode = currencyCode,
+        maximumFractionDigits = decimalPlaces,
+    )
+}
+
+/**
+ * Extension function to determine if loan summary data should be displayed.
+ * Returns true for active, closed (obligations met), or overpaid loans.
+ */
+internal fun LoanStatusEntity.shouldInflateLoanSummary(): Boolean {
+    return active == true || closedObligationsMet == true || overpaid == true
+}
+
+/**
+ * Extension function to determine the primary action button for a loan based on its status.
+ */
+internal fun LoanStatusEntity.getPrimaryAction(): LoanPrimaryAction {
+    return when {
+        active == true -> LoanPrimaryAction.MAKE_REPAYMENT
+        pendingApproval == true -> LoanPrimaryAction.APPROVE_LOAN
+        waitingForDisbursal == true -> LoanPrimaryAction.DISBURSE_LOAN
+        overpaid == true -> LoanPrimaryAction.OVERPAID
+        closedObligationsMet == true -> LoanPrimaryAction.CLOSED
+        else -> LoanPrimaryAction.CLOSED
+    }
+}
+
+/**
+ * Extension function to determine if the primary action button should be enabled.
+ */
+internal fun LoanStatusEntity.isButtonActive(): Boolean {
+    return active == true || pendingApproval == true || waitingForDisbursal == true
 }

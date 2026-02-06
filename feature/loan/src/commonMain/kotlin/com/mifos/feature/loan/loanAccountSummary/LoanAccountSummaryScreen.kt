@@ -33,7 +33,6 @@ import androidclient.feature.loan.generated.resources.feature_loan_loan_interest
 import androidclient.feature.loan.generated.resources.feature_loan_loan_overview
 import androidclient.feature.loan.generated.resources.feature_loan_loan_penalty
 import androidclient.feature.loan.generated.resources.feature_loan_loan_principal
-import androidclient.feature.loan.generated.resources.feature_loan_loan_rejected_message
 import androidclient.feature.loan.generated.resources.feature_loan_make_Repayment
 import androidclient.feature.loan.generated.resources.feature_loan_outstanding_balance
 import androidclient.feature.loan.generated.resources.feature_loan_overpaid
@@ -69,11 +68,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -89,7 +84,6 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import co.touchlab.kermit.Logger
 import com.mifos.core.common.utils.Constants
-import com.mifos.core.common.utils.DateHelper
 import com.mifos.core.designsystem.component.MifosCard
 import com.mifos.core.designsystem.component.MifosMenuDropDownItem
 import com.mifos.core.designsystem.component.MifosScaffold
@@ -181,62 +175,56 @@ internal fun LoanAccountSummaryScreen(
     navController: NavController,
     snackbarHostState: SnackbarHostState,
 ) {
-    var openDropdown by rememberSaveable {
-        mutableStateOf(false)
-    }
-
     MifosScaffold(
         title = stringResource(Res.string.feature_loan_loan_account_summary),
         onBackPressed = { onAction(LoanAccountSummaryAction.NavigateBack) },
         snackbarHostState = snackbarHostState,
         actions = {
-            IconButton(onClick = { openDropdown = !openDropdown }) {
+            IconButton(onClick = { onAction(LoanAccountSummaryAction.ToggleDropdown) }) {
                 Icon(
                     imageVector = MifosIcons.MoreVert,
                     contentDescription = "More options",
                 )
             }
-            if (openDropdown) {
-                DropdownMenu(
-                    expanded = openDropdown,
-                    onDismissRequest = { openDropdown = false },
-                ) {
-                    MifosMenuDropDownItem(
-                        option = Constants.DATA_TABLE_LOAN_NAME,
-                        onClick = {
-                            openDropdown = false
-                            onAction(LoanAccountSummaryAction.OnMoreInfoClick)
-                        },
-                    )
-                    MifosMenuDropDownItem(
-                        option = stringResource(Res.string.feature_loan_transactions),
-                        onClick = {
-                            openDropdown = false
-                            onAction(LoanAccountSummaryAction.OnTransactionsClick)
-                        },
-                    )
-                    MifosMenuDropDownItem(
-                        option = stringResource(Res.string.feature_loan_repayment_schedule),
-                        onClick = {
-                            openDropdown = false
-                            onAction(LoanAccountSummaryAction.OnRepaymentScheduleClick)
-                        },
-                    )
-                    MifosMenuDropDownItem(
-                        option = stringResource(Res.string.feature_loan_documents),
-                        onClick = {
-                            openDropdown = false
-                            onAction(LoanAccountSummaryAction.OnDocumentsClick)
-                        },
-                    )
-                    MifosMenuDropDownItem(
-                        option = stringResource(Res.string.feature_loan_loan_charges),
-                        onClick = {
-                            openDropdown = false
-                            onAction(LoanAccountSummaryAction.OnChargesClick)
-                        },
-                    )
-                }
+            DropdownMenu(
+                expanded = state.openDropdown,
+                onDismissRequest = { onAction(LoanAccountSummaryAction.ToggleDropdown) },
+            ) {
+                MifosMenuDropDownItem(
+                    option = Constants.DATA_TABLE_LOAN_NAME,
+                    onClick = {
+                        onAction(LoanAccountSummaryAction.ToggleDropdown)
+                        onAction(LoanAccountSummaryAction.OnMoreInfoClick)
+                    },
+                )
+                MifosMenuDropDownItem(
+                    option = stringResource(Res.string.feature_loan_transactions),
+                    onClick = {
+                        onAction(LoanAccountSummaryAction.ToggleDropdown)
+                        onAction(LoanAccountSummaryAction.OnTransactionsClick)
+                    },
+                )
+                MifosMenuDropDownItem(
+                    option = stringResource(Res.string.feature_loan_repayment_schedule),
+                    onClick = {
+                        onAction(LoanAccountSummaryAction.ToggleDropdown)
+                        onAction(LoanAccountSummaryAction.OnRepaymentScheduleClick)
+                    },
+                )
+                MifosMenuDropDownItem(
+                    option = stringResource(Res.string.feature_loan_documents),
+                    onClick = {
+                        onAction(LoanAccountSummaryAction.ToggleDropdown)
+                        onAction(LoanAccountSummaryAction.OnDocumentsClick)
+                    },
+                )
+                MifosMenuDropDownItem(
+                    option = stringResource(Res.string.feature_loan_loan_charges),
+                    onClick = {
+                        onAction(LoanAccountSummaryAction.ToggleDropdown)
+                        onAction(LoanAccountSummaryAction.OnChargesClick)
+                    },
+                )
             }
         },
     ) {
@@ -252,43 +240,26 @@ internal fun LoanAccountSummaryScreen(
                     .fillMaxWidth()
                     .weight(1f),
             ) {
-                state.loanWithAssociations?.let { loanWithAssociations ->
-                    LoanAccountSummaryContent(
-                        loanWithAssociations = loanWithAssociations,
-                        onAction = onAction,
-                        snackbarHostState = snackbarHostState,
-                    )
+                when (state.dialogState) {
+                    is LoanAccountSummaryState.DialogState.Error -> {
+                        MifosSweetError(
+                            message = state.dialogState.message,
+                            onclick = { onAction(LoanAccountSummaryAction.OnRetry) },
+                        )
+                    }
+                    is LoanAccountSummaryState.DialogState.Loading -> {
+                        MifosProgressIndicator()
+                    }
+                    is LoanAccountSummaryState.DialogState.Idle -> {
+                        state.loanWithAssociations?.let { loanWithAssociations ->
+                            LoanAccountSummaryContent(
+                                loanWithAssociations = loanWithAssociations,
+                                actualDisbursementDate = state.actualDisbursementDate,
+                                onAction = onAction,
+                            )
+                        }
+                    }
                 }
-
-                DialogStateHandler(
-                    dialogState = state.dialogState,
-                    loanWithAssociations = state.loanWithAssociations,
-                    onRetry = { onAction(LoanAccountSummaryAction.OnRetry) },
-                )
-            }
-        }
-    }
-}
-
-@Composable
-private fun DialogStateHandler(
-    dialogState: LoanAccountSummaryState.DialogState?,
-    loanWithAssociations: LoanWithAssociationsEntity?,
-    onRetry: () -> Unit,
-) {
-    when (dialogState) {
-        is LoanAccountSummaryState.DialogState.Error -> {
-            MifosSweetError(
-                message = dialogState.message,
-                onclick = onRetry,
-            )
-        }
-        LoanAccountSummaryState.DialogState.Loading -> {
-            MifosProgressIndicator()
-        }
-        null -> {
-            if (loanWithAssociations == null) {
-                MifosProgressIndicator()
             }
         }
     }
@@ -297,35 +268,13 @@ private fun DialogStateHandler(
 @Composable
 private fun LoanAccountSummaryContent(
     loanWithAssociations: LoanWithAssociationsEntity,
+    actualDisbursementDate: String,
     onAction: (LoanAccountSummaryAction) -> Unit,
-    snackbarHostState: SnackbarHostState,
 ) {
     val inflateLoanSummary = loanWithAssociations.status.shouldInflateLoanSummary()
     val summary = if (inflateLoanSummary) loanWithAssociations.summary else null
     val scrollState = rememberScrollState()
-    val scope = rememberCoroutineScope()
     val clipboardManager = LocalClipboardManager.current
-    val message = stringResource(Res.string.feature_loan_loan_rejected_message)
-
-    fun formatCurrency(amount: Double?): String {
-        if (amount == null) return ""
-        val currencyCode = loanWithAssociations.currency.code
-        if (currencyCode.isNullOrBlank()) return amount.toString()
-
-        return com.mifos.core.common.utils.CurrencyFormatter.format(
-            balance = amount,
-            currencyCode = currencyCode,
-            maximumFractionDigits = loanWithAssociations.currency.decimalPlaces,
-        )
-    }
-
-    var actualDisbursementDate by remember { mutableStateOf("") }
-
-    LaunchedEffect(loanWithAssociations.timeline.actualDisbursementDate) {
-        actualDisbursementDate = LoanFormatUtils.formatActualDisbursementDate(
-            loanWithAssociations.timeline.actualDisbursementDate,
-        )
-    }
 
     Column(
         modifier = Modifier
@@ -426,19 +375,31 @@ private fun LoanAccountSummaryContent(
         Row {
             InfoCard(
                 titleText = stringResource(Res.string.feature_loan_total_loan),
-                infoText = formatCurrency(summary?.totalExpectedRepayment),
+                infoText = formatCurrency(
+                    summary?.totalExpectedRepayment,
+                    loanWithAssociations.currency.code,
+                    loanWithAssociations.currency.decimalPlaces,
+                ),
                 modifier = Modifier.fillMaxWidth(0.5f),
             )
             Spacer(modifier = Modifier.width(DesignToken.spacing.medium))
             InfoCard(
                 titleText = stringResource(Res.string.feature_loan_amount_paid),
-                infoText = formatCurrency(summary?.totalRepayment),
+                infoText = formatCurrency(
+                    summary?.totalRepayment,
+                    loanWithAssociations.currency.code,
+                    loanWithAssociations.currency.decimalPlaces,
+                ),
                 modifier = Modifier.fillMaxWidth(),
             )
         }
         InfoCard(
             titleText = stringResource(Res.string.feature_loan_outstanding_balance),
-            infoText = formatCurrency(summary?.totalOutstanding),
+            infoText = formatCurrency(
+                summary?.totalOutstanding,
+                loanWithAssociations.currency.code,
+                loanWithAssociations.currency.decimalPlaces,
+            ),
             modifier = Modifier.fillMaxWidth(),
         )
 
@@ -464,7 +425,11 @@ private fun LoanAccountSummaryContent(
                     LoanSummaryFarApartTextItem(
                         title = stringResource(Res.string.feature_loan_loan_amount_disbursed),
                         value = if (inflateLoanSummary) {
-                            formatCurrency(loanWithAssociations.summary.principalDisbursed)
+                            formatCurrency(
+                                loanWithAssociations.summary.principalDisbursed,
+                                loanWithAssociations.currency.code,
+                                loanWithAssociations.currency.decimalPlaces,
+                            )
                         } else {
                             ""
                         },
@@ -496,7 +461,11 @@ private fun LoanAccountSummaryContent(
                     LoanSummaryFarApartTextItem(
                         title = stringResource(Res.string.feature_loan_loan_in_arrears),
                         value = if (inflateLoanSummary) {
-                            formatCurrency(loanWithAssociations.summary.totalOverdue)
+                            formatCurrency(
+                                loanWithAssociations.summary.totalOverdue,
+                                loanWithAssociations.currency.code,
+                                loanWithAssociations.currency.decimalPlaces,
+                            )
                         } else {
                             ""
                         },
@@ -588,17 +557,6 @@ private fun LoanSummaryDataTable(
     // dataTable should be empty if [inflateLoanSummary] is false
     val summary = if (inflateLoanSummary) loanSummary else null
 
-    fun formatAmount(amount: Double?): String {
-        if (amount == null) return ""
-        if (currencyCode.isNullOrBlank()) return amount.toString()
-
-        return com.mifos.core.common.utils.CurrencyFormatter.format(
-            balance = amount,
-            currencyCode = currencyCode,
-            maximumFractionDigits = decimalPlaces,
-        )
-    }
-
     MifosCard {
         DataTableRow(
             summaryColumnTitle = stringResource(Res.string.feature_loan_summary),
@@ -613,36 +571,36 @@ private fun LoanSummaryDataTable(
 
         DataTableRow(
             summaryColumnTitle = stringResource(Res.string.feature_loan_loan_principal),
-            loanColumnValue = formatAmount(summary?.principalDisbursed),
-            amountColumnValue = formatAmount(summary?.principalPaid),
-            balanceColumnValue = formatAmount(summary?.principalOutstanding),
+            loanColumnValue = formatCurrency(summary?.principalDisbursed, currencyCode, decimalPlaces),
+            amountColumnValue = formatCurrency(summary?.principalPaid, currencyCode, decimalPlaces),
+            balanceColumnValue = formatCurrency(summary?.principalOutstanding, currencyCode, decimalPlaces),
         )
 
         HorizontalDivider(thickness = 0.5.dp)
 
         DataTableRow(
             summaryColumnTitle = stringResource(Res.string.feature_loan_loan_interest),
-            loanColumnValue = formatAmount(summary?.interestCharged),
-            amountColumnValue = formatAmount(summary?.interestPaid),
-            balanceColumnValue = formatAmount(summary?.interestOutstanding),
+            loanColumnValue = formatCurrency(summary?.interestCharged, currencyCode, decimalPlaces),
+            amountColumnValue = formatCurrency(summary?.interestPaid, currencyCode, decimalPlaces),
+            balanceColumnValue = formatCurrency(summary?.interestOutstanding, currencyCode, decimalPlaces),
         )
 
         HorizontalDivider(thickness = 0.5.dp)
 
         DataTableRow(
             summaryColumnTitle = stringResource(Res.string.feature_loan_loan_fees),
-            loanColumnValue = formatAmount(summary?.feeChargesCharged),
-            amountColumnValue = formatAmount(summary?.feeChargesPaid),
-            balanceColumnValue = formatAmount(summary?.feeChargesOutstanding),
+            loanColumnValue = formatCurrency(summary?.feeChargesCharged, currencyCode, decimalPlaces),
+            amountColumnValue = formatCurrency(summary?.feeChargesPaid, currencyCode, decimalPlaces),
+            balanceColumnValue = formatCurrency(summary?.feeChargesOutstanding, currencyCode, decimalPlaces),
         )
 
         HorizontalDivider(thickness = 0.5.dp)
 
         DataTableRow(
             summaryColumnTitle = stringResource(Res.string.feature_loan_loan_penalty),
-            loanColumnValue = formatAmount(summary?.penaltyChargesCharged),
-            amountColumnValue = formatAmount(summary?.penaltyChargesPaid),
-            balanceColumnValue = formatAmount(summary?.penaltyChargesOutstanding),
+            loanColumnValue = formatCurrency(summary?.penaltyChargesCharged, currencyCode, decimalPlaces),
+            amountColumnValue = formatCurrency(summary?.penaltyChargesPaid, currencyCode, decimalPlaces),
+            balanceColumnValue = formatCurrency(summary?.penaltyChargesOutstanding, currencyCode, decimalPlaces),
         )
     }
 }
@@ -759,54 +717,6 @@ private fun DataTableRow(
     }
 }
 
-/**
- * Extension function to determine if loan summary data should be displayed.
- * Returns true for active, closed (obligations met), or overpaid loans.
- */
-private fun LoanStatusEntity.shouldInflateLoanSummary(): Boolean {
-    return active == true || closedObligationsMet == true || overpaid == true
-}
-
-/**
- * Extension function to determine the primary action button for a loan based on its status.
- */
-private fun LoanStatusEntity.getPrimaryAction(): LoanPrimaryAction {
-    return when {
-        active == true -> LoanPrimaryAction.MAKE_REPAYMENT
-        pendingApproval == true -> LoanPrimaryAction.APPROVE_LOAN
-        waitingForDisbursal == true -> LoanPrimaryAction.DISBURSE_LOAN
-        overpaid == true -> LoanPrimaryAction.OVERPAID
-        closedObligationsMet == true -> LoanPrimaryAction.CLOSED
-        else -> LoanPrimaryAction.CLOSED
-    }
-}
-
-/**
- * Extension function to determine if the primary action button should be enabled.
- */
-private fun LoanStatusEntity.isButtonActive(): Boolean {
-    return active == true || pendingApproval == true || waitingForDisbursal == true
-}
-
-/**
- * Utility object for loan-related formatting operations.
- */
-private object LoanFormatUtils {
-    /**
-     * Formats the actual disbursement date from a list of integers to a readable string.
-     * @param date List of nullable integers representing [year, month, day]
-     * @return Formatted date string or empty string if date is null/empty
-     */
-    fun formatActualDisbursementDate(date: List<Int?>?): String {
-        return if (date != null && date.isNotEmpty() && date.all { it != null }) {
-            @Suppress("UNCHECKED_CAST")
-            DateHelper.getDateAsString(date as List<Int>)
-        } else {
-            ""
-        }
-    }
-}
-
 private class LoanAccountSummaryPreviewProvider :
     PreviewParameterProvider<LoanAccountSummaryState> {
     private val demoSummary = LoansAccountSummaryEntity(
@@ -863,7 +773,7 @@ private class LoanAccountSummaryPreviewProvider :
                     loanProductName = "Group Loan",
                     summary = demoSummary,
                 ),
-                dialogState = null,
+                dialogState = LoanAccountSummaryState.DialogState.Idle,
             ),
         )
 }
