@@ -41,13 +41,13 @@ class RecurringAccountRepositoryImp(
         ).asDataStateFlow()
     }
 
-    override fun approveRecurringDepositAccount(
+    override suspend fun approveRecurringDepositAccount(
         accountId: String,
         approval: RecurringDepositApproval,
-    ): Flow<DataState<GenericResponse>> {
+    ): GenericResponse {
         return dataManagerRecurringAccount.approveRecurringDepositAccount(
             accountId,
             approval,
-        ).asDataStateFlow()
+        )
     }
 }

@@ -53,21 +53,20 @@ class DataManagerRecurringAccount(
         )
     }
 
-    fun approveRecurringDepositAccount(
+    suspend fun approveRecurringDepositAccount(
         accountId: String,
         approval: RecurringDepositApproval,
-    ): Flow<GenericResponse> {
-        return mBaseApiManager.recurringSavingsAccountService.approveRecurringDepositAccount(
+    ): GenericResponse {
+        val response = mBaseApiManager.recurringSavingsAccountService.approveRecurringDepositAccount(
             accountId,
             approval,
-        ).map { response ->
-            if (!response.status.isSuccess()) {
-                val errorMessage = extractErrorMessage(response)
-                throw IllegalStateException(errorMessage)
-            }
-
-            val json = Json { ignoreUnknownKeys = true }
-            json.decodeFromString<GenericResponse>(response.bodyAsText())
+        )
+        if (!response.status.isSuccess()) {
+            val errorMessage = extractErrorMessage(response)
+            throw IllegalStateException(errorMessage)
         }
+
+        val json = Json { ignoreUnknownKeys = true }
+        return json.decodeFromString<GenericResponse>(response.bodyAsText())
     }
 }

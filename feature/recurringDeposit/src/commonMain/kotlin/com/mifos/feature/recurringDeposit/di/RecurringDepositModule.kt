@@ -17,17 +17,4 @@ import org.koin.dsl.module
 val RecurringDepositModule = module {
     viewModelOf(::RecurringAccountViewModel)
     viewModelOf(::RecurringDepositAccountApprovalViewModel)
-
-   /* viewModel {
-        RecurringDepositAccountApprovalViewModel(
-            savedStateHandle = get(),
-            approveRecurringDepositUseCase = get(),
-        )
-    }*/
-
-   /* factory {
-        ApproveRecurringDepositUseCase(
-            repository = get(),
-        )
-    }*/
 }

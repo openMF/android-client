@@ -27,8 +27,8 @@ interface RecurringAccountRepository {
         recurringDepositAccountPayload: RecurringDepositAccountPayload?,
     ): Flow<DataState<GenericResponse>>
 
-    fun approveRecurringDepositAccount(
+    suspend fun approveRecurringDepositAccount(
         accountId: String,
         approval: RecurringDepositApproval,
-    ): Flow<DataState<GenericResponse>>
+    ): GenericResponse
 }
