@@ -27,7 +27,6 @@ import com.mifos.room.entities.accounts.savings.SavingAccountCurrencyEntity
 import com.mifos.room.entities.accounts.savings.SavingAccountDepositTypeEntity
 import com.mifos.room.entities.accounts.savings.SavingsAccountEntity
 import com.mifos.room.entities.accounts.savings.SavingsAccountStatusEntity
-import kotlin.math.max
 
 /**
  * Created by Aditya Gupta on 30/08/23.
@@ -111,12 +110,7 @@ object GetClientsClientIdAccountMapper :
                     loanCycle = it.loanCycle,
                     originalLoan = it.originalLoan,
                     loanBalance = it.loanBalance,
-                    amountPaid = if (it.originalLoan != null) {
-                        val calculated = it.originalLoan - (it.loanBalance ?: 0.0)
-                        max(0.0, calculated)
-                    } else {
-                        null
-                    },
+                    amountPaid = it.amountPaid,
                 )
             } ?: emptyList(),
 
