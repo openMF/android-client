@@ -371,7 +371,10 @@ class ClientDaoHelper(
     suspend fun insertIdentifiers(identifiers: List<ClientIdentifierEntity>) {
         if (identifiers.isEmpty()) return
 
-        val clientIds = identifiers.mapNotNull { it.clientId }.distinct()
+        val validIdentifiers = identifiers.filter { it.clientId != null }
+        if (validIdentifiers.isEmpty()) return
+
+        val clientIds = validIdentifiers.map { it.clientId!! }.distinct()
 
         val backupIdentifiers = mutableListOf<ClientIdentifierEntity>()
         clientIds.forEach { clientId ->
@@ -382,14 +385,17 @@ class ClientDaoHelper(
             clientIds.forEach { clientId ->
                 clientDao.deleteIdentifiersByClientId(clientId)
             }
-            clientDao.insertIdentifiers(identifiers)
+            clientDao.insertIdentifiers(validIdentifiers)
         } catch (e: Exception) {
-            if (backupIdentifiers.isNotEmpty()) {
-                try {
-                    clientDao.insertIdentifiers(backupIdentifiers)
-                } catch (restoreException: Exception) {
-                    Logger.e(restoreException) { "Failed to restore identifiers backup" }
+            try {
+                clientIds.forEach { clientId ->
+                    clientDao.deleteIdentifiersByClientId(clientId)
                 }
+                if (backupIdentifiers.isNotEmpty()) {
+                    clientDao.insertIdentifiers(backupIdentifiers)
+                }
+            } catch (restoreException: Exception) {
+                Logger.e(restoreException) { "Failed to restore identifiers backup" }
             }
             throw e
         }

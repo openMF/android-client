@@ -9,24 +9,10 @@
  */
 package com.mifos.feature.searchrecord.di
 
-import com.mifos.core.data.datasource.SearchRecordLocalDataSource
-import com.mifos.core.data.datasource.SearchRecordLocalDataSourceImpl
-import com.mifos.core.data.repository.SearchRecordRepository
-import com.mifos.core.data.repositoryImp.SearchRecordRepositoryImpl
 import com.mifos.feature.searchrecord.SearchRecordViewModel
-import org.koin.core.module.dsl.bind
-import org.koin.core.module.dsl.singleOf
 import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.module
 
 val SearchRecordModule = module {
     viewModelOf(::SearchRecordViewModel)
-
-    singleOf(::SearchRecordRepositoryImpl) {
-        bind<SearchRecordRepository>()
-    }
-
-    singleOf(::SearchRecordLocalDataSourceImpl) {
-        bind<SearchRecordLocalDataSource>()
-    }
 }

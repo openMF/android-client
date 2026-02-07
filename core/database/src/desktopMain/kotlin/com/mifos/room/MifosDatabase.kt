@@ -177,17 +177,20 @@ actual abstract class MifosDatabase : RoomDatabase() {
                 connection.execSQL(
                     """
                     CREATE TABLE IF NOT EXISTS `ClientAddress` (
-                        `id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
-                        `clientId` INTEGER NOT NULL,
+                        `addressId` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+                        `clientId` INTEGER,
+                        `addressType` TEXT,
+                        `addressTypeId` INTEGER,
+                        `isActive` INTEGER NOT NULL DEFAULT 0,
                         `addressLine1` TEXT,
                         `addressLine2` TEXT,
                         `addressLine3` TEXT,
                         `city` TEXT,
-                        `stateName` TEXT,
+                        `stateProvinceId` INTEGER,
                         `countryName` TEXT,
-                        `postalCode` TEXT,
-                        `addressType` TEXT,
-                        `isActive` INTEGER NOT NULL DEFAULT 0
+                        `stateName` TEXT,
+                        `countryId` INTEGER,
+                        `postalCode` TEXT
                     )
                     """.trimIndent(),
                 )
@@ -196,13 +199,13 @@ actual abstract class MifosDatabase : RoomDatabase() {
                     """
                     CREATE TABLE IF NOT EXISTS `ClientIdentifier` (
                         `localId` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
-                        `id` INTEGER NOT NULL,
-                        `clientId` INTEGER NOT NULL,
-                        `documentKey` TEXT NOT NULL,
-                        `documentTypeName` TEXT NOT NULL,
-                        `documentTypeId` INTEGER NOT NULL,
-                        `description` TEXT NOT NULL,
-                        `status` TEXT NOT NULL
+                        `id` INTEGER,
+                        `clientId` INTEGER,
+                        `documentKey` TEXT,
+                        `documentTypeName` TEXT,
+                        `documentTypeId` INTEGER,
+                        `description` TEXT,
+                        `status` TEXT
                     )
                     """.trimIndent(),
                 )

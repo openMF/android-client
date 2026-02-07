@@ -71,6 +71,7 @@ import com.mifos.core.ui.components.MifosActionsIdentifierListingComponent
 import com.mifos.core.ui.components.MifosAddressCard
 import com.mifos.core.ui.components.MifosAlertDialog
 import com.mifos.core.ui.components.MifosProgressIndicator
+import com.mifos.core.ui.util.DevicePreview
 import com.mifos.core.ui.util.EventsEffect
 import com.mifos.core.ui.utils.getClientIdentifierStatus
 import org.jetbrains.compose.resources.stringResource
@@ -389,6 +390,29 @@ private fun SearchRecordNoResultsState(query: String) {
             text = stringResource(Res.string.search_record_no_results_description, query),
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
+        )
+    }
+}
+
+@DevicePreview
+@Composable
+private fun SearchRecordScreenPreview() {
+    MaterialTheme {
+        SearchRecordScreen(
+            state = SearchRecordState(
+                searchQuery = "John Doe",
+                searchRecords = listOf(
+                    GenericSearchRecord(
+                        id = 1,
+                        name = "John Doe",
+                        description = "Client #123",
+                        type = RecordType.ADDRESS.name,
+                        metadata = emptyMap(),
+                    ),
+                ),
+            ),
+            onBackClick = {},
+            onRecordSelected = {},
         )
     }
 }

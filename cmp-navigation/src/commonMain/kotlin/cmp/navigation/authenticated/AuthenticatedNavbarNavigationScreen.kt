@@ -66,8 +66,10 @@ import cmp.navigation.components.MifosTopAppBar
 import cmp.navigation.components.ScaffoldNavigationData
 import cmp.navigation.navigation.HomeDestinationsScreen
 import cmp.navigation.ui.rememberMifosNavController
+import co.touchlab.kermit.Logger
 import com.mifos.core.common.utils.Constants
 import com.mifos.core.designsystem.theme.DesignToken
+import com.mifos.core.model.objects.searchrecord.GenericSearchRecord
 import com.mifos.core.model.objects.searchrecord.RecordType
 import com.mifos.core.ui.RootTransitionProviders
 import com.mifos.core.ui.util.EventsEffect
@@ -377,8 +379,8 @@ internal fun AuthenticatedNavbarNavigationScreenContent(
 
                 searchRecordNavigation(
                     onBackClick = { navController.popBackStack() },
-                    onRecordSelected = { record ->
-                        val clientId = record.metadata[Constants.CLIENT_ID]?.toIntOrNull()
+                    onRecordSelected = { record: GenericSearchRecord ->
+                        val clientId = record.metadata[Constants.CLIENT_ID]?.toString()?.toIntOrNull()
 
                         if (clientId != null) {
                             when {
@@ -390,6 +392,8 @@ internal fun AuthenticatedNavbarNavigationScreenContent(
                                     navController.navigateToClientIdentifiersListScreen(clientId = clientId)
                                 }
                             }
+                        } else {
+                            Logger.w("AuthenticatedNavbar") { "Invalid Client ID selected for record: ${record.id}" }
                         }
                     },
                 )

@@ -12,6 +12,7 @@ package com.mifos.core.data.repositoryImp
 import co.touchlab.kermit.Logger
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.common.utils.asDataStateFlow
+import com.mifos.core.data.mappers.toRoomEntity
 import com.mifos.core.data.repository.CreateNewClientRepository
 import com.mifos.core.model.objects.clients.ClientAddressEntity
 import com.mifos.core.network.datamanager.DataManagerClient
@@ -29,7 +30,6 @@ import com.mifos.room.helper.ClientDaoHelper
 import io.ktor.client.request.forms.MultiPartFormDataContent
 import kotlinx.coroutines.flow.Flow
 import kotlin.coroutines.cancellation.CancellationException
-import com.mifos.room.entities.client.ClientAddressEntity as RoomAddressEntity
 
 /**
  * Created by Aditya Gupta on 10/08/23.
@@ -79,23 +79,7 @@ class CreateNewClientRepositoryImp(
             clientDaoHelper.deleteAddressesByClientId(clientId)
 
             if (addresses.isNotEmpty()) {
-                val roomEntities = addresses.map { item ->
-                    RoomAddressEntity(
-                        clientID = item.clientID ?: clientId,
-                        addressId = item.addressId ?: 0,
-                        addressType = item.addressType ?: "",
-                        addressLine1 = item.addressLine1 ?: "",
-                        addressLine2 = item.addressLine2 ?: "",
-                        addressLine3 = item.addressLine3 ?: "",
-                        city = item.city ?: "",
-                        stateProvinceId = item.stateProvinceId ?: -1,
-                        countryName = item.countryName ?: "",
-                        stateName = item.stateName ?: "",
-                        countryId = item.countryId ?: -1,
-                        postalCode = item.postalCode ?: "",
-                        isActive = item.isActive ?: false,
-                    )
-                }
+                val roomEntities = addresses.map { it.toRoomEntity(clientId) }
                 clientDaoHelper.insertAddresses(roomEntities)
             }
         } catch (e: CancellationException) {

@@ -23,7 +23,7 @@ import com.mifos.room.utils.PrimaryKey
 data class ClientAddressEntity(
     @PrimaryKey(autoGenerate = true)
     val addressId: Int = 0,
-    val clientID: Int? = null,
+    val clientId: Int? = null,
     val addressType: String? = null,
     val addressTypeId: Int? = null,
     val isActive: Boolean = false,

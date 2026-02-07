@@ -44,7 +44,7 @@ class SearchRecordLocalDataSourceImpl(
                         description = buildAddressDescription(address),
                         type = RecordType.ADDRESS.name,
                         metadata = mapOf(
-                            Constants.CLIENT_ID to (address.clientID?.toString() ?: ""),
+                            Constants.CLIENT_ID to (address.clientId?.toString() ?: ""),
                             Constants.CITY to (address.city ?: ""),
                             Constants.STATE to (address.stateName ?: ""),
                             Constants.COUNTRY to (address.countryName ?: ""),
