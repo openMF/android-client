@@ -109,7 +109,16 @@ internal class LoanAccountSummaryViewModel(
 
                     is DataState.Success -> {
                         val loan: LoanWithAssociationsEntity? = dataState.data
-                        fillLoanSummary(loan)
+                        if (loan != null) {
+                            fillLoanSummary(loan)
+                        } else {
+                            val errorMessage = getString(Res.string.feature_loan_unknown_error_occured)
+                            mutableStateFlow.update {
+                                it.copy(
+                                    dialogState = LoanAccountSummaryState.DialogState.Error(errorMessage),
+                                )
+                            }
+                        }
                     }
 
                     is DataState.Error -> {
@@ -125,7 +134,7 @@ internal class LoanAccountSummaryViewModel(
         }
     }
 
-    private fun fillLoanSummary(loan: LoanWithAssociationsEntity?) {
+    private fun fillLoanSummary(loan: LoanWithAssociationsEntity) {
         val actualDisbursementDate = formatActualDisbursementDate(
             loan?.timeline?.actualDisbursementDate,
         )

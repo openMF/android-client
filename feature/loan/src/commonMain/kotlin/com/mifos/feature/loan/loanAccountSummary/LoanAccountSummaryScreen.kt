@@ -227,8 +227,6 @@ internal fun LoanAccountSummaryScreen(
                 state.loanWithAssociations?.let { loanWithAssociations ->
                     LoanAccountSummaryContent(
                         state = state,
-                        loanWithAssociations = loanWithAssociations,
-                        actualDisbursementDate = state.actualDisbursementDate,
                         onAction = onAction,
                     )
                 }
@@ -240,10 +238,10 @@ internal fun LoanAccountSummaryScreen(
 @Composable
 private fun LoanAccountSummaryContent(
     state: LoanAccountSummaryState,
-    loanWithAssociations: LoanWithAssociationsEntity,
-    actualDisbursementDate: String,
     onAction: (LoanAccountSummaryAction) -> Unit,
 ) {
+    val loanWithAssociations = state.loanWithAssociations ?: return
+    val actualDisbursementDate = state.actualDisbursementDate
     val scrollState = rememberScrollState()
     val clipboardManager = LocalClipboardManager.current
 
@@ -441,7 +439,8 @@ private fun LoanAccountSummaryContent(
 
         LoanSummaryDataTable(state = state)
 
-        val buttonText = when (loanWithAssociations.status.getPrimaryAction()) {
+        val primaryAction = loanWithAssociations.status.getPrimaryAction()
+        val buttonText = when (primaryAction) {
             LoanPrimaryAction.MAKE_REPAYMENT -> stringResource(Res.string.feature_loan_make_Repayment)
             LoanPrimaryAction.APPROVE_LOAN -> stringResource(Res.string.feature_loan_approve_loan)
             LoanPrimaryAction.DISBURSE_LOAN -> stringResource(Res.string.feature_loan_disburse_loan)
@@ -456,7 +455,7 @@ private fun LoanAccountSummaryContent(
                 .height(DesignToken.sizes.buttonHeightMedium),
             shape = DesignToken.shapes.small,
             onClick = {
-                when (loanWithAssociations.status.getPrimaryAction()) {
+                when (primaryAction) {
                     LoanPrimaryAction.MAKE_REPAYMENT -> onAction(LoanAccountSummaryAction.OnMakeRepayment)
                     LoanPrimaryAction.APPROVE_LOAN -> onAction(LoanAccountSummaryAction.OnApproveLoan)
                     LoanPrimaryAction.DISBURSE_LOAN -> onAction(LoanAccountSummaryAction.OnDisburseLoan)
@@ -769,6 +768,37 @@ private class LoanAccountSummaryPreviewProvider :
                     summary = demoSummary,
                 ),
                 dialogState = null,
+            ),
+            LoanAccountSummaryState(
+                loanWithAssociations = LoanWithAssociationsEntity(
+                    accountNo = "12345678901",
+                    status = LoanStatusEntity(
+                        active = true,
+                    ),
+                    clientName = "John Doe",
+                    loanOfficerName = "Jane Smith",
+                    loanProductName = "Personal Loan",
+                    summary = demoSummary,
+                ),
+                dialogState = null,
+                inflateLoanSummary = true,
+                actualDisbursementDate = "01 June 2024",
+                totalLoanFormat = "$10,700.00",
+                loanAmountPaid = "$4,450.00",
+                outstandingAmount = "$6,250.00",
+                overdueAmount = "$580.00",
+                principalDisbursed = "$10,000.00",
+                principalPaid = "$4,000.00",
+                principalOutStanding = "$6,000.00",
+                interestCharged = "$700.00",
+                interestPaid = "$300.00",
+                interestOutstanding = "$200.00",
+                feeChargesCharged = "$200.00",
+                feeChargesPaid = "$150.00",
+                feeChargesOutstanding = "$50.00",
+                penaltyChargesCharged = "$100.00",
+                penaltyChargesPaid = "$50.00",
+                penaltyChargesOutstanding = "$50.00",
             ),
         )
 }
