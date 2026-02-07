@@ -71,10 +71,12 @@ import com.mifos.core.ui.components.MifosActionsIdentifierListingComponent
 import com.mifos.core.ui.components.MifosAddressCard
 import com.mifos.core.ui.components.MifosAlertDialog
 import com.mifos.core.ui.components.MifosProgressIndicator
-import com.mifos.core.ui.util.DevicePreview
 import com.mifos.core.ui.util.EventsEffect
 import com.mifos.core.ui.utils.getClientIdentifierStatus
 import org.jetbrains.compose.resources.stringResource
+import org.jetbrains.compose.ui.tooling.preview.Preview
+import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
+import org.jetbrains.compose.ui.tooling.preview.PreviewParameterProvider
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -394,23 +396,60 @@ private fun SearchRecordNoResultsState(query: String) {
     }
 }
 
-@DevicePreview
-@Composable
-private fun SearchRecordScreenPreview() {
-    MaterialTheme {
-        SearchRecordScreen(
-            state = SearchRecordState(
-                searchQuery = "John Doe",
+private class SearchRecordPreviewProvider : PreviewParameterProvider<SearchRecordState> {
+    override val values: Sequence<SearchRecordState>
+        get() = sequenceOf(
+            SearchRecordState(
+                searchQuery = "Kartikey",
+                displayTitle = "Client",
                 searchRecords = listOf(
                     GenericSearchRecord(
                         id = 1,
-                        name = "John Doe",
-                        description = "Client #123",
+                        name = "Home Address",
+                        description = "Delhi, India",
                         type = RecordType.ADDRESS.name,
-                        metadata = emptyMap(),
+                        metadata = mapOf(
+                            Constants.ADDRESS_LINE_1 to "123 Main",
+                            Constants.CITY to "Delhi",
+                            Constants.COUNTRY to "India",
+                        ),
+                    ),
+                    GenericSearchRecord(
+                        id = 2,
+                        name = "Passport",
+                        description = "Valid Document",
+                        type = RecordType.IDENTIFIER.name,
+                        metadata = mapOf(
+                            Constants.DOCUMENT_KEY to "A12345678",
+                            Constants.STATUS to "Active",
+                        ),
                     ),
                 ),
             ),
+            SearchRecordState(
+                displayTitle = "Client",
+                dialogState = SearchRecordState.DialogState.Loading,
+            ),
+            SearchRecordState(
+                displayTitle = "Client",
+                searchQuery = "Unknown",
+                isNoResultsFound = true,
+            ),
+            SearchRecordState(
+                displayTitle = "Client",
+                dialogState = SearchRecordState.DialogState.Error("Network Timeout"),
+            ),
+        )
+}
+
+@Composable
+@Preview
+private fun SearchRecordScreenPreview(
+    @PreviewParameter(SearchRecordPreviewProvider::class) state: SearchRecordState,
+) {
+    MaterialTheme {
+        SearchRecordScreen(
+            state = state,
             onBackClick = {},
             onRecordSelected = {},
         )

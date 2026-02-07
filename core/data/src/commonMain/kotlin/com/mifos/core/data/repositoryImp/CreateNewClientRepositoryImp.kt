@@ -12,7 +12,7 @@ package com.mifos.core.data.repositoryImp
 import co.touchlab.kermit.Logger
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.common.utils.asDataStateFlow
-import com.mifos.core.data.mappers.toRoomEntity
+import com.mifos.core.data.mappers.client.ClientAddressMapper
 import com.mifos.core.data.repository.CreateNewClientRepository
 import com.mifos.core.model.objects.clients.ClientAddressEntity
 import com.mifos.core.network.datamanager.DataManagerClient
@@ -79,7 +79,9 @@ class CreateNewClientRepositoryImp(
             clientDaoHelper.deleteAddressesByClientId(clientId)
 
             if (addresses.isNotEmpty()) {
-                val roomEntities = addresses.map { it.toRoomEntity(clientId) }
+                val roomEntities = addresses.map {
+                    ClientAddressMapper.mapFromEntity(it.copy(clientID = clientId))
+                }
                 clientDaoHelper.insertAddresses(roomEntities)
             }
         } catch (e: CancellationException) {

@@ -12,7 +12,7 @@ package com.mifos.core.data.repositoryImp
 import co.touchlab.kermit.Logger
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.common.utils.asDataStateFlow
-import com.mifos.core.data.mappers.toRoomEntity
+import com.mifos.core.data.mappers.client.ClientIdentifierMapper
 import com.mifos.core.data.repository.ClientIdentifiersRepository
 import com.mifos.core.model.objects.noncoreobjects.Identifier
 import com.mifos.core.model.objects.noncoreobjects.IdentifierPayload
@@ -38,7 +38,9 @@ class ClientIdentifiersRepositoryImp(
             .asDataStateFlow()
             .onEach { dataState ->
                 if (dataState is DataState.Success) {
-                    val entities = dataState.data.map { it.toRoomEntity(clientId.toInt()) }
+                    val entities = dataState.data.map {
+                        ClientIdentifierMapper.mapFromEntity(it.copy(clientId = clientId.toInt()))
+                    }
                     try {
                         clientDaoHelper.insertIdentifiers(entities)
                     } catch (e: CancellationException) {
