@@ -144,24 +144,27 @@ internal class LoanAccountSummaryViewModel(
                 dialogState = null,
                 inflateLoanSummary = shouldInflateLoanSummary == true,
 
-                totalLoanFormat = formatCurrency(
-                    summary?.totalExpectedRepayment,
-                    currencyCode,
-                    decimalPlaces,
-                ),
-                outstandingAmount = formatCurrency(
-                    summary?.totalOutstanding,
-                    currencyCode,
-                    decimalPlaces,
-                ),
-                amountDisbursed = formatCurrency(
-                    summary?.principalDisbursed,
-                    currencyCode,
-                    decimalPlaces,
-                ),
+                totalLoanFormat = formatCurrency(summary?.totalExpectedRepayment, currencyCode, decimalPlaces),
+                loanAmountPaid = formatCurrency(summary?.totalRepayment, currencyCode, decimalPlaces),
+                outstandingAmount = formatCurrency(summary?.totalOutstanding, currencyCode, decimalPlaces),
+                amountDisbursed = formatCurrency(summary?.principalDisbursed, currencyCode, decimalPlaces),
                 overdueAmount = formatCurrency(summary?.totalOverdue, currencyCode, decimalPlaces),
-                // todo format all of them like this 
 
+                principalDisbursed = formatCurrency(summary?.principalDisbursed, currencyCode, decimalPlaces),
+                principalPaid = formatCurrency(summary?.principalPaid, currencyCode, decimalPlaces),
+                principalOutStanding = formatCurrency(summary?.principalOutstanding, currencyCode, decimalPlaces),
+
+                interestCharged = formatCurrency(summary?.interestCharged, currencyCode, decimalPlaces),
+                interestPaid = formatCurrency(summary?.interestPaid, currencyCode, decimalPlaces),
+                interestOutstanding = formatCurrency(summary?.interestOutstanding, currencyCode, decimalPlaces),
+
+                feeChargesCharged = formatCurrency(summary?.feeChargesCharged, currencyCode, decimalPlaces),
+                feeChargesPaid = formatCurrency(summary?.feeChargesPaid, currencyCode, decimalPlaces),
+                feeChargesOutstanding = formatCurrency(summary?.feeChargesOutstanding, currencyCode, decimalPlaces),
+
+                penaltyChargesCharged = formatCurrency(summary?.penaltyChargesCharged, currencyCode, decimalPlaces),
+                penaltyChargesPaid = formatCurrency(summary?.penaltyChargesPaid, currencyCode, decimalPlaces),
+                penaltyChargesOutstanding = formatCurrency(summary?.penaltyChargesOutstanding, currencyCode, decimalPlaces),
             )
         }
     }
@@ -179,7 +182,7 @@ internal class LoanAccountSummaryViewModel(
         return active == true || closedObligationsMet == true || overpaid == true
     }
 
-    fun formatCurrency(
+    private fun formatCurrency(
         amount: Double?,
         currencyCode: String?,
         decimalPlaces: Int?,
@@ -285,4 +288,3 @@ internal fun LoanStatusEntity.getPrimaryAction(): LoanPrimaryAction {
         else -> LoanPrimaryAction.CLOSED
     }
 }
-

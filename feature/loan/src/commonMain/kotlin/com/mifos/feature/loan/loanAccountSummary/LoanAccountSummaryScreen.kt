@@ -180,8 +180,6 @@ internal fun LoanAccountSummaryScreenRoute(
             { viewModel.trySendAction(it) }
         },
     )
-
-
 }
 
 @Composable
@@ -771,7 +769,6 @@ private class LoanAccountSummaryPreviewProvider :
         )
 }
 
-
 @Composable
 @Preview
 private fun PreviewLoanAccountSummary(
@@ -786,4 +783,3 @@ private fun PreviewLoanAccountSummary(
         )
     }
 }
-
