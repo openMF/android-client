@@ -9,8 +9,12 @@
  */
 package com.mifos.room.entities.client
 
+import com.mifos.room.utils.ColumnInfo
 import com.mifos.room.utils.Entity
 import com.mifos.room.utils.PrimaryKey
+import com.mifos.room.utils.UNDEFINED
+import com.mifos.room.utils.UNSPECIFIED
+import com.mifos.room.utils.VALUE_UNSPECIFIED
 
 @Entity(
     tableName = "ClientAddress",
@@ -23,6 +27,13 @@ import com.mifos.room.utils.PrimaryKey
 data class ClientAddressEntity(
     @PrimaryKey(autoGenerate = true)
     val addressId: Int = 0,
+    @ColumnInfo(
+        name = "clientID",
+        index = true,
+        typeAffinity = UNDEFINED,
+        collate = UNSPECIFIED,
+        defaultValue = VALUE_UNSPECIFIED,
+    )
     val clientId: Int = -1,
     val addressType: String = "",
     val addressTypeId: Int = -1,

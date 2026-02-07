@@ -36,7 +36,9 @@ object ClientIdentifierMapper : AbstractMapper<Identifier, ClientIdentifierEntit
             documentKey = roomEntity.documentKey,
             description = roomEntity.description,
             status = roomEntity.status,
-            documentType = if (roomEntity.documentTypeId != null || roomEntity.documentTypeName != null) {
+            documentType = if (
+                roomEntity.documentTypeId != null || roomEntity.documentTypeName != null
+            ) {
                 DocumentType(
                     id = roomEntity.documentTypeId,
                     name = roomEntity.documentTypeName,
