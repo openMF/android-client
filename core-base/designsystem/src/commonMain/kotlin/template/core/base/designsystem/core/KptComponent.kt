@@ -132,6 +132,18 @@ interface KptColorScheme {
     val surfaceContainerHighest: Color
     val surfaceContainerLow: Color
     val surfaceContainerLowest: Color
+    val primaryFixed: Color
+    val primaryFixedDim: Color
+    val onPrimaryFixed: Color
+    val onPrimaryFixedVariant: Color
+    val secondaryFixed: Color
+    val secondaryFixedDim: Color
+    val onSecondaryFixed: Color
+    val onSecondaryFixedVariant: Color
+    val tertiaryFixed: Color
+    val tertiaryFixedDim: Color
+    val onTertiaryFixed: Color
+    val onTertiaryFixedVariant: Color
 }
 
 @Stable

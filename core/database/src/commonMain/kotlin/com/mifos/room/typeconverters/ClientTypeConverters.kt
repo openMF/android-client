@@ -11,9 +11,9 @@ package com.mifos.room.typeconverters
 
 import com.mifos.core.model.objects.account.loan.Currency
 import com.mifos.room.entities.accounts.loans.LoanAccountEntity
-import com.mifos.room.utils.TypeConverter
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
+import template.core.base.database.TypeConverter
 
 class ClientTypeConverters {
     @TypeConverter
