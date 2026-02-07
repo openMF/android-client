@@ -56,19 +56,23 @@ internal class LoanAccountSummaryViewModel(
             is LoanAccountSummaryAction.OnChargesClick -> {
                 sendEvent(LoanAccountSummaryEvent.NavigateToCharges(loanAccountNumber))
             }
-            is LoanAccountSummaryAction.OnApproveLoan -> {
-                sendEvent(
-                    LoanAccountSummaryEvent.NavigateToApproveLoan(
-                        loanAccountNumber,
-                        action.loanWithAssociations,
-                    ),
-                )
+            LoanAccountSummaryAction.OnApproveLoan -> {
+                mutableStateFlow.value.loanWithAssociations?.let { loan ->
+                    sendEvent(
+                        LoanAccountSummaryEvent.NavigateToApproveLoan(
+                            loanAccountNumber,
+                            loan,
+                        ),
+                    )
+                }
             }
-            is LoanAccountSummaryAction.OnDisburseLoan -> {
+            LoanAccountSummaryAction.OnDisburseLoan -> {
                 sendEvent(LoanAccountSummaryEvent.NavigateToDisburseLoan(loanAccountNumber))
             }
-            is LoanAccountSummaryAction.OnMakeRepayment -> {
-                sendEvent(LoanAccountSummaryEvent.NavigateToMakeRepayment(action.loanWithAssociations))
+            LoanAccountSummaryAction.OnMakeRepayment -> {
+                mutableStateFlow.value.loanWithAssociations?.let { loan ->
+                    sendEvent(LoanAccountSummaryEvent.NavigateToMakeRepayment(loan))
+                }
             }
             LoanAccountSummaryAction.OnLoanIdCopied -> {
                 mutableStateFlow.update { it.copy(showLoanIdCopiedMessage = true) }
@@ -117,7 +121,7 @@ internal class LoanAccountSummaryViewModel(
     }
 
     private fun formatActualDisbursementDate(date: List<Int?>?): String {
-        return if (date != null && date.isNotEmpty() && date.all { it != null }) {
+        return if (date != null && date.size >= 3 && date.all { it != null }) {
             @Suppress("UNCHECKED_CAST")
             DateHelper.getDateAsString(date as List<Int>)
         } else {

@@ -55,9 +55,9 @@ sealed interface LoanAccountSummaryAction {
     data object OnRepaymentScheduleClick : LoanAccountSummaryAction
     data object OnDocumentsClick : LoanAccountSummaryAction
     data object OnChargesClick : LoanAccountSummaryAction
-    data class OnApproveLoan(val loanWithAssociations: LoanWithAssociationsEntity) : LoanAccountSummaryAction
+    data object OnApproveLoan : LoanAccountSummaryAction
     data object OnDisburseLoan : LoanAccountSummaryAction
-    data class OnMakeRepayment(val loanWithAssociations: LoanWithAssociationsEntity) : LoanAccountSummaryAction
+    data object OnMakeRepayment : LoanAccountSummaryAction
     data object OnLoanIdCopied : LoanAccountSummaryAction
     data object OnMessageShown : LoanAccountSummaryAction
     data object ToggleDropdown : LoanAccountSummaryAction

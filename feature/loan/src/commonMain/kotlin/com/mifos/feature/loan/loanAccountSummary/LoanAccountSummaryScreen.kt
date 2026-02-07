@@ -515,25 +515,14 @@ private fun LoanAccountSummaryContent(
                 .fillMaxWidth()
                 .height(DesignToken.sizes.buttonHeightMedium),
             shape = DesignToken.shapes.small,
-            onClick = when {
-                loanWithAssociations.status.active == true -> {
-                    { onAction(LoanAccountSummaryAction.OnMakeRepayment(loanWithAssociations)) }
-                }
-
-                loanWithAssociations.status.pendingApproval == true -> {
-                    { onAction(LoanAccountSummaryAction.OnApproveLoan(loanWithAssociations)) }
-                }
-
-                loanWithAssociations.status.waitingForDisbursal == true -> {
-                    { onAction(LoanAccountSummaryAction.OnDisburseLoan) }
-                }
-
-                loanWithAssociations.status.closedObligationsMet == true -> {
-                    { Logger.e("LoanAccountSummary") { "TRANSACTION ACTION NOT SET" } }
-                }
-
-                else -> {
-                    { Logger.e("LoanAccountSummary") { "TRANSACTION ACTION NOT SET" } }
+            onClick = {
+                when (loanWithAssociations.status.getPrimaryAction()) {
+                    LoanPrimaryAction.MAKE_REPAYMENT -> onAction(LoanAccountSummaryAction.OnMakeRepayment)
+                    LoanPrimaryAction.APPROVE_LOAN -> onAction(LoanAccountSummaryAction.OnApproveLoan)
+                    LoanPrimaryAction.DISBURSE_LOAN -> onAction(LoanAccountSummaryAction.OnDisburseLoan)
+                    LoanPrimaryAction.OVERPAID, LoanPrimaryAction.CLOSED -> {
+                        Logger.e("LoanAccountSummary") { "TRANSACTION ACTION NOT SET" }
+                    }
                 }
             },
             colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
