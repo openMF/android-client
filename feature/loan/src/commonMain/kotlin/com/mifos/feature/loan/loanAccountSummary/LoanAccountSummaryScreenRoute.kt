@@ -37,7 +37,7 @@ fun NavGraphBuilder.loanAccountSummary(
     navController: NavController,
 ) {
     composable<LoanAccountSummaryScreenRoute> {
-        LoanAccountSummaryScreen(
+        LoanAccountSummaryScreenRoute(
             onMoreInfoClicked = onMoreInfoClicked,
             onTransactionsClicked = onTransactionsClicked,
             onRepaymentScheduleClicked = onRepaymentScheduleClicked,
