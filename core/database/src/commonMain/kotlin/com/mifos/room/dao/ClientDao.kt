@@ -160,13 +160,13 @@ interface ClientDao {
     @Query(
         """
     SELECT * FROM ClientAddress 
-    WHERE addressLine1 LIKE :query
-       OR addressLine2 LIKE :query
-       OR addressLine3 LIKE :query
-       OR city LIKE :query
-       OR stateName LIKE :query
-       OR countryName LIKE :query
-       OR postalCode LIKE :query
+    WHERE addressLine1 LIKE :query ESCAPE '\'
+       OR addressLine2 LIKE :query ESCAPE '\'
+       OR addressLine3 LIKE :query ESCAPE '\'
+       OR city LIKE :query ESCAPE '\'
+       OR stateName LIKE :query ESCAPE '\'
+       OR countryName LIKE :query ESCAPE '\'
+       OR postalCode LIKE :query ESCAPE '\'
     ORDER BY city
     LIMIT 50
     """,
@@ -185,10 +185,10 @@ interface ClientDao {
     @Query(
         """
     SELECT * FROM ClientIdentifier 
-    WHERE CAST(id AS TEXT) LIKE :query  -- Added this line to search by numeric ID
-       OR documentKey LIKE :query 
-       OR description LIKE :query 
-       OR documentTypeName LIKE :query
+    WHERE CAST(id AS TEXT) LIKE :query ESCAPE '\'
+       OR documentKey LIKE :query ESCAPE '\'
+       OR description LIKE :query ESCAPE '\'
+       OR documentTypeName LIKE :query ESCAPE '\'
     ORDER BY documentKey
     LIMIT 50
     """,

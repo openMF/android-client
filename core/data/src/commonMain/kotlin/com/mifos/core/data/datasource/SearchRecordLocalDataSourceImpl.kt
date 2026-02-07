@@ -34,7 +34,8 @@ class SearchRecordLocalDataSourceImpl(
     }
 
     private fun searchAddressesLocal(query: String): Flow<List<GenericSearchRecord>> {
-        val fuzzyQuery = "%$query%"
+        val sanitized = query.replace("%", "\\%").replace("_", "\\_")
+        val fuzzyQuery = "%$sanitized%"
         return clientDaoHelper.searchAddressesByQuery(fuzzyQuery)
             .map { addresses ->
                 addresses.map { address ->
@@ -59,7 +60,8 @@ class SearchRecordLocalDataSourceImpl(
     }
 
     private fun searchIdentifiersLocal(query: String): Flow<List<GenericSearchRecord>> {
-        val fuzzyQuery = "%$query%"
+        val sanitized = query.replace("%", "\\%").replace("_", "\\_")
+        val fuzzyQuery = "%$sanitized%"
         return clientDaoHelper.searchIdentifiersByQuery(fuzzyQuery)
             .map { identifiers ->
                 identifiers.map { identifier ->

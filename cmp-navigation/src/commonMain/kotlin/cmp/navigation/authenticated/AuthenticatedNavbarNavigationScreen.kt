@@ -380,7 +380,7 @@ internal fun AuthenticatedNavbarNavigationScreenContent(
                 searchRecordNavigation(
                     onBackClick = { navController.popBackStack() },
                     onRecordSelected = { record: GenericSearchRecord ->
-                        val clientId = record.metadata[Constants.CLIENT_ID]?.toString()?.toIntOrNull()
+                        val clientId = record.metadata[Constants.CLIENT_ID]?.toIntOrNull()
 
                         if (clientId != null) {
                             when {
