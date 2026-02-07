@@ -136,22 +136,22 @@ internal class LoanAccountSummaryViewModel(
 
     private fun fillLoanSummary(loan: LoanWithAssociationsEntity) {
         val actualDisbursementDate = formatActualDisbursementDate(
-            loan?.timeline?.actualDisbursementDate,
+            loan.timeline?.actualDisbursementDate,
         )
 
-        val shouldInflateLoanSummary = loan?.status?.shouldInflateLoanSummary()
+        val shouldInflateLoanSummary = loan.status?.shouldInflateLoanSummary() ?: false
         // dataTable should be empty if [inflateLoanSummary] is false
-        val summary = if (shouldInflateLoanSummary == true) loan.summary else null
+        val summary = if (shouldInflateLoanSummary) loan.summary else null
 
-        val currencyCode = loan?.currency?.code
-        val decimalPlaces = loan?.currency?.decimalPlaces
+        val currencyCode = loan.currency?.code
+        val decimalPlaces = loan.currency?.decimalPlaces
 
         mutableStateFlow.update {
             it.copy(
                 loanWithAssociations = loan,
                 actualDisbursementDate = actualDisbursementDate,
                 dialogState = null,
-                inflateLoanSummary = shouldInflateLoanSummary == true,
+                inflateLoanSummary = shouldInflateLoanSummary,
 
                 totalLoanFormat = formatCurrency(summary?.totalExpectedRepayment, currencyCode, decimalPlaces),
                 loanAmountPaid = formatCurrency(summary?.totalRepayment, currencyCode, decimalPlaces),

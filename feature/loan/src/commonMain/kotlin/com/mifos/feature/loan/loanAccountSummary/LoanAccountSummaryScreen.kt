@@ -180,9 +180,7 @@ internal fun LoanAccountSummaryScreenRoute(
 
     LoadAccountSummaryDialog(
         state.dialogState,
-        onAction = remember(viewModel) {
-            { viewModel.trySendAction(it) }
-        },
+        onAction = viewModel::trySendAction,
     )
 }
 
@@ -467,7 +465,7 @@ private fun LoanAccountSummaryContent(
             colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
         ) {
             Text(
-                color = MaterialTheme.colorScheme.background,
+                color = MaterialTheme.colorScheme.onPrimary,
                 text = buttonText,
             )
         }
