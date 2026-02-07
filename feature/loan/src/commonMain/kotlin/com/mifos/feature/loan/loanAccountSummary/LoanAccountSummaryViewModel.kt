@@ -147,7 +147,6 @@ internal class LoanAccountSummaryViewModel(
                 totalLoanFormat = formatCurrency(summary?.totalExpectedRepayment, currencyCode, decimalPlaces),
                 loanAmountPaid = formatCurrency(summary?.totalRepayment, currencyCode, decimalPlaces),
                 outstandingAmount = formatCurrency(summary?.totalOutstanding, currencyCode, decimalPlaces),
-                amountDisbursed = formatCurrency(summary?.principalDisbursed, currencyCode, decimalPlaces),
                 overdueAmount = formatCurrency(summary?.totalOverdue, currencyCode, decimalPlaces),
 
                 principalDisbursed = formatCurrency(summary?.principalDisbursed, currencyCode, decimalPlaces),
@@ -209,7 +208,6 @@ data class LoanAccountSummaryState(
     val totalLoanFormat: String = "",
     val loanAmountPaid: String = "",
     val outstandingAmount: String = "",
-    val amountDisbursed: String = "",
     val overdueAmount: String = "",
 
     val principalDisbursed: String = "",

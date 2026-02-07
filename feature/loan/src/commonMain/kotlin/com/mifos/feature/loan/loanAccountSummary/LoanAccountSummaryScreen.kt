@@ -69,6 +69,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -160,11 +161,14 @@ internal fun LoanAccountSummaryScreenRoute(
         }
     }
 
-    LaunchedEffect(state.showLoanIdCopiedMessage) {
-        if (state.showLoanIdCopiedMessage) {
-            snackbarHostState.showSnackbar(message = loanIdCopiedMessage)
-            viewModel.trySendAction(LoanAccountSummaryAction.OnMessageShown)
-        }
+    LaunchedEffect(Unit) {
+        snapshotFlow { state.showLoanIdCopiedMessage }
+            .collect { showMessage ->
+                if (showMessage) {
+                    snackbarHostState.showSnackbar(message = loanIdCopiedMessage)
+                    viewModel.trySendAction(LoanAccountSummaryAction.OnMessageShown)
+                }
+            }
     }
 
     LoanAccountSummaryScreen(
@@ -380,7 +384,7 @@ private fun LoanAccountSummaryContent(
                     LoanSummaryFarApartTextItem(
                         title = stringResource(Res.string.feature_loan_loan_amount_disbursed),
                         value = if (state.inflateLoanSummary) {
-                            state.amountDisbursed
+                            state.principalDisbursed
                         } else {
                             ""
                         },
