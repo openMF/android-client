@@ -184,6 +184,7 @@ private fun ClientLoanAccountsScreen(
                                         (loan.amountPaid ?: "Not Available").toString()
                                         ),
                                     type = loan.loanType?.value ?: "Not Available",
+                                    status = loan.status?.value ?: "Not Available",
                                     // TODO check if we need to add other options as well, such as disburse and all
                                     // currently didn't add it cuz its not in the UI design
                                     menuList = when {
