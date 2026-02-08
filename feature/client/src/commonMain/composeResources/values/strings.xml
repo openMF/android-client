@@ -648,6 +648,13 @@
     <string name="feature_fixed_deposit_interest_empty_date">Date Not Found</string>
     <string name="feature_fixed_account_created_successfully">Share account created successfully</string>
 
-
+    <!-- Filters -->
+    <string name="feature_client_filters">Filters</string>
+    <string name="feature_client_account_status">Account Status</string>
+    <string name="feature_client_status_active">Active</string>
+    <string name="feature_client_status_closed">Closed</string>
+    <string name="feature_client_status_overpaid">Overpaid</string>
+    <string name="feature_client_status_waiting">Waiting for Disbursal</string>
+    <string name="feature_client_status_pending">Pending Approval</string>
 
 </resources>
