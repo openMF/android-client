@@ -28,7 +28,7 @@ fun NavGraphBuilder.savingsAccountsDestination(
     createAccount: (Int) -> Unit,
 ) {
     composable<SavingsAccountsRoute> {
-        SavingsAccountsScreenRoute(
+        SavingsAccountsScreen(
             navigateBack = navigateBack,
             navigateToViewAccount = navigateToViewAccount,
             navigateToApproveAccount = navigateToApproveAccount,
