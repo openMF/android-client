@@ -113,7 +113,10 @@ internal fun RecurringDepositAccountApprovalScreen(
             ) {
                 when (uiState) {
                     RecurringDepositAccountApprovalUiState.Initial -> {
-                        RecurringDepositAccountApprovalContent(approveAccount = approveAccount)
+                        RecurringDepositAccountApprovalContent(
+                            approveAccount = approveAccount,
+                            isLoading = false,
+                        )
                     }
 
                     is RecurringDepositAccountApprovalUiState.ShowError -> {
@@ -125,7 +128,13 @@ internal fun RecurringDepositAccountApprovalScreen(
                     }
 
                     RecurringDepositAccountApprovalUiState.ShowProgressbar -> {
-                        MifosProgressIndicator()
+                        Box(modifier = Modifier.fillMaxSize()) {
+                            RecurringDepositAccountApprovalContent(
+                                approveAccount = approveAccount,
+                                isLoading = true,
+                            )
+                            MifosProgressIndicator()
+                        }
                     }
 
                     is RecurringDepositAccountApprovalUiState.ShowRecurringDepositAccountApprovedSuccessfully -> {
