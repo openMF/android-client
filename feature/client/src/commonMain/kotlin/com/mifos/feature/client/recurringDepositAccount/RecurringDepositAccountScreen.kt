@@ -109,7 +109,7 @@ fun RecurringDepositAccountScreen(
         onAction = remember(viewModel) { { viewModel.trySendAction(it) } },
     )
 
-    RecurringDepositAccountScaffold(
+    RecurringDepositAccountContent(
         navController = navController,
         state = state,
         modifier = modifier,
@@ -146,7 +146,7 @@ internal fun RecurringDepositAccountDialog(
 }
 
 @Composable
-internal fun RecurringDepositAccountScaffold(
+internal fun RecurringDepositAccountContent(
     navController: NavController,
     state: RecurringDepositAccountState,
     modifier: Modifier = Modifier,
@@ -159,13 +159,9 @@ internal fun RecurringDepositAccountScaffold(
     ) { paddingValues ->
 
         Column(
-            modifier = Modifier
-                .padding(paddingValues)
-                .fillMaxSize(),
+            modifier = Modifier.fillMaxSize(),
         ) {
             MifosBreadcrumbNavBar(navController)
-
-            Spacer(modifier = Modifier.height(DesignToken.spacing.small))
             when (state.isLoading) {
                 true -> MifosProgressIndicator()
                 false -> {

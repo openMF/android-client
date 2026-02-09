@@ -14,6 +14,7 @@ import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.Month
 import kotlinx.datetime.TimeZone
+import kotlinx.datetime.atStartOfDayIn
 import kotlinx.datetime.format
 import kotlinx.datetime.format.FormatStringsInDatetimeFormats
 import kotlinx.datetime.format.MonthNames
@@ -447,6 +448,19 @@ object DateHelper {
         val year = localDate.year
 
         return "$day $monthName $year"
+    }
+
+    @OptIn(ExperimentalTime::class)
+    fun getDateAsLongFromList(integersOfDate: List<Int>?): Long? {
+        if (integersOfDate == null) return null
+        val dateStr = getDateAsString(integersOfDate)
+        return try {
+            val dateList = getDateAsList(dateStr)
+            val localDate = LocalDate(dateList[0], dateList[1], dateList[2])
+            localDate.atStartOfDayIn(TimeZone.UTC).toEpochMilliseconds()
+        } catch (e: Exception) {
+            null
+        }
     }
 
     @OptIn(ExperimentalTime::class)

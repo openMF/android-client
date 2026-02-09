@@ -76,13 +76,15 @@ internal fun RecurringDepositAccountApprovalScreen(
     navigateBack: () -> Unit,
     viewModel: RecurringDepositAccountApprovalViewModel = koinViewModel(),
 ) {
-    val uiState by viewModel.recurringDepositAccountApprovalUiState.collectAsStateWithLifecycle()
+    val uiState by viewModel.stateFlow.collectAsStateWithLifecycle()
 
     RecurringDepositAccountApprovalScreen(
         navController = navController,
         uiState = uiState,
         navigateBack = navigateBack,
-        approveAccount = { viewModel.approveRecurringDepositApplication(it) },
+        approveAccount = {
+            viewModel.trySendAction(RecurringDepositAccountApprovalAction.Approve(it))
+        },
     )
 }
 

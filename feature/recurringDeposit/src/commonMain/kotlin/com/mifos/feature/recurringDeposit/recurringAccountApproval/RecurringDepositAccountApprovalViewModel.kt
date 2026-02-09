@@ -10,35 +10,40 @@
 package com.mifos.feature.recurringDeposit.recurringAccountApproval
 
 import androidx.lifecycle.SavedStateHandle
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.domain.useCases.ApproveRecurringDepositUseCase
 import com.mifos.core.model.objects.template.recurring.approval.RecurringDepositApproval
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
+import com.mifos.core.ui.util.BaseViewModel
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class RecurringDepositAccountApprovalViewModel(
     savedStateHandle: SavedStateHandle,
     private val approveRecurringDepositUseCase: ApproveRecurringDepositUseCase,
-) : ViewModel() {
+) : BaseViewModel<
+    RecurringDepositAccountApprovalUiState,
+    Unit,
+    RecurringDepositAccountApprovalAction,
+    >(
+    initialState = RecurringDepositAccountApprovalUiState.Initial,
+) {
 
     private val route = savedStateHandle.toRoute<RecurringDepositAccountApprovalRoute>()
 
-    private val _recurringDepositAccountApprovalUiState =
-        MutableStateFlow<RecurringDepositAccountApprovalUiState>(
-            RecurringDepositAccountApprovalUiState.Initial,
-        )
-    val recurringDepositAccountApprovalUiState: StateFlow<RecurringDepositAccountApprovalUiState> =
-        _recurringDepositAccountApprovalUiState.asStateFlow()
-
     fun approveRecurringDepositApplication(recurringDepositApproval: RecurringDepositApproval) {
-        _recurringDepositAccountApprovalUiState.value =
-            RecurringDepositAccountApprovalUiState.ShowProgressbar
+        trySendAction(RecurringDepositAccountApprovalAction.Approve(recurringDepositApproval))
+    }
 
+    override fun handleAction(action: RecurringDepositAccountApprovalAction) {
+        when (action) {
+            is RecurringDepositAccountApprovalAction.Approve -> approveRecurringDeposit(action.approval)
+        }
+    }
+
+    private fun approveRecurringDeposit(recurringDepositApproval: RecurringDepositApproval) {
+        mutableStateFlow.update { RecurringDepositAccountApprovalUiState.ShowProgressbar }
         viewModelScope.launch {
             approveRecurringDepositUseCase.invoke(
                 accountId = route.accountId,
@@ -46,23 +51,32 @@ class RecurringDepositAccountApprovalViewModel(
             ).collect { result ->
                 when (result) {
                     is DataState.Error -> {
-                        _recurringDepositAccountApprovalUiState.value =
+                        mutableStateFlow.update {
                             RecurringDepositAccountApprovalUiState.ShowError(result.message)
+                        }
                     }
 
                     is DataState.Loading -> {
-                        _recurringDepositAccountApprovalUiState.value =
+                        mutableStateFlow.update {
                             RecurringDepositAccountApprovalUiState.ShowProgressbar
+                        }
                     }
 
                     is DataState.Success -> {
-                        _recurringDepositAccountApprovalUiState.value =
-                            RecurringDepositAccountApprovalUiState.ShowRecurringDepositAccountApprovedSuccessfully(
-                                result.data,
-                            )
+                        mutableStateFlow.update {
+                            RecurringDepositAccountApprovalUiState
+                                .ShowRecurringDepositAccountApprovedSuccessfully(
+                                    result.data,
+                                )
+                        }
                     }
                 }
             }
         }
     }
+}
+
+sealed interface RecurringDepositAccountApprovalAction {
+    data class Approve(val approval: RecurringDepositApproval) :
+        RecurringDepositAccountApprovalAction
 }
