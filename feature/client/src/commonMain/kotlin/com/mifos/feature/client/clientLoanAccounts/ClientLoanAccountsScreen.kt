@@ -175,12 +175,27 @@ private fun ClientLoanAccountsScreen(
                                         ),
                                     amountPaid = symbol + (
                                         (
-                                            loan.amountPaid
-                                                ?: "Not Available"
-                                            ).toString()
+                                            if (loan.status?.pendingApproval == true) {
+                                                "Not Available"
+                                            } else {
+                                                (
+                                                    loan.amountPaid
+                                                        ?: "0"
+                                                    ).toString()
+                                            }
+                                            )
                                         ),
                                     loanBalance = symbol + (
-                                        (loan.loanBalance ?: "Not Available").toString()
+                                        (
+                                            if (loan.status?.pendingApproval == true) {
+                                                "Not Available"
+                                            } else {
+                                                (
+                                                    loan.loanBalance
+                                                        ?: "0"
+                                                    ).toString()
+                                            }
+                                            )
                                         ),
                                     type = loan.loanType?.value ?: "Not Available",
                                     // TODO check if we need to add other options as well, such as disburse and all
