@@ -7,8 +7,12 @@
  *
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
-package com.mifos.feature.client.utils
+package com.mifos.feature.searchrecord.di
 
-import com.mifos.core.ui.utils.getClientIdentifierStatus as getStatus
+import com.mifos.feature.searchrecord.SearchRecordViewModel
+import org.koin.core.module.dsl.viewModelOf
+import org.koin.dsl.module
 
-fun getClientIdentifierStatus(status: String?) = getStatus(status)
+val SearchRecordModule = module {
+    viewModelOf(::SearchRecordViewModel)
+}

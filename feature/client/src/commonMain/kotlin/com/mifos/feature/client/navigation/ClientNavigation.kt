@@ -17,6 +17,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import androidx.navigation.navArgument
 import com.mifos.core.common.utils.Constants
+import com.mifos.core.model.objects.searchrecord.RecordType
 import com.mifos.feature.client.charges.chargesDestination
 import com.mifos.feature.client.charges.navigateToChargesRoute
 import com.mifos.feature.client.clientAddDocuments.AddDocumentRoute
@@ -123,6 +124,7 @@ fun NavGraphBuilder.clientNavGraph(
     onMoreInfoClicked: (String, Int) -> Unit,
     activateClient: (Int) -> Unit,
     hasDatatables: KFunction4<List<DataTableEntity>, Any?, Int, MutableList<List<FormWidgetDTO>>, Unit>,
+    onNavigateToSearch: (RecordType) -> Unit,
 ) {
     navigation<ClientNavGraph>(
         startDestination = ClientListScreenRoute,
@@ -207,6 +209,9 @@ fun NavGraphBuilder.clientNavGraph(
             onNavigateBack = navController::popBackStack,
             navigateToAddAddressForm = navController::navigateToClientAddAddressRoute,
             navController = navController,
+            onNavigateToSearch = {
+                onNavigateToSearch(RecordType.ADDRESS)
+            },
         )
 
         clientAddAddressRoute(
@@ -329,7 +334,6 @@ fun NavGraphBuilder.clientNavGraph(
             navigateToViewAccount = navController::navigateToSavingsAccountSummaryScreen,
             navController = navController,
             navigateToApproveAccount = navController::navigateToSavingsAccountApproval,
-
         )
         clientCollateralDestination(
             onNavigateBack = navController::popBackStack,
@@ -346,6 +350,9 @@ fun NavGraphBuilder.clientNavGraph(
             addNewClientIdentity = navController::onNavigateToClientIdentifiersAddUpdateScreen,
             onBackPress = navController::popBackStack,
             navController = navController,
+            onNavigateToSearch = {
+                onNavigateToSearch(RecordType.IDENTIFIER)
+            },
         )
         clientApplyNewApplicationRoute(
             onNavigateBack = navController::popBackStack,
