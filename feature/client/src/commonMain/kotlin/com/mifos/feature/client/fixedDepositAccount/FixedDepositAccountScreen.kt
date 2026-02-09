@@ -155,19 +155,19 @@ fun FixedDepositAccountContent(
                 ) {
                     val notAvailableText = stringResource(Res.string.client_savings_not_available)
 
-                        FixedDepositAccountHeader(
-                            state.fixedDepositAccount.size.toString(),
-                            onToggleSearch = {
-                                onAction(FixedDepositAccountAction.ToggleSearch)
-                            },
-                            onToggleFilter = {
-                                onAction(FixedDepositAccountAction.ToggleFilter)
-                            },
-                            addAccount = {
-                                onAction(FixedDepositAccountAction.AddAccount)
-                            },
-                            isFixedDepositScreenEmpty = state.fixedDepositAccount.isEmpty(),
-                        )
+                    FixedDepositAccountHeader(
+                        state.fixedDepositAccount.size.toString(),
+                        onToggleSearch = {
+                            onAction(FixedDepositAccountAction.ToggleSearch)
+                        },
+                        onToggleFilter = {
+                            onAction(FixedDepositAccountAction.ToggleFilter)
+                        },
+                        addAccount = {
+                            onAction(FixedDepositAccountAction.AddAccount)
+                        },
+                        isFixedDepositScreenEmpty = state.fixedDepositAccount.isEmpty(),
+                    )
 
                     // todo implement search bar functionality
                     if (state.isSearchBarActive) {
@@ -186,55 +186,55 @@ fun FixedDepositAccountContent(
                     }
                     Spacer(modifier = Modifier.height(KptTheme.spacing.lg))
 
-                        if (state.fixedDepositAccount.isEmpty()) {
-                            MifosEmptyCard(
-                                msg = stringResource(Res.string.feature_fixed_account_empty_list_message),
-                                isButtonPresent = true,
-                                onClick = { onAction.invoke(FixedDepositAccountAction.AddAccount) },
-                            )
-                        } else {
-                            LazyColumn {
-                                itemsIndexed(state.fixedDepositAccount) { index, fixedDepositAccount ->
-                                    MifosActionsSavingsListingComponent(
-                                        accountNo = fixedDepositAccount.accountNo ?: notAvailableText,
-                                        savingsProduct = stringResource(Res.string.client_product_fixed_deposit_account),
-                                        savingsProductName = fixedDepositAccount.shortProductName
-                                            ?: notAvailableText,
-                                        lastActive = if (fixedDepositAccount.status?.submittedAndPendingApproval == true) {
-                                            stringResource(Res.string.client_savings_pending_approval)
-                                        } else if (fixedDepositAccount.lastActiveTransactionDate != null) {
-                                            DateHelper.getDateAsString(fixedDepositAccount.lastActiveTransactionDate!!)
-                                        } else {
-                                            notAvailableText
-                                        },
-                                        balance = if (fixedDepositAccount.accountBalance != null) {
-                                            "${fixedDepositAccount.currency?.displaySymbol ?: ""} ${fixedDepositAccount.accountBalance}"
-                                        } else {
-                                            notAvailableText
-                                        },
-                                        isExpanded = expandedIndex == index,
-                                        onExpandToggle = {
-                                            expandedIndex = if (expandedIndex == index) -1 else index
-                                        },
-                                        menuList = if (fixedDepositAccount.status?.submittedAndPendingApproval == true) {
-                                            listOf(
-                                                Actions.ViewAccount(MifosIcons.ShielOutlined),
-                                                Actions.ApproveAccount(),
+                    if (state.fixedDepositAccount.isEmpty()) {
+                        MifosEmptyCard(
+                            msg = stringResource(Res.string.feature_fixed_account_empty_list_message),
+                            isButtonPresent = true,
+                            onClick = { onAction.invoke(FixedDepositAccountAction.AddAccount) },
+                        )
+                    } else {
+                        LazyColumn {
+                            itemsIndexed(state.fixedDepositAccount) { index, fixedDepositAccount ->
+                                MifosActionsSavingsListingComponent(
+                                    accountNo = fixedDepositAccount.accountNo ?: notAvailableText,
+                                    savingsProduct = stringResource(Res.string.client_product_fixed_deposit_account),
+                                    savingsProductName = fixedDepositAccount.shortProductName
+                                        ?: notAvailableText,
+                                    lastActive = if (fixedDepositAccount.status?.submittedAndPendingApproval == true) {
+                                        stringResource(Res.string.client_savings_pending_approval)
+                                    } else if (fixedDepositAccount.lastActiveTransactionDate != null) {
+                                        DateHelper.getDateAsString(fixedDepositAccount.lastActiveTransactionDate!!)
+                                    } else {
+                                        notAvailableText
+                                    },
+                                    balance = if (fixedDepositAccount.accountBalance != null) {
+                                        "${fixedDepositAccount.currency?.displaySymbol ?: ""} ${fixedDepositAccount.accountBalance}"
+                                    } else {
+                                        notAvailableText
+                                    },
+                                    isExpanded = expandedIndex == index,
+                                    onExpandToggle = {
+                                        expandedIndex = if (expandedIndex == index) -1 else index
+                                    },
+                                    menuList = if (fixedDepositAccount.status?.submittedAndPendingApproval == true) {
+                                        listOf(
+                                            Actions.ViewAccount(MifosIcons.ShielOutlined),
+                                            Actions.ApproveAccount(),
+                                        )
+                                    } else {
+                                        listOf(
+                                            Actions.ViewAccount(MifosIcons.ShielOutlined),
+                                        )
+                                    },
+                                ) { actions ->
+                                    when (actions) {
+                                        is Actions.ViewAccount -> {
+                                            onAction(
+                                                FixedDepositAccountAction.ViewAccount(
+                                                    fixedDepositAccount.accountNo ?: "",
+                                                ),
                                             )
-                                        } else {
-                                            listOf(
-                                                Actions.ViewAccount(MifosIcons.ShielOutlined),
-                                            )
-                                        },
-                                    ) { actions ->
-                                        when (actions) {
-                                            is Actions.ViewAccount -> {
-                                                onAction(
-                                                    FixedDepositAccountAction.ViewAccount(
-                                                        fixedDepositAccount.accountNo ?: "",
-                                                    ),
-                                                )
-                                            }
+                                        }
 
                                         is Actions.ApproveAccount -> {
                                             onAction(

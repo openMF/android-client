@@ -20,8 +20,6 @@ import androidclient.feature.client.generated.resources.feature_client_dialog_ac
 import androidclient.feature.client.generated.resources.feature_savings_account_empty_list_message
 import androidclient.feature.client.generated.resources.filter
 import androidclient.feature.client.generated.resources.search
-import androidclient.feature.client.generated.resources.update_default_account_title
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -49,8 +47,6 @@ import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.mifos.core.common.utils.DateHelper
-import com.mifos.core.designsystem.component.MifosScaffold
-import com.mifos.core.designsystem.theme.AppColors
 import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.designsystem.theme.MifosTypography
 import com.mifos.core.ui.components.Actions
@@ -148,44 +144,44 @@ fun SavingsAccountsContent(
 
                     Spacer(modifier = Modifier.height(KptTheme.spacing.md))
 
-                        if (state.savingsAccounts.isEmpty()) {
-                            MifosEmptyCard(
-                                msg = stringResource(Res.string.feature_savings_account_empty_list_message),
-                                isButtonPresent = true,
-                                onClick = { onAction.invoke(SavingsAccountAction.AddAccount) },
-                            )
-                        } else {
-                            LazyColumn {
-                                itemsIndexed(state.savingsAccounts) { index, savings ->
-                                    MifosActionsSavingsListingComponent(
-                                        accountNo = savings.accountNo.toString(),
-                                        savingsProduct = stringResource(Res.string.client_product_saving_account),
-                                        savingsProductName = savings.productName.toString(),
-                                        // todo modify with currency symbol when not getting null from api, currently getting null
-                                        balance = if (savings.accountBalance != null) {
-                                            "${savings.currency?.displaySymbol ?: ""} ${savings.accountBalance}"
-                                        } else {
-                                            stringResource(Res.string.client_savings_not_avilable)
-                                        },
-                                        menuList = if (savings.status?.submittedAndPendingApproval == true) {
-                                            listOf(
-                                                Actions.ViewAccount(),
-                                                Actions.ApproveAccount(),
+                    if (state.savingsAccounts.isEmpty()) {
+                        MifosEmptyCard(
+                            msg = stringResource(Res.string.feature_savings_account_empty_list_message),
+                            isButtonPresent = true,
+                            onClick = { onAction.invoke(SavingsAccountAction.AddAccount) },
+                        )
+                    } else {
+                        LazyColumn {
+                            itemsIndexed(state.savingsAccounts) { index, savings ->
+                                MifosActionsSavingsListingComponent(
+                                    accountNo = savings.accountNo.toString(),
+                                    savingsProduct = stringResource(Res.string.client_product_saving_account),
+                                    savingsProductName = savings.productName.toString(),
+                                    // todo modify with currency symbol when not getting null from api, currently getting null
+                                    balance = if (savings.accountBalance != null) {
+                                        "${savings.currency?.displaySymbol ?: ""} ${savings.accountBalance}"
+                                    } else {
+                                        stringResource(Res.string.client_savings_not_avilable)
+                                    },
+                                    menuList = if (savings.status?.submittedAndPendingApproval == true) {
+                                        listOf(
+                                            Actions.ViewAccount(),
+                                            Actions.ApproveAccount(),
+                                        )
+                                    } else {
+                                        listOf(
+                                            Actions.ViewAccount(),
+                                        )
+                                    },
+                                    onActionClicked = { actions ->
+                                        when (actions) {
+                                            is Actions.ViewAccount -> onAction.invoke(
+                                                SavingsAccountAction.ViewAccount(
+                                                    savings.id ?: 0,
+                                                    savings.depositType
+                                                        ?: SavingAccountDepositTypeEntity(),
+                                                ),
                                             )
-                                        } else {
-                                            listOf(
-                                                Actions.ViewAccount(),
-                                            )
-                                        },
-                                        onActionClicked = { actions ->
-                                            when (actions) {
-                                                is Actions.ViewAccount -> onAction.invoke(
-                                                    SavingsAccountAction.ViewAccount(
-                                                        savings.id ?: 0,
-                                                        savings.depositType
-                                                            ?: SavingAccountDepositTypeEntity(),
-                                                    ),
-                                                )
 
                                             is Actions.ApproveAccount -> onAction.invoke(
                                                 SavingsAccountAction.ApproveAccount(

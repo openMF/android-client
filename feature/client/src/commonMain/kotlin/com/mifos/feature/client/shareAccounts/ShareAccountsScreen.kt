@@ -160,7 +160,6 @@ internal fun ShareAccountsContent(
         }
     }
 
-
 @Composable
 private fun ShareAccountHeader(
     totalItem: String,

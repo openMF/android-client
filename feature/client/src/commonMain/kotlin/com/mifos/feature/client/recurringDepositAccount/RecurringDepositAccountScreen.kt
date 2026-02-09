@@ -186,63 +186,63 @@ internal fun RecurringDepositAccountContent(
 
                     Spacer(modifier = Modifier.height(KptTheme.spacing.lg))
 
-                        if (state.recurringDepositAccounts.isEmpty()) {
-                            MifosEmptyCard(
-                                msg = stringResource(Res.string.feature_recurring_account_empty_list_message),
-                                isButtonPresent = true,
-                                onClick = { onAction.invoke(RecurringDepositAccountAction.AddAccount) },
-                            )
-                        } else {
-                            LazyColumn {
-                                itemsIndexed(state.recurringDepositAccounts) { index, recurringDeposit ->
-                                    MifosActionsSavingsListingComponent(
-                                        accountNo = recurringDeposit.accountNo ?: notAvailableText,
-                                        savingsProduct = stringResource(Res.string.client_product_recurring_deposit_account),
-                                        savingsProductName = recurringDeposit.shortProductName ?: notAvailableText,
-                                        lastActive = if (recurringDeposit.status?.submittedAndPendingApproval == true) {
-                                            stringResource(Res.string.client_savings_pending_approval)
-                                        } else if (recurringDeposit.lastActiveTransactionDate != null) {
-                                            DateHelper.getDateAsString(recurringDeposit.lastActiveTransactionDate!!)
-                                        } else {
-                                            notAvailableText
-                                        },
-                                        balance =
-                                        if (recurringDeposit.accountBalance != null) {
-                                            "${recurringDeposit.currency?.displaySymbol ?: ""} ${recurringDeposit.accountBalance}"
-                                        } else {
-                                            notAvailableText
-                                        },
-                                        isExpanded = expandedIndex == index,
-                                        onExpandToggle = {
-                                            expandedIndex = if (expandedIndex == index) -1 else index
-                                        },
-                                        menuList = if (recurringDeposit.status?.submittedAndPendingApproval == true) {
-                                            listOf(
-                                                Actions.ViewAccount(MifosIcons.Calendar),
-                                                Actions.ApproveAccount(),
-                                            )
-                                        } else {
-                                            listOf(
-                                                Actions.ViewAccount(MifosIcons.Calendar),
-                                            )
-                                        },
-                                    ) { actions ->
-                                        when (actions) {
-                                            is Actions.ViewAccount -> {
-                                                onAction(
-                                                    RecurringDepositAccountAction.ViewAccount(
-                                                        recurringDeposit.accountNo ?: "",
-                                                    ),
-                                                )
-                                            }
-                                            is Actions.ApproveAccount -> {
-                                                RecurringDepositAccountAction.ApproveAccount(
+                    if (state.recurringDepositAccounts.isEmpty()) {
+                        MifosEmptyCard(
+                            msg = stringResource(Res.string.feature_recurring_account_empty_list_message),
+                            isButtonPresent = true,
+                            onClick = { onAction.invoke(RecurringDepositAccountAction.AddAccount) },
+                        )
+                    } else {
+                        LazyColumn {
+                            itemsIndexed(state.recurringDepositAccounts) { index, recurringDeposit ->
+                                MifosActionsSavingsListingComponent(
+                                    accountNo = recurringDeposit.accountNo ?: notAvailableText,
+                                    savingsProduct = stringResource(Res.string.client_product_recurring_deposit_account),
+                                    savingsProductName = recurringDeposit.shortProductName ?: notAvailableText,
+                                    lastActive = if (recurringDeposit.status?.submittedAndPendingApproval == true) {
+                                        stringResource(Res.string.client_savings_pending_approval)
+                                    } else if (recurringDeposit.lastActiveTransactionDate != null) {
+                                        DateHelper.getDateAsString(recurringDeposit.lastActiveTransactionDate!!)
+                                    } else {
+                                        notAvailableText
+                                    },
+                                    balance =
+                                    if (recurringDeposit.accountBalance != null) {
+                                        "${recurringDeposit.currency?.displaySymbol ?: ""} ${recurringDeposit.accountBalance}"
+                                    } else {
+                                        notAvailableText
+                                    },
+                                    isExpanded = expandedIndex == index,
+                                    onExpandToggle = {
+                                        expandedIndex = if (expandedIndex == index) -1 else index
+                                    },
+                                    menuList = if (recurringDeposit.status?.submittedAndPendingApproval == true) {
+                                        listOf(
+                                            Actions.ViewAccount(MifosIcons.Calendar),
+                                            Actions.ApproveAccount(),
+                                        )
+                                    } else {
+                                        listOf(
+                                            Actions.ViewAccount(MifosIcons.Calendar),
+                                        )
+                                    },
+                                ) { actions ->
+                                    when (actions) {
+                                        is Actions.ViewAccount -> {
+                                            onAction(
+                                                RecurringDepositAccountAction.ViewAccount(
                                                     recurringDeposit.accountNo ?: "",
-                                                )
-                                            }
-                                            else -> null
+                                                ),
+                                            )
                                         }
+                                        is Actions.ApproveAccount -> {
+                                            RecurringDepositAccountAction.ApproveAccount(
+                                                recurringDeposit.accountNo ?: "",
+                                            )
+                                        }
+                                        else -> null
                                     }
+                                }
 
                                 Spacer(modifier = Modifier.height(KptTheme.spacing.sm))
                             }
