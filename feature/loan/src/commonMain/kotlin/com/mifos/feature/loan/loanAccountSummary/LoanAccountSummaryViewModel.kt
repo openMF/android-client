@@ -310,6 +310,7 @@ sealed interface LoanAccountSummaryAction {
     data object OnLoanIdCopied : LoanAccountSummaryAction
     data object OnMessageShown : LoanAccountSummaryAction
     data object ToggleDropdown : LoanAccountSummaryAction
+
     @JvmInline
     value class DropdownAction(val action: LoanSummaryDropDownAction) : LoanAccountSummaryAction
 }
