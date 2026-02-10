@@ -12,6 +12,8 @@ package com.mifos.room
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
+import androidx.room.migration.Migration
+import androidx.sqlite.db.SupportSQLiteDatabase
 import com.mifos.room.dao.CenterDao
 import com.mifos.room.dao.ChargeDao
 import com.mifos.room.dao.ClientDao
@@ -46,9 +48,11 @@ import com.mifos.room.entities.center.CenterPayloadEntity
 import com.mifos.room.entities.client.ChargeCalculationTypeEntity
 import com.mifos.room.entities.client.ChargeTimeTypeEntity
 import com.mifos.room.entities.client.ChargesEntity
+import com.mifos.room.entities.client.ClientAddressEntity
 import com.mifos.room.entities.client.ClientChargeCurrencyEntity
 import com.mifos.room.entities.client.ClientDateEntity
 import com.mifos.room.entities.client.ClientEntity
+import com.mifos.room.entities.client.ClientIdentifierEntity
 import com.mifos.room.entities.client.ClientPayloadEntity
 import com.mifos.room.entities.client.ClientStatusEntity
 import com.mifos.room.entities.group.CenterDateEntity
@@ -114,6 +118,8 @@ import com.mifos.room.typeconverters.CustomTypeConverters
         ClientChargeCurrencyEntity::class,
         ClientDateEntity::class,
         ClientStatusEntity::class,
+        ClientAddressEntity::class,
+        ClientIdentifierEntity::class,
         // group package
         CenterEntity::class,
         CenterDateEntity::class,
@@ -167,6 +173,46 @@ actual abstract class MifosDatabase : RoomDatabase() {
     actual abstract val surveyDao: SurveyDao
 
     companion object {
-        const val VERSION = 1
+        const val VERSION = 2
+
+        val MIGRATION_1_2 = object : Migration(1, 2) {
+            override fun migrate(db: SupportSQLiteDatabase) {
+                db.execSQL(
+                    """
+                    CREATE TABLE IF NOT EXISTS `ClientAddress` (
+                        `addressId` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+                        `clientId` INTEGER,
+                        `addressType` TEXT,
+                        `addressTypeId` INTEGER,
+                        `isActive` INTEGER NOT NULL DEFAULT 0,
+                        `addressLine1` TEXT,
+                        `addressLine2` TEXT,
+                        `addressLine3` TEXT,
+                        `city` TEXT,
+                        `stateProvinceId` INTEGER,
+                        `countryName` TEXT,
+                        `stateName` TEXT,
+                        `countryId` INTEGER,
+                        `postalCode` TEXT
+                    )
+                    """.trimIndent(),
+                )
+
+                db.execSQL(
+                    """
+                    CREATE TABLE IF NOT EXISTS `ClientIdentifier` (
+                        `localId` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+                        `id` INTEGER,
+                        `clientId` INTEGER,
+                        `documentKey` TEXT,
+                        `documentTypeName` TEXT,
+                        `documentTypeId` INTEGER,
+                        `description` TEXT,
+                        `status` TEXT
+                    )
+                    """.trimIndent(),
+                )
+            }
+        }
     }
 }

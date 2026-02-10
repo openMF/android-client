@@ -10,6 +10,8 @@
 package com.mifos.core.data.di
 
 import com.mifos.core.common.network.MifosDispatchers
+import com.mifos.core.data.datasource.SearchRecordLocalDataSource
+import com.mifos.core.data.datasource.SearchRecordLocalDataSourceImpl
 import com.mifos.core.data.repository.ActivateRepository
 import com.mifos.core.data.repository.CenterDetailsRepository
 import com.mifos.core.data.repository.CenterListRepository
@@ -60,6 +62,7 @@ import com.mifos.core.data.repository.SavingsAccountRepository
 import com.mifos.core.data.repository.SavingsAccountSummaryRepository
 import com.mifos.core.data.repository.SavingsAccountTransactionReceiptRepository
 import com.mifos.core.data.repository.SavingsAccountTransactionRepository
+import com.mifos.core.data.repository.SearchRecordRepository
 import com.mifos.core.data.repository.SearchRepository
 import com.mifos.core.data.repository.ShareAccountRepository
 import com.mifos.core.data.repository.SignatureRepository
@@ -123,6 +126,7 @@ import com.mifos.core.data.repositoryImp.SavingsAccountRepositoryImp
 import com.mifos.core.data.repositoryImp.SavingsAccountSummaryRepositoryImp
 import com.mifos.core.data.repositoryImp.SavingsAccountTransactionReceiptRepositoryImpl
 import com.mifos.core.data.repositoryImp.SavingsAccountTransactionRepositoryImp
+import com.mifos.core.data.repositoryImp.SearchRecordRepositoryImpl
 import com.mifos.core.data.repositoryImp.SearchRepositoryImp
 import com.mifos.core.data.repositoryImp.ShareAccountRepositoryImpl
 import com.mifos.core.data.repositoryImp.SignatureRepositoryImp
@@ -222,6 +226,8 @@ val RepositoryModule = module {
     singleOf(::SurveyListRepositoryImp) bind SurveyListRepository::class
     singleOf(::SurveySubmitRepositoryImp) bind SurveySubmitRepository::class
     singleOf(::SignatureRepositoryImp) bind SignatureRepository::class
+    singleOf(::SearchRecordRepositoryImpl) bind SearchRecordRepository::class
+    singleOf(::SearchRecordLocalDataSourceImpl) bind SearchRecordLocalDataSource::class
 
     singleOf(::RecurringAccountRepositoryImp) bind RecurringAccountRepository::class
     singleOf(::ShareAccountRepositoryImpl) bind ShareAccountRepository::class

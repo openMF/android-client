@@ -229,4 +229,14 @@ object Constants {
     const val DATA_TABLE_DATA_NAV_DATA = "data_table_data_nav_data"
     const val DATA_TABLE_LIST_NAV_DATA = "data_table_list_nav_data"
     const val PAYMENT_DETAILS_ARGS = "paymentDetailsArgs"
+
+    const val ADDRESS_LINE_1 = "addressLine1"
+    const val ADDRESS_LINE_2 = "addressLine2"
+    const val ADDRESS_LINE_3 = "addressLine3"
+    const val CITY = "city"
+    const val STATE = "state"
+    const val COUNTRY = "country"
+    const val POSTAL_CODE = "postalCode"
+    const val STATUS = "status"
+    const val DOCUMENT_KEY = "documentKey"
 }
