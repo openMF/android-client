@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Mifos Initiative
+ * Copyright 2026 Mifos Initiative
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -7,8 +7,12 @@
  *
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
-package com.mifos.feature.client.utils
+package com.mifos.core.model.objects.searchrecord
 
-import com.mifos.core.ui.utils.getClientIdentifierStatus as getStatus
+import kotlinx.serialization.Serializable
 
-fun getClientIdentifierStatus(status: String?) = getStatus(status)
+@Serializable
+enum class RecordType {
+    ADDRESS,
+    IDENTIFIER,
+}

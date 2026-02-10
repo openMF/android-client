@@ -24,12 +24,14 @@ fun NavGraphBuilder.clientIdentifiersListDestination(
     addNewClientIdentity: (Int, Feature, String?) -> Unit,
     onBackPress: () -> Unit,
     navController: NavController,
+    onNavigateToSearch: () -> Unit,
 ) {
     composable<ClientIdentifiersListRoute> {
         ClientIdentifiersListScreen(
             addNewClientIdentity = addNewClientIdentity,
             onBackPress = onBackPress,
             navController = navController,
+            onNavigateToSearch = onNavigateToSearch,
         )
     }
 }

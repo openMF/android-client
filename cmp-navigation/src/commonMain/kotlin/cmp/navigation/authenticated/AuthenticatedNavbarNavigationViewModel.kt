@@ -11,15 +11,17 @@ package cmp.navigation.authenticated
 
 import androidx.lifecycle.viewModelScope
 import com.mifos.core.data.util.NetworkMonitor
+import com.mifos.core.model.objects.searchrecord.RecordType
 import com.mifos.core.ui.util.BaseViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.update
 
 internal class AuthenticatedNavbarNavigationViewModel(
     networkMonitor: NetworkMonitor,
-) : BaseViewModel<Unit, AuthenticatedNavBarEvent, AuthenticatedNavBarAction>(
-    initialState = Unit,
+) : BaseViewModel<AuthenticatedNavbarState, AuthenticatedNavBarEvent, AuthenticatedNavBarAction>(
+    initialState = AuthenticatedNavbarState(),
 ) {
 
     val isOffline = networkMonitor.isOnline
@@ -39,6 +41,23 @@ internal class AuthenticatedNavbarNavigationViewModel(
             AuthenticatedNavBarAction.CenterTabClick -> handleCenterTabClicked()
 
             AuthenticatedNavBarAction.GroupTabClick -> handleGroupsTabClicked()
+
+            is AuthenticatedNavBarAction.OnRouteChanged -> updateRouteState(action.route)
+        }
+    }
+
+    private fun updateRouteState(route: String?) {
+        val safeRoute = route ?: ""
+        val shouldShowTopBar = !safeRoute.contains("SearchRecord")
+        val searchType = when {
+            safeRoute.contains("ClientIdentifiersList") -> RecordType.IDENTIFIER.name
+            else -> RecordType.ADDRESS.name
+        }
+        mutableStateFlow.update { currentState ->
+            currentState.copy(
+                isTopBarVisible = shouldShowTopBar,
+                searchRecordType = searchType,
+            )
         }
     }
 
@@ -59,6 +78,11 @@ internal class AuthenticatedNavbarNavigationViewModel(
     }
 }
 
+internal data class AuthenticatedNavbarState(
+    val isTopBarVisible: Boolean = true,
+    val searchRecordType: String = RecordType.ADDRESS.name,
+)
+
 internal sealed class AuthenticatedNavBarAction {
 
     data object SearchTabClick : AuthenticatedNavBarAction()
@@ -68,6 +92,8 @@ internal sealed class AuthenticatedNavBarAction {
     data object CenterTabClick : AuthenticatedNavBarAction()
 
     data object GroupTabClick : AuthenticatedNavBarAction()
+
+    data class OnRouteChanged(val route: String?) : AuthenticatedNavBarAction()
 }
 
 internal sealed class AuthenticatedNavBarEvent {

@@ -9,8 +9,10 @@
  */
 package com.mifos.core.data.repositoryImp
 
+import co.touchlab.kermit.Logger
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.common.utils.asDataStateFlow
+import com.mifos.core.data.mappers.client.ClientAddressMapper
 import com.mifos.core.data.repository.CreateNewClientRepository
 import com.mifos.core.model.objects.clients.ClientAddressEntity
 import com.mifos.core.network.datamanager.DataManagerClient
@@ -24,8 +26,10 @@ import com.mifos.room.entities.client.ClientPayloadEntity
 import com.mifos.room.entities.organisation.OfficeEntity
 import com.mifos.room.entities.organisation.StaffEntity
 import com.mifos.room.entities.templates.clients.ClientsTemplateEntity
+import com.mifos.room.helper.ClientDaoHelper
 import io.ktor.client.request.forms.MultiPartFormDataContent
 import kotlinx.coroutines.flow.Flow
+import kotlin.coroutines.cancellation.CancellationException
 
 /**
  * Created by Aditya Gupta on 10/08/23.
@@ -34,6 +38,7 @@ class CreateNewClientRepositoryImp(
     private val dataManagerClient: DataManagerClient,
     private val dataManagerOffices: DataManagerOffices,
     private val dataManagerStaff: DataManagerStaff,
+    private val clientDaoHelper: ClientDaoHelper,
 ) : CreateNewClientRepository {
 
     override fun clientTemplate(): Flow<DataState<ClientsTemplateEntity>> {
@@ -68,7 +73,23 @@ class CreateNewClientRepositoryImp(
     }
 
     override suspend fun getAddresses(clientId: Int): List<ClientAddressEntity> {
-        return dataManagerClient.getClientAddresses(clientId = clientId)
+        val addresses = dataManagerClient.getClientAddresses(clientId = clientId)
+
+        try {
+            clientDaoHelper.deleteAddressesByClientId(clientId)
+
+            if (addresses.isNotEmpty()) {
+                val roomEntities = addresses.map {
+                    ClientAddressMapper.mapFromEntity(it.copy(clientID = clientId))
+                }
+                clientDaoHelper.insertAddresses(roomEntities)
+            }
+        } catch (e: CancellationException) {
+            throw e
+        } catch (e: Exception) {
+            Logger.e(e) { "Failed to update local cache for client addresses" }
+        }
+        return addresses
     }
 
     override suspend fun createClientAddress(
