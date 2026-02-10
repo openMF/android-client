@@ -24,6 +24,7 @@ import com.mifos.room.entities.accounts.loans.LoanWithAssociationsEntity
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.getString
+import kotlin.jvm.JvmInline
 
 internal class LoanAccountSummaryViewModel(
     savedStateHandle: SavedStateHandle,
@@ -93,6 +94,27 @@ internal class LoanAccountSummaryViewModel(
 
             LoanAccountSummaryAction.ToggleDropdown -> {
                 mutableStateFlow.update { it.copy(openDropdown = !it.openDropdown) }
+            }
+
+            is LoanAccountSummaryAction.DropdownAction -> {
+                mutableStateFlow.update { it.copy(openDropdown = false) }
+                when (action.action) {
+                    LoanSummaryDropDownAction.OnMoreInfoClick -> {
+                        handleAction(LoanAccountSummaryAction.OnMoreInfoClick)
+                    }
+                    LoanSummaryDropDownAction.OnTransactionsClick -> {
+                        handleAction(LoanAccountSummaryAction.OnTransactionsClick)
+                    }
+                    LoanSummaryDropDownAction.OnRepaymentScheduleClick -> {
+                        handleAction(LoanAccountSummaryAction.OnRepaymentScheduleClick)
+                    }
+                    LoanSummaryDropDownAction.OnDocumentsClick -> {
+                        handleAction(LoanAccountSummaryAction.OnDocumentsClick)
+                    }
+                    LoanSummaryDropDownAction.OnChargesClick -> {
+                        handleAction(LoanAccountSummaryAction.OnChargesClick)
+                    }
+                }
             }
         }
     }
@@ -249,6 +271,14 @@ internal enum class LoanPrimaryAction {
     CLOSED,
 }
 
+enum class LoanSummaryDropDownAction {
+    OnMoreInfoClick,
+    OnTransactionsClick,
+    OnRepaymentScheduleClick,
+    OnDocumentsClick,
+    OnChargesClick,
+}
+
 sealed interface LoanAccountSummaryEvent {
     data object NavigateBack : LoanAccountSummaryEvent
     data class NavigateToMoreInfo(val loanId: Int) : LoanAccountSummaryEvent
@@ -280,6 +310,8 @@ sealed interface LoanAccountSummaryAction {
     data object OnLoanIdCopied : LoanAccountSummaryAction
     data object OnMessageShown : LoanAccountSummaryAction
     data object ToggleDropdown : LoanAccountSummaryAction
+    @JvmInline
+    value class DropdownAction(val action: LoanSummaryDropDownAction) : LoanAccountSummaryAction
 }
 
 /**

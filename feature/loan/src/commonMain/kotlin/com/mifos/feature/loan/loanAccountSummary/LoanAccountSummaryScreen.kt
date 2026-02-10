@@ -178,7 +178,7 @@ internal fun LoanAccountSummaryScreenRoute(
         snackbarHostState = snackbarHostState,
     )
 
-    LoadAccountSummaryDialog(
+    LoanAccountSummaryDialog(
         state.dialogState,
         onAction = viewModel::trySendAction,
     )
@@ -638,7 +638,7 @@ private fun DataTableRow(
 }
 
 @Composable
-private fun LoadAccountSummaryDialog(
+private fun LoanAccountSummaryDialog(
     dialogState: LoanAccountSummaryState.DialogState?,
     onAction: (LoanAccountSummaryAction) -> Unit,
 ) {
@@ -670,36 +670,31 @@ private fun LoanSummaryDropdown(
         MifosMenuDropDownItem(
             option = Constants.DATA_TABLE_LOAN_NAME,
             onClick = {
-                onAction(LoanAccountSummaryAction.ToggleDropdown)
-                onAction(LoanAccountSummaryAction.OnMoreInfoClick)
+                onAction(LoanAccountSummaryAction.DropdownAction(LoanSummaryDropDownAction.OnMoreInfoClick))
             },
         )
         MifosMenuDropDownItem(
             option = stringResource(Res.string.feature_loan_transactions),
             onClick = {
-                onAction(LoanAccountSummaryAction.ToggleDropdown)
-                onAction(LoanAccountSummaryAction.OnTransactionsClick)
+                onAction(LoanAccountSummaryAction.DropdownAction(LoanSummaryDropDownAction.OnTransactionsClick))
             },
         )
         MifosMenuDropDownItem(
             option = stringResource(Res.string.feature_loan_repayment_schedule),
             onClick = {
-                onAction(LoanAccountSummaryAction.ToggleDropdown)
-                onAction(LoanAccountSummaryAction.OnRepaymentScheduleClick)
+                onAction(LoanAccountSummaryAction.DropdownAction(LoanSummaryDropDownAction.OnRepaymentScheduleClick))
             },
         )
         MifosMenuDropDownItem(
             option = stringResource(Res.string.feature_loan_documents),
             onClick = {
-                onAction(LoanAccountSummaryAction.ToggleDropdown)
-                onAction(LoanAccountSummaryAction.OnDocumentsClick)
+                onAction(LoanAccountSummaryAction.DropdownAction(LoanSummaryDropDownAction.OnDocumentsClick))
             },
         )
         MifosMenuDropDownItem(
             option = stringResource(Res.string.feature_loan_loan_charges),
             onClick = {
-                onAction(LoanAccountSummaryAction.ToggleDropdown)
-                onAction(LoanAccountSummaryAction.OnChargesClick)
+                onAction(LoanAccountSummaryAction.DropdownAction(LoanSummaryDropDownAction.OnChargesClick))
             },
         )
     }
