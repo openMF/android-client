@@ -535,7 +535,7 @@ fun NavController.navigateClientSurveyListScreen(clientId: Int) {
 }
 
 fun NavController.navigateToClientSurveyQuestionScreen(clientId: Int, survey: SurveyEntity) {
-    val arg = Json.encodeToString(survey)
+    val arg = Json.encodeToString(SurveyEntity.serializer(), survey)
     navigate(ClientScreens.ClientSurveyQuestionScreen.argument(clientId, arg))
 }
 

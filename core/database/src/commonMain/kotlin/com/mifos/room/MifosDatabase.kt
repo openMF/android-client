@@ -20,6 +20,7 @@ import com.mifos.room.dao.SavingsDao
 import com.mifos.room.dao.StaffDao
 import com.mifos.room.dao.SurveyDao
 
+@Suppress("NO_ACTUAL_FOR_EXPECT")
 expect abstract class MifosDatabase {
     abstract val centerDao: CenterDao
     abstract val chargeDao: ChargeDao

@@ -29,17 +29,6 @@ secrets {
 
 kotlin {
 
-    listOf(
-        iosX64(),
-        iosArm64(),
-        iosSimulatorArm64(),
-    ).forEach {
-        it.binaries.framework {
-            isStatic = false
-            export(libs.kermit.simple)
-        }
-    }
-
     sourceSets {
         commonMain.dependencies {
             api(projects.core.model)
@@ -58,6 +47,7 @@ kotlin {
             implementation(libs.filekit.coil)
             implementation(libs.filekit.compose)
             implementation(libs.filekit.dialog.compose)
+            implementation(libs.filekit.dialogs)
             implementation(libs.ktor.client.core)
         }
 

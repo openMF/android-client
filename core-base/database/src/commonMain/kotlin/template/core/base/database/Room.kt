@@ -29,7 +29,8 @@ import kotlin.reflect.KClass
  * }
  * ```
  */
-@Suppress("NO_ACTUAL_FOR_EXPECT")
+@OptIn(ExperimentalMultiplatform::class)
+@OptionalExpectation
 expect annotation class Dao()
 
 /**
@@ -47,7 +48,8 @@ expect annotation class Dao()
  * suspend fun getUsersOlderThan(minAge: Int): List<User>
  * ```
  */
-@Suppress("NO_ACTUAL_FOR_EXPECT")
+@OptIn(ExperimentalMultiplatform::class)
+@OptionalExpectation
 @Target(AnnotationTarget.FUNCTION, AnnotationTarget.PROPERTY_GETTER)
 @Retention(AnnotationRetention.BINARY)
 expect annotation class Query(
@@ -72,7 +74,8 @@ expect annotation class Query(
  * suspend fun insertUsers(users: List<User>): List<Long>
  * ```
  */
-@Suppress("NO_ACTUAL_FOR_EXPECT")
+@OptIn(ExperimentalMultiplatform::class)
+@OptionalExpectation
 @Target(AnnotationTarget.FUNCTION)
 @Retention(AnnotationRetention.BINARY)
 expect annotation class Insert(
@@ -98,7 +101,8 @@ expect annotation class Insert(
  * )
  * ```
  */
-@Suppress("NO_ACTUAL_FOR_EXPECT")
+@OptIn(ExperimentalMultiplatform::class)
+@OptionalExpectation
 @Target(AnnotationTarget.FIELD, AnnotationTarget.FUNCTION)
 @Retention(AnnotationRetention.BINARY)
 expect annotation class PrimaryKey(
@@ -106,21 +110,31 @@ expect annotation class PrimaryKey(
 )
 
 /**
- * Cross-platform annotation for defining foreign key constraints.
+ * Common (expect) annotation for describing foreign key relationships in
+ * shared KMP entity definitions.
  *
- * This annotation is used within the @Entity annotation to define relationships
- * between entities through foreign key constraints. It ensures referential integrity
- * between related tables.
+ * This annotation is intended to be used inside an `@Entity` annotation
+ * in `commonMain` to describe foreign key constraints in a platform-agnostic way.
  *
- * Example:
+ *  Important:
+ * - This annotation itself does NOT enforce any database constraints.
+ * - Actual behavior is provided by platform-specific `actual` implementations
+ *   (for example, Room on Android).
+ * - Platforms that do not support relational databases (JS, WASM) may provide
+ *   empty or no-op actual implementations.
+ *
+ * Typical usage (in shared code):
+ *
  * ```kotlin
  * @Entity(
- *     foreignKeys = [ForeignKey(
- *         entity = User::class,
- *         parentColumns = ["id"],
- *         childColumns = ["userId"],
- *         onDelete = ForeignKey.CASCADE
- *     )]
+ *     foreignKeys = [
+ *         ForeignKey(
+ *             entity = User::class,
+ *             parentColumns = ["id"],
+ *             childColumns = ["userId"],
+ *             onDelete = ForeignKey.CASCADE
+ *         )
+ *     ]
  * )
  * data class Post(
  *     @PrimaryKey val id: Long,
@@ -128,11 +142,25 @@ expect annotation class PrimaryKey(
  *     val content: String
  * )
  * ```
+ *
+ * Platform notes:
+ * - Android: mapped to `androidx.room.ForeignKey`
+ * - Other platforms: usually ignored or treated as metadata only
+ *
+ * This annotation exists to keep entity models consistent across platforms,
+ * not to guarantee database enforcement everywhere.
  */
-@Suppress("NO_ACTUAL_FOR_EXPECT")
-@Target(allowedTargets = [])
+
+@Target(allowedTargets = []) // Intentionally restricted; actual targets are platform-defined
 @Retention(AnnotationRetention.BINARY)
-expect annotation class ForeignKey
+expect annotation class ForeignKey(
+    val entity: KClass<*>,
+    val parentColumns: Array<String>,
+    val childColumns: Array<String>,
+    val onDelete: Int,
+    val onUpdate: Int,
+    val deferred: Boolean,
+)
 
 /**
  * Cross-platform annotation for defining database indexes.
@@ -157,7 +185,6 @@ expect annotation class ForeignKey
  * )
  * ```
  */
-@Suppress("NO_ACTUAL_FOR_EXPECT")
 @Target(allowedTargets = [])
 @Retention(AnnotationRetention.BINARY)
 expect annotation class Index
@@ -190,7 +217,8 @@ expect annotation class Index
  * )
  * ```
  */
-@Suppress("NO_ACTUAL_FOR_EXPECT")
+@OptIn(ExperimentalMultiplatform::class)
+@OptionalExpectation
 @Target(AnnotationTarget.CLASS)
 @Retention(AnnotationRetention.BINARY)
 expect annotation class Entity(
@@ -221,7 +249,8 @@ expect annotation class Entity(
  * suspend fun updateUsers(users: List<User>): Int
  * ```
  */
-@Suppress("NO_ACTUAL_FOR_EXPECT")
+@OptIn(ExperimentalMultiplatform::class)
+@OptionalExpectation
 @Target(AnnotationTarget.FUNCTION)
 @Retention(AnnotationRetention.BINARY)
 expect annotation class Update(
@@ -247,7 +276,8 @@ expect annotation class Update(
  * suspend fun deleteUsers(users: List<User>): Int
  * ```
  */
-@Suppress("NO_ACTUAL_FOR_EXPECT")
+@OptIn(ExperimentalMultiplatform::class)
+@OptionalExpectation
 @Target(AnnotationTarget.FUNCTION)
 @Retention(AnnotationRetention.BINARY)
 expect annotation class Delete(
@@ -300,7 +330,8 @@ expect annotation class Upsert(
  * suspend fun getUserWithPosts(userId: Long): UserWithPosts
  * ```
  */
-@Suppress("NO_ACTUAL_FOR_EXPECT")
+@OptIn(ExperimentalMultiplatform::class)
+@OptionalExpectation
 @Target(AnnotationTarget.FUNCTION)
 @Retention(AnnotationRetention.BINARY)
 expect annotation class Transaction()
@@ -331,7 +362,8 @@ expect annotation class Transaction()
  * )
  * ```
  */
-@Suppress("NO_ACTUAL_FOR_EXPECT")
+@OptIn(ExperimentalMultiplatform::class)
+@OptionalExpectation
 @Target(AnnotationTarget.FIELD, AnnotationTarget.FUNCTION)
 @Retention(AnnotationRetention.BINARY)
 expect annotation class ColumnInfo(
@@ -371,7 +403,8 @@ expect annotation class ColumnInfo(
  * // This creates columns: id, name, home_street, home_city, home_zipCode, work_street, work_city, work_zipCode
  * ```
  */
-@Suppress("NO_ACTUAL_FOR_EXPECT")
+@OptIn(ExperimentalMultiplatform::class)
+@OptionalExpectation
 @Target(AnnotationTarget.FIELD, AnnotationTarget.FUNCTION)
 @Retention(AnnotationRetention.BINARY)
 expect annotation class Embedded(
@@ -410,7 +443,8 @@ expect annotation class Embedded(
  * }
  * ```
  */
-@Suppress("NO_ACTUAL_FOR_EXPECT")
+@OptIn(ExperimentalMultiplatform::class)
+@OptionalExpectation
 @Target(AnnotationTarget.FIELD, AnnotationTarget.FUNCTION)
 @Retention(AnnotationRetention.BINARY)
 expect annotation class Relation(
@@ -454,7 +488,6 @@ expect annotation class Relation(
  * )
  * ```
  */
-@Suppress("NO_ACTUAL_FOR_EXPECT")
 @Target(allowedTargets = [])
 @Retention(AnnotationRetention.BINARY)
 expect annotation class Junction(
@@ -490,84 +523,12 @@ expect annotation class Junction(
  * abstract class MyDatabase : RoomDatabase()
  * ```
  */
-@Suppress("NO_ACTUAL_FOR_EXPECT")
+@OptIn(ExperimentalMultiplatform::class)
+@OptionalExpectation
 @Target(AnnotationTarget.FUNCTION)
 @Retention(AnnotationRetention.BINARY)
 expect annotation class TypeConverter()
 
-/**
- * Cross-platform annotation for specifying which type converters to use.
- *
- * This annotation tells Room which type converter classes to use for an entity,
- * DAO, or database. It can be applied at different scopes to control where
- * converters are available.
- *
- * @param value Array of type converter classes
- * @param builtInTypeConverters Configuration for built-in type converters
- *
- * Example:
- * ```kotlin
- * @Database(
- *     entities = [User::class, Post::class],
- *     version = 1
- * )
- * @TypeConverters(Converters::class)
- * abstract class AppDatabase : RoomDatabase() {
- *     abstract fun userDao(): UserDao
- * }
- *
- * @Entity
- * @TypeConverters(DateConverters::class)
- * data class Event(
- *     @PrimaryKey val id: Long,
- *     val date: Date
- * )
- * ```
- */
-@Suppress("NO_ACTUAL_FOR_EXPECT")
-@Target(
-    AnnotationTarget.FUNCTION,
-    AnnotationTarget.CLASS,
-    AnnotationTarget.FIELD,
-)
-@Retention(AnnotationRetention.BINARY)
-expect annotation class TypeConverters(
-    /**
-     * The list of type converter classes. If converter methods are not static, Room will create an
-     * instance of these classes.
-     *
-     * @return The list of classes that contains the converter methods.
-     */
-    vararg val value: KClass<*>,
-
-    /**
-     * Configure whether Room can use various built in converters for common types. See
-     * [BuiltInTypeConverters] for details.
-     */
-    val builtInTypeConverters: BuiltInTypeConverters,
-)
-
-/**
- * Cross-platform annotation for configuring built-in type converters.
- *
- * This annotation allows you to enable or disable Room's built-in type converters
- * for specific types like enums and UUID. Use it within @TypeConverters annotation.
- *
- * Note: For advanced configuration, reference androidx.room.BuiltInTypeConverters.State directly.
- * The default constructor uses INHERITED for all converters (enabled by default).
- *
- * Example:
- * ```kotlin
- * @TypeConverters(
- *     value = [CustomConverters::class],
- *     builtInTypeConverters = BuiltInTypeConverters()
- * )
- * ```
- */
-@Suppress("NO_ACTUAL_FOR_EXPECT")
-@Target(allowedTargets = [])
-@Retention(AnnotationRetention.BINARY)
-expect annotation class BuiltInTypeConverters()
 
 /**
  * Cross-platform annotation for marking a class as a Room database.
@@ -596,7 +557,8 @@ expect annotation class BuiltInTypeConverters()
  * }
  * ```
  */
-@Suppress("NO_ACTUAL_FOR_EXPECT")
+@OptIn(ExperimentalMultiplatform::class)
+@OptionalExpectation
 @Target(AnnotationTarget.CLASS)
 @Retention(AnnotationRetention.BINARY)
 expect annotation class Database(
@@ -630,7 +592,6 @@ expect annotation class Database(
  * abstract class AppDatabase : RoomDatabase()
  * ```
  */
-@Suppress("NO_ACTUAL_FOR_EXPECT")
 @Target(allowedTargets = [])
 @Retention(AnnotationRetention.BINARY)
 expect annotation class AutoMigration(
@@ -667,7 +628,8 @@ expect annotation class AutoMigration(
  * )
  * ```
  */
-@Suppress("NO_ACTUAL_FOR_EXPECT")
+@OptIn(ExperimentalMultiplatform::class)
+@OptionalExpectation
 @Target(
     AnnotationTarget.FIELD,
     AnnotationTarget.CONSTRUCTOR,
@@ -700,7 +662,8 @@ expect annotation class Ignore()
  * )
  * ```
  */
-@Suppress("NO_ACTUAL_FOR_EXPECT")
+@OptIn(ExperimentalMultiplatform::class)
+@OptionalExpectation
 @Target(AnnotationTarget.CLASS)
 @Retention(AnnotationRetention.BINARY)
 expect annotation class DatabaseView(
@@ -765,10 +728,8 @@ object ColumnInfoTypeAffinity {
     /** Store as BLOB (binary data) */
     const val BLOB = 5
 
-    /** Indicates that the column name should be inherited from the field name */
     const val INHERIT_FIELD_NAME: String = "[field-name]"
 
-    /** Indicates that no default value is specified for the column */
     const val VALUE_UNSPECIFIED: String = "[value-unspecified]"
 }
 
@@ -798,23 +759,27 @@ object CollationSequence {
 }
 
 /**
- * Cross-platform constants for foreign key actions.
+ * Foreign key action constants used with the `ForeignKey` annotation.
  *
- * These constants define the action to take when a referenced key is updated or deleted.
+ * These values define how child rows react when a referenced parent row
+ * is updated or deleted.
+ *
+ * Note:
+ * - Acts as metadata in shared (commonMain) code.
+ * - Actual enforcement depends on the platform database (e.g. Room on Android).
+ *
+ * Values:
+ * - NO_ACTION   → No automatic action
+ * - RESTRICT    → Prevent the operation
+ * - SET_NULL    → Set child column to NULL
+ * - SET_DEFAULT → Set child column to its default value
+ * - CASCADE     → Propagate the change to child rows
  */
 object ForeignKeyAction {
-    /** Take no action when a referenced key changes */
     const val NO_ACTION = 1
-
-    /** Prevent the operation if it would violate the foreign key constraint */
     const val RESTRICT = 2
-
-    /** Set the foreign key column to NULL when the referenced key is deleted/updated */
     const val SET_NULL = 3
-
-    /** Set the foreign key column to its default value when the referenced key is deleted/updated */
     const val SET_DEFAULT = 4
-
-    /** Cascade the delete/update operation to the referencing rows */
     const val CASCADE = 5
 }
+

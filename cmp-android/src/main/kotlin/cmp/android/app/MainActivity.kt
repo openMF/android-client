@@ -24,7 +24,6 @@ import io.github.vinceglb.filekit.FileKit
 import io.github.vinceglb.filekit.dialogs.init
 import org.koin.android.ext.android.inject
 import java.util.Locale
-import kotlin.getValue
 
 /**
  * Main activity class.
@@ -33,6 +32,7 @@ import kotlin.getValue
  * @constructor Create empty Main activity
  * @see AppCompatActivity
  */
+@Suppress("ktlint:standard:multiline-expression-wrapping")
 class MainActivity : AppCompatActivity() {
     /**
      * Called when the activity is starting.

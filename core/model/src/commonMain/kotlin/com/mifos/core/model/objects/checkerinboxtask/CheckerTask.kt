@@ -9,6 +9,7 @@
  */
 package com.mifos.core.model.objects.checkerinboxtask
 
+import com.mifos.core.model.utils.IgnoredOnParcel
 import com.mifos.core.model.utils.Parcelable
 import com.mifos.core.model.utils.Parcelize
 import kotlinx.datetime.TimeZone
@@ -29,6 +30,7 @@ data class CheckerTask(
     val resourceId: String,
 ) : Parcelable {
 
+    @IgnoredOnParcel
     var selectedFlag = false
 
     @OptIn(ExperimentalTime::class)

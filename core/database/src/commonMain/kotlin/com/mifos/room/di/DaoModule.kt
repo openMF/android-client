@@ -13,6 +13,7 @@ import com.mifos.room.MifosDatabase
 import org.koin.dsl.module
 
 val DaoModule = module {
+    includes(PlatformSpecificDatabaseModule)
     single { get<MifosDatabase>().centerDao }
     single { get<MifosDatabase>().chargeDao }
     single { get<MifosDatabase>().clientDao }

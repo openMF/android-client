@@ -17,7 +17,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class ClientIdentitiesAddUpdateRoute(
     val clientId: Int,
-    val feature: Feature,
+    val feature: String,
     val uniqueKeyForHandleDocument: String?,
 )
 
@@ -37,7 +37,7 @@ fun NavGraphBuilder.clientIdentifiersAddUpdateDestination(
 
 fun NavController.onNavigateToClientIdentifiersAddUpdateScreen(
     clientId: Int,
-    feature: Feature,
+    feature: String,
     uniqueKeyForHandleDocument: String?,
 ) {
     this.navigate(

@@ -70,7 +70,7 @@ data class LoanAccountEntity(
 
     val currency: Currency? = null,
 
-    @ColumnInfo(index = true, name = INHERIT_FIELD_NAME, typeAffinity = UNDEFINED, collate = UNSPECIFIED, defaultValue = VALUE_UNSPECIFIED)
+    @ColumnInfo(index = true, name = INHERIT_FIELD_NAME, typeAffinity = UNDEFINED, collate = UNDEFINED, defaultValue = VALUE_UNSPECIFIED)
     val status: LoanStatusEntity? = null,
 
     @ColumnInfo(index = true, name = INHERIT_FIELD_NAME, typeAffinity = UNDEFINED, collate = UNSPECIFIED, defaultValue = VALUE_UNSPECIFIED)

@@ -21,10 +21,10 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class Incentive(
     val amount: Double? = null,
-    @IgnoredOnParcel val attributeName: AttributeName? = null,
+    @param:IgnoredOnParcel val attributeName: AttributeName? = null,
     val attributeValue: String? = null,
     val attributeValueDesc: String? = null,
-    @IgnoredOnParcel val conditionType: ConditionType? = null,
-    @IgnoredOnParcel val entityType: EntityType? = null,
-    @IgnoredOnParcel val incentiveType: IncentiveType? = null,
+    @param:IgnoredOnParcel val conditionType: ConditionType? = null,
+    @param:IgnoredOnParcel val entityType: EntityType? = null,
+    @param:IgnoredOnParcel val incentiveType: IncentiveType? = null,
 ) : Parcelable

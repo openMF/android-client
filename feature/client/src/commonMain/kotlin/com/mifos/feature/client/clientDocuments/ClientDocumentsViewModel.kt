@@ -26,7 +26,6 @@ import com.mifos.feature.client.EntityDocumentState
 import com.mifos.feature.client.EntityDocumentState.EntityType
 import com.mifos.feature.client.utils.openPdfWithDefaultExternalApp
 import io.github.vinceglb.filekit.PlatformFile
-import io.github.vinceglb.filekit.extension
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -203,18 +202,18 @@ class ClientDocumentsViewModel(
                                 loadingDialogState()
                             }
                             is DataState.Success -> {
-                                documentSelectAndUploadRepository.updateEntityDocument(platformFile = dataState.data)
-                                nullDialogState()
-                                if (dataState.data.extension == "pdf") {
-                                    sendAction(ClientDocumentsActions.OpenExternalPdfViewer(dataState.data))
-                                } else {
-                                    // Uncomment them when you want to enable document update on backend.
-                                    // And also enable the button on the UI Screen, for SubmitMode.UPDATE.
-                                    // ( do this after uncommenting these line)
-//                                documentSelectAndUploadRepository.updateStep(step = EntityDocumentState.Step.UPDATE_PREVIEW)
-//                                documentSelectAndUploadRepository.changeSubmitMode(EntityDocumentState.SubmitMode.UPDATE)
-                                    sendEvent(ClientDocumentsEvents.OnViewDocument)
-                                }
+//                                documentSelectAndUploadRepository.updateEntityDocument(platformFile = dataState.data)
+//                                nullDialogState()
+//                                if (dataState.data.extension == "pdf") {
+//                                    sendAction(ClientDocumentsActions.OpenExternalPdfViewer(dataState.data))
+//                                } else {
+//                                    // Uncomment them when you want to enable document update on backend.
+//                                    // And also enable the button on the UI Screen, for SubmitMode.UPDATE.
+//                                    // ( do this after uncommenting these line)
+// //                                documentSelectAndUploadRepository.updateStep(step = EntityDocumentState.Step.UPDATE_PREVIEW)
+// //                                documentSelectAndUploadRepository.changeSubmitMode(EntityDocumentState.SubmitMode.UPDATE)
+//                                    sendEvent(ClientDocumentsEvents.OnViewDocument)
+//                                }
                             }
                         }
                     }
