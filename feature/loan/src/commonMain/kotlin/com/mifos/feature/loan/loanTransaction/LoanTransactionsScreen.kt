@@ -11,6 +11,7 @@ package com.mifos.feature.loan.loanTransaction
 
 import androidclient.feature.loan.generated.resources.Res
 import androidclient.feature.loan.generated.resources.feature_loan_break_down
+import androidclient.feature.loan.generated.resources.feature_loan_export
 import androidclient.feature.loan.generated.resources.feature_loan_id
 import androidclient.feature.loan.generated.resources.feature_loan_loan_fees
 import androidclient.feature.loan.generated.resources.feature_loan_loan_interest
@@ -43,6 +44,7 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
@@ -110,10 +112,31 @@ internal fun LoanTransactionsScreen(
     val snackbarHostState = remember {
         SnackbarHostState()
     }
+    var showExportDialog by rememberSaveable { mutableStateOf(false) }
+
+    if (showExportDialog) {
+        ExportTransactionsDialog(
+            onDismiss = { showExportDialog = false },
+            onGenerateReport = { fromDate, toDate ->
+                // Placeholder: No API call as per requirements
+                // TODO: Implement report generation when backend API is ready
+                showExportDialog = false
+            },
+        )
+    }
+
     MifosScaffold(
         snackbarHostState = snackbarHostState,
         title = stringResource(Res.string.feature_loan_loan_transactions),
         onBackPressed = navigateBack,
+        actions = {
+            IconButton(onClick = { showExportDialog = true }) {
+                Icon(
+                    imageVector = MifosIcons.FileUpload,
+                    contentDescription = stringResource(Res.string.feature_loan_export),
+                )
+            }
+        },
     ) {
         Box(
             modifier = Modifier
