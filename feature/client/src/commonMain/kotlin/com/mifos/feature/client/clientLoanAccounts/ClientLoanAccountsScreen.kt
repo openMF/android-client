@@ -22,7 +22,6 @@ import androidclient.feature.client.generated.resources.feature_client_status_ov
 import androidclient.feature.client.generated.resources.feature_client_status_pending
 import androidclient.feature.client.generated.resources.filter
 import androidclient.feature.client.generated.resources.search
-import androidclient.feature.client.generated.resources.string_not_available
 import androidclient.feature.client.generated.resources.wallet
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
