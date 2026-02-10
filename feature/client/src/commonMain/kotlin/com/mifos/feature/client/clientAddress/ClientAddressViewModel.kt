@@ -172,6 +172,7 @@ internal class ClientAddressViewModel(
             is ClientAddressAction.ShowAddressForm -> sendEvent(ClientAddressEvent.ShowAddressForm)
             is ClientAddressAction.OnNext -> sendEvent(ClientAddressEvent.NavigateNext)
             is ClientAddressAction.OnRetry -> handleRetry()
+            is ClientAddressAction.NavigateToSearch -> sendEvent(ClientAddressEvent.NavigateToSearch)
         }
     }
 }
@@ -206,6 +207,7 @@ sealed interface ClientAddressEvent {
     data object NavigateBack : ClientAddressEvent
     data object ShowAddressForm : ClientAddressEvent
     data object NavigateNext : ClientAddressEvent
+    data object NavigateToSearch : ClientAddressEvent
 }
 
 sealed interface ClientAddressAction {
@@ -213,4 +215,5 @@ sealed interface ClientAddressAction {
     data object OnNext : ClientAddressAction
     data object ShowAddressForm : ClientAddressAction
     data object OnRetry : ClientAddressAction
+    data object NavigateToSearch : ClientAddressAction
 }
