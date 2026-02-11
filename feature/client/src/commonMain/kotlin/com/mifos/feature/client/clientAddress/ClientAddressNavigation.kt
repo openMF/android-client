@@ -24,12 +24,14 @@ fun NavGraphBuilder.clientAddressNavigation(
     onNavigateBack: () -> Unit,
     navController: NavController,
     navigateToAddAddressForm: (Int) -> Unit,
+    onNavigateToSearch: () -> Unit,
 ) {
     composable<ClientAddressRoute> {
         ClientAddressScreen(
             onNavigateBack = onNavigateBack,
             navigateToAddAddressForm = navigateToAddAddressForm,
             navController = navController,
+            onNavigateToSearch = onNavigateToSearch,
         )
     }
 }

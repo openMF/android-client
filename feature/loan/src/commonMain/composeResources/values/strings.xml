@@ -145,7 +145,8 @@
 
 
     <string name="feature_loan_unknown_error_occured">An Unknown Error Occured</string>
-    <string name="feature_loan_payment_success_message">Payment Successful, Transaction ID = </string>
+    <string name="feature_loan_payment_success_transaction_label">Transaction ID: %1$s</string>
+    <string name="feature_loan_payment_success_title">Payment Successful</string>
 
     <!-- New Loan Account -->
     <string name="new_loan_account_title">New Loan Account</string>

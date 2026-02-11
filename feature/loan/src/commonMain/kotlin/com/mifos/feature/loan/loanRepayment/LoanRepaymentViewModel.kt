@@ -16,6 +16,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
+import com.mifos.core.common.utils.CurrencyFormatter
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.repository.LoanRepaymentRepository
 import com.mifos.room.entities.accounts.loans.LoanRepaymentRequestEntity
@@ -23,6 +24,7 @@ import com.mifos.room.entities.templates.loans.LoanRepaymentTemplateEntity
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import kotlin.math.round
 
 class LoanRepaymentViewModel(
     savedStateHandle: SavedStateHandle,
@@ -57,9 +59,6 @@ class LoanRepaymentViewModel(
         }
     }
 
-    /**
-     *   app crashes on submit click
-     */
     fun submitPayment(request: LoanRepaymentRequestEntity) {
         viewModelScope.launch {
             _loanRepaymentUiState.value = LoanRepaymentUiState.ShowProgressbar
@@ -101,5 +100,37 @@ class LoanRepaymentViewModel(
                 }
             }
         }
+    }
+
+    fun calculateTotal(fees: String, amount: String, additionalPayment: String): Double {
+        fun setValue(value: String): Double {
+            if (value.isEmpty()) return 0.0
+            return try {
+                value.toDouble()
+            } catch (e: NumberFormatException) {
+                0.0
+            }
+        }
+        val total = setValue(fees) + setValue(amount) + setValue(additionalPayment)
+        return round(total * 100) / 100.0
+    }
+
+    fun formatCurrency(amount: Double?, code: String?, decimalPlaces: Int?): String {
+        return CurrencyFormatter.format(
+            balance = amount,
+            currencyCode = code,
+            maximumFractionDigits = decimalPlaces ?: 2,
+        )
+    }
+
+    fun isAllFieldsValid(
+        amount: String,
+        additionalPayment: String,
+        fees: String,
+        paymentType: String,
+    ): Boolean {
+        return listOf(amount, additionalPayment, fees).all {
+            it.trim().toDoubleOrNull()?.let { n -> n >= 0 } == true
+        } && paymentType.isNotBlank()
     }
 }

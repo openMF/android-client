@@ -66,8 +66,11 @@ import cmp.navigation.components.MifosTopAppBar
 import cmp.navigation.components.ScaffoldNavigationData
 import cmp.navigation.navigation.HomeDestinationsScreen
 import cmp.navigation.ui.rememberMifosNavController
+import co.touchlab.kermit.Logger
 import com.mifos.core.common.utils.Constants
 import com.mifos.core.designsystem.theme.DesignToken
+import com.mifos.core.model.objects.searchrecord.GenericSearchRecord
+import com.mifos.core.model.objects.searchrecord.RecordType
 import com.mifos.core.ui.RootTransitionProviders
 import com.mifos.core.ui.util.EventsEffect
 import com.mifos.feature.activate.navigateToActivateRoute
@@ -75,6 +78,8 @@ import com.mifos.feature.center.navigation.centerNavGraph
 import com.mifos.feature.center.navigation.navigateCenterDetailsScreenRoute
 import com.mifos.feature.center.navigation.navigateCreateCenterScreenRoute
 import com.mifos.feature.center.navigation.navigateToCenterListScreenRoute
+import com.mifos.feature.client.clientAddress.navigateToClientAddressRoute
+import com.mifos.feature.client.clientIdentifiersList.navigateToClientIdentifiersListScreen
 import com.mifos.feature.client.clientProfile.navigateToClientProfileRoute
 import com.mifos.feature.client.navigation.clientNavGraph
 import com.mifos.feature.client.navigation.navigateClientDetailsScreen
@@ -94,15 +99,18 @@ import com.mifos.feature.savings.navigation.navigateToSavingsAccountSummaryScree
 import com.mifos.feature.search.navigation.SearchScreenRoute
 import com.mifos.feature.search.navigation.navigateToSearchScreen
 import com.mifos.feature.search.navigation.searchNavGraph
+import com.mifos.feature.searchrecord.navigation.navigateToSearchRecord
+import com.mifos.feature.searchrecord.navigation.searchRecordNavigation
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
-import org.mifos.core.designsystem.component.MifosTopAppBar
 import org.mifos.navigation.generated.resources.Res
+import org.mifos.navigation.generated.resources.cmp_navigation_dp_placeholder
 import org.mifos.navigation.generated.resources.cmp_navigation_mifos
 import org.mifos.navigation.generated.resources.cmp_navigation_no_internet
+import org.mifos.navigation.generated.resources.cmp_navigation_profile_header
 import org.mifos.navigation.generated.resources.drawer_profile_header
 import org.mifos.navigation.generated.resources.ic_dp_placeholder
 
@@ -120,6 +128,7 @@ internal fun AuthenticatedNavbarNavigationScreen(
     val scope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
     val isOffline by viewModel.isOffline.collectAsStateWithLifecycle()
+    val state by viewModel.stateFlow.collectAsStateWithLifecycle()
 
     EventsEffect(eventFlow = viewModel.eventFlow) { event ->
         navController.apply {
@@ -166,6 +175,7 @@ internal fun AuthenticatedNavbarNavigationScreen(
     }
 
     AuthenticatedNavbarNavigationScreenContent(
+        state = state,
         navController = navController,
         snackbarHostState = snackbarHostState,
         modifier = modifier,
@@ -181,6 +191,7 @@ internal fun AuthenticatedNavbarNavigationScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun AuthenticatedNavbarNavigationScreenContent(
+    state: AuthenticatedNavbarState,
     navController: NavHostController,
     onDrawerItemClick: (String) -> Unit,
     navigateToDocumentScreen: (Int, String) -> Unit,
@@ -190,8 +201,13 @@ internal fun AuthenticatedNavbarNavigationScreenContent(
     onAction: (AuthenticatedNavBarAction) -> Unit,
 ) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
-    var selectedItemIndex by rememberSaveable { mutableStateOf<Int?>(null) }
+    val currentRoute = navBackStackEntry?.destination?.route
 
+    LaunchedEffect(currentRoute) {
+        onAction(AuthenticatedNavBarAction.OnRouteChanged(currentRoute))
+    }
+
+    var selectedItemIndex by rememberSaveable { mutableStateOf<Int?>(null) }
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
 
@@ -217,66 +233,27 @@ internal fun AuthenticatedNavbarNavigationScreenContent(
         drawerState = drawerState,
         drawerContent = {
             ModalDrawerSheet(modifier = Modifier.requiredWidth(320.dp)) {
-                Column(
-                    modifier = Modifier.verticalScroll(rememberScrollState()),
-                ) {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(200.dp),
-                    ) {
-                        Image(
-                            modifier = Modifier.fillMaxSize(),
-                            contentScale = ContentScale.Crop,
-                            painter = painterResource(Res.drawable.drawer_profile_header),
-                            contentDescription = "Profile header",
-                        )
+                Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
+                    Box(modifier = Modifier.fillMaxWidth().height(200.dp)) {
+                        Image(modifier = Modifier.fillMaxSize(), contentScale = ContentScale.Crop, painter = painterResource(Res.drawable.drawer_profile_header), contentDescription = stringResource(Res.string.cmp_navigation_profile_header))
                         Column(modifier = Modifier.padding(32.dp)) {
                             Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                                Image(
-                                    modifier = Modifier
-                                        .size(64.dp)
-                                        .clip(CircleShape),
-                                    painter = painterResource(Res.drawable.ic_dp_placeholder),
-                                    contentDescription = "DP place holder",
-                                )
-                                Text(
-                                    text = stringResource(Res.string.cmp_navigation_mifos),
-                                    color = Color.White,
-                                    style = MaterialTheme.typography.titleMedium,
-                                )
+                                Image(modifier = Modifier.size(64.dp).clip(CircleShape), painter = painterResource(Res.drawable.ic_dp_placeholder), contentDescription = stringResource(Res.string.cmp_navigation_dp_placeholder))
+                                Text(text = stringResource(Res.string.cmp_navigation_mifos), color = Color.White, style = MaterialTheme.typography.titleMedium)
                             }
                         }
                     }
                     Spacer(modifier = Modifier.height(DesignToken.padding.small))
                     navigationDrawerTabs.forEachIndexed { index, item ->
                         NavigationDrawerItem(
-                            label = {
-                                Text(
-                                    text = stringResource(item.title),
-                                    style = MaterialTheme.typography.bodyMedium,
-                                )
-                            },
+                            label = { Text(text = stringResource(item.title), style = MaterialTheme.typography.bodyMedium) },
                             selected = index == selectedItemIndex,
                             onClick = {
                                 selectedItemIndex = index
                                 onDrawerItemClick(navigationDrawerTabs[index].route)
-                                scope.launch {
-                                    drawerState.close()
-                                }
+                                scope.launch { drawerState.close() }
                             },
-                            icon = {
-                                item.icon?.let {
-                                    Icon(
-                                        imageVector = if (index == selectedItemIndex) {
-                                            it
-                                        } else {
-                                            it
-                                        },
-                                        contentDescription = stringResource(item.title),
-                                    )
-                                }
-                            },
+                            icon = { item.icon?.let { Icon(imageVector = it, contentDescription = stringResource(item.title)) } },
                             modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding),
                         )
                         if (index == (navigationDrawerTabs.size - 2)) {
@@ -289,15 +266,17 @@ internal fun AuthenticatedNavbarNavigationScreenContent(
     ) {
         MifosScaffold(
             topBar = {
-                MifosTopAppBar(
-                    onNavigationIconClick = {
-                        scope.launch {
-                            drawerState.open()
-                        }
-                    },
-                    onSearchIconClick = {},
-                    onNotificationIconClick = {},
-                )
+                if (state.isTopBarVisible) {
+                    MifosTopAppBar(
+                        onNavigationIconClick = {
+                            scope.launch {
+                                drawerState.open()
+                            }
+                        },
+                        onSearchIconClick = {},
+                        onNotificationIconClick = {},
+                    )
+                }
             },
             contentWindowInsets = WindowInsets(0.dp),
             navigationData = ScaffoldNavigationData(
@@ -393,6 +372,30 @@ internal fun AuthenticatedNavbarNavigationScreenContent(
                         )
                     },
                     hasDatatables = navController::navigateDataTableList,
+                    onNavigateToSearch = { type ->
+                        navController.navigateToSearchRecord(type)
+                    },
+                )
+
+                searchRecordNavigation(
+                    onBackClick = { navController.popBackStack() },
+                    onRecordSelected = { record: GenericSearchRecord ->
+                        val clientId = record.metadata[Constants.CLIENT_ID]?.toIntOrNull()
+
+                        if (clientId != null) {
+                            when {
+                                record.type.equals(RecordType.ADDRESS.name, ignoreCase = true) -> {
+                                    navController.navigateToClientAddressRoute(id = clientId)
+                                }
+
+                                record.type.equals(RecordType.IDENTIFIER.name, ignoreCase = true) -> {
+                                    navController.navigateToClientIdentifiersListScreen(clientId = clientId)
+                                }
+                            }
+                        } else {
+                            Logger.w("AuthenticatedNavbar") { "Invalid Client ID selected for record: ${record.id}" }
+                        }
+                    },
                 )
             }
         }

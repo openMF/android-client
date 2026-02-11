@@ -10,7 +10,6 @@
 package com.mifos.feature.savings.savingsAccount
 
 import androidclient.feature.savings.generated.resources.Res
-import androidclient.feature.savings.generated.resources.feature_savings_cancel
 import androidclient.feature.savings.generated.resources.feature_savings_create_savings_account
 import androidclient.feature.savings.generated.resources.feature_savings_days_in_year
 import androidclient.feature.savings.generated.resources.feature_savings_external_id
@@ -28,7 +27,6 @@ import androidclient.feature.savings.generated.resources.feature_savings_nominal
 import androidclient.feature.savings.generated.resources.feature_savings_overdraft_allowed
 import androidclient.feature.savings.generated.resources.feature_savings_product
 import androidclient.feature.savings.generated.resources.feature_savings_savings_account_submitted_for_approval
-import androidclient.feature.savings.generated.resources.feature_savings_select_date
 import androidclient.feature.savings.generated.resources.feature_savings_submit
 import androidclient.feature.savings.generated.resources.feature_savings_submitted_on
 import androidx.compose.animation.AnimatedVisibility
@@ -52,16 +50,10 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.Checkbox
-import androidx.compose.material3.DatePicker
-import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.SelectableDates
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
-import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -107,17 +99,11 @@ internal fun SavingsAccountScreen(
     val uiState by viewModel.savingAccountUiState.collectAsStateWithLifecycle()
     val savingProductsTemplate by viewModel.savingProductsTemplate.collectAsStateWithLifecycle()
 
-    LaunchedEffect(key1 = Unit) {
-        viewModel.loadSavingsAccountsAndTemplate()
-    }
-
     SavingsAccountScreen(
         uiState = uiState,
         savingProductsTemplate = savingProductsTemplate,
         navigateBack = navigateBack,
-        onRetry = {
-            viewModel.loadSavingsAccountsAndTemplate()
-        },
+        onRetry = viewModel::loadSavingsAccountsAndTemplate,
         onSavingsProductSelected = { productId ->
             if (viewModel.route.isGroupAccount) {
                 viewModel.loadGroupSavingAccountTemplateByProduct(productId)
@@ -242,8 +228,8 @@ private fun SavingsAccountContent(
     var maximumOverdraftAmount by rememberSaveable {
         mutableStateOf("")
     }
-    var nominalAnnualInterest by rememberSaveable {
-        mutableStateOf("")
+    var nominalAnnualInterest: Double by rememberSaveable {
+        mutableStateOf(0.0)
     }
     var minimumOverdraftAmount by rememberSaveable {
         mutableStateOf("")
@@ -257,8 +243,8 @@ private fun SavingsAccountContent(
     var interestPostingPeriod by rememberSaveable {
         mutableStateOf("")
     }
-    var fieldOfficerId by rememberSaveable {
-        mutableStateOf(0)
+    var fieldOfficerId: Int? by rememberSaveable {
+        mutableStateOf(null)
     }
     var selectedSavingsProductID by rememberSaveable {
         mutableStateOf(0)
@@ -269,45 +255,8 @@ private fun SavingsAccountContent(
     val density = LocalDensity.current
     val scrollState = rememberScrollState()
 
-    var pickSubmitDate by rememberSaveable { mutableStateOf(false) }
     var submittedOnDate by rememberSaveable {
-        mutableLongStateOf(
-            Clock.System.now().toEpochMilliseconds(),
-        )
-    }
-    val datePickerState = rememberDatePickerState(
-        initialSelectedDateMillis = submittedOnDate,
-        selectableDates = object : SelectableDates {
-            override fun isSelectableDate(utcTimeMillis: Long): Boolean {
-                return utcTimeMillis >= Clock.System.now().toEpochMilliseconds()
-            }
-        },
-    )
-    if (pickSubmitDate) {
-        DatePickerDialog(
-            onDismissRequest = {
-                pickSubmitDate = false
-            },
-            confirmButton = {
-                TextButton(
-                    onClick = {
-                        datePickerState.selectedDateMillis?.let {
-                            submittedOnDate = it
-                        }
-                        pickSubmitDate = false
-                    },
-                ) { Text(stringResource(Res.string.feature_savings_select_date)) }
-            },
-            dismissButton = {
-                TextButton(
-                    onClick = {
-                        pickSubmitDate = false
-                    },
-                ) { Text(stringResource(Res.string.feature_savings_cancel)) }
-            },
-        ) {
-            DatePicker(state = datePickerState)
-        }
+        mutableLongStateOf(Clock.System.now().toEpochMilliseconds())
     }
 
     Column(
@@ -364,18 +313,17 @@ private fun SavingsAccountContent(
         Spacer(modifier = Modifier.height(16.dp))
 
         MifosDatePickerTextField(
+            enabled = false,
             value = DateHelper.getDateAsStringFromLong(submittedOnDate),
             label = stringResource(Res.string.feature_savings_submitted_on),
-            openDatePicker = {
-                pickSubmitDate = true
-            },
+            openDatePicker = { },
         )
 
         Spacer(modifier = Modifier.height(16.dp))
 
         MifosOutlinedTextField(
-            value = nominalAnnualInterest,
-            onValueChange = { nominalAnnualInterest = it },
+            value = nominalAnnualInterest.toString(),
+            onValueChange = { nominalAnnualInterest = it.toDoubleOrNull() ?: 0.0 },
             label = stringResource(Res.string.feature_savings_nominal),
             error = null,
             keyboardType = KeyboardType.Number,
@@ -529,8 +477,8 @@ private fun SavingsAccountContent(
 
                 savingsPayload.externalId = externalId
                 savingsPayload.locale = "en"
-                savingsPayload.submittedOnDate = submittedOnDate.toString()
-                savingsPayload.dateFormat = "dd MMMM yyyy"
+                savingsPayload.submittedOnDate = DateHelper.getDateAsStringFromLong(submittedOnDate)
+                savingsPayload.dateFormat = "dd-MM-yyyy"
                 if (isGroupAccount) {
                     savingsPayload.groupId = groupId
                 } else {
@@ -538,7 +486,7 @@ private fun SavingsAccountContent(
                 }
                 savingsPayload.productId = selectedSavingsProductID
                 savingsPayload.fieldOfficerId = fieldOfficerId
-                savingsPayload.nominalAnnualInterestRate = nominalAnnualInterest
+                savingsPayload.nominalAnnualInterestRate = nominalAnnualInterest.toString()
                 savingsPayload.allowOverdraft = overDraftAllowed
                 savingsPayload.nominalAnnualInterestRateOverdraft =
                     nominalAnnualInterestOverdraft
