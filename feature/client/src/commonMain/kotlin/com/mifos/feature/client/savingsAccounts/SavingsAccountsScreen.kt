@@ -12,7 +12,7 @@ package com.mifos.feature.client.savingsAccounts
 import androidclient.feature.client.generated.resources.Res
 import androidclient.feature.client.generated.resources.client_product_saving_account
 import androidclient.feature.client.generated.resources.client_savings_item
-import androidclient.feature.client.generated.resources.client_savings_not_avilable
+import androidclient.feature.client.generated.resources.client_savings_not_available
 import androidclient.feature.client.generated.resources.client_savings_pending_approval
 import androidclient.feature.client.generated.resources.client_savings_savings_accounts
 import androidclient.feature.client.generated.resources.feature_client_dialog_action_ok
@@ -153,7 +153,7 @@ fun SavingsAccountsContent(
                                     balance = if (savings.accountBalance != null) {
                                         "${savings.currency?.displaySymbol ?: ""} ${savings.accountBalance}"
                                     } else {
-                                        stringResource(Res.string.client_savings_not_avilable)
+                                        stringResource(Res.string.client_savings_not_available)
                                     },
                                     menuList = if (savings.status?.submittedAndPendingApproval == true) {
                                         listOf(
@@ -189,7 +189,7 @@ fun SavingsAccountsContent(
                                     } else if (savings.status?.submittedAndPendingApproval == true) {
                                         stringResource(Res.string.client_savings_pending_approval)
                                     } else {
-                                        stringResource(Res.string.client_savings_not_avilable)
+                                        stringResource(Res.string.client_savings_not_available)
                                     },
                                     isExpanded = expandedIndex == index,
                                     onExpandToggle = {

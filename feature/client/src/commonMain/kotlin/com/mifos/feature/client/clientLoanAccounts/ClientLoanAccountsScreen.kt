@@ -11,6 +11,7 @@ package com.mifos.feature.client.clientLoanAccounts
 
 import androidclient.feature.client.generated.resources.Res
 import androidclient.feature.client.generated.resources.cash_bundel
+import androidclient.feature.client.generated.resources.client_loan_not_available
 import androidclient.feature.client.generated.resources.client_savings_item
 import androidclient.feature.client.generated.resources.feature_client_account_status
 import androidclient.feature.client.generated.resources.feature_client_dialog_action_ok
@@ -168,15 +169,19 @@ private fun ClientLoanAccountsScreen(
                             items(state.loanAccounts) { loan ->
                                 val symbol = loan.currency?.displaySymbol ?: ""
                                 MifosActionsLoanListingComponent(
-                                    accountNo = (loan.accountNo ?: stringResource(Res.string.client_savings_not_avilable)),
-                                    loanProduct = loan.productName ?: stringResource(Res.string.client_savings_not_avilable),
+                                    accountNo = (
+                                        loan.accountNo ?: stringResource(
+                                            Res.string.client_loan_not_available,
+                                        )
+                                        ),
+                                    loanProduct = loan.productName ?: stringResource(Res.string.client_loan_not_available),
                                     originalLoan = symbol + (
-                                        (loan.originalLoan ?: stringResource(Res.string.client_savings_not_avilable)).toString()
+                                        (loan.originalLoan ?: stringResource(Res.string.client_loan_not_available)).toString()
                                         ),
                                     amountPaid = symbol + (
                                         (
                                             if (loan.status?.pendingApproval == true) {
-                                                stringResource(Res.string.client_savings_not_avilable)
+                                                stringResource(Res.string.client_loan_not_available)
                                             } else {
                                                 (
                                                     loan.amountPaid
@@ -188,7 +193,7 @@ private fun ClientLoanAccountsScreen(
                                     loanBalance = symbol + (
                                         (
                                             if (loan.status?.pendingApproval == true) {
-                                                stringResource(Res.string.client_savings_not_avilable)
+                                                stringResource(Res.string.client_loan_not_available)
                                             } else {
                                                 (
                                                     loan.loanBalance
@@ -197,7 +202,7 @@ private fun ClientLoanAccountsScreen(
                                             }
                                             )
                                         ),
-                                    type = loan.loanType?.value ?: stringResource(Res.string.client_savings_not_avilable),
+                                    type = loan.loanType?.value ?: stringResource(Res.string.client_loan_not_available),
                                     // TODO check if we need to add other options as well, such as disburse and all
                                     // currently didn't add it cuz its not in the UI design
                                     menuList = when {
