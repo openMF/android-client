@@ -12,11 +12,20 @@ package com.mifos.feature.client.clientLoanAccounts
 import androidclient.feature.client.generated.resources.Res
 import androidclient.feature.client.generated.resources.cash_bundel
 import androidclient.feature.client.generated.resources.client_savings_item
+import androidclient.feature.client.generated.resources.feature_client_account_status
 import androidclient.feature.client.generated.resources.feature_client_dialog_action_ok
+import androidclient.feature.client.generated.resources.feature_client_filters
 import androidclient.feature.client.generated.resources.feature_client_loan_account
+import androidclient.feature.client.generated.resources.feature_client_status_active
+import androidclient.feature.client.generated.resources.feature_client_status_closed
+import androidclient.feature.client.generated.resources.feature_client_status_overpaid
+import androidclient.feature.client.generated.resources.feature_client_status_pending
 import androidclient.feature.client.generated.resources.filter
 import androidclient.feature.client.generated.resources.search
 import androidclient.feature.client.generated.resources.wallet
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -24,21 +33,34 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.SheetState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
+import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.designsystem.theme.MifosTypography
 import com.mifos.core.ui.components.Actions
@@ -53,6 +75,7 @@ import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.resources.vectorResource
 import org.koin.compose.viewmodel.koinViewModel
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun ClientLoanAccountsScreenRoute(
     navigateBack: () -> Unit,
@@ -62,6 +85,7 @@ internal fun ClientLoanAccountsScreenRoute(
     viewModel: ClientLoanAccountsViewModel = koinViewModel(),
 ) {
     val state by viewModel.stateFlow.collectAsStateWithLifecycle()
+    val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
 
     EventsEffect(viewModel.eventFlow) { event ->
         when (event) {
@@ -81,6 +105,17 @@ internal fun ClientLoanAccountsScreenRoute(
         state = state,
         onAction = remember(viewModel) { { viewModel.trySendAction(it) } },
     )
+    if (state.isFilterDialogOpen) {
+        FilterBottomSheet(
+            onDismissRequest = { viewModel.trySendAction(ClientLoanAccountsAction.ToggleFilter) },
+            sheetState = sheetState,
+            selectedStatuses = state.selectedStatus,
+            handleFilterClick = { status ->
+                viewModel.trySendAction(ClientLoanAccountsAction.HandleFilterClick(status))
+            },
+            clearFilters = { viewModel.trySendAction(ClientLoanAccountsAction.ClearFilters) },
+        )
+    }
 }
 
 @Composable
@@ -106,6 +141,7 @@ private fun ClientLoanAccountsScreen(
                     ClientsAccountHeader(
                         totalItem = state.loanAccounts.size.toString(),
                         onAction = onAction,
+                        isFilterActive = state.selectedStatus.isNotEmpty(),
                     )
 
                     if (state.isSearchBarActive) {
@@ -183,7 +219,7 @@ private fun ClientLoanAccountsScreen(
                                     },
                                 )
 
-                                Spacer(modifier = Modifier.height(8.dp))
+                                Spacer(modifier = Modifier.height(DesignToken.padding.small))
                             }
                         }
                     }
@@ -196,6 +232,7 @@ private fun ClientLoanAccountsScreen(
 @Composable
 private fun ClientsAccountHeader(
     totalItem: String,
+    isFilterActive: Boolean,
     onAction: (ClientLoanAccountsAction) -> Unit,
 ) {
     Row(
@@ -225,13 +262,29 @@ private fun ClientsAccountHeader(
             )
         }
 
-        IconButton(
-            onClick = { onAction.invoke(ClientLoanAccountsAction.ToggleFilter) },
+        Box(
+            modifier = Modifier.wrapContentSize(),
+            contentAlignment = Alignment.Center,
         ) {
-            Icon(
-                painter = painterResource(Res.drawable.filter),
-                contentDescription = null,
-            )
+            IconButton(
+                onClick = { onAction.invoke(ClientLoanAccountsAction.ToggleFilter) },
+            ) {
+                Icon(
+                    painter = painterResource(Res.drawable.filter),
+                    contentDescription = null,
+                )
+            }
+
+            if (isFilterActive) {
+                Box(
+                    modifier = Modifier
+                        .align(Alignment.TopEnd)
+                        .padding(top = 12.dp, end = 16.dp)
+                        .size(8.dp)
+                        .clip(CircleShape)
+                        .background(MaterialTheme.colorScheme.error),
+                )
+            }
         }
     }
 }
@@ -259,5 +312,92 @@ private fun ClientLoanAccountsDialog(
         }
 
         else -> null
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun FilterBottomSheet(
+    onDismissRequest: () -> Unit,
+    sheetState: SheetState,
+    handleFilterClick: (LoanStatusFilter) -> Unit,
+    selectedStatuses: Set<LoanStatusFilter>,
+    clearFilters: () -> Unit,
+) {
+    ModalBottomSheet(
+        onDismissRequest = onDismissRequest,
+        sheetState = sheetState,
+        dragHandle = null,
+        containerColor = MaterialTheme.colorScheme.background,
+    ) {
+        Column(
+            modifier = Modifier.padding(DesignToken.padding.large),
+        ) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(DesignToken.padding.medium),
+            ) {
+                Text(
+                    text = stringResource(Res.string.feature_client_filters),
+                    style = MifosTypography.titleLargeEmphasized,
+                    color = MaterialTheme.colorScheme.primary,
+                )
+                Row {
+                    IconButton(
+                        onClick = {
+                            clearFilters()
+                            onDismissRequest()
+                        },
+                    ) {
+                        Icon(
+                            imageVector = MifosIcons.Redo,
+                            contentDescription = "Clear",
+                        )
+                    }
+
+                    IconButton(
+                        onClick = onDismissRequest,
+                    ) {
+                        Icon(
+                            imageVector = MifosIcons.Check,
+                            contentDescription = "Apply",
+                        )
+                    }
+                }
+            }
+        }
+
+        HorizontalDivider(Modifier.fillMaxWidth(), thickness = 1.5.dp)
+        Column(modifier = Modifier.padding(DesignToken.padding.medium)) {
+            Text(
+                text = stringResource(Res.string.feature_client_account_status),
+                style = MifosTypography.titleMediumEmphasized,
+                modifier = Modifier.padding(bottom = DesignToken.padding.small),
+            )
+
+            LoanStatusFilter.entries.forEach { status ->
+                val isChecked = selectedStatuses.contains(status)
+                val statusLabel = when (status) {
+                    LoanStatusFilter.ACTIVE -> stringResource(Res.string.feature_client_status_active)
+                    LoanStatusFilter.PENDING -> stringResource(Res.string.feature_client_status_pending)
+                    LoanStatusFilter.CLOSED -> stringResource(Res.string.feature_client_status_closed)
+                    LoanStatusFilter.OVERPAID -> stringResource(Res.string.feature_client_status_overpaid)
+                }
+
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Spacer(modifier = Modifier.width(DesignToken.padding.medium))
+                    Checkbox(
+                        checked = isChecked,
+                        onCheckedChange = { handleFilterClick(status) },
+                    )
+                    Text(text = statusLabel)
+                }
+            }
+        }
     }
 }
