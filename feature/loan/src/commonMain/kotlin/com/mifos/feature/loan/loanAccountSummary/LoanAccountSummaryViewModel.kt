@@ -24,7 +24,6 @@ import com.mifos.room.entities.accounts.loans.LoanWithAssociationsEntity
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.getString
-import kotlin.jvm.JvmInline
 
 internal class LoanAccountSummaryViewModel(
     savedStateHandle: SavedStateHandle,
@@ -79,7 +78,7 @@ internal class LoanAccountSummaryViewModel(
             }
 
             LoanAccountSummaryAction.OnMakeRepayment -> {
-                mutableStateFlow.value.loanWithAssociations?.let { loan ->
+                state.loanWithAssociations?.let { loan ->
                     sendEvent(LoanAccountSummaryEvent.NavigateToMakeRepayment(loan))
                 }
             }
@@ -98,24 +97,23 @@ internal class LoanAccountSummaryViewModel(
 
             is LoanAccountSummaryAction.DropdownAction -> {
                 mutableStateFlow.update { it.copy(openDropdown = false) }
-                when (action.action) {
-                    LoanSummaryDropDownAction.OnMoreInfoClick -> {
-                        handleAction(LoanAccountSummaryAction.OnMoreInfoClick)
-                    }
-                    LoanSummaryDropDownAction.OnTransactionsClick -> {
-                        handleAction(LoanAccountSummaryAction.OnTransactionsClick)
-                    }
-                    LoanSummaryDropDownAction.OnRepaymentScheduleClick -> {
-                        handleAction(LoanAccountSummaryAction.OnRepaymentScheduleClick)
-                    }
-                    LoanSummaryDropDownAction.OnDocumentsClick -> {
-                        handleAction(LoanAccountSummaryAction.OnDocumentsClick)
-                    }
-                    LoanSummaryDropDownAction.OnChargesClick -> {
-                        handleAction(LoanAccountSummaryAction.OnChargesClick)
-                    }
-                }
+                handleDropdownAction(action.action)
             }
+        }
+    }
+
+    private fun handleDropdownAction(action: LoanSummaryDropDownAction) {
+        when (action) {
+            LoanSummaryDropDownAction.OnMoreInfoClick ->
+                sendEvent(LoanAccountSummaryEvent.NavigateToMoreInfo(loanAccountNumber))
+            LoanSummaryDropDownAction.OnTransactionsClick ->
+                sendEvent(LoanAccountSummaryEvent.NavigateToTransactions(loanAccountNumber))
+            LoanSummaryDropDownAction.OnRepaymentScheduleClick ->
+                sendEvent(LoanAccountSummaryEvent.NavigateToRepaymentSchedule(loanAccountNumber))
+            LoanSummaryDropDownAction.OnDocumentsClick ->
+                sendEvent(LoanAccountSummaryEvent.NavigateToDocuments(loanAccountNumber))
+            LoanSummaryDropDownAction.OnChargesClick ->
+                sendEvent(LoanAccountSummaryEvent.NavigateToCharges(loanAccountNumber))
         }
     }
 
@@ -311,8 +309,7 @@ sealed interface LoanAccountSummaryAction {
     data object OnMessageShown : LoanAccountSummaryAction
     data object ToggleDropdown : LoanAccountSummaryAction
 
-    @JvmInline
-    value class DropdownAction(val action: LoanSummaryDropDownAction) : LoanAccountSummaryAction
+    data class DropdownAction(val action: LoanSummaryDropDownAction) : LoanAccountSummaryAction
 }
 
 /**
