@@ -63,7 +63,7 @@ internal class LoanAccountSummaryViewModel(
             }
 
             LoanAccountSummaryAction.OnApproveLoan -> {
-                mutableStateFlow.value.loanWithAssociations?.let { loan ->
+                state.loanWithAssociations?.let { loan ->
                     sendEvent(
                         LoanAccountSummaryEvent.NavigateToApproveLoan(
                             loanAccountNumber,
