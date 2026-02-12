@@ -18,6 +18,8 @@ import io.github.vinceglb.filekit.dialogs.openFilePicker
 
 suspend fun ImageBitmap.toPlatformFile(fileName: String): PlatformFile {
     val bytearray = this.encodeToByteArray(ImageFormat.PNG)
+    // TODO: file access via FileKit are currently disabled because
+    //  they are not supported across all KMP targets.
 //    val outFile = FileKit.filesDir / "$fileName.png"
 //    outFile.write(bytearray)
     return compressImage(bytearray.toPlatformFile(fileName), fileName)
@@ -25,6 +27,8 @@ suspend fun ImageBitmap.toPlatformFile(fileName: String): PlatformFile {
 
 suspend fun ByteArray.toPlatformFile(fileName: String): PlatformFile {
     val outFile = FileKit.openFilePicker()
+    // TODO: outFile.write() are currently disabled because
+    //  they are not supported across all KMP targets.
 //    outFile.write(this)
     return outFile!!
 }

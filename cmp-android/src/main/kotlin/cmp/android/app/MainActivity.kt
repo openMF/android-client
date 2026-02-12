@@ -32,7 +32,6 @@ import java.util.Locale
  * @constructor Create empty Main activity
  * @see AppCompatActivity
  */
-@Suppress("ktlint:standard:multiline-expression-wrapping")
 class MainActivity : AppCompatActivity() {
     /**
      * Called when the activity is starting.
@@ -64,12 +63,13 @@ class MainActivity : AppCompatActivity() {
                 },
                 handleAppLocale = { localeTag ->
                     val currentLocales = AppCompatDelegate.getApplicationLocales()
-                    val newLocales = if (localeTag != null) {
-                        LocaleListCompat.forLanguageTags(localeTag)
-                    } else {
-                        // System Default: clear app-specific locale
-                        LocaleListCompat.getEmptyLocaleList()
-                    }
+                    val newLocales =
+                        if (localeTag != null) {
+                            LocaleListCompat.forLanguageTags(localeTag)
+                        } else {
+                            // System Default: clear app-specific locale
+                            LocaleListCompat.getEmptyLocaleList()
+                        }
 
                     // Only update if the locale has actually changed
                     if (currentLocales != newLocales) {

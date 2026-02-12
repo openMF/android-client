@@ -202,6 +202,8 @@ class ClientDocumentsViewModel(
                                 loadingDialogState()
                             }
                             is DataState.Success -> {
+                                // TODO: writeFileToCache return type has changed because currently not support all
+                                //  KMP target that's why currently comment out this it will fix in next PR
 //                                documentSelectAndUploadRepository.updateEntityDocument(platformFile = dataState.data)
 //                                nullDialogState()
 //                                if (dataState.data.extension == "pdf") {

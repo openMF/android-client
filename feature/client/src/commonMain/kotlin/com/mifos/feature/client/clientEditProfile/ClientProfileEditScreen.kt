@@ -227,6 +227,8 @@ private fun ClientProfileEditDialogs(
         null -> Unit
 
         ClientProfileEditState.DialogState.ShowUploadOptions -> {
+            // TODO(KMP): The current image crop library is not supported on all target platforms.
+            //  Migrate from cmp-image-pick-n-crop to crop-krop-ui library and enable document update & preview in a follow-up PR.
 //            val imageCropper = rememberImageCropper()
 //            val scope = rememberCoroutineScope()
 //            CMPImagePickNCropDialog(

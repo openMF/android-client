@@ -12,6 +12,10 @@ package com.mifos.feature.client.utils
 import io.github.vinceglb.filekit.PlatformFile
 
 suspend fun compressImage(imageFile: PlatformFile, clientId: String): PlatformFile {
+    // TODO: Image compression and direct file access via FileKit are
+    //  currently disabled because they are not supported across all KMP targets.
+
+// Implement platform-specific handling before enabling this.
 //    val bytes = FileKit.compressImage(
 //        file = imageFile,
 //        imageFormat = ImageFormat.PNG,
