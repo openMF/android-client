@@ -122,7 +122,7 @@ fun NavGraphBuilder.clientNavGraph(
     onMoreInfoClicked: (String, Int) -> Unit,
     activateClient: (Int) -> Unit,
     hasDatatables: KFunction4<List<DataTableEntity>, Any?, Int, MutableList<List<FormWidgetDTO>>, Unit>,
-    onNavigateToSearch: (RecordType) -> Unit,
+    onNavigateToSearch: (String) -> Unit,
 ) {
     navigation<ClientNavGraph>(
         startDestination = ClientListScreenRoute,
@@ -208,7 +208,7 @@ fun NavGraphBuilder.clientNavGraph(
             navigateToAddAddressForm = navController::navigateToClientAddAddressRoute,
             navController = navController,
             onNavigateToSearch = {
-                onNavigateToSearch(RecordType.ADDRESS)
+                onNavigateToSearch(RecordType.ADDRESS.name)
             },
         )
 
@@ -341,7 +341,7 @@ fun NavGraphBuilder.clientNavGraph(
             onBackPress = navController::popBackStack,
             navController = navController,
             onNavigateToSearch = {
-                onNavigateToSearch(RecordType.IDENTIFIER)
+                onNavigateToSearch(RecordType.IDENTIFIER.name)
             },
         )
         clientApplyNewApplicationRoute(
