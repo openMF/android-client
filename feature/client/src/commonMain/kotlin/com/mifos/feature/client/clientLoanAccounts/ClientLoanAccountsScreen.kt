@@ -18,11 +18,11 @@ import androidclient.feature.client.generated.resources.feature_client_account_s
 import androidclient.feature.client.generated.resources.feature_client_dialog_action_ok
 import androidclient.feature.client.generated.resources.feature_client_filters
 import androidclient.feature.client.generated.resources.feature_client_loan_account
-import androidclient.feature.client.generated.resources.feature_loan_account_empty_list_message
 import androidclient.feature.client.generated.resources.feature_client_status_active
 import androidclient.feature.client.generated.resources.feature_client_status_closed
 import androidclient.feature.client.generated.resources.feature_client_status_overpaid
 import androidclient.feature.client.generated.resources.feature_client_status_pending
+import androidclient.feature.client.generated.resources.feature_loan_account_empty_list_message
 import androidclient.feature.client.generated.resources.filter
 import androidclient.feature.client.generated.resources.search
 import androidclient.feature.client.generated.resources.wallet
