@@ -92,9 +92,7 @@ class ClientIdentifiersListViewModel(
             }
 
             ClientIdentifiersListAction.ToggleSearch -> {
-                mutableStateFlow.update {
-                    it.copy(isSearchBarActive = !it.isSearchBarActive)
-                }
+                sendEvent(ClientIdentifiersListEvent.NavigateToSearch)
             }
 
             ClientIdentifiersListAction.CloseDialog -> {
@@ -313,6 +311,7 @@ data class ClientIdentifiersListState(
 
 sealed interface ClientIdentifiersListEvent {
     data object NavigateBack : ClientIdentifiersListEvent
+    data object NavigateToSearch : ClientIdentifiersListEvent
     data class AddNewClientIdentity(
         val id: Int,
         val feature: Feature,

@@ -35,6 +35,7 @@ import com.mifos.feature.recurringDeposit.di.RecurringDepositModule
 import com.mifos.feature.report.di.ReportModule
 import com.mifos.feature.savings.di.SavingsModule
 import com.mifos.feature.search.di.SearchModule
+import com.mifos.feature.searchrecord.di.SearchRecordModule
 import com.mifos.feature.settings.di.SettingsModule
 import com.mifos.room.di.DaoModule
 import com.mifos.room.di.HelperModule
@@ -88,6 +89,7 @@ object KoinModules {
             SavingsModule,
             SearchModule,
             SettingsModule,
+            SearchRecordModule,
         )
     }
 
