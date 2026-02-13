@@ -9,7 +9,9 @@
  */
 package com.mifos.room
 
+import androidx.room.Database
 import androidx.room.RoomDatabase
+import androidx.room.TypeConverters
 import com.mifos.room.dao.CenterDao
 import com.mifos.room.dao.ChargeDao
 import com.mifos.room.dao.ClientDao
@@ -76,8 +78,6 @@ import com.mifos.room.entities.templates.loans.LoanRepaymentTemplateEntity
 import com.mifos.room.entities.templates.savings.SavingsAccountTransactionTemplateEntity
 import com.mifos.room.typeconverters.ClientTypeConverters
 import com.mifos.room.typeconverters.CustomTypeConverters
-import template.core.base.database.Database
-import template.core.base.database.TypeConverters
 
 @Database(
     entities = [
