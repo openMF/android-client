@@ -454,7 +454,7 @@
     <string name="client_savings_savings_accounts">Savings Accounts</string>
     <string name="client_savings_item">item</string>
     <string name="client_savings_pending_approval">Pending Approval</string>
-    <string name="client_savings_not_avilable">Not Available</string>
+    <string name="client_savings_not_available">Not Available</string>
 
     <string name="client_collateral_title">Client Collateral</string>
     <string name="client_collateral_choose_type">Choose Collateral Type</string>
@@ -519,6 +519,9 @@
     <string name="client_signature_gallery">Gallery</string>
     <string name="client_signature_draw">Draw</string>
     <string name="client_signature_more">More</string>
+
+    <!-- Client Loan Accounts-->
+    <string name="client_loan_accounts_not_available">Not Available</string>
 
     <!-- Client Share Account-->
     <string name="client_share_accounts_share_accounts">Share Accounts</string>
