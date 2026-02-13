@@ -104,10 +104,13 @@ object GetClientsClientIdAccountMapper :
                         LoanTypeEntity(
                             id = loanType.id?.toInt(),
                             code = loanType.code,
-                            value = loanType.description,
+                            value = loanType.value,
                         )
                     },
                     loanCycle = it.loanCycle,
+                    originalLoan = it.originalLoan,
+                    loanBalance = it.loanBalance,
+                    amountPaid = it.amountPaid,
                 )
             } ?: emptyList(),
 
@@ -191,9 +194,12 @@ object GetClientsClientIdAccountMapper :
                     loanType = GetClientsLoanAccountsType(
                         id = it.loanType?.id?.toLong(),
                         code = it.loanType?.code,
-                        description = it.loanType?.value,
+                        value = it.loanType?.value,
                     ),
                     loanCycle = it.loanCycle,
+                    loanBalance = it.loanBalance,
+                    originalLoan = it.originalLoan,
+                    amountPaid = it.amountPaid,
                 )
             }.toSet(),
         )
