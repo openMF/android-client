@@ -9,6 +9,7 @@
  */
 package com.mifos.room.helper
 
+import co.touchlab.kermit.Logger
 import com.mifos.core.common.utils.Constants.DATA_TABLE_NAME_CLIENT
 import com.mifos.core.common.utils.MapDeserializer
 import com.mifos.core.common.utils.Page
@@ -16,8 +17,10 @@ import com.mifos.room.dao.ClientDao
 import com.mifos.room.entities.accounts.ClientAccounts
 import com.mifos.room.entities.accounts.loans.LoanAccountEntity
 import com.mifos.room.entities.accounts.savings.SavingsAccountEntity
+import com.mifos.room.entities.client.ClientAddressEntity
 import com.mifos.room.entities.client.ClientDateEntity
 import com.mifos.room.entities.client.ClientEntity
+import com.mifos.room.entities.client.ClientIdentifierEntity
 import com.mifos.room.entities.client.ClientPayloadEntity
 import com.mifos.room.entities.group.GroupWithAssociations
 import com.mifos.room.entities.noncore.ColumnHeader
@@ -335,6 +338,67 @@ class ClientDaoHelper(
      */
     suspend fun updateDatabaseClientPayload(clientPayload: ClientPayloadEntity) {
         clientDao.updateDatabaseClientPayload(clientPayload)
+    }
+
+    fun searchAddressesByQuery(query: String): Flow<List<ClientAddressEntity>> {
+        return clientDao.searchAddressesByQuery(query)
+            .flowOn(ioDispatcher)
+    }
+
+    fun getAddressesByClientId(clientId: Int): Flow<List<ClientAddressEntity>> {
+        return clientDao.getAddressesByClientId(clientId)
+            .flowOn(ioDispatcher)
+    }
+
+    suspend fun deleteAddressesByClientId(clientId: Int) {
+        clientDao.deleteAddressesByClientId(clientId)
+    }
+
+    suspend fun insertAddresses(addresses: List<ClientAddressEntity>) {
+        clientDao.insertAddresses(addresses)
+    }
+
+    fun searchIdentifiersByQuery(query: String): Flow<List<ClientIdentifierEntity>> {
+        return clientDao.searchIdentifiersByQuery(query)
+            .flowOn(ioDispatcher)
+    }
+
+    fun getIdentifiersByClientId(clientId: Int): Flow<List<ClientIdentifierEntity>> {
+        return clientDao.getIdentifiersByClientId(clientId)
+            .flowOn(ioDispatcher)
+    }
+
+    suspend fun insertIdentifiers(identifiers: List<ClientIdentifierEntity>) {
+        if (identifiers.isEmpty()) return
+
+        val validIdentifiers = identifiers.filter { it.clientId != null }
+        if (validIdentifiers.isEmpty()) return
+
+        val clientIds = validIdentifiers.map { it.clientId!! }.distinct()
+
+        val backupIdentifiers = mutableListOf<ClientIdentifierEntity>()
+        clientIds.forEach { clientId ->
+            backupIdentifiers.addAll(clientDao.getIdentifiersByClientId(clientId).first())
+        }
+
+        try {
+            clientIds.forEach { clientId ->
+                clientDao.deleteIdentifiersByClientId(clientId)
+            }
+            clientDao.insertIdentifiers(validIdentifiers)
+        } catch (e: Exception) {
+            try {
+                clientIds.forEach { clientId ->
+                    clientDao.deleteIdentifiersByClientId(clientId)
+                }
+                if (backupIdentifiers.isNotEmpty()) {
+                    clientDao.insertIdentifiers(backupIdentifiers)
+                }
+            } catch (restoreException: Exception) {
+                Logger.e(restoreException) { "Failed to restore identifiers backup" }
+            }
+            throw e
+        }
     }
 
     companion object {

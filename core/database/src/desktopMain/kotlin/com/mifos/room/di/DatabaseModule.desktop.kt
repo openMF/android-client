@@ -26,6 +26,7 @@ actual val PlatformSpecificDatabaseModule: Module = module {
         AppDatabaseFactory()
             .createDatabase<MifosDatabase>(Constants.DATABASE_NAME)
             .fallbackToDestructiveMigrationOnDowngrade(false)
+            .addMigrations(MifosDatabase.MIGRATION_1_2)
             .setDriver(BundledSQLiteDriver())
             .setQueryCoroutineContext(ioContext)
             .build()
