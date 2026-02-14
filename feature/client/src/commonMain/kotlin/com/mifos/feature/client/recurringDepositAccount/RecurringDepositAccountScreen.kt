@@ -14,7 +14,7 @@ import androidclient.feature.client.generated.resources.client_empty_card_messag
 import androidclient.feature.client.generated.resources.client_product_recurring_deposit_account
 import androidclient.feature.client.generated.resources.client_profile_recurring_deposit_account_title
 import androidclient.feature.client.generated.resources.client_savings_item
-import androidclient.feature.client.generated.resources.client_savings_not_avilable
+import androidclient.feature.client.generated.resources.client_savings_not_available
 import androidclient.feature.client.generated.resources.client_savings_pending_approval
 import androidclient.feature.client.generated.resources.feature_client_dialog_action_ok
 import androidclient.feature.client.generated.resources.filter
@@ -149,7 +149,7 @@ internal fun RecurringDepositAccountContent(
                             horizontal = DesignToken.padding.large,
                         ),
                 ) {
-                    val notAvailableText = stringResource(Res.string.client_savings_not_avilable)
+                    val notAvailableText = stringResource(Res.string.client_savings_not_available)
                     RecurringDepositAccountHeader(
                         state.recurringDepositAccounts.size.toString(),
                         onToggleSearch = {
