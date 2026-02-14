@@ -49,6 +49,10 @@ class SavingAccountViewModel(
     private val _savingProductsTemplate = MutableStateFlow(SavingProductsTemplate())
     val savingProductsTemplate = _savingProductsTemplate.asStateFlow()
 
+    init {
+        loadSavingsAccountsAndTemplate()
+    }
+
     fun loadSavingsAccountsAndTemplate() =
         viewModelScope.launch {
             loadSavingsAccountsAndTemplateUseCase()

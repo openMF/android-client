@@ -65,6 +65,7 @@ internal fun ClientIdentifiersListScreen(
     addNewClientIdentity: (Int, Feature, String?) -> Unit,
     onBackPress: () -> Unit,
     navController: NavController,
+    onNavigateToSearch: () -> Unit,
     viewModel: ClientIdentifiersListViewModel = koinViewModel(),
 ) {
     val state by viewModel.stateFlow.collectAsStateWithLifecycle()
@@ -78,6 +79,7 @@ internal fun ClientIdentifiersListScreen(
             )
 
             ClientIdentifiersListEvent.NavigateBack -> onBackPress()
+            ClientIdentifiersListEvent.NavigateToSearch -> onNavigateToSearch()
         }
     }
 

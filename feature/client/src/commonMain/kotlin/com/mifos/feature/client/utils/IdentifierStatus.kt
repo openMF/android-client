@@ -9,20 +9,6 @@
  */
 package com.mifos.feature.client.utils
 
-import com.mifos.core.ui.components.Status
+import com.mifos.core.ui.utils.getClientIdentifierStatus as getStatus
 
-fun getClientIdentifierStatus(status: String?): Status? {
-    return if (status != null) {
-        if (status.lowercase().endsWith("inactive")) {
-            Status.Inactive
-        } else if (status.lowercase()
-                .endsWith("active")
-        ) {
-            Status.Active
-        } else {
-            Status.Pending
-        }
-    } else {
-        null
-    }
-}
+fun getClientIdentifierStatus(status: String?) = getStatus(status)

@@ -26,4 +26,9 @@
     <string name="offline_sync">Offline Sync</string>
     <string name="powered_by">Powered By</string>
 
+    <string name="cmp_navigation_profile_header">Profile header</string>
+    <string name="cmp_navigation_dp_placeholder">DP</string>
+    <string name="cmp_navigation_address">Address</string>
+
+
 </resources>

@@ -155,7 +155,6 @@ class ClientLoanAccountsViewModel(
                             LoanStatusFilter.ACTIVE -> loanStatus.active == true
                             LoanStatusFilter.CLOSED -> loanStatus.isActuallyClosed
                             LoanStatusFilter.PENDING -> loanStatus.isPending
-                            LoanStatusFilter.WAITING -> loanStatus.isWaiting
                             LoanStatusFilter.OVERPAID -> loanStatus.isOverpaid
                         }
                     }
@@ -185,9 +184,6 @@ class ClientLoanAccountsViewModel(
 
     private val LoanStatusEntity.isPending: Boolean
         get() = this.pendingApproval == true
-
-    private val LoanStatusEntity.isWaiting: Boolean
-        get() = this.waitingForDisbursal == true
 
     private val LoanStatusEntity.isOverpaid: Boolean
         get() = this.overpaid == true
@@ -233,7 +229,6 @@ sealed interface ClientLoanAccountsAction {
 enum class LoanStatusFilter {
     ACTIVE,
     PENDING,
-    WAITING,
     CLOSED,
     OVERPAID,
 }
