@@ -9,11 +9,13 @@
  */
 package com.mifos.feature.center.centerList.ui
 
-@androidx.compose.runtime.Composable
+import androidx.compose.runtime.Composable
+
+@Composable
 actual fun CenterListContent(
-    state: com.mifos.feature.center.centerList.ui.CenterListUiState,
+    state: CenterListUiState,
     isInSelectionMode: Boolean,
-    selectedItems: com.mifos.feature.center.centerList.ui.SelectedItemsState,
+    selectedItems: SelectedItemsState,
     onRefresh: () -> Unit,
     onCenterSelect: (Int) -> Unit,
     modifier: androidx.compose.ui.Modifier,

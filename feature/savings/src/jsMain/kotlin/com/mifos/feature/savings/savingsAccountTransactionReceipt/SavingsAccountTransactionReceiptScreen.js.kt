@@ -9,6 +9,8 @@
  */
 package com.mifos.feature.savings.savingsAccountTransactionReceipt
 
-@androidx.compose.runtime.Composable
+import androidx.compose.runtime.Composable
+
+@Composable
 actual fun PdfViewer(pdfBytes: ByteArray) {
 }

@@ -12,10 +12,10 @@ package com.mifos.feature.path.tracking
 import androidx.compose.runtime.Composable
 import com.mifos.core.model.objects.users.UserLatLng
 
-@androidx.compose.runtime.Composable
+@Composable
 actual fun PathTrackingScreen(
     onBackPressed: () -> Unit,
-    viewModel: com.mifos.feature.path.tracking.PathTrackingViewModel,
+    viewModel: PathTrackingViewModel,
 ) {
 }
 

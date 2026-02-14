@@ -38,7 +38,6 @@ private val SCRIM_COLOR: Int = Color.TRANSPARENT
  * This logic is from the Now-In-Android app found
  * [here](https://github.com/android/nowinandroid/blob/689ef92e41427ab70f82e2c9fe59755441deae92/app/src/main/kotlin/com/google/samples/apps/nowinandroid/MainActivity.kt#L94).
  */
-@Suppress("MaxLineLength", "ktlint:standard:multiline-expression-wrapping")
 fun ComponentActivity.setupEdgeToEdge(appThemeFlow: Flow<DarkThemeConfig>) {
     lifecycleScope.launch {
         lifecycle.repeatOnLifecycle(
@@ -71,7 +70,6 @@ fun ComponentActivity.setupEdgeToEdge(appThemeFlow: Flow<DarkThemeConfig>) {
 /**
  * Emits whether the system is currently in dark mode.
  */
-@Suppress("ktlint:standard:multiline-expression-wrapping")
 private fun ComponentActivity.isSystemInDarkModeFlow(): Flow<Boolean> =
     callbackFlow {
         trySend(resources.configuration.isSystemInDarkMode)

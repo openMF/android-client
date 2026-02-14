@@ -9,9 +9,15 @@
  */
 package com.mifos.feature.client.charges
 
-@androidx.compose.runtime.Composable
+import androidx.compose.runtime.Composable
+import androidx.paging.PagingData
+import com.mifos.core.model.objects.clients.Page
+import com.mifos.room.entities.client.ChargesEntity
+import kotlinx.coroutines.flow.Flow
+
+@Composable
 actual fun ShowClientCharge(
-    pagingFlow: kotlinx.coroutines.flow.Flow<androidx.paging.PagingData<com.mifos.core.model.objects.clients.Page<com.mifos.room.entities.client.ChargesEntity>>>,
-    onAction: (com.mifos.feature.client.charges.ChargesAction) -> Unit,
+    pagingFlow: Flow<PagingData<Page<ChargesEntity>>>,
+    onAction: (ChargesAction) -> Unit,
 ) {
 }
