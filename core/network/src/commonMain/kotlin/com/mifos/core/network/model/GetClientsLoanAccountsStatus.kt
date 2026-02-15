@@ -20,7 +20,7 @@ import kotlinx.serialization.Serializable
  * @param closedRescheduled
  * @param closedWrittenOff
  * @param code
- * @param description
+ * @param value
  * @param id
  * @param overpaid
  * @param pendingApproval
@@ -42,7 +42,7 @@ data class GetClientsLoanAccountsStatus(
 
     val code: String? = null,
 
-    val description: String? = null,
+    val value: String? = null,
 
     val id: Long? = null,
 
