@@ -21,10 +21,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
@@ -34,13 +32,14 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.unit.dp
+import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.model.objects.surveys.Scorecard
 import com.mifos.core.ui.components.MifosProgressIndicator
 import com.mifos.core.ui.util.DevicePreview
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameterProvider
+import template.core.base.designsystem.theme.KptTheme
 
 @Composable
 internal fun SurveySubmitScreen(
@@ -117,29 +116,28 @@ internal fun SurveySubmitContent(
             modifier = Modifier.fillMaxWidth(),
         ) {
             Card(
-                modifier = Modifier.padding(horizontal = 40.dp),
-                shape = RoundedCornerShape(4.dp),
+                modifier = Modifier.padding(horizontal = DesignToken.padding.dp40),
+                shape = KptTheme.shapes.extraSmall,
             ) {
                 Card(
-                    modifier = Modifier
-                        .padding(top = 4.dp),
-                    shape = RoundedCornerShape(4.dp),
+                    modifier = Modifier.padding(top = KptTheme.spacing.xs),
+                    shape = KptTheme.shapes.extraSmall,
                 ) {
                     Box(
                         modifier = Modifier
-                            .shadow(1.dp)
-                            .padding(horizontal = 8.dp, vertical = 4.dp),
+                            .shadow(KptTheme.elevation.level1)
+                            .padding(horizontal = KptTheme.spacing.sm, vertical = KptTheme.spacing.xs),
                         contentAlignment = Alignment.Center,
                     ) {
                         Text(
                             text = displayText,
-                            style = MaterialTheme.typography.bodyMedium,
+                            style = KptTheme.typography.bodyMedium,
                         )
                     }
                 }
             }
 
-            Spacer(modifier = Modifier.height(80.dp))
+            Spacer(modifier = Modifier.height(DesignToken.spacing.dp80))
 
             if (showButton) {
                 Button(
@@ -149,7 +147,7 @@ internal fun SurveySubmitContent(
                     },
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = 40.dp),
+                        .padding(horizontal = DesignToken.padding.dp40),
                 ) {
                     Text(text = stringResource(Res.string.feature_client_submit_survey))
                 }

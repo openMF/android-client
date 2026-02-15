@@ -36,7 +36,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Card
@@ -59,7 +58,6 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mifos.core.common.utils.Constants
 import com.mifos.core.designsystem.component.MifosScaffold
@@ -78,6 +76,7 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameterProvider
 import org.koin.compose.viewmodel.koinViewModel
+import template.core.base.designsystem.theme.KptTheme
 
 @Composable
 internal fun SearchRecordScreen(
@@ -189,7 +188,7 @@ private fun SearchRecordToolbar(
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(16.dp),
+            .padding(KptTheme.spacing.md),
     ) {
         TextField(
             value = searchQuery,
@@ -197,7 +196,7 @@ private fun SearchRecordToolbar(
             modifier = Modifier
                 .fillMaxWidth()
                 .focusRequester(focusRequester),
-            shape = RoundedCornerShape(32.dp),
+            shape = DesignToken.shapes.extraLargeIncreased,
             colors = TextFieldDefaults.colors(
                 focusedIndicatorColor = Color.Transparent,
                 unfocusedIndicatorColor = Color.Transparent,
@@ -206,7 +205,7 @@ private fun SearchRecordToolbar(
                 Icon(
                     imageVector = MifosIcons.Search,
                     contentDescription = stringResource(Res.string.search_record_search_icon_desc),
-                    tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                    tint = KptTheme.colorScheme.onSurfaceVariant,
                 )
             },
             trailingIcon = {
@@ -241,9 +240,9 @@ private fun SearchRecordResultsList(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(horizontal = DesignToken.padding.large),
+            .padding(horizontal = KptTheme.spacing.md),
     ) {
-        Spacer(modifier = Modifier.height(DesignToken.padding.largeIncreasedExtra))
+        Spacer(modifier = Modifier.height(KptTheme.spacing.lg))
 
         LazyColumn(
             modifier = Modifier.fillMaxSize(),
@@ -256,7 +255,7 @@ private fun SearchRecordResultsList(
                     record = record,
                     onRecordSelected = onRecordSelected,
                 )
-                Spacer(Modifier.height(DesignToken.spacing.small))
+                Spacer(Modifier.height(KptTheme.spacing.sm))
             }
         }
     }
@@ -288,10 +287,10 @@ private fun AddressRecordCard(
     Surface(
         onClick = { onRecordSelected(record) },
         modifier = Modifier.fillMaxWidth(),
-        shape = DesignToken.shapes.medium,
+        shape = KptTheme.shapes.medium,
         border = BorderStroke(
-            1.dp,
-            MaterialTheme.colorScheme.secondaryContainer,
+            DesignToken.spacing.dp1,
+            KptTheme.colorScheme.secondaryContainer,
         ),
         color = Color.Transparent,
     ) {
@@ -343,17 +342,17 @@ private fun GenericRecordCard(
         onClick = { onRecordSelected(record) },
     ) {
         Column(
-            modifier = Modifier.padding(DesignToken.padding.large),
+            modifier = Modifier.padding(KptTheme.spacing.md),
         ) {
             Text(
                 text = record.name,
-                style = MaterialTheme.typography.titleMedium,
+                style = KptTheme.typography.titleMedium,
             )
-            Spacer(modifier = Modifier.height(DesignToken.spacing.extraSmall))
+            Spacer(modifier = Modifier.height(KptTheme.spacing.xs))
             Text(
                 text = record.description,
-                style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                style = KptTheme.typography.bodySmall,
+                color = KptTheme.colorScheme.onSurfaceVariant,
             )
         }
     }
@@ -364,13 +363,13 @@ private fun SearchRecordEmptyState() {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(32.dp),
+            .padding(KptTheme.spacing.xl),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Text(
             text = stringResource(Res.string.search_record_empty_state),
-            style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            style = KptTheme.typography.bodyMedium,
+            color = KptTheme.colorScheme.onSurfaceVariant,
         )
     }
 }
@@ -380,18 +379,18 @@ private fun SearchRecordNoResultsState(query: String) {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(32.dp),
+            .padding(KptTheme.spacing.xl),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Text(
             text = stringResource(Res.string.search_record_no_results_title),
-            style = MaterialTheme.typography.headlineSmall,
+            style = KptTheme.typography.headlineSmall,
         )
-        Spacer(modifier = Modifier.height(8.dp))
+        Spacer(modifier = Modifier.height(KptTheme.spacing.sm))
         Text(
             text = stringResource(Res.string.search_record_no_results_description, query),
-            style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            style = KptTheme.typography.bodyMedium,
+            color = KptTheme.colorScheme.onSurfaceVariant,
         )
     }
 }

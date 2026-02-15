@@ -74,6 +74,7 @@ import com.mifos.core.designsystem.component.MifosOutlinedTextField
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.component.MifosTextFieldDropdown
+import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.model.objects.responses.SaveResponse
 import com.mifos.core.ui.components.MifosAlertDialog
 import com.mifos.core.ui.components.MifosProgressIndicator
@@ -85,6 +86,7 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameterProvider
 import org.koin.compose.viewmodel.koinViewModel
+import template.core.base.designsystem.theme.KptTheme
 import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
 
@@ -277,7 +279,7 @@ private fun CreateNewGroupContent(
             .fillMaxSize()
             .verticalScroll(scrollState),
     ) {
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(KptTheme.spacing.md))
 
         MifosOutlinedTextField(
             value = groupName,
@@ -288,8 +290,7 @@ private fun CreateNewGroupContent(
             label = stringResource(Res.string.feature_groups_name),
             error = groupValidationError?.let { stringResource(it) },
         )
-
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(KptTheme.spacing.md))
 
         MifosTextFieldDropdown(
             value = selectedOffice,
@@ -308,8 +309,7 @@ private fun CreateNewGroupContent(
             readOnly = true,
             errorMessage = officeValidationError?.let { stringResource(it) },
         )
-
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(KptTheme.spacing.md))
 
         MifosDatePickerTextField(
             value = DateHelper.getDateAsStringFromLong(submittedOnDate),
@@ -318,8 +318,7 @@ private fun CreateNewGroupContent(
                 submitDatePicker = true
             },
         )
-
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(KptTheme.spacing.md))
 
         MifosOutlinedTextField(
             value = externalId,
@@ -327,14 +326,13 @@ private fun CreateNewGroupContent(
             label = stringResource(Res.string.feature_groups_external_id),
             error = null,
         )
-
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(KptTheme.spacing.md))
 
         Row(
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Checkbox(
-                modifier = Modifier.padding(start = 8.dp),
+                modifier = Modifier.padding(start = KptTheme.spacing.sm),
                 checked = isActive,
                 onCheckedChange = { isActive = !isActive },
             )
@@ -352,7 +350,7 @@ private fun CreateNewGroupContent(
             ),
             exit = slideOutVertically() + shrinkVertically() + fadeOut(),
         ) {
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(KptTheme.spacing.md))
 
             MifosDatePickerTextField(
                 value = DateHelper.getDateAsStringFromLong(activationDate),
@@ -362,14 +360,13 @@ private fun CreateNewGroupContent(
                 },
             )
         }
-
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(KptTheme.spacing.md))
 
         Button(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 16.dp)
-                .heightIn(46.dp),
+                .padding(horizontal = KptTheme.spacing.md)
+                .heightIn(DesignToken.spacing.dp46),
             onClick = {
                 groupValidationError = validateGroupField(groupName)
                 officeValidationError = validateOffice(selectedOffice)

@@ -41,14 +41,15 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.unit.dp
 import com.mifos.core.designsystem.component.MifosOutlinedTextField
 import com.mifos.core.designsystem.icon.MifosIcons
+import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.ui.util.DevicePreview
 import com.mifos.feature.search.FilterOption
 import com.mifos.feature.search.SearchScreenEvent
 import com.mifos.feature.search.SearchScreenState
 import org.jetbrains.compose.resources.stringResource
+import template.core.base.designsystem.theme.KptTheme
 
 @Composable
 internal fun SearchBox(
@@ -64,7 +65,7 @@ internal fun SearchBox(
     ) {
         Column(
             modifier = Modifier.fillMaxWidth(),
-            verticalArrangement = Arrangement.spacedBy(8.dp),
+            verticalArrangement = Arrangement.spacedBy(KptTheme.spacing.sm),
         ) {
             // Title And Filter Icon
             Row(
@@ -74,7 +75,7 @@ internal fun SearchBox(
             ) {
                 Text(
                     text = stringResource(Res.string.feature_search_title),
-                    style = MaterialTheme.typography.headlineSmall,
+                    style = KptTheme.typography.headlineSmall,
                 )
 
                 AssistChip(
@@ -84,7 +85,7 @@ internal fun SearchBox(
                     label = {
                         Text(
                             text = state.selectedFilter?.label ?: "All",
-                            style = MaterialTheme.typography.bodyLarge,
+                            style = KptTheme.typography.bodyLarge,
                         )
                     },
                     leadingIcon = {
@@ -100,7 +101,7 @@ internal fun SearchBox(
                         )
                     },
                     colors = AssistChipDefaults.assistChipColors().copy(
-                        leadingIconContentColor = MaterialTheme.colorScheme.tertiary,
+                        leadingIconContentColor = KptTheme.colorScheme.tertiary,
                     ),
                 )
             }
@@ -129,7 +130,7 @@ internal fun SearchBox(
                 },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .defaultMinSize(minHeight = 48.dp),
+                    .defaultMinSize(minHeight = DesignToken.spacing.extraExtraLarge),
             ) {
                 Icon(
                     imageVector = MifosIcons.Search,
@@ -138,7 +139,7 @@ internal fun SearchBox(
 
                 Text(
                     text = stringResource(Res.string.feature_search_title),
-                    style = MaterialTheme.typography.bodyLarge,
+                    style = KptTheme.typography.bodyLarge,
                 )
             }
 
@@ -151,9 +152,9 @@ internal fun SearchBox(
                     ) {
                         onEvent(SearchScreenEvent.UpdateExactMatch)
                     }
-                    .padding(vertical = 12.dp),
+                    .padding(vertical = DesignToken.padding.medium),
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.Start),
+                horizontalArrangement = Arrangement.spacedBy(KptTheme.spacing.sm, Alignment.Start),
             ) {
                 Checkbox(
                     checked = state.exactMatch ?: false,
@@ -161,7 +162,7 @@ internal fun SearchBox(
                         onEvent(SearchScreenEvent.UpdateExactMatch)
                     },
                     modifier = Modifier
-                        .size(20.dp),
+                        .size(DesignToken.sizes.iconAverage),
                 )
 
                 Text(

@@ -14,17 +14,17 @@ import androidclient.feature.savings.generated.resources.feature_savings_transac
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import com.mifos.core.designsystem.component.MifosSweetError
+import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.ui.components.MifosProgressIndicator
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
+import template.core.base.designsystem.theme.KptTheme
 
 /**
  * Created by Arin Yadav on 20/08/2025
@@ -43,10 +43,9 @@ fun SavingsAccountTransactionReceiptScreen(
                 onClick = { viewModel.loadReceipt(transactionId) },
                 content = {
                     Text(
-                        modifier = Modifier
-                            .padding(horizontal = 20.dp),
+                        modifier = Modifier.padding(horizontal = DesignToken.padding.largeIncreased),
                         text = stringResource(Res.string.feature_savings_transaction_view_receipt),
-                        style = MaterialTheme.typography.bodyLarge,
+                        style = KptTheme.typography.bodyLarge,
                     )
                 },
             )

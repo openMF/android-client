@@ -62,7 +62,6 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import com.mifos.core.common.utils.DateHelper
 import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.designsystem.theme.MifosTypography
@@ -72,6 +71,7 @@ import com.mifos.core.ui.components.MifosTwoButtonRow
 import com.mifos.feature.client.newFixedDepositAccount.NewFixedDepositAccountAction
 import com.mifos.feature.client.newFixedDepositAccount.NewFixedDepositAccountState
 import org.jetbrains.compose.resources.stringResource
+import template.core.base.designsystem.theme.KptTheme
 
 @Composable
 fun PreviewPage(
@@ -80,11 +80,11 @@ fun PreviewPage(
     onAction: (NewFixedDepositAccountAction) -> Unit,
 ) {
     Column(
-        Modifier.fillMaxSize().padding(bottom = DesignToken.padding.large),
+        Modifier.fillMaxSize().padding(bottom = KptTheme.spacing.md),
     ) {
         Column(
             modifier = modifier.weight(1f).verticalScroll(rememberScrollState()),
-            verticalArrangement = Arrangement.spacedBy(20.dp),
+            verticalArrangement = Arrangement.spacedBy(DesignToken.spacing.largeIncreased),
         ) {
             Text(
                 text = stringResource(Res.string.step_details),
@@ -128,7 +128,7 @@ fun PreviewPage(
                 text = "${state.fixedDepositAccountCharges.addedCharges.size} ${stringResource(Res.string.feature_share_account_charge_active_charge)}",
                 btnEnabled = state.fixedDepositAccountCharges.addedCharges.isNotEmpty(),
             )
-            Spacer(Modifier.height(DesignToken.padding.large))
+            Spacer(Modifier.height(KptTheme.spacing.md))
         }
         MifosTwoButtonRow(
             firstBtnText = stringResource(Res.string.feature_share_account_back),
@@ -160,7 +160,7 @@ fun DetailsCard(state: NewFixedDepositAccountState) {
                 ),
             Res.string.feature_client_external_id to state.fixedDepositAccountDetail.externalId,
         ),
-        verticalArrangement = Arrangement.spacedBy(DesignToken.padding.small),
+        verticalArrangement = Arrangement.spacedBy(KptTheme.spacing.sm),
     )
 }
 
@@ -195,7 +195,7 @@ fun TermsCard(state: NewFixedDepositAccountState) {
                 ""
             },
         ),
-        verticalArrangement = Arrangement.spacedBy(DesignToken.padding.small),
+        verticalArrangement = Arrangement.spacedBy(KptTheme.spacing.sm),
     )
 }
 
@@ -260,7 +260,7 @@ fun SettingCard(state: NewFixedDepositAccountState) {
                 ""
             },
         ),
-        verticalArrangement = Arrangement.spacedBy(DesignToken.padding.small),
+        verticalArrangement = Arrangement.spacedBy(KptTheme.spacing.sm),
     )
 }
 
@@ -292,10 +292,10 @@ fun InterestRate(
                     stringResource(Res.string.feature_fixed_deposit_interest_no)
                 },
             ),
-            verticalArrangement = Arrangement.spacedBy(DesignToken.padding.small),
+            verticalArrangement = Arrangement.spacedBy(KptTheme.spacing.sm),
         )
 
-        Spacer(Modifier.height(DesignToken.padding.small))
+        Spacer(Modifier.height(KptTheme.spacing.sm))
 
         MifosRowWithTextAndButton(
             onBtnClick = {

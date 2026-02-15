@@ -48,7 +48,6 @@ import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SelectableDates
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
@@ -66,7 +65,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color.Companion.Black
 import androidx.compose.ui.graphics.Color.Companion.DarkGray
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import co.touchlab.kermit.Logger
 import com.mifos.core.common.utils.Constants
@@ -76,6 +74,7 @@ import com.mifos.core.designsystem.component.MifosOutlinedTextField
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.component.MifosTextFieldDropdown
+import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.model.objects.account.saving.SavingsAccountTransactionResponse
 import com.mifos.core.ui.components.MifosAlertDialog
 import com.mifos.core.ui.components.MifosProgressIndicator
@@ -88,6 +87,7 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameterProvider
 import org.koin.compose.viewmodel.koinViewModel
+import template.core.base.designsystem.theme.KptTheme
 import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
 
@@ -281,7 +281,7 @@ private fun SavingsAccountTransactionContent(
             title = {
                 Text(
                     text = stringResource(Res.string.feature_savings_review_transaction_details),
-                    style = MaterialTheme.typography.titleLarge,
+                    style = KptTheme.typography.titleLarge,
                 )
             },
             text = {
@@ -356,26 +356,26 @@ private fun SavingsAccountTransactionContent(
     Column(
         modifier = modifier
             .fillMaxSize()
-            .padding(horizontal = 16.dp, vertical = 10.dp)
+            .padding(horizontal = KptTheme.spacing.md, vertical = DesignToken.spacing.dp10)
             .verticalScroll(scrollState),
     ) {
         Text(
-            style = MaterialTheme.typography.bodyLarge,
-            color = MaterialTheme.colorScheme.onBackground,
+            style = KptTheme.typography.bodyLarge,
+            color = KptTheme.colorScheme.onBackground,
             text = clientName ?: "",
 
             // TODO from old fragment
             // 1. Implement QuickContactBadge here
         )
 
-        HorizontalDivider(modifier = Modifier.padding(top = 6.dp))
+        HorizontalDivider(modifier = Modifier.padding(top = DesignToken.padding.dp6))
 
         FarApartTextItem(
             title = stringResource(Res.string.feature_savings_account_number),
             value = savingsAccountNumber?.toString() ?: "",
         )
 
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(KptTheme.spacing.md))
 
         // TODO from old fragment: Add Validation to make sure :
         // 1. Date Is in Correct Format
@@ -389,7 +389,7 @@ private fun SavingsAccountTransactionContent(
             openDatepicker = true
         }
 
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(KptTheme.spacing.md))
 
         MifosOutlinedTextField(
             modifier = Modifier.fillMaxWidth(),
@@ -400,7 +400,7 @@ private fun SavingsAccountTransactionContent(
             keyboardType = KeyboardType.Number,
         )
 
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(KptTheme.spacing.md))
 
         MifosTextFieldDropdown(
             modifier = Modifier.fillMaxWidth(),
@@ -415,21 +415,21 @@ private fun SavingsAccountTransactionContent(
             readOnly = true,
         )
 
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(KptTheme.spacing.md))
 
         Row(
             modifier = Modifier.fillMaxSize(),
             horizontalArrangement = Arrangement.SpaceBetween,
         ) {
             Button(
-                modifier = Modifier.heightIn(46.dp),
+                modifier = Modifier.heightIn(DesignToken.spacing.dp46),
                 onClick = { navigateBack.invoke() },
             ) {
                 Text(text = stringResource(Res.string.feature_savings_cancel))
             }
 
             Button(
-                modifier = Modifier.heightIn(46.dp),
+                modifier = Modifier.heightIn(DesignToken.spacing.dp46),
                 onClick = {
                     if (isAmountValid(
                             amount,
@@ -475,17 +475,17 @@ private fun FarApartTextItem(title: String, value: String) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(top = 6.dp),
+            .padding(top = DesignToken.padding.dp6),
         horizontalArrangement = Arrangement.SpaceBetween,
     ) {
         Text(
-            style = MaterialTheme.typography.bodyLarge,
+            style = KptTheme.typography.bodyLarge,
             text = title,
             color = Black,
         )
 
         Text(
-            style = MaterialTheme.typography.bodyLarge,
+            style = KptTheme.typography.bodyLarge,
             text = value,
             color = DarkGray,
         )

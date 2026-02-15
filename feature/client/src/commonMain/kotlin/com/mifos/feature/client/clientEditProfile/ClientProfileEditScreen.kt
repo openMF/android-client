@@ -33,7 +33,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -65,6 +64,7 @@ import kotlinx.coroutines.delay
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
+import template.core.base.designsystem.theme.KptTheme
 
 @Composable
 internal fun ClientProfileEditScreen(
@@ -112,9 +112,7 @@ private fun ClientProfileEditContent(
                 modifier = Modifier
                     .fillMaxSize()
                     .verticalScroll(rememberScrollState())
-                    .padding(
-                        horizontal = DesignToken.padding.large,
-                    ),
+                    .padding(horizontal = KptTheme.spacing.md),
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 Spacer(Modifier.height(DesignToken.padding.largeIncreased))
@@ -127,7 +125,7 @@ private fun ClientProfileEditContent(
                 Text(
                     text = stringResource(Res.string.account_number_prefix, state.accountNo),
                     style = MifosTypography.bodySmall,
-                    color = MaterialTheme.colorScheme.secondary,
+                    color = KptTheme.colorScheme.secondary,
                 )
                 Spacer(Modifier.height(DesignToken.padding.largeIncreased))
                 MifosUserImage(
@@ -136,11 +134,11 @@ private fun ClientProfileEditContent(
                     hasBorder = true,
                 )
                 if (state.profileImage == null) {
-                    Spacer(Modifier.height(DesignToken.padding.large))
+                    Spacer(Modifier.height(KptTheme.spacing.md))
                     Text(
                         text = stringResource(Res.string.update_profile_photo_message),
                         style = MifosTypography.bodySmall,
-                        color = MaterialTheme.colorScheme.secondary,
+                        color = KptTheme.colorScheme.secondary,
                         textAlign = TextAlign.Center,
                     )
                 }
@@ -159,7 +157,7 @@ private fun ClientProfileEditContent(
                     },
                     modifier = Modifier.fillMaxWidth(),
                 )
-                Spacer(Modifier.height(DesignToken.padding.large))
+                Spacer(Modifier.height(KptTheme.spacing.md))
                 MifosTextButton(
                     text = { Text(stringResource(Res.string.upload_new_photo)) },
                     onClick = {
@@ -217,7 +215,7 @@ private fun ClientProfileEditDialogs(
                     Icon(
                         imageVector = MifosIcons.DeleteDocument,
                         contentDescription = null,
-                        tint = MaterialTheme.colorScheme.primary,
+                        tint = KptTheme.colorScheme.primary,
                         modifier = Modifier.size(DesignToken.sizes.iconMedium),
                     )
                 },
@@ -271,11 +269,11 @@ private fun ClientProfileEditDialogs(
                 ),
             ) {
                 Surface(
-                    shape = DesignToken.shapes.extraLarge,
-                    color = MaterialTheme.colorScheme.surface,
+                    shape = KptTheme.shapes.extraLarge,
+                    color = KptTheme.colorScheme.surface,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(DesignToken.padding.large),
+                        .padding(KptTheme.spacing.md),
                 ) {
                     MifosStatusDialog(
                         status = state.dialogState.status,

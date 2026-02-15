@@ -42,7 +42,6 @@ import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -55,7 +54,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mifos.core.common.utils.Utils
 import com.mifos.core.designsystem.component.MifosButton
@@ -63,6 +61,7 @@ import com.mifos.core.designsystem.component.MifosMenuDropDownItem
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.icon.MifosIcons
+import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.model.objects.groups.CenterInfo
 import com.mifos.core.ui.components.MifosProgressIndicator
 import com.mifos.room.entities.group.CenterWithAssociations
@@ -71,6 +70,7 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameterProvider
 import org.koin.compose.viewmodel.koinViewModel
+import template.core.base.designsystem.theme.KptTheme
 
 @Composable
 internal fun CenterDetailsScreen(
@@ -149,12 +149,12 @@ internal fun CenterDetailsScreen(
                     onClick = { onActivateCenter() },
                     modifier = Modifier
                         .fillMaxWidth()
-                        .heightIn(44.dp)
-                        .padding(horizontal = 16.dp),
+                        .heightIn(DesignToken.spacing.dp44)
+                        .padding(horizontal = KptTheme.spacing.md),
                 ) {
                     Text(
                         text = stringResource(Res.string.feature_center_activate_center),
-                        style = MaterialTheme.typography.bodyMedium,
+                        style = KptTheme.typography.bodyMedium,
                     )
                 }
             }
@@ -200,9 +200,9 @@ private fun CenterDetailsContent(
             Text(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(16.dp),
+                    .padding(KptTheme.spacing.md),
                 text = it,
-                style = MaterialTheme.typography.titleMedium,
+                style = KptTheme.typography.titleMedium,
                 textAlign = TextAlign.Center,
             )
         }
@@ -241,15 +241,15 @@ private fun CenterDetailsContent(
             },
         )
 
-        Spacer(modifier = Modifier.height(16.dp))
-        HorizontalDivider(modifier = Modifier.padding(horizontal = 16.dp))
+        Spacer(modifier = Modifier.height(KptTheme.spacing.md))
+        HorizontalDivider(modifier = Modifier.padding(horizontal = KptTheme.spacing.md))
 
         Text(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp),
+                .padding(KptTheme.spacing.md),
             text = stringResource(Res.string.feature_center_summary_info),
-            style = MaterialTheme.typography.titleMedium,
+            style = KptTheme.typography.titleMedium,
             textAlign = TextAlign.Center,
         )
 
@@ -295,26 +295,26 @@ private fun CenterDetailsContent(
 private fun MifosCenterDetailsText(icon: ImageVector, field: String, value: String) {
     Row(
         modifier = Modifier
-            .padding(horizontal = 16.dp, vertical = 8.dp)
+            .padding(horizontal = KptTheme.spacing.md, vertical = KptTheme.spacing.sm)
             .fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Icon(
-            modifier = Modifier.size(18.dp),
+            modifier = Modifier.size(DesignToken.sizes.dp18),
             imageVector = icon,
             contentDescription = "Icon",
         )
         Text(
             modifier = Modifier
                 .weight(1f)
-                .padding(start = 16.dp),
+                .padding(start = KptTheme.spacing.md),
             text = field,
-            style = MaterialTheme.typography.bodyLarge,
+            style = KptTheme.typography.bodyLarge,
             textAlign = TextAlign.Start,
         )
         Text(
             text = value,
-            style = MaterialTheme.typography.bodyLarge,
+            style = KptTheme.typography.bodyLarge,
             textAlign = TextAlign.Start,
         )
     }

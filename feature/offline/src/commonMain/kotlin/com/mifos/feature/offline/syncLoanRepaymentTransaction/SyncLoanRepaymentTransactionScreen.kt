@@ -30,14 +30,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
@@ -51,10 +49,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.icon.MifosIcons
+import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.ui.components.MifosProgressIndicator
 import com.mifos.feature.offline.syncSavingsAccountTransaction.getPaymentTypeName
 import com.mifos.room.entities.PaymentTypeOptionEntity
@@ -65,6 +63,7 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameterProvider
 import org.koin.compose.viewmodel.koinViewModel
+import template.core.base.designsystem.theme.KptTheme
 
 @Composable
 internal fun SyncLoanRepaymentTransactionScreenRoute(
@@ -197,14 +196,14 @@ private fun LoanRepaymentTransactionItem(
     Card(
         modifier = modifier
             .fillMaxWidth()
-            .padding(2.dp),
-        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
-        shape = RoundedCornerShape(2.dp),
+            .padding(DesignToken.padding.extraExtraSmall),
+        elevation = CardDefaults.cardElevation(defaultElevation = DesignToken.elevation.dp2),
+        shape = DesignToken.shapes.dp2,
     ) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(8.dp),
+                .padding(KptTheme.spacing.sm),
         ) {
             TransactionRow(
                 stringResource(Res.string.feature_offline_loan_id),
@@ -231,9 +230,9 @@ private fun LoanRepaymentTransactionItem(
             if (request.errorMessage != null) {
                 Text(
                     text = request.errorMessage!!,
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.error,
-                    modifier = Modifier.padding(top = 4.dp),
+                    style = KptTheme.typography.bodyMedium,
+                    color = KptTheme.colorScheme.error,
+                    modifier = Modifier.padding(top = KptTheme.spacing.xs),
                 )
             }
         }
@@ -249,17 +248,17 @@ private fun TransactionRow(
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .padding(vertical = 4.dp),
+            .padding(vertical = KptTheme.spacing.xs),
     ) {
         Text(
             text = label,
-            style = MaterialTheme.typography.bodyMedium,
+            style = KptTheme.typography.bodyMedium,
             fontWeight = FontWeight.Bold,
             modifier = Modifier.weight(1f),
         )
         Text(
             text = value,
-            style = MaterialTheme.typography.bodyMedium,
+            style = KptTheme.typography.bodyMedium,
             modifier = Modifier.weight(1f),
         )
     }
@@ -279,9 +278,9 @@ private fun ErrorStateScreen(
         Icon(
             imageVector = MifosIcons.Error,
             contentDescription = null,
-            modifier = Modifier.size(48.dp),
+            modifier = Modifier.size(DesignToken.sizes.dp48),
         )
-        Text(text = message, modifier = Modifier.padding(vertical = 6.dp))
+        Text(text = message, modifier = Modifier.padding(vertical = DesignToken.padding.dp6))
         Button(onClick = onRefresh) {
             Text(stringResource(Res.string.feature_offline_click_to_refresh))
         }
@@ -296,22 +295,22 @@ private fun EmptyLoanRepaymentsScreen(
     Column(
         modifier = modifier
             .fillMaxSize()
-            .padding(16.dp),
+            .padding(KptTheme.spacing.md),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
     ) {
         Icon(
             imageVector = MifosIcons.AssignmentTurnedIn,
             contentDescription = null,
-            modifier = Modifier.size(72.dp),
-            tint = MaterialTheme.colorScheme.primary,
+            modifier = Modifier.size(DesignToken.sizes.dp72),
+            tint = KptTheme.colorScheme.primary,
         )
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(KptTheme.spacing.md))
         Text(
             text = message,
-            style = MaterialTheme.typography.bodyLarge,
+            style = KptTheme.typography.bodyLarge,
             textAlign = TextAlign.Center,
-            color = MaterialTheme.colorScheme.onSurface,
+            color = KptTheme.colorScheme.onSurface,
         )
     }
 }

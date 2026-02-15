@@ -33,7 +33,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -58,6 +57,7 @@ import com.mifos.core.ui.util.EventsEffect
 import com.mifos.feature.client.EntityDocumentState
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
+import template.core.base.designsystem.theme.KptTheme
 
 @Composable
 fun ClientAddDocumentsScreen(
@@ -127,7 +127,7 @@ private fun ClientAddDocumentContent(
             Column(
                 Modifier.fillMaxSize()
                     .padding(
-                        horizontal = DesignToken.padding.large,
+                        horizontal = KptTheme.spacing.md,
                     ),
             ) {
                 Text(
@@ -147,7 +147,7 @@ private fun ClientAddDocumentContent(
                     },
                     label = stringResource(Res.string.document_name),
                     maxLines = 1,
-                    shape = DesignToken.shapes.medium,
+                    shape = KptTheme.shapes.medium,
                 )
 
                 MifosOutlinedTextField(
@@ -160,9 +160,9 @@ private fun ClientAddDocumentContent(
                     },
                     label = stringResource(Res.string.feature_client_description),
                     maxLines = 1,
-                    shape = DesignToken.shapes.medium,
+                    shape = KptTheme.shapes.medium,
                     modifier = Modifier
-                        .padding(bottom = DesignToken.padding.small),
+                        .padding(bottom = KptTheme.spacing.sm),
                 )
 
                 MifosRowWithTextAndButton(
@@ -197,14 +197,14 @@ private fun ClientAddDocumentContent(
                             onAction(ClientAddDocumentScreenAction.NavigateBack)
                         },
                         colors = ButtonDefaults.outlinedButtonColors(
-                            containerColor = MaterialTheme.colorScheme.onPrimary,
-                            contentColor = MaterialTheme.colorScheme.primary,
+                            containerColor = KptTheme.colorScheme.onPrimary,
+                            contentColor = KptTheme.colorScheme.primary,
                         ),
                         border = BorderStroke(
-                            1.dp,
-                            color = MaterialTheme.colorScheme.secondaryContainer,
+                            DesignToken.strokes.thin,
+                            color = KptTheme.colorScheme.secondaryContainer,
                         ),
-                        shape = DesignToken.shapes.medium,
+                        shape = KptTheme.shapes.medium,
                         modifier = Modifier
                             .height(DesignToken.sizes.iconExtraLarge)
                             .weight(1f),
@@ -213,17 +213,17 @@ private fun ClientAddDocumentContent(
                             imageVector = MifosIcons.ArrowBack,
                             "back button",
                             modifier = Modifier.size(DesignToken.sizes.iconMedium),
-                            tint = MaterialTheme.colorScheme.primary,
+                            tint = KptTheme.colorScheme.primary,
                         )
-                        Spacer(Modifier.width(DesignToken.spacing.extraSmall))
+                        Spacer(Modifier.width(KptTheme.spacing.xs))
                         Text(
                             stringResource(Res.string.btn_back),
-                            style = MaterialTheme.typography.labelLarge,
+                            style = KptTheme.typography.labelLarge,
                             fontFamily = FontFamily.SansSerif,
                         )
                     }
 
-                    Spacer(Modifier.width(DesignToken.spacing.small))
+                    Spacer(Modifier.width(KptTheme.spacing.sm))
 
                     MifosOutlinedButton(
                         onClick = {
@@ -234,12 +234,12 @@ private fun ClientAddDocumentContent(
                             }
                         },
                         colors = ButtonDefaults.outlinedButtonColors(
-                            containerColor = MaterialTheme.colorScheme.primary,
-                            contentColor = MaterialTheme.colorScheme.onPrimary,
-                            disabledContainerColor = MaterialTheme.colorScheme.onSurface.copy(
+                            containerColor = KptTheme.colorScheme.primary,
+                            contentColor = KptTheme.colorScheme.onPrimary,
+                            disabledContainerColor = KptTheme.colorScheme.onSurface.copy(
                                 alpha = .12f,
                             ),
-                            disabledContentColor = MaterialTheme.colorScheme.onSurface.copy(
+                            disabledContentColor = KptTheme.colorScheme.onSurface.copy(
                                 .5f,
                             ),
                         ),
@@ -249,9 +249,9 @@ private fun ClientAddDocumentContent(
                             } else {
                                 0.dp
                             },
-                            color = MaterialTheme.colorScheme.secondaryContainer,
+                            color = KptTheme.colorScheme.secondaryContainer,
                         ),
-                        shape = DesignToken.shapes.medium,
+                        shape = KptTheme.shapes.medium,
                         modifier = Modifier
                             .height(DesignToken.sizes.iconExtraLarge)
                             .weight(1f),
@@ -262,10 +262,10 @@ private fun ClientAddDocumentContent(
                             contentDescription = "submit button",
                             modifier = Modifier.size(DesignToken.sizes.iconSmall),
                         )
-                        Spacer(Modifier.width(DesignToken.spacing.small))
+                        Spacer(Modifier.width(KptTheme.spacing.sm))
                         Text(
                             stringResource(Res.string.btn_submit),
-                            style = MaterialTheme.typography.labelLarge,
+                            style = KptTheme.typography.labelLarge,
                             fontFamily = FontFamily.SansSerif,
                         )
                     }

@@ -46,7 +46,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
@@ -55,7 +54,6 @@ import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -70,7 +68,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Color.Companion.DarkGray
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mifos.core.common.utils.DateHelper
@@ -79,6 +76,7 @@ import com.mifos.core.designsystem.component.MifosMenuDropDownItem
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.icon.MifosIcons
+import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.ui.components.MifosEmptyUi
 import com.mifos.core.ui.components.MifosProgressIndicator
 import com.mifos.feature.savings.savingsAccountTransactionReceipt.SavingsAccountTransactionReceiptScreen
@@ -95,6 +93,7 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameterProvider
 import org.koin.compose.viewmodel.koinViewModel
+import template.core.base.designsystem.theme.KptTheme
 
 /**
  * Created by Pronay Sarker on 10/07/2024 (6:21 PM)
@@ -239,7 +238,7 @@ private fun SavingsAccountSummaryContent(
     }
     Column {
         Box(
-            modifier = modifier.padding(horizontal = 24.dp),
+            modifier = modifier.padding(horizontal = KptTheme.spacing.lg),
         ) {
             Column(
                 modifier = Modifier.fillMaxSize(),
@@ -247,10 +246,10 @@ private fun SavingsAccountSummaryContent(
                 Text(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(top = 8.dp, bottom = 8.dp),
+                        .padding(vertical = KptTheme.spacing.sm),
                     text = savingsAccountWithAssociations.clientName
                         ?: stringResource(Res.string.feature_savings_client_name),
-                    style = MaterialTheme.typography.bodyLarge,
+                    style = KptTheme.typography.bodyLarge,
                 )
 
                 HorizontalDivider(color = DarkGray)
@@ -261,7 +260,7 @@ private fun SavingsAccountSummaryContent(
                     value = savingsAccountWithAssociations.accountNo?.toString() ?: "",
                 )
 
-                HorizontalDivider(modifier = Modifier.padding(top = 6.dp), color = DarkGray)
+                HorizontalDivider(modifier = Modifier.padding(top = DesignToken.padding.dp6), color = DarkGray)
 
                 FarApartTextItem(
                     title = stringResource(Res.string.feature_savings_account_balance),
@@ -288,7 +287,7 @@ private fun SavingsAccountSummaryContent(
                 )
 
                 HorizontalDivider(
-                    modifier = Modifier.padding(vertical = 8.dp),
+                    modifier = Modifier.padding(vertical = KptTheme.spacing.sm),
                     color = DarkGray,
                 )
 
@@ -296,9 +295,9 @@ private fun SavingsAccountSummaryContent(
                     MifosEmptyUi(text = stringResource(Res.string.feature_savings_no_transactions))
                 } else {
                     Text(
-                        style = MaterialTheme.typography.bodyLarge,
+                        style = KptTheme.typography.bodyLarge,
                         text = stringResource(Res.string.feature_savings_transactions),
-                        color = MaterialTheme.colorScheme.onBackground,
+                        color = KptTheme.colorScheme.onBackground,
                     )
 
                     LazyColumn {
@@ -318,14 +317,14 @@ private fun SavingsAccountSummaryContent(
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(vertical = 8.dp),
+                        .padding(vertical = KptTheme.spacing.sm),
                     horizontalArrangement = Arrangement.SpaceBetween,
                 ) {
                     if (isWithdrawalAndDepositButtonVisible) {
                         Button(
                             modifier = Modifier
                                 .weight(1f)
-                                .padding(horizontal = 8.dp),
+                                .padding(horizontal = KptTheme.spacing.sm),
                             onClick = {
                                 onWithdrawButtonClicked.invoke(
                                     savingsAccountWithAssociations,
@@ -338,7 +337,7 @@ private fun SavingsAccountSummaryContent(
                         Button(
                             modifier = Modifier
                                 .weight(1f)
-                                .padding(horizontal = 8.dp),
+                                .padding(horizontal = KptTheme.spacing.sm),
                             onClick = { onDepositButtonClicked.invoke(savingsAccountWithAssociations) },
                         ) {
                             Text(text = stringResource(Res.string.feature_savings_make_deposit))
@@ -349,7 +348,7 @@ private fun SavingsAccountSummaryContent(
                         Button(
                             modifier = Modifier
                                 .weight(1f)
-                                .padding(horizontal = 8.dp),
+                                .padding(horizontal = KptTheme.spacing.sm),
                             onClick = when {
                                 savingsAccountWithAssociations.status?.submittedAndPendingApproval == true -> {
                                     { approveSavings.invoke() }
@@ -402,32 +401,32 @@ private fun TransactionItemRow(
         colors = CardDefaults.cardColors(
             containerColor = Color.White,
         ),
-        shape = RoundedCornerShape(0.dp),
+        shape = DesignToken.shapes.none,
     ) {
         Column {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(vertical = 16.dp),
+                    .padding(vertical = KptTheme.spacing.md),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 Text(
                     text = DateHelper.getDateAsString(transaction.date as List<Int>),
-                    style = MaterialTheme.typography.bodyLarge,
-                    color = MaterialTheme.colorScheme.onBackground,
+                    style = KptTheme.typography.bodyLarge,
+                    color = KptTheme.colorScheme.onBackground,
                     modifier = Modifier.weight(4f),
                 )
 
                 Text(
                     text = transaction.transactionType?.value ?: "",
-                    style = MaterialTheme.typography.bodyLarge,
-                    color = MaterialTheme.colorScheme.onBackground,
+                    style = KptTheme.typography.bodyLarge,
+                    color = KptTheme.colorScheme.onBackground,
                     modifier = Modifier.weight(3f),
                 )
 
                 Text(
                     text = transaction.currency?.displaySymbol + " " + transaction.amount?.toString(),
-                    style = MaterialTheme.typography.bodyLarge,
+                    style = KptTheme.typography.bodyLarge,
                     modifier = Modifier.weight(3f),
                     textAlign = TextAlign.End,
                     color = when {
@@ -461,9 +460,9 @@ private fun SummaryDialogBox(
             MifosCard {
                 Column(
                     modifier = Modifier.verticalScroll(rememberScrollState())
-                        .padding(16.dp),
+                        .padding(KptTheme.spacing.md),
                     horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.spacedBy(5.dp),
+                    verticalArrangement = Arrangement.spacedBy(DesignToken.spacing.dp5),
                 ) {
                     DialogBoxRowItem(
                         title = stringResource(Res.string.feature_savings_transaction_id),
@@ -518,25 +517,25 @@ private fun DialogBoxRowItem(
         modifier = Modifier
             .fillMaxWidth()
             .border(
-                width = 2.dp,
-                color = MaterialTheme.colorScheme.primary,
-                shape = RoundedCornerShape(0.dp),
+                width = DesignToken.spacing.dp2,
+                color = KptTheme.colorScheme.primary,
+                shape = DesignToken.shapes.none,
             )
-            .padding(horizontal = 8.dp, vertical = 16.dp),
+            .padding(horizontal = KptTheme.spacing.sm, vertical = KptTheme.spacing.md),
         verticalAlignment = Alignment.CenterVertically,
 
     ) {
         Text(
             modifier = Modifier.weight(5f),
-            style = MaterialTheme.typography.bodyMedium,
+            style = KptTheme.typography.bodyMedium,
             text = title,
         )
 
         Text(
             modifier = Modifier
                 .weight(5f)
-                .padding(end = 8.dp),
-            style = MaterialTheme.typography.bodyMedium,
+                .padding(end = KptTheme.spacing.sm),
+            style = KptTheme.typography.bodyMedium,
             text = value,
             textAlign = TextAlign.End,
         )
@@ -548,16 +547,16 @@ private fun FarApartTextItem(title: String, value: String) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(top = 6.dp),
+            .padding(top = DesignToken.padding.dp6),
         horizontalArrangement = Arrangement.SpaceBetween,
     ) {
         Text(
-            style = MaterialTheme.typography.bodyLarge,
+            style = KptTheme.typography.bodyLarge,
             text = title,
         )
 
         Text(
-            style = MaterialTheme.typography.bodyLarge,
+            style = KptTheme.typography.bodyLarge,
             text = value,
             color = DarkGray,
         )

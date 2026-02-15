@@ -89,6 +89,7 @@ import com.mifos.core.ui.util.ShareUtils
 import kotlinx.coroutines.delay
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
+import template.core.base.designsystem.theme.KptTheme
 
 @Composable
 internal fun UpdateServerConfigScreenRoute(
@@ -143,7 +144,7 @@ internal fun UpdateServerConfigScreenRoute(
                 },
                 modifier = Modifier
                     .align(Alignment.Center)
-                    .padding(DesignToken.padding.largeIncreasedExtra),
+                    .padding(KptTheme.spacing.lg),
             )
         }
     }
@@ -182,24 +183,24 @@ internal fun UpdateServerConfigScreenContent(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(it)
-                .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = .1f)),
-            contentPadding = PaddingValues(DesignToken.padding.small),
-            verticalArrangement = Arrangement.spacedBy(DesignToken.spacing.small),
+                .background(KptTheme.colorScheme.surfaceVariant.copy(alpha = .1f)),
+            contentPadding = PaddingValues(KptTheme.spacing.sm),
+            verticalArrangement = Arrangement.spacedBy(KptTheme.spacing.sm),
             state = lazyListState,
         ) {
             item {
                 Text(
                     text = stringResource(Res.string.feature_settings_quick_setup),
-                    modifier = Modifier.padding(horizontal = DesignToken.padding.large, vertical = DesignToken.padding.extraSmall),
+                    modifier = Modifier.padding(horizontal = KptTheme.spacing.md, vertical = KptTheme.spacing.xs),
                     fontWeight = FontWeight.SemiBold,
-                    style = MaterialTheme.typography.titleMedium,
+                    style = KptTheme.typography.titleMedium,
                     fontFamily = FontFamily.SansSerif,
                 )
             }
 
             item {
                 Row(
-                    modifier = Modifier.fillMaxWidth().padding(horizontal = DesignToken.padding.large, vertical = DesignToken.padding.medium),
+                    modifier = Modifier.fillMaxWidth().padding(horizontal = KptTheme.spacing.md, vertical = DesignToken.padding.medium),
                     horizontalArrangement = Arrangement.Center,
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
@@ -215,10 +216,10 @@ internal fun UpdateServerConfigScreenContent(
                         enabled = !hasAnyError,
                         shape = DesignToken.shapes.largeIncreased,
                         colors = ButtonDefaults.buttonColors(
-                            containerColor = MaterialTheme.colorScheme.primary,
-                            disabledContainerColor = MaterialTheme.colorScheme.surface,
-                            disabledContentColor = MaterialTheme.colorScheme.primary,
-                            contentColor = MaterialTheme.colorScheme.onPrimary,
+                            containerColor = KptTheme.colorScheme.primary,
+                            disabledContainerColor = KptTheme.colorScheme.surface,
+                            disabledContentColor = KptTheme.colorScheme.primary,
+                            contentColor = KptTheme.colorScheme.onPrimary,
                         ),
                     ) {
                         Column(
@@ -227,12 +228,12 @@ internal fun UpdateServerConfigScreenContent(
                         ) {
                             Text(
                                 text = stringResource(Res.string.feature_settings_local),
-                                style = MaterialTheme.typography.bodyMedium,
+                                style = KptTheme.typography.bodyMedium,
                                 fontFamily = FontFamily.SansSerif,
                             )
                             Text(
                                 text = stringResource(Res.string.feature_settings_development),
-                                style = MaterialTheme.typography.bodyMedium,
+                                style = KptTheme.typography.bodyMedium,
                                 fontFamily = FontFamily.SansSerif,
                             )
                         }
@@ -252,10 +253,10 @@ internal fun UpdateServerConfigScreenContent(
                         enabled = !hasAnyError,
                         shape = DesignToken.shapes.largeIncreased,
                         colors = ButtonDefaults.buttonColors(
-                            containerColor = MaterialTheme.colorScheme.primary,
-                            disabledContainerColor = MaterialTheme.colorScheme.surface,
-                            disabledContentColor = MaterialTheme.colorScheme.primary,
-                            contentColor = MaterialTheme.colorScheme.onPrimary,
+                            containerColor = KptTheme.colorScheme.primary,
+                            disabledContainerColor = KptTheme.colorScheme.surface,
+                            disabledContentColor = KptTheme.colorScheme.primary,
+                            contentColor = KptTheme.colorScheme.onPrimary,
                         ),
                     ) {
                         Column(
@@ -264,12 +265,12 @@ internal fun UpdateServerConfigScreenContent(
                         ) {
                             Text(
                                 text = stringResource(Res.string.feature_settings_demo),
-                                style = MaterialTheme.typography.bodyMedium,
+                                style = KptTheme.typography.bodyMedium,
                                 fontFamily = FontFamily.SansSerif,
                             )
                             Text(
                                 text = stringResource(Res.string.feature_settings_environment),
-                                style = MaterialTheme.typography.bodyMedium,
+                                style = KptTheme.typography.bodyMedium,
                                 fontFamily = FontFamily.SansSerif,
                             )
                         }
@@ -291,7 +292,7 @@ internal fun UpdateServerConfigScreenContent(
                     Text(
                         text = stringResource(Res.string.feature_settings_or),
                         modifier = Modifier
-                            .padding(horizontal = DesignToken.padding.small),
+                            .padding(horizontal = KptTheme.spacing.sm),
                         fontFamily = FontFamily.SansSerif,
                     )
 
@@ -305,8 +306,8 @@ internal fun UpdateServerConfigScreenContent(
             item {
                 Text(
                     stringResource(Res.string.feature_settings_label_protocol),
-                    style = MaterialTheme.typography.labelMedium,
-                    modifier = Modifier.padding(start = DesignToken.padding.large),
+                    style = KptTheme.typography.labelMedium,
+                    modifier = Modifier.padding(start = KptTheme.spacing.md),
                     fontFamily = FontFamily.SansSerif,
                 )
                 MifosOutlinedTextField(
@@ -319,18 +320,20 @@ internal fun UpdateServerConfigScreenContent(
                     onValueChange = {
                         onEvent(UpdateServerConfigEvent.UpdateProtocol(it))
                     },
-                    shape = DesignToken.shapes.large,
+                    shape = KptTheme.shapes.large,
                     colors = OutlinedTextFieldDefaults.colors(
-                        focusedBorderColor = MaterialTheme.colorScheme.primary,
-                        unfocusedBorderColor = MaterialTheme.colorScheme.outlineVariant,
-                        focusedContainerColor = MaterialTheme.colorScheme.surface,
-                        unfocusedContainerColor = MaterialTheme.colorScheme.surface,
+                        focusedBorderColor = KptTheme.colorScheme.primary,
+                        unfocusedBorderColor = KptTheme.colorScheme.outlineVariant,
+                        focusedContainerColor = KptTheme.colorScheme.surface,
+                        unfocusedContainerColor = KptTheme.colorScheme.surface,
                     ),
-                    modifier = Modifier.fillMaxWidth().padding(horizontal = DesignToken.padding.large),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = KptTheme.spacing.md),
                     label = "",
                     textStyle = TextStyle(
                         fontFamily = FontFamily.SansSerif,
-                        fontSize = MaterialTheme.typography.bodyLarge.fontSize,
+                        fontSize = KptTheme.typography.bodyLarge.fontSize,
                         fontWeight = FontWeight.Medium,
                     ),
                 )
@@ -339,8 +342,8 @@ internal fun UpdateServerConfigScreenContent(
             item {
                 Text(
                     stringResource(Res.string.feature_settings_label_hostname),
-                    style = MaterialTheme.typography.labelMedium,
-                    modifier = Modifier.padding(start = DesignToken.padding.large),
+                    style = KptTheme.typography.labelMedium,
+                    modifier = Modifier.padding(start = KptTheme.spacing.md),
                     fontFamily = FontFamily.SansSerif,
                 )
                 MifosOutlinedTextField(
@@ -353,17 +356,17 @@ internal fun UpdateServerConfigScreenContent(
                     onValueChange = {
                         onEvent(UpdateServerConfigEvent.UpdateEndPoint(it))
                     },
-                    shape = DesignToken.shapes.large,
+                    shape = KptTheme.shapes.large,
                     colors = OutlinedTextFieldDefaults.colors(
-                        focusedBorderColor = MaterialTheme.colorScheme.primary,
-                        unfocusedBorderColor = MaterialTheme.colorScheme.outlineVariant,
-                        focusedContainerColor = MaterialTheme.colorScheme.surface,
-                        unfocusedContainerColor = MaterialTheme.colorScheme.surface,
+                        focusedBorderColor = KptTheme.colorScheme.primary,
+                        unfocusedBorderColor = KptTheme.colorScheme.outlineVariant,
+                        focusedContainerColor = KptTheme.colorScheme.surface,
+                        unfocusedContainerColor = KptTheme.colorScheme.surface,
                     ),
-                    modifier = Modifier.fillMaxWidth().padding(horizontal = DesignToken.padding.large),
+                    modifier = Modifier.fillMaxWidth().padding(horizontal = KptTheme.spacing.md),
                     textStyle = TextStyle(
                         fontFamily = FontFamily.SansSerif,
-                        fontSize = MaterialTheme.typography.bodyLarge.fontSize,
+                        fontSize = KptTheme.typography.bodyLarge.fontSize,
                         fontWeight = FontWeight.Medium,
                     ),
                 )
@@ -372,8 +375,8 @@ internal fun UpdateServerConfigScreenContent(
             item {
                 Text(
                     stringResource(Res.string.feature_settings_label_api_path),
-                    style = MaterialTheme.typography.labelMedium,
-                    modifier = Modifier.padding(start = DesignToken.padding.large),
+                    style = KptTheme.typography.labelMedium,
+                    modifier = Modifier.padding(start = KptTheme.spacing.md),
                     fontFamily = FontFamily.SansSerif,
                 )
 
@@ -388,18 +391,18 @@ internal fun UpdateServerConfigScreenContent(
                     onValueChange = {
                         onEvent(UpdateServerConfigEvent.UpdateApiPath(it))
                     },
-                    shape = DesignToken.shapes.large,
+                    shape = KptTheme.shapes.large,
                     colors = OutlinedTextFieldDefaults.colors(
-                        focusedBorderColor = MaterialTheme.colorScheme.primary,
-                        unfocusedBorderColor = MaterialTheme.colorScheme.outlineVariant,
-                        focusedContainerColor = MaterialTheme.colorScheme.surface,
-                        unfocusedContainerColor = MaterialTheme.colorScheme.surface,
+                        focusedBorderColor = KptTheme.colorScheme.primary,
+                        unfocusedBorderColor = KptTheme.colorScheme.outlineVariant,
+                        focusedContainerColor = KptTheme.colorScheme.surface,
+                        unfocusedContainerColor = KptTheme.colorScheme.surface,
                     ),
                     modifier = Modifier.fillMaxWidth().padding(horizontal = DesignToken.padding.large),
                     label = "",
                     textStyle = TextStyle(
                         fontFamily = FontFamily.SansSerif,
-                        fontSize = MaterialTheme.typography.bodyLarge.fontSize,
+                        fontSize = KptTheme.typography.bodyLarge.fontSize,
                         fontWeight = FontWeight.Medium,
                     ),
                 )
@@ -408,8 +411,8 @@ internal fun UpdateServerConfigScreenContent(
             item {
                 Text(
                     stringResource(Res.string.feature_settings_label_port),
-                    style = MaterialTheme.typography.labelMedium,
-                    modifier = Modifier.padding(start = DesignToken.padding.large),
+                    style = KptTheme.typography.labelMedium,
+                    modifier = Modifier.padding(start = KptTheme.spacing.md),
                     fontFamily = FontFamily.SansSerif,
                 )
                 MifosOutlinedTextField(
@@ -422,18 +425,18 @@ internal fun UpdateServerConfigScreenContent(
                     onValueChange = {
                         onEvent(UpdateServerConfigEvent.UpdatePort(it))
                     },
-                    shape = DesignToken.shapes.large,
+                    shape = KptTheme.shapes.large,
                     colors = OutlinedTextFieldDefaults.colors(
-                        focusedBorderColor = MaterialTheme.colorScheme.primary,
-                        unfocusedBorderColor = MaterialTheme.colorScheme.outlineVariant,
-                        focusedContainerColor = MaterialTheme.colorScheme.surface,
-                        unfocusedContainerColor = MaterialTheme.colorScheme.surface,
+                        focusedBorderColor = KptTheme.colorScheme.primary,
+                        unfocusedBorderColor = KptTheme.colorScheme.outlineVariant,
+                        focusedContainerColor = KptTheme.colorScheme.surface,
+                        unfocusedContainerColor = KptTheme.colorScheme.surface,
                     ),
-                    modifier = Modifier.fillMaxWidth().padding(horizontal = DesignToken.padding.large),
+                    modifier = Modifier.fillMaxWidth().padding(horizontal = KptTheme.spacing.md),
                     label = "",
                     textStyle = TextStyle(
                         fontFamily = FontFamily.SansSerif,
-                        fontSize = MaterialTheme.typography.bodyLarge.fontSize,
+                        fontSize = KptTheme.typography.bodyLarge.fontSize,
                         fontWeight = FontWeight.Medium,
                     ),
                 )
@@ -442,8 +445,8 @@ internal fun UpdateServerConfigScreenContent(
             item {
                 Text(
                     stringResource(Res.string.feature_settings_label_tenant),
-                    style = MaterialTheme.typography.labelMedium,
-                    modifier = Modifier.padding(start = DesignToken.padding.large),
+                    style = KptTheme.typography.labelMedium,
+                    modifier = Modifier.padding(start = KptTheme.spacing.md),
                     fontFamily = FontFamily.SansSerif,
                 )
                 MifosOutlinedTextField(
@@ -456,20 +459,20 @@ internal fun UpdateServerConfigScreenContent(
                     onValueChange = {
                         onEvent(UpdateServerConfigEvent.UpdateTenant(it))
                     },
-                    shape = DesignToken.shapes.large,
+                    shape = KptTheme.shapes.large,
                     colors = OutlinedTextFieldDefaults.colors(
-                        focusedBorderColor = MaterialTheme.colorScheme.primary,
-                        unfocusedBorderColor = MaterialTheme.colorScheme.outlineVariant,
-                        focusedContainerColor = MaterialTheme.colorScheme.surface,
-                        unfocusedContainerColor = MaterialTheme.colorScheme.surface,
+                        focusedBorderColor = KptTheme.colorScheme.primary,
+                        unfocusedBorderColor = KptTheme.colorScheme.outlineVariant,
+                        focusedContainerColor = KptTheme.colorScheme.surface,
+                        unfocusedContainerColor = KptTheme.colorScheme.surface,
                     ),
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = DesignToken.padding.large),
+                        .padding(horizontal = KptTheme.spacing.md),
                     label = "",
                     textStyle = TextStyle(
                         fontFamily = FontFamily.SansSerif,
-                        fontSize = MaterialTheme.typography.bodyLarge.fontSize,
+                        fontSize = KptTheme.typography.bodyLarge.fontSize,
                         fontWeight = FontWeight.Medium,
                     ),
                 )
@@ -481,28 +484,28 @@ internal fun UpdateServerConfigScreenContent(
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(DesignToken.sizes.profile)
-                        .padding(horizontal = DesignToken.padding.large)
-                        .clip(DesignToken.shapes.large)
+                        .padding(horizontal = KptTheme.spacing.md)
+                        .clip(KptTheme.shapes.large)
                         .background(AppColors.customYellow.copy(alpha = 0.1f)),
                 ) {
                     Row(
-                        modifier = Modifier.padding(horizontal = DesignToken.padding.small),
+                        modifier = Modifier.padding(horizontal = KptTheme.spacing.sm),
                         horizontalArrangement = Arrangement.Center,
                     ) {
                         Text(
                             "⚠\uFE0F",
-                            modifier = Modifier.padding(horizontal = DesignToken.padding.small),
+                            modifier = Modifier.padding(horizontal = KptTheme.spacing.sm),
                         )
                         Text(
                             text = stringResource(Res.string.feature_settings_note_text),
-                            style = MaterialTheme.typography.titleSmall,
+                            style = KptTheme.typography.titleSmall,
                             color = AppColors.customYellow,
                             overflow = TextOverflow.Ellipsis,
                             fontFamily = FontFamily.SansSerif,
                         )
                     }
                 }
-                Spacer(Modifier.height(DesignToken.spacing.small))
+                Spacer(Modifier.height(KptTheme.spacing.sm))
             }
 
             item {
@@ -513,14 +516,14 @@ internal fun UpdateServerConfigScreenContent(
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(DesignToken.sizes.buttonHeight)
-                        .padding(horizontal = DesignToken.padding.large),
+                        .padding(horizontal = KptTheme.spacing.md),
                     enabled = !hasAnyError,
-                    shape = DesignToken.shapes.large,
+                    shape = KptTheme.shapes.large,
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = MaterialTheme.colorScheme.primary,
-                        disabledContainerColor = MaterialTheme.colorScheme.surface,
-                        disabledContentColor = MaterialTheme.colorScheme.primary,
-                        contentColor = MaterialTheme.colorScheme.onPrimary,
+                        containerColor = KptTheme.colorScheme.primary,
+                        disabledContainerColor = KptTheme.colorScheme.surface,
+                        disabledContentColor = KptTheme.colorScheme.primary,
+                        contentColor = KptTheme.colorScheme.onPrimary,
                     ),
                 ) {
                     Text(
@@ -557,7 +560,7 @@ private fun RestartCountdownDialog(
 
     Card(
         modifier = modifier.fillMaxWidth(),
-        shape = DesignToken.shapes.extraLarge,
+        shape = KptTheme.shapes.extraLarge,
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surface,
         ),
@@ -582,19 +585,19 @@ private fun RestartCountdownDialog(
                 )
             }
 
-            Spacer(modifier = Modifier.height(DesignToken.spacing.large))
+            Spacer(modifier = Modifier.height(KptTheme.spacing.md))
 
             Text(
                 text = stringResource(Res.string.feature_settings_configuration_saved),
-                style = MaterialTheme.typography.titleLarge.copy(
+                style = KptTheme.typography.titleLarge.copy(
                     fontWeight = FontWeight.Bold,
                 ),
                 textAlign = TextAlign.Center,
             )
-            Spacer(modifier = Modifier.height(DesignToken.spacing.small))
+            Spacer(modifier = Modifier.height(KptTheme.spacing.sm))
             Text(
                 text = stringResource(Res.string.feature_settings_restart_application),
-                style = MaterialTheme.typography.bodyMedium,
+                style = KptTheme.typography.bodyMedium,
                 color = Color.Gray,
                 textAlign = TextAlign.Center,
             )
@@ -605,15 +608,15 @@ private fun RestartCountdownDialog(
                 CircularProgressIndicator(
                     progress = { progress },
                     modifier = Modifier.size(DesignToken.sizes.topAppBarHeight),
-                    color = MaterialTheme.colorScheme.primary,
-                    trackColor = MaterialTheme.colorScheme.primaryContainer,
-                    strokeWidth = DesignToken.padding.small,
+                    color = KptTheme.colorScheme.primary,
+                    trackColor = KptTheme.colorScheme.primaryContainer,
+                    strokeWidth = KptTheme.spacing.sm,
                 )
                 Text(
                     text = "$countdown",
-                    style = MaterialTheme.typography.headlineLarge.copy(
+                    style = KptTheme.typography.headlineLarge.copy(
                         fontWeight = FontWeight.ExtraBold,
-                        color = MaterialTheme.colorScheme.primary,
+                        color = KptTheme.colorScheme.primary,
                     ),
                 )
             }
@@ -625,7 +628,7 @@ private fun RestartCountdownDialog(
                 shape = DesignToken.shapes.circle,
                 modifier = Modifier.fillMaxWidth().height(DesignToken.sizes.buttonHeight),
                 colors = ButtonDefaults.textButtonColors(
-                    contentColor = MaterialTheme.colorScheme.primary,
+                    contentColor = KptTheme.colorScheme.primary,
                 ),
             ) {
                 Text(stringResource(Res.string.feature_settings_restart_now))
