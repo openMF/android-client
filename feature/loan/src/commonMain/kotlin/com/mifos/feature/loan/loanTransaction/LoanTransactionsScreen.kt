@@ -155,8 +155,8 @@ internal fun LoanTransactionsScreen(
                         MaterialTheme.colorScheme.onSurface
                     },
                     modifier = Modifier
-                        .size(24.dp)
-                        .offset(y = 1.dp),
+                        .size(DesignToken.sizes.iconMedium)
+                        .offset(y = DesignToken.padding.extraExtraSmall),
                 )
             }
             IconButton(onClick = onExportClick) {
@@ -164,7 +164,7 @@ internal fun LoanTransactionsScreen(
                     imageVector = MifosIcons.Share,
                     contentDescription = stringResource(Res.string.feature_loan_export),
                     tint = MaterialTheme.colorScheme.onSurface,
-                    modifier = Modifier.size(24.dp),
+                    modifier = Modifier.size(DesignToken.sizes.iconMedium),
                 )
             }
         },
