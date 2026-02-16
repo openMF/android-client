@@ -62,7 +62,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -251,15 +250,6 @@ private fun FilterBottomSheet(
     onDismiss: () -> Unit,
 ) {
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
-    val scope = rememberCoroutineScope()
-
-    LaunchedEffect(showFilterBottomSheet) {
-        if (showFilterBottomSheet) {
-            sheetState.show()
-        } else {
-            sheetState.hide()
-        }
-    }
 
     if (showFilterBottomSheet) {
         ModalBottomSheet(
