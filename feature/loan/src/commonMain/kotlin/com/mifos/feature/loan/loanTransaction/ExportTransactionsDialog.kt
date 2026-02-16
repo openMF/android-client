@@ -223,11 +223,10 @@ internal fun ExportTransactionsDialog(
 }
 
 @OptIn(ExperimentalTime::class)
-@Composable
 private fun formatDateFromMillis(millis: Long?): String {
     if (millis == null) return ""
     val localDate = Instant.fromEpochMilliseconds(millis)
-        .toLocalDateTime(TimeZone.currentSystemDefault())
+        .toLocalDateTime(TimeZone.UTC)
         .date
     return localDate.format("dd-MM-yyyy")
 }
