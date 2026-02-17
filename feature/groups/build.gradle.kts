@@ -39,7 +39,6 @@ kotlin{
             implementation(compose.ui)
             implementation(compose.material3)
             implementation(libs.androidx.compose.foundation)
-            implementation(libs.androidx.compose.material.iconsExtended)
         }
     }
 }

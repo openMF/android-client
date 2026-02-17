@@ -13,9 +13,9 @@ import com.mifos.core.model.utils.Parcelable
 import com.mifos.core.model.utils.Parcelize
 import com.mifos.room.entities.accounts.loans.LoanTimelineEntity
 import com.mifos.room.entities.client.ClientStatusEntity
-import com.mifos.room.utils.ForeignKeyAction
 import template.core.base.database.Entity
 import template.core.base.database.ForeignKey
+import template.core.base.database.ForeignKeyAction
 import template.core.base.database.PrimaryKey
 
 @Parcelize

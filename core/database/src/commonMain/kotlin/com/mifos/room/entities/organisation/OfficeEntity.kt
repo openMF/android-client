@@ -9,10 +9,10 @@
  */
 package com.mifos.room.entities.organisation
 
-import com.mifos.room.utils.ForeignKeyAction
 import kotlinx.serialization.Serializable
 import template.core.base.database.Entity
 import template.core.base.database.ForeignKey
+import template.core.base.database.ForeignKeyAction
 import template.core.base.database.PrimaryKey
 
 @Entity(

@@ -13,7 +13,8 @@ import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import androidx.room.migration.Migration
-import androidx.sqlite.db.SupportSQLiteDatabase
+import androidx.sqlite.SQLiteConnection
+import androidx.sqlite.execSQL
 import com.mifos.room.dao.CenterDao
 import com.mifos.room.dao.ChargeDao
 import com.mifos.room.dao.ClientDao
@@ -176,8 +177,8 @@ actual abstract class MifosDatabase : RoomDatabase() {
         const val VERSION = 2
 
         val MIGRATION_1_2 = object : Migration(1, 2) {
-            override fun migrate(db: SupportSQLiteDatabase) {
-                db.execSQL(
+            override fun migrate(connection: SQLiteConnection) {
+                connection.execSQL(
                     """
                     CREATE TABLE IF NOT EXISTS `ClientAddress` (
                         `addressId` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
@@ -198,7 +199,7 @@ actual abstract class MifosDatabase : RoomDatabase() {
                     """.trimIndent(),
                 )
 
-                db.execSQL(
+                connection.execSQL(
                     """
                     CREATE TABLE IF NOT EXISTS `ClientIdentifier` (
                         `localId` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
