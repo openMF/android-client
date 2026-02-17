@@ -10,25 +10,34 @@
 package com.mifos.feature.loan.loanRepaymentSchedule
 
 import androidclient.feature.loan.generated.resources.Res
+import androidclient.feature.loan.generated.resources.due
 import androidclient.feature.loan.generated.resources.feature_loan_balance
 import androidclient.feature.loan.generated.resources.feature_loan_complete
 import androidclient.feature.loan.generated.resources.feature_loan_date
+import androidclient.feature.loan.generated.resources.feature_loan_days
+import androidclient.feature.loan.generated.resources.feature_loan_in_advance
+import androidclient.feature.loan.generated.resources.feature_loan_late
 import androidclient.feature.loan.generated.resources.feature_loan_loan_fees
 import androidclient.feature.loan.generated.resources.feature_loan_loan_interest
 import androidclient.feature.loan.generated.resources.feature_loan_loan_penalty
 import androidclient.feature.loan.generated.resources.feature_loan_loan_principal
 import androidclient.feature.loan.generated.resources.feature_loan_loan_repayment_schedule
+import androidclient.feature.loan.generated.resources.feature_loan_outstanding
 import androidclient.feature.loan.generated.resources.feature_loan_overdue
+import androidclient.feature.loan.generated.resources.feature_loan_paid_date
 import androidclient.feature.loan.generated.resources.feature_loan_pending
+import androidclient.feature.loan.generated.resources.paid
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
@@ -174,23 +183,24 @@ private fun LoanRepaymentScheduleContent(
         ) {
             LazyColumn(
                 modifier = Modifier.fillMaxSize(),
+                contentPadding = PaddingValues(bottom = 48.dp),
             ) {
                 stickyHeader {
                     MifosTableRow(
                         cells = listOf(
-                            { HeaderCell(text = "Days") },
+                            { HeaderCell(text = stringResource(Res.string.feature_loan_days)) },
                             { HeaderCell(text = stringResource(Res.string.feature_loan_date)) },
-                            { HeaderCell(text = "Paid Date") },
+                            { HeaderCell(text = stringResource(Res.string.feature_loan_paid_date)) },
                             { HeaderCell(text = stringResource(Res.string.feature_loan_balance)) },
                             { HeaderCell(text = stringResource(Res.string.feature_loan_loan_principal)) },
                             { HeaderCell(text = stringResource(Res.string.feature_loan_loan_interest)) },
                             { HeaderCell(text = stringResource(Res.string.feature_loan_loan_fees)) },
                             { HeaderCell(text = stringResource(Res.string.feature_loan_loan_penalty)) },
-                            { HeaderCell(text = "Due") },
-                            { HeaderCell(text = "Paid") },
-                            { HeaderCell(text = "In Advance") },
-                            { HeaderCell(text = "Late") },
-                            { HeaderCell(text = "Outstanding") },
+                            { HeaderCell(text = stringResource(Res.string.due)) },
+                            { HeaderCell(text = stringResource(Res.string.paid)) },
+                            { HeaderCell(text = stringResource(Res.string.feature_loan_in_advance)) },
+                            { HeaderCell(text = stringResource(Res.string.feature_loan_late)) },
+                            { HeaderCell(text = stringResource(Res.string.feature_loan_outstanding)) },
                         ),
                         columnWidths = columnWidths,
                         scrollState = scrollState,
@@ -208,13 +218,13 @@ private fun LoanRepaymentScheduleContent(
                 }
 
                 // Data Rows with unique keys for performance
-                items(
+                itemsIndexed(
                     items = periods,
-                    key = { period ->
-                        // Use dueDate as unique key, fallback to hashCode if null
-                        period.dueDate?.joinToString("-") ?: period.hashCode()
+                    key = { index, period ->
+                        // Use index + dueDate to ensure uniqueness and prevent collisions
+                        "$index-${period.dueDate?.joinToString("-") ?: "null"}"
                     },
-                ) { period ->
+                ) { _, period ->
                     MifosTableRow(
                         cells = listOf(
                             { DataCell(text = period.daysInPeriod?.toString() ?: "", align = TextAlign.Left) },

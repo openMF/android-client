@@ -12,6 +12,7 @@ package com.mifos.core.designsystem.component
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
@@ -50,41 +51,43 @@ fun MifosTableRow(
         "Number of cells (${cells.size}) must match number of column widths (${columnWidths.size})"
     }
 
-    Row(
-        modifier = modifier
-            .background(backgroundColor)
-            .horizontalScroll(scrollState),
-        verticalAlignment = Alignment.CenterVertically,
-    ) {
-        cells.forEachIndexed { index, cell ->
-            if (index > 0) {
-                VerticalDivider(
-                    modifier = Modifier.padding(vertical = DesignToken.padding.extraSmall),
-                    thickness = 0.5.dp,
-                    color = MaterialTheme.colorScheme.outlineVariant,
-                )
-            }
-            Row(
-                modifier = Modifier
-                    .width(columnWidths[index])
-                    .padding(
-                        horizontal = DesignToken.padding.small,
-                        vertical = if (isHeader) {
-                            DesignToken.padding.medium
-                        } else {
-                            DesignToken.padding.small
-                        },
-                    ),
-                verticalAlignment = Alignment.CenterVertically,
-            ) {
-                cell()
+    Column(modifier = modifier) {
+        Row(
+            modifier = Modifier
+                .background(backgroundColor)
+                .horizontalScroll(scrollState),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            cells.forEachIndexed { index, cell ->
+                if (index > 0) {
+                    VerticalDivider(
+                        modifier = Modifier.padding(vertical = DesignToken.padding.extraSmall),
+                        thickness = 0.5.dp,
+                        color = MaterialTheme.colorScheme.outlineVariant,
+                    )
+                }
+                Row(
+                    modifier = Modifier
+                        .width(columnWidths[index])
+                        .padding(
+                            horizontal = DesignToken.padding.small,
+                            vertical = if (isHeader) {
+                                DesignToken.padding.medium
+                            } else {
+                                DesignToken.padding.small
+                            },
+                        ),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    cell()
+                }
             }
         }
-    }
-    if (!isHeader) {
-        HorizontalDivider(
-            thickness = 0.5.dp,
-            color = MaterialTheme.colorScheme.outlineVariant,
-        )
+        if (!isHeader) {
+            HorizontalDivider(
+                thickness = 0.5.dp,
+                color = MaterialTheme.colorScheme.outlineVariant,
+            )
+        }
     }
 }
