@@ -10,6 +10,7 @@
 package com.mifos.feature.center.centerList.ui
 
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 
 @Composable
 actual fun CenterListContent(
@@ -18,6 +19,6 @@ actual fun CenterListContent(
     selectedItems: SelectedItemsState,
     onRefresh: () -> Unit,
     onCenterSelect: (Int) -> Unit,
-    modifier: androidx.compose.ui.Modifier,
+    modifier: Modifier,
 ) {
 }

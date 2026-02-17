@@ -51,12 +51,13 @@ fun ComponentActivity.setupEdgeToEdge(appThemeFlow: Flow<DarkThemeConfig>) {
             }
                 .distinctUntilChanged()
                 .collect {
-                    val style = SystemBarStyle
-                        .auto(
-                            darkScrim = SCRIM_COLOR,
-                            lightScrim = SCRIM_COLOR,
-                            detectDarkMode = { false },
-                        )
+                    val style =
+                        SystemBarStyle
+                            .auto(
+                                darkScrim = SCRIM_COLOR,
+                                lightScrim = SCRIM_COLOR,
+                                detectDarkMode = { false },
+                            )
 
                     enableEdgeToEdge(
                         statusBarStyle = style,
@@ -74,11 +75,12 @@ private fun ComponentActivity.isSystemInDarkModeFlow(): Flow<Boolean> =
     callbackFlow {
         trySend(resources.configuration.isSystemInDarkMode)
 
-        val listener = Consumer<Configuration> { configuration ->
-            trySend(
-                configuration.isSystemInDarkMode,
-            )
-        }
+        val listener =
+            Consumer<Configuration> { configuration ->
+                trySend(
+                    configuration.isSystemInDarkMode,
+                )
+            }
 
         addOnConfigurationChangedListener(listener)
 

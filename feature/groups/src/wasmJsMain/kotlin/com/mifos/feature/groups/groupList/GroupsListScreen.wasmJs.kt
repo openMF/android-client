@@ -9,11 +9,12 @@
  */
 package com.mifos.feature.groups.groupList
 
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable
 
 @Composable
 internal actual fun GroupsListRoute(
-    paddingValues: androidx.compose.foundation.layout.PaddingValues,
+    paddingValues: PaddingValues,
     onAddGroupClick: () -> Unit,
     onGroupClick: (groupId: Int) -> Unit,
     viewModel: GroupsListViewModel,
