@@ -75,6 +75,7 @@
 
     <!-- Action Names -->
     <string name="core_ui_view_account">View Account</string>
+    <string name="core_ui_transfer_fund">Transfer Fund</string>
     <string name="core_ui_edit_note">Edit Note</string>
     <string name="core_ui_delete_note">Delete Note</string>
     <string name="core_ui_approve_account">Approve Account</string>

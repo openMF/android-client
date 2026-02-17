@@ -93,6 +93,7 @@ internal fun ClientLoanAccountsScreenRoute(
             is ClientLoanAccountsEvent.MakeRepayment -> makeRepayment(event.id)
             ClientLoanAccountsEvent.NavigateBack -> navigateBack()
             is ClientLoanAccountsEvent.ViewAccount -> viewAccount(event.id)
+            is ClientLoanAccountsEvent.TransferFund -> {}
         }
     }
 
@@ -219,17 +220,31 @@ private fun ClientLoanAccountsScreen(
                                         }
 
                                         else -> {
-                                            listOf(
-                                                Actions.ViewAccount(
-                                                    vectorResource(Res.drawable.wallet),
-                                                ),
-                                            )
+                                            if(loan.status?.overpaid==true) {
+                                                listOf(
+                                                    Actions.ViewAccount(
+                                                        vectorResource(Res.drawable.wallet),
+                                                    ),
+                                                    Actions.TransferFund(),
+                                                )
+                                            } else {
+                                                listOf(
+                                                    Actions.ViewAccount(
+                                                        vectorResource(Res.drawable.wallet),
+                                                    ),
+                                                )
+                                            }
+
+
                                         }
                                     },
                                     onActionClicked = { actions ->
                                         when (actions) {
                                             is Actions.ViewAccount -> onAction(
                                                 ClientLoanAccountsAction.ViewAccount(loan.id ?: 0),
+                                            )
+                                            is Actions.TransferFund -> onAction(
+                                                ClientLoanAccountsAction.TransferFund,
                                             )
                                             is Actions.MakeRepayment -> onAction(
                                                 ClientLoanAccountsAction.MakeRepayment,

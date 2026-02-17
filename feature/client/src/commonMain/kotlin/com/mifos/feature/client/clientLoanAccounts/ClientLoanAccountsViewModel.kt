@@ -73,6 +73,9 @@ class ClientLoanAccountsViewModel(
                     action.loanId,
                 ),
             )
+            is ClientLoanAccountsAction.TransferFund -> sendEvent(
+                ClientLoanAccountsEvent.TransferFund,
+            )
             is ClientLoanAccountsAction.HandleFilterClick -> handleFilterClick(action.status)
 
             is ClientLoanAccountsAction.ClearFilters -> clearFilters()
@@ -209,6 +212,7 @@ sealed interface ClientLoanAccountsEvent {
     data object NavigateBack : ClientLoanAccountsEvent
     data class MakeRepayment(val id: Int) : ClientLoanAccountsEvent
     data class ViewAccount(val id: Int) : ClientLoanAccountsEvent
+    data object TransferFund : ClientLoanAccountsEvent
 }
 
 sealed interface ClientLoanAccountsAction {
@@ -219,6 +223,7 @@ sealed interface ClientLoanAccountsAction {
     data object Refresh : ClientLoanAccountsAction
     data object MakeRepayment : ClientLoanAccountsAction
     data class ViewAccount(val loanId: Int) : ClientLoanAccountsAction
+    data object TransferFund : ClientLoanAccountsAction
     data class UpdateSearchValue(val query: String) : ClientLoanAccountsAction
     data object OnSearchClick : ClientLoanAccountsAction
     data object CloseDialog : ClientLoanAccountsAction
