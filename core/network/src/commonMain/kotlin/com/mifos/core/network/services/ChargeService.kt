@@ -178,15 +178,4 @@ interface ChargeService {
         @Path("chargeId") chargeId: Int,
         @Body payload: ChargesPayload,
     )
-
-    // TODO: Remove in future to createCharges()
-    @POST(APIEndPoint.LOANS + "/{loanId}/charges")
-    suspend fun createLoanCharges(
-        @Path("loanId") loanId: Int,
-        @Body chargesPayload: ChargesPayload,
-    ): ChargeCreationResponse
-
-    // TODO: Remove in future to getChargeTemplate()
-    @GET(APIEndPoint.LOANS + "/{loanId}/charges/template")
-    suspend fun getAllChargeV3(@Path("loanId") loanId: Int): HttpResponse
 }

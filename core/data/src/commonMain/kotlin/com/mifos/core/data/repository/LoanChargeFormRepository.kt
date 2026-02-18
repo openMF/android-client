@@ -11,17 +11,18 @@ package com.mifos.core.data.repository
 
 import com.mifos.core.model.objects.clients.ChargeCreationResponse
 import com.mifos.core.model.objects.payloads.ChargesPayload
-import io.ktor.client.statement.HttpResponse
+import com.mifos.core.model.objects.template.client.ChargeTemplate
 
 /**
  * Created by Aditya Gupta on 16/08/23.
  */
-interface LoanChargeDialogRepository {
+interface LoanChargeFormRepository {
 
-    suspend fun getAllChargesV3(loanId: Int): HttpResponse
+    suspend fun getChargeTemplate(resourceType: String, resourceId: Int): ChargeTemplate
 
-    suspend fun createLoanCharges(
-        loanId: Int,
+    suspend fun createCharges(
+        resourceType: String,
+        resourceId: Int,
         chargesPayload: ChargesPayload,
     ): ChargeCreationResponse
 }
