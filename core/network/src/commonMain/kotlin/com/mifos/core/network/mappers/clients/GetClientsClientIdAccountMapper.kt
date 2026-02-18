@@ -89,7 +89,7 @@ object GetClientsClientIdAccountMapper :
                         com.mifos.room.entities.accounts.loans.LoanStatusEntity(
                             id = status.id?.toInt(),
                             code = status.code,
-                            value = status.description,
+                            value = status.value,
                             pendingApproval = status.pendingApproval,
                             waitingForDisbursal = status.waitingForDisbursal,
                             active = status.active,
@@ -104,10 +104,13 @@ object GetClientsClientIdAccountMapper :
                         LoanTypeEntity(
                             id = loanType.id?.toInt(),
                             code = loanType.code,
-                            value = loanType.description,
+                            value = loanType.value,
                         )
                     },
                     loanCycle = it.loanCycle,
+                    originalLoan = it.originalLoan,
+                    loanBalance = it.loanBalance,
+                    amountPaid = it.amountPaid,
                 )
             } ?: emptyList(),
 
@@ -178,7 +181,7 @@ object GetClientsClientIdAccountMapper :
                     status = GetClientsLoanAccountsStatus(
                         id = it.status?.id?.toLong(),
                         code = it.status?.code,
-                        description = it.status?.value,
+                        value = it.status?.value,
                         pendingApproval = it.status?.pendingApproval,
                         waitingForDisbursal = it.status?.waitingForDisbursal,
                         active = it.status?.active,
@@ -191,9 +194,12 @@ object GetClientsClientIdAccountMapper :
                     loanType = GetClientsLoanAccountsType(
                         id = it.loanType?.id?.toLong(),
                         code = it.loanType?.code,
-                        description = it.loanType?.value,
+                        value = it.loanType?.value,
                     ),
                     loanCycle = it.loanCycle,
+                    loanBalance = it.loanBalance,
+                    originalLoan = it.originalLoan,
+                    amountPaid = it.amountPaid,
                 )
             }.toSet(),
         )
