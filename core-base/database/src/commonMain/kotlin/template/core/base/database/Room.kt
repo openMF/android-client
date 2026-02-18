@@ -816,5 +816,5 @@ object ForeignKeyAction {
     const val SET_DEFAULT = 4
 
     /** Cascade the delete/update operation to the referencing rows */
-    const val CASCADE = 4
+    const val CASCADE = 5
 }
