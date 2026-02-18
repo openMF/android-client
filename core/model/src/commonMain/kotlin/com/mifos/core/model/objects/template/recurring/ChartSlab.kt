@@ -24,6 +24,6 @@ data class ChartSlab(
     val currency: Currency? = null,
     val description: String? = null,
     val fromPeriod: Int? = null,
-    @param:IgnoredOnParcel val incentives: List<Incentive>? = null,
-    @param:IgnoredOnParcel val periodType: PeriodType? = null,
+    @IgnoredOnParcel val incentives: List<Incentive>? = null,
+    @IgnoredOnParcel val periodType: PeriodType? = null,
 ) : Parcelable

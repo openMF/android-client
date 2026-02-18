@@ -82,7 +82,7 @@ class CustomTypeConverters {
     }
 
     @TypeConverter
-    fun toCurrencyToCurrency(json: String?): Currency? {
+    fun toCurrency(json: String?): Currency? {
         return json?.let { Json.decodeFromString(it) }
     }
 
@@ -430,12 +430,12 @@ class CustomTypeConverters {
     }
 
     @TypeConverter
-    fun fromCurrency(currency: SavingAccountCurrencyEntity?): String? {
+    fun fromSavingAccountCurrency(currency: SavingAccountCurrencyEntity?): String? {
         return currency?.let { Json.encodeToString(it) }
     }
 
     @TypeConverter
-    fun toCurrency(json: String?): SavingAccountCurrencyEntity? {
+    fun toSavingAccountCurrency(json: String?): SavingAccountCurrencyEntity? {
         return json?.let { Json.decodeFromString(it) }
     }
 

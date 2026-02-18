@@ -26,17 +26,17 @@ import kotlinx.coroutines.flow.flow
 object FileKitUtil {
 
     // TODO(KMP): cacheDir is supported on Android, iOS, Desktop
-    // ❌ NOT supported on Web/WASM targets
+    // NOT supported on Web/WASM targets
     // val appCache = FileKit.cacheDir
 
     // TODO(KMP): filesDir maps to private app storage
-    // ❌ NOT supported on Web/WASM targets
-    // ❌ On Desktop requires FileKit initialization with appId
+    // NOT supported on Web/WASM targets
+    // On Desktop requires FileKit initialization with appId
     // val appPrivateInternalStorage = FileKit.filesDir
 
     // TODO(KMP): databasesDir is intended for Room / SQLDelight
-    // ❌ NOT supported on Web/WASM targets
-    // ❌ Not portable across all KMP platforms
+    // NOT supported on Web/WASM targets
+    // Not portable across all KMP platforms
     // val appInternalStorage = FileKit.databasesDir
 
     fun pickFile(
@@ -63,8 +63,8 @@ object FileKitUtil {
     }.asDataStateFlow()
 
     // TODO(KMP): Directory picker is NOT supported consistently
-    // ❌ Not available on Web/WASM
-    // ❌ Desktop & iOS support varies by sandbox permissions
+    // Not available on Web/WASM
+    // Desktop & iOS support varies by sandbox permissions
     // suspend fun pickDirectory(): PlatformFile? {
     //     return FileKit.openDirectoryPicker()
     // }
@@ -110,8 +110,8 @@ object FileKitUtil {
     }.asDataStateFlow()
 
     // TODO(KMP): Intended ONLY for database engines (Room / SQLDelight)
-    // ❌ NOT supported on Web/WASM
-    // ❌ Should not be used for general file storage
+    // NOT supported on Web/WASM
+    // Should not be used for general file storage
     // fun writeFileToApplicationInternalStorage(
     //     fileName: String,
     //     fileExtension: String,
@@ -124,9 +124,9 @@ object FileKitUtil {
     // }.asDataStateFlow()
 
     // TODO(KMP): Writing to user-selected directory
-    // ❌ NOT supported on Web/WASM
-    // ❌ Desktop requires explicit user permissions
-    // ❌ iOS sandbox restrictions apply
+    // NOT supported on Web/WASM
+    // Desktop requires explicit user permissions
+    // iOS sandbox restrictions apply
     // fun writeToSelectedDirectory(
     //     filesByteArray: ByteArray,
     //     platformFile: PlatformFile,
@@ -135,8 +135,8 @@ object FileKitUtil {
     // }.asDataStateFlow()
 
     // TODO(KMP): File deletion is platform-dependent
-    // ❌ NOT supported on Web/WASM
-    // ❌ iOS sandbox may prevent deletion
+    // NOT supported on Web/WASM
+    // iOS sandbox may prevent deletion
     // suspend fun deleteFile(
     //     file: PlatformFile,
     // ) {

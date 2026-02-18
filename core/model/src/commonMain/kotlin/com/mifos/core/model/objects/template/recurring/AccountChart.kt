@@ -19,18 +19,18 @@ import kotlinx.serialization.Serializable
 @Parcelize
 @Serializable
 data class AccountChart(
-    @param:IgnoredOnParcel val attributeNameOptions: List<AttributeNameOption>? = null,
-    @param:IgnoredOnParcel val chartSlabs: List<ChartSlab>? = null,
+    @IgnoredOnParcel val attributeNameOptions: List<AttributeNameOption>? = null,
+    @IgnoredOnParcel val chartSlabs: List<ChartSlab>? = null,
 //    val clientClassificationOptions: List<Any?>? = null,
-    @param:IgnoredOnParcel val clientTypeOptions: List<ClientTypeOption>? = null,
-    @param:IgnoredOnParcel val conditionTypeOptions: List<ConditionTypeOption>? = null,
+    @IgnoredOnParcel val clientTypeOptions: List<ClientTypeOption>? = null,
+    @IgnoredOnParcel val conditionTypeOptions: List<ConditionTypeOption>? = null,
     val endDate: List<Int>? = null,
-    @param:IgnoredOnParcel val entityTypeOptions: List<EntityTypeOption>? = null,
+    @IgnoredOnParcel val entityTypeOptions: List<EntityTypeOption>? = null,
     val fromDate: List<Int>? = null,
 //    val genderOptions: List<Any?>? = null,
-    @param:IgnoredOnParcel val incentiveTypeOptions: List<IncentiveTypeOption>? = null,
+    @IgnoredOnParcel val incentiveTypeOptions: List<IncentiveTypeOption>? = null,
     val isPrimaryGroupingByAmount: Boolean? = null,
     val name: String? = null,
     val description: String? = null,
-    @param:IgnoredOnParcel val periodTypes: List<PeriodType>? = null,
+    @IgnoredOnParcel val periodTypes: List<PeriodType>? = null,
 ) : Parcelable

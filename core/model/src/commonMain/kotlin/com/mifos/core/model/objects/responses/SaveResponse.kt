@@ -25,7 +25,7 @@ class SaveResponse(
 
     var officeId: Int? = null,
 
-    @param:IgnoredOnParcel
+    @IgnoredOnParcel
     var changes: Changes? = null,
 ) : Parcelable {
     override fun toString(): String {
