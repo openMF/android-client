@@ -161,7 +161,7 @@ fun SavingsAccountsContent(
                                     balance = if (savings.accountBalance != null) {
                                         "${savings.currency?.displaySymbol ?: ""} ${savings.accountBalance}"
                                     } else {
-                                        stringResource(Res.string.client_savings_not_avilable)
+                                        stringResource(Res.string.client_savings_not_available)
                                     },
                                     menuList = if (savings.status?.submittedAndPendingApproval == true) {
                                         listOf(
