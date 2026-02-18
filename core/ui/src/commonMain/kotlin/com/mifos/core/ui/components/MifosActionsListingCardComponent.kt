@@ -43,11 +43,11 @@ import androidclient.core.ui.generated.resources.core_ui_quantity
 import androidclient.core.ui.generated.resources.core_ui_status
 import androidclient.core.ui.generated.resources.core_ui_total_collateral_value
 import androidclient.core.ui.generated.resources.core_ui_total_value
+import androidclient.core.ui.generated.resources.core_ui_transfer_fund
 import androidclient.core.ui.generated.resources.core_ui_type
 import androidclient.core.ui.generated.resources.core_ui_upload_again
 import androidclient.core.ui.generated.resources.core_ui_view_account
 import androidclient.core.ui.generated.resources.core_ui_view_document
-import androidclient.core.ui.generated.resources.core_ui_transfer_fund
 import androidclient.core.ui.generated.resources.core_ui_waived
 import androidclient.core.ui.generated.resources.listing_component_identifier_not_available
 import androidclient.core.ui.generated.resources.name

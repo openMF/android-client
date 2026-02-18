@@ -220,7 +220,7 @@ private fun ClientLoanAccountsScreen(
                                         }
 
                                         else -> {
-                                            if(loan.status?.overpaid==true) {
+                                            if (loan.status?.overpaid == true) {
                                                 listOf(
                                                     Actions.ViewAccount(
                                                         vectorResource(Res.drawable.wallet),
@@ -234,8 +234,6 @@ private fun ClientLoanAccountsScreen(
                                                     ),
                                                 )
                                             }
-
-
                                         }
                                     },
                                     onActionClicked = { actions ->
