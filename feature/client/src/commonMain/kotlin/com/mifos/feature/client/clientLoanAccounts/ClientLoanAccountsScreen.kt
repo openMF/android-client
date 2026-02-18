@@ -203,6 +203,7 @@ private fun ClientLoanAccountsScreen(
                                             )
                                         ),
                                     type = loan.loanType?.value ?: stringResource(Res.string.client_loan_accounts_not_available),
+                                    status = loan.status?.value ?: stringResource(Res.string.client_loan_accounts_not_available),
                                     // TODO check if we need to add other options as well, such as disburse and all
                                     // currently didn't add it cuz its not in the UI design
                                     menuList = when {

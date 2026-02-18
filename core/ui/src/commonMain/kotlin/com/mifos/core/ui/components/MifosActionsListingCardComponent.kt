@@ -384,6 +384,7 @@ fun MifosActionsLoanListingComponent(
     amountPaid: String,
     loanBalance: String,
     type: String,
+    status: String,
     menuList: List<Actions>,
     onActionClicked: (Actions) -> Unit,
 ) {
@@ -432,6 +433,11 @@ fun MifosActionsLoanListingComponent(
                 MifosListingRowItem(
                     key = stringResource(Res.string.core_ui_type),
                     value = type,
+                )
+                Spacer(Modifier.height(DesignToken.padding.medium))
+                MifosListingRowItem(
+                    key = stringResource(Res.string.core_ui_status),
+                    value = status,
                 )
             }
         }
@@ -1041,6 +1047,7 @@ private fun PreviewMifosActionsLoanListingComponent() {
             amountPaid = "$2000",
             loanBalance = "$3000",
             type = "Active",
+            status = "Active",
             menuList = listOf(
                 Actions.ViewAccount(),
                 Actions.ApproveAccount(),
