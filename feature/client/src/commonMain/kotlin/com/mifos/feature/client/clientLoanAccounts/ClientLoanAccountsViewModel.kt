@@ -74,7 +74,7 @@ class ClientLoanAccountsViewModel(
                 ),
             )
             is ClientLoanAccountsAction.TransferFund -> sendEvent(
-                ClientLoanAccountsEvent.TransferFund,
+                ClientLoanAccountsEvent.TransferFund(action.loanId),
             )
             is ClientLoanAccountsAction.HandleFilterClick -> handleFilterClick(action.status)
 
@@ -212,7 +212,7 @@ sealed interface ClientLoanAccountsEvent {
     data object NavigateBack : ClientLoanAccountsEvent
     data class MakeRepayment(val id: Int) : ClientLoanAccountsEvent
     data class ViewAccount(val id: Int) : ClientLoanAccountsEvent
-    data object TransferFund : ClientLoanAccountsEvent
+    data class TransferFund(val loanId: Int) : ClientLoanAccountsEvent
 }
 
 sealed interface ClientLoanAccountsAction {
@@ -223,7 +223,7 @@ sealed interface ClientLoanAccountsAction {
     data object Refresh : ClientLoanAccountsAction
     data object MakeRepayment : ClientLoanAccountsAction
     data class ViewAccount(val loanId: Int) : ClientLoanAccountsAction
-    data object TransferFund : ClientLoanAccountsAction
+    data class TransferFund(val loanId: Int) : ClientLoanAccountsAction
     data class UpdateSearchValue(val query: String) : ClientLoanAccountsAction
     data object OnSearchClick : ClientLoanAccountsAction
     data object CloseDialog : ClientLoanAccountsAction

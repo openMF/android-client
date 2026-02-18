@@ -242,7 +242,7 @@ private fun ClientLoanAccountsScreen(
                                                 ClientLoanAccountsAction.ViewAccount(loan.id ?: 0),
                                             )
                                             is Actions.TransferFund -> onAction(
-                                                ClientLoanAccountsAction.TransferFund,
+                                                ClientLoanAccountsAction.TransferFund(loan.id ?: 0),
                                             )
                                             is Actions.MakeRepayment -> onAction(
                                                 ClientLoanAccountsAction.MakeRepayment,

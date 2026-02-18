@@ -264,7 +264,7 @@ fun AnalyticsHelper.performanceTracker(
 fun AnalyticsHelper.lifecycleTracker(): AppLifecycleTracker = AppLifecycleTracker(this)
 
 @OptIn(ExperimentalTime::class)
-private val currentTime = Clock.System.now().toEpochMilliseconds()
+private val currentTime: Long get() = Clock.System.now().toEpochMilliseconds()
 
 /** Quick performance timing for suspend functions */
 suspend inline fun <T> AnalyticsHelper.timePerformance(
