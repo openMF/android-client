@@ -71,6 +71,7 @@ import com.mifos.core.ui.components.MifosEmptyCard
 import com.mifos.core.ui.components.MifosProgressIndicator
 import com.mifos.core.ui.components.MifosSearchBar
 import com.mifos.core.ui.util.EventsEffect
+import com.mifos.feature.client.clientsList.FilterBottomSheet
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.resources.vectorResource
@@ -218,22 +219,20 @@ private fun ClientLoanAccountsScreen(
                                                 ),
                                             )
                                         }
-
+                                        loan.status?.overpaid == true ->{
+                                            listOf(
+                                                Actions.ViewAccount(
+                                                    vectorResource(Res.drawable.wallet),
+                                                ),
+                                                Actions.TransferFund(),
+                                            )
+                                        }
                                         else -> {
-                                            if (loan.status?.overpaid == true) {
-                                                listOf(
-                                                    Actions.ViewAccount(
-                                                        vectorResource(Res.drawable.wallet),
-                                                    ),
-                                                    Actions.TransferFund(),
-                                                )
-                                            } else {
-                                                listOf(
-                                                    Actions.ViewAccount(
-                                                        vectorResource(Res.drawable.wallet),
-                                                    ),
-                                                )
-                                            }
+                                            listOf(
+                                                Actions.ViewAccount(
+                                                    vectorResource(Res.drawable.wallet),
+                                                ),
+                                            )
                                         }
                                     },
                                     onActionClicked = { actions ->
