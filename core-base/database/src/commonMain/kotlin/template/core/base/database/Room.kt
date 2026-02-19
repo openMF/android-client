@@ -132,7 +132,7 @@ expect annotation class PrimaryKey(
  *             entity = User::class,
  *             parentColumns = ["id"],
  *             childColumns = ["userId"],
- *             onDelete = ForeignKey.CASCADE
+ *             onDelete = ForeignKeyAction.CASCADE
  *         )
  *     ]
  * )
