@@ -10,7 +10,6 @@
 package template.core.base.analytics
 
 import kotlin.time.Clock
-import kotlin.time.ExperimentalTime
 
 /** Performance tracking utilities for analytics */
 
@@ -263,7 +262,6 @@ fun AnalyticsHelper.performanceTracker(
 /** Create an app lifecycle tracker */
 fun AnalyticsHelper.lifecycleTracker(): AppLifecycleTracker = AppLifecycleTracker(this)
 
-@OptIn(ExperimentalTime::class)
 private val currentTime = Clock.System.now().toEpochMilliseconds()
 
 /** Quick performance timing for suspend functions */
