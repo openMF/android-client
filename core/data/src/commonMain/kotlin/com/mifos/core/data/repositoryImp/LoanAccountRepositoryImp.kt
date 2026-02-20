@@ -15,6 +15,7 @@ import com.mifos.core.data.repository.LoanAccountRepository
 import com.mifos.core.model.objects.organisations.LoanProducts
 import com.mifos.core.network.datamanager.DataManagerLoan
 import com.mifos.core.network.model.LoansPayload
+import com.mifos.room.entities.accounts.loans.LoanWithAssociationsEntity
 import com.mifos.room.entities.templates.loans.LoanTemplate
 import io.ktor.client.statement.HttpResponse
 import kotlinx.coroutines.flow.Flow
@@ -40,6 +41,13 @@ class LoanAccountRepositoryImp(
 
     override fun createLoansAccount(loansPayload: LoansPayload): Flow<DataState<HttpResponse>> {
         return dataManagerLoan.createLoansAccount(loansPayload)
+            .asDataStateFlow()
+    }
+
+    override fun calculateLoanSchedule(
+        loansPayload: LoansPayload,
+    ): Flow<DataState<LoanWithAssociationsEntity>> {
+        return dataManagerLoan.calculateLoanSchedule(loansPayload)
             .asDataStateFlow()
     }
 }

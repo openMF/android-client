@@ -26,6 +26,7 @@ import com.mifos.core.common.utils.DateHelper
 import com.mifos.core.data.repository.ClientDetailsRepository
 import com.mifos.core.data.repository.SyncClientsDialogRepository
 import com.mifos.core.data.util.NetworkMonitor
+import com.mifos.core.domain.useCases.CalculateLoanScheduleUseCase
 import com.mifos.core.domain.useCases.CreateLoanAccountUseCase
 import com.mifos.core.domain.useCases.GetAllLoanUseCase
 import com.mifos.core.domain.useCases.GetLoansAccountTemplateUseCase
@@ -52,6 +53,7 @@ internal class NewLoanAccountViewModel(
     private val getLoanWithAssociations: SyncClientsDialogRepository,
     private val networkMonitor: NetworkMonitor,
     private val loanUseCase: CreateLoanAccountUseCase,
+    private val calculateLoanScheduleUseCase: CalculateLoanScheduleUseCase,
     val savedStateHandle: SavedStateHandle,
 ) : BaseViewModel<NewLoanAccountState, NewLoanAccountEvent, NewLoanAccountAction>(
     initialState = run {
@@ -880,7 +882,10 @@ internal class NewLoanAccountViewModel(
 
     private suspend fun repaymentScheduler() {
         isOnline {
-            getLoanWithAssociations.syncLoanById(state.clientId).collect { dataState ->
+            // Build LoansPayload from current form state to calculate schedule preview
+            val payload = buildLoansPayloadForSchedulePreview()
+
+            calculateLoanScheduleUseCase(payload).collect { dataState ->
                 when (dataState) {
                     is DataState.Error -> {
                         mutableStateFlow.update {
@@ -901,27 +906,15 @@ internal class NewLoanAccountViewModel(
 
                     is DataState.Success -> {
                         val schedulerDetails = mapOf(
-                            Res.string.account_number to dataState.data.accountNo,
-                            Res.string.disbursement_date to (
-                                dataState.data.timeline.actualDisbursementDate?.filterNotNull()
-                                    ?.let { date ->
-                                        DateHelper.getDateAsString(date)
-                                    } ?: "N/A"
-                                ),
+                            Res.string.account_number to (dataState.data.accountNo ?: "Preview"),
+                            Res.string.disbursement_date to state.expectedDisbursementDate.ifEmpty { "N/A" },
                             Res.string.principle_paid_off to CurrencyFormatter.format(
-                                balance = dataState.data.summary.principalPaid ?: 0.0,
+                                balance = 0.0,
                                 currencyCode = dataState.data.currency.code ?: "N/A",
                                 maximumFractionDigits = dataState.data.currency.decimalPlaces ?: 0,
                             ),
-                            Res.string.installment_paid to (
-                                dataState.data.repaymentSchedule.periods?.count { it.complete == true }
-                                    ?.toString() ?: "N/A"
-                                ),
-                            Res.string.installment_paid to (
-                                dataState.data.repaymentSchedule.periods?.count { it.complete == false }
-                                    ?.toString() ?: "N/A"
-                                ),
-                            Res.string.total_installments to dataState.data.termFrequency.toString(),
+                            Res.string.installment_paid to "0",
+                            Res.string.total_installments to state.noOfRepayments.toString(),
                         )
 
                         mutableStateFlow.update {
@@ -936,6 +929,73 @@ internal class NewLoanAccountViewModel(
                 }
             }
         }
+    }
+
+    /**
+     * Build LoansPayload from current form state for schedule preview calculation.
+     * Uses the same data that will be sent when submitting the loan application.
+     */
+    private fun buildLoansPayloadForSchedulePreview(): LoansPayload {
+        return LoansPayload(
+            loanOfficerId = if (state.loanOfficerIndex == -1) {
+                null
+            } else {
+                state.loanTemplate?.loanOfficerOptions?.getOrNull(state.loanOfficerIndex)?.id
+            },
+            principal = state.principalAmount.toDoubleOrNull(),
+            clientId = state.clientId,
+            allowPartialPeriodInterestCalcualtion = state.isCheckedInterestPartialPeriod,
+            amortizationType = state.loanTemplate?.amortizationTypeOptions
+                ?.getOrNull(state.nominalAmortizationIndex)?.id,
+            dateFormat = DateHelper.SHORT_MONTH,
+            interestCalculationPeriodType = state.loanTemplate?.interestCalculationPeriodTypeOptions
+                ?.getOrNull(state.interestCalculationPeriodIndex)?.id,
+            interestRatePerPeriod = state.nominalInterestRate.toDoubleOrNull(),
+            interestType = state.loanTemplate?.interestTypeOptions
+                ?.getOrNull(state.nominalInterestMethodIndex)?.id,
+            loanTermFrequency = state.noOfRepayments * state.repaidEvery,
+            loanTermFrequencyType = state.loanTemplate?.termFrequencyTypeOptions
+                ?.getOrNull(state.termFrequencyIndex)?.id,
+            loanType = "individual",
+            locale = "en",
+            numberOfRepayments = state.noOfRepayments,
+            productId = state.productId,
+            repaymentEvery = state.repaidEvery,
+            repaymentFrequencyDayOfWeekType = if (state.selectedDayIndex == -1) {
+                null
+            } else {
+                state.loanTemplate?.repaymentFrequencyDaysOfWeekTypeOptions
+                    ?.getOrNull(state.selectedDayIndex)?.id
+            },
+            repaymentFrequencyNthDayType = if (state.selectedOnIndex == -1) {
+                null
+            } else {
+                state.loanTemplate?.repaymentFrequencyNthDayTypeOptions
+                    ?.getOrNull(state.selectedOnIndex)?.id
+            },
+            repaymentFrequencyType = state.loanTemplate?.termFrequencyTypeOptions
+                ?.getOrNull(state.termFrequencyIndex)?.id,
+            expectedDisbursementDate = state.expectedDisbursementDate,
+            submittedOnDate = state.submissionDate,
+            loanPurposeId = if (state.loanPurposeIndex == -1) {
+                null
+            } else {
+                state.loanTemplate?.loanPurposeOptions?.getOrNull(state.loanPurposeIndex)?.id
+            },
+            fundId = if (state.fundIndex == -1) {
+                null
+            } else {
+                state.loanTemplate?.fundOptions?.getOrNull(state.fundIndex)?.id
+            },
+            linkAccountId = if (state.linkSavingsIndex == -1) {
+                null
+            } else {
+                state.loanTemplate?.accountLinkingOptions?.getOrNull(state.linkSavingsIndex)?.id
+            },
+            transactionProcessingStrategyCode = state.loanTemplate?.transactionProcessingStrategyOptions
+                ?.getOrNull(state.repaymentStrategyIndex)?.code,
+            externalId = state.externalId,
+        )
     }
 }
 

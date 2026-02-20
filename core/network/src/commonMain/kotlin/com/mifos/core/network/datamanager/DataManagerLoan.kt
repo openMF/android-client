@@ -291,4 +291,15 @@ class DataManagerLoan(
     ): Flow<GenericResponse> {
         return mBaseApiManager.loanService.disburseLoan(loanId, loanDisbursement)
     }
+
+    /**
+     * Calculate loan repayment schedule without creating the loan.
+     * Used to preview the schedule before submitting the loan application.
+     *
+     * @param loansPayload The loan parameters to calculate the schedule for
+     * @return LoanWithAssociationsEntity containing the calculated repayment schedule
+     */
+    fun calculateLoanSchedule(loansPayload: LoansPayload): Flow<LoanWithAssociationsEntity> {
+        return mBaseApiManager.loanService.calculateLoanSchedule(loansPayload)
+    }
 }

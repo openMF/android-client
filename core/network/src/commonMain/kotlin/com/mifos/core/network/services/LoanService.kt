@@ -78,6 +78,13 @@ interface LoanService {
     @POST(APIEndPoint.CREATE_LOANS_ACCOUNTS)
     fun createLoansAccount(@Body loansPayload: LoansPayload?): Flow<HttpResponse>
 
+    /**
+     * Calculate loan repayment schedule without creating the loan.
+     * Used to preview the schedule before submitting the loan application.
+     */
+    @POST(APIEndPoint.CREATE_LOANS_ACCOUNTS + "?command=calculateLoanSchedule")
+    fun calculateLoanSchedule(@Body loansPayload: LoansPayload?): Flow<LoanWithAssociationsEntity>
+
     @GET(APIEndPoint.CREATE_LOANS_ACCOUNTS + "/template?templateType=individual")
     fun getLoansAccountTemplate(
         @Query("clientId") clientId: Int,
