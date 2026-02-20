@@ -304,9 +304,12 @@
     <string name="feature_loan_transfer_date">Transfer Date</string>
     <string name="feature_loan_transfer">Transfer</string>
     <string name="feature_loan_transfer_funds">Transfer Funds</string>
-    <string name="feature_loan_transfer_detaiils">Transfer Details</string>
+    <string name="feature_loan_transfer_details">Transfer Details</string>
     <string name="feature_loan_invalid_amount">Invalid amount</string>
     <string name="feature_loan_transfer_amount_can_not_be_zero">Amount can not be zero or negative</string>
     <string name="feature_loan_description_can_not_be_empty">Description can not be empty</string>
-
+    <string name="feature_loan_must_select_office">Must select office</string>
+    <string name="feature_loan_must_select_client">Must select client</string>
+    <string name="feature_loan_must_select_account">Must select account</string>
+    <string name="feature_loan_must_select_account_type">Must select account</string>
 </resources>

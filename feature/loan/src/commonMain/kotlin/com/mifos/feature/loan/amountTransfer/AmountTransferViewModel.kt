@@ -12,6 +12,10 @@ package com.mifos.feature.loan.amountTransfer
 import androidclient.feature.loan.generated.resources.Res
 import androidclient.feature.loan.generated.resources.feature_loan_description_can_not_be_empty
 import androidclient.feature.loan.generated.resources.feature_loan_invalid_amount
+import androidclient.feature.loan.generated.resources.feature_loan_must_select_account
+import androidclient.feature.loan.generated.resources.feature_loan_must_select_account_type
+import androidclient.feature.loan.generated.resources.feature_loan_must_select_client
+import androidclient.feature.loan.generated.resources.feature_loan_must_select_office
 import androidclient.feature.loan.generated.resources.feature_loan_transfer_amount_can_not_be_zero
 import androidx.lifecycle.viewModelScope
 import com.mifos.core.ui.util.BaseViewModel
@@ -34,6 +38,7 @@ class AmountTransferViewModel() :
                     it.copy(
                         accountId = action.id,
                         selectedAccountName = action.name,
+                        accountIdError = null,
                     )
                 }
             }
@@ -43,12 +48,13 @@ class AmountTransferViewModel() :
                     it.copy(
                         accountTypeId = action.id,
                         selectedAccountType = action.name,
+                        accountTypeIdError = null,
                     )
                 }
             }
 
             is AmountTransferAction.OnAmountChange -> mutableStateFlow.update {
-                it.copy(amount = action.amount)
+                it.copy(amount = action.amount, amountError = null)
             }
 
             is AmountTransferAction.OnClientChange -> {
@@ -56,12 +62,18 @@ class AmountTransferViewModel() :
                     it.copy(
                         selectedClientId = action.id,
                         selectedClientName = action.name,
+                        selectedClientIdError = null,
                     )
                 }
             }
 
             is AmountTransferAction.OnDescriptionChange -> {
-                mutableStateFlow.update { it.copy(description = action.description) }
+                mutableStateFlow.update {
+                    it.copy(
+                        description = action.description,
+                        descriptionError = null,
+                    )
+                }
             }
 
             is AmountTransferAction.OnOfficeChanged -> {
@@ -69,6 +81,7 @@ class AmountTransferViewModel() :
                     it.copy(
                         selectedOfficeId = action.id,
                         selectedOfficeName = action.name,
+                        selectedOfficeIdError = null,
                     )
                 }
             }
@@ -102,9 +115,7 @@ class AmountTransferViewModel() :
             }
         } else if (state.amount.toDouble() <= 0.00) {
             mutableStateFlow.update {
-                it.copy(
-                    amountError = Res.string.feature_loan_transfer_amount_can_not_be_zero,
-                )
+                it.copy(amountError = Res.string.feature_loan_transfer_amount_can_not_be_zero)
             }
         } else {
             mutableStateFlow.update { it.copy(amountError = null) }
@@ -112,15 +123,55 @@ class AmountTransferViewModel() :
 
         if (state.description.trim().isEmpty()) {
             mutableStateFlow.update {
-                it.copy(
-                    descriptionError = Res.string.feature_loan_description_can_not_be_empty,
-                )
+                it.copy(descriptionError = Res.string.feature_loan_description_can_not_be_empty)
             }
         } else {
             mutableStateFlow.update { it.copy(descriptionError = null) }
         }
 
         if (state.amountError == null && state.descriptionError == null) {
+            onTransferClicked()
+        }
+
+        if (state.selectedOfficeId == null) {
+            mutableStateFlow.update {
+                it.copy(selectedOfficeIdError = Res.string.feature_loan_must_select_office)
+            }
+        } else {
+            mutableStateFlow.update { it.copy(selectedOfficeIdError = null) }
+        }
+
+        if (state.selectedClientId == null) {
+            mutableStateFlow.update {
+                it.copy(selectedClientIdError = Res.string.feature_loan_must_select_client)
+            }
+        } else {
+            mutableStateFlow.update { it.copy(selectedClientIdError = null) }
+        }
+
+        if (state.accountTypeId == null) {
+            mutableStateFlow.update {
+                it.copy(accountTypeIdError = Res.string.feature_loan_must_select_account_type)
+            }
+        } else {
+            mutableStateFlow.update { it.copy(accountTypeIdError = null) }
+        }
+
+        if (state.accountId == null) {
+            mutableStateFlow.update {
+                it.copy(accountIdError = Res.string.feature_loan_must_select_account)
+            }
+        } else {
+            mutableStateFlow.update { it.copy(accountIdError = null) }
+        }
+
+        if (state.selectedOfficeIdError == null &&
+            state.selectedClientIdError == null &&
+            state.accountTypeIdError == null &&
+            state.accountIdError == null &&
+            state.amountError == null &&
+            state.descriptionError == null
+        ) {
             onTransferClicked()
         }
     }
@@ -131,8 +182,13 @@ class AmountTransferViewModel() :
 
 data class AmountTransferUiState(
     val dialogState: DialogState? = null,
+
     val amountError: StringResource? = null,
     val descriptionError: StringResource? = null,
+    val selectedOfficeIdError: StringResource? = null,
+    val selectedClientIdError: StringResource? = null,
+    val accountTypeIdError: StringResource? = null,
+    val accountIdError: StringResource? = null,
 
     val selectedOfficeName: String = "",
     val selectedClientName: String = "",

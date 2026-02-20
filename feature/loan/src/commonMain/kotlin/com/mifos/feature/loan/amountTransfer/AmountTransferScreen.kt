@@ -22,7 +22,7 @@ import androidclient.feature.loan.generated.resources.feature_loan_select_accoun
 import androidclient.feature.loan.generated.resources.feature_loan_select_client
 import androidclient.feature.loan.generated.resources.feature_loan_select_office
 import androidclient.feature.loan.generated.resources.feature_loan_transfer
-import androidclient.feature.loan.generated.resources.feature_loan_transfer_detaiils
+import androidclient.feature.loan.generated.resources.feature_loan_transfer_details
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -98,12 +98,12 @@ internal fun AmountTransferContent(
                 .fillMaxSize()
                 .padding(horizontal = DesignToken.padding.largeIncreased)
                 .verticalScroll(rememberScrollState()),
-            verticalArrangement = Arrangement.spacedBy(DesignToken.padding.small),
+            verticalArrangement = Arrangement.spacedBy(DesignToken.padding.extraSmall),
         ) {
             OutlinedCard(
                 modifier = Modifier
                     .fillMaxWidth(),
-                colors = CardDefaults.cardColors(
+                colors = CardDefaults.outlinedCardColors(
                     containerColor = MaterialTheme.colorScheme.surface,
                 ),
                 shape = RoundedCornerShape(DesignToken.padding.medium),
@@ -138,7 +138,7 @@ internal fun AmountTransferContent(
 
             Text(
                 modifier = Modifier.padding(vertical = DesignToken.padding.medium),
-                text = stringResource(Res.string.feature_loan_transfer_detaiils) + " :",
+                text = stringResource(Res.string.feature_loan_transfer_details) + " :",
                 style = MaterialTheme.typography.headlineSmall,
             )
 
@@ -150,6 +150,7 @@ internal fun AmountTransferContent(
                 onOptionSelected = { index, text ->
                     onAction.invoke(AmountTransferAction.OnOfficeChanged(index, text))
                 },
+                errorMessage = state.selectedOfficeIdError?.let { stringResource(it) },
             )
 
             MifosTextFieldDropdown(
@@ -160,6 +161,7 @@ internal fun AmountTransferContent(
                 onOptionSelected = { index, text ->
                     onAction.invoke(AmountTransferAction.OnClientChange(index, text))
                 },
+                errorMessage = state.selectedClientIdError?.let { stringResource(it) },
             )
 
             MifosTextFieldDropdown(
@@ -170,6 +172,7 @@ internal fun AmountTransferContent(
                 onOptionSelected = { index, text ->
                     onAction.invoke(AmountTransferAction.OnAccountTypeChange(index, text))
                 },
+                errorMessage = state.accountTypeIdError?.let { stringResource(it) },
             )
 
             MifosTextFieldDropdown(
@@ -180,6 +183,7 @@ internal fun AmountTransferContent(
                 onOptionSelected = { index, text ->
                     onAction.invoke(AmountTransferAction.OnAccountChange(index, text))
                 },
+                errorMessage = state.accountIdError?.let { stringResource(it) },
             )
 
             MifosOutlinedTextField(
