@@ -41,7 +41,6 @@ actual val KtorHttpClient: HttpClient
         install(ContentNegotiation) {
             json(
                 Json {
-                    encodeDefaults = true
                     prettyPrint = true
                     isLenient = true
                     ignoreUnknownKeys = true

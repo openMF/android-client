@@ -468,6 +468,6 @@ object DateHelper {
         val instant = Instant.fromEpochMilliseconds(timeInMillis)
             .toLocalDateTime(TimeZone.currentSystemDefault())
 
-        return instant.format(apiDateFormat) // Returns "21 January 2026"
+        return instant.format(apiDateFormat) 
     }
 }
