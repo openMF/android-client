@@ -154,7 +154,8 @@ internal fun RecurringDepositAccountContent(
     var expandedIndex by rememberSaveable { mutableStateOf(-1) }
 
     Column(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier
+            .fillMaxSize(),
     ) {
         MifosBreadcrumbNavBar(navController)
         when (state.isLoading) {
@@ -203,7 +204,8 @@ internal fun RecurringDepositAccountContent(
                                 MifosActionsSavingsListingComponent(
                                     accountNo = recurringDeposit.accountNo ?: notAvailableText,
                                     savingsProduct = stringResource(Res.string.client_product_recurring_deposit_account),
-                                    savingsProductName = recurringDeposit.shortProductName ?: notAvailableText,
+                                    savingsProductName = recurringDeposit.shortProductName
+                                        ?: notAvailableText,
                                     lastActive = if (recurringDeposit.status?.submittedAndPendingApproval == true) {
                                         stringResource(Res.string.client_savings_pending_approval)
                                     } else if (recurringDeposit.lastActiveTransactionDate != null) {
