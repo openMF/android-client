@@ -9,6 +9,7 @@
  */
 package com.mifos.core.network.model
 
+import com.mifos.core.common.utils.ApiDateFormatter
 import com.mifos.core.model.utils.Parcelable
 import com.mifos.core.model.utils.Parcelize
 import com.mifos.room.entities.noncore.BulkRepaymentTransactions
@@ -25,7 +26,7 @@ data class IndividualCollectionSheetPayload(
     var actualDisbursementDate: String? = null,
     var bulkDisbursementTransactions: List<BulkRepaymentTransactions> = ArrayList(),
     var bulkSavingsDueTransactions: List<BulkRepaymentTransactions> = ArrayList(),
-    var dateFormat: String = "dd MMMM YYYY",
-    var locale: String = "en",
+    var dateFormat: String = ApiDateFormatter.DATE_FORMAT,
+    var locale: String = ApiDateFormatter.LOCALE,
     var transactionDate: String? = null,
 ) : Parcelable

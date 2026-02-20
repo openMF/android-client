@@ -20,6 +20,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import co.touchlab.kermit.Logger
+import com.mifos.core.common.utils.ApiDateFormatter
 import com.mifos.core.common.utils.Constants
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.repository.DataTableListRepository
@@ -200,8 +201,8 @@ class DataTableListViewModel(
 
     fun addDataTableInput(widgets: List<Any>): Map<String, Any> {
         val payload = mutableMapOf<String, Any>()
-        payload["dateFormat"] = "dd-mm-YYYY"
-        payload["locale"] = "en"
+        payload["dateFormat"] = ApiDateFormatter.DATE_FORMAT
+        payload["locale"] = ApiDateFormatter.LOCALE
 
         for (widget in widgets) {
             when (widget) {

@@ -90,6 +90,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
+import com.mifos.core.common.utils.ApiDateFormatter
 import com.mifos.core.common.utils.DateHelper
 import com.mifos.core.common.utils.formatDate
 import com.mifos.core.designsystem.component.MifosDatePickerTextField
@@ -992,9 +993,6 @@ private fun createClientPayload(
     selectedClientClassificationId: Int,
     legalFormId: Int?,
 ): ClientPayloadEntity {
-    val dateFormat = "dd MMMM yyyy"
-    val locale = "en"
-
     var clientPayload = ClientPayloadEntity(
         // Mandatory fields
         firstname = firstName,
@@ -1007,8 +1005,8 @@ private fun createClientPayload(
         activationDate = formatDate(activationDate),
         submittedOnDate = formatDate(submissionDate),
         dateOfBirth = formatDate(dateOfBirth),
-        dateFormat = dateFormat,
-        locale = locale,
+        dateFormat = ApiDateFormatter.DATE_FORMAT,
+        locale = ApiDateFormatter.LOCALE,
     )
 
     if (PhoneNumberUtil.isGlobalPhoneNumber(mobileNumber)) {
