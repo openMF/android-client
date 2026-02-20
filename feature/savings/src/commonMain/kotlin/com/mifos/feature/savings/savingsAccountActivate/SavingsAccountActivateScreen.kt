@@ -49,6 +49,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.mifos.core.common.utils.ApiDateFormatter
 import com.mifos.core.common.utils.DateHelper
 import com.mifos.core.designsystem.component.MifosDatePickerTextField
 import com.mifos.core.designsystem.component.MifosOutlinedTextField
@@ -232,9 +233,9 @@ private fun SavingsAccountActivateContent(
                 .heightIn(46.dp),
             onClick = {
                 val hashMap = HashMap<String, String>()
-                hashMap["dateFormat"] = "dd MMMM yyyy"
+                hashMap["dateFormat"] = ApiDateFormatter.DATE_FORMAT
                 hashMap["activatedOnDate"] = approvalDate.toString()
-                hashMap["locale"] = "en"
+                hashMap["locale"] = ApiDateFormatter.LOCALE
 
                 activateSavings.invoke(hashMap)
             },

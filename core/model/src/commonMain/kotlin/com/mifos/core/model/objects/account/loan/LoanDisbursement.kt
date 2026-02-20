@@ -9,6 +9,7 @@
  */
 package com.mifos.core.model.objects.account.loan
 
+import com.mifos.core.common.utils.ApiDateFormatter
 import com.mifos.core.model.utils.Parcelable
 import com.mifos.core.model.utils.Parcelize
 
@@ -22,7 +23,7 @@ data class LoanDisbursement(
 
     var paymentId: Int? = null,
 
-    var locale: String? = "en",
+    var locale: String? = ApiDateFormatter.LOCALE,
 
-    var dateFormat: String? = "dd MMMM yyyy",
+    var dateFormat: String? = ApiDateFormatter.DATE_FORMAT,
 ) : Parcelable
