@@ -300,5 +300,6 @@
     <string name="feature_loan_to_date">To Date*</string>
     <string name="feature_loan_generate_report">Generate Report</string>
     <string name="feature_loan_invalid_date_range">To Date cannot be earlier than From Date</string>
+    <string name="feature_loan_close">Close</string>
 
 </resources>

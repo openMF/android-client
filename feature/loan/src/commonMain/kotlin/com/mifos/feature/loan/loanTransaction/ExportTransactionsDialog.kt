@@ -11,13 +11,13 @@ package com.mifos.feature.loan.loanTransaction
 
 import androidclient.feature.loan.generated.resources.Res
 import androidclient.feature.loan.generated.resources.feature_loan_cancel
+import androidclient.feature.loan.generated.resources.feature_loan_close
 import androidclient.feature.loan.generated.resources.feature_loan_export_transactions
 import androidclient.feature.loan.generated.resources.feature_loan_from_date
 import androidclient.feature.loan.generated.resources.feature_loan_generate_report
 import androidclient.feature.loan.generated.resources.feature_loan_invalid_date_range
 import androidclient.feature.loan.generated.resources.feature_loan_select
 import androidclient.feature.loan.generated.resources.feature_loan_to_date
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -33,6 +33,7 @@ import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.DatePickerState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SelectableDates
 import androidx.compose.material3.Surface
@@ -53,13 +54,13 @@ import com.mifos.core.designsystem.component.MifosCustomDialog
 import com.mifos.core.designsystem.component.MifosDatePickerTextField
 import com.mifos.core.designsystem.component.MifosOutlinedButton
 import com.mifos.core.designsystem.icon.MifosIcons
-import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 import org.jetbrains.compose.resources.stringResource
 import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
+import kotlin.time.Instant
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalTime::class)
 @Composable
@@ -125,15 +126,13 @@ internal fun ExportTransactionsDialog(
                             text = stringResource(Res.string.feature_loan_export_transactions),
                             style = MaterialTheme.typography.titleLarge,
                         )
-                        Icon(
-                            imageVector = MifosIcons.Cancel,
-                            contentDescription = stringResource(Res.string.feature_loan_cancel),
-                            tint = MaterialTheme.colorScheme.outline,
-                            modifier = Modifier
-                                .width(30.dp)
-                                .height(30.dp)
-                                .clickable { onDismiss() },
-                        )
+                        IconButton(onClick = onDismiss) {
+                            Icon(
+                                imageVector = MifosIcons.Cancel,
+                                contentDescription = stringResource(Res.string.feature_loan_close),
+                                tint = MaterialTheme.colorScheme.outline,
+                            )
+                        }
                     }
 
                     Spacer(modifier = Modifier.height(8.dp))
@@ -221,13 +220,18 @@ private fun initializeDatePicker(
 }
 
 @OptIn(ExperimentalTime::class, ExperimentalMaterial3Api::class)
-private fun createSelectableDatesFrom(minDate: LocalDate) = object : SelectableDates {
+private fun createSelectableDatesFrom(
+    minDate: LocalDate,
+    maxDate: LocalDate = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).date,
+) = object : SelectableDates {
     override fun isSelectableDate(utcTimeMillis: Long): Boolean {
         val selectedDate = Instant.fromEpochMilliseconds(utcTimeMillis)
             .toLocalDateTime(TimeZone.UTC)
             .date
-        return selectedDate >= minDate
+        return selectedDate in minDate..maxDate
     }
+
+    override fun isSelectableYear(year: Int): Boolean = year in minDate.year..maxDate.year
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
