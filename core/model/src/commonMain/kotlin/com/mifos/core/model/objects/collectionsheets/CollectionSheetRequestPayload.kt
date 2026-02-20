@@ -9,7 +9,7 @@
  */
 package com.mifos.core.model.objects.collectionsheets
 
-import com.mifos.core.common.utils.ApiDateFormatter
+import com.mifos.core.model.utils.DateConstants
 import com.mifos.core.model.utils.Parcelable
 import com.mifos.core.model.utils.Parcelize
 
@@ -20,9 +20,9 @@ import com.mifos.core.model.utils.Parcelize
 data class CollectionSheetRequestPayload(
     var calendarId: Int? = null,
 
-    var dateFormat: String = ApiDateFormatter.DATE_FORMAT,
+    var dateFormat: String = DateConstants.DATE_FORMAT,
 
-    var locale: String = ApiDateFormatter.LOCALE,
+    var locale: String = DateConstants.LOCALE,
 
     var transactionDate: String? = null,
 ) : Parcelable

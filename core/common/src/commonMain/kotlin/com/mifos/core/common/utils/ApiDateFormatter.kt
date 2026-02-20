@@ -9,6 +9,7 @@
  */
 package com.mifos.core.common.utils
 
+import com.mifos.core.model.utils.DateConstants
 import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
@@ -25,8 +26,8 @@ import kotlinx.datetime.toLocalDateTime
  * ```kotlin
  * val payload = ClientPayload(
  *     activationDate = ApiDateFormatter.formatForApi(dateMillis),
- *     dateFormat = ApiDateFormatter.dateFormat,
- *     locale = ApiDateFormatter.locale
+ *     dateFormat = ApiDateFormatter.DATE_FORMAT,
+ *     locale = ApiDateFormatter.LOCALE
  * )
  * ```
  */
@@ -36,22 +37,12 @@ object ApiDateFormatter {
      * Standard date format for Fineract API: "dd MMMM yyyy"
      * Example: "18 February 2026"
      */
-    const val DATE_FORMAT = "dd MMMM yyyy"
+    const val DATE_FORMAT = DateConstants.DATE_FORMAT
 
     /**
      * Standard locale for Fineract API
      */
-    const val LOCALE = "en"
-
-    /**
-     * Alias for DATE_FORMAT - the dateFormat parameter value to send to API
-     */
-    val dateFormat: String get() = DATE_FORMAT
-
-    /**
-     * Alias for LOCALE - the locale parameter value to send to API
-     */
-    val locale: String get() = LOCALE
+    const val LOCALE = DateConstants.LOCALE
 
     /**
      * Format epoch milliseconds to API date string using standard format.
