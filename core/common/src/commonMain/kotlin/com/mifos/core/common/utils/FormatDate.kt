@@ -10,7 +10,6 @@
 package com.mifos.core.common.utils
 
 import kotlinx.datetime.TimeZone
-import kotlinx.datetime.number
 import kotlinx.datetime.toLocalDateTime
 import kotlin.time.ExperimentalTime
 import kotlin.time.Instant
@@ -22,7 +21,7 @@ fun formatDate(millis: Long): String {
         .toLocalDateTime(TimeZone.currentSystemDefault())
 
     val day = dateTime.day.toString().padStart(2, '0')
-    val month = dateTime.month.number.toString().padStart(2, '0')
+    val monthName = dateTime.month.name.lowercase().replaceFirstChar { it.uppercase() }
     val year = dateTime.year
-    return "$day/$month/$year"
+    return "$day $monthName $year"
 }
