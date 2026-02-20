@@ -44,6 +44,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.mifos.core.common.utils.ApiDateFormatter
 import com.mifos.core.common.utils.Constants
 import com.mifos.core.common.utils.DateHelper
 import com.mifos.core.common.utils.formatDate
@@ -195,8 +196,8 @@ private fun ActivateContent(
                 onActivate(
                     ActivatePayload(
                         activationDate = formatDate(activateDate),
-                        dateFormat = Constants.DATE_FORMAT_LONG,
-                        locale = Constants.LOCALE_EN,
+                        dateFormat = ApiDateFormatter.DATE_FORMAT,
+                        locale = ApiDateFormatter.LOCALE,
                     ),
                 )
             },

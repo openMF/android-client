@@ -9,6 +9,7 @@
  */
 package com.mifos.room.entities.collectionsheet
 
+import com.mifos.core.common.utils.ApiDateFormatter
 import com.mifos.core.model.objects.collectionsheets.BulkSavingsDueTransaction
 import com.mifos.core.model.utils.IgnoredOnParcel
 import com.mifos.core.model.utils.Parcelable
@@ -34,9 +35,9 @@ data class CollectionSheetPayload(
 
     var clientsAttendance: MutableList<ClientsAttendance> = ArrayList(),
 
-    var dateFormat: String = "dd MMMM yyyy",
+    var dateFormat: String = ApiDateFormatter.DATE_FORMAT,
 
-    var locale: String = "en",
+    var locale: String = ApiDateFormatter.LOCALE,
 
     var transactionDate: String? = null,
 
