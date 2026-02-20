@@ -52,7 +52,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.lerp
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewModelScope
@@ -142,22 +141,20 @@ private fun LoanRepaymentScheduleContent(
     val decimalPlaces = loanWithAssociations.currency.decimalPlaces
     val scrollState = rememberScrollState()
 
-    // Define fixed column widths for all 13 columns
-    // Days, Date, Paid Date, Balance, Principal, Interest, Fees, Penalties, Due, Paid, In Advance, Late, Outstanding
     val columnWidths = listOf(
-        50.dp,
-        90.dp,
-        90.dp,
-        110.dp,
-        100.dp,
-        90.dp,
-        80.dp,
-        90.dp,
-        90.dp,
-        90.dp,
-        100.dp,
-        80.dp,
-        110.dp,
+        DesignToken.sizes.tableCellWidthSmall,
+        DesignToken.sizes.tableCellWidthLarge,
+        DesignToken.sizes.tableCellWidthLarge,
+        DesignToken.sizes.tableCellWidthMedium,
+        DesignToken.sizes.tableCellWidthMedium,
+        DesignToken.sizes.tableCellWidthMedium,
+        DesignToken.sizes.tableCellWidthMedium,
+        DesignToken.sizes.tableCellWidthMedium,
+        DesignToken.sizes.tableCellWidthMedium,
+        DesignToken.sizes.tableCellWidthMedium,
+        DesignToken.sizes.tableCellWidthMedium,
+        DesignToken.sizes.tableCellWidthMedium,
+        DesignToken.sizes.tableCellWidthMedium,
     )
 
     fun formatCurrency(amount: Double?): String {
@@ -183,7 +180,7 @@ private fun LoanRepaymentScheduleContent(
         ) {
             LazyColumn(
                 modifier = Modifier.fillMaxSize(),
-                contentPadding = PaddingValues(bottom = 48.dp),
+                contentPadding = PaddingValues(bottom = DesignToken.spacing.extraExtraLarge),
             ) {
                 stickyHeader {
                     MifosTableRow(
@@ -217,29 +214,27 @@ private fun LoanRepaymentScheduleContent(
                     )
                 }
 
-                // Data Rows with unique keys for performance
                 itemsIndexed(
                     items = periods,
                     key = { index, period ->
-                        // Use index + dueDate to ensure uniqueness and prevent collisions
                         "$index-${period.dueDate?.joinToString("-") ?: "null"}"
                     },
                 ) { _, period ->
                     MifosTableRow(
                         cells = listOf(
-                            { DataCell(text = period.daysInPeriod?.toString() ?: "", align = TextAlign.Left) },
-                            { DataCell(text = formatDate(period.dueDate), align = TextAlign.Left) },
-                            { DataCell(text = formatDate(period.obligationsMetOnDate), align = TextAlign.Left) },
-                            { DataCell(text = formatCurrency(period.principalLoanBalanceOutstanding), align = TextAlign.Right) },
-                            { DataCell(text = formatCurrency(period.principalDue), align = TextAlign.Right) },
-                            { DataCell(text = formatCurrency(period.interestDue), align = TextAlign.Right) },
-                            { DataCell(text = formatCurrency(period.feeChargesDue), align = TextAlign.Right) },
-                            { DataCell(text = formatCurrency(period.penaltyChargesDue), align = TextAlign.Right) },
-                            { DataCell(text = formatCurrency(period.totalDueForPeriod), align = TextAlign.Right) },
-                            { DataCell(text = formatCurrency(period.totalPaidForPeriod), align = TextAlign.Right) },
-                            { DataCell(text = formatCurrency(period.totalPaidInAdvanceForPeriod), align = TextAlign.Right) },
-                            { DataCell(text = formatCurrency(period.totalPaidLateForPeriod), align = TextAlign.Right) },
-                            { DataCell(text = formatCurrency(period.totalOutstandingForPeriod), align = TextAlign.Right) },
+                            { DataCell(text = period.daysInPeriod?.toString() ?: "") },
+                            { DataCell(text = formatDate(period.dueDate)) },
+                            { DataCell(text = formatDate(period.obligationsMetOnDate)) },
+                            { DataCell(text = formatCurrency(period.principalLoanBalanceOutstanding)) },
+                            { DataCell(text = formatCurrency(period.principalDue)) },
+                            { DataCell(text = formatCurrency(period.interestDue)) },
+                            { DataCell(text = formatCurrency(period.feeChargesDue)) },
+                            { DataCell(text = formatCurrency(period.penaltyChargesDue)) },
+                            { DataCell(text = formatCurrency(period.totalDueForPeriod)) },
+                            { DataCell(text = formatCurrency(period.totalPaidForPeriod)) },
+                            { DataCell(text = formatCurrency(period.totalPaidInAdvanceForPeriod)) },
+                            { DataCell(text = formatCurrency(period.totalPaidLateForPeriod)) },
+                            { DataCell(text = formatCurrency(period.totalOutstandingForPeriod)) },
                         ),
                         columnWidths = columnWidths,
                         scrollState = scrollState,
@@ -284,8 +279,6 @@ private fun DataCell(
         color = MaterialTheme.colorScheme.onSurfaceVariant,
         textAlign = align,
         modifier = Modifier.fillMaxWidth(),
-        maxLines = 1,
-        overflow = TextOverflow.Ellipsis,
     )
 }
 
