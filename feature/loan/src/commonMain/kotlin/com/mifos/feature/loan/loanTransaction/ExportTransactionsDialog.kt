@@ -42,12 +42,10 @@ import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.mifos.core.common.utils.DateHelper.format
 import com.mifos.core.designsystem.component.MifosButton
@@ -73,8 +71,7 @@ internal fun ExportTransactionsDialog(
     var showToDatePicker by rememberSaveable { mutableStateOf(false) }
     var fromDate: Long? by rememberSaveable { mutableStateOf(null) }
     var toDate: Long? by rememberSaveable { mutableStateOf(null) }
-    var showInvalidDateRangeError by remember { mutableStateOf(false) }
-
+    val isInvalidDateRange = fromDate != null && toDate != null && toDate!! < fromDate!!
     val isValidDateRange = fromDate != null && toDate != null && toDate!! >= fromDate!!
 
     val fromDatePickerState = rememberDatePickerState(
@@ -92,10 +89,7 @@ internal fun ExportTransactionsDialog(
         state = fromDatePickerState,
         onDismiss = { showFromDatePicker = false },
         onConfirm = { selectedMillis ->
-            selectedMillis?.let {
-                fromDate = it
-                showInvalidDateRangeError = false
-            }
+            selectedMillis?.let { fromDate = it }
         },
     )
 
@@ -104,10 +98,7 @@ internal fun ExportTransactionsDialog(
         state = toDatePickerState,
         onDismiss = { showToDatePicker = false },
         onConfirm = { selectedMillis ->
-            selectedMillis?.let {
-                toDate = it
-                showInvalidDateRangeError = false
-            }
+            selectedMillis?.let { toDate = it }
         },
     )
 
@@ -161,22 +152,16 @@ internal fun ExportTransactionsDialog(
                     MifosDatePickerTextField(
                         value = formatDateFromMillis(toDate),
                         label = stringResource(Res.string.feature_loan_to_date),
+                        errorMessage = if (isInvalidDateRange) {
+                            stringResource(Res.string.feature_loan_invalid_date_range)
+                        } else {
+                            null
+                        },
                         openDatePicker = {
                             initializeDatePicker(toDate, toDatePickerState)
                             showToDatePicker = true
                         },
                     )
-
-                    if (showInvalidDateRangeError) {
-                        Text(
-                            text = stringResource(Res.string.feature_loan_invalid_date_range),
-                            color = MaterialTheme.colorScheme.error,
-                            style = MaterialTheme.typography.bodySmall,
-                            textAlign = TextAlign.Start,
-                            modifier = Modifier
-                                .padding(top = 8.dp, start = 16.dp),
-                        )
-                    }
 
                     Spacer(modifier = Modifier.height(16.dp))
 
@@ -199,11 +184,6 @@ internal fun ExportTransactionsDialog(
 
                         MifosButton(
                             onClick = {
-                                if (!isValidDateRange) {
-                                    showInvalidDateRangeError = true
-                                    return@MifosButton
-                                }
-                                showInvalidDateRangeError = false
                                 onGenerateReport(fromDate!!, toDate!!)
                             },
                             enabled = isValidDateRange,
