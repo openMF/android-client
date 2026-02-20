@@ -89,7 +89,7 @@ object GetClientsClientIdAccountMapper :
                         com.mifos.room.entities.accounts.loans.LoanStatusEntity(
                             id = status.id?.toInt(),
                             code = status.code,
-                            value = status.description,
+                            value = status.value,
                             pendingApproval = status.pendingApproval,
                             waitingForDisbursal = status.waitingForDisbursal,
                             active = status.active,
@@ -181,7 +181,7 @@ object GetClientsClientIdAccountMapper :
                     status = GetClientsLoanAccountsStatus(
                         id = it.status?.id?.toLong(),
                         code = it.status?.code,
-                        description = it.status?.value,
+                        value = it.status?.value,
                         pendingApproval = it.status?.pendingApproval,
                         waitingForDisbursal = it.status?.waitingForDisbursal,
                         active = it.status?.active,

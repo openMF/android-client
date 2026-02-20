@@ -208,6 +208,7 @@ private fun PreviewMifosActionsLoanListingComponent() {
             amountPaid = "$2000",
             loanBalance = "$3000",
             type = "Active",
+            status = "Active",
             menuList = listOf(
                 Actions.ViewAccount(),
                 Actions.ApproveAccount(),

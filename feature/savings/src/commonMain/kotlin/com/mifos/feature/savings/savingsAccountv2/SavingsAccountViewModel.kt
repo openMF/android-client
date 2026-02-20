@@ -17,6 +17,7 @@ import androidclient.feature.savings.generated.resources.step_terms_decimal_plac
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
+import com.mifos.core.common.utils.ApiDateFormatter
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.common.utils.DateHelper
 import com.mifos.core.data.util.NetworkMonitor
@@ -145,8 +146,8 @@ internal class SavingsAccountViewModel(
 
     private fun submitSavingsApplication() {
         val savingsPayload = SavingsPayload().apply {
-            locale = "en"
-            dateFormat = "dd-MM-yyyy"
+            locale = ApiDateFormatter.LOCALE
+            dateFormat = ApiDateFormatter.DATE_FORMAT
             productId = state.savingProductOptions.getOrNull(state.savingsProductSelected)?.id
             clientId = state.clientId
             fieldOfficerId = state.fieldOfficerOptions.getOrNull(state.fieldOfficerIndex)?.id

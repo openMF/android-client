@@ -13,14 +13,14 @@ import com.mifos.core.model.utils.Parcelable
 import com.mifos.core.model.utils.Parcelize
 import com.mifos.room.entities.PaymentTypeOptionEntity
 import com.mifos.room.entities.accounts.savings.SavingAccountCurrencyEntity
-import com.mifos.room.utils.ColumnInfo
-import com.mifos.room.utils.Entity
-import com.mifos.room.utils.INHERIT_FIELD_NAME
-import com.mifos.room.utils.PrimaryKey
-import com.mifos.room.utils.UNDEFINED
-import com.mifos.room.utils.UNSPECIFIED
-import com.mifos.room.utils.VALUE_UNSPECIFIED
 import kotlinx.serialization.Serializable
+import template.core.base.database.CollationSequence.UNSPECIFIED
+import template.core.base.database.ColumnInfo
+import template.core.base.database.ColumnInfoTypeAffinity.INHERIT_FIELD_NAME
+import template.core.base.database.ColumnInfoTypeAffinity.UNDEFINED
+import template.core.base.database.ColumnInfoTypeAffinity.VALUE_UNSPECIFIED
+import template.core.base.database.Entity
+import template.core.base.database.PrimaryKey
 
 @Serializable
 @Parcelize

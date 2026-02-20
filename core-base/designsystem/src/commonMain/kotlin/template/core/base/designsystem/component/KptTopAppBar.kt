@@ -119,7 +119,7 @@ fun KptTopAppBar(configuration: KptTopAppBarConfiguration) {
             navigationIcon = navigationIconContent,
             actions = actionsContent,
             windowInsets = configuration.windowInsets ?: TopAppBarDefaults.windowInsets,
-            colors = configuration.colors ?: TopAppBarDefaults.centerAlignedTopAppBarColors(),
+            colors = configuration.colors ?: TopAppBarDefaults.topAppBarColors(),
             scrollBehavior = configuration.scrollBehavior,
         )
 
@@ -129,7 +129,7 @@ fun KptTopAppBar(configuration: KptTopAppBarConfiguration) {
             navigationIcon = navigationIconContent,
             actions = actionsContent,
             windowInsets = configuration.windowInsets ?: TopAppBarDefaults.windowInsets,
-            colors = configuration.colors ?: TopAppBarDefaults.mediumTopAppBarColors(),
+            colors = configuration.colors ?: TopAppBarDefaults.topAppBarColors(),
             scrollBehavior = configuration.scrollBehavior,
         )
 
@@ -139,7 +139,7 @@ fun KptTopAppBar(configuration: KptTopAppBarConfiguration) {
             navigationIcon = navigationIconContent,
             actions = actionsContent,
             windowInsets = configuration.windowInsets ?: TopAppBarDefaults.windowInsets,
-            colors = configuration.colors ?: TopAppBarDefaults.largeTopAppBarColors(),
+            colors = configuration.colors ?: TopAppBarDefaults.topAppBarColors(),
             scrollBehavior = configuration.scrollBehavior,
         )
     }

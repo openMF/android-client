@@ -13,10 +13,10 @@ import com.mifos.core.common.utils.MapDeserializer
 import com.mifos.core.model.utils.Parcelable
 import com.mifos.core.model.utils.Parcelize
 import com.mifos.core.model.utils.RawValue
-import com.mifos.room.utils.Entity
-import com.mifos.room.utils.PrimaryKey
 import kotlinx.serialization.Contextual
 import kotlinx.serialization.Serializable
+import template.core.base.database.Entity
+import template.core.base.database.PrimaryKey
 
 @Serializable
 @Parcelize

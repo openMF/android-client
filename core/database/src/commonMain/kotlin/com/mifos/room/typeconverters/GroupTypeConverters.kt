@@ -11,9 +11,9 @@ package com.mifos.room.typeconverters
 
 import com.mifos.room.entities.Timeline
 import com.mifos.room.entities.group.GroupDateEntity
-import com.mifos.room.utils.TypeConverter
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
+import template.core.base.database.TypeConverter
 
 /**
  * Created by Pronay Sarker on 17/02/2025 (7:45 AM)

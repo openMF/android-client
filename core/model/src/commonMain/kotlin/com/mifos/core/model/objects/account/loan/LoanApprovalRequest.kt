@@ -9,6 +9,7 @@
  */
 package com.mifos.core.model.objects.account.loan
 
+import com.mifos.core.model.utils.DateConstants
 import com.mifos.core.model.utils.Parcelable
 import com.mifos.core.model.utils.Parcelize
 
@@ -17,9 +18,9 @@ import com.mifos.core.model.utils.Parcelize
  */
 @Parcelize
 data class LoanApprovalRequest(
-    var locale: String = "en",
+    var locale: String = DateConstants.LOCALE,
 
-    var dateFormat: String = "dd MM yyyy",
+    var dateFormat: String = DateConstants.DATE_FORMAT,
 
     var approvedOnDate: String? = null,
 

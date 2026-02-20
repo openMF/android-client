@@ -11,8 +11,8 @@ package com.mifos.room.entities.noncore
 
 import com.mifos.core.model.utils.Parcelable
 import com.mifos.core.model.utils.Parcelize
-import com.mifos.room.utils.Entity
-import com.mifos.room.utils.PrimaryKey
+import template.core.base.database.Entity
+import template.core.base.database.PrimaryKey
 
 @Parcelize
 @Entity(

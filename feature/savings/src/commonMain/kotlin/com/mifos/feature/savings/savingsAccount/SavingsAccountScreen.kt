@@ -66,6 +66,7 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.mifos.core.common.utils.ApiDateFormatter
 import com.mifos.core.common.utils.DateHelper
 import com.mifos.core.designsystem.component.MifosDatePickerTextField
 import com.mifos.core.designsystem.component.MifosOutlinedTextField
@@ -476,9 +477,9 @@ private fun SavingsAccountContent(
                 val savingsPayload = SavingsPayload()
 
                 savingsPayload.externalId = externalId
-                savingsPayload.locale = "en"
-                savingsPayload.submittedOnDate = DateHelper.getDateAsStringFromLong(submittedOnDate)
-                savingsPayload.dateFormat = "dd-MM-yyyy"
+                savingsPayload.locale = ApiDateFormatter.LOCALE
+                savingsPayload.submittedOnDate = ApiDateFormatter.formatForApi(submittedOnDate)
+                savingsPayload.dateFormat = ApiDateFormatter.DATE_FORMAT
                 if (isGroupAccount) {
                     savingsPayload.groupId = groupId
                 } else {
