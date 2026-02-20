@@ -10,12 +10,12 @@
 package com.mifos.room.dao
 
 import com.mifos.room.entities.noncore.ColumnValue
-import com.mifos.room.utils.Dao
-import com.mifos.room.utils.Delete
-import com.mifos.room.utils.Insert
-import com.mifos.room.utils.OnConflictStrategy
-import com.mifos.room.utils.Query
-import com.mifos.room.utils.Update
+import template.core.base.database.Dao
+import template.core.base.database.Delete
+import template.core.base.database.Insert
+import template.core.base.database.OnConflictStrategy
+import template.core.base.database.Query
+import template.core.base.database.Update
 
 @Dao
 interface ColumnValueDao {
