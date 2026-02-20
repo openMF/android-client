@@ -14,6 +14,7 @@ import androidclient.feature.loan.generated.resources.feature_loan_account_type
 import androidclient.feature.loan.generated.resources.feature_loan_amount
 import androidclient.feature.loan.generated.resources.feature_loan_applicant_name
 import androidclient.feature.loan.generated.resources.feature_loan_currency
+import androidclient.feature.loan.generated.resources.feature_loan_description
 import androidclient.feature.loan.generated.resources.feature_loan_from_account
 import androidclient.feature.loan.generated.resources.feature_loan_loan_account_type
 import androidclient.feature.loan.generated.resources.feature_loan_office
@@ -79,6 +80,7 @@ internal fun AmountTransferScreenRoute(
 
     AmountTransferDialogContent(
         dialogState = state.dialogState,
+        onAction = viewModel::trySendAction,
     )
 }
 
@@ -194,7 +196,7 @@ internal fun AmountTransferContent(
             MifosOutlinedTextField(
                 value = state.description,
                 onValueChange = { onAction.invoke(AmountTransferAction.OnDescriptionChange(it)) },
-                label = "Description",
+                label = stringResource(Res.string.feature_loan_description),
                 errorText = state.descriptionError?.let { stringResource(it) },
                 isError = state.descriptionError != null,
             )
@@ -211,11 +213,14 @@ internal fun AmountTransferContent(
 @Composable
 private fun AmountTransferDialogContent(
     dialogState: AmountTransferUiState.DialogState?,
+    onAction: (AmountTransferAction) -> Unit,
 ) {
     when (dialogState) {
         is AmountTransferUiState.DialogState.Error -> {
             MifosSweetError(
                 message = dialogState.message,
+                isRetryEnabled = true,
+                onclick = { onAction.invoke(AmountTransferAction.OnRetryClick) },
             )
         }
 

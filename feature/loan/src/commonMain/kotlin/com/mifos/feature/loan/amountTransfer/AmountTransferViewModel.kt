@@ -21,11 +21,12 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.StringResource
 
-class AmountTransferViewModel() : BaseViewModel<AmountTransferUiState, AmountTransferEvent, AmountTransferAction>(
-    initialState = AmountTransferUiState(
-        dialogState = DialogState.Loading,
-    ),
-) {
+class AmountTransferViewModel() :
+    BaseViewModel<AmountTransferUiState, AmountTransferEvent, AmountTransferAction>(
+        initialState = AmountTransferUiState(
+            dialogState = DialogState.Loading,
+        ),
+    ) {
     override fun handleAction(action: AmountTransferAction) {
         when (action) {
             is AmountTransferAction.OnAccountChange -> {
@@ -73,6 +74,7 @@ class AmountTransferViewModel() : BaseViewModel<AmountTransferUiState, AmountTra
             }
 
             AmountTransferAction.OnTransferClicked -> validateFields()
+            AmountTransferAction.OnRetryClick -> fetchTemplate()
         }
     }
 
@@ -158,6 +160,7 @@ sealed interface AmountTransferAction {
     data class OnAmountChange(val amount: String) : AmountTransferAction
     data class OnDescriptionChange(val description: String) : AmountTransferAction
     data object OnTransferClicked : AmountTransferAction
+    data object OnRetryClick : AmountTransferAction
 }
 
 sealed interface AmountTransferEvent {
