@@ -26,7 +26,7 @@ fun NavGraphBuilder.createNewClientDestination(
     hasDatatables: KFunction4<List<DataTableEntity>, Any?, Int, MutableList<List<FormWidgetDTO>>, Unit>,
 ) {
     composable<CreateNewClientRoute> {
-        CreateNewClientScreenRoute(
+        CreateNewClientScreen(
             navigateBack = navController::popBackStack,
             hasDatatables = { datatables, clientPayload ->
                 hasDatatables(datatables, clientPayload, Constants.CREATE_CLIENT, mutableListOf())

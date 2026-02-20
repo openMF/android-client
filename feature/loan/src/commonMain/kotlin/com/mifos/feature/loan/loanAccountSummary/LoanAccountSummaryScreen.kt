@@ -35,12 +35,12 @@ import androidclient.feature.loan.generated.resources.feature_loan_loan_penalty
 import androidclient.feature.loan.generated.resources.feature_loan_loan_principal
 import androidclient.feature.loan.generated.resources.feature_loan_make_Repayment
 import androidclient.feature.loan.generated.resources.feature_loan_outstanding_balance
-import androidclient.feature.loan.generated.resources.feature_loan_overpaid
 import androidclient.feature.loan.generated.resources.feature_loan_repayment_schedule
 import androidclient.feature.loan.generated.resources.feature_loan_staff
 import androidclient.feature.loan.generated.resources.feature_loan_summary
 import androidclient.feature.loan.generated.resources.feature_loan_total_loan
 import androidclient.feature.loan.generated.resources.feature_loan_transactions
+import androidclient.feature.loan.generated.resources.feature_loan_transfer_funds
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -83,7 +83,6 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import co.touchlab.kermit.Logger
 import com.mifos.core.common.utils.Constants
 import com.mifos.core.designsystem.component.MifosCard
 import com.mifos.core.designsystem.component.MifosMenuDropDownItem
@@ -116,6 +115,7 @@ internal fun LoanAccountSummaryScreenRoute(
     onChargesClicked: (loanId: Int) -> Unit,
     approveLoan: (loadId: Int, loanWithAssociations: LoanWithAssociationsEntity) -> Unit,
     disburseLoan: (loanId: Int) -> Unit,
+    amountTransferScreen: (loanId: Int) -> Unit,
     onRepaymentClick: (loanWithAssociations: LoanWithAssociationsEntity) -> Unit,
     navController: NavController,
     viewModel: LoanAccountSummaryViewModel = koinViewModel(),
@@ -157,6 +157,10 @@ internal fun LoanAccountSummaryScreenRoute(
 
             is LoanAccountSummaryEvent.NavigateToMakeRepayment -> {
                 onRepaymentClick(event.loanWithAssociations)
+            }
+
+            is LoanAccountSummaryEvent.NavigateToLoanTransfer -> {
+                amountTransferScreen(event.loanId)
             }
         }
     }
@@ -442,7 +446,7 @@ private fun LoanAccountSummaryContent(
             LoanPrimaryAction.MAKE_REPAYMENT -> stringResource(Res.string.feature_loan_make_Repayment)
             LoanPrimaryAction.APPROVE_LOAN -> stringResource(Res.string.feature_loan_approve_loan)
             LoanPrimaryAction.DISBURSE_LOAN -> stringResource(Res.string.feature_loan_disburse_loan)
-            LoanPrimaryAction.OVERPAID -> stringResource(Res.string.feature_loan_overpaid)
+            LoanPrimaryAction.OVERPAID -> stringResource(Res.string.feature_loan_transfer_funds)
             LoanPrimaryAction.CLOSED -> stringResource(Res.string.feature_loan_closed)
         }
 
@@ -457,9 +461,8 @@ private fun LoanAccountSummaryContent(
                     LoanPrimaryAction.MAKE_REPAYMENT -> onAction(LoanAccountSummaryAction.OnMakeRepayment)
                     LoanPrimaryAction.APPROVE_LOAN -> onAction(LoanAccountSummaryAction.OnApproveLoan)
                     LoanPrimaryAction.DISBURSE_LOAN -> onAction(LoanAccountSummaryAction.OnDisburseLoan)
-                    LoanPrimaryAction.OVERPAID, LoanPrimaryAction.CLOSED -> {
-                        Logger.e("LoanAccountSummary") { "TRANSACTION ACTION NOT SET" }
-                    }
+                    LoanPrimaryAction.OVERPAID -> onAction(LoanAccountSummaryAction.NavigateToLoanTransfer)
+                    LoanPrimaryAction.CLOSED -> { }
                 }
             },
             colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
@@ -701,7 +704,7 @@ private fun LoanSummaryDropdown(
 }
 
 private fun LoanStatusEntity.isButtonActive(): Boolean {
-    return active == true || pendingApproval == true || waitingForDisbursal == true
+    return active == true || pendingApproval == true || waitingForDisbursal == true || overpaid == true
 }
 
 private class LoanAccountSummaryPreviewProvider :

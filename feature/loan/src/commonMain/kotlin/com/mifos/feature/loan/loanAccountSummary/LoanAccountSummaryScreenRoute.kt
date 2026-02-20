@@ -33,6 +33,7 @@ fun NavGraphBuilder.loanAccountSummary(
     onChargesClicked: (Int) -> Unit,
     approveLoan: (loadId: Int, loanWithAssociations: LoanWithAssociationsEntity) -> Unit,
     disburseLoan: (Int) -> Unit,
+    amountTransferScreen: (Int) -> Unit,
     onRepaymentClick: (LoanWithAssociationsEntity) -> Unit,
     navController: NavController,
 ) {
@@ -45,6 +46,7 @@ fun NavGraphBuilder.loanAccountSummary(
             onChargesClicked = onChargesClicked,
             approveLoan = approveLoan,
             disburseLoan = disburseLoan,
+            amountTransferScreen = amountTransferScreen,
             onRepaymentClick = onRepaymentClick,
             onNavigateBack = onBackPressed,
             navController = navController,

@@ -40,8 +40,12 @@ internal class LoanAccountSummaryViewModel(
 
     override fun handleAction(action: LoanAccountSummaryAction) {
         when (action) {
-            LoanAccountSummaryAction.OnRetry -> loadLoanById()
-            LoanAccountSummaryAction.NavigateBack -> sendEvent(LoanAccountSummaryEvent.NavigateBack)
+            LoanAccountSummaryAction.OnRetry -> {
+                loadLoanById()
+            }
+            LoanAccountSummaryAction.NavigateBack -> {
+                sendEvent(LoanAccountSummaryEvent.NavigateBack)
+            }
             is LoanAccountSummaryAction.OnMoreInfoClick -> {
                 sendEvent(LoanAccountSummaryEvent.NavigateToMoreInfo(loanAccountNumber))
             }
@@ -99,6 +103,14 @@ internal class LoanAccountSummaryViewModel(
                 mutableStateFlow.update { it.copy(openDropdown = false) }
                 handleDropdownAction(action.action)
             }
+
+            LoanAccountSummaryAction.NavigateToLoanTransfer -> {
+                sendEvent(
+                    LoanAccountSummaryEvent.NavigateToLoanTransfer(
+                        loanAccountNumber,
+                    ),
+                )
+            }
         }
     }
 
@@ -106,12 +118,16 @@ internal class LoanAccountSummaryViewModel(
         when (action) {
             LoanSummaryDropDownAction.OnMoreInfoClick ->
                 sendEvent(LoanAccountSummaryEvent.NavigateToMoreInfo(loanAccountNumber))
+
             LoanSummaryDropDownAction.OnTransactionsClick ->
                 sendEvent(LoanAccountSummaryEvent.NavigateToTransactions(loanAccountNumber))
+
             LoanSummaryDropDownAction.OnRepaymentScheduleClick ->
                 sendEvent(LoanAccountSummaryEvent.NavigateToRepaymentSchedule(loanAccountNumber))
+
             LoanSummaryDropDownAction.OnDocumentsClick ->
                 sendEvent(LoanAccountSummaryEvent.NavigateToDocuments(loanAccountNumber))
+
             LoanSummaryDropDownAction.OnChargesClick ->
                 sendEvent(LoanAccountSummaryEvent.NavigateToCharges(loanAccountNumber))
         }
@@ -132,10 +148,13 @@ internal class LoanAccountSummaryViewModel(
                         if (loan != null) {
                             fillLoanSummary(loan)
                         } else {
-                            val errorMessage = getString(Res.string.feature_loan_unknown_error_occured)
+                            val errorMessage =
+                                getString(Res.string.feature_loan_unknown_error_occured)
                             mutableStateFlow.update {
                                 it.copy(
-                                    dialogState = LoanAccountSummaryState.DialogState.Error(errorMessage),
+                                    dialogState = LoanAccountSummaryState.DialogState.Error(
+                                        errorMessage,
+                                    ),
                                 )
                             }
                         }
@@ -173,26 +192,78 @@ internal class LoanAccountSummaryViewModel(
                 dialogState = null,
                 inflateLoanSummary = shouldInflateLoanSummary,
 
-                totalLoanFormat = formatCurrency(summary?.totalExpectedRepayment, currencyCode, decimalPlaces),
-                loanAmountPaid = formatCurrency(summary?.totalRepayment, currencyCode, decimalPlaces),
-                outstandingAmount = formatCurrency(summary?.totalOutstanding, currencyCode, decimalPlaces),
+                totalLoanFormat = formatCurrency(
+                    summary?.totalExpectedRepayment,
+                    currencyCode,
+                    decimalPlaces,
+                ),
+                loanAmountPaid = formatCurrency(
+                    summary?.totalRepayment,
+                    currencyCode,
+                    decimalPlaces,
+                ),
+                outstandingAmount = formatCurrency(
+                    summary?.totalOutstanding,
+                    currencyCode,
+                    decimalPlaces,
+                ),
                 overdueAmount = formatCurrency(summary?.totalOverdue, currencyCode, decimalPlaces),
 
-                principalDisbursed = formatCurrency(summary?.principalDisbursed, currencyCode, decimalPlaces),
+                principalDisbursed = formatCurrency(
+                    summary?.principalDisbursed,
+                    currencyCode,
+                    decimalPlaces,
+                ),
                 principalPaid = formatCurrency(summary?.principalPaid, currencyCode, decimalPlaces),
-                principalOutStanding = formatCurrency(summary?.principalOutstanding, currencyCode, decimalPlaces),
+                principalOutStanding = formatCurrency(
+                    summary?.principalOutstanding,
+                    currencyCode,
+                    decimalPlaces,
+                ),
 
-                interestCharged = formatCurrency(summary?.interestCharged, currencyCode, decimalPlaces),
+                interestCharged = formatCurrency(
+                    summary?.interestCharged,
+                    currencyCode,
+                    decimalPlaces,
+                ),
                 interestPaid = formatCurrency(summary?.interestPaid, currencyCode, decimalPlaces),
-                interestOutstanding = formatCurrency(summary?.interestOutstanding, currencyCode, decimalPlaces),
+                interestOutstanding = formatCurrency(
+                    summary?.interestOutstanding,
+                    currencyCode,
+                    decimalPlaces,
+                ),
 
-                feeChargesCharged = formatCurrency(summary?.feeChargesCharged, currencyCode, decimalPlaces),
-                feeChargesPaid = formatCurrency(summary?.feeChargesPaid, currencyCode, decimalPlaces),
-                feeChargesOutstanding = formatCurrency(summary?.feeChargesOutstanding, currencyCode, decimalPlaces),
+                feeChargesCharged = formatCurrency(
+                    summary?.feeChargesCharged,
+                    currencyCode,
+                    decimalPlaces,
+                ),
+                feeChargesPaid = formatCurrency(
+                    summary?.feeChargesPaid,
+                    currencyCode,
+                    decimalPlaces,
+                ),
+                feeChargesOutstanding = formatCurrency(
+                    summary?.feeChargesOutstanding,
+                    currencyCode,
+                    decimalPlaces,
+                ),
 
-                penaltyChargesCharged = formatCurrency(summary?.penaltyChargesCharged, currencyCode, decimalPlaces),
-                penaltyChargesPaid = formatCurrency(summary?.penaltyChargesPaid, currencyCode, decimalPlaces),
-                penaltyChargesOutstanding = formatCurrency(summary?.penaltyChargesOutstanding, currencyCode, decimalPlaces),
+                penaltyChargesCharged = formatCurrency(
+                    summary?.penaltyChargesCharged,
+                    currencyCode,
+                    decimalPlaces,
+                ),
+                penaltyChargesPaid = formatCurrency(
+                    summary?.penaltyChargesPaid,
+                    currencyCode,
+                    decimalPlaces,
+                ),
+                penaltyChargesOutstanding = formatCurrency(
+                    summary?.penaltyChargesOutstanding,
+                    currencyCode,
+                    decimalPlaces,
+                ),
             )
         }
     }
@@ -279,6 +350,7 @@ enum class LoanSummaryDropDownAction {
 
 sealed interface LoanAccountSummaryEvent {
     data object NavigateBack : LoanAccountSummaryEvent
+    data class NavigateToLoanTransfer(val loanId: Int) : LoanAccountSummaryEvent
     data class NavigateToMoreInfo(val loanId: Int) : LoanAccountSummaryEvent
     data class NavigateToTransactions(val loanId: Int) : LoanAccountSummaryEvent
     data class NavigateToRepaymentSchedule(val loanId: Int) : LoanAccountSummaryEvent
@@ -308,6 +380,7 @@ sealed interface LoanAccountSummaryAction {
     data object OnLoanIdCopied : LoanAccountSummaryAction
     data object OnMessageShown : LoanAccountSummaryAction
     data object ToggleDropdown : LoanAccountSummaryAction
+    data object NavigateToLoanTransfer : LoanAccountSummaryAction
 
     data class DropdownAction(val action: LoanSummaryDropDownAction) : LoanAccountSummaryAction
 }
