@@ -12,11 +12,11 @@ package com.mifos.room.dao
 import com.mifos.room.entities.survey.QuestionDatasEntity
 import com.mifos.room.entities.survey.ResponseDatasEntity
 import com.mifos.room.entities.survey.SurveyEntity
-import com.mifos.room.utils.Dao
-import com.mifos.room.utils.Insert
-import com.mifos.room.utils.OnConflictStrategy
-import com.mifos.room.utils.Query
 import kotlinx.coroutines.flow.Flow
+import template.core.base.database.Dao
+import template.core.base.database.Insert
+import template.core.base.database.OnConflictStrategy
+import template.core.base.database.Query
 
 /**
  * Created by Pronay Sarker on 12/02/2025 (9:33 PM)

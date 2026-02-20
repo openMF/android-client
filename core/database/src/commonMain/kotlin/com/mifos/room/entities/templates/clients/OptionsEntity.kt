@@ -11,10 +11,10 @@ package com.mifos.room.entities.templates.clients
 
 import com.mifos.core.model.utils.Parcelable
 import com.mifos.core.model.utils.Parcelize
-import com.mifos.room.utils.Entity
-import com.mifos.room.utils.PrimaryKey
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import template.core.base.database.Entity
+import template.core.base.database.PrimaryKey
 
 @Parcelize
 @Serializable

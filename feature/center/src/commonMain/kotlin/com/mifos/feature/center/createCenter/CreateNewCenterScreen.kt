@@ -57,6 +57,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.mifos.core.common.utils.ApiDateFormatter
 import com.mifos.core.common.utils.formatDate
 import com.mifos.core.designsystem.component.MifosButton
 import com.mifos.core.designsystem.component.MifosDatePickerTextField
@@ -295,8 +296,8 @@ private fun CreateNewCenterContent(
                                 null
                             },
                             officeId = officeId,
-                            dateFormat = "dd MMMM yyyy",
-                            locale = "en",
+                            dateFormat = ApiDateFormatter.DATE_FORMAT,
+                            locale = ApiDateFormatter.LOCALE,
                         ),
                     )
                 }

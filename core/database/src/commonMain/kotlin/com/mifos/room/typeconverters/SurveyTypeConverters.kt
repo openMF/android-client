@@ -12,9 +12,9 @@ package com.mifos.room.typeconverters
 import com.mifos.room.entities.survey.ComponentDatasEntity
 import com.mifos.room.entities.survey.QuestionDatasEntity
 import com.mifos.room.entities.survey.ResponseDatasEntity
-import com.mifos.room.utils.TypeConverter
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
+import template.core.base.database.TypeConverter
 
 /**
  * Created by Pronay Sarker on 13/02/2025 (2:53 AM)

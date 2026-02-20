@@ -28,8 +28,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FabPosition
 import androidx.compose.material3.FilledTonalButton
@@ -139,7 +137,7 @@ fun GroupsListScreen(
     Scaffold(
         modifier = modifier,
         floatingActionButton = {
-            MifosFAB(icon = Icons.Default.Add, onClick = onAddGroupClick)
+            MifosFAB(icon = MifosIcons.Add, onClick = onAddGroupClick)
         },
         floatingActionButtonPosition = FabPosition.End,
         topBar = {

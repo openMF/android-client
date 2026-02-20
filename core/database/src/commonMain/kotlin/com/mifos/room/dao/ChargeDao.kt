@@ -10,11 +10,11 @@
 package com.mifos.room.dao
 
 import com.mifos.room.entities.client.ChargesEntity
-import com.mifos.room.utils.Dao
-import com.mifos.room.utils.Insert
-import com.mifos.room.utils.OnConflictStrategy
-import com.mifos.room.utils.Query
 import kotlinx.coroutines.flow.Flow
+import template.core.base.database.Dao
+import template.core.base.database.Insert
+import template.core.base.database.OnConflictStrategy
+import template.core.base.database.Query
 
 /**
  * Created by Pronay Sarker on 14/02/2025 (3:32 PM)

@@ -10,11 +10,11 @@
 package com.mifos.room.dao
 
 import com.mifos.room.entities.organisation.OfficeEntity
-import com.mifos.room.utils.Dao
-import com.mifos.room.utils.Insert
-import com.mifos.room.utils.OnConflictStrategy
-import com.mifos.room.utils.Query
 import kotlinx.coroutines.flow.Flow
+import template.core.base.database.Dao
+import template.core.base.database.Insert
+import template.core.base.database.OnConflictStrategy
+import template.core.base.database.Query
 
 @Dao
 interface OfficeDao {

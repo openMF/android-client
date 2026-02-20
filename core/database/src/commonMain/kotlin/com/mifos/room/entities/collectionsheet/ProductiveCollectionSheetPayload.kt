@@ -9,6 +9,7 @@
  */
 package com.mifos.room.entities.collectionsheet
 
+import com.mifos.core.common.utils.ApiDateFormatter
 import com.mifos.core.model.utils.Parcelable
 import com.mifos.core.model.utils.Parcelize
 import com.mifos.room.entities.noncore.BulkRepaymentTransactions
@@ -24,9 +25,9 @@ data class ProductiveCollectionSheetPayload(
 
     var calendarId: Int? = 0,
 
-    var dateFormat: String? = "dd MMMM yyyy",
+    var dateFormat: String? = ApiDateFormatter.DATE_FORMAT,
 
-    var locale: String? = "en",
+    var locale: String? = ApiDateFormatter.LOCALE,
 
     var transactionDate: String? = null,
 ) : Parcelable
