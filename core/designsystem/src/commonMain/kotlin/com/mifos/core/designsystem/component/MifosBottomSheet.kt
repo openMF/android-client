@@ -21,7 +21,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
 import androidx.compose.material3.contentColorFor
@@ -37,19 +36,19 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.dp
 import com.arkivanov.essenty.backhandler.BackCallback
 import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.designsystem.theme.MifosTypography
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.ui.tooling.preview.Preview
+import template.core.base.designsystem.theme.KptTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MifosBottomSheet(
     onDismiss: () -> Unit,
     modifier: Modifier = Modifier,
-    containerColor: Color = MaterialTheme.colorScheme.onPrimary,
+    containerColor: Color = KptTheme.colorScheme.onPrimary,
     contentColor: Color = contentColorFor(containerColor),
     content: @Composable () -> Unit,
 ) {
@@ -92,7 +91,7 @@ fun MifosBottomSheet(
 fun MifosBottomSheetOptionItem(
     label: String,
     icon: ImageVector,
-    iconBackgroundColor: Color = MaterialTheme.colorScheme.onPrimary,
+    iconBackgroundColor: Color = KptTheme.colorScheme.onPrimary,
     onClick: () -> Unit,
 ) {
     Column(
@@ -112,7 +111,7 @@ fun MifosBottomSheetOptionItem(
                 modifier = Modifier
                     .padding(DesignToken.padding.medium)
                     .size(DesignToken.sizes.iconMedium),
-                tint = MaterialTheme.colorScheme.primary,
+                tint = KptTheme.colorScheme.primary,
             )
         }
         Spacer(Modifier.height(DesignToken.padding.small))
@@ -146,7 +145,7 @@ fun MifosBottomSheetOptionItem(
                 modifier = Modifier
                     .padding(DesignToken.padding.medium)
                     .size(DesignToken.sizes.iconAverage),
-                tint = MaterialTheme.colorScheme.primary,
+                tint = KptTheme.colorScheme.primary,
             )
         }
         Spacer(Modifier.height(DesignToken.padding.small))
@@ -176,8 +175,8 @@ fun MifosBottomSheetOptionItem(
                 .clickable(onClick = onClick),
             shape = DesignToken.shapes.small,
             colors = CardDefaults.cardColors(
-                containerColor = MaterialTheme.colorScheme.onPrimary,
-                contentColor = MaterialTheme.colorScheme.primary,
+                containerColor = KptTheme.colorScheme.onPrimary,
+                contentColor = KptTheme.colorScheme.primary,
             ),
         ) {
             Icon(
@@ -202,7 +201,7 @@ private fun MifosBottomSheetPreview() {
     MifosBottomSheet(
         content = {
             Box {
-                Modifier.height(100.dp)
+                Modifier.height(DesignToken.sizes.imageDp100)
             }
         },
         onDismiss = {},

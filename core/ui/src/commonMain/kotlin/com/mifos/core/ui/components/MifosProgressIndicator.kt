@@ -22,14 +22,13 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import com.mifos.core.designsystem.theme.AppColors
+import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.designsystem.theme.MifosTheme
 import com.mifos.core.ui.util.LottieConstants
 import io.github.alexzhirkevich.compottie.LottieCompositionSpec
@@ -37,6 +36,8 @@ import io.github.alexzhirkevich.compottie.animateLottieCompositionAsState
 import io.github.alexzhirkevich.compottie.rememberLottieComposition
 import io.github.alexzhirkevich.compottie.rememberLottiePainter
 import org.jetbrains.compose.ui.tooling.preview.Preview
+import template.core.base.designsystem.KptTheme
+import template.core.base.designsystem.theme.KptTheme
 
 @Composable
 fun MifosProgressIndicator(
@@ -111,10 +112,10 @@ fun MifosPagingAppendProgress(modifier: Modifier = Modifier) {
     ) {
         CircularProgressIndicator(
             modifier = Modifier
-                .width(40.dp)
-                .height(40.dp)
-                .padding(8.dp),
-            strokeWidth = 4.dp,
+                .width(DesignToken.sizes.imageDp40)
+                .height(DesignToken.sizes.imageDp40)
+                .padding(KptTheme.spacing.sm),
+            strokeWidth = DesignToken.strokes.dp4,
         )
     }
 }
@@ -140,7 +141,7 @@ fun MifosProgressIndicatorMini(
                 progress = { progress },
             ),
             contentDescription = "Lottie animation",
-            modifier = Modifier.height(100.dp),
+            modifier = Modifier.height(DesignToken.sizes.imageDp100),
         )
     }
 }
@@ -172,7 +173,7 @@ private fun Overlay_Loading_Preview() {
 @Preview
 @Composable
 private fun MifosPagingAppendProgressPreview() {
-    MaterialTheme {
+    KptTheme {
         MifosPagingAppendProgress()
     }
 }

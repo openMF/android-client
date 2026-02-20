@@ -17,7 +17,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Card
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -27,8 +26,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
+import com.mifos.core.designsystem.theme.DesignToken
 import core.designsystem.generated.resources.Res
 import core.designsystem.generated.resources.core_designsystem_cancel
 import core.designsystem.generated.resources.core_designsystem_dialog_action_ok
@@ -37,6 +36,8 @@ import core.designsystem.generated.resources.core_designsystem_enter_tenant
 import core.designsystem.generated.resources.core_designsystem_pref_base_url_title
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
+import template.core.base.designsystem.KptTheme
+import template.core.base.designsystem.theme.KptTheme
 
 // TODO: Remove it during settings new screen ui someone implemented it wrong.
 // It should not be in design system
@@ -58,10 +59,10 @@ fun UpdateEndpointDialogScreen(
             Column(
                 modifier = modifier
                     .fillMaxWidth()
-                    .padding(20.dp),
+                    .padding(DesignToken.padding.largeIncreased),
             ) {
                 Text(text = stringResource(Res.string.core_designsystem_pref_base_url_title))
-                Spacer(modifier = Modifier.height(8.dp))
+                Spacer(modifier = Modifier.height(KptTheme.spacing.sm))
 
                 baseURL?.let {
                     OutlinedTextField(
@@ -71,7 +72,7 @@ fun UpdateEndpointDialogScreen(
                     )
                 }
 
-                Spacer(modifier = Modifier.height(8.dp))
+                Spacer(modifier = Modifier.height(KptTheme.spacing.sm))
 
                 tenant?.let {
                     OutlinedTextField(
@@ -108,7 +109,7 @@ fun UpdateEndpointDialogScreen(
 @Preview
 @Composable
 fun UpdateEndpointDialogScreenPreview() {
-    MaterialTheme {
+    KptTheme {
         UpdateEndpointDialogScreen(
             initialBaseURL = "https://demo.mifos.org",
             initialTenant = "default",

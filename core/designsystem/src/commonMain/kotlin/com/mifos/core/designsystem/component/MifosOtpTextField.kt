@@ -20,7 +20,6 @@ import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -34,9 +33,10 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.dp
+import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.designsystem.theme.MifosTheme
 import org.jetbrains.compose.ui.tooling.preview.Preview
+import template.core.base.designsystem.theme.KptTheme
 
 @Composable
 fun MifosOtpTextField(
@@ -50,7 +50,7 @@ fun MifosOtpTextField(
     Column(
         modifier = modifier
             .fillMaxWidth()
-            .padding(16.dp),
+            .padding(KptTheme.spacing.md),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         BasicTextField(
@@ -88,7 +88,7 @@ fun MifosOtpTextField(
                             index = index,
                             text = otpText,
                         )
-                        Spacer(modifier = Modifier.width(8.dp))
+                        Spacer(modifier = Modifier.width(KptTheme.spacing.sm))
                     }
                 }
             },
@@ -97,10 +97,10 @@ fun MifosOtpTextField(
             // display error message in text
             Text(
                 text = "Invalid OTP",
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.error,
+                style = KptTheme.typography.bodyMedium,
+                color = KptTheme.colorScheme.error,
                 textAlign = TextAlign.Center,
-                modifier = Modifier.padding(top = 8.dp),
+                modifier = Modifier.padding(top = KptTheme.spacing.sm),
             )
         }
     }
@@ -120,14 +120,14 @@ private fun CharView(
     }
     Text(
         modifier = modifier
-            .width(40.dp)
+            .width(DesignToken.sizes.textDp40)
             .wrapContentHeight(align = Alignment.CenterVertically),
         text = char,
-        style = MaterialTheme.typography.headlineSmall,
+        style = KptTheme.typography.headlineSmall,
         color = if (isFocused) {
-            MaterialTheme.colorScheme.secondary
+            KptTheme.colorScheme.secondary
         } else {
-            MaterialTheme.colorScheme.tertiary
+            KptTheme.colorScheme.tertiary
         },
         textAlign = TextAlign.Center,
     )
