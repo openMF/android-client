@@ -89,14 +89,15 @@ object ApiDateFormatter {
     fun formatForApi(date: LocalDate, pattern: DateFormatPattern): String {
         val day = date.dayOfMonth.toString().padStart(2, '0')
         val month = date.month
+        val monthNumber = date.monthNumber.toString().padStart(2, '0')
         val year = date.year
 
         return when (pattern) {
             DateFormatPattern.FULL_MONTH -> "$day ${month.toFullName()} $year"
             DateFormatPattern.SHORT_MONTH -> "$day ${month.toShortName()} $year"
-            DateFormatPattern.NUMERIC_DASH -> "$day-${month.number.toString().padStart(2, '0')}-$year"
-            DateFormatPattern.NUMERIC_SLASH -> "$day/${month.number.toString().padStart(2, '0')}/$year"
-            DateFormatPattern.ISO -> "$year-${month.number.toString().padStart(2, '0')}-$day"
+            DateFormatPattern.NUMERIC_DASH -> "$day-$monthNumber-$year"
+            DateFormatPattern.NUMERIC_SLASH -> "$day/$monthNumber/$year"
+            DateFormatPattern.ISO -> "$year-$monthNumber-$day"
             DateFormatPattern.FULL_MONTH_WITH_TIME -> "$day ${month.toFullName()} $year 00:00"
         }
     }
@@ -145,6 +146,7 @@ object ApiDateFormatter {
     ): String {
         val day = dateTime.dayOfMonth.toString().padStart(2, '0')
         val month = dateTime.month
+        val monthNumber = dateTime.monthNumber.toString().padStart(2, '0')
         val year = dateTime.year
         val hour = dateTime.hour.toString().padStart(2, '0')
         val minute = dateTime.minute.toString().padStart(2, '0')
@@ -152,9 +154,9 @@ object ApiDateFormatter {
         return when (pattern) {
             DateFormatPattern.FULL_MONTH -> "$day ${month.toFullName()} $year"
             DateFormatPattern.SHORT_MONTH -> "$day ${month.toShortName()} $year"
-            DateFormatPattern.NUMERIC_DASH -> "$day-${month.number.toString().padStart(2, '0')}-$year"
-            DateFormatPattern.NUMERIC_SLASH -> "$day/${month.number.toString().padStart(2, '0')}/$year"
-            DateFormatPattern.ISO -> "$year-${month.number.toString().padStart(2, '0')}-$day"
+            DateFormatPattern.NUMERIC_DASH -> "$day-$monthNumber-$year"
+            DateFormatPattern.NUMERIC_SLASH -> "$day/$monthNumber/$year"
+            DateFormatPattern.ISO -> "$year-$monthNumber-$day"
             DateFormatPattern.FULL_MONTH_WITH_TIME -> "$day ${month.toFullName()} $year $hour:$minute"
         }
     }
