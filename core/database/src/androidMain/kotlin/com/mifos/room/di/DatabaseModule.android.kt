@@ -11,20 +11,21 @@ package com.mifos.room.di
 
 import androidx.sqlite.driver.bundled.BundledSQLiteDriver
 import com.mifos.core.common.network.MifosDispatchers
+import com.mifos.core.common.utils.Constants
 import com.mifos.room.MifosDatabase
-import com.mifos.room.utils.MifosDatabaseFactory
 import org.koin.android.ext.koin.androidApplication
 import org.koin.core.module.Module
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
+import template.core.base.database.AppDatabaseFactory
 import kotlin.coroutines.CoroutineContext
 
 actual val PlatformSpecificDatabaseModule: Module = module {
     single<MifosDatabase> {
         val ioContext: CoroutineContext = getKoin().get(named(MifosDispatchers.IO.name))
 
-        MifosDatabaseFactory(androidApplication())
-            .createDatabase()
+        AppDatabaseFactory(androidApplication())
+            .createDatabase(MifosDatabase::class.java, Constants.DATABASE_NAME)
             .fallbackToDestructiveMigrationOnDowngrade(false)
             .addMigrations(MifosDatabase.MIGRATION_1_2)
             .setDriver(BundledSQLiteDriver())

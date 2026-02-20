@@ -11,7 +11,7 @@ package com.mifos.core.ui.util
 
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asSkiaBitmap
-import io.github.vinceglb.filekit.core.FileKit
+import io.github.vinceglb.filekit.FileKit
 import java.awt.Desktop
 import java.net.URI
 
