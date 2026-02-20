@@ -9,12 +9,12 @@
  */
 package com.mifos.room.entities.client
 
-import com.mifos.room.utils.ColumnInfo
-import com.mifos.room.utils.Entity
-import com.mifos.room.utils.PrimaryKey
-import com.mifos.room.utils.UNDEFINED
-import com.mifos.room.utils.UNSPECIFIED
-import com.mifos.room.utils.VALUE_UNSPECIFIED
+import template.core.base.database.CollationSequence.UNSPECIFIED
+import template.core.base.database.ColumnInfo
+import template.core.base.database.ColumnInfoTypeAffinity.UNDEFINED
+import template.core.base.database.ColumnInfoTypeAffinity.VALUE_UNSPECIFIED
+import template.core.base.database.Entity
+import template.core.base.database.PrimaryKey
 
 @Entity(
     tableName = "ClientAddress",

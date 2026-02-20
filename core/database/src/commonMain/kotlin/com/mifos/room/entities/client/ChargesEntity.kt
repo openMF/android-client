@@ -11,9 +11,9 @@ package com.mifos.room.entities.client
 
 import com.mifos.core.model.utils.Parcelable
 import com.mifos.core.model.utils.Parcelize
-import com.mifos.room.utils.Entity
-import com.mifos.room.utils.PrimaryKey
 import kotlinx.serialization.Serializable
+import template.core.base.database.Entity
+import template.core.base.database.PrimaryKey
 
 /**
  * Created by nellyk on 2/15/2016.

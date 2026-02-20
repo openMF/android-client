@@ -29,6 +29,7 @@ kotlin{
             implementation(libs.kotlinx.serialization.json)
             api(projects.core.common)
             api(projects.core.model)
+            api(projects.coreBase.database)
         }
 
         androidMain.dependencies {
