@@ -83,7 +83,7 @@ interface LoanService {
      * Used to preview the schedule before submitting the loan application.
      */
     @POST(APIEndPoint.CREATE_LOANS_ACCOUNTS + "?command=calculateLoanSchedule")
-    fun calculateLoanSchedule(@Body loansPayload: LoansPayload?): Flow<LoanWithAssociationsEntity>
+    fun calculateLoanSchedule(@Body loansPayload: LoansPayload?): Flow<HttpResponse>
 
     @GET(APIEndPoint.CREATE_LOANS_ACCOUNTS + "/template?templateType=individual")
     fun getLoansAccountTemplate(

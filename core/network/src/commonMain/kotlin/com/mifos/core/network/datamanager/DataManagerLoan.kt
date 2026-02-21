@@ -12,6 +12,7 @@ package com.mifos.core.network.datamanager
 import com.mifos.core.common.utils.extractErrorMessage
 import com.mifos.core.datastore.UserPreferencesRepository
 import com.mifos.core.model.objects.account.loan.LoanDisbursement
+import com.mifos.core.model.objects.account.loan.RepaymentSchedule
 import com.mifos.core.network.BaseApiManager
 import com.mifos.core.network.GenericResponse
 import com.mifos.core.network.model.LoansPayload
@@ -24,6 +25,7 @@ import com.mifos.room.entities.templates.loans.LoanTemplate
 import com.mifos.room.entities.templates.loans.LoanTransactionTemplate
 import com.mifos.room.helper.LoanDaoHelper
 import io.ktor.client.statement.HttpResponse
+import io.ktor.client.statement.bodyAsText
 import io.ktor.http.isSuccess
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
@@ -31,6 +33,7 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
+import kotlinx.serialization.json.Json
 
 /**
  * Created by Rajan Maurya on 15/07/16.
@@ -299,7 +302,15 @@ class DataManagerLoan(
      * @param loansPayload The loan parameters to calculate the schedule for
      * @return LoanWithAssociationsEntity containing the calculated repayment schedule
      */
-    fun calculateLoanSchedule(loansPayload: LoansPayload): Flow<LoanWithAssociationsEntity> {
-        return mBaseApiManager.loanService.calculateLoanSchedule(loansPayload)
+    fun calculateLoanSchedule(loansPayload: LoansPayload): Flow<RepaymentSchedule> {
+        return mBaseApiManager.loanService.calculateLoanSchedule(loansPayload).map { response ->
+            if (!response.status.isSuccess()) {
+                val errorMessage = extractErrorMessage(response)
+
+                throw IllegalStateException(errorMessage)
+            }
+
+            Json { ignoreUnknownKeys = true }.decodeFromString<RepaymentSchedule>(response.bodyAsText())
+        }
     }
 }

@@ -11,8 +11,8 @@ package com.mifos.core.domain.useCases
 
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.repository.LoanAccountRepository
+import com.mifos.core.model.objects.account.loan.RepaymentSchedule
 import com.mifos.core.network.model.LoansPayload
-import com.mifos.room.entities.accounts.loans.LoanWithAssociationsEntity
 import kotlinx.coroutines.flow.Flow
 
 /**
@@ -23,6 +23,6 @@ class CalculateLoanScheduleUseCase(
     private val loanAccountRepository: LoanAccountRepository,
 ) {
 
-    operator fun invoke(loansPayload: LoansPayload): Flow<DataState<LoanWithAssociationsEntity>> =
+    operator fun invoke(loansPayload: LoansPayload): Flow<DataState<RepaymentSchedule>> =
         loanAccountRepository.calculateLoanSchedule(loansPayload)
 }

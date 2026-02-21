@@ -24,18 +24,17 @@ import com.mifos.core.common.utils.CurrencyFormatter
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.common.utils.DateHelper
 import com.mifos.core.data.repository.ClientDetailsRepository
-import com.mifos.core.data.repository.SyncClientsDialogRepository
 import com.mifos.core.data.util.NetworkMonitor
 import com.mifos.core.domain.useCases.CalculateLoanScheduleUseCase
 import com.mifos.core.domain.useCases.CreateLoanAccountUseCase
 import com.mifos.core.domain.useCases.GetAllLoanUseCase
 import com.mifos.core.domain.useCases.GetLoansAccountTemplateUseCase
+import com.mifos.core.model.objects.account.loan.RepaymentSchedule
 import com.mifos.core.model.objects.organisations.LoanProducts
 import com.mifos.core.network.model.CollateralItem
 import com.mifos.core.network.model.LoansPayload
 import com.mifos.core.ui.util.BaseViewModel
 import com.mifos.feature.loan.newLoanAccount.NewLoanAccountState.DialogState
-import com.mifos.room.entities.accounts.loans.LoanWithAssociationsEntity
 import com.mifos.room.entities.templates.loans.LoanTemplate
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
@@ -50,14 +49,14 @@ internal class NewLoanAccountViewModel(
     private val getAllLoanUseCase: GetAllLoanUseCase,
     private val repo: ClientDetailsRepository,
     private val getLoansAccountTemplateUseCase: GetLoansAccountTemplateUseCase,
-    private val getLoanWithAssociations: SyncClientsDialogRepository,
     private val networkMonitor: NetworkMonitor,
     private val loanUseCase: CreateLoanAccountUseCase,
     private val calculateLoanScheduleUseCase: CalculateLoanScheduleUseCase,
     val savedStateHandle: SavedStateHandle,
 ) : BaseViewModel<NewLoanAccountState, NewLoanAccountEvent, NewLoanAccountAction>(
     initialState = run {
-        NewLoanAccountState(clientId = savedStateHandle.toRoute<NewLoanAccountRoute>().clientId)
+        val route = savedStateHandle.toRoute<NewLoanAccountRoute>()
+        NewLoanAccountState(clientId = route.clientId, accountNo = route.accountNo)
     },
 ) {
 
@@ -254,9 +253,15 @@ internal class NewLoanAccountViewModel(
 
             is NewLoanAccountAction.RepaymentScheduler -> {
                 moveToNextStep()
-                if (state.repaymentSchedules.isEmpty()) {
+                if (state.noOfRepaymentsPreviousState != state.noOfRepayments) {
                     viewModelScope.launch {
                         repaymentScheduler()
+                    }
+
+                    mutableStateFlow.update {
+                        it.copy(
+                            noOfRepaymentsPreviousState = state.noOfRepayments,
+                        )
                     }
                 }
             }
@@ -888,11 +893,24 @@ internal class NewLoanAccountViewModel(
             calculateLoanScheduleUseCase(payload).collect { dataState ->
                 when (dataState) {
                     is DataState.Error -> {
-                        mutableStateFlow.update {
-                            it.copy(
-                                screenState = NewLoanAccountState.ScreenState.Error(dataState.message),
-                                isOverLayLoadingActive = false,
-                            )
+                        if (dataState.exception is IllegalStateException) {
+                            mutableStateFlow.update {
+                                it.copy(
+                                    dialogState = NewLoanAccountState.DialogState.SuccessResponseStatus(
+                                        successStatus = false,
+                                        msg = dataState.message,
+                                    ),
+                                    launchEffectKey = Random.nextInt(),
+                                    isOverLayLoadingActive = false,
+                                )
+                            }
+                        } else {
+                            mutableStateFlow.update {
+                                it.copy(
+                                    screenState = NewLoanAccountState.ScreenState.Error(dataState.message),
+                                    isOverLayLoadingActive = false,
+                                )
+                            }
                         }
                     }
 
@@ -906,12 +924,12 @@ internal class NewLoanAccountViewModel(
 
                     is DataState.Success -> {
                         val schedulerDetails = mapOf(
-                            Res.string.account_number to (dataState.data.accountNo ?: "Preview"),
+                            Res.string.account_number to (state.accountNo),
                             Res.string.disbursement_date to state.expectedDisbursementDate.ifEmpty { "N/A" },
                             Res.string.principle_paid_off to CurrencyFormatter.format(
-                                balance = 0.0,
-                                currencyCode = dataState.data.currency.code ?: "N/A",
-                                maximumFractionDigits = dataState.data.currency.decimalPlaces ?: 0,
+                                balance = state.repaymentSchedule.totalPrincipalPaid,
+                                currencyCode = dataState.data.currency?.code ?: "N/A",
+                                maximumFractionDigits = dataState.data.currency?.decimalPlaces ?: 0,
                             ),
                             Res.string.installment_paid to "0",
                             Res.string.total_installments to state.noOfRepayments.toString(),
@@ -919,10 +937,11 @@ internal class NewLoanAccountViewModel(
 
                         mutableStateFlow.update {
                             it.copy(
-                                repaymentSchedules = schedulerDetails,
+                                repaymentSchedulesSummary = schedulerDetails,
                                 screenState = NewLoanAccountState.ScreenState.Success,
-                                loanWithAssociationsEntity = dataState.data,
+                                repaymentSchedule = dataState.data,
                                 isOverLayLoadingActive = false,
+                                launchEffectKey = Random.nextInt(),
                             )
                         }
                     }
@@ -1003,11 +1022,12 @@ data class NewLoanAccountState
 @OptIn(ExperimentalTime::class)
 constructor(
     val launchEffectKey: Int? = null,
+    val accountNo: String = "",
     val clientId: Int,
     val productId: Int? = null,
     val productLoans: List<LoanProducts> = emptyList(),
-    val loanWithAssociationsEntity: LoanWithAssociationsEntity = LoanWithAssociationsEntity(),
-    val repaymentSchedules: Map<StringResource, String> = emptyMap(),
+    val repaymentSchedule: RepaymentSchedule = RepaymentSchedule(),
+    val repaymentSchedulesSummary: Map<StringResource, String> = emptyMap(),
     val loanTemplate: LoanTemplate? = null,
     val currentStep: Int = 0,
     val totalSteps: Int = 4,
@@ -1027,6 +1047,7 @@ constructor(
     val isCheckedStandingInstructions: Boolean = false,
     val principalAmount: String = "0",
     val noOfRepayments: Int = 0,
+    val noOfRepaymentsPreviousState: Int = 0,
     val firstRepaymentDate: String = DateHelper.getDateAsStringFromLong(
         Clock.System.now().toEpochMilliseconds(),
     ),
