@@ -16,7 +16,6 @@ import androidclient.feature.loan.generated.resources.feature_loan_export_transa
 import androidclient.feature.loan.generated.resources.feature_loan_from_date
 import androidclient.feature.loan.generated.resources.feature_loan_generate_report
 import androidclient.feature.loan.generated.resources.feature_loan_invalid_date_range
-import androidclient.feature.loan.generated.resources.feature_loan_select
 import androidclient.feature.loan.generated.resources.feature_loan_to_date
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -28,18 +27,12 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.DatePicker
-import androidx.compose.material3.DatePickerDialog
-import androidx.compose.material3.DatePickerState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.SelectableDates
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
-import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -48,19 +41,14 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.mifos.core.common.utils.DateHelper.format
 import com.mifos.core.designsystem.component.MifosButton
 import com.mifos.core.designsystem.component.MifosCustomDialog
-import com.mifos.core.designsystem.component.MifosDatePickerTextField
 import com.mifos.core.designsystem.component.MifosOutlinedButton
 import com.mifos.core.designsystem.icon.MifosIcons
+import com.mifos.core.ui.components.MifosDateRangePicker
 import kotlinx.datetime.LocalDate
-import kotlinx.datetime.TimeZone
-import kotlinx.datetime.toLocalDateTime
 import org.jetbrains.compose.resources.stringResource
-import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
-import kotlin.time.Instant
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalTime::class)
 @Composable
@@ -68,40 +56,9 @@ internal fun ExportTransactionsDialog(
     onDismiss: () -> Unit,
     onGenerateReport: (fromDate: Long, toDate: Long) -> Unit,
 ) {
-    var showFromDatePicker by rememberSaveable { mutableStateOf(false) }
-    var showToDatePicker by rememberSaveable { mutableStateOf(false) }
     var fromDate: Long? by rememberSaveable { mutableStateOf(null) }
     var toDate: Long? by rememberSaveable { mutableStateOf(null) }
-    val isInvalidDateRange = fromDate != null && toDate != null && toDate!! < fromDate!!
     val isValidDateRange = fromDate != null && toDate != null && toDate!! >= fromDate!!
-
-    val fromDatePickerState = rememberDatePickerState(
-        initialSelectedDateMillis = Clock.System.now().toEpochMilliseconds(),
-        selectableDates = createSelectableDatesFrom(LocalDate.parse("2000-01-01")),
-    )
-
-    val toDatePickerState = rememberDatePickerState(
-        initialSelectedDateMillis = Clock.System.now().toEpochMilliseconds(),
-        selectableDates = createSelectableDatesFrom(LocalDate.parse("2000-01-01")),
-    )
-
-    MifosDatePickerDialog(
-        show = showFromDatePicker,
-        state = fromDatePickerState,
-        onDismiss = { showFromDatePicker = false },
-        onConfirm = { selectedMillis ->
-            selectedMillis?.let { fromDate = it }
-        },
-    )
-
-    MifosDatePickerDialog(
-        show = showToDatePicker,
-        state = toDatePickerState,
-        onDismiss = { showToDatePicker = false },
-        onConfirm = { selectedMillis ->
-            selectedMillis?.let { toDate = it }
-        },
-    )
 
     MifosCustomDialog(
         onDismiss = onDismiss,
@@ -137,29 +94,15 @@ internal fun ExportTransactionsDialog(
 
                     Spacer(modifier = Modifier.height(8.dp))
 
-                    MifosDatePickerTextField(
-                        value = formatDateFromMillis(fromDate),
-                        label = stringResource(Res.string.feature_loan_from_date),
-                        openDatePicker = {
-                            initializeDatePicker(fromDate, fromDatePickerState)
-                            showFromDatePicker = true
-                        },
-                    )
-
-                    Spacer(modifier = Modifier.height(8.dp))
-
-                    MifosDatePickerTextField(
-                        value = formatDateFromMillis(toDate),
-                        label = stringResource(Res.string.feature_loan_to_date),
-                        errorMessage = if (isInvalidDateRange) {
-                            stringResource(Res.string.feature_loan_invalid_date_range)
-                        } else {
-                            null
-                        },
-                        openDatePicker = {
-                            initializeDatePicker(toDate, toDatePickerState)
-                            showToDatePicker = true
-                        },
+                    MifosDateRangePicker(
+                        fromDate = fromDate,
+                        toDate = toDate,
+                        onFromDateSelected = { fromDate = it },
+                        onToDateSelected = { toDate = it },
+                        fromDateLabel = stringResource(Res.string.feature_loan_from_date),
+                        toDateLabel = stringResource(Res.string.feature_loan_to_date),
+                        minSelectableDate = LocalDate.parse("2000-01-01"),
+                        invalidDateRangeMessage = stringResource(Res.string.feature_loan_invalid_date_range),
                     )
 
                     Spacer(modifier = Modifier.height(16.dp))
@@ -197,71 +140,6 @@ internal fun ExportTransactionsDialog(
                     }
                 }
             }
-        }
-    }
-}
-
-@OptIn(ExperimentalTime::class)
-private fun formatDateFromMillis(millis: Long?): String {
-    if (millis == null) return ""
-    val localDate = Instant.fromEpochMilliseconds(millis)
-        .toLocalDateTime(TimeZone.UTC)
-        .date
-    return localDate.format("dd-MM-yyyy")
-}
-
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalTime::class)
-private fun initializeDatePicker(
-    currentDate: Long?,
-    datePickerState: DatePickerState,
-) {
-    datePickerState.selectedDateMillis = currentDate
-        ?: Clock.System.now().toEpochMilliseconds()
-}
-
-@OptIn(ExperimentalTime::class, ExperimentalMaterial3Api::class)
-private fun createSelectableDatesFrom(
-    minDate: LocalDate,
-    maxDate: LocalDate = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).date,
-) = object : SelectableDates {
-    override fun isSelectableDate(utcTimeMillis: Long): Boolean {
-        val selectedDate = Instant.fromEpochMilliseconds(utcTimeMillis)
-            .toLocalDateTime(TimeZone.UTC)
-            .date
-        return selectedDate in minDate..maxDate
-    }
-
-    override fun isSelectableYear(year: Int): Boolean = year in minDate.year..maxDate.year
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-private fun MifosDatePickerDialog(
-    show: Boolean,
-    state: DatePickerState,
-    onDismiss: () -> Unit,
-    onConfirm: (Long?) -> Unit,
-) {
-    if (show) {
-        DatePickerDialog(
-            onDismissRequest = onDismiss,
-            confirmButton = {
-                TextButton(
-                    onClick = {
-                        onConfirm(state.selectedDateMillis)
-                        onDismiss()
-                    },
-                ) {
-                    Text(stringResource(Res.string.feature_loan_select))
-                }
-            },
-            dismissButton = {
-                TextButton(onClick = onDismiss) {
-                    Text(stringResource(Res.string.feature_loan_cancel))
-                }
-            },
-        ) {
-            DatePicker(state = state)
         }
     }
 }
