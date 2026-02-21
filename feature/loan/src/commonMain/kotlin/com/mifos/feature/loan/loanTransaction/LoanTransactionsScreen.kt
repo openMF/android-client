@@ -23,7 +23,6 @@ import androidclient.feature.loan.generated.resources.feature_loan_loan_transact
 import androidclient.feature.loan.generated.resources.feature_loan_no_transactions
 import androidclient.feature.loan.generated.resources.feature_loan_office
 import androidclient.feature.loan.generated.resources.feature_loan_principal
-import androidclient.feature.loan.generated.resources.filter
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.fadeIn
@@ -58,7 +57,6 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -83,8 +81,6 @@ import com.mifos.core.model.objects.account.loan.Type
 import com.mifos.core.ui.components.MifosCheckBox
 import com.mifos.core.ui.components.MifosEmptyUi
 import com.mifos.core.ui.components.MifosProgressIndicator
-import com.mifos.room.entities.accounts.loans.LoanWithAssociationsEntity
-import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
@@ -97,47 +93,33 @@ internal fun LoanTransactionsScreen(
     navigateBack: () -> Unit,
     viewModel: LoanTransactionsViewModel = koinViewModel(),
 ) {
-    val uiState by viewModel.loanTransactionsUiState.collectAsStateWithLifecycle()
-    val hideReversed by viewModel.hideReversed.collectAsStateWithLifecycle()
-    val hideAccruals by viewModel.hideAccruals.collectAsStateWithLifecycle()
+    val state by viewModel.stateFlow.collectAsStateWithLifecycle()
     var showFilterBottomSheet by rememberSaveable { mutableStateOf(false) }
 
-    LaunchedEffect(key1 = Unit) {
-        viewModel.refresh()
-    }
-
     LoanTransactionsScreen(
-        uiState = uiState,
-        hideReversed = hideReversed,
-        hideAccruals = hideAccruals,
+        state = state,
         showFilterBottomSheet = showFilterBottomSheet,
         onShowFilterBottomSheet = { showFilterBottomSheet = true },
         onDismissFilterBottomSheet = { showFilterBottomSheet = false },
-        onHideReversedChange = { viewModel.setHideReversed(it) },
-        onHideAccrualsChange = { viewModel.setHideAccruals(it) },
+        onAction = viewModel::trySendAction,
         onExportClick = { /* UI-only, no logic */ },
         navigateBack = navigateBack,
-        onRetry = viewModel::refresh,
     )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun LoanTransactionsScreen(
-    uiState: LoanTransactionsUiState,
-    hideReversed: Boolean,
-    hideAccruals: Boolean,
+    state: LoanTransactionsState,
     showFilterBottomSheet: Boolean,
     onShowFilterBottomSheet: () -> Unit,
     onDismissFilterBottomSheet: () -> Unit,
-    onHideReversedChange: (Boolean) -> Unit,
-    onHideAccrualsChange: (Boolean) -> Unit,
+    onAction: (LoanTransactionsAction) -> Unit,
     onExportClick: () -> Unit,
     navigateBack: () -> Unit,
-    onRetry: () -> Unit,
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
-    val isFilterApplied = hideReversed || hideAccruals
+    val isFilterApplied = state.hideReversed || state.hideAccruals
 
     MifosScaffold(
         snackbarHostState = snackbarHostState,
@@ -146,7 +128,7 @@ internal fun LoanTransactionsScreen(
         actions = {
             IconButton(onClick = onShowFilterBottomSheet) {
                 Icon(
-                    painter = painterResource(Res.drawable.filter),
+                    imageVector = MifosIcons.Filter,
                     contentDescription = stringResource(Res.string.feature_loan_filters),
                     tint = if (isFilterApplied) {
                         MaterialTheme.colorScheme.primary
@@ -173,28 +155,28 @@ internal fun LoanTransactionsScreen(
                 .fillMaxSize()
                 .padding(it),
         ) {
-            when (uiState) {
-                is LoanTransactionsUiState.ShowFetchingError -> {
+            when (val dialogState = state.dialogState) {
+                is LoanTransactionsState.DialogState.Error -> {
                     MifosSweetError(
-                        message = uiState.message,
-                        onclick = onRetry,
+                        message = dialogState.message,
+                        onclick = { onAction(LoanTransactionsAction.Refresh) },
                     )
                 }
 
-                is LoanTransactionsUiState.ShowLoanTransaction -> {
-                    if (uiState.loanWithAssociations.transactions.isEmpty()) {
+                LoanTransactionsState.DialogState.Loading -> {
+                    MifosProgressIndicator()
+                }
+
+                null -> {
+                    if (state.transactions.isEmpty()) {
                         MifosEmptyUi(text = stringResource(Res.string.feature_loan_no_transactions))
                     } else {
                         LoanTransactionsContent(
-                            transactions = uiState.loanWithAssociations.transactions,
-                            hideReversed = hideReversed,
-                            hideAccruals = hideAccruals,
+                            transactions = state.transactions,
+                            hideReversed = state.hideReversed,
+                            hideAccruals = state.hideAccruals,
                         )
                     }
-                }
-
-                LoanTransactionsUiState.ShowProgressBar -> {
-                    MifosProgressIndicator()
                 }
             }
         }
@@ -202,10 +184,10 @@ internal fun LoanTransactionsScreen(
 
     FilterBottomSheet(
         showFilterBottomSheet = showFilterBottomSheet,
-        hideReversed = hideReversed,
-        hideAccruals = hideAccruals,
-        onHideReversedChange = onHideReversedChange,
-        onHideAccrualsChange = onHideAccrualsChange,
+        hideReversed = state.hideReversed,
+        hideAccruals = state.hideAccruals,
+        onHideReversedChange = { onAction(LoanTransactionsAction.SetHideReversed(it)) },
+        onHideAccrualsChange = { onAction(LoanTransactionsAction.SetHideAccruals(it)) },
         onDismiss = onDismissFilterBottomSheet,
     )
 }
@@ -533,7 +515,7 @@ private fun LoanTransactionsItemDetailsCard(
     }
 }
 
-private class LoanTransactionsPreviewProvider : PreviewParameterProvider<LoanTransactionsUiState> {
+private class LoanTransactionsPreviewProvider : PreviewParameterProvider<LoanTransactionsState> {
     val transaction =
         Transaction(
             id = 23,
@@ -549,25 +531,17 @@ private class LoanTransactionsPreviewProvider : PreviewParameterProvider<LoanTra
             ),
         )
 
-    override val values: Sequence<LoanTransactionsUiState>
+    override val values: Sequence<LoanTransactionsState>
         get() = sequenceOf(
-            LoanTransactionsUiState.ShowFetchingError(""),
-            LoanTransactionsUiState.ShowProgressBar,
-            LoanTransactionsUiState.ShowLoanTransaction(
-                LoanWithAssociationsEntity(
-                    transactions = listOf(
-                        transaction,
-                        transaction,
-                        transaction,
-                        transaction,
-                        transaction,
-                        transaction,
-                        transaction,
-                        transaction,
-                        transaction,
-                        transaction,
-                    ),
-                ),
+            LoanTransactionsState(
+                dialogState = LoanTransactionsState.DialogState.Error("Something went wrong"),
+            ),
+            LoanTransactionsState(
+                dialogState = LoanTransactionsState.DialogState.Loading,
+            ),
+            LoanTransactionsState(
+                transactions = List(10) { transaction },
+                dialogState = null,
             ),
         )
 }
@@ -576,20 +550,16 @@ private class LoanTransactionsPreviewProvider : PreviewParameterProvider<LoanTra
 @Composable
 @Preview
 private fun PreviewLoanTransactions(
-    @PreviewParameter(LoanTransactionsPreviewProvider::class) loanTransactionsUiState: LoanTransactionsUiState,
+    @PreviewParameter(LoanTransactionsPreviewProvider::class) loanTransactionsState: LoanTransactionsState,
 ) {
     LoanTransactionsScreen(
-        uiState = loanTransactionsUiState,
-        hideReversed = false,
-        hideAccruals = false,
+        state = loanTransactionsState,
         showFilterBottomSheet = false,
         onShowFilterBottomSheet = {},
         onDismissFilterBottomSheet = {},
-        onHideReversedChange = {},
-        onHideAccrualsChange = {},
+        onAction = {},
         onExportClick = {},
         navigateBack = {},
-        onRetry = {},
     )
 }
 
@@ -598,46 +568,43 @@ private fun PreviewLoanTransactions(
 @Preview
 private fun PreviewLoanTransactionsWithFilters() {
     LoanTransactionsScreen(
-        uiState = LoanTransactionsUiState.ShowLoanTransaction(
-            LoanWithAssociationsEntity(
-                transactions = listOf(
-                    Transaction(
-                        id = 1,
-                        officeName = "Main office",
-                        date = listOf(2024, 6, 1),
-                        principalPortion = 121.2,
-                        penaltyChargesPortion = 32323.232,
-                        overpaymentPortion = 23232.23,
-                        feeChargesPortion = 323.3,
-                        interestPortion = 232.3,
-                        type = Type(value = "Repayment"),
-                    ),
-                    Transaction(
-                        id = 2,
-                        officeName = "Branch office",
-                        date = listOf(2024, 6, 15),
-                        principalPortion = 200.0,
-                        type = Type(value = "Reversed", accrual = false),
-                    ),
-                    Transaction(
-                        id = 3,
-                        officeName = "Main office",
-                        date = listOf(2024, 7, 1),
-                        principalPortion = 150.0,
-                        type = Type(value = "Accrual", accrual = true),
-                    ),
+        state = LoanTransactionsState(
+            transactions = listOf(
+                Transaction(
+                    id = 1,
+                    officeName = "Main office",
+                    date = listOf(2024, 6, 1),
+                    principalPortion = 121.2,
+                    penaltyChargesPortion = 32323.232,
+                    overpaymentPortion = 23232.23,
+                    feeChargesPortion = 323.3,
+                    interestPortion = 232.3,
+                    type = Type(value = "Repayment"),
+                ),
+                Transaction(
+                    id = 2,
+                    officeName = "Branch office",
+                    date = listOf(2024, 6, 15),
+                    principalPortion = 200.0,
+                    type = Type(value = "Reversed", accrual = false),
+                ),
+                Transaction(
+                    id = 3,
+                    officeName = "Main office",
+                    date = listOf(2024, 7, 1),
+                    principalPortion = 150.0,
+                    type = Type(value = "Accrual", accrual = true),
                 ),
             ),
+            hideReversed = true,
+            hideAccruals = false,
+            dialogState = null,
         ),
-        hideReversed = true,
-        hideAccruals = false,
         showFilterBottomSheet = true,
         onShowFilterBottomSheet = {},
         onDismissFilterBottomSheet = {},
-        onHideReversedChange = {},
-        onHideAccrualsChange = {},
+        onAction = {},
         onExportClick = {},
         navigateBack = {},
-        onRetry = {},
     )
 }
