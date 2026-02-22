@@ -58,7 +58,7 @@ import org.koin.compose.viewmodel.koinViewModel
 @Composable
 internal fun ClientApplyNewApplicationsScreen(
     onNavigateBack: () -> Unit,
-    onNavigateApplyLoanAccount: (Int) -> Unit,
+    onNavigateApplyLoanAccount: (Int, String) -> Unit,
     onNavigateApplySavingsAccount: (Int) -> Unit,
     onNavigateApplyShareAccount: (Int) -> Unit,
     onNavigateApplyRecurringAccount: (Int) -> Unit,
@@ -79,6 +79,7 @@ internal fun ClientApplyNewApplicationsScreen(
 
                     ClientApplyNewApplicationsItem.NewLoanAccount -> onNavigateApplyLoanAccount(
                         state.clientId,
+                        state.accountNo,
                     )
 
                     ClientApplyNewApplicationsItem.NewRecurringAccount -> onNavigateApplyRecurringAccount(
