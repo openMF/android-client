@@ -54,9 +54,9 @@ fun SchedulePage(
 
             Spacer(Modifier.height(DesignToken.padding.large))
 
-            if (!state.repaymentSchedules.isEmpty()) {
+            if (!state.repaymentSchedulesSummary.isEmpty()) {
                 MifosDefaultListingComponentFromStringResources(
-                    data = state.repaymentSchedules,
+                    data = state.repaymentSchedulesSummary,
                     backgroundColor = MaterialTheme.colorScheme.surfaceContainer,
                     borderColor = MaterialTheme.colorScheme.surfaceDim,
                     verticalArrangement = Arrangement.spacedBy(DesignToken.padding.small),
@@ -66,10 +66,10 @@ fun SchedulePage(
             Spacer(Modifier.height(DesignToken.padding.large))
 
             RepaymentScheduleList(
-                periods = state.loanWithAssociationsEntity.repaymentSchedule.periods.orEmpty()
+                periods = state.repaymentSchedule.periods.orEmpty()
                     .filter { it.period != null },
-                currencyCode = state.loanWithAssociationsEntity.currency.code,
-                maxDigits = state.loanWithAssociationsEntity.currency.decimalPlaces,
+                currencyCode = state.repaymentSchedule.currency?.code,
+                maxDigits = state.repaymentSchedule.currency?.decimalPlaces,
             )
             Spacer(Modifier.height(DesignToken.padding.large))
         }

@@ -9,11 +9,13 @@
  */
 package com.mifos.core.network.model
 
+import com.mifos.core.common.utils.ApiDateFormatter
+
 /**
  * Created by ADMIN on 16-Jun-15.
  */
 
 data class DefaultPayload(
-    var dateFormat: String = "dd MMMM YYYY",
-    var locale: String = "en",
+    var dateFormat: String = ApiDateFormatter.DATE_FORMAT,
+    var locale: String = ApiDateFormatter.LOCALE,
 )
