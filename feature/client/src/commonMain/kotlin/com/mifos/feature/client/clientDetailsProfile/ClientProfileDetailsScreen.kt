@@ -78,7 +78,7 @@ internal fun ClientProfileDetailsScreen(
     navigateToUpdateDetails: (Int) -> Unit,
     navigateToClientTransfer: (Int) -> Unit,
     navigateToClientClosure: (Int) -> Unit,
-    navigateToApplyNewApplication: (Int, String) -> Unit,
+    navigateToApplyNewApplication: (Int, String, String) -> Unit,
     navigateToUpdateDefaultAccount: (Int) -> Unit,
     navigateToCollateral: (Int) -> Unit,
     navigateToUpdateSignature: (Int, String, String) -> Unit,
@@ -104,6 +104,7 @@ internal fun ClientProfileDetailsScreen(
                         navigateToApplyNewApplication(
                             state.client?.id ?: -1,
                             state.client?.status?.value ?: "",
+                            state.client?.accountNo ?: "",
                         )
                     }
 
