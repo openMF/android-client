@@ -10,6 +10,7 @@
 package com.mifos.feature.search.components
 
 import androidclient.feature.search.generated.resources.Res
+import androidclient.feature.search.generated.resources.feature_search_all
 import androidclient.feature.search.generated.resources.feature_search_empty_input_field
 import androidclient.feature.search.generated.resources.feature_search_exact_match
 import androidclient.feature.search.generated.resources.feature_search_search_hint
@@ -83,7 +84,8 @@ internal fun SearchBox(
                     },
                     label = {
                         Text(
-                            text = state.selectedFilter?.label ?: "All",
+                            text = state.selectedFilter?.let { stringResource(it.labelRes) }
+                                ?: stringResource(Res.string.feature_search_all),
                             style = MaterialTheme.typography.bodyLarge,
                         )
                     },
