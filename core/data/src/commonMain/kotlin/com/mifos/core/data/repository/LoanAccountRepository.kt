@@ -10,6 +10,7 @@
 package com.mifos.core.data.repository
 
 import com.mifos.core.common.utils.DataState
+import com.mifos.core.model.objects.account.loan.RepaymentSchedule
 import com.mifos.core.model.objects.organisations.LoanProducts
 import com.mifos.core.network.model.LoansPayload
 import com.mifos.room.entities.templates.loans.LoanTemplate
@@ -26,4 +27,10 @@ interface LoanAccountRepository {
     fun getLoansAccountTemplate(clientId: Int, productId: Int): Flow<DataState<LoanTemplate>>
 
     fun createLoansAccount(loansPayload: LoansPayload): Flow<DataState<HttpResponse>>
+
+    /**
+     * Calculate loan repayment schedule without creating the loan.
+     * Used to preview the schedule before submitting the loan application.
+     */
+    fun calculateLoanSchedule(loansPayload: LoansPayload): Flow<DataState<RepaymentSchedule>>
 }
