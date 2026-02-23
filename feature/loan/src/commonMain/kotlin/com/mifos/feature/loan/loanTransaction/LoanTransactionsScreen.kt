@@ -11,6 +11,7 @@ package com.mifos.feature.loan.loanTransaction
 
 import androidclient.feature.loan.generated.resources.Res
 import androidclient.feature.loan.generated.resources.feature_loan_break_down
+import androidclient.feature.loan.generated.resources.feature_loan_export
 import androidclient.feature.loan.generated.resources.feature_loan_loan_transactions
 import androidclient.feature.loan.generated.resources.feature_loan_no_transactions
 import androidclient.feature.loan.generated.resources.feature_loan_table_header_amount
@@ -51,7 +52,10 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -123,6 +127,8 @@ internal fun LoanTransactionsScreen(
         SnackbarHostState()
     }
 
+    var showExportDialog by rememberSaveable { mutableStateOf(false) }
+
     MifosScaffold(
         snackbarHostState = snackbarHostState,
         title = stringResource(Res.string.feature_loan_loan_transactions),
@@ -179,6 +185,15 @@ internal fun LoanTransactionsScreen(
                 }
             }
         }
+    }
+
+    if (showExportDialog) {
+        ExportTransactionsDialog(
+            onDismiss = { showExportDialog = false },
+            onGenerateReport = { fromDate, toDate ->
+                showExportDialog = false
+            },
+        )
     }
 }
 
