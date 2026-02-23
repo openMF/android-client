@@ -41,4 +41,8 @@ data class Transaction(
     var penaltyChargesPortion: Double? = null,
 
     var overpaymentPortion: Double? = null,
+
+    var outstandingLoanBalance: Double? = null,
+
+    var manuallyReversed: Boolean? = null,
 ) : Parcelable
