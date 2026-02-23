@@ -21,6 +21,7 @@ class ClientApplyNewApplicationsViewModel(
         ClientApplyNewApplicationsState(
             clientId = route.clientId,
             status = route.status,
+            accountNo = route.accountNo,
         )
     },
 ) {
@@ -39,6 +40,7 @@ class ClientApplyNewApplicationsViewModel(
 
 data class ClientApplyNewApplicationsState(
     val clientId: Int,
+    val accountNo: String,
     val status: String,
 )
 

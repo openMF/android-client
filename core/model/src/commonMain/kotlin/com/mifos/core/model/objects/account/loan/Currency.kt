@@ -23,7 +23,7 @@ data class Currency(
 
     val name: String? = null,
 
-    val decimalPlaces: Double? = null,
+    val decimalPlaces: Int? = null,
 
     val inMultiplesOf: Int? = null,
 
