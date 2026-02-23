@@ -17,7 +17,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class NewLoanAccountRoute(
     val clientId: Int = -1,
-    val accountNo: String?,
+    val accountNo: String? = null,
 )
 
 fun NavGraphBuilder.newLoanAccountDestination(
