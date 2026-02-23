@@ -10,6 +10,9 @@
 package com.mifos.feature.loan.loanRepaymentSchedule
 
 import androidclient.feature.loan.generated.resources.Res
+import androidclient.feature.loan.generated.resources.account_number
+import androidclient.feature.loan.generated.resources.disbursement_date
+import androidclient.feature.loan.generated.resources.feature_loan_amount_paid
 import androidclient.feature.loan.generated.resources.feature_loan_balance_of_loan
 import androidclient.feature.loan.generated.resources.feature_loan_complete_count
 import androidclient.feature.loan.generated.resources.feature_loan_date
@@ -21,6 +24,7 @@ import androidclient.feature.loan.generated.resources.feature_loan_installment_t
 import androidclient.feature.loan.generated.resources.feature_loan_interest_short
 import androidclient.feature.loan.generated.resources.feature_loan_late
 import androidclient.feature.loan.generated.resources.feature_loan_loan_amount_and_balance
+import androidclient.feature.loan.generated.resources.feature_loan_loan_amount_due
 import androidclient.feature.loan.generated.resources.feature_loan_loan_repayment_schedule
 import androidclient.feature.loan.generated.resources.feature_loan_number
 import androidclient.feature.loan.generated.resources.feature_loan_outstanding
@@ -30,24 +34,37 @@ import androidclient.feature.loan.generated.resources.feature_loan_paid_short
 import androidclient.feature.loan.generated.resources.feature_loan_penalties_short
 import androidclient.feature.loan.generated.resources.feature_loan_pending_count
 import androidclient.feature.loan.generated.resources.feature_loan_principal_due
+import androidclient.feature.loan.generated.resources.feature_loan_status
+import androidclient.feature.loan.generated.resources.feature_loan_table_header_fees
+import androidclient.feature.loan.generated.resources.feature_loan_table_header_interest
+import androidclient.feature.loan.generated.resources.feature_loan_table_header_penalties
+import androidclient.feature.loan.generated.resources.feature_loan_table_header_principal
 import androidclient.feature.loan.generated.resources.feature_loan_total
 import androidclient.feature.loan.generated.resources.feature_loan_total_cost_of_loan
+import androidclient.feature.loan.generated.resources.principle_paid_off
+import androidclient.feature.loan.generated.resources.total_installments
 import androidx.compose.foundation.background
 import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.lerp
@@ -59,11 +76,20 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.component.MifosTableRow
+import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.model.objects.account.loan.RepaymentScheduleRowData
 import com.mifos.core.model.objects.account.loan.RepaymentScheduleTableData
 import com.mifos.core.model.objects.account.loan.RepaymentScheduleTotalsData
 import com.mifos.core.ui.components.MifosProgressIndicator
+import com.mifos.core.ui.util.pdf.Orientation
+import com.mifos.core.ui.util.pdf.PageConfig
+import com.mifos.core.ui.util.pdf.PageSize
+import com.mifos.core.ui.util.pdf.rememberPdfGenerator
+import com.mifos.feature.loan.loanRepaymentSchedule.pdf.RepaymentScheduleHtmlGenerator
+import com.mifos.feature.loan.loanRepaymentSchedule.pdf.RepaymentSchedulePdfStrings
+import kotlinx.coroutines.launch
+import org.jetbrains.compose.resources.getString
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
@@ -77,19 +103,45 @@ internal fun LoanRepaymentScheduleScreen(
     navigateBack: () -> Unit,
 ) {
     val uiState by viewModel.loanRepaymentScheduleUiState.collectAsStateWithLifecycle()
+    val tableData by viewModel.repaymentScheduleTableData.collectAsStateWithLifecycle()
+    val coroutineScope = rememberCoroutineScope()
+    val pdfGenerator = rememberPdfGenerator()
 
     LoanRepaymentScheduleScreen(
         uiState = uiState,
+        tableData = tableData,
         navigateBack = navigateBack,
         onRetry = viewModel::loadLoanRepaymentSchedule,
+        onExportPdf = {
+            tableData?.let { data ->
+                coroutineScope.launch {
+                    try {
+                        val pdfStrings = createPdfStrings()
+                        val htmlGenerator = RepaymentScheduleHtmlGenerator(data, pdfStrings)
+                        val htmlContent = htmlGenerator.generateHtml()
+                        val fileName = "repayment_schedule_${data.accountNo}"
+                        val pageConfig = PageConfig(
+                            size = PageSize.A4,
+                            orientation = Orientation.LANDSCAPE,
+                            marginMm = 8,
+                        )
+                        pdfGenerator.generateAndSharePdf(htmlContent, fileName, pageConfig)
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    }
+                }
+            }
+        },
     )
 }
 
 @Composable
 internal fun LoanRepaymentScheduleScreen(
     uiState: LoanRepaymentScheduleUiState,
+    tableData: RepaymentScheduleTableData?,
     navigateBack: () -> Unit,
     onRetry: () -> Unit,
+    onExportPdf: () -> Unit,
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
 
@@ -97,7 +149,16 @@ internal fun LoanRepaymentScheduleScreen(
         title = stringResource(Res.string.feature_loan_loan_repayment_schedule),
         snackbarHostState = snackbarHostState,
         onBackPressed = navigateBack,
+        actions = {
+            IconButton(onClick = onExportPdf) {
+                Icon(
+                    imageVector = MifosIcons.Save,
+                    contentDescription = stringResource(Res.string.feature_loan_export_to_pdf),
+                )
+            }
+        },
     ) { paddingValues ->
+
         Box(modifier = Modifier.padding(paddingValues)) {
             when (uiState) {
                 is LoanRepaymentScheduleUiState.ShowProgressbar -> MifosProgressIndicator()
@@ -111,6 +172,39 @@ internal fun LoanRepaymentScheduleScreen(
             }
         }
     }
+}
+
+private suspend fun createPdfStrings(): RepaymentSchedulePdfStrings {
+    return RepaymentSchedulePdfStrings(
+        title = getString(Res.string.feature_loan_repayment_schedule_pdf_title),
+        clientNameLabel = getString(Res.string.feature_loan_client_name_label),
+        accountNumberLabel = getString(Res.string.account_number),
+        productNameLabel = getString(Res.string.feature_loan_loan_repayment_schedule),
+        disbursementDateLabel = getString(Res.string.disbursement_date),
+        installmentsLabel = getString(Res.string.total_installments),
+        paidLabel = getString(Res.string.feature_loan_paid_label),
+        totalLabel = getString(Res.string.feature_loan_total_label),
+        principalPaidLabel = getString(Res.string.principle_paid_off),
+        periodDetailsHeader = getString(Res.string.feature_loan_period_details),
+        loanAmountBalanceHeader = getString(Res.string.feature_loan_amount_and_balance),
+        totalCostLoanHeader = getString(Res.string.feature_loan_total_cost_of_loan),
+        installmentTotalsHeader = getString(Res.string.feature_loan_installment_totals),
+        totalsLabel = getString(Res.string.feature_loan_totals_uppercase),
+        hNo = getString(Res.string.feature_loan_table_header_installment),
+        hDays = getString(Res.string.feature_loan_table_header_days),
+        hDate = getString(Res.string.feature_loan_table_header_date),
+        hPaidDate = getString(Res.string.feature_loan_table_header_paid_date),
+        hBalance = getString(Res.string.feature_loan_table_header_balance),
+        hPrincipal = getString(Res.string.feature_loan_table_header_principal),
+        hInterest = getString(Res.string.feature_loan_table_header_interest),
+        hFees = getString(Res.string.feature_loan_table_header_fees),
+        hPenalties = getString(Res.string.feature_loan_table_header_penalties),
+        hDue = getString(Res.string.feature_loan_table_header_due),
+        hPaid = getString(Res.string.feature_loan_table_header_paid),
+        hInAdvance = getString(Res.string.feature_loan_table_header_in_advance),
+        hLate = getString(Res.string.feature_loan_table_header_late),
+        hOutstanding = getString(Res.string.feature_loan_table_header_outstanding),
+    )
 }
 
 @Composable
@@ -295,37 +389,51 @@ private fun TableHeaderCell(
 }
 
 @Composable
-private fun ScheduleTableRow(
-    values: List<String>,
-    widths: List<Dp>,
-    backgroundColor: Color,
-    fontWeight: FontWeight,
-    textStyle: TextStyle,
-) {
-    MifosTableRow(
-        cells = values.map { value ->
-            {
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .background(backgroundColor)
-                        .padding(vertical = KptTheme.spacing.sm, horizontal = KptTheme.spacing.xs),
-                ) {
-                    Text(
-                        text = value,
-                        style = textStyle,
-                        fontWeight = fontWeight,
-                        modifier = Modifier.fillMaxWidth(),
-                        textAlign = TextAlign.Left,
-                        color = KptTheme.colorScheme.onBackground,
-                    )
-                }
-            }
-        },
-        widths = widths,
-        backgroundColor = backgroundColor,
-        edgeOffset = DesignToken.padding.medium,
-    )
+private fun HeaderLoanRepaymentSchedule() {
+    Box(
+        modifier = Modifier
+            .background(Color.Red.copy(alpha = .5f))
+            .fillMaxWidth(),
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = KptTheme.spacing.xs, vertical = KptTheme.spacing.xs),
+            horizontalArrangement = Arrangement.SpaceBetween,
+        ) {
+            Text(
+                modifier = Modifier.weight(2f),
+                text = stringResource(Res.string.feature_loan_status),
+                style = KptTheme.typography.bodyLarge,
+                color = Color.Black,
+                textAlign = TextAlign.Start,
+            )
+
+            Text(
+                modifier = Modifier.weight(2f),
+                text = stringResource(Res.string.feature_loan_date),
+                style = KptTheme.typography.bodyLarge,
+                color = Color.Black,
+                textAlign = TextAlign.Center,
+            )
+
+            Text(
+                modifier = Modifier.weight(3f),
+                text = stringResource(Res.string.feature_loan_loan_amount_due),
+                style = KptTheme.typography.bodyLarge,
+                color = Color.Black,
+                textAlign = TextAlign.Center,
+            )
+
+            Text(
+                modifier = Modifier.weight(3f),
+                text = stringResource(Res.string.feature_loan_amount_paid),
+                style = KptTheme.typography.bodyLarge,
+                color = Color.Black,
+                textAlign = TextAlign.End,
+            )
+        }
+    }
 }
 
 @Composable
@@ -412,6 +520,8 @@ private fun PreviewLoanRepaymentSchedule(
     LoanRepaymentScheduleScreen(
         uiState = uiState,
         navigateBack = {},
+        tableData = null,
         onRetry = {},
+        onExportPdf = {},
     )
 }
