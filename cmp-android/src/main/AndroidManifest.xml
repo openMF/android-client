@@ -49,7 +49,6 @@
         android:theme="@style/Theme.AndroidClientTheme"
         android:requestLegacyExternalStorage="true"
         android:localeConfig="@xml/locale_config">
-        >
 
         <activity
             android:name=".MainActivity"
