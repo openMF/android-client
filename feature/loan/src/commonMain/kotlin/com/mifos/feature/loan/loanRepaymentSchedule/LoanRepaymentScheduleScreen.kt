@@ -28,6 +28,7 @@ import androidclient.feature.loan.generated.resources.feature_loan_paid_date
 import androidclient.feature.loan.generated.resources.feature_loan_pending
 import androidclient.feature.loan.generated.resources.paid
 import androidx.compose.foundation.background
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -79,18 +80,14 @@ internal fun LoanRepaymentScheduleScreen(
 ) {
     val uiState by viewModel.loanRepaymentScheduleUiState.collectAsStateWithLifecycle()
 
-    LaunchedEffect(key1 = Unit) {
+    LaunchedEffect(viewModel.loanId) {
         viewModel.loadLoanRepaySchedule()
     }
 
     LoanRepaymentScheduleScreen(
         uiState = uiState,
         navigateBack = navigateBack,
-        onRetry = {
-            viewModel.viewModelScope.launch {
-                viewModel.loadLoanRepaySchedule()
-            }
-        },
+        onRetry = viewModel::retryLoadSchedule,
     )
 }
 
@@ -159,7 +156,19 @@ private fun LoanRepaymentScheduleContent(
 
     fun formatCurrency(amount: Double?): String {
         if (amount == null) return ""
-        if (currencyCode.isNullOrBlank()) return amount.toString()
+        if (currencyCode.isNullOrBlank()) {
+            // Fallback: format with decimal places without currency symbol
+            val places = decimalPlaces ?: 2
+            val multiplier = when (places) {
+                0 -> 1.0
+                1 -> 10.0
+                2 -> 100.0
+                3 -> 1000.0
+                else -> 10000.0
+            }
+            val rounded = kotlin.math.round(amount * multiplier) / multiplier
+            return rounded.toString()
+        }
 
         return CurrencyFormatter.format(
             balance = amount,
@@ -175,14 +184,16 @@ private fun LoanRepaymentScheduleContent(
     Column(
         modifier = Modifier.fillMaxSize(),
     ) {
-        Box(
+        LazyColumn(
             modifier = Modifier.weight(1f),
         ) {
-            LazyColumn(
-                modifier = Modifier.fillMaxSize(),
-                contentPadding = PaddingValues(bottom = DesignToken.spacing.extraExtraLarge),
-            ) {
-                stickyHeader {
+            stickyHeader {
+                // Follow the same pattern as LoanTransactionsScreen
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .horizontalScroll(scrollState),
+                ) {
                     MifosTableRow(
                         cells = listOf(
                             { HeaderCell(text = stringResource(Res.string.feature_loan_days)) },
@@ -199,73 +210,89 @@ private fun LoanRepaymentScheduleContent(
                             { HeaderCell(text = stringResource(Res.string.feature_loan_late)) },
                             { HeaderCell(text = stringResource(Res.string.feature_loan_outstanding)) },
                         ),
-                        columnWidths = columnWidths,
-                        scrollState = scrollState,
-                        isHeader = true,
+                        widths = columnWidths,
                         backgroundColor = lerp(
                             MaterialTheme.colorScheme.surface,
                             MaterialTheme.colorScheme.primary,
                             0.08f,
                         ),
-                    )
-                    HorizontalDivider(
-                        thickness = 1.dp,
-                        color = MaterialTheme.colorScheme.primary,
-                    )
-                }
-
-                itemsIndexed(
-                    items = periods,
-                    key = { index, period ->
-                        "$index-${period.dueDate?.joinToString("-") ?: "null"}"
-                    },
-                ) { _, period ->
-                    MifosTableRow(
-                        cells = listOf(
-                            { DataCell(text = period.daysInPeriod?.toString() ?: "") },
-                            { DataCell(text = formatDate(period.dueDate)) },
-                            { DataCell(text = formatDate(period.obligationsMetOnDate)) },
-                            { DataCell(text = formatCurrency(period.principalLoanBalanceOutstanding)) },
-                            { DataCell(text = formatCurrency(period.principalDue)) },
-                            { DataCell(text = formatCurrency(period.interestDue)) },
-                            { DataCell(text = formatCurrency(period.feeChargesDue)) },
-                            { DataCell(text = formatCurrency(period.penaltyChargesDue)) },
-                            { DataCell(text = formatCurrency(period.totalDueForPeriod)) },
-                            { DataCell(text = formatCurrency(period.totalPaidForPeriod)) },
-                            { DataCell(text = formatCurrency(period.totalPaidInAdvanceForPeriod)) },
-                            { DataCell(text = formatCurrency(period.totalPaidLateForPeriod)) },
-                            { DataCell(text = formatCurrency(period.totalOutstandingForPeriod)) },
-                        ),
-                        columnWidths = columnWidths,
-                        scrollState = scrollState,
-                        isHeader = false,
+                        edgeOffset = DesignToken.padding.medium,
+                        cornerShape = DesignToken.shapes.topMedium,
                     )
                 }
             }
 
-            // Bottom Summary Bar
-            BottomBarLoanRepaymentSchedule(
-                totalPaid = RepaymentSchedule.getNumberOfRepaymentsComplete(periods).toString(),
-                totalOverdue = RepaymentSchedule.getNumberOfRepaymentsOverDue(periods).toString(),
-                tvTotalUpcoming = RepaymentSchedule.getNumberOfRepaymentsPending(periods).toString(),
-                modifier = Modifier
-                    .align(Alignment.BottomStart)
-                    .background(color = MaterialTheme.colorScheme.surfaceVariant),
-            )
+            itemsIndexed(
+                items = periods,
+                key = { index, period ->
+                    // Using index + dueDate for unique keys, handling potential null dates
+                    "$index-${period.dueDate?.joinToString("-") ?: "null"}"
+                },
+            ) { index, period ->
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .horizontalScroll(scrollState),
+                ) {
+                    MifosTableRow(
+                        cells = listOf(
+                            { DataCell(text = period.daysInPeriod?.toString() ?: "", align = TextAlign.Center) },
+                            { DataCell(text = formatDate(period.dueDate), align = TextAlign.Start) },
+                            { DataCell(text = formatDate(period.obligationsMetOnDate), align = TextAlign.Start) },
+                            { DataCell(text = formatCurrency(period.principalLoanBalanceOutstanding), align = TextAlign.End) },
+                            { DataCell(text = formatCurrency(period.principalDue), align = TextAlign.End) },
+                            { DataCell(text = formatCurrency(period.interestDue), align = TextAlign.End) },
+                            { DataCell(text = formatCurrency(period.feeChargesDue), align = TextAlign.End) },
+                            { DataCell(text = formatCurrency(period.penaltyChargesDue), align = TextAlign.End) },
+                            { DataCell(text = formatCurrency(period.totalDueForPeriod), align = TextAlign.End) },
+                            { DataCell(text = formatCurrency(period.totalPaidForPeriod), align = TextAlign.End) },
+                            { DataCell(text = formatCurrency(period.totalPaidInAdvanceForPeriod), align = TextAlign.End) },
+                            { DataCell(text = formatCurrency(period.totalPaidLateForPeriod), align = TextAlign.End) },
+                            { DataCell(text = formatCurrency(period.totalOutstandingForPeriod), align = TextAlign.End) },
+                        ),
+                        widths = columnWidths,
+                        backgroundColor = MaterialTheme.colorScheme.surface,
+                        edgeOffset = DesignToken.padding.medium,
+                        showTopBorder = false,
+                        showBottomBorder = index < periods.lastIndex, // Only show bottom border if not last row
+                    )
+                }
+            }
         }
+
+        // Bottom Summary Bar - explicit layout instead of overlapping
+        HorizontalDivider(
+            thickness = 1.dp,
+            color = MaterialTheme.colorScheme.outlineVariant,
+        )
+        BottomBarLoanRepaymentSchedule(
+            totalPaid = RepaymentSchedule.getNumberOfRepaymentsComplete(periods).toString(),
+            totalOverdue = RepaymentSchedule.getNumberOfRepaymentsOverDue(periods).toString(),
+            tvTotalUpcoming = RepaymentSchedule.getNumberOfRepaymentsPending(periods).toString(),
+            modifier = Modifier.background(color = MaterialTheme.colorScheme.surfaceVariant),
+        )
     }
 }
 
 @Composable
 private fun HeaderCell(text: String) {
-    Text(
-        text = text,
-        style = MaterialTheme.typography.titleSmall,
-        fontWeight = FontWeight.Bold,
-        color = MaterialTheme.colorScheme.onSurface,
-        textAlign = TextAlign.Center,
-        modifier = Modifier.fillMaxWidth(),
-    )
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(
+                vertical = DesignToken.padding.small,
+                horizontal = DesignToken.padding.extraSmall,
+            ),
+        contentAlignment = Alignment.Center,
+    ) {
+        Text(
+            text = text,
+            style = MaterialTheme.typography.titleSmall,
+            fontWeight = FontWeight.Bold,
+            color = MaterialTheme.colorScheme.onSurface,
+            textAlign = TextAlign.Center,
+        )
+    }
 }
 
 @Composable
@@ -273,13 +300,26 @@ private fun DataCell(
     text: String,
     align: TextAlign = TextAlign.Center,
 ) {
-    Text(
-        text = text,
-        style = MaterialTheme.typography.bodyMedium,
-        color = MaterialTheme.colorScheme.onSurfaceVariant,
-        textAlign = align,
-        modifier = Modifier.fillMaxWidth(),
-    )
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(
+                vertical = DesignToken.padding.small,
+                horizontal = DesignToken.padding.extraSmall,
+            ),
+        contentAlignment = when (align) {
+            TextAlign.Start -> Alignment.CenterStart
+            TextAlign.End -> Alignment.CenterEnd
+            else -> Alignment.Center
+        },
+    ) {
+        Text(
+            text = text,
+            style = MaterialTheme.typography.bodyMedium,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            textAlign = align,
+        )
+    }
 }
 
 @Composable

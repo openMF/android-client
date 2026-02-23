@@ -11,11 +11,13 @@ package com.mifos.feature.loan.loanRepaymentSchedule
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.repository.LoanRepaymentScheduleRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.launch
 
 class LoanRepaymentScheduleViewModel(
     private val repository: LoanRepaymentScheduleRepository,
@@ -42,6 +44,12 @@ class LoanRepaymentScheduleViewModel(
                             state.data,
                         )
             }
+        }
+    }
+
+    fun retryLoadSchedule() {
+        viewModelScope.launch {
+            loadLoanRepaySchedule()
         }
     }
 }
