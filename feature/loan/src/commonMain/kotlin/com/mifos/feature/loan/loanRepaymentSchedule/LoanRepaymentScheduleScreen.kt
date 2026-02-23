@@ -20,6 +20,11 @@ import androidclient.feature.loan.generated.resources.feature_loan_days
 import androidclient.feature.loan.generated.resources.feature_loan_due_short
 import androidclient.feature.loan.generated.resources.feature_loan_fees_short
 import androidclient.feature.loan.generated.resources.feature_loan_in_advance
+import androidclient.feature.loan.generated.resources.account_number
+import androidclient.feature.loan.generated.resources.disbursement_date
+import androidclient.feature.loan.generated.resources.feature_loan_amount_and_balance
+import androidclient.feature.loan.generated.resources.feature_loan_client_name_label
+import androidclient.feature.loan.generated.resources.feature_loan_export_to_pdf
 import androidclient.feature.loan.generated.resources.feature_loan_installment_totals
 import androidclient.feature.loan.generated.resources.feature_loan_interest_short
 import androidclient.feature.loan.generated.resources.feature_loan_late
