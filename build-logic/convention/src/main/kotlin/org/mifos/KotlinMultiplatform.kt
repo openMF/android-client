@@ -15,6 +15,7 @@ internal fun Project.configureKotlinMultiplatform() {
         androidTarget()
         iosSimulatorArm64()
         iosArm64()
+//        iosX64()
         js(IR) {
             this.nodejs()
             binaries.executable()
