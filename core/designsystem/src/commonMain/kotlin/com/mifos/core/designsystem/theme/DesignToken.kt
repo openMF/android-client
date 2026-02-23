@@ -312,6 +312,9 @@ data class AppSizes(
     val logoSizeTopAppBar: Dp = 28.dp,
     val topAppBarHeight: Dp = 85.dp,
     val bottomAppBarHeight: Dp = 70.dp,
+    val tableCellWidthSmall: Dp = 65.dp,
+    val tableCellWidthMedium: Dp = 100.dp,
+    val tableCellWidthLarge: Dp = 150.dp,
 )
 
 /**
