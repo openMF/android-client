@@ -399,6 +399,9 @@ data class AppStrokes(
     val dp2: Dp = 2.dp,
     val dp4: Dp = 4.dp,
     val dp5: Dp = 5.dp,
+    val tableCellWidthSmall: Dp = 65.dp,
+    val tableCellWidthMedium: Dp = 100.dp,
+    val tableCellWidthLarge: Dp = 150.dp,
 )
 
 /**
