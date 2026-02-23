@@ -9,20 +9,28 @@
  */
 package com.mifos.core.common.utils
 
-import kotlinx.datetime.TimeZone
-import kotlinx.datetime.number
-import kotlinx.datetime.toLocalDateTime
-import kotlin.time.ExperimentalTime
-import kotlin.time.Instant
-
-@OptIn(ExperimentalTime::class)
+/**
+ * Format epoch milliseconds to API-compatible date string.
+ *
+ * Returns date in "dd MMMM yyyy" format (e.g., "18 February 2026")
+ * which matches the standard Fineract API dateFormat parameter.
+ *
+ * @param millis Epoch milliseconds
+ * @return Formatted date string for API usage
+ * @see ApiDateFormatter for more formatting options
+ */
 fun formatDate(millis: Long): String {
-    val dateTime = Instant
-        .fromEpochMilliseconds(millis)
-        .toLocalDateTime(TimeZone.currentSystemDefault())
+    return ApiDateFormatter.formatForApi(millis)
+}
 
-    val day = dateTime.day.toString().padStart(2, '0')
-    val month = dateTime.month.number.toString().padStart(2, '0')
-    val year = dateTime.year
-    return "$day/$month/$year"
+/**
+ * Format epoch milliseconds to date string using specified pattern.
+ *
+ * @param millis Epoch milliseconds
+ * @param pattern The date format pattern to use
+ * @return Formatted date string
+ * @see ApiDateFormatter for more formatting options
+ */
+fun formatDate(millis: Long, pattern: DateFormatPattern): String {
+    return ApiDateFormatter.formatForApi(millis, pattern)
 }

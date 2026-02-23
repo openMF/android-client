@@ -66,6 +66,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.mifos.core.common.utils.ApiDateFormatter
 import com.mifos.core.common.utils.DateHelper
 import com.mifos.core.common.utils.formatDate
 import com.mifos.core.designsystem.component.MifosDatePickerTextField
@@ -385,8 +386,8 @@ private fun CreateNewGroupContent(
                             activationDate = activationDateInString,
                             submittedOnDate = submittedOnDateInString,
                             officeId = officeId,
-                            dateFormat = "dd MMMM yyyy",
-                            locale = "en",
+                            dateFormat = ApiDateFormatter.DATE_FORMAT,
+                            locale = ApiDateFormatter.LOCALE,
                         ),
                     )
                 }
