@@ -97,7 +97,6 @@ import com.mifos.feature.loan.loanAccount.navigateToLoanAccountScreen
 import com.mifos.feature.loan.loanAccountSummary.navigateToLoanAccountSummaryScreen
 import com.mifos.feature.loan.navigation.loanDestination
 import com.mifos.feature.loan.newLoanAccount.navigateToNewLoanAccountRoute
-import com.mifos.feature.loan.newLoanAccount.newLoanAccountDestination
 import com.mifos.feature.note.navigation.noteDestination
 import com.mifos.feature.note.notes.navigateToNoteScreen
 import com.mifos.feature.recurringDeposit.newRecurringDepositAccount.navigateToRecurringAccountRoute
@@ -372,12 +371,6 @@ fun NavGraphBuilder.clientNavGraph(
             navController = navController,
             onMoreInfoClicked = onMoreInfoClicked,
             onDocumentsClicked = navController::navigateToDocumentListScreen,
-        )
-
-        newLoanAccountDestination(
-            onNavigateBack = navController::popBackStack,
-            onFinish = navController::popBackStack,
-            navController = navController,
         )
 
         dataTableRoute(
