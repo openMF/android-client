@@ -56,7 +56,10 @@ internal class NewLoanAccountViewModel(
 ) : BaseViewModel<NewLoanAccountState, NewLoanAccountEvent, NewLoanAccountAction>(
     initialState = run {
         val route = savedStateHandle.toRoute<NewLoanAccountRoute>()
-        NewLoanAccountState(clientId = route.clientId, accountNo = route.accountNo)
+        NewLoanAccountState(
+            clientId = route.clientId,
+            accountNo = route.accountNo ?: "",
+        )
     },
 ) {
 
