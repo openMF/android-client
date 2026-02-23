@@ -72,7 +72,6 @@ import com.mifos.feature.client.clientUpcomingCharges.navigateToClientUpcomingCh
 import com.mifos.feature.client.clientUpdateDefaultAccount.navigateToUpdateDefaultAccountRoute
 import com.mifos.feature.client.clientUpdateDefaultAccount.updateDefaultAccountDestination
 import com.mifos.feature.client.clientsList.ClientListScreen
-import com.mifos.feature.client.createNewClient.CreateNewClientScreen
 import com.mifos.feature.client.createNewClient.CreateNewClientScreenRoute
 import com.mifos.feature.client.createShareAccount.createShareAccountDestination
 import com.mifos.feature.client.createShareAccount.navigateToCreateShareAccountRoute
@@ -186,7 +185,7 @@ fun NavGraphBuilder.clientNavGraph(
         createClientRoute(
             onBackPressed = navController::popBackStack,
             hasDatatables = hasDatatables,
-            navigateToCreateLoanAccount = navController::navigateToNewLoanAccountRoute
+            navigateToCreateLoanAccount = navController::navigateToNewLoanAccountRoute,
         )
         clientProfileDestination(
             onNavigateBack = navController::popBackStack,
@@ -513,7 +512,7 @@ fun NavGraphBuilder.clientSurveyQuestionRoute(
 
 fun NavGraphBuilder.createClientRoute(
     onBackPressed: () -> Unit,
-    navigateToCreateLoanAccount : (Int) -> Unit,
+    navigateToCreateLoanAccount: (Int) -> Unit,
     hasDatatables: KFunction4<List<DataTableEntity>, Any?, Int, MutableList<List<FormWidgetDTO>>, Unit>,
 ) {
     composable(

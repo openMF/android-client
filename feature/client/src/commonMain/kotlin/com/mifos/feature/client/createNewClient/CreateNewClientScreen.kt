@@ -136,7 +136,6 @@ import io.github.vinceglb.filekit.dialogs.FileKitType
 import io.github.vinceglb.filekit.dialogs.compose.rememberFilePickerLauncher
 import io.github.vinceglb.filekit.path
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.getString
 import org.jetbrains.compose.resources.painterResource
@@ -1345,7 +1344,7 @@ private fun PreviewCreateNewClientScreen(
         createClient = { },
         uploadImage = { _ -> },
         onImageSelected = {},
-        navigateToCreateLoanAccount = { }
+        navigateToCreateLoanAccount = { },
     ) { _, _ ->
     }
 }
