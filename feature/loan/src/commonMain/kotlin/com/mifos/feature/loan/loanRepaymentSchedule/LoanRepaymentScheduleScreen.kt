@@ -31,13 +31,11 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.HorizontalDivider
@@ -55,7 +53,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewModelScope
 import com.mifos.core.common.utils.CurrencyFormatter
 import com.mifos.core.common.utils.DateHelper
 import com.mifos.core.designsystem.component.MifosScaffold
@@ -66,7 +63,6 @@ import com.mifos.core.model.objects.account.loan.Period
 import com.mifos.core.model.objects.account.loan.RepaymentSchedule
 import com.mifos.core.ui.components.MifosProgressIndicator
 import com.mifos.room.entities.accounts.loans.LoanWithAssociationsEntity
-import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
@@ -157,7 +153,6 @@ private fun LoanRepaymentScheduleContent(
     fun formatCurrency(amount: Double?): String {
         if (amount == null) return ""
         if (currencyCode.isNullOrBlank()) {
-            // Fallback: format with decimal places without currency symbol
             val places = decimalPlaces ?: 2
             val multiplier = when (places) {
                 0 -> 1.0
@@ -188,7 +183,6 @@ private fun LoanRepaymentScheduleContent(
             modifier = Modifier.weight(1f),
         ) {
             stickyHeader {
-                // Follow the same pattern as LoanTransactionsScreen
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -225,7 +219,6 @@ private fun LoanRepaymentScheduleContent(
             itemsIndexed(
                 items = periods,
                 key = { index, period ->
-                    // Using index + dueDate for unique keys, handling potential null dates
                     "$index-${period.dueDate?.joinToString("-") ?: "null"}"
                 },
             ) { index, period ->
@@ -254,13 +247,12 @@ private fun LoanRepaymentScheduleContent(
                         backgroundColor = MaterialTheme.colorScheme.surface,
                         edgeOffset = DesignToken.padding.medium,
                         showTopBorder = false,
-                        showBottomBorder = index < periods.lastIndex, // Only show bottom border if not last row
+                        showBottomBorder = index < periods.lastIndex,
                     )
                 }
             }
         }
 
-        // Bottom Summary Bar - explicit layout instead of overlapping
         HorizontalDivider(
             thickness = 1.dp,
             color = MaterialTheme.colorScheme.outlineVariant,
