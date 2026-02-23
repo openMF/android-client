@@ -76,6 +76,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.mifos.core.common.utils.ApiDateFormatter
 import com.mifos.core.common.utils.DateHelper
 import com.mifos.core.designsystem.component.MifosDatePickerTextField
 import com.mifos.core.designsystem.component.MifosOutlinedTextField
@@ -586,14 +587,14 @@ private fun GroupLoanAccountContent(
                     isAllowPartialPeriodInterestCalcualtion = selectedCalculateExactDaysIn
                     amortizationType = selectedAmortizationId
                     this.groupId = groupId
-                    dateFormat = "dd MMMM yyyy"
+                    dateFormat = ApiDateFormatter.DATE_FORMAT
                     expectedDisbursementDate =
                         DateHelper.getDateAsStringFromLong(
                             disbursementDate,
                         )
                     interestCalculationPeriodType = selectedInterestCalculationPeriodId
                     loanType = "individual"
-                    locale = "en"
+                    locale = ApiDateFormatter.LOCALE
                     numberOfRepayments = numberOfRepayment
                     principal = principalAmount
                     productId = selectedLoanProductId

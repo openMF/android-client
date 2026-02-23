@@ -9,6 +9,7 @@
  */
 package com.mifos.core.network.datamanager
 
+import com.mifos.core.common.utils.ApiDateFormatter
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.common.utils.Page
 import com.mifos.core.common.utils.asDataStateFlow
@@ -501,8 +502,8 @@ class DataManagerClient(
                 destinationOfficeId = destinationOfficeId,
                 transferDate = transferDate,
                 note = note,
-                locale = "en",
-                dateFormat = "dd-MM-yyyy",
+                locale = ApiDateFormatter.LOCALE,
+                dateFormat = ApiDateFormatter.DATE_FORMAT,
             ),
         )
     }
@@ -517,8 +518,8 @@ class DataManagerClient(
             payload = ClientCloseRequest(
                 closureDate = closureDate,
                 closureReasonId = closureReasonId,
-                dateFormat = "dd-MM-yyyy",
-                locale = "en",
+                dateFormat = ApiDateFormatter.DATE_FORMAT,
+                locale = ApiDateFormatter.LOCALE,
             ),
         )
     }

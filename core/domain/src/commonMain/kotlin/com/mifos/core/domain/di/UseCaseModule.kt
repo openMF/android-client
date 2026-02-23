@@ -18,6 +18,7 @@ import com.mifos.core.domain.useCases.AddDataTableEntryUseCase
 import com.mifos.core.domain.useCases.AddNoteUseCase
 import com.mifos.core.domain.useCases.ApproveCheckerUseCase
 import com.mifos.core.domain.useCases.ApproveSavingsApplicationUseCase
+import com.mifos.core.domain.useCases.CalculateLoanScheduleUseCase
 import com.mifos.core.domain.useCases.CreateChargesUseCase
 import com.mifos.core.domain.useCases.CreateClientIdentifierUseCase
 import com.mifos.core.domain.useCases.CreateGroupLoansAccountUseCase
@@ -102,6 +103,7 @@ val UseCaseModule = module {
     factoryOf(::ApproveSavingsApplicationUseCase)
     factoryOf(::CreateChargesUseCase)
     factoryOf(::CreateClientIdentifierUseCase)
+    factoryOf(::CalculateLoanScheduleUseCase)
     factoryOf(::CreateGroupLoansAccountUseCase)
     factoryOf(::CreateLoanAccountUseCase)
     factoryOf(::CreateLoanChargesUseCase)
