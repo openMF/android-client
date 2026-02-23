@@ -136,6 +136,7 @@ import io.github.vinceglb.filekit.dialogs.FileKitType
 import io.github.vinceglb.filekit.dialogs.compose.rememberFilePickerLauncher
 import io.github.vinceglb.filekit.path
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.getString
 import org.jetbrains.compose.resources.painterResource
@@ -152,8 +153,9 @@ import kotlin.time.ExperimentalTime
  */
 
 @Composable
-internal fun CreateNewClientScreen(
+internal fun CreateNewClientScreenRoute(
     navigateBack: () -> Unit,
+    navigateToCreateLoanAccount: (Int) -> Unit,
     hasDatatables: (datatables: List<DataTableEntity>, clientPayload: ClientPayloadEntity) -> Unit,
     viewmodel: CreateNewClientViewModel = koinViewModel(),
 ) {
@@ -161,21 +163,18 @@ internal fun CreateNewClientScreen(
     val officeList by viewmodel.showOffices.collectAsStateWithLifecycle()
     val staffInOffice by viewmodel.staffInOffices.collectAsStateWithLifecycle()
 
-    LaunchedEffect(key1 = Unit) {
-        viewmodel.loadOfficeAndClientTemplate()
-    }
-
     CreateNewClientScreen(
         uiState = uiState,
         officeList = officeList,
         staffInOffices = staffInOffice,
+        navigateToCreateLoanAccount = navigateToCreateLoanAccount,
         onRetry = { viewmodel.loadOfficeAndClientTemplate() },
-        navigateBack = navigateBack,
         loadStaffInOffice = { viewmodel.loadStaffInOffices(it) },
         createClient = { viewmodel.createClient(clientPayload = it) },
         uploadImage = { id ->
             viewmodel.uploadImage(id)
         },
+        navigateBack = navigateBack,
         hasDatatables = hasDatatables,
         onImageSelected = {
             viewmodel.updateSelectedImage(it)
@@ -189,6 +188,7 @@ internal fun CreateNewClientScreen(
     onRetry: () -> Unit,
     officeList: List<OfficeEntity>,
     staffInOffices: List<StaffEntity>,
+    navigateToCreateLoanAccount: (Int) -> Unit,
     loadStaffInOffice: (officeId: Int) -> Unit,
     navigateBack: () -> Unit,
     onImageSelected: (PlatformFile?) -> Unit,
@@ -235,7 +235,7 @@ internal fun CreateNewClientScreen(
                 if (createClientWithImage) {
                     uploadImage(uiState.id)
                 } else {
-                    navigateBack.invoke()
+                    navigateToCreateLoanAccount(uiState.id)
                 }
             }
 
@@ -255,7 +255,7 @@ internal fun CreateNewClientScreen(
                         duration = SnackbarDuration.Long,
                     )
                 }
-                navigateBack.invoke()
+                navigateToCreateLoanAccount(uiState.clientId)
             }
 
             is CreateNewClientUiState.ShowWaitingForCheckerApproval -> {
@@ -1325,7 +1325,7 @@ private class CreateNewClientScreenPreviewProvider :
             ),
             CreateNewClientUiState.ShowProgressbar,
             CreateNewClientUiState.ShowClientCreatedSuccessfully(Res.string.feature_client_client_created_successfully),
-            CreateNewClientUiState.OnImageUploadSuccess(Res.string.feature_client_Image_Upload_Successful),
+            CreateNewClientUiState.OnImageUploadSuccess(Res.string.feature_client_Image_Upload_Successful, 2),
             CreateNewClientUiState.ShowWaitingForCheckerApproval(Res.string.feature_client_waiting_for_checker_approval),
         )
 }
@@ -1345,6 +1345,7 @@ private fun PreviewCreateNewClientScreen(
         createClient = { },
         uploadImage = { _ -> },
         onImageSelected = {},
+        navigateToCreateLoanAccount = { }
     ) { _, _ ->
     }
 }

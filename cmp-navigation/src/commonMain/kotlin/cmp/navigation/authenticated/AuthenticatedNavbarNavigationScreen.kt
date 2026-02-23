@@ -92,6 +92,7 @@ import com.mifos.feature.groups.navigation.navigateToCreateNewGroupScreen
 import com.mifos.feature.groups.navigation.navigateToGroupDetailsScreen
 import com.mifos.feature.groups.navigation.navigateToGroupListScreen
 import com.mifos.feature.loan.groupLoanAccount.navigateToGroupLoanScreen
+import com.mifos.feature.loan.loanAccount.navigateToLoanAccountScreen
 import com.mifos.feature.loan.loanAccountSummary.navigateToLoanAccountSummaryScreen
 import com.mifos.feature.note.notes.navigateToNoteScreen
 import com.mifos.feature.savings.navigation.navigateToAddSavingsAccount
@@ -372,9 +373,7 @@ internal fun AuthenticatedNavbarNavigationScreenContent(
                         )
                     },
                     hasDatatables = navController::navigateDataTableList,
-                    onNavigateToSearch = { type ->
-                        navController.navigateToSearchRecord(type)
-                    },
+                    onNavigateToSearch = navController::navigateToSearchRecord,
                 )
 
                 searchRecordNavigation(

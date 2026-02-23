@@ -73,6 +73,7 @@ import com.mifos.feature.client.clientUpdateDefaultAccount.navigateToUpdateDefau
 import com.mifos.feature.client.clientUpdateDefaultAccount.updateDefaultAccountDestination
 import com.mifos.feature.client.clientsList.ClientListScreen
 import com.mifos.feature.client.createNewClient.CreateNewClientScreen
+import com.mifos.feature.client.createNewClient.CreateNewClientScreenRoute
 import com.mifos.feature.client.createShareAccount.createShareAccountDestination
 import com.mifos.feature.client.createShareAccount.navigateToCreateShareAccountRoute
 import com.mifos.feature.client.documentPreviewScreen.createDocumentPreviewRoute
@@ -97,6 +98,7 @@ import com.mifos.feature.loan.loanAccount.navigateToLoanAccountScreen
 import com.mifos.feature.loan.loanAccountSummary.navigateToLoanAccountSummaryScreen
 import com.mifos.feature.loan.navigation.loanDestination
 import com.mifos.feature.loan.newLoanAccount.navigateToNewLoanAccountRoute
+import com.mifos.feature.loan.newLoanAccount.newLoanAccountDestination
 import com.mifos.feature.note.navigation.noteDestination
 import com.mifos.feature.note.notes.navigateToNoteScreen
 import com.mifos.feature.recurringDeposit.newRecurringDepositAccount.navigateToRecurringAccountRoute
@@ -184,6 +186,7 @@ fun NavGraphBuilder.clientNavGraph(
         createClientRoute(
             onBackPressed = navController::popBackStack,
             hasDatatables = hasDatatables,
+            navigateToCreateLoanAccount = navController::navigateToNewLoanAccountRoute
         )
         clientProfileDestination(
             onNavigateBack = navController::popBackStack,
@@ -372,6 +375,12 @@ fun NavGraphBuilder.clientNavGraph(
             onDocumentsClicked = navController::navigateToDocumentListScreen,
         )
 
+        newLoanAccountDestination(
+            onNavigateBack = navController::popBackStack,
+            onFinish = navController::popBackStack,
+            navController = navController,
+        )
+
         dataTableRoute(
             onBackPressed = navController::popBackStack,
             onClick = navController::navigateDataTableData,
@@ -504,13 +513,15 @@ fun NavGraphBuilder.clientSurveyQuestionRoute(
 
 fun NavGraphBuilder.createClientRoute(
     onBackPressed: () -> Unit,
+    navigateToCreateLoanAccount : (Int) -> Unit,
     hasDatatables: KFunction4<List<DataTableEntity>, Any?, Int, MutableList<List<FormWidgetDTO>>, Unit>,
 ) {
     composable(
         route = ClientScreens.CreateClientScreen.route,
     ) {
-        CreateNewClientScreen(
+        CreateNewClientScreenRoute(
             navigateBack = onBackPressed,
+            navigateToCreateLoanAccount = navigateToCreateLoanAccount,
             hasDatatables = { datatables, clientPayload ->
                 hasDatatables(datatables, clientPayload, Constants.CREATE_CLIENT, mutableListOf())
             },
