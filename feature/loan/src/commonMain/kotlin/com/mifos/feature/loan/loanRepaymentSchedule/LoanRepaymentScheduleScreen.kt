@@ -154,15 +154,7 @@ private fun LoanRepaymentScheduleContent(
         if (amount == null) return ""
         if (currencyCode.isNullOrBlank()) {
             val places = decimalPlaces ?: 2
-            val multiplier = when (places) {
-                0 -> 1.0
-                1 -> 10.0
-                2 -> 100.0
-                3 -> 1000.0
-                else -> 10000.0
-            }
-            val rounded = kotlin.math.round(amount * multiplier) / multiplier
-            return rounded.toString()
+            return "%.${places}f".format(amount)
         }
 
         return CurrencyFormatter.format(
