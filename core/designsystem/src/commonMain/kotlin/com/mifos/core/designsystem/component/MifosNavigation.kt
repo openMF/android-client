@@ -21,7 +21,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import com.mifos.core.designsystem.icon.MifosIcons
-import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.designsystem.theme.MifosTheme
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import template.core.base.designsystem.theme.KptTheme
@@ -78,7 +77,7 @@ fun MifosNavigationBar(
     NavigationBar(
         modifier = modifier,
         containerColor = KptTheme.colorScheme.background,
-        tonalElevation = DesignToken.elevation.none,
+        tonalElevation = KptTheme.elevation.level0,
         content = content,
     )
 }

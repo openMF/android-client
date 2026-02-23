@@ -33,7 +33,7 @@ fun MifosCard(
     modifier: Modifier = Modifier,
     shape: Shape = DesignToken.shapes.small,
     borderStroke: BorderStroke = BorderStroke(DesignToken.strokes.none, Color.Transparent),
-    elevation: Dp = DesignToken.elevation.dp1,
+    elevation: Dp = KptTheme.elevation.level1,
     onClick: (() -> Unit)? = null,
     colors: CardColors = CardDefaults.cardColors(
         containerColor = KptTheme.colorScheme.background,
