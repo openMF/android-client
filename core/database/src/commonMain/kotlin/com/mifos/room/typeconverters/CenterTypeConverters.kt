@@ -12,9 +12,9 @@ package com.mifos.room.typeconverters
 import com.mifos.room.entities.accounts.savings.SavingAccountDepositTypeEntity
 import com.mifos.room.entities.group.CenterDateEntity
 import com.mifos.room.entities.group.GroupDateEntity
-import com.mifos.room.utils.TypeConverter
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
+import template.core.base.database.TypeConverter
 
 class CenterTypeConverters {
 

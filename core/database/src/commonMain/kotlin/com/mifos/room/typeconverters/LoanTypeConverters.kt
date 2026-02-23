@@ -27,9 +27,9 @@ import com.mifos.room.entities.accounts.loans.LoanTimelineEntity
 import com.mifos.room.entities.accounts.loans.LoanTypeEntity
 import com.mifos.room.entities.accounts.loans.LoansAccountSummaryEntity
 import com.mifos.room.entities.accounts.savings.SavingAccountCurrencyEntity
-import com.mifos.room.utils.TypeConverter
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
+import template.core.base.database.TypeConverter
 
 /**
  * Created by Pronay Sarker on 24/01/2025 (3:07 PM)

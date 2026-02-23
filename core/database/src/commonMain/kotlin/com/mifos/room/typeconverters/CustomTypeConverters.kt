@@ -67,10 +67,10 @@ import com.mifos.room.entities.templates.clients.OptionsEntity
 import com.mifos.room.entities.templates.clients.SavingProductOptionsEntity
 import com.mifos.room.entities.templates.clients.StaffOptionsEntity
 import com.mifos.room.entities.templates.loans.LoanType
-import com.mifos.room.utils.TypeConverter
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonObject
+import template.core.base.database.TypeConverter
 
 @Suppress("TooManyFunctions")
 class CustomTypeConverters {

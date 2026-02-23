@@ -1,27 +1,27 @@
 [versions]
 accompanistPermission = "0.37.3"
-androidDesugarJdkLibs = "2.1.4"
-androidGradlePlugin = "8.7.3"
-androidTools = "31.8.0"
-androidxActivity = "1.10.0"
+androidDesugarJdkLibs = "2.1.5"
+androidGradlePlugin = "8.12.3"
+androidTools = "31.12.3"
+androidxActivity = "1.12.2"
 androidxAppCompat = "1.7.0"
-androidxComposeBom = "2025.01.00"
-androidxComposeCompiler = "1.5.8"
+androidxComposeBom = "2025.12.01"
+androidxComposeCompiler = "1.5.15"
 androidxComposeUi = "1.7.6"
 androidxComposeRuntime = "1.7.6"
-androidxComposeRuntimeTracing = "1.7.6"
+androidxComposeRuntimeTracing = "1.10.0"
 androidxComposeMaterial3 = "1.3.1"
-androidxCore = "1.15.0"
-androidxCoreSplashscreen = "1.0.1"
+androidxCore = "1.17.0"
+androidxCoreSplashscreen = "1.2.0"
 androidxEspresso = "3.6.1"
 androidxLifecycle = "2.8.7"
-androidxMacroBenchmark = "1.3.4"
+androidxMacroBenchmark = "1.4.1"
 androidxBaselineProfile = "1.3.3"
 androidxBenchmark = "1.3.3"
 androidxBenchmarkJunit4 = "1.1.1"
 androidxMaterial = "1.6.7"
 androidxMaterialVersion = "1.7.6"
-androidxMetrics = "1.0.0-beta01"
+androidxMetrics = "1.0.0"
 androidxNavigation = "2.8.5"
 androidxPagingCommon = "3.3.6"
 androidxProfileinstaller = "1.4.1"
@@ -30,11 +30,11 @@ androidxTestCore = "1.6.1"
 androidxTestExt = "1.2.1"
 androidxTestRules = "1.6.1"
 androidxTestRunner = "1.6.2"
-androidxTracing = "1.2.0"
+androidxTracing = "1.3.0"
 androidxUiAutomator = "2.3.0"
 androidxWindowManager = "1.3.0"
-androidxWork = "2.10.0"
-androidxBrowser = "1.8.0"
+androidxWork = "2.11.0"
+androidxBrowser = "1.9.0"
 annotation = "1.9.1"
 cmpImagePickNCrop = "1.1.2"
 compiler = "1.5.15"
@@ -43,17 +43,17 @@ coreTesting = "2.2.0"
 espressoIdlingResource = "3.6.1"
 espressoIntents = "3.6.1"
 fineractClientVersion = "0.0.1"
-firebaseBom = "33.8.0"
-firebaseCrashlyticsPlugin = "3.0.2"
-firebasePerfPlugin = "1.4.2"
+firebaseBom = "34.7.0"
+firebaseCrashlyticsPlugin = "3.0.6"
+firebasePerfPlugin = "2.0.2"
 fliptables = "1.0.1"
 glide = "4.15.1"
-gmsPlugin = "4.4.2"
-googleOss = "17.1.0"
-googleOssPlugin = "0.10.6"
+gmsPlugin = "4.4.4"
+googleOss = "17.3.0"
+googleOssPlugin = "0.10.10"
 jacoco = "0.8.7"
 junit4 = "4.13.2"
-junitJupiter = "5.8.2"
+junitJupiter = "5.13.4"
 junitVersion = "1.2.1"
 koinAndroid = "4.0.1"
 koinAndroidxCompose = "3.5.0"
@@ -89,73 +89,72 @@ playUpdate = "2.1.0"
 playScanner = "16.1.0"
 playService = "18.5.0"
 realmVersion = "1.13.0"
-roborazzi = "1.26.0"
-room = "2.7.2"
-sqliteBundled = "2.5.0-alpha12"
+roborazzi = "1.52.0"
+room = "2.8.4"
+sqliteBundled = "2.6.2"
 #roomKtxVersion = "2.7.0-rc02"
 #roomRuntimeVersion = "2.7.0-rc02"
 #roomTestingVersion = "2.7.0-rc02"
 rxandroidVersion = "1.1.0"
 rxandroid = "3.0.2" # 1.1.0
 dependencyGuard = "0.5.0"
-spotlessVersion = "6.25.0"
+spotlessVersion = "7.0.2"
 ktlint = "12.1.1"
-detekt = "1.23.7"
+detekt = "1.23.8"
 twitter-detekt-compose = "0.0.26"
-moduleGraph = "2.7.1"
+moduleGraph = "2.9.0"
 fluentui-icons = "1.0.0"
 
 secrets = "2.0.1"
-truthVersion = '1.4.4'
+truthVersion = '1.4.5'
 runtimeLivedata = "1.7.6"
-appcompat = "1.7.0"
+appcompat = "1.7.1"
 
 # Kotlin KMP Dependencies
-kotlin = "2.1.0"
+kotlin = "2.2.21"
 kotlinInject = "0.7.2"
-kotlinxCoroutines = "1.10.1"
+kotlinxCoroutines = "1.10.2"
 kotlinxDatetime = "0.7.1"
-kotlinxImmutable = "0.3.8"
-kotlinxSerializationJson = "1.7.3"
-ksp = "2.1.10-1.0.30"
+kotlinxImmutable = "0.4.0"
+kotlinxSerializationJson = "1.9.0"
+ksp = "2.2.21-2.0.4"
 
 # Ktor & Ktorfit
-ktorVersion = "3.1.3"
-ktorfit = "2.5.2"
-ktorfitKsp = "2.5.1"
+ktorVersion = "3.3.3"
+ktorfit = "2.7.1"
 
 # Koin CMP Dependencies
-koin = "4.1.0"
+koin = "4.1.1"
 koinAnnotationsVersion = "2.1.0"
 
 # CMP Libraries
-compose-plugin = "1.9.0"
-coil = "3.2.0"
+compose-plugin = "1.9.3"
+coil = "3.3.0"
 backHandlerVersion = "2.5.0"
-constraintLayout = "0.4.0"
+constraintLayout = "0.6.0"
 multiplatformSettings = "1.3.0"
 qroseVersion = "1.0.1"
-okioVersion = "3.15.0"
-kermit = "2.0.6"
-fileKit = "0.10.0-beta04"
+okioVersion = "3.16.4"
+kermit = "2.0.8"
+fileKit = "0.12.0"
 fileKitCompose = "0.8.8"
-wire = "5.0.0"
-compose_ui = "1.8.0-alpha03"
+wire = "5.4.0"
+uiBackhandler = "1.9.3"
 composeSignature = "1.0.1"
 krop = "0.2.0"
 # Jetbrains CMP
 windowsSizeClass = "0.5.0"
 uiDesktopVersion = "1.7.0"
-composeLifecycle = "2.9.1"
-composeNavigation = "2.9.0-beta03"
+composeLifecycle = "2.9.6"
+composeNavigation = "2.9.1"
 jbCoreBundle = "1.0.1"
-jbSavedState = "1.3.3"
-gitLive = "2.1.0"
+jbSavedState = "1.4.0"
+gitLive = "2.4.0"
 material3adaptive = "1.1.2"
 calfPermissions = "0.8.0"
 appUpdate = "2.1.0"
 review = "2.0.2"
-integrity = "1.4.0"
+integrity = "1.6.0"
 lottie = "6.6.7"
 compottie = "2.0.0-rc05"
 pdfbox = "2.0.30"
@@ -281,11 +280,11 @@ androidx-lifecycle-runtimeTesting = { group = "androidx.lifecycle", name = "life
 androidx-window-manager = { module = "androidx.window:window", version.ref = "androidxWindowManager" }
 
 # Firebase Analytics & Bom
-firebase-analytics = { group = "com.google.firebase", name = "firebase-analytics-ktx" }
+firebase-analytics = { group = "com.google.firebase", name = "firebase-analytics" }
 firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version.ref = "firebaseBom" }
-firebase-cloud-messaging = { group = "com.google.firebase", name = "firebase-messaging-ktx" }
-firebase-crashlytics = { group = "com.google.firebase", name = "firebase-crashlytics-ktx" }
-firebase-performance = { group = "com.google.firebase", name = "firebase-perf-ktx" }
+firebase-cloud-messaging = { group = "com.google.firebase", name = "firebase-messaging" }
+firebase-crashlytics = { group = "com.google.firebase", name = "firebase-crashlytics" }
+firebase-performance = { group = "com.google.firebase", name = "firebase-perf" }
 firebase-performance-gradle = { group = "com.google.firebase", name = "perf-plugin", version.ref = "firebasePerfPlugin" }
 
 # Google OSS Plugins
@@ -389,7 +388,7 @@ ktor-client-logging = { group = "io.ktor", name = "ktor-client-logging", version
 ktor-client-serialization = { group = "io.ktor", name = "ktor-client-serialization", version.ref = "ktorVersion" }
 ktor-serialization-kotlinx-json = { group = "io.ktor", name = "ktor-serialization-kotlinx-json", version.ref = "ktorVersion" }
 
-ktorfit-ksp = { group = "de.jensklingenberg.ktorfit", name = "ktorfit-ksp", version.ref = "ktorfitKsp" }
+ktorfit-ksp = { group = "de.jensklingenberg.ktorfit", name = "ktorfit-ksp", version.ref = "ktorfit" }
 ktorfit-lib = { group = "de.jensklingenberg.ktorfit", name = "ktorfit-lib", version.ref = "ktorfit" }
 
 coil-core = { group = "io.coil-kt.coil3", name = "coil-core", version.ref = "coil" }
@@ -410,7 +409,7 @@ filekit-compose = { group = "io.github.vinceglb", name = "filekit-compose", vers
 filekit-dialogs = { module = "io.github.vinceglb:filekit-dialogs", version.ref = "fileKit" }
 filekit-dialog-compose = { group = "io.github.vinceglb", name = "filekit-dialogs-compose", version.ref = "fileKit" }
 filekit-coil = { module = "io.github.vinceglb:filekit-coil", version.ref = "fileKit" }
-ui-backhandler = { group = "org.jetbrains.compose.ui", name = "ui-backhandler", version.ref = "compose_ui" }
+ui-backhandler = { group = "org.jetbrains.compose.ui", name = "ui-backhandler", version.ref = "uiBackhandler" }
 
 kermit-logging = { group = "co.touchlab", name = "kermit", version.ref = "kermit" }
 kermit-simple = { group = "co.touchlab", name = "kermit-simple", version.ref = "kermit" }

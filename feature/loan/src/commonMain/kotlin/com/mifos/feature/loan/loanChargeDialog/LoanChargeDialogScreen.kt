@@ -63,6 +63,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.mifos.core.common.utils.ApiDateFormatter
 import com.mifos.core.common.utils.DateHelper
 import com.mifos.core.designsystem.component.MifosDatePickerTextField
 import com.mifos.core.designsystem.component.MifosOutlinedTextField
@@ -276,12 +277,10 @@ internal fun LoanChargeDialogScreen(
                                     if (validateInput()) {
                                         val payload = ChargesPayload().apply {
                                             this.amount = amount
-                                            this.locale = locale
-                                            this.dateFormat = "dd-MM-yyyy"
+                                            this.locale = ApiDateFormatter.LOCALE
+                                            this.dateFormat = ApiDateFormatter.DATE_FORMAT
                                             this.chargeId = chargeId
-                                            this.dueDate = DateHelper.getDateAsStringFromLong(
-                                                dueDate,
-                                            )
+                                            this.dueDate = ApiDateFormatter.formatForApi(dueDate)
                                         }
                                         onCreate(payload)
                                     }

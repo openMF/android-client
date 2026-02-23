@@ -9,6 +9,7 @@
  */
 package com.mifos.core.model.objects.users
 
+import com.mifos.core.model.utils.DateConstants
 import com.mifos.core.model.utils.Parcelable
 import com.mifos.core.model.utils.Parcelize
 import kotlinx.serialization.Serializable
@@ -33,7 +34,7 @@ data class UserLocation(
 
     var endAddress: String? = null,
 
-    var dateFormat: String? = "dd MMMM yyyy HH:mm",
+    var dateFormat: String? = DateConstants.DATE_FORMAT_WITH_TIME,
 
-    var locale: String? = "en",
+    var locale: String? = DateConstants.LOCALE,
 ) : Parcelable

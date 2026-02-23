@@ -17,9 +17,9 @@ import com.mifos.core.model.objects.account.saving.LockinPeriodFrequencyType
 import com.mifos.room.entities.PaymentTypeOptionEntity
 import com.mifos.room.entities.accounts.savings.SavingsTransactionDateEntity
 import com.mifos.room.entities.accounts.savings.SavingsTransactionTypeEntity
-import com.mifos.room.utils.TypeConverter
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
+import template.core.base.database.TypeConverter
 
 // todo add missing converters
 class SavingsTypeConverters {
