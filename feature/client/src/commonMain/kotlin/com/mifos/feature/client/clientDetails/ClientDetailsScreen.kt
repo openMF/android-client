@@ -61,7 +61,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -71,7 +70,6 @@ import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -96,6 +94,7 @@ import com.mifos.core.designsystem.component.MifosMenuDropDownItem
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.icon.MifosIcons
+import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.ui.components.MifosProgressIndicator
 import com.mifos.core.ui.components.MifosUserImage
 import com.mifos.core.ui.util.DevicePreview
@@ -108,6 +107,7 @@ import io.github.vinceglb.filekit.dialogs.compose.rememberFilePickerLauncher
 import org.jetbrains.compose.resources.getString
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
+import template.core.base.designsystem.theme.KptTheme
 
 /**
  * Created by Aditya Gupta on 18/03/24.
@@ -200,7 +200,7 @@ internal fun ClientDetailsScreen(
                 Icon(imageVector = MifosIcons.MoreVert, contentDescription = null)
             }
             DropdownMenu(
-                modifier = Modifier.background(MaterialTheme.colorScheme.surface),
+                modifier = Modifier.background(KptTheme.colorScheme.surface),
                 expanded = showMenu,
                 onDismissRequest = { showMenu = false },
             ) {
@@ -287,13 +287,13 @@ internal fun ClientDetailsScreen(
                     onClick = { activateClient(clientId) },
                     modifier = Modifier
                         .fillMaxWidth()
-                        .heightIn(44.dp)
-                        .padding(start = 16.dp, end = 16.dp),
+                        .heightIn(DesignToken.spacing.dp44)
+                        .padding(horizontal = KptTheme.spacing.md),
                     contentPadding = PaddingValues(),
                 ) {
                     Text(
                         text = stringResource(Res.string.feature_client_activate_client),
-                        style = MaterialTheme.typography.bodyLarge,
+                        style = KptTheme.typography.bodyLarge,
                     )
                 }
             }
@@ -358,7 +358,7 @@ private fun MifosClientDetailsScreen(
             .padding(padding)
             .verticalScroll(rememberScrollState()),
     ) {
-        Spacer(modifier = Modifier.height(20.dp))
+        Spacer(modifier = Modifier.height(DesignToken.spacing.largeIncreased))
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.Center,
@@ -366,21 +366,21 @@ private fun MifosClientDetailsScreen(
             MifosUserImage(
                 bitmap = profileImage.value,
                 modifier = Modifier
-                    .size(100.dp)
+                    .size(DesignToken.sizes.dp100)
                     .clickable(onClick = onClick),
             )
         }
 
-        Spacer(modifier = Modifier.height(10.dp))
+        Spacer(modifier = Modifier.height(DesignToken.spacing.dp10))
         client?.displayName?.let {
             Text(
-                modifier = Modifier.padding(16.dp),
+                modifier = Modifier.padding(KptTheme.spacing.md),
                 text = it,
-                style = MaterialTheme.typography.titleLarge,
+                style = KptTheme.typography.titleLarge,
                 textAlign = TextAlign.Start,
             )
         }
-        Spacer(modifier = Modifier.height(6.dp))
+        Spacer(modifier = Modifier.height(DesignToken.spacing.mediumSmall))
         client?.accountNo?.let {
             MifosClientDetailsText(
                 icon = MifosIcons.Numbers,
@@ -427,12 +427,12 @@ private fun MifosClientDetailsScreen(
                 }
             }
         }
-        Spacer(modifier = Modifier.height(20.dp))
+        Spacer(modifier = Modifier.height(DesignToken.spacing.largeIncreased))
         if (loanAccounts != null && savingsAccounts != null) {
             Text(
-                modifier = Modifier.padding(start = 16.dp, bottom = 6.dp),
+                modifier = Modifier.padding(start = KptTheme.spacing.md, bottom = DesignToken.spacing.mediumSmall),
                 text = stringResource(Res.string.feature_client_accounts),
-                style = MaterialTheme.typography.titleMedium,
+                style = KptTheme.typography.titleMedium,
                 textAlign = TextAlign.Start,
             )
         }
@@ -468,20 +468,20 @@ private fun MifosLoanAccountExpendableCard(
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(8.dp)
+            .padding(KptTheme.spacing.sm)
             .animateContentSize(
                 animationSpec = tween(
                     durationMillis = 300,
                     easing = LinearOutSlowInEasing,
                 ),
             ),
-        shape = RoundedCornerShape(22.dp),
-        colors = CardDefaults.cardColors(MaterialTheme.colorScheme.secondary),
+        shape = DesignToken.shapes.dp22,
+        colors = CardDefaults.cardColors(KptTheme.colorScheme.secondary),
     ) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(10.dp),
+                .padding(DesignToken.padding.dp10),
         ) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
@@ -489,14 +489,14 @@ private fun MifosLoanAccountExpendableCard(
                 Text(
                     modifier = Modifier
                         .weight(1f)
-                        .padding(start = 8.dp),
+                        .padding(start = KptTheme.spacing.sm),
                     text = accountType,
-                    style = MaterialTheme.typography.bodyLarge,
+                    style = KptTheme.typography.bodyLarge,
                     textAlign = TextAlign.Start,
                 )
                 IconButton(
                     modifier = Modifier
-                        .size(24.dp),
+                        .size(DesignToken.sizes.iconMedium),
                     onClick = { expendableState = !expendableState },
                 ) {
                     Icon(
@@ -508,7 +508,7 @@ private fun MifosLoanAccountExpendableCard(
             }
 
             if (expendableState) {
-                Spacer(modifier = Modifier.height(10.dp))
+                Spacer(modifier = Modifier.height(DesignToken.spacing.dp10))
                 MifosLoanAccountsLazyColumn(loanAccounts, loanAccountSelected)
             }
         }
@@ -523,19 +523,19 @@ private fun MifosLoanAccountsLazyColumn(
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(8.dp),
-        shape = RoundedCornerShape(22.dp),
-        colors = CardDefaults.cardColors(MaterialTheme.colorScheme.secondary),
+            .padding(KptTheme.spacing.sm),
+        shape = DesignToken.shapes.dp22,
+        colors = CardDefaults.cardColors(KptTheme.colorScheme.secondary),
     ) {
         LazyColumn(
             modifier = Modifier
                 .height((loanAccounts.size * 52).dp)
-                .padding(6.dp),
+                .padding(DesignToken.padding.dp6),
         ) {
             items(loanAccounts) { loanAccount ->
                 Row(
                     modifier = Modifier
-                        .padding(5.dp)
+                        .padding(DesignToken.padding.dp5)
                         .clickable(
                             onClick = {
                                 loanAccount.id?.let {
@@ -549,8 +549,8 @@ private fun MifosLoanAccountsLazyColumn(
                 ) {
                     Canvas(
                         modifier = Modifier
-                            .size(20.dp)
-                            .padding(4.dp),
+                            .size(DesignToken.sizes.iconAverage)
+                            .padding(KptTheme.spacing.xs),
                         onDraw = {
                             drawCircle(
                                 color = when {
@@ -580,25 +580,25 @@ private fun MifosLoanAccountsLazyColumn(
                     Column(
                         modifier = Modifier
                             .weight(1f)
-                            .padding(start = 4.dp),
+                            .padding(start = KptTheme.spacing.xs),
                     ) {
                         loanAccount.productName?.let {
                             Text(
                                 text = it,
-                                style = MaterialTheme.typography.bodyLarge,
+                                style = KptTheme.typography.bodyLarge,
                                 textAlign = TextAlign.Start,
                             )
                         }
                         Text(
                             text = loanAccount.accountNo.toString(),
-                            style = MaterialTheme.typography.bodyMedium,
+                            style = KptTheme.typography.bodyMedium,
                             textAlign = TextAlign.Start,
                         )
                     }
                     loanAccount.productId?.let {
                         Text(
                             text = it.toString(),
-                            style = MaterialTheme.typography.bodyLarge,
+                            style = KptTheme.typography.bodyLarge,
                             textAlign = TextAlign.Start,
                         )
                     }
@@ -623,20 +623,20 @@ private fun MifosSavingsAccountExpandableCard(
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(8.dp)
+            .padding(KptTheme.spacing.sm)
             .animateContentSize(
                 animationSpec = tween(
                     durationMillis = 300,
                     easing = LinearOutSlowInEasing,
                 ),
             ),
-        shape = RoundedCornerShape(22.dp),
-        colors = CardDefaults.cardColors(MaterialTheme.colorScheme.secondary),
+        shape = DesignToken.shapes.dp22,
+        colors = CardDefaults.cardColors(KptTheme.colorScheme.secondary),
     ) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(10.dp),
+                .padding(DesignToken.padding.dp10),
         ) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
@@ -644,14 +644,14 @@ private fun MifosSavingsAccountExpandableCard(
                 Text(
                     modifier = Modifier
                         .weight(1f)
-                        .padding(start = 8.dp),
+                        .padding(start = KptTheme.spacing.sm),
                     text = accountType,
-                    style = MaterialTheme.typography.bodyLarge,
+                    style = KptTheme.typography.bodyLarge,
                     textAlign = TextAlign.Start,
                 )
                 IconButton(
                     modifier = Modifier
-                        .size(24.dp),
+                        .size(DesignToken.sizes.iconMedium),
                     onClick = { expendableState = !expendableState },
                 ) {
                     Icon(
@@ -663,7 +663,7 @@ private fun MifosSavingsAccountExpandableCard(
             }
 
             if (expendableState) {
-                Spacer(modifier = Modifier.height(10.dp))
+                Spacer(modifier = Modifier.height(DesignToken.spacing.dp10))
                 MifosSavingsAccountsLazyColumn(savingsAccount, savingsAccountSelected)
             }
         }
@@ -678,19 +678,19 @@ private fun MifosSavingsAccountsLazyColumn(
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(8.dp),
-        shape = RoundedCornerShape(22.dp),
-        colors = CardDefaults.cardColors(MaterialTheme.colorScheme.surface),
+            .padding(KptTheme.spacing.sm),
+        shape = DesignToken.shapes.dp22,
+        colors = CardDefaults.cardColors(KptTheme.colorScheme.surface),
     ) {
         LazyColumn(
             modifier = Modifier
                 .height((savingsAccounts.size * 50).dp)
-                .padding(6.dp),
+                .padding(DesignToken.padding.dp6),
         ) {
             items(savingsAccounts) { savingsAccount ->
                 Row(
                     modifier = Modifier
-                        .padding(5.dp)
+                        .padding(DesignToken.padding.dp5)
                         .clickable(
                             onClick = {
                                 savingsAccount.id?.let {
@@ -707,8 +707,8 @@ private fun MifosSavingsAccountsLazyColumn(
                 ) {
                     Canvas(
                         modifier = Modifier
-                            .size(20.dp)
-                            .padding(4.dp),
+                            .size(DesignToken.sizes.iconAverage)
+                            .padding(KptTheme.spacing.xs),
                         onDraw = {
                             drawCircle(
                                 color = when {
@@ -734,25 +734,25 @@ private fun MifosSavingsAccountsLazyColumn(
                     Column(
                         modifier = Modifier
                             .weight(1f)
-                            .padding(start = 4.dp),
+                            .padding(start = KptTheme.spacing.xs),
                     ) {
                         savingsAccount.productName?.let {
                             Text(
                                 text = it,
-                                style = MaterialTheme.typography.bodyLarge,
+                                style = KptTheme.typography.bodyLarge,
                                 textAlign = TextAlign.Start,
                             )
                         }
                         Text(
                             text = savingsAccount.accountNo.toString(),
-                            style = MaterialTheme.typography.bodyMedium,
+                            style = KptTheme.typography.bodyMedium,
                             textAlign = TextAlign.Start,
                         )
                     }
                     savingsAccount.productId?.let {
                         Text(
                             text = it.toString(),
-                            style = MaterialTheme.typography.bodyLarge,
+                            style = KptTheme.typography.bodyLarge,
                             textAlign = TextAlign.Start,
                         )
                     }
@@ -777,53 +777,53 @@ private fun MifosSelectImageDialog(
         ),
     ) {
         Card(
-            colors = CardDefaults.cardColors(MaterialTheme.colorScheme.surface),
-            shape = RoundedCornerShape(20.dp),
+            colors = CardDefaults.cardColors(KptTheme.colorScheme.surface),
+            shape = DesignToken.shapes.largeIncreased,
         ) {
             Column(
                 modifier = Modifier
-                    .padding(30.dp),
+                    .padding(DesignToken.padding.dp30),
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 Text(
                     text = stringResource(Res.string.feature_client_please_select),
                     modifier = Modifier.fillMaxWidth(),
-                    style = MaterialTheme.typography.bodyLarge,
+                    style = KptTheme.typography.bodyLarge,
                     textAlign = TextAlign.Center,
                 )
-                Spacer(modifier = Modifier.height(20.dp))
+                Spacer(modifier = Modifier.height(DesignToken.spacing.largeIncreased))
 
                 Button(
                     onClick = { takeImage() },
-                    colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.secondary),
+                    colors = ButtonDefaults.buttonColors(KptTheme.colorScheme.secondary),
                 ) {
                     Text(
                         text = stringResource(Res.string.feature_client_take_new_image),
                         modifier = Modifier.fillMaxWidth(),
-                        style = MaterialTheme.typography.bodyLarge,
+                        style = KptTheme.typography.bodyLarge,
                         textAlign = TextAlign.Center,
                     )
                 }
                 Button(
                     onClick = { uploadImage() },
-                    colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.primary),
+                    colors = ButtonDefaults.buttonColors(KptTheme.colorScheme.primary),
                 ) {
                     Text(
                         text = stringResource(Res.string.feature_client_upload_new_image),
                         modifier = Modifier.fillMaxWidth(),
-                        style = MaterialTheme.typography.bodyLarge,
+                        style = KptTheme.typography.bodyLarge,
                         textAlign = TextAlign.Center,
                     )
                 }
                 Button(
                     onClick = { deleteImage() },
-                    colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.secondary),
+                    colors = ButtonDefaults.buttonColors(KptTheme.colorScheme.secondary),
                 ) {
                     Text(
                         text = stringResource(Res.string.feature_client_delete_image),
                         modifier = Modifier.fillMaxWidth(),
-                        style = MaterialTheme.typography.bodyLarge,
+                        style = KptTheme.typography.bodyLarge,
                         textAlign = TextAlign.Center,
                     )
                 }
@@ -836,27 +836,27 @@ private fun MifosSelectImageDialog(
 private fun MifosClientDetailsText(icon: ImageVector, field: String, value: String) {
     Row(
         modifier = Modifier
-            .padding(vertical = 8.dp, horizontal = 16.dp)
+            .padding(vertical = KptTheme.spacing.sm, horizontal = KptTheme.spacing.md)
             .fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Icon(
-            modifier = Modifier.size(18.dp),
+            modifier = Modifier.size(DesignToken.sizes.dp18),
             imageVector = icon,
             contentDescription = null,
-            tint = MaterialTheme.colorScheme.onSurfaceVariant,
+            tint = KptTheme.colorScheme.onSurfaceVariant,
         )
         Text(
             modifier = Modifier
                 .weight(1f)
-                .padding(start = 16.dp),
+                .padding(start = KptTheme.spacing.md),
             text = field,
-            style = MaterialTheme.typography.bodyLarge,
+            style = KptTheme.typography.bodyLarge,
             textAlign = TextAlign.Start,
         )
         Text(
             text = value,
-            style = MaterialTheme.typography.bodyLarge,
+            style = KptTheme.typography.bodyLarge,
             textAlign = TextAlign.Start,
         )
     }

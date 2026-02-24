@@ -99,15 +99,24 @@ data class AppSpacing(
     val extraExtraLarge: Dp = 48.dp,
     val half: Dp = 500.dp,
     val full: Dp = 1000.dp,
-    // custom spacings
-    val negativeDp7: Dp = (-7).dp,
+    val dp1: Dp = 1.dp,
     val dp2: Dp = 2.dp,
     val dp5: Dp = 5.dp,
     val dp6: Dp = 6.dp,
     val dp10: Dp = 10.dp,
+    val dp18: Dp = 18.dp,
     val dp24: Dp = 24.dp,
+    val dp30: Dp = 30.dp,
     val dp40: Dp = 40.dp,
+    val dp44: Dp = 44.dp,
+    val dp46: Dp = 46.dp,
     val dp50: Dp = 50.dp,
+    val dp52: Dp = 52.dp,
+    val dp80: Dp = 80.dp,
+    val dp160: Dp = 160.dp,
+    val dp164: Dp = 164.dp,
+    val dp300: Dp = 300.dp,
+    val negativeDp7: Dp = (-7).dp,
 )
 
 /**
@@ -157,14 +166,17 @@ data class AppPadding(
     val extraLargeIncreased: Dp = 32.dp,
     val extraExtraLarge: Dp = 48.dp,
     val full: Dp = 1000.dp,
-    // custom paddings
     val dp1: Dp = 1.dp,
     val dp2: Dp = 2.dp,
+    val dp5: Dp = 5.dp,
     val dp6: Dp = 6.dp,
     val dp10: Dp = 10.dp,
     val dp14: Dp = 14.dp,
+    val dp15: Dp = 15.dp,
     val dp18: Dp = 18.dp,
     val dp24: Dp = 24.dp,
+    val dp30: Dp = 30.dp,
+    val dp40: Dp = 40.dp,
     val dp56: Dp = 56.dp,
     val dp75: Dp = 75.dp,
     val dp100: Dp = 100.dp,
@@ -225,11 +237,12 @@ data class AppShapes(
     val topBar: Shape = RoundedCornerShape(bottomStart = 16.dp, bottomEnd = 16.dp),
     val topMedium: Shape = RoundedCornerShape(topStart = 12.dp, topEnd = 12.dp),
     val bottomMedium: Shape = RoundedCornerShape(bottomStart = 12.dp, bottomEnd = 12.dp),
-    // custom shapes
     val topCornerDp8: Shape = RoundedCornerShape(topStart = 8.dp, topEnd = 8.dp),
     val topCornerDp16: Shape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp),
     val bottomCornerDp12: Shape = RoundedCornerShape(bottomStart = 12.dp, bottomEnd = 12.dp),
     val dp2: Shape = RoundedCornerShape(2.dp),
+    val dp10: Shape = RoundedCornerShape(10.dp),
+    val dp22: Shape = RoundedCornerShape(22.dp),
     val dp25: Shape = RoundedCornerShape(25.dp),
     val dp100: Shape = RoundedCornerShape(100.dp),
 )
@@ -270,12 +283,12 @@ data class AppShapes(
 @Immutable
 data class AppElevation(
     val none: Dp = 0.dp,
+    val dp1: Dp = 1.dp,
     val appBar: Dp = 5.dp,
     val elevation: Dp = 25.dp,
-    // custom elevation
-    val dp1: Dp = 1.dp,
-    val dp6: Dp = 6.dp,
     val dp2: Dp = 2.dp,
+    val dp4: Dp = 4.dp,
+    val dp6: Dp = 6.dp,
 )
 
 /**
@@ -347,10 +360,6 @@ data class AppSizes(
     val logoSizeTopAppBar: Dp = 28.dp,
     val topAppBarHeight: Dp = 85.dp,
     val bottomAppBarHeight: Dp = 70.dp,
-    val tableCellWidthSmall: Dp = 65.dp,
-    val tableCellWidthMedium: Dp = 100.dp,
-    val tableCellWidthLarge: Dp = 150.dp,
-    // custom sizes
     val iconDp39: Dp = 39.dp,
     val iconDp100: Dp = 100.dp,
     val checkboxDp18: Dp = 18.dp,
@@ -392,6 +401,20 @@ data class AppSizes(
     val backgroundDp100: Dp = 100.dp,
     val buttonHeightDp48: Dp = 48.dp,
     val stepIndicatorDp40: Dp = 40.dp,
+    val dp5: Dp = 5.dp,
+    val dp18: Dp = 18.dp,
+    val dp20: Dp = 20.dp,
+    val dp30: Dp = 30.dp,
+    val dp42: Dp = 42.dp,
+    val dp48: Dp = 48.dp,
+    val dp72: Dp = 72.dp,
+    val dp80: Dp = 80.dp,
+    val dp100: Dp = 100.dp,
+    val dp120: Dp = 120.dp,
+    val dp128: Dp = 128.dp,
+    val tableCellWidthSmall: Dp = 65.dp,
+    val tableCellWidthMedium: Dp = 100.dp,
+    val tableCellWidthLarge: Dp = 150.dp,
 )
 
 @Immutable
@@ -402,9 +425,6 @@ data class AppStrokes(
     val dp2: Dp = 2.dp,
     val dp4: Dp = 4.dp,
     val dp5: Dp = 5.dp,
-    val tableCellWidthSmall: Dp = 65.dp,
-    val tableCellWidthMedium: Dp = 100.dp,
-    val tableCellWidthLarge: Dp = 150.dp,
 )
 
 /**
@@ -498,6 +518,7 @@ internal fun DesignTokenTheme(
     shapes: AppShapes = AppShapes(),
     elevation: AppElevation = AppElevation(),
     sizes: AppSizes = AppSizes(),
+    strokes: AppStrokes = AppStrokes(),
     content: @Composable () -> Unit,
 ) {
     CompositionLocalProvider(
@@ -506,6 +527,7 @@ internal fun DesignTokenTheme(
         LocalShapes provides shapes,
         LocalElevation provides elevation,
         LocalSizes provides sizes,
+        LocalStrokes provides strokes,
         content = content,
     )
 }
