@@ -27,11 +27,12 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
+import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.designsystem.theme.MifosTheme
 import com.mifos.core.ui.util.DevicePreview
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
+import template.core.base.designsystem.theme.KptTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -48,12 +49,12 @@ fun MifosRadioButtonDialog(
         modifier = modifier,
     ) {
         Card {
-            Column(modifier = Modifier.padding(20.dp)) {
+            Column(modifier = Modifier.padding(DesignToken.padding.largeIncreased)) {
                 Text(text = stringResource(titleResId))
                 LazyColumn(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .heightIn(max = 500.dp),
+                        .heightIn(max = DesignToken.sizes.lazyColHeightInDp500),
                 ) {
                     itemsIndexed(items = items) { index, item ->
                         Row(
@@ -74,7 +75,7 @@ fun MifosRadioButtonDialog(
                             )
                             Text(
                                 text = item,
-                                modifier = Modifier.padding(start = 4.dp),
+                                modifier = Modifier.padding(start = KptTheme.spacing.xs),
                             )
                         }
                     }

@@ -22,7 +22,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -38,6 +37,7 @@ import com.mifos.core.ui.util.TextUtil
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
+import template.core.base.designsystem.theme.KptTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -114,7 +114,7 @@ fun MifosRowCard(
                 modifier = Modifier
                     .size(DesignToken.sizes.iconExtraLarge)
                     .background(
-                        color = MaterialTheme.colorScheme.surfaceBright,
+                        color = KptTheme.colorScheme.surfaceBright,
                         shape = CircleShape,
                     )
                     .padding(DesignToken.padding.small),
@@ -130,7 +130,7 @@ fun MifosRowCard(
                 TextUtil(
                     text = title,
                     style = MifosTypography.titleSmallEmphasized,
-                    color = MaterialTheme.colorScheme.onSurface,
+                    color = KptTheme.colorScheme.onSurface,
                 ),
             )
             leftValues.forEach {
@@ -196,7 +196,7 @@ fun MifosRowTextWithButton(
                 Text(
                     text = btnText,
                     style = MifosTypography.labelMediumEmphasized,
-                    color = MaterialTheme.colorScheme.primary,
+                    color = KptTheme.colorScheme.primary,
                 )
             }
         }

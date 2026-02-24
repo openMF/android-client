@@ -18,7 +18,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.unit.dp
+import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.designsystem.theme.MifosTheme
 import com.mifos.core.ui.util.DevicePreview
 import org.jetbrains.compose.resources.DrawableResource
@@ -34,7 +34,7 @@ fun MifosRoundIcon(
             .clip(CircleShape),
     ) {
         Image(
-            modifier = Modifier.padding(all = 6.dp),
+            modifier = Modifier.padding(all = DesignToken.padding.dp6),
             painter = painterResource(iconId),
             contentDescription = "Icon",
         )

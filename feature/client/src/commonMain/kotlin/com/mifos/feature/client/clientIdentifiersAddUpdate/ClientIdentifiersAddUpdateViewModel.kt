@@ -53,10 +53,10 @@ class ClientIdentifiersAddUpdateViewModel(
         mutableStateFlow.update {
             it.copy(
                 clientId = route.clientId,
-                feature = route.feature,
+                feature = Feature.valueOf(route.feature),
             )
         }
-        if (route.feature == Feature.ADD_IDENTIFIER) {
+        if (state.feature == Feature.ADD_IDENTIFIER) {
             getIdentifiersOptionsAndObserveNetwork()
         } else {
             viewModelScope.launch {

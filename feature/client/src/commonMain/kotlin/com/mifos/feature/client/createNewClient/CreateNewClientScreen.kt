@@ -134,7 +134,6 @@ import com.mifos.room.entities.templates.clients.ClientsTemplateEntity
 import io.github.vinceglb.filekit.PlatformFile
 import io.github.vinceglb.filekit.dialogs.FileKitType
 import io.github.vinceglb.filekit.dialogs.compose.rememberFilePickerLauncher
-import io.github.vinceglb.filekit.path
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.getString
@@ -355,14 +354,16 @@ private fun CreateNewClientContent(
         type = FileKitType.Image,
     ) { file ->
         file?.let {
-            selectedImagePath = file.path
+//            TODO: path not support in kmp all targets
+//            selectedImagePath = file.path
             onImageSelected(file)
         }
     }
 
     val cameraLauncher = rememberPlatformCameraLauncher { file ->
         file?.let {
-            selectedImagePath = file.path
+//            TODO: path not support in kmp all targets
+//            selectedImagePath = file.path
             onImageSelected(file)
         }
     }

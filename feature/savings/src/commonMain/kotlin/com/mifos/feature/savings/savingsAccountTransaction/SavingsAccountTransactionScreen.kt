@@ -307,7 +307,7 @@ private fun SavingsAccountTransactionContent(
                                 paymentTypeId = paymentTypeId.toString(),
                             )
                         val builtTransactionRequestAsJson =
-                            Json.encodeToString(savingsAccountTransactionRequest)
+                            Json.encodeToString(SavingsAccountTransactionRequestEntity.serializer(), savingsAccountTransactionRequest)
                         Logger.d(
                             "builtTransactionRequestAsJson",
                             Throwable(builtTransactionRequestAsJson),

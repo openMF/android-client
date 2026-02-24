@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Mifos Initiative
+ * Copyright 2026 Mifos Initiative
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -38,48 +38,55 @@ private val SCRIM_COLOR: Int = Color.TRANSPARENT
  * This logic is from the Now-In-Android app found
  * [here](https://github.com/android/nowinandroid/blob/689ef92e41427ab70f82e2c9fe59755441deae92/app/src/main/kotlin/com/google/samples/apps/nowinandroid/MainActivity.kt#L94).
  */
-@Suppress("MaxLineLength")
-fun ComponentActivity.setupEdgeToEdge(
-    appThemeFlow: Flow<DarkThemeConfig>,
-) {
+fun ComponentActivity.setupEdgeToEdge(appThemeFlow: Flow<DarkThemeConfig>) {
     lifecycleScope.launch {
-        lifecycle.repeatOnLifecycle(state = Lifecycle.State.STARTED) {
+        lifecycle.repeatOnLifecycle(
+            state = Lifecycle.State.STARTED,
+        ) {
             combine(
                 isSystemInDarkModeFlow(),
                 appThemeFlow,
-            ) { isSystemDarkMode, appTheme ->
+            ) { _, appTheme ->
                 AppCompatDelegate.setDefaultNightMode(appTheme.osValue)
             }
                 .distinctUntilChanged()
-                .collect { isDarkMode ->
-                    // This handles all the settings to go edge-to-edge. We are using a transparent
-                    // scrim for system bars and switching between "light" and "dark" based on the
-                    // system and internal app theme settings.
-                    val style = SystemBarStyle.auto(
-                        darkScrim = SCRIM_COLOR,
-                        lightScrim = SCRIM_COLOR,
-                        // Disabling Dark Mode for this app
-                        detectDarkMode = { false },
+                .collect {
+                    val style =
+                        SystemBarStyle
+                            .auto(
+                                darkScrim = SCRIM_COLOR,
+                                lightScrim = SCRIM_COLOR,
+                                detectDarkMode = { false },
+                            )
+
+                    enableEdgeToEdge(
+                        statusBarStyle = style,
+                        navigationBarStyle = style,
                     )
-                    enableEdgeToEdge(statusBarStyle = style, navigationBarStyle = style)
                 }
         }
     }
 }
 
 /**
- * Adds a configuration change listener to retrieve whether system is in
- * dark theme or not. This will emit current status immediately and then
- * will emit changes as needed.
+ * Emits whether the system is currently in dark mode.
  */
 private fun ComponentActivity.isSystemInDarkModeFlow(): Flow<Boolean> =
     callbackFlow {
-        channel.trySend(element = resources.configuration.isSystemInDarkMode)
-        val listener = Consumer<Configuration> {
-            channel.trySend(element = it.isSystemInDarkMode)
+        trySend(resources.configuration.isSystemInDarkMode)
+
+        val listener =
+            Consumer<Configuration> { configuration ->
+                trySend(
+                    configuration.isSystemInDarkMode,
+                )
+            }
+
+        addOnConfigurationChangedListener(listener)
+
+        awaitClose {
+            removeOnConfigurationChangedListener(listener)
         }
-        addOnConfigurationChangedListener(listener = listener)
-        awaitClose { removeOnConfigurationChangedListener(listener = listener) }
     }
         .distinctUntilChanged()
         .conflate()

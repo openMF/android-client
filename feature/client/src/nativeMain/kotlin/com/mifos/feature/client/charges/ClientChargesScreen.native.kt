@@ -16,12 +16,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.paging.PagingData
+import com.mifos.core.model.objects.clients.Page
 import com.mifos.room.entities.client.ChargesEntity
 import kotlinx.coroutines.flow.Flow
 
 @Composable
 actual fun ShowClientCharge(
-    pagingFlow: Flow<PagingData<ChargesEntity>>,
+    pagingFlow: Flow<PagingData<Page<ChargesEntity>>>,
     onAction: (ChargesAction) -> Unit,
 ) {
     Box(

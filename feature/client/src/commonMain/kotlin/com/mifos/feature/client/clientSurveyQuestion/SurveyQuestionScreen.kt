@@ -63,6 +63,7 @@ import com.mifos.feature.client.clientSurveySubmit.SurveySubmitUiState
 import com.mifos.feature.client.clientSurveySubmit.SurveySubmitViewModel
 import com.mifos.room.entities.survey.SurveyEntity
 import kotlinx.coroutines.launch
+import kotlinx.serialization.builtins.serializer
 import kotlinx.serialization.json.Json
 import org.jetbrains.compose.resources.getString
 import org.jetbrains.compose.resources.stringResource
@@ -140,7 +141,7 @@ private fun processSurveyData(survey: SurveyEntity): Pair<List<String>, List<Lis
     val optionsData = mutableListOf<List<String>>()
 
     survey.questionDatas.forEach { question ->
-        val questionText = Json.encodeToString(question.text).replace("\"", "")
+        val questionText = Json.encodeToString(String.serializer(), question.text.orEmpty()).replace("\"", "")
         val optionsList = question.responseDatas.map { it.text!! }
 
         questionData.add(questionText)

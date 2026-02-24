@@ -9,6 +9,7 @@
  */
 package com.mifos.core.data.di
 
+import com.mifos.core.data.util.NativePlatformDependentDataModule
 import org.koin.core.module.Module
 import org.koin.dsl.module
 

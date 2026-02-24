@@ -11,6 +11,7 @@ package com.mifos.room.typeconverters
 
 import com.mifos.core.model.objects.Changes
 import com.mifos.core.model.objects.account.loan.AmortizationType
+import com.mifos.core.model.objects.account.loan.Currency
 import com.mifos.core.model.objects.account.loan.InterestCalculationPeriodType
 import com.mifos.core.model.objects.account.loan.InterestRateFrequencyType
 import com.mifos.core.model.objects.account.loan.InterestType
@@ -74,6 +75,17 @@ import template.core.base.database.TypeConverter
 
 @Suppress("TooManyFunctions")
 class CustomTypeConverters {
+
+    @TypeConverter
+    fun fromCurrency(type: Currency?): String? {
+        return type?.let { Json.encodeToString(it) }
+    }
+
+    @TypeConverter
+    fun toCurrency(json: String?): Currency? {
+        return json?.let { Json.decodeFromString(it) }
+    }
+
     @TypeConverter
     fun fromCenterDate(centerDate: CenterDateEntity?): String? {
         return centerDate?.let { Json.encodeToString(it) }
@@ -418,12 +430,12 @@ class CustomTypeConverters {
     }
 
     @TypeConverter
-    fun fromCurrency(currency: SavingAccountCurrencyEntity?): String? {
+    fun fromSavingAccountCurrency(currency: SavingAccountCurrencyEntity?): String? {
         return currency?.let { Json.encodeToString(it) }
     }
 
     @TypeConverter
-    fun toCurrency(json: String?): SavingAccountCurrencyEntity? {
+    fun toSavingAccountCurrency(json: String?): SavingAccountCurrencyEntity? {
         return json?.let { Json.decodeFromString(it) }
     }
 

@@ -24,7 +24,6 @@ import io.github.vinceglb.filekit.FileKit
 import io.github.vinceglb.filekit.dialogs.init
 import org.koin.android.ext.android.inject
 import java.util.Locale
-import kotlin.getValue
 
 /**
  * Main activity class.
@@ -64,12 +63,13 @@ class MainActivity : AppCompatActivity() {
                 },
                 handleAppLocale = { localeTag ->
                     val currentLocales = AppCompatDelegate.getApplicationLocales()
-                    val newLocales = if (localeTag != null) {
-                        LocaleListCompat.forLanguageTags(localeTag)
-                    } else {
-                        // System Default: clear app-specific locale
-                        LocaleListCompat.getEmptyLocaleList()
-                    }
+                    val newLocales =
+                        if (localeTag != null) {
+                            LocaleListCompat.forLanguageTags(localeTag)
+                        } else {
+                            // System Default: clear app-specific locale
+                            LocaleListCompat.getEmptyLocaleList()
+                        }
 
                     // Only update if the locale has actually changed
                     if (currentLocales != newLocales) {

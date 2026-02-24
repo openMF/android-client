@@ -16,7 +16,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -25,7 +24,6 @@ import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.layout.onGloballyPositioned
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.toSize
 import androidx.compose.ui.window.DialogProperties
 import com.mifos.core.designsystem.component.MifosCustomDialog
@@ -37,6 +35,7 @@ import com.niyajali.compose.sign.SignatureConfig
 import com.niyajali.compose.sign.exportSignature
 import com.niyajali.compose.sign.isNotEmpty
 import com.niyajali.compose.sign.rememberSignatureState
+import template.core.base.designsystem.theme.KptTheme
 
 @Composable
 fun MifosSignatureDrawDialog(
@@ -110,8 +109,8 @@ fun MifosSignatureDrawDialog(
                 )
 
                 HorizontalDivider(
-                    thickness = 1.dp,
-                    color = MaterialTheme.colorScheme.outlineVariant,
+                    thickness = DesignToken.strokes.thin,
+                    color = KptTheme.colorScheme.outlineVariant,
                 )
 
                 ComposeSign(

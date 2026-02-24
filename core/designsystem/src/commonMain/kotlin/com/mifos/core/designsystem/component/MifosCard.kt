@@ -17,27 +17,26 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardColors
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.dp
 import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.designsystem.theme.MifosTheme
 import org.jetbrains.compose.ui.tooling.preview.Preview
+import template.core.base.designsystem.theme.KptTheme
 
 @Composable
 fun MifosCard(
     modifier: Modifier = Modifier,
     shape: Shape = DesignToken.shapes.small,
-    borderStroke: BorderStroke = BorderStroke(0.dp, Color.Transparent),
-    elevation: Dp = 1.dp,
+    borderStroke: BorderStroke = BorderStroke(DesignToken.strokes.none, Color.Transparent),
+    elevation: Dp = KptTheme.elevation.level1,
     onClick: (() -> Unit)? = null,
     colors: CardColors = CardDefaults.cardColors(
-        containerColor = MaterialTheme.colorScheme.background,
+        containerColor = KptTheme.colorScheme.background,
     ),
     content: @Composable ColumnScope.() -> Unit,
 ) {

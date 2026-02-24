@@ -11,12 +11,13 @@ package com.mifos.core.designsystem.theme
 
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.ColorScheme
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
-import com.mifos.core.designsystem.theme.DesignToken.spacing
-
+import template.core.base.designsystem.KptMaterialTheme
+import template.core.base.designsystem.theme.KptThemeProviderImpl
+import template.core.base.designsystem.toKptColorScheme
+import template.core.base.designsystem.toKptTypography
 val lightScheme = lightColorScheme(
     primary = primaryLight,
     onPrimary = onPrimaryLight,
@@ -255,23 +256,22 @@ fun MifosTheme(
     content: @Composable () -> Unit,
 ) {
     val colorScheme = when {
-        androidTheme -> if (darkTheme) darkScheme else lightScheme
-        else -> colorScheme(
-            darkTheme,
-            shouldDisplayDynamicTheming,
-        )
-    }
-    MaterialTheme(
-        colorScheme = colorScheme,
-        typography = mifosTypography(),
-    ) {
-        DesignTokenTheme(
-            spacing = spacing,
-            shapes = AppShapes(),
-            elevation = AppElevation(),
-            content = content,
-        )
-    }
+        shouldDisplayDynamicTheming -> colorScheme(darkTheme, true)
+        androidTheme -> if (darkTheme) darkColorScheme() else lightColorScheme()
+        else -> if (darkTheme) darkScheme else lightScheme
+    }.toKptColorScheme()
+
+    val typography = mifosTypography().toKptTypography()
+
+    val theme = KptThemeProviderImpl(
+        colors = colorScheme,
+        typography = typography,
+    )
+
+    KptMaterialTheme(
+        theme = theme,
+        content = content,
+    )
 }
 
 @Composable

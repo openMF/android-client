@@ -31,7 +31,6 @@ class KMPRoomConventionPlugin : Plugin<Project> {
                     "kspDesktop",
                     "kspAndroid",
                     "kspIosArm64",
-                    "kspIosX64",
                     "kspIosSimulatorArm64",
                     // Add any other platform you may support
                 ).forEach { platform ->
