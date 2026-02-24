@@ -123,7 +123,7 @@ fun NavController.navigateDataTableData(
     entityId: Int,
     dataTable: DataTableEntity,
 ) {
-    val arg = Json.encodeToString(DataTableDataNavigationArg(tableName, entityId, dataTable))
+    val arg = Json.encodeToString(DataTableDataNavigationArg.serializer(), DataTableDataNavigationArg(tableName, entityId, dataTable))
     navigate(DataTableScreens.DataTableDataScreen.argument(arg))
 }
 
@@ -133,6 +133,6 @@ fun NavController.navigateDataTableList(
     requestType: Int,
     formWidget: MutableList<List<FormWidgetDTO>>,
 ) {
-    val arg = Json.encodeToString(DataTableListNavArgs(dataTableList, requestType, payload, formWidget))
+    val arg = Json.encodeToString(DataTableListNavArgs.serializer(), DataTableListNavArgs(dataTableList, requestType, payload, formWidget))
     navigate(DataTableScreens.DataTableListScreen.argument(arg))
 }

@@ -57,6 +57,7 @@ include(":cmp-desktop")
 include(":cmp-ios")
 include(":cmp-navigation")
 include(":cmp-shared")
+include(":cmp-web")
 
 include(":core:common")
 include(":core:data")

@@ -13,15 +13,12 @@ import androidclient.feature.client.generated.resources.Res
 import androidclient.feature.client.generated.resources.account_number_prefix
 import androidclient.feature.client.generated.resources.arrow_up
 import androidclient.feature.client.generated.resources.cancel
-import androidclient.feature.client.generated.resources.choose_from_option
 import androidclient.feature.client.generated.resources.client_profile_edit_failure_title
 import androidclient.feature.client.generated.resources.client_profile_edit_success_title
 import androidclient.feature.client.generated.resources.delete_dialog_message
 import androidclient.feature.client.generated.resources.delete_dialog_title
 import androidclient.feature.client.generated.resources.delete_photo
 import androidclient.feature.client.generated.resources.dialog_continue
-import androidclient.feature.client.generated.resources.from_camera
-import androidclient.feature.client.generated.resources.from_gallery
 import androidclient.feature.client.generated.resources.remove
 import androidclient.feature.client.generated.resources.update_profile_photo_message
 import androidclient.feature.client.generated.resources.upload_new_photo
@@ -43,7 +40,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
@@ -66,10 +62,6 @@ import com.mifos.core.ui.components.MifosUserImage
 import com.mifos.core.ui.components.ResultStatus
 import com.mifos.core.ui.util.EventsEffect
 import kotlinx.coroutines.delay
-import network.chaintech.cmpimagepickncrop.CMPImagePickNCropDialog
-import network.chaintech.cmpimagepickncrop.imagecropper.ImageAspectRatio
-import network.chaintech.cmpimagepickncrop.imagecropper.rememberImageCropper
-import network.chaintech.cmpimagepickncrop.utils.ImagePickerDialogStyle
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
@@ -235,31 +227,33 @@ private fun ClientProfileEditDialogs(
         null -> Unit
 
         ClientProfileEditState.DialogState.ShowUploadOptions -> {
-            val imageCropper = rememberImageCropper()
-            val scope = rememberCoroutineScope()
-            CMPImagePickNCropDialog(
-                imageCropper = imageCropper,
-                openImagePicker = state.openImagePicker,
-                defaultAspectRatio = ImageAspectRatio(16, 9),
-                imagePickerDialogStyle = ImagePickerDialogStyle(
-                    title = stringResource(Res.string.choose_from_option),
-                    txtCamera = stringResource(Res.string.from_camera),
-                    txtGallery = stringResource(Res.string.from_gallery),
-                    txtCameraColor = MaterialTheme.colorScheme.primary,
-                    txtGalleryColor = MaterialTheme.colorScheme.primary,
-                    cameraIconTint = MaterialTheme.colorScheme.primary,
-                    galleryIconTint = MaterialTheme.colorScheme.primary,
-                    backgroundColor = MaterialTheme.colorScheme.background,
-                ),
-                autoZoom = true,
-                imagePickerDialogHandler = {
-                    onAction(ClientProfileEditAction.UpdateImagePicker(it))
-                },
-                selectedImageCallback = {
-                    onAction(ClientProfileEditAction.OnImageSelected(it))
-                },
-                selectedImageFileCallback = {},
-            )
+            // TODO(KMP): The current image crop library is not supported on all target platforms.
+            //  Migrate from cmp-image-pick-n-crop to crop-krop-ui library and enable document update & preview in a follow-up PR.
+//            val imageCropper = rememberImageCropper()
+//            val scope = rememberCoroutineScope()
+//            CMPImagePickNCropDialog(
+//                imageCropper = imageCropper,
+//                openImagePicker = state.openImagePicker,
+//                defaultAspectRatio = ImageAspectRatio(16, 9),
+//                imagePickerDialogStyle = ImagePickerDialogStyle(
+//                    title = stringResource(Res.string.choose_from_option),
+//                    txtCamera = stringResource(Res.string.from_camera),
+//                    txtGallery = stringResource(Res.string.from_gallery),
+//                    txtCameraColor = MaterialTheme.colorScheme.primary,
+//                    txtGalleryColor = MaterialTheme.colorScheme.primary,
+//                    cameraIconTint = MaterialTheme.colorScheme.primary,
+//                    galleryIconTint = MaterialTheme.colorScheme.primary,
+//                    backgroundColor = MaterialTheme.colorScheme.background,
+//                ),
+//                autoZoom = true,
+//                imagePickerDialogHandler = {
+//                    onAction(ClientProfileEditAction.UpdateImagePicker(it))
+//                },
+//                selectedImageCallback = {
+//                    onAction(ClientProfileEditAction.OnImageSelected(it))
+//                },
+//                selectedImageFileCallback = {},
+//            )
         }
 
         is ClientProfileEditState.DialogState.ShowStatusDialog -> {

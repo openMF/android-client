@@ -11,16 +11,9 @@ package com.mifos.core.common.utils
 
 import io.github.vinceglb.filekit.FileKit
 import io.github.vinceglb.filekit.PlatformFile
-import io.github.vinceglb.filekit.cacheDir
-import io.github.vinceglb.filekit.databasesDir
-import io.github.vinceglb.filekit.delete
 import io.github.vinceglb.filekit.dialogs.FileKitMode
 import io.github.vinceglb.filekit.dialogs.FileKitType
-import io.github.vinceglb.filekit.dialogs.openDirectoryPicker
 import io.github.vinceglb.filekit.dialogs.openFilePicker
-import io.github.vinceglb.filekit.div
-import io.github.vinceglb.filekit.filesDir
-import io.github.vinceglb.filekit.write
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
@@ -32,9 +25,19 @@ import kotlinx.coroutines.flow.flow
  */
 object FileKitUtil {
 
-    val appCache = FileKit.cacheDir
-    val appPrivateInternalStorage = FileKit.filesDir
-    val appInternalStorage = FileKit.databasesDir
+    // TODO(KMP): cacheDir is supported on Android, iOS, Desktop
+    // NOT supported on Web/WASM targets
+    // val appCache = FileKit.cacheDir
+
+    // TODO(KMP): filesDir maps to private app storage
+    // NOT supported on Web/WASM targets
+    // On Desktop requires FileKit initialization with appId
+    // val appPrivateInternalStorage = FileKit.filesDir
+
+    // TODO(KMP): databasesDir is intended for Room / SQLDelight
+    // NOT supported on Web/WASM targets
+    // Not portable across all KMP platforms
+    // val appInternalStorage = FileKit.databasesDir
 
     fun pickFile(
         dialogTitle: String = "",
@@ -59,9 +62,12 @@ object FileKitUtil {
         emit(image)
     }.asDataStateFlow()
 
-    suspend fun pickDirectory(): PlatformFile? {
-        return FileKit.openDirectoryPicker()
-    }
+    // TODO(KMP): Directory picker is NOT supported consistently
+    // Not available on Web/WASM
+    // Desktop & iOS support varies by sandbox permissions
+    // suspend fun pickDirectory(): PlatformFile? {
+    //     return FileKit.openDirectoryPicker()
+    // }
 
     /**
      *  Android
@@ -98,44 +104,44 @@ object FileKitUtil {
         fileExtension: String,
         filesByteArray: ByteArray,
     ) = flow {
-        val filePath = appCache / "$fileName.$fileExtension"
-        filePath.write(filesByteArray)
-        emit(filePath)
+//        val filePath = appCache / "$fileName.$fileExtension"
+//        filePath.write(filesByteArray)
+        emit("")
     }.asDataStateFlow()
 
-    fun writeFileToApplicationPrivateInternalStorage(
-        fileName: String,
-        fileExtension: String,
-        filesByteArray: ByteArray,
-    ) = flow {
-        val privateInternalStorage = appPrivateInternalStorage / "$fileName.$fileExtension"
-        privateInternalStorage.write(filesByteArray)
-        emit(privateInternalStorage)
-    }.asDataStateFlow()
+    // TODO(KMP): Intended ONLY for database engines (Room / SQLDelight)
+    // NOT supported on Web/WASM
+    // Should not be used for general file storage
+    // fun writeFileToApplicationInternalStorage(
+    //     fileName: String,
+    //     fileExtension: String,
+    //     filesByteArray: ByteArray,
+    // ) = flow {
+    //     val internalStorage =
+    //         appInternalStorage / "$fileName.$fileExtension"
+    //     internalStorage.write(filesByteArray)
+    //     emit(internalStorage)
+    // }.asDataStateFlow()
 
-    // Use only if you are using a database service such as room or sqldelight
-    fun writeFileToApplicationInternalStorage(
-        fileName: String,
-        fileExtension: String,
-        filesByteArray: ByteArray,
-    ) = flow {
-        val internalStorage = appInternalStorage / "$fileName.$fileExtension"
-        internalStorage.write(filesByteArray)
-        emit(internalStorage)
-    }.asDataStateFlow()
+    // TODO(KMP): Writing to user-selected directory
+    // NOT supported on Web/WASM
+    // Desktop requires explicit user permissions
+    // iOS sandbox restrictions apply
+    // fun writeToSelectedDirectory(
+    //     filesByteArray: ByteArray,
+    //     platformFile: PlatformFile,
+    // ) = flow {
+    //     emit(platformFile.write(filesByteArray))
+    // }.asDataStateFlow()
 
-    fun writeToSelectedDirectory(
-        filesByteArray: ByteArray,
-        platformFile: PlatformFile,
-    ) = flow {
-        emit(platformFile.write(filesByteArray))
-    }.asDataStateFlow()
-
-    suspend fun deleteFile(
-        file: PlatformFile,
-    ) {
-        file.delete(false)
-    }
+    // TODO(KMP): File deletion is platform-dependent
+    // NOT supported on Web/WASM
+    // iOS sandbox may prevent deletion
+    // suspend fun deleteFile(
+    //     file: PlatformFile,
+    // ) {
+    //     file.delete(false)
+    // }
 
     fun takePhoto() = takePhotoIfSupported()
 }

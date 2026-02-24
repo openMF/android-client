@@ -23,5 +23,6 @@ internal actual fun LazyColumnForClientListApi(
     fetchImage: (Int) -> Unit,
     images: Map<Int, ByteArray?>,
     modifier: Modifier,
-) {
-}
+    sort: SortTypes?,
+    onUpdateOffices: (List<String?>) -> Unit,
+) {}

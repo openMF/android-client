@@ -20,7 +20,7 @@ object Utils {
         return try {
             val date = LocalDate(year, month, day)
             val monthFormatted = date.month.name.lowercase().replaceFirstChar { it.uppercase() }
-            "${date.dayOfMonth} $monthFormatted ${date.year}"
+            "${date.day} $monthFormatted ${date.year}"
         } catch (e: Exception) {
             "Invalid Date"
         }

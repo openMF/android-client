@@ -11,14 +11,14 @@ package com.mifos.core.ui.components
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextDecoration
-import androidx.compose.ui.unit.dp
+import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.designsystem.theme.MifosTheme
 import com.mifos.core.ui.util.DevicePreview
+import template.core.base.designsystem.theme.KptTheme
 
 @Composable
 fun MifosLinkText(
@@ -29,11 +29,11 @@ fun MifosLinkText(
 ) {
     Text(
         text = text,
-        style = MaterialTheme.typography.bodyMedium.copy(
+        style = KptTheme.typography.bodyMedium.copy(
             textDecoration = if (isUnderlined) TextDecoration.Underline else null,
         ),
         modifier = modifier
-            .padding(vertical = 2.dp)
+            .padding(vertical = DesignToken.padding.extraExtraSmall)
             .clickable {
                 onClick()
             },

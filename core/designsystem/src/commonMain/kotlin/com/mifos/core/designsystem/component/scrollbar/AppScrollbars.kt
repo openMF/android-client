@@ -27,7 +27,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.State
@@ -50,9 +49,11 @@ import androidx.compose.ui.unit.dp
 import com.mifos.core.designsystem.component.scrollbar.ThumbState.Active
 import com.mifos.core.designsystem.component.scrollbar.ThumbState.Dormant
 import com.mifos.core.designsystem.component.scrollbar.ThumbState.Inactive
+import com.mifos.core.designsystem.theme.DesignToken
 import kotlinx.coroutines.delay
 import org.mifos.core.designsystem.component.scrollbar.Scrollbar
 import org.mifos.core.designsystem.component.scrollbar.ScrollbarState
+import template.core.base.designsystem.theme.KptTheme
 
 /**
  * The time period for showing the scrollbar thumb after interacting with it, before it fades away
@@ -130,8 +131,8 @@ private fun ScrollableState.DraggableScrollbarThumb(
         modifier = Modifier
             .run {
                 when (orientation) {
-                    Vertical -> width(12.dp).fillMaxHeight()
-                    Horizontal -> height(12.dp).fillMaxWidth()
+                    Vertical -> width(DesignToken.sizes.boxDp12).fillMaxHeight()
+                    Horizontal -> height(DesignToken.sizes.boxDp12).fillMaxWidth()
                 }
             }
             .scrollThumb(this, interactionSource),
@@ -150,8 +151,8 @@ private fun ScrollableState.DecorativeScrollbarThumb(
         modifier = Modifier
             .run {
                 when (orientation) {
-                    Vertical -> width(2.dp).fillMaxHeight()
-                    Horizontal -> height(2.dp).fillMaxWidth()
+                    Vertical -> width(DesignToken.strokes.dp2).fillMaxHeight()
+                    Horizontal -> height(DesignToken.strokes.dp2).fillMaxWidth()
                 }
             }
             .scrollThumb(this, interactionSource),
@@ -218,8 +219,8 @@ private fun scrollbarThumbColor(
 
     val color = animateColorAsState(
         targetValue = when (state) {
-            Active -> MaterialTheme.colorScheme.onSurface.copy(0.5f)
-            Inactive -> MaterialTheme.colorScheme.onSurface.copy(alpha = 0.2f)
+            Active -> KptTheme.colorScheme.onSurface.copy(0.5f)
+            Inactive -> KptTheme.colorScheme.onSurface.copy(alpha = 0.2f)
             Dormant -> Color.Transparent
         },
         animationSpec = SpringSpec(

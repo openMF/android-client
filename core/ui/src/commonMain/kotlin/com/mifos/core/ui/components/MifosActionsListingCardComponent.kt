@@ -72,7 +72,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -97,6 +96,7 @@ import com.mifos.core.ui.util.TextUtil
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
+import template.core.base.designsystem.theme.KptTheme
 
 @Composable
 private fun ActionMenuRow(
@@ -120,8 +120,8 @@ private fun ActionMenuRow(
         Text(
             modifier = Modifier.fillMaxWidth(),
             text = stringResource(menuItem.text),
-            color = MaterialTheme.colorScheme.onSurface,
-            fontSize = MaterialTheme.typography.bodyLarge.fontSize,
+            color = KptTheme.colorScheme.onSurface,
+            fontSize = KptTheme.typography.bodyLarge.fontSize,
         )
     }
 }
@@ -140,14 +140,14 @@ fun MifosActionsListingComponentOutline(
     Box(
         modifier = modifier
             .border(
-                width = 1.dp,
+                width = DesignToken.strokes.thin,
                 shape = RoundedCornerShape(
                     topStart = 12.dp,
                     topEnd = 12.dp,
                     bottomStart = bottomCorner,
                     bottomEnd = bottomCorner,
                 ),
-                color = MaterialTheme.colorScheme.secondaryContainer,
+                color = KptTheme.colorScheme.secondaryContainer,
             ),
     ) {
         content()
@@ -224,7 +224,7 @@ fun MifosActionsIdentifierListingComponent(
                     bottomStart = DesignToken.padding.medium,
                     bottomEnd = DesignToken.padding.medium,
                 ),
-                color = MaterialTheme.colorScheme.surfaceContainer,
+                color = KptTheme.colorScheme.surfaceContainer,
             ) {
                 Column(
                     modifier = Modifier.padding(
@@ -277,7 +277,7 @@ fun MifosActionsCollateralDataListingComponent(
                 MifosListingRowItem(
                     key = stringResource(Res.string.core_ui_total_collateral_value),
                     value = totalCollateralValue,
-                    valueColor = MaterialTheme.colorScheme.primary,
+                    valueColor = KptTheme.colorScheme.primary,
                 )
             }
 
@@ -360,7 +360,7 @@ fun MifosActionsClientDocumentListingComponent(
                     bottomStart = DesignToken.padding.medium,
                     bottomEnd = DesignToken.padding.medium,
                 ),
-                color = MaterialTheme.colorScheme.surfaceContainer,
+                color = KptTheme.colorScheme.surfaceContainer,
             ) {
                 Column(
                     modifier = Modifier.padding(
@@ -416,7 +416,7 @@ fun MifosActionsLoanListingComponent(
                     MifosListingRowItem(
                         key = stringResource(Res.string.core_ui_original_loan),
                         value = originalLoan,
-                        valueColor = MaterialTheme.colorScheme.primary,
+                        valueColor = KptTheme.colorScheme.primary,
                     )
                     MifosListingRowItem(
                         key = stringResource(Res.string.core_ui_amount_paid),
@@ -448,7 +448,7 @@ fun MifosActionsLoanListingComponent(
                     bottomStart = DesignToken.padding.medium,
                     bottomEnd = DesignToken.padding.medium,
                 ),
-                color = MaterialTheme.colorScheme.surfaceContainer,
+                color = KptTheme.colorScheme.surfaceContainer,
             ) {
                 Column(
                     modifier = Modifier.padding(
@@ -520,7 +520,7 @@ fun MifosActionsShareListingComponent(
                         bottomStart = DesignToken.padding.medium,
                         bottomEnd = DesignToken.padding.medium,
                     ),
-                    color = MaterialTheme.colorScheme.surfaceContainer,
+                    color = KptTheme.colorScheme.surfaceContainer,
                 ) {
                     Column(
                         modifier = Modifier.padding(
@@ -636,7 +636,7 @@ fun MifosActionsChargeListingComponent(
                     bottomStart = DesignToken.padding.medium,
                     bottomEnd = DesignToken.padding.medium,
                 ),
-                color = MaterialTheme.colorScheme.surfaceContainer,
+                color = KptTheme.colorScheme.surfaceContainer,
             ) {
                 Column(
                     modifier = Modifier.padding(
@@ -694,7 +694,7 @@ fun MifosActionsSavingsListingComponent(
                     MifosListingRowItem(
                         key = stringResource(Res.string.core_ui_balance),
                         value = balance,
-                        valueColor = MaterialTheme.colorScheme.primary,
+                        valueColor = KptTheme.colorScheme.primary,
                     )
                 }
             }
@@ -707,7 +707,7 @@ fun MifosActionsSavingsListingComponent(
                     bottomStart = DesignToken.padding.medium,
                     bottomEnd = DesignToken.padding.medium,
                 ),
-                color = MaterialTheme.colorScheme.surfaceContainer,
+                color = KptTheme.colorScheme.surfaceContainer,
             ) {
                 Column(
                     modifier = Modifier.padding(
@@ -759,7 +759,7 @@ fun MifosActionsClientFeeListingComponent(
                     MifosListingRowItem(
                         key = stringResource(Res.string.core_ui_due),
                         value = due,
-                        valueColor = MaterialTheme.colorScheme.error,
+                        valueColor = KptTheme.colorScheme.error,
                     )
                     MifosListingRowItem(
                         key = stringResource(Res.string.core_ui_paid),
@@ -785,7 +785,7 @@ fun MifosActionsClientFeeListingComponent(
                         bottomStart = DesignToken.padding.medium,
                         bottomEnd = DesignToken.padding.medium,
                     ),
-                    color = MaterialTheme.colorScheme.surfaceContainer,
+                    color = KptTheme.colorScheme.surfaceContainer,
                 ) {
                     Column(
                         modifier = Modifier.padding(
@@ -886,7 +886,7 @@ fun MifosActionsNoteListingComponent(
                     bottomStart = DesignToken.padding.medium,
                     bottomEnd = DesignToken.padding.medium,
                 ),
-                color = MaterialTheme.colorScheme.surfaceContainer,
+                color = KptTheme.colorScheme.surfaceContainer,
             ) {
                 Column(
                     modifier = Modifier.padding(

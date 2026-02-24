@@ -9,12 +9,8 @@
  */
 package com.mifos.room
 
-import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
-import androidx.room.migration.Migration
-import androidx.sqlite.SQLiteConnection
-import androidx.sqlite.execSQL
 import com.mifos.room.dao.CenterDao
 import com.mifos.room.dao.ChargeDao
 import com.mifos.room.dao.ClientDao
@@ -82,6 +78,7 @@ import com.mifos.room.entities.templates.clients.StaffOptionsEntity
 import com.mifos.room.entities.templates.loans.LoanRepaymentTemplateEntity
 import com.mifos.room.entities.templates.savings.SavingsAccountTransactionTemplateEntity
 import com.mifos.room.typeconverters.CustomTypeConverters
+import template.core.base.database.Database
 
 @Database(
     entities = [
@@ -156,7 +153,9 @@ import com.mifos.room.typeconverters.CustomTypeConverters
     exportSchema = false,
     autoMigrations = [],
 )
-@TypeConverters(CustomTypeConverters::class)
+@TypeConverters(
+    CustomTypeConverters::class,
+)
 actual abstract class MifosDatabase : RoomDatabase() {
     actual abstract val centerDao: CenterDao
     actual abstract val chargeDao: ChargeDao
@@ -170,46 +169,6 @@ actual abstract class MifosDatabase : RoomDatabase() {
     actual abstract val surveyDao: SurveyDao
 
     companion object {
-        const val VERSION = 2
-
-        val MIGRATION_1_2 = object : Migration(1, 2) {
-            override fun migrate(connection: SQLiteConnection) {
-                connection.execSQL(
-                    """
-                    CREATE TABLE IF NOT EXISTS `ClientAddress` (
-                        `addressId` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
-                        `clientId` INTEGER,
-                        `addressType` TEXT,
-                        `addressTypeId` INTEGER,
-                        `isActive` INTEGER NOT NULL DEFAULT 0,
-                        `addressLine1` TEXT,
-                        `addressLine2` TEXT,
-                        `addressLine3` TEXT,
-                        `city` TEXT,
-                        `stateProvinceId` INTEGER,
-                        `countryName` TEXT,
-                        `stateName` TEXT,
-                        `countryId` INTEGER,
-                        `postalCode` TEXT
-                    )
-                    """.trimIndent(),
-                )
-
-                connection.execSQL(
-                    """
-                    CREATE TABLE IF NOT EXISTS `ClientIdentifier` (
-                        `localId` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
-                        `id` INTEGER,
-                        `clientId` INTEGER,
-                        `documentKey` TEXT,
-                        `documentTypeName` TEXT,
-                        `documentTypeId` INTEGER,
-                        `description` TEXT,
-                        `status` TEXT
-                    )
-                    """.trimIndent(),
-                )
-            }
-        }
+        const val VERSION = 1
     }
 }

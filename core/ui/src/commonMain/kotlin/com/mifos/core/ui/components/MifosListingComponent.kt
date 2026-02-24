@@ -57,7 +57,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -66,7 +65,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.unit.dp
 import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.designsystem.theme.AppColors
 import com.mifos.core.designsystem.theme.DesignToken
@@ -75,11 +73,13 @@ import com.mifos.core.designsystem.theme.MifosTypography
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
+import template.core.base.designsystem.KptTheme
+import template.core.base.designsystem.theme.KptTheme
 
 @Composable
 fun MifosListingComponentOutline(
     modifier: Modifier = Modifier,
-    borderColor: Color = MaterialTheme.colorScheme.secondaryContainer,
+    borderColor: Color = KptTheme.colorScheme.secondaryContainer,
     backgroundColor: Color = AppColors.customWhite,
     shape: Shape = DesignToken.shapes.medium,
     content: @Composable () -> Unit,
@@ -89,7 +89,7 @@ fun MifosListingComponentOutline(
             .fillMaxWidth()
             .padding(DesignToken.padding.extraExtraSmall)
             .border(
-                width = 1.dp,
+                width = DesignToken.strokes.thin,
                 shape = shape,
                 color = borderColor,
             )
@@ -145,9 +145,9 @@ fun MifosListingColumnItem(
     key: String,
     value: String,
     keyStyle: TextStyle = MifosTypography.labelSmall,
-    keyColor: Color = MaterialTheme.colorScheme.secondary,
+    keyColor: Color = KptTheme.colorScheme.secondary,
     valueStyle: TextStyle = MifosTypography.bodySmall,
-    valueColor: Color = MaterialTheme.colorScheme.onSurface,
+    valueColor: Color = KptTheme.colorScheme.onSurface,
 ) {
     MifosListingColumnItem(
         keyContent = {
@@ -175,7 +175,7 @@ fun MifosListingRowItem(
     value: String,
     keyStyle: TextStyle = MifosTypography.labelMediumEmphasized,
     valueStyle: TextStyle = MifosTypography.labelMedium,
-    valueColor: Color = MaterialTheme.colorScheme.onSurface,
+    valueColor: Color = KptTheme.colorScheme.onSurface,
 ) {
     MifosListingRowItem(
         keyContent = {
@@ -221,7 +221,7 @@ fun MifosListingRowItemHeader(
 
 @Composable
 fun MifosDefaultListingComponent(
-    color: Color = MaterialTheme.colorScheme.primary.copy(alpha = 0.5f),
+    color: Color = KptTheme.colorScheme.primary.copy(alpha = 0.5f),
     data: Map<String, String>,
 ) {
     MifosListingComponentOutline(
@@ -243,7 +243,7 @@ fun MifosDefaultListingComponent(
 
 @Composable
 fun MifosDefaultListingComponentFromStringResources(
-    borderColor: Color = MaterialTheme.colorScheme.primary.copy(alpha = 0.5f),
+    borderColor: Color = KptTheme.colorScheme.primary.copy(alpha = 0.5f),
     verticalArrangement: Arrangement.Vertical = Arrangement.spacedBy(DesignToken.padding.extraExtraSmall),
     backgroundColor: Color = AppColors.customWhite,
     data: Map<StringResource, String>,
@@ -297,7 +297,7 @@ fun MifosClientFeeListingComponent(
                 MifosListingRowItem(
                     key = stringResource(Res.string.core_ui_due),
                     value = due,
-                    valueColor = MaterialTheme.colorScheme.error,
+                    valueColor = KptTheme.colorScheme.error,
                 )
                 MifosListingRowItem(
                     key = stringResource(Res.string.core_ui_paid),
@@ -350,7 +350,7 @@ fun MifosLoanListingComponent(
                 MifosListingRowItem(
                     key = stringResource(Res.string.core_ui_original_loan),
                     value = originalLoan,
-                    valueColor = MaterialTheme.colorScheme.primary,
+                    valueColor = KptTheme.colorScheme.primary,
                 )
                 MifosListingRowItem(
                     key = stringResource(Res.string.core_ui_amount_paid),
@@ -405,7 +405,7 @@ fun MifosSavingsListingComponent(
                 MifosListingRowItem(
                     key = stringResource(Res.string.core_ui_balance),
                     value = balance,
-                    valueColor = MaterialTheme.colorScheme.primary,
+                    valueColor = KptTheme.colorScheme.primary,
                 )
             }
         }
@@ -446,7 +446,7 @@ fun MifosCollateralDataListingComponent(
             MifosListingRowItem(
                 key = stringResource(Res.string.core_ui_total_collateral_value),
                 value = totalCollateralValue,
-                valueColor = MaterialTheme.colorScheme.primary,
+                valueColor = KptTheme.colorScheme.primary,
             )
         }
     }
@@ -674,7 +674,7 @@ private fun MifosDefaultListingComponentPreview() {
 @Preview
 @Composable
 private fun PreviewMifosClientFeeListingComponent() {
-    MaterialTheme {
+    KptTheme {
         MifosClientFeeListingComponent(
             name = "John Doe",
             dueAsOf = "2025-08-19",
@@ -689,7 +689,7 @@ private fun PreviewMifosClientFeeListingComponent() {
 @Preview
 @Composable
 private fun PreviewMifosLoanListingComponent() {
-    MaterialTheme {
+    KptTheme {
         MifosLoanListingComponent(
             accountNo = "LN12345",
             loanProduct = "Personal Loan",
@@ -704,7 +704,7 @@ private fun PreviewMifosLoanListingComponent() {
 @Preview
 @Composable
 private fun PreviewMifosSavingsListingComponent() {
-    MaterialTheme {
+    KptTheme {
         MifosSavingsListingComponent(
             accountNo = "SV9876",
             savingsProduct = "Regular Savings",
@@ -717,7 +717,7 @@ private fun PreviewMifosSavingsListingComponent() {
 @Preview
 @Composable
 private fun PreviewMifosCollateralDataListingComponent() {
-    MaterialTheme {
+    KptTheme {
         MifosCollateralDataListingComponent(
             name = "Gold Jewelry",
             quantity = "5",
@@ -730,7 +730,7 @@ private fun PreviewMifosCollateralDataListingComponent() {
 @Preview
 @Composable
 private fun PreviewMifosIdentifierListingComponent() {
-    MaterialTheme {
+    KptTheme {
         MifosIdentifierListingComponent(
             type = "Passport",
             id = "P1234567",
@@ -745,7 +745,7 @@ private fun PreviewMifosIdentifierListingComponent() {
 @Preview
 @Composable
 private fun PreviewMifosDelinquencyListingComponent() {
-    MaterialTheme {
+    KptTheme {
         MifosDelinquencyListingComponent(
             date = "2025-08-01",
             time = "10:00 AM",
@@ -759,7 +759,7 @@ private fun PreviewMifosDelinquencyListingComponent() {
 @Preview
 @Composable
 private fun PreviewMifosChargesListingComponent() {
-    MaterialTheme {
+    KptTheme {
         MifosChargesListingComponent(
             title = "Processing Fee",
             type = "Flat",
@@ -776,7 +776,7 @@ private fun PreviewMifosChargesListingComponent() {
 @Preview
 @Composable
 private fun PreviewMifosSellLoanListingComponent() {
-    MaterialTheme {
+    KptTheme {
         MifosSellLoanListingComponent(
             status = Status.Pending,
             effectiveForm = "2025-08-20",
@@ -791,7 +791,7 @@ private fun PreviewMifosSellLoanListingComponent() {
 @Preview
 @Composable
 private fun PreviewMifosHeader() {
-    MaterialTheme {
+    KptTheme {
         MifosListingRowItemHeader(
             text = "Hello",
         )

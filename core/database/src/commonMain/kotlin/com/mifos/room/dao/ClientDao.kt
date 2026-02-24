@@ -139,7 +139,7 @@ interface ClientDao {
     @Query("DELETE FROM DataTablePayload WHERE clientCreationTime = :clientCreationTime")
     suspend fun deleteDataTablePayloadByCreationTime(clientCreationTime: Long)
 
-    @Update(ClientPayloadEntity::class)
+    @Update(entity = ClientPayloadEntity::class, onConflict = OnConflictStrategy.NONE)
     suspend fun updateDatabaseClientPayload(clientPayload: ClientPayloadEntity)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE, entity = ClientAddressEntity::class)

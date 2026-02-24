@@ -13,8 +13,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Tab
 import androidx.compose.material3.Text
 import androidx.compose.material3.contentColorFor
@@ -22,9 +20,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.unit.dp
+import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.designsystem.theme.MifosTheme
 import org.jetbrains.compose.ui.tooling.preview.Preview
+import template.core.base.designsystem.theme.KptTheme
 
 @Composable
 fun MifosTab(
@@ -32,8 +31,8 @@ fun MifosTab(
     selected: Boolean,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
-    selectedColor: Color = MaterialTheme.colorScheme.primary,
-    unselectedColor: Color = MaterialTheme.colorScheme.primaryContainer,
+    selectedColor: Color = KptTheme.colorScheme.primary,
+    unselectedColor: Color = KptTheme.colorScheme.primaryContainer,
 ) {
     Tab(
         text = {
@@ -44,9 +43,9 @@ fun MifosTab(
         selectedContentColor = contentColorFor(selectedColor),
         unselectedContentColor = contentColorFor(unselectedColor),
         modifier = modifier
-            .clip(RoundedCornerShape(25.dp))
+            .clip(DesignToken.shapes.dp25)
             .background(if (selected) selectedColor else unselectedColor)
-            .padding(horizontal = 20.dp),
+            .padding(horizontal = DesignToken.padding.largeIncreased),
     )
 }
 
@@ -55,8 +54,8 @@ fun MifosTab(
 private fun MifosTabPreview() {
     MifosTheme {
         Column(
-            verticalArrangement = Arrangement.spacedBy(8.dp),
-            modifier = Modifier.padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(KptTheme.spacing.sm),
+            modifier = Modifier.padding(KptTheme.spacing.md),
         ) {
             MifosTab(
                 text = "Selected Tab",
