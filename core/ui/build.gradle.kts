@@ -32,6 +32,7 @@ kotlin{
             api(projects.core.designsystem)
             api(libs.kotlinx.datetime)
             implementation(libs.jb.composeViewmodel)
+            implementation(libs.jb.lifecycle.compose)
             implementation(libs.jb.lifecycleViewmodel)
             implementation(libs.jb.lifecycleViewmodelSavedState)
             implementation(libs.coil.kt)

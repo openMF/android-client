@@ -54,7 +54,6 @@ import com.mifos.core.ui.components.MifosEmptyCard
 import com.mifos.core.ui.components.MifosProgressIndicator
 import com.mifos.core.ui.components.MifosProgressIndicatorOverlay
 import com.mifos.core.ui.util.EventsEffect
-import com.mifos.feature.client.clientIdentifiersAddUpdate.Feature
 import com.mifos.feature.client.utils.getClientIdentifierStatus
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
@@ -62,7 +61,7 @@ import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 internal fun ClientIdentifiersListScreen(
-    addNewClientIdentity: (Int, Feature, String?) -> Unit,
+    addNewClientIdentity: (Int, String, String?) -> Unit,
     onBackPress: () -> Unit,
     navController: NavController,
     onNavigateToSearch: () -> Unit,
@@ -74,7 +73,7 @@ internal fun ClientIdentifiersListScreen(
         when (event) {
             is ClientIdentifiersListEvent.AddNewClientIdentity -> addNewClientIdentity(
                 event.id,
-                event.feature,
+                event.feature.name,
                 event.uniqueKeyForHandleDocument,
             )
 

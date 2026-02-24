@@ -84,8 +84,8 @@ class DataManagerCharge(
     }
 
     suspend fun createCharges(
-        resourceId: Int,
         resourceType: String,
+        resourceId: Int,
         payload: ChargesPayload,
     ): ChargeCreationResponse {
         val response =

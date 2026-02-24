@@ -39,7 +39,7 @@ interface SavingsDao {
     @Insert(entity = SavingsAccountTransactionTemplateEntity::class, onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertSavingsAccountTransactionTemplate(transactionTemplate: SavingsAccountTransactionTemplateEntity)
 
-    @Update(SavingsAccountTransactionRequestEntity::class)
+    @Update(entity = SavingsAccountTransactionRequestEntity::class, onConflict = OnConflictStrategy.NONE)
     suspend fun updateSavingsAccountTransactionRequest(transactionRequest: SavingsAccountTransactionRequestEntity)
 
     @Query("SELECT * FROM TransactionTable WHERE savingsAccountId = :savingsAccountId")

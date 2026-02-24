@@ -23,7 +23,8 @@ android {
 
 kotlin {
     listOf(
-        iosX64(),
+// removed support for iosX64 to align with Jetbrains deprecation of the macosX64 targets
+//        iosX64(),
         iosArm64(),
         iosSimulatorArm64()
     ).forEach { iosTarget ->

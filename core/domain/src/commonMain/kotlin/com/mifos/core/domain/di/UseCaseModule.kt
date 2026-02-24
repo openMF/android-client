@@ -19,6 +19,7 @@ import com.mifos.core.domain.useCases.AddNoteUseCase
 import com.mifos.core.domain.useCases.ApproveCheckerUseCase
 import com.mifos.core.domain.useCases.ApproveRecurringDepositUseCase
 import com.mifos.core.domain.useCases.ApproveSavingsApplicationUseCase
+import com.mifos.core.domain.useCases.CalculateLoanScheduleUseCase
 import com.mifos.core.domain.useCases.CreateChargesUseCase
 import com.mifos.core.domain.useCases.CreateClientIdentifierUseCase
 import com.mifos.core.domain.useCases.CreateGroupLoansAccountUseCase
@@ -36,10 +37,10 @@ import com.mifos.core.domain.useCases.FetchCenterDetailsUseCase
 import com.mifos.core.domain.useCases.FetchCollectionSheetUseCase
 import com.mifos.core.domain.useCases.FetchGroupsAssociatedWithCenterUseCase
 import com.mifos.core.domain.useCases.FetchProductiveCollectionSheetUseCase
-import com.mifos.core.domain.useCases.GetAllChargesV3UseCase
 import com.mifos.core.domain.useCases.GetAllLoanUseCase
 import com.mifos.core.domain.useCases.GetCenterDetailsUseCase
 import com.mifos.core.domain.useCases.GetCentersInOfficeUseCase
+import com.mifos.core.domain.useCases.GetChargeTemplateUseCase
 import com.mifos.core.domain.useCases.GetChargesTemplateUseCase
 import com.mifos.core.domain.useCases.GetCheckerInboxBadgesUseCase
 import com.mifos.core.domain.useCases.GetCheckerTasksUseCase
@@ -103,6 +104,7 @@ val UseCaseModule = module {
     factoryOf(::ApproveSavingsApplicationUseCase)
     factoryOf(::CreateChargesUseCase)
     factoryOf(::CreateClientIdentifierUseCase)
+    factoryOf(::CalculateLoanScheduleUseCase)
     factoryOf(::CreateGroupLoansAccountUseCase)
     factoryOf(::CreateLoanAccountUseCase)
     factoryOf(::CreateLoanChargesUseCase)
@@ -119,7 +121,7 @@ val UseCaseModule = module {
     factoryOf(::FetchGroupsAssociatedWithCenterUseCase)
     factoryOf(::FetchProductiveCollectionSheetUseCase)
     factoryOf(::GetChargesTemplateUseCase)
-    factoryOf(::GetAllChargesV3UseCase)
+    factoryOf(::GetChargeTemplateUseCase)
     factoryOf(::GetAllLoanUseCase)
     factoryOf(::GetCenterDetailsUseCase)
     factoryOf(::GetCentersInOfficeUseCase)

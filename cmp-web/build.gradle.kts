@@ -8,7 +8,7 @@ plugins {
 
 kotlin {
     js(IR) {
-        moduleName = "cmp-web"
+        outputModuleName = "cmp-web"
         browser {
             commonWebpackConfig {
                 outputFileName = "cmp-web.js"
@@ -19,7 +19,7 @@ kotlin {
 
     @OptIn(ExperimentalWasmDsl::class)
     wasmJs {
-        moduleName = "cmp-wasm"
+        outputModuleName = "cmp-wasm"
         browser {
             commonWebpackConfig {
                 outputFileName = "cmp-wasm.js"
@@ -44,7 +44,6 @@ kotlin {
                 implementation(compose.ui)
                 implementation(compose.foundation)
                 implementation(compose.material3)
-                implementation(compose.components.resources)
 
                 implementation(libs.multiplatform.settings)
                 implementation(libs.multiplatform.settings.serialization)
@@ -52,6 +51,10 @@ kotlin {
 
                 implementation(libs.koin.core)
             }
+        }
+
+        commonMain.dependencies{
+            implementation(compose.components.resources)
         }
 
         jsMain.get().dependsOn(jsWasmMain)

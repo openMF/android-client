@@ -11,20 +11,21 @@ package com.mifos.core.domain.useCases
 
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.common.utils.asDataStateFlow
-import com.mifos.core.data.repository.LoanChargeDialogRepository
+import com.mifos.core.data.repository.LoanChargeFormRepository
 import com.mifos.core.model.objects.clients.ChargeCreationResponse
 import com.mifos.core.model.objects.payloads.ChargesPayload
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
 class CreateLoanChargesUseCase(
-    private val repository: LoanChargeDialogRepository,
+    private val repository: LoanChargeFormRepository,
 ) {
 
     operator fun invoke(
-        loanId: Int,
+        resourceType: String,
+        resourceId: Int,
         chargesPayload: ChargesPayload,
     ): Flow<DataState<ChargeCreationResponse>> = flow {
-        emit(repository.createLoanCharges(loanId, chargesPayload))
+        emit(repository.createCharges(resourceType, resourceId, chargesPayload))
     }.asDataStateFlow()
 }

@@ -11,9 +11,10 @@ package com.mifos.feature.loan.loanCharge
 
 import androidclient.feature.loan.generated.resources.Res
 import androidclient.feature.loan.generated.resources.feature_loan_charge_amount
+import androidclient.feature.loan.generated.resources.feature_loan_charge_created_successfully
 import androidclient.feature.loan.generated.resources.feature_loan_charge_due_date
+import androidclient.feature.loan.generated.resources.feature_loan_charge_id
 import androidclient.feature.loan.generated.resources.feature_loan_charge_name
-import androidclient.feature.loan.generated.resources.feature_loan_client_id
 import androidclient.feature.loan.generated.resources.feature_loan_failed_to_load_loan_charges
 import androidclient.feature.loan.generated.resources.feature_loan_loan_charges
 import androidclient.feature.loan.generated.resources.feature_loan_no_loan_charges
@@ -40,6 +41,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -58,8 +60,10 @@ import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.ui.components.MifosEmptyUi
 import com.mifos.core.ui.components.MifosProgressIndicator
-import com.mifos.feature.loan.loanChargeDialog.LoanChargeDialogScreen
+import com.mifos.feature.loan.loanChargeForm.LoanChargeForm
 import com.mifos.room.entities.client.ChargesEntity
+import kotlinx.coroutines.launch
+import org.jetbrains.compose.resources.getString
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
@@ -107,27 +111,42 @@ internal fun LoanChargeScreen(
     onRefresh: () -> Unit,
 ) {
     val snackbarHostState by remember { mutableStateOf(SnackbarHostState()) }
+    val coroutineScope = rememberCoroutineScope()
     val pullRefreshState = rememberPullToRefreshState()
-    var showLoanChargeDialog by rememberSaveable { mutableStateOf(false) }
+    var showLoanChargeForm by rememberSaveable { mutableStateOf(false) }
 
-    if (showLoanChargeDialog) {
-        LoanChargeDialogScreen(
-            loanId = loanAccountNumber,
-            onSuccess = {
-                onChargeCreated()
-                showLoanChargeDialog = false
-            },
-            onDismiss = { showLoanChargeDialog = false },
-        )
-    }
+    LoanChargeForm(
+        loanId = loanAccountNumber,
+        isVisible = showLoanChargeForm,
+        onSuccess = {
+            onChargeCreated()
+            showLoanChargeForm = false
+            coroutineScope.launch {
+                snackbarHostState.showSnackbar(
+                    message = getString(Res.string.feature_loan_charge_created_successfully),
+                )
+            }
+        },
+        onDismiss = { showLoanChargeForm = false },
+        onError = { errorMessage ->
+            showLoanChargeForm = false
+            coroutineScope.launch {
+                snackbarHostState.showSnackbar(
+                    message = errorMessage,
+                )
+            }
+        },
+    )
 
     MifosScaffold(
         title = stringResource(Res.string.feature_loan_loan_charges),
         onBackPressed = onBackPressed,
         actions = {
-            IconButton(onClick = {
-                showLoanChargeDialog = true
-            }) {
+            IconButton(
+                onClick = {
+                    showLoanChargeForm = true
+                },
+            ) {
                 Icon(imageVector = MifosIcons.Add, contentDescription = null)
             }
         },
@@ -188,7 +207,7 @@ private fun LoanChargeItem(
     ) {
         Spacer(modifier = Modifier.height(8.dp))
         MifosLoanChargeDetailsText(
-            stringResource(Res.string.feature_loan_client_id),
+            stringResource(Res.string.feature_loan_charge_id),
             charges.chargeId.toString(),
         )
         MifosLoanChargeDetailsText(

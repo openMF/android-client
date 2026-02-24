@@ -24,4 +24,6 @@ data class ChargeCreationResponse(
     var officeId: Int = 0,
 
     var resourceId: Int = 0,
+
+    var loanId: Int = 0,
 ) : Parcelable

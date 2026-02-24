@@ -42,7 +42,7 @@ import com.mifos.core.data.repository.LoanAccountApprovalRepository
 import com.mifos.core.data.repository.LoanAccountDisbursementRepository
 import com.mifos.core.data.repository.LoanAccountRepository
 import com.mifos.core.data.repository.LoanAccountSummaryRepository
-import com.mifos.core.data.repository.LoanChargeDialogRepository
+import com.mifos.core.data.repository.LoanChargeFormRepository
 import com.mifos.core.data.repository.LoanChargeRepository
 import com.mifos.core.data.repository.LoanRepaymentRepository
 import com.mifos.core.data.repository.LoanRepaymentScheduleRepository
@@ -106,7 +106,7 @@ import com.mifos.core.data.repositoryImp.LoanAccountApprovalRepositoryImp
 import com.mifos.core.data.repositoryImp.LoanAccountDisbursementRepositoryImp
 import com.mifos.core.data.repositoryImp.LoanAccountRepositoryImp
 import com.mifos.core.data.repositoryImp.LoanAccountSummaryRepositoryImp
-import com.mifos.core.data.repositoryImp.LoanChargeDialogRepositoryImp
+import com.mifos.core.data.repositoryImp.LoanChargeFormRepositoryImp
 import com.mifos.core.data.repositoryImp.LoanChargeRepositoryImp
 import com.mifos.core.data.repositoryImp.LoanRepaymentRepositoryImp
 import com.mifos.core.data.repositoryImp.LoanRepaymentScheduleRepositoryImp
@@ -179,7 +179,7 @@ val RepositoryModule = module {
     singleOf(::LoanAccountApprovalRepositoryImp) bind LoanAccountApprovalRepository::class
     singleOf(::LoanAccountDisbursementRepositoryImp) bind LoanAccountDisbursementRepository::class
     singleOf(::LoanAccountSummaryRepositoryImp) bind LoanAccountSummaryRepository::class
-    singleOf(::LoanChargeDialogRepositoryImp) bind LoanChargeDialogRepository::class
+    singleOf(::LoanChargeFormRepositoryImp) bind LoanChargeFormRepository::class
     singleOf(::LoanChargeRepositoryImp) bind LoanChargeRepository::class
     singleOf(::LoanRepaymentRepositoryImp) bind LoanRepaymentRepository::class
     singleOf(::LoanRepaymentScheduleRepositoryImp) bind LoanRepaymentScheduleRepository::class

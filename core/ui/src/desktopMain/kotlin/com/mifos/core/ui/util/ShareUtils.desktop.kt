@@ -10,8 +10,6 @@
 package com.mifos.core.ui.util
 
 import androidx.compose.ui.graphics.ImageBitmap
-import androidx.compose.ui.graphics.asSkiaBitmap
-import io.github.vinceglb.filekit.FileKit
 import java.awt.Desktop
 import java.net.URI
 
@@ -20,19 +18,25 @@ actual object ShareUtils {
     }
 
     actual suspend fun shareImage(title: String, image: ImageBitmap) {
-        FileKit.saveFile(
-            bytes = image.asSkiaBitmap().readPixels(),
-            baseName = "MifosQrCode",
-            extension = "png",
-        )
+// TODO(KMP): FileKit.saveFile is not currently available on this source set.
+// Add the platform-specific FileKit dependency in a follow-up PR.
+
+//        FileKit.saveFile(
+//            bytes = image.asSkiaBitmap().readPixels(),
+//            baseName = "MifosQrCode",
+//            extension = "png",
+//        )
     }
 
     actual suspend fun shareImage(title: String, byte: ByteArray) {
-        FileKit.saveFile(
-            bytes = byte,
-            baseName = "MifosQrCode",
-            extension = "png",
-        )
+// TODO(KMP): FileKit.saveFile is not currently available on this source set.
+// Add the platform-specific FileKit dependency in a follow-up PR.
+
+//        FileKit.saveFile(
+//            bytes = byte,
+//            baseName = "MifosQrCode",
+//            extension = "png",
+//        )
     }
 
     actual fun callHelpline() {

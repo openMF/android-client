@@ -13,6 +13,7 @@ import androidclient.feature.offline.generated.resources.Res
 import androidclient.feature.offline.generated.resources.feature_offline_all_groups_synced
 import androidclient.feature.offline.generated.resources.feature_offline_ic_assignment_turned_in_black_24dp
 import androidclient.feature.offline.generated.resources.feature_offline_no_group_payload_to_sync
+import com.mifos.core.common.utils.ApiDateFormatter
 import com.mifos.room.entities.group.GroupPayloadEntity
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.StringResource
@@ -51,7 +52,7 @@ val dummyGroupPayloads = listOf(
         externalId = "EXT001",
         name = "Group 1",
         locale = "en",
-        dateFormat = "dd MMM yyyy",
+        dateFormat = ApiDateFormatter.DATE_FORMAT,
     ),
     GroupPayloadEntity(
         id = 2,
@@ -63,7 +64,7 @@ val dummyGroupPayloads = listOf(
         externalId = "EXT002",
         name = "Group 2",
         locale = "en",
-        dateFormat = "dd MMM yyyy",
+        dateFormat = ApiDateFormatter.DATE_FORMAT,
     ),
     GroupPayloadEntity(
         id = 3,
@@ -75,6 +76,6 @@ val dummyGroupPayloads = listOf(
         externalId = "EXT003",
         name = "Group 3",
         locale = "en",
-        dateFormat = "dd MMM yyyy",
+        dateFormat = ApiDateFormatter.DATE_FORMAT,
     ),
 )

@@ -5,10 +5,8 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  *
- * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ * See See https://github.com/openMF/kmp-project-template/blob/main/LICENSE
  */
-@file:Suppress("KotlinNoActualForExpect")
-
 package template.core.base.database
 
 import kotlin.reflect.KClass
@@ -29,7 +27,8 @@ import kotlin.reflect.KClass
  * }
  * ```
  */
-@Suppress("NO_ACTUAL_FOR_EXPECT")
+@OptIn(ExperimentalMultiplatform::class)
+@OptionalExpectation
 expect annotation class Dao()
 
 /**
@@ -47,7 +46,8 @@ expect annotation class Dao()
  * suspend fun getUsersOlderThan(minAge: Int): List<User>
  * ```
  */
-@Suppress("NO_ACTUAL_FOR_EXPECT")
+@OptIn(ExperimentalMultiplatform::class)
+@OptionalExpectation
 @Target(AnnotationTarget.FUNCTION, AnnotationTarget.PROPERTY_GETTER)
 @Retention(AnnotationRetention.BINARY)
 expect annotation class Query(
@@ -72,7 +72,8 @@ expect annotation class Query(
  * suspend fun insertUsers(users: List<User>): List<Long>
  * ```
  */
-@Suppress("NO_ACTUAL_FOR_EXPECT")
+@OptIn(ExperimentalMultiplatform::class)
+@OptionalExpectation
 @Target(AnnotationTarget.FUNCTION)
 @Retention(AnnotationRetention.BINARY)
 expect annotation class Insert(
@@ -98,7 +99,8 @@ expect annotation class Insert(
  * )
  * ```
  */
-@Suppress("NO_ACTUAL_FOR_EXPECT")
+@OptIn(ExperimentalMultiplatform::class)
+@OptionalExpectation
 @Target(AnnotationTarget.FIELD, AnnotationTarget.FUNCTION)
 @Retention(AnnotationRetention.BINARY)
 expect annotation class PrimaryKey(
@@ -119,7 +121,9 @@ expect annotation class PrimaryKey(
  *         entity = User::class,
  *         parentColumns = ["id"],
  *         childColumns = ["userId"],
- *         onDelete = ForeignKey.CASCADE
+ *         onDelete = ForeignKeyAction.CASCADE,
+ *         onUpdate = ForeignKeyAction.CASCADE,
+ *         deferred = false
  *     )]
  * )
  * data class Post(
@@ -129,10 +133,16 @@ expect annotation class PrimaryKey(
  * )
  * ```
  */
-@Suppress("NO_ACTUAL_FOR_EXPECT")
 @Target(allowedTargets = [])
 @Retention(AnnotationRetention.BINARY)
-expect annotation class ForeignKey
+expect annotation class ForeignKey(
+    val entity: KClass<*>,
+    val parentColumns: Array<String>,
+    val childColumns: Array<String>,
+    val onDelete: Int,
+    val onUpdate: Int,
+    val deferred: Boolean,
+)
 
 /**
  * Cross-platform annotation for defining database indexes.
@@ -157,7 +167,6 @@ expect annotation class ForeignKey
  * )
  * ```
  */
-@Suppress("NO_ACTUAL_FOR_EXPECT")
 @Target(allowedTargets = [])
 @Retention(AnnotationRetention.BINARY)
 expect annotation class Index
@@ -190,7 +199,8 @@ expect annotation class Index
  * )
  * ```
  */
-@Suppress("NO_ACTUAL_FOR_EXPECT")
+@OptIn(ExperimentalMultiplatform::class)
+@OptionalExpectation
 @Target(AnnotationTarget.CLASS)
 @Retention(AnnotationRetention.BINARY)
 expect annotation class Entity(
@@ -221,7 +231,8 @@ expect annotation class Entity(
  * suspend fun updateUsers(users: List<User>): Int
  * ```
  */
-@Suppress("NO_ACTUAL_FOR_EXPECT")
+@OptIn(ExperimentalMultiplatform::class)
+@OptionalExpectation
 @Target(AnnotationTarget.FUNCTION)
 @Retention(AnnotationRetention.BINARY)
 expect annotation class Update(
@@ -247,7 +258,8 @@ expect annotation class Update(
  * suspend fun deleteUsers(users: List<User>): Int
  * ```
  */
-@Suppress("NO_ACTUAL_FOR_EXPECT")
+@OptIn(ExperimentalMultiplatform::class)
+@OptionalExpectation
 @Target(AnnotationTarget.FUNCTION)
 @Retention(AnnotationRetention.BINARY)
 expect annotation class Delete(
@@ -272,7 +284,8 @@ expect annotation class Delete(
  * suspend fun upsertUsers(users: List<User>): List<Long>
  * ```
  */
-@Suppress("NO_ACTUAL_FOR_EXPECT")
+@OptIn(ExperimentalMultiplatform::class)
+@OptionalExpectation
 @Target(AnnotationTarget.FUNCTION)
 @Retention(AnnotationRetention.BINARY)
 expect annotation class Upsert(
@@ -300,7 +313,8 @@ expect annotation class Upsert(
  * suspend fun getUserWithPosts(userId: Long): UserWithPosts
  * ```
  */
-@Suppress("NO_ACTUAL_FOR_EXPECT")
+@OptIn(ExperimentalMultiplatform::class)
+@OptionalExpectation
 @Target(AnnotationTarget.FUNCTION)
 @Retention(AnnotationRetention.BINARY)
 expect annotation class Transaction()
@@ -331,7 +345,8 @@ expect annotation class Transaction()
  * )
  * ```
  */
-@Suppress("NO_ACTUAL_FOR_EXPECT")
+@OptIn(ExperimentalMultiplatform::class)
+@OptionalExpectation
 @Target(AnnotationTarget.FIELD, AnnotationTarget.FUNCTION)
 @Retention(AnnotationRetention.BINARY)
 expect annotation class ColumnInfo(
@@ -371,7 +386,8 @@ expect annotation class ColumnInfo(
  * // This creates columns: id, name, home_street, home_city, home_zipCode, work_street, work_city, work_zipCode
  * ```
  */
-@Suppress("NO_ACTUAL_FOR_EXPECT")
+@OptIn(ExperimentalMultiplatform::class)
+@OptionalExpectation
 @Target(AnnotationTarget.FIELD, AnnotationTarget.FUNCTION)
 @Retention(AnnotationRetention.BINARY)
 expect annotation class Embedded(
@@ -410,7 +426,8 @@ expect annotation class Embedded(
  * }
  * ```
  */
-@Suppress("NO_ACTUAL_FOR_EXPECT")
+@OptIn(ExperimentalMultiplatform::class)
+@OptionalExpectation
 @Target(AnnotationTarget.FIELD, AnnotationTarget.FUNCTION)
 @Retention(AnnotationRetention.BINARY)
 expect annotation class Relation(
@@ -454,7 +471,6 @@ expect annotation class Relation(
  * )
  * ```
  */
-@Suppress("NO_ACTUAL_FOR_EXPECT")
 @Target(allowedTargets = [])
 @Retention(AnnotationRetention.BINARY)
 expect annotation class Junction(
@@ -490,7 +506,8 @@ expect annotation class Junction(
  * abstract class MyDatabase : RoomDatabase()
  * ```
  */
-@Suppress("NO_ACTUAL_FOR_EXPECT")
+@OptIn(ExperimentalMultiplatform::class)
+@OptionalExpectation
 @Target(AnnotationTarget.FUNCTION)
 @Retention(AnnotationRetention.BINARY)
 expect annotation class TypeConverter()
@@ -524,7 +541,8 @@ expect annotation class TypeConverter()
  * )
  * ```
  */
-@Suppress("NO_ACTUAL_FOR_EXPECT")
+@OptIn(ExperimentalMultiplatform::class)
+@OptionalExpectation
 @Target(
     AnnotationTarget.FUNCTION,
     AnnotationTarget.CLASS,
@@ -564,7 +582,7 @@ expect annotation class TypeConverters(
  * )
  * ```
  */
-@Suppress("NO_ACTUAL_FOR_EXPECT")
+
 @Target(allowedTargets = [])
 @Retention(AnnotationRetention.BINARY)
 expect annotation class BuiltInTypeConverters()
@@ -596,7 +614,8 @@ expect annotation class BuiltInTypeConverters()
  * }
  * ```
  */
-@Suppress("NO_ACTUAL_FOR_EXPECT")
+@OptIn(ExperimentalMultiplatform::class)
+@OptionalExpectation
 @Target(AnnotationTarget.CLASS)
 @Retention(AnnotationRetention.BINARY)
 expect annotation class Database(
@@ -630,7 +649,6 @@ expect annotation class Database(
  * abstract class AppDatabase : RoomDatabase()
  * ```
  */
-@Suppress("NO_ACTUAL_FOR_EXPECT")
 @Target(allowedTargets = [])
 @Retention(AnnotationRetention.BINARY)
 expect annotation class AutoMigration(
@@ -667,7 +685,8 @@ expect annotation class AutoMigration(
  * )
  * ```
  */
-@Suppress("NO_ACTUAL_FOR_EXPECT")
+@OptIn(ExperimentalMultiplatform::class)
+@OptionalExpectation
 @Target(
     AnnotationTarget.FIELD,
     AnnotationTarget.CONSTRUCTOR,
@@ -700,7 +719,8 @@ expect annotation class Ignore()
  * )
  * ```
  */
-@Suppress("NO_ACTUAL_FOR_EXPECT")
+@OptIn(ExperimentalMultiplatform::class)
+@OptionalExpectation
 @Target(AnnotationTarget.CLASS)
 @Retention(AnnotationRetention.BINARY)
 expect annotation class DatabaseView(
