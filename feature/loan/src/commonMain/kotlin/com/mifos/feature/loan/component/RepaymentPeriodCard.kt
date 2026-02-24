@@ -28,14 +28,12 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.unit.dp
 import com.mifos.core.common.utils.CurrencyFormatter
 import com.mifos.core.common.utils.DateHelper
 import com.mifos.core.designsystem.component.MifosCard
@@ -44,6 +42,7 @@ import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.designsystem.theme.MifosTypography
 import com.mifos.core.model.objects.account.loan.Period
 import org.jetbrains.compose.resources.stringResource
+import template.core.base.designsystem.theme.KptTheme
 import kotlin.time.ExperimentalTime
 
 @OptIn(ExperimentalTime::class)
@@ -66,20 +65,20 @@ fun RepaymentPeriodCard(
         modifier = modifier
             .fillMaxWidth()
             .border(
-                1.dp,
-                MaterialTheme.colorScheme.secondaryContainer,
+                DesignToken.spacing.dp1,
+                KptTheme.colorScheme.secondaryContainer,
                 DesignToken.shapes.medium,
             ),
         shape = DesignToken.shapes.medium,
-        elevation = 0.dp,
+        elevation = KptTheme.elevation.level0,
         colors = CardDefaults.cardColors(
             AppColors.customWhite,
         ),
-        borderStroke = BorderStroke(1.dp, MaterialTheme.colorScheme.secondaryContainer),
+        borderStroke = BorderStroke(DesignToken.spacing.dp1, KptTheme.colorScheme.secondaryContainer),
     ) {
         Row(
             modifier = Modifier
-                .padding(DesignToken.padding.large)
+                .padding(KptTheme.spacing.md)
                 .fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween,
@@ -88,7 +87,7 @@ fun RepaymentPeriodCard(
                 modifier = Modifier
                     .size(DesignToken.sizes.iconExtraLarge)
                     .clip(CircleShape)
-                    .background(MaterialTheme.colorScheme.primary),
+                    .background(KptTheme.colorScheme.primary),
                 contentAlignment = Alignment.Center,
             ) {
                 Text(
@@ -120,14 +119,14 @@ fun RepaymentPeriodCard(
                             }"
                         } ?: "-",
                     ),
-                    color = MaterialTheme.colorScheme.outline,
+                    color = KptTheme.colorScheme.outline,
                     style = MifosTypography.labelMediumEmphasized,
                 )
 
                 Text(
                     text = dueDate,
                     style = MifosTypography.labelLargeEmphasized,
-                    color = MaterialTheme.colorScheme.onSurface,
+                    color = KptTheme.colorScheme.onSurface,
                 )
             }
             Column(
@@ -141,13 +140,13 @@ fun RepaymentPeriodCard(
                         stringResource(Res.string.due)
                     },
                     style = MifosTypography.labelSmall.copy(
-                        color = if (isPaid) AppColors.customEnable else MaterialTheme.colorScheme.error,
+                        color = if (isPaid) AppColors.customEnable else KptTheme.colorScheme.error,
                     ),
                 )
                 Text(
                     text = amount,
                     style = MifosTypography.titleSmallEmphasized,
-                    color = if (isPaid) AppColors.customEnable else MaterialTheme.colorScheme.error,
+                    color = if (isPaid) AppColors.customEnable else KptTheme.colorScheme.error,
                 )
             }
         }

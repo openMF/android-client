@@ -43,7 +43,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.designsystem.theme.MifosTypography
 import com.mifos.core.ui.components.MifosGeneralCard
 import com.mifos.core.ui.components.MifosRowWithTextAndButton
@@ -51,6 +50,7 @@ import com.mifos.core.ui.components.MifosTwoButtonRow
 import com.mifos.feature.savings.savingsAccountv2.SavingsAccountAction
 import com.mifos.feature.savings.savingsAccountv2.SavingsAccountState
 import org.jetbrains.compose.resources.stringResource
+import template.core.base.designsystem.theme.KptTheme
 import kotlin.collections.mapOf
 
 @Composable
@@ -129,21 +129,21 @@ fun PreviewPage(
 
     )
 
-    Column(modifier = Modifier.fillMaxSize().padding(bottom = DesignToken.padding.large)) {
+    Column(modifier = Modifier.fillMaxSize().padding(bottom = KptTheme.spacing.md)) {
         LazyColumn(modifier = modifier.weight(1f)) {
             item {
                 Text(
                     stringResource(Res.string.step_details),
                     style = MifosTypography.labelLargeEmphasized,
                 )
-                Spacer(Modifier.height(DesignToken.padding.large))
+                Spacer(Modifier.height(KptTheme.spacing.md))
             }
 
             item {
                 MifosGeneralCard(
                     contentMap = previewDetailsMap,
                 )
-                Spacer(Modifier.height(DesignToken.padding.large))
+                Spacer(Modifier.height(KptTheme.spacing.md))
             }
 
             item {
@@ -151,14 +151,14 @@ fun PreviewPage(
                     stringResource(Res.string.step_terms),
                     style = MifosTypography.labelLargeEmphasized,
                 )
-                Spacer(Modifier.height(DesignToken.padding.large))
+                Spacer(Modifier.height(KptTheme.spacing.md))
             }
 
             item {
                 MifosGeneralCard(
                     contentMap = termsDetailsMap,
                 )
-                Spacer(Modifier.height(DesignToken.padding.large))
+                Spacer(Modifier.height(KptTheme.spacing.md))
             }
 
             item {
@@ -166,7 +166,7 @@ fun PreviewPage(
                     stringResource(Res.string.step_charges),
                     style = MifosTypography.labelLargeEmphasized,
                 )
-                Spacer(Modifier.height(DesignToken.padding.large))
+                Spacer(Modifier.height(KptTheme.spacing.md))
             }
 
             item {
@@ -181,7 +181,7 @@ fun PreviewPage(
                     ),
                     btnEnabled = state.addedCharges.isNotEmpty(),
                 )
-                Spacer(Modifier.height(DesignToken.padding.large))
+                Spacer(Modifier.height(KptTheme.spacing.md))
             }
         }
         MifosTwoButtonRow(

@@ -29,13 +29,12 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SelectableDates
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -49,17 +48,18 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mifos.core.designsystem.component.MifosOutlinedTextField
 import com.mifos.core.designsystem.component.MifosTextFieldDropdown
 import com.mifos.core.designsystem.icon.MifosIcons
-import com.mifos.core.ui.components.MifosDateRangePicker
+import com.mifos.core.designsystem.theme.DesignToken
 import kotlinx.datetime.LocalDate
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.viewmodel.koinViewModel
+import template.core.base.designsystem.theme.KptTheme
+import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
 import kotlin.time.Instant
 
@@ -139,49 +139,81 @@ private fun CheckerInboxTasksFilterDialog(
         onDismissRequest = { closeDialog.invoke() },
     ) {
         Surface(
-            shape = RoundedCornerShape(16.dp),
-            color = MaterialTheme.colorScheme.surface,
+            shape = KptTheme.shapes.large,
+            color = KptTheme.colorScheme.surface,
         ) {
             Box(
                 contentAlignment = Alignment.Center,
             ) {
-                Column(modifier = Modifier.padding(20.dp)) {
+                Column(modifier = Modifier.padding(DesignToken.padding.largeIncreased)) {
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(bottom = 16.dp),
+                            .padding(bottom = KptTheme.spacing.md),
                         horizontalArrangement = Arrangement.SpaceBetween,
                         verticalAlignment = Alignment.CenterVertically,
                     ) {
                         Text(
                             text = stringResource(Res.string.feature_checker_inbox_task_filter_checkers),
-                            fontSize = MaterialTheme.typography.titleLarge.fontSize,
+                            style = KptTheme.typography.titleLarge,
                         )
                         Icon(
                             imageVector = MifosIcons.Cancel,
                             contentDescription = "",
-                            tint = MaterialTheme.colorScheme.outline,
+                            tint = KptTheme.colorScheme.outline,
                             modifier = Modifier
-                                .width(30.dp)
-                                .height(30.dp)
+                                .size(DesignToken.sizes.dp30)
                                 .clickable { closeDialog.invoke() },
                         )
                     }
 
-                    Spacer(modifier = Modifier.height(8.dp))
+                    Spacer(modifier = Modifier.height(KptTheme.spacing.sm))
 
-                    MifosDateRangePicker(
-                        fromDate = fromDate,
-                        toDate = toDate,
-                        onFromDateSelected = { fromDate = it },
-                        onToDateSelected = { toDate = it },
-                        fromDateLabel = stringResource(Res.string.feature_checker_inbox_task_select_from_date),
-                        toDateLabel = stringResource(Res.string.feature_checker_inbox_task_select_to_date),
-                        minSelectableDate = initialDate,
-                        invalidDateRangeMessage = invalidDateRangeMessage,
+                    MifosDatePickerTextField(
+                        value = if (fromDate == 0L) {
+                            ""
+                        } else {
+                            val localDate = Instant.fromEpochMilliseconds(fromDate)
+                                .toLocalDateTime(TimeZone.currentSystemDefault())
+                                .date
+
+                            localDate.format("dd-MM-yyyy")
+                        },
+                        label = stringResource(Res.string.feature_checker_inbox_task_select_from_date),
+                        openDatePicker = {
+                            if (fromDate == 0L) {
+                                fromDatePickerState.selectedDateMillis = Clock.System.now().toEpochMilliseconds()
+                            } else {
+                                fromDatePickerState.selectedDateMillis = fromDate
+                            }
+                            showFromDatePicker = true
+                        },
                     )
 
-                    Spacer(modifier = Modifier.height(8.dp))
+                    Spacer(modifier = Modifier.height(KptTheme.spacing.sm))
+
+                    MifosDatePickerTextField(
+                        value = if (toDate == 0L) {
+                            ""
+                        } else {
+                            val localDate = Instant.fromEpochMilliseconds(toDate)
+                                .toLocalDateTime(TimeZone.currentSystemDefault())
+                                .date
+
+                            localDate.format("dd-MM-yyyy")
+                        },
+                        label = stringResource(Res.string.feature_checker_inbox_task_select_to_date),
+                        openDatePicker = {
+                            if (toDate == 0L) {
+                                toDatePickerState.selectedDateMillis = Clock.System.now().toEpochMilliseconds()
+                            } else {
+                                toDatePickerState.selectedDateMillis = toDate
+                            }
+                            showToDatePicker = true
+                        },
+                    )
+
+                    Spacer(modifier = Modifier.height(KptTheme.spacing.sm))
 
                     MifosTextFieldDropdown(
                         value = action,
@@ -196,7 +228,7 @@ private fun CheckerInboxTasksFilterDialog(
                         options = actionList,
                     )
 
-                    Spacer(modifier = Modifier.height(8.dp))
+                    Spacer(modifier = Modifier.height(KptTheme.spacing.sm))
 
                     MifosTextFieldDropdown(
                         value = entity,
@@ -211,7 +243,7 @@ private fun CheckerInboxTasksFilterDialog(
                         options = entityList,
                     )
 
-                    Spacer(modifier = Modifier.height(8.dp))
+                    Spacer(modifier = Modifier.height(KptTheme.spacing.sm))
 
                     MifosOutlinedTextField(
                         value = resourceId,
@@ -231,14 +263,14 @@ private fun CheckerInboxTasksFilterDialog(
                     if (showInvalidDateRangeError) {
                         Text(
                             text = invalidDateRangeMessage,
-                            color = MaterialTheme.colorScheme.error,
+                            color = KptTheme.colorScheme.error,
                             textAlign = TextAlign.Start,
                             modifier = Modifier
-                                .padding(top = 8.dp, start = 16.dp),
+                                .padding(top = KptTheme.spacing.sm, start = KptTheme.spacing.md),
                         )
                     }
 
-                    Spacer(modifier = Modifier.height(8.dp))
+                    Spacer(modifier = Modifier.height(KptTheme.spacing.sm))
 
                     Row(
                         modifier = Modifier.fillMaxWidth(),
@@ -248,17 +280,17 @@ private fun CheckerInboxTasksFilterDialog(
                             onClick = {
                                 clearFilter.invoke()
                             },
-                            modifier = Modifier.height(40.dp),
+                            modifier = Modifier.height(DesignToken.spacing.dp40),
                             colors = ButtonColors(
-                                containerColor = MaterialTheme.colorScheme.primary,
-                                contentColor = MaterialTheme.colorScheme.onPrimary,
-                                disabledContainerColor = MaterialTheme.colorScheme.primaryContainer,
-                                disabledContentColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                                containerColor = KptTheme.colorScheme.primary,
+                                contentColor = KptTheme.colorScheme.onPrimary,
+                                disabledContainerColor = KptTheme.colorScheme.primaryContainer,
+                                disabledContentColor = KptTheme.colorScheme.onPrimaryContainer,
                             ),
                         ) {
                             Text(
                                 text = stringResource(Res.string.feature_checker_inbox_task_clear_filter),
-                                style = MaterialTheme.typography.bodyMedium,
+                                style = KptTheme.typography.bodyMedium,
                             )
                         }
 
@@ -276,17 +308,17 @@ private fun CheckerInboxTasksFilterDialog(
                                     )
                                 }
                             },
-                            modifier = Modifier.height(40.dp),
+                            modifier = Modifier.height(DesignToken.spacing.dp40),
                             colors = ButtonColors(
-                                containerColor = MaterialTheme.colorScheme.primary,
-                                contentColor = MaterialTheme.colorScheme.onPrimary,
-                                disabledContainerColor = MaterialTheme.colorScheme.primaryContainer,
-                                disabledContentColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                                containerColor = KptTheme.colorScheme.primary,
+                                contentColor = KptTheme.colorScheme.onPrimary,
+                                disabledContainerColor = KptTheme.colorScheme.primaryContainer,
+                                disabledContentColor = KptTheme.colorScheme.onPrimaryContainer,
                             ),
                         ) {
                             Text(
                                 text = stringResource(Res.string.feature_checker_inbox_task_apply_filter),
-                                style = MaterialTheme.typography.bodyMedium,
+                                style = KptTheme.typography.bodyMedium,
                             )
                         }
                     }

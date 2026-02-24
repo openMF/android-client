@@ -40,7 +40,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -68,6 +67,7 @@ import com.mifos.feature.client.clientDetailsProfile.components.clientsDetailsAc
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
+import template.core.base.designsystem.theme.KptTheme
 
 @Composable
 internal fun ClientProfileDetailsScreen(
@@ -193,9 +193,7 @@ private fun ClientProfileDetailsContent(
                 modifier = Modifier
                     .fillMaxSize()
                     .verticalScroll(rememberScrollState())
-                    .padding(
-                        horizontal = DesignToken.padding.large,
-                    ),
+                    .padding(horizontal = KptTheme.spacing.md),
             ) {
                 ClientDetailsProfile(
                     image = state.profileImage,
@@ -226,7 +224,7 @@ private fun ClientProfileDetailsContent(
                         },
                         modifier = Modifier.weight(1f),
                     )
-                    Spacer(Modifier.width(DesignToken.padding.small))
+                    Spacer(Modifier.width(KptTheme.spacing.sm))
                     MifosTextButton(
                         onClick = {
                             onAction(ClientProfileDetailsAction.OnUpdateSignatureClick)
@@ -248,11 +246,11 @@ private fun ClientProfileDetailsContent(
                     )
                 }
 
-                Spacer(Modifier.height(DesignToken.padding.large))
+                Spacer(Modifier.height(KptTheme.spacing.md))
 
                 state.details.forEach { list ->
                     MifosDefaultListingComponentFromStringResources(data = list)
-                    Spacer(Modifier.height(DesignToken.padding.large))
+                    Spacer(Modifier.height(KptTheme.spacing.md))
                 }
 
                 Row(
@@ -267,16 +265,16 @@ private fun ClientProfileDetailsContent(
                             painterResource(Res.drawable.arrow_downward),
                             contentDescription = null,
                             modifier = Modifier.size(DesignToken.sizes.iconAverage),
-                            tint = MaterialTheme.colorScheme.secondary.copy(alpha = 0.5f),
+                            tint = KptTheme.colorScheme.secondary.copy(alpha = 0.5f),
                         )
-                        Spacer(Modifier.width(DesignToken.padding.small))
+                        Spacer(Modifier.width(KptTheme.spacing.sm))
                         Text(
                             text = stringResource(Res.string.scroll_for_more_options),
                             style = MifosTypography.tag,
-                            color = MaterialTheme.colorScheme.secondary.copy(alpha = 0.5f),
+                            color = KptTheme.colorScheme.secondary.copy(alpha = 0.5f),
                         )
                     }
-                    Spacer(Modifier.width(DesignToken.padding.small))
+                    Spacer(Modifier.width(KptTheme.spacing.sm))
                     MifosTextButton(
                         onClick = {
                             onAction(ClientProfileDetailsAction.OnUpdateDetailsClick)
@@ -297,13 +295,13 @@ private fun ClientProfileDetailsContent(
                         modifier = Modifier.weight(1f),
                     )
                 }
-                Spacer(Modifier.height(DesignToken.padding.large))
+                Spacer(Modifier.height(KptTheme.spacing.md))
                 Text(
                     text = stringResource(Res.string.client_profile_actions),
                     style = MifosTypography.labelLargeEmphasized,
                 )
 
-                Spacer(Modifier.height(DesignToken.padding.large))
+                Spacer(Modifier.height(KptTheme.spacing.md))
                 clientsDetailsActionItems.forEach {
                     MifosRowCard(
                         title = stringResource(it.title),
@@ -312,7 +310,7 @@ private fun ClientProfileDetailsContent(
                             TextUtil(
                                 text = stringResource(it.subTitle),
                                 style = MifosTypography.bodySmall,
-                                color = MaterialTheme.colorScheme.secondary,
+                                color = KptTheme.colorScheme.secondary,
                             ),
                         ),
                         rightValues = emptyList(),

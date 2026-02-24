@@ -50,7 +50,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -91,6 +90,7 @@ import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.getString
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
+import template.core.base.designsystem.theme.KptTheme
 
 @Composable
 internal fun AddAddressScreen(
@@ -256,17 +256,16 @@ private fun AddAddressScaffold(
                     MifosBreadcrumbNavBar(navController)
                     LazyColumn(
                         modifier = Modifier.padding(
-                            start = DesignToken.padding.large,
-                            end = DesignToken.padding.large,
+                            horizontal = KptTheme.spacing.md,
                         ),
                     ) {
                         item {
                             Text(
                                 text = stringResource(Res.string.feature_client_add_address),
                                 fontWeight = FontWeight.SemiBold,
-                                fontSize = MaterialTheme.typography.labelLarge.fontSize,
-                                letterSpacing = MaterialTheme.typography.labelLarge.letterSpacing,
-                                color = MaterialTheme.colorScheme.onSurface,
+                                fontSize = KptTheme.typography.labelLarge.fontSize,
+                                letterSpacing = KptTheme.typography.labelLarge.letterSpacing,
+                                color = KptTheme.colorScheme.onSurface,
                             )
                             if (isAddressEnabled && state.addressTemplate != null) {
                                 val sortedAddressTypeOptions = state.addressTemplate.addressTypeIdOptions.sortedBy { it.name }
@@ -342,11 +341,12 @@ private fun AddAddressFormBottomBar(
     isSubmitEnabled: Boolean,
 ) {
     Box(
-        modifier = Modifier.background(MaterialTheme.colorScheme.surface),
+        modifier = Modifier.background(KptTheme.colorScheme.surface),
     ) {
         Row(
             modifier = Modifier
-                .fillMaxWidth().padding(DesignToken.padding.small),
+                .fillMaxWidth()
+                .padding(KptTheme.spacing.sm),
             horizontalArrangement = Arrangement.SpaceEvenly,
         ) {
             OutlinedButton(
@@ -355,28 +355,28 @@ private fun AddAddressFormBottomBar(
                     .weight(0.4f)
                     .heightIn(DesignToken.sizes.avatarMedium),
                 colors = ButtonDefaults.outlinedButtonColors(
-                    containerColor = MaterialTheme.colorScheme.onPrimary,
-                    contentColor = MaterialTheme.colorScheme.primary,
+                    containerColor = KptTheme.colorScheme.onPrimary,
+                    contentColor = KptTheme.colorScheme.primary,
                 ),
                 shape = RoundedCornerShape(DesignToken.sizes.iconMinyMiny),
                 border = BorderStroke(
                     width = Dp.Hairline,
-                    color = MaterialTheme.colorScheme.secondaryContainer,
+                    color = KptTheme.colorScheme.secondaryContainer,
                 ),
                 onClick = { onCancelClick.invoke() },
             ) {
                 Icon(imageVector = MifosIcons.Close, contentDescription = "")
-                Spacer(modifier = Modifier.width(DesignToken.spacing.small))
+                Spacer(modifier = Modifier.width(KptTheme.spacing.sm))
                 Text(
                     text = stringResource(Res.string.feature_client_cancel),
                     fontWeight = FontWeight.Medium,
-                    fontSize = MaterialTheme.typography.labelLarge.fontSize,
-                    letterSpacing = MaterialTheme.typography.labelLarge.letterSpacing,
-                    lineHeight = MaterialTheme.typography.labelLarge.lineHeight,
+                    fontSize = KptTheme.typography.labelLarge.fontSize,
+                    letterSpacing = KptTheme.typography.labelLarge.letterSpacing,
+                    lineHeight = KptTheme.typography.labelLarge.lineHeight,
                     textAlign = TextAlign.Center,
                 )
             }
-            Spacer(modifier = Modifier.width(DesignToken.spacing.small))
+            Spacer(modifier = Modifier.width(KptTheme.spacing.sm))
             Button(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -385,19 +385,19 @@ private fun AddAddressFormBottomBar(
                 shape = RoundedCornerShape(DesignToken.sizes.iconMinyMiny),
                 enabled = isSubmitEnabled,
                 colors = ButtonDefaults.outlinedButtonColors(
-                    containerColor = MaterialTheme.colorScheme.primary,
-                    contentColor = MaterialTheme.colorScheme.onPrimary,
+                    containerColor = KptTheme.colorScheme.primary,
+                    contentColor = KptTheme.colorScheme.onPrimary,
                 ),
                 onClick = { onSubmitClick.invoke() },
             ) {
                 Icon(imageVector = MifosIcons.Check, contentDescription = "")
-                Spacer(modifier = Modifier.width(DesignToken.spacing.small))
+                Spacer(modifier = Modifier.width(KptTheme.spacing.sm))
                 Text(
                     text = stringResource(Res.string.feature_client_submit),
                     fontWeight = FontWeight.Medium,
-                    fontSize = MaterialTheme.typography.labelLarge.fontSize,
-                    letterSpacing = MaterialTheme.typography.labelLarge.letterSpacing,
-                    lineHeight = MaterialTheme.typography.labelLarge.lineHeight,
+                    fontSize = KptTheme.typography.labelLarge.fontSize,
+                    letterSpacing = KptTheme.typography.labelLarge.letterSpacing,
+                    lineHeight = KptTheme.typography.labelLarge.lineHeight,
                     textAlign = TextAlign.Center,
                 )
             }
@@ -454,7 +454,7 @@ private fun AddressInputTextFields(
             error = addressLineError,
         )
 
-        Spacer(modifier = Modifier.height(DesignToken.padding.large))
+        Spacer(modifier = Modifier.height(KptTheme.spacing.md))
 
         MifosOutlinedTextField(
             value = addressLine2,
@@ -463,7 +463,7 @@ private fun AddressInputTextFields(
             error = null,
         )
 
-        Spacer(modifier = Modifier.height(DesignToken.padding.large))
+        Spacer(modifier = Modifier.height(KptTheme.spacing.md))
 
         MifosOutlinedTextField(
             value = addressLine3,
@@ -472,7 +472,7 @@ private fun AddressInputTextFields(
             error = null,
         )
 
-        Spacer(modifier = Modifier.height(DesignToken.padding.large))
+        Spacer(modifier = Modifier.height(KptTheme.spacing.md))
 
         MifosOutlinedTextField(
             value = city,
@@ -481,7 +481,7 @@ private fun AddressInputTextFields(
             error = cityError,
         )
 
-        Spacer(modifier = Modifier.height(DesignToken.padding.large))
+        Spacer(modifier = Modifier.height(KptTheme.spacing.md))
 
         MifosTextFieldDropdown(
             value = selectedStateName,

@@ -31,7 +31,6 @@ import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.ListItemDefaults
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
@@ -50,13 +49,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.PagingData
 import coil3.compose.AsyncImage
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.icon.MifosIcons
+import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.ui.components.MifosProgressIndicator
 import com.mifos.core.ui.components.SelectionModeTopAppBar
 import com.mifos.feature.center.syncCentersDialog.SyncCenterDialogScreen
@@ -67,6 +66,7 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameterProvider
 import org.koin.compose.viewmodel.koinViewModel
+import template.core.base.designsystem.theme.KptTheme
 
 @Composable
 internal fun CenterListScreen(
@@ -251,8 +251,8 @@ fun CenterCard(
     isInSelectionMode: Boolean,
     onSelect: (CenterEntity) -> Unit,
     modifier: Modifier = Modifier,
-    selectedColor: Color = MaterialTheme.colorScheme.secondaryContainer,
-    unselectedColor: Color = MaterialTheme.colorScheme.surface,
+    selectedColor: Color = KptTheme.colorScheme.secondaryContainer,
+    unselectedColor: Color = KptTheme.colorScheme.surface,
     onClick: (CenterEntity) -> Unit,
 ) {
     val containerColor = if (selected) selectedColor else unselectedColor
@@ -279,7 +279,7 @@ fun CenterCard(
         ListItem(
             leadingContent = {
                 Canvas(
-                    modifier = Modifier.size(16.dp),
+                    modifier = Modifier.size(DesignToken.sizes.iconSmall),
                     onDraw = {
                         drawCircle(
                             color = if (center.active == true) Color.Green else Color.Red,
@@ -299,11 +299,11 @@ fun CenterCard(
             trailingContent = {
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(4.dp),
+                    horizontalArrangement = Arrangement.spacedBy(KptTheme.spacing.xs),
                 ) {
                     if (center.sync) {
                         AsyncImage(
-                            modifier = Modifier.size(20.dp),
+                            modifier = Modifier.size(DesignToken.sizes.iconAverage),
                             model = Res.drawable.feature_center_ic_done_all_black_24dp,
                             contentDescription = null,
                         )

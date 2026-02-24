@@ -57,16 +57,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color.Companion.Black
 import androidx.compose.ui.graphics.Color.Companion.Blue
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontStyle
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mifos.core.common.utils.Constants
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.component.MifosTextFieldDropdown
+import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.model.objects.runreport.DataRow
 import com.mifos.core.model.objects.runreport.client.ClientReportTypeItem
 import com.mifos.core.ui.components.MifosProgressIndicator
@@ -77,6 +73,7 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameterProvider
 import org.koin.compose.viewmodel.koinViewModel
+import template.core.base.designsystem.theme.KptTheme
 
 @Composable
 internal fun ReportDetailScreen(
@@ -378,20 +375,18 @@ private fun RunReportContent(
     ) {
         OutlinedCard(
             modifier = modifier
-                .padding(8.dp),
+                .padding(horizontal = KptTheme.spacing.sm),
         ) {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(
-                        16.dp,
-                    ),
+                    .padding(KptTheme.spacing.md),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 Box(
                     contentAlignment = Alignment.Center,
                     modifier = Modifier
-                        .size(42.dp)
+                        .size(DesignToken.sizes.dp42)
                         .background(Blue, CircleShape),
                 ) {
                     Icon(
@@ -403,46 +398,34 @@ private fun RunReportContent(
                 Column(
                     modifier = Modifier
                         .weight(1f)
-                        .padding(start = 16.dp),
+                        .padding(KptTheme.spacing.md),
                 ) {
                     reportItem.reportName?.let {
                         Text(
                             text = it,
-                            style = TextStyle(
-                                fontSize = 16.sp,
-                                fontWeight = FontWeight.Normal,
-                                fontStyle = FontStyle.Normal,
-                            ),
+                            style = KptTheme.typography.bodyLarge,
                         )
                     }
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(top = 8.dp),
+                            .padding(top = KptTheme.spacing.sm),
                         horizontalArrangement = Arrangement.SpaceBetween,
                     ) {
                         Text(
                             text = reportItem.reportType.toString(),
-                            style = TextStyle(
-                                fontSize = 14.sp,
-                                fontWeight = FontWeight.Normal,
-                                fontStyle = FontStyle.Normal,
-                            ),
+                            style = KptTheme.typography.bodyMedium,
                         )
                         Text(
                             text = reportItem.reportCategory.toString(),
-                            style = TextStyle(
-                                fontSize = 14.sp,
-                                fontWeight = FontWeight.Normal,
-                                fontStyle = FontStyle.Normal,
-                            ),
+                            style = KptTheme.typography.bodyMedium,
                         )
                     }
                 }
             }
         }
 
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(KptTheme.spacing.md))
 
         if (officeList.isNotEmpty()) {
             MifosTextFieldDropdown(
@@ -458,7 +441,7 @@ private fun RunReportContent(
                 options = officeList.mapNotNull { it.row.getOrNull(1) },
                 readOnly = true,
             )
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(KptTheme.spacing.md))
         }
 
         if (loanPurposeList.isNotEmpty()) {
@@ -475,7 +458,7 @@ private fun RunReportContent(
                 options = loanPurposeList.mapNotNull { it.row.getOrNull(1) },
                 readOnly = true,
             )
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(KptTheme.spacing.md))
         }
 
         if (reportOffices.isNotEmpty()) {
@@ -492,7 +475,7 @@ private fun RunReportContent(
                 options = reportOffices.mapNotNull { it.row.getOrNull(1) },
                 readOnly = true,
             )
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(KptTheme.spacing.md))
         }
 
         if (reportProducts.isNotEmpty()) {
@@ -509,7 +492,7 @@ private fun RunReportContent(
                 options = reportProducts.mapNotNull { it.row.getOrNull(1) },
                 readOnly = true,
             )
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(KptTheme.spacing.md))
         }
 
         if (fundList.isNotEmpty()) {
@@ -526,7 +509,7 @@ private fun RunReportContent(
                 options = fundList.mapNotNull { it.row.getOrNull(1) },
                 readOnly = true,
             )
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(KptTheme.spacing.md))
         }
 
         if (currencyList.isNotEmpty()) {
@@ -543,7 +526,7 @@ private fun RunReportContent(
                 options = currencyList.mapNotNull { it.row.getOrNull(1) },
                 readOnly = true,
             )
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(KptTheme.spacing.md))
         }
 
         if (parCalculatorList.isNotEmpty()) {
@@ -560,7 +543,7 @@ private fun RunReportContent(
                 options = parCalculatorList.mapNotNull { it.row.getOrNull(1) },
                 readOnly = true,
             )
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(KptTheme.spacing.md))
         }
 
         if (savingsAccountDepositList.isNotEmpty()) {
@@ -577,7 +560,7 @@ private fun RunReportContent(
                 options = savingsAccountDepositList.mapNotNull { it.row.getOrNull(1) },
                 readOnly = true,
             )
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(KptTheme.spacing.md))
         }
 
         if (glAccountList.isNotEmpty()) {
@@ -594,7 +577,7 @@ private fun RunReportContent(
                 options = glAccountList.mapNotNull { it.row.getOrNull(1) },
                 readOnly = true,
             )
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(KptTheme.spacing.md))
         }
 
         if (obligationDateList.isNotEmpty()) {
@@ -611,7 +594,7 @@ private fun RunReportContent(
                 options = obligationDateList.mapNotNull { it.row.getOrNull(1) },
                 readOnly = true,
             )
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(KptTheme.spacing.md))
         }
     }
 }

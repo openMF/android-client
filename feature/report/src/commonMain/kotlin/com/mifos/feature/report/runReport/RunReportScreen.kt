@@ -59,12 +59,12 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mifos.core.designsystem.component.MifosMenuDropDownItem
 import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.icon.MifosIcons
+import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.model.objects.runreport.client.ClientReportTypeItem
 import com.mifos.core.ui.components.MifosProgressIndicator
 import org.jetbrains.compose.resources.painterResource
@@ -73,6 +73,7 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameterProvider
 import org.koin.compose.viewmodel.koinViewModel
+import template.core.base.designsystem.theme.KptTheme
 
 @Composable
 internal fun RunReportScreen(
@@ -154,7 +155,7 @@ internal fun RunReportScreen(
                             ),
                             textAlign = TextAlign.Start,
                         )
-                        Spacer(modifier = Modifier.width(8.dp))
+                        Spacer(modifier = Modifier.width(KptTheme.spacing.sm))
                         Icon(
                             imageVector = if (showMenu) MifosIcons.ArrowUp else MifosIcons.ArrowDown,
                             contentDescription = null,
@@ -267,7 +268,7 @@ private fun RunReportCardItem(
 ) {
     OutlinedCard(
         modifier = modifier
-            .padding(8.dp)
+            .padding(KptTheme.spacing.sm)
             .clickable {
                 onReportClick(report)
             },
@@ -275,15 +276,13 @@ private fun RunReportCardItem(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(
-                    16.dp,
-                ),
+                .padding(KptTheme.spacing.md),
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Box(
                 contentAlignment = Alignment.Center,
                 modifier = Modifier
-                    .size(42.dp)
+                    .size(DesignToken.sizes.dp42)
                     .background(Blue, CircleShape),
             ) {
                 Icon(
@@ -294,22 +293,18 @@ private fun RunReportCardItem(
             Column(
                 modifier = Modifier
                     .weight(1f)
-                    .padding(start = 16.dp),
+                    .padding(start = KptTheme.spacing.md),
             ) {
                 report.reportName?.let {
                     Text(
                         text = it,
-                        style = TextStyle(
-                            fontSize = 16.sp,
-                            fontWeight = FontWeight.Normal,
-                            fontStyle = FontStyle.Normal,
-                        ),
+                        style = KptTheme.typography.bodyLarge,
                     )
                 }
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(top = 8.dp),
+                        .padding(top = KptTheme.spacing.sm),
                     horizontalArrangement = Arrangement.SpaceBetween,
                 ) {
                     Text(

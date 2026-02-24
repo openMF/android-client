@@ -31,7 +31,6 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
@@ -48,16 +47,14 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.mifos.core.designsystem.component.MifosAndroidClientIcon
 import com.mifos.core.designsystem.component.MifosOutlinedTextField
 import com.mifos.core.designsystem.icon.MifosIcons
+import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.ui.components.MifosProgressIndicatorOverlay
 import com.mifos.core.ui.util.DevicePreview
 import kotlinx.coroutines.launch
@@ -66,6 +63,7 @@ import org.jetbrains.compose.resources.getString
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
+import template.core.base.designsystem.theme.KptTheme
 
 /**
  * Created by Aditya Gupta on 11/02/24.
@@ -134,14 +132,14 @@ internal fun LoginScreen(
     Scaffold(
         modifier = modifier
             .fillMaxSize()
-            .padding(16.dp),
-        containerColor = White,
+            .padding(KptTheme.spacing.md),
+        containerColor = KptTheme.colorScheme.surface,
         snackbarHost = { SnackbarHost(snackbarHostState) },
         bottomBar = {
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(12.dp),
+                    .padding(DesignToken.padding.medium),
                 contentAlignment = Alignment.Center,
             ) {
                 FilledTonalButton(
@@ -149,13 +147,13 @@ internal fun LoginScreen(
                     modifier = Modifier
                         .align(Alignment.Center),
                     colors = ButtonDefaults.filledTonalButtonColors(
-                        containerColor = MaterialTheme.colorScheme.tertiaryContainer,
-                        contentColor = MaterialTheme.colorScheme.tertiary,
+                        containerColor = KptTheme.colorScheme.tertiaryContainer,
+                        contentColor = KptTheme.colorScheme.tertiary,
                     ),
                 ) {
                     Text(text = "Update Server Configuration")
 
-                    Spacer(modifier = Modifier.width(4.dp))
+                    Spacer(modifier = Modifier.width(KptTheme.spacing.xs))
 
                     Icon(
                         imageVector = MifosIcons.ArrowForward,
@@ -173,20 +171,20 @@ internal fun LoginScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
 
         ) {
-            Spacer(modifier = Modifier.height(80.dp))
+            Spacer(modifier = Modifier.height(DesignToken.spacing.dp80))
 
             MifosAndroidClientIcon(imageVector = painterResource(Res.drawable.feature_auth_mifos_logo))
 
             Text(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(top = 8.dp),
+                    .padding(top = KptTheme.spacing.sm),
                 text = stringResource(Res.string.feature_auth_enter_credentials),
                 textAlign = TextAlign.Center,
-                style = MaterialTheme.typography.bodyMedium,
+                style = KptTheme.typography.bodyMedium,
             )
 
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(KptTheme.spacing.md))
 
             MifosOutlinedTextField(
                 value = userName,
@@ -203,7 +201,7 @@ internal fun LoginScreen(
                 },
             )
 
-            Spacer(modifier = Modifier.height(6.dp))
+            Spacer(modifier = Modifier.height(DesignToken.spacing.mediumSmall))
 
             MifosOutlinedTextField(
                 value = password,
@@ -230,7 +228,7 @@ internal fun LoginScreen(
                 },
             )
 
-            Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.height(KptTheme.spacing.sm))
 
             Button(
                 onClick = {
@@ -240,11 +238,11 @@ internal fun LoginScreen(
                 },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .heightIn(44.dp)
-                    .padding(start = 16.dp, end = 16.dp),
+                    .heightIn(DesignToken.spacing.dp44)
+                    .padding(horizontal = KptTheme.spacing.md),
                 contentPadding = PaddingValues(),
             ) {
-                Text(text = "Login", fontSize = 16.sp)
+                Text(text = "Login", style = KptTheme.typography.bodyLarge)
             }
         }
         if (showDialog.value) {
