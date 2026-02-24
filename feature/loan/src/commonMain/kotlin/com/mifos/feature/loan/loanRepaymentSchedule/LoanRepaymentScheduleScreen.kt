@@ -40,8 +40,16 @@ import androidclient.feature.loan.generated.resources.feature_loan_penalties_sho
 import androidclient.feature.loan.generated.resources.feature_loan_pending_count
 import androidclient.feature.loan.generated.resources.feature_loan_principal_due
 import androidclient.feature.loan.generated.resources.feature_loan_status
+import androidclient.feature.loan.generated.resources.feature_loan_paid_label
+import androidclient.feature.loan.generated.resources.feature_loan_period_details
+import androidclient.feature.loan.generated.resources.feature_loan_repayment_schedule_pdf_title
+import androidclient.feature.loan.generated.resources.feature_loan_table_header_date
+import androidclient.feature.loan.generated.resources.feature_loan_table_header_days
+import androidclient.feature.loan.generated.resources.feature_loan_table_header_due
 import androidclient.feature.loan.generated.resources.feature_loan_table_header_fees
 import androidclient.feature.loan.generated.resources.feature_loan_table_header_interest
+import androidclient.feature.loan.generated.resources.feature_loan_table_header_loan_balance
+import androidclient.feature.loan.generated.resources.feature_loan_table_header_number
 import androidclient.feature.loan.generated.resources.feature_loan_table_header_penalties
 import androidclient.feature.loan.generated.resources.feature_loan_table_header_principal
 import androidclient.feature.loan.generated.resources.feature_loan_total
@@ -195,12 +203,12 @@ private suspend fun createPdfStrings(): RepaymentSchedulePdfStrings {
         totalCostLoanHeader = getString(Res.string.feature_loan_total_cost_of_loan),
         installmentTotalsHeader = getString(Res.string.feature_loan_installment_totals),
         totalsLabel = getString(Res.string.feature_loan_totals_uppercase),
-        hNo = getString(Res.string.feature_loan_table_header_installment),
+        hNo = getString(Res.string.feature_loan_table_header_number),
         hDays = getString(Res.string.feature_loan_table_header_days),
         hDate = getString(Res.string.feature_loan_table_header_date),
         hPaidDate = getString(Res.string.feature_loan_table_header_paid_date),
-        hBalance = getString(Res.string.feature_loan_table_header_balance),
-        hPrincipal = getString(Res.string.feature_loan_table_header_principal),
+        hBalance = getString(Res.string.feature_loan_table_header_loan_balance),
+        hPrincipal = getString(Res.string.feature_loan_table_header_principal_due),
         hInterest = getString(Res.string.feature_loan_table_header_interest),
         hFees = getString(Res.string.feature_loan_table_header_fees),
         hPenalties = getString(Res.string.feature_loan_table_header_penalties),

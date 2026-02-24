@@ -203,11 +203,19 @@
     <string name="feature_loan_table_header_transaction_date">Transaction Date</string>
     <string name="feature_loan_table_header_transaction_type">Transaction Type</string>
     <string name="feature_loan_table_header_amount">Amount</string>
-    <string name="feature_loan_table_header_principal">Principal</string>
+    <string name="feature_loan_table_header_loan_balance">Loan Balance</string>
+    <string name="feature_loan_table_header_days">Days</string>
+    <string name="feature_loan_table_header_date">Date</string>
+    <string name="feature_loan_table_header_paid_date">Paid Date</string>
+    <string name="feature_loan_table_header_principal_due">Principal Due</string>
     <string name="feature_loan_table_header_interest">Interest</string>
     <string name="feature_loan_table_header_fees">Fees</string>
     <string name="feature_loan_table_header_penalties">Penalties</string>
-    <string name="feature_loan_table_header_loan_balance">Loan Balance</string>
+    <string name="feature_loan_table_header_due">Due</string>
+    <string name="feature_loan_table_header_paid">Paid</string>
+    <string name="feature_loan_table_header_in_advance">In advance</string>
+    <string name="feature_loan_table_header_late">Late</string>
+    <string name="feature_loan_table_header_outstanding">Outstanding</string>
 
     <string name="feature_loan_transaction_action_undo">Undo Transaction</string>
     <string name="feature_loan_transaction_action_view_receipts">View Receipts</string>
@@ -341,22 +349,6 @@
     <string name="feature_loan_installment_totals">Installment Totals</string>
     <string name="feature_loan_totals_uppercase">TOTALS</string>
     <string name="feature_loan_generation_date">Generation Date</string>
-
-    <!-- Repayment Schedule table headers -->
-    <string name="feature_loan_table_header_installment">#</string>
-    <string name="feature_loan_table_header_days">Days</string>
-    <string name="feature_loan_table_header_date">Date</string>
-    <string name="feature_loan_table_header_paid_date">Paid Date</string>
-    <string name="feature_loan_table_header_balance">Balance of loan</string>
-    <string name="feature_loan_table_header_principal">Principal Due</string>
-    <string name="feature_loan_table_header_interest">Interest</string>
-    <string name="feature_loan_table_header_fees">Fees</string>
-    <string name="feature_loan_table_header_penalties">Penalties</string>
-    <string name="feature_loan_table_header_due">Due</string>
-    <string name="feature_loan_table_header_paid">Paid</string>
-    <string name="feature_loan_table_header_in_advance">In advance</string>
-    <string name="feature_loan_table_header_late">Late</string>
-    <string name="feature_loan_table_header_outstanding">Outstanding</string>
 
     <string name="feature_loan_table_total">Total</string>
 
