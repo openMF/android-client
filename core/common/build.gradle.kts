@@ -28,6 +28,17 @@ secrets {
 }
 
 kotlin {
+// This is commented out because it is already provided by the top-level KMP library plugin.
+//    listOf(
+//        iosX64(),
+//        iosArm64(),
+//        iosSimulatorArm64(),
+//    ).forEach {
+//        it.binaries.framework {
+//            isStatic = false
+//            export(libs.kermit.simple)
+//        }
+//    }
 
     sourceSets {
         commonMain.dependencies {

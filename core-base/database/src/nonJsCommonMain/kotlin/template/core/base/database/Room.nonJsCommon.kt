@@ -1,5 +1,3 @@
-package template.core.base.database
-
 /*
  * Copyright 2025 Mifos Initiative
  *
@@ -9,7 +7,8 @@ package template.core.base.database
  *
  * See See https://github.com/openMF/kmp-project-template/blob/main/LICENSE
  */
-import androidx.room.AutoMigration
+package template.core.base.database
+
 import androidx.room.ColumnInfo
 import androidx.room.Dao
 import androidx.room.Database
@@ -27,8 +26,11 @@ import androidx.room.Query
 import androidx.room.Relation
 import androidx.room.Transaction
 import androidx.room.TypeConverter
+import androidx.room.TypeConverters
 import androidx.room.Update
 import androidx.room.Upsert
+import androidx.room.BuiltInTypeConverters
+import androidx.room.AutoMigration
 
 /**
  * Multiplatform typealiases for Room database annotations and interfaces.
@@ -136,6 +138,18 @@ actual typealias Junction = Junction
  * Used to mark methods as type converters.
  */
 actual typealias TypeConverter = TypeConverter
+
+/**
+ * Typealias for the Room `@TypeConverters` annotation.
+ * Used to specify which type converters to use.
+ */
+actual typealias TypeConverters = TypeConverters
+
+/**
+ * Typealias for the Room `BuiltInTypeConverters` annotation.
+ * Used to configure built-in type converters.
+ */
+actual typealias BuiltInTypeConverters = BuiltInTypeConverters
 
 /**
  * Typealias for the Room `@Database` annotation.

@@ -5,10 +5,8 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  *
- * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ * See See https://github.com/openMF/kmp-project-template/blob/main/LICENSE
  */
-@file:Suppress("KotlinNoActualForExpect")
-
 package template.core.base.database
 
 import kotlin.reflect.KClass
@@ -110,31 +108,23 @@ expect annotation class PrimaryKey(
 )
 
 /**
- * Common (expect) annotation for describing foreign key relationships in
- * shared KMP entity definitions.
+ * Cross-platform annotation for defining foreign key constraints.
  *
- * This annotation is intended to be used inside an `@Entity` annotation
- * in `commonMain` to describe foreign key constraints in a platform-agnostic way.
+ * This annotation is used within the @Entity annotation to define relationships
+ * between entities through foreign key constraints. It ensures referential integrity
+ * between related tables.
  *
- *  Important:
- * - This annotation itself does NOT enforce any database constraints.
- * - Actual behavior is provided by platform-specific `actual` implementations
- *   (for example, Room on Android).
- * - Platforms that do not support relational databases (JS, WASM) may provide
- *   empty or no-op actual implementations.
- *
- * Typical usage (in shared code):
- *
+ * Example:
  * ```kotlin
  * @Entity(
- *     foreignKeys = [
- *         ForeignKey(
- *             entity = User::class,
- *             parentColumns = ["id"],
- *             childColumns = ["userId"],
- *             onDelete = ForeignKeyAction.CASCADE
- *         )
- *     ]
+ *     foreignKeys = [ForeignKey(
+ *         entity = User::class,
+ *         parentColumns = ["id"],
+ *         childColumns = ["userId"],
+ *         onDelete = ForeignKeyAction.CASCADE,
+ *         onUpdate = ForeignKeyAction.CASCADE,
+ *         deferred = false
+ *     )]
  * )
  * data class Post(
  *     @PrimaryKey val id: Long,
@@ -142,16 +132,8 @@ expect annotation class PrimaryKey(
  *     val content: String
  * )
  * ```
- *
- * Platform notes:
- * - Android: mapped to `androidx.room.ForeignKey`
- * - Other platforms: usually ignored or treated as metadata only
- *
- * This annotation exists to keep entity models consistent across platforms,
- * not to guarantee database enforcement everywhere.
  */
-
-@Target(allowedTargets = []) // Intentionally restricted; actual targets are platform-defined
+@Target(allowedTargets = [])
 @Retention(AnnotationRetention.BINARY)
 expect annotation class ForeignKey(
     val entity: KClass<*>,
@@ -302,7 +284,8 @@ expect annotation class Delete(
  * suspend fun upsertUsers(users: List<User>): List<Long>
  * ```
  */
-@Suppress("NO_ACTUAL_FOR_EXPECT")
+@OptIn(ExperimentalMultiplatform::class)
+@OptionalExpectation
 @Target(AnnotationTarget.FUNCTION)
 @Retention(AnnotationRetention.BINARY)
 expect annotation class Upsert(
@@ -529,6 +512,80 @@ expect annotation class Junction(
 @Retention(AnnotationRetention.BINARY)
 expect annotation class TypeConverter()
 
+/**
+ * Cross-platform annotation for specifying which type converters to use.
+ *
+ * This annotation tells Room which type converter classes to use for an entity,
+ * DAO, or database. It can be applied at different scopes to control where
+ * converters are available.
+ *
+ * @param value Array of type converter classes
+ * @param builtInTypeConverters Configuration for built-in type converters
+ *
+ * Example:
+ * ```kotlin
+ * @Database(
+ *     entities = [User::class, Post::class],
+ *     version = 1
+ * )
+ * @TypeConverters(Converters::class)
+ * abstract class AppDatabase : RoomDatabase() {
+ *     abstract fun userDao(): UserDao
+ * }
+ *
+ * @Entity
+ * @TypeConverters(DateConverters::class)
+ * data class Event(
+ *     @PrimaryKey val id: Long,
+ *     val date: Date
+ * )
+ * ```
+ */
+@OptIn(ExperimentalMultiplatform::class)
+@OptionalExpectation
+@Target(
+    AnnotationTarget.FUNCTION,
+    AnnotationTarget.CLASS,
+    AnnotationTarget.FIELD,
+)
+@Retention(AnnotationRetention.BINARY)
+expect annotation class TypeConverters(
+    /**
+     * The list of type converter classes. If converter methods are not static, Room will create an
+     * instance of these classes.
+     *
+     * @return The list of classes that contains the converter methods.
+     */
+    vararg val value: KClass<*>,
+
+    /**
+     * Configure whether Room can use various built in converters for common types. See
+     * [BuiltInTypeConverters] for details.
+     */
+    val builtInTypeConverters: BuiltInTypeConverters,
+)
+
+/**
+ * Cross-platform annotation for configuring built-in type converters.
+ *
+ * This annotation allows you to enable or disable Room's built-in type converters
+ * for specific types like enums and UUID. Use it within @TypeConverters annotation.
+ *
+ * Note: For advanced configuration, reference androidx.room.BuiltInTypeConverters.State directly.
+ * The default constructor uses INHERITED for all converters (enabled by default).
+ *
+ * Example:
+ * ```kotlin
+ * @TypeConverters(
+ *     value = [CustomConverters::class],
+ *     builtInTypeConverters = BuiltInTypeConverters()
+ * )
+ * ```
+ */
+
+@Target(allowedTargets = [])
+@Retention(AnnotationRetention.BINARY)
+expect annotation class BuiltInTypeConverters()
 
 /**
  * Cross-platform annotation for marking a class as a Room database.
@@ -781,4 +838,3 @@ object ForeignKeyAction {
     /** Cascade the delete/update operation to the referencing rows */
     const val CASCADE = 5
 }
-
