@@ -29,7 +29,7 @@ class LoanTransactionsViewModel(
     private val repository: LoanTransactionsRepository,
     savedStateHandle: SavedStateHandle,
 ) : BaseViewModel<LoanTransactionsState, LoanTransactionsEvent, LoanTransactionsAction>(
-    initialState = LoanTransactionsState(),
+    initialState = LoanTransactionsState(dialogState = LoanTransactionsState.DialogState.Loading),
 ) {
 
     val loanId = savedStateHandle.toRoute<LoanTransactionScreenRoute>().loanAccountNumber
@@ -70,10 +70,6 @@ class LoanTransactionsViewModel(
                 }
             }
         }
-    }
-
-    override fun setInitialState(): LoanTransactionsState {
-        return LoanTransactionsState(dialogState = LoanTransactionsState.DialogState.Loading)
     }
 
     override fun handleAction(action: LoanTransactionsAction) {
