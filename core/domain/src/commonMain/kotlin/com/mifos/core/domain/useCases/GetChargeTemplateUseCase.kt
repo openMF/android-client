@@ -11,16 +11,16 @@ package com.mifos.core.domain.useCases
 
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.common.utils.asDataStateFlow
-import com.mifos.core.data.repository.LoanChargeDialogRepository
-import io.ktor.client.statement.HttpResponse
+import com.mifos.core.data.repository.LoanChargeFormRepository
+import com.mifos.core.model.objects.template.client.ChargeTemplate
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
-class GetAllChargesV3UseCase(
-    private val repository: LoanChargeDialogRepository,
+class GetChargeTemplateUseCase(
+    private val repository: LoanChargeFormRepository,
 ) {
 
-    operator fun invoke(loanId: Int): Flow<DataState<HttpResponse>> = flow {
-        emit(repository.getAllChargesV3(loanId))
+    operator fun invoke(resourceType: String, resourceId: Int): Flow<DataState<ChargeTemplate>> = flow {
+        emit(repository.getChargeTemplate(resourceType, resourceId))
     }.asDataStateFlow()
 }
