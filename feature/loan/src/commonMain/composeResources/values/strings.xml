@@ -136,6 +136,26 @@
     <string name="feature_loan_office">Office</string>
     <string name="feature_loan_break_down">Break Down</string>
     <string name="feature_loan_outstanding_balance">Outstanding Balance</string>
+
+    <!-- Loan Transactions Table Headers -->
+    <string name="feature_loan_table_header_number">#</string>
+    <string name="feature_loan_table_header_transaction_id">ID</string>
+    <string name="feature_loan_table_header_office">Office</string>
+    <string name="feature_loan_table_header_external_id">External ID</string>
+    <string name="feature_loan_table_header_transaction_date">Transaction Date</string>
+    <string name="feature_loan_table_header_transaction_type">Transaction Type</string>
+    <string name="feature_loan_table_header_amount">Amount</string>
+    <string name="feature_loan_table_header_principal">Principal</string>
+    <string name="feature_loan_table_header_interest">Interest</string>
+    <string name="feature_loan_table_header_fees">Fees</string>
+    <string name="feature_loan_table_header_penalties">Penalties</string>
+    <string name="feature_loan_table_header_loan_balance">Loan Balance</string>
+
+    <string name="feature_loan_transaction_action_undo">Undo Transaction</string>
+    <string name="feature_loan_transaction_action_view_receipts">View Receipts</string>
+    <string name="feature_loan_transaction_action_view_journal_entries">View Journal Entries</string>
+    <string name="feature_loan_transaction_action_view_details">View Transaction</string>
+
     <string name="feature_loan_loan_overview">Loan Overview</string>
     <string name="feature_loan_loan_id">Loan ID: #</string>
     <string name="feature_loan_loan_id_copied">Copied to clipboard</string>

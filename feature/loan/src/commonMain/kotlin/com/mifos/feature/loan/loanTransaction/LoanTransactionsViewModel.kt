@@ -12,17 +12,12 @@ package com.mifos.feature.loan.loanTransaction
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
+import com.mifos.core.common.utils.CurrencyFormatter
 import com.mifos.core.common.utils.DataState
+import com.mifos.core.common.utils.DateHelper
 import com.mifos.core.data.repository.LoanTransactionsRepository
-import com.mifos.core.model.objects.account.loan.Transaction
 import com.mifos.core.ui.util.BaseViewModel
-import com.mifos.room.entities.accounts.loans.LoanWithAssociationsEntity
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class LoanTransactionsViewModel(
@@ -34,41 +29,12 @@ class LoanTransactionsViewModel(
 
     val loanId = savedStateHandle.toRoute<LoanTransactionScreenRoute>().loanAccountNumber
 
-    private val rawTransactions = MutableStateFlow<List<Transaction>>(emptyList())
-    private val hideReversed = MutableStateFlow(false)
-    private val hideAccruals = MutableStateFlow(false)
-
-    private val filteredTransactionsFlow: StateFlow<List<Transaction>> = combine(
-        rawTransactions,
-        hideReversed,
-        hideAccruals,
-    ) { transactions, hideReversed, hideAccruals ->
-        transactions.filter { transaction ->
-            val typeValue = transaction.type?.value ?: ""
-            val isAccrual = transaction.type?.accrual == true
-            when {
-                hideReversed && typeValue.equals("Reversed", ignoreCase = true) -> false
-                hideAccruals && isAccrual -> false
-                else -> true
-            }
-        }
-    }.stateIn(
-        scope = viewModelScope,
-        started = SharingStarted.Eagerly,
-        initialValue = emptyList(),
-    )
+    val _loanTransactionsUiState =
+        MutableStateFlow<LoanTransactionsUiState>(LoanTransactionsUiState.ShowProgressBar)
 
     init {
-        loadLoanTransaction()
         viewModelScope.launch {
-            filteredTransactionsFlow.collect { filtered ->
-                mutableStateFlow.update {
-                    it.copy(
-                        transactions = filtered,
-                        isTransactionsEmpty = filtered.isEmpty(),
-                    )
-                }
-            }
+            loadLoanTransaction()
         }
     }
 
@@ -84,52 +50,154 @@ class LoanTransactionsViewModel(
                 mutableStateFlow.update { it.copy(showFilterSheet = false) }
             }
             is LoanTransactionsAction.SetHideReversed -> {
-                hideReversed.value = action.value
                 mutableStateFlow.update { it.copy(hideReversed = action.value) }
+                applyFilters()
             }
             is LoanTransactionsAction.SetHideAccruals -> {
-                hideAccruals.value = action.value
                 mutableStateFlow.update { it.copy(hideAccruals = action.value) }
-            }
-            is LoanTransactionsAction.Internal.ReceiveTransactionResult -> {
-                handleTransactionResult(action.result)
+                applyFilters()
             }
         }
     }
 
-    private fun loadLoanTransaction() {
-        viewModelScope.launch {
-            mutableStateFlow.update {
-                it.copy(dialogState = LoanTransactionsState.DialogState.Loading)
-            }
-            repository.getLoanTransactions(loanId).collect { dataState ->
-                sendAction(LoanTransactionsAction.Internal.ReceiveTransactionResult(dataState))
+    suspend fun loadLoanTransaction() {
+        mutableStateFlow.update {
+            it.copy(dialogState = LoanTransactionsState.DialogState.Loading)
+        }
+        repository.getLoanTransactions(loanId).collect { state ->
+            when (state) {
+                is DataState.Error -> {
+                    mutableStateFlow.update {
+                        it.copy(dialogState = LoanTransactionsState.DialogState.Error(state.message))
+                    }
+                    _loanTransactionsUiState.value =
+                        LoanTransactionsUiState.ShowFetchingError(state.message)
+                }
+
+                DataState.Loading -> {
+                    mutableStateFlow.update {
+                        it.copy(dialogState = LoanTransactionsState.DialogState.Loading)
+                    }
+                    _loanTransactionsUiState.value = LoanTransactionsUiState.ShowProgressBar
+                }
+
+                is DataState.Success -> {
+                    val loanWithAssociations = state.data
+                    val currencyCode = loanWithAssociations.currency.code
+                    val maxDigits = loanWithAssociations.currency.decimalPlaces
+
+                    val transactionsData =
+                        loanWithAssociations.transactions.mapIndexed { index, transaction ->
+
+                            LoanTransactionsUiState.LoanTransactionsTableData.TransactionRowData(
+                                number = (index + 1).toString(),
+                                id = transaction.id?.toString() ?: "-",
+                                office = transaction.officeName ?: "-",
+                                externalId = "-",
+                                transactionDate = if (transaction.date.isNotEmpty()) {
+                                    DateHelper.getDateAsString(
+                                        transaction.date,
+                                    )
+                                } else {
+                                    "-"
+                                },
+                                transactionType = transaction.type?.value?.let {
+                                    TransactionType.fromValue(it)
+                                } ?: TransactionType.UNKNOWN,
+                                amount = CurrencyFormatter.format(
+                                    transaction.amount,
+                                    currencyCode,
+                                    maxDigits,
+                                ),
+                                principal = CurrencyFormatter.format(
+                                    transaction.principalPortion,
+                                    currencyCode,
+                                    maxDigits,
+                                ),
+                                interest = CurrencyFormatter.format(
+                                    transaction.interestPortion,
+                                    currencyCode,
+                                    maxDigits,
+                                ),
+                                fees = CurrencyFormatter.format(
+                                    transaction.feeChargesPortion,
+                                    currencyCode,
+                                    maxDigits,
+                                ),
+                                penalties = CurrencyFormatter.format(
+                                    transaction.penaltyChargesPortion,
+                                    currencyCode,
+                                    maxDigits,
+                                ),
+                                loanBalance = CurrencyFormatter.format(
+                                    transaction.outstandingLoanBalance,
+                                    currencyCode,
+                                    maxDigits,
+                                ),
+                                manuallyReversed = transaction.manuallyReversed ?: false,
+                            )
+                        }
+
+                    _loanTransactionsUiState.value =
+                        LoanTransactionsUiState.ShowLoanTransaction(
+                            transactionsTableData = LoanTransactionsUiState.LoanTransactionsTableData(
+                                transactions = transactionsData,
+                            ),
+                        )
+                    
+                    mutableStateFlow.update { it.copy(dialogState = null) }
+                    applyFilters()
+                }
             }
         }
     }
 
-    private fun handleTransactionResult(result: DataState<LoanWithAssociationsEntity>) {
-        when (result) {
-            is DataState.Error -> mutableStateFlow.update {
-                it.copy(dialogState = LoanTransactionsState.DialogState.Error(result.message))
+    private fun applyFilters() {
+        val currentUiState = _loanTransactionsUiState.value
+        if (currentUiState is LoanTransactionsUiState.ShowLoanTransaction) {
+            val currentState = stateFlow.value
+            val allTransactions = currentUiState.transactionsTableData?.transactions ?: emptyList()
+            
+            val filteredTransactions = allTransactions.filter { row ->
+                val hideReversedCondition = !currentState.hideReversed || !row.manuallyReversed
+                val hideAccrualsCondition = !currentState.hideAccruals || row.transactionType != TransactionType.ACCRUAL
+                hideReversedCondition && hideAccrualsCondition
             }
-            DataState.Loading -> mutableStateFlow.update {
-                it.copy(dialogState = LoanTransactionsState.DialogState.Loading)
-            }
-            is DataState.Success -> {
-                rawTransactions.value = result.data.transactions ?: emptyList()
-                mutableStateFlow.update { it.copy(dialogState = null) }
-            }
+            
+            _loanTransactionsUiState.value = currentUiState.copy(
+                transactionsTableData = LoanTransactionsUiState.LoanTransactionsTableData(
+                    transactions = filteredTransactions
+                )
+            )
         }
+    }
+
+    fun onRowAction(row: LoanTransactionsUiState.LoanTransactionsTableData.TransactionRowData) {
+        val currentState = _loanTransactionsUiState.value
+        if (currentState is LoanTransactionsUiState.ShowLoanTransaction) {
+            _loanTransactionsUiState.value =
+                currentState.copy(selectedRow = row, isBottomSheetOpen = true)
+        }
+    }
+
+    fun dismissBottomSheet() {
+        val currentState = _loanTransactionsUiState.value
+        if (currentState is LoanTransactionsUiState.ShowLoanTransaction) {
+            _loanTransactionsUiState.value =
+                currentState.copy(isBottomSheetOpen = false, selectedRow = null)
+        }
+    }
+
+    fun onActionSelected(action: TransactionAction, id: Int) {
+        // TODO: Handle the action based on action string and id
+        dismissBottomSheet()
     }
 }
 
 data class LoanTransactionsState(
-    val transactions: List<Transaction> = emptyList(),
     val hideReversed: Boolean = false,
     val hideAccruals: Boolean = false,
     val showFilterSheet: Boolean = false,
-    val isTransactionsEmpty: Boolean = false,
     val dialogState: DialogState? = null,
 ) {
     sealed interface DialogState {
@@ -148,10 +216,4 @@ sealed interface LoanTransactionsAction {
     data object DismissFilterSheet : LoanTransactionsAction
     data class SetHideReversed(val value: Boolean) : LoanTransactionsAction
     data class SetHideAccruals(val value: Boolean) : LoanTransactionsAction
-
-    sealed class Internal : LoanTransactionsAction {
-        data class ReceiveTransactionResult(
-            val result: DataState<LoanWithAssociationsEntity>,
-        ) : Internal()
-    }
 }
