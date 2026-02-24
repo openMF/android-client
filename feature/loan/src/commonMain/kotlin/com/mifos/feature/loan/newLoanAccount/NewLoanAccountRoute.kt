@@ -17,7 +17,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class NewLoanAccountRoute(
     val clientId: Int = -1,
-    val accountNo: String? = null,
+    val accountNo: String,
 )
 
 fun NavGraphBuilder.newLoanAccountDestination(
@@ -34,7 +34,7 @@ fun NavGraphBuilder.newLoanAccountDestination(
     }
 }
 
-fun NavController.navigateToNewLoanAccountRoute(clientId: Int, accountNo: String? = null) {
+fun NavController.navigateToNewLoanAccountRoute(clientId: Int, accountNo: String) {
     this.navigate(
         NewLoanAccountRoute(clientId, accountNo),
     )

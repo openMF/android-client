@@ -184,7 +184,7 @@ fun NavGraphBuilder.clientNavGraph(
         createClientRoute(
             onBackPressed = navController::popBackStack,
             hasDatatables = hasDatatables,
-            navigateToCreateLoanAccount = navController::navigateToNewLoanAccountRoute,
+            navigateToClientDetails = navController::navigateToClientDetailsProfileRoute,
         )
         clientProfileDestination(
             onNavigateBack = navController::popBackStack,
@@ -505,7 +505,7 @@ fun NavGraphBuilder.clientSurveyQuestionRoute(
 
 fun NavGraphBuilder.createClientRoute(
     onBackPressed: () -> Unit,
-    navigateToCreateLoanAccount: (Int) -> Unit,
+    navigateToClientDetails: (Int) -> Unit,
     hasDatatables: KFunction4<List<DataTableEntity>, Any?, Int, MutableList<List<FormWidgetDTO>>, Unit>,
 ) {
     composable(
@@ -513,7 +513,7 @@ fun NavGraphBuilder.createClientRoute(
     ) {
         CreateNewClientScreenRoute(
             navigateBack = onBackPressed,
-            navigateToCreateLoanAccount = navigateToCreateLoanAccount,
+            navigateToClientDetails = navigateToClientDetails,
             hasDatatables = { datatables, clientPayload ->
                 hasDatatables(datatables, clientPayload, Constants.CREATE_CLIENT, mutableListOf())
             },

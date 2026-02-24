@@ -154,7 +154,7 @@ import kotlin.time.ExperimentalTime
 @Composable
 internal fun CreateNewClientScreenRoute(
     navigateBack: () -> Unit,
-    navigateToCreateLoanAccount: (Int) -> Unit,
+    navigateToClientDetails: (Int) -> Unit,
     hasDatatables: (datatables: List<DataTableEntity>, clientPayload: ClientPayloadEntity) -> Unit,
     viewmodel: CreateNewClientViewModel = koinViewModel(),
 ) {
@@ -166,7 +166,7 @@ internal fun CreateNewClientScreenRoute(
         uiState = uiState,
         officeList = officeList,
         staffInOffices = staffInOffice,
-        navigateToCreateLoanAccount = navigateToCreateLoanAccount,
+        navigateToCreateLoanAccount = navigateToClientDetails,
         onRetry = { viewmodel.loadOfficeAndClientTemplate() },
         loadStaffInOffice = { viewmodel.loadStaffInOffices(it) },
         createClient = { viewmodel.createClient(clientPayload = it) },
