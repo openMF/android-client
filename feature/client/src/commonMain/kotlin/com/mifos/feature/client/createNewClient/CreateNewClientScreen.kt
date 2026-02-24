@@ -166,7 +166,7 @@ internal fun CreateNewClientScreenRoute(
         uiState = uiState,
         officeList = officeList,
         staffInOffices = staffInOffice,
-        navigateToCreateLoanAccount = navigateToClientDetails,
+        navigateToClientDetails = navigateToClientDetails,
         onRetry = { viewmodel.loadOfficeAndClientTemplate() },
         loadStaffInOffice = { viewmodel.loadStaffInOffices(it) },
         createClient = { viewmodel.createClient(clientPayload = it) },
@@ -187,7 +187,7 @@ internal fun CreateNewClientScreen(
     onRetry: () -> Unit,
     officeList: List<OfficeEntity>,
     staffInOffices: List<StaffEntity>,
-    navigateToCreateLoanAccount: (Int) -> Unit,
+    navigateToClientDetails: (Int) -> Unit,
     loadStaffInOffice: (officeId: Int) -> Unit,
     navigateBack: () -> Unit,
     onImageSelected: (PlatformFile?) -> Unit,
@@ -234,7 +234,7 @@ internal fun CreateNewClientScreen(
                 if (createClientWithImage) {
                     uploadImage(uiState.id)
                 } else {
-                    navigateToCreateLoanAccount(uiState.id)
+                    navigateToClientDetails(uiState.id)
                 }
             }
 
@@ -254,7 +254,7 @@ internal fun CreateNewClientScreen(
                         duration = SnackbarDuration.Long,
                     )
                 }
-                navigateToCreateLoanAccount(uiState.clientId)
+                navigateToClientDetails(uiState.clientId)
             }
 
             is CreateNewClientUiState.ShowWaitingForCheckerApproval -> {
@@ -1344,7 +1344,7 @@ private fun PreviewCreateNewClientScreen(
         createClient = { },
         uploadImage = { _ -> },
         onImageSelected = {},
-        navigateToCreateLoanAccount = { },
+        navigateToClientDetails = { },
     ) { _, _ ->
     }
 }
