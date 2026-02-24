@@ -17,6 +17,11 @@ import com.mifos.core.data.repository.LoanTransactionsRepository
 import com.mifos.core.model.objects.account.loan.Transaction
 import com.mifos.core.ui.util.BaseViewModel
 import com.mifos.room.entities.accounts.loans.LoanWithAssociationsEntity
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
@@ -29,17 +34,65 @@ class LoanTransactionsViewModel(
 
     val loanId = savedStateHandle.toRoute<LoanTransactionScreenRoute>().loanAccountNumber
 
+    private val rawTransactions = MutableStateFlow<List<Transaction>>(emptyList())
+    private val hideReversed = MutableStateFlow(false)
+    private val hideAccruals = MutableStateFlow(false)
+
+    private val filteredTransactionsFlow: StateFlow<List<Transaction>> = combine(
+        rawTransactions,
+        hideReversed,
+        hideAccruals,
+    ) { transactions, hideReversed, hideAccruals ->
+        transactions.filter { transaction ->
+            val typeValue = transaction.type?.value ?: ""
+            val isAccrual = transaction.type?.accrual == true
+            when {
+                hideReversed && typeValue.equals("Reversed", ignoreCase = true) -> false
+                hideAccruals && isAccrual -> false
+                else -> true
+            }
+        }
+    }.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.Eagerly,
+        initialValue = emptyList(),
+    )
+
     init {
-        trySendAction(LoanTransactionsAction.Refresh)
+        loadLoanTransaction()
+        viewModelScope.launch {
+            filteredTransactionsFlow.collect { filtered ->
+                mutableStateFlow.update {
+                    it.copy(
+                        transactions = filtered,
+                        isTransactionsEmpty = filtered.isEmpty(),
+                    )
+                }
+            }
+        }
+    }
+
+    override fun setInitialState(): LoanTransactionsState {
+        return LoanTransactionsState(dialogState = LoanTransactionsState.DialogState.Loading)
     }
 
     override fun handleAction(action: LoanTransactionsAction) {
         when (action) {
-            LoanTransactionsAction.Refresh -> loadLoanTransaction()
+            LoanTransactionsAction.Refresh -> {
+                viewModelScope.launch { loadLoanTransaction() }
+            }
+            LoanTransactionsAction.ShowFilterSheet -> {
+                mutableStateFlow.update { it.copy(showFilterSheet = true) }
+            }
+            LoanTransactionsAction.DismissFilterSheet -> {
+                mutableStateFlow.update { it.copy(showFilterSheet = false) }
+            }
             is LoanTransactionsAction.SetHideReversed -> {
+                hideReversed.value = action.value
                 mutableStateFlow.update { it.copy(hideReversed = action.value) }
             }
             is LoanTransactionsAction.SetHideAccruals -> {
+                hideAccruals.value = action.value
                 mutableStateFlow.update { it.copy(hideAccruals = action.value) }
             }
             is LoanTransactionsAction.Internal.ReceiveTransactionResult -> {
@@ -67,11 +120,9 @@ class LoanTransactionsViewModel(
             DataState.Loading -> mutableStateFlow.update {
                 it.copy(dialogState = LoanTransactionsState.DialogState.Loading)
             }
-            is DataState.Success -> mutableStateFlow.update {
-                it.copy(
-                    transactions = result.data.transactions,
-                    dialogState = null,
-                )
+            is DataState.Success -> {
+                rawTransactions.value = result.data.transactions ?: emptyList()
+                mutableStateFlow.update { it.copy(dialogState = null) }
             }
         }
     }
@@ -81,7 +132,9 @@ data class LoanTransactionsState(
     val transactions: List<Transaction> = emptyList(),
     val hideReversed: Boolean = false,
     val hideAccruals: Boolean = false,
-    val dialogState: DialogState? = DialogState.Loading,
+    val showFilterSheet: Boolean = false,
+    val isTransactionsEmpty: Boolean = false,
+    val dialogState: DialogState? = null,
 ) {
     sealed interface DialogState {
         data object Loading : DialogState
@@ -89,10 +142,14 @@ data class LoanTransactionsState(
     }
 }
 
-sealed interface LoanTransactionsEvent
+sealed interface LoanTransactionsEvent {
+    data object NavigateBack : LoanTransactionsEvent
+}
 
 sealed interface LoanTransactionsAction {
     data object Refresh : LoanTransactionsAction
+    data object ShowFilterSheet : LoanTransactionsAction
+    data object DismissFilterSheet : LoanTransactionsAction
     data class SetHideReversed(val value: Boolean) : LoanTransactionsAction
     data class SetHideAccruals(val value: Boolean) : LoanTransactionsAction
 

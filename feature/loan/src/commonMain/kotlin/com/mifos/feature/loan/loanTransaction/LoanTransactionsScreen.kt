@@ -57,6 +57,7 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -94,15 +95,19 @@ internal fun LoanTransactionsScreen(
     viewModel: LoanTransactionsViewModel = koinViewModel(),
 ) {
     val state by viewModel.stateFlow.collectAsStateWithLifecycle()
-    var showFilterBottomSheet by rememberSaveable { mutableStateOf(false) }
+
+    LaunchedEffect(Unit) {
+        viewModel.eventFlow.collect { event ->
+            when (event) {
+                is LoanTransactionsEvent.NavigateBack -> navigateBack()
+            }
+        }
+    }
 
     LoanTransactionsScreen(
         state = state,
-        showFilterBottomSheet = showFilterBottomSheet,
-        onShowFilterBottomSheet = { showFilterBottomSheet = true },
-        onDismissFilterBottomSheet = { showFilterBottomSheet = false },
         onAction = viewModel::trySendAction,
-        onExportClick = { /* UI-only, no logic */ },
+        onExportClick = { },
         navigateBack = navigateBack,
     )
 }
@@ -111,9 +116,6 @@ internal fun LoanTransactionsScreen(
 @Composable
 internal fun LoanTransactionsScreen(
     state: LoanTransactionsState,
-    showFilterBottomSheet: Boolean,
-    onShowFilterBottomSheet: () -> Unit,
-    onDismissFilterBottomSheet: () -> Unit,
     onAction: (LoanTransactionsAction) -> Unit,
     onExportClick: () -> Unit,
     navigateBack: () -> Unit,
@@ -126,7 +128,7 @@ internal fun LoanTransactionsScreen(
         title = stringResource(Res.string.feature_loan_loan_transactions),
         onBackPressed = navigateBack,
         actions = {
-            IconButton(onClick = onShowFilterBottomSheet) {
+            IconButton(onClick = { onAction(LoanTransactionsAction.ShowFilterSheet) }) {
                 Icon(
                     imageVector = MifosIcons.Filter,
                     contentDescription = stringResource(Res.string.feature_loan_filters),
@@ -155,68 +157,57 @@ internal fun LoanTransactionsScreen(
                 .fillMaxSize()
                 .padding(it),
         ) {
-            when (val dialogState = state.dialogState) {
-                is LoanTransactionsState.DialogState.Error -> {
-                    MifosSweetError(
-                        message = dialogState.message,
-                        onclick = { onAction(LoanTransactionsAction.Refresh) },
-                    )
-                }
-
-                LoanTransactionsState.DialogState.Loading -> {
-                    MifosProgressIndicator()
-                }
-
-                null -> {
-                    if (state.transactions.isEmpty()) {
-                        MifosEmptyUi(text = stringResource(Res.string.feature_loan_no_transactions))
-                    } else {
-                        LoanTransactionsContent(
-                            transactions = state.transactions,
-                            hideReversed = state.hideReversed,
-                            hideAccruals = state.hideAccruals,
-                        )
-                    }
-                }
+            if (state.isTransactionsEmpty) {
+                MifosEmptyUi(text = stringResource(Res.string.feature_loan_no_transactions))
+            } else {
+                LoanTransactionsContent(
+                    transactions = state.transactions,
+                )
             }
+
+            LoanTransactionsDialogState(
+                dialogState = state.dialogState,
+                onAction = onAction,
+            )
         }
     }
 
     FilterBottomSheet(
-        showFilterBottomSheet = showFilterBottomSheet,
+        showFilterBottomSheet = state.showFilterSheet,
         hideReversed = state.hideReversed,
         hideAccruals = state.hideAccruals,
         onHideReversedChange = { onAction(LoanTransactionsAction.SetHideReversed(it)) },
         onHideAccrualsChange = { onAction(LoanTransactionsAction.SetHideAccruals(it)) },
-        onDismiss = onDismissFilterBottomSheet,
+        onDismiss = { onAction(LoanTransactionsAction.DismissFilterSheet) },
     )
+}
+
+@Composable
+private fun LoanTransactionsDialogState(
+    dialogState: LoanTransactionsState.DialogState?,
+    onAction: (LoanTransactionsAction) -> Unit,
+) {
+    when (dialogState) {
+        is LoanTransactionsState.DialogState.Error -> {
+            MifosSweetError(
+                message = dialogState.message,
+                onclick = { onAction(LoanTransactionsAction.Refresh) },
+            )
+        }
+        LoanTransactionsState.DialogState.Loading -> {
+            MifosProgressIndicator()
+        }
+        null -> Unit
+    }
 }
 
 @Composable
 private fun LoanTransactionsContent(
     transactions: List<Transaction>,
-    hideReversed: Boolean,
-    hideAccruals: Boolean,
 ) {
-    val filteredTransactions = remember(transactions, hideReversed, hideAccruals) {
-        transactions.filter { transaction ->
-            val typeValue = transaction.type?.value ?: ""
-            val isAccrual = transaction.type?.accrual == true
-            when {
-                hideReversed && typeValue.equals("Reversed", ignoreCase = true) -> false
-                hideAccruals && isAccrual -> false
-                else -> true
-            }
-        }
-    }
-
-    if (filteredTransactions.isEmpty()) {
-        MifosEmptyUi(text = stringResource(Res.string.feature_loan_no_transactions))
-    } else {
-        LazyColumn {
-            items(filteredTransactions) { transaction ->
-                LoanTransactionsItemRow(transaction = transaction)
-            }
+    LazyColumn {
+        items(transactions) { transaction ->
+            LoanTransactionsItemRow(transaction = transaction)
         }
     }
 }
@@ -554,55 +545,6 @@ private fun PreviewLoanTransactions(
 ) {
     LoanTransactionsScreen(
         state = loanTransactionsState,
-        showFilterBottomSheet = false,
-        onShowFilterBottomSheet = {},
-        onDismissFilterBottomSheet = {},
-        onAction = {},
-        onExportClick = {},
-        navigateBack = {},
-    )
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-@Preview
-private fun PreviewLoanTransactionsWithFilters() {
-    LoanTransactionsScreen(
-        state = LoanTransactionsState(
-            transactions = listOf(
-                Transaction(
-                    id = 1,
-                    officeName = "Main office",
-                    date = listOf(2024, 6, 1),
-                    principalPortion = 121.2,
-                    penaltyChargesPortion = 32323.232,
-                    overpaymentPortion = 23232.23,
-                    feeChargesPortion = 323.3,
-                    interestPortion = 232.3,
-                    type = Type(value = "Repayment"),
-                ),
-                Transaction(
-                    id = 2,
-                    officeName = "Branch office",
-                    date = listOf(2024, 6, 15),
-                    principalPortion = 200.0,
-                    type = Type(value = "Reversed", accrual = false),
-                ),
-                Transaction(
-                    id = 3,
-                    officeName = "Main office",
-                    date = listOf(2024, 7, 1),
-                    principalPortion = 150.0,
-                    type = Type(value = "Accrual", accrual = true),
-                ),
-            ),
-            hideReversed = true,
-            hideAccruals = false,
-            dialogState = null,
-        ),
-        showFilterBottomSheet = true,
-        onShowFilterBottomSheet = {},
-        onDismissFilterBottomSheet = {},
         onAction = {},
         onExportClick = {},
         navigateBack = {},
