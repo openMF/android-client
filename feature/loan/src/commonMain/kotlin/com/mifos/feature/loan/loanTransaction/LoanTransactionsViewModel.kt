@@ -18,6 +18,7 @@ import com.mifos.core.common.utils.DateHelper
 import com.mifos.core.data.repository.LoanTransactionsRepository
 import com.mifos.core.ui.util.BaseViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class LoanTransactionsViewModel(
@@ -29,8 +30,9 @@ class LoanTransactionsViewModel(
 
     val loanId = savedStateHandle.toRoute<LoanTransactionScreenRoute>().loanAccountNumber
 
-    val _loanTransactionsUiState =
+    private val loanTransactionsUiStateFlow =
         MutableStateFlow<LoanTransactionsUiState>(LoanTransactionsUiState.ShowProgressBar)
+    val loanTransactionsUiState = loanTransactionsUiStateFlow
 
     init {
         viewModelScope.launch {
@@ -70,7 +72,7 @@ class LoanTransactionsViewModel(
                     mutableStateFlow.update {
                         it.copy(dialogState = LoanTransactionsState.DialogState.Error(state.message))
                     }
-                    _loanTransactionsUiState.value =
+                    loanTransactionsUiStateFlow.value =
                         LoanTransactionsUiState.ShowFetchingError(state.message)
                 }
 
@@ -78,7 +80,7 @@ class LoanTransactionsViewModel(
                     mutableStateFlow.update {
                         it.copy(dialogState = LoanTransactionsState.DialogState.Loading)
                     }
-                    _loanTransactionsUiState.value = LoanTransactionsUiState.ShowProgressBar
+                    loanTransactionsUiStateFlow.value = LoanTransactionsUiState.ShowProgressBar
                 }
 
                 is DataState.Success -> {
@@ -138,13 +140,13 @@ class LoanTransactionsViewModel(
                             )
                         }
 
-                    _loanTransactionsUiState.value =
+                    loanTransactionsUiStateFlow.value =
                         LoanTransactionsUiState.ShowLoanTransaction(
                             transactionsTableData = LoanTransactionsUiState.LoanTransactionsTableData(
                                 transactions = transactionsData,
                             ),
                         )
-                    
+
                     mutableStateFlow.update { it.copy(dialogState = null) }
                     applyFilters()
                 }
@@ -153,37 +155,37 @@ class LoanTransactionsViewModel(
     }
 
     private fun applyFilters() {
-        val currentUiState = _loanTransactionsUiState.value
+        val currentUiState = loanTransactionsUiStateFlow.value
         if (currentUiState is LoanTransactionsUiState.ShowLoanTransaction) {
             val currentState = stateFlow.value
             val allTransactions = currentUiState.transactionsTableData?.transactions ?: emptyList()
-            
+
             val filteredTransactions = allTransactions.filter { row ->
                 val hideReversedCondition = !currentState.hideReversed || !row.manuallyReversed
                 val hideAccrualsCondition = !currentState.hideAccruals || row.transactionType != TransactionType.ACCRUAL
                 hideReversedCondition && hideAccrualsCondition
             }
-            
-            _loanTransactionsUiState.value = currentUiState.copy(
+
+            loanTransactionsUiStateFlow.value = currentUiState.copy(
                 transactionsTableData = LoanTransactionsUiState.LoanTransactionsTableData(
-                    transactions = filteredTransactions
-                )
+                    transactions = filteredTransactions,
+                ),
             )
         }
     }
 
     fun onRowAction(row: LoanTransactionsUiState.LoanTransactionsTableData.TransactionRowData) {
-        val currentState = _loanTransactionsUiState.value
+        val currentState = loanTransactionsUiStateFlow.value
         if (currentState is LoanTransactionsUiState.ShowLoanTransaction) {
-            _loanTransactionsUiState.value =
+            loanTransactionsUiStateFlow.value =
                 currentState.copy(selectedRow = row, isBottomSheetOpen = true)
         }
     }
 
     fun dismissBottomSheet() {
-        val currentState = _loanTransactionsUiState.value
+        val currentState = loanTransactionsUiStateFlow.value
         if (currentState is LoanTransactionsUiState.ShowLoanTransaction) {
-            _loanTransactionsUiState.value =
+            loanTransactionsUiStateFlow.value =
                 currentState.copy(isBottomSheetOpen = false, selectedRow = null)
         }
     }

@@ -69,7 +69,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.Dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.mifos.core.common.utils.DateHelper
+import androidx.lifecycle.viewModelScope
 import com.mifos.core.designsystem.component.MifosBottomSheet
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
@@ -95,7 +95,7 @@ internal fun LoanTransactionsScreen(
     viewModel: LoanTransactionsViewModel = koinViewModel(),
 ) {
     val state by viewModel.stateFlow.collectAsStateWithLifecycle()
-    val uiState by viewModel._loanTransactionsUiState.collectAsStateWithLifecycle()
+    val uiState by viewModel.loanTransactionsUiState.collectAsStateWithLifecycle()
 
     LaunchedEffect(Unit) {
         viewModel.eventFlow.collect { event ->
