@@ -279,7 +279,7 @@ private fun RecurringDepositAccountApprovalContent(
     }
 }
 
-// UI State
+
 sealed class RecurringDepositAccountApprovalUiState {
     data object Initial : RecurringDepositAccountApprovalUiState()
     data object ShowProgressbar : RecurringDepositAccountApprovalUiState()

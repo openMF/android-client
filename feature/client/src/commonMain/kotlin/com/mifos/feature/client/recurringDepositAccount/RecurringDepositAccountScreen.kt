@@ -154,7 +154,7 @@ internal fun RecurringDepositAccountContent(
     var expandedIndex by rememberSaveable { mutableStateOf(-1) }
 
     Column(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxSize(),
     ) {
         MifosBreadcrumbNavBar(navController)
