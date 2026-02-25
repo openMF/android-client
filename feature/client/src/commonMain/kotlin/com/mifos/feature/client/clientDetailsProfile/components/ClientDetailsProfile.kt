@@ -21,7 +21,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -32,6 +31,7 @@ import com.mifos.core.designsystem.theme.MifosTypography
 import com.mifos.core.ui.components.MifosUserImage
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
+import template.core.base.designsystem.theme.KptTheme
 
 @Composable
 fun ClientDetailsProfile(
@@ -41,8 +41,12 @@ fun ClientDetailsProfile(
     email: String?,
 ) {
     Row(
-        Modifier.fillMaxWidth()
-            .padding(top = DesignToken.padding.largeIncreasedExtra, bottom = DesignToken.padding.medium),
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(
+                top = KptTheme.spacing.lg,
+                bottom = DesignToken.padding.medium,
+            ),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         MifosUserImage(
@@ -61,12 +65,12 @@ fun ClientDetailsProfile(
             Text(
                 text = mobile ?: stringResource(Res.string.mobile_na),
                 style = MifosTypography.bodySmall,
-                color = MaterialTheme.colorScheme.secondary,
+                color = KptTheme.colorScheme.secondary,
             )
             Text(
                 text = email ?: stringResource(Res.string.email_na),
                 style = MifosTypography.bodySmall,
-                color = MaterialTheme.colorScheme.secondary,
+                color = KptTheme.colorScheme.secondary,
             )
         }
     }

@@ -24,9 +24,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.material3.CardColors
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -42,6 +41,7 @@ import com.mifos.core.designsystem.theme.MifosTypography
 import com.mifos.core.ui.components.MifosUserImage
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
+import template.core.base.designsystem.theme.KptTheme
 
 @Composable
 fun ProfileCard(
@@ -55,17 +55,17 @@ fun ProfileCard(
 ) {
     MifosCard(
         modifier = Modifier.clickable { onClick() },
-        colors = CardColors(
-            containerColor = MaterialTheme.colorScheme.primary,
+        colors = CardDefaults.cardColors(
+            containerColor = KptTheme.colorScheme.primary,
             contentColor = AppColors.customWhite,
-            disabledContainerColor = MaterialTheme.colorScheme.primary,
+            disabledContainerColor = KptTheme.colorScheme.primary,
             disabledContentColor = AppColors.customWhite,
         ),
     ) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(DesignToken.padding.largeIncreasedExtra),
+                .padding(KptTheme.spacing.lg),
             verticalAlignment = Alignment.CenterVertically,
         ) {
             MifosUserImage(
@@ -85,15 +85,15 @@ fun ProfileCard(
                 Text(
                     text = "Acc. No. $accountNo",
                     style = MifosTypography.bodySmall,
-                    color = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.8f),
+                    color = KptTheme.colorScheme.onPrimary.copy(alpha = 0.8f),
                 )
                 Text(
                     text = office,
                     style = MifosTypography.bodySmall,
-                    color = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.8f),
+                    color = KptTheme.colorScheme.onPrimary.copy(alpha = 0.8f),
                 )
 
-                Spacer(Modifier.height(DesignToken.padding.small))
+                Spacer(Modifier.height(KptTheme.spacing.sm))
 
                 val displayGroupName = groupName ?: stringResource(Res.string.group_na)
                 val isClickable = !groupName.isNullOrBlank() && groupName != stringResource(Res.string.group_na)
@@ -110,7 +110,7 @@ fun ProfileCard(
                 imageVector = MifosIcons.ChevronRight,
                 contentDescription = null,
                 modifier = Modifier.size(DesignToken.sizes.iconSmall),
-                tint = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.6f),
+                tint = KptTheme.colorScheme.onPrimary.copy(alpha = 0.6f),
             )
         }
     }
@@ -124,25 +124,25 @@ private fun GroupChip(
 ) {
     Box(
         modifier = Modifier
-            .clip(DesignToken.shapes.small)
+            .clip(KptTheme.shapes.small)
             .background(
-                color = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.15f),
+                color = KptTheme.colorScheme.onPrimary.copy(alpha = 0.15f),
             )
             .clickable(enabled = isClickable, onClick = onClick)
-            .padding(horizontal = DesignToken.padding.small, vertical = DesignToken.padding.extraSmall),
+            .padding(horizontal = KptTheme.spacing.sm, vertical = KptTheme.spacing.xs),
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             Icon(
                 imageVector = MifosIcons.Group,
                 contentDescription = null,
                 modifier = Modifier.size(DesignToken.sizes.iconSmall),
-                tint = MaterialTheme.colorScheme.onPrimary,
+                tint = KptTheme.colorScheme.onPrimary,
             )
-            Spacer(modifier = Modifier.width(DesignToken.padding.extraSmall))
+            Spacer(modifier = Modifier.width(KptTheme.spacing.xs))
             Text(
                 text = text,
                 style = MifosTypography.bodySmall.copy(fontWeight = FontWeight.Medium),
-                color = MaterialTheme.colorScheme.onPrimary,
+                color = KptTheme.colorScheme.onPrimary,
             )
         }
     }

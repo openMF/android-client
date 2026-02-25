@@ -32,6 +32,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
@@ -39,7 +40,6 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SelectableDates
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
@@ -56,7 +56,6 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mifos.core.common.utils.DateHelper
 import com.mifos.core.designsystem.component.MifosButton
@@ -64,6 +63,7 @@ import com.mifos.core.designsystem.component.MifosDatePickerTextField
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.component.MifosTextFieldDropdown
+import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.model.objects.collectionsheets.CollectionSheetRequestPayload
 import com.mifos.core.ui.components.MifosProgressIndicator
 import com.mifos.room.entities.collectionsheet.CenterDetail
@@ -77,6 +77,7 @@ import com.mifos.room.entities.organisation.StaffEntity
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
+import template.core.base.designsystem.theme.KptTheme
 import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
 
@@ -300,7 +301,7 @@ private fun GenerateCollectionSheetContent(
     }
 
     Column(modifier = modifier.fillMaxSize().verticalScroll(rememberScrollState())) {
-        Spacer(modifier = Modifier.heightIn(16.dp))
+        Spacer(modifier = Modifier.height(KptTheme.spacing.md))
 
         MifosTextFieldDropdown(
             value = selectedOffice,
@@ -318,8 +319,7 @@ private fun GenerateCollectionSheetContent(
             label = stringResource(Res.string.feature_collection_sheet_office),
             readOnly = true,
         )
-
-        Spacer(modifier = Modifier.heightIn(8.dp))
+        Spacer(modifier = Modifier.height(KptTheme.spacing.sm))
 
         MifosDatePickerTextField(
             value = DateHelper.getDateAsStringFromLong(repaymentDate),
@@ -328,8 +328,7 @@ private fun GenerateCollectionSheetContent(
                 showDatePicker = true
             },
         )
-
-        Spacer(modifier = Modifier.heightIn(8.dp))
+        Spacer(modifier = Modifier.height(KptTheme.spacing.sm))
 
         MifosTextFieldDropdown(
             value = selectedStaff,
@@ -348,7 +347,7 @@ private fun GenerateCollectionSheetContent(
             readOnly = true,
         )
 
-        Spacer(modifier = Modifier.heightIn(16.dp))
+        Spacer(modifier = Modifier.height(KptTheme.spacing.md))
 
         MifosButton(
             onClick = {
@@ -361,8 +360,8 @@ private fun GenerateCollectionSheetContent(
             },
             modifier = Modifier
                 .fillMaxWidth()
-                .heightIn(44.dp)
-                .padding(horizontal = 16.dp),
+                .heightIn(DesignToken.spacing.dp44)
+                .padding(horizontal = KptTheme.spacing.md),
             contentPadding = PaddingValues(),
         ) {
             Text(
@@ -370,11 +369,10 @@ private fun GenerateCollectionSheetContent(
                     Res.string
                         .feature_collection_sheet_productive_collection_sheet,
                 ),
-                style = MaterialTheme.typography.bodyLarge,
+                style = KptTheme.typography.bodyLarge,
             )
         }
-
-        Spacer(modifier = Modifier.heightIn(16.dp))
+        Spacer(modifier = Modifier.height(KptTheme.spacing.md))
 
         MifosTextFieldDropdown(
             value = selectedCenter,
@@ -391,8 +389,7 @@ private fun GenerateCollectionSheetContent(
             label = stringResource(Res.string.feature_collection_sheet_center),
             readOnly = true,
         )
-
-        Spacer(modifier = Modifier.heightIn(8.dp))
+        Spacer(modifier = Modifier.height(KptTheme.spacing.sm))
 
         MifosTextFieldDropdown(
             value = selectedGroup,
@@ -409,8 +406,7 @@ private fun GenerateCollectionSheetContent(
             label = stringResource(Res.string.feature_collection_sheet_group),
             readOnly = true,
         )
-
-        Spacer(modifier = Modifier.heightIn(16.dp))
+        Spacer(modifier = Modifier.height(KptTheme.spacing.md))
 
         MifosButton(
             onClick = {
@@ -423,8 +419,8 @@ private fun GenerateCollectionSheetContent(
             },
             modifier = Modifier
                 .fillMaxWidth()
-                .heightIn(44.dp)
-                .padding(horizontal = 16.dp),
+                .heightIn(DesignToken.spacing.dp44)
+                .padding(horizontal = KptTheme.spacing.md),
             contentPadding = PaddingValues(),
         ) {
             Text(
@@ -432,7 +428,7 @@ private fun GenerateCollectionSheetContent(
                     Res.string
                         .feature_collection_sheet_generate_collection_sheet,
                 ),
-                style = MaterialTheme.typography.bodyLarge,
+                style = KptTheme.typography.bodyLarge,
             )
         }
 
@@ -503,8 +499,8 @@ private fun GenerateCollectionSheetContent(
                 },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .heightIn(44.dp)
-                    .padding(horizontal = 16.dp),
+                    .heightIn(DesignToken.spacing.dp44)
+                    .padding(horizontal = KptTheme.spacing.md),
                 contentPadding = PaddingValues(),
             ) {
                 Text(
@@ -512,7 +508,7 @@ private fun GenerateCollectionSheetContent(
                         Res.string
                             .feature_collection_sheet_submit_collection_sheet,
                     ),
-                    style = MaterialTheme.typography.bodyLarge,
+                    style = KptTheme.typography.bodyLarge,
                 )
             }
         }

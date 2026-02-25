@@ -44,7 +44,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -77,6 +76,7 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameterProvider
 import org.koin.compose.viewmodel.koinViewModel
+import template.core.base.designsystem.theme.KptTheme
 
 @Composable
 internal fun LoanTransactionsScreen(
@@ -275,13 +275,13 @@ private fun LoanTransactionsTableContent(
                                 modifier = Modifier
                                     .fillMaxSize()
                                     .padding(
-                                        vertical = DesignToken.padding.small,
-                                        horizontal = DesignToken.padding.extraSmall,
+                                        vertical = KptTheme.spacing.sm,
+                                        horizontal = KptTheme.spacing.xs,
                                     ),
                             ) {
                                 Text(
                                     text = stringResource(headerId),
-                                    style = MaterialTheme.typography.titleSmall,
+                                    style = KptTheme.typography.titleSmall,
                                     modifier = Modifier.fillMaxSize(),
                                     textAlign = if (index == 6) TextAlign.Center else TextAlign.Left,
                                 )
@@ -290,8 +290,8 @@ private fun LoanTransactionsTableContent(
                     },
                     widths = headerWidthsRow1,
                     backgroundColor = lerp(
-                        MaterialTheme.colorScheme.surface,
-                        MaterialTheme.colorScheme.primary,
+                        KptTheme.colorScheme.surface,
+                        KptTheme.colorScheme.primary,
                         0.3f,
                     ),
                     edgeOffset = DesignToken.padding.medium,
@@ -307,22 +307,22 @@ private fun LoanTransactionsTableContent(
                                     .background(
                                         if (headerTitle.isNotBlank()) {
                                             lerp(
-                                                MaterialTheme.colorScheme.surface,
-                                                MaterialTheme.colorScheme.primary,
+                                                KptTheme.colorScheme.surface,
+                                                KptTheme.colorScheme.primary,
                                                 0.08f,
                                             )
                                         } else {
-                                            MaterialTheme.colorScheme.background
+                                            KptTheme.colorScheme.background
                                         },
                                     )
                                     .padding(
-                                        vertical = DesignToken.padding.small,
-                                        horizontal = DesignToken.padding.extraSmall,
+                                        vertical = KptTheme.spacing.sm,
+                                        horizontal = KptTheme.spacing.xs,
                                     ),
                             ) {
                                 Text(
                                     text = headerTitle,
-                                    style = MaterialTheme.typography.titleSmall,
+                                    style = KptTheme.typography.titleSmall,
                                 )
                             }
                         }
@@ -373,11 +373,11 @@ private fun TransactionRow(
         row.loanBalance,
     )
 
-    val commonTextStyle = MaterialTheme.typography.bodySmall
+    val commonTextStyle = KptTheme.typography.bodySmall
     val commonModifier = Modifier.fillMaxSize()
     val commonTextAlign = TextAlign.Left
     val textColor =
-        if (row.manuallyReversed) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.onBackground
+        if (row.manuallyReversed) KptTheme.colorScheme.error else KptTheme.colorScheme.onBackground
     val textDecoration = if (row.manuallyReversed) TextDecoration.LineThrough else null
 
     val cells: List<@Composable () -> Unit> = textValues.mapIndexed { index, value ->
@@ -388,17 +388,17 @@ private fun TransactionRow(
                     .background(
                         if (index in 6..10) {
                             lerp(
-                                MaterialTheme.colorScheme.surface,
-                                MaterialTheme.colorScheme.primary,
+                                KptTheme.colorScheme.surface,
+                                KptTheme.colorScheme.primary,
                                 0.08f,
                             )
                         } else {
-                            MaterialTheme.colorScheme.surface
+                            KptTheme.colorScheme.surface
                         },
                     )
                     .padding(
-                        vertical = DesignToken.padding.small,
-                        horizontal = DesignToken.padding.extraSmall,
+                        vertical = KptTheme.spacing.sm,
+                        horizontal = KptTheme.spacing.xs,
                     ),
             ) {
                 Text(
@@ -474,7 +474,7 @@ private fun TransactionActionsBottomSheet(
         onDismiss = onDismissRequest,
         content = {
             Column(
-                modifier = Modifier.padding(DesignToken.padding.large),
+                modifier = Modifier.padding(KptTheme.spacing.md),
             ) {
                 actions.forEach { action ->
                     Row(
@@ -483,7 +483,7 @@ private fun TransactionActionsBottomSheet(
                             .clickable {
                                 onAction(action)
                             }
-                            .padding(DesignToken.padding.small),
+                            .padding(KptTheme.spacing.sm),
                         verticalAlignment = Alignment.CenterVertically,
                     ) {
                         Icon(

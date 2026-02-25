@@ -73,8 +73,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mifos.core.common.utils.ApiDateFormatter
 import com.mifos.core.common.utils.DateHelper
@@ -83,6 +81,7 @@ import com.mifos.core.designsystem.component.MifosOutlinedTextField
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.component.MifosTextFieldDropdown
+import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.model.objects.payloads.GroupLoanPayload
 import com.mifos.core.model.objects.template.loan.GroupLoanTemplate
 import com.mifos.core.ui.components.MifosProgressIndicator
@@ -92,6 +91,7 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameterProvider
 import org.koin.compose.viewmodel.koinViewModel
+import template.core.base.designsystem.theme.KptTheme
 import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
 
@@ -423,7 +423,7 @@ private fun GroupLoanAccountContent(
             MifosOutlinedTextField(
                 modifier = Modifier
                     .weight(1f)
-                    .padding(start = 16.dp),
+                    .padding(start = KptTheme.spacing.md),
                 value = nominal,
                 label = stringResource(Res.string.feature_loan_nominal),
                 onValueChange = {
@@ -433,7 +433,7 @@ private fun GroupLoanAccountContent(
                 keyboardType = KeyboardType.Number,
             )
             Text(
-                modifier = Modifier.padding(16.dp),
+                modifier = Modifier.padding(KptTheme.spacing.md),
                 text = stringResource(Res.string.feature_loan_per_month),
             )
         }
@@ -442,7 +442,7 @@ private fun GroupLoanAccountContent(
             MifosOutlinedTextField(
                 modifier = Modifier
                     .weight(2f)
-                    .padding(start = 16.dp),
+                    .padding(start = KptTheme.spacing.md),
                 value = repaidEvery,
                 label = stringResource(Res.string.feature_loan_repaid_every),
                 onValueChange = {
@@ -455,8 +455,8 @@ private fun GroupLoanAccountContent(
             loanTemplate.repaymentFrequencyDaysOfWeekTypeOptions?.let { repaymentFrequencyDaysOfWeekTypeOptions ->
                 MifosTextFieldDropdown(
                     modifier = Modifier
-                        .width(164.dp)
-                        .padding(start = 8.dp, end = 16.dp),
+                        .width(DesignToken.spacing.dp164)
+                        .padding(start = KptTheme.spacing.sm, end = KptTheme.spacing.md),
                     value = repaidEveryType,
                     onValueChanged = { repaidEveryType = it },
                     onOptionSelected = { index, value ->
@@ -475,7 +475,7 @@ private fun GroupLoanAccountContent(
             MifosOutlinedTextField(
                 modifier = Modifier
                     .weight(2f)
-                    .padding(start = 16.dp),
+                    .padding(start = KptTheme.spacing.md),
                 value = loanTerms,
                 label = stringResource(Res.string.feature_loan_loan_terms),
                 onValueChange = {
@@ -488,8 +488,8 @@ private fun GroupLoanAccountContent(
             loanTemplate.termFrequencyTypeOptions?.let { termFrequencyTypeOptions ->
                 MifosTextFieldDropdown(
                     modifier = Modifier
-                        .width(164.dp)
-                        .padding(start = 8.dp, end = 16.dp),
+                        .width(DesignToken.spacing.dp164)
+                        .padding(start = KptTheme.spacing.sm, end = KptTheme.spacing.md),
                     value = loanTermsType,
                     onValueChanged = { loanTermsType = it },
                     onOptionSelected = { index, value ->
@@ -578,8 +578,7 @@ private fun GroupLoanAccountContent(
                 readOnly = true,
             )
         }
-
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(KptTheme.spacing.md))
 
         Button(
             onClick = {
@@ -615,14 +614,16 @@ private fun GroupLoanAccountContent(
             },
             modifier = Modifier
                 .fillMaxWidth()
-                .heightIn(44.dp)
-                .padding(start = 16.dp, end = 16.dp),
+                .heightIn(DesignToken.spacing.dp44)
+                .padding(start = KptTheme.spacing.md, end = KptTheme.spacing.md),
             contentPadding = PaddingValues(),
         ) {
-            Text(text = stringResource(Res.string.feature_loan_submit), fontSize = 16.sp)
+            Text(
+                text = stringResource(Res.string.feature_loan_submit),
+                style = KptTheme.typography.bodyLarge,
+            )
         }
-
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(KptTheme.spacing.md))
     }
 }
 

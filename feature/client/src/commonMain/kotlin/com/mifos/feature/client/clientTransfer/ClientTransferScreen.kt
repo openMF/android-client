@@ -31,13 +31,13 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SelectableDates
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -65,6 +65,7 @@ import com.mifos.core.ui.components.ResultStatus
 import com.mifos.core.ui.util.EventsEffect
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
+import template.core.base.designsystem.theme.KptTheme
 import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
 
@@ -132,7 +133,7 @@ private fun ClientTransferContent(
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(horizontal = DesignToken.padding.large),
+                    .padding(horizontal = KptTheme.spacing.md),
             ) {
                 if (state.offices.isNotEmpty()) {
                     Text(
@@ -215,19 +216,19 @@ private fun ClientTransferContent(
                                     imageVector = MifosIcons.ChevronLeft,
                                     contentDescription = null,
                                     modifier = Modifier.size(DesignToken.sizes.iconAverage),
-                                    tint = MaterialTheme.colorScheme.primary,
+                                    tint = KptTheme.colorScheme.primary,
                                 )
                             },
                             text = {
                                 Text(
                                     text = stringResource(Res.string.btn_back),
-                                    color = MaterialTheme.colorScheme.primary,
+                                    color = KptTheme.colorScheme.primary,
                                     style = MifosTypography.labelLarge,
                                 )
                             },
                             modifier = Modifier.weight(1f),
                         )
-                        Spacer(Modifier.padding(DesignToken.padding.small))
+                        Spacer(Modifier.width(KptTheme.spacing.sm))
                         MifosTextButton(
                             onClick = {
                                 onAction(ClientTransferAction.OnSubmit)

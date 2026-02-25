@@ -55,6 +55,7 @@ import com.mifos.core.ui.components.MifosTwoButtonRow
 import com.mifos.feature.loan.newLoanAccount.NewLoanAccountAction
 import com.mifos.feature.loan.newLoanAccount.NewLoanAccountState
 import org.jetbrains.compose.resources.stringResource
+import template.core.base.designsystem.theme.KptTheme
 import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
 
@@ -141,7 +142,7 @@ fun DetailsPage(
         }
     }
 
-    Column(Modifier.fillMaxSize().padding(bottom = DesignToken.padding.large)) {
+    Column(Modifier.fillMaxSize().padding(bottom = KptTheme.spacing.md)) {
         Column(
             modifier = modifier.weight(1f).verticalScroll(rememberScrollState()),
         ) {
@@ -149,7 +150,7 @@ fun DetailsPage(
                 text = stringResource(Res.string.step_details),
                 style = MifosTypography.labelLargeEmphasized,
             )
-            Spacer(Modifier.height(DesignToken.padding.large))
+            Spacer(Modifier.height(KptTheme.spacing.md))
 
             MifosTextFieldDropdown(
                 value = if (state.loanProductSelected == -1) {
@@ -174,7 +175,7 @@ fun DetailsPage(
                     },
                     label = stringResource(Res.string.external_id),
                 )
-                Spacer(Modifier.height(DesignToken.padding.large))
+                Spacer(Modifier.height(KptTheme.spacing.md))
                 MifosTextFieldDropdown(
                     value = if (state.loanOfficerIndex == -1) {
                         ""
@@ -228,7 +229,7 @@ fun DetailsPage(
                         onAction(NewLoanAccountAction.OnSubmissionDatePick(true))
                     },
                 )
-                Spacer(Modifier.height(DesignToken.padding.large))
+                Spacer(Modifier.height(KptTheme.spacing.md))
                 MifosDatePickerTextField(
                     value = state.expectedDisbursementDate,
                     label = stringResource(Res.string.expected_disbursement),
@@ -236,12 +237,12 @@ fun DetailsPage(
                         onAction(NewLoanAccountAction.OnExpectedDisbursementDatePick(true))
                     },
                 )
-                Spacer(Modifier.height(DesignToken.padding.large))
+                Spacer(Modifier.height(KptTheme.spacing.md))
                 Text(
                     text = stringResource(Res.string.savings_linkage),
                     style = MifosTypography.labelLargeEmphasized,
                 )
-                Spacer(Modifier.height(DesignToken.padding.large))
+                Spacer(Modifier.height(KptTheme.spacing.md))
                 MifosTextFieldDropdown(
                     value = if (state.linkSavingsIndex == -1) {
                         ""
@@ -271,7 +272,7 @@ fun DetailsPage(
                         style = MifosTypography.labelLarge,
                     )
                 }
-                Spacer(Modifier.height(DesignToken.padding.large))
+                Spacer(Modifier.height(KptTheme.spacing.md))
             }
         }
 
@@ -285,7 +286,7 @@ fun DetailsPage(
                 onAction(NewLoanAccountAction.NextStep)
             },
             isSecondButtonEnabled = state.isDetailsNextEnabled,
-            modifier = Modifier.padding(top = DesignToken.padding.small),
+            modifier = Modifier.padding(top = KptTheme.spacing.sm),
         )
     }
 }
