@@ -10,6 +10,7 @@
 package com.mifos.room
 
 import androidx.room.ConstructedBy
+import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.RoomDatabaseConstructor
 import androidx.room.TypeConverters
@@ -80,7 +81,6 @@ import com.mifos.room.entities.templates.clients.StaffOptionsEntity
 import com.mifos.room.entities.templates.loans.LoanRepaymentTemplateEntity
 import com.mifos.room.entities.templates.savings.SavingsAccountTransactionTemplateEntity
 import com.mifos.room.typeconverters.CustomTypeConverters
-import template.core.base.database.Database
 
 @Database(
     entities = [
