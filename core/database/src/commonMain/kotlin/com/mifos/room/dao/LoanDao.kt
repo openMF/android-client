@@ -41,7 +41,7 @@ interface LoanDao {
     @Query("SELECT * FROM LoanRepaymentRequestEntity WHERE loanId = :loanId LIMIT 1")
     suspend fun getLoanRepaymentRequest(loanId: Int): LoanRepaymentRequestEntity?
 
-    @Update(entity = LoanRepaymentRequestEntity::class)
+    @Update(entity = LoanRepaymentRequestEntity::class, onConflict = OnConflictStrategy.NONE)
     suspend fun updateLoanRepaymentRequest(loanRepaymentRequest: LoanRepaymentRequestEntity)
 
     @Query("SELECT * FROM LoanRepaymentRequestEntity ORDER BY timeStamp ASC")

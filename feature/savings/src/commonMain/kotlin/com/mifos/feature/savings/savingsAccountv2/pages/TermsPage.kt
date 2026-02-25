@@ -50,12 +50,12 @@ import androidx.compose.ui.text.input.KeyboardType
 import com.mifos.core.designsystem.component.MifosOutlinedTextField
 import com.mifos.core.designsystem.component.MifosTextFieldConfig
 import com.mifos.core.designsystem.component.MifosTextFieldDropdown
-import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.designsystem.theme.MifosTypography
 import com.mifos.core.ui.components.MifosTwoButtonRow
 import com.mifos.feature.savings.savingsAccountv2.SavingsAccountAction
 import com.mifos.feature.savings.savingsAccountv2.SavingsAccountState
 import org.jetbrains.compose.resources.stringResource
+import template.core.base.designsystem.theme.KptTheme
 
 @Composable
 fun TermsPage(
@@ -63,7 +63,7 @@ fun TermsPage(
     modifier: Modifier = Modifier,
     onAction: (SavingsAccountAction) -> Unit,
 ) {
-    Column(modifier = Modifier.fillMaxSize().padding(bottom = DesignToken.padding.large)) {
+    Column(modifier = Modifier.fillMaxSize().padding(bottom = KptTheme.spacing.md)) {
         Column(
             modifier = modifier.weight(1f).verticalScroll(rememberScrollState()),
         ) {
@@ -71,7 +71,7 @@ fun TermsPage(
                 stringResource(Res.string.step_terms),
                 style = MifosTypography.labelLargeEmphasized,
             )
-            Spacer(Modifier.height(DesignToken.padding.large))
+            Spacer(Modifier.height(KptTheme.spacing.md))
             MifosTextFieldDropdown(
                 value = if (state.currencyIndex == -1) {
                     ""
@@ -103,7 +103,7 @@ fun TermsPage(
                     ),
                 ),
             )
-            Spacer(Modifier.height(DesignToken.padding.large))
+            Spacer(Modifier.height(KptTheme.spacing.md))
             MifosTextFieldDropdown(
                 value = if (state.interestCompPeriodIndex == -1) {
                     ""
@@ -179,7 +179,7 @@ fun TermsPage(
                     ),
                 ),
             )
-            Spacer(Modifier.height(DesignToken.padding.large))
+            Spacer(Modifier.height(KptTheme.spacing.md))
             Row(
                 Modifier.fillMaxWidth()
                     .clickable {
@@ -198,12 +198,12 @@ fun TermsPage(
                     style = MifosTypography.labelLarge,
                 )
             }
-            Spacer(Modifier.height(DesignToken.padding.large))
+            Spacer(Modifier.height(KptTheme.spacing.md))
             Text(
                 stringResource(Res.string.step_terms_lock_in_period),
                 style = MifosTypography.labelLargeEmphasized,
             )
-            Spacer(Modifier.height(DesignToken.padding.large))
+            Spacer(Modifier.height(KptTheme.spacing.md))
             MifosOutlinedTextField(
                 value = state.frequency,
                 onValueChange = { onAction(SavingsAccountAction.OnFrequencyChange(it)) },
@@ -215,7 +215,7 @@ fun TermsPage(
                     ),
                 ),
             )
-            Spacer(Modifier.height(DesignToken.padding.large))
+            Spacer(Modifier.height(KptTheme.spacing.md))
             MifosTextFieldDropdown(
                 value = if (state.freqTypeIndex == -1) {
                     ""
@@ -237,7 +237,7 @@ fun TermsPage(
                 stringResource(Res.string.step_terms_overdraft),
                 style = MifosTypography.labelLargeEmphasized,
             )
-            Spacer(Modifier.height(DesignToken.padding.large))
+            Spacer(Modifier.height(KptTheme.spacing.md))
             Row(
                 Modifier.fillMaxWidth()
                     .clickable {
@@ -256,12 +256,12 @@ fun TermsPage(
                     style = MifosTypography.labelLarge,
                 )
             }
-            Spacer(Modifier.height(DesignToken.padding.large))
+            Spacer(Modifier.height(KptTheme.spacing.md))
             Text(
                 stringResource(Res.string.step_terms_monthly_min_balance),
                 style = MifosTypography.labelLargeEmphasized,
             )
-            Spacer(Modifier.height(DesignToken.padding.large))
+            Spacer(Modifier.height(KptTheme.spacing.md))
             Row(
                 Modifier.fillMaxWidth()
                     .clickable {
@@ -280,7 +280,7 @@ fun TermsPage(
                     style = MifosTypography.labelLarge,
                 )
             }
-            Spacer(Modifier.height(DesignToken.padding.large))
+            Spacer(Modifier.height(KptTheme.spacing.md))
             MifosOutlinedTextField(
                 value = state.monthlyMinimumBalance,
                 onValueChange = { onAction(SavingsAccountAction.OnMonthlyMinimumBalanceChange(it)) },
@@ -293,7 +293,7 @@ fun TermsPage(
                     ),
                 ),
             )
-            Spacer(Modifier.height(DesignToken.padding.large))
+            Spacer(Modifier.height(KptTheme.spacing.md))
         }
         MifosTwoButtonRow(
             firstBtnText = stringResource(Res.string.feature_savings_back),

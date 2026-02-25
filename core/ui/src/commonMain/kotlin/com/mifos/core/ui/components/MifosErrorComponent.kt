@@ -23,7 +23,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -31,12 +30,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.mifos.core.designsystem.icon.MifosIcons
+import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.designsystem.theme.MifosTheme
 import com.mifos.core.ui.util.DevicePreview
 import org.jetbrains.compose.resources.stringResource
+import template.core.base.designsystem.theme.KptTheme
 
 @Composable
 fun MifosErrorComponent(
@@ -73,8 +73,8 @@ fun NoInternetComponent(
     ) {
         Icon(
             modifier = Modifier
-                .size(100.dp)
-                .padding(bottom = 12.dp),
+                .size(DesignToken.sizes.imageDp100)
+                .padding(bottom = DesignToken.padding.medium),
             imageVector = MifosIcons.WifiOff,
             contentDescription = "Wifi Icon",
         )
@@ -84,7 +84,7 @@ fun NoInternetComponent(
             style = TextStyle(fontSize = 20.sp),
         )
 
-        Spacer(modifier = Modifier.height(12.dp))
+        Spacer(modifier = Modifier.height(DesignToken.spacing.medium))
 
         if (isRetryEnabled) {
             FilledTonalButton(onClick = { onRetry.invoke() }) {
@@ -109,14 +109,14 @@ fun EmptyDataComponent(
     ) {
         Icon(
             modifier = Modifier
-                .size(100.dp)
-                .padding(bottom = 12.dp),
+                .size(DesignToken.sizes.imageDp100)
+                .padding(bottom = DesignToken.padding.medium),
             imageVector = MifosIcons.Info,
             contentDescription = "Info Icon",
         )
 
         Text(
-            modifier = Modifier.padding(horizontal = 20.dp),
+            modifier = Modifier.padding(horizontal = DesignToken.padding.largeIncreased),
             text = message ?: if (isEmptyData) {
                 stringResource(Res.string.core_ui_no_data)
             } else {
@@ -128,7 +128,7 @@ fun EmptyDataComponent(
 
         if (isRetryEnabled) {
             FilledTonalButton(
-                modifier = Modifier.padding(top = 8.dp),
+                modifier = Modifier.padding(top = DesignToken.padding.small),
                 onClick = { onRetry.invoke() },
             ) {
                 Text(text = stringResource(Res.string.core_ui_retry))
@@ -151,18 +151,18 @@ fun EmptyDataComponentWithModifiedMessageAndIcon(
     ) {
         Icon(
             modifier = Modifier
-                .size(100.dp)
-                .padding(bottom = 12.dp),
+                .size(DesignToken.sizes.imageDp100)
+                .padding(bottom = DesignToken.padding.medium),
             imageVector = if (isEmptyData) icon else MifosIcons.Info,
             contentDescription = "Info Icon",
         )
 
         Text(
-            modifier = Modifier.padding(horizontal = 20.dp),
+            modifier = Modifier.padding(horizontal = DesignToken.padding.largeIncreased),
             text = if (isEmptyData) message else stringResource(Res.string.core_ui_something_went_wrong),
             style = TextStyle(fontSize = 20.sp),
             textAlign = TextAlign.Center,
-            color = MaterialTheme.colorScheme.error,
+            color = KptTheme.colorScheme.error,
 
         )
     }

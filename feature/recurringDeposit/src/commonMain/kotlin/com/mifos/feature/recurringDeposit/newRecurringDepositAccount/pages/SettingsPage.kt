@@ -51,13 +51,13 @@ import androidx.compose.ui.text.input.KeyboardType
 import com.mifos.core.designsystem.component.MifosOutlinedTextField
 import com.mifos.core.designsystem.component.MifosTextFieldConfig
 import com.mifos.core.designsystem.component.MifosTextFieldDropdown
-import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.designsystem.theme.MifosTypography
 import com.mifos.core.ui.components.MifosCheckBox
 import com.mifos.core.ui.components.MifosTwoButtonRow
 import com.mifos.feature.recurringDeposit.newRecurringDepositAccount.RecurringAccountAction
 import com.mifos.feature.recurringDeposit.newRecurringDepositAccount.RecurringAccountState
 import org.jetbrains.compose.resources.stringResource
+import template.core.base.designsystem.theme.KptTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -68,7 +68,7 @@ fun SettingPage(
 ) {
     val settingsState = state.recurringDepositAccountSettings
 
-    Column(Modifier.fillMaxSize().padding(bottom = DesignToken.padding.large)) {
+    Column(Modifier.fillMaxSize().padding(bottom = KptTheme.spacing.md)) {
         Column(
             modifier = modifier.weight(1f).verticalScroll(rememberScrollState()),
         ) {
@@ -76,7 +76,7 @@ fun SettingPage(
                 text = stringResource(Res.string.feature_recurring_deposit_step_settings),
                 style = MifosTypography.labelLargeEmphasized,
             )
-            Spacer(Modifier.height(DesignToken.padding.large))
+            Spacer(Modifier.height(KptTheme.spacing.md))
 
             MifosCheckBox(
                 text = stringResource(Res.string.feature_recurring_deposit_is_mandatory_deposit),
@@ -86,7 +86,7 @@ fun SettingPage(
                 },
             )
 
-            Spacer(Modifier.height(DesignToken.padding.small))
+            Spacer(Modifier.height(KptTheme.spacing.sm))
 
             MifosCheckBox(
                 text = stringResource(Res.string.feature_recurring_deposit_adjust_advance_payments),
@@ -94,7 +94,7 @@ fun SettingPage(
                 onCheckChanged = { onAction(RecurringAccountAction.RecurringAccountSettingsAction.ToggleAdvancePaymentsTowardsFutureInstallments) },
             )
 
-            Spacer(Modifier.height(DesignToken.padding.small))
+            Spacer(Modifier.height(KptTheme.spacing.sm))
 
             MifosCheckBox(
                 text = stringResource(Res.string.feature_recurring_deposit_allow_withdrawals),
@@ -102,13 +102,13 @@ fun SettingPage(
                 onCheckChanged = { onAction(RecurringAccountAction.RecurringAccountSettingsAction.ToggleAllowWithdrawals) },
             )
 
-            Spacer(Modifier.height(DesignToken.padding.large))
+            Spacer(Modifier.height(KptTheme.spacing.md))
 
             Text(
                 stringResource(Res.string.feature_recurring_deposit_lock_in_period),
                 style = MifosTypography.labelLargeEmphasized,
             )
-            Spacer(Modifier.height(DesignToken.padding.large))
+            Spacer(Modifier.height(KptTheme.spacing.md))
 
             MifosOutlinedTextField(
                 value = settingsState.lockInPeriod.frequency,
@@ -128,7 +128,7 @@ fun SettingPage(
                 ),
                 modifier = Modifier.fillMaxWidth(),
             )
-            Spacer(Modifier.height(DesignToken.padding.small))
+            Spacer(Modifier.height(KptTheme.spacing.sm))
             MifosTextFieldDropdown(
                 value = if (settingsState.lockInPeriod.frequencyTypeIndex != -1) {
                     state.template.lockinPeriodFrequencyTypeOptions
@@ -147,12 +147,12 @@ fun SettingPage(
                 },
                 label = stringResource(Res.string.feature_recurring_deposit_type),
             )
-            Spacer(Modifier.height(DesignToken.padding.large))
+            Spacer(Modifier.height(KptTheme.spacing.md))
             Text(
                 stringResource(Res.string.feature_recurring_deposit_recurring_deposit_details),
                 style = MifosTypography.labelLargeEmphasized,
             )
-            Spacer(Modifier.height(DesignToken.padding.large))
+            Spacer(Modifier.height(KptTheme.spacing.md))
             MifosOutlinedTextField(
                 value = settingsState.recurringDepositDetails.depositAmount,
                 onValueChange = {
@@ -180,12 +180,12 @@ fun SettingPage(
                 ),
                 modifier = Modifier.fillMaxWidth(),
             )
-            Spacer(Modifier.height(DesignToken.padding.large))
+            Spacer(Modifier.height(KptTheme.spacing.md))
             Text(
                 stringResource(Res.string.feature_recurring_deposit_deposit_period),
                 style = MifosTypography.labelLargeEmphasized,
             )
-            Spacer(Modifier.height(DesignToken.padding.large))
+            Spacer(Modifier.height(KptTheme.spacing.md))
             MifosOutlinedTextField(
                 value = settingsState.depositPeriod.period,
                 onValueChange = {
@@ -210,7 +210,7 @@ fun SettingPage(
                 ),
                 modifier = Modifier.fillMaxWidth(),
             )
-            Spacer(Modifier.height(DesignToken.padding.small))
+            Spacer(Modifier.height(KptTheme.spacing.sm))
             MifosTextFieldDropdown(
                 value = if (settingsState.depositPeriod.periodType != -1) {
                     state.template.periodFrequencyTypeOptions
@@ -237,13 +237,13 @@ fun SettingPage(
                     )
                 },
             )
-            Spacer(Modifier.height(DesignToken.padding.small))
+            Spacer(Modifier.height(KptTheme.spacing.sm))
 
             Text(
                 stringResource(Res.string.feature_recurring_account_deposit_frequency),
                 style = MifosTypography.labelLargeEmphasized,
             )
-            Spacer(Modifier.height(DesignToken.padding.small))
+            Spacer(Modifier.height(KptTheme.spacing.sm))
             MifosCheckBox(
                 text = stringResource(Res.string.feature_recurring_deposit_deposit_frequency_same_as_meeting),
                 checked = settingsState.depositPeriod.depositFrequencySameAsGroupCenterMeeting,
@@ -279,7 +279,7 @@ fun SettingPage(
                         ),
                     )
 
-                    Spacer(Modifier.height(DesignToken.padding.large))
+                    Spacer(Modifier.height(KptTheme.spacing.md))
 
                     MifosTextFieldDropdown(
                         value = if (settingsState.recurringFrequencyTypeIndex != -1) {
@@ -308,12 +308,12 @@ fun SettingPage(
                     )
                 }
             }
-            Spacer(Modifier.height(DesignToken.padding.large))
+            Spacer(Modifier.height(KptTheme.spacing.md))
             Text(
                 stringResource(Res.string.feature_recurring_deposit_minimum_deposit_term),
                 style = MifosTypography.labelLargeEmphasized,
             )
-            Spacer(Modifier.height(DesignToken.padding.large))
+            Spacer(Modifier.height(KptTheme.spacing.md))
             MifosOutlinedTextField(
                 value = settingsState.minimumDepositTerm.frequency,
                 onValueChange = {
@@ -332,7 +332,7 @@ fun SettingPage(
                 ),
                 modifier = Modifier.fillMaxWidth(),
             )
-            Spacer(Modifier.height(DesignToken.padding.small))
+            Spacer(Modifier.height(KptTheme.spacing.sm))
             MifosTextFieldDropdown(
                 value = if (settingsState.minimumDepositTerm.frequencyTypeIndex != -1) {
                     state.template.periodFrequencyTypeOptions?.getOrNull(settingsState.minimumDepositTerm.frequencyTypeIndex)?.value.orEmpty()
@@ -353,12 +353,12 @@ fun SettingPage(
                 label = stringResource(Res.string.feature_recurring_deposit_type),
                 modifier = Modifier.fillMaxWidth(),
             )
-            Spacer(Modifier.height(DesignToken.padding.large))
+            Spacer(Modifier.height(KptTheme.spacing.md))
             Text(
                 stringResource(Res.string.feature_recurring_deposit_in_multiples_of),
                 style = MifosTypography.labelLargeEmphasized,
             )
-            Spacer(Modifier.height(DesignToken.padding.large))
+            Spacer(Modifier.height(KptTheme.spacing.md))
             MifosOutlinedTextField(
                 value = settingsState.minimumDepositTerm.frequencyAfterInMultiplesOf,
                 onValueChange = {
@@ -377,7 +377,7 @@ fun SettingPage(
                 ),
                 modifier = Modifier.fillMaxWidth(),
             )
-            Spacer(Modifier.height(DesignToken.padding.small))
+            Spacer(Modifier.height(KptTheme.spacing.sm))
             MifosTextFieldDropdown(
                 value = if (settingsState.minimumDepositTerm.frequencyTypeIndexAfterInMultiplesOf != -1) {
                     state.template.periodFrequencyTypeOptions?.getOrNull(settingsState.minimumDepositTerm.frequencyTypeIndexAfterInMultiplesOf)?.value.orEmpty()
@@ -398,12 +398,12 @@ fun SettingPage(
                 label = stringResource(Res.string.feature_recurring_deposit_type),
                 modifier = Modifier.fillMaxWidth(),
             )
-            Spacer(Modifier.height(DesignToken.padding.large))
+            Spacer(Modifier.height(KptTheme.spacing.md))
             Text(
                 stringResource(Res.string.feature_recurring_deposit_maximum_deposit_term),
                 style = MifosTypography.labelLargeEmphasized,
             )
-            Spacer(Modifier.height(DesignToken.padding.large))
+            Spacer(Modifier.height(KptTheme.spacing.md))
             MifosOutlinedTextField(
                 value = settingsState.maxDepositTerm.frequency,
                 onValueChange = {
@@ -422,7 +422,7 @@ fun SettingPage(
                 ),
                 modifier = Modifier.fillMaxWidth(),
             )
-            Spacer(Modifier.height(DesignToken.padding.small))
+            Spacer(Modifier.height(KptTheme.spacing.sm))
             MifosTextFieldDropdown(
                 value = if (settingsState.maxDepositTerm.frequencyTypeIndex != -1) {
                     state.template.periodFrequencyTypeOptions?.getOrNull(settingsState.maxDepositTerm.frequencyTypeIndex)?.value.orEmpty()
@@ -443,12 +443,12 @@ fun SettingPage(
                 label = stringResource(Res.string.feature_recurring_deposit_type),
                 modifier = Modifier.fillMaxWidth(),
             )
-            Spacer(Modifier.height(DesignToken.padding.large))
+            Spacer(Modifier.height(KptTheme.spacing.md))
             Text(
                 stringResource(Res.string.feature_recurring_deposit_for_pre_mature_closure),
                 style = MifosTypography.labelLargeEmphasized,
             )
-            Spacer(Modifier.height(DesignToken.padding.small))
+            Spacer(Modifier.height(KptTheme.spacing.sm))
             MifosCheckBox(
                 text = stringResource(Res.string.feature_recurring_deposit_apply_penal_interest),
                 checked = settingsState.preMatureClosure.applyPenalInterest,
@@ -477,7 +477,7 @@ fun SettingPage(
                         ),
                     )
 
-                    Spacer(Modifier.height(DesignToken.padding.large))
+                    Spacer(Modifier.height(KptTheme.spacing.md))
 
                     MifosTextFieldDropdown(
                         value = if (settingsState.preMatureClosure.interestPeriodIndex != -1) {
@@ -519,7 +519,7 @@ fun SettingPage(
                             },
                         ),
                     )
-                    Spacer(Modifier.height(DesignToken.padding.large))
+                    Spacer(Modifier.height(KptTheme.spacing.md))
                 }
             }
         }

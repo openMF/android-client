@@ -26,12 +26,10 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
@@ -41,16 +39,17 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.painter.Painter
-import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
+import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.ui.components.MifosProgressIndicator
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.viewmodel.koinViewModel
+import template.core.base.designsystem.theme.KptTheme
 
 /**
  * Created by Aditya Gupta on 21/03/24.
@@ -149,38 +148,36 @@ private fun TaskOptions(
     ) {
         Row(
             modifier = Modifier
-                .padding(24.dp)
+                .padding(KptTheme.spacing.lg)
                 .fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Icon(
                 modifier = Modifier
-                    .size(24.dp),
+                    .size(DesignToken.sizes.iconMedium),
                 painter = leadingIcon,
                 contentDescription = null,
             )
             Text(
                 modifier = Modifier
-                    .padding(start = 16.dp)
+                    .padding(start = KptTheme.spacing.md)
                     .weight(1f),
                 text = option,
-                style = MaterialTheme.typography.labelLarge,
+                style = KptTheme.typography.labelLarge,
             )
             Card(
                 colors = CardDefaults.cardColors(
-                    containerColor = MaterialTheme.colorScheme.secondary,
+                    containerColor = KptTheme.colorScheme.secondary,
                 ),
-                shape = RoundedCornerShape(10.dp),
+                shape = DesignToken.shapes.dp10,
             ) {
                 Text(
                     modifier = Modifier.padding(
-                        start = 12.dp,
-                        end = 12.dp,
-                        top = 2.dp,
-                        bottom = 2.dp,
+                        horizontal = DesignToken.padding.medium,
+                        vertical = DesignToken.padding.extraExtraSmall,
                     ),
                     text = badge,
-                    style = MaterialTheme.typography.labelLarge,
+                    style = KptTheme.typography.labelLarge,
                 )
             }
         }

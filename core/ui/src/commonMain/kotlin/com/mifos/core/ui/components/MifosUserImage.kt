@@ -14,19 +14,19 @@ import androidclient.core.ui.generated.resources.profile
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.unit.dp
 import coil3.ImageLoader
 import coil3.compose.LocalPlatformContext
 import coil3.compose.rememberAsyncImagePainter
+import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.designsystem.theme.MifosTheme
 import com.mifos.core.ui.util.DevicePreview
 import org.jetbrains.compose.resources.painterResource
+import template.core.base.designsystem.theme.KptTheme
 
 @Composable
 fun MifosUserImage(
@@ -50,8 +50,8 @@ fun MifosUserImage(
         .then(
             if (hasBorder) {
                 Modifier.border(
-                    width = 2.dp,
-                    color = MaterialTheme.colorScheme.primary,
+                    width = DesignToken.strokes.dp2,
+                    color = KptTheme.colorScheme.primary,
                     shape = CircleShape,
                 )
             } else {

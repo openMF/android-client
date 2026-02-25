@@ -46,7 +46,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -70,12 +69,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.backhandler.BackHandler
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mifos.core.designsystem.component.MifosDialogBox
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.icon.MifosIcons
+import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.model.objects.checkerinboxtask.CheckerTask
 import com.mifos.core.ui.components.MifosProgressIndicator
 import com.mifos.core.ui.components.SelectionModeTopAppBar
@@ -86,6 +85,7 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameterProvider
 import org.koin.compose.viewmodel.koinViewModel
+import template.core.base.designsystem.theme.KptTheme
 import kotlin.time.ExperimentalTime
 import kotlin.time.Instant
 
@@ -350,11 +350,11 @@ private fun CheckerInboxScreen(
     ) { paddingValues ->
         Column(modifier = Modifier.padding(paddingValues)) {
             ElevatedCard(
-                modifier = Modifier.padding(8.dp),
-                elevation = CardDefaults.elevatedCardElevation(4.dp),
+                modifier = Modifier.padding(KptTheme.spacing.sm),
+                elevation = CardDefaults.elevatedCardElevation(DesignToken.elevation.dp4),
             ) {
                 Row(
-                    modifier = Modifier.padding(4.dp),
+                    modifier = Modifier.padding(KptTheme.spacing.xs),
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
@@ -365,7 +365,7 @@ private fun CheckerInboxScreen(
                     )
                     TextField(
                         modifier = Modifier
-                            .height(52.dp)
+                            .height(DesignToken.spacing.dp52)
                             .weight(4f),
                         value = searchInbox,
                         onValueChange = {
@@ -451,8 +451,8 @@ private fun CheckerInboxContent(
 ) {
     LazyColumn(
         modifier = modifier,
-        contentPadding = PaddingValues(12.dp),
-        verticalArrangement = Arrangement.spacedBy(12.dp),
+        contentPadding = PaddingValues(DesignToken.padding.medium),
+        verticalArrangement = Arrangement.spacedBy(DesignToken.spacing.medium),
     ) {
         items(
             count = checkerTaskList.size,
@@ -506,8 +506,8 @@ private fun CheckerInboxItem(
     selectedItemsState: SelectedItemsState,
     selectedMode: () -> Unit,
 ) {
-    val selectedColor = MaterialTheme.colorScheme.primaryContainer
-    val unselectedColor = MaterialTheme.colorScheme.surface
+    val selectedColor = KptTheme.colorScheme.primaryContainer
+    val unselectedColor = KptTheme.colorScheme.surface
 
     val selectedItems by selectedItemsState.selectedItems
     val isSelected = selectedItemsState.contains(checkerTask.id)
@@ -563,16 +563,16 @@ private fun CheckerInboxItem(
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Column(
-                modifier = Modifier.padding(16.dp),
+                modifier = Modifier.padding(KptTheme.spacing.md),
             ) {
                 Text(
                     text = "# ${checkerTask.id} ${checkerTask.actionName} ${checkerTask.entityName}",
-                    style = MaterialTheme.typography.bodyLarge,
+                    style = KptTheme.typography.bodyLarge,
                 )
-                Spacer(modifier = Modifier.height(16.dp))
+                Spacer(modifier = Modifier.height(KptTheme.spacing.md))
                 Text(
                     text = checkerTask.processingResult,
-                    style = MaterialTheme.typography.bodyMedium,
+                    style = KptTheme.typography.bodyMedium,
                 )
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -581,27 +581,27 @@ private fun CheckerInboxItem(
                     Row {
                         Text(
                             text = stringResource(Res.string.feature_checker_inbox_task_create_by),
-                            style = MaterialTheme.typography.bodyMedium,
+                            style = KptTheme.typography.bodyMedium,
                         )
-                        Spacer(modifier = Modifier.width(8.dp))
+                        Spacer(modifier = Modifier.width(KptTheme.spacing.sm))
                         Text(
                             text = checkerTask.maker,
-                            style = MaterialTheme.typography.labelLarge,
+                            style = KptTheme.typography.labelLarge,
                         )
                     }
                     Text(
                         text = checkerTask.getDate(),
-                        style = MaterialTheme.typography.labelLarge,
+                        style = KptTheme.typography.labelLarge,
                     )
                 }
             }
         }
         HorizontalDivider()
         if (expendCheckerTask) {
-            Column(modifier = Modifier.padding(8.dp)) {
+            Column(modifier = Modifier.padding(KptTheme.spacing.sm)) {
                 Text(
                     text = checkerTask.entityName,
-                    style = MaterialTheme.typography.labelLarge,
+                    style = KptTheme.typography.labelLarge,
                 )
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -632,7 +632,7 @@ private fun CheckerInboxItem(
                 Text(
                     modifier = Modifier.fillMaxWidth(),
                     text = checkerTask.getDate(),
-                    style = MaterialTheme.typography.labelLarge,
+                    style = KptTheme.typography.labelLarge,
                     textAlign = TextAlign.Center,
                 )
             }

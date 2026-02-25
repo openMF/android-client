@@ -13,13 +13,12 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import com.mifos.core.model.objects.searchrecord.GenericSearchRecord
-import com.mifos.core.model.objects.searchrecord.RecordType
 import com.mifos.feature.searchrecord.SearchRecordScreen
 import kotlinx.serialization.Serializable
 
 @Serializable
 data class SearchRecordRoute(
-    val type: RecordType,
+    val type: String,
 )
 
 fun NavGraphBuilder.searchRecordNavigation(
@@ -34,6 +33,6 @@ fun NavGraphBuilder.searchRecordNavigation(
     }
 }
 
-fun NavController.navigateToSearchRecord(type: RecordType) {
+fun NavController.navigateToSearchRecord(type: String) {
     navigate(SearchRecordRoute(type = type))
 }

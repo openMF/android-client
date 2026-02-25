@@ -1,10 +1,19 @@
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.window.CanvasBasedWindow
 import androidx.compose.ui.window.ComposeViewport
 import androidx.compose.ui.window.ComposeViewportConfiguration
 import cmp.shared.SharedApp
 import cmp.shared.utils.initKoin
+import kotlinx.browser.document
+import kotlinx.browser.localStorage
+import kotlinx.browser.window
 import org.jetbrains.compose.resources.configureWebResources
+import org.jetbrains.skiko.wasm.onWasmReady
 
 /**
  * Main function.

@@ -18,7 +18,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -28,6 +27,8 @@ import androidx.compose.ui.unit.dp
 import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.designsystem.theme.MifosTypography
 import org.jetbrains.compose.ui.tooling.preview.Preview
+import template.core.base.designsystem.KptTheme
+import template.core.base.designsystem.theme.KptTheme
 
 @Composable
 fun MifosGeneralCardComponentOutline(
@@ -38,14 +39,14 @@ fun MifosGeneralCardComponentOutline(
     Box(
         modifier = modifier
             .border(
-                width = 1.dp,
+                width = DesignToken.strokes.thin,
                 shape = RoundedCornerShape(
                     topStart = 12.dp,
                     topEnd = 12.dp,
                     bottomStart = borderCorner,
                     bottomEnd = borderCorner,
                 ),
-                color = MaterialTheme.colorScheme.secondaryContainer,
+                color = KptTheme.colorScheme.secondaryContainer,
             ),
     ) {
         content()
@@ -99,7 +100,7 @@ fun MifosGeneralCard(
 @Preview
 @Composable
 fun MifosPreviewGeneralCard() {
-    MaterialTheme {
+    KptTheme {
         MifosGeneralCard(
             contentMap = mapOf(
                 "title" to "answer",

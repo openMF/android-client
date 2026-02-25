@@ -16,7 +16,6 @@
         android:required="false" />
 
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"
         android:maxSdkVersion="32" />
@@ -29,8 +28,6 @@
         android:required="false" />
     <uses-permission android:name="android.permission.CAMERA"/>
     <uses-permission android:name="android.permission.FLASHLIGHT"/>
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"
-        android:maxSdkVersion="32" />
     <!--
     Firebase automatically adds the AD_ID permission, even though we don't use it. If you use this
     permission you must declare how you're using it to Google Play, otherwise the app will be
@@ -49,6 +46,7 @@
         android:theme="@style/Theme.AndroidClientTheme"
         android:requestLegacyExternalStorage="true"
         android:localeConfig="@xml/locale_config">
+
 
         <activity
             android:name=".MainActivity"

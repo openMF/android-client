@@ -40,12 +40,12 @@ import com.mifos.core.designsystem.component.MifosDatePickerTextField
 import com.mifos.core.designsystem.component.MifosOutlinedTextField
 import com.mifos.core.designsystem.component.MifosTextFieldConfig
 import com.mifos.core.designsystem.component.MifosTextFieldDropdown
-import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.designsystem.theme.MifosTypography
 import com.mifos.core.ui.components.MifosTwoButtonRow
 import com.mifos.feature.client.newFixedDepositAccount.NewFixedDepositAccountAction
 import com.mifos.feature.client.newFixedDepositAccount.NewFixedDepositAccountState
 import org.jetbrains.compose.resources.stringResource
+import template.core.base.designsystem.theme.KptTheme
 import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
 
@@ -95,7 +95,7 @@ fun DetailsPage(
             DatePicker(state = submissionDatePickerState)
         }
     }
-    Column(modifier = Modifier.fillMaxSize().padding(bottom = DesignToken.padding.large)) {
+    Column(modifier = Modifier.fillMaxSize().padding(bottom = KptTheme.spacing.md)) {
         Column(
             modifier = modifier.weight(1f).verticalScroll(rememberScrollState()),
         ) {
@@ -103,7 +103,7 @@ fun DetailsPage(
                 text = stringResource(Res.string.step_details),
                 style = MifosTypography.labelLargeEmphasized,
             )
-            Spacer(Modifier.height(DesignToken.padding.large))
+            Spacer(Modifier.height(KptTheme.spacing.md))
             MifosTextFieldDropdown(
                 value = if (state.fixedDepositAccountDetail.productSelected == -1) {
                     ""
@@ -130,7 +130,7 @@ fun DetailsPage(
                         onAction(NewFixedDepositAccountAction.OnSubmissionDatePick(true))
                     },
                 )
-                Spacer(Modifier.height(DesignToken.padding.large))
+                Spacer(Modifier.height(KptTheme.spacing.md))
                 MifosTextFieldDropdown(
                     value = if (state.fixedDepositAccountDetail.fieldOfficerIndex == -1) {
                         ""
@@ -165,7 +165,7 @@ fun DetailsPage(
                         },
                     ),
                 )
-                Spacer(Modifier.height(DesignToken.padding.large))
+                Spacer(Modifier.height(KptTheme.spacing.md))
             }
         }
         MifosTwoButtonRow(
@@ -173,7 +173,7 @@ fun DetailsPage(
             secondBtnText = stringResource(Res.string.feature_client_next),
             onFirstBtnClick = { onAction(NewFixedDepositAccountAction.NavigateBack) },
             onSecondBtnClick = { onAction(NewFixedDepositAccountAction.OnDetailNext) },
-            modifier = Modifier.padding(top = DesignToken.padding.small),
+            modifier = Modifier.padding(top = KptTheme.spacing.sm),
         )
     }
 }

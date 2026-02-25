@@ -11,9 +11,10 @@ package com.mifos.feature.loan.loanCharge
 
 import androidclient.feature.loan.generated.resources.Res
 import androidclient.feature.loan.generated.resources.feature_loan_charge_amount
+import androidclient.feature.loan.generated.resources.feature_loan_charge_created_successfully
 import androidclient.feature.loan.generated.resources.feature_loan_charge_due_date
+import androidclient.feature.loan.generated.resources.feature_loan_charge_id
 import androidclient.feature.loan.generated.resources.feature_loan_charge_name
-import androidclient.feature.loan.generated.resources.feature_loan_client_id
 import androidclient.feature.loan.generated.resources.feature_loan_failed_to_load_loan_charges
 import androidclient.feature.loan.generated.resources.feature_loan_loan_charges
 import androidclient.feature.loan.generated.resources.feature_loan_no_loan_charges
@@ -25,7 +26,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -40,6 +40,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -50,21 +51,24 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.icon.MifosIcons
+import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.ui.components.MifosEmptyUi
 import com.mifos.core.ui.components.MifosProgressIndicator
-import com.mifos.feature.loan.loanChargeDialog.LoanChargeDialogScreen
+import com.mifos.feature.loan.loanChargeForm.LoanChargeForm
 import com.mifos.room.entities.client.ChargesEntity
+import kotlinx.coroutines.launch
+import org.jetbrains.compose.resources.getString
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameterProvider
 import org.koin.compose.viewmodel.koinViewModel
+import template.core.base.designsystem.theme.KptTheme
 
 @Composable
 internal fun LoanChargeScreen(
@@ -107,27 +111,42 @@ internal fun LoanChargeScreen(
     onRefresh: () -> Unit,
 ) {
     val snackbarHostState by remember { mutableStateOf(SnackbarHostState()) }
+    val coroutineScope = rememberCoroutineScope()
     val pullRefreshState = rememberPullToRefreshState()
-    var showLoanChargeDialog by rememberSaveable { mutableStateOf(false) }
+    var showLoanChargeForm by rememberSaveable { mutableStateOf(false) }
 
-    if (showLoanChargeDialog) {
-        LoanChargeDialogScreen(
-            loanId = loanAccountNumber,
-            onSuccess = {
-                onChargeCreated()
-                showLoanChargeDialog = false
-            },
-            onDismiss = { showLoanChargeDialog = false },
-        )
-    }
+    LoanChargeForm(
+        loanId = loanAccountNumber,
+        isVisible = showLoanChargeForm,
+        onSuccess = {
+            onChargeCreated()
+            showLoanChargeForm = false
+            coroutineScope.launch {
+                snackbarHostState.showSnackbar(
+                    message = getString(Res.string.feature_loan_charge_created_successfully),
+                )
+            }
+        },
+        onDismiss = { showLoanChargeForm = false },
+        onError = { errorMessage ->
+            showLoanChargeForm = false
+            coroutineScope.launch {
+                snackbarHostState.showSnackbar(
+                    message = errorMessage,
+                )
+            }
+        },
+    )
 
     MifosScaffold(
         title = stringResource(Res.string.feature_loan_loan_charges),
         onBackPressed = onBackPressed,
         actions = {
-            IconButton(onClick = {
-                showLoanChargeDialog = true
-            }) {
+            IconButton(
+                onClick = {
+                    showLoanChargeForm = true
+                },
+            ) {
                 Icon(imageVector = MifosIcons.Add, contentDescription = null)
             }
         },
@@ -182,13 +201,13 @@ private fun LoanChargeItem(
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(8.dp),
-        shape = RoundedCornerShape(0.dp),
-        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
+            .padding(KptTheme.spacing.sm),
+        shape = DesignToken.shapes.none,
+        elevation = CardDefaults.cardElevation(defaultElevation = DesignToken.elevation.dp2),
     ) {
-        Spacer(modifier = Modifier.height(8.dp))
+        Spacer(modifier = Modifier.height(KptTheme.spacing.sm))
         MifosLoanChargeDetailsText(
-            stringResource(Res.string.feature_loan_client_id),
+            stringResource(Res.string.feature_loan_charge_id),
             charges.chargeId.toString(),
         )
         MifosLoanChargeDetailsText(
@@ -203,7 +222,7 @@ private fun LoanChargeItem(
             stringResource(Res.string.feature_loan_charge_due_date),
             charges.formattedDueDate,
         )
-        Spacer(modifier = Modifier.height(8.dp))
+        Spacer(modifier = Modifier.height(KptTheme.spacing.sm))
     }
 }
 
@@ -217,7 +236,7 @@ private fun MifosLoanChargeDetailsText(field: String, value: String) {
         Text(
             modifier = Modifier
                 .weight(1f)
-                .padding(start = 16.dp),
+                .padding(start = KptTheme.spacing.md),
             text = field,
             style = TextStyle(
                 fontSize = 16.sp,

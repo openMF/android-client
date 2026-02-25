@@ -20,14 +20,18 @@ import androidclient.feature.client.generated.resources.returned_invalid_data_af
 import androidclient.feature.client.generated.resources.unexpected_loading
 import androidx.core.content.FileProvider
 import com.mifos.core.common.utils.DataState
-import com.mifos.core.common.utils.FileKitUtil
+import com.mifos.core.common.utils.asDataStateFlow
 import com.mifos.core.ui.util.getMimeTypeFromPlatformFile
 import io.github.vinceglb.filekit.FileKit
 import io.github.vinceglb.filekit.PlatformFile
 import io.github.vinceglb.filekit.absolutePath
+import io.github.vinceglb.filekit.cacheDir
 import io.github.vinceglb.filekit.context
+import io.github.vinceglb.filekit.div
 import io.github.vinceglb.filekit.path
 import io.github.vinceglb.filekit.readBytes
+import io.github.vinceglb.filekit.write
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.last
 import org.jetbrains.compose.resources.getString
 import java.io.File
@@ -59,13 +63,13 @@ actual suspend fun openPdfWithDefaultExternalApp(platformFile: PlatformFile) {
 
 private suspend fun ensurePdfIsInCache(platformFile: PlatformFile): PlatformFile {
     val inputFile = platformFile
-    val cacheDir = FileKitUtil.appCache
+    val cacheDir = FileKit.cacheDir
 
     if (inputFile.absolutePath().startsWith(cacheDir.absolutePath())) {
         return inputFile
     }
 
-    val finalState = FileKitUtil.writeFileToCache(
+    val finalState = writeFileToCache(
         getString(Res.string.default_preview_pdf_name),
         "pdf",
         platformFile.readBytes(),
@@ -80,3 +84,13 @@ private suspend fun ensurePdfIsInCache(platformFile: PlatformFile): PlatformFile
         DataState.Loading -> throw IllegalStateException(getString(Res.string.unexpected_loading))
     }
 }
+
+fun writeFileToCache(
+    fileName: String,
+    fileExtension: String,
+    filesByteArray: ByteArray,
+) = flow {
+    val filePath = FileKit.cacheDir / "$fileName.$fileExtension"
+    filePath.write(filesByteArray)
+    emit(filePath)
+}.asDataStateFlow()

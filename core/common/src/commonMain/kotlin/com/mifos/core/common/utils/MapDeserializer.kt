@@ -74,7 +74,6 @@ object MapDeserializer : KSerializer<Map<String, Any>> {
                     else -> null
                 }
             }
-            else -> null
         }
     }
 

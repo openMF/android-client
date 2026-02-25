@@ -54,15 +54,15 @@ import com.mifos.core.ui.components.MifosEmptyCard
 import com.mifos.core.ui.components.MifosProgressIndicator
 import com.mifos.core.ui.components.MifosProgressIndicatorOverlay
 import com.mifos.core.ui.util.EventsEffect
-import com.mifos.feature.client.clientIdentifiersAddUpdate.Feature
 import com.mifos.feature.client.utils.getClientIdentifierStatus
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
+import template.core.base.designsystem.theme.KptTheme
 
 @Composable
 internal fun ClientIdentifiersListScreen(
-    addNewClientIdentity: (Int, Feature, String?) -> Unit,
+    addNewClientIdentity: (Int, String, String?) -> Unit,
     onBackPress: () -> Unit,
     navController: NavController,
     onNavigateToSearch: () -> Unit,
@@ -74,7 +74,7 @@ internal fun ClientIdentifiersListScreen(
         when (event) {
             is ClientIdentifiersListEvent.AddNewClientIdentity -> addNewClientIdentity(
                 event.id,
-                event.feature,
+                event.feature.name,
                 event.uniqueKeyForHandleDocument,
             )
 
@@ -112,14 +112,14 @@ internal fun ClientIdentifiersListScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(horizontal = DesignToken.padding.large),
+                .padding(horizontal = KptTheme.spacing.md),
         ) {
             ClientIdentifiersHeader(
                 totalItem = state.clientIdentitiesList.size.toString(),
                 onAction = onAction,
             )
 
-            Spacer(modifier = Modifier.height(DesignToken.padding.largeIncreasedExtra))
+            Spacer(modifier = Modifier.height(KptTheme.spacing.lg))
 
             if (state.clientIdentitiesList.isEmpty()) {
                 MifosEmptyCard(stringResource(Res.string.client_identifiers_click_on_plus_button_to_add_an_item))
@@ -196,7 +196,7 @@ internal fun ClientIdentifiersListScreen(
                                 isExpanded = (index == state.currentExpandedItem) && state.expandClientIdentity,
                             )
 
-                            Spacer(Modifier.height(DesignToken.spacing.small))
+                            Spacer(Modifier.height(KptTheme.spacing.sm))
                         }
                     }
                 }

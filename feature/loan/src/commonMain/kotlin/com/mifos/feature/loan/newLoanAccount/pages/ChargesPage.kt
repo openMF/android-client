@@ -28,7 +28,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -41,6 +40,7 @@ import com.mifos.core.ui.components.MifosTwoButtonRow
 import com.mifos.feature.loan.newLoanAccount.NewLoanAccountAction
 import com.mifos.feature.loan.newLoanAccount.NewLoanAccountState
 import org.jetbrains.compose.resources.stringResource
+import template.core.base.designsystem.theme.KptTheme
 
 @Composable
 fun ChargesPage(
@@ -48,7 +48,7 @@ fun ChargesPage(
     modifier: Modifier = Modifier,
     onAction: (NewLoanAccountAction) -> Unit,
 ) {
-    Column(Modifier.fillMaxSize().padding(bottom = DesignToken.padding.large)) {
+    Column(Modifier.fillMaxSize().padding(bottom = KptTheme.spacing.md)) {
         Column(
             modifier = modifier.weight(1f).verticalScroll(rememberScrollState()),
         ) {
@@ -57,7 +57,7 @@ fun ChargesPage(
                 style = MifosTypography.labelLargeEmphasized,
             )
 
-            Spacer(Modifier.height(DesignToken.padding.large))
+            Spacer(Modifier.height(KptTheme.spacing.md))
 
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -73,19 +73,19 @@ fun ChargesPage(
                     Icon(
                         imageVector = MifosIcons.Add,
                         contentDescription = null,
-                        tint = MaterialTheme.colorScheme.primary,
+                        tint = KptTheme.colorScheme.primary,
                         modifier = Modifier.size(DesignToken.sizes.iconSmall),
                     )
 
                     Text(
                         text = stringResource(Res.string.add_new),
-                        color = MaterialTheme.colorScheme.primary,
+                        color = KptTheme.colorScheme.primary,
                         style = MifosTypography.labelLargeEmphasized,
                     )
                 }
             }
 
-            Spacer(Modifier.height(DesignToken.padding.large))
+            Spacer(Modifier.height(KptTheme.spacing.md))
 
             MifosRowWithTextAndButton(
                 onBtnClick = {
@@ -97,7 +97,7 @@ fun ChargesPage(
             )
 
             if (state.loanTemplate?.overdueCharges?.isNotEmpty() ?: false) {
-                Spacer(Modifier.height(DesignToken.padding.large))
+                Spacer(Modifier.height(KptTheme.spacing.md))
 
                 MifosRowWithTextAndButton(
                     onBtnClick = {
@@ -108,7 +108,7 @@ fun ChargesPage(
                     btnEnabled = state.addedCharges.isNotEmpty(),
                 )
             }
-            Spacer(Modifier.height(DesignToken.padding.large))
+            Spacer(Modifier.height(KptTheme.spacing.md))
         }
 
         MifosTwoButtonRow(
@@ -120,7 +120,7 @@ fun ChargesPage(
             onSecondBtnClick = {
                 onAction(NewLoanAccountAction.RepaymentScheduler)
             },
-            modifier = Modifier.padding(top = DesignToken.padding.small),
+            modifier = Modifier.padding(top = KptTheme.spacing.sm),
         )
     }
 }

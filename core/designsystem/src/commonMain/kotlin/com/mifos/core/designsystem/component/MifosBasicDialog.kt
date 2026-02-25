@@ -17,7 +17,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -25,13 +24,13 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.testTag
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.dp
 import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.designsystem.theme.MifosTheme
 import com.mifos.core.designsystem.theme.MifosTypography
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameterProvider
+import template.core.base.designsystem.theme.KptTheme
 
 @Composable
 fun MifosBasicDialog(
@@ -55,7 +54,7 @@ fun MifosBasicDialog(
                 {
                     Text(
                         text = it,
-                        style = MaterialTheme.typography.headlineSmall,
+                        style = KptTheme.typography.headlineSmall,
                         modifier = Modifier.testTag("AlertTitleText"),
                     )
                 }
@@ -63,11 +62,11 @@ fun MifosBasicDialog(
             text = {
                 Text(
                     text = visibilityState.message,
-                    style = MaterialTheme.typography.bodyMedium,
+                    style = KptTheme.typography.bodyMedium,
                     modifier = Modifier.testTag("AlertContentText"),
                 )
             },
-            containerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
+            containerColor = KptTheme.colorScheme.surfaceContainerHigh,
             modifier = Modifier.semantics {
                 testTag = "AlertPopup"
             },
@@ -93,7 +92,7 @@ fun MifosBasicDialog(
                     Text(
                         text = confirmText,
                         style = MifosTypography.labelLarge,
-                        color = MaterialTheme.colorScheme.primary,
+                        color = KptTheme.colorScheme.primary,
                         modifier = Modifier
                             .padding(horizontal = DesignToken.padding.large)
                             .clickable {
@@ -105,7 +104,7 @@ fun MifosBasicDialog(
                     Text(
                         text = dismissText,
                         style = MifosTypography.labelLarge,
-                        color = MaterialTheme.colorScheme.primary,
+                        color = KptTheme.colorScheme.primary,
                         modifier = Modifier
                             .padding(horizontal = DesignToken.padding.large)
                             .clickable {
@@ -117,7 +116,7 @@ fun MifosBasicDialog(
                 title = {
                     Text(
                         text = visibilityState.title,
-                        style = MaterialTheme.typography.headlineSmall,
+                        style = KptTheme.typography.headlineSmall,
                         modifier = Modifier.fillMaxWidth().testTag("AlertTitleText"),
                         textAlign = TextAlign.Center,
                     )
@@ -125,11 +124,11 @@ fun MifosBasicDialog(
                 text = {
                     Text(
                         text = visibilityState.message,
-                        style = MaterialTheme.typography.bodyMedium,
+                        style = KptTheme.typography.bodyMedium,
                         modifier = Modifier.fillMaxWidth().testTag("AlertContentText"),
                     )
                 },
-                containerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
+                containerColor = KptTheme.colorScheme.surfaceContainerHigh,
                 modifier = Modifier.semantics {
                     testTag = "AlertPopup"
                 },
@@ -160,14 +159,14 @@ fun MifosBasicDialog(
                     text = {
                         Text(
                             text = dismissText,
-                            color = MaterialTheme.colorScheme.primary,
+                            color = KptTheme.colorScheme.primary,
                             style = MifosTypography.labelLarge,
                         )
                     },
                     modifier = Modifier.weight(1f),
                 )
 
-                Spacer(modifier = Modifier.width(8.dp))
+                Spacer(modifier = Modifier.width(KptTheme.spacing.sm))
 
                 MifosTextButton(
                     onClick = { onConfirm() },
@@ -192,7 +191,7 @@ fun MifosBasicDialog(
             )
         },
         text = { content() },
-        containerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
+        containerColor = KptTheme.colorScheme.surfaceContainerHigh,
         modifier = Modifier.semantics { testTag = "AlertPopup" },
     )
 }

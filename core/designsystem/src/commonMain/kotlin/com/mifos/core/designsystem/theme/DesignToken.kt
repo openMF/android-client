@@ -49,6 +49,10 @@ object DesignToken {
     val sizes: AppSizes
         @Composable
         get() = LocalSizes.current
+
+    val strokes: AppStrokes
+        @Composable
+        get() = LocalStrokes.current
 }
 
 /**
@@ -95,6 +99,24 @@ data class AppSpacing(
     val extraExtraLarge: Dp = 48.dp,
     val half: Dp = 500.dp,
     val full: Dp = 1000.dp,
+    val dp1: Dp = 1.dp,
+    val dp2: Dp = 2.dp,
+    val dp5: Dp = 5.dp,
+    val dp6: Dp = 6.dp,
+    val dp10: Dp = 10.dp,
+    val dp18: Dp = 18.dp,
+    val dp24: Dp = 24.dp,
+    val dp30: Dp = 30.dp,
+    val dp40: Dp = 40.dp,
+    val dp44: Dp = 44.dp,
+    val dp46: Dp = 46.dp,
+    val dp50: Dp = 50.dp,
+    val dp52: Dp = 52.dp,
+    val dp80: Dp = 80.dp,
+    val dp160: Dp = 160.dp,
+    val dp164: Dp = 164.dp,
+    val dp300: Dp = 300.dp,
+    val negativeDp7: Dp = (-7).dp,
 )
 
 /**
@@ -144,6 +166,20 @@ data class AppPadding(
     val extraLargeIncreased: Dp = 32.dp,
     val extraExtraLarge: Dp = 48.dp,
     val full: Dp = 1000.dp,
+    val dp1: Dp = 1.dp,
+    val dp2: Dp = 2.dp,
+    val dp5: Dp = 5.dp,
+    val dp6: Dp = 6.dp,
+    val dp10: Dp = 10.dp,
+    val dp14: Dp = 14.dp,
+    val dp15: Dp = 15.dp,
+    val dp18: Dp = 18.dp,
+    val dp24: Dp = 24.dp,
+    val dp30: Dp = 30.dp,
+    val dp40: Dp = 40.dp,
+    val dp56: Dp = 56.dp,
+    val dp75: Dp = 75.dp,
+    val dp100: Dp = 100.dp,
 )
 
 /**
@@ -201,6 +237,14 @@ data class AppShapes(
     val topBar: Shape = RoundedCornerShape(bottomStart = 16.dp, bottomEnd = 16.dp),
     val topMedium: Shape = RoundedCornerShape(topStart = 12.dp, topEnd = 12.dp),
     val bottomMedium: Shape = RoundedCornerShape(bottomStart = 12.dp, bottomEnd = 12.dp),
+    val topCornerDp8: Shape = RoundedCornerShape(topStart = 8.dp, topEnd = 8.dp),
+    val topCornerDp16: Shape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp),
+    val bottomCornerDp12: Shape = RoundedCornerShape(bottomStart = 12.dp, bottomEnd = 12.dp),
+    val dp2: Shape = RoundedCornerShape(2.dp),
+    val dp10: Shape = RoundedCornerShape(10.dp),
+    val dp22: Shape = RoundedCornerShape(22.dp),
+    val dp25: Shape = RoundedCornerShape(25.dp),
+    val dp100: Shape = RoundedCornerShape(100.dp),
 )
 
 /**
@@ -239,8 +283,12 @@ data class AppShapes(
 @Immutable
 data class AppElevation(
     val none: Dp = 0.dp,
+    val dp1: Dp = 1.dp,
     val appBar: Dp = 5.dp,
     val elevation: Dp = 25.dp,
+    val dp2: Dp = 2.dp,
+    val dp4: Dp = 4.dp,
+    val dp6: Dp = 6.dp,
 )
 
 /**
@@ -312,9 +360,71 @@ data class AppSizes(
     val logoSizeTopAppBar: Dp = 28.dp,
     val topAppBarHeight: Dp = 85.dp,
     val bottomAppBarHeight: Dp = 70.dp,
+    val iconDp39: Dp = 39.dp,
+    val iconDp100: Dp = 100.dp,
+    val checkboxDp18: Dp = 18.dp,
+    val imageDp14: Dp = 14.dp,
+    val imageDp28: Dp = 28.dp,
+    val imageDp40: Dp = 40.dp,
+    val imageDp48: Dp = 48.dp,
+    val imageDp50: Dp = 50.dp,
+    val imageDp60: Dp = 60.dp,
+    val imageDp96: Dp = 96.dp,
+    val imageDp100: Dp = 100.dp,
+    val imageDp128: Dp = 128.dp,
+    val imageDp140: Dp = 140.dp,
+    val imageDp150: Dp = 150.dp,
+    val imageDp165: Dp = 165.dp,
+    val imageDp200: Dp = 200.dp,
+    val imageDp212: Dp = 212.dp,
+    val imageDp256: Dp = 256.dp,
+    val iconDp20: Dp = 20.dp,
+    val cardDp64: Dp = 64.dp,
+    val cardDp112: Dp = 112.dp,
+    val cardDp128: Dp = 128.dp,
+    val boxDp4: Dp = 4.dp,
+    val boxDp12: Dp = 12.dp,
+    val boxDp36: Dp = 36.dp,
+    val boxDp41: Dp = 41.dp,
+    val boxDp76: Dp = 76.dp,
+    val boxDp128: Dp = 128.dp,
+    val boxDp100: Dp = 100.dp,
+    val boxDp107: Dp = 107.33333.dp,
+    val buttonDp50: Dp = 50.dp,
+    val surfaceDp40: Dp = 40.dp,
+    val minThumbSizeDp40: Dp = 40.dp,
+    val lazyColHeightInDp500: Dp = 500.dp,
+    val rippleRadiusDp24: Dp = 24.dp,
+    val textDp40: Dp = 40.dp,
+    val surfaceColWidthInDp80: Dp = 80.dp,
+    val dropDownMenuHeightInDp200: Dp = 200.dp,
+    val backgroundDp100: Dp = 100.dp,
+    val buttonHeightDp48: Dp = 48.dp,
+    val stepIndicatorDp40: Dp = 40.dp,
+    val dp5: Dp = 5.dp,
+    val dp18: Dp = 18.dp,
+    val dp20: Dp = 20.dp,
+    val dp30: Dp = 30.dp,
+    val dp42: Dp = 42.dp,
+    val dp48: Dp = 48.dp,
+    val dp72: Dp = 72.dp,
+    val dp80: Dp = 80.dp,
+    val dp100: Dp = 100.dp,
+    val dp120: Dp = 120.dp,
+    val dp128: Dp = 128.dp,
     val tableCellWidthSmall: Dp = 65.dp,
     val tableCellWidthMedium: Dp = 100.dp,
     val tableCellWidthLarge: Dp = 150.dp,
+)
+
+@Immutable
+data class AppStrokes(
+    val none: Dp = 0.dp,
+    val dpPoint5: Dp = 0.5.dp,
+    val thin: Dp = 1.dp,
+    val dp2: Dp = 2.dp,
+    val dp4: Dp = 4.dp,
+    val dp5: Dp = 5.dp,
 )
 
 /**
@@ -362,6 +472,8 @@ val LocalElevation = staticCompositionLocalOf { AppElevation() }
  */
 val LocalSizes = staticCompositionLocalOf { AppSizes() }
 
+val LocalStrokes = staticCompositionLocalOf { AppStrokes() }
+
 /**
  * Theme provider composable that establishes the design token context for
  * the entire composition tree.
@@ -406,6 +518,7 @@ internal fun DesignTokenTheme(
     shapes: AppShapes = AppShapes(),
     elevation: AppElevation = AppElevation(),
     sizes: AppSizes = AppSizes(),
+    strokes: AppStrokes = AppStrokes(),
     content: @Composable () -> Unit,
 ) {
     CompositionLocalProvider(
@@ -414,6 +527,7 @@ internal fun DesignTokenTheme(
         LocalShapes provides shapes,
         LocalElevation provides elevation,
         LocalSizes provides sizes,
+        LocalStrokes provides strokes,
         content = content,
     )
 }

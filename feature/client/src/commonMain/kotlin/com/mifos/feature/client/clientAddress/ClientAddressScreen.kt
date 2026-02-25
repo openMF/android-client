@@ -40,7 +40,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.mifos.core.designsystem.component.MifosSweetError
@@ -56,6 +55,7 @@ import com.mifos.core.ui.util.EventsEffect
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
+import template.core.base.designsystem.theme.KptTheme
 
 @Composable
 internal fun ClientAddressScreen(
@@ -126,15 +126,14 @@ private fun ClientAddressContent(
                 MifosBreadcrumbNavBar(navController)
                 Column(
                     modifier = Modifier.padding(
-                        start = DesignToken.padding.large,
-                        end = DesignToken.padding.large,
+                        horizontal = KptTheme.spacing.md,
                     ),
                 ) {
                     ClientAddressHeader(
                         totalItem = state.address.size.toString(),
                         onAction = onAction,
                     )
-                    Spacer(modifier = Modifier.height(DesignToken.padding.large))
+                    Spacer(modifier = Modifier.height(KptTheme.spacing.md))
                     if (state.address.isEmpty()) {
                         EmptyAddressCard()
                     } else {
@@ -223,12 +222,12 @@ private fun EmptyAddressCard() {
     OutlinedCard(
         modifier = Modifier.fillMaxWidth(),
         border = BorderStroke(
-            width = 1.dp,
+            width = DesignToken.strokes.thin,
             color = AppColors.cardBorders,
         ),
     ) {
         Column(
-            modifier = Modifier.padding(DesignToken.padding.large),
+            modifier = Modifier.padding(KptTheme.spacing.md),
         ) {
             Text(
                 text = stringResource(Res.string.feature_client_empty_address_card_title),

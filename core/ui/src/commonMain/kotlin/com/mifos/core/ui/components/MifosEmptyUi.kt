@@ -16,7 +16,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -24,10 +23,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
-import androidx.compose.ui.unit.dp
 import com.mifos.core.designsystem.icon.MifosIcons
+import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.designsystem.theme.MifosTheme
 import org.jetbrains.compose.ui.tooling.preview.Preview
+import template.core.base.designsystem.theme.KptTheme
 
 @Composable
 fun MifosEmptyUi(
@@ -46,20 +46,20 @@ fun MifosEmptyUi(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(18.dp)
+                .padding(DesignToken.padding.dp18)
                 .align(Alignment.Center),
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(20.dp, Alignment.CenterVertically),
+            verticalArrangement = Arrangement.spacedBy(DesignToken.spacing.largeIncreased, Alignment.CenterVertically),
         ) {
             Icon(
                 imageVector = icon,
                 contentDescription = text + icon.name,
-                modifier = Modifier.size(70.dp),
+                modifier = Modifier.size(DesignToken.sizes.profile),
             )
 
             Text(
                 text = text,
-                style = MaterialTheme.typography.bodyMedium,
+                style = KptTheme.typography.bodyMedium,
             )
         }
     }

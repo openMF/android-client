@@ -22,7 +22,7 @@ interface ColumnValueDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE, entity = ColumnValue::class)
     suspend fun insert(columnValue: ColumnValue)
 
-    @Update(entity = ColumnValue::class)
+    @Update(entity = ColumnValue::class, onConflict = OnConflictStrategy.NONE)
     suspend fun update(columnValue: ColumnValue)
 
     @Delete(entity = ColumnValue::class)
