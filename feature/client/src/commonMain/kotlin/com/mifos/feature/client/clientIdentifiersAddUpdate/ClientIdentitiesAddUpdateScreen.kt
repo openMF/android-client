@@ -43,14 +43,12 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import coil3.compose.AsyncImage
@@ -71,6 +69,7 @@ import com.mifos.core.ui.util.EventsEffect
 import com.mifos.feature.client.utils.PdfPreview
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
+import template.core.base.designsystem.theme.KptTheme
 
 @Composable
 internal fun ClientIdentifiersAddUpdateScreen(
@@ -137,7 +136,7 @@ private fun ClientIdentifiersAddUpdateDialog(
                 )
             } else {
                 MifosErrorComponent(
-                    modifier = Modifier.background(MaterialTheme.colorScheme.background),
+                    modifier = Modifier.background(KptTheme.colorScheme.background),
                     message = state.dialogState.message,
                     isRetryEnabled = true,
                     onRetry = {
@@ -192,7 +191,7 @@ internal fun ClientIdentifiersAddUpdateContent(
 
         Column(
             modifier = Modifier.fillMaxSize().padding(
-                horizontal = DesignToken.padding.large,
+                horizontal = KptTheme.spacing.md,
             ),
         ) {
             if (state.feature != Feature.VIEW_DOCUMENT) {
@@ -208,7 +207,7 @@ internal fun ClientIdentifiersAddUpdateContent(
                 )
             }
 
-            Spacer(Modifier.height(DesignToken.spacing.large))
+            Spacer(Modifier.height(KptTheme.spacing.md))
 
             when (state.feature) {
                 Feature.ADD_IDENTIFIER -> {
@@ -273,7 +272,7 @@ private fun ClientIdentifiersAddIdentifier(
         label = stringResource(Res.string.client_identifier_document_key),
     )
 
-    Spacer(Modifier.height(DesignToken.padding.large))
+    Spacer(Modifier.height(KptTheme.spacing.md))
 
     MifosOutlinedTextField(
         value = state.description ?: "",
@@ -311,7 +310,7 @@ private fun ClientIdentifiersAddUpdateDocument(
         label = stringResource(Res.string.client_identifier_document_name),
     )
 
-    Spacer(Modifier.height(DesignToken.padding.large))
+    Spacer(Modifier.height(KptTheme.spacing.md))
 
     MifosRowWithTextAndButton(
         text = state.imageFileName ?: stringResource(Res.string.client_identifier_no_file_selected),
@@ -360,9 +359,9 @@ private fun ClientIdentifiersDocumentPreview(
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         MifosCard(
-            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.onPrimary),
-            elevation = 0.dp,
-            borderStroke = BorderStroke(1.dp, MaterialTheme.colorScheme.secondaryContainer),
+            colors = CardDefaults.cardColors(containerColor = KptTheme.colorScheme.onPrimary),
+            elevation = KptTheme.elevation.level0,
+            borderStroke = BorderStroke(DesignToken.strokes.thin, KptTheme.colorScheme.secondaryContainer),
         ) {
             Box(
                 modifier = Modifier.aspectRatio(0.707f, true),

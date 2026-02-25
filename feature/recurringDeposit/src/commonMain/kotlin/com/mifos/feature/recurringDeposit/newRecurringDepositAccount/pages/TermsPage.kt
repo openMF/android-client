@@ -28,12 +28,12 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.mifos.core.designsystem.component.MifosTextFieldDropdown
-import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.designsystem.theme.MifosTypography
 import com.mifos.core.ui.components.MifosTwoButtonRow
 import com.mifos.feature.recurringDeposit.newRecurringDepositAccount.RecurringAccountAction
 import com.mifos.feature.recurringDeposit.newRecurringDepositAccount.RecurringAccountState
 import org.jetbrains.compose.resources.stringResource
+import template.core.base.designsystem.theme.KptTheme
 
 @Composable
 fun TermsPage(
@@ -41,7 +41,7 @@ fun TermsPage(
     modifier: Modifier = Modifier,
     onAction: (RecurringAccountAction) -> Unit,
 ) {
-    Column(Modifier.fillMaxSize().padding(bottom = DesignToken.padding.large)) {
+    Column(Modifier.fillMaxSize().padding(bottom = KptTheme.spacing.md)) {
         Column(
             modifier = modifier.weight(1f).verticalScroll(rememberScrollState()),
         ) {
@@ -49,7 +49,7 @@ fun TermsPage(
                 text = stringResource(Res.string.feature_recurring_deposit_step_terms),
                 style = MifosTypography.labelLargeEmphasized,
             )
-            Spacer(Modifier.height(DesignToken.padding.large))
+            Spacer(Modifier.height(KptTheme.spacing.md))
             MifosTextFieldDropdown(
                 value = if (state.recurringDepositAccountInterestChart.interestCompoundingPeriodType == -1) {
                     ""
@@ -137,7 +137,7 @@ fun TermsPage(
             secondBtnText = stringResource(Res.string.feature_recurring_deposit_next),
             onFirstBtnClick = { onAction(RecurringAccountAction.OnBackPress) },
             onSecondBtnClick = { onAction(RecurringAccountAction.OnNextPress) },
-            modifier = Modifier.padding(top = DesignToken.padding.small),
+            modifier = Modifier.padding(top = KptTheme.spacing.sm),
         )
     }
 }

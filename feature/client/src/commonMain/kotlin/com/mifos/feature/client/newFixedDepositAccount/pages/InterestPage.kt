@@ -49,6 +49,7 @@ import com.mifos.core.ui.components.MifosTwoButtonRow
 import com.mifos.feature.client.newFixedDepositAccount.NewFixedDepositAccountAction
 import com.mifos.feature.client.newFixedDepositAccount.NewFixedDepositAccountState
 import org.jetbrains.compose.resources.stringResource
+import template.core.base.designsystem.theme.KptTheme
 
 @Composable
 fun InterestPage(
@@ -56,7 +57,7 @@ fun InterestPage(
     modifier: Modifier = Modifier,
     onAction: (NewFixedDepositAccountAction) -> Unit,
 ) {
-    Column(Modifier.fillMaxSize().padding(bottom = DesignToken.padding.large)) {
+    Column(Modifier.fillMaxSize().padding(bottom = KptTheme.spacing.md)) {
         Column(
             modifier = modifier.weight(1f).verticalScroll(rememberScrollState()),
         ) {
@@ -64,7 +65,7 @@ fun InterestPage(
                 text = stringResource(Res.string.step_interest),
                 style = MifosTypography.labelLargeEmphasized,
             )
-            Spacer(Modifier.height(DesignToken.padding.large))
+            Spacer(Modifier.height(KptTheme.spacing.md))
 
             MifosDefaultListingComponentFromStringResources(
                 data = mapOf(
@@ -88,10 +89,10 @@ fun InterestPage(
                         stringResource(Res.string.feature_fixed_deposit_interest_no)
                     },
                 ),
-                verticalArrangement = Arrangement.spacedBy(DesignToken.padding.small),
+                verticalArrangement = Arrangement.spacedBy(KptTheme.spacing.sm),
             )
 
-            Spacer(Modifier.height(DesignToken.padding.large))
+            Spacer(Modifier.height(KptTheme.spacing.md))
 
             MifosRowWithTextAndButton(
                 onBtnClick = {
@@ -105,7 +106,7 @@ fun InterestPage(
                 },
                 btnEnabled = state.isRateChartEmpty,
             )
-            Spacer(Modifier.height(DesignToken.padding.large))
+            Spacer(Modifier.height(KptTheme.spacing.md))
         }
 
         MifosTwoButtonRow(
@@ -128,7 +129,7 @@ fun FixedDepositRateChart(
         },
         content = {
             Column(
-                modifier = Modifier.fillMaxWidth().padding(DesignToken.padding.large),
+                modifier = Modifier.fillMaxWidth().padding(KptTheme.spacing.md),
                 verticalArrangement = Arrangement.spacedBy(DesignToken.padding.largeIncreased),
             ) {
                 Text(

@@ -33,7 +33,6 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SelectableDates
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
@@ -47,7 +46,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mifos.core.common.utils.ApiDateFormatter
 import com.mifos.core.common.utils.DateHelper
@@ -55,6 +53,7 @@ import com.mifos.core.designsystem.component.MifosDatePickerTextField
 import com.mifos.core.designsystem.component.MifosOutlinedTextField
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
+import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.network.GenericResponse
 import com.mifos.core.ui.components.MifosAlertDialog
 import com.mifos.core.ui.components.MifosProgressIndicator
@@ -63,6 +62,7 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameterProvider
 import org.koin.compose.viewmodel.koinViewModel
+import template.core.base.designsystem.theme.KptTheme
 import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
 
@@ -197,15 +197,15 @@ private fun SavingsAccountActivateContent(
             .fillMaxSize()
             .verticalScroll(scrollstate),
     ) {
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(KptTheme.spacing.md))
 
         Text(
-            style = MaterialTheme.typography.bodyLarge,
+            style = KptTheme.typography.bodyLarge,
             text = stringResource(Res.string.feature_savings_approved_on),
-            modifier = Modifier.padding(start = 16.dp),
+            modifier = Modifier.padding(start = KptTheme.spacing.md),
         )
 
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(KptTheme.spacing.md))
 
         MifosDatePickerTextField(
             value = DateHelper.getDateAsStringFromLong(approvalDate),
@@ -215,7 +215,7 @@ private fun SavingsAccountActivateContent(
             },
         )
 
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(KptTheme.spacing.md))
 
         MifosOutlinedTextField(
             value = approvalReason,
@@ -224,13 +224,13 @@ private fun SavingsAccountActivateContent(
             error = null,
         )
 
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(KptTheme.spacing.md))
 
         Button(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 16.dp)
-                .heightIn(46.dp),
+                .padding(horizontal = KptTheme.spacing.md)
+                .heightIn(DesignToken.spacing.dp46),
             onClick = {
                 val hashMap = HashMap<String, String>()
                 hashMap["dateFormat"] = ApiDateFormatter.DATE_FORMAT

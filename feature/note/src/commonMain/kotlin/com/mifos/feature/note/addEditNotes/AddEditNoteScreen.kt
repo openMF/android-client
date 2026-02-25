@@ -22,7 +22,6 @@ import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -43,6 +42,7 @@ import com.mifos.core.ui.components.MifosTwoButtonRow
 import com.mifos.core.ui.util.EventsEffect
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
+import template.core.base.designsystem.theme.KptTheme
 
 @Composable
 internal fun AddEditNoteScreen(
@@ -150,22 +150,22 @@ private fun AddEditNote(
         modifier = Modifier
             .fillMaxWidth()
             .padding(
-                horizontal = DesignToken.spacing.large,
-                vertical = DesignToken.spacing.small,
+                horizontal = KptTheme.spacing.md,
+                vertical = KptTheme.spacing.sm,
             ),
-        verticalArrangement = Arrangement.spacedBy(DesignToken.spacing.large),
+        verticalArrangement = Arrangement.spacedBy(KptTheme.spacing.md),
     ) {
         Text(
             text = stringResource(state.title),
             style = MifosTypography.labelLargeEmphasized,
-            color = MaterialTheme.colorScheme.onSurface,
+            color = KptTheme.colorScheme.onSurface,
         )
 
         Column(
             modifier = Modifier
                 .weight(1f)
                 .verticalScroll(scrollState),
-            verticalArrangement = Arrangement.spacedBy(DesignToken.spacing.large),
+            verticalArrangement = Arrangement.spacedBy(KptTheme.spacing.md),
         ) {
             MifosOutlinedTextField(
                 value = state.textFieldNotesPayload.note ?: "",
@@ -180,14 +180,14 @@ private fun AddEditNote(
                 },
                 maxLines = 18,
                 singleLine = false,
-                shape = DesignToken.shapes.large,
+                shape = KptTheme.shapes.large,
                 label = stringResource(state.label),
                 modifier = Modifier
                     .fillMaxWidth()
                     .heightIn(min = DesignToken.spacing.half),
-                textStyle = MaterialTheme.typography.bodyLarge.copy(textAlign = TextAlign.Start),
+                textStyle = KptTheme.typography.bodyLarge.copy(textAlign = TextAlign.Start),
                 colors = OutlinedTextFieldDefaults.colors(
-                    unfocusedBorderColor = MaterialTheme.colorScheme.secondaryContainer,
+                    unfocusedBorderColor = KptTheme.colorScheme.secondaryContainer,
                 ),
             )
         }
@@ -204,7 +204,7 @@ private fun AddEditNote(
                     onAction(AddEditNoteAction.AddNote(state.textFieldNotesPayload))
                 }
             },
-            modifier = Modifier.padding(bottom = DesignToken.padding.large),
+            modifier = Modifier.padding(bottom = KptTheme.spacing.md),
         )
     }
 }

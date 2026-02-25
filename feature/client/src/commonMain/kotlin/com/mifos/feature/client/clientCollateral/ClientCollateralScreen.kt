@@ -56,6 +56,7 @@ import com.mifos.core.ui.components.MifosTwoButtonRow
 import com.mifos.core.ui.util.EventsEffect
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
+import template.core.base.designsystem.theme.KptTheme
 
 @Composable
 internal fun ClientCollateralScreen(
@@ -97,7 +98,7 @@ private fun ClientCollateralContent(
         Column(
             modifier = modifier
                 .fillMaxSize()
-                .padding(bottom = DesignToken.padding.large),
+                .padding(bottom = KptTheme.spacing.md),
         ) {
             MifosBreadcrumbNavBar(
                 navController = navController,
@@ -106,7 +107,7 @@ private fun ClientCollateralContent(
             Text(
                 text = stringResource(Res.string.client_collateral_title),
                 style = MifosTypography.labelLargeEmphasized,
-                modifier = Modifier.padding(horizontal = DesignToken.padding.large),
+                modifier = Modifier.padding(horizontal = KptTheme.spacing.md),
             )
 
             Spacer(modifier = Modifier.height(DesignToken.spacing.medium))
@@ -117,7 +118,7 @@ private fun ClientCollateralContent(
                         .fillMaxWidth()
                         .weight(1f)
                         .verticalScroll(rememberScrollState())
-                        .padding(horizontal = DesignToken.padding.large),
+                        .padding(horizontal = KptTheme.spacing.md),
                 ) {
                     MifosTextFieldDropdown(
                         value = state.collaterals[state.currentSelectedIndex].name,
@@ -205,7 +206,7 @@ private fun ClientCollateralContent(
                     secondBtnText = stringResource(Res.string.btn_submit),
                     onFirstBtnClick = { onAction(ClientCollateralAction.NavigateBack) },
                     onSecondBtnClick = { onAction(ClientCollateralAction.OnSave) },
-                    modifier = Modifier.padding(horizontal = DesignToken.padding.large),
+                    modifier = Modifier.padding(horizontal = KptTheme.spacing.md),
                 )
             } else {
                 Text(stringResource(Res.string.client_collateral_no_options))

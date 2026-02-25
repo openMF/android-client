@@ -38,7 +38,6 @@ import androidx.compose.material3.Checkbox
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SelectableDates
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
@@ -55,7 +54,6 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mifos.core.common.utils.ApiDateFormatter
 import com.mifos.core.common.utils.formatDate
@@ -65,6 +63,7 @@ import com.mifos.core.designsystem.component.MifosOutlinedTextField
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.component.MifosTextFieldDropdown
+import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.ui.components.MifosAlertDialog
 import com.mifos.core.ui.components.MifosProgressIndicator
 import com.mifos.room.entities.center.CenterPayloadEntity
@@ -75,6 +74,7 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameterProvider
 import org.koin.compose.viewmodel.koinViewModel
+import template.core.base.designsystem.theme.KptTheme
 import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
 
@@ -260,7 +260,7 @@ private fun CreateNewCenterContent(
         )
 
         Row(
-            modifier = Modifier.padding(8.dp),
+            modifier = Modifier.padding(vertical = KptTheme.spacing.sm),
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Checkbox(
@@ -280,7 +280,7 @@ private fun CreateNewCenterContent(
                     showDatePicker = true
                 },
             )
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(KptTheme.spacing.md))
         }
 
         MifosButton(
@@ -305,13 +305,13 @@ private fun CreateNewCenterContent(
             enabled = validateAllFields(),
             modifier = Modifier
                 .fillMaxWidth()
-                .heightIn(44.dp)
-                .padding(horizontal = 16.dp),
+                .heightIn(DesignToken.spacing.dp44)
+                .padding(horizontal = KptTheme.spacing.md),
             contentPadding = PaddingValues(),
         ) {
             Text(
                 text = stringResource(Res.string.feature_center_create),
-                style = MaterialTheme.typography.bodyMedium,
+                style = KptTheme.typography.bodyMedium,
             )
         }
     }

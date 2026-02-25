@@ -39,7 +39,6 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
@@ -56,6 +55,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.icon.MifosIcons
+import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.ui.components.MifosProgressIndicator
 import com.mifos.room.entities.client.ClientPayloadEntity
 import kotlinx.coroutines.launch
@@ -64,6 +64,7 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameterProvider
 import org.koin.compose.viewmodel.koinViewModel
+import template.core.base.designsystem.theme.KptTheme
 
 @Composable
 internal fun SyncClientPayloadsScreenRoute(
@@ -187,10 +188,10 @@ private fun ClientPayloadItem(
     Card(
         modifier = modifier
             .fillMaxWidth()
-            .padding(8.dp),
+            .padding(KptTheme.spacing.sm),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
     ) {
-        Column(modifier = Modifier.padding(16.dp)) {
+        Column(modifier = Modifier.padding(KptTheme.spacing.md)) {
             val payloadStatus: String = if (payload.active == true) {
                 "true"
             } else {
@@ -249,9 +250,9 @@ private fun ClientPayloadItem(
             if (payload.errorMessage != null) {
                 Text(
                     text = payload.errorMessage!!,
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.error,
-                    modifier = Modifier.padding(top = 8.dp),
+                    style = KptTheme.typography.bodyMedium,
+                    color = KptTheme.colorScheme.error,
+                    modifier = Modifier.padding(top = KptTheme.spacing.sm),
                 )
             }
         }
@@ -267,17 +268,17 @@ private fun PayloadField(
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .padding(vertical = 4.dp),
+            .padding(vertical = KptTheme.spacing.xs),
     ) {
         Text(
             text = label,
-            style = MaterialTheme.typography.bodyMedium,
+            style = KptTheme.typography.bodyMedium,
             fontWeight = FontWeight.Bold,
             modifier = Modifier.weight(1f),
         )
         Text(
             text = value,
-            style = MaterialTheme.typography.bodyMedium,
+            style = KptTheme.typography.bodyMedium,
             modifier = Modifier.weight(1f),
         )
     }
@@ -297,9 +298,9 @@ private fun ErrorStateScreen(
         Icon(
             imageVector = MifosIcons.Error,
             contentDescription = null,
-            modifier = Modifier.size(48.dp),
+            modifier = Modifier.size(DesignToken.sizes.dp48),
         )
-        Text(text = message, modifier = Modifier.padding(vertical = 16.dp))
+        Text(text = message, modifier = Modifier.padding(vertical = KptTheme.spacing.md))
         Button(onClick = onRefresh) {
             Text(stringResource(Res.string.feature_offline_click_to_refresh))
         }

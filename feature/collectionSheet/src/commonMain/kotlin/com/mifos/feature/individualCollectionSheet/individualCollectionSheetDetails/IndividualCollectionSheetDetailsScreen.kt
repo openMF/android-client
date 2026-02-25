@@ -34,7 +34,6 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
@@ -50,11 +49,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color.Companion.LightGray
-import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.icon.MifosIcons
+import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.model.objects.account.loan.PaymentTypeOptions
 import com.mifos.core.model.objects.collectionsheets.LoanAndClientName
 import com.mifos.core.network.model.IndividualCollectionSheetPayload
@@ -67,6 +66,7 @@ import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
+import template.core.base.designsystem.theme.KptTheme
 
 @Composable
 internal fun IndividualCollectionSheetDetailsScreen(
@@ -212,7 +212,7 @@ private fun IndividualCollectionSheetItem(
 ) {
     OutlinedCard(
         modifier = modifier
-            .padding(6.dp)
+            .padding(DesignToken.padding.dp6)
             .combinedClickable(
                 onClick = {
                     onClick()
@@ -224,52 +224,51 @@ private fun IndividualCollectionSheetItem(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(
-                    horizontal = 16.dp,
-                    vertical = 24.dp,
+                    horizontal = KptTheme.spacing.md,
+                    vertical = KptTheme.spacing.lg,
                 ),
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Image(
                 modifier = Modifier
-                    .size(40.dp)
+                    .size(DesignToken.sizes.topBarStandardHeight)
                     .clip(CircleShape)
-                    .border(width = 1.dp, LightGray, shape = CircleShape),
+                    .border(width = DesignToken.spacing.dp1, LightGray, shape = CircleShape),
                 painter = painterResource(Res.drawable.feature_collection_sheet_ic_dp_placeholder),
                 contentDescription = "collection sheet placeholder",
             )
             Column(
                 modifier = Modifier
                     .weight(1f)
-                    .padding(start = 16.dp),
+                    .padding(start = KptTheme.spacing.md),
             ) {
                 client.clientName?.let {
                     Text(
                         text = it,
-                        style = MaterialTheme.typography.bodyLarge,
+                        style = KptTheme.typography.bodyLarge,
 
                     )
                 }
                 Row {
                     Text(
                         text = stringResource(Res.string.feature_collection_sheet_total_due),
-                        style = MaterialTheme.typography.bodyMedium,
-
+                        style = KptTheme.typography.bodyMedium,
                     )
-                    Spacer(modifier = Modifier.width(16.dp))
+                    Spacer(modifier = Modifier.width(KptTheme.spacing.md))
                     Text(
                         text = client.loans?.get(index)?.totalDue.toString(),
-                        style = MaterialTheme.typography.bodyMedium,
+                        style = KptTheme.typography.bodyMedium,
                     )
                 }
                 Row {
                     Text(
                         text = stringResource(Res.string.feature_collection_sheet_total_charges),
-                        style = MaterialTheme.typography.bodyMedium,
+                        style = KptTheme.typography.bodyMedium,
                     )
-                    Spacer(modifier = Modifier.width(16.dp))
+                    Spacer(modifier = Modifier.width(KptTheme.spacing.md))
                     Text(
                         text = client.loans?.get(index)?.chargesDue.toString(),
-                        style = MaterialTheme.typography.bodyMedium,
+                        style = KptTheme.typography.bodyMedium,
                     )
                 }
                 Text(
@@ -278,7 +277,7 @@ private fun IndividualCollectionSheetItem(
                             index,
                         )?.productShortName
                     })",
-                    style = MaterialTheme.typography.bodyMedium,
+                    style = KptTheme.typography.bodyMedium,
                 )
             }
             Icon(

@@ -48,6 +48,7 @@ import kotlinx.coroutines.flow.Flow
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
+import template.core.base.designsystem.theme.KptTheme
 
 @Composable
 fun ClientUpcomingChargesScreenRoute(
@@ -94,14 +95,14 @@ fun ClientUpcomingChargesScreen(
             false -> {
                 Column(
                     modifier = Modifier.fillMaxSize()
-                        .padding(horizontal = DesignToken.padding.large),
+                        .padding(horizontal = KptTheme.spacing.md),
                 ) {
                     UpcomingChargesHeader(
                         totalItem = itemCount.toString(),
                         onAction = onAction,
                     )
 
-                    Spacer(modifier = Modifier.height(DesignToken.padding.large))
+                    Spacer(modifier = Modifier.height(KptTheme.spacing.md))
 
                     if (state.chargesFlow == null) {
                         MifosEmptyCard()

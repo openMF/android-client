@@ -56,6 +56,7 @@ import com.mifos.core.ui.components.MifosSearchBar
 import com.mifos.core.ui.util.EventsEffect
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
+import template.core.base.designsystem.theme.KptTheme
 
 @Composable
 internal fun ClientDocumentScreen(
@@ -168,7 +169,7 @@ private fun ClientDocumentsContent(
                 Column(
                     Modifier.fillMaxSize()
                         .padding(
-                            horizontal = DesignToken.padding.large,
+                            horizontal = KptTheme.spacing.md,
                         ),
                 ) {
                     ClientDocumentsHeader(
@@ -196,7 +197,7 @@ private fun ClientDocumentsContent(
                         )
                     }
 
-                    Spacer(modifier = Modifier.height(DesignToken.padding.largeIncreasedExtra))
+                    Spacer(modifier = Modifier.height(KptTheme.spacing.lg))
 
                     if (state.clientDocuments.isEmpty()) {
                         MifosEmptyCard(msg = stringResource(Res.string.client_identifiers_click_on_plus_button_to_add_an_item))
@@ -250,8 +251,7 @@ private fun ClientDocumentsContent(
                                         else -> null
                                     }
                                 }
-
-                                Spacer(modifier = Modifier.height(DesignToken.spacing.small))
+                                Spacer(modifier = Modifier.height(KptTheme.spacing.sm))
                             }
                         }
                     }

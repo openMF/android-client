@@ -47,6 +47,7 @@ kotlin {
             api(libs.window.size)
             api(projects.coreBase.designsystem)
             implementation(libs.fluentui.system.icons)
+            api(projects.coreBase.designsystem)
         }
 
         nativeMain.dependencies {

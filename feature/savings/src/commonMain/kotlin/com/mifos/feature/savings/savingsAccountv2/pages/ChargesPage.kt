@@ -29,7 +29,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -42,6 +41,7 @@ import com.mifos.core.ui.components.MifosTwoButtonRow
 import com.mifos.feature.savings.savingsAccountv2.SavingsAccountAction
 import com.mifos.feature.savings.savingsAccountv2.SavingsAccountState
 import org.jetbrains.compose.resources.stringResource
+import template.core.base.designsystem.theme.KptTheme
 
 @Composable
 fun ChargesPage(
@@ -49,7 +49,11 @@ fun ChargesPage(
     modifier: Modifier = Modifier,
     onAction: (SavingsAccountAction) -> Unit,
 ) {
-    Column(modifier = Modifier.fillMaxSize().padding(bottom = DesignToken.padding.large)) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(bottom = KptTheme.spacing.md),
+    ) {
         Column(
             modifier = modifier.weight(1f).verticalScroll(rememberScrollState()),
         ) {
@@ -57,7 +61,7 @@ fun ChargesPage(
                 stringResource(Res.string.step_charges),
                 style = MifosTypography.labelLargeEmphasized,
             )
-            Spacer(Modifier.height(DesignToken.padding.large))
+            Spacer(Modifier.height(KptTheme.spacing.md))
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically,
@@ -72,19 +76,19 @@ fun ChargesPage(
                     Icon(
                         imageVector = MifosIcons.Add,
                         contentDescription = null,
-                        tint = MaterialTheme.colorScheme.primary,
+                        tint = KptTheme.colorScheme.primary,
                         modifier = Modifier.size(DesignToken.sizes.iconSmall),
                     )
 
                     Text(
                         text = stringResource(Res.string.step_charges_add_new),
-                        color = MaterialTheme.colorScheme.primary,
+                        color = KptTheme.colorScheme.primary,
                         style = MifosTypography.labelLargeEmphasized,
                     )
                 }
             }
 
-            Spacer(Modifier.height(DesignToken.padding.large))
+            Spacer(Modifier.height(KptTheme.spacing.md))
 
             MifosRowWithTextAndButton(
                 onBtnClick = {
@@ -94,7 +98,7 @@ fun ChargesPage(
                 text = state.addedCharges.size.toString() + " " + stringResource(Res.string.step_charges_active) + " " + stringResource(Res.string.step_charges),
                 btnEnabled = state.addedCharges.isNotEmpty(),
             )
-            Spacer(Modifier.height(DesignToken.padding.large))
+            Spacer(Modifier.height(KptTheme.spacing.md))
         }
         MifosTwoButtonRow(
             firstBtnText = stringResource(Res.string.feature_savings_back),

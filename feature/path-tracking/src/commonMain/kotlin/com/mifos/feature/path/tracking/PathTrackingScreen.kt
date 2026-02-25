@@ -25,7 +25,6 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
@@ -39,7 +38,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.dp
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.component.PermissionBox
@@ -59,6 +57,7 @@ import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameterProvider
 import org.koin.compose.viewmodel.koinViewModel
+import template.core.base.designsystem.theme.KptTheme
 
 @Composable
 expect fun PathTrackingScreen(
@@ -186,22 +185,22 @@ private fun PathTrackingItem(
         }
     }
     OutlinedCard(
-        modifier = modifier.padding(8.dp),
+        modifier = modifier.padding(KptTheme.spacing.sm),
         onClick = { onPathTrackingClick(latLngList) },
-        colors = CardDefaults.outlinedCardColors(MaterialTheme.colorScheme.surface),
+        colors = CardDefaults.outlinedCardColors(KptTheme.colorScheme.surface),
     ) {
         PathTrackingMapView(latLngList = latLngList)
 
         Text(
-            modifier = Modifier.padding(vertical = 4.dp, horizontal = 8.dp),
+            modifier = Modifier.padding(vertical = KptTheme.spacing.xs, horizontal = KptTheme.spacing.sm),
             text = "${pathTracking.startAddress ?: startAdd} to ${pathTracking.endAddress ?: endAdd}",
-            style = MaterialTheme.typography.bodyMedium,
+            style = KptTheme.typography.bodyMedium,
             fontWeight = FontWeight.Medium,
         )
         Text(
-            modifier = Modifier.padding(8.dp),
+            modifier = Modifier.padding(KptTheme.spacing.sm),
             text = "${pathTracking.date} from ${pathTracking.startTime} to ${pathTracking.stopTime}",
-            style = MaterialTheme.typography.bodySmall,
+            style = KptTheme.typography.bodySmall,
         )
     }
 }

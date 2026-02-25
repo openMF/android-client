@@ -33,7 +33,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.LinearProgressIndicator
@@ -54,14 +53,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import co.touchlab.kermit.Logger
+import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.ui.components.MifosProgressIndicator
 import com.mifos.core.ui.util.DevicePreview
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
+import template.core.base.designsystem.theme.KptTheme
 
 @Composable
 internal fun SyncSurveysDialog(
@@ -226,32 +226,32 @@ private fun SyncSurveysDialogContent(
     Dialog(onDismissRequest = { closeDialog.invoke() }) {
         Box(
             modifier = Modifier
-                .clip(RoundedCornerShape(16.dp))
+                .clip(KptTheme.shapes.large)
                 .background(Color.White)
-                .padding(16.dp),
+                .padding(KptTheme.spacing.md),
             contentAlignment = Alignment.Center,
         ) {
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(5.dp),
+                    .padding(DesignToken.padding.dp5),
             ) {
                 Text(
                     text = stringResource(Res.string.feature_settings_sync_surveys_full_information),
                     modifier = Modifier
-                        .padding(10.dp)
+                        .padding(DesignToken.padding.dp10)
                         .align(Alignment.CenterHorizontally),
                 )
 
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(8.dp),
+                        .padding(KptTheme.spacing.sm),
                 ) {
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(vertical = 8.dp),
+                            .padding(vertical = KptTheme.spacing.sm),
                         horizontalArrangement = Arrangement.SpaceBetween,
                     ) {
                         Text(text = stringResource(Res.string.feature_settings_name))
@@ -261,7 +261,7 @@ private fun SyncSurveysDialogContent(
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(vertical = 8.dp),
+                            .padding(vertical = KptTheme.spacing.sm),
                         horizontalArrangement = Arrangement.SpaceBetween,
                     ) {
                         Text(text = stringResource(Res.string.feature_settings_total))
@@ -271,7 +271,7 @@ private fun SyncSurveysDialogContent(
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(vertical = 8.dp),
+                            .padding(vertical = KptTheme.spacing.sm),
                         horizontalArrangement = Arrangement.SpaceBetween,
                     ) {
                         Text(text = stringResource(Res.string.feature_settings_syncing_survey))
@@ -282,13 +282,13 @@ private fun SyncSurveysDialogContent(
                         progress = { surveySyncProgress },
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(vertical = 8.dp),
+                            .padding(vertical = KptTheme.spacing.sm),
                     )
 
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(vertical = 8.dp),
+                            .padding(vertical = KptTheme.spacing.sm),
                         horizontalArrangement = Arrangement.SpaceBetween,
                     ) {
                         Text(text = stringResource(Res.string.feature_settings_syncing_question))
@@ -299,13 +299,13 @@ private fun SyncSurveysDialogContent(
                         progress = { questionSyncProgress },
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(vertical = 8.dp),
+                            .padding(vertical = KptTheme.spacing.sm),
                     )
 
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(vertical = 8.dp),
+                            .padding(vertical = KptTheme.spacing.sm),
                         horizontalArrangement = Arrangement.SpaceBetween,
                     ) {
                         Text(text = stringResource(Res.string.feature_settings_syncing_response))
@@ -316,13 +316,13 @@ private fun SyncSurveysDialogContent(
                         progress = { responseSyncProgress },
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(vertical = 8.dp),
+                            .padding(vertical = KptTheme.spacing.sm),
                     )
 
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(vertical = 8.dp),
+                            .padding(vertical = KptTheme.spacing.sm),
                         horizontalArrangement = Arrangement.SpaceBetween,
                     ) {
                         Text(text = stringResource(Res.string.feature_settings_total_sync_progress))
@@ -333,13 +333,13 @@ private fun SyncSurveysDialogContent(
                         progress = { totalSyncProgress },
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(vertical = 8.dp),
+                            .padding(vertical = KptTheme.spacing.sm),
                     )
 
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(vertical = 8.dp),
+                            .padding(vertical = KptTheme.spacing.sm),
                         horizontalArrangement = Arrangement.SpaceBetween,
                     ) {
                         Text(text = stringResource(Res.string.feature_settings_failed_sync))
@@ -350,13 +350,13 @@ private fun SyncSurveysDialogContent(
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(vertical = 16.dp),
+                        .padding(vertical = KptTheme.spacing.md),
                 ) {
                     SyncSurveyButton(
                         onClick = { closeDialog.invoke() },
                         modifier = Modifier
                             .weight(1f)
-                            .padding(end = 8.dp),
+                            .padding(end = KptTheme.spacing.sm),
                         text = stringResource(Res.string.feature_settings_cancel),
                         isEnabled = showCancelButton,
                     )
@@ -365,7 +365,7 @@ private fun SyncSurveysDialogContent(
                         onClick = { closeDialog.invoke() },
                         modifier = Modifier
                             .weight(1f)
-                            .padding(start = 8.dp),
+                            .padding(start = KptTheme.spacing.sm),
                         text = stringResource(Res.string.feature_settings_hide),
                         isEnabled = true,
                     )
@@ -386,7 +386,7 @@ private fun SyncSurveyButton(
         onClick = onClick,
         modifier = modifier
             .fillMaxWidth()
-            .height(40.dp),
+            .height(DesignToken.spacing.dp40),
         colors = ButtonDefaults.buttonColors(
             disabledContainerColor = Color.DarkGray,
         ),
