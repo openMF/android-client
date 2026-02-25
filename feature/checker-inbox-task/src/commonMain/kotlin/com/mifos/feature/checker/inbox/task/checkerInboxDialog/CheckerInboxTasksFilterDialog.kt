@@ -220,7 +220,6 @@ private fun CheckerInboxTasksFilterDialog(
                         },
                     )
 
-
                     Spacer(modifier = Modifier.height(KptTheme.spacing.sm))
 
                     Row(

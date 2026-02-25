@@ -11,7 +11,6 @@ package com.mifos.feature.loan.loanTransaction
 
 import androidclient.feature.loan.generated.resources.Res
 import androidclient.feature.loan.generated.resources.feature_loan_cancel
-import androidclient.feature.loan.generated.resources.feature_loan_close
 import androidclient.feature.loan.generated.resources.feature_loan_export_transactions
 import androidclient.feature.loan.generated.resources.feature_loan_from_date
 import androidclient.feature.loan.generated.resources.feature_loan_generate_report
@@ -26,7 +25,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -38,7 +36,6 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import com.mifos.core.designsystem.component.MifosButton
 import com.mifos.core.designsystem.component.MifosCustomDialog
 import com.mifos.core.designsystem.component.MifosOutlinedButton
