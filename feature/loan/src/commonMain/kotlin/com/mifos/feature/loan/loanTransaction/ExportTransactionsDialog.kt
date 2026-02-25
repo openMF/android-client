@@ -28,8 +28,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -44,10 +42,11 @@ import androidx.compose.ui.unit.dp
 import com.mifos.core.designsystem.component.MifosButton
 import com.mifos.core.designsystem.component.MifosCustomDialog
 import com.mifos.core.designsystem.component.MifosOutlinedButton
-import com.mifos.core.designsystem.icon.MifosIcons
+import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.ui.components.MifosDateRangePicker
 import kotlinx.datetime.LocalDate
 import org.jetbrains.compose.resources.stringResource
+import template.core.base.designsystem.theme.KptTheme
 import kotlin.time.ExperimentalTime
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalTime::class)
@@ -64,35 +63,21 @@ internal fun ExportTransactionsDialog(
         onDismiss = onDismiss,
     ) {
         Surface(
-            shape = RoundedCornerShape(16.dp),
+            shape = DesignToken.shapes.medium,
             color = MaterialTheme.colorScheme.surface,
             modifier = Modifier.fillMaxWidth(0.95f),
         ) {
             Box(
                 contentAlignment = Alignment.Center,
             ) {
-                Column(modifier = Modifier.padding(20.dp)) {
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(bottom = 16.dp),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically,
-                    ) {
-                        Text(
-                            text = stringResource(Res.string.feature_loan_export_transactions),
-                            style = MaterialTheme.typography.titleLarge,
-                        )
-                        IconButton(onClick = onDismiss) {
-                            Icon(
-                                imageVector = MifosIcons.Cancel,
-                                contentDescription = stringResource(Res.string.feature_loan_close),
-                                tint = MaterialTheme.colorScheme.outline,
-                            )
-                        }
-                    }
+                Column(modifier = Modifier.padding(DesignToken.padding.large)) {
+                    Text(
+                        text = stringResource(Res.string.feature_loan_export_transactions),
+                        style = MaterialTheme.typography.titleLarge,
+                        modifier = Modifier.fillMaxWidth(),
+                    )
 
-                    Spacer(modifier = Modifier.height(8.dp))
+                    Spacer(modifier = Modifier.height(DesignToken.padding.medium))
 
                     MifosDateRangePicker(
                         fromDate = fromDate,
@@ -105,7 +90,7 @@ internal fun ExportTransactionsDialog(
                         invalidDateRangeMessage = stringResource(Res.string.feature_loan_invalid_date_range),
                     )
 
-                    Spacer(modifier = Modifier.height(16.dp))
+                    Spacer(modifier = Modifier.height(DesignToken.padding.medium))
 
                     Row(
                         modifier = Modifier.fillMaxWidth(),
@@ -122,7 +107,7 @@ internal fun ExportTransactionsDialog(
                             )
                         }
 
-                        Spacer(modifier = Modifier.width(12.dp))
+                        Spacer(modifier = Modifier.width(KptTheme.spacing.md))
 
                         MifosButton(
                             onClick = {
