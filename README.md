@@ -25,7 +25,7 @@ One of the standout features of this application is its offline capability, allo
 > **We're moving towards to Jira for issue tracking. Please use [Jira](https://mifosforge.jira.com/jira/software/c/projects/MIFOSAC/issues/) for issue tracking.**
 > **And Join our [slack](https://join.slack.com/t/mifos/shared_invite/zt-2wvi9t82t-DuSBdqdQVOY9fsqsLjkKPA) community channel `mifos-x-field-officer-app` to discuss all things about Android Client development. Please keep discussions focused and avoid cross-posting across channels.**
 
-### Demo Credentials
+## Demo Credentials
 Access the Field Officer (Android Client) demo credentials on our [Jira Wiki page](https://mifosforge.jira.com/wiki/spaces/MP/pages/4537024513/Welcome+to+the+Mifos+Mobile+Apps+Community#%F0%9F%93%B1-Mifos-X-Field-Officer-App.1).
 
 ## How to Contribute
